@@ -27,7 +27,7 @@ use UGroupManager;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class UsersRetrieverTest extends TuleapTestCase
+class NotifiedPeopleRetrieverTest extends TuleapTestCase
 {
     /** @var  UsersRetriever */
     private $retriever;
@@ -57,7 +57,7 @@ class UsersRetrieverTest extends TuleapTestCase
         $this->ugroup_manager       = mock('UgroupManager');
         $this->item_factory   = mock('Docman_ItemFactory');
 
-        $this->retriever = new UsersRetriever(
+        $this->retriever = new NotifiedPeopleRetriever(
             $this->notified_users_dao,
             $this->notified_ugroups_dao,
             $this->item_factory,

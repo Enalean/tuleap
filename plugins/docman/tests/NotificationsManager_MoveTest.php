@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UsersRetriever;
 
 require_once 'bootstrap.php';
@@ -303,6 +304,11 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         $mail_builder          = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
         $users_retriever       = new UsersRetriever(
             $dao,
+            $docman_itemfactory
+        );
+
+        $notified_people_retriever = new NotifiedPeopleRetriever(
+            $dao,
             $ugroups_to_notify_dao,
             $docman_itemfactory,
             $ugroup_manager
@@ -320,7 +326,9 @@ class NotificationsManager_MoveTest extends TuleapTestCase
             $feedback,
             $mail_builder,
             $dao,
-            $users_retriever
+            $users_retriever,
+            mock('Tuleap\Docman\Notifications\UGroupsRetriever'),
+            $notified_people_retriever
         );
         $dnmm->somethingHappen('plugin_docman_event_move', array(
             'group_id' => $group_id,

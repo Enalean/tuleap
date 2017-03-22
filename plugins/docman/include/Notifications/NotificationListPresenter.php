@@ -22,6 +22,7 @@ namespace Tuleap\Docman\Notifications;
 
 use Codendi_HTMLPurifier;
 use Docman_Item;
+use Tuleap\Notifications\UgroupToBeNotifiedPresenter;
 use Tuleap\Notifications\UserToBeNotifiedPresenter;
 use UserManager;
 
@@ -34,12 +35,15 @@ class NotificationListPresenter
     public $monitored_doc;
     public $purified_help;
     public $empty_state;
+    public $ugroups_to_be_notified;
+    public $users_to_be_notified;
 
-    public function __construct(array $listeners, Docman_Item $item)
+    public function __construct(array $users, array $ugroups, Docman_Item $item)
     {
-        $this->has_listeners = count($listeners) > 0;
+        $this->has_listeners = count($users) + count($ugroups) > 0;
 
-        $this->notifications = $this->buildNotificationsFromListeners($listeners, $item);
+        $this->users_to_be_notified   = $this->buildNotificationsFromUsers($users, $item);
+        $this->ugroups_to_be_notified = $this->buildNotificationsFromUGroups($ugroups, $item);
 
         $this->notified_people = dgettext('tuleap-docman', 'Notified people');
         $this->delete_button   = $GLOBALS['Language']->getText('plugin_docman', 'action_delete');
@@ -51,12 +55,12 @@ class NotificationListPresenter
         );
     }
 
-    private function buildNotificationsFromListeners(array $listeners, Docman_Item $item)
+    private function buildNotificationsFromUsers(array $users, Docman_Item $item)
     {
         $user_manager    = UserManager::instance();
         $users_to_notify = array();
 
-        foreach ($listeners as $user_id => $monitored_item) {
+        foreach ($users as $user_id => $monitored_item) {
             $user = $user_manager->getUserById($user_id);
 
             $users_to_notify[] = array(
@@ -73,5 +77,22 @@ class NotificationListPresenter
         }
 
         return $users_to_notify;
+    }
+
+    private function buildNotificationsFromUGroups(array $ugroups, Docman_Item $item)
+    {
+        $groups_to_notify = array();
+
+        foreach ($ugroups as $ugroup_monitored_item) {
+            $monitored_item     = $ugroup_monitored_item->getMonitoredItem();
+            $monitoring_ugroup  = $ugroup_monitored_item->getUgroupPresenter();
+            $groups_to_notify[] = array(
+                'can_be_deleted' => ($monitored_item == $item),
+                'item_title'     => $monitored_item->getTitle(),
+                'ugroup'         => $monitoring_ugroup
+            );
+        }
+
+        return $groups_to_notify;
     }
 }

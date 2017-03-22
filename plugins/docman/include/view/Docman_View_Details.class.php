@@ -1,12 +1,25 @@
 <?php
-
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_Details
-*/
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 
 require_once('Docman_View_Display.class.php');
 
@@ -24,16 +37,16 @@ require_once('Docman_View_ItemDetailsSectionApproval.class.php');
 require_once(dirname(__FILE__).'/../Docman_LockFactory.class.php');
 
 class Docman_View_Details extends Docman_View_Display {
-    
+
     /* protected */ function _getTitle($params) {
         $hp = Codendi_HTMLPurifier::instance();
         return $GLOBALS['Language']->getText('plugin_docman', 'details_title',  $hp->purify($params['item']->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) );
     }
-    
+
     function _content($params, $view = null, $section = null) {
         $url = $params['default_url'];
-        
-        $token = isset($params['token']) ? $params['token'] : null;        
+
+        $token = isset($params['token']) ? $params['token'] : null;
 
         $user_can_manage = $this->_controller->userCanManage($params['item']->getId());
         $user_can_write = $user_can_manage || $this->_controller->userCanWrite($params['item']->getId());
@@ -77,12 +90,20 @@ class Docman_View_Details extends Docman_View_Display {
             $sections['permissions'] = true;
             $details->addSection(new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url'], $token));
         }
-        
+
         if ($user_can_read) {
             $sections['notifications'] = true;
-            $details->addSection(new Docman_View_ItemDetailsSectionNotifications($params['item'], $params['default_url'], $this->_controller->notificationsManager, $token));
+            $details->addSection(
+                new Docman_View_ItemDetailsSectionNotifications(
+                    $params['item'],
+                    $params['default_url'],
+                    $this->_controller->notificationsManager,
+                    $token,
+                    new CollectionOfUgroupMonitoredItemsBuilder($this->_controller->notificationsManager)
+                )
+            );
         }
-        
+
         if ($user_can_read && !is_a($params['item'], 'Docman_Empty')) {
             if ($view && $section == 'approval') {
                 $approval = $view;
@@ -98,12 +119,12 @@ class Docman_View_Details extends Docman_View_Display {
             $logger = $this->_controller->getLogger();
             $details->addSection(new Docman_View_ItemDetailsSectionHistory($params['item'], $params['default_url'], $user_can_manage, $logger));
         }
-        
+
         if ($user_can_read) {
             $sections['references'] = true;
             $details->addSection(new Docman_View_ItemDetailsSectionReferences($params['item'], $params['default_url']));
         }
-        
+
         if ($user_can_read && is_a($params['item'], 'Docman_Folder')) {
             $sections['statistics'] = true;
             $details->addSection(new Docman_View_ItemDetailsSectionStatistics($params['item'], $params['default_url'], $this->_controller, $token));

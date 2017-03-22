@@ -23,17 +23,41 @@
  *
  *
  */
+
+use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
 use Tuleap\Docman\Notifications\NotificationListPresenter;
 
 require_once('Docman_View_ItemDetailsSection.class.php');
 
-class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection {
+class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection
+{
+    /**
+     * @var Docman_NotificationsManager
+     */
     var $notificationsManager;
     var $token;
-    function Docman_View_ItemDetailsSectionNotifications(&$item, $url, &$notificationsManager, $token) {
-        parent::Docman_View_ItemDetailsSection($item, $url, 'notifications', $GLOBALS['Language']->getText('plugin_docman', 'details_notifications'));
-        $this->notificationsManager =& $notificationsManager;
-        $this->token = $token;
+
+    /**
+     * @var Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder
+     */
+    private $ugroups_to_be_notified_builder;
+
+    function Docman_View_ItemDetailsSectionNotifications(
+        &$item,
+        $url,
+        &$notificationsManager,
+        $token,
+        CollectionOfUgroupMonitoredItemsBuilder $ugroups_to_be_notified_builder
+    ) {
+        parent::Docman_View_ItemDetailsSection(
+            $item,
+            $url,
+            'notifications',
+            $GLOBALS['Language']->getText('plugin_docman', 'details_notifications')
+        );
+        $this->notificationsManager           =& $notificationsManager;
+        $this->token                          = $token;
+        $this->ugroups_to_be_notified_builder = $ugroups_to_be_notified_builder;
     }
     function getContent() {
         $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
@@ -75,13 +99,17 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $purifier   = Codendi_HTMLPurifier::instance();
         $content    = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
-            $listeners = $this->notificationsManager->getListeningUsers($this->item);
+            $users   = $this->notificationsManager->getListeningUsers($this->item);
+            $ugroups = $this->ugroups_to_be_notified_builder->getCollectionOfUgroupMonitoredItems($this->item);
+
             $content .= '<fieldset><legend>'. $purifier->purify($GLOBALS['Language']->getText('plugin_docman', 'details_listeners')) .'</legend>';
 
-            $renderer = TemplateRendererFactory::build()->getRenderer(dirname(PLUGIN_DOCMAN_BASE_DIR).'/templates');
+            $renderer = TemplateRendererFactory::build()->getRenderer(
+                dirname(PLUGIN_DOCMAN_BASE_DIR) . '/templates'
+            );
             $content .= $renderer->renderToString(
                 'item-details-notifications',
-                new NotificationListPresenter($listeners, $this->item)
+                new NotificationListPresenter($users, $ugroups, $this->item)
             );
 
             $content .= $this->addListeningUser($itemId);
@@ -150,5 +178,3 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         return $content;
     }
 }
-
-?>

@@ -20,53 +20,42 @@
 
 namespace Tuleap\Docman\Notifications;
 
-use ArrayIterator;
-use Docman_Item;
-use Docman_ItemFactory;
-use Project;
-use UGroupManager;
-
-class UsersRetriever
+class UGroupsRetriever
 {
     /**
-     * @var Dao
+     * @var UgroupsToNotifyDao
      */
-    private $user_dao;
-
+    private $dao;
     /**
-     * @var Docman_ItemFactory
+     * @var \Docman_ItemFactory
      */
     private $item_factory;
 
-
-
-    public function __construct(
-        Dao $user_dao,
-        Docman_ItemFactory $item_factory
-    ) {
-        $this->user_dao       = $user_dao;
-        $this->item_factory   = $item_factory;
+    public function __construct(UgroupsToNotifyDao $dao, \Docman_ItemFactory $item_factory)
+    {
+        $this->dao          = $dao;
+        $this->item_factory = $item_factory;
     }
 
-    public function getListeningUsers(Docman_Item $item, array $users, $type)
+    public function getListeningUGroups(\Docman_Item $item, array $ugroups, $type)
     {
-        $dar = $this->user_dao->searchUserIdByObjectIdAndType(
+        $dar = $this->dao->searchUgroupsByItemIdAndType(
             $item->getId(),
             $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE
         );
         if ($dar) {
-            foreach ($dar as $user) {
-                if (! array_key_exists($user['user_id'], $users)) {
-                    $users[$user['user_id']] = $item;
+            foreach ($dar as $group) {
+                if (! array_key_exists($group['ugroup_id'], $ugroups)) {
+                    $ugroups[$group['ugroup_id']] = $item;
                 }
             }
         }
 
         if ($id = $item->getParentId()) {
-            $item  = $this->item_factory->getItemFromDb($id);
-            $users = $this->getListeningUsers($item, $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+            $item    = $this->item_factory->getItemFromDb($id);
+            $ugroups = $this->getListeningUGroups($item, $ugroups, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
         }
 
-        return $users;
+        return $ugroups;
     }
 }
