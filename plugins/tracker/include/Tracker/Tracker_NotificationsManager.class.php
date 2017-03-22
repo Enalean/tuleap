@@ -19,29 +19,21 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
-use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
+use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\User\RequestFromAutocompleter;
 
 class Tracker_NotificationsManager {
 
     protected $tracker;
 
     /**
-     * @var CollectionOfUserToBeNotifiedPresenterBuilder
-     */
-    private $user_to_be_notified_builder;
-    /**
      * @var UsersToNotifyDao
      */
     private $user_to_notify_dao;
-    /**
-     * @var CollectionOfUgroupToBeNotifiedPresenterBuilder
-     */
-    private $ugroup_to_be_notified_builder;
     /**
      * @var UgroupsToNotifyDao
      */
@@ -50,24 +42,39 @@ class Tracker_NotificationsManager {
      * @var GlobalNotificationsAddressesBuilder
      */
     private $addresses_builder;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
+    /**
+     * @var NotificationListBuilder
+     */
+    private $notification_list_builder;
 
     public function __construct(
         $tracker,
-        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
-        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
+        NotificationListBuilder $notification_list_builder,
         UsersToNotifyDao $user_to_notify_dao,
         UgroupsToNotifyDao $ugroup_to_notify_dao,
-        GlobalNotificationsAddressesBuilder $addresses_builder
+        GlobalNotificationsAddressesBuilder $addresses_builder,
+        UserManager $user_manager,
+        UGroupManager $ugroup_manager
     ) {
         $this->tracker                       = $tracker;
-        $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
         $this->user_to_notify_dao            = $user_to_notify_dao;
-        $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
         $this->ugroup_to_notify_dao          = $ugroup_to_notify_dao;
         $this->addresses_builder             = $addresses_builder;
+        $this->user_manager                  = $user_manager;
+        $this->ugroup_manager                = $ugroup_manager;
+        $this->notification_list_builder     = $notification_list_builder;
     }
 
-    public function process(TrackerManager $tracker_manager, Codendi_Request $request, $current_user) {
+    public function process(TrackerManager $tracker_manager, Codendi_Request $request, $current_user)
+    {
         if ($request->exist('stop_notification')) {
             if ($this->tracker->stop_notification != $request->get('stop_notification')) {
                 $this->tracker->stop_notification = $request->get('stop_notification') ? 1 : 0;
@@ -78,14 +85,17 @@ class Tracker_NotificationsManager {
             }
         }
 
-        if ($global_notification_data = $request->get('global_notification')) {
-            if (!empty($global_notification_data)) {
-                $this->processGlobalNotificationDataForUpdate($global_notification_data);
-            }
-        }
+        $new_global_notification = $request->get('new_global_notification');
+        $global_notification     = $request->get('global_notification');
+        $remove_global           = $request->get('remove_global');
 
-        $this->createNewGlobalNotification($request);
-        $this->deleteGlobalNotification($request);
+        if ($remove_global) {
+            $this->deleteGlobalNotification($remove_global);
+        } else if ($new_global_notification && $new_global_notification['addresses']) {
+            $this->createNewGlobalNotification($new_global_notification);
+        } else if ($global_notification) {
+            $this->updateGlobalNotification($global_notification);
+        }
 
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
         $reminderRenderer = new Tracker_DateReminderRenderer($this->tracker);
@@ -97,27 +107,21 @@ class Tracker_NotificationsManager {
         $reminderRenderer->displayFooter($tracker_manager);
     }
 
-    private function createNewGlobalNotification(Codendi_Request $request)
+    private function createNewGlobalNotification($global_notification_data)
     {
-        if ($request->exist('new_global_notification')) {
-            $global_notification_data = $request->get('new_global_notification');
+        $autocompleter = $this->getAutocompleter($global_notification_data['addresses']);
 
-            if ($global_notification_data['addresses'] !== '') {
-                $this->addGlobalNotification(
-                    $global_notification_data['addresses'],
-                    $global_notification_data['all_updates'],
-                    $global_notification_data['check_permissions']
-                );
-            }
+        if (! $this->isNotificationEmpty($autocompleter)) {
+            $notification_id = $this->notificationAddEmails($global_notification_data, $autocompleter);
+            $this->notificationAddUsers($notification_id, $autocompleter);
+            $this->notificationAddUgroups($notification_id, $autocompleter);
         }
     }
 
-    private function deleteGlobalNotification(Codendi_Request $request)
+    private function deleteGlobalNotification($remove_global)
     {
-        if ($request->exist('remove_global')) {
-            foreach ($request->get('remove_global') as $notification_id => $value) {
-                $this->removeGlobalNotification($notification_id);
-            }
+        foreach ($remove_global as $notification_id => $value) {
+            $this->removeGlobalNotification($notification_id);
         }
     }
 
@@ -161,12 +165,11 @@ class Tracker_NotificationsManager {
             $renderer->renderToPage(
                 'notifications',
                 new PaneNotificationListPresenter(
-                    $notifs,
-                    $this->user_to_be_notified_builder,
-                    $this->ugroup_to_be_notified_builder,
-                    $this->addresses_builder
+                    $this->tracker->getGroupId(),
+                    $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
                 )
             );
+            $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
         } else {
             $ok = false;
             if ( $nb_notifs ) {
@@ -186,32 +189,6 @@ class Tracker_NotificationsManager {
                 }
             } else {
                 echo $GLOBALS['Language']->getText('plugin_tracker_include_type','admin_not_conf');
-            }
-        }
-    }
-
-    /**
-     * this function process global notification data
-     * @param Array<Array> $data
-     */
-    private function processGlobalNotificationDataForUpdate($data)
-    {
-        $global_notifications = $this->getGlobalNotifications();
-        foreach ( $data as $id=>$fields ) {
-            if ( empty($fields['addresses']) ) {
-                continue;
-            }
-
-            if ( !isset($fields['all_updates']) ) {
-                continue;
-            }
-
-            if ( !isset($fields['check_permissions']) ) {
-                continue;
-            }
-
-            if ( array_key_exists($id, $global_notifications) ) {
-                $this->updateGlobalNotification($id, $fields);
             }
         }
     }
@@ -240,8 +217,37 @@ class Tracker_NotificationsManager {
      * @param Integer $check_permissions
      * @return Integer last inserted id in database
      */
-    protected function addGlobalNotification( $addresses, $all_updates, $check_permissions ) {
+    protected function addGlobalNotification($addresses, $all_updates, $check_permissions)
+    {
         return $this->getGlobalDao()->create($this->tracker->id, $addresses, $all_updates, $check_permissions);
+    }
+
+    private function notificationAddEmails($global_notification_data, RequestFromAutocompleter $autocompleter)
+    {
+        $emails          = $autocompleter->getEmails();
+        $notification_id = $this->addGlobalNotification(
+            $this->addresses_builder->transformNotificationAddressesArrayAsString($emails),
+            $global_notification_data['all_updates'],
+            $global_notification_data['check_permissions']
+        );
+
+        return $notification_id;
+    }
+
+    private function notificationAddUsers($notification_id, RequestFromAutocompleter $autocompleter)
+    {
+        $users = $autocompleter->getUsers();
+        foreach ($users as $user) {
+            $this->user_to_notify_dao->insert($notification_id, $user->getId());
+        }
+    }
+
+    private function notificationAddUgroups($notification_id, RequestFromAutocompleter $autocompleter)
+    {
+        $ugroups = $autocompleter->getUgroups();
+        foreach ($ugroups as $ugroup) {
+            $this->ugroup_to_notify_dao->insert($notification_id, $ugroup->getId());
+        }
     }
 
     protected function removeGlobalNotification($id)
@@ -259,16 +265,27 @@ class Tracker_NotificationsManager {
         }
     }
 
-    protected function updateGlobalNotification($global_notification_id, $data) {
-        $feedback = '';
-        $arr_email_address = $this->addresses_builder->transformNotificationAddressesStringAsArray($data['addresses']);
-        if (!util_validateCCList($arr_email_address, $feedback, false)) {
-          $GLOBALS['Response']->addFeedback('error', $feedback);
-        } else {
-          $data['addresses'] = util_cleanup_emails(implode(', ', $arr_email_address));
-          return $this->getGlobalDao()->modify($global_notification_id, $data);
+    protected function updateGlobalNotification(array $notifications)
+    {
+        $global_notifications = $this->getGlobalNotifications();
+        foreach ($notifications as $notification_id => $notification) {
+            if (array_key_exists($notification_id, $global_notifications)) {
+                $autocompleter             = $this->getAutocompleter($notification['addresses']);
+                $emails                    = $autocompleter->getEmails();
+                $notification['addresses'] = $this->addresses_builder->transformNotificationAddressesArrayAsString($emails);
+
+                $this->getGlobalDao()->modify($notification_id, $notification);
+                $this->user_to_notify_dao->deleteByNotificationId($notification_id);
+                $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id);
+
+                if ($this->isNotificationEmpty($autocompleter)) {
+                    $this->removeGlobalNotification($notification_id);
+                } else {
+                    $this->notificationAddUsers($notification_id, $autocompleter);
+                    $this->notificationAddUgroups($notification_id, $autocompleter);
+                }
+            }
         }
-        return false;
     }
 
     /**
@@ -333,5 +350,32 @@ class Tracker_NotificationsManager {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return RequestFromAutocompleter
+     */
+    private function getAutocompleter($addresses)
+    {
+        $autocompleter = new RequestFromAutocompleter(
+            new Rule_Email(),
+            UserManager::instance(),
+            $this->ugroup_manager,
+            $this->user_manager->getCurrentUser(),
+            $this->tracker->getProject(),
+            $addresses
+        );
+        return $autocompleter;
+    }
+
+    /**
+     * @return boolean
+     */
+    private function isNotificationEmpty(RequestFromAutocompleter $autocompleter)
+    {
+        $emails  = $autocompleter->getEmails();
+        $ugroups = $autocompleter->getUgroups();
+        $users   = $autocompleter->getUsers();
+        return empty($emails) && empty($ugroups) && empty($users);
     }
 }

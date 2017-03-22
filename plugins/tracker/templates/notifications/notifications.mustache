@@ -13,7 +13,7 @@
             {{# has_notifications }}
                 {{# notifications }}
                     {{# has_notified }}
-                        <tr>
+                        <tr data-target-input-id="edit_email_{{ notification_id }}">
                             <td>
                                 <div class="tracker-global-notifications-checkbox-cell-read">
                                     <div class="tracker-notification-email-list">
@@ -39,10 +39,19 @@
                                     </div>
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <input type="text"
-                                           class="tracker-global-notification-email"
+                                    <input type="hidden"
+                                           id="edit_email_{{ notification_id }}"
                                            name="global_notification[{{ notification_id }}][addresses]"
-                                           value="{{# emails_to_be_notified }}{{ . }}, {{/ emails_to_be_notified }}">
+                                           class="edit_email tracker-global-notification-email tracker-global-notification-email autocompleter-users-and-ugroups-input"
+                                           placeholder="{{ new_notification_placeholder }}"
+                                           data-project-id="{{ project_id }}"
+                                           data-emails="{{ emails_to_be_notified_json }}"
+                                           data-users="{{ users_to_be_notified_json }}"
+                                           data-ugroups="{{ ugroups_to_be_notified_json }}"
+                                           multiple
+                                           disabled
+                                    />
+                                    <input type="hidden" name="notification_id" value="{{ notification_id }}" disabled />
                                 </div>
                             </td>
                             <td class="tracker-global-notifications-checkbox-cell">
@@ -50,10 +59,11 @@
                                     {{# all_updates }}<i class="icon-ok"></i>{{/ all_updates }}
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <input type="hidden" name="global_notification[{{ notification_id }}][all_updates]" value="0" />
+                                    <input type="hidden" name="global_notification[{{ notification_id }}][all_updates]" value="0" disabled />
                                     <input type="checkbox"
                                            name="global_notification[{{ notification_id }}][all_updates]"
                                            value="1"
+                                           disabled
                                            {{# all_updates }}data-checked="1" checked{{/ all_updates }} />
                                 </div>
                             </td>
@@ -62,10 +72,11 @@
                                     {{# check_permissions }}<i class="icon-ok"></i>{{/ check_permissions }}
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <input type="hidden" name="global_notification[{{ notification_id }}][check_permissions]" value="0" />
+                                    <input type="hidden" name="global_notification[{{ notification_id }}][check_permissions]" value="0" disabled />
                                     <input type="checkbox"
                                            name="global_notification[{{ notification_id }}][check_permissions]"
                                            value="1"
+                                           disabled
                                            {{# check_permissions }}data-checked="1" checked{{/ check_permissions }} />
                                 </div>
                             </td>
@@ -118,7 +129,14 @@
             {{/ has_notifications }}
             <tr>
                 <td>
-                    <input class="tracker-global-notification-email" type="text" name="new_global_notification[addresses]" placeholder="{{ new_notification_placeholder }}" )="">
+                    <input type="hidden"
+                           id="add_email"
+                           name="new_global_notification[addresses]"
+                           class="tracker-global-notification-email autocompleter-users-and-ugroups-input"
+                           placeholder="{{ new_notification_placeholder }}"
+                           data-project-id="{{ project_id }}"
+                           multiple
+                    />
                 </td>
                 <td class="tracker-global-notifications-checkbox-cell">
                     <input type="hidden" name="new_global_notification[all_updates]" value="0" />

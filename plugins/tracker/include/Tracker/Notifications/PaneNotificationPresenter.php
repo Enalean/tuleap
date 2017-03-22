@@ -32,13 +32,20 @@ class PaneNotificationPresenter
     public $users_to_be_notified;
     public $ugroups_to_be_notified;
 
+    public $users_to_be_notified_json;
+    public $ugroups_to_be_notified_json;
+    public $emails_to_be_notified_json;
+
     public $has_notified;
 
     public function __construct(
         Tracker_GlobalNotification $notification,
         array $emails_to_be_notified,
         array $users_to_be_notified,
-        array $ugroups_to_be_notified
+        array $ugroups_to_be_notified,
+        $emails_to_be_notified_json,
+        $users_to_be_notified_json,
+        $ugroups_to_be_notified_json
     ) {
         $this->notification_id   = $notification->getId();
         $this->all_updates       = $notification->isAllUpdates();
@@ -47,6 +54,10 @@ class PaneNotificationPresenter
         $this->users_to_be_notified   = $users_to_be_notified;
         $this->ugroups_to_be_notified = $ugroups_to_be_notified;
         $this->emails_to_be_notified  = $emails_to_be_notified;
+
+        $this->users_to_be_notified_json   = $users_to_be_notified_json;
+        $this->ugroups_to_be_notified_json = $ugroups_to_be_notified_json;
+        $this->emails_to_be_notified_json  = $emails_to_be_notified_json;
 
         $this->has_notified = count($this->emails_to_be_notified) > 0
             || count($this->users_to_be_notified) > 0

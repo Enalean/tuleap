@@ -34,6 +34,7 @@ use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
+use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
@@ -1356,13 +1357,19 @@ class trackerPlugin extends Plugin {
     private function getTrackerNotificationManager() {
         $user_to_notify_dao   = $this->getUserToNotifyDao();
         $ugroup_to_notify_dao = $this->getUgroupToNotifyDao();
+        $notification_list_builder = new NotificationListBuilder(
+            new UGroupDao(),
+            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
+            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
+        );
         return new Tracker_NotificationsManager(
             $this,
-            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
-            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
+            $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            new GlobalNotificationsAddressesBuilder()
+            new GlobalNotificationsAddressesBuilder(),
+            UserManager::instance(),
+            new UGroupManager()
         );
     }
 }

@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
         toggle_button.addEventListener('click', toggleEditMode);
     });
 
+    initializeAutocompleter('#add_email');
+    initializeAutocompleter('.edit_email');
+
     function toggleEditMode() {
         var tr    = this.parentNode.parentNode.parentNode,
             checkboxes = tr.querySelectorAll('.tracker-global-notifications-checkbox-cell-write > input[type=checkbox]'),
@@ -35,12 +38,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
         [].forEach.call(cells, function (cell) {
             cell.classList.toggle('tracker-global-notifications-checkbox-cell-hidden');
+            var inputs = cell.getElementsByTagName('input');
+            [].forEach.call(inputs, function (input) {
+                input.disabled = cell.classList.contains('tracker-global-notifications-checkbox-cell-hidden');
+            });
         });
+
+        var input            = document.getElementById(tr.dataset.targetInputId),
+            selected_ugroups = JSON.parse(input.dataset.ugroups),
+            selected_users   = JSON.parse(input.dataset.users),
+            selected_emails  = JSON.parse(input.dataset.emails);
+        tuleap.addDataToAutocompleter(input, selected_ugroups.concat(selected_users).concat(selected_emails));
+        tuleap.enableAutocompleter(input);
     }
 
     function resetCheckboxesToInitialState(checkboxes) {
         [].forEach.call(checkboxes, function (checkbox) {
             checkbox.checked = !!checkbox.dataset.checked;
+        });
+    }
+
+    function initializeAutocompleter(input_id) {
+        var inputs = document.querySelectorAll(input_id);
+
+        if (! inputs) {
+            return;
+        }
+
+        [].forEach.call(inputs, function (input) {
+            tuleap.loadUserAndUgroupAutocompleter(input);
+            tuleap.addDataToAutocompleter(input);
         });
     }
 });

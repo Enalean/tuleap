@@ -27,11 +27,22 @@ var tuleap = tuleap || {};
             return '<i class="icon-group autocompleter-icon-group"></i>' + tuleap.escaper.html(item.text);
 
         } else if (type === 'user') {
-            return '<div class="avatar autocompleter-avatar"></div>' + tuleap.escaper.html(item.text);
+            return formatUser(item);
 
         } else {
             return tuleap.escaper.html(item.text);
         }
+    }
+
+    function formatUser(user) {
+        if (user.loading) {
+            return tuleap.escaper.html(user.text);
+        }
+
+        return '<div class="avatar autocompleter-avatar"> \
+                ' + (user.has_avatar ? '<img src="' + tuleap.escaper.html(user.avatar_url) +'">' : '') +' \
+            </div> \
+            ' + tuleap.escaper.html(user.text);
     }
 
     function createSearchChoice(term, data) {
@@ -46,6 +57,14 @@ var tuleap = tuleap || {};
             };
         }
     }
+
+    tuleap.addDataToAutocompleter = function (input, items) {
+        $(input).select2('data', items);
+    };
+
+    tuleap.enableAutocompleter = function (input) {
+        $(input).select2('enable', true);
+    };
 
     tuleap.loadUserAndUgroupAutocompleter = function (input) {
         if (! input) {

@@ -132,7 +132,7 @@ if ($json_format) {
             'type'       => 'user',
             'id'         => $user['display_name'],
             'text'       => $user['display_name'],
-            'login'      => $user['login'],
+            'avatar_url' => '/users/' . $user['login'] . '/avatar.png',
             'has_avatar' => (bool)$user['has_avatar']
         );
     }

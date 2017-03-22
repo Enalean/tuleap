@@ -33,6 +33,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
+use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
@@ -2075,15 +2076,21 @@ EOS;
      * @return Tracker_NotificationsManager
      */
     public function getNotificationsManager() {
-        $user_to_notify_dao   = new UsersToNotifyDao();
-        $ugroup_to_notify_dao = new UgroupsToNotifyDao();
+        $user_to_notify_dao        = new UsersToNotifyDao();
+        $ugroup_to_notify_dao      = new UgroupsToNotifyDao();
+        $notification_list_builder = new NotificationListBuilder(
+            new UGroupDao(),
+            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
+            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
+        );
         return new Tracker_NotificationsManager(
             $this,
-            new CollectionOfUserToBeNotifiedPresenterBuilder($user_to_notify_dao),
-            new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao),
+            $notification_list_builder,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            new GlobalNotificationsAddressesBuilder()
+            new GlobalNotificationsAddressesBuilder(),
+            UserManager::instance(),
+            new UGroupManager()
         );
     }
 

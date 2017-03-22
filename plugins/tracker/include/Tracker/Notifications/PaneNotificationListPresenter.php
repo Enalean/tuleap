@@ -37,26 +37,12 @@ class PaneNotificationListPresenter
     public $remove_notif_desc;
     public $remove_notif_title;
     public $remove_notif_confirm;
+    public $project_id;
 
-    /**
-     * @var CollectionOfUserToBeNotifiedPresenterBuilder
-     */
-    private $user_to_be_notified_builder;
-    /**
-     * @var CollectionOfUgroupToBeNotifiedPresenterBuilder
-     */
-    private $ugroup_to_be_notified_builder;
-
-    public function __construct(
-        array $notifications,
-        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
-        CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder,
-        GlobalNotificationsAddressesBuilder $addresses_builder
-    ) {
-        $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
-        $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
-
-        $this->notifications      = $this->getNotificationsPresenter($notifications, $addresses_builder);
+    public function __construct($project_id, array $notifications)
+    {
+        $this->project_id         = $project_id;
+        $this->notifications      = $notifications;
         $this->empty_notification = dgettext('tuleap-tracker', 'No notification set');
         $this->has_notifications  = (bool)(count($notifications) > 0);
 
@@ -77,24 +63,5 @@ class PaneNotificationListPresenter
         $this->remove_notif_confirm         = dgettext('tuleap-tracker', 'Confirm deletion');
         $this->add_notification             = dgettext('tuleap-tracker', 'Add notification');
         $this->new_notification_placeholder = dgettext('tuleap-tracker', 'Enter here a comma separated email addresses list to be notified');
-    }
-
-    private function getNotificationsPresenter(array $notifications, GlobalNotificationsAddressesBuilder $addresses_builder)
-    {
-        $notifications_presenters = array();
-        foreach ($notifications as $notification) {
-            $emails_to_be_notified = $addresses_builder->transformNotificationAddressesStringAsArray(
-                $notification->getAddresses()
-            );
-            $user_presenters   = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
-            $ugroup_presenters = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
-            $notifications_presenters[] = new PaneNotificationPresenter(
-                $notification,
-                $emails_to_be_notified,
-                $user_presenters,
-                $ugroup_presenters
-            );
-        }
-        return $notifications_presenters;
     }
 }

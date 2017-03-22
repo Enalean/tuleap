@@ -42,4 +42,14 @@ class GlobalNotificationsAddressesBuilder
 
         return $addresses;
     }
+
+    /**
+     * @return string
+     */
+    public function transformNotificationAddressesArrayAsString($addresses)
+    {
+        $addresses = implode(',', $addresses);
+
+        return $addresses;
+    }
 }

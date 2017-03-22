@@ -74,4 +74,15 @@ class UsersToNotifyDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function insert($notification_id, $user_id)
+    {
+        $notification_id = $this->da->escapeInt($notification_id);
+        $user_id         = $this->da->escapeInt($user_id);
+
+        $sql = "REPLACE INTO tracker_global_notification_users(notification_id, user_id)
+                VALUES ($notification_id, $user_id)";
+
+        return $this->update($sql);
+    }
 }
