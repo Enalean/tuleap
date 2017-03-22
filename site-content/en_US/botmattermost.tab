@@ -9,6 +9,7 @@ plugin_botmattermost	alert_success_edit_bot	Bot successfully edited
 plugin_botmattermost	alert_error_empty_input	The name and the webhook URL input must be filled
 plugin_botmattermost	alert_error_invalid_url	Invalid URL
 plugin_botmattermost	alert_error_invalid_id	Invalid bot ID
+plugin_botmattermost	alert_error_invalid_post_arguments	Invalid post argument(s)
 plugin_botmattermost	alert_error_bot_already_exist	A bot with the same name and the same webhook URL already exists
 plugin_botmattermost	alert_error_bot_not_found	No bot found
 plugin_botmattermost	alert_error_channels_not_found	No channels found
@@ -24,7 +25,7 @@ plugin_botmattermost	configuration_modal_add_title	Add bot
 plugin_botmattermost	configuration_modal_delete_title	Delete bot
 plugin_botmattermost	configuration_label_bot_id	Id
 plugin_botmattermost	configuration_label_bot_name	Bot name
-plugin_botmattermost	configuration_label_hook_url	Webhook channel URL
+plugin_botmattermost	configuration_label_hook_url	Webhook URL
 plugin_botmattermost	configuration_label_avatar_url	Avatar URL
 plugin_botmattermost	configuration_label_channels_handles	Channel handles list
 plugin_botmattermost	configuration_input_bot_name	Bot name...

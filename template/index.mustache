@@ -11,13 +11,11 @@
                 </button>
                 {{> modal-add-bot }}
             </div>
-            <table class="tlp-table">
+            <table id="bot_list" class="tlp-table">
                 <thead>
                 <tr>
-                    <th>{{ table_col_avatar }}</th>
                     <th>{{ table_col_name }}</th>
                     <th>{{ table_col_webhook_url }}</th>
-                    <th>{{ table_col_channels_handles }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -25,16 +23,11 @@
                     <tbody>
                     {{# bots }}
                         <tr>
-                            <td>
-                                {{# getAvatarUrl }}
-                                    <img src="{{ getAvatarUrl }}"
-                                         width="30"
-                                         height="30">
-                                {{/ getAvatarUrl }}
+                            <td class="bot-name">
+                                {{# getAvatarUrl }}<img class="bot-avatar" src="{{ getAvatarUrl }}">{{/ getAvatarUrl }}
+                                {{ getName }}
                             </td>
-                            <td>{{ getName }}</td>
                             <td>{{ getWebhookUrl }}</td>
-                            <td>{{ getChannelsNamesInOneRow }}</td>
                             <td class="tlp-table-cell-actions">
                                 <button id="button-modal-edit-bot-{{ getId }}" type="button"
                                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"

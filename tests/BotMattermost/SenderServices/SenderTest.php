@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,18 +45,14 @@ class SenderTest extends TuleapTestCase
         );
     }
 
-    public function itVerifiedThatPushNotification()
+    public function itVerifiedThatPushNotificationForEachChannels()
     {
         $text = '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}';
-        $bot1 = mock('Tuleap\\BotMattermost\\Bot\\Bot');
-        $bot2 = mock('Tuleap\\BotMattermost\\Bot\\Bot');
-        stub($bot1)->getChannelsNames()->returns(array('channel1', 'channel2'));
-        stub($bot1)->getWebhookUrl()->returns('https:\/\/webhook_url.com');
-        stub($bot2)->getChannelsNames()->returns(array('channel1'));
-        stub($bot2)->getWebhookUrl()->returns('https:\/\/webhook_url.com');
-        $bots = array($bot1, $bot2);
+        $bot = mock('Tuleap\\BotMattermost\\Bot\\Bot');
+        $channels = array('channel1', 'channel2');
+        stub($bot)->getWebhookUrl()->returns('https:\/\/webhook_url.com');
 
-        $this->sender->pushNotifications($bots, $text);
-        $this->botMattermost_client->expectCallCount('sendMessage', 3);
+        $this->sender->pushNotification($bot, $channels, $text);
+        $this->botMattermost_client->expectCallCount('sendMessage', 2);
     }
 }

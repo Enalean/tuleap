@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,11 +19,11 @@
  */
 namespace Tuleap\BotMattermost\Bot;
 
+use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
+use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
 use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
-use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
-use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 
 class BotFactory
@@ -41,16 +41,14 @@ class BotFactory
     public function save(
         $bot_name,
         $bot_webhook_url,
-        $bot_avatar_url,
-        $bot_channels_names
+        $bot_avatar_url
     ) {
         $channels_names = $this->convertChannelsToArray($bot_channels_names);
         if (! $this->doesBotAlreadyExist($bot_name, $bot_webhook_url)) {
-            $id = $this->dao->addBotAndChannels(
+            $id = $this->dao->addBot(
                 trim($bot_name),
                 trim($bot_webhook_url),
-                trim($bot_avatar_url),
-                $channels_names
+                trim($bot_avatar_url)
             );
             if (! $id) {
                 throw new CannotCreateBotException();
@@ -63,8 +61,7 @@ class BotFactory
             $id,
             $bot_name,
             $bot_webhook_url,
-            $bot_avatar_url,
-            $channels_names
+            $bot_avatar_url
         );
     }
 
@@ -72,12 +69,9 @@ class BotFactory
         $bot_name,
         $bot_webhook_url,
         $bot_avatar_url,
-        $bot_channels_names,
         $bot_id
     ) {
-        $channels_names = $this->convertChannelsToArray($bot_channels_names);
-        if (! $this->dao->updateBotAndChannels(
-            $channels_names,
+        if (! $this->dao->updateBot(
             trim($bot_name),
             trim($bot_webhook_url),
             trim($bot_avatar_url),
@@ -94,7 +88,7 @@ class BotFactory
 
     public function deleteBotById($id)
     {
-        if (! $this->dao->deleteBotAndChannelsByBotId($id)) {
+        if (! $this->dao->deleteBot($id)) {
             throw new CannotDeleteBotException();
         }
     }
@@ -110,19 +104,11 @@ class BotFactory
         }
         $bots = array();
         foreach ($dar as $row) {
-            $id = $row['id'];
-            try {
-                $channels = $this->getChannelsByBotId($id);
-            } catch (ChannelsNotFoundException $e) {
-                throw $e;
-            }
-
             $bots[] = new Bot(
-                $id,
+                $row['id'],
                 $row['name'],
                 $row['webhook_url'],
-                $row['avatar_url'],
-                $channels
+                $row['avatar_url']
             );
         }
 
@@ -134,41 +120,18 @@ class BotFactory
         return $this->dao->searchBotByNameAndByWebhookUrl($name, $webhook_url);
     }
 
-    /**
-     * @return array
-     */
-    private function getChannelsByBotId($bot_id)
-    {
-        $dar = $this->dao->searchChannelsByBotId($bot_id);
-        if ($dar === false) {
-            throw new ChannelsNotFoundException();
-        }
-        $channels = array();
-        foreach($dar as $row) {
-            $channels[] = $row['name'];
-        }
-
-        return $channels;
-    }
-
     public function getBotById($bot_id)
     {
         $row = $this->dao->searchBotById($bot_id);
         if ($row === null) {
             throw new BotNotFoundException();
         }
-        try {
-            $channels = $this->getChannelsByBotId($bot_id);
-        } catch (ChannelsNotFoundException $e) {
-            throw $e;
-        }
 
         return new Bot(
-            $bot_id,
+            $row['id'],
             $row['name'],
             $row['webhook_url'],
-            $row['avatar_url'],
-            $channels
+            $row['avatar_url']
         );
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,13 @@
 
 namespace Tuleap\BotMattermost;
 
+
+use Exception;
 use HTTPRequest;
 use CSRFSynchronizerToken;
-use TemplateRendererFactory;
 use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
 use Valid_HTTPURI;
-use Valid_Numeric;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
@@ -34,7 +34,7 @@ use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
-use Tuleap\BotMattermost\AdminPresenter;
+
 
 class AdminController
 {
@@ -98,8 +98,7 @@ class AdminController
                 $this->bot_factory->save(
                         $request->get('bot_name'),
                         $request->get('webhook_url'),
-                        $request->get('avatar_url'),
-                        $request->get('channels_names')
+                        $request->get('avatar_url')
                 );
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_success_add_bot'));
             } catch (CannotCreateBotException $e) {
@@ -136,7 +135,6 @@ class AdminController
                     $request->get('bot_name'),
                     $request->get('webhook_url'),
                     $request->get('avatar_url'),
-                    $request->get('channels_names'),
                     $id
                 );
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_success_edit_bot'));

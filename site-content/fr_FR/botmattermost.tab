@@ -9,6 +9,7 @@ plugin_botmattermost	alert_success_edit_bot	Robot édité avec succès
 plugin_botmattermost	alert_error_empty_input	les champs "nom du robot" et "URL du salon de discussion (webhook)" doivent être renseignés
 plugin_botmattermost	alert_error_invalid_url	URL invalide
 plugin_botmattermost	alert_error_invalid_id	L'identifiant du robot est invalide
+plugin_botmattermost	alert_error_invalid_post_arguments	Les arguments soumis lors du formulaire sont invalides
 plugin_botmattermost	alert_error_bot_already_exist	Un robot avec le même nom et le même lien de salon de discussion (webhook) existe déjà
 plugin_botmattermost	alert_error_bot_not_found	Aucun robot n'a été trouvé
 plugin_botmattermost	alert_error_channels_not_found	Aucun salon de discussion n'a été trouvé
@@ -24,7 +25,7 @@ plugin_botmattermost	configuration_modal_add_title	Ajouter un robot
 plugin_botmattermost	configuration_modal_delete_title	Supprimer un robot
 plugin_botmattermost	configuration_label_bot_id	Id
 plugin_botmattermost	configuration_label_bot_name	Nom du robot
-plugin_botmattermost	configuration_label_hook_url	URL du salon de discussion (webhook)
+plugin_botmattermost	configuration_label_hook_url	URL du webhook
 plugin_botmattermost	configuration_label_avatar_url	URL de l'avatar
 plugin_botmattermost	configuration_label_channels_handles	Liste des identifiants des salons de discussion
 plugin_botmattermost	configuration_input_bot_name	Nom...

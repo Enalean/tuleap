@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,20 +26,17 @@ class Bot {
     private $name;
     private $webhook_url;
     private $avatar_url;
-    private $channels_names;
 
     public function __construct(
         $id,
         $name,
         $webhook_url,
-        $avatar_url,
-        array $channels_names
+        $avatar_url
     ) {
         $this->id             = $id;
         $this->name           = $name;
         $this->webhook_url    = $webhook_url;
         $this->avatar_url     = $avatar_url;
-        $this->channels_names = $channels_names;
     }
 
     public function getId()
@@ -62,18 +59,8 @@ class Bot {
         return $this->avatar_url;
     }
 
-    public function getChannelsNames()
-    {
-        return $this->channels_names;
-    }
-
     public function getChannelsNamesInOneRow()
     {
-        return implode(' | ', $this->channels_names);
-    }
-
-    public function getOneChannelNamePerRow()
-    {
-        return implode(PHP_EOL, $this->channels_names);
+        return ''; // no more channels linked to the bot
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,30 +31,7 @@ class BotDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function addBotAndChannels(
-        $bot_name,
-        $bot_webhook_url,
-        $bot_avatar_url,
-        array $bot_channels_names
-    ) {
-        $this->da->startTransaction();
-
-        $id = $this->addBot($bot_name, $bot_webhook_url, $bot_avatar_url);
-        if(! $id) {
-            $this->da->rollback();
-            return false;
-        } else {
-            $dar = $this->addChannels($bot_channels_names, $id);
-            if($dar === false) {
-                $this->da->rollback();
-                return false;
-            }
-        }
-
-        return $this->da->commit();
-    }
-
-    private function addBot($bot_name, $bot_webhook_url, $bot_avatar_url)
+    public function addBot($bot_name, $bot_webhook_url, $bot_avatar_url)
     {
         $name           = $this->da->quoteSmart($bot_name);
         $webhook_url    = $this->da->quoteSmart($bot_webhook_url);
@@ -66,47 +43,7 @@ class BotDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
-    private function addChannels(array $bot_channels_names, $bot_id)
-    {
-        $channels = array();
-        foreach($bot_channels_names as $bot_channel_name) {
-            $channels[] = $this->getChannelValueSqlForInsert($bot_channel_name, $bot_id);
-        }
-
-        $sql = "INSERT INTO plugin_botmattermost_channel (bot_id, name)
-                VALUES ".implode(',', $channels);
-
-        return $this->update($sql);
-    }
-
-    private function getChannelValueSqlForInsert($bot_channel_name, $bot_id)
-    {
-        $id           = $this->da->escapeInt($bot_id);
-        $channel_name = $this->da->quoteSmart($bot_channel_name);
-
-        return "($id, $channel_name)";
-    }
-
-    public function deleteBotAndChannelsByBotId($bot_id)
-    {
-        $this->da->startTransaction();
-
-        $dar = $this->deleteBotById($bot_id);
-        if ($dar === false) {
-            $this->da->rollback();
-            return false;
-        } else {
-            $dar = $this->deleteChannelsByBotId($bot_id);
-            if ($dar === false) {
-                $this->da->rollback();
-                return false;
-            }
-        }
-
-        return $this->da->commit();
-    }
-
-    private function deleteBotById($bot_id)
+    public function deleteBot($bot_id)
     {
         $id = $this->da->escapeInt($bot_id);
 
@@ -114,38 +51,6 @@ class BotDao extends DataAccessObject
                 WHERE id = $id";
 
         return $this->update($sql);
-    }
-
-    private function deleteChannelsByBotId($bot_id)
-    {
-        $id = $this->da->escapeInt($bot_id);
-
-        $sql = "DELETE FROM plugin_botmattermost_channel
-                WHERE bot_id = $id";
-
-        return $this->update($sql);
-    }
-
-    public function updateBotAndChannels(
-        array $channels_names,
-        $name,
-        $webhook_url,
-        $avatar_url,
-        $id
-    ) {
-        $this->da->startTransaction();
-
-        if(! $this->updateBot($name, $webhook_url, $avatar_url, $id)) {
-            $this->da->rollback();
-            return false;
-        }
-
-        if(! $this->updateChannels($channels_names, $id)) {
-            $this->da->rollback();
-            return false;
-        }
-
-        return $this->da->commit();
     }
 
     public function updateBot($bot_name, $bot_webhook_url, $bot_avatar_url, $id)
@@ -164,30 +69,6 @@ class BotDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    private function updateChannels(array $channels_names, $id)
-    {
-        $id = $this->da->escapeInt($id);
-        if (! $this->deleteChannelsByBotId($id)) {
-            return false;
-        }
-        if ($this->hasValue($channels_names)) {
-            if(! $this->addChannels($channels_names, $id)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function hasValue(array $array)
-    {
-        if (empty($array)) {
-            return false;
-        }
-
-        return (trim(implode('', $array)) !== '');
-    }
-
     public function searchBotByNameAndByWebhookUrl($bot_name, $bot_webhook_url)
     {
         $name        = $this->da->quoteSmart($bot_name);
@@ -199,17 +80,6 @@ class BotDao extends DataAccessObject
                     AND webhook_url = $webhook_url";
 
         return $this->retrieveFirstRow($sql);
-    }
-
-    public function searchChannelsByBotId($bot_id)
-    {
-        $id = $this->da->escapeInt($bot_id);
-
-        $sql = "SELECT *
-                FROM plugin_botmattermost_channel
-                WHERE bot_id = $id";
-
-        return $this->retrieve($sql);
     }
 
     public function searchBotById($bot_id)
