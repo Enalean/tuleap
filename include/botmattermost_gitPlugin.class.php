@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'autoload.php';
-require_once 'constants.php';
-
-use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Bot\BotDao;
+use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
-use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
-use Tuleap\BotMattermostGit\BotGit\BotGitDao;
-use Tuleap\BotMattermostGit\Controller;
+use Tuleap\BotMattermostGit\BotMattermostGitNotification\Dao;
+use Tuleap\BotMattermostGit\BotMattermostGitNotification\Factory;
+use Tuleap\BotMattermostGit\BotMattermostGitNotification\Validator;
 use Tuleap\BotMattermostGit\Plugin\PluginInfo;
+use Tuleap\BotMattermostGit\Controller;
 use Tuleap\BotMattermostGit\SenderServices\GitNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\GitNotificationSender;
+
+require_once 'autoload.php';
+require_once 'constants.php';
 
 
 class botmattermost_gitPlugin extends Plugin
@@ -43,6 +44,7 @@ class botmattermost_gitPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->addHook('cssfile');
+        $this->addHook('javascript_file');
         if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
             require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
         }
@@ -92,8 +94,8 @@ class botmattermost_gitPlugin extends Plugin
                     new ClientBotMattermost(),
                     $logger
                 ),
-                new BotGitFactory(
-                    new BotGitDao(),
+                new Factory(
+                    new Dao(),
                     new BotFactory(new BotDao())
                 ),
                 $repository,
@@ -115,11 +117,19 @@ class botmattermost_gitPlugin extends Plugin
         }
     }
 
+    public function javascript_file()
+    {
+        $git_plugin = PluginManager::instance()->getPluginByName('git');
+        if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/autocompleter.js"></script>';
+        }
+    }
+
     public function process()
     {
         $request = HTTPRequest::instance();
         if ($this->isAllowed($request->getProject()->getID())) {
-            $this->getController($request)->save();
+            $this->getController($request)->process();
         }
     }
 
@@ -134,8 +144,9 @@ class botmattermost_gitPlugin extends Plugin
                 new GitDao(),
                 ProjectManager::instance()
             ),
-            new BotGitFactory(new BotGitDao(), $botFactory),
-            $botFactory
+            new Factory(new Dao(), $botFactory),
+            $botFactory,
+            new Validator($botFactory)
         );
     }
 }

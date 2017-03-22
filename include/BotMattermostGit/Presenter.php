@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,86 +20,63 @@
 
 namespace Tuleap\BotMattermostGit;
 
+use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use GitRepository;
 use GitViews_RepoManagement_Pane_Notification;
 
 class Presenter
 {
-    private $repository;
-    private $bots;
     /**
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
+    public $bot_assigned;
+    public $bots;
+
+    private $repository;
 
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
         GitRepository $repository,
-        array $bots
+        array $bots,
+        $bot_assigned
     ) {
-        $this->csrf_token = $csrf_token;
-        $this->repository = $repository;
-        $this->bots       = $bots;
-    }
+        $this->csrf_token    = $csrf_token;
+        $this->repository    = $repository;
+        $this->bots          = $bots;
+        $this->bot_assigned  = $bot_assigned;
 
-    public function project_id()
-    {
-        return $this->repository->getProjectId();
-    }
+        $this->project_id    = $this->repository->getProjectId();
+        $this->repository_id = $this->repository->getId();
+        $this->has_bots      = ! empty($bots);
+        $this->title         = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'title');
 
-    public function pane_identifier()
-    {
-        return GitViews_RepoManagement_Pane_Notification::ID;
-    }
+        $this->modal_add_title          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_configure_notification');
+        $this->modal_edit_title         = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_edit_configure_notification');
+        $this->modal_delete_title       = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_delete_configure_notification');
+        $this->modal_delete_content     = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_delete_content');
 
-    public function repository_id()
-    {
-        return $this->repository->getId();
-    }
+        $this->label_bot_id                    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_id');
+        $this->label_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
+        $this->label_hook_url                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_hook_url');
+        $this->label_avatar_url                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_avatar_url');
+        $this->label_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_label_channels_handles');
+        $this->input_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_bot_name');
+        $this->input_url                       = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_url');
+        $this->input_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_input_channels_handles');
+        $this->purified_info_channels_handles  = Codendi_HTMLPurifier::instance()->purify(
+            $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_info_channels_handles'),
+            CODENDI_PURIFIER_LIGHT
+        );
 
-    public function btn_save()
-    {
-        return $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
-    }
+        $this->any_configured_notification = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification');
+        $this->empty_bot_list = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
 
-    public function title()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_git', 'title');
-    }
-
-    public function bots()
-    {
-        return $this->bots;
-    }
-
-    public function botListIsEmpty()
-    {
-        return count($this->bots) === 0;
-    }
-
-    public function empty_bot_list()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
-    }
-
-    public function table_col_name()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
-    }
-
-    public function table_col_webhook_url()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_webhook_url');
-    }
-
-    public function table_title()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_title');
-    }
-
-    public function description()
-    {
-        return $GLOBALS['Language']->getText('plugin_botmattermost_git', 'description');
+        $this->button_config  = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'button_configure_notification');
+        $this->button_confirm = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'button_confirm');
+        $this->button_close   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_close');
+        $this->button_delete  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_delete');
+        $this->button_edit    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_edit');
     }
 }

@@ -33,7 +33,7 @@ find www/themes -name '*.scss' | xargs rm -f
 
 # www
 %{__mkdir} -p $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_git/www
-%{__cp} -ar www/index.php www/themes $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_git/www
+%{__cp} -ar www/index.php www/themes www/scripts $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/botmattermost_git/www
 
 
 %pre

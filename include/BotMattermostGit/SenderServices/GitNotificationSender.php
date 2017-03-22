@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 use GitRepository;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\SenderServices\Sender;
-use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
+use Tuleap\BotMattermostGit\BotMattermostGitNotification\Factory;
 
 class GitNotificationSender
 {
@@ -35,7 +35,7 @@ class GitNotificationSender
 
     public function __construct(
         Sender $sender,
-        BotGitFactory $bot_git_factory,
+        Factory $bot_git_factory,
         GitRepository $repository,
         GitNotificationBuilder $notification_builder
     ) {
@@ -48,10 +48,10 @@ class GitNotificationSender
     public function process(array $params)
     {
         try {
-            $bots = $this->bot_git_factory->getBotsByRepositoryId($this->repository->getId());
+
             $text = $this->notification_builder->buildNotificationText($params);
-            if (! empty($bots)) {
-                $this->sender->pushNotifications($bots, $text);
+            if ($bot_assignment = $this->bot_git_factory->getBotNotification($this->repository->getId())) {
+                $this->sender->pushNotification($bot_assignment->getBot(), $bot_assignment->getChannels(), $text);
             }
         } catch (BotNotFoundException $e) {
             // Nothing to do

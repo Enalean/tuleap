@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,18 +20,18 @@
 
 namespace Tuleap\BotMattermostGit;
 
-use HTTPRequest;
+
 use CSRFSynchronizerToken;
+use Exception;
+use Feedback;
 use GitRepository;
 use GitRepositoryFactory;
-use Tuleap\BotMattermost\Exception\CannotCreateBotException;
-use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
-use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\BotMattermostGit\BotGit\BotGitFactory;
-use Valid_UInt;
+use HTTPRequest;
 use TemplateRendererFactory;
-use Feedback;
-use Exception;
+use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermostGit\BotMattermostGitNotification\Factory;
+use Tuleap\BotMattermostGit\BotMattermostGitNotification\Validator;
+use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
 
 class Controller
 {
@@ -46,112 +46,102 @@ class Controller
         HTTPRequest $request,
         CSRFSynchronizerToken $csrf,
         GitRepositoryFactory $git_repository_factory,
-        BotGitFactory $bot_git_factory,
-        BotFactory $bot_factory
+        Factory $bot_git_factory,
+        BotFactory $bot_factory,
+        Validator $validator
     ) {
         $this->request                = $request;
         $this->csrf                   = $csrf;
         $this->git_repository_factory = $git_repository_factory;
         $this->bot_git_factory        = $bot_git_factory;
         $this->bot_factory            = $bot_factory;
+        $this->validator              = $validator;
+    }
+
+    public function process()
+    {
+        $action = $this->request->get('action');
+
+        try {
+            switch ($action) {
+                case 'add_bot':
+                    $this->addBotNotification();
+                    break;
+                case 'edit_bot':
+                    $this->editBotNotification();
+                    break;
+                case 'delete_bot':
+                    $this->deleteBotNotification();
+                    break;
+                default:
+                    $this->displayIndex();
+            }
+
+            $this->displayIndex();
+        } catch (Exception $exception) {
+            $this->redirectWithErrorFeedback($exception);
+        }
     }
 
     public function render(GitRepository $repository)
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR.'/template');
-        $presenter_bots = array();
-        foreach ($this->bot_git_factory->getBots() as $bot) {
-            $presenter_bots[] = $bot->toArray($repository->getId());
+        $renderer      = TemplateRendererFactory::build()->getRenderer(PLUGIN_BOT_MATTERMOST_GIT_BASE_DIR.'/template');
+        $repository_id = $repository->getId();
+        $bots          = $this->bot_factory->getBots();
+
+        if ($bot_assigned = $this->bot_git_factory->getBotNotification($repository_id)) {
+            $bot_assigned = $bot_assigned->toArray($repository_id);
         }
 
         return $renderer->renderToString(
             'index',
-            new Presenter($this->csrf, $repository, $presenter_bots)
+            new Presenter($this->csrf, $repository, $bots, $bot_assigned)
         );
     }
 
-    public function save()
+    private function displayIndex()
     {
-        $this->csrf->check();
-        $repository_id = $this->request->get('repository_id');
-        $repository    = $this->git_repository_factory->getRepositoryById($repository_id);
-        if ($this->isValidPostValues()) {
-            if ($repository) {
-                $bots_ids = $this->request->get('bots_ids') ? $this->request->get('bots_ids') : array();
-                $this->saveInDao($repository_id, $bots_ids);
-            } else {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_hudson_git', 'error_repository_invalid'));
-                $GLOBALS['Response']->redirect(GIT_BASE_URL."/?group_id=".$repository->getProjectId());
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_botmattermost_git', 'alert_invalid_post')
-            );
-        }
-        $GLOBALS['Response']->redirect(GIT_BASE_URL."/?action=repo_management&group_id=".$repository->getProjectId()."&repo_id=$repository_id&pane=".Notification::ID);
+        $repository = $this->git_repository_factory->getRepositoryById($this->request->get('repository_id'));
+
+        $GLOBALS['Response']->redirect(
+            GIT_BASE_URL.'/?action=repo_management&group_id='.$repository->getProjectId(
+            ).'&repo_id='.$repository->getId().'&pane='.Notification::ID
+        );
     }
 
-    private function saveInDao($repository_id, array $bots_ids)
+    private function addBotNotification()
     {
-        try {
-            $this->bot_git_factory->saveBotsAssignements($repository_id, $bots_ids);
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_botmattermost_git','alert_success_update')
-            );
-        } catch (CannotCreateBotException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+        if ($this->validator->isValid($this->csrf, $this->request, $this->git_repository_factory, 'add')) {
+            $repository_id = $this->request->get('repository_id');
+            $bot_id        = $this->request->get('bot_id');
+            $channels      = explode(',', $this->request->get('channels'));
+
+            $this->bot_git_factory->addBotNotification($channels, $repository_id, $bot_id);
         }
     }
 
-    private function isValidPostValues()
+    private function editBotNotification()
     {
-        $valid_uint = new Valid_UInt();
-        if (
-            $this->request->existAndNonEmpty('repository_id') &&
-            $valid_uint->validate($this->request->get('repository_id'))
-        ) {
-            if ($this->request->get('bots_ids')) {
-                $bots_ids = $this->request->get('bots_ids');
-                return $this->validBotsIds($bots_ids);
-            }
-            return true;
-        }
+        if ($this->validator->isValid($this->csrf, $this->request, $this->git_repository_factory, 'edit')) {
+            $repository_id = $this->request->get('repository_id');
+            $channels      = explode(',', $this->request->get('channels'));
 
-        return false;
+            $this->bot_git_factory->saveBotNotification($channels, $repository_id);
+        }
     }
 
-    private function validBotsIds(array $bots_ids)
+    private function deleteBotNotification()
     {
-        $valid_uint = new Valid_UInt();
-        try {
-            $bots = $this->bot_factory->getBots();
-        } catch (Exception $e) {
-            return false;
-        }
-        foreach ($bots_ids as $bot_id) {
-            if (!$valid_uint->validate($bot_id) || !$this->validBotId($bots, $bot_id)) {
-                return false;
-            }
-        }
+        if ($this->validator->isValid($this->csrf, $this->request, $this->git_repository_factory, 'delete')) {
+            $repository_id = $this->request->get('repository_id');
 
-        return true;
+            $this->bot_git_factory->deleteBotNotification($repository_id);
+        }
     }
 
-    /**
-     * @param Bot[]
-     */
-    private function validBotId(array $bots, $bot_id)
+    private function redirectWithErrorFeedback(Exception $e)
     {
-        foreach ($bots as $bot) {
-            if ($bot->getId() === $bot_id) {
-                return true;
-            }
-        }
-
-        return false;
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+        $this->displayIndex();
     }
 }

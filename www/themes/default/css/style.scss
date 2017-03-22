@@ -1,22 +1,22 @@
-#bot_list {
-    min-width: 960px;
-    width: auto;
+#git-notification-mattermost-section {
 
-    & > thead > tr {
-        background: #E4E4E4;
+    & > div {
+        margin: 0 0 20px 0;
 
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
+        & > p > img.avatar {
+            margin: 0 10px 0 0;
+            width: 35px;
+            height: 35px;
+        }
+
+        & > .bot-assigned-label {
+            color: #444444;
+            font-weight: bold;
+            margin: auto auto 0 auto;
         }
     }
+}
 
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
-
-    & > tbody > tr > td {
-        vertical-align: middle;
-    }
+.form-group {
+    margin-bottom: 15px;
 }
