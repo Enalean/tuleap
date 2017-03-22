@@ -19,23 +19,27 @@
 #
 
 basedir=$1
-translated_plugins=(proftpd tracker captcha git docman)
 
-echo "[core] Generating .mo file"
+info() {
+    echo -e "\033[32m$1\033[0m"
+}
+
+info "[core] Generating .mo file"
 for f in $(find "$basedir/site-content" -name "tuleap-core.po"); do
     locale_dir=$(dirname "$f")
     msgfmt -o "$locale_dir/tuleap-core.mo" "$f"
 done
 
-index=0
-while [ "x${translated_plugins[index]}" != "x" ]
+while IFS= read -r -d '' path
 do
-    translated_plugin=${translated_plugins[index]}
-    index=$(( $index + 1 ))
+    translated_plugin=$(basename "$path")
+    if [ ! -f "$path/site-content/tuleap-$translated_plugin.pot" ]; then
+        continue
+    fi
 
-    echo "[$translated_plugin] Generating .mo file"
+    info "[$translated_plugin] Generating .mo file"
     for f in $(find "$basedir/plugins/$translated_plugin/site-content" -name "tuleap-$translated_plugin.po"); do
         locale_dir=$(dirname "$f")
         msgfmt -o "$locale_dir/tuleap-$translated_plugin.mo" "$f"
     done
-done
+done < <(find "$basedir/plugins/" -maxdepth 1 -mindepth 1 -type d -print0 | sort -z)

@@ -19,9 +19,16 @@
 #
 
 basedir=$1
-translated_plugins=(proftpd tracker captcha git docman)
 
-echo "[core] Generating .pot file"
+info() {
+    echo -e "\033[32m$1\033[0m"
+}
+
+warning() {
+    echo -e "\033[33m$1\033[0m"
+}
+
+info "[core] Generating .pot file"
 find "$basedir/src" -name "*.php" \
     | grep -v -E '(common/wiki/phpwiki|common/include/lib)' \
     | xargs xgettext \
@@ -34,20 +41,21 @@ find "$basedir/src" -name "*.php" \
     | sed '/^msgctxt/d' \
     > "$basedir/site-content/tuleap-core.pot"
 
-echo "[core] Merging .pot file into .po files"
+info "[core] Merging .pot file into .po files"
 find "$basedir/site-content" -name "tuleap-core.po" -exec msgmerge \
     --update \
     "{}" \
     "$basedir/site-content/tuleap-core.pot" \;
 
-index=0
-while [ "x${translated_plugins[index]}" != "x" ]
+while IFS= read -r -d '' path
 do
-    translated_plugin=${translated_plugins[index]}
-    path=$basedir/plugins/$translated_plugin
-    index=$(( $index + 1 ))
+    translated_plugin=$(basename "$path")
+    if [ ! -f "$path/site-content/tuleap-$translated_plugin.pot" ]; then
+        warning "[$translated_plugin] No .pot file found."
+        continue
+    fi
 
-    echo "[$translated_plugin] Generating default .pot file"
+    info "[$translated_plugin] Generating default .pot file"
     find "$path/include" -name "*.php" \
         | xargs xgettext \
             --keyword="dgettext:1c,2" \
@@ -62,7 +70,7 @@ do
         | sed '/^msgctxt/d' \
         > "$path/site-content/tuleap-$translated_plugin-default.pot"
 
-    echo "[$translated_plugin] Generating plural .pot file"
+    info "[$translated_plugin] Generating plural .pot file"
     find "$path/include" -name "*.php" \
         | xargs xgettext \
             --keyword="dngettext:1c,2,3" \
@@ -77,7 +85,7 @@ do
         | sed '/^msgctxt/d' \
         > "$path/site-content/tuleap-$translated_plugin-plural.pot"
 
-    echo "[$translated_plugin] Combining .pot files into one"
+    info "[$translated_plugin] Combining .pot files into one"
     msgcat --no-location --sort-output --use-first \
         "$path/site-content/tuleap-$translated_plugin-plural.pot" \
         "$path/site-content/tuleap-$translated_plugin-default.pot" \
@@ -91,7 +99,7 @@ do
         po_file=$lc_messages/tuleap-$translated_plugin.po
         if [ ! -d "$lc_messages" ];
         then
-            echo "[$translated_plugin] Creating missing ${po_file/$basedir\//}"
+            info "[$translated_plugin] Creating missing ${po_file/$basedir\//}"
             mkdir -p "$lc_messages"
             echo 'msgid ""' > "$po_file"
             echo 'msgstr ""' >> "$po_file"
@@ -99,9 +107,10 @@ do
         fi
     done
 
-    echo "[$translated_plugin] Merging .pot file into .po files"
+    info "[$translated_plugin] Merging .pot file into .po files"
     find "$path/site-content" -name "tuleap-$translated_plugin.po" -exec msgmerge \
         --update \
         "{}" \
         "$path/site-content/tuleap-$translated_plugin.pot" \;
-done
+
+done < <(find "$basedir/plugins/" -maxdepth 1 -mindepth 1 -type d -print0 | sort -z)
