@@ -10,20 +10,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 
 msgid "Add notification"
 msgstr "Ajouter une notification"
 
 msgid ""
-"As a tracker administrator you can provide email addresses (comma separated) "
-"to which new Artifact submissions (and possibly updates) will be "
-"systematically sent."
+"As a tracker administrator, you can provide email addresses to which new "
+"Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
-"En tant qu'administrateur de l'outil de suivi vous pouvez spécifier des "
-"adresses e-mail (séparées par des virgules) qui recevront systématiquement "
-"les notifications de soumission (et éventuellement de modification) "
-"d'artefacts."
+"En tant qu'administrateur de l'outil de suivi, vous pouvez spécifier des "
+"adresses e-mail qui recevront systématiquement les notifications de "
+"soumission (et éventuellement de modification) d'artefacts."
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -104,6 +102,10 @@ msgstr ""
 #, php-format
 msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ date '%s' ne peut pas être comparé à la chaîne '%s'."
+
+#, php-format
+msgid "The entered value '%s' is invalid."
+msgstr "La valeur saisie '%s' est invalide"
 
 #, php-format
 msgid "The field '%s' doesn't exist"

@@ -99,7 +99,7 @@ class RequestFromAutocompleter
             $listener = trim($listener);
             if ($this->isLookingLikeAnEmail($listener)) {
                 $this->addEmailFromListener($listener);
-            } elseif ($this->isLookingLikeAnUgroup($listener)) {
+            } else if ($this->isLookingLikeAnUgroup($listener)) {
                 $this->addUgroupFromListener($listener);
             } else {
                 $this->addUserFromListener($listener);
@@ -146,6 +146,8 @@ class RequestFromAutocompleter
         $ugroup = $this->ugroup_manager->getUGroupByName($this->project, $name);
         if ($ugroup && $this->userCanSeeUgroup($this->current_user, $ugroup, $this->project)) {
             $this->ugroups[] = $ugroup;
+        } else {
+            throw new RequestFromAutocompleterException($listener);
         }
     }
 
@@ -162,6 +164,8 @@ class RequestFromAutocompleter
         $user = $this->user_manager->findUser($listener);
         if ($user) {
             $this->users[] = $user;
+        } else {
+            throw new RequestFromAutocompleterException($listener);
         }
     }
 }

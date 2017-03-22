@@ -86,13 +86,10 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         $this->assertEqual($request->getEmails(), array('jdoe@example.com', 'smith@example.com'));
     }
 
-    public function itIgnoresIfItIsUnknown()
+    public function itThrowsAnExceptionIfItIsUnknown()
     {
-        $request = $this->getRequest(',bla,');
-
-        $this->assertEqual($request->getEmails(), array());
-        $this->assertEqual($request->getUsers(), array());
-        $this->assertEqual($request->getUgroups(), array());
+        $this->expectException('Tuleap\User\RequestFromAutocompleterException');
+        $this->getRequest(',bla,');
     }
 
     public function itExtractsUgroups()
@@ -102,11 +99,10 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         $this->assertEqual($request->getUgroups(), array($this->project_members, $this->developers));
     }
 
-    public function itDoesNotLeakSecretUgroups()
+    public function itThrowsAnExceptionForSecretUgroups()
     {
-        $request = $this->getRequest('_ugroup:Secret');
-
-        $this->assertEqual($request->getUgroups(), array());
+        $this->expectException('Tuleap\User\RequestFromAutocompleterException');
+        $this->getRequest('_ugroup:Secret');
     }
 
     public function itExtractsUsers()
@@ -116,11 +112,10 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         $this->assertEqual($request->getUsers(), array($this->smith, $this->thomas));
     }
 
-    public function itIgnoresUnknownPeople()
+    public function itThrowsAnExceptionForUnknownPeople()
     {
-        $request = $this->getRequest('Unknown (seraph)');
-
-        $this->assertEqual($request->getUsers(), array());
+        $this->expectException('Tuleap\User\RequestFromAutocompleterException');
+        $this->getRequest('Unknown (seraph)');
     }
 
     public function itExtractsEmailsAndUgroupsAndUsers()

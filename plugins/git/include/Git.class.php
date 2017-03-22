@@ -49,6 +49,7 @@ use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\User\RequestFromAutocompleterException;
 
 /**
  * Git
@@ -1380,58 +1381,68 @@ class Git extends PluginController {
     }
 
     private function processRepoManagementNotifications($pane, $repoId, $repositoryName, $user) {
-        $this->addView('repoManagement');
-        if ($this->request->exist('mail_prefix')) {
-            $valid = new Valid_String('mail_prefix');
-            $valid->required();
-            $mailPrefix = $this->request->getValidated('mail_prefix', $valid, '');
-            $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix, $pane));
-        }
-        $add_mail = $this->request->getValidated('add_mail');
-        if ($add_mail) {
-            $autocompleter = new RequestFromAutocompleter(
-                new Rule_Email(),
-                UserManager::instance(),
-                $this->ugroup_manager,
-                $user,
-                $this->request->getProject(),
-                $add_mail
+        try {
+            $this->addView('repoManagement');
+            if ($this->request->exist('mail_prefix')) {
+                $valid = new Valid_String('mail_prefix');
+                $valid->required();
+                $mailPrefix = $this->request->getValidated('mail_prefix', $valid, '');
+                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix, $pane));
+            }
+            $add_mail = $this->request->getValidated('add_mail');
+            if ($add_mail) {
+                $autocompleter = new RequestFromAutocompleter(
+                    new Rule_Email(),
+                    UserManager::instance(),
+                    $this->ugroup_manager,
+                    $user,
+                    $this->request->getProject(),
+                    $add_mail
+                );
+
+                $emails = $autocompleter->getEmails();
+                if ($emails) {
+                    $this->addAction('notificationAddMail', array($this->groupId, $repoId, $emails, $pane));
+                }
+
+                $users = $autocompleter->getUsers();
+                if ($users) {
+                    $this->addAction('notificationAddUsers', array($this->groupId, $repoId, $users));
+                }
+
+                $ugroups = $autocompleter->getUgroups();
+                if ($ugroups) {
+                    $this->addAction('notificationAddUgroups', array($this->groupId, $repoId, $ugroups));
+                }
+            }
+            $remove_mail = $this->request->get('remove_mail');
+            if (is_array($remove_mail)) {
+                $mails = array();
+                $valid = new Valid_Email('remove_mail');
+                $valid->required();
+                if ($this->request->validArray($valid)) {
+                    $mails = $this->request->get('remove_mail');
+                }
+                if (count($mails) > 0) {
+                    $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails, $pane));
+                }
+            }
+            $users_to_remove = $this->request->get('remove_user');
+            if (is_array($users_to_remove) && count($users_to_remove) > 0) {
+                $this->addAction('notificationRemoveUser', array($this->groupId, $repoId, $users_to_remove));
+            }
+            $ugrops_to_remove = $this->request->get('remove_ugroup');
+            if (is_array($ugrops_to_remove) && count($ugrops_to_remove) > 0) {
+                $this->addAction('notificationRemoveUgroup', array($this->groupId, $repoId, $ugrops_to_remove));
+            }
+        } catch (RequestFromAutocompleterException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                sprintf(
+                    dgettext("tuleap-git", "The entered value '%s' is invalid."),
+                    $exception->getMessage()
+                )
             );
-
-            $emails = $autocompleter->getEmails();
-            if ($emails) {
-                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $emails, $pane));
-            }
-
-            $users = $autocompleter->getUsers();
-            if ($users) {
-                $this->addAction('notificationAddUsers', array($this->groupId, $repoId, $users));
-            }
-
-            $ugroups = $autocompleter->getUgroups();
-            if ($ugroups) {
-                $this->addAction('notificationAddUgroups', array($this->groupId, $repoId, $ugroups));
-            }
-        }
-        $remove_mail = $this->request->get('remove_mail');
-        if (is_array($remove_mail)) {
-            $mails = array();
-            $valid = new Valid_Email('remove_mail');
-            $valid->required();
-            if($this->request->validArray($valid)) {
-                $mails = $this->request->get('remove_mail');
-            }
-            if (count($mails) > 0) {
-                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails, $pane));
-            }
-        }
-        $users_to_remove = $this->request->get('remove_user');
-        if (is_array($users_to_remove) && count($users_to_remove) > 0) {
-            $this->addAction('notificationRemoveUser', array($this->groupId, $repoId, $users_to_remove));
-        }
-        $ugrops_to_remove = $this->request->get('remove_ugroup');
-        if (is_array($ugrops_to_remove) && count($ugrops_to_remove) > 0) {
-            $this->addAction('notificationRemoveUgroup', array($this->groupId, $repoId, $ugrops_to_remove));
         }
         $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
     }
