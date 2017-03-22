@@ -58,4 +58,15 @@ class UGroupsRetriever
 
         return $ugroups;
     }
+
+    public function doesNotificationExistByUGroupAndItemId($ugroup_id, $item_id, $type)
+    {
+        $dar = $this->dao->searchUGroupByUGroupIdAndItemIdAndType(
+            $item_id,
+            $ugroup_id,
+            $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+        );
+
+        return $dar->count() > 0;
+    }
 }

@@ -27,8 +27,10 @@
 use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
+use Tuleap\Docman\Notifications\UgroupsRemover;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
+use Tuleap\Docman\Notifications\UsersRemover;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
@@ -884,7 +886,9 @@ class DocmanPlugin extends Plugin
                     $this->getUsersToNotifyDao(),
                     $this->getUsersNotificationRetriever(),
                     $this->getUGroupsRetriever(),
-                    $this->getNotifiedPeopleRetriever()
+                    $this->getNotifiedPeopleRetriever(),
+                    $this->getUsersRemover(),
+                    $this->getUGroupsRemover()
                 );
                 $dar = $notificationsManager->listAllMonitoredItems($groupId);
                 if($dar && !$dar->isError()) {
@@ -893,7 +897,7 @@ class DocmanPlugin extends Plugin
                     foreach ($dar as $row) {
                         $user = $userManager->getUserById($row['user_id']);
                         if (!$user->isMember($groupId)) {
-                            $notificationsManager->remove($row['user_id'], $row['item_id'], $row['type']);
+                            $notificationsManager->removeUser($row['user_id'], $row['item_id'], $row['type']);
                         }
                     }
                 }
@@ -1059,7 +1063,9 @@ class DocmanPlugin extends Plugin
                 $this->getUsersToNotifyDao(),
                 $this->getUsersNotificationRetriever(),
                 $this->getUGroupsRetriever(),
-                $this->getNotifiedPeopleRetriever()
+                $this->getNotifiedPeopleRetriever(),
+                $this->getUsersRemover(),
+                $this->getUGroupsRemover()
             ),
             $this->getUsersToNotifyDao()
         );
@@ -1114,5 +1120,15 @@ class DocmanPlugin extends Plugin
     private function getUserManager()
     {
         return UserManager::instance();
+    }
+
+    private function getUGroupsRemover()
+    {
+        return new UgroupsRemover($this->getUGroupToNotifyDao());
+    }
+
+    private function getUsersRemover()
+    {
+        return new UsersRemover($this->getUsersToNotifyDao());
     }
 }

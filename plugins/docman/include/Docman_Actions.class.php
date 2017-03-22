@@ -1656,8 +1656,8 @@ class Docman_Actions extends Actions {
         $user = $this->_controler->getUser();
         if (!$user->isAnonymous()) {
             $something_happen  = false;
-            $already_monitored = $this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId());
-            $already_cascaded  = $this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+            $already_monitored = $this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId());
+            $already_cascaded  = $this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
             if ($params['monitor'] && !$already_monitored) {
                 //monitor
                 if (!$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
@@ -1686,8 +1686,8 @@ class Docman_Actions extends Actions {
             }
             //Feedback
             if ($something_happen) {
-                if ($this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
-                    if ($this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                if ($this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId())) {
+                    if ($this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_on', array($params['item']->getTitle())));
                     } else {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_on', array($params['item']->getTitle())));
@@ -1735,7 +1735,7 @@ class Docman_Actions extends Actions {
                 $invalidUsers = $params['invalid_users'];
                 foreach ($params['listeners_to_add'] as $user) {
                     if ($user instanceof PFUser) {
-                        if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
+                        if (!$this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId())) {
                             if ($dpm->userCanRead($user, $params['item']->getId())) {
                                 if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
                                     if ($cascade && !$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
@@ -1778,29 +1778,14 @@ class Docman_Actions extends Actions {
      * @return void
      */
     function remove_monitoring($params) {
-        if (isset($params['listeners_to_delete']) && is_array($params['listeners_to_delete']) && !empty($params['listeners_to_delete'])) {
-                $users = array();
-                foreach ($params['listeners_to_delete'] as $user) {
-                    if ($this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
-                        if ($this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId()) && $this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
-                            $users[] = $user;
-                        } else {
-                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed', array($user->getName())));
-                        }
-                    } else {
-                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_present', array($user->getName())));
-                    }
-                }
-                if (!empty($users)) {
-                    $removedUsers = array();
-                    foreach ($users as $user) {
-                        $removedUsers[] = $user->getName();
-                    }
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $removedUsers))));
-                    $this->_raiseMonitoringListEvent($params['item'], $users, 'plugin_docman_remove_monitoring');
-                }
+        $users_to_delete   = $params['listeners_users_to_delete'];
+        $ugroups_to_delete = $params['listeners_ugroups_to_delete'];
+        if (isset($users_to_delete) && is_array($users_to_delete) && ! empty($users_to_delete)) {
+            $this->removeNotificationUsersByItem($params['item'], $users_to_delete);
+        } else if (isset($ugroups_to_delete) && is_array($ugroups_to_delete) && ! empty($ugroups_to_delete)) {
+            $this->removeNotificationUgroupsByItem($params['item'], $ugroups_to_delete);
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_element'));
         }
     }
 
@@ -2272,6 +2257,55 @@ class Docman_Actions extends Actions {
             $this->_raiseUnlockEvent($item, $user);
         }
     }
-}
 
-?>
+    private function removeNotificationUsersByItem(Docman_Item $item, array $users_to_delete)
+    {
+        $users = array();
+        foreach ($users_to_delete as $user) {
+            if ($this->_controler->notificationsManager->userExists($user->getId(), $item->getId())) {
+                if ($this->_controler->notificationsManager->removeUser($user->getId(), $item->getId())
+                    && $this->_controler->notificationsManager->removeUser($user->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                    $users[] = $user;
+                } else {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed_user', array($user->getName())));
+                }
+            } else {
+                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_present_user', array($user->getName())));
+            }
+        }
+
+        if (! empty($users)) {
+            $removed_users = array();
+            foreach ($users as $user) {
+                $removed_users[] = $user->getName();
+            }
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_user', array(implode(',', $removed_users))));
+            $this->_raiseMonitoringListEvent($item, $users, 'plugin_docman_remove_monitoring');
+        }
+    }
+
+    private function removeNotificationUgroupsByItem(Docman_Item $item, array $ugroups_to_delete)
+    {
+        $ugroups = array();
+        foreach ($ugroups_to_delete as $ugroup) {
+            if ($this->_controler->notificationsManager->ugroupExists($ugroup->getId(), $item->getId())) {
+                if ($this->_controler->notificationsManager->removeUgroup($ugroup->getId(), $item->getId())
+                    && $this->_controler->notificationsManager->removeUgroup($ugroup->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                    $ugroups[] = $ugroup;
+                } else {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed_ugroup', array($ugroup->getTranslatedName())));
+                }
+            } else {
+                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_present_ugroup', array($ugroup->getTranslatedName())));
+            }
+        }
+
+        if (! empty($ugroups)) {
+            $removed_ugroups = array();
+            foreach ($ugroups as $ugroup) {
+                $removed_ugroups[] = $ugroup->getTranslatedName();
+            }
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_ugroup', array(implode(',', $removed_ugroups))));
+        }
+    }
+}

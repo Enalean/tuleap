@@ -658,15 +658,18 @@ plugin_docman	new_view_change	view/change
 
 plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
 plugin_docman	notifications_on	You're monitoring '$1'.
-plugin_docman	notifications_not_removed	Unable to remove monitoring for user '$1'
-plugin_docman	notifications_not_present	Monitoring was not active for user '$1'
-plugin_docman	notifications_removed	Removed monitoring for user(s) '$1'
+plugin_docman	notifications_not_removed_user	Unable to remove monitoring for user '$1'
+plugin_docman	notifications_not_removed_ugroup	Unable to remove monitoring for group '$1'
+plugin_docman	notifications_not_present_user	Monitoring was not active for user '$1'
+plugin_docman	notifications_not_present_ugroup	Monitoring was not active for group '$1'
+plugin_docman	notifications_removed_user	Removed monitoring for user(s) '$1'
+plugin_docman	notifications_removed_ugroup	Removed monitoring for group(s) '$1'
 plugin_docman	notifications_added	Monitoring for user(s) '$1' has been added
 plugin_docman	notifications_not_added	Monitoring for the whole sub-hierarchy for user(s) '$1' has not been added
 plugin_docman	notifications_cascade_not_added	Monitoring for user(s) '$1' has not been added
 plugin_docman	notifications_already_exists	Monitoring for user(s) '$1' already exists
 plugin_docman	notifications_no_access_rights	Insufficient permissions for user(s) '$1'
-plugin_docman	notifications_no_user	No user selected
+plugin_docman	notifications_no_element	No element selected
 plugin_docman	notifications_no_user_added	No user added
 plugin_docman	notifications_some_users_not_added	Some users are not added
 plugin_docman	notifications_add_user	Add

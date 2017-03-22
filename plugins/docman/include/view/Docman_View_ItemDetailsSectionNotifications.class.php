@@ -71,7 +71,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<input type="hidden" name="id" value="'. $this->item->getId() .'" />';
         $um   =& UserManager::instance();
         $user =& $um->getCurrentUser();
-        $checked  = !$user->isAnonymous() && $this->notificationsManager->exist($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
+        $checked  = !$user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $disabled = $user->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="monitor" value="0" />';
         $content .= '<label class="checkbox" for="plugin_docman_monitor_item">';
@@ -169,7 +169,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     }
     function visitFolder(&$item, $params) {
         $content = '<blockquote>';
-        $checked  = !$params['user']->isAnonymous() && $this->notificationsManager->exist($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';
+        $checked  = !$params['user']->isAnonymous() && $this->notificationsManager->userExists($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';
         $disabled = $params['user']->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="cascade" value="0" />';
         $content .= '<input type="checkbox" name="cascade" value="1" id="plugin_docman_monitor_cascade_item" '. $checked .' '. $disabled .' />';

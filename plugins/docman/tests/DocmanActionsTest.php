@@ -225,10 +225,10 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $controller->feedback->expectOnce('log', array('error', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_user'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_element'));
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->remove_monitoring(array('listeners_to_delete' => true));
+        $actions->remove_monitoring(array('listeners_users_to_delete' => true, 'listeners_ugroups_to_delete' => true));
     }
 
     function testRemove_monitoringNotifDoesNotExist() {
@@ -244,21 +244,22 @@ class DocmanActionsTest extends TuleapTestCase {
         $user3->setReturnValue('getId', 133);
         $user3->setReturnValue('getName', 'Charlie');
         $controller->feedback->expectAt(0, 'log', array('warning', '*'));
-        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_present', array($user1->getName())));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_present_user', array($user1->getName())));
         $controller->feedback->expectAt(1, 'log', array('warning', '*'));
-        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_present', array($user2->getName())));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_present_user', array($user2->getName())));
         $controller->feedback->expectAt(2, 'log', array('warning', '*'));
-        $GLOBALS['Language']->expectAt(2, 'getText', array('plugin_docman', 'notifications_not_present', array($user3->getName())));
+        $GLOBALS['Language']->expectAt(2, 'getText', array('plugin_docman', 'notifications_not_present_user', array($user3->getName())));
         $notificationsManager = new MockDocman_NotificationsManager();
-        $notificationsManager->setReturnValue('exist', false);
+        $notificationsManager->setReturnValue('userExists', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $params['listeners_to_delete'] = array($user1, $user2, $user3);
-        $params['item'] = new MockDocman_Item();
+        $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
+        $params['listeners_ugroups_to_delete'] = array();
+        $params['item'] = new Docman_Item();
         $actions->remove_monitoring($params);
-        $notificationsManager->expectCallCount('exist', 3);
-        $notificationsManager->expectNever('remove');
+        $notificationsManager->expectCallCount('userExists', 3);
+        $notificationsManager->expectNever('removeUser');
     }
 
     function testRemove_monitoringError() {
@@ -275,22 +276,23 @@ class DocmanActionsTest extends TuleapTestCase {
         $user3->setReturnValue('getId', 133);
         $user3->setReturnValue('getName', 'Charlie');
         $controller->feedback->expectAt(0, 'log', array('error', '*'));
-        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_removed', array($user1->getName())));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_removed_user', array($user1->getName())));
         $controller->feedback->expectAt(1, 'log', array('error', '*'));
-        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_removed', array($user2->getName())));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_removed_user', array($user2->getName())));
         $controller->feedback->expectAt(2, 'log', array('error', '*'));
-        $GLOBALS['Language']->expectAt(2, 'getText', array('plugin_docman', 'notifications_not_removed', array($user3->getName())));
+        $GLOBALS['Language']->expectAt(2, 'getText', array('plugin_docman', 'notifications_not_removed_user', array($user3->getName())));
         $notificationsManager = new MockDocman_NotificationsManager();
-        $notificationsManager->setReturnValue('exist', true);
-        $notificationsManager->setReturnValue('remove', false);
+        $notificationsManager->setReturnValue('userExists', true);
+        $notificationsManager->setReturnValue('removeUser', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $params['listeners_to_delete'] = array($user1, $user2, $user3);
-        $params['item'] = new MockDocman_Item();
+        $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
+        $params['listeners_ugroups_to_delete'] = array();
+        $params['item'] = new Docman_Item();
         $actions->remove_monitoring($params);
-        $notificationsManager->expectCallCount('exist', 3);
-        $notificationsManager->expectCallCount('remove', 3);
+        $notificationsManager->expectCallCount('userExists', 3);
+        $notificationsManager->expectCallCount('removeUser', 3);
     }
 
     function testRemove_monitoringSuccess() {
@@ -307,20 +309,21 @@ class DocmanActionsTest extends TuleapTestCase {
         $user3->setReturnValue('getId', 133);
         $user3->setReturnValue('getName', 'Charlie');
         $controller->feedback->expectOnce('log', array('info', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_removed', array('Carol,Carlos,Charlie')));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_removed_user', array('Carol,Carlos,Charlie')));
         $notificationsManager = new MockDocman_NotificationsManager();
-        $notificationsManager->setReturnValue('exist', true);
-        $notificationsManager->setReturnValue('remove', true);
+        $notificationsManager->setReturnValue('userExists', true);
+        $notificationsManager->setReturnValue('removeUser', true);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->event_manager = new MockEventManager($this);
         $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array($user1, $user2, $user3);
-        $params['item'] = new MockDocman_Item();
+        $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
+        $params['listeners_ugroups_to_delete'] = array();
+        $params['item'] = new Docman_Item();
         $actions->remove_monitoring($params);
-        $notificationsManager->expectCallCount('exist', 3);
-        $notificationsManager->expectCallCount('remove', 6);
+        $notificationsManager->expectCallCount('userExists', 3);
+        $notificationsManager->expectCallCount('removeUser', 6);
     }
 
     function testAdd_monitoringNoOneToAdd() {
@@ -337,7 +340,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
-        $notificationsManager->setReturnValue('exist', true);
+        $notificationsManager->setReturnValue('userExists', true);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
@@ -350,10 +353,10 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->feedback->expectOnce('log', array('warning', '*'));
         $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_already_exists', array('Carol,Carlos')));
         $params['listeners_to_add'] = array($user1, $user2);
-        $params['item']             = new MockDocman_Item();
+        $params['item']             = new Docman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $notificationsManager->expectCallCount('exist', 2);
+        $notificationsManager->expectCallCount('userExists', 2);
         $notificationsManager->expectNever('add');
     }
 
@@ -361,7 +364,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
-        $notificationsManager->setReturnValue('exist', false);
+        $notificationsManager->setReturnValue('userExists', false);
         $notificationsManager->setReturnValue('add', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
@@ -380,10 +383,10 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->feedback->expectAt(1, 'log', array('error', '*'));
         $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_added', array($user2->getName())));
         $params['listeners_to_add'] = array($user1, $user2);
-        $params['item']             = new MockDocman_Item();
+        $params['item']             = new Docman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $notificationsManager->expectCallCount('exist', 2);
+        $notificationsManager->expectCallCount('userExists', 2);
         $notificationsManager->expectCallCount('add', 2);
     }
 
@@ -391,7 +394,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
-        $notificationsManager->setReturnValue('exist', false);
+        $notificationsManager->setReturnValue('userExists', false);
         $notificationsManager->setReturnValue('add', true);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
@@ -412,10 +415,10 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->feedback->expectAt(1, 'log', array('info', '*'));
         $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_added', array($user1->getName())));
         $params['listeners_to_add'] = array($user1, $user2);
-        $params['item']             = new MockDocman_Item();
+        $params['item']             = new Docman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $notificationsManager->expectCallCount('exist', 2);
+        $notificationsManager->expectCallCount('userExists', 2);
         $docmanPermissionsManager->expectCallCount('userCanRead', 2);
         $notificationsManager->expectCallCount('add', 1);
     }
@@ -429,7 +432,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->feedback->expectOnce('log', array('info', '*'));
         $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_added', array($user->getName())));
         $notificationsManager = new MockDocman_NotificationsManager();
-        $notificationsManager->setReturnValue('exist', false);
+        $notificationsManager->setReturnValue('userExists', false);
         $notificationsManager->setReturnValue('add', true);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
@@ -439,10 +442,10 @@ class DocmanActionsTest extends TuleapTestCase {
         $docmanPermissionsManager->setReturnValue('userCanRead', true);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
         $params['listeners_to_add'] = array($user);
-        $params['item']             = new MockDocman_Item();
+        $params['item']             = new Docman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $notificationsManager->expectCallCount('exist', 1);
+        $notificationsManager->expectCallCount('userExists', 1);
         $notificationsManager->expectCallCount('add', 1);
     }
 }

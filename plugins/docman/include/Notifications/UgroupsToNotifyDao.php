@@ -68,4 +68,36 @@ class UgroupsToNotifyDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function delete($item_id, $ugroup_id, $type)
+    {
+        $item_id   = $this->da->escapeInt($item_id);
+        $type      = $this->da->quoteSmart($type);
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "DELETE
+            FROM plugin_docman_notification_ugroups
+            WHERE item_id = $item_id
+            AND ugroup_id = $ugroup_id
+            AND type = $type
+            ";
+
+        return $this->update($sql);
+    }
+
+    public function searchUGroupByUGroupIdAndItemIdAndType($item_id, $ugroup_id, $type)
+    {
+        $item_id   = $this->da->escapeInt($item_id);
+        $type      = $this->da->quoteSmart($type);
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "SELECT *
+            FROM plugin_docman_notification_ugroups
+            WHERE item_id = $item_id
+            AND ugroup_id = $ugroup_id
+            AND type = $type
+            ";
+
+        return $this->retrieve($sql);
+    }
 }
