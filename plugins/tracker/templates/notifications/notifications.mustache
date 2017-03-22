@@ -18,20 +18,23 @@
                                 <div class="tracker-global-notifications-checkbox-cell-read">
                                     <div class="tracker-notification-email-list">
                                         {{# ugroups_to_be_notified }}
-                                            <i class="icon-group tracker-notification-email-list-group-icon"></i>
-                                            {{ label }}
-                                            <span class="tracker-notification-email-list-separator">, </span>
+                                            <span class="tracker-notification-email-list-entry">
+                                                <i class="icon-group tracker-notification-email-list-group-icon"></i>
+                                                {{ label }}<span class="tracker-notification-email-list-separator">, </span>
+                                            </span>
                                         {{/ ugroups_to_be_notified }}
                                         {{# users_to_be_notified }}
-                                            <div class="avatar tracker-notification-user-avatar">
-                                                {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
-                                            </div>
-                                            {{ label }}
-                                            <span class="tracker-notification-email-list-separator">, </span>
+                                            <span class="tracker-notification-email-list-entry">
+                                                <div class="avatar tracker-notification-user-avatar">
+                                                    {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                                                </div>
+                                                {{ label }}<span class="tracker-notification-email-list-separator">, </span>
+                                            </span>
                                         {{/ users_to_be_notified }}
                                         {{# emails_to_be_notified }}
-                                            {{ . }}
-                                            <span class="tracker-notification-email-list-separator">, </span>
+                                            <span class="tracker-notification-email-list-entry">
+                                                {{ . }}<span class="tracker-notification-email-list-separator">, </span>
+                                            </span>
                                         {{/ emails_to_be_notified }}
                                     </div>
                                 </div>
