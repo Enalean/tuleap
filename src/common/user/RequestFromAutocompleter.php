@@ -74,8 +74,13 @@ class RequestFromAutocompleter
      * @var Project
      */
     private $project;
+    /**
+     * @var InvalidEntryInAutocompleterCollection
+     */
+    private $invalid_entries;
 
     public function __construct(
+        InvalidEntryInAutocompleterCollection $invalid_entries,
         Rule_Email $rule_email,
         UserManager $user_manager,
         UGroupManager $ugroup_manager,
@@ -83,11 +88,12 @@ class RequestFromAutocompleter
         Project $project,
         $data
     ) {
-        $this->rule_email     = $rule_email;
-        $this->user_manager   = $user_manager;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->current_user   = $current_user;
-        $this->project        = $project;
+        $this->invalid_entries = $invalid_entries;
+        $this->rule_email      = $rule_email;
+        $this->user_manager    = $user_manager;
+        $this->ugroup_manager  = $ugroup_manager;
+        $this->current_user    = $current_user;
+        $this->project         = $project;
 
         $this->emails  = array();
         $this->ugroups = array();
@@ -147,7 +153,7 @@ class RequestFromAutocompleter
         if ($ugroup && $this->userCanSeeUgroup($this->current_user, $ugroup, $this->project)) {
             $this->ugroups[] = $ugroup;
         } else {
-            throw new RequestFromAutocompleterException($listener);
+            $this->invalid_entries->add($listener);
         }
     }
 
@@ -165,7 +171,7 @@ class RequestFromAutocompleter
         if ($user) {
             $this->users[] = $user;
         } else {
-            throw new RequestFromAutocompleterException($listener);
+            $this->invalid_entries->add($listener);
         }
     }
 }

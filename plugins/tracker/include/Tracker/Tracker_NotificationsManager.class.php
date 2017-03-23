@@ -24,8 +24,8 @@ use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
-use Tuleap\User\RequestFromAutocompleterException;
 
 class Tracker_NotificationsManager {
 
@@ -111,22 +111,14 @@ class Tracker_NotificationsManager {
 
     private function createNewGlobalNotification($global_notification_data)
     {
-        try {
-            $autocompleter = $this->getAutocompleter($global_notification_data['addresses']);
+        $invalid_entries = new InvalidEntryInAutocompleterCollection();
+        $autocompleter = $this->getAutocompleter($global_notification_data['addresses'], $invalid_entries);
+        $invalid_entries->generateWarningMessageForInvalidEntries();
 
-            if (! $this->isNotificationEmpty($autocompleter)) {
-                $notification_id = $this->notificationAddEmails($global_notification_data, $autocompleter);
-                $this->notificationAddUsers($notification_id, $autocompleter);
-                $this->notificationAddUgroups($notification_id, $autocompleter);
-            }
-        } catch (RequestFromAutocompleterException $exception) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                sprintf(
-                    dgettext("tuleap-tracker", "The entered value '%s' is invalid."),
-                    $exception->getMessage()
-                )
-            );
+        if (! $this->isNotificationEmpty($autocompleter)) {
+            $notification_id = $this->notificationAddEmails($global_notification_data, $autocompleter);
+            $this->notificationAddUsers($notification_id, $autocompleter);
+            $this->notificationAddUgroups($notification_id, $autocompleter);
         }
     }
 
@@ -134,29 +126,22 @@ class Tracker_NotificationsManager {
     {
         $global_notifications = $this->getGlobalNotifications();
         if (array_key_exists($notification_id, $global_notifications)) {
-            try {
-                $autocompleter             = $this->getAutocompleter($notification['addresses']);
-                $emails                    = $autocompleter->getEmails();
-                $notification['addresses'] = $this->addresses_builder->transformNotificationAddressesArrayAsString($emails);
+            $invalid_entries = new InvalidEntryInAutocompleterCollection();
+            $autocompleter             = $this->getAutocompleter($notification['addresses'], $invalid_entries);
+            $emails                    = $autocompleter->getEmails();
+            $notification['addresses'] = $this->addresses_builder->transformNotificationAddressesArrayAsString($emails);
 
-                $this->getGlobalDao()->modify($notification_id, $notification);
-                $this->user_to_notify_dao->deleteByNotificationId($notification_id);
-                $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id);
+            $invalid_entries->generateWarningMessageForInvalidEntries();
 
-                if ($this->isNotificationEmpty($autocompleter)) {
-                    $this->removeGlobalNotification($notification_id);
-                } else {
-                    $this->notificationAddUsers($notification_id, $autocompleter);
-                    $this->notificationAddUgroups($notification_id, $autocompleter);
-                }
-            } catch (RequestFromAutocompleterException $exception) {
-                $GLOBALS['Response']->addFeedback(
-                    'error',
-                    sprintf(
-                        dgettext("tuleap-tracker", "The entered value '%s' is invalid."),
-                        $exception->getMessage()
-                    )
-                );
+            $this->getGlobalDao()->modify($notification_id, $notification);
+            $this->user_to_notify_dao->deleteByNotificationId($notification_id);
+            $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id);
+
+            if ($this->isNotificationEmpty($autocompleter)) {
+                $this->removeGlobalNotification($notification_id);
+            } else {
+                $this->notificationAddUsers($notification_id, $autocompleter);
+                $this->notificationAddUgroups($notification_id, $autocompleter);
             }
         }
     }
@@ -375,9 +360,10 @@ class Tracker_NotificationsManager {
     /**
      * @return RequestFromAutocompleter
      */
-    private function getAutocompleter($addresses)
+    private function getAutocompleter($addresses, InvalidEntryInAutocompleterCollection $invalid_entries)
     {
         $autocompleter = new RequestFromAutocompleter(
+            $invalid_entries,
             new Rule_Email(),
             UserManager::instance(),
             $this->ugroup_manager,

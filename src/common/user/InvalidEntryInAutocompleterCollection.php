@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,27 @@
 
 namespace Tuleap\User;
 
-use Exception;
+use Feedback;
 
-class RequestFromAutocompleterException extends Exception
+class InvalidEntryInAutocompleterCollection
 {
+    private $entries = array();
+
+    public function add($entry)
+    {
+        $this->entries[] = $entry;
+    }
+
+    public function generateWarningMessageForInvalidEntries()
+    {
+        foreach ($this->entries as $entry) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    _("The entered value '%s' is invalid."),
+                    $entry
+                )
+            );
+        }
+    }
 }

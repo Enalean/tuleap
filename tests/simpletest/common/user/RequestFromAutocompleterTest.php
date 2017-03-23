@@ -35,6 +35,8 @@ class RequestFromAutocompleterTest extends TuleapTestCase
     private $current_user;
     private $smith;
     private $thomas;
+    /** @var InvalidEntryInAutocompleterCollection */
+    private $invalid_entries;
 
     public function setUp()
     {
@@ -61,6 +63,8 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         stub($this->user_manager)->findUser('Smith (asmith)')->returns($this->smith);
         stub($this->user_manager)->findUser('Thomas A. Anderson (neo)')->returns($this->thomas);
 
+        $this->invalid_entries = new InvalidEntryInAutocompleterCollection();
+
         $this->rule_email   = new Rule_Email();
     }
 
@@ -70,6 +74,7 @@ class RequestFromAutocompleterTest extends TuleapTestCase
     private function getRequest($data)
     {
         return new RequestFromAutocompleter(
+            $this->invalid_entries,
             $this->rule_email,
             $this->user_manager,
             $this->ugroup_manager,
@@ -86,10 +91,13 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         $this->assertEqual($request->getEmails(), array('jdoe@example.com', 'smith@example.com'));
     }
 
-    public function itThrowsAnExceptionIfItIsUnknown()
+    public function itIgnoresIfItIsUnknown()
     {
-        $this->expectException('Tuleap\User\RequestFromAutocompleterException');
-        $this->getRequest(',bla,');
+        $request = $this->getRequest(',bla,');
+
+        $this->assertEqual($request->getEmails(), array());
+        $this->assertEqual($request->getUsers(), array());
+        $this->assertEqual($request->getUgroups(), array());
     }
 
     public function itExtractsUgroups()
@@ -99,10 +107,11 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         $this->assertEqual($request->getUgroups(), array($this->project_members, $this->developers));
     }
 
-    public function itThrowsAnExceptionForSecretUgroups()
+    public function itDoesNotLeakSecretUgroups()
     {
-        $this->expectException('Tuleap\User\RequestFromAutocompleterException');
-        $this->getRequest('_ugroup:Secret');
+        $request = $this->getRequest('_ugroup:Secret');
+
+        $this->assertEqual($request->getUgroups(), array());
     }
 
     public function itExtractsUsers()
@@ -112,10 +121,11 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         $this->assertEqual($request->getUsers(), array($this->smith, $this->thomas));
     }
 
-    public function itThrowsAnExceptionForUnknownPeople()
+    public function itIgnoresUnknownPeople()
     {
-        $this->expectException('Tuleap\User\RequestFromAutocompleterException');
-        $this->getRequest('Unknown (seraph)');
+        $request = $this->getRequest('Unknown (seraph)');
+
+        $this->assertEqual($request->getUsers(), array());
     }
 
     public function itExtractsEmailsAndUgroupsAndUsers()
@@ -125,5 +135,16 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         $this->assertEqual($request->getEmails(), array('jdoe@example.com'));
         $this->assertEqual($request->getUgroups(), array($this->developers));
         $this->assertEqual($request->getUsers(), array($this->thomas));
+    }
+
+    public function itCollectsUnknownEntries()
+    {
+        $this->getRequest('bla,jdoe@example.com,_ugroup:Secret,Unknown (seraph)');
+
+        $this->invalid_entries->generateWarningMessageForInvalidEntries();
+        expect($GLOBALS['Response'])->addFeedback()->count(3);
+        expect($GLOBALS['Response'])->addFeedback(\Feedback::WARN, "The entered value 'bla' is invalid.")->at(0);
+        expect($GLOBALS['Response'])->addFeedback(\Feedback::WARN, "The entered value 'Secret' is invalid.")->at(1);
+        expect($GLOBALS['Response'])->addFeedback(\Feedback::WARN, "The entered value 'seraph' is invalid.")->at(2);
     }
 }
