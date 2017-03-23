@@ -243,9 +243,18 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     public function getUnplannedArtifacts(PFUser $user, $sub_milestone_ids)
     {
         if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->milestone->getProject()->getID()) === true) {
-            return $this->items_finder->getAllTopMilestoneUnplannedBacklogItems($user);
+            return $this->getUnplannedArtifactsForMonoMilestoneConfiguration($user, $sub_milestone_ids);
         } else {
             return $this->getUnplannedArtifactsForMultiMilestoneConfiguration($user, $sub_milestone_ids);
+        }
+    }
+
+    private function getUnplannedArtifactsForMonoMilestoneConfiguration(PFUser $user, $sub_milestone_ids)
+    {
+        if ($this->milestone instanceof Planning_VirtualTopMilestone) {
+            return $this->items_finder->getAllTopMilestoneUnplannedBacklogItems($user);
+        } else {
+            return $this->items_finder->getOpenArtifactsForSubmilestonesForMonoMilestoneConfiguration($user, $sub_milestone_ids);
         }
     }
 

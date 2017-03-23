@@ -164,6 +164,17 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder {
 
         return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
     }
+    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
+    public function getOpenArtifactsForSubmilestonesForMonoMilestoneConfiguration(PFUser $user, $sub_milestone_ids) {
+        $result = $this->artifact_dao->getArtifactsWithOpenStatusForSubmilestonesForMonoMilestoneConfiguration(
+            $this->milestone_id,
+            $this->descendant_tracker_ids,
+            $sub_milestone_ids,
+            $this->getDescendantPlannifiableItems()
+        );
+
+        return $this->getItemsForUser($user, $result, $this->artifact_dao->foundRows());
+    }
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
     public function getMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(PFUser $user, $sub_milestone_ids, $limit, $offset) {
@@ -220,10 +231,10 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder {
     }
 
     /**
-     * @return string
+     * @return array
      */
     private function getDescendantPlannifiableItems() {
-        $item_list = '';
+        $item_list = array();
         foreach ($this->getHierarchiesToSearchIn() as $hierarchy) {
             reset($hierarchy);
 
@@ -238,7 +249,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder {
                 );
 
                 if ($this->canChildrenBePlanned($children, $tracker_id)) {
-                    $item_list .= ($item_list) ? ','.$children : $children;
+                    $item_list = array_merge($item_list, explode(',', $children));
                     break;
                 }
 
