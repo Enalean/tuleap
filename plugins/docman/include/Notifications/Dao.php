@@ -93,4 +93,14 @@ class Dao extends DataAccessObject
         );
         return $this->update($sql);
     }
+
+    public function deleteByItemId($item_id)
+    {
+        $item_id = $this->da->escapeInt($item_id);
+
+        $sql = "DELETE FROM plugin_docman_notifications
+                WHERE item_id = $item_id";
+
+        return $this->update($sql);
+    }
 }

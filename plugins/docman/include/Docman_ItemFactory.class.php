@@ -20,6 +20,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
+
 require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 
@@ -39,10 +43,8 @@ require_once('Docman_PermissionsManager.class.php');
 require_once('Docman_BuildItemMappingVisitor.class.php');
 require_once('Docman_ActionsDeleteVisitor.class.php');
 
-/**
- * 
- */
-class Docman_ItemFactory {
+class Docman_ItemFactory
+{
     var $rootItems;
     var $onlyOneChildForRoot;
     var $copiedItem;
@@ -1233,15 +1235,16 @@ class Docman_ItemFactory {
      *
      * @return void
      */
-    function delete($item) {
+    public function delete($item)
+    {
         // The event must be processed before the item is deleted
-        $um         = UserManager::instance();
+        $um         = $this->_getUserManager();
         $user       = $um->getCurrentUser();
         $itemParent = $this->getItemFromDb($item->getParentId());
         $item->fireEvent('plugin_docman_event_del', $user, $itemParent);
-        
+
         // Delete Lock if any
-        $lF = new Docman_LockFactory();
+        $lF = $this->getLockFactory();
         if($lF->itemIsLocked($item)) {
             $lF->unlock($item);
         }
@@ -1249,9 +1252,31 @@ class Docman_ItemFactory {
         $item->setDeleteDate(time());
         $this->delCutPreferenceForAllUsers($item->getId());
         $this->delCopyPreferenceForAllUsers($item->getId());
+        $this->deleteNotifications($item->getId());
         $dao = $this->_getItemDao();
         $dao->updateFromRow($item->toRow());
         $dao->storeDeletedItem($item->getId());
+    }
+
+    public function getLockFactory()
+    {
+        return new Docman_LockFactory();
+    }
+
+    private function deleteNotifications($item_id)
+    {
+        $this->getUgroupsToNotifyDao()->deleteByItemId($item_id);
+        $this->getUsersToNotifyDao()->deleteByItemId($item_id);
+    }
+
+    public function getUgroupsToNotifyDao()
+    {
+        return new UgroupsToNotifyDao();
+    }
+
+    public function getUsersToNotifyDao()
+    {
+        return new Dao();
     }
 
     /**
@@ -1396,5 +1421,3 @@ class Docman_ItemFactory {
         return false;
     }
 }
-
-?>
