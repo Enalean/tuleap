@@ -95,8 +95,6 @@ class ProjectBacklogResource {
         $planning_factory             = PlanningFactory::build();
         $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
-        $scrum_mono_milestone_checker =  new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
-
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
             Tracker_ArtifactFactory::instance(),
@@ -105,7 +103,7 @@ class ProjectBacklogResource {
             $status_counter,
             $this->planning_permissions_manager,
             new AgileDashboard_Milestone_MilestoneDao(),
-            $scrum_mono_milestone_checker
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
@@ -141,7 +139,7 @@ class ProjectBacklogResource {
             $tracker_artifact_factory
         );
 
-        $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager, $scrum_mono_milestone_checker);
+        $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,

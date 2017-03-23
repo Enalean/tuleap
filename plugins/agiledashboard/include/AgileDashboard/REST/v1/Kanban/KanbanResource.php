@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 use DateTime;
 use AgileDashboard_KanbanItemManager;
 use Luracast\Restler\RestException;
-use PlanningFactory;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use AgileDashboard_PermissionsManager;
@@ -62,6 +59,7 @@ use Kanban_SemanticStatusBasedOnASharedFieldException;
 use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
 use Kanban_SemanticStatusColumnIdsNotInOpenSemanticException;
 use AgileDashboard_KanbanColumnManager;
+use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tuleap\RealTime\NodeJSClient;
@@ -71,6 +69,7 @@ use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 
@@ -151,10 +150,7 @@ class KanbanResource extends AuthenticatedResource {
             $this->artifact_factory
         );
 
-        $artifactlink_updater    = new ArtifactLinkUpdater(
-            $priority_manager,
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build())
-        );
+        $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager);
         $this->resources_patcher = new ResourcesPatcher(
             $artifactlink_updater,
             $this->artifact_factory,
