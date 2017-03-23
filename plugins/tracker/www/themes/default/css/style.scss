@@ -3511,6 +3511,7 @@ td.tracker-global-notifications-checkbox-cell {
 }
 
 .tracker-notification-email-list-entry {
+    display: flex;
     white-space: nowrap;
 
     &:last-child > .tracker-notification-email-list-separator {
