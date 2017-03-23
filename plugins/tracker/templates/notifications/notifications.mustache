@@ -63,7 +63,7 @@
                                            name="global_notification[{{ notification_id }}][all_updates]"
                                            value="1"
                                            disabled
-                                           {{# all_updates }}data-checked="1" checked{{/ all_updates }} />
+                                           {{# all_updates }}checked{{/ all_updates }} />
                                 </div>
                             </td>
                             <td class="tracker-global-notifications-checkbox-cell">
@@ -76,12 +76,12 @@
                                            name="global_notification[{{ notification_id }}][check_permissions]"
                                            value="1"
                                            disabled
-                                           {{# check_permissions }}data-checked="1" checked{{/ check_permissions }} />
+                                           {{# check_permissions }}checked{{/ check_permissions }} />
                                 </div>
                             </td>
                             <td class="tracker-notification-edit">
                                 <div class="tracker-global-notifications-checkbox-cell-read">
-                                    <a href="javascript:;" class="tracker-notification-edit-toggle tracker-notification-edit">
+                                    <a href="javascript:;" class="tracker-notification-edit-show tracker-notification-edit">
                                         <i class="icon-pencil"></i>
                                         {{ edit }}
                                     </a>
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
                                     <button type="submit" name="submit_notification_edit" value="{{ notification_id }}" class="btn btn-primary">{{ save }}</button>
-                                    <button type="button" name="submit" class="btn tracker-notification-edit-toggle">{{ cancel }}</button>
+                                    <button type="button" name="submit" class="btn tracker-notification-edit-hide">{{ cancel }}</button>
                                 </div>
                             </td>
                         </tr>
@@ -126,7 +126,7 @@
                     </td>
                 </tr>
             {{/ has_notifications }}
-            <tr>
+            <tr id="tracker-global-notifications-row-add" class="tracker-global-notifications-row-add-hidden">
                 <td>
                     <input type="hidden"
                            id="add_email"
@@ -145,13 +145,15 @@
                     <input type="hidden" name="new_global_notification[check_permissions]" value="0" />
                     <input type="checkbox" name="new_global_notification[check_permissions]" value="1"/>
                 </td>
-                <td>
-                    <button type="submit" class="btn tracker-global-notifications-add">
-                        <i class="icon-plus"></i>
-                        {{ add_notification }}
-                    </button>
+                <td class="tracker-notification-edit">
+                    <button type="submit" class="btn btn-primary">{{ save }}</button>
+                    <button type="button" name="submit" class="btn tracker-notification-edit-hide">{{ cancel }}</button>
                 </td>
             </tr>
         </tbody>
     </table>
+    <button type="button" class="btn" id="tracker-global-notifications-add">
+        <i class="icon-plus"></i>
+        {{ add_notification }}
+    </button>
 </div>

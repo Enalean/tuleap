@@ -18,29 +18,68 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    var toggle_buttons = document.querySelectorAll('.tracker-notification-edit-toggle');
-    [].forEach.call(toggle_buttons, function (toggle_button) {
-        toggle_button.addEventListener('click', toggleEditMode);
+    var add_button = document.getElementById('tracker-global-notifications-add'),
+        add_row    = document.getElementById('tracker-global-notifications-row-add');
+
+    if (! add_button || ! add_row) {
+        return;
+    }
+
+    var show_edit_mode_buttons = document.querySelectorAll('.tracker-notification-edit-show');
+    [].forEach.call(show_edit_mode_buttons, function (button) {
+        button.addEventListener('click', showEditMode);
+    });
+
+    var hide_edit_mode_buttons = document.querySelectorAll('.tracker-notification-edit-hide');
+    [].forEach.call(hide_edit_mode_buttons, function (button) {
+        button.addEventListener('click', hideEditMode);
     });
 
     initializeAutocompleter('#add_email');
     initializeAutocompleter('.edit_email');
+    initializeAddNotification();
 
-    function toggleEditMode() {
+    function initializeAddNotification() {
+        add_button.addEventListener('click', function () {
+            hideEditMode();
+            add_row.classList.remove('tracker-global-notifications-row-add-hidden');
+            add_button.classList.add('tracker-global-notifications-add-hidden');
+            tuleap.resetPlaceholder('#add_email');
+        });
+    }
+
+    function hideEditMode() {
+        var form       = document.getElementById('tracker-admin-notifications-form'),
+            read_cells = document.querySelectorAll('.tracker-global-notifications-checkbox-cell-read'),
+            edit_cells = document.querySelectorAll('.tracker-global-notifications-checkbox-cell-write');
+
+        form.reset();
+
+        [].forEach.call(read_cells, function (cell) {
+            cell.classList.remove('tracker-global-notifications-checkbox-cell-hidden');
+        });
+        [].forEach.call(edit_cells, function (cell) {
+            cell.classList.add('tracker-global-notifications-checkbox-cell-hidden');
+        });
+        add_row.classList.add('tracker-global-notifications-row-add-hidden');
+        add_button.classList.remove('tracker-global-notifications-add-hidden');
+    }
+
+    function showEditMode() {
+        hideEditMode();
+
         var tr    = this.parentNode.parentNode.parentNode,
-            checkboxes = tr.querySelectorAll('.tracker-global-notifications-checkbox-cell-write > input[type=checkbox]'),
-            cells = tr.querySelectorAll(
-                '.tracker-global-notifications-checkbox-cell-read, \
-                .tracker-global-notifications-checkbox-cell-write'
-            );
+            read_cells = tr.querySelectorAll('.tracker-global-notifications-checkbox-cell-read'),
+            edit_cells = tr.querySelectorAll('.tracker-global-notifications-checkbox-cell-write');
 
-        resetCheckboxesToInitialState(checkboxes);
-
-        [].forEach.call(cells, function (cell) {
-            cell.classList.toggle('tracker-global-notifications-checkbox-cell-hidden');
+        [].forEach.call(read_cells, function (cell) {
+            cell.classList.add('tracker-global-notifications-checkbox-cell-hidden');
+        });
+        [].forEach.call(edit_cells, function (cell) {
+            cell.classList.remove('tracker-global-notifications-checkbox-cell-hidden');
             var inputs = cell.getElementsByTagName('input');
             [].forEach.call(inputs, function (input) {
-                input.disabled = cell.classList.contains('tracker-global-notifications-checkbox-cell-hidden');
+                input.disabled = false;
             });
         });
 
@@ -50,12 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
             selected_emails  = JSON.parse(input.dataset.emails);
         tuleap.addDataToAutocompleter(input, selected_ugroups.concat(selected_users).concat(selected_emails));
         tuleap.enableAutocompleter(input);
-    }
-
-    function resetCheckboxesToInitialState(checkboxes) {
-        [].forEach.call(checkboxes, function (checkbox) {
-            checkbox.checked = !!checkbox.dataset.checked;
-        });
     }
 
     function initializeAutocompleter(input_id) {

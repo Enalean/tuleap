@@ -66,6 +66,10 @@ var tuleap = tuleap || {};
         $(input).select2('enable', true);
     };
 
+    tuleap.resetPlaceholder = function (input) {
+        $(input).select2('val', null);
+    };
+
     tuleap.loadUserAndUgroupAutocompleter = function (input) {
         if (! input) {
             return;

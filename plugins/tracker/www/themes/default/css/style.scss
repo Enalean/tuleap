@@ -3540,12 +3540,12 @@ td.tracker-global-notifications-checkbox-cell {
     color: #666666;
 }
 
-
-.tracker-global-notifications-add,
 .tracker-notification-edit {
     white-space: nowrap;
 }
 
+.tracker-global-notifications-add-hidden,
+.tracker-global-notifications-row-add-hidden,
 .tracker-global-notifications-checkbox-cell-hidden {
     display: none;
 }
