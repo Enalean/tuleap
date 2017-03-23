@@ -71,7 +71,8 @@ class ProjectBacklogResource {
             $tracker_artifact_factory
         );
 
-        $this->milestone_factory = new Planning_MilestoneFactory(
+        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory);
+        $this->milestone_factory      = new Planning_MilestoneFactory(
             $this->planning_factory,
             Tracker_ArtifactFactory::instance(),
             Tracker_FormElementFactory::instance(),
@@ -79,13 +80,14 @@ class ProjectBacklogResource {
             $status_counter,
             $this->planning_permissions_manager,
             new AgileDashboard_Milestone_MilestoneDao(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory)
+            $scrum_mono_milestone_checker
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
-            $this->planning_factory
+            $this->planning_factory,
+            $scrum_mono_milestone_checker
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(

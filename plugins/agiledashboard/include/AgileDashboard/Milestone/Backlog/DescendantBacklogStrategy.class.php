@@ -51,21 +51,28 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     /** @var AgileDashboard_Milestone_Backlog_DescendantItemsFinder */
     private $items_finder;
 
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
+
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Planning_Milestone $milestone,
         array $item_names,
         array $descendant_trackers,
         AgileDashboard_BacklogItemDao $item_dao,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         $limit  = null,
         $offset = null
     ) {
-        $this->milestone            = $milestone;
-        $this->backlogitem_trackers = $item_names;
-        $this->dao                  = $item_dao;
-        $this->descendant_trackers  = $descendant_trackers;
-        $this->limit                = $limit;
-        $this->offset               = $offset;
+        $this->milestone                    = $milestone;
+        $this->backlogitem_trackers         = $item_names;
+        $this->dao                          = $item_dao;
+        $this->descendant_trackers          = $descendant_trackers;
+        $this->limit                        = $limit;
+        $this->offset                       = $offset;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
 
         $this->items_finder = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
             $item_dao,
@@ -233,7 +240,17 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     }
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getUnplannedArtifacts(PFUser $user, $sub_milestone_ids) {
+    public function getUnplannedArtifacts(PFUser $user, $sub_milestone_ids)
+    {
+        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->milestone->getProject()->getID()) === true) {
+            return $this->items_finder->getAllTopMilestoneUnplannedBacklogItems($user);
+        } else {
+            return $this->getUnplannedArtifactsForMultiMilestoneConfiguration($user, $sub_milestone_ids);
+        }
+    }
+
+    private function getUnplannedArtifactsForMultiMilestoneConfiguration(PFUser $user, $sub_milestone_ids)
+    {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null || $this->offset !== null) {
                 $artifacts_collection = $this->items_finder->getTopMilestoneUnplannedBacklogItemsWithLimitAndOffset($user, $this->limit, $this->offset);

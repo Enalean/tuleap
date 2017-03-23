@@ -39,6 +39,7 @@ use \Planning_Milestone;
 use \PFUser;
 use \Project;
 use \Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 
 class MilestoneResourceValidator {
 
@@ -60,13 +61,19 @@ class MilestoneResourceValidator {
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;
 
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
+
     public function __construct(
         PlanningFactory $planning_factory,
         Tracker_ArtifactFactory $tracker_artifact_factory,
         Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory,
         Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_row_collection_factory
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_row_collection_factory,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
     ) {
         $this->planning_factory                = $planning_factory;
         $this->tracker_artifact_factory        = $tracker_artifact_factory;
@@ -74,6 +81,7 @@ class MilestoneResourceValidator {
         $this->backlog_strategy_factory        = $backlog_strategy_factory;
         $this->milestone_factory               = $milestone_factory;
         $this->backlog_item_collection_factory = $backlog_row_collection_factory;
+        $this->scrum_mono_milestone_checker    = $scrum_mono_milestone_checker;
     }
 
     /**
@@ -231,7 +239,12 @@ class MilestoneResourceValidator {
         $this->validateIdsAreUnique($to_add);
 
         $ids_to_add = $this->filterArtifactIdsAlreadyInBacklog($to_add, $milestone, $user);
-        $indexed_children_backlog_trackers = $this->getIndexedChildrenBacklogTrackers($milestone);
+
+        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($milestone->getProject()->getID()) === true) {
+            $indexed_children_backlog_trackers = $this->getIndexedMonomilestoneBacklogTracker($milestone);
+        } else {
+            $indexed_children_backlog_trackers = $this->getIndexedChildrenBacklogTrackers($milestone);
+        }
 
         foreach($ids_to_add as $id) {
             $artifact = $this->tracker_artifact_factory->getArtifactById($id);
@@ -241,6 +254,11 @@ class MilestoneResourceValidator {
         }
 
         return $ids_to_add;
+    }
+
+    private function getIndexedMonomilestoneBacklogTracker(Planning_Milestone $milestone)
+    {
+        return $this->planning_factory->getBacklogTrackersIdsIndexedByTrackerId($milestone->getPlanningId());
     }
 
     private function filterArtifactIdsAlreadyInBacklog(array $ids, Planning_Milestone $milestone, PFUser $user) {
