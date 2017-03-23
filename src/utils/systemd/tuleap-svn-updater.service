@@ -1,0 +1,13 @@
+[Unit]
+Description=SVN Updater Service
+
+[Service]
+Type=simple
+User=root
+PIDFile=/var/run/svnroot_updater.pid
+ExecStartPre=/usr/bin/tuleap -c -r
+ExecStart=/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/svn/svnroot_updater.php
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
