@@ -155,7 +155,7 @@ class Tracker_NotificationsManager {
 
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editnotifications');
-        echo '<fieldset><form action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
+        echo '<fieldset><form id="tracker-admin-notifications-form" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
 
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotifications_Global($request);
