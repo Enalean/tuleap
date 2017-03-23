@@ -88,13 +88,14 @@ class Tracker_NotificationsManager {
         $new_global_notification = $request->get('new_global_notification');
         $global_notification     = $request->get('global_notification');
         $remove_global           = $request->get('remove_global');
+        $notification_id         = $request->get('submit_notification_edit');
 
         if ($remove_global) {
             $this->deleteGlobalNotification($remove_global);
         } else if ($new_global_notification && $new_global_notification['addresses']) {
             $this->createNewGlobalNotification($new_global_notification);
-        } else if ($global_notification) {
-            $this->updateGlobalNotification($global_notification);
+        } else if ($global_notification && $notification_id) {
+            $this->updateGlobalNotification($notification_id, $global_notification[$notification_id]);
         }
 
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
@@ -265,25 +266,23 @@ class Tracker_NotificationsManager {
         }
     }
 
-    protected function updateGlobalNotification(array $notifications)
+    protected function updateGlobalNotification($notification_id, $notification)
     {
         $global_notifications = $this->getGlobalNotifications();
-        foreach ($notifications as $notification_id => $notification) {
-            if (array_key_exists($notification_id, $global_notifications)) {
-                $autocompleter             = $this->getAutocompleter($notification['addresses']);
-                $emails                    = $autocompleter->getEmails();
-                $notification['addresses'] = $this->addresses_builder->transformNotificationAddressesArrayAsString($emails);
+        if (array_key_exists($notification_id, $global_notifications)) {
+            $autocompleter             = $this->getAutocompleter($notification['addresses']);
+            $emails                    = $autocompleter->getEmails();
+            $notification['addresses'] = $this->addresses_builder->transformNotificationAddressesArrayAsString($emails);
 
-                $this->getGlobalDao()->modify($notification_id, $notification);
-                $this->user_to_notify_dao->deleteByNotificationId($notification_id);
-                $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id);
+            $this->getGlobalDao()->modify($notification_id, $notification);
+            $this->user_to_notify_dao->deleteByNotificationId($notification_id);
+            $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id);
 
-                if ($this->isNotificationEmpty($autocompleter)) {
-                    $this->removeGlobalNotification($notification_id);
-                } else {
-                    $this->notificationAddUsers($notification_id, $autocompleter);
-                    $this->notificationAddUgroups($notification_id, $autocompleter);
-                }
+            if ($this->isNotificationEmpty($autocompleter)) {
+                $this->removeGlobalNotification($notification_id);
+            } else {
+                $this->notificationAddUsers($notification_id, $autocompleter);
+                $this->notificationAddUgroups($notification_id, $autocompleter);
             }
         }
     }

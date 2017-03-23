@@ -51,7 +51,6 @@
                                            multiple
                                            disabled
                                     />
-                                    <input type="hidden" name="notification_id" value="{{ notification_id }}" disabled />
                                 </div>
                             </td>
                             <td class="tracker-global-notifications-checkbox-cell">
@@ -112,7 +111,7 @@
                                     </div>
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
-                                    <button type="submit" name="submit" class="btn btn-primary">{{ save }}</button>
+                                    <button type="submit" name="submit_notification_edit" value="{{ notification_id }}" class="btn btn-primary">{{ save }}</button>
                                     <button type="button" name="submit" class="btn tracker-notification-edit-toggle">{{ cancel }}</button>
                                 </div>
                             </td>
