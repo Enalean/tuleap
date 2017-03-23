@@ -24,6 +24,7 @@ use Docman_ItemFactory;
 use Docman_NotificationsManager;
 use PFUser;
 use Project;
+use UserManager;
 
 class NotificationsForProjectMemberCleaner
 {
@@ -39,15 +40,21 @@ class NotificationsForProjectMemberCleaner
      * @var Docman_NotificationsManager
      */
     private $notifications_manager;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         Docman_ItemFactory $item_factory,
         Docman_NotificationsManager $notifications_manager,
+        UserManager $user_manager,
         Dao $users_to_notify_dao
     ) {
         $this->item_factory          = $item_factory;
         $this->users_to_notify_dao   = $users_to_notify_dao;
         $this->notifications_manager = $notifications_manager;
+        $this->user_manager          = $user_manager;
     }
 
     public function cleanNotificationsAfterUserRemoval(Project $project, PFUser $user)
@@ -68,7 +75,29 @@ class NotificationsForProjectMemberCleaner
         $dar = $this->notifications_manager->listAllMonitoredItems($project->getID(), $user->getId());
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
-                $this->notifications_manager->remove($row['user_id'], $row['item_id'], $row['type']);
+                $this->notifications_manager->removeUser($row['user_id'], $row['item_id'], $row['type']);
+            }
+        }
+    }
+
+    public function cleanNotificationsAfterProjectVisibilityChange(Project $project, $new_access)
+    {
+        if ($new_access !== Project::ACCESS_PRIVATE) {
+            return;
+        }
+
+        $root_item = $this->item_factory->getRoot($project->getID());
+        if (! $root_item) {
+            return;
+        }
+
+        $dar = $this->notifications_manager->listAllMonitoredItems($project->getID());
+        if ($dar && ! $dar->isError()) {
+            foreach ($dar as $row) {
+                $user = $this->user_manager->getUserById($row['user_id']);
+                if (! $user->isMember($project->getID())) {
+                    $this->notifications_manager->removeUser($row['user_id'], $row['item_id'], $row['type']);
+                }
             }
         }
     }

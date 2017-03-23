@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\Notifications;
 
 use DataAccessObject;
+use ProjectUGroup;
 
 class UgroupsToNotifyDao extends DataAccessObject
 {
@@ -99,5 +100,78 @@ class UgroupsToNotifyDao extends DataAccessObject
             ";
 
         return $this->retrieve($sql);
+    }
+
+    public function disableAnonymousRegisteredAuthenticated($project_id)
+    {
+        return $this->updateNotificationUgroups(
+            $project_id,
+            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+    }
+
+    public function disableAuthenticated($project_id)
+    {
+        return $this->updateNotificationUgroups(
+            $project_id,
+            array(ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::REGISTERED
+        );
+    }
+
+    private function updateNotificationUgroups($project_id, array $old_ugroup_ids, $new_ugroup_id)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $new_ugroup_id  = $this->da->escapeInt($new_ugroup_id);
+        $old_ugroup_ids = $this->da->escapeIntImplode($old_ugroup_ids);
+
+        $this->startTransaction();
+
+        $sql = $this->getQueryToReplaceUgroupsByProjectId($project_id, $old_ugroup_ids, $new_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        /**
+         * Ugroups to be removed if new_ugroup_id already exists in
+         * tracker_global_notification_ugroups table for the same
+         * notification_id
+         */
+        $sql = $this->getQueryToRemoveRemainingUgroupsByProjectId($project_id, $old_ugroup_ids);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return true;
+    }
+
+    private function getQueryToReplaceUgroupsByProjectId($project_id, $old_ugroup_ids, $new_ugroup_id)
+    {
+        $sql = "UPDATE IGNORE plugin_docman_notification_ugroups AS notification
+                INNER JOIN plugin_docman_item AS item
+                    ON item.item_id = notification.item_id
+            SET notification.ugroup_id = $new_ugroup_id
+            WHERE item.group_id = $project_id
+              AND notification.ugroup_id IN ($old_ugroup_ids)";
+        return $sql;
+    }
+
+    private function getQueryToRemoveRemainingUgroupsByProjectId($project_id, $old_ugroup_ids)
+    {
+        $sql = "DELETE notification.*
+                FROM plugin_docman_item AS item
+                INNER JOIN plugin_docman_notification_ugroups AS notification
+                    ON (
+                        item.item_id = notification.item_id
+                        AND item.group_id = $project_id
+                        AND notification.ugroup_id IN ($old_ugroup_ids)
+                    )";
+        return $sql;
     }
 }
