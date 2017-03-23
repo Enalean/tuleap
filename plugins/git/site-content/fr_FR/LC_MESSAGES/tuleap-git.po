@@ -35,10 +35,6 @@ msgid "Notified people"
 msgstr "Personnes notifiées"
 
 #, php-format
-msgid "The entered value '%s' is invalid."
-msgstr "La valeur saisie '%s' est invalide."
-
-#, php-format
 msgid "User \"%s\" successfully added to notifications"
 msgstr "L'utilisateur \"%s\" a été ajouté aux notifications"
 

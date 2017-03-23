@@ -113,6 +113,10 @@ msgstr "Liste des raccourcis"
 msgid "Sidebar (project)"
 msgstr "Barre de service (projet)"
 
+#, php-format
+msgid "The entered value '%s' is invalid."
+msgstr "La valeur saisie '%s' est invalide."
+
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"
 

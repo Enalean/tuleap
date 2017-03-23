@@ -97,6 +97,10 @@ msgstr ""
 msgid "Sidebar (project)"
 msgstr ""
 
+#, php-format
+msgid "The entered value '%s' is invalid."
+msgstr ""
+
 msgid "This reference does not exist"
 msgstr ""
 
