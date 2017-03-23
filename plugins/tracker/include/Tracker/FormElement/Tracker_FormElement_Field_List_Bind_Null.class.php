@@ -234,4 +234,13 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return $visitor->visitListBindNull($this, $parameters);
     }
+
+    /**
+     * @param int $bindvalue_id
+     * @return Tracker_FormElement_Field_List_BindValue
+     */
+    public function getBindValueById($bindvalue_id)
+    {
+        return new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+    }
 }

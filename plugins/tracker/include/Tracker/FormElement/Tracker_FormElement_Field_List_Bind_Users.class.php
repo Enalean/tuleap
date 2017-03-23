@@ -1050,4 +1050,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         return $values;
     }
+
+    /**
+     * @param int $bindvalue_id
+     * @return Tracker_FormElement_Field_List_BindValue
+     */
+    public function getBindValueById($bindvalue_id)
+    {
+        return new Tracker_FormElement_Field_List_Bind_UsersValue($bindvalue_id);
+    }
 }

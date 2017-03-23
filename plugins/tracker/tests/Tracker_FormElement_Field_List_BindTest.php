@@ -233,5 +233,9 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
     public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
     }
+
+    public function getBindValueById($bindvalue_id)
+    {
+    }
 }
 

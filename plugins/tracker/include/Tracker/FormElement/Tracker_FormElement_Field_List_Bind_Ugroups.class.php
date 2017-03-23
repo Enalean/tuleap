@@ -623,7 +623,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
         $recipients = array();
         foreach ($changeset_value->getListValues() as $ugroups_value) {
-            $recipients = array_merge($recipients, $ugroups_value->getMembersName());
+            if ($ugroups_value instanceof Tracker_FormElement_Field_List_Bind_UsersValue) {
+                $recipients = array_merge($recipients, $ugroups_value->getMembersName());
+            }
         }
         return $recipients;
     }
@@ -637,7 +639,25 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return true;
     }
 
-    public function isValid($value) {
+    public function isValid($value)
+    {
+        if (empty($value)) {
+            return true;
+        }
+        $separated_values = explode(',', $value);
+        foreach ($separated_values as $separated_value) {
+            if (strpos($separated_value, '!') === false) {
+                continue;
+            }
+            $user_group_name = substr($separated_value, 1);
+
+            $project = $this->getField()->getTracker()->getProject();
+            $ugroup  = $this->ugroup_manager->getUGroupByName($project, $user_group_name);
+
+            if ($ugroup === null) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -760,5 +780,16 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function accept(BindVisitor $visitor, BindParameters $parameters)
     {
         return $visitor->visitListBindUgroups($this, $parameters);
+    }
+
+    /**
+     * @param int $bindvalue_id
+     * @return Tracker_FormElement_Field_List_BindValue
+     */
+    public function getBindValueById($bindvalue_id)
+    {
+        $row = $this->value_dao->searchById($bindvalue_id)->getRow();
+
+        return $this->getValueFromRow($row);
     }
 }
