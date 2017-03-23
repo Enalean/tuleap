@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,9 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use PlanningFactory;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use Luracast\Restler\RestException;
@@ -36,7 +39,6 @@ use Tracker_Artifact;
 use TrackerFactory;
 use Tracker_SemanticManager;
 use Tracker_SemanticCollection;
-use Tracker_FormElementFactory;
 use Tracker_Semantic_Title;
 use Tracker_Semantic_Status;
 use AgileDashBoard_Semantic_InitialEffort;
@@ -63,7 +65,8 @@ class BacklogItemResource extends AuthenticatedResource {
     /** @var ResourcesPatcher */
     private $resources_patcher;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
         $this->user_manager     = UserManager::instance();
 
@@ -74,9 +77,12 @@ class BacklogItemResource extends AuthenticatedResource {
             $this->artifact_factory
         );
 
-        $this->tracker_factory      = TrackerFactory::instance();
-        $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
-        $this->resources_patcher    = new ResourcesPatcher(
+        $this->tracker_factory = TrackerFactory::instance();
+        $this->artifactlink_updater = new ArtifactLinkUpdater(
+            $priority_manager,
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build())
+        );
+        $this->resources_patcher = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->artifact_factory,
             $priority_manager

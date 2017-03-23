@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,15 +21,12 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityManager;
-use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Artifact;
 use Tracker_NoArtifactLinkFieldException;
-use UserManager;
-use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 use PFUser;
 
 class ArtifactLinkUpdater {
@@ -39,8 +36,17 @@ class ArtifactLinkUpdater {
      */
     private $priority_manager;
 
-    public function __construct(Tracker_Artifact_PriorityManager $priority_manager) {
-        $this->priority_manager = $priority_manager;
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
+
+    public function __construct(
+        Tracker_Artifact_PriorityManager $priority_manager,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+    ) {
+        $this->priority_manager             = $priority_manager;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     public function update(array $new_backlogitems_ids, Tracker_Artifact $artifact, PFUser $current_user, IFilterValidElementsToUnkink $filter) {
@@ -187,8 +193,13 @@ class ArtifactLinkUpdater {
             return;
         }
 
+        $nature = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($artifactlink_field->getTracker()->getProject()->getID()) === true) {
+            $nature = Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
+        }
+
         foreach ($elements_to_be_linked as $artifact_id) {
-            $field_datas[$artifactlink_field->getId()]['natures'][$artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+            $field_datas[$artifactlink_field->getId()]['natures'][$artifact_id] = $nature;
         }
     }
 
