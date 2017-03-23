@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 
 #, php-format
 msgid "Cannot add user \"%s\""
@@ -33,6 +33,10 @@ msgstr "Aucune notification n'a été définie"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+#, php-format
+msgid "The entered value '%s' is invalid."
+msgstr "La valeur saisie '%s' est invalide."
 
 #, php-format
 msgid "User \"%s\" successfully added to notifications"

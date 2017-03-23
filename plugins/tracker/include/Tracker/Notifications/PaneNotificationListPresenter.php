@@ -48,7 +48,7 @@ class PaneNotificationListPresenter
 
         $this->admin_note      = dgettext(
             'tuleap-tracker',
-            'As a tracker administrator you can provide email addresses (comma separated) to which new Artifact submissions (and possibly updates) will be systematically sent.'
+            'As a tracker administrator, you can provide email addresses to which new Artifact submissions (and possibly updates) will be systematically sent.'
         );
         $this->notified_people = dgettext('tuleap-tracker', 'Notified people');
         $this->send_all        = dgettext('tuleap-tracker', 'On all updates?');
