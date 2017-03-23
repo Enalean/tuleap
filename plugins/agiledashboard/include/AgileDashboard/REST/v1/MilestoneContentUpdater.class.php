@@ -21,6 +21,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Tracker_FormElement_Field_ArtifactLink;
 use \Tracker_FormElementFactory;
 use \Tracker_ArtifactFactory;
 use \Planning_Milestone;
@@ -59,7 +60,8 @@ class MilestoneContentUpdater {
             new FilterValidContent(
                 $this->artifact_factory,
                 $milestone
-            )
+            ),
+            Tracker_FormElement_Field_ArtifactLink::NO_NATURE
         );
     }
 
