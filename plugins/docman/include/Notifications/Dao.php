@@ -103,4 +103,16 @@ class Dao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function deleteByItemIdAndUserId($item_id, $user_id)
+    {
+        $item_id = $this->da->escapeInt($item_id);
+        $user_id = $this->da->escapeInt($user_id);
+
+        $sql = "DELETE FROM plugin_docman_notifications
+                WHERE item_id = $item_id
+                  AND user_id = $user_id";
+
+        return $this->update($sql);
+    }
 }

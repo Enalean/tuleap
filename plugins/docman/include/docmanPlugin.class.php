@@ -25,6 +25,7 @@
  */
 
 use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
@@ -38,7 +39,6 @@ require_once 'constants.php';
 
 class DocmanPlugin extends Plugin
 {
-
     const TRUNCATED_SERVICE_NAME = 'Documents';
     const SYSTEM_NATURE_NAME     = 'document';
     const SERVICE_SHORTNAME      = 'docman';
@@ -847,35 +847,15 @@ class DocmanPlugin extends Plugin
      *
      * @return void
      */
-    function projectRemoveUser($params) {
-        $groupId = $params['group_id'];
-        $userId = $params['user_id'];
+    function projectRemoveUser($params)
+    {
+        $project_id = $params['group_id'];
+        $user_id    = $params['user_id'];
 
-        $project = $this->getProject($groupId);
-        if (!$project->isPublic()) {
-            require_once('Docman_ItemFactory.class.php');
-            $docmanItemFactory = new Docman_ItemFactory();
-            $root = $docmanItemFactory->getRoot($groupId);
-            if ($root) {
-                require_once('Docman_NotificationsManager.class.php');
-                $notificationsManager = new Docman_NotificationsManager(
-                    $project,
-                    null,
-                    null,
-                    $this->getMailBuilder(),
-                    $this->getNotificationsDao(),
-                    $this->getUsersNotificationRetriever(),
-                    $this->getUGroupsRetriever(),
-                    $this->getNotifiedPeopleRetriever()
-                );
-                $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
-                if($dar && !$dar->isError()) {
-                    foreach ($dar as $row) {
-                        $notificationsManager->remove($row['user_id'], $row['item_id'], $row['type']);
-                    }
-                }
-            }
-        }
+        $project = $this->getProject($project_id);
+        $user    = $this->getUserManager()->getUserById($user_id);
+        $notifications_for_project_member_cleaner = $this->getNotificationsForProjectMemberCleaner($project);
+        $notifications_for_project_member_cleaner->cleanNotificationsAfterUserRemoval($project, $user);
     }
 
     /**
@@ -901,7 +881,7 @@ class DocmanPlugin extends Plugin
                     null,
                     null,
                     $this->getMailBuilder(),
-                    $this->getNotificationsDao(),
+                    $this->getUsersToNotifyDao(),
                     $this->getUsersNotificationRetriever(),
                     $this->getUGroupsRetriever(),
                     $this->getNotifiedPeopleRetriever()
@@ -1067,7 +1047,25 @@ class DocmanPlugin extends Plugin
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
     }
 
-    private function getNotificationsDao()
+    private function getNotificationsForProjectMemberCleaner(Project $project)
+    {
+        return new NotificationsForProjectMemberCleaner(
+            $this->getItemFactory($project->getID()),
+            new Docman_NotificationsManager(
+                $project,
+                null,
+                null,
+                $this->getMailBuilder(),
+                $this->getUsersToNotifyDao(),
+                $this->getUsersNotificationRetriever(),
+                $this->getUGroupsRetriever(),
+                $this->getNotifiedPeopleRetriever()
+            ),
+            $this->getUsersToNotifyDao()
+        );
+    }
+
+    private function getUsersToNotifyDao()
     {
         return new Dao();
     }
@@ -1089,22 +1087,32 @@ class DocmanPlugin extends Plugin
     private function getUsersNotificationRetriever()
     {
         return new UsersRetriever(
-            $this->getNotificationsDao(),
-            new Docman_ItemFactory()
+            $this->getUsersToNotifyDao(),
+            $this->getItemFactory()
         );
     }
     private function getUGroupsRetriever()
     {
-        return new UGroupsRetriever($this->getUGroupToNotifyDao(), new Docman_ItemFactory());
+        return new UGroupsRetriever($this->getUGroupToNotifyDao(), $this->getItemFactory());
     }
 
     private function getNotifiedPeopleRetriever()
     {
         return new NotifiedPeopleRetriever(
-            $this->getNotificationsDao(),
+            $this->getUsersToNotifyDao(),
             $this->getUGroupToNotifyDao(),
-            new Docman_ItemFactory(),
+            $this->getItemFactory(),
             $this->getUGroupManager()
         );
+    }
+
+    private function getItemFactory($project_id = null)
+    {
+        return new Docman_ItemFactory($project_id);
+    }
+
+    private function getUserManager()
+    {
+        return UserManager::instance();
     }
 }
