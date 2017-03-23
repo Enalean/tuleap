@@ -79,8 +79,8 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
         $notifications_dao         = mock('Tuleap\Docman\Notifications\Dao');
         $notified_people_retriever = mock('Tuleap\Docman\Notifications\NotifiedPeopleRetriever');
         stub($notified_people_retriever)->getNotifiedUsers()->returns($listeningUsers);
-        $users_remover   = mock('Tuleap\Docman\Notifications\UsersRemover');
-        $ugroups_remover = mock('Tuleap\Docman\Notifications\UgroupsRemover');
+        $users_remover   = mock('Tuleap\Docman\Notifications\UsersUpdater');
+        $ugroups_remover = mock('Tuleap\Docman\Notifications\UgroupsUpdater');
 
         $notifications_manager = new Docman_NotificationsManager_DeleteTestVersion();
         $notifications_manager->__construct(

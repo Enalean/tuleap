@@ -23,13 +23,15 @@
 
 use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
-use Tuleap\Docman\Notifications\UgroupsRemover;
+use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
-use Tuleap\Docman\Notifications\UsersRemover;
+use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\User\InvalidEntryInAutocompleterCollection;
+use Tuleap\User\RequestFromAutocompleter;
 
 class Docman_Controller extends Controler {
     // variables
@@ -98,8 +100,8 @@ class Docman_Controller extends Controler {
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
-            $this->getUserRemover(),
-            $this->getUGroupRemover()
+            $this->getUserUpdater(),
+            $this->getUGroupUpdater()
         );
         $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true);
@@ -114,8 +116,8 @@ class Docman_Controller extends Controler {
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
-            $this->getUserRemover(),
-            $this->getUGroupRemover()
+            $this->getUserUpdater(),
+            $this->getUGroupUpdater()
         );
         $event_manager->addListener('plugin_docman_event_add', $this->notificationsManager_Add, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true);
@@ -128,8 +130,8 @@ class Docman_Controller extends Controler {
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
-            $this->getUserRemover(),
-            $this->getUGroupRemover()
+            $this->getUserUpdater(),
+            $this->getUGroupUpdater()
         );
         $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true);
@@ -142,8 +144,8 @@ class Docman_Controller extends Controler {
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
-            $this->getUserRemover(),
-            $this->getUGroupRemover()
+            $this->getUserUpdater(),
+            $this->getUGroupUpdater()
         );
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true);
@@ -156,8 +158,8 @@ class Docman_Controller extends Controler {
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
-            $this->getUserRemover(),
-            $this->getUGroupRemover()
+            $this->getUserUpdater(),
+            $this->getUGroupUpdater()
         );
         $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true);
     }
@@ -908,78 +910,26 @@ class Docman_Controller extends Controler {
             }
             $this->_setView('Details');
             break;
-        case 'remove_monitoring':
-            $this->_actionParams['listeners_users_to_delete']   = array();
-            $this->_actionParams['listeners_ugroups_to_delete'] = array();
-            if ($this->userCanManage($item->getId())) {
-                if ($this->request->exist('listeners_users_to_delete')) {
-                    $um      = UserManager::instance();
-                    $vUserId = new Valid_UInt('listeners_users_to_delete');
-                    if($this->request->validArray($vUserId)) {
-                        $userIds = $this->request->get('listeners_users_to_delete');
-                        $users   = array();
-                        foreach ($userIds as $userId) {
-                            $users[] = $um->getUserById($userId);
-                        }
-                        $this->_actionParams['listeners_users_to_delete'] = $users;
-                        $this->_actionParams['item']                      = $item;
-                    }
-                }
-                if ($this->request->exist('listeners_ugroups_to_delete')) {
-                    $um      = new UGroupManager();
-                    $vUserId = new Valid_UInt('listeners_ugroups_to_delete');
-                    if($this->request->validArray($vUserId)) {
-                        $ugroups_ids = $this->request->get('listeners_ugroups_to_delete');
-                        $ugroups     = array();
-                        foreach ($ugroups_ids as $ugroup_id) {
-                            $ugroups[] = $um->getById($ugroup_id);
-                        }
-                        $this->_actionParams['listeners_ugroups_to_delete'] = $ugroups;
-                        $this->_actionParams['item']                        = $item;
-                    }
-                }
-                $this->action = 'remove_monitoring';
-                $this->_setView('Details');
-            } else {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
-                $this->_setView('Details');
-            }
-            break;
+        case 'update_monitoring':
+            $users_to_delete   = $this->request->get('listeners_users_to_delete');
+            $ugroups_to_delete = $this->request->get('listeners_ugroups_to_delete');
+            $listeners_to_add  = $this->request->get('listeners_to_add');
 
-        case 'add_monitoring':
-            $this->_actionParams['listeners_to_add'] = array();
-            $this->_actionParams['invalid_users']    = false;
-            if ($this->userCanManage($item->getId())) {
-                if ($this->request->exist('listeners_to_add')) {
-                    $um    = UserManager::instance();
-                    $vUser = new Valid_Text('listeners_to_add');
-                    if($this->request->valid($vUser)) {
-                        $usernames = array_map('trim', preg_split('/[,;]/', $this->request->get('listeners_to_add')));
-                        $users     = array();
-                        $vUserName = new Valid_String();
-                        $vUserName->required();
-                        foreach ($usernames as $username) {
-                            if ($vUserName->validate($username) && $user = $um->findUser($username)) {
-                                $users[] =$user;
-                            } else {
-                                $this->_actionParams['invalid_users'] = true;
-                            }
-                        }
-                        if ($this->request->exist('monitor_cascade')) {
-                            $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
-                        }
-                        $this->_actionParams['listeners_to_add'] = $users;
-                        $this->_actionParams['item']             = $item;
-                    }
-                }
-                $this->action = 'add_monitoring';
-                $this->_setView('Details');
+            if (! $users_to_delete && ! $ugroups_to_delete && ! $listeners_to_add) {
+                $this->feedback->log('error',
+                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_element'));
             } else {
-                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
-                $this->_setView('Details');
+                if ($users_to_delete || $ugroups_to_delete) {
+                    $this->removeMonitoring($item, $users_to_delete, $ugroups_to_delete);
+                }
+                if ($listeners_to_add) {
+                    $this->addMonitoring($item, $listeners_to_add);
+                }
+                $this->_actionParams['item'] = $item;
+                $this->action                = 'update_monitoring';
             }
+            $this->_setView('Details');
             break;
-
         case 'move_here':
             if (!$this->request->exist('item_to_move')) {
                 $this->feedback->log('error', 'Missing parameter.');
@@ -1933,13 +1883,111 @@ class Docman_Controller extends Controler {
         );
     }
 
-    private function getUGroupRemover()
+    private function getUGroupUpdater()
     {
-        return new UgroupsRemover($this->getUGroupNotificationDao());
+        return new UgroupsUpdater($this->getUGroupNotificationDao());
     }
 
-    private function getUserRemover()
+    private function getUserUpdater()
     {
-        return new UsersRemover($this->getNotificationsDao());
+        return new UsersUpdater($this->getNotificationsDao());
+    }
+
+    /**
+     * @param $item
+     */
+    private function removeMonitoring($item, $users_to_delete_ids, $ugroups_to_delete_ids)
+    {
+        $this->_actionParams['listeners_users_to_delete']   = array();
+        $this->_actionParams['listeners_ugroups_to_delete'] = array();
+        if ($this->userCanManage($item->getId())) {
+            $user_manager  = UserManager::instance();
+            $valid_user_id = new Valid_UInt('listeners_users_to_delete');
+            if ($this->request->validArray($valid_user_id)) {
+                $users = array();
+                foreach ($users_to_delete_ids as $user_id) {
+                    $users[] = $user_manager->getUserById($user_id);
+                }
+                $this->_actionParams['listeners_users_to_delete'] = $users;
+                $this->_actionParams['item']                      = $item;
+            }
+            $ugroup_manager  = new UGroupManager();
+            $valid_ugroup_id = new Valid_UInt('listeners_ugroups_to_delete');
+            if ($this->request->validArray($valid_ugroup_id)) {
+                $ugroups = array();
+                foreach ($ugroups_to_delete_ids as $ugroup_id) {
+                    $ugroups[] = $ugroup_manager->getById($ugroup_id);
+                }
+                $this->_actionParams['listeners_ugroups_to_delete'] = $ugroups;
+            }
+        } else {
+            $this->feedback->log('error',
+                $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+        }
+    }
+
+    /**
+     * @param $item
+     */
+    private function addMonitoring($item, $listeners_to_add)
+    {
+        $this->_actionParams['listeners_to_add'] = array();
+        if ($this->userCanManage($item->getId())) {
+            $invalid_entries = new InvalidEntryInAutocompleterCollection();
+            $autocompleter   = $this->getAutocompleter($listeners_to_add, $invalid_entries);
+            $invalid_entries->generateWarningMessageForInvalidEntries();
+            $emails  = $autocompleter->getEmails();
+            $users   = $autocompleter->getUsers();
+            $ugroups = $autocompleter->getUgroups();
+
+            if (! empty ($users)) {
+                $this->notificationAddUsers($users);
+            }
+
+            if (! empty ($ugroups)) {
+                $this->notificationAddUgroups($ugroups);
+            }
+
+            if (! empty ($emails)) {
+                $this->feedback->log('warning',
+                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_emails_supported'));
+            }
+        } else {
+            $this->feedback->log('error',
+                $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+        }
+    }
+
+    private function notificationAddUsers($users)
+    {
+        if ($this->request->exist('monitor_cascade')) {
+            $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
+        }
+        $this->_actionParams['listeners_users_to_add'] = $users;
+    }
+
+    private function notificationAddUgroups($ugroups)
+    {
+        if ($this->request->exist('monitor_cascade')) {
+            $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
+        }
+        $this->_actionParams['listeners_ugroups_to_add'] = $ugroups;
+    }
+
+    /**
+     * @return RequestFromAutocompleter
+     */
+    private function getAutocompleter($addresses, InvalidEntryInAutocompleterCollection $invalid_entries)
+    {
+        $autocompleter = new RequestFromAutocompleter(
+            $invalid_entries,
+            new Rule_Email(),
+            UserManager::instance(),
+            new UGroupManager(),
+            $this->getUser(),
+            $this->getProject(),
+            $addresses
+        );
+        return $autocompleter;
     }
 }

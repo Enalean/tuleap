@@ -1,2 +1,8 @@
 msgid "Notified people"
 msgstr ""
+
+msgid "User, group"
+msgstr ""
+
+msgid "Validate"
+msgstr ""

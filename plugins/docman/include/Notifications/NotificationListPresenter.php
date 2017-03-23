@@ -31,25 +31,32 @@ class NotificationListPresenter
     public $has_listeners;
     public $notifications;
     public $notified_people;
-    public $delete_button;
+    public $validate_button;
     public $monitored_doc;
     public $purified_help;
     public $empty_state;
     public $ugroups_to_be_notified;
     public $users_to_be_notified;
+    public $project_id;
+    public $placeholder;
+    public $enable_sub_hierarchy;
 
     public function __construct(array $users, array $ugroups, Docman_Item $item)
     {
         $this->has_listeners = count($users) + count($ugroups) > 0;
+        $this->project_id    = $item->getGroupId();
 
         $this->users_to_be_notified   = $this->buildNotificationsFromUsers($users, $item);
         $this->ugroups_to_be_notified = $this->buildNotificationsFromUGroups($ugroups, $item);
 
+        $this->placeholder     = dgettext('tuleap-docman', 'User, group');
         $this->notified_people = dgettext('tuleap-docman', 'Notified people');
-        $this->delete_button   = $GLOBALS['Language']->getText('plugin_docman', 'action_delete');
+        $this->validate_button = dgettext('tuleap-docman', 'Validate');
         $this->monitored_doc   = $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc');
         $this->empty_state     = $GLOBALS['Language']->getText('plugin_docman', 'empty_state');
-        $this->purified_help   = Codendi_HTMLPurifier::instance()->purify(
+
+        $this->enable_sub_hierarchy = $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_cascade');
+        $this->purified_help        = Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help'),
             CODENDI_PURIFIER_LIGHT
         );

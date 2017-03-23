@@ -664,12 +664,19 @@ plugin_docman	notifications_not_present_user	Le monitoring n'était pas activé 
 plugin_docman	notifications_not_present_ugroup	Le monitoring n'était pas activé pour le groupe '$1'
 plugin_docman	notifications_removed_user	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_removed_ugroup	Le monitoring a été supprimé pour le(s) groupe(s) '$1'
-plugin_docman	notifications_added	Le monitoring a été ajouté pour le(s) utilisateur(s) '$1'
-plugin_docman	notifications_not_added	Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
-plugin_docman	notifications_cascade_not_added	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
-plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
-plugin_docman	notifications_no_access_rights	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_added_user	Le monitoring a été ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_added_ugroup	Le monitoring a été ajouté pour le(s) groupe(s) '$1'
+plugin_docman	notifications_not_added_user	Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_not_added_ugroup	Le monitoring n'a pas pu être ajouté pour le(s) groupe(s) '$1'
+plugin_docman	notifications_cascade_not_added_user	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_cascade_not_added_ugroup	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) groupe(s) '$1'
+plugin_docman	notifications_already_exists_user	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
+plugin_docman	notifications_already_exists_ugroup	Le monitoring pour le(s) groupe(s) '$1' existe déjà
+plugin_docman	notifications_no_access_rights_user	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_no_access_rights_ugroup	Les permissions ne sont pas suffisantes pour le(s) groupe(s) '$1'
 plugin_docman	notifications_no_element	Aucun élément séléctionné
+plugin_docman	notifications_no_element_added	Aucun élément ajouté
+plugin_docman	notifications_no_emails_supported	Vous ne pouvez pas ajouter de mails
 plugin_docman	notifications_no_user_added	Aucun utilisateur ajouté
 plugin_docman	notifications_some_users_not_added	Certains utilisateurs n'ont pas été ajoutés
 plugin_docman	notifications_add_user	Ajoutez

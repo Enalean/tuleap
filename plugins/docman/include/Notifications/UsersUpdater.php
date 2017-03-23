@@ -20,7 +20,7 @@
 
 namespace Tuleap\Docman\Notifications;
 
-class UsersRemover
+class UsersUpdater
 {
     /**
      * @var Dao
@@ -30,6 +30,11 @@ class UsersRemover
     public function __construct(Dao $user_dao)
     {
         $this->user_dao = $user_dao;
+    }
+
+    public function create($user_id, $item_id, $type)
+    {
+        return $this->user_dao->create($user_id, $item_id, $type);
     }
 
     public function delete($user_id, $item_id, $type)

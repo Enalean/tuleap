@@ -62,6 +62,6 @@ class PaneNotificationListPresenter
         $this->remove_notif_desc            = dgettext('tuleap-tracker', 'You are about to remove the notification. Please confirm your action.');
         $this->remove_notif_confirm         = dgettext('tuleap-tracker', 'Confirm deletion');
         $this->add_notification             = dgettext('tuleap-tracker', 'Add notification');
-        $this->new_notification_placeholder = dgettext('tuleap-tracker', 'Enter here a comma separated email addresses list to be notified');
+        $this->new_notification_placeholder = dgettext('tuleap-tracker', 'User, group, email');
     }
 }

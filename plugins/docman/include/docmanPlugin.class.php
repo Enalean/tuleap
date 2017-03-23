@@ -27,11 +27,11 @@
 use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
-use Tuleap\Docman\Notifications\UgroupsRemover;
+use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
-use Tuleap\Docman\Notifications\UsersRemover;
 use Tuleap\Docman\Notifications\UgroupsToNotifyUpdater;
+use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
@@ -1051,8 +1051,8 @@ class DocmanPlugin extends Plugin
                 $this->getUsersNotificationRetriever(),
                 $this->getUGroupsRetriever(),
                 $this->getNotifiedPeopleRetriever(),
-                $this->getUsersRemover(),
-                $this->getUGroupsRemover()
+                $this->getUsersUpdater(),
+                $this->getUGroupsUpdater()
             ),
             $this->getUserManager(),
             $this->getUsersToNotifyDao()
@@ -1110,13 +1110,13 @@ class DocmanPlugin extends Plugin
         return UserManager::instance();
     }
 
-    private function getUGroupsRemover()
+    private function getUGroupsUpdater()
     {
-        return new UgroupsRemover($this->getUGroupToNotifyDao());
+        return new UgroupsUpdater($this->getUGroupToNotifyDao());
     }
 
-    private function getUsersRemover()
+    private function getUsersUpdater()
     {
-        return new UsersRemover($this->getUsersToNotifyDao());
+        return new UsersUpdater($this->getUsersToNotifyDao());
     }
 }

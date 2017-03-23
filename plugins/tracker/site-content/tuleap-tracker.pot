@@ -24,9 +24,6 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-msgid "Enter here a comma separated email addresses list to be notified"
-msgstr ""
-
 msgid "Error during parsing expert query"
 msgstr ""
 
@@ -215,6 +212,9 @@ msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
 msgid "This template does not use trackers"
+msgstr ""
+
+msgid "User, group, email"
 msgstr ""
 
 msgid "Wait a minute..."

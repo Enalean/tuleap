@@ -1,6 +1,6 @@
 <div class="docman_help plugin-docman-notifications-list-help">{{{ purified_help }}}</div>
-<form name="remove_monitoring" method="POST" action="">
-    <input type="hidden" name="action" value="remove_monitoring" />
+<form method="POST" action="">
+    <input type="hidden" name="action" value="update_monitoring" />
     <table class="table table-bordered plugin-docman-notifications-list">
         <thead>
             <tr>
@@ -55,12 +55,26 @@
                 <tr class="empty-table">
                     <td colspan="3">{{ empty_state }}</td>
                 </tr>
-             {{/ has_listeners }}
+            {{/ has_listeners }}
+            <tr>
+                <td></td>
+                <td {{^ has_listeners }}class="docman-notification-add-in-empty-table"{{/ has_listeners }} colspan="2">
+                    <input type="hidden"
+                           id="listeners_to_add"
+                           name="listeners_to_add"
+                           class="autocompleter-users-and-ugroups-input"
+                           placeholder="{{ placeholder }}"
+                           data-project-id="{{ project_id }}"
+                           multiple
+                    />
+                    <label class="checkbox" for="plugin_docman_monitor_add_user_cascade">
+                        <input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_add_user_cascade">
+                        {{ enable_sub_hierarchy }}
+                    </label>
+                </td>
+            </tr>
       </tbody>
     </table>
 
-    {{# has_listeners }}
-        <input type="submit" value="{{ delete_button }}">
-    {{/ has_listeners }}
+    <input type="submit" value="{{ validate_button }}" class="btn btn-primary">
 </form>
-<hr width="100%" size="1" noshade>

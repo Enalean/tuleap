@@ -21,9 +21,9 @@
 
 use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
-use Tuleap\Docman\Notifications\UgroupsRemover;
+use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
-use Tuleap\Docman\Notifications\UsersRemover;
+use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 
 require_once('common/mail/Mail.class.php');
@@ -72,14 +72,14 @@ class Docman_NotificationsManager
     protected $notified_people_retriever;
 
     /**
-     * @var UsersRemover
+     * @var UsersUpdater
      */
-    private $users_remover;
+    private $users_updater;
 
     /**
-     * @var UgroupsRemover
+     * @var UgroupsUpdater
      */
-    private $ugroups_remover;
+    private $ugroups_updater;
 
     public function __construct(
         Project $project,
@@ -90,8 +90,8 @@ class Docman_NotificationsManager
         UsersRetriever $users_retriever,
         UGroupsRetriever $ugroups_retriever,
         NotifiedPeopleRetriever $notified_people_retriever,
-        UsersRemover $users_remover,
-        UgroupsRemover $ugroups_remover
+        UsersUpdater $users_updater,
+        UgroupsUpdater $ugroups_updater
     ) {
         $this->project       = $project;
         $this->_url          = $url;
@@ -107,8 +107,8 @@ class Docman_NotificationsManager
         $this->users_retriever           = $users_retriever;
         $this->ugroups_retriever         = $ugroups_retriever;
         $this->notified_people_retriever = $notified_people_retriever;
-        $this->users_remover             = $users_remover;
-        $this->ugroups_remover           = $ugroups_remover;
+        $this->users_updater             = $users_updater;
+        $this->ugroups_updater           = $ugroups_updater;
     }
 
     function _getItemFactory() {
@@ -316,13 +316,29 @@ class Docman_NotificationsManager
         return $this->dao->create($user_id, $item_id, $type);
     }
 
+    public function addUser($user_id, $item_id, $type = null)
+    {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        return $this->users_updater->create($user_id, $item_id, $type);
+    }
+
+    public function addUgroup($ugroup_id, $item_id, $type = null)
+    {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+        return $this->ugroups_updater->create($ugroup_id, $item_id, $type);
+    }
+
     public function removeUser($id, $item_id, $type = null)
     {
         if ($type === null) {
             $type = $this->_getType();
         }
 
-        return $this->users_remover->delete($id, $item_id, $type);
+        return $this->users_updater->delete($id, $item_id, $type);
     }
 
     public function removeUgroup($id, $item_id, $type = null)
@@ -331,7 +347,7 @@ class Docman_NotificationsManager
             $type = $this->_getType();
         }
 
-        return $this->ugroups_remover->delete($id, $item_id, $type);
+        return $this->ugroups_updater->delete($id, $item_id, $type);
     }
 
     public function userExists($id, $item_id, $type = null)

@@ -70,6 +70,18 @@ class UgroupsToNotifyDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function create($item_id, $ugroup_id, $type)
+    {
+        $item_id   = $this->da->escapeInt($item_id);
+        $type      = $this->da->quoteSmart($type);
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+
+        $sql = "INSERT INTO plugin_docman_notification_ugroups (item_id, ugroup_id, type)
+                VALUES ($item_id, $ugroup_id, $type)";
+
+        return $this->update($sql);
+    }
+
     public function delete($item_id, $ugroup_id, $type)
     {
         $item_id   = $this->da->escapeInt($item_id);

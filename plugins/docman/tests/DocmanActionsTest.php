@@ -222,13 +222,13 @@ class DocmanActionsTest extends TuleapTestCase {
     }
 
     function testRemove_monitoringNothingToDelete() {
-        $controller = new MockDocman_Controller();
+        $notificationsManager = new MockDocman_NotificationsManager();
+        $controller           = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
-        $controller->feedback->expectOnce('log', array('error', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_element'));
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->remove_monitoring(array('listeners_users_to_delete' => true, 'listeners_ugroups_to_delete' => true));
+        $actions->update_monitoring(array('listeners_users_to_delete' => true, 'listeners_ugroups_to_delete' => true));
+        $notificationsManager->expectNever('removeUser');
     }
 
     function testRemove_monitoringNotifDoesNotExist() {
@@ -257,7 +257,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
         $params['listeners_ugroups_to_delete'] = array();
         $params['item'] = new Docman_Item();
-        $actions->remove_monitoring($params);
+        $actions->update_monitoring($params);
         $notificationsManager->expectCallCount('userExists', 3);
         $notificationsManager->expectNever('removeUser');
     }
@@ -290,7 +290,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
         $params['listeners_ugroups_to_delete'] = array();
         $params['item'] = new Docman_Item();
-        $actions->remove_monitoring($params);
+        $actions->update_monitoring($params);
         $notificationsManager->expectCallCount('userExists', 3);
         $notificationsManager->expectCallCount('removeUser', 3);
     }
@@ -321,19 +321,18 @@ class DocmanActionsTest extends TuleapTestCase {
         $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
         $params['listeners_ugroups_to_delete'] = array();
         $params['item'] = new Docman_Item();
-        $actions->remove_monitoring($params);
+        $actions->update_monitoring($params);
         $notificationsManager->expectCallCount('userExists', 3);
         $notificationsManager->expectCallCount('removeUser', 6);
     }
 
     function testAdd_monitoringNoOneToAdd() {
-        $controller = new MockDocman_Controller();
-        $controller->feedback = new MockFeedback();
-        $controller->feedback->expectOnce('log', array('error', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_user_added'));
-        $actions = new Docman_ActionsTest();
-        $actions->_controler = $controller;
-        $actions->add_monitoring(array('listeners_to_add' => true));
+        $controller           = new MockDocman_Controller();
+        $notificationsManager = new MockDocman_NotificationsManager();
+        $actions              = new Docman_ActionsTest();
+        $actions->_controler  = $controller;
+        $actions->update_monitoring(array('listeners_to_add' => true));
+        $notificationsManager->expectNever('addUser');
     }
 
     function testAdd_monitoringNotifAlreadyExist() {
@@ -350,14 +349,15 @@ class DocmanActionsTest extends TuleapTestCase {
         $user2 = mock('PFUser');
         $user2->setReturnValue('getName', 'Carlos');
         $user2->setReturnValue('getId', 2);
-        $controller->feedback->expectOnce('log', array('warning', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_already_exists', array('Carol,Carlos')));
-        $params['listeners_to_add'] = array($user1, $user2);
-        $params['item']             = new Docman_Item();
-        $params['invalid_users']    = false;
-        $actions->add_monitoring($params);
+        $controller->feedback->expectAt(0, 'log', array('warning', '*'));
+        $controller->feedback->expectAt(1, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_already_exists_user', array('Carol')));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_already_exists_user', array('Carlos')));
+        $params['listeners_users_to_add'] = array($user1, $user2);
+        $params['item']                   = new Docman_Item();
+        $actions->update_monitoring($params);
         $notificationsManager->expectCallCount('userExists', 2);
-        $notificationsManager->expectNever('add');
+        $notificationsManager->expectNever('addUser');
     }
 
     function testAdd_monitoringError() {
@@ -365,7 +365,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('userExists', false);
-        $notificationsManager->setReturnValue('add', false);
+        $notificationsManager->setReturnValue('addUser', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
@@ -379,15 +379,14 @@ class DocmanActionsTest extends TuleapTestCase {
         $user2->setReturnValue('getId', 132);
         $user2->setReturnValue('getName', 'Carlos');
         $controller->feedback->expectAt(0, 'log', array('error', '*'));
-        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_added', array($user1->getName())));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_added_user', array($user1->getName())));
         $controller->feedback->expectAt(1, 'log', array('error', '*'));
-        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_added', array($user2->getName())));
-        $params['listeners_to_add'] = array($user1, $user2);
-        $params['item']             = new Docman_Item();
-        $params['invalid_users']    = false;
-        $actions->add_monitoring($params);
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_added_user', array($user2->getName())));
+        $params['listeners_users_to_add'] = array($user1, $user2);
+        $params['item']                   = new Docman_Item();
+        $actions->update_monitoring($params);
         $notificationsManager->expectCallCount('userExists', 2);
-        $notificationsManager->expectCallCount('add', 2);
+        $notificationsManager->expectCallCount('addUser', 2);
     }
 
     function testAdd_monitoringNoUserPermissions() {
@@ -395,7 +394,7 @@ class DocmanActionsTest extends TuleapTestCase {
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('userExists', false);
-        $notificationsManager->setReturnValue('add', true);
+        $notificationsManager->setReturnValue('addUser', true);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
@@ -411,16 +410,15 @@ class DocmanActionsTest extends TuleapTestCase {
         $user2->setReturnValue('getId', 132);
         $user2->setReturnValue('getName', 'Carlos');
         $controller->feedback->expectAt(0, 'log', array('warning', '*'));
-        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_no_access_rights', array($user2->getName())));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_no_access_rights_user', array($user2->getName())));
         $controller->feedback->expectAt(1, 'log', array('info', '*'));
-        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_added', array($user1->getName())));
-        $params['listeners_to_add'] = array($user1, $user2);
-        $params['item']             = new Docman_Item();
-        $params['invalid_users']    = false;
-        $actions->add_monitoring($params);
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_added_user', array($user1->getName())));
+        $params['listeners_users_to_add'] = array($user1, $user2);
+        $params['item']                   = new Docman_Item();
+        $actions->update_monitoring($params);
         $notificationsManager->expectCallCount('userExists', 2);
         $docmanPermissionsManager->expectCallCount('userCanRead', 2);
-        $notificationsManager->expectCallCount('add', 1);
+        $notificationsManager->expectCallCount('addUser', 1);
     }
 
     function testAdd_monitoringSuccess() {
@@ -430,10 +428,10 @@ class DocmanActionsTest extends TuleapTestCase {
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('getName', 'Carol');
         $controller->feedback->expectOnce('log', array('info', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_added', array($user->getName())));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_added_user', array($user->getName())));
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('userExists', false);
-        $notificationsManager->setReturnValue('add', true);
+        $notificationsManager->setReturnValue('addUser', true);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
@@ -441,11 +439,10 @@ class DocmanActionsTest extends TuleapTestCase {
         $docmanPermissionsManager = new MockDocman_PermissionsManager();
         $docmanPermissionsManager->setReturnValue('userCanRead', true);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
-        $params['listeners_to_add'] = array($user);
-        $params['item']             = new Docman_Item();
-        $params['invalid_users']    = false;
-        $actions->add_monitoring($params);
+        $params['listeners_users_to_add'] = array($user);
+        $params['item']                   = new Docman_Item();
+        $actions->update_monitoring($params);
         $notificationsManager->expectCallCount('userExists', 1);
-        $notificationsManager->expectCallCount('add', 1);
+        $notificationsManager->expectCallCount('addUser', 1);
     }
 }
