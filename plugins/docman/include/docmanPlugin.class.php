@@ -31,6 +31,7 @@ use Tuleap\Docman\Notifications\UgroupsRemover;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersRemover;
+use Tuleap\Docman\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
@@ -105,7 +106,6 @@ class DocmanPlugin extends Plugin
 
         $this->_addHook('backend_system_purge_files',  'purgeFiles',  false);
         $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
-        $this->_addHook('project_is_private', 'projectIsPrivate', false);
 
         $this->_addHook('permission_request_information', 'permissionRequestInformation', false);
 
@@ -116,6 +116,7 @@ class DocmanPlugin extends Plugin
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook('project_admin_ugroup_deletion');
+        $this->addHook(Event::PROJECT_ACCESS_CHANGE);
     }
 
     public function getHooksAndCallbacks() {
@@ -861,51 +862,6 @@ class DocmanPlugin extends Plugin
     }
 
     /**
-     * Function called when a project goes from public to private so
-     * documents monitored by non member users should be monitored no more.
-     *
-     * @param array $params
-     *
-     * @return void
-     */
-    function projectIsPrivate($params) {
-        $groupId = $params['group_id'];
-        $private = $params['project_is_private'];
-
-        if ($private) {
-            require_once('Docman_ItemFactory.class.php');
-            $docmanItemFactory = new Docman_ItemFactory();
-            $root = $docmanItemFactory->getRoot($groupId);
-            if ($root) {
-                require_once('Docman_NotificationsManager.class.php');
-                $notificationsManager = new Docman_NotificationsManager(
-                    $this->getProject($groupId),
-                    null,
-                    null,
-                    $this->getMailBuilder(),
-                    $this->getUsersToNotifyDao(),
-                    $this->getUsersNotificationRetriever(),
-                    $this->getUGroupsRetriever(),
-                    $this->getNotifiedPeopleRetriever(),
-                    $this->getUsersRemover(),
-                    $this->getUGroupsRemover()
-                );
-                $dar = $notificationsManager->listAllMonitoredItems($groupId);
-                if($dar && !$dar->isError()) {
-                    $userManager = UserManager::instance();
-                    $user = null;
-                    foreach ($dar as $row) {
-                        $user = $userManager->getUserById($row['user_id']);
-                        if (!$user->isMember($groupId)) {
-                            $notificationsManager->removeUser($row['user_id'], $row['item_id'], $row['type']);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Display information about admin delegation
      *
      * @return void
@@ -1051,6 +1007,27 @@ class DocmanPlugin extends Plugin
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
     }
 
+    public function project_access_change($params)
+    {
+        $project_id = $params['project_id'];
+        $old_access = $params['old_access'];
+        $new_access = $params['access'];
+
+        $updater = $this->getUgroupsToNotifyUpdater();
+        $updater->updateProjectAccess($project_id, $old_access, $new_access);
+
+        $project = $this->getProject($project_id);
+        $notifications_for_project_member_cleaner = $this->getNotificationsForProjectMemberCleaner($project);
+        $notifications_for_project_member_cleaner->cleanNotificationsAfterProjectVisibilityChange($project, $new_access);
+    }
+
+    private function getUgroupsToNotifyUpdater()
+    {
+        return new UgroupsToNotifyUpdater(
+            $this->getUGroupToNotifyDao()
+        );
+    }
+
     private function getNotificationsForProjectMemberCleaner(Project $project)
     {
         return new NotificationsForProjectMemberCleaner(
@@ -1067,6 +1044,7 @@ class DocmanPlugin extends Plugin
                 $this->getUsersRemover(),
                 $this->getUGroupsRemover()
             ),
+            $this->getUserManager(),
             $this->getUsersToNotifyDao()
         );
     }
