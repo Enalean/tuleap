@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
+use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException;
@@ -233,7 +234,9 @@ class MilestoneResource extends AuthenticatedResource {
                 new FilterValidSubmilestones(
                     $this->milestone_factory,
                     $milestone
-            ));
+                ),
+                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            );
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
@@ -281,7 +284,13 @@ class MilestoneResource extends AuthenticatedResource {
                 $this->milestone_validator->validateSubmilestonesFromBodyContent($ids_to_add, $milestone, $user);
 
                 $this->resources_patcher->startTransaction();
-                $this->artifactlink_updater->updateArtifactLinks($user, $milestone->getArtifact(), $ids_to_add, array());
+                $this->artifactlink_updater->updateArtifactLinks(
+                    $user,
+                    $milestone->getArtifact(),
+                    $ids_to_add,
+                    array(),
+                    Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+                );
                 $this->resources_patcher->commit();
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
@@ -588,8 +597,13 @@ class MilestoneResource extends AuthenticatedResource {
                 $this->resources_patcher->startTransaction();
                 $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
                 if (count($to_add)) {
-                    $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($user, $milestone, array(), $to_add);
-                    $this->artifactlink_updater->updateArtifactLinks($user, $milestone->getArtifact(), $to_add, array());
+                    $this->artifactlink_updater->updateArtifactLinks(
+                        $user,
+                        $milestone->getArtifact(),
+                        $to_add,
+                        array(),
+                        Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                    );
                     $this->linkToMilestoneParent($milestone, $user, $to_add);
                 }
                 $this->resources_patcher->commit();
@@ -814,9 +828,16 @@ class MilestoneResource extends AuthenticatedResource {
         }
     }
 
-    private function addMissingElementsToBacklog(Planning_Milestone $milestone, PFUser $user, array $to_add) {
+    private function addMissingElementsToBacklog(Planning_Milestone $milestone, PFUser $user, array $to_add)
+    {
         if (count($to_add) > 0) {
-            $this->artifactlink_updater->updateArtifactLinks($user, $milestone->getArtifact(), $to_add, array());
+            $this->artifactlink_updater->updateArtifactLinks(
+                $user,
+                $milestone->getArtifact(),
+                $to_add,
+                array(),
+                Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+            );
         }
     }
 

@@ -70,7 +70,8 @@ class ResourcesPatcher {
         }
     }
 
-    public function removeArtifactFromSource(PFUser $user, array $add) {
+    public function removeArtifactFromSource(PFUser $user, array $add)
+    {
         $to_add = array();
         foreach ($add as $move) {
             if (! isset($move['id']) || ! is_int($move['id'])) {
@@ -82,9 +83,16 @@ class ResourcesPatcher {
             $to_add[] = $move['id'];
             if (isset($move['remove_from'])) {
                 $from_artifact = $this->getArtifact($move['remove_from']);
-                $this->artifactlink_updater->updateArtifactLinks($user, $from_artifact, array(), array($move['id']));
+                $this->artifactlink_updater->updateArtifactLinks(
+                    $user,
+                    $from_artifact,
+                    array(),
+                    array($move['id']),
+                    \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                );
             }
         }
+
         return $to_add;
     }
 

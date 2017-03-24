@@ -21,16 +21,12 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Tracker_Artifact_PriorityDao;
-use Tracker_Artifact_PriorityManager;
-use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_Artifact_Exception_CannotRankWithMyself;
-use Tracker_FormElement_Field_ArtifactLink;
-use Tracker_Artifact;
-use Tracker_NoArtifactLinkFieldException;
-use UserManager;
-use Tracker_ArtifactFactory;
 use PFUser;
+use Tracker_Artifact;
+use Tracker_Artifact_Exception_CannotRankWithMyself;
+use Tracker_Artifact_PriorityManager;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_NoArtifactLinkFieldException;
 
 class ArtifactLinkUpdater {
 
@@ -43,7 +39,13 @@ class ArtifactLinkUpdater {
         $this->priority_manager = $priority_manager;
     }
 
-    public function update(array $new_backlogitems_ids, Tracker_Artifact $artifact, PFUser $current_user, IFilterValidElementsToUnkink $filter) {
+    public function update(
+        array $new_backlogitems_ids,
+        Tracker_Artifact $artifact,
+        PFUser $current_user,
+        IFilterValidElementsToUnkink $filter,
+        $type
+    ) {
         $artlink_field = $artifact->getAnArtifactLinkField($current_user);
         if (! $artlink_field) {
             return;
@@ -54,7 +56,8 @@ class ArtifactLinkUpdater {
             $artifact,
             $current_user,
             $filter,
-            $new_backlogitems_ids
+            $new_backlogitems_ids,
+            $type
         );
 
         $this->unlinkAndLinkElements($artifact, $fields_data, $current_user, $new_backlogitems_ids);
@@ -65,7 +68,8 @@ class ArtifactLinkUpdater {
         Tracker_Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
-        array $new_submilestones_ids
+        array $new_submilestones_ids,
+        $type
     ) {
         $artifact_ids_already_linked = $this->getElementsAlreadyLinkedToArtifact($artifact, $current_user);
 
@@ -81,7 +85,7 @@ class ArtifactLinkUpdater {
             $new_submilestones_ids
         );
 
-        return $this->formatFieldDatas($artlink_field, $artifact_ids_to_be_linked, $artifact_ids_to_be_unlinked);
+        return $this->formatFieldDatas($artlink_field, $artifact_ids_to_be_linked, $artifact_ids_to_be_unlinked, $type);
     }
 
     private function getAllArtifactsToBeRemoved(PFUser $user, IFilterValidElementsToUnkink $filter, array $elements_already_linked, array $new_ids) {
@@ -98,13 +102,13 @@ class ArtifactLinkUpdater {
         return array_diff($new_submilestones_ids, $elements_already_linked);
     }
 
-    public function updateArtifactLinks(PFUser $user, Tracker_Artifact $artifact, array $to_add, array $to_remove) {
+    public function updateArtifactLinks(PFUser $user, Tracker_Artifact $artifact, array $to_add, array $to_remove, $type) {
         if (! $artifact->getAnArtifactLinkField($user)) {
             throw new Tracker_NoArtifactLinkFieldException('Missing artifact link field for milestone');
         }
 
         try {
-            $fields_data = $this->formatFieldDatas($artifact->getAnArtifactLinkField($user), $to_add, $to_remove);
+            $fields_data = $this->formatFieldDatas($artifact->getAnArtifactLinkField($user), $to_add, $to_remove, $type);
             $artifact->createNewChangeset($fields_data, '', $user, '');
         } catch (Tracker_NoChangeException $exception) {
         }
@@ -166,14 +170,15 @@ class ArtifactLinkUpdater {
     public function formatFieldDatas(
         Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
         array $elements_to_be_linked,
-        array $elements_to_be_unlinked
+        array $elements_to_be_unlinked,
+        $type
     ) {
         $field_datas = array();
 
         $field_datas[$artifactlink_field->getId()]['new_values']     = $this->formatLinkedElementForNewChangeset($elements_to_be_linked);
         $field_datas[$artifactlink_field->getId()]['removed_values'] = $this->formatElementsToBeUnlinkedForNewChangeset($elements_to_be_unlinked);
 
-        $this->augmentFieldDatasRegardingArtifactLinkTypeUsage($artifactlink_field, $elements_to_be_linked, $field_datas);
+        $this->augmentFieldDatasRegardingArtifactLinkTypeUsage($artifactlink_field, $elements_to_be_linked, $field_datas, $type);
 
         return $field_datas;
     }
@@ -181,14 +186,15 @@ class ArtifactLinkUpdater {
     private function augmentFieldDatasRegardingArtifactLinkTypeUsage(
         Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
         array $elements_to_be_linked,
-        array &$field_datas
+        array &$field_datas,
+        $type
     ) {
         if (! $artifactlink_field->getTracker()->isProjectAllowedToUseNature()) {
             return;
         }
 
         foreach ($elements_to_be_linked as $artifact_id) {
-            $field_datas[$artifactlink_field->getId()]['natures'][$artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+            $field_datas[$artifactlink_field->getId()]['natures'][$artifact_id] = $type;
         }
     }
 
