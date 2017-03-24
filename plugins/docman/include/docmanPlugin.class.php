@@ -117,6 +117,7 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+        $this->addHook(Event::SITE_ACCESS_CHANGE);
     }
 
     public function getHooksAndCallbacks() {
@@ -1019,6 +1020,15 @@ class DocmanPlugin extends Plugin
         $project = $this->getProject($project_id);
         $notifications_for_project_member_cleaner = $this->getNotificationsForProjectMemberCleaner($project);
         $notifications_for_project_member_cleaner->cleanNotificationsAfterProjectVisibilityChange($project, $new_access);
+    }
+
+    public function site_access_change($params)
+    {
+        $old_access = $params['old_value'];
+
+        $updater = $this->getUgroupsToNotifyUpdater();
+        $updater->updateSiteAccess($old_access);
+
     }
 
     private function getUgroupsToNotifyUpdater()
