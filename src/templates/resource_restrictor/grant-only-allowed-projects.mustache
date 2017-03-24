@@ -58,7 +58,7 @@
                                         {{ getId }}
                                     </td>
                                     <td class="resource-restrictor-cell-project-name tlp-table-cell-filterable">
-                                        <a href="{{ url_project }}?group_id={{ getGroupId }}">{{ getUnconvertedPublicName }}</a>
+                                        <a href="{{ url_project }}/{{ getUnixNameMixedCase }}">{{ getUnconvertedPublicName }}</a>
                                     </td>
                                 </tr>
                             {{/ allowed_projects }}
