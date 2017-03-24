@@ -16,7 +16,7 @@ $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'))) {
     $group_id = $request->get('group_id');
-
+    $current_project = ProjectManager::instance()->getProject($group_id);
     $vPostChanges = new Valid_WhiteList('post_changes', array('y'));
     $vPostChanges->required();
     if ($request->isPost() && $request->valid($vPostChanges)) {
@@ -104,40 +104,45 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                 $description  = $request->get('description');
                 $is_monitored = $request->get('is_monitored');
 
-                $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
+                if (($current_project->getAccess() == Project::ACCESS_PRIVATE && $is_public == 0) ||
+                    forum_can_be_public($current_project)) {
 
-                if ($is_monitored) {
-                    forum_add_monitor($fid, user_getid());
-			    }
+                    $fid = forum_create_forum($group_id,$forum_name,$is_public,1,$description);
+
+                    if ($is_monitored) {
+                        forum_add_monitor($fid, user_getid());
+			        }
+                }
             }
 
         } else if ($request->existAndNonEmpty('change_status')) {
 			/*
 				Change a forum to public/private
 			*/
+            if (forum_is_public_value_allowed($current_project, $is_public)) {
+                $vGrpForum = new Valid_UInt('group_forum_id');
+                $vGrpForum->required();
 
-            $vGrpForum = new Valid_UInt('group_forum_id');
-            $vGrpForum->required();
+                if($request->valid($vForumName) &&
+                   $request->valid($vDescription) &&
+                   $request->valid($vIsPublic) &&
+                   $request->valid($vGrpForum)) {
 
-            if($request->valid($vForumName) &&
-               $request->valid($vDescription) &&
-               $request->valid($vIsPublic) &&
-               $request->valid($vGrpForum)) {
+                    $forum_name     = $request->get('forum_name');
+                    $is_public      = $request->get('is_public');
+                    $description    = $request->get('description');
+                    $group_forum_id = $request->get('group_forum_id');
 
-                $forum_name     = $request->get('forum_name');
-                $is_public      = $request->get('is_public');
-                $description    = $request->get('description');
-                $group_forum_id = $request->get('group_forum_id');
-
-			$sql="UPDATE forum_group_list SET is_public=".db_ei($is_public).",forum_name='". db_es(htmlspecialchars($forum_name)) ."',".
-				"description='". db_es(htmlspecialchars($description)) ."' ".
-				"WHERE group_forum_id=".db_ei($group_forum_id)." AND group_id=".db_ei($group_id);
-			$result=db_query($sql);
-			if (!$result || db_affected_rows($result) < 1) {
-				$feedback .= ' '.$Language->getText('forum_admin_index','upd_err').' ';
-			} else {
-				$feedback .= ' '.$Language->getText('forum_admin_index','upd_success').' ';
-			}
+			        $sql="UPDATE forum_group_list SET is_public=".db_ei($is_public).",forum_name='". db_es(htmlspecialchars($forum_name)) ."',".
+				        "description='". db_es(htmlspecialchars($description)) ."' ".
+				        "WHERE group_forum_id=".db_ei($group_forum_id)." AND group_id=".db_ei($group_id);
+			        $result=db_query($sql);
+			        if (!$result || db_affected_rows($result) < 1) {
+				        $feedback .= ' '.$Language->getText('forum_admin_index','upd_err').' ';
+			        } else {
+				        $feedback .= ' '.$Language->getText('forum_admin_index','upd_success').' ';
+			        }
+                }
             }
 		}
 
@@ -190,12 +195,15 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<B>'.$Language->getText('forum_admin_index','forum_name').':</B><BR>
 			<INPUT TYPE="TEXT" NAME="forum_name" VALUE="" SIZE="30" MAXLENGTH="50"><BR>
 			<B>'.$Language->getText('forum_admin_index','description').':</B><BR>
-			<INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="255"><BR>
-			<P><B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>
-			<INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
-			<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> '.$Language->getText('global','no').'<P>
-			
-			<P><B>'.$Language->getText('forum_admin_index','monitor').'</B><BR>
+                        <INPUT TYPE="TEXT" NAME="description" VALUE="" SIZE="60" MAXLENGTH="255"><BR>';
+                        if ($current_project->getAccess() == Project::ACCESS_PRIVATE) {
+                            echo '<INPUT TYPE="HIDDEN" NAME="is_public" VALUE="0" CHECKED>';
+                        } else {
+                            echo '<P><B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>
+                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
+                        <INPUT TYPE="RADIO" NAME="is_public" VALUE="0"> '.$Language->getText('global','no').'<P>';
+                        }
+                        echo '<P><B>'.$Language->getText('forum_admin_index','monitor').'</B><BR>
                                                       '.$Language->getText('forum_admin_index','monitor_recommendation').' <br>
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="1" CHECKED> '.$Language->getText('global','yes').' &nbsp;&nbsp;&nbsp;&nbsp;
 			<INPUT TYPE="RADIO" NAME="is_monitored" VALUE="0"> '.$Language->getText('global','no').'<P>
@@ -225,10 +233,11 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 				'.$Language->getText('forum_admin_index','none_found_for_group');
 		} else {
 			echo '
-			<H2>'.$Language->getText('forum_admin_index','update_f_status').'</H2>
-			<P>
-			'.$Language->getText('forum_admin_index','private_explain').'<P>';
-
+                        <H2>'.$Language->getText('forum_admin_index','update_f_status').'</H2>';
+                        if (forum_can_be_public($current_project)) {
+                            echo '<P>
+			         '.$Language->getText('forum_admin_index','private_explain').'<P>';
+                        }
 			$title_arr=array();
 			$title_arr[]=$Language->getText('forum_admin_index','forum');
 			$title_arr[]=$Language->getText('global','status');
@@ -247,10 +256,12 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 					<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
 					<TD>
 						<FONT SIZE="-1">
-						<B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>
-						<INPUT TYPE="RADIO" NAME="is_public" VALUE="1"'.((db_result($result,$i,'is_public')=='1')?' CHECKED':'').'> '.$Language->getText('global','yes').'<BR>
-						<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"'.((db_result($result,$i,'is_public')=='0')?' CHECKED':'').'> '.$Language->getText('global','no').'<BR>
-						<INPUT TYPE="RADIO" NAME="is_public" VALUE="9"'.((db_result($result,$i,'is_public')=='9')?' CHECKED':'').'> '.$Language->getText('forum_admin_index','deleted').'<BR>
+                                                <B>'.$Language->getText('forum_admin_index','is_public').'</B><BR>';
+                                        if (forum_can_be_public($current_project)) {
+                                            echo '<INPUT TYPE="RADIO" NAME="is_public" VALUE="1"'.((db_result($result,$i,'is_public')=='1')?' CHECKED':'').'> '.$Language->getText('global','yes').'<BR>';
+                                        }
+                                            echo '<INPUT TYPE="RADIO" NAME="is_public" VALUE="0"'.((db_result($result,$i,'is_public')=='0')?' CHECKED':'').'> '.$Language->getText('global','no').'<BR>
+                                                  <INPUT TYPE="RADIO" NAME="is_public" VALUE="9"'.((db_result($result,$i,'is_public')=='9')?' CHECKED':'').'> '.$Language->getText('forum_admin_index','deleted').'<BR>
 					</TD><TD>
 						<FONT SIZE="-1">
 						<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'">
@@ -284,7 +295,6 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 
 		forum_footer(array());
 	}
-
 } else {
 	/*
 		Not logged in or insufficient privileges

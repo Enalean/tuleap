@@ -1071,7 +1071,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
             //submit news if requested
             if ($release_id && user_ismember($group_id, 'A') && $release_submit_news) {
-                news_submit($group_id, $release_news_subject, $release_news_details, $private_news, 3);
+                news_submit($group_id, $release_news_subject, $release_news_details, $private_news, false);
             }
 
             // Send notification

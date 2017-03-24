@@ -890,5 +890,15 @@ function forum_thread_add_monitor($forum_id, $thread_id, $user_id) {
               return true;
           }
           
+function forum_can_be_public(Project $project)
+{
+    return $project->getAccess() == Project::ACCESS_PUBLIC ||
+        $project->getAccess() == Project::ACCESS_PUBLIC_UNRESTRICTED;
+}
 
+function forum_is_public_value_allowed(Project $project, $forum_status)
+{
+    return ($project->getAccess() == Project::ACCESS_PRIVATE && ($forum_status ==0 ||
+        $forum_status ==9)) || forum_can_be_public($project);
+}
 ?>
