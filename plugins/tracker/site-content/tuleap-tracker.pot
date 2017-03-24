@@ -77,10 +77,6 @@ msgid "The date field '%s' cannot be compared to the string value '%s'."
 msgstr ""
 
 #, php-format
-msgid "The entered value '%s' is invalid."
-msgstr ""
-
-#, php-format
 msgid "The field '%s' doesn't exist"
 msgid_plural "The fields '%s' don't exist"
 msgstr[0] ""
