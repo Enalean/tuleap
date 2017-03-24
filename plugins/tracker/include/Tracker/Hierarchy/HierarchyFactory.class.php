@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 
-class Tracker_HierarchyFactory {
+class Tracker_HierarchyFactory
+{
 
     private static $_instance;
 
@@ -52,12 +55,28 @@ class Tracker_HierarchyFactory {
      */
     private $artifact_factory;
 
-    public function __construct(Tracker_Hierarchy_Dao   $hierarchy_dao,
-                                TrackerFactory          $tracker_factory,
-                                Tracker_ArtifactFactory $artifact_factory) {
-        $this->hierarchy_dao    = $hierarchy_dao;
-        $this->tracker_factory  = $tracker_factory;
-        $this->artifact_factory = $artifact_factory;
+    /**
+     * @var Tracker_ArtifactDao
+     */
+    private $artifact_dao;
+
+    /**
+     * @var ScrumForMonoMilestoneChecker
+     */
+    private $scrum_mono_milestone_checker;
+
+    public function __construct(
+        Tracker_Hierarchy_Dao $hierarchy_dao,
+        TrackerFactory $tracker_factory,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_ArtifactDao $artifact_dao,
+        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+    ) {
+        $this->hierarchy_dao                = $hierarchy_dao;
+        $this->tracker_factory              = $tracker_factory;
+        $this->artifact_factory             = $artifact_factory;
+        $this->artifact_dao                 = $artifact_dao;
+        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
     }
 
     /**
@@ -69,10 +88,18 @@ class Tracker_HierarchyFactory {
      *
      * @return Tracker_HierarchyFactory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (! self::$_instance) {
-            self::$_instance = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance(), Tracker_ArtifactFactory::instance());
+            self::$_instance = new Tracker_HierarchyFactory(
+                new Tracker_Hierarchy_Dao(),
+                TrackerFactory::instance(),
+                Tracker_ArtifactFactory::instance(),
+                new Tracker_ArtifactDao(),
+                new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build())
+            );
         }
+
         return self::$_instance;
     }
 
@@ -187,7 +214,11 @@ class Tracker_HierarchyFactory {
      * @return null| Tracker_Artifact
      */
     public function getParentArtifact(PFUser $user, Tracker_Artifact $child) {
-        $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
+        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($child->getTracker()->getGroupId()) === true) {
+            $dar = $this->artifact_dao->searchParentByArtifactIdAndNature($child->getId(), Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        } else {
+            $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
+        }
         if ($dar && !$dar->isError()) {
             $parents = array();
             foreach ($dar as $row) {

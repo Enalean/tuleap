@@ -309,7 +309,13 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         parent::setUp();
         $tracker_factory   = TrackerFactory::instance();
         $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
-        $hierarchy_factory = new Tracker_HierarchyFactory($hierarchy_dao, $tracker_factory, mock('Tracker_ArtifactFactory'));
+        $hierarchy_factory = new Tracker_HierarchyFactory(
+            $hierarchy_dao,
+            $tracker_factory,
+            mock('Tracker_ArtifactFactory'),
+            mock('Tracker_ArtifactDao'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+        );
 
         $tracker_factory->setHierarchyFactory($hierarchy_factory);
 

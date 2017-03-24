@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
@@ -3366,8 +3368,15 @@ EOS;
     /**
      * @return Tracker_HierarchyFactory
      */
-    protected function getHierarchyFactory() {
-        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
+    protected function getHierarchyFactory()
+    {
+        return new Tracker_HierarchyFactory(
+            new Tracker_Hierarchy_Dao(),
+            $this->getTrackerFactory(),
+            $this->getTrackerArtifactFactory(),
+            new Tracker_ArtifactDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build())
+        );
     }
 
     /**
