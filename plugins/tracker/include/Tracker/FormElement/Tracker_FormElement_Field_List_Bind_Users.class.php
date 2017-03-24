@@ -1019,12 +1019,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                             if (strlen($matches[1]) > 2) {
                                 $sql[] = ugroup_db_get_members($matches[1], true, $keyword, $bindvalue_ids);
                             } else {
+                                $show_suspended = false;
                                 $sql[] = ugroup_db_get_dynamic_members(
                                     $matches[1],
                                     $tracker_id,
                                     $tracker->group_id,
                                     true,
                                     $keyword,
+                                    $show_suspended,
                                     $bindvalue_ids
                                 );
                             }
