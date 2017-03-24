@@ -323,7 +323,7 @@ function ugroup_db_get_dynamic_members(
     }
     $user_status .= ")";
     if ($user_ids) {
-        $user_status .= ' AND user.user_id IN ('. $data_access->escapeIntImplode($user_ids) .')';
+        $user_status .= ' AND user.user_id IN ('. $data_access->escapeIntImplode($user_ids) .')';
     }
 
 	// Special Cases
