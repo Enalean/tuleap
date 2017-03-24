@@ -35,7 +35,13 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
     public function itRetrievesTheChildrenOfAGivenTracker() {
         $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
         $tracker_factory   = mock('TrackerFactory');
-        $hierarchy_factory = new Tracker_HierarchyFactory($hierarchy_dao, $tracker_factory, mock('Tracker_ArtifactFactory'));
+        $hierarchy_factory = new Tracker_HierarchyFactory(
+            $hierarchy_dao,
+            $tracker_factory,
+            mock('Tracker_ArtifactFactory'),
+            mock('Tracker_ArtifactDao'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+        );
 
         $tracker_id = 1;
         $child_ids  = array(array('id' => 11), array('id' => 12));
@@ -150,7 +156,14 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
             $dao = new MockTracker_Hierarchy_Dao();
             $dao->setReturnValue('searchTrackerHierarchy', array());
         }
-        return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'), mock('Tracker_ArtifactFactory'));
+
+        return new Tracker_HierarchyFactory(
+            $dao,
+            mock('TrackerFactory'),
+            mock('Tracker_ArtifactFactory'),
+            mock('Tracker_ArtifactDao'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+        );
     }
 }
 
@@ -170,7 +183,13 @@ class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
 
         $this->dao               = mock('Tracker_Hierarchy_Dao');
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
-        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, mock('TrackerFactory'), $this->artifact_factory);
+        $this->hierarchy_factory = new Tracker_HierarchyFactory(
+            $this->dao,
+            mock('TrackerFactory'),
+            $this->artifact_factory,
+            mock('Tracker_ArtifactDao'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+        );
 
         $this->user    = aUser()->build();
     }
@@ -311,7 +330,13 @@ class Tracker_HierarchyFactory_getParentTest extends TuleapTestCase {
         stub($this->tracker_factory)->getTrackerById(112)->returns($this->story_tracker);
 
         $this->dao = mock('Tracker_Hierarchy_Dao');
-        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, $this->tracker_factory, mock('Tracker_ArtifactFactory'));
+        $this->hierarchy_factory = new Tracker_HierarchyFactory(
+            $this->dao,
+            $this->tracker_factory,
+            mock('Tracker_ArtifactFactory'),
+            mock('Tracker_ArtifactDao'),
+            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+        );
     }
 
     public function itReturnsTheParentTracker() {
