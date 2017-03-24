@@ -64,6 +64,16 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
      */
     private $project;
 
+    /**
+     * @var Tuleap\Docman\Notifications\UsersRetriever
+     */
+    private $users_retriever;
+
+    /**
+     * @var Tuleap\Docman\Notifications\UGroupsRetriever
+     */
+    private $ugroups_retriever;
+
     public function setUp()
     {
         parent::setUp();
@@ -73,12 +83,13 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
 
         $this->mail_filter = mock('Tuleap\Mail\MailFilter');
 
-        $feedback          = new MockFeedback($this);
-        $itemFty           = new MockDocman_ItemFactory($this);
-        $notifications_dao = mock('Tuleap\Docman\Notifications\Dao');
-        $this->project     = aMockProject()->withId(101)->build();
-        $mail_builder      = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
-        $users_retriever   = mock('Tuleap\Docman\Notifications\UsersRetriever');
+        $feedback              = new MockFeedback($this);
+        $itemFty               = new MockDocman_ItemFactory($this);
+        $notifications_dao     = mock('Tuleap\Docman\Notifications\Dao');
+        $this->project         = aMockProject()->withId(101)->build();
+        $mail_builder          = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
+        $this->users_retriever = mock('Tuleap\Docman\Notifications\UsersRetriever');
+        $this->ugroups_retriever =  mock('Tuleap\Docman\Notifications\UGroupsRetriever');
 
         $this->notification_manager = new Docman_NotificationsManager_TestVersion($this);
         $this->notification_manager->setReturnValue('_getItemFactory', $itemFty);
@@ -89,9 +100,11 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
             $feedback,
             $mail_builder,
             $notifications_dao,
-            $users_retriever,
-            mock('\Tuleap\Docman\Notifications\UGroupsRetriever'),
-            mock('\Tuleap\Docman\Notifications\NotifiedPeopleRetriever')
+            $this->users_retriever,
+            $this->ugroups_retriever,
+            mock('\Tuleap\Docman\Notifications\NotifiedPeopleRetriever'),
+            mock('\Tuleap\Docman\Notifications\UsersRemover'),
+            mock('\Tuleap\Docman\Notifications\UgroupsRemover')
         );
 
         $this->notification_manager->_url = 'http://www.example.com/plugins/docman/';
@@ -178,5 +191,38 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
         $this->assertEqual($message2, $this->notification_manager->_getMessageForUser($user, 'new_version', $params));
         $this->assertEqual($message3, $this->notification_manager->_getMessageForUser($user, 'new_wiki_version', $params));
         $this->assertEqual($message4, $this->notification_manager->_getMessageForUser($user, 'something happen', $params));
+    }
+
+    public function itReturnsTrueWhenAtLeastOneUserIsNotified()
+    {
+        stub($this->users_retriever)->doesNotificationExistByUserAndItemId()->returns(true);
+        stub($this->ugroups_retriever)->doesNotificationExistByUGroupAndItemId()->returns(false);
+
+        $this->assertTrue(
+            $this->notification_manager->userExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
+        );
+    }
+
+    public function itReturnsTrueWhenAtLeastAGroupIsNotified()
+    {
+        stub($this->users_retriever)->doesNotificationExistByUserAndItemId()->returns(false);
+        stub($this->ugroups_retriever)->doesNotificationExistByUGroupAndItemId()->returns(true);
+
+        $this->assertTrue(
+            $this->notification_manager->ugroupExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
+        );
+    }
+
+    public function isReturnsFalseWhenNoGroupAndNoUserReceiveNotifications()
+    {
+        stub($this->users_retriever)->doesNotificationExistByUserAndItemId()->returns(false);
+        stub($this->ugroups_retriever)->doesNotificationExistByUGroupAndItemId()->returns(false);
+
+        $this->assertFalse(
+            $this->notification_manager->userExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
+        );
+        $this->assertFalse(
+            $this->notification_manager->ugroupExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
+        );
     }
 }

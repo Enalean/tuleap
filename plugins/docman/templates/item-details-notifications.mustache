@@ -16,7 +16,7 @@
                         <td>
                             <input type="checkbox"
                                    value="{{# ugroup }}{{ ugroup_id }}{{/ ugroup }}"
-                                   name="listeners_to_delete[]"
+                                   name="listeners_ugroups_to_delete[]"
                                    {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
                             >
                         </td>
@@ -34,7 +34,7 @@
                         <td>
                             <input type="checkbox"
                                    value="{{# user }}{{ user_id }}{{/ user}}"
-                                   name="listeners_to_delete[]"
+                                   name="listeners_users_to_delete[]"
                                    {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
                             >
                         </td>

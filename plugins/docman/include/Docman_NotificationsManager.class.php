@@ -21,7 +21,9 @@
 
 use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
+use Tuleap\Docman\Notifications\UgroupsRemover;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
+use Tuleap\Docman\Notifications\UsersRemover;
 use Tuleap\Docman\Notifications\UsersRetriever;
 
 require_once('common/mail/Mail.class.php');
@@ -69,6 +71,16 @@ class Docman_NotificationsManager
      */
     protected $notified_people_retriever;
 
+    /**
+     * @var UsersRemover
+     */
+    private $users_remover;
+
+    /**
+     * @var UgroupsRemover
+     */
+    private $ugroups_remover;
+
     public function __construct(
         Project $project,
         $url,
@@ -77,7 +89,9 @@ class Docman_NotificationsManager
         Dao $dao,
         UsersRetriever $users_retriever,
         UGroupsRetriever $ugroups_retriever,
-        NotifiedPeopleRetriever $notified_people_retriever
+        NotifiedPeopleRetriever $notified_people_retriever,
+        UsersRemover $users_remover,
+        UgroupsRemover $ugroups_remover
     ) {
         $this->project       = $project;
         $this->_url          = $url;
@@ -93,6 +107,8 @@ class Docman_NotificationsManager
         $this->users_retriever           = $users_retriever;
         $this->ugroups_retriever         = $ugroups_retriever;
         $this->notified_people_retriever = $notified_people_retriever;
+        $this->users_remover             = $users_remover;
+        $this->ugroups_remover           = $ugroups_remover;
     }
 
     function _getItemFactory() {
@@ -300,21 +316,49 @@ class Docman_NotificationsManager
         return $this->dao->create($user_id, $item_id, $type);
     }
 
-    public function remove($user_id, $item_id, $type = null)
+    public function removeUser($id, $item_id, $type = null)
     {
         if ($type === null) {
             $type = $this->_getType();
         }
-        return $this->dao->delete($user_id, $item_id, $type);
+
+        return $this->users_remover->delete($id, $item_id, $type);
     }
 
-    public function exist($user_id, $item_id, $type = null)
+    public function removeUgroup($id, $item_id, $type = null)
     {
         if ($type === null) {
             $type = $this->_getType();
         }
-        $dar = $this->dao->search($user_id, $item_id, $type);
-        return $dar->valid();
+
+        return $this->ugroups_remover->delete($id, $item_id, $type);
     }
 
+    public function userExists($id, $item_id, $type = null)
+    {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+
+        return $this->doesNotificationConcernAUser($id, $item_id, $type) === true;
+    }
+
+    public function ugroupExists($id, $item_id, $type = null)
+    {
+        if ($type === null) {
+            $type = $this->_getType();
+        }
+
+        return $this->doesNotificationConcernAUGroup($id, $item_id, $type) === true;
+    }
+
+    private function doesNotificationConcernAUser($user_id, $item_id, $type)
+    {
+        return $this->users_retriever->doesNotificationExistByUserAndItemId($user_id, $item_id, $type);
+    }
+
+    private function doesNotificationConcernAUGroup($user_id, $item_id, $type)
+    {
+        return $this->ugroups_retriever->doesNotificationExistByUGroupAndItemId($user_id, $item_id, $type);
+    }
 }

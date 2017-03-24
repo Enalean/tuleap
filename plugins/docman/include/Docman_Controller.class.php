@@ -23,8 +23,10 @@
 
 use Tuleap\Docman\Notifications\Dao;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
+use Tuleap\Docman\Notifications\UgroupsRemover;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
+use Tuleap\Docman\Notifications\UsersRemover;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -95,8 +97,9 @@ class Docman_Controller extends Controler {
             $this->getNotificationsDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever()
-
+            $this->getNotifiedPeopleRetriever(),
+            $this->getUserRemover(),
+            $this->getUGroupRemover()
         );
         $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true);
         $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true);
@@ -110,7 +113,9 @@ class Docman_Controller extends Controler {
             $this->getNotificationsDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever()
+            $this->getNotifiedPeopleRetriever(),
+            $this->getUserRemover(),
+            $this->getUGroupRemover()
         );
         $event_manager->addListener('plugin_docman_event_add', $this->notificationsManager_Add, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true);
@@ -122,7 +127,9 @@ class Docman_Controller extends Controler {
             $this->getNotificationsDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever()
+            $this->getNotifiedPeopleRetriever(),
+            $this->getUserRemover(),
+            $this->getUGroupRemover()
         );
         $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true);
@@ -134,7 +141,9 @@ class Docman_Controller extends Controler {
             $this->getNotificationsDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever()
+            $this->getNotifiedPeopleRetriever(),
+            $this->getUserRemover(),
+            $this->getUGroupRemover()
         );
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true);
@@ -146,7 +155,9 @@ class Docman_Controller extends Controler {
             $this->getNotificationsDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever()
+            $this->getNotifiedPeopleRetriever(),
+            $this->getUserRemover(),
+            $this->getUGroupRemover()
         );
         $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true);
     }
@@ -898,19 +909,33 @@ class Docman_Controller extends Controler {
             $this->_setView('Details');
             break;
         case 'remove_monitoring':
-            $this->_actionParams['listeners_to_delete'] = array();
+            $this->_actionParams['listeners_users_to_delete']   = array();
+            $this->_actionParams['listeners_ugroups_to_delete'] = array();
             if ($this->userCanManage($item->getId())) {
-                if ($this->request->exist('listeners_to_delete')) {
+                if ($this->request->exist('listeners_users_to_delete')) {
                     $um      = UserManager::instance();
-                    $vUserId = new Valid_UInt('listeners_to_delete');
+                    $vUserId = new Valid_UInt('listeners_users_to_delete');
                     if($this->request->validArray($vUserId)) {
-                        $userIds = $this->request->get('listeners_to_delete');
+                        $userIds = $this->request->get('listeners_users_to_delete');
                         $users   = array();
                         foreach ($userIds as $userId) {
                             $users[] = $um->getUserById($userId);
                         }
-                        $this->_actionParams['listeners_to_delete'] = $users;
-                        $this->_actionParams['item']                = $item;
+                        $this->_actionParams['listeners_users_to_delete'] = $users;
+                        $this->_actionParams['item']                      = $item;
+                    }
+                }
+                if ($this->request->exist('listeners_ugroups_to_delete')) {
+                    $um      = new UGroupManager();
+                    $vUserId = new Valid_UInt('listeners_ugroups_to_delete');
+                    if($this->request->validArray($vUserId)) {
+                        $ugroups_ids = $this->request->get('listeners_ugroups_to_delete');
+                        $ugroups     = array();
+                        foreach ($ugroups_ids as $ugroup_id) {
+                            $ugroups[] = $um->getById($ugroup_id);
+                        }
+                        $this->_actionParams['listeners_ugroups_to_delete'] = $ugroups;
+                        $this->_actionParams['item']                        = $item;
                     }
                 }
                 $this->action = 'remove_monitoring';
@@ -1906,5 +1931,15 @@ class Docman_Controller extends Controler {
             $this->getItemFactory(),
             $this->getUGroupManager()
         );
+    }
+
+    private function getUGroupRemover()
+    {
+        return new UgroupsRemover($this->getUGroupNotificationDao());
+    }
+
+    private function getUserRemover()
+    {
+        return new UsersRemover($this->getNotificationsDao());
     }
 }

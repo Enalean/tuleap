@@ -45,7 +45,7 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
      * Test the case when deleting a docman item the notification mail
      * is sent to all monitoring users not only one of them
      */
-    function testStoreEventsDoNotOverrideUsers()
+    public function testStoreEventsDoNotOverrideUsers()
     {
         $listeningUsers = new ArrayIterator(array(array('user_id' => 1,
                                                         'item_id' => 1),
@@ -79,6 +79,8 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
         $notifications_dao         = mock('Tuleap\Docman\Notifications\Dao');
         $notified_people_retriever = mock('Tuleap\Docman\Notifications\NotifiedPeopleRetriever');
         stub($notified_people_retriever)->getNotifiedUsers()->returns($listeningUsers);
+        $users_remover   = mock('Tuleap\Docman\Notifications\UsersRemover');
+        $ugroups_remover = mock('Tuleap\Docman\Notifications\UgroupsRemover');
 
         $notifications_manager = new Docman_NotificationsManager_DeleteTestVersion();
         $notifications_manager->__construct(
@@ -89,7 +91,9 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
             $notifications_dao,
             mock('Tuleap\Docman\Notifications\UsersRetriever'),
             mock('Tuleap\Docman\Notifications\UGroupsRetriever'),
-            $notified_people_retriever
+            $notified_people_retriever,
+            $users_remover,
+            $ugroups_remover
         );
         $notifications_manager->setReturnValue('_getUserManager', $um);
         $notifications_manager->setReturnValue('_getPermissionsManager', $dpm);

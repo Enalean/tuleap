@@ -69,4 +69,11 @@ class UsersRetriever
 
         return $users;
     }
+
+    public function doesNotificationExistByUserAndItemId($user_id, $item_id, $type)
+    {
+        $dar = $this->user_dao->search($user_id, $item_id, $type);
+
+        return $dar->count() > 0;
+    }
 }

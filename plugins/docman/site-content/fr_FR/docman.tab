@@ -658,15 +658,18 @@ plugin_docman	new_view_change	voir/changer
 
 plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
 plugin_docman	notifications_on	Vous surveillez désormais '$1'.
-plugin_docman	notifications_not_removed	Impossible de supprimer le monitoring pour l'utilisateur '$1'
-plugin_docman	notifications_not_present	Le monitoring n'était pas activé pour l'utilisateur '$1'
-plugin_docman	notifications_removed	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_not_removed_user	Impossible de supprimer le monitoring pour l'utilisateur '$1'
+plugin_docman	notifications_not_removed_ugroup	Impossible de supprimer le monitoring pour le groupe '$1'
+plugin_docman	notifications_not_present_user	Le monitoring n'était pas activé pour l'utilisateur '$1'
+plugin_docman	notifications_not_present_ugroup	Le monitoring n'était pas activé pour le groupe '$1'
+plugin_docman	notifications_removed_user	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_removed_ugroup	Le monitoring a été supprimé pour le(s) groupe(s) '$1'
 plugin_docman	notifications_added	Le monitoring a été ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_not_added	Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_cascade_not_added	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
 plugin_docman	notifications_no_access_rights	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
-plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
+plugin_docman	notifications_no_element	Aucun élément séléctionné
 plugin_docman	notifications_no_user_added	Aucun utilisateur ajouté
 plugin_docman	notifications_some_users_not_added	Certains utilisateurs n'ont pas été ajoutés
 plugin_docman	notifications_add_user	Ajoutez
