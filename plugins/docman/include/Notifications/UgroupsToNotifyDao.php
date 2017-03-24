@@ -120,6 +120,22 @@ class UgroupsToNotifyDao extends DataAccessObject
         );
     }
 
+    public function updateAllAnonymousAccessToRegistered()
+    {
+        return $this->updateAllNotifications(
+            ProjectUGroup::ANONYMOUS,
+            ProjectUGroup::REGISTERED
+        );
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered()
+    {
+        return $this->updateAllNotifications(
+            ProjectUGroup::AUTHENTICATED,
+            ProjectUGroup::REGISTERED
+        );
+    }
+
     private function updateNotificationUgroups($project_id, array $old_ugroup_ids, $new_ugroup_id)
     {
         $project_id     = $this->da->escapeInt($project_id);
@@ -172,6 +188,52 @@ class UgroupsToNotifyDao extends DataAccessObject
                         AND item.group_id = $project_id
                         AND notification.ugroup_id IN ($old_ugroup_ids)
                     )";
+        return $sql;
+    }
+
+    private function updateAllNotifications($old_ugroup_id, $new_ugroup_id)
+    {
+        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+
+        $this->startTransaction();
+
+        $sql = $this->getQueryToReplaceUgroup($old_ugroup_id, $new_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        /**
+         * Ugroups to be removed if new_ugroup_id already exists in
+         * tracker_global_notification_ugroups table for the same
+         * notification_id
+         */
+        $sql = $this->getQueryToRemoveRemainingUgroup($old_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return true;
+    }
+
+    private function getQueryToReplaceUgroup($old_ugroup_id, $new_ugroup_id)
+    {
+        $sql = "UPDATE IGNORE plugin_docman_notification_ugroups
+            SET ugroup_id = $new_ugroup_id
+            WHERE ugroup_id = $old_ugroup_id";
+        return $sql;
+    }
+
+    private function getQueryToRemoveRemainingUgroup($old_ugroup_id)
+    {
+        $sql = "DELETE notification.*
+            FROM plugin_docman_notification_ugroups AS notification
+            WHERE notification.ugroup_id = $old_ugroup_id";
         return $sql;
     }
 }

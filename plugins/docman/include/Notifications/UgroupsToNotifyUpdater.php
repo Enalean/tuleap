@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\Notifications;
 
+use ForgeAccess;
 use Project;
 
 class UgroupsToNotifyUpdater
@@ -42,6 +43,17 @@ class UgroupsToNotifyUpdater
 
         if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->ugroups_dao->disableAuthenticated($project_id);
+        }
+    }
+
+    public function updateSiteAccess($old_access)
+    {
+        if ($old_access == ForgeAccess::ANONYMOUS) {
+            $this->ugroups_dao->updateAllAnonymousAccessToRegistered();
+        }
+
+        if ($old_access == ForgeAccess::RESTRICTED) {
+            $this->ugroups_dao->updateAllAuthenticatedAccessToRegistered();
         }
     }
 }
