@@ -214,7 +214,7 @@ class StandUpNotificationBuilder
     {
         return array(
             'url'  => $http_request->getServerUrl().$tracker_Artifact->getUri(),
-            'name' => $tracker_Artifact->getTracker()->getDescription().' #'.$tracker_Artifact->getId()
+            'name' => $tracker_Artifact->getXRef()
         );
     }
 
