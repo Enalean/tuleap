@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\Svn\SvnrootUpdater;
 
 class SystemEventProcessor_Root extends SystemEventProcessor {
 
@@ -98,6 +99,8 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
         // Update SVN root definition for Apache once everything else is processed
         if ($this->backend_svn->getSVNApacheConfNeedUpdate()) {
             $this->generator->generate();
+            $updater = new SvnrootUpdater($this->logger);
+            $updater->push();
         }
 
         // Update system user and group caches once everything else is processed

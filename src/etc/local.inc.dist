@@ -154,6 +154,9 @@ $codendi_bin_prefix = '/usr/lib/codendi/bin';
 // Tuleap database configuration file
 $db_config_file = $sys_custom_dir . '/conf/database.inc';
 
+// Rabbitmq config file
+$rabbitmq_config_file = '/etc/tuleap/conf/rabbitmq.inc';
+
 // Data Directory
 $sys_data_dir = '/var/lib/codendi';
 

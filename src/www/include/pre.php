@@ -33,6 +33,7 @@ if (isset($GLOBALS['DEBUG_MODE'])) {
     ForgeConfig::loadFromFile(dirname($local_inc).'/development.inc');
 }
 ForgeConfig::loadFromDatabase();
+ForgeConfig::loadFromFile(ForgeConfig::get('rabbitmq_config_file'));
 
 Tuleap\Instrument\Collect::startTiming('pre.'.php_sapi_name());
 
