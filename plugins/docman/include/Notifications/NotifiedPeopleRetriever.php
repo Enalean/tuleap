@@ -100,7 +100,7 @@ class NotifiedPeopleRetriever
                 $project,
                 $item->getParentId(),
                 $users,
-                $type
+                PLUGIN_DOCMAN_NOTIFICATION_CASCADE
             );
         }
     }
