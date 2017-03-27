@@ -98,7 +98,7 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
     {
         $this->userDaoReturnsFalse($this->item_id);
         $this->ugroupDaoReturnsFalse($this->item_id);
-        $this->userDaoReturnsItemIdAndUser105($this->parent_item_id);
+        $this->userDaoReturnsItemIdAndUser105ByCascade($this->parent_item_id);
         $this->ugroupDaoReturnsFalse($this->parent_item_id);
 
         $this->itemExistsinDb();
@@ -111,7 +111,7 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 $this->user_id => array(
                     'item_id' => '65',
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
 
                 )
             )
@@ -123,7 +123,7 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
     {
         $this->userDaoReturnsItemIdAndUser105($this->item_id);
         $this->ugroupDaoReturnsFalse($this->item_id);
-        $this->userDaoReturnsItemIdAndUser105($this->parent_item_id);
+        $this->userDaoReturnsItemIdAndUser105ByCascade($this->parent_item_id);
         $this->ugroupDaoReturnsFalse($this->parent_item_id);
 
         $this->itemExistsinDb();
@@ -136,7 +136,7 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 $this->user_id => array(
                     'item_id' => '65',
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
 
                 )
             )
@@ -169,8 +169,8 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
     {
         $this->userDaoReturnsFalse($this->item_id);
         $this->ugroupDaoReturnsFalse($this->item_id);
-        $this->userDaoReturnsFalse($this->parent_item_id);
-        $this->ugroupDaoReturnsUgroup169($this->parent_item_id);
+        $this->userDaoReturnsFalseByCascade($this->parent_item_id);
+        $this->ugroupDaoReturnsUgroup169ByCascade($this->parent_item_id);
 
         $this->itemExistsinDb();
         $this->parentItemExistsInDb();
@@ -182,7 +182,7 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 $this->user_id => array(
                     'item_id' => '65',
                     'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
                 )
             )
         );
@@ -218,6 +218,14 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
         )->returnsDar(false);
     }
 
+    private function userDaoReturnsFalseByCascade($item_id)
+    {
+        stub($this->notified_users_dao)->searchUserIdByObjectIdAndType(
+            $item_id,
+            PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+        )->returnsDar(false);
+    }
+
     private function userDaoReturnsItemIdAndUser105($item_id)
     {
         stub($this->notified_users_dao)->searchUserIdByObjectIdAndType(
@@ -228,6 +236,20 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 'item_id' => $item_id,
                 'user_id' => $this->user_id,
                 'type'    => PLUGIN_DOCMAN_NOTIFICATION
+            )
+        );
+    }
+
+    private function userDaoReturnsItemIdAndUser105ByCascade($item_id)
+    {
+        stub($this->notified_users_dao)->searchUserIdByObjectIdAndType(
+            $item_id,
+            PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+        )->returnsDar(
+            array(
+                'item_id' => $item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
             )
         );
     }
@@ -245,6 +267,16 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
         stub($this->notified_ugroups_dao)->searchUgroupsByItemIdAndType(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION
+        )->returnsDar(
+            array('ugroup_id' => 169)
+        );
+    }
+
+    private function ugroupDaoReturnsUgroup169ByCascade($item_id)
+    {
+        stub($this->notified_ugroups_dao)->searchUgroupsByItemIdAndType(
+            $item_id,
+            PLUGIN_DOCMAN_NOTIFICATION_CASCADE
         )->returnsDar(
             array('ugroup_id' => 169)
         );
