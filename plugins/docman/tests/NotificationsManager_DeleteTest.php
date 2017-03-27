@@ -76,7 +76,7 @@ class NotificationsManager_DeleteTest extends TuleapTestCase
         $project                   = aMockProject()->withId(101)->build();
         $feedback                  = mock('Feedback');
         $mail_builder              = mock('MailBuilder');
-        $notifications_dao         = mock('Tuleap\Docman\Notifications\Dao');
+        $notifications_dao         = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
         $notified_people_retriever = mock('Tuleap\Docman\Notifications\NotifiedPeopleRetriever');
         stub($notified_people_retriever)->getNotifiedUsers()->returns($listeningUsers);
         $users_remover   = mock('Tuleap\Docman\Notifications\UsersUpdater');

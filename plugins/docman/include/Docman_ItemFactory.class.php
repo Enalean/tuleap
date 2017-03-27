@@ -4,7 +4,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 
 require_once('common/dao/CodendiDataAccess.class.php');
@@ -51,7 +51,7 @@ class Docman_ItemFactory
     var $groupId;
 
     private static $instance;
-    
+
     function __construct($groupId=null) {
         // Cache highly used info
         $this->rootItems[] = array();
@@ -65,11 +65,11 @@ class Docman_ItemFactory
 
     /**
      * Return a single instance of Docman_ItemFactory per group.
-     * 
+     *
      * This is useful when you need to cache information across method calls
-     * 
+     *
      * @param Integer $group_id Project id
-     * 
+     *
      * @return Docman_ItemFactory
      */
     public static function instance($group_id) {
@@ -81,11 +81,11 @@ class Docman_ItemFactory
 
     /**
      * Return a single instance of Docman_ItemFactory per group.
-     * 
+     *
      * This is useful when you need to cache information across method calls
-     * 
+     *
      * @param Integer $group_id Project id
-     * 
+     *
      * @return Docman_ItemFactory
      */
     public static function setInstance($group_id, $instance) {
@@ -94,11 +94,11 @@ class Docman_ItemFactory
 
     /**
      * Return a single instance of Docman_ItemFactory per group.
-     * 
+     *
      * This is useful when you need to cache information across method calls
-     * 
+     *
      * @param Integer $group_id Project id
-     * 
+     *
      * @return Docman_ItemFactory
      */
     public static function clearInstance($group_id) {
@@ -224,10 +224,10 @@ class Docman_ItemFactory
         }
         return $type;
     }
-	
-    /**   
+
+    /**
     * @return wiki page id or null if the page is not yet created in wiki.
-    */   
+    */
     function getIdInWikiOfWikiPageItem($pagename, $group_id) {
         $wiki_page = $this->getWikiPage($group_id, $pagename);
 
@@ -314,7 +314,7 @@ class Docman_ItemFactory
 
     public function getChildrenFromParent($item) {
         $dao = $this->_getItemDao();
-        
+
         $itemArray = array();
 
         $dar = $dao->searchByParentsId(array($item->getId()));
@@ -355,21 +355,21 @@ class Docman_ItemFactory
 
         return $children;
     }
-    
+
     /**
      * Retreive list of collapsed items for given user
      *
-     * This function retreive collapsed folders from user preferences 
+     * This function retreive collapsed folders from user preferences
      *
      * @param $parentId Id of the "current" root node (cannot be excluded).
      * @param $userId Id of current user.
      * @return Array List of items to exclude for a search
      **/
     private function _getExpandedUserPrefs($parentId, $userId) {
-        $collapsedItems = array();     
+        $collapsedItems = array();
         // Retreive the list of collapsed folders in prefs
         $dao = $this->_getItemDao();
-        $dar = $dao->searchExpandedUserPrefs($this->groupId, 
+        $dar = $dao->searchExpandedUserPrefs($this->groupId,
                                                    $userId);
         while($dar->valid()) {
             $row = $dar->current();
@@ -378,11 +378,11 @@ class Docman_ItemFactory
                 $collapsedItems[] = (int) $tmp[4];
             }
             $dar->next();
-        }               
-        
+        }
+
         return $collapsedItems;
     }
-    
+
     /**
      * Preload item perms from a item result set
      */
@@ -444,7 +444,7 @@ class Docman_ItemFactory
      * Build a subtree from the given item id.
      *
      * Build the list in depth, level per level, from root to leaves.
-     * 
+     *
      * @param Docman_Item $rootItem
      * @param PFUser $user
      * @param boolean $ignorePerms
@@ -469,7 +469,7 @@ class Docman_ItemFactory
         //
         $dao = $this->_getItemDao();
         $dPm = Docman_PermissionsManager::instance($rootItem->getGroupId());
-        
+
         $itemList = array($rootItem->getId() => &$rootItem);
         $parentIds = array($rootItem->getId());
         do {
@@ -490,7 +490,7 @@ class Docman_ItemFactory
                     }
                     $dar->next();
                 }
-                
+
                 // Fetch all the permissions at the same time
                 $dPm->retreiveReadPermissionsForItems($itemIds, $user);
 
@@ -508,7 +508,7 @@ class Docman_ItemFactory
 
         return $itemList[$rootItem->getId()];
     }
-    
+
     /**
      * This function return an iterator on a list of documents (no folders).
      *
@@ -519,7 +519,7 @@ class Docman_ItemFactory
      * 2. Get the list of folders behind $parentId (permissions apply).
      * 3. Check that each document in list 1. is in a folder of list 2.
      * 5. Apply limits ($start, $offset) is only a subset of the list is required.
-     * 6. If needed, add the metadata to the items. 
+     * 6. If needed, add the metadata to the items.
      */
     private function getItemSubTreeAsList($parentId, &$nbItemsFound, $params = null) {
         $user = $params['user'];
@@ -547,7 +547,7 @@ class Docman_ItemFactory
         }
 
         $dao = $this->_getItemDao();
-        
+
         //
         // Build Folder List
         //
@@ -858,7 +858,7 @@ class Docman_ItemFactory
         }
         return $movable;
     }
- 
+
    function setNewParent($item_id, $new_parent_id, $ordering) {
         $item = $this->getItemFromDb($item_id);
         $dao  = $this->_getItemDao();
@@ -1063,7 +1063,7 @@ class Docman_ItemFactory
             $srcItem = $this->getItemFromDb($srcItemId);
         }
         $itemTree = $itemFactory->getItemTree($srcItem, $user, false, true);
-        
+
         if ($itemTree) {
             $rank = null;
             if($ordering !== null) {
@@ -1097,14 +1097,14 @@ class Docman_ItemFactory
 
     /**
      * Get the item_id that was cut by the user.
-     * 
+     *
      * If groupId is given, only items that belongs to this groupId will be
      * returned.
      * If no item match, returns false.
-     * 
+     *
      * @param PFUser    $user
      * @param Integer $groupId
-     * 
+     *
      * @return Integer or false.
      */
     function getCutPreference($user, $groupId=null) {
@@ -1172,7 +1172,7 @@ class Docman_ItemFactory
         }
         return $version;
     }
-    
+
     /**
      * Returns the folder stats (count + size)
      */
@@ -1184,7 +1184,7 @@ class Docman_ItemFactory
             return null;
         }
     }
-    
+
     /**
      * Recursive method that takes a subtree and
      * returns the corresponding stats (count + size)
@@ -1193,17 +1193,17 @@ class Docman_ItemFactory
         $stats['count'] = 0;
         $stats['size'] = 0;
         $stats['types'] = array();
-        
+
         if(is_a($folder, 'Docman_Folder')) {
             $items = $folder->getAllItems();
             foreach ($items->iterator() as $item) {
                 $class = get_class($item);
                 $type = strtolower(substr(strrchr($class, '_'), 1));
-                
+
                 if (!isset($stats['types'][$type])) {
                     $stats['types'][$type] = 0;
                 }
-                
+
                 $stats['types'][$type]++;
                 $stats['count']++;
                 if ($type == 'file' || $type == 'embeddedfile') {
@@ -1224,14 +1224,14 @@ class Docman_ItemFactory
                 }
             }
         }
-        
+
         return $stats;
     }
 
     /**
      * Mark item as deleted
      *
-     * @param Docman_Item $item 
+     * @param Docman_Item $item
      *
      * @return void
      */
@@ -1276,7 +1276,7 @@ class Docman_ItemFactory
 
     public function getUsersToNotifyDao()
     {
-        return new Dao();
+        return new UsersToNotifyDao();
     }
 
     /**
@@ -1309,13 +1309,13 @@ class Docman_ItemFactory
 
     /**
      * Manage deletion of a entire item hierarchy.
-     * 
+     *
      * It's the recommended and official way to delete a file in the docman
      *
      * @param Docman_Item $item        Item to delete
      * @param PFUser        $user        User who performs the delete
      * @param Boolean     $cascadeWiki If there are wiki documents, do we delete corresponding in wiki page too ?
-     * 
+     *
      * @return Boolean success
      */
     public function deleteSubTree(Docman_Item $item, PFUser $user, $cascadeWiki) {
@@ -1338,7 +1338,7 @@ class Docman_ItemFactory
         }
         return false;
     }
-    
+
     /**
      * List pending items
      *
@@ -1387,9 +1387,9 @@ class Docman_ItemFactory
 
     /**
      * Restore on item
-     * 
+     *
      * @param Docman_Item $item
-     * 
+     *
      * @return Boolean
      */
     public function restore($item) {

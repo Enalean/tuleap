@@ -280,7 +280,7 @@ class NotificationsManager_MoveTest extends TuleapTestCase
 
         $docman_path = new MockDocman_Path();
 
-        $dao = mock('Tuleap\Docman\Notifications\Dao');
+        $dao = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
         stub($dao)->searchUserIdByObjectIdAndType($d->getId(), 'plugin_docman')->returns($dar_d);
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_d, array($d->getId(), 'plugin_docman'));
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_c, array($c->getId(), 'plugin_docman'));

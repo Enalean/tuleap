@@ -23,11 +23,11 @@ namespace Tuleap\Docman\Notifications;
 class UsersUpdater
 {
     /**
-     * @var Dao
+     * @var UsersToNotifyDao
      */
     private $user_dao;
 
-    public function __construct(Dao $user_dao)
+    public function __construct(UsersToNotifyDao $user_dao)
     {
         $this->user_dao = $user_dao;
     }

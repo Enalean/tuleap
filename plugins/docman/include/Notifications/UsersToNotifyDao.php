@@ -23,7 +23,7 @@ namespace Tuleap\Docman\Notifications;
 use DataAccessObject;
 use DataAccessResult;
 
-class Dao extends DataAccessObject
+class UsersToNotifyDao extends DataAccessObject
 {
     public function searchDocmanMonitoredItems($project_id, $user_id)
     {

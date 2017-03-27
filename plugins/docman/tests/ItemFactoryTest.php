@@ -625,7 +625,7 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $lock_factory          = mock('Docman_LockFactory');
         $item_dao              = mock('Docman_ItemDao');
         $ugroups_to_notify_dao = mock('Tuleap\Docman\Notifications\UgroupsToNotifyDao');
-        $users_to_notify_dao   = mock('Tuleap\Docman\Notifications\Dao');
+        $users_to_notify_dao   = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
 
         $item_id = 183;
         $item    = new MockDocman_File($this);

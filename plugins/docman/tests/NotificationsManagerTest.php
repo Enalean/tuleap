@@ -85,7 +85,7 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
 
         $feedback              = new MockFeedback($this);
         $itemFty               = new MockDocman_ItemFactory($this);
-        $notifications_dao     = mock('Tuleap\Docman\Notifications\Dao');
+        $notifications_dao     = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
         $this->project         = aMockProject()->withId(101)->build();
         $mail_builder          = new MailBuilder(TemplateRendererFactory::build(), $this->mail_filter);
         $this->users_retriever = mock('Tuleap\Docman\Notifications\UsersRetriever');
