@@ -141,8 +141,9 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $checked  = !$params['user']->isAnonymous() && $this->notificationsManager->userExists($params['user']->getId(), $this->item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE) ? 'checked="checked"' : '';
         $disabled = $params['user']->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="cascade" value="0" />';
+        $content .= '<label for="plugin_docman_monitor_cascade_item" class="checkbox">';
         $content .= '<input type="checkbox" name="cascade" value="1" id="plugin_docman_monitor_cascade_item" '. $checked .' '. $disabled .' />';
-        $content .= '<label for="plugin_docman_monitor_cascade_item">'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_cascade_sendemail') .'</label>';
+        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_cascade_sendemail') .'</label>';
         $content .= '</blockquote>';
         return $content;
     }
