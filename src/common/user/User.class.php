@@ -384,7 +384,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
     /**
      * Check if user is admin of a Project
-     * @param type $group_id
+     * @param int $group_id
      * @return boolean
      */
     public function isAdmin($group_id) {

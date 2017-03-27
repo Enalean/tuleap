@@ -673,7 +673,6 @@ plugin_docman	notifications_not_added_ugroup	Monitoring for group(s) '$1' has no
 plugin_docman	notifications_already_exists_user	Monitoring for user(s) '$1' already exists
 plugin_docman	notifications_already_exists_ugroup	Monitoring for group(s) '$1' already exists
 plugin_docman	notifications_no_access_rights_user	Insufficient permissions for user(s) '$1'
-plugin_docman	notifications_no_access_rights_ugroup	Insufficient permissions for group(s) '$1'
 plugin_docman	notifications_no_element	No element selected
 plugin_docman	notifications_no_element_added	No element added
 plugin_docman	notifications_no_emails_supported	You cannot add emails
