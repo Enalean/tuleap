@@ -2311,17 +2311,10 @@ class Docman_Actions extends Actions {
     {
         $ugroups      = array();
         $ugroups_name = array();
-        $dpm          = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
         foreach ($ugroups_to_add as $ugroup) {
             if ($this->_controler->notificationsManager->ugroupExists($ugroup->getId(), $item->getId())) {
                 $this->_controler->feedback->log('warning',
                     $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists_ugroup',
-                        array($ugroup->getTranslatedName())));
-                continue;
-            }
-            if (! $dpm->isUgroupUsed($ugroup->getId())) {
-                $this->_controler->feedback->log('warning',
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_access_rights_ugroup',
                         array($ugroup->getTranslatedName())));
                 continue;
             }

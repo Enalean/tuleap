@@ -673,7 +673,6 @@ plugin_docman	notifications_cascade_not_added_ugroup	Le monitoring de la sous-hi
 plugin_docman	notifications_already_exists_user	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
 plugin_docman	notifications_already_exists_ugroup	Le monitoring pour le(s) groupe(s) '$1' existe déjà
 plugin_docman	notifications_no_access_rights_user	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
-plugin_docman	notifications_no_access_rights_ugroup	Les permissions ne sont pas suffisantes pour le(s) groupe(s) '$1'
 plugin_docman	notifications_no_element	Aucun élément séléctionné
 plugin_docman	notifications_no_element_added	Aucun élément ajouté
 plugin_docman	notifications_no_emails_supported	Vous ne pouvez pas ajouter de mails

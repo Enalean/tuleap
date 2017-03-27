@@ -153,7 +153,7 @@ class RequestFromAutocompleter
         if ($ugroup && $this->userCanSeeUgroup($this->current_user, $ugroup, $this->project)) {
             $this->ugroups[] = $ugroup;
         } else {
-            $this->invalid_entries->add($listener);
+            $this->invalid_entries->add($name);
         }
     }
 
@@ -162,7 +162,8 @@ class RequestFromAutocompleter
         $allowed_static_ugroups = array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN);
 
         return in_array($ugroup->getId(), $allowed_static_ugroups)
-            || $current_user->isMemberOfUGroup($ugroup->getId(), $project->getId());
+            || $current_user->isMemberOfUGroup($ugroup->getId(), $project->getId())
+            || $current_user->isAdmin($project->getID());
     }
 
     private function addUserFromListener($listener)
