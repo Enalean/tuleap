@@ -1577,7 +1577,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
             if ($this->getTracker()->isProjectAllowedToUseNature()) {
-                $fields_data[$artlink_field->getId()]['natures'][$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+                $fields_data[$artlink_field->getId()]['natures'] = $this->getNoNatureForLink($linked_artifact_id);
             }
 
             try {
@@ -2144,5 +2144,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             ),
             Tracker_FormElementFactory::instance()
         );
+    }
+
+    private function getNoNatureForLink($linked_artifact_id)
+    {
+        $types = array();
+        $linked_artifact_ids_array = explode(',', $linked_artifact_id);
+        foreach ($linked_artifact_ids_array as $linked_artifact_id) {
+            $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+        }
+        return $types;
     }
 }
