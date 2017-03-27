@@ -83,7 +83,7 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
 
     public function url_project()
     {
-        return MEDIAWIKI_BASE_URL . '/wiki/';
+        return MEDIAWIKI_BASE_URL . '/wiki';
     }
 
     public function resource_allowed_project_filter_empty()
