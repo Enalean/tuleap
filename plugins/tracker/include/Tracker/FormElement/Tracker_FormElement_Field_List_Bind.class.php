@@ -42,6 +42,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
     protected $default_values;
     protected $decorators;
+
+    /** @var Tracker_FormElement_Field */
     protected $field;
 
     public function __construct($field, $default_values, $decorators) {
@@ -448,6 +450,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @return string
      */
     public abstract function getType();
+
+    /**
+     * @param int $bindvalue_id
+     * @return Tracker_FormElement_Field_List_BindValue
+     */
+    public abstract function getBindValueById($bindvalue_id);
 
     /**
      * Get the html to select a default value

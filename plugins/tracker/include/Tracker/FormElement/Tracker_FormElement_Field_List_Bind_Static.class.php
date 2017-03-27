@@ -960,4 +960,16 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     {
         return $visitor->visitListBindStatic($this, $parameters);
     }
+
+    /**
+     * @param int $bindvalue_id
+     * @return Tracker_FormElement_Field_List_BindValue
+     */
+    public function getBindValueById($bindvalue_id)
+    {
+        $dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+        $row = $dao->searchById($bindvalue_id)->getRow();
+
+        return $this->getValueFromRow($row);
+    }
 }

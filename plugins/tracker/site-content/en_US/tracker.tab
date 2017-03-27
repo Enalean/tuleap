@@ -708,7 +708,8 @@ plugin_tracker_common_artifact	followup_upd_fail	Follow-up Comment Update Failed
 plugin_tracker_common_artifact	err_required	The field $1 is required.
 plugin_tracker_common_artifact	transition_not_valid	The transition to the value "$1" is not valid.
 plugin_tracker_common_artifact	transition_to_none	The transition to the value "None" is not valid.
-plugin_tracker_common_artifact	error_openlist_value	contains a value which is not a login or an email.
+plugin_tracker_common_artifact	error_openlist_value_user_bind	$1 contains a value which is not a login or an email.
+plugin_tracker_common_artifact	error_openlist_value_ugroup_bind	$1 contains a value which is not a user group.
 plugin_tracker_common_artifact	error_integer_value	is not an integer.
 plugin_tracker_common_artifact	error_float_value	is not a float.
 plugin_tracker_common_artifact	error_string_value	$1 is not a string.
