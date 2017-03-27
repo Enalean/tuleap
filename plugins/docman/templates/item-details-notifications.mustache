@@ -1,4 +1,3 @@
-<div class="docman_help plugin-docman-notifications-list-help">{{{ purified_help }}}</div>
 <form method="POST" action="">
     <input type="hidden" name="action" value="update_monitoring" />
     <table class="table table-bordered plugin-docman-notifications-list">
@@ -17,7 +16,10 @@
                             <input type="checkbox"
                                    value="{{# ugroup }}{{ ugroup_id }}{{/ ugroup }}"
                                    name="listeners_ugroups_to_delete[]"
-                                   {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
+                                   {{^ can_be_deleted }}
+                                       disabled="disabled"
+                                       title="{{ cannot_delete_title }}"
+                                   {{/ can_be_deleted }}
                             >
                         </td>
                         <td>
@@ -35,7 +37,10 @@
                             <input type="checkbox"
                                    value="{{# user }}{{ user_id }}{{/ user}}"
                                    name="listeners_users_to_delete[]"
-                                   {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
+                                   {{^ can_be_deleted }}
+                                       disabled="disabled"
+                                       title="{{ cannot_delete_title }}"
+                                   {{/ can_be_deleted }}
                             >
                         </td>
                         <td class="docman-notification-user">
@@ -67,7 +72,7 @@
                            data-project-id="{{ project_id }}"
                            multiple
                     />
-                    <label class="checkbox" for="plugin_docman_monitor_add_user_cascade">
+                    <label class="checkbox docman-notification-add-cascade" for="plugin_docman_monitor_add_user_cascade">
                         <input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_add_user_cascade">
                         {{ enable_sub_hierarchy }}
                     </label>

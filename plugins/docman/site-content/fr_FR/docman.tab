@@ -371,7 +371,7 @@ plugin_docman	details_notifications	Notifications
 plugin_docman	details_listeners	Abonnés
 plugin_docman	details_notifications_monitored_doc	Document monitoré
 plugin_docman	empty_state	Aucune notification définie
-plugin_docman	details_notifications_help	Les utilisateurs qui ne peuvent pas être enlevés monitorent un parent avec sa sous-hiérarchie.<br />Vous pouvez supprimer ce monitoring uniquement depuis le parent en question.
+plugin_docman	details_notifications_help	Impossible de supprimer car un dossier parent est monitoré avec sa sous-hiérarchie. Vous pouvez supprimer ce monitoring uniquement depuis le parent en question.
 plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
 plugin_docman	details_notifications_cascade_sendemail	...ainsi que pour toute la sous-hiérarchie.
 plugin_docman	details_paste_importmd	Importer les propriétés de $1 :

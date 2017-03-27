@@ -523,10 +523,6 @@ a img {
     width: 50%;
 }
 
-.plugin-docman-notifications-list-help {
-    margin: 0 0 20px;
-}
-
 td.docman-notification-user {
     vertical-align: middle;
     padding-left: 37px;
@@ -549,4 +545,8 @@ td.docman-notification-user {
 
 .table-bordered > tbody > tr > td.docman-notification-add-in-empty-table {
     border-left: 0;
+}
+
+.docman-notification-add-cascade {
+    margin: 0;
 }

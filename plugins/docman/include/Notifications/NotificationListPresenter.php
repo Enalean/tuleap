@@ -33,7 +33,7 @@ class NotificationListPresenter
     public $notified_people;
     public $validate_button;
     public $monitored_doc;
-    public $purified_help;
+    public $cannot_delete_title;
     public $empty_state;
     public $ugroups_to_be_notified;
     public $users_to_be_notified;
@@ -56,10 +56,7 @@ class NotificationListPresenter
         $this->empty_state     = $GLOBALS['Language']->getText('plugin_docman', 'empty_state');
 
         $this->enable_sub_hierarchy = $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_cascade');
-        $this->purified_help        = Codendi_HTMLPurifier::instance()->purify(
-            $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help'),
-            CODENDI_PURIFIER_LIGHT
-        );
+        $this->cannot_delete_title  = $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help');
     }
 
     private function buildNotificationsFromUsers(array $users, Docman_Item $item)
