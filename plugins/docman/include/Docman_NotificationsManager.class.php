@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -53,9 +53,9 @@ class Docman_NotificationsManager
      */
     private $mail_builder;
     /**
-     * @var Dao
+     * @var UsersToNotifyDao
      */
-    private $dao;
+    private $users_to_notify_dao;
 
     /**
      * @var UsersRetriever
@@ -86,7 +86,7 @@ class Docman_NotificationsManager
         $url,
         $feedback,
         MailBuilder $mail_builder,
-        Dao $dao,
+        UsersToNotifyDao $users_to_notify_dao,
         UsersRetriever $users_retriever,
         UGroupsRetriever $ugroups_retriever,
         NotifiedPeopleRetriever $notified_people_retriever,
@@ -103,7 +103,7 @@ class Docman_NotificationsManager
         if ($project && ! $project->isError()) {
             $this->_group_name = $project->getPublicName();
         }
-        $this->dao                       = $dao;
+        $this->users_to_notify_dao       = $users_to_notify_dao;
         $this->users_retriever           = $users_retriever;
         $this->ugroups_retriever         = $ugroups_retriever;
         $this->notified_people_retriever = $notified_people_retriever;
@@ -305,7 +305,7 @@ class Docman_NotificationsManager
      * @return Boolean
      */
     function listAllMonitoredItems($groupId, $userId = null) {
-        return $this->dao->searchDocmanMonitoredItems($groupId, $userId);
+        return $this->users_to_notify_dao->searchDocmanMonitoredItems($groupId, $userId);
     }
 
     public function add($user_id, $item_id, $type = null)
@@ -313,7 +313,7 @@ class Docman_NotificationsManager
         if ($type === null) {
             $type = $this->_getType();
         }
-        return $this->dao->create($user_id, $item_id, $type);
+        return $this->users_to_notify_dao->create($user_id, $item_id, $type);
     }
 
     public function addUser($user_id, $item_id, $type = null)

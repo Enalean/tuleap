@@ -31,7 +31,7 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
 {
     /** @var  UsersRetriever */
     private $retriever;
-    /** @var  Dao */
+    /** @var  UsersToNotifyDao */
     private $notified_users_dao;
     /** @var  UgroupsToNotifyDao */
     private $notified_ugroups_dao;
@@ -52,7 +52,7 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
 
         $this->project = aMockProject()->build();
 
-        $this->notified_users_dao   = mock('Tuleap\Docman\Notifications\Dao');
+        $this->notified_users_dao   = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
         $this->notified_ugroups_dao = mock('Tuleap\Docman\Notifications\UgroupsToNotifyDao');
         $this->ugroup_manager       = mock('UgroupManager');
         $this->item_factory   = mock('Docman_ItemFactory');

@@ -29,7 +29,7 @@ use UGroupManager;
 class UsersRetriever
 {
     /**
-     * @var Dao
+     * @var UsersToNotifyDao
      */
     private $user_dao;
 
@@ -41,7 +41,7 @@ class UsersRetriever
 
 
     public function __construct(
-        Dao $user_dao,
+        UsersToNotifyDao $user_dao,
         Docman_ItemFactory $item_factory
     ) {
         $this->user_dao       = $user_dao;

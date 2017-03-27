@@ -24,7 +24,7 @@
  *
  */
 
-use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
@@ -1061,7 +1061,7 @@ class DocmanPlugin extends Plugin
 
     private function getUsersToNotifyDao()
     {
-        return new Dao();
+        return new UsersToNotifyDao();
     }
 
     private function getUGroupManager()

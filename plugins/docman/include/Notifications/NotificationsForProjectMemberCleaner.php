@@ -33,7 +33,7 @@ class NotificationsForProjectMemberCleaner
      */
     private $item_factory;
     /**
-     * @var Dao
+     * @var UsersToNotifyDao
      */
     private $users_to_notify_dao;
     /**
@@ -49,7 +49,7 @@ class NotificationsForProjectMemberCleaner
         Docman_ItemFactory $item_factory,
         Docman_NotificationsManager $notifications_manager,
         UserManager $user_manager,
-        Dao $users_to_notify_dao
+        UsersToNotifyDao $users_to_notify_dao
     ) {
         $this->item_factory          = $item_factory;
         $this->users_to_notify_dao   = $users_to_notify_dao;

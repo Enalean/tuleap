@@ -21,7 +21,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Notifications\Dao;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -96,7 +96,7 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao(),
+            $this->getUsersToNotifyDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
@@ -112,7 +112,7 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao(),
+            $this->getUsersToNotifyDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
@@ -126,7 +126,7 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao(),
+            $this->getUsersToNotifyDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
@@ -140,7 +140,7 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao(),
+            $this->getUsersToNotifyDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
@@ -154,7 +154,7 @@ class Docman_Controller extends Controler {
             get_server_url().$this->getDefaultUrl(),
             $this->feedback,
             $this->getMailBuilder(),
-            $this->getNotificationsDao(),
+            $this->getUsersToNotifyDao(),
             $this->getUsersRetriever(),
             $this->getUGroupsRetriever(),
             $this->getNotifiedPeopleRetriever(),
@@ -1827,17 +1827,17 @@ class Docman_Controller extends Controler {
     }
 
     /**
-     * @return Dao
+     * @return UsersToNotifyDao
      */
-    private function getNotificationsDao()
+    private function getUsersToNotifyDao()
     {
-        return new Dao();
+        return new UsersToNotifyDao();
     }
 
     /**
      * @return UgroupsToNotifyDao
      */
-    private function getUGroupNotificationDao()
+    private function getUgroupsToNotifyDao()
     {
         return new UgroupsToNotifyDao();
     }
@@ -1848,7 +1848,7 @@ class Docman_Controller extends Controler {
     private function getUsersRetriever()
     {
         return new UsersRetriever(
-            $this->getNotificationsDao(),
+            $this->getUsersToNotifyDao(),
             new Docman_ItemFactory()
         );
     }
@@ -1858,7 +1858,7 @@ class Docman_Controller extends Controler {
      */
     private function getUGroupsRetriever()
     {
-        return new UGroupsRetriever($this->getUGroupNotificationDao(), $this->getItemFactory());
+        return new UGroupsRetriever($this->getUgroupsToNotifyDao(), $this->getItemFactory());
     }
 
     /**
@@ -1876,8 +1876,8 @@ class Docman_Controller extends Controler {
     private function getNotifiedPeopleRetriever()
     {
         return new NotifiedPeopleRetriever(
-            $this->getNotificationsDao(),
-            $this->getUGroupNotificationDao(),
+            $this->getUsersToNotifyDao(),
+            $this->getUgroupsToNotifyDao(),
             $this->getItemFactory(),
             $this->getUGroupManager()
         );
@@ -1885,12 +1885,12 @@ class Docman_Controller extends Controler {
 
     private function getUGroupUpdater()
     {
-        return new UgroupsUpdater($this->getUGroupNotificationDao());
+        return new UgroupsUpdater($this->getUgroupsToNotifyDao());
     }
 
     private function getUserUpdater()
     {
-        return new UsersUpdater($this->getNotificationsDao());
+        return new UsersUpdater($this->getUsersToNotifyDao());
     }
 
     /**

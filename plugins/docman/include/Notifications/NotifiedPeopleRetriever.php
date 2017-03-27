@@ -28,7 +28,7 @@ use UGroupManager;
 class NotifiedPeopleRetriever
 {
     /**
-     * @var Dao
+     * @var UsersToNotifyDao
      */
     private $user_dao;
 
@@ -48,7 +48,7 @@ class NotifiedPeopleRetriever
     private $ugroup_manager;
 
     public function __construct(
-        Dao $user_dao,
+        UsersToNotifyDao $user_dao,
         UgroupsToNotifyDao $ugroup_dao,
         Docman_ItemFactory $item_factory,
         UGroupManager $ugroup_manager
