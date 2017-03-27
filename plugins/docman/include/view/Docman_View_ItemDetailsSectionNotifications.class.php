@@ -112,40 +112,9 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                 new NotificationListPresenter($users, $ugroups, $this->item)
             );
 
-            $content .= $this->addListeningUser($itemId);
             $content .= '</fieldset>';
+            $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
         }
-        return $content;
-    }
-
-    /**
-     * Add a user to the list of peoples that are monitoring a given item.
-     *
-     * @param Integer $itemId Id of the document
-     *
-     * @return String
-     */
-    private function addListeningUser($itemId) {
-        $content = '';
-        $content .= '<tr><form name="add_monitoring" method="POST" action="">';
-        $content .= '<input type="hidden" name="action" value="add_monitoring">';
-        $content .= '<input type="hidden" name="item_id" value="'. $itemId .'">';
-        $content .= '<table>';
-        $content .= '<tr><td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td></tr>';
-        $content .= '<tr><td><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea></td></tr>';
-
-        //checkbox to enable cascade monitoring
-        $content .= '<tr><td>';
-        $content .= '<label class="checkbox" for="plugin_docman_monitor_add_user_cascade">';
-        $content .= '<input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_add_user_cascade" />'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_cascade');
-        $content .= '</label></td></tr></table>';
-
-        //autocompletion on "add_user" field.
-        $autocomplete = "new UserAutoCompleter('listeners_to_add','".
-                        util_get_dir_image_theme()."',true);";
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
-        $content .= '<input type="submit" name="submit" value="'.
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user') .'"></td></form></tr>';
         return $content;
     }
 

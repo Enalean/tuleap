@@ -546,3 +546,7 @@ td.docman-notification-user {
     width: 22px;
     height: 22px;
 }
+
+.table-bordered > tbody > tr > td.docman-notification-add-in-empty-table {
+    border-left: 0;
+}

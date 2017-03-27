@@ -20,7 +20,7 @@
 
 namespace Tuleap\Docman\Notifications;
 
-class UgroupsRemover
+class UgroupsUpdater
 {
     /**
      * @var UgroupsToNotifyDao
@@ -30,6 +30,11 @@ class UgroupsRemover
     public function __construct(UgroupsToNotifyDao $ugroup_dao)
     {
         $this->ugroup_dao = $ugroup_dao;
+    }
+
+    public function create($ugroup_id, $item_id, $type)
+    {
+        return $this->ugroup_dao->create($item_id, $ugroup_id, $type);
     }
 
     public function delete($ugroup_id, $item_id, $type)

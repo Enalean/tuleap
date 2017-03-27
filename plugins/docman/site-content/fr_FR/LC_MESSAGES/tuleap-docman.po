@@ -14,3 +14,9 @@ msgstr ""
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
+
+msgid "User, group"
+msgstr "Utilisateur, groupe"
+
+msgid "Validate"
+msgstr "Valider"

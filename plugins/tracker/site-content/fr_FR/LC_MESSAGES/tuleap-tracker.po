@@ -41,9 +41,6 @@ msgstr "Supprimer"
 msgid "Edit"
 msgstr "Éditer"
 
-msgid "Enter here a comma separated email addresses list to be notified"
-msgstr "Ajouter ici une liste d'adresses email séparées par des virgules"
-
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
@@ -274,6 +271,9 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
+
+msgid "User, group, email"
+msgstr "Utilisateur, groupe, email"
 
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."

@@ -103,8 +103,8 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
             $this->users_retriever,
             $this->ugroups_retriever,
             mock('\Tuleap\Docman\Notifications\NotifiedPeopleRetriever'),
-            mock('\Tuleap\Docman\Notifications\UsersRemover'),
-            mock('\Tuleap\Docman\Notifications\UgroupsRemover')
+            mock('\Tuleap\Docman\Notifications\UsersUpdater'),
+            mock('\Tuleap\Docman\Notifications\UgroupsUpdater')
         );
 
         $this->notification_manager->_url = 'http://www.example.com/plugins/docman/';

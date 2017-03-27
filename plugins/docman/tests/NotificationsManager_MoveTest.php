@@ -23,8 +23,8 @@
  */
 
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
-use Tuleap\Docman\Notifications\UgroupsRemover;
-use Tuleap\Docman\Notifications\UsersRemover;
+use Tuleap\Docman\Notifications\UgroupsUpdater;
+use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 
 require_once 'bootstrap.php';
@@ -316,8 +316,8 @@ class NotificationsManager_MoveTest extends TuleapTestCase
             $ugroup_manager
         );
 
-        $users_remover   = new UsersRemover($dao);
-        $ugroups_remover = new UgroupsRemover($ugroups_to_notify_dao);
+        $users_updater   = new UsersUpdater($dao);
+        $ugroups_updater = new UgroupsUpdater($ugroups_to_notify_dao);
 
         $docman_item = mock('Docman_EmbeddedFile');
         stub($docman_itemfactory)->getItemFromDb('b')->returns($docman_item);
@@ -334,8 +334,8 @@ class NotificationsManager_MoveTest extends TuleapTestCase
             $users_retriever,
             mock('Tuleap\Docman\Notifications\UGroupsRetriever'),
             $notified_people_retriever,
-            $users_remover,
-            $ugroups_remover
+            $users_updater,
+            $ugroups_updater
         );
         $dnmm->somethingHappen('plugin_docman_event_move', array(
             'group_id' => $group_id,
