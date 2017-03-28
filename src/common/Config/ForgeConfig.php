@@ -132,4 +132,13 @@ class ForgeConfig {
     public static function areRestrictedUsersAllowed() {
         return self::get(ForgeAccess::CONFIG) === ForgeAccess::RESTRICTED;
     }
+
+    public static function getApplicationUserLogin()
+    {
+        if (posix_getpwnam('tuleap') !== false) {
+            return 'tuleap';
+        } else {
+            return self::get('sys_http_user');
+        }
+    }
 }

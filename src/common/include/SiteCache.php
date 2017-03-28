@@ -90,8 +90,8 @@ class SiteCache {
         $this->logger->info('Restore ownership to ' . $cache_directory);
         $backend->changeOwnerGroupMode(
             $cache_directory,
-            ForgeConfig::get('sys_http_user'),
-            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::getApplicationUserLogin(),
+            ForgeConfig::getApplicationUserLogin(),
             0750
         );
 
@@ -99,8 +99,8 @@ class SiteCache {
         $this->logger->info('Restore ownership to ' . $language_cache_directory);
         $backend->recurseChownChgrp(
             $language_cache_directory,
-            ForgeConfig::get('sys_http_user'),
-            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::getApplicationUserLogin(),
+            ForgeConfig::getApplicationUserLogin(),
             array('php')
         );
 
@@ -109,8 +109,8 @@ class SiteCache {
         $this->logger->info('Restore ownership to ' . $plugin_cache_file);
         $backend->changeOwnerGroupMode(
             $plugin_cache_file,
-            ForgeConfig::get('sys_http_user'),
-            ForgeConfig::get('sys_http_user'),
+            ForgeConfig::getApplicationUserLogin(),
+            ForgeConfig::getApplicationUserLogin(),
             0600
         );
     }

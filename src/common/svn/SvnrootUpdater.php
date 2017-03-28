@@ -117,7 +117,6 @@ class SvnrootUpdater
             try {
                 $logger->info("Received ", $msg->body);
                 ForgeConfig::set('svn_root_file', '/etc/httpd/conf.d/svnroot.conf');
-                ForgeConfig::set('sys_http_user', 'tuleap');
                 $backend_svn = Backend::instance('SVN');
                 $backend_svn->generateSVNApacheConf();
                 $command = new System_Command();
