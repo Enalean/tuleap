@@ -99,7 +99,7 @@ class RequestFromAutocompleter
         $this->ugroups = array();
         $this->users   = array();
 
-        $list_of_listeners = explode(',', $data);
+        $list_of_listeners = array_filter(explode(',', $data));
 
         foreach ($list_of_listeners as $listener) {
             $listener = trim($listener);
