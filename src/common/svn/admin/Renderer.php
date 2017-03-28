@@ -48,7 +48,6 @@ class Renderer extends AdminPageRenderer
     {
         return TemplateRendererFactory::build()->getRenderer(
             array(
-                ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor',
                 ForgeConfig::get('codendi_dir') . '/src/templates/svn'
             )
         );

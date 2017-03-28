@@ -5,18 +5,18 @@
  *
  * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class Event {
 
@@ -405,9 +405,7 @@ class Event {
      *
      * Parameters:
      *     'project_info'              => A row of Projects DB table
-     *     'project_authorizes_tokens' => Define if project authorizes tokens
      *     'cache_parameters'          => Parameters concerning SVN authentication cache
-     *     'svn_conf_auth'             => Requested authentication method in conf file
      *     'svn_apache_auth'           => SVN_Apache_Auth, object to generate the conf if relevant
      */
     const SVN_APACHE_AUTH = 'svn_apache_auth';
@@ -1184,11 +1182,10 @@ class Event {
      *
      * Sql fragments should be in the form of:
      *
-     *  SELECT groups.*, service.*, repository_name, auth_mod
+     *  SELECT groups.*, service.*, repository_name
      *  FROM ...
      *
      * Where repository_name is "my_project" or "my_project/my_repo"
-     * and auth_mod is modperl, modmysql, ... (see SVN_Apache_SvnrootConf)
      *
      * Parameters:
      *      'sql_fragments' => array

@@ -26,17 +26,12 @@ use PFUser;
 class Router
 {
     /**
-     * @var TokenController
-     */
-    private $token_controller;
-    /**
      * @var CacheController
      */
     private $cache_controller;
 
-    public function __construct(CacheController $cache_controller, TokenController $token_controller)
+    public function __construct(CacheController $cache_controller)
     {
-        $this->token_controller = $token_controller;
         $this->cache_controller = $cache_controller;
     }
 
@@ -65,8 +60,6 @@ class Router
         switch ($requested_pane) {
             case 'cache':
                 return $this->cache_controller;
-            case 'token':
-                return $this->token_controller;
         }
 
         $GLOBALS['Response']->redirect('/admin/svn/index.php?pane=cache');

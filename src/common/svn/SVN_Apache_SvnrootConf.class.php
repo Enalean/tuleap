@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,10 @@ require_once 'SVN_Apache_Auth_Factory.class.php';
  * Manage generation of Apache svnroot.conf file with all project subversion
  * configuration
  */
-class SVN_Apache_SvnrootConf {
-    const CONFIG_SVN_LOG_PATH   = 'svn_log_path';
-    const CONFIG_SVN_AUTH_KEY   = 'sys_auth_svn_mod';
-    const CONFIG_SVN_AUTH_MYSQL = 'modmysql';
-    const CONFIG_SVN_AUTH_PERL  = 'modperl';
-    
+class SVN_Apache_SvnrootConf
+{
+    const CONFIG_SVN_LOG_PATH = 'svn_log_path';
+
     /**
      * @var Array
      */
@@ -55,7 +53,7 @@ class SVN_Apache_SvnrootConf {
     public function getFullConf() {
         $conf = '';
         foreach ($this->projects as $row) {
-            $auth = $this->authFactory->get($row, $row['auth_mod']);
+            $auth = $this->authFactory->get($row);
             $this->collectApacheConfHeaders($auth);
             $conf .= $auth->getConf($row['public_path'], $row['system_path']);
         }
@@ -79,5 +77,3 @@ class SVN_Apache_SvnrootConf {
         return $headers;
     }
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,15 +21,12 @@
 use Tuleap\SvnCore\Admin\CacheController;
 use Tuleap\SvnCore\Admin\Renderer;
 use Tuleap\SvnCore\Admin\Router;
-use Tuleap\SvnCore\Admin\TokenController;
 use Tuleap\SvnCore\Cache\ParameterDao;
 use Tuleap\SvnCore\Cache\ParameterRetriever;
 use Tuleap\SvnCore\Cache\ParameterSaver;
 
 require_once 'pre.php';
 
-$project_manager     = ProjectManager::instance();
-$token_manager       = new SVN_TokenUsageManager(new SVN_TokenDao(), $project_manager);
 $event_manager       = EventManager::instance();
 $parameter_dao       = new ParameterDao();
 $parameter_retriever = new ParameterRetriever($parameter_dao);
@@ -38,11 +35,8 @@ $parameter_saver     = new ParameterSaver($parameter_dao, $event_manager);
 $csrf_token          = new CSRFSynchronizerToken('/admin/svn/index.php?pane=index');
 $renderer            = new Renderer();
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');
-
-$token_controller = new TokenController($project_manager, $token_manager, $event_manager, $renderer, $csrf_token);
 $cache_controller = new CacheController($parameters, $parameter_saver, $renderer, $csrf_token);
 
-$router  = new Router($cache_controller, $token_controller);
+$router  = new Router($cache_controller);
 $request = HTTPRequest::instance();
 $router->process($request);

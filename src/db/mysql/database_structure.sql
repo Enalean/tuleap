@@ -528,11 +528,6 @@ CREATE TABLE svn_immutable_tags (
     PRIMARY KEY(group_id)
 );
 
-CREATE TABLE svn_token_usage (
-    project_id INT(11),
-    PRIMARY KEY(project_id)
-);
-
 CREATE TABLE svn_cache_parameter (
     name VARCHAR(255) PRIMARY KEY,
     value VARCHAR(255)
