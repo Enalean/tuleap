@@ -27,7 +27,22 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
+#, php-format
+msgid "Group '%s' couldn't be added."
+msgid_plural "Groups '%s' couldn't be added."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "No element selected."
+msgstr ""
+
 msgid "No notification set"
+msgstr ""
+
+msgid "Notification successfully deleted."
+msgstr ""
+
+msgid "Notification successfully saved."
 msgstr ""
 
 msgid "Notified people"
@@ -193,6 +208,12 @@ msgid ""
 "operator."
 msgstr ""
 
+msgid "The notification could not be deleted."
+msgstr ""
+
+msgid "The notification could not be saved."
+msgstr ""
+
 msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "
@@ -213,6 +234,12 @@ msgstr ""
 
 msgid "This template does not use trackers"
 msgstr ""
+
+#, php-format
+msgid "User '%s' couldn't be added."
+msgid_plural "Users '%s' couldn't be added."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "User, group, email"
 msgstr ""
