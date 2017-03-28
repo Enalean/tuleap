@@ -21,7 +21,7 @@
 $tuleap_short_options = 'hvcr';
 $tuleap_long_options  = array('help', 'version', 'clear-caches', 'restore-caches');
 
-$command = '';
+$commands = array();
 
 if (version_compare(phpversion(), '5.3', '>=')) {
     $options = getopt($tuleap_short_options, $tuleap_long_options);
@@ -38,46 +38,48 @@ foreach ($options as $option => $value) {
 
         case 'v':
         case 'version':
-            $command = 'version';
-            break;
+            $commands = array('version');
+            break 2;
 
         case 'c':
         case 'clear-caches':
-            $command = 'clear-caches';
+            $commands[] = 'clear-caches';
             break;
 
         case 'r':
         case 'restore-caches':
-            $command = 'restore-caches';
+            $commands[] = 'restore-caches';
             break;
     }
 }
 
-if (! $command) {
+if (! $commands) {
     show_usage();
     exit(0);
 }
 
 require_once 'pre.php';
 
-switch ($command) {
-    case 'clear-caches':
-        $site_cache = new SiteCache(new Log_ConsoleLogger());
-        $site_cache->invalidatePluginBasedCaches();
-        break;
+foreach ($commands as $command) {
+    switch ($command) {
+        case 'clear-caches':
+            $site_cache = new SiteCache(new Log_ConsoleLogger());
+            $site_cache->invalidatePluginBasedCaches();
+            break;
 
-    case 'restore-caches':
-        $site_cache = new SiteCache(new Log_ConsoleLogger());
-        $site_cache->restoreCacheDirectories();
-        $site_cache->restoreOwnership();
-        break;
+        case 'restore-caches':
+            $site_cache = new SiteCache(new Log_ConsoleLogger());
+            $site_cache->restoreCacheDirectories();
+            $site_cache->restoreOwnership();
+            break;
 
-    case 'version':
-        show_version();
-        break;
+        case 'version':
+            show_version();
+            break;
 
-    default:
-        show_usage();
+        default:
+            show_usage();
+    }
 }
 
 function show_usage() {
