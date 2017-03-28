@@ -106,6 +106,9 @@ class SiteCache {
 
         $plugin_manager    = PluginManager::instance();
         $plugin_cache_file = $plugin_manager->getCacheFile();
+        if (! file_exists($plugin_cache_file)) {
+            touch($plugin_cache_file);
+        }
         $this->logger->info('Restore ownership to ' . $plugin_cache_file);
         $backend->changeOwnerGroupMode(
             $plugin_cache_file,
