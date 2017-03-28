@@ -1718,6 +1718,7 @@ class Docman_Actions extends Actions {
 
     public function update_monitoring($params)
     {
+        $item    = $params['item'];
         $cascade = false;
         if (isset($params['monitor_cascade']) && $params['monitor_cascade']) {
             $cascade = true;
@@ -1726,22 +1727,22 @@ class Docman_Actions extends Actions {
         if (isset($params['listeners_users_to_add'])
             && is_array($params['listeners_users_to_add'])
             && ! empty($params['listeners_users_to_add'])) {
-            $this->addMonitoringUsers($cascade, $params['item'], $params['listeners_users_to_add']);
+            $this->addMonitoringUsers($cascade, $item, $params['listeners_users_to_add']);
         }
         if (isset($params['listeners_ugroups_to_add'])
             && is_array($params['listeners_ugroups_to_add'])
             && ! empty($params['listeners_ugroups_to_add'])) {
-            $this->addMonitorinUgroups($cascade, $params['item'], $params['listeners_ugroups_to_add']);
+            $this->addMonitorinUgroups($cascade, $item, $params['listeners_ugroups_to_add']);
         }
         if (isset($params['listeners_users_to_delete'])
             && is_array($params['listeners_users_to_delete'])
             && ! empty($params['listeners_users_to_delete'])) {
-            $this->removeNotificationUsersByItem($params['item'], $params['listeners_users_to_delete']);
+            $this->removeNotificationUsersByItem($item, $params['listeners_users_to_delete']);
         }
         if (isset($params['listeners_ugroups_to_delete'])
             && is_array($params['listeners_ugroups_to_delete'])
             && ! empty($params['listeners_ugroups_to_delete'])) {
-            $this->removeNotificationUgroupsByItem($params['item'], $params['listeners_ugroups_to_delete']);
+            $this->removeNotificationUgroupsByItem($item, $params['listeners_ugroups_to_delete']);
         }
     }
 

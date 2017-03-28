@@ -120,6 +120,7 @@ class Tracker_NotificationsManager {
             $this->notificationAddUsers($notification_id, $autocompleter);
             $this->notificationAddUgroups($notification_id, $autocompleter);
         }
+        $this->redirectOnNotifications();
     }
 
     private function updateGlobalNotification($notification_id, $notification)
@@ -144,6 +145,7 @@ class Tracker_NotificationsManager {
                 $this->notificationAddUgroups($notification_id, $autocompleter);
             }
         }
+        $this->redirectOnNotifications();
     }
 
     private function deleteGlobalNotification($remove_global)
@@ -151,6 +153,7 @@ class Tracker_NotificationsManager {
         foreach ($remove_global as $notification_id => $value) {
             $this->removeGlobalNotification($notification_id);
         }
+        $this->redirectOnNotifications();
     }
 
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
@@ -383,5 +386,10 @@ class Tracker_NotificationsManager {
         $ugroups = $autocompleter->getUgroups();
         $users   = $autocompleter->getUsers();
         return empty($emails) && empty($ugroups) && empty($users);
+    }
+
+    private function redirectOnNotifications()
+    {
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=notifications');
     }
 }
