@@ -44,8 +44,24 @@ msgstr "Éditer"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
+#, fuzzy, php-format
+msgid "Group '%s' couldn't be added."
+msgid_plural "Groups '%s' couldn't be added."
+msgstr[0] "Le groupe '%s' a été ajouté"
+msgstr[1] "Les groupes '%s' ont été ajoutés"
+
+msgid "No element selected."
+msgstr "Aucun élément sélectionné."
+
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
+
+#, fuzzy
+msgid "Notification successfully deleted."
+msgstr "Aucune notification n'a été définie"
+
+msgid "Notification successfully saved."
+msgstr "Notification enregistrée avec succès."
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
@@ -249,6 +265,12 @@ msgstr ""
 "Le champ liste '%s' ne peut pas être comparé à une chaîne vide avec "
 "l'opérateur NOT IN()."
 
+msgid "The notification could not be deleted."
+msgstr "La notification n’a pas pu être supprimée."
+
+msgid "The notification could not be saved."
+msgstr "La notification n’a pas pu être enregistrée."
+
 msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "
@@ -271,6 +293,12 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
+
+#, fuzzy, php-format
+msgid "User '%s' couldn't be added."
+msgid_plural "Users '%s' couldn't be added."
+msgstr[0] "L'utilisateur '%s' a été ajouté"
+msgstr[1] "Les utilisateurs '%s' ont été ajoutés"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"

@@ -93,10 +93,13 @@ class Tracker_NotificationsManager {
 
         if ($remove_global) {
             $this->deleteGlobalNotification($remove_global);
+            $this->redirectOnNotifications();
         } else if ($new_global_notification && $new_global_notification['addresses']) {
             $this->createNewGlobalNotification($new_global_notification);
+            $this->redirectOnNotifications();
         } else if ($global_notification && $notification_id) {
             $this->updateGlobalNotification($notification_id, $global_notification[$notification_id]);
+            $this->redirectOnNotifications();
         }
 
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
@@ -115,12 +118,21 @@ class Tracker_NotificationsManager {
         $autocompleter = $this->getAutocompleter($global_notification_data['addresses'], $invalid_entries);
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if (! $this->isNotificationEmpty($autocompleter)) {
-            $notification_id = $this->notificationAddEmails($global_notification_data, $autocompleter);
-            $this->notificationAddUsers($notification_id, $autocompleter);
-            $this->notificationAddUgroups($notification_id, $autocompleter);
+        if ($this->isNotificationEmpty($autocompleter)) {
+            $this->addFeedbackNoElement();
+            return;
         }
-        $this->redirectOnNotifications();
+
+        $notification_id = $this->notificationAddEmails($global_notification_data, $autocompleter);
+
+        if (! $notification_id) {
+            $this->addFeedbackNotSaved();
+            return;
+        }
+
+        $this->notificationAddUsers($notification_id, $autocompleter);
+        $this->notificationAddUgroups($notification_id, $autocompleter);
+        $this->addFeedbackCorrectlySaved();
     }
 
     private function updateGlobalNotification($notification_id, $notification)
@@ -134,7 +146,11 @@ class Tracker_NotificationsManager {
 
             $invalid_entries->generateWarningMessageForInvalidEntries();
 
-            $this->getGlobalDao()->modify($notification_id, $notification);
+            if (! $this->getGlobalDao()->modify($notification_id, $notification)) {
+                $this->addFeedbackNotSaved();
+                return;
+            }
+
             $this->user_to_notify_dao->deleteByNotificationId($notification_id);
             $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id);
 
@@ -143,9 +159,9 @@ class Tracker_NotificationsManager {
             } else {
                 $this->notificationAddUsers($notification_id, $autocompleter);
                 $this->notificationAddUgroups($notification_id, $autocompleter);
+                $this->addFeedbackCorrectlySaved();
             }
         }
-        $this->redirectOnNotifications();
     }
 
     private function deleteGlobalNotification($remove_global)
@@ -153,7 +169,6 @@ class Tracker_NotificationsManager {
         foreach ($remove_global as $notification_id => $value) {
             $this->removeGlobalNotification($notification_id);
         }
-        $this->redirectOnNotifications();
     }
 
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
@@ -267,18 +282,36 @@ class Tracker_NotificationsManager {
 
     private function notificationAddUsers($notification_id, RequestFromAutocompleter $autocompleter)
     {
-        $users = $autocompleter->getUsers();
+        $users           = $autocompleter->getUsers();
+        $users_not_added = array();
         foreach ($users as $user) {
-            $this->user_to_notify_dao->insert($notification_id, $user->getId());
+            if (! $this->user_to_notify_dao->insert($notification_id, $user->getId())) {
+                $users_not_added[] = $user->getName();
+            }
         }
+
+        if (! empty($users_not_added)) {
+            $this->addFeedbackUsersNotAdded($users_not_added);
+        }
+
+        return empty($users_not_added);
     }
 
     private function notificationAddUgroups($notification_id, RequestFromAutocompleter $autocompleter)
     {
-        $ugroups = $autocompleter->getUgroups();
+        $ugroups           = $autocompleter->getUgroups();
+        $ugroups_not_added = array();
         foreach ($ugroups as $ugroup) {
-            $this->ugroup_to_notify_dao->insert($notification_id, $ugroup->getId());
+            if (! $this->ugroup_to_notify_dao->insert($notification_id, $ugroup->getId())) {
+                $ugroups_not_added[] = $ugroup->getTranslatedName();
+            }
         }
+
+        if (! empty($ugroups_not_added)) {
+            $this->addFeedbackUgroupsNotAdded($ugroups_not_added);
+        }
+
+        return empty($ugroups_not_added);
     }
 
     protected function removeGlobalNotification($id)
@@ -286,13 +319,17 @@ class Tracker_NotificationsManager {
         $dao   = $this->getGlobalDao();
         $notif = $dao->searchById($id);
 
-        if (! empty($notif)) {
-            $deletion_result = $dao->delete($id, $this->tracker->id);
+        if (empty($notif)) {
+            $this->addFeedbackNotDeleted();
+            return;
+        }
 
-            if ($deletion_result) {
-                $this->user_to_notify_dao->deleteByNotificationId($id);
-                $this->ugroup_to_notify_dao->deleteByNotificationId($id);
-            }
+        if ($dao->delete($id, $this->tracker->id)) {
+            $this->user_to_notify_dao->deleteByNotificationId($id);
+            $this->ugroup_to_notify_dao->deleteByNotificationId($id);
+            $this->addFeedbackCorrectlyDeleted();
+        } else {
+            $this->addFeedbackNotDeleted();
         }
     }
 
@@ -391,5 +428,92 @@ class Tracker_NotificationsManager {
     private function redirectOnNotifications()
     {
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&func=notifications');
+    }
+
+    private function addFeedbackCorrectlySaved()
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext(
+                'tuleap-tracker',
+                'Notification successfully saved.'
+            )
+        );
+    }
+
+    protected function addFeedbackCorrectlyDeleted()
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext(
+                'tuleap-tracker',
+                'Notification successfully deleted.'
+            )
+        );
+    }
+
+    private function addFeedbackUsersNotAdded($users_not_added)
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            sprintf(
+                dngettext(
+                    'tuleap-tracker',
+                    "User '%s' couldn't be added.",
+                    "Users '%s' couldn't be added.",
+                    count($users_not_added)
+                ),
+                implode("' ,'", $users_not_added)
+            )
+        );
+    }
+
+    private function addFeedbackUgroupsNotAdded($ugroups_not_added)
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            sprintf(
+                dngettext(
+                    'tuleap-tracker',
+                    "Group '%s' couldn't be added.",
+                    "Groups '%s' couldn't be added.",
+                    count($ugroups_not_added)
+                ),
+                implode("' ,'", $ugroups_not_added)
+            )
+        );
+    }
+
+    private function addFeedbackNotSaved()
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            dgettext(
+                'tuleap-tracker',
+                'The notification could not be saved.'
+            )
+        );
+    }
+
+    private function addFeedbackNotDeleted()
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            dgettext(
+                'tuleap-tracker',
+                'The notification could not be deleted.'
+            )
+        );
+    }
+
+    private function addFeedbackNoElement()
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            dgettext(
+                'tuleap-tracker',
+                'No element selected.'
+            )
+        );
     }
 }
