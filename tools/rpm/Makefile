@@ -53,13 +53,19 @@ endif
 
 PKG_NAME=tuleap
 
-DIST=
 
 ifeq ($(strip $(OS)),rhel6)
+DIST=
 SPEC_FILE=tuleap.rhel6.spec
 CUSTOM_SPEC_FILE=customization.rhel6.spec
 else
+ifeq ($(strip $(OS)),rhel7)
+SPEC_FILE=tuleap.rhel7.spec
+DIST=.el7
+PHP_BASE=rh-php56-php
+else
 $(error OS version not supported)
+endif
 endif
 
 .PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball node srpms dist
@@ -86,7 +92,7 @@ rpmprep: $(RPM_TMP) ~/.rpmmacros
 	@echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
 	@echo '%_sysconfdir /etc' >> ~/.rpmmacros
 	@echo '%php_base $(PHP_BASE)' >> ~/.rpmmacros
-	@echo '%undefine dist' >> ~/.rpmmacros
+	@echo '%dist $(DIST)' >> ~/.rpmmacros
 
 $(RPM_TMP):
 	[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
@@ -103,16 +109,13 @@ mo:
 
 node:
 	cd $(BASE_DIR) &&\
-	    npm install &&\
-	    npm run build &&\
-	cd $(BASE_DIR)/src/www/themes/common/tlp &&\
-            npm install &&\
-            npm run build &&\
+	     npm install &&\
+	     npm run build &&\
 	for directory in $(ANGULAR_APPS_TO_BUILD); do\
-	    cd $(BASE_DIR)/$$directory &&\
-	    npm install &&\
-	    bower install --allow-root --config.interactive=false &&\
-	    npm run build; \
+	     cd $(BASE_DIR)/$$directory &&\
+	     npm install &&\
+	     bower install --allow-root --config.interactive=false &&\
+	     npm run build; \
 	done
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
@@ -127,6 +130,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
 				-name ".git" -o\
 				-name ".gitignore" -o\
 				-name ".gitmodules" -o\
+                                -name "node_modules" -o\
 				-path "*/.DS_Store" -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/doc -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/gulpfile.js -o\

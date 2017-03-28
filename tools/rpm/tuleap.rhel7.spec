@@ -1,0 +1,1106 @@
+# Define variables
+%define PKG_NAME @@PKG_NAME@@
+%define APP_NAME tuleap
+%define APP_USER tuleap
+%define APP_HOME_DIR /home/%{APP_USER}
+%define APP_DIR %{_datadir}/%{APP_NAME}
+%define APP_LIB_DIR /usr/lib/%{APP_NAME}
+%define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
+%define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
+%define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
+%define APP_LOG_DIR /var/log/%{APP_NAME}
+%define APP_PHP_INCLUDE_PATH /usr/share/pear:%{APP_DIR}/src/www/include:%{APP_DIR}/src:.
+
+%define app_group        tuleap
+%define app_user         tuleap
+%define dummy_group      dummy
+%define dummy_user       dummy
+%define ftpadmin_group   ftpadmin
+%define ftpadmin_user    ftpadmin
+%define ftp_group        ftp
+%define ftp_user         ftp
+
+Summary: The Tuleap forge
+Name: %{PKG_NAME}
+Version: @@VERSION@@
+Release: @@RELEASE@@%{?dist}
+BuildArch: noarch
+License: GPL
+Group: Development/Tools
+URL: http://tuleap.net
+Source0: %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Packager: Manuel VACELET <manuel.vacelet@enalean.com>
+
+AutoReqProv: no
+
+# Php and web related stuff
+Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear
+Requires: %{php_base}-process  %{php_base}-opcache
+
+Requires: php-ZendFramework2-Loader
+Requires: php-paragonie-random-compat
+
+%description
+Tuleap is a web based application that address all the aspects of product development.
+
+#
+## Core component definitions
+#
+
+%package install
+Summary: Initial setup of the platform
+Group: Development/Tools
+Version: @@VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description install
+This package contains the setup script for the tuleap platform.
+It is meant to be install at the initial setup of the platform and
+recommanded to uninstall it after.
+
+%package core-mailman
+Summary: Mailman component for Tuleap
+Group: Development/Tools
+Version: @@CORE_MAILMAN_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+#Requires: mailman-tuleap
+%description core-mailman
+Manage dependencies for Tuleap mailman integration
+
+%package core-cvs
+Summary: CVS component for Tuleap
+Group: Development/Tools
+Version: @@CORE_CVS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, highlight, perl-CGI
+#Requires: viewvc, viewvc-theme-tuleap
+#Requires: cvs-tuleap
+%description core-cvs
+Manage dependencies for Tuleap CVS integration
+
+
+%package core-subversion
+Summary: Subversion component for Tuleap
+Group: Development/Tools
+Version: 1.2
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
+Requires: viewvc, viewvc-theme-tuleap
+Requires: python, MySQL-python, python-ldap
+Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-LDAP, perl-DBD-MySQL
+Requires: tuleap-theme-flamingparrot
+%description core-subversion
+Manage dependencies for Tuleap Subversion integration
+
+#
+## Plugins
+#
+
+%package plugin-forumml
+Summary: ForumML plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_FORUMML_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{php_base}-pear-Mail-mimeDecode %{php_base}-pear-Mail-Mime %{php_base}-pear-Mail-Mbox %{php_base}-pear-Mail
+#Requires: tuleap-core-mailman
+%description plugin-forumml
+ForumML brings to Tuleap a very nice mail archive viewer and the possibility
+to send mails through the web interface. It can replace the forums.
+
+%package plugin-svn
+Summary: Subversion plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_SVN_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+AutoReqProv: no
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-core-subversion
+%description plugin-svn
+Integration of Subversion software configuration management tool with Tuleap.
+
+%package plugin-git
+Summary: Git plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_GIT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+AutoReqProv: no
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-11
+#Requires: geshi, php-guzzle-Guzzle, sudo
+%description plugin-git
+Integration of git distributed software configuration management tool together
+with Tuleap.
+This package is integrated with gitolite v3 (new version)
+
+%package plugin-ldap
+Summary: Tuleap plugin to manage LDAP integration
+Group: Development/Tools
+Version: @@PLUGIN_LDAP_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{php_base}-ldap, perl-LDAP, python-ldap
+%description plugin-ldap
+LDAP Plugin for Tuleap. Provides LDAP information, LDAP
+authentication, user and group management.
+
+%package plugin-hudson
+Summary: Hudson plugin for Tuleap
+Group: Development/Tools/Building
+Version: @@PLUGIN_HUDSON_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-hudson
+Plugin to install the Tuleap Hudson plugin for continuous integration
+
+%package plugin-hudson-svn
+Summary: Hudson/Jenkins plugin for Tuleap SVN multiple repositories
+Group: Development/Tools
+Version: @@PLUGIN_HUDSON_SVN_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-hudson, tuleap-plugin-svn
+%description plugin-hudson-svn
+Hudson/Jenkins plugin for Tuleap SVN multiple repositories
+
+%package plugin-hudson-git
+Summary: Hudson/Jenkins plugin for Tuleap Git repositories
+Group: Development/Tools
+Version: @@PLUGIN_HUDSON_GIT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-hudson, tuleap-plugin-git
+%description plugin-hudson-git
+Hudson/Jenkins plugin for Tuleap Git repositories
+
+%package plugin-webdav
+Summary: WebDAV plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_WEBDAV_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+#Requires: %{php_base}-sabredav = 1.4.4
+%description plugin-webdav
+Plugin to access to file releases & docman though WebDAV
+
+%package plugin-tracker
+AutoReqProv: no
+Summary: Tracker v5 for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_TRACKER_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, %{php_base}-imap
+%description plugin-tracker
+New tracker generation for Tuleap.
+
+%package plugin-graphontrackers
+Summary: Graphs for Tracker v5
+Group: Development/Tools
+Version: @@PLUGIN_GRAPHONTRACKERS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker >= 0.8.4
+%description plugin-graphontrackers
+Graphs for new tracker generation
+
+%package plugin-tracker-encryption
+Summary: Encryption for tracker
+Group: Development/Tools
+Version: @@PLUGIN_TRACKER_ENCRYPTION_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+#Requires: php-phpseclib-crypt-rsa
+%description plugin-tracker-encryption
+Adding a new type of tracker fields that are encrypted.
+This plugin is still in beta.
+
+%package plugin-cardwall
+Summary: Graphs for Tracker v5
+Group: Development/Tools
+Version: @@PLUGIN_CARDWALL_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+Requires: tuleap-plugin-tracker
+%description plugin-cardwall
+Fancy cardwall output on top of Tracker v5
+
+%package plugin-agiledashboard
+Summary: Agile dashboard
+Group: Development/Tools
+Version: @@PLUGIN_AGILEDASHBOARD_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-cardwall
+%description plugin-agiledashboard
+Agile Dashboard aims to provide an nice integration of Scrum/Kanban
+tool on top of Tracker.
+
+%package plugin-fulltextsearch
+Summary: Full-Text Search
+Group: Development/Tools
+Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+#Requires: %{php_base}-elasticsearch
+%description plugin-fulltextsearch
+Allows documents of the docman to be searched in a full-text manner.
+
+%package plugin-archivedeleteditems
+Summary: Archiving plugin
+Group: Development/Tools
+Version: @@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-archivedeleteditems
+Archive deleted items before purging them from filesystem
+
+%package plugin-mediawiki
+Summary: Mediawiki plugin
+Group: Development/Tools
+Version: @@PLUGIN_MEDIAWIKI_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+#Requires: php-mediawiki-tuleap >= 1.20.3-6
+%description plugin-mediawiki
+This plugin provides Mediawiki integration in Tuleap.
+
+%package plugin-openidconnectclient
+Summary: OpenId consumer plugin
+Group: Development/Tools
+Version: @@PLUGIN_OPENIDCONNECTCLIENT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+#Requires: %{php_base}-openid-connect-client
+%description plugin-openidconnectclient
+Connect to Tuleap using an OpenID Connect provider
+
+%package plugin-proftpd
+Summary: Proftpd plugin
+Group: Development/Tools
+Version: @@PLUGIN_PROFTPD_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+#Requires: %{php_base}-pear-HTTP-Download >= 1.1.4-3
+%description plugin-proftpd
+Control and interfact with Proftpd as FTP server
+
+%package plugin-frs
+AutoReqProv: no
+Summary: File release system plugin
+Group: Development/Tools
+Version: @@PLUGIN_FRS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+%description plugin-frs
+Add features to the file release system provided by Tuleap
+
+%package plugin-referencealias-core
+Summary: Reference aliases plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_CORE_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-referencealias-core
+This plugin allows to have references defined with "pkgXXX" syntax as an alias for Tuleap FRS refrences.
+
+%package plugin-referencealias-git
+Summary: Reference aliases for git plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_GIT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-git
+%description plugin-referencealias-git
+This plugin allows to use cmmtXXX as aliases for git references
+
+%package plugin-referencealias-svn
+Summary: Reference aliases for svn plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_SVN_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-svn
+%description plugin-referencealias-svn
+This plugin allows to use cmmtXXX references as aliases for svn plugin commit references
+
+%package plugin-referencealias-mediawiki
+Summary: Reference aliases for mediawiki plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_MEDIAWIKI_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-mediawiki
+%description plugin-referencealias-mediawiki
+This plugin allows to use wikiXXXX references to point to mediawiki pages
+
+%package plugin-referencealias-tracker
+Summary: Reference aliases for tracker plugin
+Group: Development/Tools
+Version: @@PLUGIN_REFERENCEALIAS_TRACKER_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+%description plugin-referencealias-tracker
+This plugin allows to import references like "artfXXX" or "trackerYYYY" for the tracker plugin.
+
+%package plugin-artifactsfolders
+Summary: Artifacts Folders
+Group: Development/Tools
+Version: @@PLUGIN_ARTIFACTSFOLDERS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker
+%description plugin-artifactsfolders
+Add a "Folder" tab in an artifact
+
+%package plugin-captcha
+Summary: Add a captcha protection to sensitive operations
+Group: Development/Tools
+Version: @@PLUGIN_CAPTCHA_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-captcha
+%{summary}.
+
+%package api-explorer
+Summary: Web API Explorer
+Group: Development/Tools
+Version: 1.0
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+#Requires: %{php_base}-restler
+%description api-explorer
+Web API Explorer for Restler. Based on Swagger UI, it dynamically generates beautiful documentation.
+
+#
+## Themes
+#
+
+%package theme-flamingparrot
+Summary: FlamingParrot, default theme starting Tuleap 7
+Group: Development/Tools
+Version: @@THEME_FLAMINGPARROT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description theme-flamingparrot
+FlamingParrot, default theme starting Tuleap 7
+
+%package theme-burningparrot
+Summary: BurningParrot, default theme starting Tuleap 10
+Group: Development/Tools
+Version: @@THEME_BURNINGPARROT_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description theme-burningparrot
+BurningParrot, default theme starting Tuleap 10
+
+#
+# Package setup
+%prep
+%setup -q
+
+#
+# Build
+%build
+# Nothing to do
+
+#
+# Install
+%install
+%{__rm} -rf $RPM_BUILD_ROOT
+
+#
+# Install tuleap application
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
+for i in tools cli plugins site-content src VERSION AUTHORS; do
+	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
+done
+# Remove old scripts: not used and add unneeded perl depedencies to the package
+%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanUploader.pl
+%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
+# Hard-coded perl include that breaks packging
+%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
+# No need of template
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/IM
+# Remove development tools and utility files
+find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php56
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/version_numbers
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-mo.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-po.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/sass.sh
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/tuleap-gulp-build.js
+
+# Data dir
+#%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
+#%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
+#%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
+
+# Install script
+#%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
+#%{__install} -m 755 tools/setup.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
+
+# Install systemd Unit
+%{__install} -d $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
+
+# Install Tuleap executables
+%{__install} -d $RPM_BUILD_ROOT/%{_bindir}
+%{__install} src/utils/tuleap $RPM_BUILD_ROOT/%{_bindir}/tuleap
+
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/svn/backup_subversion.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
+#%{__install} plugins/forumml/bin/mail_2_DB.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+
+# Special custom include script
+#%{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
+#%{__perl} -pi -e "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
+#
+## Install init.d script
+#%{__install} -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+#%{__install} src/utils/init.d/codendi $RPM_BUILD_ROOT/etc/rc.d/init.d/%{APP_NAME}
+#
+## Install cron.d script
+#%{__install} -d $RPM_BUILD_ROOT/etc/cron.d
+#%{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
+#
+## Install logrotate.d script
+#%{__install} -d $RPM_BUILD_ROOT/etc/logrotate.d
+#%{__install} src/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+
+# Cache dir
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
+
+# Log dir
+%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}/cvslog
+
+# Core subversion mod_perl
+%{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
+%{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
+
+# Apache conf dir
+#%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
+#%{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
+#%{__install} src/etc/tuleap-uploaded-images.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
+#%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/
+#%{__install} src/etc/00-common.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/00-common.conf
+#%{__install} src/etc/01-download.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/01-download.conf
+#%{__install} src/etc/02-themes.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/02-themes.conf
+#%{__install} src/etc/03-plugins.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
+#%{__install} src/etc/04-cgi.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
+#
+## plugin webdav
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
+#
+## plugin forumml
+#%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
+#
+## plugin-git
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitroot
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/repositories
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/grokmirror
+#touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
+#%{__ln_s} var/lib/%{APP_NAME}/gitroot $RPM_BUILD_ROOT
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
+#%{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} plugins/git/bin/restore-tar-repository.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+#%{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
+#%{__install} plugins/git/etc/sudoers.d/gitolite-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
+#%{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
+#
+## plugin-git-gitolite3
+#%{__install} plugins/git/bin/gitolite3-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+#%{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
+#%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
+#%{__install} plugins/git/etc/sudoers.d/gitolite3-replace-authorized-keys $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_replace_authorized_keys
+#
+##codendiadm > gitolite sudo
+#%{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
+#%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
+#
+# Plugin svn
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
+
+# Plugin tracker
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
+#%{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+#%{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
+#
+## Plugin mediawiki
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
+#%{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+#
+## Plugin proftpd
+#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
+#
+## Plugin fulltextsearch
+#%{__install} plugins/fulltextsearch/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
+#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
+#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
+#
+#
+## Symlink for compatibility with older version
+#%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
+#%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
+#%{__ln_s} %{APP_DATA_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DATA_DIR}
+#%{__ln_s} %{APP_CACHE_DIR} $RPM_BUILD_ROOT/%{OLD_APP_CACHE_DIR}
+#%{__ln_s} %{APP_LOG_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LOG_DIR}
+#%{__ln_s} /etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/codendi
+#%{__ln_s} /etc/%{APP_NAME} $RPM_BUILD_ROOT/etc/%{OLD_APP_NAME}
+#
+## Symlink for the API Explorer
+#%{__ln_s} /usr/share/restler/vendor/Luracast/Restler/explorer/ $RPM_BUILD_ROOT/%{APP_DIR}/src/www/api/explorer
+#
+##
+## On package install
+##
+
+#
+#
+#
+%pre
+if [ "$1" -eq "1" ]; then
+    # Install
+
+    #
+    # Make sure mandatory unix groups exist
+    #
+
+    # tuleap
+    if ! grep -q "^%{app_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{app_group} 2> /dev/null || :
+    fi
+    # dummy
+    if ! grep -q "^%{dummy_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{dummy_group} 2> /dev/null || :
+    fi
+    # ftpadmin
+    if ! grep -q "^%{ftpadmin_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{ftpadmin_group} 2> /dev/null || :
+    fi
+    # ftp
+    if ! grep -q "^%{ftp_group}:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r %{ftp_group} 2> /dev/null || :
+    fi
+
+    # Make user mandatory unix users exist
+
+    # tuleap
+    if id %{app_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'Tuleap user'    -d '/var/lib/tuleap'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
+    else
+        /usr/sbin/useradd -c 'Tuleap user' -m -d '/var/lib/tuleap' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group} %{app_user}
+    fi
+    # ftpadmin
+    if id %{ftpadmin_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'FTP Administrator'    -d '/var/lib/tuleap/ftp'    -g %{ftpadmin_group} %{ftpadmin_user}
+    else
+        /usr/sbin/useradd -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g %{ftpadmin_group} %{ftpadmin_user}
+    fi
+    # ftp
+    if id %{ftp_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'FTP User'    -d '/var/lib/tuleap/ftp'    -g %{ftp_group} %{ftp_user}
+    else
+        /usr/sbin/useradd -c 'FTP User' -M -d '/var/lib/tuleap/ftp' -r -g %{ftp_group} %{ftp_user}
+    fi
+    # dummy
+    if id %{dummy_user} >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'Dummy Tuleap User'    -d '/var/lib/tuleap/dumps'    -g %{dummy_group} %{dummy_user}
+    else
+        /usr/sbin/useradd -c 'Dummy Tuleap User' -M -d '/var/lib/tuleap/dumps' -r -g %{dummy_group} %{dummy_user}
+    fi
+else
+    true
+fi
+
+#%pre plugin-git-gitolite3
+#if [ "$1" -eq "1" ]; then
+#    # Install
+#    if ! grep -q "^gitolite:" /etc/group 2> /dev/null ; then
+#        /usr/sbin/groupadd -r gitolite 2> /dev/null || :
+#    fi
+#
+#    if id gitolite >/dev/null 2>&1; then
+#        /usr/sbin/usermod -c 'Git'    -d '/var/lib/gitolite' -g gitolite gitolite
+#    else
+#        /usr/sbin/useradd -c 'Git' -m -d '/var/lib/gitolite' -g gitolite gitolite
+#    fi
+#
+#    echo 'source /opt/rh/git19/enable' > /var/lib/gitolite/.profile
+#    chown gitolite:gitolite /var/lib/gitolite/.profile
+#else
+#    true
+#fi
+#
+#chmod 750 /var/lib/gitolite
+#
+#
+#
+#
+%post
+${systemd_postun}
+if [ "$1" -eq "1" ]; then
+    # Install
+    true
+
+else
+    # Upgrade
+
+    %{_bindir}/tuleap --clear-caches
+fi
+
+# In any cases fix the context
+#/usr/sbin/semanage fcontext -a -t httpd_sys_content_t '%{APP_DIR}(/.*)?' || true
+#/sbin/restorecon -R %{APP_DIR} || true
+
+#
+# Post install of git plugin
+#%post plugin-git
+#if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
+#    if [ -d '/var/lib/gitolite' ]; then
+#	GITOLITE_BASE_DIR=/var/lib/gitolite
+#    else
+#	GITOLITE_BASE_DIR=/usr/com/gitolite
+#    fi
+#
+#    # deploy gitolite.rc
+#    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.rc.dist $GITOLITE_BASE_DIR/.gitolite.rc
+#
+#    # generate codendiadm ssh key for gitolite
+#    %{__install} -d "%{APP_HOME_DIR}/.ssh/" -g %{APP_USER} -o %{APP_USER} -m 00700
+#    ssh-keygen -q -t rsa -N "" -C "Tuleap / gitolite admin key" -f "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+#    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+#    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub"
+#
+#    # deploy codendiadm ssh key for gitolite
+#    %{__cp} "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub" /tmp/
+#    su -c 'git config --global user.name "gitolite"' - gitolite
+#    su -c 'git config --global user.email gitolite@localhost' - gitolite
+#    %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite
+#    %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite/conf
+#    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist $GITOLITE_BASE_DIR/.gitolite/conf/gitolite.conf
+#    su -c 'gl-setup /tmp/id_rsa_gl-adm.pub' - gitolite
+#
+#    # checkout
+#    %{__cat} "%{APP_DIR}/plugins/git/etc/ssh.config.dist" >> "%{APP_HOME_DIR}/.ssh/config"
+#    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/config"
+#    su -c 'git config --global user.name "%{APP_USER}"' - %{APP_USER}
+#    su -c 'git config --global user.email %{APP_USER}@localhost' - %{APP_USER}
+#    su -c 'cd %{APP_DATA_DIR}/gitolite; git clone gitolite@gl-adm:gitolite-admin admin' - %{APP_USER}
+#    %{__chmod} 750 %{APP_DATA_DIR}/gitolite/admin
+#
+#    # uncomment gl-membership
+#    # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
+#    # doesn't have DB access .
+#    perl -pi -e 's/^# \$GL_GET_MEMBERSHIPS_PGM/\$GL_GET_MEMBERSHIPS_PGM/' $GITOLITE_BASE_DIR/.gitolite.rc
+#
+#    # add codendiadm to gitolite group
+#    if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
+#	usermod -a -G gitolite codendiadm
+#    fi
+#fi
+#%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
+#
+#%post plugin-git-gitolite3
+#if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
+#    # Setup repositories in Tuleap area
+#    %{__ln_s} %{APP_DATA_DIR}/gitolite/repositories /var/lib/gitolite/repositories
+#
+#    # deploy gitolite.rc
+#    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite3.rc.dist /var/lib/gitolite/.gitolite.rc
+#
+#    # generate codendiadm ssh key for gitolite
+#    %{__install} -d "%{APP_HOME_DIR}/.ssh/" -g %{APP_USER} -o %{APP_USER} -m 00700
+#    ssh-keygen -q -t rsa -N "" -C "Tuleap / gitolite admin key" -f "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+#    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+#    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub"
+#
+#    # deploy codendiadm ssh key for gitolite
+#    %{__cp} "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub" /tmp/
+#    su -c 'git config --global user.name "gitolite"' - gitolite
+#    su -c 'git config --global user.email gitolite@localhost' - gitolite
+#    su -c 'gitolite setup -pk /tmp/id_rsa_gl-adm.pub' - gitolite
+#
+#    # checkout
+#    %{__cat} "%{APP_DIR}/plugins/git/etc/ssh.config.dist" >> "%{APP_HOME_DIR}/.ssh/config"
+#    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/config"
+#    su -c 'git config --global user.name "%{APP_USER}"' - %{APP_USER}
+#    su -c 'git config --global user.email %{APP_USER}@localhost' - %{APP_USER}
+#    su -c 'cd %{APP_DATA_DIR}/gitolite; git clone gitolite@gl-adm:gitolite-admin admin' - %{APP_USER}
+#    %{__chmod} 750 %{APP_DATA_DIR}/gitolite/admin
+#
+#    # remove testing
+#    %{__install} -g codendiadm -o codendiadm -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist  %{APP_DATA_DIR}/gitolite/admin/conf/gitolite.conf
+#    su -c 'cd %{APP_DATA_DIR}/gitolite/admin && git add conf/gitolite.conf && git commit -m "Remove testing" && git push origin master' - %{APP_USER}
+#    %{__rm} -rf %{APP_DATA_DIR}/gitolite/repositories/testing.git
+#
+#    # uncomment gl-membership
+#    # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
+#    # doesn't have DB access .
+#    perl -pi -e 's/# GROUPLIST_PGM/GROUPLIST_PGM/' /var/lib/gitolite/.gitolite.rc
+#
+#    # SSH keys are managed by Tuleap
+#    sed -i "s/'ssh-authkeys',/#'ssh-authkeys',/" /var/lib/gitolite/.gitolite.rc
+#
+#    # add codendiadm to gitolite group
+#    if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
+#	usermod -a -G gitolite codendiadm
+#    fi
+#fi
+#%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /var/lib/gitolite/.gitolite/hooks/common/post-receive
+#if [ -f /usr/share/gitolite/hooks/common/post-receive ]; then
+#	%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
+#fi
+
+#
+#
+#
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+
+
+#
+#
+#
+%files
+%defattr(-,root,root,-)
+%dir %{APP_DIR}
+%{APP_DIR}/tools
+%{APP_DIR}/cli
+%{APP_DIR}/site-content
+%{APP_DIR}/VERSION
+%{APP_DIR}/AUTHORS
+# Split src for src/www/themes
+%dir %{APP_DIR}/src
+%{APP_DIR}/src/common
+%{APP_DIR}/src/COPYING
+%{APP_DIR}/src/db
+%{APP_DIR}/src/etc
+%{APP_DIR}/src/forgeupgrade
+%{APP_DIR}/src/templates
+%{APP_DIR}/src/utils
+# Split src/www for src/www/themes
+%dir %{APP_DIR}/src/www
+%{APP_DIR}/src/www/*.php
+%{APP_DIR}/src/www/.htaccess
+%{APP_DIR}/src/www/account
+%{APP_DIR}/src/www/admin
+# API Explorer is not packaged with the core
+%dir %{APP_DIR}/src/www/api
+%{APP_DIR}/src/www/api/index.php
+%{APP_DIR}/src/www/api/VERSION
+%{APP_DIR}/src/www/api/.htaccess
+%{APP_DIR}/src/www/api/reference
+%{APP_DIR}/src/www/assets
+%{APP_DIR}/src/www/codendi.css
+%{APP_DIR}/src/www/cvs
+%{APP_DIR}/src/www/docman
+%{APP_DIR}/src/www/docs
+%{APP_DIR}/src/www/export
+%{APP_DIR}/src/www/favicon.ico
+%{APP_DIR}/src/www/file
+%{APP_DIR}/src/www/forum
+%{APP_DIR}/src/www/help
+%{APP_DIR}/src/www/include
+%{APP_DIR}/src/www/mail
+%{APP_DIR}/src/www/my
+%{APP_DIR}/src/www/new
+%{APP_DIR}/src/www/news
+%{APP_DIR}/src/www/project
+%{APP_DIR}/src/www/reference
+%{APP_DIR}/src/www/scripts
+%{APP_DIR}/src/www/search
+%{APP_DIR}/src/www/service
+%{APP_DIR}/src/www/soap
+%{APP_DIR}/src/www/softwaremap
+%{APP_DIR}/src/www/svn
+# Only "common" theme is embedded into the package
+%dir %{APP_DIR}/src/www/themes
+%dir %{APP_DIR}/src/www/themes/common
+%{APP_DIR}/src/www/themes/common/css
+%{APP_DIR}/src/www/themes/common/font
+%{APP_DIR}/src/www/themes/common/images
+%dir %{APP_DIR}/src/www/themes/common/tlp
+%{APP_DIR}/src/www/themes/common/tlp/dist
+%{APP_DIR}/src/www/tos
+%{APP_DIR}/src/www/tour
+%{APP_DIR}/src/www/tracker
+%{APP_DIR}/src/www/user
+%{APP_DIR}/src/www/widgets
+%{APP_DIR}/src/www/wiki
+# Plugins dir
+%dir %{APP_DIR}/plugins
+%{APP_DIR}/plugins/admindelegation
+%{APP_DIR}/plugins/docman
+%{APP_DIR}/plugins/graphontrackers
+%{APP_DIR}/plugins/pluginsadministration
+%{APP_DIR}/plugins/projectlinks
+%{APP_DIR}/plugins/statistics
+%{APP_DIR}/plugins/tracker_date_reminder
+%{APP_DIR}/plugins/userlog
+
+# Data dir
+#%dir %{APP_DATA_DIR}
+#%dir %{APP_DATA_DIR}/user
+#%dir %{APP_DATA_DIR}/images
+
+# Executables (/usr/bin)
+%attr(00755,%{APP_USER},%{APP_USER}) %{_bindir}/tuleap
+
+# Executables (/usr/lib/tuleap/bin)
+#%attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
+#%attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
+#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
+#%attr(00740,root,root) %{APP_LIBBIN_DIR}/backup_job
+#%attr(00740,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/backup_subversion.sh
+#%attr(04755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
+#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
+#%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
+#%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
+#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
+#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
+#%attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
+#%attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
+#%attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
+#%attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
+#%attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
+#%attr(00644,root,root) /etc/cron.d/%{APP_NAME}
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
+%dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
+#%dir /etc/httpd/conf.d/tuleap-plugins
+#%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
+#%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
+#%dir /etc/httpd/conf.d/tuleap-aliases
+#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/00-common.conf
+#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/01-download.conf
+#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/02-themes.conf
+#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
+#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
+
+# Log dir
+%attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
+#%attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
+
+#
+# Install
+#
+%files install
+%defattr(-,root,root,-)
+#%{_datadir}/tuleap-install
+
+#
+# Core
+#
+%files core-mailman
+%defattr(-,root,root,-)
+%{APP_DIR}/src/CORE_MAILMAN_VERSION
+
+%files core-subversion
+%defattr(-,root,root,-)
+%{perl_vendorlib}/Apache/Tuleap.pm
+%attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
+
+%files core-cvs
+%defattr(-,root,root,-)
+%{APP_DIR}/src/CORE_CVS_VERSION
+
+#
+# Plugins
+#
+%files plugin-forumml
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/forumml
+#%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/mail_2_DB.pl
+#%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
+
+%files plugin-git
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/git
+# %dir %{APP_DATA_DIR}/gitroot
+# %dir %{APP_DATA_DIR}/gitolite
+# %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
+# %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
+# %attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
+# %attr(-,root,root) /gitroot
+# %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
+# %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
+# %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
+# %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
+# %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
+# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite2_http
+# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
+# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
+
+# %files plugin-git-gitolite3
+# %defattr(-,root,root,-)
+# %{APP_DIR}/plugins/git
+# %dir %{APP_DATA_DIR}/gitroot
+# %dir %{APP_DATA_DIR}/gitolite
+# %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
+# %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
+# %attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
+# %attr(-,root,root) /gitroot
+# %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
+# %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
+# %attr(00755,root,root) %{APP_LIBBIN_DIR}/gitolite3-suexec-wrapper.sh
+# %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
+# %attr(00644,root,root) %{_sysconfdir}/logrotate.d/%{APP_NAME}_git
+# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
+# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
+# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
+# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
+
+%files plugin-ldap
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/ldap
+
+%files plugin-hudson
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/hudson
+
+%files plugin-hudson-svn
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/hudson_svn
+
+%files plugin-hudson-git
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/hudson_git
+
+%files plugin-webdav
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/webdav
+#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
+
+%files plugin-svn
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/svn
+%attr(00750,%{APP_USER},%{APP_USER}) %dir %{APP_DATA_DIR}/svn_plugin
+
+%files plugin-tracker
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/tracker
+#%dir %{APP_DATA_DIR}/tracker
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
+#%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker
+
+%files plugin-graphontrackers
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/graphontrackersv5
+
+%files plugin-tracker-encryption
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/tracker_encryption
+
+%files plugin-cardwall
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/cardwall
+
+%files plugin-agiledashboard
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/agiledashboard
+
+%files plugin-fulltextsearch
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/fulltextsearch
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_fulltextsearch
+
+%files plugin-archivedeleteditems
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/archivedeleteditems
+
+%files plugin-mediawiki
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/mediawiki
+#%dir %{APP_DATA_DIR}/mediawiki
+#%dir %{APP_DATA_DIR}/mediawiki/master
+#%dir %{APP_DATA_DIR}/mediawiki/projects
+#%attr(644,root,root) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+
+%files plugin-openidconnectclient
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/openidconnectclient
+
+%files plugin-proftpd
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/proftpd
+#%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
+
+%files plugin-frs
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/frs
+
+%files plugin-referencealias-core
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/referencealias_core
+
+%files plugin-referencealias-git
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/referencealias_git
+
+%files plugin-referencealias-svn
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/referencealias_svn
+
+%files plugin-referencealias-mediawiki
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/referencealias_mediawiki
+
+%files plugin-referencealias-tracker
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/referencealias_tracker
+
+%files plugin-artifactsfolders
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/artifactsfolders
+
+%files plugin-captcha
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/captcha
+
+%files api-explorer
+%defattr(-,root,root,-)
+#%{APP_DIR}/src/www/api/explorer
+
+#
+# Themes
+#
+
+%files theme-flamingparrot
+%defattr(-,root,root,-)
+%{APP_DIR}/src/www/themes/FlamingParrot
+
+%files theme-burningparrot
+%defattr(-,root,root,-)
+%{APP_DIR}/src/www/themes/BurningParrot
+
+%changelog
+* Thu Mar 23 2017 Matthieu MONNIER <matthieu.monnier@enalean.com> -
+- RHEL7 support
+
+* Fri Dec 04 2015 Adrien HAMRAOUI <adrien.hamraoui@sogilis.com> -
+- Add gitolite sudoer file installation.
+
+* Mon Oct 11 2010 Manuel VACELET <manuel.vacelet@st.com> -
+- Package plugins that matters (solve dependencies install issues).
+
+* Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> -
+- Initial build.
