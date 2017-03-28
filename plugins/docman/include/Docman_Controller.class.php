@@ -928,7 +928,9 @@ class Docman_Controller extends Controler {
                 $this->_actionParams['item'] = $item;
                 $this->action                = 'update_monitoring';
             }
-            $this->_setView('Details');
+            $this->view                       = 'RedirectAfterCrud';
+            $this->_viewParams['redirect_to'] = DOCMAN_BASE_URL.'/index.php?group_id='
+                .$item->groupId.'&id='.$item->id.'&action=details&section=notifications';
             break;
         case 'move_here':
             if (!$this->request->exist('item_to_move')) {

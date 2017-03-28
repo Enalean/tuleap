@@ -222,12 +222,15 @@ class DocmanActionsTest extends TuleapTestCase {
     }
 
     function testRemove_monitoringNothingToDelete() {
-        $notificationsManager = new MockDocman_NotificationsManager();
-        $controller           = new MockDocman_Controller();
-        $controller->feedback = new MockFeedback();
-        $actions = new Docman_ActionsTest();
-        $actions->_controler = $controller;
-        $actions->update_monitoring(array('listeners_users_to_delete' => true, 'listeners_ugroups_to_delete' => true));
+        $notificationsManager                  = new MockDocman_NotificationsManager();
+        $controller                            = new MockDocman_Controller();
+        $controller->feedback                  = new MockFeedback();
+        $actions                               = new Docman_ActionsTest();
+        $actions->_controler                   = $controller;
+        $params['listeners_users_to_delete']   = true;
+        $params['listeners_ugroups_to_delete'] = true;
+        $params['item']                        = new Docman_Item();
+        $actions->update_monitoring($params);
         $notificationsManager->expectNever('removeUser');
     }
 
@@ -327,11 +330,13 @@ class DocmanActionsTest extends TuleapTestCase {
     }
 
     function testAdd_monitoringNoOneToAdd() {
-        $controller           = new MockDocman_Controller();
-        $notificationsManager = new MockDocman_NotificationsManager();
-        $actions              = new Docman_ActionsTest();
-        $actions->_controler  = $controller;
-        $actions->update_monitoring(array('listeners_to_add' => true));
+        $controller                 = new MockDocman_Controller();
+        $notificationsManager       = new MockDocman_NotificationsManager();
+        $actions                    = new Docman_ActionsTest();
+        $actions->_controler        = $controller;
+        $params['listeners_to_add'] = true;
+        $params['item']             = new Docman_Item();
+        $actions->update_monitoring($params);
         $notificationsManager->expectNever('addUser');
     }
 

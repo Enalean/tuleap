@@ -67,4 +67,6 @@ define('PLUGIN_DOCMAN_NOTIFICATION_CASCADE', 'plugin_docman_cascade');
 define('PLUGIN_DOCMAN_SORT_DESC', 0);
 define('PLUGIN_DOCMAN_SORT_ASC',  1);
 
+define('DOCMAN_BASE_URL', '/plugins/docman');
+
 ?>
