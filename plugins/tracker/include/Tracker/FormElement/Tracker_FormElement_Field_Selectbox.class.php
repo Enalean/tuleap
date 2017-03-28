@@ -151,7 +151,9 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return false;
     }
 
-    function displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value) {
+    function displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
         $check = '';
         if(count($transitions)>0) {
             foreach($transitions as $transition) {
@@ -161,18 +163,19 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
                 }
              }
           }
-          echo '<td class="matrix_cell" style="white-space:nowrap; text-align:center;"><label class="pc_checkbox"><input type="checkbox" name="'.$box_value.'" '. $check .' />&nbsp;</label>';
+          echo '<td class="matrix_cell" style="white-space:nowrap; text-align:center;"><label class="pc_checkbox"><input type="checkbox" name="'.$purifier->purify($box_value).'" '. $check .' />&nbsp;</label>';
           if ($check) {
-              echo ' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+              echo ' <a href="'.$purifier->purify(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker_id,
                                                         'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
-                                                        'edit_transition'  => $transition->getTransitionId())) .'">[Details]</a>';
+                                                        'edit_transition'  => $transition->getTransitionId()))) .'">[Details]</a>';
           }
           echo '</td>';
     }
 
-    function displayTransitionsMatrix($transitions=null) {
-
+    function displayTransitionsMatrix($transitions=null)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
        $field=Tracker_FormElementFactory::instance()->getFormElementById($this->id);
        $field_values = array();
        foreach ($field->getBind()->getAllValues() as $id => $v) {
@@ -193,7 +196,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
            echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
            echo "<td></td>";
            foreach($field_values as $field_value_id=>$field_value) {
-               echo '<td class="matrix_cell">'.$field_value->getLabel()."</td>";
+               echo '<td class="matrix_cell">'.$purifier->purify($field_value->getLabel())."</td>";
            }
            echo "</tr>";
 
@@ -213,7 +216,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
            //Display the available transitions
            foreach($field_values as $field_value_id_from=>$field_value_from) {
                echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
-               echo "<td>".$field_value_from->getLabel()."</td>";
+               echo "<td>".$purifier->purify($field_value_from->getLabel())."</td>";
                foreach($field_values as $field_value_id_to=>$field_value_to) {
                    $box_value = $field_value_id_from.'_'.$field_value_id_to;
                    if ($field_value_id_from!=$field_value_id_to) {
