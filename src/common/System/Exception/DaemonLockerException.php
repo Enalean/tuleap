@@ -19,23 +19,9 @@
  *
  */
 
-require_once 'pre.php';
+namespace Tuleap\System\Exception;
 
-$locker = new Tuleap\System\DaemonLocker('/var/run/svnroot_updater.pid');
+class DaemonLockerException extends \Exception
+{
 
-$logger = new TruncateLevelLogger(
-    new BackendLogger('/var/log/tuleap/svnroot_updater.log'),
-    ForgeConfig::get('sys_logger_level')
-);
-
-try {
-    $locker->isRunning();
-
-    $logger->info("Start service");
-
-    $updater = new  Tuleap\Svn\SvnrootUpdater($logger);
-    $updater->listen('backend-svn-1');
-} catch (Exception $exception) {
-    fwrite(STDERR, '*** ERROR: '.$exception->getMessage()."\n");
-    exit(1);
 }
