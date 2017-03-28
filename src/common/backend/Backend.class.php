@@ -322,7 +322,7 @@ class Backend {
      */
     public function getHTTPUser() {
         if (! $this->httpUser) {
-            $this->httpUser = ForgeConfig::get('sys_http_user');
+            $this->httpUser = ForgeConfig::getApplicationUserLogin();
         }
         return $this->httpUser;
     }
@@ -335,7 +335,7 @@ class Backend {
      */
     public function getHTTPUserUID() {
         if (! $this->httpUserUID) {
-            $userinfo = posix_getpwnam(ForgeConfig::get('sys_http_user'));
+            $userinfo = posix_getpwnam($this->getHTTPUser());
             $this->httpUserUID = $userinfo['uid'];
         }
         return $this->httpUserUID;
