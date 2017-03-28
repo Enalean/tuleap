@@ -147,4 +147,12 @@ class RequestFromAutocompleterTest extends TuleapTestCase
         expect($GLOBALS['Response'])->addFeedback(\Feedback::WARN, "The entered value 'Secret' is invalid.")->at(1);
         expect($GLOBALS['Response'])->addFeedback(\Feedback::WARN, "The entered value 'seraph' is invalid.")->at(2);
     }
+
+    public function itIgnoresEmptyStrings()
+    {
+        $this->getRequest('');
+
+        $this->invalid_entries->generateWarningMessageForInvalidEntries();
+        expect($GLOBALS['Response'])->addFeedback()->count(0);
+    }
 }
