@@ -147,11 +147,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $previous_item = null;
         $i = 0;
         foreach ($this->artifact->getFollowupsContent() as $item) {
+            $diff_to_previous = $item->diffToPrevious();
             if ($previous_item) {
                 $classnames  = html_get_alt_row_color($i++) .' tracker_artifact_followup ';
-                $classnames .= $item->getFollowUpClassnames();
+                $classnames .= $item->getFollowUpClassnames($diff_to_previous);
                 $html .= '<li id="followup_'. $item->getId() .'" class="'. $classnames .'">';
-                $html .= $item->fetchFollowUp();
+                $html .= $item->fetchFollowUp($diff_to_previous);
                 $html .= '</li>';
             }
             $previous_item = $item;

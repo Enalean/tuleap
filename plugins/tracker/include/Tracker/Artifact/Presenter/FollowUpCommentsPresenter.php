@@ -22,14 +22,38 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter {
     /** @var PFUser */
     protected $user;
 
-    /** @var Tracker_Artifact_Followup_Item[] */
+    /** @var array */
     public $followups;
 
-    public function __construct($followups) {
-        $this->followups = $followups;
+    /**
+     * @param Tracker_Artifact_Followup_Item[] $followups
+     */
+    public function __construct(array $followups) {
+        $this->followups = $this->buildFollowUpsPresenters($followups);
     }
 
     public function no_comment() {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_comment');
+    }
+
+    /**
+     * @param Tracker_Artifact_Followup_Item[] $followups
+     * @return array
+     */
+    private function buildFollowUpsPresenters(array $followups)
+    {
+        $presenters = array();
+        foreach ($followups as $followup) {
+            $diff_to_previous = $followup->diffToPrevious();
+            $presenters[] = array(
+                'getId'              => $followup->getId(),
+                'getAvatarIfEnabled' => $followup->getAvatarIfEnabled(),
+                'getUserLink'        => $followup->getUserLink(),
+                'getTimeAgo'         => $followup->getTimeAgo(),
+                'getFollowupContent' => $followup->getFollowupContent($diff_to_previous)
+            );
+        }
+
+        return $presenters;
     }
 }

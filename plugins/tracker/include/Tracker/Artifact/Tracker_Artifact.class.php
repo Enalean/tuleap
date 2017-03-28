@@ -719,10 +719,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
             case 'artifact-delete-changeset':
-                // @see comment in Tracker_Artifact_Changeset::fetchFollowUp()
-                //if ($changeset = $this->getChangeset($request->get('changeset'))) {
-                //    $changeset->delete($current_user);
-                //}
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
                 break;
             case 'artifact-update':
@@ -1252,6 +1248,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->getPriorityManager()->getArtifactPriorityHistory($this);
     }
 
+    /**
+     * @return Tracker_Artifact_Followup_Item[]
+     */
     public function getFollowupsContent() {
         return $this->getSortedBySubmittedOn(
             array_merge(

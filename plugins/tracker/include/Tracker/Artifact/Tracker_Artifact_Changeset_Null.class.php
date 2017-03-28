@@ -21,10 +21,10 @@
 
 /**
  * Fake / Null class for Tracker_Artifact_Changeset
- * 
+ *
  * This class is used when there is a need for a Changeset object but
  * not a real one (like on initialChangeset creation).
- * 
+ *
  * This class follow the Null Object Pattern
  */
 class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
@@ -61,7 +61,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return string
      */
-    public function fetchFollowUp() {
+    public function fetchFollowUp($diff_to_previous) {
         return '';
     }
 
@@ -122,10 +122,16 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return string The field difference between the previous changeset. or false if no changes
      */
-    public function diffToPrevious($format='html', $user=null, $ignore_perms=false) {
+    public function diffToPrevious(
+        $format = 'html',
+        $user = null,
+        $ignore_perms = false,
+        $for_mail = false,
+        $for_modal = false
+    ) {
         return false;
     }
-    
+
     /**
     * Display diff messsage
     *
@@ -139,7 +145,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
     public function getTracker() {
         return null;
     }
-    
+
     /**
      * Get the recipients for notification
      *
@@ -174,7 +180,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
     public function getBodyText($is_update, $recipient_user, $ignore_perms=false) {
         return '';
     }
-    
+
     /**
      * Get the subject for notification
      *
