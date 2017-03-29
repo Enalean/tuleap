@@ -22,15 +22,28 @@ abstract class Tracker_Artifact_Followup_Item {
 
     abstract public function getFollowUpDate();
 
-    abstract public function getFollowUpClassnames();
+    abstract public function getFollowUpClassnames($diff_to_previous);
 
-    abstract public function fetchFollowUp();
+    abstract public function fetchFollowUp($diff_to_previous);
 
     abstract public function getHTMLAvatar();
 
     abstract public function getSubmitterUrl();
 
-    abstract public function getFollowupContent();
+    abstract public function getFollowupContent($diff_to_previous);
+
+    /**
+     * Return diff between this followup and previous one (HTML code)
+     *
+     * @return string html
+     */
+    public abstract function diffToPrevious(
+        $format = 'html',
+        $user = null,
+        $ignore_perms = false,
+        $for_mail = false,
+        $for_modal = false
+    );
 
     public function getAvatarIfEnabled() {
         if (ForgeConfig::get('sys_enable_avatars')) {

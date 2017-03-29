@@ -131,7 +131,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $this->prioritized_on;
     }
 
-    public function getFollowUpClassnames() {
+    public function getFollowUpClassnames($diff_to_previous) {
         return 'tracker_artifact_followup-priority';
     }
 
@@ -150,7 +150,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $this->prioritized_by->fetchHtmlAvatar();
     }
 
-    public function fetchFollowUp() {
+    public function fetchFollowUp($diff_to_previous) {
         $html  = '';
         $html .= $this->getAvatarIfEnabled();
 
@@ -161,7 +161,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         $html .= '</div>';
 
         $html .= '<div class="tracker_artifact_followup_content">';
-        $html .= $this->getFollowupContent();
+        $html .= $this->getFollowupContent($diff_to_previous);
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';
@@ -169,7 +169,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $html;
     }
 
-    public function getFollowupContent() {
+    public function getFollowupContent($diff_to_previous) {
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_intro') .
             ' ' . $this->getRankProgression() .
             $this->getContextRepresentation() .
@@ -219,4 +219,18 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_after_than') . ' ' . $this->artifact_higher->fetchColoredXRef();
     }
 
+    /**
+     * Return diff between this followup and previous one (HTML code)
+     *
+     * @return string html
+     */
+    public function diffToPrevious(
+        $format = 'html',
+        $user = null,
+        $ignore_perms = false,
+        $for_mail = false,
+        $for_modal = false
+    ) {
+        return '';
+    }
 }

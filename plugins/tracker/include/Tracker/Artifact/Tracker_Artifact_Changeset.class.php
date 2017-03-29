@@ -189,7 +189,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $this->submitted_on;
     }
 
-    public function getFollowupContent() {
+    public function getFollowupContent($diff_to_previous) {
         $html = '';
 
         //The comment
@@ -198,15 +198,15 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $html .= $comment->fetchFollowUp();
             $html .= '</div>';
 
-            if ($comment->fetchFollowUp() && $this->diffToPrevious()) {
+            if ($comment->fetchFollowUp() && $diff_to_previous) {
                 $html .= '<hr size="1" />';
             }
         }
 
         //The changes
-        if ($changes = $this->diffToPrevious()) {
+        if ($diff_to_previous) {
             $html .= '<ul class="tracker_artifact_followup_changes">';
-            $html .= $changes;
+            $html .= $diff_to_previous;
             $html .= '</ul>';
         }
 
@@ -218,7 +218,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      *
      * @return string html
      */
-    public function fetchFollowUp() {
+    public function fetchFollowUp($diff_to_previous) {
         $html = '';
 
         $html .= $this->getAvatarIfEnabled();
@@ -232,7 +232,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
         // The content
         $html .= '<div class="tracker_artifact_followup_content">';
-        $html .= $this->getFollowupContent();
+        $html .= $this->getFollowupContent($diff_to_previous);
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';
@@ -356,13 +356,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @return string
      */
-    public function getFollowUpClassnames() {
+    public function getFollowUpClassnames($diff_to_previous) {
         $classnames = '';
 
         $comment = $this->getComment();
-        $changes = $this->diffToPrevious();
 
-        if ($changes || $this->shouldBeDisplayedAsChange($changes, $comment)) {
+        if ($diff_to_previous || $this->shouldBeDisplayedAsChange($diff_to_previous, $comment)) {
             $classnames .= ' tracker_artifact_followup-with_changes ';
         }
 
@@ -600,11 +599,17 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     }
 
     /**
-     * Return diff between this changeset and previous one (HTML code)
+     * Return diff between this followup and previous one (HTML code)
      *
-     * @return string The field difference between the previous changeset. or false if no changes
+     * @return string html
      */
-    public function diffToPrevious($format = 'html', $user = null, $ignore_perms = false, $for_mail = false, $for_modal = false) {
+    public function diffToPrevious(
+        $format = 'html',
+        $user = null,
+        $ignore_perms = false,
+        $for_mail = false,
+        $for_modal = false
+    ) {
         $result             = '';
         $factory            = $this->getFormElementFactory();
         $previous_changeset = $this->getArtifact()->getPreviousChangeset($this->getId());
