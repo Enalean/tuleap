@@ -405,7 +405,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '</tr>';
 
         // Notification
-        $notifChecked  = !$user->isAnonymous() && $this->notificationsManager->exist($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
+        $notifChecked  = !$user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $html .= '<tr>';
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_review_notif').'</td>';
         $html .= '<td>';

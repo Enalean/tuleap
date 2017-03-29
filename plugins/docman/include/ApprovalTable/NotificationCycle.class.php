@@ -29,6 +29,7 @@ class Docman_ApprovalTableNotificationCycle {
     /** @var MailNotificationBuilder */
     private $mail_notification_builder;
 
+    /** @var Docman_NotificationsManager|null */
     private $notificationManager = null;
 
     public function __construct(MailNotificationBuilder $mail_builder) {
@@ -198,7 +199,7 @@ class Docman_ApprovalTableNotificationCycle {
      * Enable the monitoring of an item for a given reviewer
      */
     private function enableMonitorForReviewer($reviewerId) {
-        if (($this->notificationManager !== null) && !$this->notificationManager->exist($reviewerId, $this->item->getId())) {
+        if (($this->notificationManager !== null) && !$this->notificationManager->userExists($reviewerId, $this->item->getId())) {
             $this->notificationManager->add($reviewerId, $this->item->getId());
         }
     }
