@@ -751,9 +751,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
             $additional_artifacts_sql = 'OR linked_art.id IN ('. $this->da->escapeIntImplode($additional_artifacts) .')';
         }
 
-        $exclude = '';
+        $exclude       = '';
+        $exclude_where = '';
         if (count($excluded_linked_ids) > 0) {
-            $exclude = 'AND submile.id IN ('.$this->da->escapeIntImplode($excluded_linked_ids).')';
+            $exclude        = 'AND submile.id IN ('.$this->da->escapeIntImplode($excluded_linked_ids).')';
+            $exclude_where  = 'AND submile.id IS NULL';
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS linked_art.*
@@ -780,7 +782,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
                     ) ON (C.id = CV2.changeset_id)
                 WHERE parent_art.id = $artifact_id
-                    AND submile.id IS NULL
+                    $exclude_where
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
                 ORDER BY tracker_artifact_priority_rank.rank ASC";
@@ -803,7 +805,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         }
 
         $exclude       = '';
-        $exculde_where = '';
+        $exclude_where = '';
         if (count($excluded_linked_ids) > 0) {
             $exclude = 'LEFT JOIN (
                         tracker_artifact as submile
@@ -812,7 +814,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         INNER JOIN tracker_changeset_value_artifactlink AS artlink2 ON (artlink2.changeset_value_id = cv2.id)
                     ) ON (linked_art.id = artlink2.artifact_id AND submile.id IN (' . $this->da->escapeIntImplode($excluded_linked_ids) . '))';
 
-            $exculde_where = "AND submile.id IS NULL";
+            $exclude_where = "AND submile.id IS NULL";
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS linked_art.*
@@ -834,7 +836,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
                     ) ON (C.id = CV2.changeset_id)
                 WHERE parent_art.id = $artifact_id
-                    $exculde_where
+                    $exclude_where
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
                 ORDER BY tracker_artifact_priority_rank.rank ASC";
@@ -1033,9 +1035,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $limit        = $this->da->escapeInt($limit);
         $offset       = $this->da->escapeInt($offset);
 
-        $exclude      = '';
+        $exclude       = '';
+        $exclude_where = '';
         if (count($excluded_linked_ids) > 0) {
-            $exclude = 'AND submile.id IN ('.$this->da->escapeIntImplode($excluded_linked_ids).')';
+            $exclude       = 'AND submile.id IN ('.$this->da->escapeIntImplode($excluded_linked_ids).')';
+            $exclude_where = 'AND submile.id IS NULL';
         }
 
         $additional_artifacts_sql = '';
@@ -1077,7 +1081,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR
                         CVL2.bindvalue_id = SS.open_value_id
                      )
-                    AND submile.id IS NULL
+                    $exclude_where
                     AND linked_art.tracker_id IN ($tracker_ids)
                 GROUP BY (linked_art.id)
                 ORDER BY tracker_artifact_priority_rank.rank ASC
