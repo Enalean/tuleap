@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory;
@@ -125,7 +127,8 @@ class botmattermost_agiledashboardPlugin extends Plugin
                     TrackerFactory::instance(),
                     $milestone_status_counter,
                     new PlanningPermissionsManager(),
-                    new AgileDashboard_Milestone_MilestoneDao()
+                    new AgileDashboard_Milestone_MilestoneDao(),
+                    new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory)
                 ),
                 $milestone_status_counter,
                 $planning_factory,
