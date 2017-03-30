@@ -2,8 +2,8 @@
 2016-10-04.11:29:01	17863	pre_git	gitolite-admin	id_rsa_gl-adm	R	any	refs/.*
 2016-10-04.11:29:01	17863		system,git,shell,-c,git-receive-pack '/var/lib/gitolite/repositories/gitolite-admin.git'
 2016-10-04.11:29:01	17863	END
-2016-10-04.09:33:43	10072	ssh	ARGV=forge_gerrit_1	SOC=git-upload-pack '/project_name/repository_name.git'	FROM=172.17.42.1
-2016-10-04.09:33:43	10072	pre_git	project_name/repository_name	forge_gerrit_1	R	any	refs/.*
+2016-10-04.09:33:43	10072	ssh	ARGV=forge__gerrit_1	SOC=git-upload-pack '/project_name/repository_name.git'	FROM=172.17.42.1
+2016-10-04.09:33:43	10072	pre_git	project_name/repository_name	forge__gerrit_1	R	any	refs/.*
 2016-10-04.09:33:43	10072		system,git,shell,-c,git-upload-pack '/var/lib/gitolite/repositories/project_name/repository_name.git'
 2016-10-04.09:33:43	10072	END
 2016-10-04.09:33:14	10058	ssh	ARGV=username	SOC=git-upload-pack '/project_name/repository_name.git'	FROM=172.17.42.1

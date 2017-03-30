@@ -24,16 +24,55 @@ use DataAccessObject;
 
 class Dao extends DataAccessObject
 {
-    public function insertGitReadAccess($repository_id, $user_id, $timestamp)
+    public function hasAccessForTheDay($day, $repository_id, $user_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
         $user_id       = $this->da->escapeInt($user_id);
-        $time          = $this->da->escapeInt($timestamp);
+        $day           = $this->da->escapeInt($day);
 
-        $sql = "INSERT INTO plugin_git_full_history (time, repository_id, user_id)
-                VALUES ($time, $repository_id, $user_id)";
+        $sql = "SELECT 1
+                FROM plugin_git_log_read_daily
+                WHERE repository_id = $repository_id
+                AND user_id = $user_id
+                AND day = $day";
+        $dar = $this->retrieve($sql);
+        return $dar && $dar->count() > 0;
+    }
+
+    public function insertGitReadAccess($day, $repository_id, $user_id, $count)
+    {
+        $day           = $this->da->escapeInt($day);
+        $repository_id = $this->da->escapeInt($repository_id);
+        $user_id       = $this->da->escapeInt($user_id);
+        $count         = $this->da->escapeInt($count);
+
+        $sql = "INSERT INTO plugin_git_log_read_daily (repository_id, user_id, day, git_read)
+                VALUES ($repository_id, $user_id, $day, $count)";
 
         return $this->update($sql);
+    }
+
+    public function addGitReadAccess($day, $repository_id, $user_id, $count)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $user_id       = $this->da->escapeInt($user_id);
+        $day           = $this->da->escapeInt($day);
+        $count         = $this->da->escapeInt($count);
+        $sql = "UPDATE plugin_git_log_read_daily
+                SET git_read = git_read + $count
+                WHERE repository_id = $repository_id
+                AND user_id = $user_id
+                AND day = $day";
+        return $this->update($sql);
+    }
+
+    public function searchAccessPerDay($day)
+    {
+        $day = $this->da->escapeInt($day);
+        $sql = "SELECT repository_id, user_id
+                FROM plugin_git_log_read_daily
+                WHERE day = $day";
+        return $this->retrieve($sql);
     }
 
     public function searchStatistics($start_date, $end_date, $project_id = null)
@@ -47,12 +86,12 @@ class Dao extends DataAccessObject
             $project_filter = " AND project_id = " . $project_id;
         }
 
-        $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(time), '%M') AS month,
-                    YEAR(FROM_UNIXTIME(time)) AS year,
-                    COUNT(*) AS nb
-                FROM plugin_git_full_history JOIN plugin_git USING(repository_id)
-                WHERE time BETWEEN UNIX_TIMESTAMP($start_date) AND UNIX_TIMESTAMP($end_date)
-                    $project_filter
+        $sql = "SELECT DATE_FORMAT(day, '%M') AS month,
+                  YEAR(day) as year,
+                  SUM(git_read) as nb
+                FROM plugin_git_log_read_daily JOIN plugin_git USING(repository_id)
+                WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
+                  $project_filter
                 GROUP BY year, month
                 ORDER BY year, STR_TO_DATE(month,'%M')";
 

@@ -252,6 +252,19 @@ CREATE TABLE plugin_git_full_history (
   INDEX time_idx(time, repository_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_git_full_history_checkpoint (
+  last_timestamp int(11) UNSIGNED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS plugin_git_log_read_daily (
+  repository_id int(10) unsigned NOT NULL,
+  user_id int(11) NOT NULL,
+  day int(11) UNSIGNED NOT NULL,
+  git_read int(11) UNSIGNED NOT NULL default 0,
+  PRIMARY KEY (repository_id, user_id, day),
+  INDEX time_idx(day, repository_id)
+);
+
 CREATE TABLE plugin_git_file_logs_parse (
   file_name VARCHAR(255) NOT NULL,
   end_line INT(11),

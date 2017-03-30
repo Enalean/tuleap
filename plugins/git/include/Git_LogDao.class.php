@@ -145,18 +145,18 @@ class Git_LogDao extends DataAccessObject {
      *
      * @return String
      */
-    function getSqlStatementForLogsDaily($project_id, $condition) {
+    function getSqlStatementForLogsDaily($project_id, $condition, $full_history_condition) {
         $project_id = $this->da->escapeInt($project_id);
 
-        return "SELECT log.time AS time,
+        return "SELECT UNIX_TIMESTAMP(day) AS time,
                   'read' AS type,
                   user.user_name AS user_name,
                   user.realname AS realname, user.email AS email,
                   git.repository_name AS title
-                FROM plugin_git_full_history AS log
+                FROM plugin_git_log_read_daily AS log
                     INNER JOIN user USING (user_id)
                     INNER JOIN plugin_git AS git USING (repository_id)
-                WHERE $condition
+                WHERE $full_history_condition
                   AND git.project_id = $project_id
                 UNION
                 SELECT log.push_date AS time,

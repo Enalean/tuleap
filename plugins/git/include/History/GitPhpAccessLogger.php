@@ -22,6 +22,7 @@ namespace Tuleap\Git\History;
 
 use GitRepository;
 use PFUser;
+use DateTime;
 
 class GitPhpAccessLogger
 {
@@ -32,10 +33,12 @@ class GitPhpAccessLogger
 
     public function logAccess(GitRepository $repository, PFUser $user)
     {
-        return $this->dao->insertGitReadAccess(
-            $repository->getId(),
-            $user->getId(),
-            $_SERVER['REQUEST_TIME']
-        );
+        $request_time = new DateTime('@'.$_SERVER['REQUEST_TIME']);
+        $day          = $request_time->format('Ymd');
+
+        if ($this->dao->hasAccessForTheDay($day, $repository->getId(), $user->getId())) {
+            return $this->dao->addGitReadAccess($day, $repository->getId(), $user->getId(), 1);
+        }
+        return $this->dao->insertGitReadAccess($day, $repository->getId(), $user->getId(), 1);
     }
 }

@@ -30,6 +30,7 @@ use System_Command;
 use Tuleap\Git\History\Dao;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use UserManager;
+use GitRepository;
 
 class Gitolite3LogParser
 {
@@ -69,6 +70,16 @@ class Gitolite3LogParser
      * @var GitoliteFileLogsDao
      */
     private $file_logs_dao;
+
+    /**
+     * @var array
+     */
+    private $access_cache = array();
+
+    /**
+     * @var array
+     */
+    private $day_accesses_cache = array();
 
     public function __construct(
         Logger $logger,
@@ -130,6 +141,7 @@ class Gitolite3LogParser
                     }
                 }
 
+                $this->storeCacheInDb();
                 $this->file_logs_dao->storeLastLine($log, ftell($log_file));
                 fclose($log_file);
             }
@@ -164,7 +176,56 @@ class Gitolite3LogParser
                 $user_id = 0;
             }
 
-            $this->history_dao->insertGitReadAccess($repository->getId(), $user_id, $day->getTimestamp());
+            $this->cacheAccess($repository, $user_id, $day);
+        }
+    }
+
+    private function resetCaches()
+    {
+        $this->access_cache = array();
+        $this->day_accesses_cache = array();
+    }
+
+    private function cacheAccess(GitRepository $repository, $user_id, DateTime $day)
+    {
+        $day_key = $day->format('Ymd');
+        if (! isset($this->access_cache[$day_key][$repository->getId()][$user_id])) {
+            $this->access_cache[$day_key][$repository->getId()][$user_id] = 0;
+        }
+        $this->access_cache[$day_key][$repository->getId()][$user_id]++;
+    }
+
+    private function storeCacheInDb()
+    {
+        $this->history_dao->startTransaction();
+        foreach ($this->access_cache as $day => $repositories) {
+            foreach ($repositories as $repository_id => $users) {
+                foreach ($users as $user_id => $count) {
+                    if ($this->hasRecord($repository_id, $user_id, $day)) {
+                        $this->history_dao->addGitReadAccess($day, $repository_id, $user_id, $count);
+                    } else {
+                        $this->history_dao->insertGitReadAccess($day, $repository_id, $user_id, $count);
+                    }
+                }
+            }
+        }
+        $this->history_dao->commit();
+        $this->resetCaches();
+    }
+
+    private function hasRecord($repository_id, $user_id, $day)
+    {
+        $this->cacheAccessPerDay($day);
+        return isset($this->day_accesses_cache[$day][$repository_id][$user_id]);
+    }
+
+    private function cacheAccessPerDay($day)
+    {
+        if (! isset($this->day_accesses_cache[$day])) {
+            $dar = $this->history_dao->searchAccessPerDay($day);
+            foreach ($dar as $row) {
+                $this->day_accesses_cache[$day][$row['repository_id']][$row['user_id']] = 1;
+            }
         }
     }
 

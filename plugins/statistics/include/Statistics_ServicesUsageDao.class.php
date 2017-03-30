@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * @codingStandardsIgnoreFile
  */
 
 class Statistics_ServicesUsageDao extends DataAccessObject {
@@ -166,11 +168,15 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
 
     public function getGitRead()
     {
-        $sql = "SELECT project_id AS group_id, count(*) AS result
-                FROM  plugin_git_full_history
+        $start_date = new DateTime('@'.$this->start_date);
+        $end_date   = new DateTime('@'.$this->end_date);
+        $start_day  = $start_date->format('Ymd');
+        $end_day    = $end_date->format('Ymd');
+        $sql = "SELECT project_id AS group_id, SUM(git_read) AS result
+                FROM  plugin_git_log_read_daily
                     INNER JOIN plugin_git USING(repository_id)
-                WHERE time <= $this->end_date
-                    AND time >= $this->start_date
+                WHERE day <= $end_day
+                    AND day >= $start_day
                 GROUP BY project_id";
 
         return $this->retrieve($sql);

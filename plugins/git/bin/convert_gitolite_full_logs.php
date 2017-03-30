@@ -33,23 +33,10 @@ $console    = new Log_ConsoleLogger();
 $logger     = new GitBackendLogger();
 $broker_log = new BrokerLogger(array($logger, $console));
 
-$detector = new VersionDetector();
-if (! $detector->isGitolite3()) {
-    $broker_log->error("You are currently using Gitolite2. Parsing logs only works for Gitolite3.");
-    exit(1);
-}
+$broker_log->info("Starting transfer from plugin_git_full_history to plugin_git_log_read_daily");
 
-$broker_log->info("Starting parse gitolite3 logs.");
-$gitolite_parser = new Gitolite3LogParser(
-    $broker_log,
-    new System_Command(),
-    new HttpUserValidator(),
-    new Dao(),
-    new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
-    UserManager::instance(),
-    new GitoliteFileLogsDao()
-);
-$gitolite_parser->parseAllLogs(GITOLITE3_LOGS_PATH);
+$transfer = new \Tuleap\Git\Gitolite\GitoliteFullLogsToAggregatedLogs($broker_log);
+$transfer->convert();
 
 $broker_log->info("Logs parsed with success.");
 
