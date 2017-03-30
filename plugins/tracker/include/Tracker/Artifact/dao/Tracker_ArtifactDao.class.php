@@ -576,24 +576,6 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchParentByArtifactIdAndNature($artifact_id, $nature)
-    {
-        $artifact_id = $this->da->escapeInt($artifact_id);
-        $nature      = $this->da->quoteSmart($nature);
-        $sql         = "SELECT parent_art.*
-                        FROM tracker_artifact parent_art
-                            INNER JOIN tracker_field                        AS f
-                                ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
-                            INNER JOIN tracker_changeset_value              AS cv
-                                ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                            INNER JOIN tracker_changeset_value_artifactlink AS artlink
-                                ON (artlink.changeset_value_id = cv.id)
-                        WHERE artlink.artifact_id = $artifact_id
-                        AND artlink.nature = $nature";
-
-        return $this->retrieve($sql);
-    }
-
 
     public function getSiblings($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);

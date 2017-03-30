@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -66,10 +66,7 @@ class NatureIsChildLinkRetriever {
         }
         $already_seen_artifacts[$artifact->getId()] = 1;
 
-        $parents = array();
-        foreach ($this->artifact_link_dao->searchIsChildReverseLinksById($artifact->getId()) as $row) {
-            $parents[] = $this->factory->getArtifactById($row['artifact_id']);
-        }
+        $parents = $this->getDirectParents($artifact);
 
         if (count($parents) > 0) {
             $collection->addArtifacts($parents);
@@ -86,4 +83,15 @@ class NatureIsChildLinkRetriever {
         return $this->factory->getIsChildLinkedArtifactsById($artifact);
     }
 
+    /**
+     * @return Tracker_Artifact[]
+     */
+    public function getDirectParents(Tracker_Artifact $artifact)
+    {
+        $parents = array();
+        foreach ($this->artifact_link_dao->searchIsChildReverseLinksById($artifact->getId()) as $row) {
+            $parents[] = $this->factory->getArtifactById($row['artifact_id']);
+        }
+        return $parents;
+    }
 }

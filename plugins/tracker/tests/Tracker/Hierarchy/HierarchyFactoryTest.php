@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,14 +33,14 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
     }
 
     public function itRetrievesTheChildrenOfAGivenTracker() {
-        $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
-        $tracker_factory   = mock('TrackerFactory');
-        $hierarchy_factory = new Tracker_HierarchyFactory(
+        $hierarchy_dao        = mock('Tracker_Hierarchy_Dao');
+        $tracker_factory      = mock('TrackerFactory');
+        $child_link_retriever = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever');
+        $hierarchy_factory    = new Tracker_HierarchyFactory(
             $hierarchy_dao,
             $tracker_factory,
             mock('Tracker_ArtifactFactory'),
-            mock('Tracker_ArtifactDao'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $child_link_retriever
         );
 
         $tracker_id = 1;
@@ -151,18 +151,20 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
         return $dao;
     }
 
-    private function GivenAHierarchyFactory($dao = null) {
-        if (!$dao) {
+    private function GivenAHierarchyFactory($dao = null)
+    {
+        if (! $dao) {
             $dao = new MockTracker_Hierarchy_Dao();
             $dao->setReturnValue('searchTrackerHierarchy', array());
         }
-
+        $child_link_retriever = mock(
+            'Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever'
+        );
         return new Tracker_HierarchyFactory(
             $dao,
             mock('TrackerFactory'),
             mock('Tracker_ArtifactFactory'),
-            mock('Tracker_ArtifactDao'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $child_link_retriever
         );
     }
 }
@@ -183,12 +185,14 @@ class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
 
         $this->dao               = mock('Tracker_Hierarchy_Dao');
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $child_link_retriever    = mock(
+            'Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever'
+        );
         $this->hierarchy_factory = new Tracker_HierarchyFactory(
             $this->dao,
             mock('TrackerFactory'),
             $this->artifact_factory,
-            mock('Tracker_ArtifactDao'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $child_link_retriever
         );
 
         $this->user    = aUser()->build();
@@ -319,7 +323,8 @@ class Tracker_HierarchyFactoryGetAllAncestorsTest extends TuleapTestCase {
 
 class Tracker_HierarchyFactory_getParentTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->epic_tracker  = aTracker()->withId(111)->build();
@@ -329,13 +334,15 @@ class Tracker_HierarchyFactory_getParentTest extends TuleapTestCase {
         stub($this->tracker_factory)->getTrackerById(111)->returns($this->epic_tracker);
         stub($this->tracker_factory)->getTrackerById(112)->returns($this->story_tracker);
 
-        $this->dao = mock('Tracker_Hierarchy_Dao');
+        $this->dao               = mock('Tracker_Hierarchy_Dao');
+        $child_link_retriever    = mock(
+            'Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever'
+        );
         $this->hierarchy_factory = new Tracker_HierarchyFactory(
             $this->dao,
             $this->tracker_factory,
             mock('Tracker_ArtifactFactory'),
-            mock('Tracker_ArtifactDao'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $child_link_retriever
         );
     }
 

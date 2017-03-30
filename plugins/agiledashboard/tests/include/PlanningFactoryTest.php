@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -305,16 +305,17 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     private $project_id                  = 123;
     private $project_id_without_planning = 124;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
-        $tracker_factory   = TrackerFactory::instance();
-        $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
-        $hierarchy_factory = new Tracker_HierarchyFactory(
+        $tracker_factory      = TrackerFactory::instance();
+        $hierarchy_dao        = mock('Tracker_Hierarchy_Dao');
+        $child_link_retriever = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever');
+        $hierarchy_factory    = new Tracker_HierarchyFactory(
             $hierarchy_dao,
             $tracker_factory,
             mock('Tracker_ArtifactFactory'),
-            mock('Tracker_ArtifactDao'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            $child_link_retriever
         );
 
         $tracker_factory->setHierarchyFactory($hierarchy_factory);
@@ -570,7 +571,7 @@ class PlanningFactory_getNonLastLevelPlanningsTest extends PlanningFactoryTest {
 
         $first_planning  = $plannings[0];
         $second_planning = $plannings[1];
-        
+
         $this->assertEqual($first_planning->getPlanningTrackerId(), 22);
         $this->assertEqual($second_planning->getPlanningTrackerId(), 33);
     }
