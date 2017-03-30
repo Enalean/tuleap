@@ -19,6 +19,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
+
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 require_once('common/widget/Widget_Static.class.php');
@@ -135,38 +137,25 @@ function stats_getactiveusers($since) {
     }
 }
 
+$nb_seconds_in_a_day        = 84600;
+$nb_seconds_in_a_week       = 592200;
+$nb_seconds_in_a_month      = 2678400;
+$nb_seconds_in_three_months = 8031600;
+
+$user_statistics_presenter = new UsersStatisticsPresenter(
+    $statistics_users_graph,
+    stats_getactiveusers($nb_seconds_in_a_day),
+    stats_getactiveusers($nb_seconds_in_a_week),
+    stats_getactiveusers($nb_seconds_in_a_month),
+    stats_getactiveusers($nb_seconds_in_three_months),
+    $mode_lab
+);
+$renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/admin/homepage/');
+
 $user_stats = new Widget_Static($Language->getText('admin_main', 'stat_users'));
 $user_stats->setIcon('fa-pie-chart');
 $user_stats->setAdditionalClass('siteadmin-homepage-statistics');
-$user_stats->setContent('
-    <section class="tlp-pane-section siteadmin-homepage-statistics-section-last siteadmin-homepage-statistics-section-graph">
-        <div class="tlp-property">
-            <div id="siteadmin-homepage-users"
-                 class="siteadmin-homepage-pie-chart"
-                 data-statistics="'. $purifier->purify(json_encode($statistics_users_graph)) .'"></div>
-        </div>
-
-        <div class="tlp-property">
-            <label class="tlp-label">'.$Language->getText('admin_main', 'active_users').'</label>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.number_format(stats_getactiveusers(84600)).' '.$Language->getText('admin_main', 'lastday_users').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.number_format(stats_getactiveusers(592200)).' '.$Language->getText('admin_main', 'lastweek_users').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.number_format(stats_getactiveusers(2678400)).' '.$Language->getText('admin_main', 'lastmonth_users').'</span>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.number_format(stats_getactiveusers(8031600)).' '.$Language->getText('admin_main', 'last3months_users').'</span>
-
-            <a href="/admin/lastlogins.php" class="siteadmin-homepage-stat-lastlogins" title="'.$Language->getText('admin_main', 'stat_login').'">'.$Language->getText('admin_main', 'stat_login').'</a>
-        </div>
-
-        <div class="tlp-property">
-            <label class="tlp-label">'.$Language->getText('admin_main', 'mode_lab_users').'</label>
-            <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">'.$mode_lab.' '.$Language->getText('admin_main', 'mode_lab_users_nb_users').'</span>
-        </div>
-    </section>
-    <div class="tlp-pane-spacer"></div>
-    <section class="tlp-pane-section">
-        <a href="/admin/userlist.php" class="tlp-button-primary tlp-button-outline tlp-button-wide" title="'.$Language->getText('admin_main', 'homepage_all_users').'">'.$Language->getText('admin_main', 'homepage_all_users').'</a>
-    </section>
-');
-
+$user_stats->setContent($renderer->renderToString('users-statistics', $user_statistics_presenter));
 
 $project_stats = new Widget_Static($Language->getText('admin_main', 'stat_projects'));
 $project_stats->setIcon('fa-pie-chart');
