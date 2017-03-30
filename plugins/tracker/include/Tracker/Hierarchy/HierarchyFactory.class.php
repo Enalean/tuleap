@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class Tracker_HierarchyFactory
 {
-
     private static $_instance;
 
     /**
@@ -54,29 +52,21 @@ class Tracker_HierarchyFactory
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-
     /**
-     * @var Tracker_ArtifactDao
+     * @var NatureIsChildLinkRetriever
      */
-    private $artifact_dao;
-
-    /**
-     * @var ScrumForMonoMilestoneChecker
-     */
-    private $scrum_mono_milestone_checker;
+    private $child_link_retriever;
 
     public function __construct(
         Tracker_Hierarchy_Dao $hierarchy_dao,
         TrackerFactory $tracker_factory,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_ArtifactDao $artifact_dao,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker
+        NatureIsChildLinkRetriever $child_link_retriever
     ) {
-        $this->hierarchy_dao                = $hierarchy_dao;
-        $this->tracker_factory              = $tracker_factory;
-        $this->artifact_factory             = $artifact_factory;
-        $this->artifact_dao                 = $artifact_dao;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->hierarchy_dao        = $hierarchy_dao;
+        $this->tracker_factory      = $tracker_factory;
+        $this->artifact_factory     = $artifact_factory;
+        $this->child_link_retriever = $child_link_retriever;
     }
 
     /**
@@ -95,11 +85,12 @@ class Tracker_HierarchyFactory
                 new Tracker_Hierarchy_Dao(),
                 TrackerFactory::instance(),
                 Tracker_ArtifactFactory::instance(),
-                new Tracker_ArtifactDao(),
-                new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), PlanningFactory::build())
+                new NatureIsChildLinkRetriever(
+                    Tracker_ArtifactFactory::instance(),
+                    new Tracker_FormElement_Field_Value_ArtifactLinkDao()
+                )
             );
         }
-
         return self::$_instance;
     }
 
@@ -214,30 +205,31 @@ class Tracker_HierarchyFactory
      * @return null| Tracker_Artifact
      */
     public function getParentArtifact(PFUser $user, Tracker_Artifact $child) {
-        if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($child->getTracker()->getGroupId()) === true) {
-            $dar = $this->artifact_dao->searchParentByArtifactIdAndNature($child->getId(), Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $parents = array();
+        if ($child->getTracker()->isProjectAllowedToUseNature() === true) {
+            $parents = $this->child_link_retriever->getDirectParents($child);
         } else {
             $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
+            if ($dar && !$dar->isError()) {
+                foreach ($dar as $row) {
+                    $parents[] = $this->artifact_factory->getInstanceFromRow($row);
+                }
+            }
         }
-        if ($dar && !$dar->isError()) {
-            $parents = array();
-            foreach ($dar as $row) {
-                $parents[] = $this->artifact_factory->getInstanceFromRow($row);
-            }
-            if (count($parents) > 1) {
-                $warning = $GLOBALS['Language']->getText(
-                    'plugin_tracker_hierarchy',
-                    'error_more_than_one_parent',
-                    array(
-                        $this->getParentTitle($child),
-                        $this->getParentsList($parents)
-                    )
-                );
-                $GLOBALS['Response']->addFeedback('warning', $warning, CODENDI_PURIFIER_LIGHT);
-            }
-            if ($parents) {
-                return $parents[0];
-            }
+
+        if (count($parents) > 1) {
+            $warning = $GLOBALS['Language']->getText(
+                'plugin_tracker_hierarchy',
+                'error_more_than_one_parent',
+                array(
+                    $this->getParentTitle($child),
+                    $this->getParentsList($parents)
+                )
+            );
+            $GLOBALS['Response']->addFeedback('warning', $warning, CODENDI_PURIFIER_LIGHT);
+        }
+        if (isset($parents[0])) {
+            return $parents[0];
         }
         return null;
     }
