@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 
 require_once('pre.php');
 
-session_require(array('group' => 1, 'admin_flags' => 'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 $csrf = new CSRFSynchronizerToken('/admin/massmail.php');
 $csrf->check();

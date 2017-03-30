@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 function html_feedback_top($feedback) {
     echo $GLOBALS['HTML']->feedback($GLOBALS['feedback']);
@@ -36,7 +36,7 @@ function html_image($src,$args,$display=1) {
 	if (!isset($args['border']) || !$args['border']) $return .= (" border=0");
 
 	// ## if no height AND no width tag, insert em both
-	if ((!isset($args['height']) || !$args['height']) && 
+	if ((!isset($args['height']) || !$args['height']) &&
             (!isset($args['width'])  || !$args['width'])) {
 		/* Check to see if we've already fetched the image data */
 		if($img_size){
@@ -44,7 +44,7 @@ function html_image($src,$args,$display=1) {
 				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
 			}
 		} else {
-			if(is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){		
+			if(is_file($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src)){
 				$img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'].util_get_dir_image_theme().$src);
 			}
 		}
@@ -197,7 +197,7 @@ function html_build_select_box_from_arrays (
         $return           = '';
         $isAValueSelected = false;
         $hp               = Codendi_HTMLPurifier::instance();
-        
+
 	/*
 
 		The infamous '100 row' has to do with the
@@ -260,7 +260,7 @@ function html_build_select_box_from_arrays (
 			}
 		} else {
 	    	$selected = ( $checked_val == 0 ? 'SELECTED':'');
-            if ($checked_val == 0) { 
+            if ($checked_val == 0) {
                 $isAValueSelected = true;
             }
 	    }
@@ -293,7 +293,7 @@ function html_build_select_box_from_arrays (
 	for ($i=0; $i<$rows; $i++) {
 	    //  uggh - sorry - don't show the 100 row and Any row
 	    //  if it was shown above, otherwise do show it
-	    if ( (($vals[$i] != '100') && ($vals[$i] != '0')) || 
+	    if ( (($vals[$i] != '100') && ($vals[$i] != '0')) ||
 		 ($vals[$i] == '100' && !$show_100) ||
 		 ($vals[$i] == '0' && !$show_any) ) {
 			$return .= '
@@ -397,7 +397,7 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 		the menu label (default true for backward compatibility
 	*/
         $hp = Codendi_HTMLPurifier::instance();
-        
+
         // Position default values for special menu items
         if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
         if ($text_any == '') { $text_any = $Language->getText('global','any'); }
@@ -551,10 +551,10 @@ function site_project_header($params) {
 
 	$group_id=$params['group'];
 
-	//get the project object 
+	//get the project object
 	$pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
-    
+
 	//group doesn't exist
 	if ($project->isError()) {
 		exit_error($Language->getText('include_html','invalid_g'),$Language->getText('include_html','g_not_exist'));
@@ -568,8 +568,7 @@ function site_project_header($params) {
 
 	//for dead projects must be member of admin project
 	if (!$project->isActive()) {
-		//only SF group can view non-active, non-holding groups
-		session_require(array('group'=>'1'));
+        HTTPRequest::instance()->checkUserIsSuperUser();
 	}
 
         if (isset($params['pv']) && $params['pv'] != 0) {
@@ -581,7 +580,7 @@ function site_project_header($params) {
 }
 
 /*!     @function site_project_footer
-	@abstract currently a simple shim that should be on every project page, 
+	@abstract currently a simple shim that should be on every project page,
 		rather than a direct call to site_footer() or theme_footer()
 	@param params array() empty
 	@result text - echos HTML to the screen directly
@@ -624,15 +623,15 @@ function html_trash_link($link, $warn, $alt) {
 }
 
 /**
- * 
+ *
  *  Returns a date operator field
- * 
+ *
  *  @param value: initial value
  *  @param ro: if true, the field is read-only
  *
  *	@return	string
  */
-function html_select_operator($name='', $value='', $ro=false) {    
+function html_select_operator($name='', $value='', $ro=false) {
     if ($ro) {
         $html = htmlspecialchars($value);
     } else {
@@ -642,12 +641,12 @@ function html_select_operator($name='', $value='', $ro=false) {
 			'<option value="-1"'.(($value == '-1') ? 'selected="selected"':'').'>&lt;</option>'.
 			'</select>';
     }
-    return($html);	
+    return($html);
 }
 
 /**
  *  Returns a date field
- * 
+ *
  *  @param value: initial value
  *  @param size: the field size
  *  @param maxlength: the max field size

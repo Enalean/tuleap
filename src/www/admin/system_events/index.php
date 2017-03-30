@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 – 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 – 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,8 @@ require_once 'adminPresenter.class.php';
 require_once 'common/dao/SystemEventsFollowersDao.class.php';
 require_once 'common/include/Toggler.class.php';
 
-session_require(array('group'=>'1', 'admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 $token  = new CSRFSynchronizerToken('/admin/system_events/');
 $se     = SystemEventManager::instance();

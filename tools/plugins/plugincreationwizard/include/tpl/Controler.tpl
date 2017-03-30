@@ -29,14 +29,14 @@ require_once('<?=$class_name?>Actions.class.php');
  * <?=$class_name?>
  */
 class <?=$class_name?> extends Controler {
-    
+
     function <?=$class_name?>() {
-        session_require(array('group'=>'1','admin_flags'=>'A'));
+        HTTPRequest::instance()->checkUserIsSuperUser();
     }
-    
+
     function request() {
         $request =& HTTPRequest::instance();
-        
+
         $this->view = 'hello';
     }
 }

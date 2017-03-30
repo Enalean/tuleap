@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -36,8 +36,9 @@ $special_access                   = $forge_ugroup_permissions_manager->doesUserH
     $user, new User_ForgeUserGroupPermission_ProjectApproval()
 );
 
+$request = HTTPRequest::instance();
 if (! $special_access) {
-    session_require(array('group' => '1', 'admin_flags' => 'A'));
+    $request->checkUserIsSuperUser();
 }
 
 $action = $request->getValidated('action', 'string', '');

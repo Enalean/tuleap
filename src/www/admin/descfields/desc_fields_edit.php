@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,12 +26,12 @@ require_once 'pre.php';
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Project\Admin\DescriptionFields\FieldsListPresenter;
-use Tuleap\Project\Admin\DescriptionFields\FieldPresenter;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder;
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/admin-description-fields.js');
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
-session_require(array('group' => '1', 'admin_flags' => 'A'));
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/admin-description-fields.js');
 
 $delete_desc_id = $request->get('delete_group_desc_id');
 if ($delete_desc_id) {

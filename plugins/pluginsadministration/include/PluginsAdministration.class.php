@@ -1,22 +1,37 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
+ * This file is a part of Tuleap.
  *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * PluginsAdministration
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('common/mvc/Controler.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginsAdministrationViews.class.php');
 require_once('PluginsAdministrationActions.class.php');
-class PluginsAdministration extends Controler {
-
-    function PluginsAdministration() {
-        session_require(array('group'=>'1','admin_flags'=>'A'));
+class PluginsAdministration extends Controler
+{
+    public function __construct()
+    {
+        HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
-    function request() {
+    public function request()
+    {
         $request =& HTTPRequest::instance();
 
         if ($request->exist('view')) {

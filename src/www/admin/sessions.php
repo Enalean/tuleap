@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 require_once('pre.php');
 require_once('common/dao/SessionDao.class.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
-
 $request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 if ($request->exist('reset_all_sessions')) {
     $csrf = new CSRFSynchronizerToken('/admin/sessions.php');
     $csrf->check('/admin/userlist.php');
-    
+
     $session_dao = new SessionDao();
     $session_dao->deleteAll();
 }
 $GLOBALS['HTML']->redirect('/');
-?>

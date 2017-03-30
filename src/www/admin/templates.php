@@ -24,7 +24,8 @@ use Tuleap\Project\Admin\TemplatePresenter;
 
 require_once('pre.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 $templates_presenters = array();
 foreach (ProjectManager::instance()->getSiteTemplates() as $template) {

@@ -24,13 +24,13 @@ use Tuleap\Tracker\ArtifactPendingDeletionPresenter;
 
 require_once('pre.php');
 
-session_require(array('group' => '1', 'admin_flags' => 'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/trackers-pending-removal.js');
 
-$pm      = ProjectManager::instance();
-$request = HTTPRequest::instance();
-$func    = $request->get('func');
+$pm   = ProjectManager::instance();
+$func = $request->get('func');
 switch ($func) {
     case 'restore':
         if ($group = $pm->getProject($request->getValidated('group_id', 'GroupId'))) {

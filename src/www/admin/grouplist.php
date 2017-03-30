@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -29,7 +29,8 @@ use Tuleap\Project\Admin\ProjectListResultsPresenter;
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-list.js');
 

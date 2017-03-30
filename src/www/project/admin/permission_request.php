@@ -21,6 +21,8 @@
 
 require_once('pre.php');
 
+$request = HTTPRequest::instance();
+
 // Valid group id
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -43,7 +45,7 @@ if (!$project || !is_object($project) || $project->isError()) {
 
 //if the project isn't active, require you to be a member of the super-admin group
 if ($project->getStatus() != 'A') {
-    session_require(array('group'=>1));
+    $request->checkUserIsSuperUser();
 }
 
 $vFunc = new Valid_WhiteList('func', array('member_req_notif_group', 'member_req_notif_message'));
@@ -165,7 +167,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
         $selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
 }
 
- 
+
 $ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => util_translate_name_ugroup('project_admin')));
 $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {

@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('account.php');
 require_once('common/include/TemplateSingleton.class.php');
@@ -29,6 +29,7 @@ require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
+$request = HTTPRequest::instance();
 
 // Valid group id
 $vGroupId = new Valid_GroupId();
@@ -52,7 +53,7 @@ if (!$group || !is_object($group) || $group->isError()) {
 
 //if the project isn't active, require you to be a member of the super-admin group
 if ($group->getStatus() != 'A') {
-    session_require(array('group'=>1));
+    $request->checkUserIsSuperUser();
 }
 
 $em = EventManager::instance();
@@ -110,7 +111,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_index','p_
 echo '<TABLE width=100% border=0>
 <TR valign=top><TD width=50%>';
 
-$HTML->box1_top($Language->getText('project_admin_index','p_edit',$group->getPublicName())); 
+$HTML->box1_top($Language->getText('project_admin_index','p_edit',$group->getPublicName()));
 
 $hp =& Codendi_HTMLPurifier::instance();
 
@@ -150,7 +151,7 @@ if ($GLOBALS['sys_use_trove'] != 0) {
 
 // list all possible project types
 // get current information
-$template =& TemplateSingleton::instance(); 
+$template =& TemplateSingleton::instance();
 
 
 print '
@@ -227,7 +228,7 @@ if ($parent_project) {
     echo $Language->getText('project_admin_editugroup', 'no_parent');
 }
 echo ' &dash; <a href="editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editugroup', 'go_to_hierarchy_admin').'</a>';
-$HTML->box1_bottom(); 
+$HTML->box1_bottom();
 
 echo '
 </TD><TD>&nbsp;</TD><TD width=50%>';
@@ -257,7 +258,7 @@ $user_helper = new UserHelper();
 
 while ($row_memb=db_fetch_array($res_memb)) {
     $display_name = '';
-    
+
     $em->processEvent('get_user_display_name', array(
         'user_id'           => $row_memb['user_id'],
         'user_name'         => $row_memb['user_name'],
@@ -327,7 +328,7 @@ echo '
          <A href="/project/admin/userperms.php?group_id='. $group_id.'">'.$Language->getText('project_admin_index','edit_member_perm').'</A>
          </div>
          </TD></TR>';
- 
+
 $HTML->box1_bottom();
 
 
@@ -374,10 +375,10 @@ if ( $group->usesTracker()) {
     if (!$group || !is_object($group) || $group->isError()) {
         exit_error($Language->getText('global','error'),'Could Not Get ArtifactTypeFactory');
     }
-    
+
     // Get the artfact type list
     $at_arr = $atf->getArtifactTypes();
-    
+
     if (!$at_arr || count($at_arr) < 1) {
         echo "<br><i>-&nbsp;".$Language->getText('project_admin_index','no_tracker_found').'</i>';
     } else {
@@ -403,7 +404,7 @@ foreach($admin_pages as $admin_page) {
 
 // }}}
 
-$HTML->box1_bottom(); 
+$HTML->box1_bottom();
 
 
 

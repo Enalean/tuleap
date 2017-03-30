@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,8 @@
 require_once('pre.php');
 require_once('proj_email.php');
 
-session_require(array('group' => '1', 'admin_flags' => 'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 $project_id = $request->getValidated('group_id', 'uint', 0);
 $project    = ProjectManager::instance()->getProject($project_id);

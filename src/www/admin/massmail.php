@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 
 require_once('pre.php');
 
-
-session_require(array('group' => '1', 'admin_flags' => 'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 // get numbers of users for each mailing
 $res_count     = db_query("SELECT COUNT(DISTINCT user.email) FROM user WHERE ( status='A' OR status='R' ) AND mail_va=1");

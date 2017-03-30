@@ -1,7 +1,7 @@
 <?php
 /**
  * SourceForge: Breaking Down the Barriers to Open Source Development
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,9 +26,10 @@ use Tuleap\Admin\AdminPageRenderer;
 
 require_once('pre.php');
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/trovecat.js');
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
-session_require(array('group' => '1', 'admin_flags' => 'A'));
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/trovecat.js');
 
 $trove_dao = new TroveCatDao();
 
