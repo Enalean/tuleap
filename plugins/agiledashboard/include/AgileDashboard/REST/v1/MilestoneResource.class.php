@@ -23,7 +23,6 @@ use BacklogItemReference;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
@@ -56,7 +55,6 @@ use AgileDashboard_Milestone_MilestoneDao;
 use MilestoneParentLinker;
 use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
-
 
 /**
  * Wrapper for milestone related REST methods
@@ -427,14 +425,10 @@ class MilestoneResource extends AuthenticatedResource {
             throw new RestException(400, $exception->getMessage());
         }
 
-        try {
-            $paginated_milestones_representations = $this->milestone_representation_builder
-                ->getPaginatedSubMilestonesRepresentations(
-                    $milestone, $user, $fields, $criterion, $limit, $offset, $order
-                );
-        } catch (ScrumForMonoMilestoneDifferentThanOnePlanningException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        }
+        $paginated_milestones_representations = $this->milestone_representation_builder
+            ->getPaginatedSubMilestonesRepresentations(
+                $milestone, $user, $fields, $criterion, $limit, $offset, $order
+            );
 
         $this->sendAllowHeaderForSubmilestones();
         $this->sendPaginationHeaders($limit, $offset, $paginated_milestones_representations->getTotalSize());

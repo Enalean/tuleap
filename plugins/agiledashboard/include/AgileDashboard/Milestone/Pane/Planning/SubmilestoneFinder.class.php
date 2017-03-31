@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException;
 
 /**
  * I find the suitable submilestone for planning
@@ -68,13 +67,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder
 
     private function findTrackersForMonoMilestonesConfiguration(Planning_Milestone $milestone)
     {
-        $trackers_backlog = $this->planning_factory->getBacklogTrackersIds($milestone->getPlanningId());
-
-        if (count($trackers_backlog) === 0) {
-            throw new ScrumForMonoMilestoneDifferentThanOnePlanningException();
-        }
-
-        return $this->tracker_factory->getTrackerById($trackers_backlog[0]);
+        return $milestone->getPlanning()->getPlanningTracker();
     }
 
     private function findTrackersForMultiMilestonesConfiguration(Planning_Milestone $milestone)
