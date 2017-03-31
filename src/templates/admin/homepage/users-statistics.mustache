@@ -1,0 +1,38 @@
+<section class="tlp-pane-section siteadmin-homepage-statistics-section-last siteadmin-homepage-statistics-section-graph">
+    <div class="tlp-property">
+        <div id="siteadmin-homepage-users"
+             class="siteadmin-homepage-pie-chart"
+             data-statistics="{{ json_encoded_statistics }}"></div>
+    </div>
+
+    <div class="tlp-property">
+        <label class="tlp-label">{{ per_activities }}</label>
+        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">
+            {{ lastday_users }} {{ lastday_users_label }}
+        </span>
+        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">
+            {{ lastweek_users }} {{ lastweek_users_label }}
+        </span>
+        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">
+            {{ lastmonth_users }} {{ lastmonth_users_label }}
+        </span>
+        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">
+            {{ last3months_users }} {{ last3months_users_label }}
+        </span>
+
+        <a href="/admin/lastlogins.php" class="siteadmin-homepage-stat-lastlogins">{{ recent_logins_label }}</a>
+    </div>
+
+    <div class="tlp-property">
+        <label class="tlp-label">{{ mode_lab_users }}</label>
+        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">
+            {{ nb_mode_lab }} {{ nb_mode_lab_label }}
+        </span>
+    </div>
+</section>
+<div class="tlp-pane-spacer"></div>
+<section class="tlp-pane-section">
+    <a href="/admin/userlist.php" class="tlp-button-primary tlp-button-outline tlp-button-wide">
+        {{ homepage_all_users }}
+    </a>
+</section>
