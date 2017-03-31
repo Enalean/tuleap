@@ -32,3 +32,27 @@ msgstr "Enalean License Manager"
 
 msgid "Manage usage of license for Tuleap"
 msgstr "Gestionnaire des licenses d'utilisation de Tuleap"
+
+msgid "Oups!"
+msgstr "Oups !"
+
+msgid "Warning!"
+msgstr "Attention !"
+
+#, php-format
+msgid ""
+"You no longer have available licences (0/%1$d), please contact the Enalean "
+"sales department (sales@enalean.com) to purchase additional licenses."
+msgstr ""
+"Vous n’avez plus de licences disponibles (0/%1$d), veuillez contacter le "
+"service commercial d’Enalean (sales@enalean.com) pour acheter des licences "
+"supplémentaires."
+
+#, php-format
+msgid ""
+"You will be short of licenses soon (%1$d/%2$d), to purchase additional "
+"licenses please contact Enalean sales department (sales@enalean.com)."
+msgstr ""
+"Vous n’avez bientôt plus de licences disponibles (%1$d/%2$d), pour acheter "
+"des licences supplémentaires veuillez contacter le service commercial "
+"d’Enalean (sales@enalean.com)."

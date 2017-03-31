@@ -37,6 +37,7 @@ class enalean_licensemanagerPlugin extends Plugin
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS);
+        $this->addHook(Event::GET_SITEADMIN_WARNINGS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -53,6 +54,23 @@ class enalean_licensemanagerPlugin extends Plugin
         return $this->pluginInfo;
     }
 
+    /** @see Event::GET_SITEADMIN_WARNINGS */
+    public function get_siteadmin_warnings(array $params)
+    {
+        $nb_max_users = $this->getMaxUsers();
+        if (! $nb_max_users) {
+            return;
+        }
+
+        $nb_used_users = $this->getNbUsedUsersFromEventParams($params);
+
+        if ($this->isQuotaExceeded($nb_used_users, $nb_max_users)) {
+            $params['warnings'][] = $this->getExceededWarning($nb_max_users);
+        } else if ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
+            $params['warnings'][] = $this->getExceedingSoonWarning($nb_used_users, $nb_max_users);
+        }
+    }
+
     /** @see Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS */
     public function get_siteadmin_homepage_user_statistics(array $params)
     {
@@ -61,21 +79,16 @@ class enalean_licensemanagerPlugin extends Plugin
             return;
         }
 
-        /** @var Tuleap\Admin\Homepage\NbUsersByStatus $users_by_status */
-        $users_by_status    = $params['nb_users_by_status'];
-        $nb_users_for_quota = $users_by_status->getNbActive()
-            + $users_by_status->getNbPending()
-            + $users_by_status->getNbRestricted()
-            + $users_by_status->getNbAllValidated();
+        $nb_used_users = $this->getNbUsedUsersFromEventParams($params);
 
         $nb_alive_users_label = sprintf(
             dngettext(
                 'tuleap-enalean_licensemanager',
                 '%d user',
                 '%d users',
-                $nb_users_for_quota
+                $nb_used_users
             ),
-            $nb_users_for_quota
+            $nb_used_users
         );
 
         $max_allowed_users_label = sprintf(
@@ -88,13 +101,10 @@ class enalean_licensemanagerPlugin extends Plugin
             $nb_max_users
         );
 
-        $is_user_quota_exceeded  = $nb_users_for_quota > $nb_max_users;
-        $is_quota_exceeding_soon = 1 - $nb_users_for_quota / $nb_max_users < 0.2;
-
         $level = StatisticsBadgePresenter::LEVEL_SECONDARY;
-        if ($is_user_quota_exceeded) {
+        if ($this->isQuotaExceeded($nb_used_users, $nb_max_users)) {
             $level = StatisticsBadgePresenter::LEVEL_DANGER;
-        } else if ($is_quota_exceeding_soon) {
+        } else if ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
             $level = StatisticsBadgePresenter::LEVEL_WARNING;
         }
 
@@ -109,6 +119,9 @@ class enalean_licensemanagerPlugin extends Plugin
         );
     }
 
+    /**
+     * @return int
+     */
     private function getMaxUsers()
     {
         $filename = $this->getPluginEtcRoot() . '/max_users.txt';
@@ -119,5 +132,102 @@ class enalean_licensemanagerPlugin extends Plugin
         $nb_max_users = (int) file_get_contents($filename);
 
         return $nb_max_users;
+    }
+
+    /**
+     * @param array $params
+     * @return int
+     */
+    private function getNbUsedUsersFromEventParams(array $params)
+    {
+        /** @var Tuleap\Admin\Homepage\NbUsersByStatus $users_by_status */
+        $users_by_status = $params['nb_users_by_status'];
+        $nb_used_users   = $users_by_status->getNbActive()
+            + $users_by_status->getNbPending()
+            + $users_by_status->getNbRestricted()
+            + $users_by_status->getNbAllValidated();
+
+        return $nb_used_users;
+    }
+
+    /**
+     * @param int $nb_used_users
+     * @param int $nb_max_users
+     * @return bool
+     */
+    private function isQuotaExceedingSoon($nb_used_users, $nb_max_users)
+    {
+        return 1 - $nb_used_users / $nb_max_users < 0.2;
+    }
+
+    /**
+     * @param int $nb_used_users
+     * @param int $nb_max_users
+     * @return string
+     */
+    private function getExceedingSoonWarning($nb_used_users, $nb_max_users)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $title   = dgettext('tuleap-enalean_licensemanager', 'Warning!');
+        $message = sprintf(
+            dgettext(
+                'tuleap-enalean_licensemanager',
+                'You will be short of licenses soon (%1$d/%2$d), to purchase additional licenses please contact Enalean sales department (sales@enalean.com).'
+            ),
+            $nb_max_users - $nb_used_users,
+            $nb_max_users
+        );
+
+        $warning = '
+                <div class="tlp-alert-warning alert alert-warning alert-block">
+                    <h4><i class="icon-warning-sign fa fa-warning tlp-alert-icon"></i> ' . $purifier->purify($title) . '</h4>
+                    <p>
+                        ' . $purifier->purify($message, CODENDI_PURIFIER_BASIC) . '
+                    </p>
+                </div>
+            ';
+
+        return $warning;
+    }
+
+    /**
+     * @param int $nb_used_users
+     * @param int $nb_max_users
+     * @return string
+     */
+    private function getExceededWarning($nb_max_users)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $title   = dgettext('tuleap-enalean_licensemanager', 'Oups!');
+        $message = sprintf(
+            dgettext(
+                'tuleap-enalean_licensemanager',
+                'You no longer have available licences (0/%1$d), please contact the Enalean sales department (sales@enalean.com) to purchase additional licenses.'
+            ),
+            $nb_max_users
+        );
+
+        $warning = '
+                <div class="tlp-alert-danger alert alert-danger alert-block">
+                    <h4><i class="icon-frown fa fa-frown-o tlp-alert-icon"></i> ' . $purifier->purify($title) . '</h4>
+                    <p>
+                        ' . $purifier->purify($message, CODENDI_PURIFIER_BASIC) . '
+                    </p>
+                </div>
+            ';
+
+        return $warning;
+    }
+
+    /**
+     * @param int $nb_used_users
+     * @param int $nb_max_users
+     * @return bool
+     */
+    private function isQuotaExceeded($nb_used_users, $nb_max_users)
+    {
+        return $nb_used_users > $nb_max_users;
     }
 }
