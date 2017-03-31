@@ -1,0 +1,5 @@
+msgid "Enalean License Manager"
+msgstr ""
+
+msgid "Manage usage of license for Tuleap"
+msgstr ""
