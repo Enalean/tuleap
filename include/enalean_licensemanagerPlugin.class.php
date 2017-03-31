@@ -88,12 +88,22 @@ class enalean_licensemanagerPlugin extends Plugin
             $nb_max_users
         );
 
+        $is_user_quota_exceeded  = $nb_users_for_quota > $nb_max_users;
+        $is_quota_exceeding_soon = 1 - $nb_users_for_quota / $nb_max_users < 0.2;
+
+        $level = StatisticsBadgePresenter::LEVEL_SECONDARY;
+        if ($is_user_quota_exceeded) {
+            $level = StatisticsBadgePresenter::LEVEL_DANGER;
+        } else if ($is_quota_exceeding_soon) {
+            $level = StatisticsBadgePresenter::LEVEL_WARNING;
+        }
+
         $params['additional_statistics'][] = new StatisticsPresenter(
             dgettext('tuleap-enalean_licensemanager', 'Allowed users quota'),
             array(
                 new StatisticsBadgePresenter(
                     "$nb_alive_users_label / $max_allowed_users_label",
-                    StatisticsBadgePresenter::LEVEL_DANGER
+                    $level
                 )
             )
         );
