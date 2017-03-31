@@ -43,6 +43,22 @@ class ProjectTest extends ProjectBase
         );
     }
 
+    public function testPOST(){
+
+        $post_resource = json_encode(array(
+                'label' => 'Test Request 9747',
+                'shortname'  => 'test9747',
+                'description' => 'Test of Request 9747 for REST API Project Creation',
+                'is_public' => true,
+                'template_id' => 100
+            ));
+
+        $response = $this->getResponse($this->client->post('projects',null,$post_resource));
+        $project = $response->json();
+        $this->assertArrayHasKey("id", $project);
+        $this->assertEquals($response->getStatusCode(), 201);
+    }
+
     public function testGET() {
         $response      = $this->getResponse($this->client->get('projects'));
         $json_projects = $response->json();
