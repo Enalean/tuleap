@@ -35,7 +35,7 @@ admin_sidebar	links_nav_doc	Doc
 #
 admin_main	title		Administration du site
 admin_main	header		Fonctions d'administration
-admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
+admin_main	forgeupgrade	<h4><i class="icon-warning-sign fa fa-warning tlp-alert-icon"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
 admin_main	header_user	Utilisateurs en attente
 admin_main	display_user	Afficher les utilisateurs commençant par :
 admin_main	search_user	Utilisateur

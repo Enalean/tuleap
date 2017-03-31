@@ -1,7 +1,7 @@
 <?php
 /**
   * Copyright 1999-2000 (c) The SourceForge Crew
-  * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
+  * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -264,7 +264,7 @@ $siteadmin->header($Language->getText('admin_main', 'title'));
 global $feedback;
 echo html_feedback_top($feedback);
 
-echo site_admin_warnings();
+echo site_admin_warnings($nb_users_by_status);
 
 echo '<div id="siteadmin-homepage-container">';
 echo '<div class="siteadmin-homepage-column">';
