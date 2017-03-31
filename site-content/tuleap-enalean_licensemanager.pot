@@ -1,3 +1,18 @@
+#, php-format
+msgid "%d allowed"
+msgid_plural "%d allowed"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%d user"
+msgid_plural "%d users"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Allowed users quota"
+msgstr ""
+
 msgid "Enalean License Manager"
 msgstr ""
 

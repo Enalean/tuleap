@@ -10,7 +10,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#, php-format
+msgid "%d allowed"
+msgid_plural "%d allowed"
+msgstr[0] "%d autorisé"
+msgstr[1] "%d autorisés"
+
+#, php-format
+msgid "%d user"
+msgid_plural "%d users"
+msgstr[0] "%d utilisateur"
+msgstr[1] "%d utilisateurs"
+
+msgid "Allowed users quota"
+msgstr "Quota d'utilisateurs"
 
 msgid "Enalean License Manager"
 msgstr "Enalean License Manager"

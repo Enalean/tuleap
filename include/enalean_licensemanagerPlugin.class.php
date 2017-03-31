@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
+use Tuleap\Admin\Homepage\StatisticsPresenter;
+
 require_once 'autoload.php';
 require_once 'constants.php';
 
@@ -28,7 +31,14 @@ class enalean_licensemanagerPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        bindtextdomain('tuleap-enalean_licensemanager', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-enalean_licensemanager', __DIR__ . '/../site-content');
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS);
+
+        return parent::getHooksAndCallbacks();
     }
 
     /**
@@ -36,9 +46,68 @@ class enalean_licensemanagerPlugin extends Plugin
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\Enalean\LicenseManager\PluginInfo($this);
         }
+
         return $this->pluginInfo;
+    }
+
+    /** @see Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS */
+    public function get_siteadmin_homepage_user_statistics(array $params)
+    {
+        $nb_max_users = $this->getMaxUsers();
+        if (! $nb_max_users) {
+            return;
+        }
+
+        /** @var Tuleap\Admin\Homepage\NbUsersByStatus $users_by_status */
+        $users_by_status    = $params['nb_users_by_status'];
+        $nb_users_for_quota = $users_by_status->getNbActive()
+            + $users_by_status->getNbPending()
+            + $users_by_status->getNbRestricted()
+            + $users_by_status->getNbAllValidated();
+
+        $nb_alive_users_label = sprintf(
+            dngettext(
+                'tuleap-enalean_licensemanager',
+                '%d user',
+                '%d users',
+                $nb_users_for_quota
+            ),
+            $nb_users_for_quota
+        );
+
+        $max_allowed_users_label = sprintf(
+            dngettext(
+                'tuleap-enalean_licensemanager',
+                '%d allowed',
+                '%d allowed',
+                $nb_max_users
+            ),
+            $nb_max_users
+        );
+
+        $params['additional_statistics'][] = new StatisticsPresenter(
+            dgettext('tuleap-enalean_licensemanager', 'Allowed users quota'),
+            array(
+                new StatisticsBadgePresenter(
+                    "$nb_alive_users_label / $max_allowed_users_label",
+                    StatisticsBadgePresenter::LEVEL_DANGER
+                )
+            )
+        );
+    }
+
+    private function getMaxUsers()
+    {
+        $filename = $this->getPluginEtcRoot() . '/max_users.txt';
+        if (! is_file($filename)) {
+            return 0;
+        }
+
+        $nb_max_users = (int) file_get_contents($filename);
+
+        return $nb_max_users;
     }
 }
