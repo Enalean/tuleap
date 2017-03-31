@@ -391,6 +391,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->isMember($group_id, 'A');
     }
 
+    private $cache_ugroup_membership = array();
     /**
      * Check membership of the user to a specified ugroup
      * (call to old style ugroup_user_is_member in /src/www/project/admin ; here for unit tests purpose)
@@ -402,7 +403,13 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * @return boolean true if user is member of the ugroup, false otherwise.
      */
     public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0) {
-        return ugroup_user_is_member($this->getId(), $ugroup_id, $group_id, $tracker_id);
+        if (! isset($this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id])) {
+            $is_member = ugroup_user_is_member($this->getId(), $ugroup_id, $group_id, $tracker_id);
+
+            $this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id] = $is_member;
+        }
+
+        return $this->cache_ugroup_membership[$ugroup_id][$group_id][$tracker_id];
     }
 
     public function isNone() {
