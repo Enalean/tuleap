@@ -24,7 +24,6 @@ class UsersStatisticsPresenter
 {
     public $json_encoded_statistics;
     public $per_activities;
-    public $mode_lab_users;
     public $lastday_users_label;
     public $lastweek_users_label;
     public $lastmonth_users_label;
@@ -34,8 +33,8 @@ class UsersStatisticsPresenter
     public $lastweek_users;
     public $lastmonth_users;
     public $last3months_users;
-    public $nb_mode_lab;
     public $homepage_all_users;
+    public $additional_statistics;
 
     public function __construct(
         $statistics_users_graph,
@@ -43,23 +42,21 @@ class UsersStatisticsPresenter
         $lastweek_users,
         $lastmonth_users,
         $last3months_users,
-        $nb_mode_lab
+        array $additional_statistics
     ) {
         $this->json_encoded_statistics = json_encode($statistics_users_graph);
         $this->lastday_users           = number_format($lastday_users);
         $this->lastweek_users          = number_format($lastweek_users);
         $this->lastmonth_users         = number_format($lastmonth_users);
         $this->last3months_users       = number_format($last3months_users);
-        $this->nb_mode_lab             = $nb_mode_lab;
+        $this->additional_statistics   = $additional_statistics;
 
         $this->lastday_users_label     = $GLOBALS['Language']->getText('admin_main', 'lastday_users');
         $this->lastweek_users_label    = $GLOBALS['Language']->getText('admin_main', 'lastweek_users');
         $this->lastmonth_users_label   = $GLOBALS['Language']->getText('admin_main', 'lastmonth_users');
         $this->last3months_users_label = $GLOBALS['Language']->getText('admin_main', 'last3months_users');
         $this->recent_logins_label     = $GLOBALS['Language']->getText('admin_main', 'stat_login');
-        $this->nb_mode_lab_label       = $GLOBALS['Language']->getText('admin_main', 'mode_lab_users_nb_users');
         $this->per_activities          = $GLOBALS['Language']->getText('admin_main', 'active_users');
-        $this->mode_lab_users          = $GLOBALS['Language']->getText('admin_main', 'mode_lab_users');
         $this->homepage_all_users      = $GLOBALS['Language']->getText('admin_main', 'homepage_all_users');
     }
 }

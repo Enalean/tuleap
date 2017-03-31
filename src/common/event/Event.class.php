@@ -1340,4 +1340,13 @@ class Event {
      * Event sent at the beginning of display the homepage
      */
     const DISPLAYING_HOMEPAGE = 'displaying_homepage';
+
+    /**
+     * Event raised while displaying the user statistics widget on site admin homepage
+     *
+     * Parameters:
+     *  - nb_users_by_status    => (in)  Tuleap\Admin\Homepage\NbUsersByStatus
+     *  - additional_statistics => (out) Tuleap\Admin\Homepage\StatisticsPresenter[]
+     */
+    const GET_SITEADMIN_HOMEPAGE_USER_STATISTICS = 'get_siteadmin_homepage_user_statistics';
 }
