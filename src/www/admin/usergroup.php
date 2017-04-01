@@ -154,6 +154,7 @@ if ($request->isPost()) {
                     case PFUser::STATUS_SUSPENDED:
                         $user->setStatus($request->get('form_status'));
                         $user->setUnixStatus($user->getStatus());
+                        $accountActivationEvent = 'project_admin_suspend_user';
                         break;
                 }
             }
