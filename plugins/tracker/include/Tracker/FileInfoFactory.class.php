@@ -123,12 +123,17 @@ class Tracker_FileInfoFactory {
      * @return Tracker_Artifact | null
      */
     public function getArtifactByFileInfoId($id) {
-        $row = $this->dao->searchArtifactIdByFileInfoId($id)->getRow();
-        if (! $row) {
-            return;
+        static $cache = array();
+        if (! isset($cache[$id])) {
+            $row = $this->dao->searchArtifactIdByFileInfoId($id)->getRow();
+            if (! $row) {
+                return;
+            }
+
+            $cache[$id] = $row['artifact_id'];
         }
 
-        return $this->artifact_factory->getArtifactById($row['artifact_id']);
+        return $this->artifact_factory->getArtifactById($cache[$id]);
     }
 
     public function buildFileInfoData(Tracker_Artifact_Attachment_TemporaryFile $file, $path) {
