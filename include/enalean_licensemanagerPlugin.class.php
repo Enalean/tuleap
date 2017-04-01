@@ -20,6 +20,12 @@
 
 use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
 use Tuleap\Admin\Homepage\StatisticsPresenter;
+use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\Enalean\LicenseManager\LicencesWidget;
+use Tuleap\Enalean\LicenseManager\UserCounterWebhook;
+use Tuleap\Enalean\LicenseManager\Webhook\StatusLogger;
+use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
+use Tuleap\Webhook\Emitter;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -39,6 +45,10 @@ class enalean_licensemanagerPlugin extends Plugin
         $this->addHook(Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS);
         $this->addHook(Event::GET_SITEADMIN_WARNINGS);
 
+        $this->addHook('project_admin_activate_user', 'userStatusActivity', true);
+        $this->addHook('project_admin_delete_user',   'userStatusActivity', true);
+        $this->addHook('project_admin_suspend_user',  'userStatusActivity', true);
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -52,6 +62,25 @@ class enalean_licensemanagerPlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function userStatusActivity($event, array $params)
+    {
+        $nb_max_users = $this->getMaxUsers();
+        if (! $nb_max_users) {
+            return;
+        }
+
+        $url = $this->getWebhookUrl();
+        if (! $url) {
+            return;
+        }
+
+        $payload = new UserCounterPayload(HTTPRequest::instance(), new UserCounterDao(), $this->getMaxUsers(), $event, $params['user_id']);
+        $emitter = new Emitter(new Http_Client(), new StatusLogger());
+        $webhook = new UserCounterWebhook($url);
+
+        $emitter->emit($webhook, $payload);
     }
 
     /** @see Event::GET_SITEADMIN_WARNINGS */
@@ -132,6 +161,19 @@ class enalean_licensemanagerPlugin extends Plugin
         $nb_max_users = (int) file_get_contents($filename);
 
         return $nb_max_users;
+    }
+
+    /**
+     * @return string
+     */
+    private function getWebhookUrl()
+    {
+        $filename = $this->getPluginEtcRoot() . '/webhook_url.txt';
+        if (! is_file($filename)) {
+            return '';
+        }
+
+        return trim(file_get_contents($filename));
     }
 
     /**
