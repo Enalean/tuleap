@@ -78,8 +78,8 @@ class XMLSvnExporterTest extends TuleapTestCase
 
         stub($mail_notification_manager)->getByRepository($repository)->returns(
             array(
-                new MailNotification($repository, 'mail@example.com', '/'),
-                new MailNotification($repository, 'mail2@example.com', '/trunk')
+                new MailNotification(1, $repository, 'mail@example.com', '/'),
+                new MailNotification(2, $repository, 'mail2@example.com', '/trunk')
             )
         );
 

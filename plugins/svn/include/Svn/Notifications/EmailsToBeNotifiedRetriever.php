@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Notifications;
 
+use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\Repository;
 
@@ -29,10 +30,17 @@ class EmailsToBeNotifiedRetriever
      * @var MailNotificationManager
      */
     private $notification_manager;
+    /**
+     * @var UsersToNotifyDao
+     */
+    private $user_dao;
 
-    public function __construct(MailNotificationManager $notification_manager)
-    {
+    public function __construct(
+        MailNotificationManager $notification_manager,
+        UsersToNotifyDao $user_dao
+    ) {
         $this->notification_manager = $notification_manager;
+        $this->user_dao             = $user_dao;
     }
 
     public function getEmailsToBeNotifiedForPath(Repository $repository, $path)
@@ -44,8 +52,16 @@ class EmailsToBeNotifiedRetriever
             $mail_list       = explode(",", $notification->getNotifiedMails());
             $mail_list       = array_map('trim', $mail_list);
             $notified_emails = array_merge($mail_list, $notified_emails);
+            $this->addUsers($notification, $notified_emails);
         }
 
-        return $notified_emails;
+        return array_values(array_filter($notified_emails));
+    }
+
+    private function addUsers(MailNotification $notification, array &$emails)
+    {
+        foreach ($this->user_dao->searchUsersByNotificationId($notification->getId()) as $row) {
+            $emails[] = $row['email'];
+        }
     }
 }
