@@ -69,7 +69,9 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
     {
         stub($this->mono_milestone_checker)->isMonoMilestoneEnabled(101)->returns(true);
         stub($this->planning_factory)->getAvailableBacklogTrackers()->returns(array());
+        stub($this->planning_factory)->getPotentialPlanningTrackers()->returns(array());
         expect($this->planning_factory)->getAvailableBacklogTrackers()->once();
+        expect($this->planning_factory)->getPotentialPlanningTrackers()->once();
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
             array(1, 2),
