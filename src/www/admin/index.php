@@ -20,6 +20,8 @@
   */
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
+use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
+use Tuleap\Admin\Homepage\StatisticsPresenter;
 use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
 
@@ -125,6 +127,25 @@ function stats_getactiveusers($since) {
     }
 }
 
+$additional_statistics = array(
+    new StatisticsPresenter(
+        $GLOBALS['Language']->getText('admin_main', 'mode_lab_users'),
+        array(
+            new StatisticsBadgePresenter(
+                "$mode_lab ". $GLOBALS['Language']->getText('admin_main', 'mode_lab_users_nb_users'),
+                StatisticsBadgePresenter::LEVEL_SECONDARY
+            )
+        )
+    )
+);
+EventManager::instance()->processEvent(
+    EVENT::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS,
+    array(
+        'nb_users_by_status'    => $nb_users_by_status,
+        'additional_statistics' => &$additional_statistics
+    )
+);
+
 $nb_seconds_in_a_day        = 84600;
 $nb_seconds_in_a_week       = 592200;
 $nb_seconds_in_a_month      = 2678400;
@@ -136,7 +157,7 @@ $user_statistics_presenter = new UsersStatisticsPresenter(
     stats_getactiveusers($nb_seconds_in_a_week),
     stats_getactiveusers($nb_seconds_in_a_month),
     stats_getactiveusers($nb_seconds_in_three_months),
-    $mode_lab
+    $additional_statistics
 );
 $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/admin/homepage/');
 

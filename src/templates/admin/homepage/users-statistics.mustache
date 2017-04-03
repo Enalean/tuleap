@@ -23,12 +23,16 @@
         <a href="/admin/lastlogins.php" class="siteadmin-homepage-stat-lastlogins">{{ recent_logins_label }}</a>
     </div>
 
-    <div class="tlp-property">
-        <label class="tlp-label">{{ mode_lab_users }}</label>
-        <span class="tlp-badge-secondary tlp-badge-outline siteadmin-homepage-stat-badge">
-            {{ nb_mode_lab }} {{ nb_mode_lab_label }}
-        </span>
-    </div>
+    {{# additional_statistics }}
+        <div class="tlp-property">
+            <label class="tlp-label">{{ label }}</label>
+            {{# badges }}
+                <span class="tlp-badge-{{ level }} tlp-badge-outline siteadmin-homepage-stat-badge">
+                    {{ label }}
+                </span>
+            {{/ badges }}
+        </div>
+    {{/ additional_statistics }}
 </section>
 <div class="tlp-pane-spacer"></div>
 <section class="tlp-pane-section">
