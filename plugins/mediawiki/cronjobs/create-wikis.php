@@ -66,16 +66,16 @@ while ( $row = db_fetch_array($project_res) ) {
 		cron_debug("  Project dir $project_dir exists, so I assume the project already exists.");
 	} else {
 		// Create the DB
-		$schema = "plugin_mediawiki_$project";
+		$database = "plugin_mediawiki_$project";
 		// Sanitize schema name
-		$schema = strtr($schema, "-", "_");
+		$database = strtr($database, "-", "_");
 
 		db_begin();
 
-		cron_debug("  Creating schema $schema.");
-		$res = db_query_params("CREATE SCHEMA $schema", array());
+		cron_debug("  Creating database $database.");
+		$res = db_query_params("CREATE DATABASE $database", array());
 		if (!$res) {
-			$err =  "Error: Schema Creation Failed: " .
+			$err =  "Error: Database Creation Failed: " .
 				db_error();
 			cron_debug($err);
 			cron_entry(23,$err);
@@ -93,7 +93,7 @@ while ( $row = db_fetch_array($project_res) ) {
 			exit;
 		}
 
-		$res = db_query_params("SET search_path=$schema", array());
+		$res = db_query_params("SET search_path=$database", array());
 		if (!$res) {
 			$err =  "Error: DB Query Failed: " .
 				db_error();
@@ -114,7 +114,7 @@ while ( $row = db_fetch_array($project_res) ) {
 			exit;
 		}
 
-		$res = db_query_params("CREATE TEXT SEARCH CONFIGURATION $schema.default ( COPY = pg_catalog.english )", array());
+		$res = db_query_params("CREATE TEXT SEARCH CONFIGURATION $database.default ( COPY = pg_catalog.english )", array());
 		if (!$res) {
 			$err =  "Error: DB Query Failed: " .
 				db_error();
@@ -125,9 +125,9 @@ while ( $row = db_fetch_array($project_res) ) {
 		}
 
                 $dao = new MediawikiDao();
-                $update = $dao->addDatabase($schema, $this->project_id);
+                $update = $dao->addDatabase($database, $this->project_id);
                 if (! $update) {
-                    $err = 'Error: Mediawiki Database list update failed: (' .$schema . ':'. $this->project_id.')'. mysql_error();
+                    $err = 'Error: Mediawiki Database list update failed: (' .$database . ':'. $this->project_id.')'. mysql_error();
                     cron_debug($err);
                     cron_entry(23,$err);
                     db_rollback();

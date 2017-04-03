@@ -221,17 +221,17 @@ class MediaWikiInstantiater {
     }
 
     private function createDatabase($mediawiki_path) {
-        $schema = strtr('plugin_mediawiki_' . $this->project_id, '-', '_');
+        $database   = strtr('plugin_mediawiki_' . $this->project_id, '-', '_');
         $table_file = $mediawiki_path . '/maintenance/tables.sql';
-        $main_db = ForgeConfig::get('sys_dbname');
+        $main_db    = ForgeConfig::get('sys_dbname');
 
         db_query('START TRANSACTION;');
 
         try {
-            $this->logger->info('Creating schema ' . $schema);
-            $create_db = db_query_params('CREATE SCHEMA ' . $schema, array());
+            $this->logger->info('Creating database ' . $database);
+            $create_db = db_query_params('CREATE DATABASE ' . $database, array());
             if (!$create_db) {
-                throw new Exception('Error: Schema Creation Failed: ' . db_error());
+                throw new Exception('Error: Database Creation Failed: ' . db_error());
             }
 
             $this->logger->info('Updating mediawiki database.');
@@ -239,9 +239,9 @@ class MediaWikiInstantiater {
                 throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
             }
 
-            $this->logger->info('Using schema: ' . $schema);
-            $use_new_schema = db_query('USE ' . $schema);
-            if (!$use_new_schema) {
+            $this->logger->info('Using database: ' . $database);
+            $use_new_database = db_query('USE ' . $database);
+            if (!$use_new_database) {
                 throw new Exception('Error: DB Query Failed: ' . db_error());
             }
 
@@ -251,9 +251,9 @@ class MediaWikiInstantiater {
                 throw new Exception('Error: Mediawiki Database Creation Failed: ' . db_error());
             }
 
-            $this->logger->info('Updating list of mediawiki databases (' . $schema . ')');
+            $this->logger->info('Updating list of mediawiki databases (' . $database . ')');
             db_query('USE '.$main_db);
-            $update = $this->dao->addDatabase($schema, $this->project_id);
+            $update = $this->dao->addDatabase($database, $this->project_id);
             if (! $update) {
                 throw new Exception('Error: Mediawiki Database list update failed: ' . mysql_error());
             }
@@ -264,7 +264,7 @@ class MediaWikiInstantiater {
 
         db_query('COMMIT;');
 
-        $this->logger->info('Using schema: ' . $main_db);
+        $this->logger->info('Using database: ' . $main_db);
         db_query('USE '.$main_db);
     }
 
