@@ -69,6 +69,7 @@ menu	login_ssl	Identification sécurisée (SSL)
 menu	logout	Sortir
 menu	my_account	Mon compte
 menu	my_personal_page	Ma page personnelle
+menu	administration	Administration
 menu	mypage	Ma page
 menu	new_project	Nouveau projet
 menu	new_releases	Sorties récentes
@@ -98,4 +99,3 @@ searchbox	softwaregroup	Logiciel/Groupe
 searchbox	task	Tâches
 searchbox	tasks	Les tâches de ce projet
 searchbox	trackers	Le suivi de ce projet
-

@@ -32,6 +32,7 @@ require_once 'NavBarItemPresentersCollection.php';
 require_once 'NavBarItemPresentersCollectionBuilder.php';
 require_once 'NavBarItemPresenter.php';
 require_once 'NavBarItemProjectsPresenter.php';
+require_once 'NavBarItemAdminPresenter.php';
 require_once 'NavBarItemLinkPresenter.php';
 require_once 'NavBarItemDropdownPresenter.php';
 require_once 'NavBarItemDropdownSectionPresenter.php';

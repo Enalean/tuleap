@@ -62,6 +62,21 @@ class FlamingParrot_NavBarPresenter {
      */
     private $url_redirect;
 
+    /**
+     * @var string
+     */
+    public $logout_label;
+
+    /**
+     * @var string
+     */
+    public $bookmark_label;
+
+    /**
+     * @var string
+     */
+    public $my_account_label;
+
     public function __construct(
         $imgroot,
         PFUser $user,
@@ -92,6 +107,10 @@ class FlamingParrot_NavBarPresenter {
         $this->user_actions           = $user_actions;
         $this->logout_csrf            = $logout_csrf;
         $this->url_redirect           = $url_redirect;
+
+        $this->logout_label     = $GLOBALS['Language']->getText('include_menu', 'logout');
+        $this->bookmark_label   = $GLOBALS['Language']->getText('include_menu','bookmark_this_page');
+        $this->my_account_label = $GLOBALS['Language']->getText('my_index','account_maintenance');
     }
 
     public function imgroot() {
@@ -108,6 +127,10 @@ class FlamingParrot_NavBarPresenter {
 
     public function user_real_name() {
         return $this->user->getRealName();
+    }
+
+    public function user_login_name() {
+        return "@".$this->user->getUnixName();
     }
 
     public function has_user_avatar() {
@@ -141,16 +164,8 @@ class FlamingParrot_NavBarPresenter {
         return urlencode($this->request_uri);
     }
 
-    public function my_index_text() {
-        return $GLOBALS['Language']->getText('my_index','account_maintenance');
-    }
-
     public function account_options_text() {
         return $GLOBALS['Language']->getText('account_options','preferences');
-    }
-
-    public function include_menu_text() {
-        return $GLOBALS['Language']->getText('include_menu','logout');
     }
 
     public function menu_home_text() {
@@ -165,16 +180,8 @@ class FlamingParrot_NavBarPresenter {
         return $GLOBALS['Language']->getText('include_menu','new_user');
     }
 
-    public function include_menu_bookmark_this_page_text() {
-        return $GLOBALS['Language']->getText('include_menu','bookmark_this_page');
-    }
-
     public function search_placeholder() {
         return $GLOBALS['Language']->getText('include_menu','search');
-    }
-
-    public function nav_user_class() {
-        return $this->getClassnameNavItemActive('/account/');
     }
 
     public function request_is_post() {

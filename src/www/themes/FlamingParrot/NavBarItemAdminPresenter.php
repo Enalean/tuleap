@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class FlamingParrot_NavBarItemPresenter {
+class FlamingParrot_NavBarItemAdminPresenter extends FlamingParrot_NavBarItemPresenter
+{
 
-    public $is_link     = false;
-    public $is_dropdown = false;
-    public $is_projects = false;
-    public $is_admin    = false;
+    public $is_admin = true;
 
-    public $id;
-    public $is_active;
+    public $href;
+    public $label;
 
-    public function __construct($id, $is_active) {
-        $this->id        = $id;
-        $this->is_active = $is_active;
+    public function __construct($id, $is_active, $href, $label)
+    {
+        parent::__construct($id, $is_active);
+        $this->href  = $href;
+        $this->label = $label;
     }
 }
