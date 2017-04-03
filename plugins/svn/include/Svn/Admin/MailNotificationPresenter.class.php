@@ -45,6 +45,11 @@ class MailNotificationPresenter extends BaseAdminPresenter{
     public $repository_name;
     public $repository_full_name;
     public $no_notifications_message;
+    public $list_mails;
+
+    public $edit;
+    public $save;
+    public $cancel;
 
     public function __construct(
         Repository $repository,
@@ -78,6 +83,10 @@ class MailNotificationPresenter extends BaseAdminPresenter{
         $this->no_notifications_message      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'no_notifications_message');
         $this->add_notification              = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'add_notification');
         $this->delete_selected_notifications = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'delete_selected_notifications');
+
+        $this->edit   = dgettext('tuleap-svn', 'Edit');
+        $this->save   = dgettext('tuleap-svn', 'Save');
+        $this->cancel = dgettext('tuleap-svn', 'Cancel');
 
         $this->sections = new SectionsPresenter($repository);
     }

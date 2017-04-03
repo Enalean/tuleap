@@ -1,0 +1,8 @@
+msgid "Cancel"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Save"
+msgstr ""
