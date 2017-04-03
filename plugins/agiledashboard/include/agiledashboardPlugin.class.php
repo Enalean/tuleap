@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 
@@ -466,7 +468,8 @@ class AgileDashboardPlugin extends Plugin {
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
             PlanningFactory::build(),
-            $this->getMonoMilestoneChecker()
+            $this->getMonoMilestoneChecker(),
+            $this->getMonoMilestoneItemsFinder()
         );
     }
 
@@ -934,5 +937,13 @@ class AgileDashboardPlugin extends Plugin {
     private function getMonoMilestoneChecker()
     {
         return new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->getPlanningFactory());
+    }
+
+    private function getMonoMilestoneItemsFinder()
+    {
+        return new MonoMilestoneItemsFinder(
+            new MonoMilestoneBacklogItemDao(),
+            $this->getArtifactFactory()
+        );
     }
 }
