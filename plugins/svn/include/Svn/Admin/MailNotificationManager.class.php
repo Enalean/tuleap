@@ -68,7 +68,7 @@ class MailNotificationManager {
     public function removeSvnNotification(Repository $repository, $selected_paths) {
         if (is_array($selected_paths) && !empty($selected_paths)) {
             foreach ($selected_paths as $path_to_delete) {
-                if (! $this->dao->deleteSvnMailingList($repository->getId(), $path_to_delete)) {
+                if (! $this->dao->deleteNotification($repository->getId(), $path_to_delete)) {
                     throw new CannotDeleteMailNotificationException ($GLOBALS['Language']->getText('plugin_svn_admin_notification','delete_error'));
                 }
             }

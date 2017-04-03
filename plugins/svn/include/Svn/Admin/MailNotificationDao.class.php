@@ -44,13 +44,17 @@ class MailNotificationDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function deleteSvnMailingList($repository_id, $path) {
+    public function deleteNotification($repository_id, $path)
+    {
         $path          = $this->da->quoteSmart($path);
         $repository_id = $this->da->escapeInt($repository_id);
 
-        $sql = "DELETE FROM plugin_svn_notification
+        $sql = "DELETE n.*, u.*
+                FROM plugin_svn_notification AS n
+                    LEFT JOIN plugin_svn_notification_users AS u ON (n.id = u.notification_id)
                 WHERE svn_path      = $path
                   AND repository_id = $repository_id";
+
         return $this->update($sql);
     }
 
