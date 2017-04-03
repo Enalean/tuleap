@@ -87,47 +87,47 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    function testNoDefaultValue() {
+    public function testNoDefaultValue() {
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $this->assertFalse($field->hasDefaultValue());
     }
-    
+
     function testGetChangesetValue() {
         $value_dao = new MockTracker_FormElement_Field_Value_ArtifactLinkDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValueAt(0, 'valid', true);
         $dar->setReturnValueAt(0, 'getRow', array(
-                                                'id' => 123, 
-                                                'field_id' => 1, 
-                                                'artifact_id' => '999', 
-                                                'keyword' => 'bug', 
+                                                'id' => 123,
+                                                'field_id' => 1,
+                                                'artifact_id' => '999',
+                                                'keyword' => 'bug',
                                                 'group_id' => '102',
-                                                'tracker_id' => '456', 
+                                                'tracker_id' => '456',
                                                 'nature' => '',
                                                 'last_changeset_id' => '789'));
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
         stub($value_dao)->searchReverseLinksById()->returnsEmptyDar();
-        
+
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $field->setReturnReference('getValueDao', $value_dao);
-        
+
         $this->assertIsA($field->getChangesetValue($this->changeset, 123, false), 'Tracker_Artifact_ChangesetValue_ArtifactLink');
     }
-    
+
     function testGetChangesetValue_doesnt_exist() {
         $value_dao = new MockTracker_FormElement_Field_Value_ArtifactLinkDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('getRow', false);
         $value_dao->setReturnReference('searchById', $dar);
         stub($value_dao)->searchReverseLinksById()->returnsEmptyDar();
-        
+
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $field->setReturnReference('getValueDao', $value_dao);
-        
+
         $this->assertNotNull($field->getChangesetValue($this->changeset, 123, false));
     }
-    
+
     function testFetchRawValue() {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $art_ids = array('123, 132, 999');
@@ -135,130 +135,33 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $value->setReturnReference('getArtifactIds', $art_ids);
         $this->assertEqual($f->fetchRawValue($value), '123, 132, 999');
     }
-    
-    public function testIsValidRequiredFieldWithExistingValues() {
+
+    public function testIsValidRequiredFieldWithExistingValues()
+    {
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $field->setReturnValue('isRequired', true);
 
-        $field->setReturnValue('getArtifactFactory', $this->artifact_factory);
-
-        $tracker = stub('Tracker')->isDeleted()->returns(false);
-        stub($tracker)->isProjectAllowedToUseNature()->returns(false);
-
-        $artifact_123 = stub('Tracker_Artifact')->getTracker()->returns($tracker);
-        $artifact_321 = stub('Tracker_Artifact')->getTracker()->returns($tracker);
-        $artifact_999 = stub('Tracker_Artifact')->getTracker()->returns($tracker);
-
-        stub($this->artifact_factory)->getArtifactById('123')->returns($artifact_123);
-        stub($this->artifact_factory)->getArtifactById('321')->returns($artifact_321);
-        stub($this->artifact_factory)->getArtifactById('999')->returns($artifact_999);
-        stub($this->artifact_factory)->getArtifactById('666')->returns(null);
-        stub($this->artifact_factory)->getArtifactById('toto')->returns(null);
-
         $ids = array(123);
-        $cv = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
+        $cv  = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
         $cv->setReturnReference('getArtifactIds', $ids);
         $c = new MockTracker_Artifact_Changeset();
         $c->setReturnReference('getValue', $cv);
-        $artifact = mock('Tracker_Artifact');
 
+        $artifact = mock('Tracker_Artifact');
+        $tracker  = mock('Tracker');
         stub($artifact)->getLastChangeset()->returns($c);
         stub($artifact)->getTracker()->returns($tracker);
 
         $field->setReturnReference('getLastChangesetValue', $cv);
 
-        $this->assertTrue($field->isValid($artifact, array('new_values' => '123')));
-        $this->assertFalse($field->isValid($artifact, array('new_values' => '666')));
-        $this->assertFalse($field->isValid($artifact, array('new_values' => '123, 666')));
-        $this->assertFalse($field->isValid($artifact, array('new_values' => '123,666')));
-        $this->assertTrue($field->isValid($artifact, array('new_values' => '123          ,   321, 999')));
-        $this->assertTrue($field->isValid($artifact, array('new_values' => ''))); // existing values
-        $this->assertFalse($field->isValid($artifact, array('new_values' => '123, toto')));
         $this->assertTrue($field->isValidRegardingRequiredProperty($artifact, null));  // existing values
-        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, array('new_values' => '', 'removed_values'=> '123')));
+        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, array('new_values' => '', 'removed_values' => '123')));
     }
 
-    function testIsValid_NatureExists() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-
-        $nature_dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
-        stub($nature_dao)->getFromShortname()->returns(array('shortname' => 'is_reported_in', 'forward_label' => '', 'reverse_label' => '', 'is_used' => true));
-        $nature_presenter_factory = new NaturePresenterFactory($nature_dao);
-        $f->setReturnValue('getNaturePresenterFactory', $nature_presenter_factory);
-
-        $a = new MockTracker_Artifact();
-        $tracker = mock('Tracker');
-        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
-        $a->setReturnValue('getTracker', $tracker);
-        stub($this->artifact_factory)->getArtifactById('1')->returns($a);
-
-        $this->assertTrue($f->isValid($a, array('new_values' => '1', 'natures' => array('1' => 'is_reported_in'))));
-    }
-
-    function testIsValid_NatureIsChild() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-
-        $nature_dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
-        $nature_presenter_factory = new NaturePresenterFactory($nature_dao);
-        $f->setReturnValue('getNaturePresenterFactory', $nature_presenter_factory);
-
-        $a = new MockTracker_Artifact();
-        $tracker = mock('Tracker');
-        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
-        $a->setReturnValue('getTracker', $tracker);
-        stub($this->artifact_factory)->getArtifactById('1')->returns($a);
-
-        $this->assertTrue($f->isValid($a, array('new_values' => '1', 'natures' => array('1' => '_is_child'))));
-    }
-
-    function testIsValid_NatureEmpty() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-
-        $nature_dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
-        $nature_presenter_factory = new NaturePresenterFactory($nature_dao);
-        $f->setReturnValue('getNaturePresenterFactory', $nature_presenter_factory);
-
-        $a = new MockTracker_Artifact();
-        $tracker = mock('Tracker');
-        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
-        $a->setReturnValue('getTracker', $tracker);
-        stub($this->artifact_factory)->getArtifactById('1')->returns($a);
-
-        $this->assertTrue($f->isValid($a, array('new_values' => '1', 'natures' => array('1' => ''))));
-    }
-
-    function testIsValid_NatureDoesNotExist() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-
-        $nature_dao = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
-        $nature_presenter_factory = new NaturePresenterFactory($nature_dao);
-        $f->setReturnValue('getNaturePresenterFactory', $nature_presenter_factory);
-
-        $a = new MockTracker_Artifact();
-        $tracker = mock('Tracker');
-        stub($tracker)->isProjectAllowedToUseNature()->returns(true);
-        $a->setReturnValue('getTracker', $tracker);
-        stub($this->artifact_factory)->getArtifactById('1')->returns($a);
-
-        $this->assertFalse($f->isValid($a, array('new_values' => '1', 'natures' => array('1' => 'blalalala'))));
-    }
-
-    public function testIsValidRequiredFieldWithoutExistingValues() {
+    public function testIsValidRequiredFieldWithoutExistingValues()
+    {
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $field->setReturnValue('isRequired', true);
-
-        $field->setReturnValue('getArtifactFactory', $this->artifact_factory);
-
-        $tracker = stub('Tracker')->isDeleted()->returns(false);
-        $artifact_123 = stub('Tracker_Artifact')->getTracker()->returns($tracker);
-        $artifact_321 = stub('Tracker_Artifact')->getTracker()->returns($tracker);
-        $artifact_999 = stub('Tracker_Artifact')->getTracker()->returns($tracker);
-
-        stub($this->artifact_factory)->getArtifactById('123')->returns($artifact_123);
-        stub($this->artifact_factory)->getArtifactById('321')->returns($artifact_321);
-        stub($this->artifact_factory)->getArtifactById('999')->returns($artifact_999);
-        stub($this->artifact_factory)->getArtifactById('666')->returns(null);
-        stub($this->artifact_factory)->getArtifactById('toto')->returns(null);
 
         $ids = array();
         $cv = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
@@ -268,65 +171,42 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $a = new MockTracker_Artifact();
         $a->setReturnReference('getLastChangeset', $c);
 
-        stub($tracker)->isProjectAllowedToUseNature()->returns(false);
-        $a->setReturnValue('getTracker', $tracker);
-        
-        $this->assertTrue($field->isValid($a, array('new_values' => '123')));
-        $this->assertFalse($field->isValid($a, array('new_values' => '666')));
-        $this->assertFalse($field->isValid($a, array('new_values' => '123, 666')));
-        $this->assertFalse($field->isValid($a, array('new_values' => '123,666')));
-        $this->assertTrue($field->isValid($a, array('new_values' => '123          ,   321, 999')));
         $this->assertFalse($field->isValidRegardingRequiredProperty($a, array('new_values' => '')));
-        $this->assertFalse($field->isValid($a, array('new_values' => '123, toto')));
         $this->assertFalse($field->isValidRegardingRequiredProperty($a, null));
     }
-    
-    function testIsValidNotRequiredField() {
-        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
-        $f->setReturnValue('isRequired', false);
-        
-        $a = new MockTracker_Artifact();
 
-        $tracker = mock('Tracker');
-        stub($tracker)->isProjectAllowedToUseNature()->returns(false);
-        $a->setReturnValue('getTracker', $tracker);
-
-        $this->assertTrue($f->isValid($a, array('new_values' => '')));
-        $this->assertTrue($f->isValid($a, null));
-    }
-    
     function testSoapAvailableValues() {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $this->assertNull($f->getSoapAvailableValues());
     }
-    
+
     function testIsValid_AddsErrorIfARequiredFieldIsAnArrayWithoutNewValues() {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $f->setReturnValue('isRequired', true);
-        
+
         $a = new MockTracker_Artifact();
         $a->setReturnValue('getLastChangeset', false);
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, array('new_values' => '')));
         $this->assertTrue($f->hasErrors());
 
     }
-    
+
     function testIsValid_AddsErrorIfARequiredFieldValueIsAnEmptyString() {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $f->setReturnValue('isRequired', true);
-        
+
         $a = new MockTracker_Artifact();
         $a->setReturnValue('getLastChangeset', false);
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertTrue($f->hasErrors());
     }
-    
+
     public function itReturnsAnEmptyListWhenThereAreNoValuesInTheChangeset() {
         $field = anArtifactLinkField()->build();
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('getValue', null, array($this));
         $user = aUser()->build();
-        
+
         $artifacts = $field->getLinkedArtifacts($changeset, $user);
         $this->assertIdentical(array(), $artifacts);
     }
@@ -344,17 +224,17 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
     public function itCreatesAListOfArtifactsBasedOnTheIdsInTheChangesetField() {
         $user = aUser()->build();
-        
+
         $artifact_1 = mock('Tracker_Artifact');
         stub($artifact_1)->getId()->returns(123);
         stub($artifact_1)->userCanView()->returns(true);
         $artifact_2 = mock('Tracker_Artifact');
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView()->returns(true);
-        
+
         $field = anArtifactLinkField()->build();
         $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
-        
+
         $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
 
         $artifacts          = $field->getLinkedArtifacts($changeset, $user);
@@ -440,13 +320,13 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $artifact = mock('Tracker_Artifact');
         stub($artifact)->getId()->returns(123);
         stub($artifact)->userCanView()->returns(true);
-        
+
         $field = anArtifactLinkField()->build();
         $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact)));
-        
+
         $non_existing_id = 666;
         $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, $non_existing_id));
-        
+
         $artifacts          = $field->getLinkedArtifacts($changeset, $user);
         $expected_artifacts = array($artifact);
         $this->assertEqual($expected_artifacts, $artifacts);
@@ -472,16 +352,16 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
     public function itReturnsOnlyArtifactsAccessibleByGivenUser() {
         $user = aUser()->build();
-        
+
         $artifact_1 = mock('Tracker_Artifact');
         stub($artifact_1)->getId()->returns(123);
         $artifact_2 = mock('Tracker_Artifact');
         stub($artifact_2)->getId()->returns(345);
         stub($artifact_2)->userCanView($user)->returns(true);
-        
+
         $field = anArtifactLinkField()->build();
         $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
-        
+
         $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
 
         $artifacts          = $field->getLinkedArtifacts($changeset, $user);
@@ -562,7 +442,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('getValue', $changeset_value, array($field));
         return $changeset;
-        
+
     }
 
     private function GivenAnArtifactFactory($artifacts) {
@@ -571,7 +451,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
             $factory->setReturnValue('getArtifactById', $a, array($a->getId()));
         }
         return $factory;
-        
+
     }
 }
 
