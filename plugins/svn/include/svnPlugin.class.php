@@ -94,6 +94,8 @@ class SvnPlugin extends Plugin {
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
+        bindtextdomain('tuleap-svn', __DIR__.'/../site-content');
+
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -416,6 +418,9 @@ class SvnPlugin extends Plugin {
         // Only show the javascript if we're actually in the svn pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/svn.js"></script>';
+        }
+        if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
+            echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
     }
 

@@ -120,26 +120,9 @@ class AdminController
         $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
 
         $is_path_valid = $request->valid($valid_path) && $form_path !== '';
-        if (! $is_path_valid) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
-            );
-        }
-        if (! empty($invalid_mails)) {
-            $GLOBALS['Response']->addFeedback(
-                'warning',
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_bad_adr', $invalid_mails)
-            );
-        }
-        if (empty($valid_mails)) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_fail')
-            );
-        }
+        $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
 
-        if(! empty($valid_mails) && $is_path_valid) {
+        if(!empty($valid_mails) && $is_path_valid) {
             $mail_notification = new MailNotification($repository, $valid_mails, $form_path);
             try {
                 $this->mail_notification_manager->create($mail_notification);
@@ -155,11 +138,50 @@ class AdminController
             }
         }
 
-        $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(
-            array('group_id' => $request->getProject()->getid(),
-                  'repo_id'  => $request->get('repo_id'),
-                  'action'   => 'display-mail-notification'
-            )));
+        $this->redirectOnDisplayNotification($request);
+    }
+
+    public function updateMailingList(HTTPRequest $request)
+    {
+        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+
+        $token = $this->generateToken($request->getProject(), $repository);
+        $token->check();
+
+        $notification_to_update = $request->get('notification_update');
+
+        if ($notification_to_update) {
+            $paths    = array_keys($notification_to_update);
+            $old_path = $paths[0];
+            $new_path = $notification_to_update[$old_path]['path'];
+            $emails   = $notification_to_update[$old_path]['emails'];
+
+            $valid_path    = new Valid_String($new_path);
+            $list_mails    = new MailReceivedFromUserExtractor($emails);
+            $valid_mails   = join(', ', $list_mails->getValidAdresses());
+            $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
+
+            $is_path_valid = $request->valid($valid_path) && $new_path !== '';
+            $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
+
+            if (! empty($valid_mails) && $is_path_valid) {
+                $email_notification = new MailNotification($repository, $valid_mails, $new_path);
+                try {
+                    $this->mail_notification_manager->update($old_path, $email_notification);
+                    $GLOBALS['Response']->addFeedback(
+                        'info',
+                        $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
+                    );
+                } catch (CannotCreateMailHeaderException $e) {
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+                    );
+                }
+            }
+        }
+
+        $this->redirectOnDisplayNotification($request);
     }
 
     public function deleteMailingList(HTTPRequest $request) {
@@ -304,5 +326,46 @@ class AdminController
         $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(
             array('group_id' => $project_id)
         ));
+    }
+
+    /**
+     * @param $is_path_valid
+     * @param $invalid_mails
+     * @param $valid_mails
+     */
+    private function addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails)
+    {
+        if (!$is_path_valid) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
+            );
+        }
+        if (!empty($invalid_mails)) {
+            $GLOBALS['Response']->addFeedback(
+                'warning',
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_bad_adr',
+                    $invalid_mails)
+            );
+        }
+        if (empty($valid_mails)) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_fail')
+            );
+        }
+    }
+
+    /**
+     * @param HTTPRequest $request
+     */
+    private function redirectOnDisplayNotification(HTTPRequest $request)
+    {
+        $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
+                array(
+                    'group_id' => $request->getProject()->getid(),
+                    'repo_id' => $request->get('repo_id'),
+                    'action' => 'display-mail-notification'
+                )));
     }
 }

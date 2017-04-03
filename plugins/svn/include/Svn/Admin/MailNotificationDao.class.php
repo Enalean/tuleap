@@ -67,6 +67,20 @@ class MailNotificationDao extends DataAccessObject {
         return $this->update($query);
     }
 
+    public function updateByRepositoryIdAndPath($old_path, MailNotification $email_notification)
+    {
+        $old_path      = $this->da->quoteSmart($old_path);
+        $new_path      = $this->da->quoteSmart($email_notification->getPath());
+        $mailing_list  = $this->da->quoteSmart($email_notification->getNotifiedMails());
+        $repository_id = $this->da->escapeInt($email_notification->getRepository()->getId());
+
+        $sql = "UPDATE plugin_svn_notification
+                SET svn_path = $new_path, mailing_list = $mailing_list
+                WHERE repository_id = $repository_id AND svn_path = $old_path";
+
+        return $this->update($sql);
+    }
+
     public function searchByPath($repository_id, $path) {
         $repository_id        = $this->da->escapeInt($repository_id);
         $sub_paths_expression = '';

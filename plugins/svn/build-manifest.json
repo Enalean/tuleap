@@ -16,5 +16,8 @@
             ],
             "target_dir": "www/themes/FlamingParrot/css"
         }
-    }
+    },
+    "javascript": [
+        "www/scripts/svn-admin-notifications.js"
+    ]
 }

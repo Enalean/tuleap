@@ -39,6 +39,13 @@ class MailNotificationManager {
         }
     }
 
+    public function update($old_path, MailNotification $email_notification)
+    {
+        if (! $this->dao->updateByRepositoryIdAndPath($old_path, $email_notification)) {
+            throw new CannotCreateMailHeaderException ($GLOBALS['Language']->getText('plugin_svn_admin_notification','upd_header_fail'));
+        }
+    }
+
     public function getByRepository(Repository $repository) {
         $mail_notification = array();
         foreach ($this->dao->searchByRepositoryId($repository->getId()) as $row) {

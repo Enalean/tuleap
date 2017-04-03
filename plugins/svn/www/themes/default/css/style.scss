@@ -201,10 +201,10 @@ body.viewvc-epel {
                         width: 100%;
                     }
 
-                    > input {
-                        margin: 0;
+                    > input, .svn-notification-edit-input {
                         width: 100%;
                         height: 30px;
+                        margin: 0;
                         box-sizing: border-box;
                     }
                 }
@@ -284,4 +284,12 @@ body.viewvc-epel {
             }
         }
     }
+}
+
+.svn-notification-edit {
+    white-space: nowrap;
+}
+
+.svn-notifications-checkbox-cell-hidden {
+    display: none;
 }
