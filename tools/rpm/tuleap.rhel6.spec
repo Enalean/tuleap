@@ -123,6 +123,7 @@ Version: 1.2
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, subversion, mod_dav_svn, subversion-perl, highlight, tuleap-core-subversion-modperl, perl-CGI
 Requires: viewvc, viewvc-theme-tuleap
+Requires: sha1collisiondetector
 %description core-subversion
 Manage dependencies for Tuleap Subversion integration
 
