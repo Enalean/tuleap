@@ -48,6 +48,12 @@ class MailNotificationManager {
         return $mail_notification;
     }
 
+    /**
+     * @param Repository $repository
+     * @param string $path
+     *
+     * @return MailNotification[]
+     */
     public function getByPath(Repository $repository, $path) {
         $mail_notification = array();
         foreach ($this->dao->searchByPath($repository->getId(), $path) as $row) {

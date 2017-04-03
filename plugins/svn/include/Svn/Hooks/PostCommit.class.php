@@ -25,10 +25,10 @@
 namespace Tuleap\Svn\Hooks;
 
 use PFUser;
+use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Admin\MailHeaderManager;
-use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Commit\CannotFindSVNCommitInfoException;
 use Tuleap\Svn\Admin\MailReference;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
@@ -43,9 +43,14 @@ use UserManager;
 use EventManager;
 use SvnPlugin;
 
-class PostCommit {
+class PostCommit
+{
+    const PROCESS_POST_COMMIT = 'process_post_commit';
 
-     const PROCESS_POST_COMMIT = 'process_post_commit';
+    /**
+     * @var EmailsToBeNotifiedRetriever
+     */
+    private $emails_retriever;
 
     /**
      * @var EventManager
@@ -55,7 +60,6 @@ class PostCommit {
     private $reference_manager;
     private $repository_manager;
     private $mail_header_manager;
-    private $mail_notification_manager;
     private $plugin_manager;
     private $commit_info_enhancer;
     private $mail_builder;
@@ -65,7 +69,7 @@ class PostCommit {
         ReferenceManager $reference_manager,
         RepositoryManager $repository_manager,
         MailHeaderManager $mail_header_manager,
-        MailNotificationManager $mail_notification_manager,
+        EmailsToBeNotifiedRetriever $emails_retriever,
         PluginManager $plugin_manager,
         MailBuilder $mail_builder,
         CommitInfoEnhancer $commit_info_enhancer,
@@ -75,7 +79,7 @@ class PostCommit {
         $this->reference_manager         = $reference_manager;
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
-        $this->mail_notification_manager = $mail_notification_manager;
+        $this->emails_retriever          = $emails_retriever;
         $this->plugin_manager            = $plugin_manager;
         $this->commit_info_enhancer      = $commit_info_enhancer;
         $this->mail_builder              = $mail_builder;
@@ -234,19 +238,17 @@ class PostCommit {
 
     private function getNotifiedMails(Repository $repository)
     {
-        $notified_mail = array();
+        $notified_mails = array();
 
         $commit_info = $this->commit_info_enhancer->getCommitInfo();
         foreach ($commit_info->getChangedDirectories() as $path) {
-            $mailing_list = $this->mail_notification_manager->getByPath($repository, $path);
-            foreach ($mailing_list as $mail) {
-                $mail_list     = explode(",", $mail->getNotifiedMails());
-                $mail_list     = array_map('trim', $mail_list);
-                $notified_mail = array_merge($mail_list, $notified_mail);
-            }
+            $notified_mails = array_merge(
+                $notified_mails,
+                $this->emails_retriever->getEmailsToBeNotifiedForPath($repository, $path)
+            );
         }
 
-        return array_unique($notified_mail);
+        return array_unique($notified_mails);
     }
 
     private function setFrom(MailEnhancer $mail_enhancer, PFUser $user) {
