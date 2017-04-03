@@ -19,6 +19,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
+use Tuleap\Admin\Homepage\UserCounterDao;
 use Tuleap\Admin\Homepage\UsersStatisticsPresenter;
 
 require_once('pre.php');
@@ -54,29 +56,15 @@ $res = db_query("SELECT count(*) AS count FROM groups WHERE status='D'");
 $row = db_fetch_array($res);
 $deleted_projects = $row['count'];
 
-db_query("SELECT count(*) AS count FROM user WHERE status='P'");
-$row = db_fetch_array();
-$realpending_users = $row['count'];
+$builder = new NbUsersByStatusBuilder(new UserCounterDao());
+$nb_users_by_status = $builder->getNbUsersByStatusBuilder();
 
-db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
-$row = db_fetch_array();
-$validated_users = $row['count'];
-
-db_query("SELECT count(*) AS count FROM user WHERE status='R'");
-$row = db_fetch_array();
-$restricted_users = $row['count'];
-
-db_query("SELECT count(*) AS count FROM user WHERE status='A'");
-$row = db_fetch_array();
-$actif_users = $row['count'];
-
-db_query("SELECT count(*) AS count FROM user WHERE status='S'");
-$row = db_fetch_array();
-$hold_users = $row['count'];
-
-db_query("SELECT count(*) AS count FROM user WHERE status='D'");
-$row = db_fetch_array();
-$deleted_users = $row['count'];
+$realpending_users = $nb_users_by_status->getNbPending();
+$validated_users   = $nb_users_by_status->getNbAllValidated();
+$restricted_users  = $nb_users_by_status->getNbRestricted();
+$actif_users       = $nb_users_by_status->getNbActive();
+$hold_users        = $nb_users_by_status->getNbSuspended();
+$deleted_users     = $nb_users_by_status->getNbDeleted();
 
 db_query("SELECT COUNT(DISTINCT(p.user_id)) AS count
           FROM user_preferences p
