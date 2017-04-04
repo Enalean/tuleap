@@ -305,29 +305,14 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         $this->assertEqual($tracker, $this->sprint_tracker);
     }
 
-    public function itThrowsAnExceptionWhenNoTrackerIsFoundInMonoMilestoneConfiguration()
-    {
-        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(true);
-        stub($this->planning_factory)->getBacklogTrackersIds()->returns(array());
-
-        stub($this->release_milestone)->getProject()->returns($this->project);
-
-        $this->expectException('Tuleap\AgileDashboard\ScrumForMonoMilestoneDifferentThanOnePlanningException');
-
-        $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
-    }
-
     public function itRetrievesTheTrackerInMonoMilestoneConfiguration()
     {
-        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(true);
-        stub($this->planning_factory)->getBacklogTrackersIds()->returns(array($this->user_story_tracker_id));
-
         stub($this->release_milestone)->getProject()->returns($this->project);
-
-        stub($this->tracker_factory)->getTrackerById($this->user_story_tracker_id)->returns($this->user_story_tracker);
+        stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(true);
+        stub($this->release_planning)->getPlanningTracker()->returns($this->release_tracker);
 
         $tracker = $this->finder->findFirstSubmilestoneTracker($this->release_milestone);
 
-        $this->assertEqual($tracker, $this->user_story_tracker);
+        $this->assertEqual($tracker, $this->release_tracker);
     }
 }
