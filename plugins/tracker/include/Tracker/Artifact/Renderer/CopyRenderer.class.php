@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright Enalean (c) 2014 - 2016. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
 
@@ -31,9 +32,10 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_IDisplayTrackerLayout $layout,
-        NatureIsChildLinkRetriever $retriever
+        NatureIsChildLinkRetriever $retriever,
+        VisitRecorder $visit_recorder
     ) {
-        parent::__construct($event_manager, $artifact, $formelement_factory, $layout, $retriever);
+        parent::__construct($event_manager, $artifact, $formelement_factory, $layout, $retriever, $visit_recorder);
         $this->redirect->query_parameters = array(
             'tracker' => $artifact->getTrackerId(),
             'func'    => 'submit-copy-artifact',

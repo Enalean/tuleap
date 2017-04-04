@@ -31,6 +31,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const REST_ROUTE        = 'artifacts';
@@ -805,7 +807,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $this->getPriorityManager()->moveArtifactAfterWithHistoryChangeLogging($this->getId(), $target_id, $milestone_id, $project_id);
                 break;
             case 'show-in-overlay':
-                $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager());
+                $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager(), $this->getVisitRecorder());
                 $renderer->display($request, $current_user);
                 break;
             case 'get-new-changesets':
@@ -840,7 +842,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this,
                     $this->getFormElementFactory(),
                     $layout,
-                    $this->getNatureIsChildLinkRetriever()
+                    $this->getNatureIsChildLinkRetriever(),
+                    $this->getVisitRecorder()
                 );
 
                 $renderer->display($request, $current_user);
@@ -865,7 +868,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $this->getEventManager(),
                         $this, $this->getFormElementFactory(),
                         $layout,
-                        $this->getNatureIsChildLinkRetriever()
+                        $this->getNatureIsChildLinkRetriever(),
+                        $this->getVisitRecorder()
                     );
                     $renderer->display($request, $current_user);
                 }
@@ -880,6 +884,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getArtifactlinkDao() {
         return new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+    }
+
+    /**
+     * @return VisitRecorder
+     */
+    private function getVisitRecorder()
+    {
+        return new VisitRecorder(new RecentlyVisitedDao());
     }
 
     private function sendUserDoesNotHavePermissionsErrorCode() {

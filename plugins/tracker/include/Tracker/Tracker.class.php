@@ -37,6 +37,9 @@ use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 
 require_once('common/date/DateHelper.class.php');
@@ -44,7 +47,8 @@ require_once('common/widget/Widget_Static.class.php');
 
 require_once('json.php');
 
-class Tracker implements Tracker_Dispatchable_Interface {
+class Tracker implements Tracker_Dispatchable_Interface
+{
     const PERMISSION_ADMIN               = 'PLUGIN_TRACKER_ADMIN';
     const PERMISSION_FULL                = 'PLUGIN_TRACKER_ACCESS_FULL';
     const PERMISSION_ASSIGNEE            = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
@@ -980,16 +984,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
             echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_title');
             echo '</div>';
             echo '<div class="tracker-link-artifact-recentitems-way-content">';
-            if ($recent_items = $current_user->getRecentElements()) {
+            $visit_retriever            = new VisitRetriever(
+                new RecentlyVisitedDao(),
+                $this->getTrackerArtifactFactory()
+            );
+            $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts($current_user);
+            if (! empty($recently_visited_artifacts)) {
                 echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_desc');
                 echo '<ul>';
-                foreach ($recent_items as $item) {
-                    if ($item['id'] != $link_artifact_id) {
+                foreach ($recently_visited_artifacts as $artifact) {
+                    if ((int) $artifact->getId() !== $link_artifact_id) {
                         echo '<li>';
                         echo '<input type="checkbox"
                                      name="link-artifact[recent][]"
-                                     value="'. (int)$item['id'] .'" /> ';
-                        echo $item['link'];
+                                     value="'. (int) $artifact->getId() .'" /> ';
+                        echo $artifact->fetchXRefLink();
                         echo '</li>';
                     }
                 }
@@ -1049,12 +1058,24 @@ class Tracker implements Tracker_Dispatchable_Interface {
     /**
      * Display the submit form
      */
-    public function displaySubmit(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $link = null) {
+    public function displaySubmit(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $link = null)
+    {
+        $visit_recorder = new VisitRecorder(new RecentlyVisitedDao());
         if ($link) {
             $source_artifact = $this->getTrackerArtifactFactory()->getArtifactByid($link);
-            $submit_renderer = new Tracker_Artifact_SubmitOverlayRenderer($this, $source_artifact, EventManager::instance(), $layout);
+            $submit_renderer = new Tracker_Artifact_SubmitOverlayRenderer(
+                $this,
+                $source_artifact,
+                EventManager::instance(),
+                $layout, $visit_recorder
+            );
         } else {
-            $submit_renderer = new Tracker_Artifact_SubmitRenderer($this, EventManager::instance(), $layout);
+            $submit_renderer = new Tracker_Artifact_SubmitRenderer(
+                $this,
+                EventManager::instance(),
+                $layout,
+                $visit_recorder
+            );
         }
         $submit_renderer->display($request, $current_user);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2016. All rights reserved.
+ * Copyright Enalean (c) 2013-2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,6 +25,7 @@
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
 use Tuleap\Tracker\Artifact\View\Nature;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer
 {
@@ -60,10 +61,11 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_IDisplayTrackerLayout $layout,
-        NatureIsChildLinkRetriever $retriever
+        NatureIsChildLinkRetriever $retriever,
+        VisitRecorder $visit_recorder
 
     ) {
-        parent::__construct($artifact, $event_manager);
+        parent::__construct($artifact, $event_manager, $visit_recorder);
         $this->formelement_factory = $formelement_factory;
         $this->layout              = $layout;
         $this->retriever           = $retriever;
