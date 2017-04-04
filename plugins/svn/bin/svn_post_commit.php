@@ -30,6 +30,7 @@ use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
+use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -72,7 +73,9 @@ try {
         new MailHeaderManager(new MailHeaderDao()),
         new EmailsToBeNotifiedRetriever(
             new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())),
-            new UsersToNotifyDao()
+            new UsersToNotifyDao(),
+            new UgroupsToNotifyDao(),
+            new UGroupManager()
         ),
         PluginManager::instance(),
         new MailBuilder(
