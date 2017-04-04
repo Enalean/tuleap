@@ -23,7 +23,7 @@
                 <thead>
                 <tr>
                     <th>{{ monitored_path }}</th>
-                    <th>{{ notified_mails }}</th>
+                    <th class="svn-notifications-form-emails-column">{{ notified_mails }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -107,13 +107,24 @@
                         <td colspan="3">{{ no_notifications_message }}</td>
                     </tr>
                 {{/ hasNotification }}
-                <tr>
-                    <td class="notification-path"><input type="text" name="form_path" placeholder="{{ label_path }}"></td>
-                    <td class="add-notification-list"><input type="text" name="form_mailing_list" placeholder="{{ label_mail_to }}"></td>
-                    <td><button type="submit" name="create-mailing-lists" value="1" class="btn"><i class="icon-plus"></i> {{ add_notification }}</button></td>
+                <tr id="svn-notifications-row-add" class="svn-notifications-row-add-hidden">
+                    <td class="notification-path">
+                        <input type="text" id="add_path" name="notification_add[path]" placeholder="{{ label_path }}">
+                    </td>
+                    <td class="add-notification-list">
+                        <input type="text" id="add_email" name="notification_add[emails]" placeholder="{{ label_mail_to }}">
+                    </td>
+                    <td class="svn-notification-edit">
+                        <button type="submit" name="save-mailing-lists" value="1" class="btn btn-primary">{{ save }}</button>
+                        <button type="button" name="submit" class="btn svn-notification-edit-hide">{{ cancel }}</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
+            <button type="button" class="btn" id="svn-notifications-add">
+                <i class="icon-plus"></i>
+                {{ add_notification }}
+            </button>
 
             <input type="hidden" name="group_id" value="{{ project_id }}">
             <input type="hidden" name="repo_id" value="{{ repository_id }}">

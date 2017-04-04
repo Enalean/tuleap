@@ -181,10 +181,6 @@ body.viewvc-epel {
                 > td {
                     vertical-align: middle;
 
-                    &.add-notification-list {
-                        width: 100%;
-                    }
-
                     > input, .svn-notification-edit-input {
                         width: 100%;
                         height: 30px;
@@ -270,6 +266,8 @@ body.viewvc-epel {
     }
 }
 
+.svn-notifications-add-hidden,
+.svn-notifications-row-add-hidden,
 .svn-notifications-checkbox-cell-hidden {
     display: none;
 }
@@ -301,4 +299,8 @@ body.viewvc-epel {
 
 .svn-notification-form-actions {
     white-space: nowrap;
+}
+
+.svn-notifications-form-emails-column {
+    width: 100%;
 }

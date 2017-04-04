@@ -20,7 +20,6 @@
 
 namespace Tuleap\Svn\Admin;
 
-use SystemEventManager;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
@@ -29,7 +28,6 @@ use Project;
 use HTTPRequest;
 use Valid_Int;
 use Valid_String;
-use Valid_Array;
 use CSRFSynchronizerToken;
 use Logger;
 
@@ -108,15 +106,28 @@ class AdminController
             )));
     }
 
-    public function createMailingList(HTTPRequest $request) {
+    public function saveMailingList(HTTPRequest $request)
+    {
         $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
 
         $token = $this->generateToken($request->getProject(), $repository);
         $token->check();
 
-        $valid_path    = new Valid_String('form_path');
-        $form_path     = $request->get('form_path');
-        $list_mails    = new MailReceivedFromUserExtractor($request->get('form_mailing_list'));
+        $notification_to_add    = $request->get('notification_add');
+        $notification_to_update = $request->get('notification_update');
+
+        if ($notification_to_update
+            && ! empty($notification_to_update)) {
+            $this->updateMailingList($request, $repository, $notification_to_update);
+        } else {
+            $this->createMailingList($request, $repository, $notification_to_add);
+        }
+    }
+
+    public function createMailingList(HTTPRequest $request, Repository $repository, $notification_to_add) {
+        $form_path     = $notification_to_add['path'];
+        $valid_path    = new Valid_String($form_path);
+        $list_mails    = new MailReceivedFromUserExtractor($notification_to_add['emails']);
         $valid_mails   = join(', ', $list_mails->getValidAdresses());
         $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
 
@@ -142,43 +153,34 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function updateMailingList(HTTPRequest $request)
+    public function updateMailingList(HTTPRequest $request, Repository $repository, $notification_to_update)
     {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $paths    = array_keys($notification_to_update);
+        $old_path = $paths[0];
+        $new_path = $notification_to_update[$old_path]['path'];
+        $emails   = $notification_to_update[$old_path]['emails'];
 
-        $token = $this->generateToken($request->getProject(), $repository);
-        $token->check();
+        $valid_path    = new Valid_String($new_path);
+        $list_mails    = new MailReceivedFromUserExtractor($emails);
+        $valid_mails   = join(', ', $list_mails->getValidAdresses());
+        $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
 
-        $notification_to_update = $request->get('notification_update');
+        $is_path_valid = $request->valid($valid_path) && $new_path !== '';
+        $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
 
-        if ($notification_to_update) {
-            $paths    = array_keys($notification_to_update);
-            $old_path = $paths[0];
-            $new_path = $notification_to_update[$old_path]['path'];
-            $emails   = $notification_to_update[$old_path]['emails'];
-
-            $valid_path    = new Valid_String($new_path);
-            $list_mails    = new MailReceivedFromUserExtractor($emails);
-            $valid_mails   = join(', ', $list_mails->getValidAdresses());
-            $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
-
-            $is_path_valid = $request->valid($valid_path) && $new_path !== '';
-            $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
-
-            if (! empty($valid_mails) && $is_path_valid) {
-                $email_notification = new MailNotification(0, $repository, $valid_mails, $new_path);
-                try {
-                    $this->mail_notification_manager->update($old_path, $email_notification);
-                    $GLOBALS['Response']->addFeedback(
-                        'info',
-                        $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
-                    );
-                } catch (CannotCreateMailHeaderException $e) {
-                    $GLOBALS['Response']->addFeedback(
-                        'error',
-                        $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
-                    );
-                }
+        if (! empty($valid_mails) && $is_path_valid) {
+            $email_notification = new MailNotification(0, $repository, $valid_mails, $new_path);
+            try {
+                $this->mail_notification_manager->update($old_path, $email_notification);
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
+                );
+            } catch (CannotCreateMailHeaderException $e) {
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+                );
             }
         }
 
@@ -343,17 +345,17 @@ class AdminController
      */
     private function addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails)
     {
-        if (!$is_path_valid) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
-            );
-        }
-        if (!empty($invalid_mails)) {
+        if (! empty($invalid_mails)) {
             $GLOBALS['Response']->addFeedback(
                 'warning',
                 $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_bad_adr',
                     $invalid_mails)
+            );
+        }
+        if (! $is_path_valid) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
             );
         }
         if (empty($valid_mails)) {
