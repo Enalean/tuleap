@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,7 +63,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->tracker_factory,
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -93,7 +93,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->tracker_factory,
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
         );
 
         expect($this->kanban_manager)->createKanban()->never();
@@ -123,7 +123,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->tracker_factory,
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
         );
 
         expect($this->kanban_manager)->createKanban()->never();

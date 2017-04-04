@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard;
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use TuleapTestCase;
 
 class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
@@ -50,7 +51,7 @@ class ScrumForMonoMilestoneCheckerTest extends TuleapTestCase
     public function setUp()
     {
         $this->user                     = mock('PFUser');
-        $this->scrum_mono_milestone_dao = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneDao');
+        $this->scrum_mono_milestone_dao = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao');
         $this->planning_factory               = mock('PlanningFactory');
 
         $this->scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(

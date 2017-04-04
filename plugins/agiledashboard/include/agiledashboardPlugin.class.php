@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';

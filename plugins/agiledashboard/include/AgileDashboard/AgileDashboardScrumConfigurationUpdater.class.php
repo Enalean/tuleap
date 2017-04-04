@@ -1,10 +1,6 @@
 <?php
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDisabler;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneEnabler;
-
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +17,10 @@ use Tuleap\AgileDashboard\ScrumForMonoMilestoneEnabler;
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 
 class AgileDashboardScrumConfigurationUpdater {
 

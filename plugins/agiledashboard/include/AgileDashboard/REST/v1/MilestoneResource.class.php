@@ -21,8 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;

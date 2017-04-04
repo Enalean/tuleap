@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\CannotAddMoreThanOnePlanningInScrumMonoMilestone;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
-use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\XML\Import\ImportConfig;
 
 require_once 'common/mvc2/PluginController.class.php';
@@ -31,8 +30,6 @@ require_once 'common/mvc2/PluginController.class.php';
 /**
  * Handles the HTTP actions related to a planning.
  *
- * TODO: Rename this file to PlanningController.class.php, to be consistent with
- * other classes.
  */
 class Planning_Controller extends MVC2_PluginController {
 

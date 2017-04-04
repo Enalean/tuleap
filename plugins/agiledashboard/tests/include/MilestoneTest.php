@@ -27,12 +27,12 @@ abstract class Planning_MilestoneTest extends TuleapTestCase {
         $this->project   = stub('Project')->getID()->returns(123);
         $this->planning  = aPlanning()->withId(9999)->build();
     }
-    
+
     public function itHasAPlanning() {
         $this->assertEqual($this->planning, $this->milestone->getPlanning());
         $this->assertEqual($this->planning->getId(), $this->milestone->getPlanningId());
     }
-    
+
     public function itHasAProject() {
         $this->assertEqual($this->project, $this->milestone->getProject());
         $this->assertEqual($this->project->getID(), $this->milestone->getGroupId());
@@ -50,13 +50,13 @@ class Planning_NoMilestoneTest extends Planning_MilestoneTest {
 class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
 
     /**
-     * @var \Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker
+     * @var \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
     protected $project;
     protected $planning;
     private $artifact;
-    
+
     /**
      * @var Planning_Milestone
      */
@@ -70,7 +70,7 @@ class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
         $this->planning = aPlanning()->build();
         $this->artifact = aMockArtifact()->withTitle('Foo')->build();
 
-        $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
 
         $this->milestone = new Planning_ArtifactMilestone(
             $this->project,
@@ -79,11 +79,11 @@ class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
             $this->scrum_mono_milestone_checker
         );
     }
-    
+
     public function itRepresentsAnArtifact() {
         $this->assertEqual($this->milestone->getArtifact(), $this->artifact);
     }
-    
+
     public function itDelegatesArtifactIdRetrieval() {
         $this->assertEqual($this->milestone->getArtifactId(), $this->artifact->getId());
     }
@@ -112,10 +112,10 @@ class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
 
         $this->assertEqual($this->milestone->getPlannedArtifacts(), $planned_artifacts);
     }
-    
+
     public function itMayBeNull() {
         $this->milestone = new Planning_NoMilestone($this->project, $this->planning);
-        
+
         $this->assertNull($this->milestone->getArtifact());
         $this->assertNull($this->milestone->getArtifactId());
         $this->assertNull($this->milestone->getArtifactTitle());
@@ -136,7 +136,7 @@ class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
 
 class Milestone_linkedArtifactTest extends TuleapTestCase {
     /**
-     * @var \Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker
+     * @var \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
 
@@ -149,7 +149,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
     {
         parent::setUp();
         $this->project                      = mock('Project');
-        $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
     }
 
     public function itGetsLinkedArtifactsOfTheRootLevelArtifact()

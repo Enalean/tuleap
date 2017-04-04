@@ -19,8 +19,8 @@
  */
 
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 
 class AgileDashboardRouterBuilder {

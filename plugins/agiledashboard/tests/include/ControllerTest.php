@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,7 +46,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->current_user           = stub('PFUser')->getId()->returns(666);
         $this->request                = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
         $this->planning_factory       = new MockPlanningFactory();
-        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
         $this->scrum_planning_filter  = mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter');
         $this->planning_controller    = new Planning_Controller(
             $this->request,
@@ -181,7 +181,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->planning_factory       = mock('PlanningFactory');
         $this->tracker_factory        = mock('TrackerFactory');
         $hierarchy_checker            = mock('AgileDashboard_HierarchyChecker');
-        $scrum_mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $scrum_mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
 
         $kanban_factory = stub('AgileDashboard_KanbanFactory')->getKanbanTrackerIds()->returns(array());
 
@@ -345,7 +345,7 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 $kanban_factory,
                 mock('PlanningPermissionsManager'),
                 mock('AgileDashboard_HierarchyChecker'),
-                mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker'),
+                mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
                 $planning_filter
             )
         );

@@ -25,7 +25,7 @@ use PFUser;
 use Planning;
 use Planning_TrackerPresenter;
 use PlanningFactory;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
 class ScrumPlanningFilter
 {
