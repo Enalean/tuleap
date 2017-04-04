@@ -190,9 +190,10 @@ class Dao extends DataAccessObject
             return false;
         }
 
-        $sql = "DELETE n.*, u.*
+        $sql = "DELETE n.*, u.*, g.*
                 FROM plugin_svn_notification AS n
                     LEFT JOIN plugin_svn_notification_users AS u ON(n.id = u.notification_id)
+                    LEFT JOIN plugin_svn_notification_ugroups AS g ON(n.id = g.notification_id)
                 WHERE n.repository_id = $repository_id";
         if (! $this->update($sql)) {
             $this->da->rollback();

@@ -48,6 +48,12 @@ CREATE TABLE plugin_svn_notification_users(
     PRIMARY KEY (notification_id, user_id)
 );
 
+CREATE TABLE plugin_svn_notification_ugroups(
+    notification_id INT(11) UNSIGNED NOT NULL,
+    ugroup_id INT(11) NOT NULL,
+    PRIMARY KEY (notification_id, ugroup_id)
+);
+
 CREATE TABLE plugin_svn_accessfile_history(
     id INT(11) UNSIGNED NOT NULL auto_increment PRIMARY KEY,
     version_number int(11) NOT NULL,

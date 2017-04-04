@@ -49,9 +49,10 @@ class MailNotificationDao extends DataAccessObject {
         $path          = $this->da->quoteSmart($path);
         $repository_id = $this->da->escapeInt($repository_id);
 
-        $sql = "DELETE n.*, u.*
+        $sql = "DELETE n.*, u.*, g.*
                 FROM plugin_svn_notification AS n
                     LEFT JOIN plugin_svn_notification_users AS u ON (n.id = u.notification_id)
+                    LEFT JOIN plugin_svn_notification_ugroups AS g ON (n.id = g.notification_id)
                 WHERE svn_path      = $path
                   AND repository_id = $repository_id";
 
