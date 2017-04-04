@@ -120,8 +120,21 @@ class ScrumPlanningFilter
      */
     private function getPlanningTrackerFilteredForMonoMilestone(PFUser $user, $project_id)
     {
-        $trackers_filtered = array();
+        $never_linked_trackers = $this->getTrackersNotInHierachy($user, $project_id);
+        $current_assignment    = $this->getPlanningTrackerForMonoMilestone($user, $project_id);
 
+        return array_merge($never_linked_trackers, $current_assignment);
+    }
+
+    /**
+     * @param PFUser $user
+     * @param $project_id
+     *
+     * @return array
+     */
+    private function getTrackersNotInHierachy(PFUser $user, $project_id)
+    {
+        $trackers_filtered  = array();
         $available_trackers = $this->planning_factory->getAvailableBacklogTrackers($user, $project_id);
 
         foreach ($available_trackers as $tracker) {
@@ -133,6 +146,29 @@ class ScrumPlanningFilter
                     'disabled' => false
                 );
             }
+        }
+
+        return $trackers_filtered;
+    }
+
+    /**
+     * @param PFUser $user
+     * @param $project_id
+     *
+     * @return array
+     */
+    private function getPlanningTrackerForMonoMilestone(PFUser $user, $project_id)
+    {
+        $trackers_filtered  = array();
+        $available_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $project_id);
+
+        foreach ($available_trackers as $tracker) {
+            $trackers_filtered[] = array(
+                'name'     => $tracker->getName(),
+                'id'       => $tracker->getId(),
+                'selected' => true,
+                'disabled' => false
+            );
         }
 
         return $trackers_filtered;
