@@ -35,10 +35,17 @@ CREATE TABLE plugin_svn_mailing_header(
 );
 
 CREATE TABLE plugin_svn_notification(
-  repository_id INT(11) UNSIGNED NOT NULL,
-  mailing_list text,
-  svn_path varchar(255) DEFAULT '/',
-  PRIMARY KEY (repository_id, svn_path)
+    id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
+    repository_id INT(11) UNSIGNED NOT NULL,
+    mailing_list text,
+    svn_path varchar(255) DEFAULT '/',
+    INDEX repo_path_idx (repository_id, svn_path)
+);
+
+CREATE TABLE plugin_svn_notification_users(
+    notification_id INT(11) UNSIGNED NOT NULL,
+    user_id INT(11) NOT NULL,
+    PRIMARY KEY (notification_id, user_id)
 );
 
 CREATE TABLE plugin_svn_accessfile_history(
