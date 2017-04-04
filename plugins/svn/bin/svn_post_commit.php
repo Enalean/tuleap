@@ -29,6 +29,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
@@ -68,7 +69,9 @@ try {
             SystemEventManager::instance()
         ),
         new MailHeaderManager(new MailHeaderDao()),
-        new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())),
+        new EmailsToBeNotifiedRetriever(
+            new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()))
+        ),
         PluginManager::instance(),
         new MailBuilder(
             TemplateRendererFactory::build(),
