@@ -122,8 +122,8 @@ class AdminController
         $is_path_valid = $request->valid($valid_path) && $form_path !== '';
         $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
 
-        if(!empty($valid_mails) && $is_path_valid) {
-            $mail_notification = new MailNotification($repository, $valid_mails, $form_path);
+        if(! empty($valid_mails) && $is_path_valid) {
+            $mail_notification = new MailNotification(0, $repository, $valid_mails, $form_path);
             try {
                 $this->mail_notification_manager->create($mail_notification);
                 $GLOBALS['Response']->addFeedback(
@@ -165,7 +165,7 @@ class AdminController
             $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
 
             if (! empty($valid_mails) && $is_path_valid) {
-                $email_notification = new MailNotification($repository, $valid_mails, $new_path);
+                $email_notification = new MailNotification(0, $repository, $valid_mails, $new_path);
                 try {
                     $this->mail_notification_manager->update($old_path, $email_notification);
                     $GLOBALS['Response']->addFeedback(

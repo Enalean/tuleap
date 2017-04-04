@@ -72,6 +72,7 @@ class MailNotificationManager {
 
     public function instantiateFromRow(array $row, Repository $repository) {
         return new MailNotification(
+            $row['id'],
             $repository,
             $row['mailing_list'],
             $row['svn_path']

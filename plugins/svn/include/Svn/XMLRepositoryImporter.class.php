@@ -201,7 +201,7 @@ class XMLRepositoryImporter
     {
         foreach($this->subscriptions as $subscription) {
             $logger->info("[svn {$this->name}] Add subscription to {$subscription['path']}: {$subscription['emails']}");
-            $notif = new MailNotification($repo, $subscription['emails'], $subscription['path']);
+            $notif = new MailNotification(0, $repo, $subscription['emails'], $subscription['path']);
             $mail_notification_manager->create($notif);
         }
     }
