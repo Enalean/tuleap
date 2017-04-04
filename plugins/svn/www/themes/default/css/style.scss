@@ -163,11 +163,6 @@ body.viewvc-epel {
                     border-left-color: #D2D2D2;
                     border-bottom: 2px solid #B2B2B2;
                     white-space: nowrap;
-
-                    &:first-child {
-                        width: 20px;
-                        text-align: center;
-                    }
                 }
             }
 
@@ -185,17 +180,6 @@ body.viewvc-epel {
 
                 > td {
                     vertical-align: middle;
-
-                    &:first-child {
-                        width: 20px;
-                        min-width: 20px;
-                        text-align: center;
-                    }
-
-                    &.notification-path {
-                        width: 25%;
-                        white-space: nowrap;
-                    }
 
                     &.add-notification-list {
                         width: 100%;
@@ -286,10 +270,35 @@ body.viewvc-epel {
     }
 }
 
+.svn-notifications-checkbox-cell-hidden {
+    display: none;
+}
+
 .svn-notification-edit {
+    margin: 0 10px 0 0;
     white-space: nowrap;
 }
 
-.svn-notifications-checkbox-cell-hidden {
+.svn-notification-delete-popover {
     display: none;
+}
+
+#svn-admin-notifications-form > .popover {
+    .popover-title {
+        border: 0;
+        background: #da5353;
+        color: #ffffff;
+    }
+
+    .svn-notification-delete-popover-actions {
+        text-align: right;
+    }
+
+    p {
+        font-size: 13px;
+    }
+}
+
+.svn-notification-form-actions {
+    white-space: nowrap;
 }

@@ -18,6 +18,7 @@
         }
     },
     "javascript": [
-        "www/scripts/svn-admin-notifications.js"
+        "www/scripts/svn-admin-notifications.js",
+        "www/scripts/svn-admin-notifications-popover.js"
     ]
 }
