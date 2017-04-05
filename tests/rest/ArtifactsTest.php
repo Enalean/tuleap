@@ -545,6 +545,57 @@ class ArtifactsTest extends RestBase {
         return $artifact_id;
     }
 
+    public function testPutArtifactWithNatures()
+    {
+        $nature_is_child = '_is_child';
+        $nature_empty    = '';
+        $artifact_id     = REST_TestDataBuilder::LEVEL_ONE_ARTIFACT_A_ID;
+        $field_label     = 'artlink';
+        $field_id        = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $put_resource    = json_encode(
+            array(
+                'values' => array(
+                    array(
+                        'field_id' => $field_id,
+                        "links"    => array(
+                            array("id" => REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_D_ID, "type" => $nature_is_child),
+                            array("id" => REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_F_ID, "type" => $nature_empty),
+                        )
+                    ),
+                ),
+            )
+        );
+
+        $response = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+
+        $response = $this->getResponse($this->client->get("artifacts/$artifact_id/links"));
+        $links    = $response->json();
+
+        $expected_link = array(
+            "natures" => array(
+                array(
+                    "shortname" => $nature_is_child,
+                    "direction" => 'forward',
+                    "label"     => "Child",
+                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_is_child&direction=forward"
+                ),
+                array(
+                    "shortname" => $nature_empty,
+                    "direction" => 'forward',
+                    "label"     => '',
+                    "uri"       => "artifacts/$artifact_id/linked_artifacts?nature=$nature_empty&direction=forward"
+                )
+            )
+        );
+
+        $this->assertEquals($expected_link, $links);
+
+        return $artifact_id;
+    }
+
     public function testAnonymousGETArtifact() {
         try {
             $this->client->get('artifacts/'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID)->send();
