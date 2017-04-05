@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -72,7 +72,7 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
             $backlog_strategy_factory,
             $milestone_factory,
             $backlog_row_collection_factory,
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker')
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
         );
     }
 

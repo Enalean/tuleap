@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,10 +53,10 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
             mock('AgileDashboard_KanbanFactory'),
             mock('PlanningPermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker'),
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
             mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter')
         );
-        
+
         stub($this->router)->buildPlanningController()->returns($this->planning_controller);
         stub($milestone_controller_factory)->getMilestoneController()->returns(mock('Planning_MilestoneController'));
         stub($this->router)->buildController()->returns(mock('AgileDashboard_Controller'));
@@ -66,28 +66,28 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         ForgeConfig::restore();
         parent::tearDown();
     }
-    
+
     public function itRoutesPlanningEditionRequests() {
         $request = aRequest()->with('planning_id', 1)
                              ->with('action', 'edit')->build();
         $this->router->expectOnce('renderAction', array($this->planning_controller, 'edit', $request));
         $this->router->route($request);
     }
-    
+
     public function itRoutesPlanningUpdateRequests() {
         $request = aRequest()->with('planning_id', 1)
                              ->with('action', 'update')->build();
         $this->router->expectOnce('executeAction', array($this->planning_controller, 'update'));
         $this->router->route($request);
     }
-    
+
     public function itRoutesToTheArtifactPlannificationByDefault() {
         $request = aRequest()->withUri('someurl')->build();
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_MilestoneSelectorController'), 'show'));
         $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*', '*'));
         $this->router->routeShowPlanning($request);
     }
-    
+
     public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
         $request = aRequest()->with('aid', '732')->withUri('someurl')->build();
         $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*', '*'));

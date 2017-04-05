@@ -28,7 +28,7 @@ function aMilestone() {
 
 class Test_Planning_MilestoneBuilder {
     /**
-     * @var \Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker
+     * @var \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
 
@@ -58,7 +58,7 @@ class Test_Planning_MilestoneBuilder {
         $this->planning                     = aPlanning()->build();
         $this->sub_milestones               = array();
         $this->artifact                     = anArtifact()->build();
-        $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->scrum_mono_milestone_checker = mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
     }
     
     public function withinTheSameProjectAs(Planning_Milestone $other_milestone) {

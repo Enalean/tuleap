@@ -32,7 +32,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
     private $tracker_factory;
 
     /**
-     * @var Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker'
+     * @var \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'
      */
     private $mono_milestone_checker;
 
@@ -147,7 +147,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         $this->tracker_hierarchy_factory = mock('Tracker_HierarchyFactory');
         $this->planning_factory          = mock('PlanningFactory');
 
-        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
         $this->tracker_factory = mock('TrackerFactory');
 
         $this->finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(

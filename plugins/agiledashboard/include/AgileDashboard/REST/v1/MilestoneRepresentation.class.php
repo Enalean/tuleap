@@ -19,8 +19,8 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use TrackerFactory;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Planning_Milestone;

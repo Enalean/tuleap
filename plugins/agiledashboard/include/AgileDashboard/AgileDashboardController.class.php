@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,10 @@
  */
 
 use Tuleap\AgileDashboard\AdminAdditionalPanePresenter;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDisabler;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneEnabler;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FrsPermissionDao;

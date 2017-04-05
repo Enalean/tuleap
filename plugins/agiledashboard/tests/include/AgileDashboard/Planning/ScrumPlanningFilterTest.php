@@ -53,7 +53,7 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
     {
         parent::setUp();
 
-        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker');
+        $this->mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
         $this->planning_factory       = mock('PlanningFactory');
         $this->planning               = mock('Planning');
         $this->user                   = mock('PFUser');

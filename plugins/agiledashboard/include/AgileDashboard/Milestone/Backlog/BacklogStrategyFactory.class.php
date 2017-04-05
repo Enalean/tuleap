@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,7 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
+
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 
 /**
  * I build AgileDashboard_Milestone_Backlog_BacklogStrategy
