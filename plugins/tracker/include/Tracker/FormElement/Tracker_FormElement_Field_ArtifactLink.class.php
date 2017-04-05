@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\ValueFormatter;
@@ -1468,72 +1469,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     protected function validate(Tracker_Artifact $artifact, $value)
     {
-        $is_valid = true;
-        if (! isset($value['new_values'])) {
-            return $is_valid;
-        }
-
-        $new_values = $value['new_values'];
-        if (trim($new_values) != '') {
-            $art_id_array = explode(',', $new_values);
-            foreach ($art_id_array as $artifact_id) {
-                $artifact_id = trim($artifact_id);
-                if ($artifact_id === "") {
-                    $is_valid = false;
-                    $GLOBALS['Response']->addFeedback(
-                        'error',
-                        $GLOBALS['Language']->getText(
-                            'plugin_tracker_common_artifact',
-                            'error_artifactlink_value',
-                            array($this->getLabel(), $artifact_id)
-                        )
-                    );
-
-                    continue;
-                }
-
-                $linked_artifact = $this->getArtifactFactory()->getArtifactById($artifact_id);
-                if (! $linked_artifact) {
-                    $is_valid = false;
-                    $GLOBALS['Response']->addFeedback(
-                        'error',
-                        $GLOBALS['Language']->getText(
-                            'plugin_tracker_common_artifact',
-                            'error_artifactlink_value',
-                            array($this->getLabel(), $artifact_id)
-                        )
-                    );
-
-                    continue;
-                }
-
-                if ($linked_artifact->getTracker()->isDeleted()) {
-                    $is_valid = false;
-                    $GLOBALS['Response']->addFeedback(
-                        'error',
-                        $GLOBALS['Language']->getText(
-                            'plugin_tracker_common_artifact',
-                            'error_artifactlink_value_not_exist',
-                            array($this->getLabel(), $artifact_id)
-                        )
-                    );
-
-                    continue;
-                }
-            }
-        }
-
-        if ($artifact->getTracker()->isProjectAllowedToUseNature() && isset($value['natures'])) {
-            foreach ($value['natures'] as $nature_shortname) {
-                $nature = $this->getNaturePresenterFactory()->getFromShortname($nature_shortname);
-                if (! $nature) {
-                    $is_valid = false;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_nature_missing', array($artifact_id)));
-                }
-            }
-        }
-
-        return $is_valid;
+        return $this->getArtifactLinkValidator()->isValid($value, $artifact, $this);
     }
 
     public function setArtifactFactory(Tracker_ArtifactFactory $artifact_factory) {
@@ -1881,5 +1817,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         } else {
             $result[$key] = array();
         }
+    }
+
+    private function getArtifactLinkValidator()
+    {
+        return new ArtifactLinkValidator($this->getArtifactFactory(), $this->getNaturePresenterFactory());
     }
 }
