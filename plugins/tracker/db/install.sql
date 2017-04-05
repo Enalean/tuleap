@@ -307,7 +307,8 @@ DROP TABLE IF EXISTS tracker_changeset_value_file;
 CREATE TABLE tracker_changeset_value_file(
     changeset_value_id INT(11) NOT NULL,
     fileinfo_id INT(11) NOT NULL,
-    PRIMARY KEY(changeset_value_id, fileinfo_id)
+    PRIMARY KEY(changeset_value_id, fileinfo_id),
+    INDEX reverse_idx (fileinfo_id, changeset_value_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_changeset_value_int;
