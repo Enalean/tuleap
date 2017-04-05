@@ -92,6 +92,8 @@ DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures_allowed_projects;
 
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 
+DROP TABLE IF EXISTS plugin_tracker_recently_visited;
+
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 

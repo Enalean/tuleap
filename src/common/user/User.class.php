@@ -70,11 +70,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     const PREF_NAME_LAB_FEATURE = 'use_lab_features';
 
     /**
-     * Pref for recent elements
-     */
-    const PREFERENCE_RECENT_ELEMENTS = 'recent_elements';
-
-    /**
      * Should we disable the ie7 warning?
      */
     const PREFERENCE_DISABLE_IE7_WARNING = 'disable_ie7_warning';
@@ -1422,58 +1417,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       */
      public function hasPermission($permissionType, $objectId, $groupId) {
          return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
-     }
-
-    /**
-     * Get the list of recent elements the user browsed
-     *
-     * @return Array of Recent_Element_Interface
-     */
-    public function getRecentElements() {
-        if ($recent_elements = $this->getPreference(self::PREFERENCE_RECENT_ELEMENTS)) {
-            if ($recent_elements = unserialize($recent_elements)) {
-                if (is_array($recent_elements)) {
-                    return $recent_elements;
-                }
-            }
-            //somthing wrong happen. Delete the preference
-            $this->delPreference(self::PREFERENCE_RECENT_ELEMENTS);
-        }
-        return array();
-    }
-
-     /**
-      * Add in user preference an element "recently accessed"
-      *
-      * @param Recent_Element_Interface $element
-      *
-      * @return void
-      */
-     public function addRecentElement(Recent_Element_Interface $element) {
-        $history = $this->getRecentElements();
-
-        //search if the artifact is already in the history. If so remove it
-        $found = $i = 0;
-        reset($history);
-        while (! $found && (list(, $v) = each($history))) {
-            if ($element->getId() == $v['id']) {
-                array_splice($history, $i, 1);
-                $found = true;
-            }
-            ++$i;
-        }
-        if (! $found) {
-            //drop the oldest one if >= 5
-            while (count($history) >= 7) {
-                array_pop($history);
-            }
-        }
-
-        //add the new one
-        array_unshift($history, array('id' => $element->getId(), 'link' => $element->fetchXRefLink()));
-
-        //store
-        $this->setPreference(self::PREFERENCE_RECENT_ELEMENTS, serialize($history));
      }
 
     /**

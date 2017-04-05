@@ -359,68 +359,6 @@ class UserTest extends TuleapTestCase {
         $this->assertEqual(count($res), 0);
     }
     
-    public function testRecent() {
-        $a1 = $a2 = $a3 = $a4 = $a5 = $a6 = $a7 = $a8 = $a9 = null;
-        for ($i = 0 ; $i < 10 ; ++$i) {
-            $var = 'a'. $i;
-            $$var = new MockFakeRecent();
-            $$var->setReturnValue('getId', $i);
-            $$var->setReturnValue('fetchXRefLink', 'item #'. $i);
-        }
-        $user = new UserTestVersion_MockPreferences($this);
-        
-        //empty history
-        $this->assertEqual(count($user->getRecentElements()), 0);
-        
-        //start to visit some artifacts
-        $user->addRecentElement($a1);                  // a1
-        $history = $user->getRecentElements();
-        $this->assertEqual(count($history), 1);
-        $this->assertEqual($history[0]['id'], 1);
-        
-        $user->addRecentElement($a1);                  // a1 (only one instance)
-        $history = $user->getRecentElements();
-        $this->assertEqual(count($history), 1);
-        $this->assertEqual($history[0]['id'], 1);
-        
-        $user->addRecentElement($a2);                  // a2, a1
-        $history = $user->getRecentElements();
-        $this->assertEqual(count($history), 2);
-        $this->assertEqual($history[0]['id'], 2);
-        $this->assertEqual($history[1]['id'], 1);
-        
-        $user->addRecentElement($a4);                  // a4, a2, a1
-        $user->addRecentElement($a3);                  // a3, a4, a2, a1
-        $history = $user->getRecentElements();
-        $this->assertEqual(count($history), 4);
-        $this->assertEqual($history[0]['id'], 3);
-        $this->assertEqual($history[1]['id'], 4);
-        $this->assertEqual($history[2]['id'], 2);
-        $this->assertEqual($history[3]['id'], 1);
-        
-        $user->addRecentElement($a1);                  // a1, a3, a4, a2
-        $history = $user->getRecentElements();
-        $this->assertEqual(count($history), 4);
-        $this->assertEqual($history[0]['id'], 1);
-        $this->assertEqual($history[1]['id'], 3);
-        $this->assertEqual($history[2]['id'], 4);
-        $this->assertEqual($history[3]['id'], 2);
-        
-        $user->addRecentElement($a5);                  // a5, a1, a3, a4, a2
-        $user->addRecentElement($a6);                  // a6, a5, a1, a3, a4, a2
-        $user->addRecentElement($a7);                  // a7, a6, a5, a1, a3, a4, a2
-        $user->addRecentElement($a8);                  // a8, a7, a6, a5, a1, a3, a4 (a2 is out since we keep only 7 items)
-        $history = $user->getRecentElements();
-        $this->assertEqual(count($history), 7);
-        $this->assertEqual($history[0]['id'], 8);
-        $this->assertEqual($history[1]['id'], 7);
-        $this->assertEqual($history[2]['id'], 6);
-        $this->assertEqual($history[3]['id'], 5);
-        $this->assertEqual($history[4]['id'], 1);
-        $this->assertEqual($history[5]['id'], 3);
-        $this->assertEqual($history[6]['id'], 4);
-    }
-    
     function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject() {
         $user = partial_mock('PFUser', array('getProjects', 'getUGroupDao'));
         

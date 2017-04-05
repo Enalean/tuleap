@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,13 +22,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+
 abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_ArtifactRenderer {
     /**
      * @var Tracker_Artifact
      */
     protected $artifact;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
-    public function __construct(Tracker_Artifact $artifact, EventManager $event_manager) {
+    public function __construct(Tracker_Artifact $artifact, EventManager $event_manager, VisitRecorder $visit_recorder) {
         parent::__construct($artifact->getTracker(), $event_manager);
         $this->artifact = $artifact;
 
@@ -36,10 +42,12 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
             'aid'       => $this->artifact->getId(),
             'func'      => 'artifact-update',
         );
+        $this->visit_recorder = $visit_recorder;
     }
 
-    public function display(Codendi_Request $request, PFUser $current_user) {
-        $current_user->addRecentElement($this->artifact);
+    public function display(Codendi_Request $request, PFUser $current_user)
+    {
+        $this->visit_recorder->record($current_user, $this->artifact);
         parent::display($request, $current_user);
     }
 
@@ -58,5 +66,3 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
         return $html;
     }
 }
-
-?>
