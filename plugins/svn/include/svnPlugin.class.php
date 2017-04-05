@@ -24,6 +24,10 @@ use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
+use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
+use Tuleap\Svn\Notifications\NotificationListBuilder;
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
+use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\SvnRouter;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -475,7 +479,12 @@ class SvnPlugin extends Plugin {
                 new MailHeaderManager(new MailHeaderDao()),
                 $repository_manager,
                 $this->getMailNotificationManager(),
-                new SvnLogger()
+                new SvnLogger(),
+                new NotificationListBuilder(
+                    new UGroupDao(),
+                    new CollectionOfUgroupToBeNotifiedPresenterBuilder(new UgroupsToNotifyDao())
+                ),
+                new NotificationsEmailsBuilder()
             ),
             new ExplorerController(
                 $repository_manager,

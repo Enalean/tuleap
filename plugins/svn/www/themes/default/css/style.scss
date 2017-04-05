@@ -304,3 +304,28 @@ body.viewvc-epel {
 .svn-notifications-form-emails-column {
     width: 100%;
 }
+
+.svn-notification-email-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.svn-notification-email-list-entry {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
+    &:last-child > .svn-notification-email-list-separator {
+        display: none;
+    }
+}
+
+.svn-notification-email-list-separator {
+    margin: 0 3px 0 0;
+}
+
+.svn-notification-email-list-group-icon {
+    margin: 0 3px 0 0;
+    color: #666666;
+}
