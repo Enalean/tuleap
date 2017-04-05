@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
+use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\SvnRouter;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -124,6 +125,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(Event::EXPORT_XML_PROJECT);
+        $this->addHook(Event::PROJECT_ACCESS_CHANGE);
     }
 
     public function export_xml_project($params)
@@ -641,5 +643,12 @@ class SvnPlugin extends Plugin {
         if (count($repositories) > 0) {
             $this->getBackendSVN()->setSVNApacheConfNeedUpdate();
         }
+    }
+
+    /** @see Event::PROJECT_ACCESS_CHANGE */
+    public function project_access_change(array $params)
+    {
+        $updater = new UgroupsToNotifyUpdater(new UgroupsToNotifyDao());
+        $updater->updateProjectAccess($params['project_id'], $params['old_access'], $params['access']);
     }
 }
