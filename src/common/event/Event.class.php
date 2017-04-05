@@ -1349,4 +1349,14 @@ class Event {
      *  - additional_statistics => (out) Tuleap\Admin\Homepage\StatisticsPresenter[]
      */
     const GET_SITEADMIN_HOMEPAGE_USER_STATISTICS = 'get_siteadmin_homepage_user_statistics';
+
+    /**
+     * Event raised to collect warnings to be displayed to the site admins on their personal page
+     * and siteadmin homepage
+     *
+     * Parameters:
+     *  - nb_users_by_status => (in)  Tuleap\Admin\Homepage\NbUsersByStatus
+     *  - warnings           => (out) string[] (html snippets)
+     */
+    const GET_SITEADMIN_WARNINGS = 'get_siteadmin_warnings';
 }

@@ -43,7 +43,7 @@ admin_sidebar	links_nav_doc	Doc
 #
 admin_main	title		Site administration
 admin_main	header		Administrative functions
-admin_main	forgeupgrade	<h4><i class="icon-warning-sign"></i> ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">upgrade documentation</a>.</p>
+admin_main	forgeupgrade	<h4><i class="icon-warning-sign fa fa-warning tlp-alert-icon"></i> ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">upgrade documentation</a>.</p>
 admin_main	header_user	Pending users
 admin_main	display_user	Display users beginning with :
 admin_main	search_user	User
