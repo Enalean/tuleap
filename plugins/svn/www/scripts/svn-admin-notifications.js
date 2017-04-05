@@ -18,6 +18,13 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
+    var add_button = document.getElementById('svn-notifications-add'),
+        add_row    = document.getElementById('svn-notifications-row-add');
+
+    if (! add_button || ! add_row) {
+        return;
+    }
+
     var show_edit_mode_buttons = document.querySelectorAll('.svn-notification-edit-show');
     [].forEach.call(show_edit_mode_buttons, function (button) {
         button.addEventListener('click', showEditMode);
@@ -27,6 +34,16 @@ document.addEventListener('DOMContentLoaded', function () {
     [].forEach.call(hide_edit_mode_buttons, function (button) {
         button.addEventListener('click', hideEditMode);
     });
+
+    initializeAddNotification();
+
+    function initializeAddNotification() {
+        add_button.addEventListener('click', function () {
+            hideEditMode();
+            add_row.classList.remove('svn-notifications-row-add-hidden');
+            add_button.classList.add('svn-notifications-add-hidden');
+        });
+    }
 
     function hideEditMode() {
         var form       = document.getElementById('svn-admin-notifications-form'),
@@ -41,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
         [].forEach.call(edit_cells, function (cell) {
             cell.classList.add('svn-notifications-checkbox-cell-hidden');
         });
+        add_row.classList.add('svn-notifications-row-add-hidden');
+        add_button.classList.remove('svn-notifications-add-hidden');
     }
 
     function showEditMode() {

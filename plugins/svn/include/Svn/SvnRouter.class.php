@@ -121,12 +121,9 @@ class SvnRouter {
                     $this->admin_controller->saveMailHeader($request);
                     break;
                 case "update-mailing-lists":
-                    if ($request->get('create-mailing-lists')) {
+                    if ($request->get('save-mailing-lists')) {
                         $this->checkUserCanAdministrateARepository($request);
-                        $this->admin_controller->createMailingList($request);
-                    } else if ($request->get('save-mailing-lists')) {
-                        $this->checkUserCanAdministrateARepository($request);
-                        $this->admin_controller->updateMailingList($request);
+                        $this->admin_controller->saveMailingList($request);
                     } else if ($request->get('delete-mailing-lists')) {
                         $this->checkUserCanAdministrateARepository($request);
                         $this->admin_controller->deleteMailingList($request);
