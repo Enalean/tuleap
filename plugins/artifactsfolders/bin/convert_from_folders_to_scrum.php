@@ -21,6 +21,7 @@
 
 require_once 'pre.php';
 
+use Tuleap\ArtifactsFolders\Converter\AncestorFolderChecker;
 use Tuleap\ArtifactsFolders\Converter\ArtifactsFoldersToScrumV2Converter;
 use Tuleap\ArtifactsFolders\Converter\ConverterDao;
 use Tuleap\ArtifactsFolders\Folder\Dao;
@@ -102,11 +103,17 @@ try {
         $nature_is_child_link_retriever,
         $artifact_factory
     );
+    $ancestor_folder_checker = new AncestorFolderChecker(
+        $nature_is_child_link_retriever,
+        $hierarchy_of_folder_builder
+    );
+
     $converter = new ArtifactsFoldersToScrumV2Converter(
         $converter_dao,
         $artifact_factory,
         $hierarchy_of_folder_builder,
-        $console
+        $console,
+        $ancestor_folder_checker
     );
 
     $converter->convertFromArtifactsFoldersToScrumV2($project_id, $user);

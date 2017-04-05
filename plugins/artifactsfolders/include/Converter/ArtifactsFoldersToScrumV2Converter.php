@@ -23,9 +23,13 @@ namespace Tuleap\ArtifactsFolders\Converter;
 use Logger;
 use PFUser;
 use RuntimeException;
+use Tracker_Artifact;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_Value_ArtifactLinkDao;
 use Tracker_NoChangeException;
+use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\HierarchyOfFolderBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 
 class ArtifactsFoldersToScrumV2Converter
 {
@@ -45,17 +49,23 @@ class ArtifactsFoldersToScrumV2Converter
      * @var Logger
      */
     private $logger;
+    /**
+     * @var AncestorFolderChecker
+     */
+    private $ancestor_folder_checker;
 
     public function __construct(
         ConverterDao $converter_dao,
         Tracker_ArtifactFactory $artifact_factory,
         HierarchyOfFolderBuilder $hierarchy_of_folder_builder,
-        Logger $logger
+        Logger $logger,
+        AncestorFolderChecker $ancestor_folder_checker
     ) {
         $this->converter_dao               = $converter_dao;
         $this->artifact_factory            = $artifact_factory;
         $this->hierarchy_of_folder_builder = $hierarchy_of_folder_builder;
         $this->logger                      = $logger;
+        $this->ancestor_folder_checker     = $ancestor_folder_checker;
     }
 
     public function convertFromArtifactsFoldersToScrumV2($project_id, PFUser $user)
@@ -105,12 +115,22 @@ class ArtifactsFoldersToScrumV2Converter
                 continue;
             }
 
-            $collection_of_links_to_add->addALink($folder_artifact, $item_id);
+            $item_artifact = $this->artifact_factory->getArtifactById($item_id);
+            if (! $item_artifact) {
+                $this->logger->warn("Item artifact with id $item_id not found, skipping");
+                continue;
+            }
+
+            if ($this->ancestor_folder_checker->isAncestorInSameFolder($folder_artifact, $item_artifact) === true) {
+                continue;
+            }
+
+            $collection_of_links_to_add->addALink($folder_artifact, $item_artifact);
 
             $hierarchy_of_folder = $this->hierarchy_of_folder_builder->getHierarchyOfFolder($folder_artifact);
 
             foreach ($hierarchy_of_folder as $parent_folder) {
-                $collection_of_links_to_add->addALink($parent_folder, $item_id);
+                $collection_of_links_to_add->addALink($parent_folder, $item_artifact);
             }
         }
 
