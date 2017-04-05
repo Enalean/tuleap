@@ -135,10 +135,6 @@ class ForgeConfig {
 
     public static function getApplicationUserLogin()
     {
-        if (posix_getpwnam('tuleap') !== false) {
-            return 'tuleap';
-        } else {
-            return self::get('sys_http_user');
-        }
+        return self::get('sys_http_user');
     }
 }
