@@ -48,8 +48,7 @@ class Request {
         }
         
         $this->session = new Request_SessionVars; 
-        $this->cookies = new Request_CookieVars;
-        
+
         if (ACCESS_LOG or ACCESS_LOG_SQL) {
             $this->_accesslog = new Request_AccessLog(ACCESS_LOG, ACCESS_LOG_SQL);
         }
@@ -500,16 +499,6 @@ class Request {
     function deleteSessionVar($key) {
         return $this->session->delete($key);
     }
-
-    function getCookieVar($key) {
-        return $this->cookies->get($key);
-    }
-    function setCookieVar($key, $val, $lifetime_in_days = false, $path = false) {
-        return $this->cookies->set($key, $val, $lifetime_in_days, $path);
-    }
-    function deleteCookieVar($key) {
-        return $this->cookies->delete($key);
-    }
     
     function getUploadedFile($key) {
         return Request_UploadedFile::getUploadedFile($key);
@@ -584,77 +573,6 @@ class Request_SessionVars {
             unset($GLOBALS[$key]);
         if (DEBUG) trigger_error("delete session $key", E_USER_WARNING);
         unset($_SESSION[$key]);
-    }
-}
-
-class Request_CookieVars {
-    
-    function get($key) {
-        $vars = &$_COOKIE;
-        if (isset($vars[$key])) {
-            @$val = unserialize(base64_decode($vars[$key]));
-            if (!empty($val))
-                return $val;
-            @$val = urldecode($vars[$key]);
-            if (!empty($val))
-                return $val;
-        }
-        return false;
-    }
-
-    function get_old($key) {
-        $vars = &$_COOKIE;
-        if (isset($vars[$key])) {
-            @$val = unserialize(base64_decode($vars[$key]));
-            if (!empty($val))
-                return $val;
-            @$val = unserialize($vars[$key]);
-            if (!empty($val))
-                return $val;
-            @$val = $vars[$key];
-            if (!empty($val))
-                return $val;
-        }
-        return false;
-    }
-
-    function set($key, $val, $persist_days = false, $path = false) {
-    	// if already defined, ignore
-    	if (defined('MAIN_setUser') and $key = 'WIKI_ID') return;
-        if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
-
-        $vars = &$_COOKIE;
-        if (is_numeric($persist_days)) {
-            $expires = time() + (24 * 3600) * $persist_days;
-        }
-        else {
-            $expires = 0;
-        }
-        if (is_array($val) or is_object($val))
-            $packedval = base64_encode(serialize($val));
-        else
-            $packedval = urlencode($val);
-        $vars[$key] = $packedval;
-        @$_COOKIE[$key] = $packedval;
-        if ($path)
-            @setcookie($key, $packedval, $expires, $path);
-        else
-            @setcookie($key, $packedval, $expires);
-    }
-    
-    function delete($key) {
-        static $deleted = array();
-        if (isset($deleted[$key])) return;
-        if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
-        
-        $vars = &$_COOKIE;
-        if (!defined('COOKIE_DOMAIN'))
-            @setcookie($key, '', 0);
-        else    
-            @setcookie($key, '', 0, COOKIE_DOMAIN);
-        unset($_COOKIE[$key]);
-        unset($_COOKIE[$key]);
-        $deleted[$key] = 1;
     }
 }
 

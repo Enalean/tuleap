@@ -389,8 +389,6 @@ class WikiRequest extends Request {
     function _setUser (&$user) {
         $this->_user =& $user;
         if (defined('MAIN_setUser')) return; // don't set cookies twice
-        $this->setCookieVar('WIKI_ID', $user->getAuthenticatedId(),
-                            COOKIE_EXPIRATION_DAYS, COOKIE_DOMAIN);
         if ($user->isSignedIn())
             $user->_authhow = 'signin';
 
