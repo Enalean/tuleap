@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2017-04-03 14:19+0200\n"
+"PO-Revision-Date: 2017-04-04 15:37+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -14,10 +14,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Cancel"
-msgstr "Fermer"
+msgstr "Annuler"
+
+msgid "Confirm deletion"
+msgstr "Confirmer la suppression"
+
+msgid "Delete"
+msgstr "Supprimer"
 
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Notification deleted successfully."
+msgstr "La notification a été correctement supprimée."
+
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Wait a minute..."
+msgstr "Attendez une minute..."
+
+msgid "You are about to remove the notification. Please confirm your action."
+msgstr "Vous êtes sur le point de supprimer la notification. Merci de confirmer votre action."

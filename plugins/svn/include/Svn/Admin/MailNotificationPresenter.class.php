@@ -47,6 +47,9 @@ class MailNotificationPresenter extends BaseAdminPresenter{
     public $no_notifications_message;
     public $list_mails;
 
+    public $remove_notification_title;
+    public $remove_notification_desc;
+    public $remove_notification_confirm;
     public $edit;
     public $save;
     public $cancel;
@@ -79,14 +82,16 @@ class MailNotificationPresenter extends BaseAdminPresenter{
         $this->label_notification_aviable    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'available_notifications');
         $this->monitored_path                = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'monitored_path');
         $this->notified_mails                = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notified_mails');
-        $this->delete                        = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'delete');
         $this->no_notifications_message      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'no_notifications_message');
         $this->add_notification              = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'add_notification');
-        $this->delete_selected_notifications = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'delete_selected_notifications');
 
-        $this->edit   = dgettext('tuleap-svn', 'Edit');
-        $this->save   = dgettext('tuleap-svn', 'Save');
-        $this->cancel = dgettext('tuleap-svn', 'Cancel');
+        $this->remove_notification_title   = dgettext('tuleap-svn', 'Wait a minute...');
+        $this->remove_notification_desc    = dgettext('tuleap-svn', 'You are about to remove the notification. Please confirm your action.');
+        $this->remove_notification_confirm = dgettext('tuleap-svn', 'Confirm deletion');
+        $this->edit                        = dgettext('tuleap-svn', 'Edit');
+        $this->save                        = dgettext('tuleap-svn', 'Save');
+        $this->cancel                      = dgettext('tuleap-svn', 'Cancel');
+        $this->delete                      = dgettext('tuleap-svn', 'Delete');
 
         $this->sections = new SectionsPresenter($repository);
     }

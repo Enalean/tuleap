@@ -27,6 +27,7 @@ use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\HookConfig;
 use Project;
 use HTTPRequest;
+use Valid_Int;
 use Valid_String;
 use Valid_Array;
 use CSRFSynchronizerToken;
@@ -190,11 +191,18 @@ class AdminController
         $token = $this->generateToken($request->getProject(), $repository);
         $token->check();
 
-        $vPathToDelete = new Valid_Array('paths_to_delete');
-        if($request->valid($vPathToDelete)) {
-            $PathsToDelete = $request->get('paths_to_delete');
+        $valid_notification_remove_id = new Valid_Int('notification_remove_id');
+        if($request->valid($valid_notification_remove_id)) {
+            $notification_remove_id = $request->get('notification_remove_id');
             try {
-                $this->mail_notification_manager->removeSvnNotification($repository, $PathsToDelete);
+                $this->mail_notification_manager->removeByRepositoryAndNotificationId($repository, $notification_remove_id);
+                $GLOBALS['Response']->addFeedback(
+                    'info',
+                    dgettext(
+                        'tuleap-svn',
+                        'Notification deleted successfully.'
+                    )
+                );
             } catch (CannotDeleteMailNotificationException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin_notification','delete_error'));
             }

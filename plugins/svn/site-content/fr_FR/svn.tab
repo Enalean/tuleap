@@ -37,7 +37,6 @@ plugin_svn_admin_notification	delete	Supprimer ?
 plugin_svn_admin_notification	no_notifications_message	Il n'y a aucune notification
 plugin_svn_admin_notification	delete_error	Impossible de supprimer la liste des emails notifiés
 plugin_svn_admin_notification	add_notification	Ajouter la notification
-plugin_svn_admin_notification	delete_selected_notifications	Supprimer les notifications sélectionnées
 
 plugin_svn_admin	update_successful	Mise à jour réussie
 plugin_svn_admin	update_failure_with_message	Erreur de mise à jour : $1

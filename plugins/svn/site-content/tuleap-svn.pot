@@ -1,8 +1,23 @@
 msgid "Cancel"
 msgstr ""
 
+msgid "Confirm deletion"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
+msgid "Notification deleted successfully."
+msgstr ""
+
 msgid "Save"
+msgstr ""
+
+msgid "Wait a minute..."
+msgstr ""
+
+msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""

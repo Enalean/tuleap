@@ -37,7 +37,6 @@ plugin_svn_admin_notification	delete	Delete?
 plugin_svn_admin_notification	no_notifications_message	There is no notification
 plugin_svn_admin_notification	delete_error	Unable to delete notification list
 plugin_svn_admin_notification	add_notification	Add notification
-plugin_svn_admin_notification	delete_selected_notifications	Delete selected notifications
 
 plugin_svn_admin	update_successful	Update successful
 plugin_svn_admin	update_failure_with_message	Update failed: $1
