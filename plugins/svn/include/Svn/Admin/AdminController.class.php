@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\Admin;
 
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
+use Tuleap\Svn\Notifications\NotificationListBuilder;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
@@ -37,17 +39,29 @@ class AdminController
     private $repository_manager;
     private $mail_header_manager;
     private $mail_notification_manager;
+    /**
+     * @var NotificationListBuilder
+     */
+    private $notification_list_builder;
+    /**
+     * @var NotificationsEmailsBuilder
+     */
+    private $emails_builder;
 
     public function __construct(
         MailHeaderManager $mail_header_manager,
         RepositoryManager $repository_manager,
         MailNotificationManager $mail_notification_manager,
-        Logger $logger
+        Logger $logger,
+        NotificationListBuilder $notification_list_builder,
+        NotificationsEmailsBuilder $emails_builder
     ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
         $this->mail_notification_manager = $mail_notification_manager;
         $this->logger                    = $logger;
+        $this->notification_list_builder = $notification_list_builder;
+        $this->emails_builder            = $emails_builder;
     }
 
     private function generateToken(Project $project, Repository $repository) {
@@ -74,7 +88,7 @@ class AdminController
                 $token,
                 $title,
                 $mail_header,
-                $notifications_details
+                $this->notification_list_builder->getNotificationsPresenter($notifications_details, $this->emails_builder)
             )
         );
     }

@@ -28,85 +28,99 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{# hasNotification }}
-                    {{# list_mails }}
-                        <tr>
-                            <td>
-                                <div class="svn-notifications-checkbox-cell-read">
-                                    <div>{{ getPath }}</div>
-                                </div>
-                                <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
-                                    {{# getPath }}
-                                        <input type="text"
-                                               class="svn-notification-edit-input"
-                                               name="notification_update[{{ getPath }}][path]"
-                                               value="{{ getPath }}"
-                                               disabled
-                                        />
-                                    {{/ getPath }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="svn-notifications-checkbox-cell-read">
-                                    <div>{{ getNotifiedMails }}</div>
-                                </div>
-                                <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
-                                    {{# getNotifiedMails }}
-                                        <input type="text"
-                                               class="svn-notification-edit-input"
-                                               name="notification_update[{{ getPath }}][emails]"
-                                               value="{{ getNotifiedMails }}"
-                                               disabled
-                                        />
-                                    {{/ getNotifiedMails }}
-                                </div>
-                            </td>
-                            <td class="svn-notification-form-actions">
-                                <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
-                                    <button type="submit" name="save-mailing-lists" value="1" class="btn btn-primary">{{ save }}</button>
-                                    <button type="button" name="submit" class="btn svn-notification-edit-hide">{{ cancel }}</button>
-                                </div>
-                                <div class="svn-notifications-checkbox-cell-read">
-                                    <a href="javascript:;" class="svn-notification-edit-show svn-notification-edit">
-                                        <i class="icon-pencil"></i>
-                                        {{ edit }}
-                                    </a>
-                                    <a href="javascript:;"
-                                       class="svn-notification-delete"
-                                       data-toggle="popover"
-                                       data-trigger="click"
-                                       data-placement="left"
-                                       data-html="true"
-                                       data-popover-id="svn-notification-delete-{{ getId }}-popover"
-                                    >
-                                        <i class="icon-trash"></i>
-                                        {{ delete }}
-                                    </a>
-                                    <div id="svn-notification-delete-{{ getId }}-popover"
-                                         data-title="{{ remove_notification_title }}"
-                                         class="svn-notification-delete-popover">
-                                        <p>{{ remove_notification_desc }}</p>
-
-                                        <div class="svn-notification-delete-popover-actions">
-                                            <input type="hidden" name="notification_remove_id" value="{{ getId }}">
-                                            <button type="button" class="btn btn-small btn-default dismiss-popover">{{ cancel }}</button>
-                                            <button type="submit"
-                                                    name="delete-mailing-lists"
-                                                    value="1"
-                                                    class="btn btn-small btn-danger"
-                                            >{{ remove_notification_confirm }}</button>
+                {{# has_notifications }}
+                    {{# notifications }}
+                        {{# has_notified }}
+                            <tr>
+                                <td>
+                                    <div class="svn-notifications-checkbox-cell-read">
+                                        <div>{{ path }}</div>
+                                    </div>
+                                    <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
+                                        {{# path }}
+                                            <input type="text"
+                                                   class="svn-notification-edit-input"
+                                                   name="notification_update[{{ path }}][path]"
+                                                   value="{{ path }}"
+                                                   disabled
+                                            />
+                                        {{/ path }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="svn-notifications-checkbox-cell-read">
+                                        <div class="svn-notification-email-list">
+                                            {{# ugroups_to_be_notified }}
+                                                <span class="svn-notification-email-list-entry">
+                                                <i class="icon-group svn-notification-email-list-group-icon"></i>
+                                                    {{ label }}<span class="svn-notification-email-list-separator">, </span>
+                                            </span>
+                                            {{/ ugroups_to_be_notified }}
+                                            {{# emails_to_be_notified }}
+                                                <span class="svn-notification-email-list-entry">
+                                                {{ . }}<span class="svn-notification-email-list-separator">, </span>
+                                            </span>
+                                            {{/ emails_to_be_notified }}
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {{/ list_mails }}
-                {{/ hasNotification }}
-                {{^ hasNotification }}
+                                    <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
+                                        {{# emails_to_be_notified }}
+                                            <input type="text"
+                                                   class="svn-notification-edit-input"
+                                                   name="notification_update[{{ path }}][emails]"
+                                                   value="{{ emails_to_be_notified_string }}"
+                                                   disabled
+                                            />
+                                        {{/ emails_to_be_notified }}
+                                    </div>
+                                </td>
+                                <td class="svn-notification-form-actions">
+                                    <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
+                                        <button type="submit" name="save-mailing-lists" value="1" class="btn btn-primary">{{ save }}</button>
+                                        <button type="button" name="submit" class="btn svn-notification-edit-hide">{{ cancel }}</button>
+                                    </div>
+                                    <div class="svn-notifications-checkbox-cell-read">
+                                        <a href="javascript:;" class="svn-notification-edit-show svn-notification-edit">
+                                            <i class="icon-pencil"></i>
+                                            {{ edit }}
+                                        </a>
+                                        <a href="javascript:;"
+                                           class="svn-notification-delete"
+                                           data-toggle="popover"
+                                           data-trigger="click"
+                                           data-placement="left"
+                                           data-html="true"
+                                           data-popover-id="svn-notification-delete-{{ notification_id }}-popover"
+                                        >
+                                            <i class="icon-trash"></i>
+                                            {{ delete }}
+                                        </a>
+                                        <div id="svn-notification-delete-{{ notification_id }}-popover"
+                                             data-title="{{ remove_notification_title }}"
+                                             class="svn-notification-delete-popover">
+                                            <p>{{ remove_notification_desc }}</p>
+
+                                            <div class="svn-notification-delete-popover-actions">
+                                                <input type="hidden" name="notification_remove_id" value="{{ notification_id }}">
+                                                <button type="button" class="btn btn-small btn-default dismiss-popover">{{ cancel }}</button>
+                                                <button type="submit"
+                                                        name="delete-mailing-lists"
+                                                        value="1"
+                                                        class="btn btn-small btn-danger"
+                                                >{{ remove_notification_confirm }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/ has_notified }}
+                    {{/ notifications }}
+                {{/ has_notifications }}
+                {{^ has_notifications }}
                     <tr class="empty-table">
                         <td colspan="3">{{ no_notifications_message }}</td>
                     </tr>
-                {{/ hasNotification }}
+                {{/ has_notifications }}
                 <tr id="svn-notifications-row-add" class="svn-notifications-row-add-hidden">
                     <td class="notification-path">
                         <input type="text" id="add_path" name="notification_add[path]" placeholder="{{ label_path }}">

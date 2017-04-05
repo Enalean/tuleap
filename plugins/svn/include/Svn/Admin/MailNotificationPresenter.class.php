@@ -46,6 +46,8 @@ class MailNotificationPresenter extends BaseAdminPresenter{
     public $repository_full_name;
     public $no_notifications_message;
     public $list_mails;
+    public $has_notifications;
+    public $notifications;
 
     public $remove_notification_title;
     public $remove_notification_desc;
@@ -53,6 +55,7 @@ class MailNotificationPresenter extends BaseAdminPresenter{
     public $edit;
     public $save;
     public $cancel;
+    public $delete;
 
     public function __construct(
         Repository $repository,
@@ -60,30 +63,32 @@ class MailNotificationPresenter extends BaseAdminPresenter{
         CSRFSynchronizerToken $token,
         $title,
         $mail_header,
-        $notifications_details
+        array $notifications
     ) {
         parent::__construct();
-        $this->project_id                 = $project->getId();
-        $this->repository_id              = $repository->getId();
-        $this->csrf_input                 = $token->fetchHTMLInput();
-        $this->subject_header             = $mail_header->getHeader();
-        $this->list_mails                 = $notifications_details;
-        $this->title                      = $title;
-        $this->repository_name            = $repository->getName();
-        $this->repository_full_name       = $repository->getFullName();
-        $this->notification_active        = true;
 
-        $this->notification_subtitle         = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notification_subtitle');
-        $this->comment                       = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'comment');
-        $this->label_subject_header          = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_subject_header');
-        $this->save_subject                  = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'save_subject');
-        $this->label_path                    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_path');
-        $this->label_mail_to                 = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_mail_to');
-        $this->label_notification_aviable    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'available_notifications');
-        $this->monitored_path                = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'monitored_path');
-        $this->notified_mails                = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notified_mails');
-        $this->no_notifications_message      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'no_notifications_message');
-        $this->add_notification              = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'add_notification');
+        $this->project_id           = $project->getId();
+        $this->repository_id        = $repository->getId();
+        $this->csrf_input           = $token->fetchHTMLInput();
+        $this->subject_header       = $mail_header->getHeader();
+        $this->title                = $title;
+        $this->repository_name      = $repository->getName();
+        $this->repository_full_name = $repository->getFullName();
+        $this->notification_active  = true;
+        $this->notifications        = $notifications;
+        $this->has_notifications    = (count($notifications) > 0);
+
+        $this->notification_subtitle      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notification_subtitle');
+        $this->comment                    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'comment');
+        $this->label_subject_header       = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_subject_header');
+        $this->save_subject               = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'save_subject');
+        $this->label_path                 = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_path');
+        $this->label_mail_to              = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_mail_to');
+        $this->label_notification_aviable = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'available_notifications');
+        $this->monitored_path             = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'monitored_path');
+        $this->notified_mails             = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notified_mails');
+        $this->no_notifications_message   = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'no_notifications_message');
+        $this->add_notification           = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'add_notification');
 
         $this->remove_notification_title   = dgettext('tuleap-svn', 'Wait a minute...');
         $this->remove_notification_desc    = dgettext('tuleap-svn', 'You are about to remove the notification. Please confirm your action.');
@@ -94,9 +99,5 @@ class MailNotificationPresenter extends BaseAdminPresenter{
         $this->delete                      = dgettext('tuleap-svn', 'Delete');
 
         $this->sections = new SectionsPresenter($repository);
-    }
-
-    public function hasNotification() {
-        return count($this->list_mails) > 0;
     }
 }
