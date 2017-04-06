@@ -41,4 +41,17 @@ class UsersToNotifyDao extends \DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function deleteUserFromAllNotificationsInProject($user_id, $project_id)
+    {
+        $user_id    = $this->da->escapeInt($user_id);
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "DELETE users.*
+                FROM plugin_svn_notification_users AS users
+                    INNER JOIN plugin_svn_notification AS notif ON (notif.id = users.notification_id AND users.user_id = $user_id)
+                    INNER JOIN plugin_svn_repositories AS repo ON (repo.id = notif.repository_id AND repo.project_id = $project_id)";
+
+        return $this->update($sql);
+    }
 }
