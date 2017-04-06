@@ -166,4 +166,17 @@ class UgroupsToNotifyDao extends DataAccessObject
                 WHERE notification.ugroup_id = $old_ugroup_id";
         return $sql;
     }
+
+    public function deleteByUgroupId($project_id, $ugroup_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+
+        $sql = "DELETE ugroups.*
+                FROM plugin_svn_notification_ugroups AS ugroups
+                    INNER JOIN plugin_svn_notification AS notif ON (notif.id = ugroups.notification_id AND ugroups.ugroup_id = $ugroup_id)
+                    INNER JOIN plugin_svn_repositories AS repo ON (repo.id = notif.repository_id AND repo.project_id = $project_id)";
+
+        return $this->update($sql);
+    }
 }
