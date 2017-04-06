@@ -144,6 +144,9 @@ var fat_combined_files = [
             'src/www/themes/FlamingParrot/css/FlamingParrot_DarkPurple.scss',
             'src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss'
         ],
+        watched_includes: [
+            'src/www/themes/FlamingParrot/css/**/_*.scss'
+        ],
         target_dir: 'src/www/themes/FlamingParrot/css'
     },
     theme_burningparrot_scss = {
@@ -243,6 +246,7 @@ gulp.task('watch', function() {
         common_scss.files
             .concat(select2_scss.files)
             .concat(theme_flamingparrot_scss.files)
+            .concat(theme_flamingparrot_scss.watched_includes)
             .concat(theme_burningparrot_scss.files)
             .concat(theme_burningparrot_scss.watched_includes),
         ['sass-core']

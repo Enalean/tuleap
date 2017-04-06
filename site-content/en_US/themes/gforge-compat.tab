@@ -69,6 +69,7 @@ menu	login_ssl	Login via SSL
 menu	logout	Logout
 menu	my_account	My Account
 menu	my_personal_page	My Personal Page
+menu	administration	Administration
 menu	mypage	My&nbsp;Page
 menu	new_project	Register New Project
 menu	new_releases	New Releases

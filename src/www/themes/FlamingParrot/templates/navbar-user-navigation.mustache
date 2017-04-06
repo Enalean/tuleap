@@ -11,16 +11,7 @@
                 {{{ purified_content }}}
             </li>
         {{/ user_actions }}
-        <li class="dropdown user-menu {{ nav_user_class }}">
-            <a id="navbar-user-navigation" href="#" class="dropdown-toggle username" data-toggle="dropdown">
-                {{# has_user_avatar }}
-                    <img class="user-avatar" src="{{user_avatar}}" />
-                {{/ has_user_avatar }}
-                {{ user_real_name }}
-                <b class="caret"></b>
-            </a>
-            {{> navbar-user-logged-in }}
-        </li>
+        {{> navbar-user-logged-in }}
     {{/ user_is_logged_in }}
     {{^ user_is_logged_in }}
         <li>

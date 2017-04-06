@@ -11,17 +11,21 @@
 }
 
 .logo {
-    max-width: $sidebar-width;
     width: $sidebar-width;
+    max-width: $sidebar-width;
     height: $navbar-height;
     float: left;
     @include logo-background($navbar-color);
 }
 
+.navbar .nav li.dropdown.active > .dropdown-toggle {
+    background-color: transparent;
+}
+
 @media screen and (max-width: 1366px) {
     .logo {
-        max-width: 155px;
         width: 155px;
+        max-width: 155px;
         float: left;
         @include logo-background-medium($navbar-color);
     }
@@ -29,8 +33,8 @@
 
 @media screen and (max-width: 1300px) {
     .logo {
-        max-width: 45px;
         width: 45px;
+        max-width: 45px;
         float: left;
         @include logo-background-small($navbar-color);
     }
@@ -38,29 +42,29 @@
 
 @media screen and (max-width: 980px) {
     .navbar-fixed-top {
-        margin: 0;
         position: fixed;
+        margin: 0;
     }
 }
 
 &.is-at-top .navbar {
-    box-shadow: none;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
 }
 
 .navbar {
-    background: $navbar-color;
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
     height: $navbar-height;
+    background: $navbar-color;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
 
     & > .motd {
+        padding: 13px 10px 12px;
         background: #0e73c2;
         color: #ffffff;
-        padding: 13px 10px 12px;
+        font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
         text-align: center;
-        font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 
         a {
-            color: white;
+            color: $white;
             text-decoration: underline;
         }
 
@@ -83,21 +87,44 @@
 }
 
 .navbar .navbar-inner {
-    font-family: 'SourceSansPro', Arial;
-    font-size: 1.1em;
-    background: $navbar-color;
-    filter: none;
-    border-bottom: 1px solid $dark-main;
-    color: $white;
-    padding: 0;
     height: $navbar-height;
-    box-shadow: none;
+    padding: 0;
+    border: 0;
+    background: $white;
+    color: $white;
+    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    filter: none;
+
+    #dropdown-project, #dropdown-help {
+        letter-spacing: normal;
+        text-transform: none;
+    }
+
+    .user-menu {
+        font-size: 14px;
+        letter-spacing: normal;
+        text-transform: none;
+        border-left: 1px solid #e3e5ed;
+    }
+
+    .admin-link {
+        color: #da5353;
+    }
+
+    .icon {
+        font-size: 16px;
+    }
 
     @media screen and (max-width: 1400px) {
-        font-size: 1em;
+        font-size: 12px;
     }
+
     @media screen and (max-width: 980px) {
-        font-size: 0.9em;
+        font-size: .9em;
     }
 
     .container-fluid {
@@ -112,13 +139,13 @@
         height: $navbar-height;
 
         & > li {
+            display: flex;
+            align-items: center;
             height: $navbar-height;
         }
 
         & > li > a {
-            color: $white;
             height: $navbar-height - 12px - 5px + 1px;
-            text-shadow: 0 1px 2px lighten($dark-grey, 20%);
             padding: 12px 20px 5px;
             text-align: center;
 
@@ -127,32 +154,73 @@
             }
         }
 
+        .nav-form {
+            margin-bottom: 0;
+        }
+
+        .nav-form-button {
+            padding: 0 20px;
+            border: 0;
+            background: $white;
+            color: #747474;
+
+            &:hover, &:focus {
+                outline: none;
+                color: $navbar-color;
+            }
+        }
+
         li:hover > a, li:hover > a:hover, li:hover > a:focus,
         li.active > a, li.active > a:hover, li.active > a:focus,
         li.dropdown.active > .dropdown-toggle {
-            color: $white;
-            background-color: $navbar-color-hover;
+            color: $navbar-color;
             box-shadow: none;
         }
 
-        li.dropdown > a .caret, li.dropdown > a:hover .caret, li.dropdown > a:focus .caret,
-        li.dropdown.open > .dropdown-toggle .caret, li.dropdown.active > .dropdown-toggle .caret, li.dropdown.open.active > .dropdown-toggle .caret {
+        li.dropdown.active > .dropdown-toggle .caret,
+        li.dropdown:hover > .dropdown-toggle .caret {
+            border-top-color: $navbar-color;
+            border-bottom-color: $navbar-color;
+        }
+
+        li.dropdown > a, li.dropdown > a:hover,
+        li.dropdown.open > .dropdown-toggle .caret, li.dropdown.active > .dropdown-toggle, li.dropdown.open.active > .dropdown-toggle .caret {
             border-top-color: $white;
             border-bottom-color: $white;
         }
 
         li.dropdown.open > .dropdown-toggle, li.dropdown.open.active > .dropdown-toggle {
-            color: $white;
             background-color: $dark-grey;
+            color: transparent;
             box-shadow: none;
         }
 
         li > a.username {
+            max-width: 250px;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
-            max-width: 250px;
+            display: flex;
+            padding: 0 0 0 10px;
+            height: 100%;
+            align-items: center;
+            line-height: normal;
         }
+
+        .user-infos {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-infos-real-name {
+            color: $main;
+        }
+
+        .user-infos-login-name {
+            font-size: 12px;
+        }
+
         @media screen and (max-width: 1250px) {
             li.user-menu {
                 width: 50px;
@@ -165,13 +233,12 @@
         }
 
         li.current-project > a {
-            background-color: darken($dark-main, 5%);
+            height: $navbar-height;
+            background-color: $white;
+            text-align: left;
             white-space: nowrap;
             overflow: hidden;
-            text-align: left;
             box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            height: $navbar-height;
 
             &:before {
                 content: '';
@@ -182,20 +249,20 @@
             }
         }
         li.current-project.cutted > a {
-            text-overflow: ellipsis;
             width: 180px;
+            text-overflow: ellipsis;
         }
         li.current-project:hover > a:hover, li.current-project:focus > a:focus {
-            background-color: darken($dark-main, 7%);
+            color: $navbar-color;
         }
 
         ul.dropdown-menu {
             top: $navbar-height - 1px;
-            background-color: $dark-grey;
-            border-radius: 0;
-            border: none;
             min-width: 100%;
             padding: 0;
+            border: 0;
+            border-radius: 0;
+            background-color: $dark-grey;
 
             &:before, &:after {
                 content: none;
@@ -210,12 +277,11 @@
             }
 
             li > a, .submit-action {
-                color: $white;
-                font-size: 0.9em;
-                line-height: 1.7em;
                 display: block;
                 padding: 3px 20px;
                 clear: both;
+                color: $white;
+                font-size: 13px;
                 font-weight: normal;
                 line-height: $baseLineHeight;
                 white-space: nowrap;
@@ -229,70 +295,70 @@
             .submit-action:hover, .submit-action:focus,
             .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
                 background: lighten($dark-grey, 10%);
+                color: #ffffff;
                 background-image: none;
-                filter: none;
                 text-decoration: none;
+                filter: none;
             }
 
             li > form {
-                margin: 0;
                 display: flex;
+                margin: 0;
 
                 .submit-action {
-                    background-color: transparent;
-                    border: none;
                     flex-grow: 1;
-                    text-align: left;
+                    border: 0;
+                    background-color: transparent;
                     font-family: inherit;
+                    text-align: left;
                 }
             }
 
             .divider {
-                background-color: darken($dark-grey, 5%);
                 border: 0;
+                background-color: darken($dark-grey, 5%);
             }
         }
 
         .projects-nav ul.dropdown-menu {
+            width: 300px;
             max-height: 590px;
             overflow: hidden;
-            width: 300px;
 
             #filter-projects {
-                background: lighten($dark-grey, 10%);
                 border-color: darken($dark-grey, 3%);
                 color: $grey;
                 width: 85%;
                 margin: 10px auto;
                 display: block;
+                background: lighten($dark-grey, 10%);
 
                 &:focus {
-                    box-shadow: none;
                     background: lighten($dark-grey, 15%);
+                    box-shadow: none;
                 }
             }
         }
     }
 
     .user-avatar {
-        float: left;
-        position: relative;
-        top: -8px;
-        margin: 0 10px 0 0;
         width: 36px;
         height: 36px;
-        border-radius: 50%;
+        margin: 0 10px 0 0;
     }
 
     .navbar-search {
-        margin: 8px 25px 0 0;
+        margin: 8px 10px 0 0;
 
         input[type="text"] {
-            border: 1px solid $dark-main;
+            border-radius: 14px;
+            padding-right: 15px;
+            padding-left: 15px;
 
             &:focus {
                 box-shadow: none;
                 z-index: 0;
+                border: 1px solid $navbar-color-hover;
             }
         }
 
@@ -309,7 +375,7 @@
             padding: 3px 18px 5px;
 
             i {
-                color: #FFFFFF;
+                color: #ffffff;
                 text-shadow: 0 1px 2px lighten($dark-grey, 25%);
             }
         }

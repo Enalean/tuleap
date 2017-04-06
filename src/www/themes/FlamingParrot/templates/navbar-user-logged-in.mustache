@@ -1,18 +1,39 @@
-<ul id="dropdown-user-navigation" class="dropdown-menu">
-    {{^ request_is_post }}
-        <li class="bookmarkpage">
-            <a href="/my/bookmark_add.php?bookmark_url={{ bookmark_url }}&bookmark_title={{ bookmark_title }}">
-                {{ include_menu_bookmark_this_page_text }}
-            </a>
-    {{/ request_is_post }}
-    <li><a href="/account/">{{ my_index_text }}</a></li>
-    <li class="divider"></li>
-    <li>
-        <form action="/account/logout.php" method="post">
-            {{# logout_csrf }}
-                {{> csrf_token_input }}
-            {{/ logout_csrf }}
-            <input class="submit-action" type="submit" value="{{ include_menu_text }}">
-        </form>
+<li class="user-menu">
+    <a id="navbar-user-navigation" href="/my/" class="username">
+        <img class="user-avatar" src="{{ user_avatar }}" />
+        <div class="user-infos">
+            <span class="user-infos-real-name">{{ user_real_name }}</span>
+            <span class="user-infos-login-name">{{ user_login_name }}</span>
+        </div>
+    </a>
+</li>
+<li>
+    <a href="/account/" title="{{ my_account_label }}">
+        <i class="icon icon-cog"></i>
+    </a>
+</li>
+{{^ request_is_post }}
+    <li class="bookmarkpage">
+        <a href="/my/bookmark_add.php?bookmark_url={{ bookmark_url }}&bookmark_title={{ bookmark_title }}" title="{{ bookmark_label }}">
+            <i class="icon icon-bookmark"></i>
+        </a>
     </li>
-</ul>
+{{/ request_is_post }}
+<li>
+    <form
+            class="nav-form"
+            action="/account/logout.php"
+            method="POST"
+    >
+        {{# logout_csrf }}
+            {{> csrf_token_input }}
+        {{/ logout_csrf }}
+        <button
+                class="nav-form-button"
+                type="submit"
+                title="{{ logout_label }}"
+        >
+            <i class="icon icon-off nav-form-button-icon"></i>
+        </button>
+    </form>
+</li>

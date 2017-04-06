@@ -55,7 +55,6 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
     public function buildNavBarItemPresentersCollection() {
         $collection = new FlamingParrot_NavBarItemPresentersCollection();
 
-        $this->addMyItem($collection);
         $this->addProjectsItem($collection);
         $this->addHelpItem($collection);
         $this->addMoarItem($collection);
@@ -73,24 +72,13 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder {
         return $collection;
     }
 
-    private function addMyItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
-        if ($this->user->isLoggedIn()) {
-            $collection->addItem(new FlamingParrot_NavBarItemLinkPresenter(
-                'my',
-                $this->isNavBarItemActive(array('/my/', '/widgets/')),
-                '/my/',
-                $GLOBALS['Language']->getText('menu', 'my_personal_page')
-            ));
-        }
-    }
-
     private function addAdminItem(FlamingParrot_NavBarItemPresentersCollection $collection) {
         if ($this->user->isSuperUser()) {
-            $collection->addItem(new FlamingParrot_NavBarItemLinkPresenter(
+            $collection->addItem(new FlamingParrot_NavBarItemAdminPresenter(
                 self::$NO_ID,
                 $this->isNavBarItemActive('/admin/', 'admin'),
                 '/admin/',
-                'Admin'
+                $GLOBALS['Language']->getText('menu', 'administration')
             ));
         }
     }
