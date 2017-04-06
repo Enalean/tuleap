@@ -361,7 +361,8 @@ CREATE TABLE tracker_changeset_value_artifactlink(
     group_id INT(11) NOT NULL,
     PRIMARY KEY(changeset_value_id, artifact_id),
     INDEX idx_reverse (artifact_id, changeset_value_id, nature(10)),
-    INDEX idx_nature (nature(10))
+    INDEX idx_nature (nature(10)),
+    INDEX idx_group_id_keyword (group_id, keyword)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_changeset_value_permissionsonartifact;
