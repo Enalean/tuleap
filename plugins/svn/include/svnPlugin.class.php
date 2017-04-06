@@ -128,6 +128,7 @@ class SvnPlugin extends Plugin {
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+        $this->addHook(Event::SITE_ACCESS_CHANGE);
     }
 
     public function export_xml_project($params)
@@ -651,7 +652,22 @@ class SvnPlugin extends Plugin {
     /** @see Event::PROJECT_ACCESS_CHANGE */
     public function project_access_change(array $params)
     {
-        $updater = new UgroupsToNotifyUpdater(new UgroupsToNotifyDao());
+        $updater = $this->getUgroupToNotifyUpdater();
         $updater->updateProjectAccess($params['project_id'], $params['old_access'], $params['access']);
+    }
+
+    /** @see Event::SITE_ACCESS_CHANGE */
+    public function site_access_change(array $params)
+    {
+        $updater = $this->getUgroupToNotifyUpdater();
+        $updater->updateSiteAccess($params['old_value']);
+    }
+
+    /**
+     * @return UgroupsToNotifyUpdater
+     */
+    private function getUgroupToNotifyUpdater()
+    {
+        return new UgroupsToNotifyUpdater(new UgroupsToNotifyDao());
     }
 }

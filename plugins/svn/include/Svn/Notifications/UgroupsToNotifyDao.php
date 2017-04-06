@@ -58,6 +58,16 @@ class UgroupsToNotifyDao extends DataAccessObject
         );
     }
 
+    public function updateAllAnonymousAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
+    }
+
+    public function updateAllAuthenticatedAccessToRegistered()
+    {
+        return $this->updateAllPermissions(ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+    }
+
     private function updateNotificationUgroups($project_id, array $old_ugroup_ids, $new_ugroup_id)
     {
         $project_id     = $this->da->escapeInt($project_id);
@@ -89,6 +99,36 @@ class UgroupsToNotifyDao extends DataAccessObject
         return true;
     }
 
+    private function updateAllPermissions($old_ugroup_id, $new_ugroup_id)
+    {
+        $new_ugroup_id = $this->da->escapeInt($new_ugroup_id);
+        $old_ugroup_id = $this->da->escapeInt($old_ugroup_id);
+
+        $this->startTransaction();
+
+        $sql = $this->getQueryToReplaceUgroup($old_ugroup_id, $new_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        /**
+         * Ugroups to be removed if new_ugroup_id already exists in
+         * tracker_global_notification_ugroups table for the same
+         * notification_id
+         */
+        $sql = $this->getQueryToRemoveRemainingUgroup($old_ugroup_id);
+
+        if (! $this->update($sql)) {
+            $this->rollBack();
+            return false;
+        }
+
+        $this->commit();
+        return true;
+    }
+
     private function getQueryToReplaceUgroupsByProjectId($project_id, $old_ugroup_ids, $new_ugroup_id)
     {
         $sql = "UPDATE IGNORE plugin_svn_notification_ugroups AS u
@@ -108,6 +148,22 @@ class UgroupsToNotifyDao extends DataAccessObject
                     INNER JOIN plugin_svn_repositories AS r ON (r.id = n.repository_id)
                     WHERE r.project_id = $project_id
                       AND u.ugroup_id IN ($old_ugroup_ids)";
+        return $sql;
+    }
+
+    private function getQueryToReplaceUgroup($old_ugroup_id, $new_ugroup_id)
+    {
+        $sql = "UPDATE IGNORE plugin_svn_notification_ugroups
+                SET ugroup_id = $new_ugroup_id
+                WHERE ugroup_id = $old_ugroup_id";
+        return $sql;
+    }
+
+    private function getQueryToRemoveRemainingUgroup($old_ugroup_id)
+    {
+        $sql = "DELETE notification.*
+                FROM plugin_svn_notification_ugroups AS notification
+                WHERE notification.ugroup_id = $old_ugroup_id";
         return $sql;
     }
 }
