@@ -119,6 +119,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('codendi_daily_start');
         $this->addHook('show_pending_documents');
         $this->addHook('project_is_deleted');
+        $this->addHook('project_admin_ugroup_deletion');
         $this->addHook('project_admin_remove_user');
         $this->addHook('logs_daily');
         $this->addHook('statistics_collector');
@@ -694,5 +695,15 @@ class SvnPlugin extends Plugin {
             $this->getMailNotificationDao()
         );
         $notifications_for_project_member_cleaner->cleanNotificationsAfterUserRemoval($project, $user);
+    }
+
+    public function project_admin_ugroup_deletion($params)
+    {
+        $project_id = $params['group_id'];
+        $ugroup     = $params['ugroup'];
+
+        $ugroups_to_notify_dao = new UgroupsToNotifyDao();
+        $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
+        $this->getMailNotificationDao()->deleteEmptyNotificationsInProject($project_id);
     }
 }
