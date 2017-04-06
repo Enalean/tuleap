@@ -56,6 +56,14 @@
                                                     {{ label }}<span class="svn-notification-email-list-separator">, </span>
                                             </span>
                                             {{/ ugroups_to_be_notified }}
+                                            {{# users_to_be_notified }}
+                                                <span class="svn-notification-email-list-entry">
+                                                <div class="avatar svn-notification-user-avatar">
+                                                    {{# has_avatar }}<img src="{{ avatar_url }}" />{{/ has_avatar }}
+                                                </div>
+                                                    {{ label }}<span class="svn-notification-email-list-separator">, </span>
+                                            </span>
+                                            {{/ users_to_be_notified }}
                                             {{# emails_to_be_notified }}
                                                 <span class="svn-notification-email-list-entry">
                                                 {{ . }}<span class="svn-notification-email-list-separator">, </span>

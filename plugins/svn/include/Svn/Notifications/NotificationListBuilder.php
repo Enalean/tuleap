@@ -33,12 +33,18 @@ class NotificationListBuilder
      * @var UGroupDao
      */
     private $ugroup_dao;
+    /**
+     * @var CollectionOfUserToBeNotifiedPresenterBuilder
+     */
+    private $user_to_be_notified_builder;
 
     public function __construct(
         UGroupDao $ugroup_dao,
+        CollectionOfUserToBeNotifiedPresenterBuilder $user_to_be_notified_builder,
         CollectionOfUgroupToBeNotifiedPresenterBuilder $ugroup_to_be_notified_builder
     ) {
         $this->ugroup_dao                    = $ugroup_dao;
+        $this->user_to_be_notified_builder   = $user_to_be_notified_builder;
         $this->ugroup_to_be_notified_builder = $ugroup_to_be_notified_builder;
     }
 
@@ -54,10 +60,12 @@ class NotificationListBuilder
             $emails_to_be_notified = $emails_builder->transformNotificationEmailsStringAsArray(
                 $notification->getNotifiedMails()
             );
+            $user_presenters   = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
             $ugroup_presenters = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
             $notifications_presenters[] = new NotificationPresenter(
                 $notification,
                 $emails_to_be_notified,
+                $user_presenters,
                 $ugroup_presenters,
                 $notification->getNotifiedMails()
             );
