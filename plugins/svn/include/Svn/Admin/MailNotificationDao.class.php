@@ -104,4 +104,21 @@ class MailNotificationDao extends DataAccessObject {
 
         return $this->retrieve($query);
     }
+
+    public function deleteEmptyNotificationsInProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "DELETE notif.*
+                FROM plugin_svn_notification AS notif
+                    INNER JOIN plugin_svn_repositories AS repo ON (repo.id = notif.repository_id AND repo.project_id = $project_id)
+                    LEFT JOIN plugin_svn_notification_users AS users ON (notif.id = users.notification_id)
+                    LEFT JOIN plugin_svn_notification_ugroups AS ugroups ON (notif.id = ugroups.notification_id)
+                WHERE IFNULL(notif.mailing_list, '') = ''
+                    AND users.notification_id IS NULL
+                    AND ugroups.notification_id IS NULL
+                ";
+
+        return $this->update($sql);
+    }
 }

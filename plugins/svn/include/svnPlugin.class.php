@@ -28,6 +28,7 @@ use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
+use Tuleap\Svn\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
@@ -118,6 +119,7 @@ class SvnPlugin extends Plugin {
         $this->addHook('codendi_daily_start');
         $this->addHook('show_pending_documents');
         $this->addHook('project_is_deleted');
+        $this->addHook('project_admin_remove_user');
         $this->addHook('logs_daily');
         $this->addHook('statistics_collector');
         $this->addHook('plugin_statistics_service_usage');
@@ -316,10 +318,18 @@ class SvnPlugin extends Plugin {
     private function getMailNotificationManager() {
         if (empty($this->mail_notification_manager)) {
             $this->mail_notification_manager = new MailNotificationManager(
-                new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())
+                $this->getMailNotificationDao()
             );
         }
         return $this->mail_notification_manager;
+    }
+
+    /**
+     * @return MailNotificationDao
+     */
+    private function getMailNotificationDao()
+    {
+        return new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder());
     }
 
     /**
@@ -669,5 +679,20 @@ class SvnPlugin extends Plugin {
     private function getUgroupToNotifyUpdater()
     {
         return new UgroupsToNotifyUpdater(new UgroupsToNotifyDao());
+    }
+
+    public function project_admin_remove_user(array $params)
+    {
+        $project_id = $params['group_id'];
+        $user_id    = $params['user_id'];
+
+        $project = ProjectManager::instance()->getProject($project_id);
+        $user    = UserManager::instance()->getUserById($user_id);
+
+        $notifications_for_project_member_cleaner = new NotificationsForProjectMemberCleaner(
+            new UsersToNotifyDao(),
+            $this->getMailNotificationDao()
+        );
+        $notifications_for_project_member_cleaner->cleanNotificationsAfterUserRemoval($project, $user);
     }
 }
