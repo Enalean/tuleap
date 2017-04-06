@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory;
@@ -29,7 +29,6 @@ use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostAgileDashboard\Controller;
 use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardFactory;
 use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardDao;
-use Tuleap\BotMattermostAgileDashboard\SenderServices\MarkdownFormatter;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
