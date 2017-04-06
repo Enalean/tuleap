@@ -51,22 +51,29 @@ class NotificationPresenter
      * @var bool
      */
     public $has_notified;
+    /**
+     * @var array
+     */
+    public $users_to_be_notified;
 
     public function __construct(
         MailNotification $notification,
         array $emails_to_be_notified,
+        array $users_to_be_notified,
         array $ugroups_to_be_notified,
         $emails_to_be_notified_string
     ) {
         $this->notification_id = $notification->getId();
         $this->path            = $notification->getPath();
 
+        $this->users_to_be_notified   = $users_to_be_notified;
         $this->ugroups_to_be_notified = $ugroups_to_be_notified;
         $this->emails_to_be_notified  = $emails_to_be_notified;
 
         $this->emails_to_be_notified_string = $emails_to_be_notified_string;
 
         $this->has_notified = count($this->emails_to_be_notified) > 0
+            || count($this->users_to_be_notified) > 0
             || count($this->ugroups_to_be_notified) > 0;
     }
 }
