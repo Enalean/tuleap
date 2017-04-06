@@ -49,8 +49,12 @@ class Response {
             $dao = $this->getFeedbackDao();
             $dar = $dao->search($session_id);
             if ($dar && $dar->valid()) {
-                $row = $dar->current();
-                $this->_feedback = unserialize($row['feedback']);
+                $row             = $dar->current();
+                $this->_feedback = new Feedback();
+                $feedback_logs   = json_decode($row['feedback']);
+                foreach ($feedback_logs as $feedback_log) {
+                    $this->_feedback->log($feedback_log->level, $feedback_log->msg, $feedback_log->purify);
+                }
                 $dao->delete($session_id);
             }
         }
@@ -121,7 +125,7 @@ class Response {
     function _serializeFeedback() {
         $dao        = $this->getFeedbackDao();
         $session_id = UserManager::instance()->getCurrentUser()->getSessionId();
-        $dao->create($session_id, serialize($this->_feedback));
+        $dao->create($session_id, json_encode($this->_feedback->getLogs()));
     }
 
     function setCookie($name, $value, $expire = 0) {

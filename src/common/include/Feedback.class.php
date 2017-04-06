@@ -55,6 +55,14 @@ class Feedback {
         }
     }
 
+    /**
+     * @return array
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
     function fetch() {
         return $this->formatter->format($this->logs);
     }
