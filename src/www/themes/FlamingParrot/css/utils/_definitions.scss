@@ -152,8 +152,14 @@ legend {
     }
 
     &.has_sidebar.sidebar-collapsed {
+        .logo {
+            width: $sidebar-width-collapsed;
+            max-width: $sidebar-width-collapsed;
+            background: $navbar-color url('../images/organization_logo_small.png') no-repeat center center;
+        }
+
         .sidebar-nav {
-            width: 45px;
+            width: $sidebar-width-collapsed;
 
             .project-title-container {
                 width: $sidebar-width;
@@ -161,7 +167,7 @@ legend {
             }
 
             li a {
-                width: 45px;
+                width: $sidebar-width-collapsed;
 
                 & > span {
                     display: none;
@@ -174,7 +180,7 @@ legend {
         }
 
         .main {
-            margin-left: 45px;
+            margin-left: $sidebar-width-collapsed;
         }
     }
 

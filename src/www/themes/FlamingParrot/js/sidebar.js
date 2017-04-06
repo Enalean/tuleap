@@ -19,7 +19,7 @@
 
 !function($) {
     var width_collapsed = '45px';
-    var width_expanded  = '200px';
+    var width_expanded  = '250px';
     var api;
     var throttleTimeout;
 
@@ -44,6 +44,8 @@
     }
 
     function updateSidebarWidth(new_width, duration) {
+        updateNavbarLogo(new_width);
+
         $('.sidebar-nav').animate({
             width: new_width
         }, duration, updateNavbar(new_width));
@@ -64,9 +66,20 @@
         window.setTimeout(emitSidebarSizeUpdated, 0);
     }
 
+    function updateNavbarLogo(new_width) {
+        var logo = document.querySelector('#navbar-logo > .logo');
+
+        if (new_width == width_expanded) {
+            logo.classList.remove('logo-collapsed');
+        } else {
+            logo.classList.add('logo-collapsed');
+        }
+    }
+
     function updateNavbar(new_width) {
         if (new_width == width_expanded) {
             $('.navbar .nav:first-child li.current-project').remove();
+
         } else {
             $('.navbar .nav:first-child').prepend('<li class="current-project">' + $('.project-title-container').html() + '</li>');
 

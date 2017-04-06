@@ -19,7 +19,8 @@
 
 (function() {
     var sidebar_collapsers = document.querySelectorAll('.sidebar-collapser'),
-        sidebar            = document.querySelector('.siteadmin-sidebar');
+        sidebar            = document.querySelector('.siteadmin-sidebar'),
+        logo               = document.getElementById('logo');
 
     bindSidebarEvent();
 
@@ -30,9 +31,11 @@
 
             if (! is_clicked_element_a_sidebar_collapser && document.body.classList.contains('sidebar-fully-collpased')) {
                 document.body.classList.remove('sidebar-fully-collpased');
+                logo.classList.remove('logo-collapsed');
 
             } else if (is_clicked_element_a_sidebar_collapser && ! document.body.classList.contains('sidebar-fully-collpased')) {
                 document.body.classList.add('sidebar-fully-collpased');
+                logo.classList.add('logo-collapsed');
             }
         });
     }
