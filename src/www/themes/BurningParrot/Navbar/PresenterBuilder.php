@@ -39,15 +39,20 @@ class PresenterBuilder
     /** @var array */
     private $extra_tabs;
 
+    /** @var array */
+    private $help_menu_items;
+
     public function build(
         HTTPRequest $request,
         PFUser $current_user,
         array $extra_tabs,
+        array $help_menu_items,
         URLRedirect $url_redirect
     ) {
-        $this->request      = $request;
-        $this->current_user = $current_user;
-        $this->extra_tabs   = $extra_tabs;
+        $this->request         = $request;
+        $this->current_user    = $current_user;
+        $this->extra_tabs      = $extra_tabs;
+        $this->help_menu_items = $help_menu_items;
 
         return new Presenter(
             new GlobalNavPresenter(
@@ -66,12 +71,12 @@ class PresenterBuilder
 
     private function getGlobalNavbarDropdownMenuItems()
     {
+        $navbar_dropdown_items_builder     = new DropdownItemsPresenterBuilder();
         $global_navbar_dropdown_menu_items = array();
 
         $projects_builder                 = new ProjectPresenterBuilder();
         $navbar_dropdown_projects_builder = new DropdownProjectsPresenterBuilder();
         $projects                         = $navbar_dropdown_projects_builder->build($projects_builder->build($this->current_user));
-
         if ($projects) {
             $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
@@ -80,9 +85,16 @@ class PresenterBuilder
             );
         }
 
-        $navbar_dropdown_items_builder = new DropdownItemsPresenterBuilder();
-        $dropdowns                     = $navbar_dropdown_items_builder->build($this->extra_tabs);
+        $help_dropdowns = $navbar_dropdown_items_builder->build('help-dropdown', $this->help_menu_items);
+        if ($help_dropdowns) {
+            $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
+                $GLOBALS['Language']->getText('include_menu', 'help'),
+                'fa fa-question-circle',
+                $help_dropdowns
+            );
+        }
 
+        $dropdowns = $navbar_dropdown_items_builder->build('extra-tabs-dropdown', $this->extra_tabs);
         if ($dropdowns) {
             $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'extras'),
@@ -97,12 +109,6 @@ class PresenterBuilder
     private function getGlobalMenuItems()
     {
         return array(
-            new GlobalMenuItemPresenter(
-                $GLOBALS['Language']->getText('include_menu', 'help'),
-                '/help/',
-                'fa fa-question-circle',
-                ''
-            ),
             new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'site_admin'),
                 '/admin/',

@@ -24,12 +24,17 @@ use Tuleap\Theme\BurningParrot\Navbar\GlobalMenuItemPresenter;
 
 class DropdownItemsPresenterBuilder
 {
+    /** @var string */
+    private $id;
+
     /** @var array */
     private $items;
 
     public function build(
+        $id,
         array $items
     ) {
+        $this->id    = $id;
         $this->items = $items;
 
         return $this->getDropdownItemsPresenter();
@@ -51,7 +56,7 @@ class DropdownItemsPresenterBuilder
 
         if (count($links) > 0) {
             $dropdown_items = new DropdownItemsPresenter(
-                'extra-tabs',
+                $this->id,
                 $items
             );
 

@@ -79,7 +79,7 @@ class UserNavPresenter
 
     public function my_account_label()
     {
-        return $GLOBALS['Language']->getText('my_index', 'account_maintenance');
+        return $GLOBALS['Language']->getText('menu', 'my_personal_page');
     }
 
     public function login_menu_item()
@@ -106,9 +106,9 @@ class UserNavPresenter
     {
         return array(
             new GlobalMenuItemPresenter(
-                $GLOBALS['Language']->getText('menu', 'my_personal_page'),
-                '/my/',
-                'fa fa-home',
+                $GLOBALS['Language']->getText('my_index', 'account_maintenance'),
+                '/account/',
+                'fa fa-cog',
                 'only-icon'
             )
         );
