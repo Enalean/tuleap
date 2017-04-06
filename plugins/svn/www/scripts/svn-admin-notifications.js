@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', hideEditMode);
     });
 
+    initializeAutocompleter('#add_email');
+    initializeAutocompleter('.edit_email');
     initializeAddNotification();
 
     function initializeAddNotification() {
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
             hideEditMode();
             add_row.classList.remove('svn-notifications-row-add-hidden');
             add_button.classList.add('svn-notifications-add-hidden');
+            tuleap.resetPlaceholder('#add_email');
         });
     }
 
@@ -78,6 +81,26 @@ document.addEventListener('DOMContentLoaded', function () {
             [].forEach.call(inputs, function (input) {
                 input.disabled = false;
             });
+        });
+
+        var input            = document.getElementById(tr.dataset.targetInputId),
+            selected_ugroups = JSON.parse(input.dataset.ugroups),
+            selected_users   = JSON.parse(input.dataset.users),
+            selected_emails  = JSON.parse(input.dataset.emails);
+        tuleap.addDataToAutocompleter(input, selected_ugroups.concat(selected_users).concat(selected_emails));
+        tuleap.enableAutocompleter(input);
+    }
+
+    function initializeAutocompleter(input_id) {
+        var inputs = document.querySelectorAll(input_id);
+
+        if (! inputs) {
+            return;
+        }
+
+        [].forEach.call(inputs, function (input) {
+            tuleap.loadUserAndUgroupAutocompleter(input);
+            tuleap.addDataToAutocompleter(input);
         });
     }
 });

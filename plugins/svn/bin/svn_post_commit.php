@@ -72,7 +72,11 @@ try {
         ),
         new MailHeaderManager(new MailHeaderDao()),
         new EmailsToBeNotifiedRetriever(
-            new MailNotificationManager(new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder())),
+            new MailNotificationManager(
+                new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
+                new UsersToNotifyDao(),
+                new UgroupsToNotifyDao()
+            ),
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),
             new UGroupManager()

@@ -40,6 +40,28 @@ class UgroupsToNotifyDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function insert($notification_id, $ugroup_id)
+    {
+        $notification_id = $this->da->escapeInt($notification_id);
+        $ugroup_id       = $this->da->escapeInt($ugroup_id);
+
+        $sql = "REPLACE INTO plugin_svn_notification_ugroups(notification_id, ugroup_id)
+                VALUES ($notification_id, $ugroup_id)";
+
+        return $this->update($sql);
+    }
+
+    public function deleteByNotificationId($notification_id)
+    {
+        $notification_id = $this->da->escapeInt($notification_id);
+
+        $sql = "DELETE
+                FROM plugin_svn_notification_ugroups
+                WHERE notification_id = $notification_id";
+
+        return $this->update($sql);
+    }
+
     public function disableAnonymousRegisteredAuthenticated($project_id)
     {
         return $this->updateNotificationUgroups(

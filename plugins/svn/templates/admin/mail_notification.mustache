@@ -31,7 +31,7 @@
                 {{# has_notifications }}
                     {{# notifications }}
                         {{# has_notified }}
-                            <tr>
+                            <tr data-target-input-id="edit_email_{{ notification_id }}">
                                 <td>
                                     <div class="svn-notifications-checkbox-cell-read">
                                         <div>{{ path }}</div>
@@ -40,7 +40,7 @@
                                         {{# path }}
                                             <input type="text"
                                                    class="svn-notification-edit-input"
-                                                   name="notification_update[{{ path }}][path]"
+                                                   name="notification_update[{{ notification_id }}][path]"
                                                    value="{{ path }}"
                                                    disabled
                                             />
@@ -54,7 +54,7 @@
                                                 <span class="svn-notification-email-list-entry">
                                                 <i class="icon-group svn-notification-email-list-group-icon"></i>
                                                     {{ label }}<span class="svn-notification-email-list-separator">, </span>
-                                            </span>
+                                                </span>
                                             {{/ ugroups_to_be_notified }}
                                             {{# users_to_be_notified }}
                                                 <span class="svn-notification-email-list-entry">
@@ -72,14 +72,18 @@
                                         </div>
                                     </div>
                                     <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
-                                        {{# emails_to_be_notified }}
+                                        {{# has_notified }}
                                             <input type="text"
-                                                   class="svn-notification-edit-input"
-                                                   name="notification_update[{{ path }}][emails]"
-                                                   value="{{ emails_to_be_notified_string }}"
+                                                   id="edit_email_{{ notification_id }}"
+                                                   class="edit_email autocompleter-users-and-ugroups-input"
+                                                   name="notification_update[{{ notification_id }}][emails]"
+                                                   data-project-id="{{ project_id }}"
+                                                   data-emails="{{ emails_to_be_notified_json }}"
+                                                   data-users="{{ users_to_be_notified_json }}"
+                                                   data-ugroups="{{ ugroups_to_be_notified_json }}"
                                                    disabled
                                             />
-                                        {{/ emails_to_be_notified }}
+                                        {{/ has_notified }}
                                     </div>
                                 </td>
                                 <td class="svn-notification-form-actions">
@@ -133,8 +137,15 @@
                     <td class="notification-path">
                         <input type="text" id="add_path" name="notification_add[path]" placeholder="{{ label_path }}">
                     </td>
-                    <td class="add-notification-list">
-                        <input type="text" id="add_email" name="notification_add[emails]" placeholder="{{ label_mail_to }}">
+                    <td>
+                        <input type="text"
+                               id="add_email"
+                               name="notification_add[emails]"
+                               class="autocompleter-users-and-ugroups-input"
+                               placeholder="{{ new_notification_placeholder }}"
+                               data-project-id="{{ project_id }}"
+                               multiple
+                        />
                     </td>
                     <td class="svn-notification-edit">
                         <button type="submit" name="save-mailing-lists" value="1" class="btn btn-primary">{{ save }}</button>

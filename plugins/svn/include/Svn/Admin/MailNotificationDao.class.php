@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -44,17 +44,15 @@ class MailNotificationDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function deleteByRepositoryIdAndNotificationId($repository_id, $notification_id)
+    public function deleteByNotificationId($notification_id)
     {
-        $notification_id = $this->da->quoteSmart($notification_id);
-        $repository_id   = $this->da->escapeInt($repository_id);
+        $notification_id = $this->da->escapeInt($notification_id);
 
         $sql = "DELETE n.*, u.*, g.*
                 FROM plugin_svn_notification AS n
                     LEFT JOIN plugin_svn_notification_users AS u ON (n.id = u.notification_id)
                     LEFT JOIN plugin_svn_notification_ugroups AS g ON (n.id = g.notification_id)
-                WHERE id            = $notification_id
-                  AND repository_id = $repository_id";
+                WHERE id = $notification_id";
 
         return $this->update($sql);
     }
@@ -69,19 +67,18 @@ class MailNotificationDao extends DataAccessObject {
                   VALUES
                     ($repository_id, $mailing_list, $path)";
 
-        return $this->update($query);
+        return $this->updateAndGetLastId($query);
     }
 
-    public function updateByRepositoryIdAndPath($old_path, MailNotification $email_notification)
+    public function updateByNotificationId(MailNotification $email_notification)
     {
-        $old_path      = $this->da->quoteSmart($old_path);
-        $new_path      = $this->da->quoteSmart($email_notification->getPath());
-        $mailing_list  = $this->da->quoteSmart($email_notification->getNotifiedMails());
-        $repository_id = $this->da->escapeInt($email_notification->getRepository()->getId());
+        $notification_id = $this->da->escapeInt($email_notification->getId());
+        $new_path        = $this->da->quoteSmart($email_notification->getPath());
+        $mailing_list    = $this->da->quoteSmart($email_notification->getNotifiedMails());
 
         $sql = "UPDATE plugin_svn_notification
                 SET svn_path = $new_path, mailing_list = $mailing_list
-                WHERE repository_id = $repository_id AND svn_path = $old_path";
+                WHERE id = $notification_id";
 
         return $this->update($sql);
     }

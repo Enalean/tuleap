@@ -56,6 +56,7 @@ class MailNotificationPresenter extends BaseAdminPresenter{
     public $save;
     public $cancel;
     public $delete;
+    public $new_notification_placeholder;
 
     public function __construct(
         Repository $repository,
@@ -90,13 +91,14 @@ class MailNotificationPresenter extends BaseAdminPresenter{
         $this->no_notifications_message   = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'no_notifications_message');
         $this->add_notification           = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'add_notification');
 
-        $this->remove_notification_title   = dgettext('tuleap-svn', 'Wait a minute...');
-        $this->remove_notification_desc    = dgettext('tuleap-svn', 'You are about to remove the notification. Please confirm your action.');
-        $this->remove_notification_confirm = dgettext('tuleap-svn', 'Confirm deletion');
-        $this->edit                        = dgettext('tuleap-svn', 'Edit');
-        $this->save                        = dgettext('tuleap-svn', 'Save');
-        $this->cancel                      = dgettext('tuleap-svn', 'Cancel');
-        $this->delete                      = dgettext('tuleap-svn', 'Delete');
+        $this->remove_notification_title    = dgettext('tuleap-svn', 'Wait a minute...');
+        $this->remove_notification_desc     = dgettext('tuleap-svn', 'You are about to remove the notification. Please confirm your action.');
+        $this->remove_notification_confirm  = dgettext('tuleap-svn', 'Confirm deletion');
+        $this->edit                         = dgettext('tuleap-svn', 'Edit');
+        $this->save                         = dgettext('tuleap-svn', 'Save');
+        $this->cancel                       = dgettext('tuleap-svn', 'Cancel');
+        $this->delete                       = dgettext('tuleap-svn', 'Delete');
+        $this->new_notification_placeholder = dgettext('tuleap-svn', 'User, group, email');
 
         $this->sections = new SectionsPresenter($repository);
     }

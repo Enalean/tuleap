@@ -41,27 +41,36 @@ class NotificationPresenter
      * @var array
      */
     public $ugroups_to_be_notified;
-
+    /**
+     * @var array
+     */
+    public $users_to_be_notified;
     /**
      * @var string
      */
-    public $emails_to_be_notified_string;
+    public $users_to_be_notified_json;
+    /**
+     * @var string
+     */
+    public $ugroups_to_be_notified_json;
+    /**
+     * @var string
+     */
+    public $emails_to_be_notified_json;
 
     /**
      * @var bool
      */
     public $has_notified;
-    /**
-     * @var array
-     */
-    public $users_to_be_notified;
 
     public function __construct(
         MailNotification $notification,
         array $emails_to_be_notified,
         array $users_to_be_notified,
         array $ugroups_to_be_notified,
-        $emails_to_be_notified_string
+        $emails_to_be_notified_json,
+        $users_to_be_notified_json,
+        $ugroups_to_be_notified_json
     ) {
         $this->notification_id = $notification->getId();
         $this->path            = $notification->getPath();
@@ -70,7 +79,9 @@ class NotificationPresenter
         $this->ugroups_to_be_notified = $ugroups_to_be_notified;
         $this->emails_to_be_notified  = $emails_to_be_notified;
 
-        $this->emails_to_be_notified_string = $emails_to_be_notified_string;
+        $this->emails_to_be_notified_json  = $emails_to_be_notified_json;
+        $this->users_to_be_notified_json   = $users_to_be_notified_json;
+        $this->ugroups_to_be_notified_json = $ugroups_to_be_notified_json;
 
         $this->has_notified = count($this->emails_to_be_notified) > 0
             || count($this->users_to_be_notified) > 0
