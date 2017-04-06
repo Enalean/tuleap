@@ -21,12 +21,14 @@
 namespace Tuleap\ArtifactsFolders\Converter;
 
 use DataAccessObject;
+use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 
 class ConverterDao extends DataAccessObject
 {
     public function searchArtifactsLinkedToFolderInProject($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
+        $project_id  = $this->da->escapeInt($project_id);
+        $folder_type = $this->da->quoteSmart(NatureInFolderPresenter::NATURE_IN_FOLDER);
 
         $sql = "SELECT
                     A.id AS item_id,
@@ -36,7 +38,7 @@ class ConverterDao extends DataAccessObject
                     ON (T.id = A.tracker_id AND T.group_id = $project_id)
                 INNER JOIN tracker_changeset_value_artifactlink AS artlink
                 INNER JOIN tracker_changeset_value AS cv
-                    ON (cv.id = artlink.changeset_value_id AND cv.changeset_id = A.last_changeset_id AND nature = '_in_folder')
+                    ON (cv.id = artlink.changeset_value_id AND cv.changeset_id = A.last_changeset_id AND nature = $folder_type)
                 INNER JOIN tracker_artifact AS folder
                     ON (folder.id = artlink.artifact_id)
                 INNER JOIN tracker AS folder_tracker

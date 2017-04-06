@@ -29,15 +29,16 @@ class CollectionOfLinksToAdd
      */
     private $links = array();
 
-    public function addALink(Tracker_Artifact $folder, $item_id)
+    public function addALink(Tracker_Artifact $folder, Tracker_Artifact $item)
     {
         $folder_id = $folder->getId();
+        $item_id   = $item->getId();
 
         if (! array_key_exists($folder_id, $this->links)) {
             $this->links[$folder_id] = array("folder" => $folder, "links" => array());
         }
 
-        $this->links[$folder_id]["links"][$item_id] = true;
+        $this->links[$folder_id]["links"][$item_id] = $item;
     }
 
     public function getLinksToAddToFolder()

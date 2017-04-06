@@ -80,6 +80,20 @@ class HierarchyOfFolderBuilder
         return array_reverse($hierarchy);
     }
 
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return null|Tracker_Artifact
+     */
+    public function getDirectFolderForArtifact(Tracker_Artifact $artifact)
+    {
+        $row = $this->folder_dao->searchFoldersTheArtifactBelongsTo($artifact->getId())->getRow();
+        if ($row) {
+            return $this->artifact_factory->getInstanceFromRow($row);
+        }
+
+        return null;
+    }
+
     private function getFirstParentThatIsAFolder($ancestors)
     {
         $parent_folder = null;
