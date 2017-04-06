@@ -321,11 +321,7 @@ class WikiUser {
     // Todo: try our WikiDB backends.
     function getPreferences() {
         // Restore saved preferences.
-
-        // I'd rather prefer only to store the UserId in the cookie or
-        // session, and get the preferences from the db or page.
-        if (!($prefs = $this->_request->getCookieVar('WIKI_PREFS2')))
-            $prefs = $this->_request->getSessionVar('wiki_prefs');
+        $prefs = $this->_request->getSessionVar('wiki_prefs');
 
         // before we get his prefs we should check if he is signed in
         if (USE_PREFS_IN_PAGE && $this->homePage()) { // in page metadata
@@ -349,7 +345,6 @@ class WikiUser {
         }
         // update the session and id
         $this->_request->setSessionVar('wiki_prefs', $prefs);
-        // $this->_request->setCookieVar('WIKI_PREFS2', $this->_prefs, 365);
         // simple unpacked cookie
         if ($this->_userid) setcookie('WIKI_ID', $this->_userid, 365, '/');
 

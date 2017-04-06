@@ -1,6 +1,6 @@
 <?php rcs_id('$Id: imagecache.php,v 1.12 2004/11/21 11:59:20 rurban Exp $');
 /*
- Copyright (C) 2002 Johannes Große (Johannes Gro&szlig;e)
+ Copyright (C) 2002 Johannes GroÃŸe (Johannes Gro&szlig;e)
 
  This file is part of PhpWiki.
 
@@ -21,7 +21,7 @@
 /**
  * Gets an image from the cache and prints it to the browser.
  * This file belongs to WikiPluginCached.
- * @author  Johannes Große
+ * @author  Johannes GroÃŸe
  * @version 0.8
  */
 
@@ -58,29 +58,6 @@ function deducePagename ($request) {
         return urldecode($query_string);
     
     return HOME_PAGE;
-}
-
-function deduceUsername() {
-    global $request;
-    if (!empty($request->args['auth']) and !empty($request->args['auth']['userid']))
-        return $request->args['auth']['userid'];
-    if (!empty($_SERVER['PHP_AUTH_USER']))
-        return $_SERVER['PHP_AUTH_USER'];
-    if (!empty($_ENV['REMOTE_USER']))
-        return $_ENV['REMOTE_USER'];
-    
-    if ($user = $request->getSessionVar('wiki_user')) {
-        $request->_user = $user;
-        $request->_user->_authhow = 'session';
-        return ENABLE_USER_NEW ? $user->UserName() : $request->_user;
-    }
-    if ($userid = $request->getCookieVar('WIKI_ID')) {
-        if (!empty($userid) and substr($userid,0,2) != 's:') {
-            $request->_user->authhow = 'cookie';
-            return $userid;
-        }
-    }
-    return false;
 }
 
 /**
