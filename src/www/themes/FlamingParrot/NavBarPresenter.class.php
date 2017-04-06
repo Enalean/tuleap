@@ -70,11 +70,6 @@ class FlamingParrot_NavBarPresenter {
     /**
      * @var string
      */
-    public $bookmark_label;
-
-    /**
-     * @var string
-     */
     public $my_account_label;
 
     public function __construct(
@@ -109,7 +104,6 @@ class FlamingParrot_NavBarPresenter {
         $this->url_redirect           = $url_redirect;
 
         $this->logout_label     = $GLOBALS['Language']->getText('include_menu', 'logout');
-        $this->bookmark_label   = $GLOBALS['Language']->getText('include_menu','bookmark_this_page');
         $this->my_account_label = $GLOBALS['Language']->getText('my_index','account_maintenance');
     }
 
@@ -156,14 +150,6 @@ class FlamingParrot_NavBarPresenter {
         return $this->display_new_account;
     }
 
-    public function bookmark_title() {
-        return urlencode(str_replace($GLOBALS['sys_name'].': ', '', html_entity_decode($this->title)));
-    }
-
-    public function bookmark_url() {
-        return urlencode($this->request_uri);
-    }
-
     public function account_options_text() {
         return $GLOBALS['Language']->getText('account_options','preferences');
     }
@@ -182,10 +168,6 @@ class FlamingParrot_NavBarPresenter {
 
     public function search_placeholder() {
         return $GLOBALS['Language']->getText('include_menu','search');
-    }
-
-    public function request_is_post() {
-        return $this->request->isPost();
     }
 
     private function getClassnameNavItemActive($pathsToDetect, $toptab = null) {

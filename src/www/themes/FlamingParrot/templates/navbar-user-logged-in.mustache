@@ -12,13 +12,6 @@
         <i class="icon icon-cog"></i>
     </a>
 </li>
-{{^ request_is_post }}
-    <li class="bookmarkpage">
-        <a href="/my/bookmark_add.php?bookmark_url={{ bookmark_url }}&bookmark_title={{ bookmark_title }}" title="{{ bookmark_label }}">
-            <i class="icon icon-bookmark"></i>
-        </a>
-    </li>
-{{/ request_is_post }}
 <li>
     <form
             class="nav-form"
