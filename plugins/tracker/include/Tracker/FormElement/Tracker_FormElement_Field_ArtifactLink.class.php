@@ -20,6 +20,7 @@
 */
 
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\ValueFormatter;
@@ -249,18 +250,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @return array
      * @throws Exception
      */
-    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
-        if (array_key_exists('links', $value) && is_array($value['links'])){
-            $link_ids = array();
-            foreach ($value['links'] as $link) {
+    public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null)
+    {
+        if (array_key_exists('links', $value) && is_array($value['links'])) {
+            $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromArray($value['links']);
 
-                if (array_key_exists('id', $link)) {
-                    $link_ids[] = $link['id'];
-                }
-            }
-            return $this->getFieldData(implode(',', $link_ids), $artifact);
+            return $this->getDataLikeWebUI($submitted_ids, $value['links'], $artifact);
         }
-        throw new Tracker_FormElement_InvalidFieldValueException('Value should be \'links\' and an array of {"id": integer}');
+        throw new Tracker_FormElement_InvalidFieldValueException(
+            'Value should be \'links\' and an array of {"id": integer, ["type": string]}'
+        );
     }
 
     public function getFieldDataFromRESTValueByField($value, Tracker_Artifact $artifact = null) {
@@ -276,11 +275,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      * @return array
      */
     public function getFieldData($string_value, Tracker_Artifact $artifact = null) {
+        $submitted_ids = $this->getFieldDataBuilder()->getArrayOfIdsFromString($string_value);
+        return $this->getDataLikeWebUI($submitted_ids, array($string_value), $artifact);
+
+    }
+
+    /**
+     * @param array $submitted_ids
+     * @param array $submitted_values
+     * @param Tracker_Artifact|null $artifact
+     *
+     * @return array
+     */
+    private function getDataLikeWebUI(array $submitted_ids, array $submitted_values, Tracker_Artifact $artifact = null)
+    {
         $existing_links   = $this->getArtifactLinkIdsOfLastChangeset($artifact);
-        $submitted_values = $this->getArrayOfIdsFromString($string_value);
-        $new_values       = array_diff($submitted_values, $existing_links);
-        $removed_values   = array_diff($existing_links, $submitted_values);
-        return $this->getDataLikeWebUI($new_values, $removed_values);
+        $new_values       = array_diff($submitted_ids, $existing_links);
+        $removed_values   = array_diff($existing_links, $submitted_ids);
+
+        return $this->getFieldDataBuilder()->getDataLikeWebUI($new_values, $removed_values, $submitted_values);
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact) {
@@ -327,29 +340,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     private function getArtifactLinkId(Tracker_ArtifactLinkInfo $link_info) {
         return $link_info->getArtifactId();
-    }
-
-    private function getArrayOfIdsFromString($value) {
-        return array_filter(array_map('intval', explode(',', $value)));
-    }
-
-    private function getDataLikeWebUI(array $new_values, array $removed_values) {
-        return array(
-            'new_values'     => $this->formatNewValuesLikeWebUI($new_values),
-            'removed_values' => $this->formatRemovedValuesLikeWebUI($removed_values)
-        );
-    }
-
-    private function formatNewValuesLikeWebUI(array $new_values) {
-        return implode(',', $new_values);
-    }
-
-    private function formatRemovedValuesLikeWebUI(array $removed_values) {
-        $values = array();
-        foreach ($removed_values as $value) {
-            $values[$value] = array($value);
-        }
-        return $values;
     }
 
     /**
@@ -1822,5 +1812,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function getArtifactLinkValidator()
     {
         return new ArtifactLinkValidator($this->getArtifactFactory(), $this->getNaturePresenterFactory());
+    }
+
+    private function getFieldDataBuilder()
+    {
+        return new FieldDataBuilder();
     }
 }
