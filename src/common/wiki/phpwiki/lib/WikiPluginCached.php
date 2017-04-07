@@ -1,6 +1,6 @@
 <?php rcs_id('$Id: WikiPluginCached.php,v 1.19 2004/12/16 18:30:59 rurban Exp $');
 /*
- Copyright (C) 2002 Johannes Große (Johannes Gro&szlig;e)
+ Copyright (C) 2002 Johannes GroÃŸe (Johannes Gro&szlig;e)
  Copyright (C) 2004 Reini Urban
 
  This file is part of PhpWiki.
@@ -29,9 +29,6 @@
 require_once "lib/WikiPlugin.php";
 // require_once "lib/plugincache-config.php"; // replaced by config.ini settings!
 
-// Try the system pear class. See newCache()
-@require_once('Cache.php');
-
 // types:
 define('PLUGIN_CACHED_HTML', 0);         // cached html (extensive calculation)
 define('PLUGIN_CACHED_IMG_INLINE', 1);   // gd images
@@ -57,7 +54,7 @@ define('PLUGIN_CACHED_STATIC', 128); 	 // make it available via /uploads/, not v
  *     <li>plugin/Ploticus.php</li>
  * </ul>
  *
- * @author  Johannes Große, Reini Urban
+ * @author  Johannes Groï¿½e, Reini Urban
  */                                                                
 class WikiPluginCached extends WikiPlugin
 {   
@@ -117,142 +114,9 @@ class WikiPluginCached extends WikiPlugin
         return array($id, $url);
     } // genUrl
 
-    /** 
-     * Replaces the abstract run method of WikiPlugin to implement
-     * a cache check which can avoid redundant runs. 
-     * <b>Do not override this method in a subclass. Instead you may
-     * rename your run method to getHtml, getImage or getMap.
-     * Have a close look on the arguments and required return values,
-     * however. </b>  
-     * 
-     * @access protected
-     * @param  dbi       WikiDB  database abstraction class
-     * @param  argstr    string  plugin arguments in the call from PhpWiki
-     * @param  request   Request ???
-     * @param  string    basepage Pagename to use to interpret links [/relative] page names.
-     * @return           string  HTML output to be printed to browser
-     *
-     * @see #getHtml
-     * @see #getImage
-     * @see #getMap
-     */
     function run ($dbi, $argstr, &$request, $basepage) {
-        $cache = $this->newCache();
-        //$cacheparams = $GLOBALS['CacheParams'];
-
-        $sortedargs = $this->getArgs($argstr, $request);
-        if (is_array($sortedargs) )
-            ksort($sortedargs);
-        $this->_args =& $sortedargs;
-        $this->_type = $this->getPluginType();
-        $this->_static = false;
-        if ($this->_type & PLUGIN_CACHED_STATIC 
-            or $request->getArg('action') == 'pdf') // htmldoc doesn't grok subrequests
-        {    
-            $this->_type = $this->_type & ~PLUGIN_CACHED_STATIC;
-            $this->_static = true;
-        }
-    
-        // ---------- embed static image, no getimg.php? url -----------------
-        if (0 and $this->_static) {
-            //$content = $cache->get($id, 'imagecache');
-            $content = array();
-            if ($this->produceImage($content, $this, $dbi, $sortedargs, $request, 'html')) {
-            	// save the image in uploads
-            	return $this->embedImg($content['url'], $dbi, $sortedargs, $request);
-            } else {
-            	// copy the cached image into uploads if older
-            	return HTML();
-            }
-        }
-
-        list($id, $url) = $this->genUrl($cache, $sortedargs);
-        // ---------- don't check cache: html and img gen. -----------------
-        // override global PLUGIN_CACHED_USECACHE for a plugin
-        if ($this->getPluginType() & PLUGIN_CACHED_IMG_ONDEMAND) {
-            if ($this->_static and $this->produceImage($content, $this, $dbi, $sortedargs, $request, 'html'))
-                $url = $content['url'];
-            return $this->embedImg($url, $dbi, $sortedargs, $request);
-        }
-
-        $do_save = false;
-        $content = $cache->get($id, 'imagecache');
-        switch ($this->_type) {
-            case PLUGIN_CACHED_HTML:
-                if (!$content || !$content['html']) {
-                    $this->resetError();
-                    $content['html'] = $this->getHtml($dbi, $sortedargs, $request, $basepage);
-                    if ($errortext = $this->getError()) {
-                        $this->printError($errortext, 'html');
-                        return HTML();
-                    }
-                    $do_save = true;
-                } 
-                break;
-            case PLUGIN_CACHED_IMG_INLINE:
-                if (PLUGIN_CACHED_USECACHE && (!$content || !$content['image'])) { // new
-                    $do_save = $this->produceImage($content, $this, $dbi, $sortedargs, $request, 'html');
-                    if ($this->_static) $url = $content['url'];
-                    $content['html'] = $do_save ? $this->embedImg($url, $dbi, $sortedargs, $request) : false;
-                } elseif (!empty($content['url']) && $this->_static) {   // already in cache
-                    $content['html'] = $this->embedImg($content['url'], $dbi, $sortedargs, $request);
-                } elseif (!empty($content['image']) && $this->_static) { // copy from cache to upload
-                    $do_save = $this->produceImage($content, $this, $dbi, $sortedargs, $request, 'html');
-                    $url = $content['url'];
-                    $content['html'] = $do_save ? $this->embedImg($url, $dbi, $sortedargs, $request) : false;
-                }
-                break;
-            case PLUGIN_CACHED_MAP:
-                if (!$content || !$content['image'] || !$content['html'] ) {
-                    $do_save = $this->produceImage($content, $this, $dbi, $sortedargs, $request, 'html');
-                    if ($this->_static) $url = $content['url'];
-                    $content['html'] = $do_save 
-                        ? $this->embedMap($id, $url, $content['html'], $dbi, $sortedargs, $request)
-                        : false;
-                }
-                break;
-            case PLUGIN_CACHED_SVG:
-                if (!$content || !$content['html'] ) {
-                    $do_save = $this->produceImage($content, $this, $dbi, $sortedargs, $request, 'html');
-                    if ($this->_static) $url = $content['url'];
-                    $args = array(); //width+height => object args
-                    if (!empty($sortedargs['width'])) $args['width'] = $sortedargs['width'];
-                    if (!empty($sortedargs['height'])) $args['height'] = $sortedargs['height'];
-                    $content['html'] = $do_save 
-                        ? $this->embedObject($url, 'image/svg+xml', $args,
-                                             HTML::embed(array_merge(
-                                             array('src'=>$url, 'type'=>'image/svg+xml'),
-                                             $args)))
-                        : false;
-                }
-                break;
-            case PLUGIN_CACHED_SVG_PNG:
-                if (!$content || !$content['html'] ) {
-                    $do_save_svg = $this->produceImage($content, $this, $dbi, $sortedargs, $request, 'html');
-                    if ($this->_static) $url = $content['url'];
-                    // hack alert! somehow we should know which argument will produce the secondary image (PNG)
-                    $args = $sortedargs;
-                    $args[$this->pngArg()] = $content['imagetype']; // default type: PNG or GIF
-                    $do_save = $this->produceImage($pngcontent, $this, $dbi, $args, $request, $content['imagetype']);
-                    $args = array(); //width+height => object args
-                    if (!empty($sortedargs['width'])) $args['width'] = $sortedargs['width'];
-                    if (!empty($sortedargs['height'])) $args['height'] = $sortedargs['height'];
-                    $content['html'] = $do_save_svg 
-                        ? $this->embedObject($url, 'image/svg+xml', $args, 
-                                             $this->embedImg($pngcontent['url'], $dbi, $sortedargs, $request))
-                        : false;
-                }
-                break;
-        }
-        if ($do_save) {
-            $expire = $this->getExpire($dbi, $sortedargs, $request);
-            $content['args'] = $sortedargs;
-            $cache->save($id, $content, $expire, 'imagecache');
-        }
-        if ($content['html'])
-            return $content['html'];
         return HTML();
-    } // run
+    }
 
 
     /* --------------------- virtual or abstract functions ----------- */
@@ -477,43 +341,6 @@ class WikiPluginCached extends WikiPlugin
 // --------------------------------------------------------------------------
 // ---------------------- static member functions ---------------------------
 // --------------------------------------------------------------------------
-
-    /** 
-     * Creates one static PEAR Cache object and returns copies afterwards.
-     * FIXME: There should be references returned
-     *
-     * @access static protected
-     * @return Cache  copy of the cache object
-     */
-    function newCache() {
-        static $staticcache;
-  
-        if (!is_object($staticcache)) {
-            if (!class_exists('Cache')) {
-                // uuh, pear not in include_path! should print a warning.
-                // search some possible pear paths.
-                $pearFinder = new PearFileFinder;
-                if ($lib = $pearFinder->findFile('Cache.php', 'missing_ok'))
-                    require_once($lib);
-                else // fall back to our own copy
-                    require_once('lib/pear/Cache.php');
-            }
-            $cacheparams = array();
-            foreach (explode(':','database:cache_dir:filename_prefix:highwater:lowwater'
-                             .':maxlifetime:maxarglen:usecache:force_syncmap') as $key) {
-                $cacheparams[$key] = constant('PLUGIN_CACHED_'.strtoupper($key));
-            }
-            $cacheparams['imgtypes'] = preg_split('/\s*:\s*/', PLUGIN_CACHED_IMGTYPES);
-            $staticcache = new Cache(PLUGIN_CACHED_DATABASE, $cacheparams);
-            $staticcache->gc_maxlifetime = PLUGIN_CACHED_MAXLIFETIME;
- 
-            if (! PLUGIN_CACHED_USECACHE ) {
-                $staticcache->setCaching(false);
-            }
-        }
-        return $staticcache; // FIXME: use references ?
-    }
-
     /** 
      * Determines whether a needed image type may is available 
      * from the GD library and gives an alternative otherwise.
@@ -632,154 +459,6 @@ class WikiPluginCached extends WikiPlugin
         return '';
     } // glueArgs
 
-    // ---------------------- FetchImageFromCache ------------------------------
-
-    /** 
-     * Extracts the cache entry id from the url and the plugin call
-     * parameters if available.
-     *
-     * @access private static
-     * @param  id           string   return value. Image is stored under this id.
-     * @param  plugincall   string   return value. Only returned if present in url.
-     *                               Contains all parameters to reconstruct
-     *                               plugin call.
-     * @param  cache        Cache    PEAR Cache object
-     * @param  request      Request  ???
-     * @param  errorformat  string   format which should be used to
-     *                               output errors ('html', 'png', 'gif', 'jpeg')
-     * @return boolean               false if an error occurs, true otherwise.
-     *                               Param id and param plugincall are
-     *                               also return values.
-     */
-    function checkCall1(&$id, &$plugincall, $cache, $request, $errorformat) {
-        $id = $request->getArg('id');
-        $plugincall = rawurldecode($request->getArg('args')); 
-
-        if (!$id) {
-           if (!$plugincall) {
-                // This should never happen, so do not gettextify.
-                $errortext = "Neither 'args' nor 'id' given. Cannot proceed without parameters.";
-                $this->printError($errorformat, $errortext);
-                return false;
-            } else {
-                $id = $cache->generateId( $plugincall );
-            }
-        }   
-        return true;     
-    } // checkCall1
-
-
-    /** 
-     * Extracts the parameters necessary to reconstruct the plugin
-     * call needed to produce the requested image. 
-     *
-     * @access static private  
-     * @param  plugincall string   reference to serialized array containing both 
-     *                             name and parameters of the plugin call
-     * @param  request    Request  ???
-     * @return            boolean  false if an error occurs, true otherwise.
-     *                 
-     */
-    function checkCall2(&$plugincall, $request) {
-        // if plugincall wasn't sent by URL, it must have been
-        // stored in a session var instead and we can retreive it from there
-        if (!$plugincall) {
-            if (!$plugincall=$request->getSessionVar('imagecache'.$id)) {
-                // I think this is the only error which may occur
-                // without having written bad code. So gettextify it.
-                $errortext = sprintf(
-                    gettext ("There is no image creation data available to id '%s'. Please reload referring page." ),
-                    $id );  
-                $this->printError($errorformat, $errortext);
-                return false; 
-            }       
-        }
-        $plugincall = unserialize($plugincall);
-        return true;
-    } // checkCall2
-
-
-    /** 
-     * Creates an image or image map depending on the plugin type. 
-     * @access static private 
-     * @param  content array             reference to created array which overwrite the keys
-     *                                   'image', 'imagetype' and possibly 'html'
-     * @param  plugin  WikiPluginCached  plugin which is called to create image or map
-     * @param  dbi     WikiDB            handle to database
-     * @param  argarray array            Contains all arguments needed by plugin
-     * @param  request Request           ????
-     * @param  errorformat string        outputs errors in 'png', 'gif', 'jpg' or 'html'
-     * @return boolean                   error status; true=ok; false=error
-     */
-    function produceImage(&$content, $plugin, $dbi, $argarray, $request, $errorformat) {
-        $plugin->resetError();
-        $content['html'] = $imagehandle = false;
-        if ($plugin->getPluginType() == PLUGIN_CACHED_MAP ) {
-            list($imagehandle,$content['html']) = $plugin->getMap($dbi, $argarray, $request);
-        } else {
-            $imagehandle = $plugin->getImage($dbi, $argarray, $request);
-        }
-
-        $content['imagetype'] 
-            = $this->decideImgType($plugin->getImageType($dbi, $argarray, $request));
-        $errortext = $plugin->getError();
-
-        if (!$imagehandle||$errortext) {
-            if (!$errortext) {
-                $errortext = "'<?plugin ".$plugin->getName(). ' '
-                    . $this->glueArgs($argarray)." ?>' returned no image, " 
-                    . " although no error was reported.";
-            }
-            $this->printError($errorformat, $errortext);
-            return false; 
-        }
-
-        // image handle -> image data        
-        if (!empty($this->_static)) {
-            $ext = "." . $content['imagetype'];
-            if (is_string($imagehandle) and file_exists($imagehandle)) {
-            	if (preg_match("/.(\w+)$/",$imagehandle,$m)) {
-            	    $ext = "." . $m[1];
-            	}
-            }
-            $tmpfile = tempnam(getUploadFilePath(), PLUGIN_CACHED_FILENAME_PREFIX . $ext);
-            if (!strstr(basename($tmpfile), $ext)) {
-                unlink($tmpfile);
-                $tmpfile .= $ext;
-            }
-            $tmpfile = getUploadFilePath() . basename($tmpfile);
-            if (is_string($imagehandle) and file_exists($imagehandle)) {
-                rename($imagehandle, $tmpfile);
-            }
-        } else {
-            $tmpfile = $this->tempnam();
-        }
-        if (is_resource($imagehandle)) {
-            $this->writeImage($content['imagetype'], $imagehandle, $tmpfile);
-            ImageDestroy($imagehandle);
-            sleep(0.2);
-        } elseif (is_string($imagehandle)) {
-            $content['file'] = getUploadFilePath() . basename($tmpfile);
-            $content['url'] = getUploadDataPath() . basename($tmpfile);
-            return true;
-        }
-        if (file_exists($tmpfile)) {
-            $fp = fopen($tmpfile,'rb');
-            $content['image'] = fread($fp, filesize($tmpfile));
-            fclose($fp);
-            if (!empty($this->_static)) {
-            	// on static it is in "uploads/" but in wikicached also
-                $content['file'] = $tmpfile;
-                $content['url'] = getUploadDataPath() . basename($tmpfile);
-                return true;
-            }
-            unlink($tmpfile);
-            if ($content['image'])
-                return true;
-        }
-        return false;
-    }
-
     function staticUrl ($tmpfile) {
         $content['file'] = $tmpfile;
         $content['url'] = getUploadDataPath() . basename($tmpfile);
@@ -794,75 +473,6 @@ class WikiPluginCached extends WikiPlugin
             $temp = preg_replace("/\.tmp$/", "_tmp", $temp);
         return $temp;
     }
-
-    /** 
-     * Main function for obtaining images from cache or generating on-the-fly
-     * from parameters sent by url or session vars.
-     *
-     * @access static public
-     * @param  dbi     WikiDB            handle to database
-     * @param  request Request           ???
-     * @param  errorformat string        outputs errors in 'png', 'gif', 'jpeg' or 'html'
-     */
-    function fetchImageFromCache($dbi, $request, $errorformat='png') {
-        $cache   = $this->newCache();      
-        $errorformat = $this->decideImgType($errorformat);
-        // get id
-        if (!$this->checkCall1($id, $plugincall, $cache, $request, $errorformat)) return false;
-        // check cache 
-        $content = $cache->get($id, 'imagecache');
-
-        if (!empty($content['image'])) {
-            $this->writeHeader($content['imagetype']);
-            print $content['image']; 
-            return true;
-        } 
-        if (!empty($content['html'])) {
-            print $content['html']; 
-            return true;
-        } 
-        // static version?
-        if (!empty($content['file']) && !empty($content['url']) && file_exists($content['file'])) {
-            print $this->embedImg($content['url'], $dbi, array(), $request);
-            return true;
-        } 
-
-        // re-produce image. At first, we need the plugincall parameters.
-        // Cached args with matching id override given args to shorten getimg.php?id=md5
-        if (!empty($content['args'])) 
-            $plugincall['arguments'] = $content['args'];
-        if (!$this->checkCall2($plugincall, $request)) return false;
-
-        $pluginname = $plugincall['pluginname'];
-        $argarray   = $plugincall['arguments'];
-
-        $loader = new WikiPluginLoader;
-        $plugin = $loader->getPlugin($pluginname);
-
-        // cache empty, but image maps have to be created _inline_
-        // so ask user to reload wiki page instead
-        if (($plugin->getPluginType() & PLUGIN_CACHED_MAP) && PLUGIN_CACHED_FORCE_SYNCMAP) {
-            $errortext = _("Image map expired. Reload wiki page to recreate its html part.");
-            $this->printError($errorformat, $errortext);
-        }
-
-        if (!$this->produceImage($content, $plugin, $dbi, $argarray, 
-                                 $request, $errorformat))
-            return false;
-
-        $expire = $plugin->getExpire($dbi, $argarray, $request);
-
-        if ($content['image']) {
-            $cache->save($id, $content, $expire, 'imagecache');
-            $this->writeHeader($content['imagetype']); 
-            print $content['image'];
-            return true;
-        }
-
-        $errortext = "Could not create image file from imagehandle.";
-        $this->printError($errorformat, $errortext);
-        return false; 
-    } // FetchImageFromCache
 
     // -------------------- error handling ---------------------------- 
 

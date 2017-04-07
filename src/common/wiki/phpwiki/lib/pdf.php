@@ -2,7 +2,7 @@
 rcs_id('$Id: pdf.php,v 1.7 2004/09/22 13:46:26 rurban Exp $');
 /*
  Copyright (C) 2003 Olivier PLATHEY
- Copyright (C) 200? Don Sebà
+ Copyright (C) 200? Don SebÃ 
  Copyright (C) 2004 Reini Urban
 
  This file is part of PhpWiki.
@@ -24,7 +24,7 @@ rcs_id('$Id: pdf.php,v 1.7 2004/09/22 13:46:26 rurban Exp $');
 /*
  * Credits:
  * PDF functions taken from FPDF http://www.fpdf.org
- * Edited for PHPWebthings by Don Sebà 
+ * Edited for PHPWebthings by Don SebÃ 
  *   Feel free to edit , enhance the module, and please share it at http://www.phpdbform.com
  *   Keep PHPWT COOL submit your modules/themes/mods, it will help to improve ! :)
  * Changes for PhpWiki by Reini Urban
@@ -145,42 +145,23 @@ function ConvertAndDisplayPdf (&$request) {
     include_once("lib/display.php");
     displayPage($request);
     $html = ob_get_contents();
-    
-    // check hook for external converters
-    if (defined('USE_EXTERNAL_HTML2PDF')
-        and USE_EXTERNAL_HTML2PDF)
-    {   // See http://phpwiki.sourceforge.net/phpwiki/PhpWikiToDocBookAndPDF
-        // htmldoc or ghostscript + html2ps or docbook (dbdoclet, xsltproc, fop)
-        $request->discardOutput();
-        $request->buffer_output(false/*'nocompress'*/);
-        require_once("lib/WikiPluginCached.php");
-        $cache = new WikiPluginCached;
-        $cache->newCache();
-        $tmpfile = $cache->tempnam();
-        $fp = fopen($tmpfile, "wb");
-        fwrite($fp, $html);
-        fclose($fp);
-        Header('Content-Type: application/pdf');
-        passthru(sprintf(USE_EXTERNAL_HTML2PDF, $tmpfile));
-        unlink($tmpfile);
+
+    // use fpdf:
+    if ($GLOBALS['LANG'] == 'ja') {
+        include_once("lib/fpdf/japanese.php");
+        $pdf = new PDF_Japanese;
+    } elseif ($GLOBALS['LANG'] == 'zh') {
+        include_once("lib/fpdf/chinese.php");
+        $pdf = new PDF_Chinese;
     } else {
-        // use fpdf:
-        if ($GLOBALS['LANG'] == 'ja') {
-            include_once("lib/fpdf/japanese.php");
-            $pdf = new PDF_Japanese;
-        } elseif ($GLOBALS['LANG'] == 'zh') {
-            include_once("lib/fpdf/chinese.php");
-            $pdf = new PDF_Chinese;
-        } else {
-            $pdf = new PDF;
-        }
-        $pdf->Open();
-        $pdf->AddPage();
-        $pdf->ConvertFromHTML($html);
-        $request->discardOutput();
-        $request->buffer_output(false/*'nocompress'*/);
-        $pdf->Output($pagename.".pdf", $dest ? $dest : 'I');
+        $pdf = new PDF;
     }
+    $pdf->Open();
+    $pdf->AddPage();
+    $pdf->ConvertFromHTML($html);
+    $request->discardOutput();
+    $request->buffer_output(false/*'nocompress'*/);
+    $pdf->Output($pagename.".pdf", $dest ? $dest : 'I');
     if (!empty($errormsg)) {
         $request->discardOutput();
     }

@@ -124,29 +124,7 @@ function undo_save() {
             $WikiTheme->addMoreHeaders(JavaScript('',array('src' => $WikiTheme->_findData("toolbar.js"))));
         }
 
-        include_once("lib/WikiPluginCached.php");
-        $cache = WikiPluginCached::newCache();
-        $dbi = $GLOBALS['request']->getDbh();
-        // regenerate if number of pages changes (categories, pages, templates)
-        $key = $dbi->numPages();
-        $key .= '+categories+plugin';
-        if (TOOLBAR_PAGELINK_PULLDOWN) {
-            $key .= "+pages";
-        }
-        if (TOOLBAR_TEMPLATE_PULLDOWN) {
-            $key .= "+templates_" . $dbi->getTimestamp();
-        }
-        $id = $cache->generateId($key);
-        $content = $cache->get($id, 'toolbarcache');
-
-        if (!empty($content)) {
-            $this->tokens['EDIT_TOOLBAR'] =& $content;
-        } else {
-            $content = $this->_generate();
-            // regenerate buttons every 3600 seconds
-            $cache->save($id, $content, '+3600', 'toolbarcache'); 
-            $this->tokens['EDIT_TOOLBAR'] =& $content;
-        }
+        $this->tokens['EDIT_TOOLBAR'] =& $this->_generate();
     }
 
     function getTokens () {

@@ -22,14 +22,14 @@ rcs_id('$Id: SystemInfo.php,v 1.23 2005/10/03 16:48:09 rurban Exp $');
 
 /**
  * Usage: <?plugin SystemInfo all ?>
- *        or <?plugin SystemInfo pagestats cachestats discspace hitstats ?>
+ *        or <?plugin SystemInfo pagestats cachestats hitstats ?>
  *        or <?plugin SystemInfo version ?>
  *        or <?plugin SystemInfo current_theme ?>
  *        or <?plugin SystemInfo PHPWIKI_DIR ?>
  *
  * Provide access to phpwiki's lower level system information.
  *
- *   version, charset, pagestats, SERVER_NAME, database, discspace,
+ *   version, charset, pagestats, SERVER_NAME, database,
  *   cachestats, userstats, linkstats, accessstats, hitstats,
  *   revisionstats, interwikilinks, imageextensions, wikiwordregexp,
  *   availableplugins, downloadurl  or any other predefined CONSTANT
@@ -267,145 +267,6 @@ extends WikiPluginCached
                             $stats['nmax'], $stats['maxtreshold'], 100 - $treshold);
         return $s;
     }
-    /* not yet ready
-     */
-    function revisionstats() {
-        global $request, $LANG;
-
-        include_once("lib/WikiPluginCached.php");
-        $cache = WikiPluginCached::newCache();
-        $id = $cache->generateId('SystemInfo::revisionstats_' . $LANG);
-        $cachedir = 'plugincache';
-        $content = $cache->get($id, $cachedir);
-
-        if (!empty($content))
-            return $content;
-
-        $dbi =& $this->_dbi;
-        $stats = array();
-        $page_iter = $dbi->getAllPages(true);
-        $stats['empty'] = $stats['latest']['major'] = $stats['latest']['minor'] = 0;
-        while ($page = $page_iter->next()) {
-            if (!$page->exists()) {
-                $stats['empty']++;
-                continue;
-            }
-            $current = $page->getCurrentRevision();
-            // is the latest revision a major or minor one?
-            //   latest revision: numpages 200 (100%) / major (60%) / minor (40%)
-            if ($current->get('is_minor_edit'))
-                $stats['latest']['major']++;
-            else
-                $stats['latest']['minor']++;
-/*
-            // FIXME: This needs much too long to be acceptable.
-            // overall:
-            //   number of revisions: all (100%) / major (60%) / minor (40%)
-            // revs per page:
-            //   per page: mean 20 / major (60%) / minor (40%)
-            $rev_iter = $page->getAllRevisions();
-            while ($rev = $rev_iter->next()) {
-                if ($rev->get('is_minor_edit'))
-                    $stats['page']['major']++;
-                else
-                    $stats['page']['minor']++;
-            }
-            $rev_iter->free();
-            $stats['page']['all'] = $stats['page']['major'] + $stats['page']['minor'];
-            $stats['perpage'][]       = $stats['page']['all'];
-            $stats['perpage_major'][] = $stats['page']['major'];
-            $stats['sum']['all'] += $stats['page']['all'];
-            $stats['sum']['major'] += $stats['page']['major'];
-            $stats['sum']['minor'] += $stats['page']['minor'];
-            $stats['page'] = array();
-*/            
-        }
-        $page_iter->free();
-        $stats['numpages'] = $stats['latest']['major'] + $stats['latest']['minor'];
-        $stats['latest']['major_perc'] = $stats['latest']['major'] * 100.0 / $stats['numpages'];
-        $stats['latest']['minor_perc'] = $stats['latest']['minor'] * 100.0 / $stats['numpages'];
-        $empty = sprintf("empty pages: %d (%02.1f%%) / %d (100%%)\n", 
-                         $stats['empty'], $stats['empty'] * 100.0 / $stats['numpages'],
-                         $stats['numpages']);
-        $latest = sprintf("latest revision: major %d (%02.1f%%) / minor %d (%02.1f%%) / all %d (100%%)\n", 
-                          $stats['latest']['major'], $stats['latest']['major_perc'], 
-                          $stats['latest']['minor'], $stats['latest']['minor_perc'], $stats['numpages']);
-/*                          
-        $stats['sum']['major_perc'] = $stats['sum']['major'] * 100.0 / $stats['sum']['all'];
-        $stats['sum']['minor_perc'] = $stats['sum']['minor'] * 100.0 / $stats['sum']['all'];
-        $sum = sprintf("number of revisions: major %d (%02.1f%%) / minor %d (%02.1f%%) / all %d (100%%)\n", 
-                       $stats['sum']['major'], $stats['sum']['major_perc'],
-                       $stats['sum']['minor'], $stats['sum']['minor_perc'], $stats['sum']['all']);
-
-        $stats['perpage']       = $this->_stats($stats['perpage']);
-        $stats['perpage_major'] = $this->_stats($stats['perpage_major']);
-        $stats['perpage']['major_perc'] = $stats['perpage_major']['sum'] * 100.0 / $stats['perpage']['sum'];
-        $stats['perpage']['minor_perc'] = 100 - $stats['perpage']['major_perc'];
-        $stats['perpage_minor']['sum']  = $stats['perpage']['sum'] - $stats['perpage_major']['sum'];
-        $stats['perpage_minor']['mean'] = $stats['perpage_minor']['sum'] / ($stats['perpage']['n'] - $stats['perpage_major']['n']);
-        $perpage = sprintf("revisions per page: all %d, mean %02.1f / major %d (%02.1f%%) / minor %d (%02.1f%%)\n", 
-                           $stats['perpage']['sum'], $stats['perpage']['mean'],
-                           $stats['perpage_major']['mean'], $stats['perpage']['major_perc'],
-                           $stats['perpage_minor']['mean'], $stats['perpage']['minor_perc']);
-        $perpage .= sprintf("  %d page(s) with less than %d revisions (<%d%%)\n",
-                            $stats['perpage']['nmin'], $stats['perpage']['maintreshold'], $treshold);
-        $perpage .= sprintf("  %d page(s) with more than %d revisions (>%d%%)\n",
-                            $stats['perpage']['nmax'], $stats['perpage']['maxtreshold'], 100 - $treshold);
-        $content = $empty . $latest . $sum . $perpage;
-*/
-        $content = $empty . $latest;
-
-        // regenerate cache every 30 minutes
-        $cache->save($id, $content, '+1800', $cachedir); 
-        return $content;
-    }
-    // Size of databases/files/cvs are possible plus the known size of the app.
-    // Cache this costly operation. 
-    // Even if the whole plugin call is stored internally, we cache this 
-    // seperately with a seperate key.
-    function discspace() {
-        global $DBParams, $request;
-
-        include_once("lib/WikiPluginCached.php");
-        $cache = WikiPluginCached::newCache();
-        $id = $cache->generateId('SystemInfo::discspace');
-        $cachedir = 'plugincache';
-        $content = $cache->get($id, $cachedir);
-
-        if (empty($content)) {
-            $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : '.';
-            //TODO: windows only (no cygwin)
-            $appsize = `du -s $dir | cut -f1`;
-
-            if (in_array($DBParams['dbtype'], array('SQL', 'ADODB'))) {
-                //TODO: where is the data is actually stored? see phpMyAdmin
-                $pagesize = 0;
-            } elseif ($DBParams['dbtype'] == 'dba') {
-                $pagesize = 0;
-                $dbdir = $DBParams['directory'];
-                if ($DBParams['dba_handler'] == 'db3')
-                    $pagesize = filesize($DBParams['directory']
-                                         . "/wiki_pagedb.db3") / 1024;
-                // if issubdirof($dbdir, $dir) $appsize -= $pagesize;
-            } else { // flatfile, cvs
-                $dbdir = $DBParams['directory'];
-                $pagesize = `du -s $dbdir`;
-                // if issubdirof($dbdir, $dir) $appsize -= $pagesize;
-            }
-            $content = array('appsize' => $appsize,
-                             'pagesize' => $pagesize);
-            // regenerate cache every 30 minutes
-            $cache->save($id, $content, '+1800', $cachedir); 
-        } else {
-            $appsize = $content['appsize'];
-            $pagesize = $content['pagesize'];
-        }
-
-        $s  = sprintf(_("Application size: %d Kb"), $appsize);
-        if ($pagesize)
-            $s  .= ", " . sprintf(_("Pagedata size: %d Kb", $pagesize));
-        return $s;
-    }
 
     function inlineimages () {
         return implode(' ', explode('|', INLINE_IMAGES));
@@ -489,12 +350,10 @@ extends WikiPluginCached
                              'database'         => _("Database"),
                              'cachestats'       => _("Cache statistics"),
                              'pagestats'        => _("Page statistics"),
-                             //'revisionstats'    => _("Page revision statistics"),
                              //'linkstats'        => _("Link statistics"),
                              'userstats'        => _("User statistics"),
                              //'accessstats'      => _("Access statistics"),
                              'hitstats'         => _("Hit statistics"),
-                             'discspace'        => _("Harddisc usage"),
                              'expireparams'     => _("Expiry parameters"),
                              'wikinameregexp'   => _("Wikiname regexp"),
                              'allowedprotocols' => _("Allowed protocols"),

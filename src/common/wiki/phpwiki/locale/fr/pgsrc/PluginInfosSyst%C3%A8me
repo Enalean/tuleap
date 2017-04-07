@@ -18,7 +18,7 @@ concernant PhpWiki relativement au système sur lequel il est installé.
 
 <verbatim>
  Usage:  <?plugin SystemInfo all ?>
-      ou <?plugin SystemInfo pagestats cachestats discspace hitstats ?>
+      ou <?plugin SystemInfo pagestats cachestats hitstats ?>
       ou <?plugin SystemInfo version ?>
       ou <?plugin SystemInfo current_theme ?>
       ou <?plugin SystemInfo PHPWIKI_DIR ?>
