@@ -41,6 +41,8 @@ class Gitolite3LogParserTest extends \TuleapTestCase
 
     /** @var Tuleap\Git\Gitolite\GitoliteFileLogsDao */
     private $file_logs_dao;
+    private $user_manager;
+    private $factory;
 
     public function setUp()
     {
@@ -49,7 +51,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->factory        = mock('GitRepositoryFactory');
         $this->user_manager   = mock('UserManager');
         $this->history_dao    = mock('Tuleap\Git\History\Dao');
-        $this->user_validator = mock('Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator');
+        $this->user_validator = new \Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
         $this->file_logs_dao  = mock('Tuleap\Git\Gitolite\GitoliteFileLogsDao');
         $this->parser         = new Gitolite3LogParser(
             $this->logger,
@@ -71,8 +73,9 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        stub($this->history_dao)->searchAccessPerDay()->returnsEmptyDar();
 
-        $this->history_dao->expectCallCount('insertGitReadAccess', 2);
+        expect($this->history_dao)->insertGitReadAccess(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
@@ -80,8 +83,9 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        stub($this->history_dao)->searchAccessPerDay()->returnsEmptyDar();
 
-        $this->history_dao->expectCallCount('insertGitReadAccess', 3);
+        expect($this->history_dao)->insertGitReadAccess(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-11.log');
     }
 
@@ -89,7 +93,6 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
-        stub($this->user_validator)->isLoginAnHTTPUserLogin()->returns(false);
         stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 2259));
 
         $this->history_dao->expectCallCount('insertGitReadAccess', 0);
@@ -108,7 +111,6 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     public function itParseLinesIfTheyAreNew()
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_validator)->isLoginAnHTTPUserLogin()->returns(false);
         stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 1362));
         stub($this->user_manager)->getUserByUserName()->returns($this->user);
 
@@ -119,13 +121,24 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     public function itAddsALineForAnonymousWhenUserIsNoMoreInDatabase()
     {
         stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_validator)->isLoginAnHTTPUserLogin()->returns(false);
         stub($this->user_manager)->getUserByUserName()->returns(null);
+        stub($this->history_dao)->searchAccessPerDay()->returnsEmptyDar();
 
-        $this->history_dao->expectCallCount('insertGitReadAccess', 2);
-        expect($this->history_dao)->insertGitReadAccess(1, 0, '*')->at(0);
-        expect($this->history_dao)->insertGitReadAccess(1, 0, '*')->at(1);
+        expect($this->history_dao)->insertGitReadAccess(20161004, 1, 0, 2)->once();
 
+        $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
+    }
+
+    public function itUpdatesTheCounterWhenThereAreAlreadyData()
+    {
+        stub($this->factory)->getFromFullPath()->returns($this->repository);
+        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        stub($this->history_dao)->searchAccessPerDay(20161004)->returnsDar(
+            array('repository_id' => 1, 'user_id' => 101)
+        );
+
+        expect($this->history_dao)->insertGitReadAccess()->never();
+        expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 }

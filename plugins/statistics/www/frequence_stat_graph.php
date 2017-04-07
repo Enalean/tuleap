@@ -289,6 +289,15 @@ class Sample
         return $this->titlePeriod;
     }
 
+    protected function getDataSQLQuery($filter, $startDate, $endDate)
+    {
+        return sprintf('SELECT %s(FROM_UNIXTIME('.$this->field.')) as '.$this->getFilter().',COUNT(*) as c'.
+            ' FROM '.$this->table.
+            ' WHERE '.$this->field.' >= %d'.
+            ' AND  '.$this->field.' < %d'.
+            ' GROUP BY %s', db_escape_string($filter), db_escape_int($startDate), db_escape_int($endDate), db_escape_string($filter));
+    }
+
     /**
      * fetchData()
      *
@@ -300,13 +309,7 @@ class Sample
         $startDate = $this->getStartDate();
         $endDate   = $this->getEndDate();
 
-        $query = sprintf('SELECT %s(FROM_UNIXTIME('.$this->field.')) as '.$this->getFilter().',COUNT(*) as c'.
-                         ' FROM '.$this->table.
-                         ' WHERE '.$this->field.' >= %d'.
-                         ' AND  '.$this->field.' < %d'.
-                         ' GROUP BY %s', db_escape_string($filter), db_escape_int($startDate), db_escape_int($endDate), db_escape_string($filter));
-
-        $res = db_query($query);
+        $res = db_query($this->getDataSQLQuery($filter, $startDate, $endDate));
 
         if ($this->getFilter() == 'month') {
             $nbr = 11;            
@@ -337,6 +340,16 @@ class Sample
         return $paramarray;
     }   
 
+    protected function getMonthDataSQLQuery($startDate, $endDate)
+    {
+        return sprintf('SELECT month(FROM_UNIXTIME('.$this->field.')) as month,COUNT(*) as c, YEAR(FROM_UNIXTIME('.$this->field.')) as year'.
+            ' FROM '.$this->table.
+            ' WHERE '.$this->field.' >= %d'.
+            ' AND  '.$this->field.' < %d'.
+            ' GROUP BY month, year'.
+            ' ORDER BY year, month', db_escape_int($startDate), db_escape_int($endDate));
+    }
+
     /**
      * fetchMonthData()
      *
@@ -348,14 +361,7 @@ class Sample
         $startDate = $this->getStartDate();
         $endDate   = $this->getEndDate();
 
-        $query = sprintf('SELECT month(FROM_UNIXTIME('.$this->field.')) as month,COUNT(*) as c, YEAR(FROM_UNIXTIME('.$this->field.')) as year'.
-                         ' FROM '.$this->table.
-                         ' WHERE '.$this->field.' >= %d'.
-                         ' AND  '.$this->field.' < %d'.
-                         ' GROUP BY month, year'.
-                         ' ORDER BY year, month', db_escape_int($startDate), db_escape_int($endDate)); 
-
-        $res = db_query($query);
+        $res = db_query($this->getMonthDataSQLQuery($startDate, $endDate));
 
         while ($paramrow = db_fetch_array($res)) {
 
@@ -365,6 +371,16 @@ class Sample
             $paramarray[$year][$month] = $paramrow['c'];
         }
         return $paramarray;
+    }
+
+    protected function getDayDataSQLQuery($startDate, $endDate)
+    {
+        return sprintf('SELECT day(FROM_UNIXTIME('.$this->field.')) as day,COUNT(*) as c, MONTH(FROM_UNIXTIME('.$this->field.')) as month, YEAR(FROM_UNIXTIME('.$this->field.')) as year'.
+            ' FROM '.$this->table.
+            ' WHERE '.$this->field.' >= %d'.
+            ' AND  '.$this->field.' < %d'.
+            ' GROUP BY day, month, year'.
+            ' ORDER BY year, month, day', db_escape_int($startDate), db_escape_int($endDate));
     }
 
     /**
@@ -377,14 +393,7 @@ class Sample
         $startDate = $this->getStartDate();
         $endDate   = $this->getEndDate();
 
-        $query = sprintf('SELECT day(FROM_UNIXTIME('.$this->field.')) as day,COUNT(*) as c, MONTH(FROM_UNIXTIME('.$this->field.')) as month, YEAR(FROM_UNIXTIME('.$this->field.')) as year'.
-                         ' FROM '.$this->table.
-                         ' WHERE '.$this->field.' >= %d'.
-                         ' AND  '.$this->field.' < %d'.
-                         ' GROUP BY day, month, year'.
-                         ' ORDER BY year, month, day', db_escape_int($startDate), db_escape_int($endDate));
-
-        $res = db_query($query);
+        $res = db_query($this->getDayDataSQLQuery($startDate, $endDate));
 
         while ($paramrow = db_fetch_array($res)) {
 
