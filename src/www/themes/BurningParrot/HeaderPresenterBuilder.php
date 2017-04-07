@@ -82,6 +82,7 @@ class HeaderPresenterBuilder
                 $this->request,
                 $this->current_user,
                 $this->getExtraTabs(),
+                $this->getHelpMenuItems(),
                 $url_redirect
             ),
             $color,
@@ -99,6 +100,26 @@ class HeaderPresenterBuilder
         include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
 
         return $additional_tabs;
+    }
+
+    private function getHelpMenuItems()
+    {
+        $help_menu_items = array(
+            array(
+                'link'  => '/help/',
+                'title' => $GLOBALS['Language']->getText('include_menu', 'get_help')
+            ),
+            array(
+                'link'  => '/help/api.php',
+                'title' => $GLOBALS['Language']->getText('include_menu', 'api')
+            ),
+            array(
+                'link'  => '/contact.php',
+                'title' => $GLOBALS['Language']->getText('include_menu', 'contact_us')
+            )
+        );
+
+        return $help_menu_items;
     }
 
     private function getPageTitle()
