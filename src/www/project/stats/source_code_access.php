@@ -10,14 +10,17 @@ require_once '../admin/project_admin_utils.php';
 require('./source_code_access_utils.php');
 require('www/project/export/access_logs_export.php');
 
-
 // Only for project administrators
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
 if ( !$group_id ) {
 	exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist'));
 }
-$project=new Project($group_id);
+$project = ProjectManager::instance()->getProject($group_id);
+
+$who  = $request->getValidated('who', new Valid_WhiteList('who', array('nonmembers', 'members', 'allusers')), 'nonmembers');
+$span = $request->getValidated('span', 'uint', 14);
+$view = $request->getValidated('view', new Valid_WhiteList('view', array('daily', 'weekly', 'monthly')), 'daily');
 
 if (isset($_REQUEST['SUBMIT'])) {    
         
@@ -68,18 +71,6 @@ project_admin_header(array('title'=>$Language->getText('project_admin_index','p_
 //
 
 echo "\n\n";
-
-if ( !isset($who) ) {
-    $who = "nonmembers";
-}
-
-if ( !isset($span) ) {
-	$span = 14;
-}
-
-if ( !isset($view) ) { 
-	$view = "daily";
-}
 
 echo '<h2>'.$Language->getText('project_admin_utils','access_logs').'</h2>';
 
