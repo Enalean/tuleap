@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2017-04-07 16:58+0200\n"
+"PO-Revision-Date: 2017-04-10 09:38+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -34,8 +34,16 @@ msgstr[1] "Les groupes '%s' n’ont pas pu être ajouté."
 msgid "Notification deleted successfully."
 msgstr "La notification a été correctement supprimée."
 
+#, php-format
+msgid "Notification to update doesn't exists."
+msgstr "La notification à mettre à jour n’existe pas."
+
 msgid "Save"
 msgstr "Sauvegarder"
+
+#, php-format
+msgid "The path '%s' already exists."
+msgstr "Le chemin '%s' existe déjà."
 
 #, php-format
 msgid "User '%s' couldn't be added."

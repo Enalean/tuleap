@@ -86,6 +86,17 @@ class MailNotificationManager {
 
     /**
      * @param Repository $repository
+     * @param $notification_id
+     * @return MailNotification
+     */
+    public function getByIdAndRepository(Repository $repository, $notification_id)
+    {
+        $row = $this->dao->searchById($notification_id)->getRow();
+        return $this->instantiateFromRow($row, $repository);
+    }
+
+    /**
+     * @param Repository $repository
      * @param string $path
      *
      * @return MailNotification[]
@@ -93,6 +104,21 @@ class MailNotificationManager {
     public function getByPath(Repository $repository, $path) {
         $mail_notification = array();
         foreach ($this->dao->searchByPath($repository->getId(), $path) as $row) {
+            $mail_notification[] = $this->instantiateFromRow($row, $repository);
+        }
+
+        return $mail_notification;
+    }
+
+    /**
+     * @param Repository $repository
+     * @param string $path
+     * @return MailNotification[]
+     */
+    private function getByPathStrictlyEqual(Repository $repository, $path)
+    {
+        $mail_notification = array();
+        foreach ($this->dao->searchByPathStrictlyEqual($repository->getId(), $path) as $row) {
             $mail_notification[] = $this->instantiateFromRow($row, $repository);
         }
 
@@ -165,5 +191,21 @@ class MailNotificationManager {
         }
 
         return empty($ugroups_not_added);
+    }
+
+    /**
+     * @param Repository $repository
+     * @param $notification_id
+     * @param $form_path
+     * @return bool
+     */
+    public function isAnExistingPath(Repository $repository, $notification_id, $form_path)
+    {
+        foreach ($this->getByPathStrictlyEqual($repository, $form_path) as $notification) {
+            if ($notification->getId() !== $notification_id) {
+                return true;
+            }
+        }
+        return false;
     }
 }

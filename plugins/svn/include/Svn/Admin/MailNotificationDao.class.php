@@ -102,6 +102,20 @@ class MailNotificationDao extends DataAccessObject {
         return $this->retrieve($query);
     }
 
+    public function searchByPathStrictlyEqual($repository_id, $path)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $path          = $this->da->quoteSmart($path);
+
+        $query = "SELECT *
+                    FROM plugin_svn_notification
+                    WHERE repository_id = $repository_id
+                    AND svn_path = $path
+                    ";
+
+        return $this->retrieve($query);
+    }
+
     public function deleteEmptyNotificationsInProject($project_id)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -117,5 +131,15 @@ class MailNotificationDao extends DataAccessObject {
                 ";
 
         return $this->update($sql);
+    }
+
+    public function searchById($notification_id)
+    {
+        $notification_id = $this->da->escapeInt($notification_id);
+        $sql = "SELECT *
+                FROM plugin_svn_notification
+                WHERE id=$notification_id";
+
+        return $this->retrieve($sql);
     }
 }

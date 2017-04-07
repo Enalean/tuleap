@@ -19,7 +19,15 @@ msgstr[1] ""
 msgid "Notification deleted successfully."
 msgstr ""
 
+#, php-format
+msgid "Notification to update doesn't exists."
+msgstr ""
+
 msgid "Save"
+msgstr ""
+
+#, php-format
+msgid "The path '%s' already exists."
 msgstr ""
 
 #, php-format
