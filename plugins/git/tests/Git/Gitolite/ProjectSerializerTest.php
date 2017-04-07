@@ -118,67 +118,6 @@ class ProjectSerializerTest extends TuleapTestCase {
         );
     }
 
-    public function itAddsTheDescriptionToTheConfFile() {
-        $repo_description = 'Vive tuleap';
-        $repo_name        = 'test_default';
-        $project_name     = 'project1';
-
-        $prj = stub('Project')->getUnixName()->returns($project_name);
-
-        // List all repo
-        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->returns(
-            array(
-                aGitRepository()
-                    ->withId(4)
-                    ->withName($repo_name)
-                    ->withNamespace('')
-                    ->withDescription($repo_description)
-                    ->withProject($prj)
-                    ->build()
-            )
-        );
-
-        // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_READ')->returns(array('2'));
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WPLUS')->returns(array());
-
-        // Ensure file is correct
-        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $this->assertPattern("%$project_name/$repo_name = \"$repo_description\"%", $result);
-    }
-
-    public function itReplacesNewlinesBySpaces() {
-        $repo_description = 'Vive
-            tuleap';
-        $repo_name        = 'test_default';
-        $project_name     = 'project1';
-
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', $project_name);
-
-        // List all repo
-        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->returns(
-            array(
-                aGitRepository()
-                    ->withId(4)
-                    ->withName($repo_name)
-                    ->withNamespace('')
-                    ->withDescription($repo_description)
-                    ->withProject($prj)
-                    ->build()
-            )
-        );
-
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_READ')->returns(array('2'));
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WPLUS')->returns(array());
-
-        // Ensure file is correct
-        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $this->assertPattern("%$project_name/$repo_name = \"Vive tuleap\"%", $result);
-    }
-
     //
     // The project has 2 repositories nb 4 & 5.
     // 4 has defaults

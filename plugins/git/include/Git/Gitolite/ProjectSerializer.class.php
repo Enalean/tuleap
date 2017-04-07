@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -86,8 +86,6 @@ class Git_Gitolite_ProjectSerializer {
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->permissions_serializer->getForRepository($repository);
-        $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
-        $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
 
         return $repo_config. PHP_EOL;
     }
