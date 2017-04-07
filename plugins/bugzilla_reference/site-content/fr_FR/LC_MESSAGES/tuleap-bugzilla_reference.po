@@ -1,0 +1,8 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Bugzilla reference"
+msgstr "Références bugzilla"
+
+msgid "References between Bugzilla and Tuleap"
+msgstr "Références entre Bugzilla et Tuleap"

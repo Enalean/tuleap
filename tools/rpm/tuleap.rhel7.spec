@@ -351,6 +351,15 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
 %description plugin-captcha
 %{summary}.
 
+%package plugin-bugzilla-reference
+Summary: References between Bugzilla and Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_BUGZILLA_REFERENCE_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
+%description plugin-bugzilla-reference
+%{summary}.
+
 %package api-explorer
 Summary: Web API Explorer
 Group: Development/Tools
@@ -1075,6 +1084,10 @@ fi
 %files plugin-captcha
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/captcha
+
+%files plugin-bugzilla-reference
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/bugzilla_reference
 
 %files api-explorer
 %defattr(-,root,root,-)

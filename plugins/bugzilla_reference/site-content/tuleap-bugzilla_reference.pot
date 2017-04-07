@@ -1,0 +1,5 @@
+msgid "Bugzilla reference"
+msgstr ""
+
+msgid "References between Bugzilla and Tuleap"
+msgstr ""
