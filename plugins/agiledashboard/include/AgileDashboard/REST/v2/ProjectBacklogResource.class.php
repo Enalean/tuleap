@@ -33,6 +33,8 @@ use \AgileDashboard_BacklogItemDao;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \Tracker_ArtifactDao;
 use \Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use \Tuleap\REST\Header;
@@ -71,7 +73,16 @@ class ProjectBacklogResource {
             $tracker_artifact_factory
         );
 
-        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory);
+        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
+            new MonoMilestoneBacklogItemDao(),
+            $tracker_artifact_factory
+        );
+
+        $scrum_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
+            new ScrumForMonoMilestoneDao(),
+            $this->planning_factory
+        );
+
         $this->milestone_factory      = new Planning_MilestoneFactory(
             $this->planning_factory,
             Tracker_ArtifactFactory::instance(),
@@ -87,7 +98,8 @@ class ProjectBacklogResource {
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
             $this->planning_factory,
-            $scrum_mono_milestone_checker
+            $scrum_mono_milestone_checker,
+            $mono_milestone_items_finder
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(

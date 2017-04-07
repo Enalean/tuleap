@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_Backlog_DescendantItemsFinder {
-
+class AgileDashboard_Milestone_Backlog_DescendantItemsFinder
+{
     /** @var AgileDashboard_BacklogItemDao */
     private $item_dao;
 
@@ -120,7 +120,11 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsFinder {
     }
 
     /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
-    public function getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(PFUser $user, $limit, $offset) {
+    public function getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
+        PFUser $user,
+        $limit,
+        $offset
+    ) {
         $result = $this->item_dao->getOpenUnplannedTopBacklogArtifactsWithLimitAndOffset(
             $this->descendant_tracker_ids,
             $limit,

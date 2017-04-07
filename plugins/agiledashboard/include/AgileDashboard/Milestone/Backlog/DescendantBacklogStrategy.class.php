@@ -21,8 +21,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 
 /**
  * I am the backlog of the first descendant of the current milestone
@@ -55,6 +58,14 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
      * @var ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
+    /**
+     * @var MonoMilestoneItemsFinder
+     */
+    private $mono_milestone_items_finder;
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
@@ -63,7 +74,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         array $descendant_trackers,
         AgileDashboard_BacklogItemDao $item_dao,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
-        $limit  = null,
+        MonoMilestoneItemsFinder $mono_milestone_items_finder,
+        $limit = null,
         $offset = null
     ) {
         $this->milestone                    = $milestone;
@@ -81,6 +93,8 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             $milestone,
             $this->getDescendantTrackerIds()
         );
+        $this->artifact_factory            = $artifact_factory;
+        $this->mono_milestone_items_finder = $mono_milestone_items_finder;
     }
 
     public function getDescendantTrackers() {
@@ -224,7 +238,20 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     public function getOpenUnplannedArtifacts(PFUser $user, $sub_milestone_ids) {
         if ($this->milestone instanceof Planning_VirtualTopMilestone) {
             if ($this->limit !== null || $this->offset !== null) {
-                $artifacts_collection = $this->items_finder->getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset($user, $this->limit, $this->offset);
+                if ($this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($this->milestone->getProject()->getID()) === true) {
+                    $artifacts_collection = $this->mono_milestone_items_finder->getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
+                        $user,
+                        $this->getDescendantTrackerIds(),
+                        $this->limit,
+                        $this->offset
+                    );
+                } else {
+                    $artifacts_collection = $this->items_finder->getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset(
+                        $user,
+                        $this->limit,
+                        $this->offset
+                    );
+                }
             } else {
                 $artifacts_collection = $this->items_finder->getAllTopMilestoneOpenUnplannedBacklogItems($user, $sub_milestone_ids);
             }

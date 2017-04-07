@@ -28,6 +28,8 @@ use \Planning_MilestoneFactory;
 use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
+use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use \Tuleap\REST\Header;
@@ -88,6 +90,11 @@ class ProjectMilestonesResource {
             $this->planning_factory
         );
 
+        $mono_milestone_items_finder = new MonoMilestoneItemsFinder(
+            new MonoMilestoneBacklogItemDao(),
+            $this->tracker_artifact_factory
+        );
+
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->tracker_artifact_factory,
@@ -103,7 +110,8 @@ class ProjectMilestonesResource {
             new AgileDashboard_BacklogItemDao(),
             $this->tracker_artifact_factory,
             $this->planning_factory,
-            $scrum_mono_milestone_checker
+            $scrum_mono_milestone_checker,
+            $mono_milestone_items_finder
         );
 
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
