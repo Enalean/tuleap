@@ -63,56 +63,7 @@ rcs_id('$Id: IniConfig.php,v 1.94 2005/09/15 05:56:12 rurban Exp $');
 include_once (dirname(__FILE__)."/config.php");
 include_once (dirname(__FILE__)."/FileFinder.php");
 
-/**
- * Speed-up iniconfig loading.
- *
- * Dump the static parts of the parsed config/config.ini settings to a fast-loadable config.php file.
- * The dynamic parts are then evaluated as before.
- * Requires write-permissions to config/config.php
- */
-function save_dump($file) {
-    $vars =& $GLOBALS; // copy + unset not possible
-    $ignore = array();
-    foreach (array("SERVER","ENV","GET","POST","REQUEST","COOKIE","FILES") as $key) {
-        $ignore["HTTP_".$key."_VARS"]++;
-        $ignore["_".$key]++;
-    }
-    foreach (array("HTTP_POST_FILES","GLOBALS","RUNTIMER","ErrorManager",'RCS_IDS','LANG',
-    		   'HOME_PAGE','request','SCRIPT_NAME','VIRTUAL_PATH','SCRIPT_FILENAME') as $key)
-    	$ignore[$key]++;
-    $fp = fopen($file, "wb");
-    fwrite($fp,"<?php\n");
-    fwrite($fp,"function wiki_configrestore(){\n");
-    //TODO: optimize this by removing ignore, big serialized array and merge into existing GLOBALS
-    foreach ($vars as $var => $val) {
-    	if (!$ignore[$var])
-            fwrite($fp, "\$GLOBALS['".$var."']=unserialize(\""
-            		    .addslashes(serialize($val))."\");\n");
-    }
-    // cannot be optimized, maybe leave away predefined consts somehow
-    foreach (get_defined_constants() as $var => $val) {
-    	if (substr($var,0,4) != "PHP_" and substr($var,0,2) != "E_" 
-    	    and substr($var,0,2) != "T_"  and substr($var,0,2) != "M_")
-            fwrite($fp, "if(!defined('".$var."')) define('".$var."',unserialize(\""
-            	        .addslashes(serialize($val))."\"));\n");
-    }
-    fwrite($fp, "return 'noerr';}");
-    fwrite($fp,"?>");
-    fclose($fp);
-}
-
 function IniConfig($file) {
-
-    // check config/config.php dump for faster startup
-    $dump = substr($file, 0, -3)."php";
-    if (isWindows($dump)) $dump = str_replace("/","\\",$dump);
-    if (file_exists($dump) and is_readable($dump) and sort_file_mtime($dump, $file) < 0) {
-        @include($dump);
-        if (function_exists('wiki_configrestore') and (wiki_configrestore() === 'noerr')) {
-            fixup_dynamic_configs();
-            return;
-        }
-    }
 
     // First-time installer detection here...
     // Similar to SetupWiki()
@@ -500,11 +451,6 @@ function IniConfig($file) {
     unset($rsdef);
     
     fixup_static_configs($file); //[1ms]
-    // Dump all globals and constants
-    // The question is if reading this is faster then doing IniConfig() + fixup_static_configs()
-    if (is_writable($dump)) {
-        save_dump($dump);
-    }
     // store locale[] in config.php? This is too problematic.
     fixup_dynamic_configs($file); // [100ms]
 }
