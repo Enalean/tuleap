@@ -53,7 +53,10 @@ class AncestorFolderChecker
                 $direct_ancestor_folder = $this->hierarchy_of_folder_builder->getDirectFolderForArtifact(
                     $ancestor_artifact
                 );
-                return $direct_ancestor_folder->getId() === $folder_artifact->getId();
+
+                if ($direct_ancestor_folder) {
+                    return $direct_ancestor_folder->getId() === $folder_artifact->getId();
+                }
             }
         }
 
