@@ -1,7 +1,7 @@
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
-%define APP_NAME tuleap
-%define APP_USER tuleap
+%define APP_NAME codendiadm
+%define APP_USER codendiadm
 %define APP_HOME_DIR /home/%{APP_USER}
 %define APP_DIR %{_datadir}/%{APP_NAME}
 %define APP_LIB_DIR /usr/lib/%{APP_NAME}
@@ -11,8 +11,8 @@
 %define APP_LOG_DIR /var/log/%{APP_NAME}
 %define APP_PHP_INCLUDE_PATH /usr/share/pear:%{APP_DIR}/src/www/include:%{APP_DIR}/src:.
 
-%define app_group        tuleap
-%define app_user         tuleap
+%define app_group        codendiadm
+%define app_user         codendiadm
 %define dummy_group      dummy
 %define dummy_user       dummy
 %define ftpadmin_group   ftpadmin

@@ -53,16 +53,27 @@ endif
 
 PKG_NAME=tuleap
 
+RPMBUILD = rpmbuild --define "%_topdir $(RPM_TMP)" \
+	--define "%_tmppath %{_topdir}/TMP" \
+	--define "%_buildroot %{_tmppath}/%{name}-root" \
+	--define "%_sysconfdir /etc" \
+	--define "%php_base $(PHP_BASE)"
 
 ifeq ($(strip $(OS)),rhel6)
 DIST=
 SPEC_FILE=tuleap.rhel6.spec
 CUSTOM_SPEC_FILE=customization.rhel6.spec
+SRPMS=$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm \
+	$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm \
+	$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm \
+	$(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
 else
 ifeq ($(strip $(OS)),rhel7)
 SPEC_FILE=tuleap.rhel7.spec
 DIST=.el7
 PHP_BASE=rh-php56-php
+SRPMS=$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm
+RPMBUILD += --define "%dist $(DIST)"
 else
 $(error OS version not supported)
 endif
@@ -77,22 +88,13 @@ endif
 default: all
 
 all: srpms
-	rpmbuild --rebuild $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
+	rpmbuild --rebuild $(SRPMS)
 
 ##
 ## Setup environment
 ##
 
-rpmprep: $(RPM_TMP) ~/.rpmmacros
-
-~/.rpmmacros:
-	@echo "Creating ~/.rpmmacros"
-	@echo "%_topdir $(RPM_TMP)" > ~/.rpmmacros
-	@echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
-	@echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
-	@echo '%_sysconfdir /etc' >> ~/.rpmmacros
-	@echo '%php_base $(PHP_BASE)' >> ~/.rpmmacros
-	@echo '%dist $(DIST)' >> ~/.rpmmacros
+rpmprep: $(RPM_TMP)
 
 $(RPM_TMP):
 	[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
@@ -130,7 +132,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
 				-name ".git" -o\
 				-name ".gitignore" -o\
 				-name ".gitmodules" -o\
-                                -name "node_modules" -o\
+				-name "node_modules" -o\
 				-path "*/.DS_Store" -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/doc -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/gulpfile.js -o\
@@ -157,9 +159,9 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
 
 rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
-srpms: clean rpmprep tarball $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
+srpms: $(SRPMS)
 
-srpms-docker: clean rpmprep node tarball $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
+srpms-docker: $(SRPMS)
 
 $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm
 	rpmbuild --rebuild $<
@@ -203,7 +205,7 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@THEME_BURNINGPARROT_VERSION@@/$(THEME_BURNINGPARROT_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
-	rpmbuild -bs $(RPM_TMP)/SPECS/$(SPEC_FILE)
+	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$(SPEC_FILE)
 
 custom_rpm: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
@@ -220,7 +222,7 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
 	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES/
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
-	rpmbuild -bs $(RPM_TMP)/SPECS/codendi-customization.spec
+	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/codendi-customization.spec
 
 rpm-all-deps: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
@@ -233,7 +235,7 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm: code
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$<
 	cp README.all-deps $(RPM_TMP)/SOURCES/
-	rpmbuild -bs $(RPM_TMP)/SPECS/$<
+	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$<
 
 tuleap-all: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
@@ -246,7 +248,7 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm:	tuleap-al
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$<
 	cp README.all $(RPM_TMP)/SOURCES/
-	rpmbuild -bs $(RPM_TMP)/SPECS/$<
+	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$<
 
 clean:
 	-rm -Rf $(RPM_TMP)/*
