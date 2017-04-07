@@ -340,7 +340,8 @@ DROP TABLE IF EXISTS tracker_changeset_value_list;
 CREATE TABLE tracker_changeset_value_list(
     changeset_value_id INT(11) NOT NULL,
     bindvalue_id INT(11) NOT NULL,
-    PRIMARY KEY idx(changeset_value_id, bindvalue_id)
+    PRIMARY KEY idx(changeset_value_id, bindvalue_id),
+    INDEX idx_bind (bindvalue_id, changeset_value_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_changeset_value_openlist;
