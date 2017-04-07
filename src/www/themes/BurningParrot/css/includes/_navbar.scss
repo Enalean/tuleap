@@ -103,6 +103,11 @@ header {
 
 .nav-dropdown-link {
     @include nav-link(900px);
+
+    &:hover {
+        transition: color 100ms linear;
+        color: $tlp-theme-color;
+    }
 }
 
 .nav-form {

@@ -53,7 +53,7 @@
 
 .navbar {
     height: $navbar-height;
-    background: $navbar-color;
+    background: $white;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
 
     & > .motd {
@@ -98,6 +98,7 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     filter: none;
+    box-shadow: none;
 
     #dropdown-project, #dropdown-help {
         letter-spacing: normal;
@@ -145,7 +146,7 @@
         }
 
         & > li > a {
-            height: $navbar-height - 12px - 5px + 1px;
+            height: $navbar-height - 12px - 5px;
             padding: 12px 20px 5px;
             text-align: center;
 
@@ -178,21 +179,16 @@
         }
 
         li.dropdown.active > .dropdown-toggle .caret,
-        li.dropdown:hover > .dropdown-toggle .caret {
+        li.dropdown:hover > .dropdown-toggle .caret,
+        li.dropdown.open > .dropdown-toggle .caret,
+        li.dropdown.open.active > .dropdown-toggle .caret {
             border-top-color: $navbar-color;
             border-bottom-color: $navbar-color;
         }
 
-        li.dropdown > a, li.dropdown > a:hover,
-        li.dropdown.open > .dropdown-toggle .caret, li.dropdown.active > .dropdown-toggle, li.dropdown.open.active > .dropdown-toggle .caret {
-            border-top-color: $white;
-            border-bottom-color: $white;
-        }
-
         li.dropdown.open > .dropdown-toggle, li.dropdown.open.active > .dropdown-toggle {
-            background-color: $dark-grey;
-            color: transparent;
-            box-shadow: none;
+            background-color: $white;
+            color: $navbar-color;
         }
 
         li > a.username {
@@ -219,6 +215,11 @@
 
         .user-infos-login-name {
             font-size: 12px;
+        }
+
+        .icon-cog {
+            position: relative;
+            top: 3px;
         }
 
         @media screen and (max-width: 1250px) {
@@ -262,26 +263,26 @@
             padding: 0;
             border: 0;
             border-radius: 0;
-            background-color: $dark-grey;
+            background-color: $white;
 
             &:before, &:after {
                 content: none;
             }
 
             li:first-child {
-                margin-top: 5px;
+                margin-top: 0;
             }
 
             li:last-child {
-                margin-bottom: 5px;
+                margin-bottom: 0;
             }
 
             li > a, .submit-action {
                 display: block;
-                padding: 3px 20px;
+                padding: 10px 20px;
                 clear: both;
-                color: $white;
-                font-size: 13px;
+                color: #747474;
+                font-size: 14px;
                 font-weight: normal;
                 line-height: $baseLineHeight;
                 white-space: nowrap;
@@ -294,9 +295,9 @@
             li > a:hover, li > a:focus,
             .submit-action:hover, .submit-action:focus,
             .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
-                background: lighten($dark-grey, 10%);
-                color: #ffffff;
+                background: transparentize($navbar-color, .9);
                 background-image: none;
+                color: $navbar-color;
                 text-decoration: none;
                 filter: none;
             }
@@ -316,7 +317,7 @@
 
             .divider {
                 border: 0;
-                background-color: darken($dark-grey, 5%);
+                background-color: #f3f3f3;
             }
         }
 
@@ -326,16 +327,16 @@
             overflow: hidden;
 
             #filter-projects {
-                border-color: darken($dark-grey, 3%);
-                color: $grey;
-                width: 85%;
+                width: 87%;
                 margin: 10px auto;
+                padding: 14px 15px;
                 display: block;
-                background: lighten($dark-grey, 10%);
+                border-radius: 20px;
+                box-sizing: border-box;
 
                 &:focus {
-                    background: lighten($dark-grey, 15%);
                     box-shadow: none;
+                    border-color: $navbar-color;
                 }
             }
         }
