@@ -13,48 +13,107 @@
     }
 
     .breadcrumb {
-        background-color: lighten($dark-grey, 4%);
-        font-family: 'SourceSansPro', Arial;
-        font-size: 1em;
-        color: $grey;
-        text-shadow: 0 1px 0 darken($grey, 50%);
-        border-radius: 0;
-        padding: 10px 10px;
-        min-height: 20px;
+        $step-background: #ffffff;
+        $step-color: #838383;
+        $step-border: #e3e3e3;
+        $step-border-chevron: #d5d5d5;
+        $step-active-color: $main;
+        $step-active-border: transparentize($main, .1);
+        $step-clicked-background: $main;
+        $step-clicked-border: $main;
+        $step-clicked-color: #ffffff;
 
-        li > a, li > .divider {
-            color: $grey;
-            text-shadow: 0 1px 0 darken($grey, 50%);
-        }
+        display: flex;
+        padding: 15px;
+        background: #f0f1f8;
+        list-style: none;
 
-        li > a:hover {
-            text-decoration: none;
-            color: $white;
-        }
+        > li {
+            position: relative;
 
-        li:first-child > .divider {
-            display: none;
-        }
+            > a {
+                display: block;
+                position: relative;
+                padding: 0 10px 0 30px;
+                transition: padding-right 150ms, border 150ms;
+                border: 1px solid $step-border;
+                background: $step-background;
+                color: $step-color;
+                font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+                font-size: 13px;
+                line-height: 33px;
+                text-decoration: none;
+                text-shadow: none;
 
-        li:last-child > a {
-            color: $white;
-            font-weight: normal;
+                &::after {
+                    position: absolute;
+                    top: 0;
+                    right: -16px;
+                    width: 33px;
+                    height: 33px;
+                    transform: rotate(-45deg) scale(.73);
+                    transition: box-shadow 150ms;
+                    border-radius: 50px 0 0;
+                    background: $step-background;
+                    box-shadow: 1.3px 1.3px 0 $step-border-chevron;
+                    content: '';
+                    z-index: 1;
+                }
+            }
+
+            &:first-child > a {
+                padding-left: 20px;
+            }
+
+            &:last-child > a {
+                border: 1px solid $step-active-border;
+                color: $step-active-color;
+
+                &::after {
+                    box-shadow: 1.3px 1.3px 0 $step-active-border;
+                }
+            }
+
+            &:hover {
+                > a {
+                    border: 1px solid $step-active-border;
+                    color: $step-active-color;
+
+                    &::after {
+                        box-shadow: 1.3px 1.3px 0 $step-active-border;
+                    }
+
+                    &:active {
+                        border: 1px solid $step-clicked-border;
+                        background: $step-clicked-background;
+                        color: $step-clicked-color;
+
+                        &::after {
+                            background: $step-clicked-background;
+                            box-shadow: 1.3px 1.3px 0 $step-clicked-border;
+                        }
+                    }
+                }
+            }
         }
     }
 
     .toolbar.nav-pills {
-        background: $light-grey;
-        font-family: 'SourceSansPro', Arial;
-        font-size: 1em;
-        border-bottom: 1px solid darken($light-grey, 10%);
         margin: 0;
-        padding: 2px 0px;
+        padding: 15px 20px 0;
+        border: 0;
+        background: #f0f1f8;
+        font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 13px;
 
         li > a {
+            margin: 0 30px 15px 0;
+            padding: 0;
+            background: none;
             color: $medium-grey;
             font-weight: normal;
-            background: none;
         }
+
         li > a:hover, li > a:focus {
             color: $dark-grey;
             font-weight: normal;
@@ -62,7 +121,11 @@
         }
     }
 
+    .breadcrumb + .toolbar.nav-pills {
+        padding: 0 20px;
+    }
+
     .content {
-        padding: 12px 12px 150px 12px;
+        padding: 12px 12px 150px;
     }
 }

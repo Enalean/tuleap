@@ -138,9 +138,14 @@ header {
 #logo {
     display: inline-block;
     flex: 0 0 auto;
-    width: $sidebar-width;
+    width: $sidebar-expanded-width;
     height: $navbar-height;
-    background: $tlp-theme-color url('../images/organization_logo_small.png') no-repeat center center;
+    background: $tlp-theme-color url('../images/organization_logo.png') no-repeat center center;
+
+    &.logo-collapsed {
+        width: $sidebar-collapsed-width;
+        background: $tlp-theme-color url('../images/organization_logo_small.png') no-repeat center center;
+    }
 }
 
 .header-container {

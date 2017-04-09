@@ -16,28 +16,28 @@
     height: $navbar-height;
     float: left;
     @include logo-background($navbar-color);
+
+    @media screen and (max-width: 1366px) {
+        width: 155px;
+        max-width: 155px;
+        @include logo-background-medium($navbar-color);
+    }
+
+    @media screen and (max-width: 1300px) {
+        width: $sidebar-width-collapsed;
+        max-width: $sidebar-width-collapsed;
+        @include logo-background-small($navbar-color);
+    }
+
+    &.logo-collapsed {
+        width: $sidebar-width-collapsed;
+        max-width: $sidebar-width-collapsed;
+        @include logo-background-small($navbar-color);
+    }
 }
 
 .navbar .nav li.dropdown.active > .dropdown-toggle {
     background-color: transparent;
-}
-
-@media screen and (max-width: 1366px) {
-    .logo {
-        width: 155px;
-        max-width: 155px;
-        float: left;
-        @include logo-background-medium($navbar-color);
-    }
-}
-
-@media screen and (max-width: 1300px) {
-    .logo {
-        width: 45px;
-        max-width: 45px;
-        float: left;
-        @include logo-background-small($navbar-color);
-    }
 }
 
 @media screen and (max-width: 980px) {
@@ -346,6 +346,7 @@
         width: 36px;
         height: 36px;
         margin: 0 10px 0 0;
+        border-radius: 50%;
     }
 
     .navbar-search {
