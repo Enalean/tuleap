@@ -20,6 +20,7 @@
 
 namespace Tuleap\Bugzilla\Administration;
 
+use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use PFUser;
@@ -41,7 +42,14 @@ class Router
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);
 
-        $this->controller->display();
+        $action = $request->get('action');
+        switch ($action) {
+            case 'add-reference':
+                $this->controller->addReference($request);
+                break;
+            default:
+                $this->controller->display();
+        }
     }
 
     private function checkUserIsSiteAdmin(PFUser $user)

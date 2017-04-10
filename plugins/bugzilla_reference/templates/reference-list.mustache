@@ -1,14 +1,55 @@
 <div>
-    <h1>{{ bugzilla_title }}</h1>
+    <div id="bugzilla-references-header">
+        <h1 id="bugzilla-references-header-title">{{ bugzilla_title }}</h1>
+        {{# has_references }}
+            <button type="button" class="tlp-button-primary" id="bugzilla-add-reference">
+                <i class="fa fa-plus tlp-button-icon"></i> {{ bugzilla_add }}
+            </button>
+            {{> add-reference }}
+        {{/ has_references }}
+    </div>
 
+    {{# has_references }}
+        <table class="tlp-table">
+            <thead>
+            <tr>
+                <th>{{ keyword }}</th>
+                <th>{{ server }}</th>
+                <th>{{ follow_up }}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {{# presenters }}
+                <tr>
+                    <td>{{ getKeyword }}</td>
+                    <td>{{ getServer }}</td>
+                    <td>{{ getFollowUpVisibility }}</td>
+                    <td class="tlp-table-cell-actions">
+                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                disabled>
+                            <i class="fa fa-pencil"></i> {{ edit }}
+                        </button>
+                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                                disabled>
+                            <i class="fa fa-trash-o"></i> {{ delete }}
+                        </button>
+                    </td>
+                </tr>
+            {{/ presenters }}
+            </tbody>
+        </table>
+    {{/ has_references }}
+    {{^ has_references }}
     <div class="empty-page">
         <div class="empty-page-text">{{{ purified_no_bugzilla_reference }}}</div>
         <button type="button"
+                id="bugzilla-add-reference"
                 class="tlp-button-primary tlp-button-large"
-                disabled
         >
             <i class="fa fa-plus tlp-button-icon"></i> {{ bugzilla_add }}
         </button>
-
-    </div>
+        {{> add-reference }}
+    {{/ has_references }}
+</div>
 </div>

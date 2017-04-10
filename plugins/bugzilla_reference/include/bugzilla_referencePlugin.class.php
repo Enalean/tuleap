@@ -22,6 +22,11 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Bugzilla\Administration\Controller;
 use Tuleap\Bugzilla\Administration\Router;
 use Tuleap\Bugzilla\Plugin\Info;
+use Tuleap\Bugzilla\Reference\Dao;
+use Tuleap\Bugzilla\Reference\ReferenceRetriever;
+use Tuleap\Bugzilla\Reference\ReferenceSaver;
+use Tuleap\reference\ReferenceValidator;
+use Tuleap\reference\ReservedKeywordsRetriever;
 
 require_once 'constants.php';
 
@@ -31,10 +36,13 @@ class bugzilla_referencePlugin extends Plugin
     {
         parent::__construct($id);
 
-        bindtextdomain('tuleap-bugzilla_reference', BUGZILLA_REFERENCE_BASE_DIR. '/site-content');
+        bindtextdomain('tuleap-bugzilla_reference', BUGZILLA_REFERENCE_BASE_DIR . '/site-content');
 
         $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
         $this->addHook(Event::IS_IN_SITEADMIN, 'isInSiteAdmin');
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
     }
 
     /**
@@ -66,8 +74,52 @@ class bugzilla_referencePlugin extends Plugin
 
     public function processAdmin(HTTPRequest $request)
     {
-        $controller = new Controller(new AdminPageRenderer());
-        $router     = new Router($controller);
+        $controller = new Controller(
+            new AdminPageRenderer(),
+            new ReferenceSaver(
+                new Dao(),
+                new ReferenceValidator(
+                    new ReferenceDao(),
+                    new ReservedKeywordsRetriever(EventManager::instance())
+                ),
+                $this->getReferenceRetriever()
+            ),
+            $this->getReferenceRetriever()
+        );
+
+        $router = new Router($controller);
         $router->route($request);
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $params['javascript_files'][] = BUGZILLA_REFERENCE_BASE_URL . '/scripts/bugzilla-reference.js';
+        }
+    }
+
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], '/plugins/bugzilla_reference') === 0) {
+            $variant                 = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() . '/css/style-' . $variant->getName() . '.css';
+        }
+    }
+
+    public function get_plugins_available_keywords_references(array $params)
+    {
+        foreach ($this->getReferenceRetriever()->getAllReferences() as $reference) {
+            $params['keywords'][] = $reference->getKeyword();
+        }
+    }
+
+    /**
+     * @return ReferenceRetriever
+     */
+    private function getReferenceRetriever()
+    {
+        $reference_retriever = new ReferenceRetriever(new Dao());
+
+        return $reference_retriever;
     }
 }
