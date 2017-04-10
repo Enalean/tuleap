@@ -1,0 +1,3 @@
+# Bugzilla reference plugin
+
+This plugin enables to link references between Tuleap and Bugzilla
