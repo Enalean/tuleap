@@ -1,0 +1,116 @@
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.3em;
+}
+
+blockquote p {
+    font-size: 1em;
+}
+
+input[type="file"] {
+    margin-top: -13px;
+}
+
+.tooltip.in {
+    opacity: 1;
+}
+
+.tooltip.right .tooltip-arrow {
+    border-right-color: $dark-grey;
+}
+
+.tooltip-inner {
+    background-color: $dark-grey;
+}
+
+.tour-backdrop {
+    opacity: 0.3;
+}
+
+.popover[class*="tour"] {
+    background: $main;
+    color: $white;
+    padding: 0;
+    border: none;
+    font-size: 0.85em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+
+    max-width: 370px;
+    min-width: 370px;
+
+    &.top .arrow:after {
+        border-top-color: $main;
+    }
+    &.right .arrow:after {
+        border-right-color: $main;
+    }
+    &.bottom .arrow:after {
+        border-bottom-color: $dark-main;
+    }
+    &.left .arrow:after {
+        border-left-color: $main;
+    }
+
+    .popover-title {
+        background: $dark-main;
+        color: $white;
+        border: none;
+        font-size: 1.1em;
+    }
+
+    .popover-navigation [data-role=prev], .popover-navigation [data-role=next] {
+        float: left;
+        margin-right: 5px;
+    }
+}
+
+legend {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.dropdown-menu {
+    z-index: 3000;
+}
+
+.popover {
+    z-index: 4000;
+
+    .project-privacy {
+        font-size: 0.9em;
+    }
+}
+
+.modal {
+    form {
+        margin: 0;
+    }
+}
+
+.dropdown-submenu.pull-left.glued > .dropdown-menu {
+    left: 0%;
+    margin: 0;
+    transform: translateX(-100%);
+}
