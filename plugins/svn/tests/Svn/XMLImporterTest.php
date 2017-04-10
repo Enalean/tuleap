@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -92,6 +92,8 @@ class XMLImporterTest extends TuleapTestCase {
     private $notifdao;      ///< @var Tuleap\Svn\Admin\MailNotificationDao
     private $notifmgr;      ///< @var Tuleap\Svn\Admin\MailNotificationManager
     private $backend;       ///< @var Backend
+    private $users_to_notify_dao;
+    private $ugroups_to_notify_dao;
 
     public function setUp() {
         global $Language;
@@ -140,7 +142,10 @@ class XMLImporterTest extends TuleapTestCase {
         $this->accessfilefac         = new AccessFileHistoryFactory($this->accessfiledao);
         $this->accessfilemgr         = new AccessFileHistoryCreator($this->accessfiledao, $this->accessfilefac);
         $this->notifdao              = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
-        $this->notifmgr              = new MailNotificationManager($this->notifdao);
+        $this->users_to_notify_dao   = safe_mock('Tuleap\Svn\Notifications\UsersToNotifyDao');
+        $this->ugroups_to_notify_dao = safe_mock('Tuleap\Svn\Notifications\UgroupsToNotifyDao');
+        $this->notifdao              = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
+        $this->notifmgr              = new MailNotificationManager($this->notifdao, $this->users_to_notify_dao, $this->ugroups_to_notify_dao);
 
         Backend::clearInstances();
         Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));

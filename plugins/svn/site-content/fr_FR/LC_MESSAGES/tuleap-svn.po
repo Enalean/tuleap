@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-04-03 14:12+0200\n"
-"PO-Revision-Date: 2017-04-04 15:37+0200\n"
+"PO-Revision-Date: 2017-04-07 16:58+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -25,14 +25,31 @@ msgstr "Supprimer"
 msgid "Edit"
 msgstr "Éditer"
 
+#, php-format
+msgid "Group '%s' couldn't be added."
+msgid_plural "Groups '%s' couldn't be added."
+msgstr[0] "Le groupe '%s' n’a pas pu être ajouté."
+msgstr[1] "Les groupes '%s' n’ont pas pu être ajouté."
+
 msgid "Notification deleted successfully."
 msgstr "La notification a été correctement supprimée."
 
 msgid "Save"
 msgstr "Sauvegarder"
 
+#, php-format
+msgid "User '%s' couldn't be added."
+msgid_plural "Users '%s' couldn't be added."
+msgstr[0] "L'utilisateur '%s' n’a pas pu être ajouté."
+msgstr[1] "Les utilisateurs '%s' n’ont pas pu être ajouté."
+
+msgid "User, group, email"
+msgstr "Utilisateur, groupe, mail"
+
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."
 
 msgid "You are about to remove the notification. Please confirm your action."
-msgstr "Vous êtes sur le point de supprimer la notification. Merci de confirmer votre action."
+msgstr ""
+"Vous êtes sur le point de supprimer la notification. Merci de confirmer "
+"votre action."

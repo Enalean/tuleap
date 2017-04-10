@@ -319,7 +319,9 @@ class SvnPlugin extends Plugin {
     private function getMailNotificationManager() {
         if (empty($this->mail_notification_manager)) {
             $this->mail_notification_manager = new MailNotificationManager(
-                $this->getMailNotificationDao()
+                $this->getMailNotificationDao(),
+                new UsersToNotifyDao(),
+                new UgroupsToNotifyDao()
             );
         }
         return $this->mail_notification_manager;
@@ -442,6 +444,7 @@ class SvnPlugin extends Plugin {
         if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
+        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
     }
 
     public function service_icon($params) {
@@ -501,7 +504,9 @@ class SvnPlugin extends Plugin {
                     new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao()),
                     new CollectionOfUgroupToBeNotifiedPresenterBuilder(new UgroupsToNotifyDao())
                 ),
-                new NotificationsEmailsBuilder()
+                new NotificationsEmailsBuilder(),
+                UserManager::instance(),
+                new UGroupManager()
             ),
             new ExplorerController(
                 $repository_manager,

@@ -131,6 +131,18 @@ class RequestFromAutocompleter
         return $this->users;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isNotificationEmpty()
+    {
+        $emails  = $this->getEmails();
+        $ugroups = $this->getUgroups();
+        $users   = $this->getUsers();
+        return empty($emails) && empty($ugroups) && empty($users);
+    }
+
+
     private function isLookingLikeAnEmail($listener)
     {
         return $this->rule_email->isValid($listener);

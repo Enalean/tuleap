@@ -54,4 +54,26 @@ class UsersToNotifyDao extends \DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function deleteByNotificationId($notification_id)
+    {
+        $notification_id = $this->da->escapeInt($notification_id);
+
+        $sql = "DELETE
+                FROM plugin_svn_notification_users
+                WHERE notification_id = $notification_id";
+
+        return $this->update($sql);
+    }
+
+    public function insert($notification_id, $user_id)
+    {
+        $notification_id = $this->da->escapeInt($notification_id);
+        $user_id         = $this->da->escapeInt($user_id);
+
+        $sql = "REPLACE INTO plugin_svn_notification_users(notification_id, user_id)
+                VALUES ($notification_id, $user_id)";
+
+        return $this->update($sql);
+    }
 }

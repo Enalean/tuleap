@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Notifications;
 
+use ProjectUGroup;
 use Tuleap\Svn\Admin\MailNotification;
 use UGroupDao;
 
@@ -67,9 +68,66 @@ class NotificationListBuilder
                 $emails_to_be_notified,
                 $user_presenters,
                 $ugroup_presenters,
-                $notification->getNotifiedMails()
+                json_encode($this->transformEmailsData($emails_to_be_notified)),
+                json_encode($this->transformUsersData($user_presenters)),
+                json_encode($this->transformUgroupsData($ugroup_presenters))
             );
         }
         return $notifications_presenters;
+    }
+
+    /**
+     * @param array $ugroups_to_be_notified
+     * @return array
+     */
+    private function transformUgroupsData(array $ugroups_to_be_notified)
+    {
+        $ugroups_to_be_notified_parsed = array();
+        foreach ($ugroups_to_be_notified as $ugroup_presenter) {
+            $ugroup_row    = $this->ugroup_dao->searchByUGroupId($ugroup_presenter->ugroup_id)->getRow();
+            $ugroup        = new ProjectUGroup($ugroup_row);
+            $ugroup_parsed = array(
+                'type' => 'group',
+                'id'   => '_ugroup:' . $ugroup->getNormalizedName(),
+                'text' => $ugroup->getTranslatedName()
+            );
+            $ugroups_to_be_notified_parsed[] = $ugroup_parsed;
+        }
+        return $ugroups_to_be_notified_parsed;
+    }
+
+    /**
+     * @param array $users_to_be_notified
+     * @return array
+     */
+    private function transformUsersData(array $users_to_be_notified)
+    {
+        $users_to_be_notified_parsed = array();
+        foreach ($users_to_be_notified as $user_presenter) {
+            $user_parsed                   = (array) $user_presenter;
+            $user_parsed['type']           = 'user';
+            $user_parsed['id']             = $user_presenter->label;
+            $user_parsed['text']           = $user_presenter->label;
+            $users_to_be_notified_parsed[] = $user_parsed;
+        }
+        return $users_to_be_notified_parsed;
+    }
+
+    /**
+     * @param array $emails_to_be_notified
+     * @return array
+     */
+    private function transformEmailsData(array $emails_to_be_notified)
+    {
+        $emails_to_be_notified_parsed = array();
+        foreach ($emails_to_be_notified as $email) {
+            $email_parsed = array(
+                'type' => 'email',
+                'id'   => $email,
+                'text' => $email
+            );
+            $emails_to_be_notified_parsed[] = $email_parsed;
+        }
+        return $emails_to_be_notified_parsed;
     }
 }

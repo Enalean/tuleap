@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,10 @@
 
 namespace Tuleap\Svn\Admin;
 
+use Feedback;
+use Rule_Email;
+use Tuleap\Svn\Notifications\CannotAddUgroupsNotificationException;
+use Tuleap\Svn\Notifications\CannotAddUsersNotificationException;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
 use Tuleap\Svn\ServiceSvn;
@@ -28,6 +32,10 @@ use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\HookConfig;
 use Project;
 use HTTPRequest;
+use Tuleap\User\InvalidEntryInAutocompleterCollection;
+use Tuleap\User\RequestFromAutocompleter;
+use UGroupManager;
+use UserManager;
 use Valid_Int;
 use Valid_String;
 use CSRFSynchronizerToken;
@@ -47,6 +55,14 @@ class AdminController
      * @var NotificationsEmailsBuilder
      */
     private $emails_builder;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     public function __construct(
         MailHeaderManager $mail_header_manager,
@@ -54,7 +70,9 @@ class AdminController
         MailNotificationManager $mail_notification_manager,
         Logger $logger,
         NotificationListBuilder $notification_list_builder,
-        NotificationsEmailsBuilder $emails_builder
+        NotificationsEmailsBuilder $emails_builder,
+        UserManager $user_manager,
+        UGroupManager $ugroup_manager
     ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
@@ -62,6 +80,8 @@ class AdminController
         $this->logger                    = $logger;
         $this->notification_list_builder = $notification_list_builder;
         $this->emails_builder            = $emails_builder;
+        $this->user_manager              = $user_manager;
+        $this->ugroup_manager            = $ugroup_manager;
     }
 
     private function generateToken(Project $project, Repository $repository) {
@@ -138,30 +158,46 @@ class AdminController
         }
     }
 
-    public function createMailingList(HTTPRequest $request, Repository $repository, $notification_to_add) {
-        $form_path     = $notification_to_add['path'];
-        $valid_path    = new Valid_String($form_path);
-        $list_mails    = new MailReceivedFromUserExtractor($notification_to_add['emails']);
-        $valid_mails   = join(', ', $list_mails->getValidAdresses());
-        $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
+    public function createMailingList(HTTPRequest $request, Repository $repository, $notification_to_add)
+    {
+        $form_path       = $notification_to_add['path'];
+        $valid_path      = new Valid_String($form_path);
+        $invalid_entries = new InvalidEntryInAutocompleterCollection();
+        $autocompleter   = $this->getAutocompleter($request->getProject(), $invalid_entries, $notification_to_add['emails']);
 
         $is_path_valid = $request->valid($valid_path) && $form_path !== '';
-        $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
+        $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if(! empty($valid_mails) && $is_path_valid) {
-            $mail_notification = new MailNotification(0, $repository, $valid_mails, $form_path);
+        if (! $autocompleter->isNotificationEmpty() && $is_path_valid) {
+            $mail_notification = new MailNotification(
+                0,
+                $repository,
+                $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
+                $form_path
+            );
             try {
-                $this->mail_notification_manager->create($mail_notification);
+                $notification_id = $this->mail_notification_manager->create($mail_notification);
+                $this->mail_notification_manager->notificationAddUsers($notification_id, $autocompleter);
+                $this->mail_notification_manager->notificationAddUgroups($notification_id, $autocompleter);
                 $GLOBALS['Response']->addFeedback(
-                    'info',
+                    Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
                 );
             } catch (CannotCreateMailHeaderException $e) {
                 $GLOBALS['Response']->addFeedback(
-                    'error',
+                    Feedback::ERROR,
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
                 );
+            } catch (CannotAddUsersNotificationException $e) {
+                $this->addFeedbackUsersNotAdded($e->getUsersNotAdded());
+            } catch (CannotAddUgroupsNotificationException $e) {
+                $this->addFeedbackUgroupsNotAdded($e->getUgroupsNotAdded());
             }
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+            );
         }
 
         $this->redirectOnDisplayNotification($request);
@@ -169,23 +205,29 @@ class AdminController
 
     public function updateMailingList(HTTPRequest $request, Repository $repository, $notification_to_update)
     {
-        $paths    = array_keys($notification_to_update);
-        $old_path = $paths[0];
-        $new_path = $notification_to_update[$old_path]['path'];
-        $emails   = $notification_to_update[$old_path]['emails'];
+        $notification_ids = array_keys($notification_to_update);
+        $notification_id  = $notification_ids[0];
+        $new_path         = $notification_to_update[$notification_id]['path'];
+        $emails           = $notification_to_update[$notification_id]['emails'];
+        $valid_path       = new Valid_String($new_path);
 
-        $valid_path    = new Valid_String($new_path);
-        $list_mails    = new MailReceivedFromUserExtractor($emails);
-        $valid_mails   = join(', ', $list_mails->getValidAdresses());
-        $invalid_mails = join(', ', $list_mails->getInvalidAdresses());
+        $invalid_entries = new InvalidEntryInAutocompleterCollection();
+        $autocompleter   = $this->getAutocompleter($request->getProject(), $invalid_entries, $emails);
 
         $is_path_valid = $request->valid($valid_path) && $new_path !== '';
-        $this->addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails);
+        $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if (! empty($valid_mails) && $is_path_valid) {
-            $email_notification = new MailNotification(0, $repository, $valid_mails, $new_path);
+        if (! $autocompleter->isNotificationEmpty() && $is_path_valid) {
+            $email_notification = new MailNotification(
+                $notification_id,
+                $repository,
+                $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
+                $new_path
+            );
+
             try {
-                $this->mail_notification_manager->update($old_path, $email_notification);
+                $this->mail_notification_manager->update($email_notification, $autocompleter);
+
                 $GLOBALS['Response']->addFeedback(
                     'info',
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
@@ -196,6 +238,8 @@ class AdminController
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
                 );
             }
+        } else {
+            $this->mail_notification_manager->removeByNotificationId($notification_id);
         }
 
         $this->redirectOnDisplayNotification($request);
@@ -211,7 +255,7 @@ class AdminController
         if($request->valid($valid_notification_remove_id)) {
             $notification_remove_id = $request->get('notification_remove_id');
             try {
-                $this->mail_notification_manager->removeByRepositoryAndNotificationId($repository, $notification_remove_id);
+                $this->mail_notification_manager->removeByNotificationId($notification_remove_id);
                 $GLOBALS['Response']->addFeedback(
                     'info',
                     dgettext(
@@ -391,5 +435,54 @@ class AdminController
                     'repo_id' => $request->get('repo_id'),
                     'action' => 'display-mail-notification'
                 )));
+    }
+
+    /**
+     * @return RequestFromAutocompleter
+     */
+    private function getAutocompleter(Project $project, InvalidEntryInAutocompleterCollection $invalid_entries, $emails)
+    {
+        $autocompleter = new RequestFromAutocompleter(
+            $invalid_entries,
+            new Rule_Email(),
+            $this->user_manager,
+            $this->ugroup_manager,
+            $this->user_manager->getCurrentUser(),
+            $project,
+            $emails
+        );
+        return $autocompleter;
+    }
+
+    private function addFeedbackUsersNotAdded($users_not_added)
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            sprintf(
+                dngettext(
+                    'tuleap-svn',
+                    "User '%s' couldn't be added.",
+                    "Users '%s' couldn't be added.",
+                    count($users_not_added)
+                ),
+                implode("' ,'", $users_not_added)
+            )
+        );
+    }
+
+    private function addFeedbackUgroupsNotAdded($ugroups_not_added)
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            sprintf(
+                dngettext(
+                    'tuleap-svn',
+                    "Group '%s' couldn't be added.",
+                    "Groups '%s' couldn't be added.",
+                    count($ugroups_not_added)
+                ),
+                implode("' ,'", $ugroups_not_added)
+            )
+        );
     }
 }

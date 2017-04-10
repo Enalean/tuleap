@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,30 +20,59 @@
 
 namespace Tuleap\Svn\Admin;
 
+use Tuleap\Svn\Notifications\CannotAddUgroupsNotificationException;
+use Tuleap\Svn\Notifications\CannotAddUsersNotificationException;
+use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
+use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\Repository;
-use ProjectManager;
-use Project;
-use Rule_Email;
+use Tuleap\User\RequestFromAutocompleter;
 
 class MailNotificationManager {
 
     private $dao;
+    /**
+     * @var UsersToNotifyDao
+     */
+    private $user_to_notify_dao;
+    /**
+     * @var UgroupsToNotifyDao
+     */
+    private $ugroup_to_notify_dao;
 
-    public function __construct(MailNotificationDao $dao) {
-        $this->dao = $dao;
+    public function __construct(
+        MailNotificationDao $dao,
+        UsersToNotifyDao $user_to_notify_dao,
+        UgroupsToNotifyDao $ugroup_to_notify_dao
+    ) {
+        $this->dao                  = $dao;
+        $this->user_to_notify_dao   = $user_to_notify_dao;
+        $this->ugroup_to_notify_dao = $ugroup_to_notify_dao;
     }
 
     public function create(MailNotification $mail_notification) {
-        if (! $this->dao->create($mail_notification)) {
-            throw new CannotCreateMailHeaderException ($GLOBALS['Language']->getText('plugin_svn_admin_notification','upd_header_fail'));
+        $notification_id = $this->dao->create($mail_notification);
+        if (! $notification_id) {
+            throw new CannotCreateMailHeaderException ();
         }
+        return $notification_id;
     }
 
-    public function update($old_path, MailNotification $email_notification)
+    public function update(MailNotification $email_notification, RequestFromAutocompleter $autocompleter)
     {
-        if (! $this->dao->updateByRepositoryIdAndPath($old_path, $email_notification)) {
-            throw new CannotCreateMailHeaderException ($GLOBALS['Language']->getText('plugin_svn_admin_notification','upd_header_fail'));
+        $notification_id = $email_notification->getId();
+
+        if (! $this->user_to_notify_dao->deleteByNotificationId($notification_id)) {
+            throw new CannotCreateMailHeaderException();
         }
+        if (! $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id)) {
+            throw new CannotCreateMailHeaderException();
+        }
+        if (! $this->dao->updateByNotificationId($email_notification)) {
+            throw new CannotCreateMailHeaderException();
+        }
+
+        $this->notificationAddUsers($notification_id, $autocompleter);
+        $this->notificationAddUgroups($notification_id, $autocompleter);
     }
 
     public function getByRepository(Repository $repository) {
@@ -79,10 +108,62 @@ class MailNotificationManager {
         );
     }
 
-    public function removeByRepositoryAndNotificationId(Repository $repository, $notification_id)
+    public function removeByNotificationId($notification_id)
     {
-        if (! $this->dao->deleteByRepositoryIdAndNotificationId($repository->getId(), $notification_id)) {
-            throw new CannotDeleteMailNotificationException ($GLOBALS['Language']->getText('plugin_svn_admin_notification','delete_error'));
+        if (! $this->user_to_notify_dao->deleteByNotificationId($notification_id)) {
+            throw new CannotDeleteMailNotificationException();
         }
+        if (! $this->ugroup_to_notify_dao->deleteByNotificationId($notification_id)) {
+            throw new CannotDeleteMailNotificationException();
+        }
+        if (! $this->dao->deleteByNotificationId($notification_id)) {
+            throw new CannotDeleteMailNotificationException();
+        }
+    }
+
+    /**
+     * @param $notification_id
+     * @param RequestFromAutocompleter $autocompleter
+     * @return bool
+     * @throws CannotAddUsersNotificationException
+     */
+    public function notificationAddUsers($notification_id, RequestFromAutocompleter $autocompleter)
+    {
+        $users           = $autocompleter->getUsers();
+        $users_not_added = array();
+        foreach ($users as $user) {
+            if (! $this->user_to_notify_dao->insert($notification_id, $user->getId())) {
+                $users_not_added[] = $user->getName();
+            }
+        }
+
+        if (! empty($users_not_added)) {
+            throw new CannotAddUsersNotificationException($users_not_added);
+        }
+
+        return empty($users_not_added);
+    }
+
+    /**
+     * @param $notification_id
+     * @param RequestFromAutocompleter $autocompleter
+     * @return bool
+     * @throws CannotAddUgroupsNotificationException
+     */
+    public function notificationAddUgroups($notification_id, RequestFromAutocompleter $autocompleter)
+    {
+        $ugroups           = $autocompleter->getUgroups();
+        $ugroups_not_added = array();
+        foreach ($ugroups as $ugroup) {
+            if (! $this->ugroup_to_notify_dao->insert($notification_id, $ugroup->getId())) {
+                $ugroups_not_added[] = $ugroup->getTranslatedName();
+            }
+        }
+
+        if (! empty($ugroups_not_added)) {
+            throw new CannotAddUgroupsNotificationException($ugroups_not_added);
+        }
+
+        return empty($ugroups_not_added);
     }
 }
