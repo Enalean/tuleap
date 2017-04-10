@@ -30,6 +30,7 @@
 
         > li {
             position: relative;
+            margin: 0 0 0 -2px;
 
             > a {
                 display: block;
@@ -62,6 +63,7 @@
             }
 
             &:first-child > a {
+                margin: 0;
                 padding-left: 20px;
             }
 

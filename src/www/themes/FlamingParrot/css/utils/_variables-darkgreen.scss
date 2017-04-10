@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,10 @@ $color-name: "darkgreen";
 $white: #FFFFFF;
 $main: #67AF45;
 $dark-main: $main;
-$navbar-color: #2B2B2B;
+$navbar-color: $main;
 $navbar-color-hover: $main;
 $light-grey: #EBEBEB;
 $grey: #A9A9A9;
 $medium-grey: #686868;
 $dark-grey: #373737;
+$sidebar-background: #2e342c;
