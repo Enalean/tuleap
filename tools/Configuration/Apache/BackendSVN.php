@@ -20,26 +20,35 @@
 
 namespace Tuleap\Configuration\Apache;
 
+use Tuleap\Configuration\Logger\LoggerInterface;
+use Tuleap\Configuration\Logger\Wrapper;
+
 class BackendSVN
 {
 
     private $application_user;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct($application_user)
+    public function __construct(LoggerInterface $logger, $application_user)
     {
         $this->application_user = $application_user;
+        $this->logger           = new Wrapper($logger, 'Apache');
     }
 
     public function configure()
     {
         $this->apacheListenOnLocalAsApplicationUser();
-        if (! file_exists('/etc/httpd/conf.d/svnroot.conf')) {
-            symlink('/data/etc/httpd/conf.d/codendi_svnroot.conf', '/etc/httpd/conf.d/svnroot.conf');
-        }
     }
 
     private function apacheListenOnLocalAsApplicationUser()
     {
+        if (file_exists('/etc/httpd/conf/httpd.conf.orig')) {
+            $this->logger->warn('/etc/httpd/conf/httpd.conf.orig already exists, skip apache configuration');
+            return;
+        }
         $this->backupOriginalFile('/etc/httpd/conf/httpd.conf');
         $httpd_conf = file_get_contents('/etc/httpd/conf/httpd.conf.orig');
 
