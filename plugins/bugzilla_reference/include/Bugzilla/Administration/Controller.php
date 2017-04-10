@@ -18,6 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('BUGZILLA_REFERENCE_BASE_DIR', dirname(__DIR__));
-define('BUGZILLA_REFERENCE_BASE_URL', '/plugins/bugzilla_reference');
-define('BUGZILLA_REFERENCE_TEMPLATE_DIR', BUGZILLA_REFERENCE_BASE_DIR . '/templates');
+namespace Tuleap\Bugzilla\Administration;
+
+use Tuleap\Admin\AdminPageRenderer;
+
+class Controller
+{
+    /**
+     * @var AdminPageRenderer
+     */
+    private $renderer;
+
+    public function __construct(AdminPageRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
+    public function display()
+    {
+        $presenter = new Presenter();
+        $this->renderer->renderAPresenter(
+            dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration'),
+            BUGZILLA_REFERENCE_TEMPLATE_DIR,
+            'reference-list',
+            $presenter
+        );
+    }
+}

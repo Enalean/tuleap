@@ -18,6 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('BUGZILLA_REFERENCE_BASE_DIR', dirname(__DIR__));
-define('BUGZILLA_REFERENCE_BASE_URL', '/plugins/bugzilla_reference');
-define('BUGZILLA_REFERENCE_TEMPLATE_DIR', BUGZILLA_REFERENCE_BASE_DIR . '/templates');
+require_once('pre.php');
+
+$plugin_manager = PluginManager::instance();
+$plugin         = $plugin_manager->getPluginByName('bugzilla_reference');
+if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
+    $plugin->processAdmin(HTTPRequest::instance());
+} else {
+    $GLOBALS['Response']->redirect('/');
+}

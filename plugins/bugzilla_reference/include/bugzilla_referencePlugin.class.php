@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Bugzilla\Administration\Controller;
+use Tuleap\Bugzilla\Administration\Router;
 use Tuleap\Bugzilla\Plugin\Info;
 
 require_once 'constants.php';
@@ -28,7 +31,10 @@ class bugzilla_referencePlugin extends Plugin
     {
         parent::__construct($id);
 
-        bindtextdomain('bugzilla_reference', BUGZILLA_REFERENCE_BASE_BIR. '/site-content');
+        bindtextdomain('tuleap-bugzilla_reference', BUGZILLA_REFERENCE_BASE_DIR. '/site-content');
+
+        $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
+        $this->addHook(Event::IS_IN_SITEADMIN, 'isInSiteAdmin');
     }
 
     /**
@@ -41,5 +47,27 @@ class bugzilla_referencePlugin extends Plugin
         }
 
         return $this->pluginInfo;
+    }
+
+    public function addSiteAdministrationOptionHook(array $params)
+    {
+        $params['plugins'][] = array(
+            'label' => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
+            'href'  => BUGZILLA_REFERENCE_BASE_URL . '/admin/'
+        );
+    }
+
+    public function isInSiteAdmin(array $params)
+    {
+        if (strpos($_SERVER['REQUEST_URI'], BUGZILLA_REFERENCE_BASE_URL . '/admin/') === 0) {
+            $params['is_in_siteadmin'] = true;
+        }
+    }
+
+    public function processAdmin(HTTPRequest $request)
+    {
+        $controller = new Controller(new AdminPageRenderer());
+        $router     = new Router($controller);
+        $router->route($request);
     }
 }
