@@ -25,11 +25,6 @@ textarea.text {
     display: inline;
 }
 
-#plugin_git_clone_url_group.input-append .active,
-#plugin_git_clone_url_group.input-prepend .active {
-    border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25);
-}
-
 #plugin_git_reference {
     margin-top: 1em;
     margin-bottom: 1em;
@@ -285,10 +280,6 @@ tr.boxitemalt > td {
 }
 
 #plugin_git_clone_field {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-#plugin_git_clone_field {
     display: inline-block;
     height: 20px;
     padding: 4px 6px;
@@ -297,7 +288,6 @@ tr.boxitemalt > td {
     line-height: 20px;
     color: #555555;
     vertical-align: top;
-
     background-color: #FCFCFC;
     border: 1px solid #cccccc;
     border-left: none;

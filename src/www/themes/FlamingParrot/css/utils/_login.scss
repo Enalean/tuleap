@@ -9,13 +9,6 @@ $login-background-url-base: "../images/login/login-background-";
         }
 
         > form {
-            > button {
-                background-color: $main;
-                background-image: linear-gradient(to bottom, lighten($main, 10%), $main);
-                background-repeat: repeat-x;
-                border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-            }
-
             #login-lost-password {
                 color: $main;
             }

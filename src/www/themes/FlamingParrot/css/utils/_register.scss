@@ -6,10 +6,3 @@
     background-repeat: no-repeat, repeat-x;
     background-position: center 333px, center 658px;
 }
-
-#register-form form input[type="submit"] {
-    background-color: $main;
-    background-image: linear-gradient(to bottom, lighten($main, 10%), $main);
-    background-repeat: repeat-x;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-}
