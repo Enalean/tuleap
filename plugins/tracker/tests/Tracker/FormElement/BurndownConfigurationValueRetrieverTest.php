@@ -108,7 +108,10 @@ class BurndownConfigurationValueRetrieverTest extends TuleapTestCase
         $this->duration_value = mock('Tracker_Artifact_ChangesetValue_Integer');
         $this->duration       = 5;
 
-        $this->configuration_value_retriever = new BurndownConfigurationValueRetriever($this->field_retriever);
+        $this->configuration_value_retriever = new BurndownConfigurationValueRetriever(
+            $this->field_retriever,
+            mock('Logger')
+        );
     }
 
     public function itReturnsTimestampWhenStartDateIsSet()
