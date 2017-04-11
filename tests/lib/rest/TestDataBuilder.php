@@ -37,8 +37,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const DELETED_TRACKER_SHORTNAME      = 'delete';
     const KANBAN_TRACKER_SHORTNAME       = 'kanbantask';
     const LEVEL_ONE_TRACKER_SHORTNAME    = 'LevelOne';
+    const LEVEL_TWO_TRACKER_SHORTNAME    = 'LevelTwo';
 
-    const LEVEL_TWO_TRACKER_ID    = 32;
     const LEVEL_THREE_TRACKER_ID  = 33;
     const LEVEL_FOUR_TRACKER_ID   = 34;
 
@@ -338,11 +338,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
         $user              = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
         $tracker_level_one = $this->getLevelOneTracker();
+        $tracker_level_two = $this->getLevelTwoTracker();
 
         $artifact_a = $this->createEmptyArtifact($user, 'A', $tracker_level_one->getId());
 
-        $artifact_b = $this->createEmptyArtifact($user, 'B', self::LEVEL_TWO_TRACKER_ID);
-        $artifact_c = $this->createEmptyArtifact($user, 'C', self::LEVEL_TWO_TRACKER_ID);
+        $artifact_b = $this->createEmptyArtifact($user, 'B', $tracker_level_two->getId());
+        $artifact_c = $this->createEmptyArtifact($user, 'C', $tracker_level_two->getId());
 
         $artifact_d = $this->createEmptyArtifact($user, 'D', self::LEVEL_THREE_TRACKER_ID);
         $artifact_e = $this->createEmptyArtifact($user, 'E', self::LEVEL_THREE_TRACKER_ID);
@@ -386,7 +387,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->setManualValueForComputedArtifact(
             $artifact_b,
             $user,
-            self::LEVEL_TWO_TRACKER_ID,
+            $tracker_level_two->getId(),
             'B',
             array('is_autocomputed' => true),
             null,
@@ -396,7 +397,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->setManualValueForComputedArtifact(
             $artifact_c,
             $user,
-            self::LEVEL_TWO_TRACKER_ID,
+            $tracker_level_two->getId(),
             'C',
             array('is_autocomputed' => true),
             null,
@@ -707,6 +708,14 @@ class REST_TestDataBuilder extends TestDataBuilder {
     private function getLevelOneTracker()
     {
         return $this->getTrackerInProjectComputedFields(self::LEVEL_ONE_TRACKER_SHORTNAME);
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getLevelTwoTracker()
+    {
+        return $this->getTrackerInProjectComputedFields(self::LEVEL_TWO_TRACKER_SHORTNAME);
     }
 
     private function getTrackerInProjectComputedFields($tracker_shortname)
