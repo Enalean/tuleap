@@ -54,8 +54,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const KANBAN_ARTIFACT_ID_5 = 38;
     const KANBAN_ARTIFACT_ID_6 = 39;
 
-    const BURNDOWN_FATHER_TRACKER_ID   = 4;
-    const BURNDOWN_CHILD_TRACKER_ID    = 1;
     const BURNDOWN_FATHER_ARTIFACT_ID  = 12;
     const BURNDOWN_CHILD_ARTIFACT_ID   = 1;
     const BURNDOWN_CHILD_2_ARTIFACT_ID = 8;
@@ -87,8 +85,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
     const LEVEL_FOUR_ARTIFACT_G_ID  = 46;
     const LEVEL_FOUR_ARTIFACT_H_ID  = 47;
-
-    const KANBAN_ITEM_1_ARTIFACT_ID = 52;
 
     const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
     const KANBAN_ONGOING_COLUMN_ID    = 231;
