@@ -99,13 +99,10 @@ class TestDataBuilder {
     const STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL = 'developers';
 
     const STATIC_PUBLIC_MEMBER_UGROUP_DEVS_ID    = 104;
-    const STATIC_PUBLIC_MEMBER_UGROUP_DEVS_LABEL = 'developers';
 
     const STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_ID    = 105;
-    const STATIC_PUBLIC_INCL_RESTRICTED_UGROUP_DEVS_LABEL = 'developers';
 
     const DYNAMIC_UGROUP_PROJECT_MEMBERS_ID        = 3;
-    const DYNAMIC_UGROUP_PROJECT_MEMBERS_LABEL     = 'Project members';
     const DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY       = 'ugroup_project_members_name_key';
     const DYNAMIC_UGROUP_PROJECT_ADMINS_ID         = 4;
     const DYNAMIC_UGROUP_PROJECT_ADMINS_LABEL      = 'project_admins';
