@@ -80,7 +80,7 @@ class Project_Admin_UGroup_PaneManagement {
         echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.
                 $GLOBALS['Language']->getText('project_admin_utils','ug_admin').
                 '</a> - '.$this->ugroup->getName().'</h1>';
-        echo '<div class="tabbable tabs-left">';
+        echo '<div class="tabbable">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->panes as $key => $pane) {
             $this->displayTab($pane);

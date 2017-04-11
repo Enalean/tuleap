@@ -195,7 +195,7 @@ class GitViews_RepoManagement {
      * Output repo management sub screen to the browser
      */
     public function display() {
-        echo '<div class="tabbable tabs-left">';
+        echo '<div class="tabbable">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->panes as $pane) {
             $this->displayTab($pane);

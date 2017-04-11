@@ -37,7 +37,7 @@ abstract class Tracker_Workflow_Action {
     protected function displayHeader($engine) {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
 
-        echo '<div class="tabbable tabs-left">';
+        echo '<div class="tabbable">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->getPanes() as $identifier => $pane) {
             $active = '';
