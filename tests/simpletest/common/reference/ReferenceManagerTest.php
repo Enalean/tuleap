@@ -51,30 +51,6 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertIsA(ReferenceManager::instance(), 'ReferenceManager');
     }
 
-    function testKeyword() {
-        $dao = new MockReferenceDao($this);
-        //The Reference manager
-        $this->rm->setReturnReference('_getReferenceDao', $dao);
-        $this->assertFalse($this->rm->_isValidKeyword("UPPER"));
-        $this->assertFalse($this->rm->_isValidKeyword("with space"));
-        $this->assertFalse($this->rm->_isValidKeyword('with$pecialchar'));
-        $this->assertFalse($this->rm->_isValidKeyword("with/special/char"));
-        $this->assertFalse($this->rm->_isValidKeyword("with-special"));
-        $this->assertFalse($this->rm->_isValidKeyword("-begin"));
-        $this->assertFalse($this->rm->_isValidKeyword("end-"));
-        $this->assertFalse($this->rm->_isValidKeyword("end "));
-
-        $this->assertTrue($this->rm->_isValidKeyword("valid"));
-        $this->assertTrue($this->rm->_isValidKeyword("valid123"));
-        $this->assertTrue($this->rm->_isValidKeyword("123")); // should it be?
-        $this->assertTrue($this->rm->_isValidKeyword("with_underscore"));
-
-        $this->assertTrue($this->rm->_isReservedKeyword("art"));
-        $this->assertTrue($this->rm->_isReservedKeyword("cvs"));
-        $this->assertFalse($this->rm->_isReservedKeyword("artifacts"));
-        $this->assertFalse($this->rm->_isReservedKeyword("john2"));
-    }
-
     function testExtractReference() {
         $dao = new MockReferenceDao($this);
         $dar = new MockDataAccessResult($this);
