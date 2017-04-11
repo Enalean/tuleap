@@ -22,8 +22,8 @@ namespace Tuleap\Svn;
 
 class SHA1CollisionDetector
 {
-    const KNOWN_COLLISION        = 'f92d74e3874587aaf443d1db961d4e26dde13e9c';
-    const LENGTH_KNOWN_COLLISION = 320;
+    const SHA1COLLISIONDETECTOR_PATH = '/usr/bin/sha1collisiondetector';
+    const SUCCESS_EXIT_CODE          = 0;
 
     /**
      * @return bool
@@ -31,10 +31,18 @@ class SHA1CollisionDetector
      */
     public function isColliding($handle_resource)
     {
-        $potentially_colliding_part = fread($handle_resource, self::LENGTH_KNOWN_COLLISION);
-        if ($potentially_colliding_part === false) {
+        $handle_sha1collisiondetector = popen(self::SHA1COLLISIONDETECTOR_PATH, 'w');
+        if ($handle_sha1collisiondetector === false) {
+            throw new \RuntimeException("Can't open a process file pointer to " . self::SHA1COLLISIONDETECTOR_PATH);
+        }
+
+        $size_data_copied = stream_copy_to_stream($handle_resource, $handle_sha1collisiondetector);
+        if ($size_data_copied === false) {
             throw new \RuntimeException("Can't read the resource to detect a SHA-1 collision");
         }
-        return hash_equals(self::KNOWN_COLLISION, sha1($potentially_colliding_part));
+
+        $exit_status = pclose($handle_sha1collisiondetector);
+
+        return $exit_status !== self::SUCCESS_EXIT_CODE;
     }
 }

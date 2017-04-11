@@ -91,6 +91,7 @@ Requires: viewvc, viewvc-theme-tuleap
 Requires: python, MySQL-python, python-ldap
 Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-LDAP, perl-DBD-MySQL
 Requires: tuleap-theme-flamingparrot
+Requires: sha1collisiondetector
 %description core-subversion
 Manage dependencies for Tuleap Subversion integration
 
