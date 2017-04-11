@@ -36,8 +36,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const USER_STORIES_TRACKER_SHORTNAME = 'story';
     const DELETED_TRACKER_SHORTNAME      = 'delete';
     const KANBAN_TRACKER_SHORTNAME       = 'kanbantask';
+    const LEVEL_ONE_TRACKER_SHORTNAME    = 'LevelOne';
 
-    const LEVEL_ONE_TRACKER_ID    = 31;
     const LEVEL_TWO_TRACKER_ID    = 32;
     const LEVEL_THREE_TRACKER_ID  = 33;
     const LEVEL_FOUR_TRACKER_ID   = 34;
@@ -336,11 +336,10 @@ class REST_TestDataBuilder extends TestDataBuilder {
     {
         echo "Create computed field tree\n";
 
-        $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+        $user              = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+        $tracker_level_one = $this->getLevelOneTracker();
 
-        $user_test_rest_4 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
-
-        $artifact_a = $this->createEmptyArtifact($user, 'A', self::LEVEL_ONE_TRACKER_ID);
+        $artifact_a = $this->createEmptyArtifact($user, 'A', $tracker_level_one->getId());
 
         $artifact_b = $this->createEmptyArtifact($user, 'B', self::LEVEL_TWO_TRACKER_ID);
         $artifact_c = $this->createEmptyArtifact($user, 'C', self::LEVEL_TWO_TRACKER_ID);
@@ -507,7 +506,10 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
     private function setManualValueForSlowComputedArtifact(Tracker_Artifact $artifact, PFUser $user, $field_artifact_name)
     {
-        $field = $this->tracker_formelement_factory->getFormElementByName(self::LEVEL_ONE_TRACKER_ID, 'progress');
+        $tracker_level_one    = $this->getLevelOneTracker();
+        $tracker_level_one_id = $tracker_level_one->getId();
+
+        $field = $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'progress');
         $dar = $this->getValueDao()->searchByFieldId($field->getId());
         if ($dar && count($dar)) {
             $row = $dar->getRow();
@@ -515,9 +517,9 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
         $fields_data = array(
             $field->getId() => null,
-            $this->tracker_formelement_factory->getFormElementByName(self::LEVEL_ONE_TRACKER_ID, 'remaining_effort')->getId() => null,
-            $this->tracker_formelement_factory->getFormElementByName(self::LEVEL_ONE_TRACKER_ID, 'capacity')->getId() => null,
-            $this->tracker_formelement_factory->getFormElementByName(self::LEVEL_ONE_TRACKER_ID, 'name')->getId() => $field_artifact_name
+            $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'remaining_effort')->getId() => null,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'capacity')->getId() => null,
+            $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'name')->getId() => $field_artifact_name
         );
 
         $row['target_field_name'] = 'remaining_effort';
@@ -651,7 +653,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
      */
     private function getEpicTracker()
     {
-        return $this->getTracker(self::EPICS_TRACKER_SHORTNAME);
+        return $this->getTrackerInProjectPrivateMember(self::EPICS_TRACKER_SHORTNAME);
     }
 
     /**
@@ -659,7 +661,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
      */
     private function getReleaseTracker()
     {
-        return $this->getTracker(self::RELEASES_TRACKER_SHORTNAME);
+        return $this->getTrackerInProjectPrivateMember(self::RELEASES_TRACKER_SHORTNAME);
     }
 
     /**
@@ -667,7 +669,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
      */
     private function getSprintTracker()
     {
-        return $this->getTracker(self::SPRINTS_TRACKER_SHORTNAME);
+        return $this->getTrackerInProjectPrivateMember(self::SPRINTS_TRACKER_SHORTNAME);
     }
 
     /**
@@ -675,7 +677,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
      */
     private function getUserStoryTracker()
     {
-        return $this->getTracker(self::USER_STORIES_TRACKER_SHORTNAME);
+        return $this->getTrackerInProjectPrivateMember(self::USER_STORIES_TRACKER_SHORTNAME);
     }
 
     /**
@@ -683,7 +685,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
      */
     private function getDeletedTracker()
     {
-        return $this->getTracker(self::DELETED_TRACKER_SHORTNAME);
+        return $this->getTrackerInProjectPrivateMember(self::DELETED_TRACKER_SHORTNAME);
     }
 
     /**
@@ -691,12 +693,30 @@ class REST_TestDataBuilder extends TestDataBuilder {
      */
     private function getKanbanTracker()
     {
-        return $this->getTracker(self::KANBAN_TRACKER_SHORTNAME);
+        return $this->getTrackerInProjectPrivateMember(self::KANBAN_TRACKER_SHORTNAME);
     }
 
-    private function getTracker($tracker_shortname)
+    private function getTrackerInProjectPrivateMember($tracker_shortname)
     {
-        $project    = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        return $this->getTrackerInProject($tracker_shortname, self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getLevelOneTracker()
+    {
+        return $this->getTrackerInProjectComputedFields(self::LEVEL_ONE_TRACKER_SHORTNAME);
+    }
+
+    private function getTrackerInProjectComputedFields($tracker_shortname)
+    {
+        return $this->getTrackerInProject($tracker_shortname, self::PROJECT_COMPUTED_FIELDS);
+    }
+
+    private function getTrackerInProject($tracker_shortname, $project_shortname)
+    {
+        $project    = $this->project_manager->getProjectByUnixName($project_shortname);
         $project_id = $project->getID();
 
         foreach ($this->tracker_factory->getTrackersByGroupId($project_id) as $tracker) {
