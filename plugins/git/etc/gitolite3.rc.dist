@@ -164,7 +164,7 @@
 # not write a unsafe config
 #
 # See http://gitolite.com/gitolite/git-config.html
-$UNSAFE_PATT = qr();
+$UNSAFE_PATT = qr([\n]);
 
 $ENV{PATH} = "/opt/rh/git19/root/usr/bin:$ENV{PATH}";
 

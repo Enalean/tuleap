@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -68,8 +68,6 @@ class DescriptionUpdater
                 $repository->getName() . ': update description',
                 $repository->getProjectId()
             );
-
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
