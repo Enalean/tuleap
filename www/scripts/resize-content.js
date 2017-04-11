@@ -18,7 +18,13 @@
 (function ($) {
 
     function resizeContent() {
-        var content_height = $('body').outerHeight() - $('.navbar').height() - $('.toolbar').outerHeight() - $('.breadcrumb').outerHeight();
+        var toolbar = $('.toolbar');
+        var content_height = $('body').outerHeight() - $('.navbar').height() - $('.breadcrumb').outerHeight();
+
+        if (! toolbar.hasClass('hide-toolbar')) {
+            content_height -= $('.toolbar').outerHeight();
+        }
+
         $('div.content').css({
             height: content_height + 'px'
         });

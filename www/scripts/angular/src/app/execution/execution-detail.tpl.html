@@ -2,68 +2,64 @@
 
 <div class="tuleap-modal-loading" ng-if="artifact_links_graph_modal_loading.is_loading || edit_artifact_modal_loading.loading"></div>
 
-<ul id="stack-execution" class="in" ng-if="execution">
-    <li id="current-execution">
-        <div id="current-execution-title">
-            <h2 class="{{ execution.status | dasherize }}">
-                <img id="show-artifact-links-graph-modal"
-                     src="scripts/angular/bin/assets/artifact-link-graph.svg"
-                     type="image/svg+xml"
-                     alt="Graph"
-                     ng-click="showArtifactLinksGraphModal(execution)"
-                     title="{{ 'Show dependencies graph for this test' | translate }}"
+<div id="current-execution">
+    <div id="current-execution-title">
+        <h2 class="{{ execution.status | dasherize }}">
+            <img id="show-artifact-links-graph-modal"
+                 src="scripts/angular/bin/assets/artifact-link-graph.svg"
+                 type="image/svg+xml"
+                 alt="Graph"
+                 ng-click="showArtifactLinksGraphModal(execution)"
+                 title="{{ 'Show dependencies graph for this test' | translate }}"
 
-                />
-                <a href="/plugins/tracker/?aid={{ execution.definition.id }}" id="edit-artifact">
-                    <i class="icon-edit" ng-click="showEditArtifactModal($event, execution.definition)" title="{{ 'Edit this test' | translate }}"></i>
-                </a>
-                {{ execution.definition.summary }}
-            </h2>
-        </div>
+            />
+            <a href="/plugins/tracker/?aid={{ execution.definition.id }}" id="edit-artifact">
+                <i class="icon-edit" ng-click="showEditArtifactModal($event, execution.definition)" title="{{ 'Edit this test' | translate }}"></i>
+            </a>
+            {{ execution.definition.summary }}
+        </h2>
+    </div>
 
-        <div id="current-execution-last-execution" class="{{ execution.status | dasherize }}" ng-if="(execution.status | dasherize) !== 'notrun'">
-                <img ng-src="scripts/angular/bin/assets/status-{{ execution.status | dasherize }}-white-big.png" />
-                <span ng-if="execution.previous_result.submitted_on">
-                    {{ execution.previous_result.submitted_on | amCalendar }}
-                </span>
-                <span ng-if="execution.previous_result.submitted_by.real_name">
-                    <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
-                </span>
-                <img ng-src="scripts/angular/bin/assets/status-{{ execution.status | dasherize }}-white-big.png" />
+    <div id="current-execution-last-execution" class="{{ execution.status | dasherize }}" ng-if="(execution.status | dasherize) !== 'notrun'">
+            <img ng-src="scripts/angular/bin/assets/status-{{ execution.status | dasherize }}-white-big.png" />
+            <span ng-if="execution.previous_result.submitted_on">
+                {{ execution.previous_result.submitted_on | amCalendar }}
+            </span>
+            <span ng-if="execution.previous_result.submitted_by.real_name">
+                <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
+            </span>
+            <img ng-src="scripts/angular/bin/assets/status-{{ execution.status | dasherize }}-white-big.png" />
 
-                <p id="last-execution-comment" ng-if="execution.previous_result.result">
-                    {{ execution.previous_result.result }}
-                    <span class="read-more" ng-if="execution.previous_result.result.length > 150"></span>
-                </p>
-        </div>
+            <p id="last-execution-comment" ng-if="execution.previous_result.result">
+                {{ execution.previous_result.result }}
+                <span class="read-more" ng-if="execution.previous_result.result.length > 150"></span>
+            </p>
+    </div>
 
-        <div id="current-execution-description">
-            <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>
-        </div>
+    <div id="current-execution-description">
+        <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>
+    </div>
 
-        <div id="current-execution-result">
-            <form name="execution_form">
-                <div>
-                    <textarea placeholder="{{ 'Comment...' | translate }}" ng-model="execution.results"></textarea>
-                    <timer id="execution-timer" ng-model="timer.execution_time"></timer>
-                </div>
-                <div id="result-choices">
-                    <button class="btn btn-circle btn-xl btn-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)" ng-disabled="execution.saving">
-                        <img src="scripts/angular/bin/assets/status-passed-white-big.png" alt="{{ 'Passed' | translate }}">
-                    </button>
-                    <button class="btn btn-circle btn-xl btn-danger" title="{{ 'Failed' | translate }}" ng-click="fail(execution)" ng-disabled="execution.saving">
-                        <img src="scripts/angular/bin/assets/status-failed-white-big.png" alt="{{ 'Failed' | translate }}">
-                    </button>
-                    <button class="btn btn-circle btn-xl btn-info" title="{{ 'Blocked' | translate }}" ng-click="block(execution)" ng-disabled="execution.saving">
-                        <img src="scripts/angular/bin/assets/status-blocked-white-big.png" alt="{{ 'Blocked' | translate }}">
-                    </button>
-                    <button class="btn btn-circle btn-xl btn-default" title="{{ 'Not run' | translate }}" ng-click="notrun(execution)" ng-disabled="execution.saving">
-                        <img src="scripts/angular/bin/assets/status-notrun-white-big.png" alt="{{ 'Not run' | translate }}">
-                    </button>
-                </div>
-            </form>
-        </div>
-    </li>
-    <li id="stack-first"></li>
-    <li id="stack-second"></li>
-</ul>
+    <div id="current-execution-result">
+        <form name="execution_form">
+            <div>
+                <textarea placeholder="{{ 'Comment...' | translate }}" ng-model="execution.results"></textarea>
+                <timer id="execution-timer" ng-model="timer.execution_time"></timer>
+            </div>
+            <div id="result-choices">
+                <button class="btn btn-circle btn-xl btn-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)" ng-disabled="execution.saving">
+                    <img src="scripts/angular/bin/assets/status-passed-white-big.png" alt="{{ 'Passed' | translate }}">
+                </button>
+                <button class="btn btn-circle btn-xl btn-danger" title="{{ 'Failed' | translate }}" ng-click="fail(execution)" ng-disabled="execution.saving">
+                    <img src="scripts/angular/bin/assets/status-failed-white-big.png" alt="{{ 'Failed' | translate }}">
+                </button>
+                <button class="btn btn-circle btn-xl btn-info" title="{{ 'Blocked' | translate }}" ng-click="block(execution)" ng-disabled="execution.saving">
+                    <img src="scripts/angular/bin/assets/status-blocked-white-big.png" alt="{{ 'Blocked' | translate }}">
+                </button>
+                <button class="btn btn-circle btn-xl btn-default" title="{{ 'Not run' | translate }}" ng-click="notrun(execution)" ng-disabled="execution.saving">
+                    <img src="scripts/angular/bin/assets/status-notrun-white-big.png" alt="{{ 'Not run' | translate }}">
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

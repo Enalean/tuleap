@@ -5,7 +5,7 @@
     min-height: 100%;
     box-sizing: border-box;
     padding: 20px;
-    background-color: #F3F3F3;
+    background-color: #f0f1f8;
 
     > .no-campaigns {
         margin: 50px 0 100px;
@@ -60,10 +60,9 @@
         justify-content: space-around;
         flex-wrap: wrap;
         background-color: #FFFFFF;
-        border-radius: 5px;
+        border-radius: 3px;
         min-height: 100px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.1);
-
     }
 }
 
