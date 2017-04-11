@@ -21,6 +21,7 @@
 namespace Tuleap\Configuration\Nginx;
 
 use DirectoryIterator;
+use Tuleap\Configuration\Common\Exec;
 
 class Common
 {
@@ -31,6 +32,14 @@ class Common
     {
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
+    }
+
+    public function generateSSLCertificate($server_name, $cert_filepath, $key_filepath)
+    {
+        if (! file_exists($cert_filepath)) {
+            $exec = new Exec();
+            $exec->command('openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout '.$key_filepath.' -out '.$cert_filepath.' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN='.$server_name.'" 2>/dev/null');
+        }
     }
 
     public function deployConfigurationChunks()

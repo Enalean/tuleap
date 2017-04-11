@@ -27,10 +27,15 @@ class LoadLocalInc
 {
 
     private $base_dir;
+    /**
+     * @var string
+     */
+    private $tuleap_base_dir;
 
-    public function __construct($base_dir = '/etc/tuleap')
+    public function __construct($base_dir = '/etc/tuleap', $tuleap_base_dir = '/usr/share/tuleap')
     {
-        $this->base_dir = $base_dir;
+        $this->base_dir        = $base_dir;
+        $this->tuleap_base_dir = $tuleap_base_dir;
     }
 
     /**
@@ -50,7 +55,7 @@ class LoadLocalInc
 
     private function getVariablesOverrideByLocalConf()
     {
-        $variables = $this->getVariables('/usr/share/tuleap/src/etc/local.inc.dist');
+        $variables = $this->getVariables($this->tuleap_base_dir.'/src/etc/local.inc.dist');
         $variables = array_merge($variables, $this->getVariables($this->base_dir.'/conf/local.inc'));
         return $variables;
     }
