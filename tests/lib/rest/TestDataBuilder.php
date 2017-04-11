@@ -36,11 +36,11 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const USER_STORIES_TRACKER_SHORTNAME = 'story';
     const DELETED_TRACKER_SHORTNAME      = 'delete';
     const KANBAN_TRACKER_SHORTNAME       = 'kanbantask';
+
     const LEVEL_ONE_TRACKER_SHORTNAME    = 'LevelOne';
     const LEVEL_TWO_TRACKER_SHORTNAME    = 'LevelTwo';
-
-    const LEVEL_THREE_TRACKER_ID  = 33;
-    const LEVEL_FOUR_TRACKER_ID   = 34;
+    const LEVEL_THREE_TRACKER_SHORTNAME  = 'LevelThree';
+    const LEVEL_FOUR_TRACKER_SHORTNAME   = 'LevelFour';
 
     const RELEASE_FIELD_NAME_ID     = 171;
     const RELEASE_FIELD_STATUS_ID   = 173;
@@ -336,21 +336,23 @@ class REST_TestDataBuilder extends TestDataBuilder {
     {
         echo "Create computed field tree\n";
 
-        $user              = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
-        $tracker_level_one = $this->getLevelOneTracker();
-        $tracker_level_two = $this->getLevelTwoTracker();
+        $user                = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+        $tracker_level_one   = $this->getLevelOneTracker();
+        $tracker_level_two   = $this->getLevelTwoTracker();
+        $tracker_level_three = $this->getLevelThreeTracker();
+        $tracker_level_four  = $this->getLevelFourTracker();
 
         $artifact_a = $this->createEmptyArtifact($user, 'A', $tracker_level_one->getId());
 
         $artifact_b = $this->createEmptyArtifact($user, 'B', $tracker_level_two->getId());
         $artifact_c = $this->createEmptyArtifact($user, 'C', $tracker_level_two->getId());
 
-        $artifact_d = $this->createEmptyArtifact($user, 'D', self::LEVEL_THREE_TRACKER_ID);
-        $artifact_e = $this->createEmptyArtifact($user, 'E', self::LEVEL_THREE_TRACKER_ID);
-        $artifact_f = $this->createEmptyArtifact($user, 'F', self::LEVEL_THREE_TRACKER_ID);
+        $artifact_d = $this->createEmptyArtifact($user, 'D', $tracker_level_three->getId());
+        $artifact_e = $this->createEmptyArtifact($user, 'E', $tracker_level_three->getId());
+        $artifact_f = $this->createEmptyArtifact($user, 'F', $tracker_level_three->getId());
 
-        $artifact_g = $this->createEmptyArtifact($user, 'G', self::LEVEL_FOUR_TRACKER_ID);
-        $artifact_h = $this->createEmptyArtifact($user, 'H', self::LEVEL_FOUR_TRACKER_ID);
+        $artifact_g = $this->createEmptyArtifact($user, 'G', $tracker_level_four->getId());
+        $artifact_h = $this->createEmptyArtifact($user, 'H', $tracker_level_four->getId());
 
         Tracker_FormElementFactory::clearCaches();
 
@@ -408,7 +410,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->setManualValueForComputedArtifact(
             $artifact_d,
             $user,
-            self::LEVEL_THREE_TRACKER_ID,
+            $tracker_level_three->getId(),
             'D',
             array('manual_value' => 5),
             null,
@@ -418,7 +420,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->setManualValueForComputedArtifact(
             $artifact_e,
             $user,
-            self::LEVEL_THREE_TRACKER_ID,
+            $tracker_level_three->getId(),
             'E',
             array('is_autocomputed' => true),
             null,
@@ -428,7 +430,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->setManualValueForComputedArtifact(
             $artifact_f,
             $user,
-            self::LEVEL_THREE_TRACKER_ID,
+            $tracker_level_three->getId(),
             'F',
             array('manual_value' => 5),
             null,
@@ -439,7 +441,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->setManualValueForComputedArtifact(
             $artifact_g,
             $user,
-            self::LEVEL_FOUR_TRACKER_ID,
+            $tracker_level_four->getId(),
             'G',
             5,
             15,
@@ -449,7 +451,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->setManualValueForComputedArtifact(
             $artifact_h,
             $user,
-            self::LEVEL_FOUR_TRACKER_ID,
+            $tracker_level_four->getId(),
             'H',
             5,
             10,
@@ -716,6 +718,22 @@ class REST_TestDataBuilder extends TestDataBuilder {
     private function getLevelTwoTracker()
     {
         return $this->getTrackerInProjectComputedFields(self::LEVEL_TWO_TRACKER_SHORTNAME);
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getLevelThreeTracker()
+    {
+        return $this->getTrackerInProjectComputedFields(self::LEVEL_THREE_TRACKER_SHORTNAME);
+    }
+
+    /**
+     * @return Tracker
+     */
+    private function getLevelFourTracker()
+    {
+        return $this->getTrackerInProjectComputedFields(self::LEVEL_FOUR_TRACKER_SHORTNAME);
     }
 
     private function getTrackerInProjectComputedFields($tracker_shortname)
