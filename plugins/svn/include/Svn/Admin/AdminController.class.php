@@ -168,7 +168,27 @@ class AdminController
         $is_path_valid = $request->valid($valid_path) && $form_path !== '';
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if (! $autocompleter->isNotificationEmpty() && $is_path_valid) {
+        if (! $is_path_valid) {
+            $this->redirectOnDisplayNotification($request);
+            return;
+        }
+
+        if ($this->mail_notification_manager->isAnExistingPath($repository, 0, $form_path)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext(
+                        'tuleap-svn',
+                        "The path '%s' already exists."
+                    ),
+                    $form_path
+                )
+            );
+            $this->redirectOnDisplayNotification($request);
+            return;
+        }
+
+        if (! $autocompleter->isNotificationEmpty()) {
             $mail_notification = new MailNotification(
                 0,
                 $repository,
@@ -217,24 +237,61 @@ class AdminController
         $is_path_valid = $request->valid($valid_path) && $new_path !== '';
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if (! $autocompleter->isNotificationEmpty() && $is_path_valid) {
+        if (! $is_path_valid && ! $autocompleter->isNotificationEmpty()) {
+            $this->redirectOnDisplayNotification($request);
+            return;
+        }
+
+        $notification = $this->mail_notification_manager->getByIdAndRepository($repository, $notification_id);
+
+        if (! $notification) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext(
+                        'tuleap-svn',
+                        "Notification to update doesn't exist."
+                    ),
+                    $new_path
+                )
+            );
+            $this->redirectOnDisplayNotification($request);
+            return;
+        }
+
+        if ($notification->getPath() !== $new_path
+            && $this->mail_notification_manager->isAnExistingPath($repository, $notification_id, $new_path)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                sprintf(
+                    dgettext(
+                        'tuleap-svn',
+                        "The path '%s' already exists."
+                    ),
+                    $new_path
+                )
+            );
+            $this->redirectOnDisplayNotification($request);
+            return;
+        }
+
+        if (! $autocompleter->isNotificationEmpty()) {
             $email_notification = new MailNotification(
                 $notification_id,
                 $repository,
                 $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
                 $new_path
             );
-
             try {
                 $this->mail_notification_manager->update($email_notification, $autocompleter);
 
                 $GLOBALS['Response']->addFeedback(
-                    'info',
+                    Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
                 );
             } catch (CannotCreateMailHeaderException $e) {
                 $GLOBALS['Response']->addFeedback(
-                    'error',
+                    Feedback::ERROR,
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
                 );
             }
@@ -257,22 +314,18 @@ class AdminController
             try {
                 $this->mail_notification_manager->removeByNotificationId($notification_remove_id);
                 $GLOBALS['Response']->addFeedback(
-                    'info',
+                    Feedback::INFO,
                     dgettext(
                         'tuleap-svn',
                         'Notification deleted successfully.'
                     )
                 );
             } catch (CannotDeleteMailNotificationException $e) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin_notification','delete_error'));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn_admin_notification','delete_error'));
             }
         }
 
-        $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(
-            array('group_id' => $request->getProject()->getid(),
-                  'repo_id'  => $request->get('repo_id'),
-                  'action'   => 'display-mail-notification'
-            )));
+        $this->redirectOnDisplayNotification($request);
     }
 
     public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request) {
@@ -394,34 +447,6 @@ class AdminController
         $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(
             array('group_id' => $project_id)
         ));
-    }
-
-    /**
-     * @param $is_path_valid
-     * @param $invalid_mails
-     * @param $valid_mails
-     */
-    private function addFeedbackNotificationUpdate($is_path_valid, $invalid_mails, $valid_mails)
-    {
-        if (! empty($invalid_mails)) {
-            $GLOBALS['Response']->addFeedback(
-                'warning',
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_bad_adr',
-                    $invalid_mails)
-            );
-        }
-        if (! $is_path_valid) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
-            );
-        }
-        if (empty($valid_mails)) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_fail')
-            );
-        }
     }
 
     /**
