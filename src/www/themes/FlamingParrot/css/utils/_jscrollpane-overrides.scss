@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// scss-lint:disable SelectorFormat
 .jspVerticalBar {
-    width: 8px;
+    width: 9px;
     background: transparent;
 }
 
@@ -32,7 +33,7 @@
 }
 
 .jspDrag {
-    background: #555;
-    opacity: 0.9;
-    border-radius: 5px;
+    width: 9px;
+    border-radius: 0;
+    background: darken($white, 10%);
 }

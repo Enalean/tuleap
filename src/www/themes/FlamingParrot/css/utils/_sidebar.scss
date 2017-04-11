@@ -16,6 +16,12 @@
         padding: $navbar-height * 2 0 150px 0;
     }
 
+    .jspDrag {
+        width: 9px;
+        border-radius: 0;
+        background: lighten($sidebar-background, 13%);
+    }
+
     a.project-title {
         color: $white;
         text-align: center;
