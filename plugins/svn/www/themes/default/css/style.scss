@@ -274,14 +274,15 @@ body.viewvc-epel {
     white-space: nowrap;
 }
 
-.svn-notification-delete-popover {
+.svn-notification-delete-popover,
+.svn-notification-cannot-save-popover {
     display: none;
 }
 
-#svn-admin-notifications-form > .popover {
+#svn-admin-notifications-form > .popover,
+#svn-notification-cannot-save-popover-container > .popover {
     .popover-title {
         border: 0;
-        background: #da5353;
         color: #ffffff;
     }
 
@@ -291,6 +292,18 @@ body.viewvc-epel {
 
     p {
         font-size: 13px;
+    }
+}
+
+#svn-admin-notifications-form > .popover {
+    .popover-title {
+        background: #da5353;
+    }
+}
+
+#svn-notification-cannot-save-popover-container > .popover {
+    .popover-title {
+        background: #f5b940;
     }
 }
 

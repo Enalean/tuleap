@@ -57,6 +57,8 @@ class MailNotificationPresenter extends BaseAdminPresenter{
     public $cancel;
     public $delete;
     public $new_notification_placeholder;
+    public $cannot_save_title;
+    public $cannot_save_desc;
 
     public function __construct(
         Repository $repository,
@@ -99,6 +101,11 @@ class MailNotificationPresenter extends BaseAdminPresenter{
         $this->cancel                       = dgettext('tuleap-svn', 'Cancel');
         $this->delete                       = dgettext('tuleap-svn', 'Delete');
         $this->new_notification_placeholder = dgettext('tuleap-svn', 'User, group, email');
+        $this->cannot_save_title            = dgettext('tuleap-svn', 'Be careful');
+        $this->cannot_save_desc             = dgettext(
+            'tuleap-svn',
+            'A notification already exists for this path. You cannot save it. Please change the path or update the existing notification.'
+        );
 
         $this->sections = new SectionsPresenter($repository);
     }
