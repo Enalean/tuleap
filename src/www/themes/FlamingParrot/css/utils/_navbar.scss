@@ -295,8 +295,7 @@
             li > a:hover, li > a:focus,
             .submit-action:hover, .submit-action:focus,
             .dropdown-submenu:hover > a, .dropdown-submenu:focus > a {
-                background: transparentize($navbar-color, .9);
-                background-image: none;
+                background: transparentize($main, .9);
                 color: $navbar-color;
                 text-decoration: none;
                 filter: none;
