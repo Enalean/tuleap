@@ -1,5 +1,14 @@
+msgid "Add reference"
+msgstr ""
+
+msgid "Bugzilla configuration"
+msgstr ""
+
 msgid "Bugzilla reference"
 msgstr ""
 
 msgid "References between Bugzilla and Tuleap"
+msgstr ""
+
+msgid "There is nothing here, <br> start by adding a Bugzilla reference"
 msgstr ""

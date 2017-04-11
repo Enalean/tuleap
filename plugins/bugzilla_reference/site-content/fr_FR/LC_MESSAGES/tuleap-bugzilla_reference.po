@@ -1,8 +1,17 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Add reference"
+msgstr "Ajouter une référence"
+
+msgid "Bugzilla configuration"
+msgstr "Configuration de Bugzilla"
+
 msgid "Bugzilla reference"
 msgstr "Références bugzilla"
 
 msgid "References between Bugzilla and Tuleap"
 msgstr "Références entre Bugzilla et Tuleap"
+
+msgid "There is nothing here, <br> start by adding a Bugzilla reference"
+msgstr "Il n'y a rien ici, <br> commencez par ajouter une référence Bugzilla"
