@@ -20,8 +20,11 @@
 
 require_once('pre.php');
 
+
+$tour_name = $request->get('tour_name');
+
 $tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new Url());
-$current_tour = $tour_factory->getTour($current_user, $request->get('tour_name'));
+$current_tour = $tour_factory->getTour($current_user, $tour_name);
 
 $stats_dao  = new Tuleap_TourUsageStatsDao();
 $tour_usage = new Tuleap_TourUsage($stats_dao);
@@ -30,3 +33,16 @@ $tour_usage->endTour(
     $current_tour,
     $request->getValidated('current_step', 'uint')
 );
+
+if ($tour_name === Tuleap_Tour_WelcomeTour::TOUR_NAME) {
+    $flaming_parrot_burning_parrot_unification_tour = $tour_factory->getTour(
+        $current_user,
+        Tuleap_Tour_FlamingParrotBurningParrotUnificationTour::TOUR_NAME
+    );
+
+    $tour_usage->endTour(
+        $current_user,
+        $flaming_parrot_burning_parrot_unification_tour,
+        0
+    );
+}

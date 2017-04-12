@@ -44,6 +44,9 @@ class Tuleap_TourFactory {
             case Tuleap_Tour_WelcomeTour::TOUR_NAME:
                 $tour = new Tuleap_Tour_WelcomeTour($user);
                 break;
+            case Tuleap_Tour_FlamingParrotBurningParrotUnificationTour::TOUR_NAME:
+                $tour = new Tuleap_Tour_FlamingParrotBurningParrotUnificationTour();
+                break;
             default:
                 $tour = $this->getCustomTour($user, $tour_name);
         }

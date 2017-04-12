@@ -92,8 +92,10 @@ var fat_combined_files = [
     subset_combined_flamingparrot_files = [
         'src/www/scripts/bootstrap/bootstrap-dropdown.js',
         'src/www/scripts/bootstrap/bootstrap-modal.js',
+        'src/www/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.js',
         'src/www/scripts/jscrollpane/jquery.mousewheel.js',
         'src/www/scripts/jscrollpane/jquery.jscrollpane.min.js',
+        'src/www/scripts/tuleap/tuleap-tours.js',
         'src/www/scripts/tuleap/listFilter.js',
         'src/www/scripts/codendi/Tooltip.js'
     ],

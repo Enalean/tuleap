@@ -2,7 +2,7 @@
 #  *
 #  * Personal Home Page message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -102,7 +102,7 @@ bookmark_edit	title	Edit Bookmark
 # Script: SF/www/my/rmproject.php
 #
 bookmark_rmproject	err_notmember	You are not a member of that project.
-bookmark_rmproject	err_removing	You cannot remove a group administrator. Remove this person's administrator privileges on the user permissions page before attempting to remove them from the project. 
+bookmark_rmproject	err_removing	You cannot remove a group administrator. Remove this person's administrator privileges on the user permissions page before attempting to remove them from the project.
 bookmark_rmproject	mail_subject	$1: user $2 removed from project '$3'
 bookmark_rmproject	mail_body	This message is being sent to notify the administrator(s) of\nproject ID '$1' that user ID $2 has chosen to\nremove him/herself from the project.\n\nFollow this link to see the current members of your project:\n$3\n\n
 #
@@ -116,26 +116,29 @@ my_redirect	default_txt	You are on the redirection page. You may found useful li
 #-----------------------------------------------
 # Script: SF/www/my/stop_monitor.php
 #
-my_monitored_forum	stop_monitoring	Monitoring has been turned off. You will not receive any more emails from this forum.	
+my_monitored_forum	stop_monitoring	Monitoring has been turned off. You will not receive any more emails from this forum.
 my_monitored_forum	title	Stop monitoring a forum.
 
 my_tour	welcome_title	Welcome to Tuleap!
 my_tour	welcome	Nice to meet you $1! This is your first usage of Tuleap, so we will show you how to begin.
-
 my_tour	my_personal_page_title	My personal page
 my_tour	my_personal_page	This is your personal page (where you are). You can find here your personal dashboard with your own data.
-
 my_tour	projects_title	Projects
 my_tour	projects	This is the tab where you can create your first project. You will also find projects you can access.
-
 my_tour	help_title	Help
 my_tour	help	You will find here some helpers like contacts and documentation.
-
 my_tour	search_title	Global search
 my_tour	search	This is the Tuleap's global search. You can search data across projects and services.
-
 my_tour	user_menu_title	User menu
 my_tour	user_menu	You will find here your account information where you will be allowed to change your avatar, your theme, upload your SSH Keys ...
-
 my_tour	end_tour_title	It's time for you to use Tuleap
 my_tour	end_tour	This is the end of this welcome tour. Enjoy using Tuleap.
+
+fp_bp_unification_tour	new_style_title	New style
+fp_bp_unification_tour	new_style	This is the new navigation bar look. You may also notice that some parts of Tuleap have been restyled.
+fp_bp_unification_tour	personal_page_title	My personal page
+fp_bp_unification_tour	personal_page	You can now access to your personal page by clicking on your name.
+fp_bp_unification_tour	account_title	My account
+fp_bp_unification_tour	account	Your account preferences and settings are accessible by clicking on this cog.
+fp_bp_unification_tour	be_prepared_title	And it's not over!
+fp_bp_unification_tour	be_prepared	New features are coming. Keep your eyes open…

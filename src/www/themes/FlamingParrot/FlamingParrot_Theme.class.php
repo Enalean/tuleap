@@ -239,6 +239,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
         $url_redirect          = new URLRedirect(EventManager::instance());
 
+        $this->showFlamingParrotBurningParrotUnificationTour($current_user);
+
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,
                 $current_user,
@@ -257,6 +259,15 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         );
 
         $this->container($params, $project_manager, $current_user);
+    }
+
+    private function showFlamingParrotBurningParrotUnificationTour(PFUser $current_user)
+    {
+        if ($current_user->getPreference(Tuleap_Tour_WelcomeTour::TOUR_NAME) &&
+            ! $current_user->getPreference(Tuleap_Tour_FlamingParrotBurningParrotUnificationTour::TOUR_NAME)
+        ) {
+            $GLOBALS['Response']->addTour(new Tuleap_Tour_FlamingParrotBurningParrotUnificationTour());
+        }
     }
 
     private function getProjectIdFromParams(array $params) {
