@@ -34,21 +34,20 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     die("$errno $errstr $errfile $errline");
 }, E_ALL | E_STRICT);
 
+$configuration_loader = new \Tuleap\Configuration\Etc\LoadLocalInc('/data/etc/tuleap');
+$vars                 = $configuration_loader->getVars();
 
-$tuleap_user        = new \Tuleap\Configuration\ApplicationUserFromPath('tuleap', '/data/etc/tuleap');
-$default_paths      = new \Tuleap\Configuration\DefaultPaths('tuleap');
+$tuleap_user        = new \Tuleap\Configuration\Docker\ApplicationUserFromPath($vars->getApplicationUser(), '/data/etc/tuleap');
+$default_paths      = new \Tuleap\Configuration\DefaultPaths($vars->getApplicationUser());
 $links              = new \Tuleap\Configuration\Docker\LinkFromDataVolume();
-$supervisord        = new \Tuleap\Configuration\Docker\BackendSVN('/usr/share/tuleap');
-$fpm                = new \Tuleap\Configuration\FPM\BackendSVN('/usr/share/tuleap', 'tuleap');
-$nginx              = new \Tuleap\Configuration\Nginx\BackendSVN('/usr/share/tuleap', '/etc/nginx', 'tuleap-web.tuleap-aio-dev.docker');
-$tuleap_auth_module = new \Tuleap\Configuration\Apache\TuleapAuthModule('/usr/share/tuleap');
-$apache_config      = new \Tuleap\Configuration\Apache\BackendSVN('tuleap');
+$supervisord        = new \Tuleap\Configuration\Docker\BackendSVN($vars->getApplicationBaseDir());
+$tuleap_auth_module = new \Tuleap\Configuration\Apache\TuleapAuthModule($vars->getApplicationBaseDir());
 
 $tuleap_user->configure();
 $default_paths->configure();
 $links->configure();
-$fpm->configure();
-$nginx->configure();
 $tuleap_auth_module->configure();
-$apache_config->configure();
 $supervisord->configure();
+
+$setup = new \Tuleap\Configuration\Setup\DistributedSVN();
+$setup->main('2', array('setup.php', \Tuleap\Configuration\Setup\DistributedSVN::OPT_BACKEND_SVN));

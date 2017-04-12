@@ -20,25 +20,41 @@
 
 namespace Tuleap\Configuration\FPM;
 
+use Tuleap\Configuration\Logger\LoggerInterface;
+use Tuleap\Configuration\Logger\Wrapper;
+
 class BackendSVN
 {
     private $tuleap_base_dir;
     private $application_user;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct($tuleap_base_dir, $application_user)
+    public function __construct(LoggerInterface $logger, $tuleap_base_dir, $application_user)
     {
-        $this->tuleap_base_dir = $tuleap_base_dir;
+        $this->tuleap_base_dir  = $tuleap_base_dir;
         $this->application_user = $application_user;
+        $this->logger           = new Wrapper($logger, 'FPM');
     }
 
     public function configure()
     {
+        if (file_exists('/etc/opt/rh/rh-php56/php-fpm.d/www.conf.orig')) {
+            $this->logger->warn("/etc/opt/rh/rh-php56/php-fpm.d/www.conf.orig already exists, skip FPM conf");
+            return;
+        }
+
         if (file_exists('/etc/opt/rh/rh-php56/php-fpm.d/www.conf')) {
+            $this->logger->info("Backup original FPM file");
             rename('/etc/opt/rh/rh-php56/php-fpm.d/www.conf', '/etc/opt/rh/rh-php56/php-fpm.d/www.conf.orig');
         }
         if (file_exists('/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf')) {
+            $this->logger->info("Remove pre-existing tuleap.conf file");
             unlink('/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf');
         }
+        $this->logger->info("Deploy new tuleap.conf");
         $this->replacePlaceHolderInto(
             $this->tuleap_base_dir.'/src/etc/fpm56/tuleap.conf',
             '/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf',
@@ -49,6 +65,7 @@ class BackendSVN
                 $this->application_user
             )
         );
+        $this->logger->info("Done");
     }
 
     private function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values)

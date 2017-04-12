@@ -20,17 +20,25 @@
 
 namespace Tuleap\Configuration\Nginx;
 
+use Tuleap\Configuration\Logger\LoggerInterface;
+use Tuleap\Configuration\Logger\Wrapper;
+
 class BackendSVN
 {
     private $tuleap_base_dir;
     private $nginx_base_dir;
     private $server_name;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct($tuleap_base_dir, $nginx_base_dir, $server_name)
+    public function __construct(LoggerInterface $logger, $tuleap_base_dir, $nginx_base_dir, $server_name)
     {
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
+        $this->logger          = new Wrapper($logger, 'Nginx');
     }
 
     public function configure()
@@ -41,6 +49,9 @@ class BackendSVN
 
     private function replaceDefaultNginxConfig()
     {
+        if (file_exists($this->nginx_base_dir.'/nginx.conf.orig')) {
+            $this->logger->warn($this->nginx_base_dir.'/nginx.conf.orig already exists, skip nginx configuration');
+        }
         $this->backupOriginalFile($this->nginx_base_dir.'/nginx.conf');
         copy($this->tuleap_base_dir.'/tools/distlp/backend-svn/nginx.conf', $this->nginx_base_dir.'/nginx.conf');
     }
