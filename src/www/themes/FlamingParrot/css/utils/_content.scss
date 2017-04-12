@@ -112,6 +112,7 @@
         margin: 0;
         padding: 15px 20px 0;
         border: 0;
+        border-bottom: 1px solid darken($main-background, 5%);
         background: $main-background;
         font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
         font-size: 13px;
