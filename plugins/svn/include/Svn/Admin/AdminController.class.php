@@ -169,6 +169,7 @@ class AdminController
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
         if (! $is_path_valid) {
+            $this->addFeedbackPathError();
             $this->redirectOnDisplayNotification($request);
             return;
         }
@@ -237,7 +238,8 @@ class AdminController
         $is_path_valid = $request->valid($valid_path) && $new_path !== '';
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if (! $is_path_valid && ! $autocompleter->isNotificationEmpty()) {
+        if (! $is_path_valid) {
+            $this->addFeedbackPathError($request);
             $this->redirectOnDisplayNotification($request);
             return;
         }
@@ -275,28 +277,28 @@ class AdminController
             return;
         }
 
-        if (! $autocompleter->isNotificationEmpty()) {
-            $email_notification = new MailNotification(
-                $notification_id,
-                $repository,
-                $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
-                $new_path
-            );
-            try {
+        $email_notification = new MailNotification(
+            $notification_id,
+            $repository,
+            $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
+            $new_path
+        );
+        try {
+            if (! $autocompleter->isNotificationEmpty()) {
                 $this->mail_notification_manager->update($email_notification, $autocompleter);
-
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
-                );
-            } catch (CannotCreateMailHeaderException $e) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
-                );
+            } else {
+                $this->mail_notification_manager->removeByNotificationId($notification_id);
             }
-        } else {
-            $this->mail_notification_manager->removeByNotificationId($notification_id);
+
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
+            );
+        } catch (CannotCreateMailHeaderException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+            );
         }
 
         $this->redirectOnDisplayNotification($request);
@@ -508,6 +510,14 @@ class AdminController
                 ),
                 implode("' ,'", $ugroups_not_added)
             )
+        );
+    }
+
+    private function addFeedbackPathError()
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
         );
     }
 }
