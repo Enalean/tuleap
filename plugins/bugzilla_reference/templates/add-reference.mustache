@@ -19,11 +19,11 @@
         {{/ csrf_token }}
 
         <div class="tlp-form-element">
-            <label class="tlp-label" for="username">{{ keyword }} <i class="fa fa-asterisk"></i></label>
+            <label class="tlp-label" for="keyword">{{ keyword }} <i class="fa fa-asterisk"></i></label>
             <input type="text" class="tlp-input" id="keyword" name="keyword" placeholder="bz" required>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="username">{{ server }} <i class="fa fa-asterisk"></i></label>
+            <label class="tlp-label" for="server">{{ server }} <i class="fa fa-asterisk"></i></label>
             <input type="text"
                    class="tlp-input"
                    id="server"
@@ -38,13 +38,13 @@
             <input type="text" class="tlp-input" id="username" name="username" placeholder="{{ username }}" required>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="username">{{ password }} <i class="fa fa-asterisk"></i></label>
+            <label class="tlp-label" for="password">{{ password }} <i class="fa fa-asterisk"></i></label>
             <input type="password" class="tlp-input" id="password" name="password" placeholder="{{ password }}"
                    required>
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
-                <input type="checkbox" name="are_follow_up_private" value="1"> {{ private_public_comment }}
+                <input type="checkbox" name="are_follow_up_private" value="1"> {{ are_followup_private }}
             </label>
         </div>
     </div>

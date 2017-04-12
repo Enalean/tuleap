@@ -29,16 +29,19 @@ class Presenter
     public $under_construction;
     public $purified_no_bugzilla_reference;
     public $keyword;
-    public $bz_reference;
     public $server;
     public $username;
     public $password;
     public $cancel;
-    public $private_public_comment;
+    public $are_followup_private;
     public $has_references;
     public $follow_up;
     public $edit;
+    public $change_password;
     public $delete;
+    public $bugzilla_title_edit;
+    public $bugzilla_add;
+    public $bugzilla_edit;
 
     /**
      * @var array
@@ -57,16 +60,19 @@ class Presenter
         $this->csrf_token     = $csrf_token;
 
         $this->bugzilla_title                 = dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration');
+        $this->bugzilla_title_edit            = dgettext('tuleap-bugzilla_reference', 'Edit Bugzilla configuration');
         $this->bugzilla_add                   = dgettext('tuleap-bugzilla_reference', 'Add reference');
+        $this->bugzilla_edit                  = dgettext('tuleap-bugzilla_reference', 'Edit reference');
         $this->keyword                        = dgettext('tuleap-bugzilla_reference', 'Keyword');
         $this->server                         = dgettext('tuleap-bugzilla_reference', 'Server');
         $this->username                       = dgettext('tuleap-bugzilla_reference', 'Username');
         $this->password                       = dgettext('tuleap-bugzilla_reference', 'Password');
+        $this->change_password                = dgettext('tuleap-bugzilla_reference', 'Change password');
         $this->follow_up                      = dgettext('tuleap-bugzilla_reference', 'Follow Up');
         $this->cancel                         = dgettext('tuleap-bugzilla_reference', 'Cancel');
         $this->delete                         = dgettext('tuleap-bugzilla_reference', 'Delete');
         $this->edit                           = dgettext('tuleap-bugzilla_reference', 'Edit');
-        $this->private_public_comment         = dgettext(
+        $this->are_followup_private           = dgettext(
             'bugzilla_reference',
             'Comments added in Bugzilla will be flaged as private'
         );

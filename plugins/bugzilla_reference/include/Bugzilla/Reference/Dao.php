@@ -46,7 +46,35 @@ class Dao extends \DataAccessObject
     public function searchReferenceByKeyword($keyword)
     {
         $keyword = $this->da->quoteSmart($keyword);
-        $sql     = "SELECT * FROM plugin_bugzilla_reference WHERE keyword = $keyword";
+
+        $sql = "SELECT * FROM plugin_bugzilla_reference WHERE keyword = $keyword";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function edit($id, $server, $username, $password, $are_followups_private)
+    {
+        $id                    = $this->da->escapeInt($id);
+        $server                = $this->da->quoteSmart($server);
+        $username              = $this->da->quoteSmart($username);
+        $password              = $this->da->quoteSmart($password);
+        $are_followups_private = $this->da->escapeInt($are_followups_private);
+
+        $sql_save = "UPDATE plugin_bugzilla_reference SET
+                      server = $server,
+                      username = $username,
+                      password = $password,
+                      are_followup_private = $are_followups_private
+                      WHERE id = $id";
+
+        return $this->update($sql_save);
+    }
+
+    public function getReferenceById($id)
+    {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT * FROM plugin_bugzilla_reference WHERE id = $id";
 
         return $this->retrieveFirstRow($sql);
     }

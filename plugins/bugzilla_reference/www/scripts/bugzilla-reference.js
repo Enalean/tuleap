@@ -24,4 +24,14 @@ document.addEventListener('DOMContentLoaded', function () {
     add_reference.addEventListener('click', function () {
         modal_add_reference.toggle();
     });
+
+    var bugzilla_modals_edit_buttons = document.querySelectorAll('.bugzilla-edit-modal');
+    [].forEach.call(bugzilla_modals_edit_buttons, function(bugzilla_modals_edit_button) {
+        var dom_bugzilla_modal_edit = document.getElementById(bugzilla_modals_edit_button.getAttribute('data-edit-modal-id'));
+        var tlp_bugzilla_modal_edit = tlp.modal(dom_bugzilla_modal_edit);
+
+        bugzilla_modals_edit_button.addEventListener('click', function () {
+            tlp_bugzilla_modal_edit.toggle();
+        });
+    });
 });

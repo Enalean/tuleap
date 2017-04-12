@@ -47,6 +47,9 @@ class Router
             case 'add-reference':
                 $this->controller->addReference($request);
                 break;
+            case 'edit-reference':
+                $this->controller->editReference($request);
+                break;
             default:
                 $this->controller->display();
         }

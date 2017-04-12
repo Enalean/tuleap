@@ -10,6 +10,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Change password"
+msgstr ""
+
 msgid "Comments added in Bugzilla will be flaged as private"
 msgstr ""
 
@@ -17,6 +20,12 @@ msgid "Delete"
 msgstr ""
 
 msgid "Edit"
+msgstr ""
+
+msgid "Edit Bugzilla configuration"
+msgstr ""
+
+msgid "Edit reference"
 msgstr ""
 
 msgid "Follow Up"
@@ -31,6 +40,9 @@ msgstr ""
 msgid "Missing fields for creating reference"
 msgstr ""
 
+msgid "Missing fields for updating reference"
+msgstr ""
+
 msgid "Password"
 msgstr ""
 
@@ -43,6 +55,9 @@ msgstr ""
 msgid "Reference has been successfully added"
 msgstr ""
 
+msgid "Reference has been successfully updated"
+msgstr ""
+
 msgid "References between Bugzilla and Tuleap"
 msgstr ""
 
@@ -53,7 +68,7 @@ msgid "Server is invalid"
 msgstr ""
 
 #, php-format
-msgid "The reference is already used"
+msgid "The reference \"%s\" is already used"
 msgstr ""
 
 msgid "There is nothing here, <br> start by adding a Bugzilla reference"
