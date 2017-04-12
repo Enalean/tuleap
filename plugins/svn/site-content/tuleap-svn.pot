@@ -1,3 +1,11 @@
+msgid ""
+"A notification already exists for this path. You cannot save it. Please "
+"change the path or update the existing notification."
+msgstr ""
+
+msgid "Be careful"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -20,7 +28,7 @@ msgid "Notification deleted successfully."
 msgstr ""
 
 #, php-format
-msgid "Notification to update doesn't exists."
+msgid "Notification to update doesn't exist."
 msgstr ""
 
 msgid "Save"

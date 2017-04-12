@@ -26,12 +26,26 @@
                 container: $('#svn-admin-notifications-form'),
                 title: $('#' + id).data('title'),
                 content: $('#' + id).html()
-            });
+            }).addClass('popover-danger');
+        });
+    }
+
+    function cannotSavePopover() {
+        $('.svn-notification-save').each(function() {
+            var id              = $(this).data('popover-id');
+            var popover_content = $('#' + id);
+
+            $(this).popover({
+                container: $('#svn-notification-cannot-save-popover-container'),
+                title    : popover_content.data('title'),
+                content  : popover_content.html()
+            }).addClass('popover-warning');
         });
     }
 
     function dismissPopover() {
         $('.svn-notification-delete').popover('hide');
+        $('.svn-notification-save').popover('hide');
     }
 
     function bindShowPopover() {
@@ -46,6 +60,7 @@
 
     $(function () {
         confirmDeletionPopover();
+        cannotSavePopover();
 
         bindShowPopover();
 

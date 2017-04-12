@@ -39,9 +39,10 @@
                                     <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
                                         {{# path }}
                                             <input type="text"
-                                                   class="svn-notification-edit-input"
+                                                   class="svn-notification-edit-input edit-path input-path"
                                                    name="notification_update[{{ notification_id }}][path]"
                                                    value="{{ path }}"
+                                                   data-notification-id="{{ notification_id }}"
                                                    disabled
                                             />
                                         {{/ path }}
@@ -88,7 +89,24 @@
                                 </td>
                                 <td class="svn-notification-form-actions">
                                     <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
-                                        <button type="submit" name="save-mailing-lists" value="1" class="btn btn-primary">{{ save }}</button>
+                                        <button type="submit"
+                                                id="svn-notification-save-{{ notification_id }}"
+                                                name="save-mailing-lists"
+                                                value="1"
+                                                class="btn btn-primary svn-notification-save"
+                                                data-toggle="popover"
+                                                data-trigger="manual"
+                                                data-placement="bottom"
+                                                data-html="true"
+                                                data-popover-id="svn-notification-cannot-save-{{ notification_id }}-popover"
+                                        >
+                                            {{ save }}
+                                        </button>
+                                        <div id="svn-notification-cannot-save-{{ notification_id }}-popover"
+                                             data-title="{{ cannot_save_title }}"
+                                             class="svn-notification-cannot-save-popover">
+                                            <p>{{ cannot_save_desc }}</p>
+                                        </div>
                                         <button type="button" name="submit" class="btn svn-notification-edit-hide">{{ cancel }}</button>
                                     </div>
                                     <div class="svn-notifications-checkbox-cell-read">
@@ -135,7 +153,12 @@
                 {{/ has_notifications }}
                 <tr id="svn-notifications-row-add" class="svn-notifications-row-add-hidden">
                     <td class="notification-path">
-                        <input type="text" id="add_path" name="notification_add[path]" placeholder="{{ label_path }}">
+                        <input type="text"
+                               id="add_path"
+                               name="notification_add[path]"
+                               class="input-path"
+                               placeholder="{{ label_path }}"
+                        />
                     </td>
                     <td>
                         <input type="text"
@@ -148,7 +171,24 @@
                         />
                     </td>
                     <td class="svn-notification-edit">
-                        <button type="submit" name="save-mailing-lists" value="1" class="btn btn-primary">{{ save }}</button>
+                        <button type="submit"
+                                id="svn-notification-save-adding-notification"
+                                name="save-mailing-lists"
+                                value="1"
+                                class="btn btn-primary svn-notification-save"
+                                data-toggle="popover"
+                                data-trigger="manual"
+                                data-placement="bottom"
+                                data-html="true"
+                                data-popover-id="svn-notification-cannot-save-popover"
+                        >
+                            {{ save }}
+                        </button>
+                        <div id="svn-notification-cannot-save-popover"
+                             data-title="{{ cannot_save_title }}"
+                             class="svn-notification-cannot-save-popover">
+                            <p>{{ cannot_save_desc }}</p>
+                        </div>
                         <button type="button" name="submit" class="btn svn-notification-edit-hide">{{ cancel }}</button>
                     </td>
                 </tr>
@@ -163,5 +203,6 @@
             <input type="hidden" name="repo_id" value="{{ repository_id }}">
             {{{ csrf_input }}}
         </form>
+        <div id="svn-notification-cannot-save-popover-container"></div>
     </div>
 </div>
