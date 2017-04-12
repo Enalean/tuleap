@@ -210,3 +210,87 @@ legend {
 .tab-content {
     padding: 20px 30px;
 }
+
+.modal {
+    border: 1px solid transparent;
+    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: 0 10px 36px rgba(0, 0, 0, .2);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    min-height: 64px;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    background: $main;
+    color: $white;
+
+    &.modal-header-error {
+        background: red;
+    }
+
+    i {
+        padding: 0 5px;
+    }
+
+    h2,
+    h3 {
+        flex: 1;
+        order: 1;
+        font-size: 24px;
+        font-weight: 400;
+    }
+
+    p {
+        order: 2;
+        color: $white;
+    }
+
+    > .close {
+        position: relative;
+        top: 0;
+        order: 3;
+        margin-top: 0;
+        color: $white;
+        opacity: 1;
+    }
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid #f3f3f3;
+    border-radius: 0 0 3px 3px;
+    background-color: $white;
+    text-align: right;
+}
+
+.modal-backdrop,
+.modal-backdrop.fade.in {
+    opacity: .5;
+}
+
+.tuleap-artifact-modal .modal-header .title {
+    font-size: 24px;
+}
+
+.tuleap-artifact-modal .column {
+    background-color: transparent;
+
+    & h4 {
+        color: $white;
+    }
+}
+
+.tuleap-artifact-modal .modal-body .column {
+    padding: 15px;
+}
+
+.tuleap-artifact-modal .modal-body fieldset {
+    margin: 0;
+}
