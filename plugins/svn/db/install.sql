@@ -35,11 +35,11 @@ CREATE TABLE plugin_svn_mailing_header(
 );
 
 CREATE TABLE plugin_svn_notification(
-    id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     repository_id INT(11) UNSIGNED NOT NULL,
     mailing_list text,
     svn_path varchar(255) DEFAULT '/',
-    INDEX repo_path_idx (repository_id, svn_path)
+    INDEX repo_svn_idx (repository_id, svn_path)
 );
 
 CREATE TABLE plugin_svn_notification_users(
