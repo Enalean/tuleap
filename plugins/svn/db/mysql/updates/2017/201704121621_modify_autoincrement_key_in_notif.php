@@ -34,9 +34,7 @@ class b201704121621_modify_autoincrement_key_in_notif extends ForgeUpgrade_Bucke
     {
         $sql = "ALTER TABLE plugin_svn_notification
                 DROP PRIMARY KEY,
-                MODIFY COLUMN id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST,
-                DROP INDEX repo_path_idx,
-                ADD INDEX repo_svn_idx (repository_id, svn_path)";
+                MODIFY COLUMN id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
 
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
