@@ -25,6 +25,8 @@ class Git_LastPushesGraph {
     const MAX_WEEKSNUMBER  = 25;
     const WEEKS_IN_SECONDS = 604800;
 
+    const NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY = 15;
+
     /**
      * @var Boolean
      */
@@ -101,9 +103,14 @@ class Git_LastPushesGraph {
      */
     private function prepareGraph() {
         $nbRepo = count($this->repoList);
-        $graph  = new Chart(500, 300 + 16 * $nbRepo);
+
+        $columns                 = $this->getNumberOfColumnForLegendWhenMultipleRepositories($nbRepo);
+        $margin_for_repositories = $this->getNumberOfRepositoriesAddedToSpacesLeftToTotalDirectory($nbRepo, $columns);
+        $graph_margin            = $this->getGraphMargin($margin_for_repositories, $columns, $nbRepo);
+
+        $graph  = new Chart(500, 300 + 16 * $graph_margin);
         $graph->SetScale('textint');
-        $graph->img->SetMargin(40, 20, 20, 80 + 16 * $nbRepo);
+        $graph->img->SetMargin(40, 20, 20, 80 + 16 * $graph_margin);
         $graph->SetMarginColor('white');
         $graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
         $graph->xaxis->SetLabelMargin(30);
@@ -116,7 +123,33 @@ class Git_LastPushesGraph {
         $graph->yaxis->SetTitleMargin(30);
         $graph->yaxis->SetLabelAlign('center', 'top');
         $graph->legend->Pos(0.1, 0.98, 'right', 'bottom');
+        if ($columns > 1) {
+            $graph->legend->SetColumns($columns);
+        }
         return $graph;
+    }
+
+    private function getNumberOfColumnForLegendWhenMultipleRepositories($number_of_repositories)
+    {
+        return ceil($number_of_repositories / self::NUMBER_OF_REPOSITORIES_BEFORE_GRAPH_LABEL_BREAK_DISPLAY);
+    }
+
+    private function getNumberOfRepositoriesAddedToSpacesLeftToTotalDirectory($number_of_repositories, $columns)
+    {
+        if ($columns > 0) {
+            return ceil($number_of_repositories / $columns);
+        }
+
+        return 0;
+    }
+
+    private function getGraphMargin($margin_for_repositories, $columns, $number_of_repositories)
+    {
+        if ($columns > 0) {
+            return ($number_of_repositories + $margin_for_repositories)  / $columns;
+        } else {
+            return ($number_of_repositories + $margin_for_repositories);
+        }
     }
 
     /**
