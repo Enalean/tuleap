@@ -1,4 +1,3 @@
-#!/opt/rh/rh-php56/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
@@ -22,30 +21,16 @@
 
 require_once '/usr/share/php/Zend/autoload.php';
 
-$tuleap_base_dir = '/usr/share/tuleap';
-
-$options = getopt(
-    'h',
-    array(
-        'help',
-        'tuleap-base-dir:',
-        'tuleap-conf-dir:',
-        'module:',
-    )
-);
-
-if (isset($options['tuleap-base-dir'])) {
-    $tuleap_base_dir = $options['tuleap-base-dir'];
-}
-
 $loader = new Zend\Loader\StandardAutoloader(
     array(
         'namespaces' => array(
-            'Tuleap\Configuration' => $tuleap_base_dir.'/tools/Configuration',
+            'Tuleap\Configuration' => '/tuleap/tools/Configuration',
         )
     )
 );
 $loader->register();
 
-$distributed_svn = new Tuleap\Configuration\Setup\DistributedSVN();
-$distributed_svn->main($options);
+$setup = new \Tuleap\Configuration\Setup\DistributedSVN();
+$setup->setTuleapBaseDir('/tuleap');
+$setup->setTuleapConfDir('/data/etc/tuleap');
+$setup->reverseProxy();

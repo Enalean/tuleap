@@ -2,7 +2,10 @@ version: "2"
 
 services:
   reverse-proxy:
-    image: enalean/tuleap-reverseproxy:distlp
+    image: enalean/tuleap-reverseproxy:distlp-1.1
+    command: /tuleap/tools/distlp/reverse-proxy/run.sh
+    volumes_from:
+          - container:tuleap_data # Needed for configuration (platform name)
     volumes:
       - .:/tuleap
     depends_on:
