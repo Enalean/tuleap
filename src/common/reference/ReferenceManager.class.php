@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\reference\ReferenceValidator;
+use Tuleap\reference\ReservedKeywordsRetriever;
 
 /**
  * Reference Manager
@@ -47,14 +50,6 @@ class ReferenceManager {
     var $cross_reference_dao;
 
     private $groupIdByName = array();
-
-    /**
-     * @var array
-     */
-    var $reservedKeywords = array(
-        "art", "artifact", "doc", "file", "wiki", "cvs", "svn", "news", "forum", "msg", "cc", "tracker", "release",
-        "tag", "thread", "im", "project", "folder", "plugin", "img", "commit", "rev", "revision", "patch", "bug",
-        "sr", "task", "proj", "dossier"); //should be elsewhere?
 
     /**
      * @var array containing additional regexp to match more reference formats.
@@ -110,15 +105,7 @@ class ReferenceManager {
    
     public function __construct() {
         $this->eventManager = EventManager::instance();
-        $this->loadReservedKeywords();
         $this->loadExtraFormats();
-    }
-    
-    protected function loadReservedKeywords() {
-        //retrieve additional reserved keywords from other part of the plateform
-        $additional_reserved_keywords = array();
-        $this->eventManager->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$additional_reserved_keywords));
-        $this->reservedKeywords = array_merge($this->reservedKeywords, $additional_reserved_keywords);
     }
 
     protected function loadExtraFormats(){
@@ -192,11 +179,11 @@ class ReferenceManager {
         $reference_dao = $this->_getReferenceDao();
         if (!$force) {
             // Check if keyword is valid [a-z0-9_]
-            if (!$this->_isValidKeyword($ref->getKeyword())) return false;
+            if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) return false;
             // Check that there is no system reference with the same keyword
-            if ($this->_isSystemKeyword($ref->getKeyword())) return false;
+            if ($this->getReferenceValidator()->isSystemKeyword($ref->getKeyword())) return false;
             // Check list of reserved keywords 
-            if ($this->_isReservedKeyword($ref->getKeyword())) return false;
+            if ($this->getReferenceValidator()->isReservedKeyword($ref->getKeyword())) return false;
             // Check list of existing keywords 
             $num_args=Reference::computeNumParam($ref->getLink());
             if ($this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupId())) return false;
@@ -223,7 +210,7 @@ class ReferenceManager {
         $reference_dao = $this->_getReferenceDao();
 
         // Check if keyword is valid [a-z0-9_]
-        if (!$this->_isValidKeyword($ref->getKeyword())) return false;
+        if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) return false;
         // Check that it is a system reference
         if (!$ref->isSystemReference()) return false;
         if ($ref->getGroupId() != 100) return false;
@@ -248,7 +235,7 @@ class ReferenceManager {
     function updateReference($ref,$force=false) {
         $reference_dao = $this->_getReferenceDao();
         // Check if keyword is valid [a-z0-9_]
-        if (!$this->_isValidKeyword($ref->getKeyword())) return false;
+        if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) return false;
 
         // Check list of existing keywords 
         $num_args=Reference::computeNumParam($ref->getLink());
@@ -262,11 +249,11 @@ class ReferenceManager {
                 // Don't check keyword if the reference is the same
             } else {
                 // Check that there is no system reference with the same keyword
-                if ($this->_isSystemKeyword($ref->getKeyword())) {
+                if ($this->getReferenceValidator()->isSystemKeyword($ref->getKeyword())) {
                     if ($ref->getGroupId()!= 100) return false;
                 } else {
                     // Check list of reserved keywords 
-                    if ($this->_isReservedKeyword($ref->getKeyword())) return false;
+                    if ($this->getReferenceValidator()->isReservedKeyword($ref->getKeyword())) return false;
                 }
             }
         }
@@ -1103,30 +1090,6 @@ class ReferenceManager {
             return false;
         else return true;
         }
-
-    function _isReservedKeyword($keyword) {
-        if (in_array($keyword,$this->reservedKeywords)) return true;
-        else return false;
-    }
-
-    // Only allow lower case letters, digits and underscores
-    function _isValidKeyword($keyword) {
-        if (!preg_match('/^[a-z0-9_]+$/',$keyword)) {
-            return false;
-        } else return true;
-    }
-
-    function _isSystemKeyword($keyword) {
-        // Not cached because the information is only used when creating a new reference
-        $reference_dao = $this->_getReferenceDao();
-        $dar=$reference_dao->searchByScope('S');
-        while ($row = $dar->getRow()) {
-            if ($keyword == $row['keyword']) {
-                return true;
-            }
-        }
-        return false;
-    }
     
     function _isKeywordExists($keyword, $group_id) {
         $reference_dao = $this->_getReferenceDao();
@@ -1138,9 +1101,9 @@ class ReferenceManager {
     
     public function checkKeyword($keyword) {            
             // Check that there is no system reference with the same keyword
-            if ($this->_isSystemKeyword($keyword)) return false;
+            if ($this->getReferenceValidator()->isSystemKeyword($keyword)) return false;
             // Check list of reserved keywords 
-            if ($this->_isReservedKeyword($keyword)) return false;
+            if ($this->getReferenceValidator()->isReservedKeyword($keyword)) return false;
             return true;
     }
     
@@ -1181,8 +1144,18 @@ class ReferenceManager {
         return new ArtifactDao();
     }
 
+    private function getReferenceValidator()
+    {
+        return new ReferenceValidator($this->_getReferenceDao(),$this->getReservedKeywordsRetriever());
+    }
+
     private function setProjectIdForProjectReferences($project_id)
     {
         $GLOBALS['group_id'] = $project_id;
+    }
+
+    private function getReservedKeywordsRetriever()
+    {
+        return new ReservedKeywordsRetriever($this->eventManager);
     }
 }
