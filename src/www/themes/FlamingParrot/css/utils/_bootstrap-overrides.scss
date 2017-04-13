@@ -49,6 +49,41 @@ input[type="file"] {
     opacity: .3;
 }
 
+.alert {
+    margin: 10px 0;
+    padding: 20px;
+    border: 0;
+    border-left: 5px solid $ui-color-warning;
+    border-radius: 3px;
+    background: transparentize($ui-color-warning, .9);
+    color: darken($ui-color-warning, 10%);
+    list-style: none;
+    text-shadow: none;
+
+    h4 {
+        margin: 0 0 20px;
+        color: inherit;
+    }
+}
+
+.alert-success {
+    border-left-color: $ui-color-success;
+    background: transparentize($ui-color-success, .9);
+    color: $ui-color-success;
+}
+
+.alert-info {
+    border-left-color: $ui-color-info;
+    background: transparentize($ui-color-info, .9);
+    color: darken($ui-color-info, 30%);
+}
+
+.alert-error {
+    border-left-color: $ui-color-danger;
+    background: transparentize($ui-color-danger, .9);
+    color: $ui-color-danger;
+}
+
 .popover[class*="tour"] {
     min-width: 370px;
     max-width: 370px;
