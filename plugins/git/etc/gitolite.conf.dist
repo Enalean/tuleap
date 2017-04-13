@@ -1,3 +1,6 @@
 repo    gitolite-admin
         RW+     =   id_rsa_gl-adm
 
+# Codendiadm has write access to all repositories to merge pull requests
+repo @all
+    RW = id_rsa_gl-adm
