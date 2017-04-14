@@ -21,6 +21,9 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Luracast\Restler\RestException;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
@@ -106,6 +109,11 @@ class PullRequestsResource extends AuthenticatedResource
      */
     private $inline_comment_creator;
 
+    /**
+     * @var AccessControlVerifier
+     */
+    private $access_control_verifier;
+
     public function __construct()
     {
         $this->git_repository_factory = new GitRepositoryFactory(
@@ -146,6 +154,11 @@ class PullRequestsResource extends AuthenticatedResource
 
         $dao = new \Tuleap\PullRequest\InlineComment\Dao();
         $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager);
+
+        $this->access_control_verifier = new AccessControlVerifier(
+            new FineGrainedRetriever(new FineGrainedDao()),
+            new \System_Command()
+        );
     }
 
     /**
@@ -190,7 +203,7 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkUserCanReadRepository($user, $repository_src);
 
         $executor                  = $this->getExecutor($repository_src);
-        $pr_representation_factory = new PullRequestRepresentationFactory($executor);
+        $pr_representation_factory = new PullRequestRepresentationFactory($executor, $this->access_control_verifier);
 
         return $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user);
     }
@@ -526,7 +539,7 @@ class PullRequestsResource extends AuthenticatedResource
         $repository_src  = $this->getRepository($pull_request->getRepositoryId());
         $repository_dest = $this->getRepository($pull_request->getRepoDestId());
 
-        $this->checkUserCanWriteRepository($user, $repository_src);
+        $this->checkUserCanWrite($user, $repository_dest, $pull_request->getBranchDest());
         $this->checkUserCanReadRepository($user, $repository_src);
 
         $status = $body->status;
@@ -543,7 +556,7 @@ class PullRequestsResource extends AuthenticatedResource
         $updated_pull_request        = $this->getPullRequest($id);
 
         $executor                  = $this->getExecutor($repository_src);
-        $pr_representation_factory = new PullRequestRepresentationFactory($executor);
+        $pr_representation_factory = new PullRequestRepresentationFactory($executor, $this->access_control_verifier);
 
         return $pr_representation_factory->getPullRequestRepresentation($updated_pull_request, $repository_src, $repository_dest, $user);
     }
@@ -790,11 +803,11 @@ class PullRequestsResource extends AuthenticatedResource
         }
     }
 
-    private function checkUserCanWriteRepository(PFUser $user, GitRepository $repository)
+    private function checkUserCanWrite(PFUser $user, GitRepository $repository, $reference)
     {
         ProjectAuthorization::userCanAccessProject($user, $repository->getProject(), new URLVerification());
 
-        if (! $repository->userCanWrite($user)) {
+        if (! $this->access_control_verifier->canWrite($user, $repository, $reference)) {
             throw new RestException(403, 'User is not able to WRITE the git repository');
         }
     }

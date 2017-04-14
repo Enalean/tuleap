@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
@@ -30,10 +31,15 @@ class PullRequestRepresentationFactory
      * @var GitExec;
      */
     private $executor;
+    /**
+     * @var AccessControlVerifier
+     */
+    private $access_control_verifier;
 
-    public function __construct(GitExec $executor)
+    public function __construct(GitExec $executor, AccessControlVerifier $access_control_verifier)
     {
-        $this->executor = $executor;
+        $this->executor                = $executor;
+        $this->access_control_verifier = $access_control_verifier;
     }
 
     public function getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user)
@@ -42,8 +48,9 @@ class PullRequestRepresentationFactory
         $short_stat_repres = new PullRequestShortStatRepresentation();
         $short_stat_repres->build($short_stat);
 
-        $user_can_merge   = $repository_dest->userCanWrite($user);
-        $user_can_abandon = ($repository_dest->userCanWrite($user) || $repository_src->userCanWrite($user));
+        $user_can_merge   = $this->access_control_verifier->canWrite($user, $repository_dest, $pull_request->getBranchDest());
+        $user_can_abandon = $user_can_merge ||
+            $this->access_control_verifier->canWrite($user, $repository_src, $pull_request->getBranchSrc());
 
         $pull_request_representation = new PullRequestRepresentation();
         $pull_request_representation->build(

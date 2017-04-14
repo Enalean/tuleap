@@ -47,6 +47,8 @@ npm run build
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest
 %{__cp} -ar include db templates README.mkd VERSION ChangeLog site-content $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/pullrequest
 
+%{__install} etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
+
 # logrotate
 %{__mkdir} -p $RPM_BUILD_ROOT/etc/logrotate.d
 %{__install} etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest

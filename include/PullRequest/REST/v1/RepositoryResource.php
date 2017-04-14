@@ -20,6 +20,9 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\GitExec;
@@ -68,6 +71,11 @@ class RepositoryResource
         $this->user_manager                 = UserManager::instance();
         $this->query_to_criterion_converter = new QueryToCriterionConverter();
 
+        $this->access_control_verifier = new AccessControlVerifier(
+            new FineGrainedRetriever(new FineGrainedDao()),
+            new \System_Command()
+        );
+
         $this->logger = new Logger();
     }
 
@@ -91,7 +99,7 @@ class RepositoryResource
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
 
             $executor                  = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
-            $pr_representation_factory = new PullRequestRepresentationFactory($executor);
+            $pr_representation_factory = new PullRequestRepresentationFactory($executor, $this->access_control_verifier);
 
             try {
                 $pull_request_representation = $pr_representation_factory->getPullRequestRepresentation(
