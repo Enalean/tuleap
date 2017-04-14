@@ -108,12 +108,14 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
 
         $this->event_manager      = mock('EventManager');
         $this->artifact_retriever = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever');
+        $visit_recorder           = mock('Tuleap\\Tracker\\RecentlyVisited\\VisitRecorder');
 
         $this->action = new Tracker_Action_UpdateArtifact(
             $this->task,
             $this->formelement_factory,
             $this->event_manager,
-            $this->artifact_retriever
+            $this->artifact_retriever,
+            $visit_recorder
         );
 
     }
@@ -199,14 +201,16 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
 
     public function itSendTheAutocomputedValueOfTheArtifact()
     {
-        $tracker = aMockTracker()->withId($this->tracker_id)->build();
-        $task    = aMockArtifact()->withId($this->artifact_id)->withTracker($tracker)->build();
+        $tracker        = aMockTracker()->withId($this->tracker_id)->build();
+        $task           = aMockArtifact()->withId($this->artifact_id)->withTracker($tracker)->build();
+        $visit_recorder = mock('Tuleap\\Tracker\\RecentlyVisited\\VisitRecorder');
 
         $action = new Tracker_Action_UpdateArtifact(
             $task,
             $this->formelement_factory,
             $this->event_manager,
-            $this->artifact_retriever
+            $this->artifact_retriever,
+            $visit_recorder
         );
 
         stub($GLOBALS['Language'])->getText('plugin_tracker', 'autocomputed_field')->returns('autocomputed');
@@ -350,12 +354,14 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
     }
 
     private function getRedirectUrlFor($request_data) {
-        $request  = new Codendi_Request($request_data);
-        $action   = new Tracker_Artifact_RedirectUrlTestVersion(
+        $request        = new Codendi_Request($request_data);
+        $visit_recorder = mock('Tuleap\\Tracker\\RecentlyVisited\\VisitRecorder');
+        $action         = new Tracker_Artifact_RedirectUrlTestVersion(
             $this->task,
             $this->formelement_factory,
             $this->event_manager,
-            $this->artifact_retriever
+            $this->artifact_retriever,
+            $visit_recorder
         );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
 

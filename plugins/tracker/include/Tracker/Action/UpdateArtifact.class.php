@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_Action_UpdateArtifact {
 
@@ -31,17 +32,23 @@ class Tracker_Action_UpdateArtifact {
     /** @var EventManager */
     private $event_manager;
     private $artifact_retriever;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
     public function __construct(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         EventManager $event_manager,
-        NatureIsChildLinkRetriever $artifact_retriever
+        NatureIsChildLinkRetriever $artifact_retriever,
+        VisitRecorder $visit_recorder
     ) {
         $this->artifact             = $artifact;
         $this->form_element_factory = $form_element_factory;
         $this->event_manager        = $event_manager;
         $this->artifact_retriever   = $artifact_retriever;
+        $this->visit_recorder       = $visit_recorder;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
@@ -84,7 +91,9 @@ class Tracker_Action_UpdateArtifact {
                     $this->artifact,
                     $this->form_element_factory,
                     $layout,
-                    $this->artifact_retriever);
+                    $this->artifact_retriever,
+                    $this->visit_recorder
+                );
                 $render->display($request, $current_user);
             }
         } catch (Tracker_Exception $e) {
@@ -97,7 +106,9 @@ class Tracker_Action_UpdateArtifact {
                     $this->artifact,
                     $this->form_element_factory,
                     $layout,
-                    $this->artifact_retriever);
+                    $this->artifact_retriever,
+                    $this->visit_recorder
+                );
                 $render->display($request, $current_user);
             }
         }
