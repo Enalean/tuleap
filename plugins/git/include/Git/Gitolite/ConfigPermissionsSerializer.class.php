@@ -263,21 +263,9 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         if (!isset(self::$permissions_types[$permission_type])) {
             return '';
         }
-        $git_online_edit_conf_right = $this->getUserForOnlineEdition($repository);
         $ugroup_literalizer = new UGroupLiteralizer();
         $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
-        if ($git_online_edit_conf_right) {
-            $repository_groups[] = $git_online_edit_conf_right;
-        }
         return $this->formatPermission($permission_type, $repository_groups);
-    }
-
-    private function getUserForOnlineEdition(GitRepository $repository) {
-        if ($repository->hasOnlineEditEnabled()) {
-            return 'id_rsa_gl-adm';
-        }
-
-        return '';
     }
 
     private function getMirrorUserNames(GitRepository $repository) {

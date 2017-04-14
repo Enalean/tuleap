@@ -73,8 +73,6 @@ class GitRepository implements DVCSRepository {
     private $remote_project_is_deleted;
     private $remote_server_migration_status;
 
-    private $use_online_edit;
-
     private $is_mirrored;
 
     protected $backendType;
@@ -103,7 +101,6 @@ class GitRepository implements DVCSRepository {
         $this->parentId        = 0;
         $this->loaded          = false;
         $this->scope           = self::REPO_SCOPE_PROJECT;
-        $this->use_online_edit = false;
         $this->is_mirrored     = false;
     }       
 
@@ -781,14 +778,6 @@ class GitRepository implements DVCSRepository {
         return $this->getBackend()->userCanRead($user, $this);
     }
 
-    public function userCanWrite(PFUser $user) {
-        return $user->hasPermission(Git::PERM_WRITE, $this->getId(), $this->getProjectId()) ||
-               $user->hasPermission(Git::PERM_WPLUS, $this->getId(), $this->getProjectId());
-    }
-
-    public function userCanEditOnline($user) {
-        return $this->userCanWrite($user) && $this->use_online_edit;
-    }
     /**
      * Test if user can modify repository configuration
      *
@@ -911,14 +900,6 @@ class GitRepository implements DVCSRepository {
         $href  = $url_manager->getRepositoryBaseUrl($this);
         $label = basename($this->getName());
         return '<a href="'. $href .'">'. $label .'</a>';
-    }
-
-    public function enableOnlineEdit() {
-        $this->use_online_edit = true;
-    }
-
-    public function hasOnlineEditEnabled(){
-        return $this->use_online_edit;
     }
 
     public function setIsMirrored($is_mirrored) {
