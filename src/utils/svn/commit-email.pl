@@ -849,7 +849,7 @@ sub extract_xrefs {
     $type="svn_revision";
     $text=join("\n",@log);
 
-    my $req = POST "$codendi_srv/api/reference/extractCross",
+    my $req = POST "$codendi_srv/api/reference/extractCross.php",
       [ group_id => "$group_id", text => "$text", rev_id=>"$rev", login=>"$author", type=>"$type" ];
   
 
