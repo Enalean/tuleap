@@ -78,4 +78,13 @@ class Dao extends \DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function delete($id)
+    {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "DELETE FROM plugin_bugzilla_reference WHERE id = $id";
+
+        return $this->update($sql);
+    }
 }

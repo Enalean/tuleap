@@ -25,6 +25,7 @@ use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Bugzilla\Reference\KeywordIsAlreadyUsedException;
 use Tuleap\Bugzilla\Reference\KeywordIsInvalidException;
+use Tuleap\Bugzilla\Reference\ReferenceDestructor;
 use Tuleap\Bugzilla\Reference\ReferenceRetriever;
 use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RequiredFieldEmptyException;
@@ -49,16 +50,22 @@ class Controller
      * @var ReferenceRetriever
      */
     private $reference_retriever;
+    /**
+     * @var ReferenceDestructor
+     */
+    private $reference_destructor;
 
     public function __construct(
         AdminPageRenderer $renderer,
         ReferenceSaver $reference_saver,
-        ReferenceRetriever $reference_retriever
+        ReferenceRetriever $reference_retriever,
+        ReferenceDestructor $reference_destructor
     ) {
-        $this->renderer            = $renderer;
-        $this->csrf_token          = new CSRFSynchronizerToken(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
-        $this->reference_saver     = $reference_saver;
-        $this->reference_retriever = $reference_retriever;
+        $this->renderer             = $renderer;
+        $this->csrf_token           = new CSRFSynchronizerToken(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
+        $this->reference_saver      = $reference_saver;
+        $this->reference_retriever  = $reference_retriever;
+        $this->reference_destructor = $reference_destructor;
     }
 
     public function display()
@@ -152,6 +159,25 @@ class Controller
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-bugzilla_reference', 'Server is invalid')
+            );
+        }
+
+        $GLOBALS['Response']->redirect(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
+    }
+
+    public function deleteReference(\Codendi_Request $request)
+    {
+        $this->csrf_token->check();
+
+        if ($this->reference_destructor->delete($request)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-bugzilla_reference', 'Reference has been successfully removed')
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'An error occured while removing reference')
             );
         }
 

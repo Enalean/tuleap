@@ -50,6 +50,9 @@ class Router
             case 'edit-reference':
                 $this->controller->editReference($request);
                 break;
+            case 'delete-reference':
+                $this->controller->deleteReference($request);
+                break;
             default:
                 $this->controller->display();
         }

@@ -23,6 +23,7 @@ use Tuleap\Bugzilla\Administration\Controller;
 use Tuleap\Bugzilla\Administration\Router;
 use Tuleap\Bugzilla\Plugin\Info;
 use Tuleap\Bugzilla\Reference\Dao;
+use Tuleap\Bugzilla\Reference\ReferenceDestructor;
 use Tuleap\Bugzilla\Reference\ReferenceRetriever;
 use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\reference\ReferenceValidator;
@@ -84,7 +85,8 @@ class bugzilla_referencePlugin extends Plugin
                 ),
                 $this->getReferenceRetriever()
             ),
-            $this->getReferenceRetriever()
+            $this->getReferenceRetriever(),
+            new ReferenceDestructor(new Dao())
         );
 
         $router = new Router($controller);
