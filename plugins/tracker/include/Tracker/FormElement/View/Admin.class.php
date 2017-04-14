@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -215,49 +215,50 @@ class Tracker_FormElement_View_Admin {
      * @return string html
      */
     protected function fetchAdminSpecificProperty($key, $property) {
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         switch ($property['type']) {
         case 'string':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
+            $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
             $html .= '<input type="text" 
-                             size="'. $property['size'] .'"
-                             name="formElement_data[specific_properties]['. $key .']" 
-                             id="formElement_properties_'. $key .'" 
-                             value="'. $property['value'] .'" />';
+                             size="'. $purifier->purify($property['size']) .'"
+                             name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
+                             id="formElement_properties_'. $purifier->purify($key) .'"
+                             value="'. $purifier->purify($property['value']) .'" />';
             break;
         case 'date':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
-            $value = $property['value'] ? $this->formElement->formatDate($property['value']) : '';
+            $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
+            $value = $purifier->purify($property['value'] ? $this->formElement->formatDate($property['value']) : '');
             $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_".$key, "formElement_data[specific_properties][$key]", $value);
             break;
         case 'text':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
+            $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
             $html .= '<textarea
                            cols="50" rows="10"
-                           name="formElement_data[specific_properties]['. $key .']"
+                           name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
                            id="formElement_properties_'. $key .'">' .
-                       $property['value'] . '</textarea>';
+                           $purifier->purify($property['value']) . '</textarea>';
             break;
         case 'rich_text':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
+            $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
             $html .= '<textarea
                            class="tracker-field-richtext"
                            cols="50" rows="10"  
-                           name="formElement_data[specific_properties]['. $key .']" 
-                           id="formElement_properties_'. $key .'">' .
-                       $property['value'] . '</textarea>';
+                           name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
+                           id="formElement_properties_'. $purifier->purify($key) .'">' .
+                           $purifier->purify($property['value'], CODENDI_PURIFIER_FULL) . '</textarea>';
             break;
         case 'radio':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
+            $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
             foreach ($property['choices'] as $key_choice => $choice) {
                 $checked = '';
                 if ($this->formElement->getProperty($key) == $choice['radio_value']) {
                     $checked = 'checked="checked"';
                 }
                 $html .= '<div class="form-inline"><input type="radio"
-                                 name="formElement_data[specific_properties]['. $key .']" 
-                                 value="'. $choice['radio_value'] .'" 
-                                 id="formElement_properties_'. $key_choice .'" 
+                                 name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
+                                 value="'. $purifier->purify($choice['radio_value']) .'"
+                                 id="formElement_properties_'. $purifier->purify($key_choice) .'"
                                  '. $checked .' />';
                 $html .= '&nbsp;'.$this->fetchAdminSpecificProperty($key_choice, $choice);
                 $html .= '</div>';
@@ -267,17 +268,17 @@ class Tracker_FormElement_View_Admin {
             $checked = $property['value'] ? 'checked="checked"' : '';
             $html .= '<label class="checkbox">
                         <input  type="hidden"
-                                name="formElement_data[specific_properties]['. $key .']"
+                                name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
                                 value="0"/>
                         <input  type="checkbox"
-                                name="formElement_data[specific_properties]['. $key .']"
-                                id="formElement_properties_'.$key.'" '. $checked .'
+                                name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
+                                id="formElement_properties_'.$purifier->purify($key).'" '. $checked .'
                                 value="1"/>
-                        '.$this->formElement->getPropertyLabel($key).'
+                        '.$purifier->purify($this->formElement->getPropertyLabel($key)).'
                     </label>';
             break;
         case 'label':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
+            $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
             break;
         default:
             //Unknown type. raise exception?
