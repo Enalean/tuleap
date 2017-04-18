@@ -1,0 +1,98 @@
+<form action="?action=edit-reference"
+      method="post"
+      id="edit-modal-{{ getId }}"
+      class="tlp-modal"
+      role="dialog"
+>
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-pencil tlp-modal-title-icon"></i>
+            {{ bugzilla_title_edit }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+
+    <input type="hidden"
+           class="tlp-input"
+           id="id"
+           name="id"
+           placeholder="bz_stuff"
+           value="{{ getId }}"
+    >
+    <input type="hidden"
+           class="tlp-input"
+           id="keyword"
+           name="keyword"
+           placeholder="bz_stuff"
+           value="{{ getKeyword }}"
+    >
+
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element tlp-form-element-disabled">
+            <label class="tlp-label" for="keyword-disabled">{{ keyword }}</label>
+            <input type="text"
+                   class="tlp-input"
+                   id="keyword-disabled"
+                   name="keyword-disabled"
+                   placeholder="bz"
+                   value="{{ getKeyword }}"
+                   disabled
+            >
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="server">{{ server }} <i class="fa fa-asterisk"></i></label>
+            <input type="text"
+                   class="tlp-input"
+                   id="server"
+                   name="server"
+                   placeholder="https://example.com"
+                   pattern="https?://.+"
+                   required
+                   value="{{ getServer }}"
+            >
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="username">{{ username }} <i class="fa fa-asterisk"></i></label>
+            <input type="text"
+                   class="tlp-input"
+                   id="username"
+                   name="username"
+                   placeholder="{{ username }}"
+                   required
+                   value="{{ getUsername }}"
+            >
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="password">{{ change_password }} </label>
+            <input type="password"
+                   class="tlp-input"
+                   id="password"
+                   name="password"
+                   placeholder="{{ password }}"
+            >
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input
+                        type="checkbox"
+                        name="are_follow_up_private"
+                        value="1"
+                    {{# areFollowUpPrivate }} checked {{/ areFollowUpPrivate }}
+                > {{ are_followup_private }}
+            </label>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <i class="fa fa-pencil tlp-button-icon"></i> {{ bugzilla_edit }}
+        </button>
+    </div>
+</form>

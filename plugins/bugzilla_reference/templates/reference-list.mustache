@@ -26,14 +26,19 @@
                     <td>{{ getServer }}</td>
                     <td>{{ getFollowUpVisibility }}</td>
                     <td class="tlp-table-cell-actions">
-                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
-                                disabled>
-                            <i class="fa fa-pencil"></i> {{ edit }}
+                        <button type="button"
+                                class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline bugzilla-edit-modal"
+                                data-edit-modal-id="edit-modal-{{ getId }}"
+                        >
+                            <i class="fa fa-pencil tlp-button-icon"></i>
+                            {{ edit }}
                         </button>
                         <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
                                 disabled>
                             <i class="fa fa-trash-o"></i> {{ delete }}
                         </button>
+
+                        {{> edit-reference }}
                     </td>
                 </tr>
             {{/ presenters }}

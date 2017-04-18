@@ -57,4 +57,19 @@ class ReferencePresenter
 
         return dgettext('tuleap-bugzilla_reference', 'Public');
     }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function areFollowUpPrivate()
+    {
+        return $this->are_followup_private;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

@@ -114,7 +114,7 @@ class Controller
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 sprintf(
-                    dgettext('tuleap-bugzilla_reference', 'The reference "%s"  is already used'),
+                    dgettext('tuleap-bugzilla_reference', 'The reference "%s" is already used'),
                     $request->get('keyword')
                 )
             );
@@ -122,6 +122,31 @@ class Controller
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-bugzilla_reference', 'Keyword is invalid')
+            );
+        } catch (ServerIsInvalidException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'Server is invalid')
+            );
+        }
+
+        $GLOBALS['Response']->redirect(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
+    }
+
+    public function editReference(\Codendi_Request $request)
+    {
+        $this->csrf_token->check();
+
+        try {
+            $this->reference_saver->edit($request);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-bugzilla_reference', 'Reference has been successfully updated')
+            );
+        } catch (RequiredFieldEmptyException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'Missing fields for updating reference')
             );
         } catch (ServerIsInvalidException $ex) {
             $GLOBALS['Response']->addFeedback(

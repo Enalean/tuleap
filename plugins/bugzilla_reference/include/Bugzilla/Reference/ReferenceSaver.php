@@ -77,8 +77,6 @@ class ReferenceSaver
 
     private function checkFieldsValidity($keyword, $server)
     {
-        $http_uri_validator = new Valid_HTTPSURI();
-
         if (! $this->reference_validator->isValidKeyword($keyword)) {
             throw new KeywordIsInvalidException();
         }
@@ -90,8 +88,44 @@ class ReferenceSaver
             throw new KeywordIsAlreadyUsedException();
         }
 
+        $this->checkServerValidity($server);
+    }
+
+    private function checkServerValidity($server)
+    {
+        $http_uri_validator = new Valid_HTTPSURI();
+
         if (! $http_uri_validator->validate($server)) {
             throw new ServerIsInvalidException();
         }
+    }
+
+    public function edit($request)
+    {
+        $id                    = $request->get('id');
+        $keyword               = $request->get('keyword');
+        $server                = $request->get('server');
+        $username              = $request->get('username');
+        $password              = $this->getPassowrdToStore($id, $request->get('password'));
+        $are_followups_private = $request->get('are_follow_up_private');
+        $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
+
+        $this->checkServerValidity($server);
+
+        if (! $this->areFieldsSet($keyword, $server, $username, $password)) {
+            throw new RequiredFieldEmptyException();
+        }
+
+        $this->dao->edit($id, $server, $username, $password, $are_followups_private);
+    }
+
+    private function getPassowrdToStore($id, $password)
+    {
+        if ($password !== "") {
+            return $password;
+        }
+
+        $reference = $this->dao->getReferenceById($id);
+        return $reference['password'];
     }
 }
