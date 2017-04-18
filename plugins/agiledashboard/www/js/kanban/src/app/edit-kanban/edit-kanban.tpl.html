@@ -1,14 +1,14 @@
 <div class="edit-kanban-modal">
     <div class="modal-header">
-        <button type="button" class="close" ng-click="edit_modal.cancel()">&times;</button>
+        <button type="button" class="close" ng-click="edit_modal.cancel()">×</button>
         <h2>{{ edit_modal.kanban.label }}</h2>
+    </div>
+    <div class="modal-body">
+        <h3><i class="icon-cogs"></i> <span translate>General configuration</span></h3>
         <p class="muted base-tracker">
             <i class="icon-info-sign"></i>
             <span translate>Based on the <a href="/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}">{{ edit_modal.kanban.tracker.label }}</a> tracker.</span>
         </p>
-    </div>
-    <div class="modal-body">
-        <h3><i class="icon-cogs"></i> <span translate>General configuration</span></h3>
         <div class="kanban-configuration">
             <form ng-submit="edit_modal.saveModifications()">
                 <label class="control-label" for="input-kanban-label" translate>Kanban label:</label>
@@ -127,7 +127,7 @@
         <h3><i class="icon-warning-sign"></i> <span translate>Danger zone</span></h3>
         <div class="danger-zone">
             <p translate>The deletion of a Kanban is irreversible. Please be certain before doing it.</p>
-            <button class="btn" ng-class="{'btn-danger': edit_modal.confirm_delete }" ng-click="edit_modal.deleteKanban()" ng-disabled="edit_modal.processing()">
+            <button class="btn btn-danger" ng-class="{'btn-danger': edit_modal.confirm_delete }" ng-click="edit_modal.deleteKanban()" ng-disabled="edit_modal.processing()">
                 <i class="icon-spinner icon-spin" ng-show="edit_modal.deleting"></i>
                 <i class="icon-trash" ng-hide="edit_modal.deleting"></i>
                 <span ng-if="edit_modal.confirm_delete" translate>Confirm deletion of this Kanban</span>
