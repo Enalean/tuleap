@@ -275,65 +275,6 @@ body.openid-connect-link {
     }
 }
 
-a.provider-button {
-    box-shadow: inset 0 20px 40px -10px rgba(255, 255, 255, 0.2);
-    transition: box-shadow 50ms linear;
-
-    &:hover {
-        box-shadow: none;
-        transition: box-shadow 50ms linear;
-    }
-
-    &.inca_silver {
-        background: $inca_silver;
-    }
-    &.chrome_silver {
-        background: $chrome_silver;
-    }
-    &.fiesta_red {
-        background: $fiesta_red;
-    }
-    &.teddy_brown {
-        background: $teddy_brown;
-    }
-    &.clockwork_orange {
-        background: $clockwork_orange;
-    }
-    &.red_wine {
-        background: $red_wine;
-    }
-    &.acid_green {
-        background: $acid_green;
-    }
-    &.army_green {
-        background: $army_green;
-    }
-    &.sherwood_green {
-        background: $sherwood_green;
-    }
-    &.ocean_turquoise {
-        background: $ocean_turquoise;
-    }
-    &.daphne_blue {
-        background: $daphne_blue;
-    }
-    &.lake_placid_blue {
-        background: $lake_placid_blue;
-    }
-    &.deep_blue {
-        background: $deep_blue;
-    }
-    &.plum_crazy {
-        background: $plum_crazy;
-    }
-    &.peggy_pink {
-        background: $peggy_pink;
-    }
-    &.flamingo_pink {
-        background: $flamingo_pink;
-    }
-}
-
 .provider-select2-select {
     display: block;
 
