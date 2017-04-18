@@ -402,6 +402,10 @@ legend {
         margin-top: 0;
         color: $white;
         opacity: 1;
+        font-family: inherit;
+        text-shadow: none;
+        font-weight: 600;
+        font-size: 24px;
     }
 }
 
