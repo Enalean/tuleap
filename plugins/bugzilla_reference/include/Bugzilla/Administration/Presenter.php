@@ -28,11 +28,48 @@ class Presenter
     public $references_configuration;
     public $under_construction;
     public $purified_no_bugzilla_reference;
+    public $keyword;
+    public $bz_reference;
+    public $server;
+    public $username;
+    public $password;
+    public $cancel;
+    public $private_public_comment;
+    public $has_references;
+    public $follow_up;
+    public $edit;
+    public $delete;
 
-    public function __construct()
+    /**
+     * @var array
+     */
+    public $presenters;
+
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
+    public function __construct(array $presenters, \CSRFSynchronizerToken $csrf_token)
     {
+        $this->presenters     = $presenters;
+        $this->has_references = count($presenters) > 0;
+        $this->csrf_token     = $csrf_token;
+
         $this->bugzilla_title                 = dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration');
         $this->bugzilla_add                   = dgettext('tuleap-bugzilla_reference', 'Add reference');
+        $this->keyword                        = dgettext('tuleap-bugzilla_reference', 'Keyword');
+        $this->server                         = dgettext('tuleap-bugzilla_reference', 'Server');
+        $this->username                       = dgettext('tuleap-bugzilla_reference', 'Username');
+        $this->password                       = dgettext('tuleap-bugzilla_reference', 'Password');
+        $this->follow_up                      = dgettext('tuleap-bugzilla_reference', 'Follow Up');
+        $this->cancel                         = dgettext('tuleap-bugzilla_reference', 'Cancel');
+        $this->delete                         = dgettext('tuleap-bugzilla_reference', 'Delete');
+        $this->edit                           = dgettext('tuleap-bugzilla_reference', 'Edit');
+        $this->private_public_comment         = dgettext(
+            'bugzilla_reference',
+            'Comments added in Bugzilla will be flaged as private'
+        );
         $this->purified_no_bugzilla_reference = Codendi_HTMLPurifier::instance()->purify(
             dgettext(
                 'tuleap-bugzilla_reference',

@@ -20,28 +20,116 @@
 
 namespace Tuleap\Bugzilla\Administration;
 
+use CSRFSynchronizerToken;
+use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Bugzilla\Reference\KeywordIsAlreadyUsedException;
+use Tuleap\Bugzilla\Reference\KeywordIsInvalidException;
+use Tuleap\Bugzilla\Reference\ReferenceRetriever;
+use Tuleap\Bugzilla\Reference\ReferenceSaver;
+use Tuleap\Bugzilla\Reference\RequiredFieldEmptyException;
+use Tuleap\Bugzilla\Reference\ServerIsInvalidException;
 
 class Controller
 {
     /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
+    /**
      * @var AdminPageRenderer
      */
     private $renderer;
+    /**
+     * @var ReferenceSaver
+     */
+    private $reference_saver;
+    /**
+     * @var ReferenceRetriever
+     */
+    private $reference_retriever;
 
-    public function __construct(AdminPageRenderer $renderer)
-    {
-        $this->renderer = $renderer;
+    public function __construct(
+        AdminPageRenderer $renderer,
+        ReferenceSaver $reference_saver,
+        ReferenceRetriever $reference_retriever
+    ) {
+        $this->renderer            = $renderer;
+        $this->csrf_token          = new CSRFSynchronizerToken(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
+        $this->reference_saver     = $reference_saver;
+        $this->reference_retriever = $reference_retriever;
     }
 
     public function display()
     {
-        $presenter = new Presenter();
+        $references           = $this->reference_retriever->getAllReferences();
+        $references_presenter = $this->getPresenters($references);
+        $presenter            = new Presenter($references_presenter, $this->csrf_token);
         $this->renderer->renderAPresenter(
             dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration'),
             BUGZILLA_REFERENCE_TEMPLATE_DIR,
             'reference-list',
             $presenter
         );
+    }
+
+    private function getPresenters(array $references)
+    {
+        $presenters = array();
+
+        foreach ($references as $reference) {
+            $presenters[] = new ReferencePresenter(
+                $reference->getId(),
+                $reference->getKeyword(),
+                $reference->getServer(),
+                $reference->getUsername(),
+                $reference->getPassword(),
+                $reference->getAreFollowupPrivate()
+            );
+        }
+
+        return $presenters;
+    }
+
+    /**
+     * @param \Codendi_Request $request
+     */
+    public function addReference(\Codendi_Request $request)
+    {
+        $this->csrf_token->check();
+
+        try {
+            $this->reference_saver->save($request);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-bugzilla_reference', 'Reference has been successfully added')
+            );
+        } catch (RequiredFieldEmptyException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'Missing fields for creating reference')
+            );
+        } catch (KeywordIsAlreadyUsedException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext('tuleap-bugzilla_reference', 'The reference "%s"  is already used'),
+                    $request->get('keyword')
+                )
+            );
+        } catch (KeywordIsInvalidException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'Keyword is invalid')
+            );
+        } catch (ServerIsInvalidException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'Server is invalid')
+            );
+        }
+
+        $GLOBALS['Response']->redirect(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
     }
 }

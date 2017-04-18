@@ -10,8 +10,57 @@ msgstr "Configuration de Bugzilla"
 msgid "Bugzilla reference"
 msgstr "Références bugzilla"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Comments added in Bugzilla will be flaged as private"
+msgstr "Les commentaires ajoutés sur Bugzilla seront marqués comme privés"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Edit"
+msgstr "Éditer"
+
+msgid "Follow Up"
+msgstr "Commentaire"
+
+msgid "Keyword"
+msgstr "Référence"
+
+msgid "Keyword is invalid"
+msgstr "La référence est invalide"
+
+msgid "Missing fields for creating reference"
+msgstr "Il manque des champs pour pouvoir créer la référence"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Private"
+msgstr "Privé"
+
+msgid "Public"
+msgstr "Public"
+
+msgid "Reference has been successfully added"
+msgstr "Références entre Bugzilla et Tuleap"
+
 msgid "References between Bugzilla and Tuleap"
 msgstr "Références entre Bugzilla et Tuleap"
 
+msgid "Server"
+msgstr "Serveur"
+
+msgid "Server is invalid"
+msgstr "Le serveur est invalide"
+
+#, php-format
+msgid "The reference is already used"
+msgstr "La reference est déjà utilisée"
+
 msgid "There is nothing here, <br> start by adding a Bugzilla reference"
 msgstr "Il n'y a rien ici, <br> commencez par ajouter une référence Bugzilla"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"

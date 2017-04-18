@@ -7,8 +7,57 @@ msgstr ""
 msgid "Bugzilla reference"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
+msgid "Comments added in Bugzilla will be flaged as private"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Follow Up"
+msgstr ""
+
+msgid "Keyword"
+msgstr ""
+
+msgid "Keyword is invalid"
+msgstr ""
+
+msgid "Missing fields for creating reference"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Private"
+msgstr ""
+
+msgid "Public"
+msgstr ""
+
+msgid "Reference has been successfully added"
+msgstr ""
+
 msgid "References between Bugzilla and Tuleap"
 msgstr ""
 
+msgid "Server"
+msgstr ""
+
+msgid "Server is invalid"
+msgstr ""
+
+#, php-format
+msgid "The reference is already used"
+msgstr ""
+
 msgid "There is nothing here, <br> start by adding a Bugzilla reference"
+msgstr ""
+
+msgid "Username"
 msgstr ""
