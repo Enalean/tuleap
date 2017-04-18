@@ -5,7 +5,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 //
 // adduser.php - All the forms and functions to manage unix users
 //
@@ -116,7 +116,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             $unix_group_name = db_result($res2,0,'unix_group_name');
             // $message is defined in the content file
             include($Language->getContent('include/add_user_to_group_email'));
-            
+
             $mail = new Mail();
             $mail->setTo($email_address);
             $mail->setFrom($GLOBALS['sys_noreply']);
@@ -137,7 +137,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
  *
  * @param Integer $groupId      Project id
  * @param Integer $userId       User id
- * @param Boolean $adminAction  Default value set to true, manage the displayed message according to the person that asked for the action (admin/self remove) 
+ * @param Boolean $adminAction  Default value set to true, manage the displayed message according to the person that asked for the action (admin/self remove)
  */
 function account_remove_user_from_group($groupId, $userId, $adminAction = true) {
     $pm = ProjectManager::instance();
@@ -204,7 +204,7 @@ function account_make_login_from_email($email) {
 
 /**
  * Check username validity. DEPRECATED
- * 
+ *
  * @deprecated
  * @see Valid_UserNameFormat
  * @param String $name
@@ -221,7 +221,7 @@ function account_namevalid($name, $key = '') {
 
 /**
  * Check groupname validity. DEPRECATED
- * 
+ *
  * @deprecated
  * @see Rule_ProjectName
  * @param String $name
@@ -283,7 +283,7 @@ function account_create($loginname=''
     $user->setLanguageID($lang_id);
     $user->setUnixStatus($unix_status);
     $user->setExpiryDate($expiry_date);
-    
+
     $u = $um->createAccount($user);
     if ($u) {
         return $u->getId();
@@ -297,7 +297,7 @@ function account_create_mypage($user_id) {
 }
 
 function account_redirect_after_login($return_to) {
-    global $pv;  
+    global $pv;
 
     $event_manager = EventManager::instance();
     $event_manager->processEvent('account_redirect_after_login', array('return_to' => &$return_to));

@@ -35,7 +35,13 @@ class Tuleap_Tour_WelcomeTour extends Tuleap_Tour {
                 $GLOBALS['Language']->getText('my_tour', 'my_personal_page_title'),
                 $GLOBALS['Language']->getText('my_tour', 'my_personal_page'),
                 'bottom',
-                'ul.nav > li:first-child'
+                '#navbar-user-navigation'
+            ),
+            new Tuleap_Tour_Step(
+                $GLOBALS['Language']->getText('my_tour', 'user_menu_title'),
+                $GLOBALS['Language']->getText('my_tour', 'user_menu'),
+                'bottom',
+                '.user-menu + li'
             ),
             new Tuleap_Tour_Step(
                 $GLOBALS['Language']->getText('my_tour', 'projects_title'),
@@ -54,12 +60,6 @@ class Tuleap_Tour_WelcomeTour extends Tuleap_Tour {
                 $GLOBALS['Language']->getText('my_tour', 'search'),
                 'bottom',
                 'ul.nav.pull-right > form'
-            ),
-            new Tuleap_Tour_Step(
-                $GLOBALS['Language']->getText('my_tour', 'user_menu_title'),
-                $GLOBALS['Language']->getText('my_tour', 'user_menu'),
-                'bottom',
-                'ul.nav.pull-right > li.user-menu'
             ),
             new Tuleap_Tour_Step(
                 $GLOBALS['Language']->getText('my_tour', 'end_tour_title'),

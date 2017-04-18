@@ -17,7 +17,7 @@ my_index	my_forums_msg	<b>Vous ne surveillez aucun forum.</b><P>En surveillant u
 my_index	stop_forum	Arrêter la surveillance du forum ?
 my_index	my_files	Fichiers sous surveillance
 my_index	my_files_msg	<b>Vous ne surveillez aucun fichier.</b><P>En surveillant un fichier, vous recevrez par e-mail une note signalant la publication d'une nouvelle version et un lien vers l'espace de téléchargement.<P>Vous pouvez surveiller un fichier en visitant la page de &quot;Sommaire&quot; et en cliquant sur l'icône appropriée dans la section fichiers.<BR>&nbsp;
-my_index	stop_file	Arrêter la surveillance du paquet ?	
+my_index	stop_file	Arrêter la surveillance du paquet ?
 my_index	stop_monitor	Arrêter la surveillance
 my_index	my_tasks	Mes Tâches
 my_index	my_arts	Mes artefacts
@@ -94,7 +94,7 @@ bookmark_edit	title	Modifier un favori
 # Script: SF/www/my/rmproject.php
 #
 bookmark_rmproject	err_notmember	Vous n'êtes pas membre de ce projet.
-bookmark_rmproject	err_removing	Vous ne pouvez enlever un administrateur du projet. Oter d'abord les droits d'administrateur de cet utilisateur avant de l'enlever à nouveau du projet. 
+bookmark_rmproject	err_removing	Vous ne pouvez enlever un administrateur du projet. Oter d'abord les droits d'administrateur de cet utilisateur avant de l'enlever à nouveau du projet.
 bookmark_rmproject	mail_subject	$1 : utilisateur $2 enlevé du projet '$3'
 bookmark_rmproject	mail_body	Ce message est envoyé pour prévenir le(s) administrateurs du\nprojet '$1' que l'utilisateur '$2' a quitté le projet.\n\nSuivez le lien ci-dessous pour voir la liste des membres actuels du projet :\n$3\n\n
 #
@@ -113,21 +113,24 @@ my_monitored_forum	stop_monitoring	La surveillance du forum est arrêtée. Vous 
 
 my_tour	welcome_title	Bienvenue sur Tuleap !
 my_tour	welcome	Ravi de vous rencontrer $1 ! Il s'agit de votre première connexion sur Tuleap. Nous allons vous montrer comment utiliser l'outil.
-
 my_tour	my_personal_page_title	Ma page personnelle
 my_tour	my_personal_page	Il s'agit de votre page personnelle (là où vous vous trouvez). Vous pourrez trouver ici un ensemble d'informations vous concernant.
-
 my_tour	projects_title	Mes projets
 my_tour	projects	Il s'agit de l'onglet où vous pouvez créer votre premier projet. Vous y trouverez également la liste des projets auxquels vous pouvez accéder.
-
 my_tour	help_title	Aide
 my_tour	help	Vous pourrez trouver à cet endroit différentes aides telles que les adresses de contact ou la documentation.
-
 my_tour	search_title	Recherche globale
 my_tour	search	Il s'agit de la recherche globale de Tuleap. Vous pourrez y rechercher des données au travers des différents projets et services.
-
 my_tour	user_menu_title	Menu utilisateur
 my_tour	user_menu	Vous trouverez à cet endroit les informations de votre compte où vous pourrez changer votre avatar, votre thème ou encore ajouter vos clefs SSH.
-
 my_tour	end_tour_title	Vous êtes prêt à utiliser Tuleap
 my_tour	end_tour	C'est la fin de cette présentation de bienvenue. Vous pouvez dès à présent commencer à utiliser Tuleap.
+
+fp_bp_unification_tour	new_style_title	Nouveau style
+fp_bp_unification_tour	new_style	Voici la nouvelle barre de navigation. Vous remarquerez certainement que d'autres parties de Tuleap ont été redesignées.
+fp_bp_unification_tour	personal_page_title	Ma page personnelle
+fp_bp_unification_tour	personal_page	Votre page personnelle est maintenant accessible en cliquant sur votre nom.
+fp_bp_unification_tour	account_title	Mon compte
+fp_bp_unification_tour	account	Vos préférences sont accessibles en cliquant sur cette roue dentée.
+fp_bp_unification_tour	be_prepared_title	Et ce n'est pas fini !
+fp_bp_unification_tour	be_prepared	De nouvelles fonctionnalités arrivent à grand pas. Gardez l'œil ouvert…
