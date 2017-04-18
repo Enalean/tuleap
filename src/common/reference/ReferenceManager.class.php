@@ -27,9 +27,9 @@ use Tuleap\reference\ReservedKeywordsRetriever;
  * Performs all operations on references, including DB access (through ReferenceDAO)
  */
 class ReferenceManager {
-    
+
     /**
-     * array of active Reference objects arrays of arrays, indexed by group_id, keyword, and num args. 
+     * array of active Reference objects arrays of arrays, indexed by group_id, keyword, and num args.
      * Example: $activeReferencesByProject[101]['art'][1] return the reference object for project 101, keyword 'art' and one argument.
      * @var array
      */
@@ -95,14 +95,14 @@ class ReferenceManager {
     const REFERENCE_NATURE_NEWS = 'news';
     const REFERENCE_NATURE_WIKIPAGE = 'wiki_page';
     const REFERENCE_NATURE_OTHER = 'other';
-    
+
     /**
      * Not possible to give extra params to the call back function (_insertRefCallback in this case)
      * so we use an class attribute to pass the value of the group_id
      */
     var $tmpGroupIdForCallbackFunction = null;
 
-   
+
     public function __construct() {
         $this->eventManager = EventManager::instance();
         $this->loadExtraFormats();
@@ -145,10 +145,10 @@ class ReferenceManager {
             self::REFERENCE_NATURE_NEWS => array('keyword' => 'news', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_NEWS.'_nature_key')),
             self::REFERENCE_NATURE_WIKIPAGE => array('keyword' => 'wiki', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_WIKIPAGE.'_nature_key')),
         );
-    
+
         $plugins_natures = array();
         $this->eventManager->processEvent('get_available_reference_natures', array('natures' => &$plugins_natures));
-        
+
         $natures = array_merge($core_natures, $plugins_natures);
         $natures[self::REFERENCE_NATURE_OTHER] = array('keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_OTHER.'_nature_key'));
         return $natures;
@@ -172,7 +172,7 @@ class ReferenceManager {
 
     /**
      * Create a reference
-     * 
+     *
      * First, check that keyword is valid, except if $force is true
      */
     function createReference(&$ref,$force=false) {
@@ -269,7 +269,7 @@ class ReferenceManager {
         $rgid = $reference_dao->update_ref_group($ref->getId(),
                                                  $ref->isActive(),
                                                  $ref->getGroupId());
-        
+
         return $rgid;
     }
 
@@ -470,10 +470,10 @@ class ReferenceManager {
         $ref->setGroupId($this->getGroupIdFromArtifactId($group_id));
         $ref->setLink("/tracker/?func=detail&aid=$val&group_id=$group_id");
     }
-    
+
     /**
      * the regexp used to find a reference
-     * @return $exp the string which may the regexp 
+     * @return $exp the string which may the regexp
      */
     function _getExpForRef() {
         $exp = "`
@@ -541,9 +541,9 @@ class ReferenceManager {
 
     /**
      * insert html links in text
-     * @param $html the string which may contain invalid 
+     * @param $html the string which may contain invalid
      */
-    function insertReferences(&$html,$group_id) {
+    function insertReferences(&$html, $group_id) {
         $this->tmpGroupIdForCallbackFunction = $group_id;
         $locale = setlocale(LC_CTYPE, null);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
@@ -608,7 +608,7 @@ class ReferenceManager {
     }
 
     /**
-     * Extract all possible references from input text 
+     * Extract all possible references from input text
      *
      * @param input text $html
      * @return array of matches
@@ -689,7 +689,7 @@ class ReferenceManager {
         $this->tmpGroupIdForCallbackFunction = null;
         return $referencesInstances;
     }
-    
+
     /**
      * TODO : adapt it to the new tracker structure when ready
      */
@@ -713,17 +713,17 @@ class ReferenceManager {
             return null;
         }
     }
-    
+
     /**
      * Extract References from a given text and insert extracted refs into the database
      *
      * @param String  $html        Text to parse
      * @param Integer $source_id   Id of the item where the text was added
-     * @param String  $source_type Nature of the source 
+     * @param String  $source_type Nature of the source
      * @param Integer $source_gid  Project Id of the project the source item belongs to
      * @param Integer $user_id     User who owns the text to parse
      * @param String  $source_key  Keyword to use for the reference (if different from the one associated to the nature)
-     * 
+     *
      * @retrun Boolean True if no error
      */
     public function extractCrossRef($html, $source_id, $source_type, $source_gid, $user_id = 0, $source_key = null)
@@ -743,7 +743,7 @@ class ReferenceManager {
                 $source_key = $available_natures[$source_type]['keyword'];
             }
         }
-        
+
         $matches = $this->_extractAllMatches($html);
 
         foreach ($matches as $match) {
@@ -751,8 +751,21 @@ class ReferenceManager {
             $value = $match['value'];
 
             $reference = $this->getReferenceFromMatch($match);
-
             if ($reference) {
+                $ref_instance = new ReferenceInstance($match, $reference, $value);
+                $ref_instance->computeGotoLink($source_key, $source_id, $source_gid);
+                $params = array(
+                    'source_id'         => $source_id,
+                    'target_keyword'    => $reference->getKeyword(),
+                    'target_id'         => $value,
+                    'source_link'       => $ref_instance,
+                    'source_keyword'    => $source_key,
+                );
+
+                EventManager::instance()->processEvent(
+                    Event::POST_REFERENCE_EXTRACTED,
+                    $params
+                );
 
                 //Cross reference
 
@@ -764,21 +777,23 @@ class ReferenceManager {
                     $target_key  = $key;
                     $target_gid  = $reference->getGroupId();
 
-                    if (! $user_id){
+                    if (! $user_id) {
                         $user_id = user_getid();
                     }
 
-                    $this->insertCrossReference(new CrossReference(
-                        $source_id,
-                        $source_gid,
-                        $source_type,
-                        $source_key,
-                        $target_id,
-                        $target_gid,
-                        $target_type,
-                        $target_key,
-                        $user_id
-                    ));
+                    $this->insertCrossReference(
+                        new CrossReference(
+                            $source_id,
+                            $source_gid,
+                            $source_type,
+                            $source_key,
+                            $target_id,
+                            $target_gid,
+                            $target_type,
+                            $target_key,
+                            $user_id
+                        )
+                    );
                 }
             }
         }
@@ -840,7 +855,7 @@ class ReferenceManager {
 
     /**
      * Return the group_id of an artifact_id
-     * 
+     *
      * @param Integer $artifact_id
      *
      * @return Integer
@@ -997,7 +1012,7 @@ class ReferenceManager {
         if ($ref) {
             $refInstance= new ReferenceInstance($key ." #". $match['project_name'] . $value, $ref, $value);
             $refInstance->computeGotoLink($key, $value, $ref->getGroupId());
-          
+
         }
         return $refInstance;
     }
@@ -1048,7 +1063,7 @@ class ReferenceManager {
 
     /**
      */
-    function _initProjectReferences($group_id) {   
+    function _initProjectReferences($group_id) {
         if (!isset($this->activeReferencesByProject[$group_id])) {
             $p = array();
             $reference_dao = $this->_getReferenceDao();
@@ -1090,7 +1105,7 @@ class ReferenceManager {
             return false;
         else return true;
         }
-    
+
     function _isKeywordExists($keyword, $group_id) {
         $reference_dao = $this->_getReferenceDao();
         $dar=$reference_dao->searchByKeywordAndGroupId($keyword,$group_id);
@@ -1098,15 +1113,15 @@ class ReferenceManager {
             return true;
         }
     }
-    
-    public function checkKeyword($keyword) {            
+
+    public function checkKeyword($keyword) {
             // Check that there is no system reference with the same keyword
             if ($this->getReferenceValidator()->isSystemKeyword($keyword)) return false;
-            // Check list of reserved keywords 
+            // Check list of reserved keywords
             if ($this->getReferenceValidator()->isReservedKeyword($keyword)) return false;
             return true;
     }
-    
+
     function _keywordAndNumArgsExists($keyword,$num_args,$group_id) {
         $reference_dao = $this->_getReferenceDao();
         $dar=$reference_dao->searchByKeywordAndGroupId($keyword,$group_id);

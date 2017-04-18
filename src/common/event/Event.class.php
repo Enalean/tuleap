@@ -1359,4 +1359,16 @@ class Event {
      *  - warnings           => (out) string[] (html snippets)
      */
     const GET_SITEADMIN_WARNINGS = 'get_siteadmin_warnings';
+
+    /**
+     * Event raised to extract references that are defined in plugins
+     *
+     * Parameters:
+     *  - source_id         => int (IN)
+     *  - target_keyword    => string (IN)
+     *  - target_id         => int (IN)
+     *  - source_link       => ReferenceInstance (IN)
+     *  - source_keyword    => string (IN)
+     */
+    const POST_REFERENCE_EXTRACTED = 'post_reference_extracted';
 }

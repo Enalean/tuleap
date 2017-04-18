@@ -22,9 +22,12 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Bugzilla\Administration\Controller;
 use Tuleap\Bugzilla\Administration\Router;
 use Tuleap\Bugzilla\Plugin\Info;
+use Tuleap\Bugzilla\BugzillaLogger;
+use Tuleap\Bugzilla\Reference\BugzillaReference;
 use Tuleap\Bugzilla\Reference\Dao;
 use Tuleap\Bugzilla\Reference\ReferenceRetriever;
 use Tuleap\Bugzilla\Reference\ReferenceSaver;
+use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 
@@ -43,6 +46,8 @@ class bugzilla_referencePlugin extends Plugin
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
+        $this->addHook(Event::POST_REFERENCE_EXTRACTED);
+        $this->addHook(Event::GET_REFERENCE);
     }
 
     /**
@@ -121,5 +126,31 @@ class bugzilla_referencePlugin extends Plugin
         $reference_retriever = new ReferenceRetriever(new Dao());
 
         return $reference_retriever;
+    }
+
+    public function post_reference_extracted(array $params)
+    {
+        $this->getRESTReferenceCreator()->create(
+            $params['source_link'],
+            $params['target_keyword'],
+            $params['source_id'],
+            $params['target_id'],
+            $params['source_keyword']
+        );
+    }
+
+    private function getRESTReferenceCreator()
+    {
+        return new RESTReferenceCreator($this->getReferenceRetriever(), new Http_Client(), new BugzillaLogger());
+    }
+
+    public function get_reference($params)
+    {
+        $reference = $this->getReferenceRetriever()->getReferenceByKeyword($params['keyword']);
+        if (! $reference) {
+            return;
+        }
+
+        $params['reference'] = new BugzillaReference($reference);
     }
 }
