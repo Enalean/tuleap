@@ -147,7 +147,7 @@ legend {
 }
 
 .dropdown-submenu.pull-left.glued > .dropdown-menu {
-    left: 0%;
+    left: 0;
     margin: 0;
     transform: translateX(-100%);
 }
@@ -244,4 +244,117 @@ legend {
 
 .tab-content {
     padding: 20px 30px;
+}
+
+
+/************
+ * BUTTONS
+ ************/
+
+@mixin btn($color) {
+    text-shadow: none;
+    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    border-color: $color;
+    background: $color;
+
+    &:not(.btn-link) {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .12);
+    }
+}
+
+@mixin btn-hover($color) {
+    border-color: darken($color, 5%);
+    background: darken($color, 5%);
+    box-shadow: none;
+    transition: box-shadow 75ms ease-in-out,background 75ms ease-in-out,border-color 75ms ease-in-out;
+}
+
+@mixin dropdown-menu($color) {
+    color: $color;
+}
+
+.btn-group {
+    .btn-primary + .dropdown-menu {
+        > li > * {
+            @include dropdown-menu($main);
+        }
+    }
+
+    > .dropdown-menu > li {
+        font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+
+        > * {
+            @include dropdown-menu(#747474);
+        }
+
+        &:hover,
+        > *:hover {
+            background: #f3f3f3;
+        }
+    }
+}
+
+.btn:not(.btn-link) {
+    @include btn(#e9e9e9);
+
+    &.btn-primary {
+        @include btn($main);
+    }
+
+    &.btn-danger {
+        @include btn($ui-color-danger);
+    }
+
+    &.btn-success {
+        @include btn($ui-color-success);
+    }
+
+    &.btn-warning {
+        @include btn($ui-color-warning);
+    }
+
+    &.btn-info {
+        @include btn($ui-color-info);
+    }
+
+    &:hover:not(:disabled):not(.disabled):not(:active),
+    &.active {
+        @include btn-hover(#e9e9e9);
+
+        &.btn-primary {
+            @include btn-hover($main);
+        }
+
+        &.btn-danger {
+            @include btn-hover($ui-color-danger);
+        }
+
+        &.btn-success {
+            @include btn-hover($ui-color-success);
+        }
+
+        &.btn-warning {
+            @include btn-hover($ui-color-warning);
+        }
+
+        &.btn-info {
+            @include btn-hover($ui-color-info);
+        }
+    }
+}
+
+.input-prepend,
+.input-append {
+    padding-left: 1px;
+    border-radius: 3px;
+    overflow: hidden;
+
+    > * {
+        font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    }
+
+    .btn {
+        // @bdauton approved this crappy thing
+        box-shadow: none !important;
+    }
 }
