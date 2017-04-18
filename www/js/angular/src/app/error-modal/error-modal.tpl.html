@@ -1,20 +1,18 @@
-<div class="error-modal">
-    <div class="modal-header">
-        <h3><i class="icon-frown"></i> <span translate>Oh snap!</span></h3>
-    </div>
+<div class="modal-header modal-header-error">
+    <h3><i class="icon-frown"></i> <span translate>Oh snap!</span></h3>
+</div>
 
-    <div class="modal-body">
-        <p translate>An error occured while doing one of your last actions.</p>
-        <p ng-show="! error_modal.details">
-            <button type="button" class="btn btn-small" ng-click="error_modal.details = true" translate>Show details</button>
-        </p>
-        <div ng-show="error_modal.details" class="details">
-            <h4 translate>Error details</h4>
-            <pre>{{ error_modal.message }}</pre>
-        </div>
+<div class="modal-body">
+    <p translate>An error occured while doing one of your last actions.</p>
+    <p ng-show="! error_modal.details">
+        <button type="button" class="btn btn-small" ng-click="error_modal.details = true" translate>Show details</button>
+    </p>
+    <div ng-show="error_modal.details" class="details">
+        <h4 translate>Error details</h4>
+        <pre>{{ error_modal.message }}</pre>
     </div>
+</div>
 
-    <div class="modal-footer">
-        <button class="btn btn-danger" ng-click="error_modal.ok()"><span translate>OK</span></button>
-    </div>
+<div class="modal-footer">
+    <button class="btn btn-danger" ng-click="error_modal.ok()"><span translate>OK</span></button>
 </div>
