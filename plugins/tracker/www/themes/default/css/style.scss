@@ -101,9 +101,12 @@ div.tracker-cant-delete {
     }
 }
 
-.tracker-form-element-artifactlink-list-nav-label {
-    color: #BBB;
-    padding: 8px 12px;
+body .nav-tabs > li.tracker-form-element-artifactlink-list-nav-label,
+body .nav-tabs > li.tracker-form-element-artifactlink-list-nav-label:hover {
+    padding: 10px 20px 10px 0;
+    border: 2px solid transparent;
+    box-shadow: none;
+    color: #747474;
 }
 
 h5.artifack_link_subtitle {
