@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDontExistInPlateformException;
+use Tuleap\Project\XML\Import\ImportNotValidException;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -238,7 +238,7 @@ try {
         } else {
             $xml_importer->importFromArchive($configuration, $project_id, $archive);
         }
-    } catch (NatureDontExistInPlateformException $exception) {
+    } catch (ImportNotValidException $exception) {
         $broker_log->error("Some natures used in trackers are not created on plateform.");
     }
 
