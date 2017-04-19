@@ -103,7 +103,6 @@ ${POT_FILE}: ../lib/Google.php
 ${POT_FILE}: ../lib/HtmlElement.php
 ${POT_FILE}: ../lib/HtmlParser.php
 ${POT_FILE}: ../lib/HttpClient.php
-${POT_FILE}: ../lib/imagecache.php
 ${POT_FILE}: ../lib/IniConfig.php
 ${POT_FILE}: ../lib/InlineParser.php
 ${POT_FILE}: ../lib/install.php

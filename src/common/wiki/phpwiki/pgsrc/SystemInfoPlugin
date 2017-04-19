@@ -13,7 +13,7 @@ The SystemInfoPlugin provides access to lower level system information for the p
 
 <verbatim>
  Usage:  <?plugin SystemInfo all ?>
-      or <?plugin SystemInfo pagestats cachestats discspace hitstats ?>
+      or <?plugin SystemInfo pagestats cachestats hitstats ?>
       or <?plugin SystemInfo version ?>
       or <?plugin SystemInfo current_theme ?>
       or <?plugin SystemInfo PHPWIKI_DIR ?>

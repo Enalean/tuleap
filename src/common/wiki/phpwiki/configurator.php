@@ -1673,38 +1673,15 @@ Part Seven A:
 Cached Plugin Settings. (pear Cache)
 ");
 
-$properties["pear Cache USECACHE"] =
-new boolean_define_optional('PLUGIN_CACHED_USECACHE', 
-                    array('true'  => 'Enabled',
-			  'false' => 'Disabled'), "
-Enable or disable pear caching of plugins.");
-$properties["pear Cache Database Container"] =
-new _define_selection_optional('PLUGIN_CACHED_DATABASE', 
-                               array('file' => 'file'), "
-Curently only file is supported. 
-db, trifile and imgfile might be supported, but you must hack that by yourself.");
-
 $properties["pear Cache cache directory"] =
 new _define_commented_optional('PLUGIN_CACHED_CACHE_DIR', "/tmp/cache", "
 Should be writable to the webserver.");
 $properties["pear Cache Filename Prefix"] =
 new _define_optional('PLUGIN_CACHED_FILENAME_PREFIX', "phpwiki", "");
-$properties["pear Cache HIGHWATER"] =
-new numeric_define_optional('PLUGIN_CACHED_HIGHWATER', "4194304", "
-Garbage collection parameter.");
 $properties["pear Cache LOWWATER"] =
-new numeric_define_optional('PLUGIN_CACHED_LOWWATER', "3145728", "
-Garbage collection parameter.");
-$properties["pear Cache MAXLIFETIME"] =
-new numeric_define_optional('PLUGIN_CACHED_MAXLIFETIME', "2592000", "
-Garbage collection parameter.");
 $properties["pear Cache MAXARGLEN"] =
 new numeric_define_optional('PLUGIN_CACHED_MAXARGLEN', "1000", "
 max. generated url length.");
-$properties["pear Cache FORCE_SYNCMAP"] =
-new boolean_define_optional('PLUGIN_CACHED_FORCE_SYNCMAP', 
-                    array('true'  => 'Enabled',
-			  'false' => 'Disabled'), "");
 $properties["pear Cache IMGTYPES"] =
 new list_define('PLUGIN_CACHED_IMGTYPES', "png|gif|gd|gd2|jpeg|wbmp|xbm|xpm", "
 Handle those image types via GD handles. Check your GD supported image types.");
