@@ -24,6 +24,7 @@ use ReferenceDao;
 
 class ReferenceValidator
 {
+    const REFERENCE_PATTERN = "^[a-z0-9_]+$";
     /**
      * @var ReferenceDao
      */
@@ -41,7 +42,7 @@ class ReferenceValidator
 
     public function isValidKeyword($keyword)
     {
-        return preg_match('/^[a-z0-9_]+$/', $keyword);
+        return preg_match('/' . self::REFERENCE_PATTERN . '/', $keyword);
     }
 
     public function isReservedKeyword($keyword)

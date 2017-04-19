@@ -40,6 +40,9 @@ msgstr "Référence"
 msgid "Keyword is invalid"
 msgstr "La référence est invalide"
 
+msgid "Keyword must contain only alphanumeric and underscore characters"
+msgstr "La référence peut contenir uniquement des caractères alphanumériques et des underscores"
+
 msgid "Missing fields for creating reference"
 msgstr "Il manque des champs pour pouvoir créer la référence"
 

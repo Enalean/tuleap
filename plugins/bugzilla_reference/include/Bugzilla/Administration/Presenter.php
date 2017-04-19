@@ -21,6 +21,7 @@
 namespace Tuleap\Bugzilla\Administration;
 
 use Codendi_HTMLPurifier;
+use Tuleap\reference\ReferenceValidator;
 
 class Presenter
 {
@@ -42,12 +43,13 @@ class Presenter
     public $bugzilla_title_edit;
     public $bugzilla_add;
     public $bugzilla_edit;
+    public $reference_pattern;
+    public $allowed_reference_description;
 
     /**
      * @var array
      */
     public $presenters;
-
     /**
      * @var \CSRFSynchronizerToken
      */
@@ -55,9 +57,10 @@ class Presenter
 
     public function __construct(array $presenters, \CSRFSynchronizerToken $csrf_token)
     {
-        $this->presenters     = $presenters;
-        $this->has_references = count($presenters) > 0;
-        $this->csrf_token     = $csrf_token;
+        $this->presenters        = $presenters;
+        $this->has_references    = count($presenters) > 0;
+        $this->csrf_token        = $csrf_token;
+        $this->reference_pattern = ReferenceValidator::REFERENCE_PATTERN;
 
         $this->bugzilla_title                 = dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration');
         $this->bugzilla_title_edit            = dgettext('tuleap-bugzilla_reference', 'Edit Bugzilla configuration');
@@ -72,6 +75,10 @@ class Presenter
         $this->cancel                         = dgettext('tuleap-bugzilla_reference', 'Cancel');
         $this->delete                         = dgettext('tuleap-bugzilla_reference', 'Delete');
         $this->edit                           = dgettext('tuleap-bugzilla_reference', 'Edit');
+        $this->allowed_reference_description  = dgettext(
+            'tuleap-bugzilla_reference',
+            'Keyword must contain only alphanumeric and underscore characters'
+        );
         $this->are_followup_private           = dgettext(
             'bugzilla_reference',
             'Comments added in Bugzilla will be flaged as private'
