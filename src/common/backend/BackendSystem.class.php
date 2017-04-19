@@ -272,7 +272,7 @@ class BackendSystem extends Backend {
                 if (is_file($dest_homepage)) {
                     $this->chown($dest_homepage, "dummy");
                     $this->chgrp($dest_homepage, $unix_group_name);
-                    chmod($dest_homepage,0644);
+                    chmod($dest_homepage,0664);
                 }
 
             } else {
