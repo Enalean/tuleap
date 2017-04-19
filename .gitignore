@@ -1,2 +1,4 @@
 *.css
 nbproject
+.sass-cache
+node_modules
