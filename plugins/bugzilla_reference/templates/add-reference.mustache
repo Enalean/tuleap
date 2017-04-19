@@ -20,7 +20,15 @@
 
         <div class="tlp-form-element">
             <label class="tlp-label" for="keyword">{{ keyword }} <i class="fa fa-asterisk"></i></label>
-            <input type="text" class="tlp-input" id="keyword" name="keyword" placeholder="bz" required>
+            <input type="text"
+                   class="tlp-input"
+                   id="keyword"
+                   name="keyword"
+                   placeholder="bz"
+                   required
+                   pattern="{{ reference_pattern }}"
+                   title="{{ allowed_reference_description }}"
+            >
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label" for="server">{{ server }} <i class="fa fa-asterisk"></i></label>

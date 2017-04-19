@@ -37,6 +37,9 @@ msgstr ""
 msgid "Keyword is invalid"
 msgstr ""
 
+msgid "Keyword must contain only alphanumeric and underscore characters"
+msgstr ""
+
 msgid "Missing fields for creating reference"
 msgstr ""
 
