@@ -204,9 +204,7 @@ h5.artifack_link_subtitle {
 .tracker-report-query {
     position: relative;
     padding: 10px 16px 16px;
-    border: 1px solid #cecece;
-    border-right: 0;
-    border-left: 0;
+    border-top: 2px solid #B2B2B2;
     background: #fafafa;
 
     > h3 {
@@ -533,69 +531,70 @@ select.tracker-report-expert-allowed-fields {
 
 .tracker_report_table,
 #tracker_report_table {
-    & > thead > tr {
-        background: #E4E4E4;
+    .tracker_report_table,
+    #tracker_report_table {
+        > thead > tr > th,
+        > tbody > tr > td {
+            border-top: 1px solid #fcfcfc;
+            border-right: 1px solid #fcfcfc;
+            border-left: 1px solid #fcfcfc;
+        }
 
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-
-            & > table > tbody > tr > td {
-                background-color: #E4E4E4;
-                vertical-align: top;
-                padding: 0;
-                border: none;
-
-                & > a {
-                    text-decoration: none;
-                    color: #333;
-                    display: block;
-                }
-
-                &.tracker_report_table_column_grip {
-                    width: 14px;
-                    background-image: url(../images/drag.png);
-                    background-repeat: no-repeat;
-                    background-position: 0 5px;
-                    cursor: move;
-                }
-
-                &.tracker_report_table_column_caret {
-                    text-align: right;
-                    padding-left: 4px;
-                    padding-right: 4px;
-                }
-
-                &.tracker_report_table_column_nature_editor {
-                    > a {
-                        display: block;
-                        position: relative;
-                        padding: 0 4px 4px;
-                        z-index: 10;
-                        opacity: 0.2;
-                        transition: opacity 100ms;
-                        text-align: right;
-
-                        &:hover {
-                            opacity: 1;
-                        }
-                    }
-                }
-
-                &.tracker_report_table_column_title .additional_column_title {
-                    font-weight: normal;
-                    font-size: 0.8em;
-                }
-            }
+        > tbody > tr:last-child > td {
+            border-bottom: 1px solid #fcfcfc;
         }
     }
 
-    & > tbody > tr:first-child > td {
-        border-top: none;
+    > thead > tr > th.drop-over {
+        background: #fcfcfc;
     }
 
-    & .non-displayable {
+    > thead > tr > th > table > tbody > tr > td {
+        padding: 0;
+        border: none;
+
+        & > a {
+            text-decoration: none;
+            display: block;
+        }
+
+        &.tracker_report_table_column_grip {
+            width: 14px;
+            background-image: url(../images/drag.png);
+            background-repeat: no-repeat;
+            background-position: 0 5px;
+            cursor: move;
+        }
+
+        &.tracker_report_table_column_caret {
+            text-align: right;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        &.tracker_report_table_column_nature_editor {
+            > a {
+                display: block;
+                position: relative;
+                padding: 0 4px 4px;
+                z-index: 10;
+                opacity: 0.2;
+                transition: opacity 100ms;
+                text-align: right;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &.tracker_report_table_column_title .additional_column_title {
+            font-weight: normal;
+            font-size: 0.8em;
+        }
+    }
+
+    .non-displayable {
         font-style: italic;
         color: #AAA;
         font-size: 0.9em;
@@ -2782,19 +2781,17 @@ body.in_tracker_report .main .content {
     float: right;
 }
 
-.tracker_report_table_aggregates > td {
+#tracker_report_table > tbody > tr.tracker_report_table_aggregates > td,
+.tracker_report_table > tbody > tr.tracker_report_table_aggregates > td {
     background: #FFFFFF !important;
-    border-top: 2px solid #B2B2B2;
-    border-left-color: #E5E5E5 !important;
-    padding: 0;
+    vertical-align: top !important;
+    padding: 0 !important;
 
     > table {
         width: 100%;
 
         > thead > tr > th {
             background: #EEEEEE;
-            border-left: 1px solid #E5E5E5;
-            border-bottom: 1px solid #E5E5E5;
             padding: 0 8px;
             font-weight: normal;
             height: 24px;
@@ -3249,16 +3246,6 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     table {
         max-width: 960px;
 
-        > thead > tr {
-            background: #E4E4E4;
-
-            > th {
-                vertical-align: top;
-                border-bottom: 2px solid #B2B2B2;
-                border-left-color: #D2D2D2;
-            }
-        }
-
         td {
             width: 30%;
             white-space: nowrap;
@@ -3340,20 +3327,6 @@ select[name='add_notempty_condition[]'] {
 
 .tracker-deprecated-fields {
     max-width: 960px;
-
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
 }
 
 .card-details .autocomputed_override {
@@ -3459,27 +3432,6 @@ select[name='add_notempty_condition[]'] {
 #global_notifs {
     max-width: 1200px;
     margin-bottom: 15px;
-
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
-
-    & > tbody > tr.empty-table > td {
-        padding: 50px;
-        font-size: 12px;
-        color: #AAAAAA;
-        text-align: center;
-    }
 }
 
 .table-bordered > tbody > tr > td.tracker-notification-mail-list-add-in-empty-table {

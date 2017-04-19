@@ -473,3 +473,89 @@ legend {
 .tuleap-artifact-modal .modal-body fieldset {
     margin: 0 0 20px;
 }
+
+/**
+ * Table
+ */
+%tlp-table-th {
+    padding: 10px;
+    background: #ffffff;
+    color: $main;
+    font-weight: 600;
+
+    > a {
+        color: $main;
+        text-decoration: none;
+    }
+}
+
+.table {
+    > thead > tr > th {
+        @extend %tlp-table-th;
+
+        border-bottom: 2px solid $main;
+    }
+
+    > tfoot > tr > th {
+        @extend %tlp-table-th;
+
+        border-top: 2px solid $main;
+    }
+
+    > tbody {
+        + tbody {
+            border-top: 0;
+        }
+
+        > tr:nth-child(even) > td {
+            background: #fcfcfc;
+        }
+
+        > tr:nth-child(odd) > td {
+            background: #ffffff;
+        }
+
+        > tr:hover > td {
+            background: transparentize($main, .93);
+        }
+
+        > tr > td {
+            padding: 10px;
+            border-bottom: 1px solid #e3e5ed;
+            line-height: normal;
+            vertical-align: middle;
+
+            &.table-cell-section {
+                padding: 5px 10px;
+                background: $main-background;
+                color: $main;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: .3px;
+                text-transform: uppercase;
+            }
+
+            &.table-cell-empty {
+                height: 100px;
+                background: #fcfcfc;
+                color: transparentize($main, .7);
+                font-style: italic;
+                text-align: center;
+                vertical-align: middle;
+            }
+        }
+
+        > tr:first-child > td {
+            border-top: 0;
+        }
+
+        > tr:last-child > td {
+            border: 0;
+        }
+    }
+
+    > thead > tr > th a,
+    > tbody > tr > td a {
+        text-decoration: none;
+    }
+}

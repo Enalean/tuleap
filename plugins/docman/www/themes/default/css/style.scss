@@ -493,40 +493,11 @@ a img {
 .plugin-docman-notifications-list {
     max-width: 960px;
     margin-bottom: 15px;
-
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
-
-    > tbody > tr {
-        &.empty-table > td {
-            padding: 50px;
-            color: #AAAAAA;
-            text-align: center;
-            font-size: 12px;
-        }
-    }
 }
 
 .plugin-docman-notifications-list-document,
 .plugin-docman-notifications-list-user {
     width: 50%;
-}
-
-td.docman-notification-user {
-    vertical-align: middle;
-    padding-left: 37px;
-    position: relative;
 }
 
 .docman-notification-email-list-group-icon {
@@ -536,15 +507,12 @@ td.docman-notification-user {
 
 .avatar.docman-notification-user-avatar {
     display: inline-block;
-    position: absolute;
-    top: 7px;
-    left: 8px;
+    position: relative;
+    top: -2px;
     width: 22px;
     height: 22px;
-}
-
-.table-bordered > tbody > tr > td.docman-notification-add-in-empty-table {
-    border-left: 0;
+    margin: 0 2px 0 0;
+    vertical-align: middle;
 }
 
 .docman-notification-add-cascade {

@@ -1,11 +1,6 @@
 @import '../../default/css/style';
 
 @mixin definitions($main) {
-    #svn-homepage table > thead > tr > th,
-    #svn-administration #notifications table > thead > tr > th {
-        border-bottom-color: $main;
-    }
-
     &.viewvc-epel {
         #svn-repository #svn-repository-viewvc {
             border-top-color: $main;

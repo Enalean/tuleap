@@ -51,8 +51,9 @@
             </thead>
             <tbody>
             {{^ has_branches_permissions }}
-                <tr class="empty-table">
-                    <td {{^ is_fork }}colspan="4"{{/ is_fork }}
+                <tr>
+                    <td class="table-cell-empty"
+                        {{^ is_fork }}colspan="4"{{/ is_fork }}
                         {{# is_fork }}colspan="3"{{/ is_fork }}
                     >{{ empty }}</td>
                 </tr>
@@ -120,8 +121,9 @@
             </thead>
             <tbody>
             {{^ has_tags_permissions }}
-                <tr class="empty-table">
-                    <td {{^ is_fork }}colspan="4"{{/ is_fork }}
+                <tr>
+                    <td class="table-cell-empty"
+                        {{^ is_fork }}colspan="4"{{/ is_fork }}
                         {{# is_fork }}colspan="3"{{/ is_fork }}
                     >{{ empty }}</td>
                 </tr>

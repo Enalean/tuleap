@@ -509,16 +509,6 @@ body.agiledashboard_homepage .main .content {
     border-bottom: 1px solid #dddddd;
 }
 
-.empty-table-placeholder > td {
-    text-align: center;
-    font-style: italic;
-    cursor: default;
-}
-
-.empty-table-placeholder {
-    display: none;
-}
-
 .agiledashboard h2.dropdown-toggle {
     display: inline-block;
     cursor: pointer;
@@ -591,20 +581,6 @@ body.agiledashboard_homepage .main .content {
         }
 
         .plannings {
-            & > thead > tr {
-                background: #E4E4E4;
-
-                & > th {
-                    vertical-align: top;
-                    border-left-color: #D2D2D2;
-                    border-bottom: 2px solid #B2B2B2;
-                }
-            }
-
-            & > tbody > tr:first-child > td {
-                border-top: none;
-            }
-
             td:first-child {
                 width: 100%;
             }
