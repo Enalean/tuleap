@@ -262,7 +262,7 @@ class hudsonViews extends Views {
             $project_manager = ProjectManager::instance();
             $project = $project_manager->getProject($group_id);
 
-            echo '<table id="jobs_table" class="table table-bordered table-striped">';
+            echo '<table id="jobs_table" class="table">';
             echo ' <thead><tr>';
             echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_job')).'</th>';
             echo '  <th>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess')).'</th>';

@@ -2708,7 +2708,7 @@ EOS;
                         //body
                         if (count($lines) > 1) {
                             $html_table = '';
-                            $html_table .= '<table class="table table-bordered table-striped csv-import-preview">';
+                            $html_table .= '<table class="table csv-import-preview">';
                             $html_table .=  '<thead>';
                             $header = array_shift($lines);
                             $html_table .=  '<tr class="boxtable">';

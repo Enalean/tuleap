@@ -30,7 +30,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
 
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
-    
+
     /**
      * Constructor
      *
@@ -41,7 +41,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         $this->lastPushes  = $lastPushes;
         $this->url_manager = $url_manager;
     }
-    
+
     /**
      * Get the main wrapper of the whole representation
      *
@@ -52,7 +52,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     protected function getMainWrapper($inner) {
         return '<tr>'. $inner .'</tr>';
     }
-    
+
     /**
      * Get Item wrapper
      *
@@ -64,7 +64,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     protected function getItemWrapper(GitRepository $repo, $inner) {
         return '<td>'. $inner .'</td>';
     }
-    
+
     /**
      * Obtain the tree of git repositories for a user
      *
@@ -84,7 +84,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         }
         return $tree;
     }
-    
+
     public function insertInTree(&$tree, GitRepository $repository, array $path) {
         if (count($path)) {
             $head = array_shift($path);
@@ -95,7 +95,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
             }
         }
     }
-    
+
     /**
      * Display the list of repositories
      *
@@ -111,7 +111,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         }
         $tree = $this->getTree($repositories, $user);
         if (!empty($tree)) {
-            $html .= '<table id="git_repositories_list" class="table table-striped table-bordered">';
+            $html .= '<table id="git_repositories_list" class="table">';
 
             // header
             $html .= '<thead>';
@@ -132,7 +132,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         }
         return $html;
     }
-    
+
     protected function fetchRows($repositories, $depth) {
         $nodeHtml   = '';
         $leavesHtml = '';
@@ -145,13 +145,13 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         }
         return $nodeHtml.$leavesHtml;
     }
-    
+
     protected function fetchGitRepositoryRow(GitRepository $repository, $name, $depth) {
         $trclass     = 'boxitem';
 
         $label       = $repository->getBasenameHTMLLink($this->url_manager);
         $description = $repository->getDescription();
-        
+
         $lastPush    = '&nbsp;';
         if (isset($this->lastPushes[$repository->getId()])) {
             $row = $this->lastPushes[$repository->getId()];
@@ -159,7 +159,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
             $who = UserHelper::instance()->getLinkOnUserFromUserId($row['user_id']);
             $lastPush = $GLOBALS['Language']->getText('plugin_git', 'tree_view_by', array($lastPushDate, $who));
         }
-        
+
         return $this->fetchHTMLRow($trclass, $depth, $label, $description, $lastPush);
     }
 
@@ -171,7 +171,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         $html  = '';
         $html .= $this->fetchHTMLRow($trclass, $depth, $name, $description, $lastPush);
         $html .= $this->fetchRows($children, $depth + 1);
-        
+
         return $html;
     }
 
