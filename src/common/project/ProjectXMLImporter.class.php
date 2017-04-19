@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -90,8 +90,8 @@ class ProjectXMLImporter {
         $this->ugroup_duplicator       = $ugroup_duplicator;
         $this->frs_permissions_creator = $frs_permissions_creator;
 
-        $send_notifications        = false;
-        $can_auto_activate_project = true;
+        $send_notifications = false;
+        $force_activation   = true;
 
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
@@ -99,7 +99,7 @@ class ProjectXMLImporter {
             $this->ugroup_duplicator,
             $send_notifications,
             $frs_permissions_creator,
-            $can_auto_activate_project
+            $force_activation
         );
     }
 
@@ -133,8 +133,6 @@ class ProjectXMLImporter {
         $project = $this->createProject($xml_element, $event_runner, $is_template);
 
         $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
-
-        $this->project_manager->activateWithoutNotifications($project);
     }
 
     private function createProject(
