@@ -376,7 +376,7 @@ legend {
     color: $white;
 
     &.modal-header-error {
-        background: red;
+        background: $ui-color-danger;
     }
 
     i {
