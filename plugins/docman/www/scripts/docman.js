@@ -1,44 +1,6 @@
 if (!com) var com = {};
 if (!com.xerox) com.xerox = {};
 if (!com.xerox.codendi) com.xerox.codendi = {};
-/**
- * Debug function.
- * Just give a msg as arguments, 
- * and it will be displayed inside 
- * a textarea at the end of the page.
- * Other js loggers was a little bit
- * too heavy for a simple feature.
- */
-function xgs_debug(msg) {
-    d = $('debug_console');
-    if (!d) {
-        d = document.createElement('textarea');
-        d.rows = 50;
-        d.cols = 160;
-        d.id = 'debug_console';
-        document.body.appendChild(d);
-    }
-    now = new Date();
-    h = now.getHours();
-    m = now.getMinutes();
-    s = now.getSeconds();
-    ms = now.getMilliseconds();
-    d.value = '['+h+':'+m+':'+s+'.'+ms+']\t'+(msg || '')+'\n' + d.value;
-}
-
-if (!document.getElementsByClassNames) {
-    document.getElementsByClassNames = function(classNames, parentElement) {
-        var children = ($(parentElement) || document.body).getElementsByTagName('*');
-        return $A(children).inject([], function(elements, child) {
-            if (classNames.find(function (className) {
-                return child.className.match(new RegExp("(^|\\s)" + className + "(\\s|$)"));
-            })) {
-                elements.push(child);
-            }
-            return elements;
-        });
-    };
-}
 
 com.xerox.codendi.Docman = Class.create();
 Object.extend(com.xerox.codendi.Docman.prototype, {
@@ -405,7 +367,9 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     _expandCollapse:function (parent_element) {
         var docman_item_type_folder = new RegExp("(^|\\s)" + 'docman_item_type_folder' + "(\\s|$)");
         var item_ = new RegExp("^item_.*");
-        document.getElementsByClassNames(['docman_item_type_folder', 'docman_item_type_folder_open'], parent_element).each((function (element) {
+
+        var folders = parent_element.querySelectorAll('.docman_item_type_folder, .docman_item_type_folder_open');
+        [].forEach.call(folders, function (element) {
             Event.observe(element, 'click', (function (event) {
                 var element = Event.element(event).parentNode; //element == image, element.parentNode == link
                 //We search the first parent which has id == "item_%"
@@ -469,7 +433,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 Event.stop(event);
                 return false;
             }).bind(this));
-        }).bind(this));
+        }.bind(this));
     },
     //}}}
 
