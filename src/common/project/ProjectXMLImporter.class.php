@@ -22,7 +22,7 @@ require_once "account.php";
 
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDontExistInPlateformException;
+use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -123,7 +123,7 @@ class ProjectXMLImporter {
         );
 
         if ($params['error']) {
-            throw new NatureDontExistInPlateformException();
+            throw new ImportNotValidException();
         }
 
         if (!empty($project_name_override)) {
@@ -178,7 +178,7 @@ class ProjectXMLImporter {
         );
 
         if ($params['error']) {
-            throw new NatureDontExistInPlateformException();
+            throw new ImportNotValidException();
         }
 
         $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
