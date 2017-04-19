@@ -55,7 +55,7 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
             $title_arr = array();
             $title_arr[] = $GLOBALS['Language']->getText('project_admin_editugroup', 'permission');
             $title_arr[] = $GLOBALS['Language']->getText('project_admin_editugroup', 'resource_name');
-            $content .= '<table class="admin-permissions table table-bordered table-striped">';
+            $content .= '<table class="admin-permissions table">';
             $content .= '<thead><tr>';
             $content .= '<th>'. $GLOBALS['Language']->getText('project_admin_editugroup', 'permission') .'</th>';
             $content .= '<th>'. $GLOBALS['Language']->getText('project_admin_editugroup', 'resource_name') .'</th>';

@@ -10,7 +10,7 @@
 
 <div class="artifact-links" ng-repeat="link_nature in $ctrl.natures">
     <h2>{{ link_nature.label }}</h2>
-    <table class="table table-striped table-bordered">
+    <table class="table">
         <thead>
             <tr>
                 <th></th>
@@ -45,7 +45,7 @@
 
 <div class="artifact-links" ng-if="! $ctrl.loading_natures && $ctrl.natures.length === 0">
     <h2>Artifact Links</h2>
-    <table class="table table-striped table-bordered">
+    <table class="table">
         <thead>
             <tr>
                 <th></th>

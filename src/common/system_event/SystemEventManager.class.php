@@ -504,7 +504,7 @@ class SystemEventManager {
         $purifier = Codendi_HTMLPurifier::instance();
 
         $html  = '';
-        $html .= '<table class="table table-striped table-condensed">';
+        $html .= '<table class="table">';
         $html .= '<tbody>';
 
         $filter_status = array(
