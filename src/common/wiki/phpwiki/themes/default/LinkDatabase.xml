@@ -729,7 +729,6 @@
 <edge source="ReleaseNotes" target="ListPages" />
 <edge source="ReleaseNotes" target="PloticusPlugin" />
 <edge source="ReleaseNotes" target="OldTextFormattingRules" />
-<edge source="ReleaseNotes" target="SqlResult" />
 <edge source="ReleaseNotes" target="PageDump" />
 <edge source="ReleaseNotes" target="ExternalSearchPlugin" />
 <edge source="ReleaseNotes" target="PhpWiki" />
@@ -1003,8 +1002,6 @@
 <node name="PageTrailx2e.php"><label>PageTrail.php</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PageTrail.php"/></dataref></node>
 
 <node name="GooglePlugin"><label>GooglePlugin</label><dataref><ref xlink:href="http://reini/wiki/sidebar/GooglePlugin"/></dataref></node>
-
-<node name="SqlResult"><label>SqlResult</label><dataref><ref xlink:href="http://reini/wiki/sidebar/SqlResult"/></dataref></node>
 
 <node name="AuthorHistory"><label>AuthorHistory</label><dataref><ref xlink:href="http://reini/wiki/sidebar/AuthorHistory"/></dataref></node>
 

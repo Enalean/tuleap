@@ -1104,10 +1104,6 @@ $locale["Next"] =
    "Suivant";
 $locale["Next Month"] =
    "Mois suivant";
-$locale["No DSN alias for SqlResult.ini specified"] =
-   "Aucun alias DSN spécifié pour SqlResult.ini";
-$locale["No DSN for alias %s in SqlResult.ini found"] =
-   "Aucun alias DSN trouvé pour %s dans SqlResult.ini";
 $locale["No LDAP in this PHP version"] =
    "Pas de LDAP dans cette version de php";
 $locale["No changes found"] =
@@ -1658,8 +1654,6 @@ $locale["Sound Score"] =
    "Score de son";
 $locale["Spelling Score"] =
    "Score d'épellation";
-$locale["SqlResult"] =
-   "RésultatSql";
 $locale["Statistics about %s."] =
    "Statistiques sur %s.";
 $locale["Status:"] =
