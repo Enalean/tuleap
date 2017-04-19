@@ -299,6 +299,53 @@ class Tracker_FormElementFactory {
         return null;
     }
 
+    public function getNumericFieldByNameForUser(Tracker $tracker, PFUser $user, $name)
+    {
+        $field = $this->getNumericFieldByName($tracker, $name);
+        if (! $field) {
+            return null;
+        }
+
+        return $this->getUsedFieldByNameForUser(
+            $tracker->getId(),
+            $name,
+            $user
+        );
+    }
+
+    public function getNumericFieldByName(Tracker $tracker, $name)
+    {
+        return $this->getFieldByNameAndType($tracker, array('int', 'float', 'computed'), $name);
+    }
+
+    public function getDateFieldByNameForUser(Tracker $tracker, PFUser $user, $name)
+    {
+        $field = $this->getFieldByNameAndType($tracker, array('date'), $name);
+        if (! $field) {
+            return null;
+        }
+
+        return $this->getUsedFieldByNameForUser(
+            $tracker->getId(),
+            $name,
+            $user
+        );
+    }
+
+    private function getFieldByNameAndType(Tracker $tracker, array $accepted_type, $name)
+    {
+        $field = $tracker->hasFormElementWithNameAndType(
+            $name,
+            $accepted_type
+        );
+
+        if (! $field) {
+             return null;
+        }
+
+        return $this->getUsedFieldByName($tracker->getId(), $name);
+    }
+
     /**
      * @return null|\Tracker_FormElement_Field
      */

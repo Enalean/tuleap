@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use Logger;
 use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_BurndownException;
@@ -30,10 +31,15 @@ class BurndownConfigurationValueRetriever
      * @var BurndownConfigurationFieldRetriever
      */
     private $configuration_field_retriever;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
-    public function __construct(BurndownConfigurationFieldRetriever $configuration_field_retriever)
+    public function __construct(BurndownConfigurationFieldRetriever $configuration_field_retriever, Logger $logger)
     {
         $this->configuration_field_retriever = $configuration_field_retriever;
+        $this->logger                        = $logger;
     }
 
     /**
@@ -46,6 +52,8 @@ class BurndownConfigurationValueRetriever
         try {
             $field = $this->configuration_field_retriever->getCapacityField($artifact->getTracker());
         } catch (Tracker_FormElement_Field_BurndownException $e) {
+            $this->logger->info("Artifact " . $artifact->getId() . " no capacity retrieved");
+
             return null;
         }
 

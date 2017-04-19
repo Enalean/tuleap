@@ -261,7 +261,11 @@ class Planning_MilestoneFactory {
     }
 
     private function getTimestamp(PFUser $user, Tracker_Artifact $milestone_artifact, $field_name) {
-        $field = $this->formelement_factory->getUsedFieldByNameForUser($milestone_artifact->getTracker()->getId(), $field_name, $user);
+        $field = $this->formelement_factory->getDateFieldByNameForUser(
+            $milestone_artifact->getTracker(),
+            $user,
+            $field_name
+        );
 
         if (! $field) {
             return 0;

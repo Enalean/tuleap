@@ -88,11 +88,19 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
         $this->field_capacity         = mock('Tracker_FormElement_Field_Integer');
         $this->field_remaining_effort = mock('Tracker_FormElement_Field_Integer');
 
-        $this->configuration_retriever = new BurndownConfigurationFieldRetriever($this->form_element_field_factoy);
+        $this->configuration_retriever = new BurndownConfigurationFieldRetriever(
+            $this->form_element_field_factoy,
+            mock('Logger')
+        );
     }
 
     public function itThrowsAnExceptionWhenDurationFieldDoesNotExist()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'duration',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->artifact->getTracker()->getId(),
             'duration'
@@ -109,6 +117,11 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
 
     public function itThrowsAnExceptionWhenDurationFieldExistsButUserCannotReadIt()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'duration',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->artifact->getTracker()->getId(),
             'duration'
@@ -125,8 +138,32 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
         $this->configuration_retriever->getBurndownDurationField($this->artifact, $this->user);
     }
 
+    public function itThrowsAnExceptionWhenDurationFieldIsNotANumericField()
+    {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'duration',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
+        stub($this->field_duration)->userCanRead()->returns(false);
+
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning')
+            )
+        );
+
+        $this->configuration_retriever->getBurndownDurationField($this->artifact, $this->user);
+    }
+
     public function itReturnsDurationFieldWhenDurationFieldExistsAnUserCanReadIt()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'duration',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->artifact->getTracker()->getId(),
             'duration'
@@ -142,6 +179,11 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
 
     public function itThrowsAnExceptionWhenStartDateFieldDoesNotExist()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'start_date',
+            array('date')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->artifact->getTracker()->getId(),
             'start_date'
@@ -158,6 +200,11 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
 
     public function itThrowsAnExceptionWhenStartDateFieldExistsButUserCannotReadIt()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'start_date',
+            array('date')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->artifact->getTracker()->getId(),
             'start_date'
@@ -174,8 +221,29 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
         $this->configuration_retriever->getBurndownStartDateField($this->artifact, $this->user);
     }
 
-    public function itReturnsDurationFieldWhenStartDateFieldExistsAnUserCanReadIt()
+    public function itThrowsAnExceptionWhenStartDateFieldIsNotADateField()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'duration',
+            array('date')
+        )->returns(false);
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
+            )
+        );
+
+        $this->configuration_retriever->getBurndownDurationField($this->artifact, $this->user);
+    }
+
+    public function itReturnsStartDateFieldWhenStartDateFieldExistsAnUserCanReadIt()
+    {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'start_date',
+            array('date')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->artifact->getTracker()->getId(),
             'start_date'
@@ -191,6 +259,12 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
 
     public function itThrowsAnExceptionWhenCapacityFieldDoesNotExist()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'capacity',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->tracker->getId(),
             'capacity'
@@ -201,26 +275,58 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_capacity_warning')
             )
         );
+        stub($this->field_duration)->userCanRead()->returns(true);
 
-        $this->assertEqual($this->configuration_retriever->getCapacityField($this->tracker), null);
+        $this->assertEqual($this->configuration_retriever->getCapacityField($this->tracker, $this->user), null);
+    }
+
+    public function itThrowsAnExceptionWhenCapacityFieldIsNotANumericField()
+    {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'capacity',
+            array('int', 'float', 'computed')
+        )->returns(false);
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_capacity_warning')
+            )
+        );
+
+        $this->configuration_retriever->getBurndownDurationField($this->artifact, $this->user);
     }
 
     public function itReturnsCapacityFieldWhenFieldExist()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'capacity',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->tracker->getId(),
             'capacity'
         )->returns($this->field_capacity);
+        stub($this->field_capacity)->userCanRead()->returns(true);
 
-        $this->assertEqual($this->configuration_retriever->getCapacityField($this->tracker), $this->field_capacity);
+        $this->assertEqual(
+            $this->configuration_retriever->getCapacityField($this->tracker, $this->user),
+            $this->field_capacity
+        );
     }
 
     public function itReturnsNullWhenRemainingEffortFieldDoesNotExist()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'remaining_effort',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->tracker->getId(),
             'remaining_effort'
         )->returns(null);
+        stub($this->field_duration)->userCanRead()->returns(true);
 
         $this->assertEqual(
             $this->configuration_retriever->getBurndownRemainingEffortField($this->artifact, $this->user),
@@ -230,6 +336,11 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
 
     public function itReturnsNullWhenRemainingEffortFieldExistsAndUserCanNotReadIt()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'remaining_effort',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->tracker->getId(),
             'remaining_effort'
@@ -247,12 +358,34 @@ class BurndownConfigurationFieldRetriverTest extends TuleapTestCase
         );
     }
 
+    public function itThrowsAnExceptionWhenRemainingEffortFieldIsNotANumericField()
+    {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'remaining_effort',
+            array('int', 'float', 'computed')
+        )->returns(false);
+
+        $this->expectException(
+            new Tracker_FormElement_Field_BurndownException(
+                $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_remaining_effort_warning')
+            )
+        );
+
+        $this->configuration_retriever->getBurndownDurationField($this->artifact, $this->user);
+    }
+
     public function itReturnsFieldWhenRemainingEffortFieldExistsAndUserCanReadIt()
     {
+        stub($this->tracker)->hasFormElementWithNameAndType(
+            'remaining_effort',
+            array('int', 'float', 'computed')
+        )->returns(true);
+
         stub($this->form_element_field_factoy)->getUsedFieldByName(
             $this->tracker->getId(),
             'remaining_effort'
         )->returns($this->field_remaining_effort);
+        stub($this->field_remaining_effort)->userCanRead()->returns(true);
 
         stub($this->form_element_field_factoy)->getComputableFieldByNameForUser(
             $this->artifact->getTracker()->getId(),

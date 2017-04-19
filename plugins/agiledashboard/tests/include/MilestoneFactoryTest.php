@@ -203,6 +203,11 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
 
 abstract class MilestoneFactory_MilestoneAsComputedValues extends Planning_MilestoneFactory_GetMilestoneBaseTest {
 
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    protected $milestone_factory;
+
     public function setUp() {
         parent::setUp();
         $this->milestone_factory = partial_mock(
@@ -230,14 +235,19 @@ class MilestoneFactory_MilestoneComesWithStartDateTest extends MilestoneFactory_
         $this->assertEqual($this->getMilestoneStartDate(), null);
     }
 
-    public function itRetrievesMilestoneWithStartDateWithActualValue() {
+    public function itRetrievesMilestoneWithStartDateWithActualValue()
+    {
         $start_date          = '12/10/2013';
         $expected_start_date = strtotime($start_date);
 
         $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($expected_start_date);
         $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
 
-        stub($this->formelement_factory)->getUsedFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::START_DATE_FIELD_NAME, $this->user)->returns($start_date_field);
+        stub($this->formelement_factory)->getDateFieldByNameForUser(
+            $this->milestone_tracker,
+            $this->user,
+            Planning_Milestone::START_DATE_FIELD_NAME
+        )->returns($start_date_field);
 
         $this->setText('d M', false);
 
@@ -257,7 +267,8 @@ class MilestoneFactory_MilestoneComesWithEndDateTest extends MilestoneFactory_Mi
         $this->assertEqual($this->getMilestoneEndDate(), null);
     }
 
-    public function itRetrievesMilestoneWithEndDate() {
+    public function itRetrievesMilestoneWithEndDate()
+    {
         // Sprint 10 days, from `Monday, Jul 1, 2013` to `Monday, Jul 15, 2013`
         $duration          = 10;
         $start_date        = '07/01/2013';
@@ -267,8 +278,13 @@ class MilestoneFactory_MilestoneComesWithEndDateTest extends MilestoneFactory_Mi
         $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
         $duration_field       = stub('Tracker_FormElement_Field_Integer')->getComputedValue($this->user, $this->artifact)->returns($duration);
 
-        stub($this->formelement_factory)->getUsedFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::START_DATE_FIELD_NAME, $this->user)->returns($start_date_field);
+        stub($this->formelement_factory)->getDateFieldByNameForUser(
+            $this->milestone_tracker,
+            $this->user,
+            Planning_Milestone::START_DATE_FIELD_NAME
+        )->returns($start_date_field);
         stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::DURATION_FIELD_NAME, $this->user)->returns($duration_field);
+        stub($this->milestone_tracker)->hasFormElementWithNameAndType()->returns(true);
 
         $this->setText('d M', false);
 
@@ -692,7 +708,9 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $project = mock('Project');
         stub($project)->getID()->returns(3233);
 
-        $this->tracker = aTracker()->withId(12)->withName('tracker')->build();
+        $this->tracker = mock('Tracker');
+        stub($this->tracker)->getId()->returns(12);
+        stub($this->tracker)->getName()->returns('tracker');
 
         $this->user = mock('PFUser');
 
@@ -826,8 +844,6 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
     }
 
     public function __only__itReturnsNullWhenUserCannotSeeArtifacts() {
-
-        $planning_tracker = aTracker()->withId(12)->withProject(mock('Project'))->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker()->returns(aPlanning()->withId(4)->build());
 
         $artifact = aMockArtifact()->build();

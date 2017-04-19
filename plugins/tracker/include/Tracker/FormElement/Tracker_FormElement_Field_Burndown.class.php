@@ -922,11 +922,16 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function getBurdownConfigurationFieldRetriever()
     {
-        return new BurndownConfigurationFieldRetriever($this->getFormElementFactory());
+        return new BurndownConfigurationFieldRetriever($this->getFormElementFactory(), $this->getLogger());
     }
 
+    /**
+     * @return BurndownConfigurationValueRetriever
+     */
     private function getBurndownConfigurationValueRetriever()
     {
-        return new BurndownConfigurationValueRetriever($this->getBurdownConfigurationFieldRetriever());
+        return new BurndownConfigurationValueRetriever(
+            $this->getBurdownConfigurationFieldRetriever(), $this->getLogger()
+        );
     }
 }

@@ -25,6 +25,7 @@ use Tracker;
 use Tracker_Artifact;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_BurndownException;
+use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElementFactory;
 
 class BurndownConfigurationFieldRetriever
@@ -38,24 +39,30 @@ class BurndownConfigurationFieldRetriever
      * @var Tracker_FormElementFactory
      */
     private $form_element_field_factory;
+    /**
+     * @var \Logger
+     */
+    private $logger;
 
-    public function __construct(Tracker_FormElementFactory $form_element_field_factory)
+    public function __construct(Tracker_FormElementFactory $form_element_field_factory, \Logger $logger)
     {
         $this->form_element_field_factory = $form_element_field_factory;
+        $this->logger                     = $logger;
     }
 
     /**
-     * @throws Tracker_FormElement_Field_BurndownException
+     * @param Tracker $tracker
      * @return Tracker_FormElement_Field
      */
     public function getCapacityField(Tracker $tracker)
     {
-        $field = $this->form_element_field_factory->getUsedFieldByName(
-            $tracker->getId(),
+        $field = $this->form_element_field_factory->getNumericFieldByName(
+            $tracker,
             self::CAPACITY_FIELD_NAME
         );
 
         if (! $field) {
+            $this->logger->info("Tracker " . $tracker->getName() . " doesn't have a capacity field (or field is not properly set)");
             throw new Tracker_FormElement_Field_BurndownException(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_capacity_warning')
             );
@@ -65,15 +72,16 @@ class BurndownConfigurationFieldRetriever
     }
 
     /**
-     * @throws Tracker_FormElement_Field_BurndownException
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $user
      * @return Tracker_FormElement_Field
      */
     public function getBurndownDurationField(Tracker_Artifact $artifact, PFUser $user)
     {
-        $field = $this->form_element_field_factory->getUsedFieldByNameForUser(
-            $artifact->getTracker()->getId(),
-            self::DURATION_FIELD_NAME,
-            $user
+        $field = $this->form_element_field_factory->getNumericFieldByNameForUser(
+            $artifact->getTracker(),
+            $user,
+            self::DURATION_FIELD_NAME
         );
 
         if (! $field) {
@@ -86,41 +94,50 @@ class BurndownConfigurationFieldRetriever
     }
 
     /**
-     * @throws Tracker_FormElement_Field_BurndownException
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $user
+     * @return bool|Tracker_FormElement_Field
      */
     public function getBurndownStartDateField(Tracker_Artifact $artifact, PFUser $user)
     {
-        $start_date_field = $this->form_element_field_factory->getUsedFieldByNameForUser(
-            $artifact->getTracker()->getId(),
-            self::START_DATE_FIELD_NAME,
-            $user
+        $field = $this->form_element_field_factory->getDateFieldByNameForUser(
+            $artifact->getTracker(),
+            $user,
+            self::START_DATE_FIELD_NAME
         );
 
-        if (! $start_date_field) {
+        if (! $field) {
             throw new Tracker_FormElement_Field_BurndownException(
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning')
             );
         }
 
-        return $start_date_field;
+        return $field;
     }
 
+    /**
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $user
+     * @return bool|Tracker_FormElement_Field
+     */
     public function getBurndownRemainingEffortField(Tracker_Artifact $artifact, PFUser $user)
     {
-        return $this->form_element_field_factory->getComputableFieldByNameForUser(
-            $artifact->getTracker()->getId(),
-            self::REMAINING_EFFORT_FIELD_NAME,
-            $user
+        return $this->form_element_field_factory->getNumericFieldByNameForUser(
+            $artifact->getTracker(),
+            $user,
+            self::REMAINING_EFFORT_FIELD_NAME
         );
     }
 
     /**
+     * @param Tracker $tracker
      * @return bool
      */
     public function doesCapacityFieldExist(Tracker $tracker)
     {
         try {
             $this->getCapacityField($tracker);
+
             return true;
         } catch (Tracker_FormElement_Field_BurndownException $e) {
             return false;
