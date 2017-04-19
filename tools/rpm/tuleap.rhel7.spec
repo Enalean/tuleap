@@ -1,6 +1,6 @@
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
-%define APP_NAME codendiadm
+%define APP_NAME tuleap
 %define APP_USER codendiadm
 %define APP_HOME_DIR /home/%{APP_USER}
 %define APP_DIR %{_datadir}/%{APP_NAME}
