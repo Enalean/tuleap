@@ -1,3 +1,4 @@
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.

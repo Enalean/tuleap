@@ -611,7 +611,7 @@ class BackendSVN extends Backend {
      * @return boolean true on success or false on failure
      */
     public function generateSVNApacheConf() {
-        $svn_root_file = $GLOBALS['svn_root_file'];
+        $svn_root_file = ForgeConfig::get('svn_root_file');
         $svn_root_file_old = $svn_root_file.".old";
         $svn_root_file_new = $svn_root_file.".new";
         try {
