@@ -100,3 +100,33 @@ body {
     padding: 5px 0px 0.3em;
     background-color: #FFF;
 }
+
+.mw-editsection {
+    font-size: small;
+    font-weight: normal;
+    margin-left: 1em;
+}
+
+.mw-body .mw-content-ltr h1 {
+    font-size: 2em;
+}
+
+.mw-body .mw-content-ltr h2 {
+    font-size: 1.5em;
+}
+
+.mw-body .mw-content-ltr h3 {
+    font-size: 1.17em;
+}
+
+.mw-body .mw-content-ltr h4 {
+    font-size: 1.12em;
+}
+
+.mw-body .mw-content-ltr h5 {
+    font-size: .83em;
+}
+
+.mw-body .mw-content-ltr h6 {
+    font-size: .75em;
+}
