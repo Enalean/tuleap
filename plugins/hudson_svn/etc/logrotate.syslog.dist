@@ -1,0 +1,6 @@
+/var/log/tuleap/hudson_svn_syslog {
+    missingok
+    notifempty
+    compress
+    delaycompress
+}

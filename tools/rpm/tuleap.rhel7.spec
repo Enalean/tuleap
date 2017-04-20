@@ -588,6 +588,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 ## Plugin hudson_git
 #%{__install} plugins/hudson_git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_git
 #
+## Plugin hudson_svn
+#%{__install} plugins/hudson_svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_svn
+#
 ## Symlink for compatibility with older version
 #%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
 #%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
@@ -1045,6 +1048,8 @@ fi
 %files plugin-hudson-svn
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson_svn
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_svn
+#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_svn
 
 %files plugin-hudson-git
 %defattr(-,root,root,-)
