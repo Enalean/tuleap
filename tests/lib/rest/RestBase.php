@@ -146,13 +146,13 @@ class RestBase extends PHPUnit_Framework_TestCase {
             $projects          = $response->json();
             $number_of_project = (int) (string) $response->getHeader('X-Pagination-Size');
 
-            $this->addProjectIdFromDRequestData($projects);
+            $this->addProjectIdFromRequestData($projects);
 
             $offset += $limit;
         } while ($offset < $number_of_project);
     }
 
-    private function addProjectIdFromDRequestData(array $projects)
+    private function addProjectIdFromRequestData(array $projects)
     {
         foreach ($projects as $project) {
             $project_name = $project['shortname'];
@@ -176,22 +176,39 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     private function extractTrackersForProject($project_id)
     {
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("projects/$project_id/trackers")
+        $offset = 0;
+        $limit  = 50;
+        $query  = http_build_query(
+            array('limit' => $limit, 'offset' => $offset)
         );
 
-        $trackers    = $response->json();
         $tracker_ids = array();
 
+        do {
+            $response = $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->setup_client->get("projects/$project_id/trackers?$query")
+            );
+
+            $trackers          = $response->json();
+            $number_of_tracker = (int) (string) $response->getHeader('X-Pagination-Size');
+
+            $this->addTrackerIdFromRequestData($trackers, $tracker_ids);
+
+            $offset += $limit;
+        } while ($offset < $number_of_tracker);
+
+        $this->tracker_ids[$project_id] = $tracker_ids;
+    }
+
+    private function addTrackerIdFromRequestData(array $trackers, array &$tracker_ids)
+    {
         foreach ($trackers as $tracker) {
             $tracker_id        = $tracker['id'];
             $tracker_shortname = $tracker['item_name'];
 
             $tracker_ids[$tracker_shortname] = $tracker_id;
         }
-
-        $this->tracker_ids[$project_id] = $tracker_ids;
     }
 
     private function getTrackerIdsForProjectPrivateMember()
