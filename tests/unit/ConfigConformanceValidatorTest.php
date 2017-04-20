@@ -44,6 +44,7 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
     /** @var \Tracker_Artifact */
     private $definition_artifact;
 
+    private $user_id                      = 100;
     private $project_id                   = 101;
     private $campaign_tracker_id          = 444;
     private $execution_tracker_id         = 555;
@@ -92,29 +93,54 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
 
         $this->validator = new ConfigConformanceValidator($config);
 
-        $this->artifact_outside_of_project = anArtifact()
-            ->withTracker(
+        $this->user = aUser()->withId($this->user_id)->build();
+
+
+        $this->campaign_artifact = mock('Tracker_Artifact');
+        $this->definition_artifact = mock('Tracker_Artifact');
+        $this->execution_artifact = mock('Tracker_Artifact');
+        $this->another_execution_artifact = mock('Tracker_Artifact');
+        $this->artifact_outside_of_project = mock('Tracker_Artifact');
+
+        # Stub campaign methods
+        stub($this->campaign_artifact)
+            ->getTracker()
+            ->returns($campaign_tracker);
+        stub($this->campaign_artifact)
+            ->getLinkedArtifacts($this->user)
+            ->returns(array($this->execution_artifact));
+
+        # Stub definition methods
+        stub($this->definition_artifact)
+            ->getTracker()
+            ->returns($definition_tracker);
+
+        # Stub execution methods
+        stub($this->execution_artifact)
+            ->getTracker()
+            ->returns($execution_tracker);
+        stub($this->execution_artifact)
+            ->getLinkedArtifacts($this->user)
+            ->returns(array());
+
+        # Stub other execution methods
+        stub($this->another_execution_artifact)
+            ->getTracker()
+            ->returns($another_execution_tracker);
+        stub($this->another_execution_artifact)
+            ->getLinkedArtifacts($this->user)
+            ->returns(array($this->campaign_artifact));
+
+        # Stub execution out of project methods
+        stub($this->artifact_outside_of_project)
+            ->getTracker()
+            ->returns(
                 aTracker()
                     ->withId(111)
                     ->withProject($another_project)
                     ->build()
-            )->build();
+            );
 
-        $this->execution_artifact = anArtifact()
-            ->withTracker($execution_tracker)
-            ->build();
-
-        $this->another_execution_artifact = anArtifact()
-            ->withTracker($another_execution_tracker)
-            ->build();
-
-        $this->campaign_artifact = anArtifact()
-            ->withTracker($campaign_tracker)
-            ->build();
-
-        $this->definition_artifact = anArtifact()
-            ->withTracker($definition_tracker)
-            ->build();
     }
 
     public function itReturnsFalseWhenProjectHasNoCampaignTracker() {
@@ -135,10 +161,22 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsTrueWhenExecutionBelongsToCampaign() {
+    public function itReturnsTrueWhenCampaignIsLinkedToExecution() {
         $this->assertTrue(
             $this->validator->isArtifactAnExecutionOfCampaign(
+                $this->user,
                 $this->execution_artifact,
+                $this->campaign_artifact
+            )
+        );
+    }
+
+    public function itReturnsTrueWhenExecutionIsLinkedToCampaign()
+    {
+        $this->assertTrue(
+            $this->validator->isArtifactAnExecutionOfCampaign(
+                $this->user,
+                $this->another_execution_artifact,
                 $this->campaign_artifact
             )
         );
@@ -147,7 +185,8 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
     public function itReturnsFalseWhenExecutionDoesNotBelongsToCampaign() {
         $this->assertFalse(
             $this->validator->isArtifactAnExecutionOfCampaign(
-                $this->another_execution_artifact,
+                $this->user,
+                $this->artifact_outside_of_project,
                 $this->campaign_artifact
             )
         );

@@ -43,7 +43,11 @@ class NodeBuilderFactory {
     private $artifact_builder;
 
     public function __construct() {
+        $config = new Config(new Dao());
+
         $this->trafficlights_artifact_factory = new ArtifactFactory(
+            $config,
+            new ConfigConformanceValidator($config),
             Tracker_ArtifactFactory::instance(),
             new ArtifactDao()
         );

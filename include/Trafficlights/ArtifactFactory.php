@@ -23,9 +23,20 @@ namespace Tuleap\Trafficlights;
 use PFUser;
 use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactFactory;
+use Tracker_Artifact;
 
 class ArtifactFactory
 {
+
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var ConfigConformanceValidator
+     */
+    private $conformance_validator;
 
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
@@ -34,9 +45,13 @@ class ArtifactFactory
     private $dao;
 
     public function __construct(
+        Config $config,
+        ConfigConformanceValidator $conformance_validator,
         Tracker_ArtifactFactory $tracker_artifact_factory,
         ArtifactDao $dao
     ) {
+        $this->config                   = $config;
+        $this->conformance_validator    = $conformance_validator;
         $this->tracker_artifact_factory = $tracker_artifact_factory;
         $this->dao                      = $dao;
     }
@@ -90,5 +105,25 @@ class ArtifactFactory
     public function getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, $reverse_order)
     {
         return $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, $reverse_order);
+    }
+
+    /**
+     * @param PFUser            $user       The user for which we're retrieving the campaign
+     * @param Tracker_Artifact  $execution  The execution whose campaign we're retrieving
+     *
+     * @return Tracker_Artifact
+     */
+    public function getCampaignForExecution(PFUser $user, Tracker_Artifact $execution)
+    {
+        $campaign_tracker_id = $this->config->getCampaignTrackerId($execution->getTracker()->getProject());
+        $campaigns = $this->tracker_artifact_factory->getArtifactsByTrackerId($campaign_tracker_id);
+
+        foreach ($campaigns as $campaign) {
+            if ($this->conformance_validator->isArtifactAnExecutionOfCampaign($user, $execution, $campaign)) {
+                return $campaign;
+            }
+        }
+
+        return null;
     }
 }

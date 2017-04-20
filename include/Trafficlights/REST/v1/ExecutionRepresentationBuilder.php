@@ -165,7 +165,7 @@ class ExecutionRepresentationBuilder {
 
     private function removeArtifactsThatAreNotExecution(array &$artifacts, Tracker_Artifact $campaign_artifact) {
         foreach ($artifacts as $key => $child_artifact) {
-            if (! $this->conformance_validator->isArtifactAnExecutionOfCampaign($child_artifact, $campaign_artifact)) {
+            if (! $this->conformance_validator->isArtifactAnExecution($child_artifact)) {
                 unset($artifacts[$key]);
             }
         }
