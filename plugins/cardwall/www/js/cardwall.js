@@ -1,5 +1,5 @@
 /**
-  * Copyright (c) Enalean, 2013. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -237,27 +237,21 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
     },
 
     createAndInjectTemporaryContainer : function () {
-        var clickable     = this.getClickableArea(),
-            clickable_div = new Element( 'div' );
-
-        clickable_div.update( clickable );
-        this.element.update( clickable_div );
-
-        return clickable_div;
-    },
-
-    getClickableArea : function() {
         var autocompute_label = '';
 
         if (this.element.readAttribute('data-field-is-autocomputed') === '1') {
             autocompute_label = ' ('+ codendi.locales.cardwall.autocomputed_label +')';
         }
 
-        if( this.element.innerHTML == '' ) {
-            return ' - ' ;
+        if (this.element.innerHTML === '') {
+            this.element.textContent = ' - ';
         }
 
-        return this.element.innerHTML + autocompute_label;
+        this.element.textContent = this.element.textContent + autocompute_label;
+
+        this.element.wrap('div');
+
+        return this.element;
     },
 
     ajaxCallback : function() {
@@ -402,21 +396,12 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     createAndInjectTemporaryContainer : function () {
-        var clickable     = this.getClickableArea(),
-            clickable_div = new Element( 'div' );
-
-        clickable_div.update( clickable );
-        this.element.update( clickable_div );
-
-        return clickable_div;
-    },
-
-    getClickableArea : function() {
-        if( this.element.innerHTML == '' ) {
-            return ' - ' ;
+        if (this.element.innerHTML === '') {
+            this.element.textContent = ' - ';
         }
+        this.element.wrap('div');
 
-        return this.element.innerHTML;
+        return this.element;
     },
 
     getAvailableUsers : function() {
