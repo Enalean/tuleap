@@ -16,7 +16,7 @@
     "ngSocket": "~0.2.1",
     "angular-socket-io": "~0.6.0",
     "angular-ui-utils": "bower-unique",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#d459842d21e0ae2e06de0526def85bc769d1ea6a",
+    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#4956057b41d3dbc44835d2efb23412d123561df9",
     "angular-locker": "~2.0.3",
     "angular-jwt": "~0.0.9",
     "angular-animate-change": "~1.0.2",
