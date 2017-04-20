@@ -33,12 +33,14 @@
                             <i class="fa fa-pencil tlp-button-icon"></i>
                             {{ edit }}
                         </button>
-                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
-                                disabled>
+
+                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline bugzilla-delete-modal"
+                                data-delete-modal-id="delete-modal-{{ getId }}"
+                        >
                             <i class="fa fa-trash-o"></i> {{ delete }}
                         </button>
-
                         {{> edit-reference }}
+                        {{> delete-reference }}
                     </td>
                 </tr>
             {{/ presenters }}

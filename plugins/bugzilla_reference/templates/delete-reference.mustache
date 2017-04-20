@@ -1,0 +1,29 @@
+<form action="?action=delete-reference"
+      method="post"
+      id="delete-modal-{{ getId }}"
+      class="tlp-modal"
+      role="dialog"
+>
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="delete-bugzilla-reference-{{ getId }}">
+                <i class="fa fa-trash-o tlp-modal-title-icon"></i > {{ bugzilla_title_delete }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <input type="hidden" name="id" value="{{ getId }}">
+            {{ bugzilla_delete_confirmation }}
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel }}</button>
+            <button type="submit" class="tlp-button-danger tlp-modal-action">
+                <i class="fa fa-trash-o tlp-button-icon"></i> {{ bugzilla_delete }}
+            </button>
+        </div>
+    </div>
+</form>

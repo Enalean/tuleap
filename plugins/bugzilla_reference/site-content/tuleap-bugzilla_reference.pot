@@ -1,6 +1,9 @@
 msgid "Add reference"
 msgstr ""
 
+msgid "An error occured while removing reference"
+msgstr ""
+
 msgid "Bugzilla configuration"
 msgstr ""
 
@@ -17,6 +20,12 @@ msgid "Comments added in Bugzilla will be flaged as private"
 msgstr ""
 
 msgid "Delete"
+msgstr ""
+
+msgid "Delete Bugzilla configuration"
+msgstr ""
+
+msgid "Delete reference"
 msgstr ""
 
 msgid "Edit"
@@ -58,6 +67,9 @@ msgstr ""
 msgid "Reference has been successfully added"
 msgstr ""
 
+msgid "Reference has been successfully removed"
+msgstr ""
+
 msgid "Reference has been successfully updated"
 msgstr ""
 
@@ -78,4 +90,9 @@ msgid "There is nothing here, <br> start by adding a Bugzilla reference"
 msgstr ""
 
 msgid "Username"
+msgstr ""
+
+msgid ""
+"Wow, wait a minute. You are about to delete the reference. Please confirm "
+"your action."
 msgstr ""

@@ -64,8 +64,10 @@ class Presenter
 
         $this->bugzilla_title                 = dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration');
         $this->bugzilla_title_edit            = dgettext('tuleap-bugzilla_reference', 'Edit Bugzilla configuration');
+        $this->bugzilla_title_delete          = dgettext('tuleap-bugzilla_reference', 'Delete Bugzilla configuration');
         $this->bugzilla_add                   = dgettext('tuleap-bugzilla_reference', 'Add reference');
         $this->bugzilla_edit                  = dgettext('tuleap-bugzilla_reference', 'Edit reference');
+        $this->bugzilla_delete                = dgettext('tuleap-bugzilla_reference', 'Delete reference');
         $this->keyword                        = dgettext('tuleap-bugzilla_reference', 'Keyword');
         $this->server                         = dgettext('tuleap-bugzilla_reference', 'Server');
         $this->username                       = dgettext('tuleap-bugzilla_reference', 'Username');
@@ -82,6 +84,10 @@ class Presenter
         $this->are_followup_private           = dgettext(
             'bugzilla_reference',
             'Comments added in Bugzilla will be flaged as private'
+        );
+        $this->bugzilla_delete_confirmation   = dgettext(
+            'tuleap-bugzilla_reference',
+            "Wow, wait a minute. You are about to delete the reference. Please confirm your action."
         );
         $this->purified_no_bugzilla_reference = Codendi_HTMLPurifier::instance()->purify(
             dgettext(
