@@ -566,6 +566,10 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 #%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 #%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 #
+## Plugin bugzilla
+#%{__install} plugins/bugzilla_reference/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 #
 ## Symlink for compatibility with older version
 #%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
@@ -1087,6 +1091,7 @@ fi
 %files plugin-bugzilla-reference
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/bugzilla_reference
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 
 %files api-explorer
 %defattr(-,root,root,-)

@@ -660,6 +660,11 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 
+# Plugin bugzilla
+%{__install} plugins/bugzilla_reference/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+
 # Plugin im
 %{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
@@ -1240,6 +1245,7 @@ fi
 %files plugin-bugzilla-reference
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/bugzilla_reference
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)

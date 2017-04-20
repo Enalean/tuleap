@@ -574,10 +574,7 @@ class GitPlugin extends Plugin {
     }
 
     public function getReferenceKeywords($params) {
-        $params['keywords'] = array_merge(
-            $params['keywords'],
-            array(Git::REFERENCE_KEYWORD)
-        );
+        $params['keywords'][] = Git::REFERENCE_KEYWORD;
     }
 
     public function getReferenceNatures($params) {
