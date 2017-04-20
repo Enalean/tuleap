@@ -30,17 +30,17 @@
         -moz-box-sizing: initial;
     }
 
-    .tracker_report_table,
-    #tracker_report_table {
+    .table.tracker_report_table {
+        thead:first-child > tr:first-child > th,
         > thead > tr > th,
         > tbody > tr > td {
-            border-top: 1px solid darken($main-background, 5%);
-            border-right: 1px solid darken($main-background, 5%);
-            border-left: 1px solid darken($main-background, 5%);
+            border-top-color: darken($main-background, 5%);
+            border-right-color: darken($main-background, 5%);
+            border-left-color: darken($main-background, 5%);
         }
 
         > tbody > tr:last-child > td {
-            border-bottom: 1px solid darken($main-background, 5%);
+            border-color: darken($main-background, 5%) !important;
         }
 
         > thead > tr > th.drop-over {
@@ -50,16 +50,19 @@
         > thead > tr > th > table > tbody > tr > td > a {
             color: $main;
         }
-    }
 
-    #tracker_report_table > tbody > tr.tracker_report_table_aggregates > td > table,
-    .tracker_report_table > tbody > tr.tracker_report_table_aggregates > td > table {
-        > thead > tr > th {
-            background: $main-background;
-        }
+        > tbody > tr.tracker_report_table_aggregates > td {
+            > table {
+                > thead > tr > th,
+                > thead:first-child > tr:first-child > th {
+                    background: $main-background;
+                    border-left-color: darken($main-background, 5%);
+                }
 
-        > tbody > tr > td {
-            border-color: darken($main-background, 5%);
+                > tbody > tr > td {
+                    border-color: darken($main-background, 5%);
+                }
+            }
         }
     }
 
