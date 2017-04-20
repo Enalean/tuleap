@@ -531,22 +531,23 @@ select.tracker-report-expert-allowed-fields {
 
 .tracker_report_table,
 #tracker_report_table {
-    .tracker_report_table,
-    #tracker_report_table {
-        > thead > tr > th,
-        > tbody > tr > td {
-            border-top: 1px solid #fcfcfc;
-            border-right: 1px solid #fcfcfc;
-            border-left: 1px solid #fcfcfc;
-        }
-
-        > tbody > tr:last-child > td {
-            border-bottom: 1px solid #fcfcfc;
-        }
+    > thead > tr > th,
+    > tbody > tr > td {
+        border-top: 1px solid #fcfcfc;
+        border-right: 1px solid #fcfcfc;
+        border-left: 1px solid #fcfcfc;
     }
 
-    > thead > tr > th.drop-over {
-        background: #fcfcfc;
+    > tbody > tr:last-child > td {
+        border-bottom: 1px solid #fcfcfc;
+    }
+
+    > thead > tr > th {
+        vertical-align: top;
+
+        .drop-over {
+            background: #fcfcfc;
+        }
     }
 
     > thead > tr > th > table > tbody > tr > td {
