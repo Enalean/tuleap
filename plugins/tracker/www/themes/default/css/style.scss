@@ -529,8 +529,8 @@ select.tracker-report-expert-allowed-fields {
     padding-left: 16px;
 }
 
-.tracker_report_table,
-#tracker_report_table {
+.table.tracker_report_table {
+    thead:first-child > tr:first-child > th,
     > thead > tr > th,
     > tbody > tr > td {
         border-top: 1px solid #fcfcfc;
@@ -539,7 +539,7 @@ select.tracker-report-expert-allowed-fields {
     }
 
     > tbody > tr:last-child > td {
-        border-bottom: 1px solid #fcfcfc;
+        border: 1px solid #fcfcfc !important;
     }
 
     > thead > tr > th {
@@ -592,6 +592,73 @@ select.tracker-report-expert-allowed-fields {
         &.tracker_report_table_column_title .additional_column_title {
             font-weight: normal;
             font-size: 0.8em;
+        }
+    }
+
+    > tbody > tr.tracker_report_table_aggregates > td {
+        background: #FFFFFF !important;
+        vertical-align: top !important;
+        padding: 0 !important;
+
+        > table {
+            width: 100%;
+
+            > thead > tr > th,
+            > thead:first-child > tr:first-child > th {
+                background: #EEEEEE;
+                padding: 0 8px;
+                font-weight: normal;
+                height: 24px;
+                text-transform: uppercase;
+                font-size: 0.8em;
+                font-weight: bold;
+                vertical-align: middle;
+                border: 0;
+                border-left: 1px solid #dddddd;
+
+                &:last-child {
+                    text-align: center;
+                }
+
+                &:first-child,
+                &:last-child {
+                    border-left: none;
+                }
+
+                & + th:last-child {
+                    text-align: right;
+                }
+
+                > .btn-group {
+                    text-align: left;
+                    text-transform: none;
+                    margin-top: 1px;
+                }
+            }
+
+            > tbody > tr > td {
+                border: none;
+                border-left: 1px solid #DDDDDD;
+                background: #FFFFFF !important;
+
+                &:first-child {
+                    border-left: none;
+                }
+
+                > label {
+                    font-size: 0.8em;
+                    color: #646464;
+                    margin-bottom: 0;
+                    margin-right: 10px;
+                    float: left;
+                    cursor: default;
+
+                    > .tracker_report_table_aggregates_value {
+                        color: #222;
+                        font-size: 1.2em;
+                    }
+                }
+            }
         }
     }
 
@@ -2780,71 +2847,6 @@ body.in_tracker_report .main .content {
 
 #tracker_report_renderer_view_controls {
     float: right;
-}
-
-#tracker_report_table > tbody > tr.tracker_report_table_aggregates > td,
-.tracker_report_table > tbody > tr.tracker_report_table_aggregates > td {
-    background: #FFFFFF !important;
-    vertical-align: top !important;
-    padding: 0 !important;
-
-    > table {
-        width: 100%;
-
-        > thead > tr > th {
-            background: #EEEEEE;
-            padding: 0 8px;
-            font-weight: normal;
-            height: 24px;
-            text-transform: uppercase;
-            font-size: 0.8em;
-            font-weight: bold;
-            vertical-align: middle;
-
-            &:last-child {
-                text-align: center;
-            }
-
-            &:first-child,
-            &:last-child {
-                border-left: none;
-            }
-
-            & + th:last-child {
-                text-align: right;
-            }
-
-            > .btn-group {
-                text-align: left;
-                text-transform: none;
-                margin-top: 1px;
-            }
-        }
-
-        > tbody > tr > td {
-            border: none;
-            border-left: 1px solid #DDDDDD;
-            background: #FFFFFF !important;
-
-            &:first-child {
-                border-left: none;
-            }
-
-            > label {
-                font-size: 0.8em;
-                color: #646464;
-                margin-bottom: 0;
-                margin-right: 10px;
-                float: left;
-                cursor: default;
-
-                > .tracker_report_table_aggregates_value {
-                    color: #222;
-                    font-size: 1.2em;
-                }
-            }
-        }
-    }
 }
 
 @import "../../../../../../src/www/themes/common/css/utils/colors";
