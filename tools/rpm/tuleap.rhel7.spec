@@ -583,6 +583,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 ## plugin archivedeleted_items
 #%{__install} plugins/archivedeleteditems/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_archivedeleteditems
 #
+## Plugin hudson_git
+#%{__install} plugins/hudson_git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_git
+#
 ## Symlink for compatibility with older version
 #%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
 #%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
@@ -1009,6 +1012,8 @@ fi
 %files plugin-hudson-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson_git
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_git
+#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_git
 
 %files plugin-webdav
 %defattr(-,root,root,-)
