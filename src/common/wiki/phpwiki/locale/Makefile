@@ -142,7 +142,6 @@ ${POT_FILE}: ../lib/plugin/FuzzyPages.php
 ${POT_FILE}: ../lib/plugin/GoogleMaps.php
 ${POT_FILE}: ../lib/plugin/GooglePlugin.php
 ${POT_FILE}: ../lib/plugin/GoTo.php
-${POT_FILE}: ../lib/plugin/GraphViz.php
 ${POT_FILE}: ../lib/plugin/_GroupInfo.php
 ${POT_FILE}: ../lib/plugin/HelloWorld.php
 ${POT_FILE}: ../lib/plugin/HtmlConverter.php
@@ -198,7 +197,6 @@ ${POT_FILE}: ../lib/plugin/UnfoldSubpages.php
 ${POT_FILE}: ../lib/plugin/UpLoad.php
 ${POT_FILE}: ../lib/plugin/UserPreferences.php
 ${POT_FILE}: ../lib/plugin/UserRatings.php
-${POT_FILE}: ../lib/plugin/VisualWiki.php
 ${POT_FILE}: ../lib/plugin/WantedPagesOld.php
 ${POT_FILE}: ../lib/plugin/WantedPages.php
 ${POT_FILE}: ../lib/plugin/WhoIsOnline.php

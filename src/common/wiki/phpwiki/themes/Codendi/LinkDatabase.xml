@@ -703,7 +703,6 @@
 <edge source="ReleaseNotes" target="MagicPhpWikiURLs"/>
 <edge source="ReleaseNotes" target="WikiPlugin"/>
 <edge source="ReleaseNotes" target="PhpWeather"/>
-<edge source="ReleaseNotes" target="VisualWiki"/>
 <edge source="ReleaseNotes" target="AllUsers"/>
 <edge source="ReleaseNotes" target="InterWikiSearch"/>
 <edge source="ReleaseNotes" target="EditMetaData"/>
@@ -852,8 +851,6 @@
 
 <node name="AnyUser"><label>AnyUser</label><dataref><ref xlink:href="http://reini/wiki/sidebar/AnyUser"/></dataref></node>
 <edge source="AnyUser" target="AnyUser"/>
-
-<node name="VisualWiki"><label>VisualWiki</label><dataref><ref xlink:href="http://reini/wiki/sidebar/VisualWiki"/></dataref></node>
 
 <node name="UserAuthentification"><label>UserAuthentification</label><dataref><ref xlink:href="http://reini/wiki/sidebar/UserAuthentification"/></dataref></node>
 <edge source="UserAuthentification" target="HomePage"/>

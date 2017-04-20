@@ -1953,21 +1953,8 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
-#: ../lib/plugin/GraphViz.php:115
-msgid "GraphViz"
-msgstr ""
-
-#: ../lib/plugin/GraphViz.php:118
-msgid "GraphViz image or imagemap creation of directed graphs"
-msgstr ""
-
-#: ../lib/plugin/GraphViz.php:243 ../lib/plugin/SyntaxHighlighter.php:180
+#: ../lib/plugin/SyntaxHighlighter.php:180
 msgid "empty source"
-msgstr ""
-
-#: ../lib/plugin/GraphViz.php:269
-#, php-format
-msgid "%s error: outputfile '%s' not created"
 msgstr ""
 
 #: ../lib/plugin/_GroupInfo.php:30
@@ -3342,20 +3329,6 @@ msgstr ""
 
 #: ../lib/plugin/UserRatings.php:224 ../lib/wikilens/PageListColumns.php:366
 msgid "Rate"
-msgstr ""
-
-#: ../lib/plugin/VisualWiki.php:65
-msgid ""
-"Visualizes the Wiki structure in a graph using the 'dot' commandline tool "
-"from graphviz."
-msgstr ""
-
-#: ../lib/plugin/VisualWiki.php:493
-msgid "Legend"
-msgstr ""
-
-#: ../lib/plugin/VisualWiki.php:499
-msgid "days"
 msgstr ""
 
 #: ../lib/plugin/WantedPagesOld.php:33 ../lib/plugin/WantedPagesOld.php:66
