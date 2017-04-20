@@ -185,7 +185,6 @@ ${POT_FILE}: ../lib/plugin/RichTable.php
 ${POT_FILE}: ../lib/plugin/RssFeed.php
 ${POT_FILE}: ../lib/plugin/SearchHighlight.php
 ${POT_FILE}: ../lib/plugin/SiteMap.php
-${POT_FILE}: ../lib/plugin/SqlResult.php
 ${POT_FILE}: ../lib/plugin/SyntaxHighlighter.php
 ${POT_FILE}: ../lib/plugin/SystemInfo.php
 ${POT_FILE}: ../lib/plugin/Template.php

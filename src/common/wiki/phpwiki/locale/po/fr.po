@@ -2882,23 +2882,6 @@ msgstr "Obtenir récursivement des RétroLiens ou liens"
 msgid "(max. recursion level: %d)"
 msgstr "(niveau maximum de récursivité: %d)"
 
-#: ../lib/plugin/SqlResult.php:67
-msgid "SqlResult"
-msgstr "RésultatSql"
-
-#: ../lib/plugin/SqlResult.php:71
-msgid "Display arbitrary SQL result tables"
-msgstr "Affiche le résultat de requêtes SQL simples"
-
-#: ../lib/plugin/SqlResult.php:107
-msgid "No DSN alias for SqlResult.ini specified"
-msgstr "Aucun alias DSN spécifié pour SqlResult.ini"
-
-#: ../lib/plugin/SqlResult.php:138
-#, php-format
-msgid "No DSN for alias %s in SqlResult.ini found"
-msgstr "Aucun alias DSN trouvé pour %s dans SqlResult.ini"
-
 #: ../lib/plugin/SyntaxHighlighter.php:68
 msgid "SyntaxHighlighter"
 msgstr "ColorationSyntaxique"

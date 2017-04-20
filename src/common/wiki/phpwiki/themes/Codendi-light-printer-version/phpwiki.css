@@ -866,20 +866,6 @@ div.feed { color: #333; margin: -0.5em; margin-bottom: 0em; padding: 0.3em; font
 div.itemdesc {  padding-left: 1em; }
 div.rssitem { border-top: thin dashed #aaa; }
 
-/* SqlResult */
-table.sqlresult { 
-  border: 1px outset gray;
-  background: white;
-  margin: 0.5ex 0.5em;
-  padding: 1px;
-}
-.sqlresult tr.evenrow { background: #eee; }
-.sqlresult tr.oddrow  { background: white; }
-table.sqlresult td {
-  margin: 1px;
-  border: 1px solid gray;
-}
-
 /**
  * TeX2png plugin
  */

@@ -57,8 +57,7 @@ Some special variables are automatically assigned:
 %%author%% | 
   $user->getId()
 
-This forms together with page templates and the PhpWiki:WikiFormRichPlugin and 
-optionally the PhpWiki:SqlResultPlugin a framework to create templated pages.
+This forms together with page templates and the PhpWiki:WikiFormRichPlugin a framework to create templated pages.
 
 !! Authors
 
@@ -68,7 +67,7 @@ Dan Frankowski, Reini Urban
 
 <?plugin-form CreatePage s=MyHomePage ?>
 
-See also PhpWiki:EasilyCreateNewPages, PhpWiki:WikiFormRichPlugin, PhpWiki:SqlResultPlugin
+See also PhpWiki:EasilyCreateNewPages, PhpWiki:WikiFormRichPlugin
 
 -------------
 

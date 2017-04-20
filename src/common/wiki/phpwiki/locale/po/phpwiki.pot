@@ -2776,23 +2776,6 @@ msgstr ""
 msgid "(max. recursion level: %d)"
 msgstr ""
 
-#: ../lib/plugin/SqlResult.php:67
-msgid "SqlResult"
-msgstr ""
-
-#: ../lib/plugin/SqlResult.php:71
-msgid "Display arbitrary SQL result tables"
-msgstr ""
-
-#: ../lib/plugin/SqlResult.php:107
-msgid "No DSN alias for SqlResult.ini specified"
-msgstr ""
-
-#: ../lib/plugin/SqlResult.php:138
-#, php-format
-msgid "No DSN for alias %s in SqlResult.ini found"
-msgstr ""
-
 #: ../lib/plugin/SyntaxHighlighter.php:68
 msgid "SyntaxHighlighter"
 msgstr ""
