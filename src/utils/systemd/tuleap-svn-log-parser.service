@@ -1,0 +1,13 @@
+[Unit]
+Description=SVN Logs Parser Service
+
+[Service]
+Type=simple
+User=root
+PIDFile=/var/run/push_svn_log_parse.pid
+ExecStartPre=/usr/bin/tuleap -c -r
+ExecStart=/usr/share/tuleap/plugins/svn/bin/svn_stats_to_db.php
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

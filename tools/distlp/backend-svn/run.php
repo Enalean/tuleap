@@ -50,4 +50,4 @@ $tuleap_auth_module->configure();
 $supervisord->configure();
 
 $setup = new \Tuleap\Configuration\Setup\DistributedSVN();
-$setup->backendSVN();
+$setup->backendSVN(\Tuleap\Configuration\Setup\DistributedSVN::PID_ONE_SUPERVISORD);

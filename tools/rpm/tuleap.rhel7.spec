@@ -447,6 +447,7 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 # Install systemd Unit
 %{__install} -d $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-svn-log-parser.service $RPM_BUILD_ROOT/%{_unitdir}
 
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
@@ -479,7 +480,8 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 #%{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 #
 ## Install logrotate.d script
-#%{__install} -d $RPM_BUILD_ROOT/etc/logrotate.d
+#%{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
+# Replace default httpd logrotate by ours
 #%{__install} src/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
 #%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
 #%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
@@ -926,6 +928,7 @@ fi
 %defattr(-,root,root,-)
 %{perl_vendorlib}/Apache/Tuleap.pm
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
+%attr(00644,root,root) %{_unitdir}/tuleap-svn-log-parser.service
 
 %files core-cvs
 %defattr(-,root,root,-)
