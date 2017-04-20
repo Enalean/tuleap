@@ -522,7 +522,7 @@ class WikiPage {
              ,"PluginInclureUnCadre" ,"PluginInclureUnePage" ,"PluginListeDesSousPages" 
              ,"PluginListeDuCalendrier" ,"PluginMétéoPhp" ,"PluginRechercheExterne"
              ,"PluginRedirection" ,"PluginRessourcesRss" ,"PluginTableauAncienStyle" 
-             ,"PluginTeX2png" ,"PluginWiki" ,"PluginWikiBlog" ,"PréférencesUtilisateurs" 
+             ,"PluginWiki" ,"PluginWikiBlog" ,"PréférencesUtilisateurs"
              ,"QuiEstEnLigne" ,"RèglesDeFormatageDesTextes" ,"RécupérationDeLaPage"
              ,"RétroLiens" ,"RechercheEnTexteIntégral" ,"RechercheInterWiki"
              ,"RechercheParTitre" ,"SommaireDuProjet" ,"TestDeCache" ,"TestGroupeDePages"

@@ -1918,7 +1918,7 @@ msgstr "%s ou %s paramètre manquant"
 msgid "recursive inclusion of url %s"
 msgstr "insertion récursive de l'URL %s"
 
-#: ../lib/plugin/FrameInclude.php:112 ../lib/plugin/TeX2png.php:216
+#: ../lib/plugin/FrameInclude.php:112
 #: ../lib/plugin/text2png.php:69 ../lib/plugin/text2png.php:122
 #, php-format
 msgid "See %s"
@@ -3113,29 +3113,7 @@ msgstr "Thème"
 msgid "Parametrized page inclusion."
 msgstr ""
 
-#: ../lib/plugin/TeX2png.php:29
-msgid "TeX2png"
-msgstr "TeX2png"
-
-#: ../lib/plugin/TeX2png.php:33
-msgid "Convert Tex mathematicals expressions to cached png files."
-msgstr ""
-"Convertit des expressions mathématiques au format TeX en des fichiers png "
-"mis en cache."
-
-#: ../lib/plugin/TeX2png.php:34
-msgid " This is for small text"
-msgstr "C'est pour des petits textes"
-
-#: ../lib/plugin/TeX2png.php:134
-msgid " (syntax error for latex) "
-msgstr " (erreur de syntaxe pour latex) "
-
-#: ../lib/plugin/TeX2png.php:173
-msgid "TeX directory not writable."
-msgstr "Répertoire TeX non accessible en écriture."
-
-#: ../lib/plugin/TeX2png.php:214 ../lib/plugin/text2png.php:67
+#: ../lib/plugin/text2png.php:67
 msgid "Sorry, this version of PHP cannot create PNG image files."
 msgstr ""
 "Désolé, cette version de PHP ne peut pas créer des fichiers d'image PNG."
@@ -3161,10 +3139,6 @@ msgstr "Image sauvée dans le fichier cache : %s"
 #, php-format
 msgid "Image loaded from cache file: %s"
 msgstr "Image chargée depuis le fichier cache : %s"
-
-#: ../lib/plugin/TexToPng.php:103
-msgid "Converts TeX to an image. May be used to embed formulas in PhpWiki."
-msgstr "Pour convertir des formules TeX en image."
 
 #: ../lib/plugin/TitleSearch.php:47
 msgid "Search the titles of all pages in this wiki."

@@ -868,14 +868,6 @@ div.feed { color: #333; margin: -0.5em; margin-bottom: 0em; padding: 0.3em; font
 div.itemdesc {  padding-left: 1em; }
 div.rssitem { border-top: thin dashed #aaa; }
 
-/**
- * TeX2png plugin
- */
-img.tex { 
-  border: 0ex;
-  vertical-align: middle; 
-}
-
 /* CreateToc plugin */
 ul.toc {
   background-color: rgb(246, 246, 246);
