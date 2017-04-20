@@ -29,7 +29,7 @@ rcs_id('$Id: SyntaxHighlighter.php,v 1.7 2004/07/08 20:30:07 rurban Exp $');
  * syntax: See http://www.andre-simon.de/doku/highlight/highlight.html
  * style = ["ansi", "gnu", "kr", "java", "linux"]
  
-<?plugin SyntaxHighlighter syntax=c style=kr color=emacs
+<?plugin SyntaxHighlighter syntax=c style=kr
  #include <stdio.h>
  
  int main() {
@@ -90,7 +90,8 @@ extends WikiPlugin
         $this->source = $argstr;
     }
 
-    function newFilterThroughCmd($input, $commandLine) {
+    private function filterThroughCmd($input, $commandLine)
+    {
         $descriptorspec = array(
                0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
                1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
@@ -123,65 +124,37 @@ extends WikiPlugin
         }
     }
 
-    /* PHP versions < 4.3
-     * TODO: via temp file looks more promising
-     */
-    function OldFilterThroughCmd($input, $commandLine) {
-         $input = str_replace ("\\", "\\\\", $input);
-         $input = str_replace ("\"", "\\\"", $input);
-         $input = str_replace ("\$", "\\\$", $input);
-         $input = str_replace ("`", "\`", $input);
-         $input = str_replace ("'", "\'", $input);
-         //$input = str_replace (";", "\;", $input);
-
-         $pipe = popen("echo \"$input\"|$commandLine", 'r');
-         if (!$pipe) {
-            print "pipe failed.";
-            return "";
-         }
-         $output = '';
-         while (!feof($pipe)) {
-            $output .= fread($pipe, 1024);
-         }
-         pclose($pipe);
-         return $output;
-    }
-
     function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));
         $source =& $this->source;
-        if (empty($syntax)) return $this->error(_("Syntax language not specified."));
+        if (empty($syntax)) {
+            return $this->error(_("Syntax language not specified."));
+        }
         if (!empty($source)) {
             $args = "";
-            if (defined('HIGHLIGHT_DATA_DIR'))
-                $args .= " --data-dir " . HIGHLIGHT_DATA_DIR;
-            if ($number != 0) $args .= " -l";
-            if ($wrap != 0)   $args .= " -V";
+            if (defined('HIGHLIGHT_DATA_DIR')) {
+                $args .= " --data-dir " . escapeshellarg(HIGHLIGHT_DATA_DIR);
+            }
+            if ($number != 0) {
+                $args .= " -l";
+            }
+            if ($wrap != 0) {
+                $args .= " -V";
+            }
             $html = HTML();
-            if (!empty($color) and !preg_match('/^[\w-]+$/',$color)) {
-                $html->pushContent($this->error(fmt("invalid %s ignored",'color')));
-                $color = false;
-            }
 
-            if (!empty($color)) {
-                if ($color == "emacs") {
-                    $color = "";
-                } else {
-                    $args .= " --style $color -c ".FindFile('themes')."/default/highlight-$color.css";
-                }
+            if (!empty($style)) {
+                $args .= ' -F ' . escapeshellarg($style);
             }
-            if (!empty($style)) $args .= " -F $style";
-            $commandLine = HIGHLIGHT_EXE . "$args -q -f -S $syntax";
-            if (check_php_version(4,3,0))
-                $code = $this->newFilterThroughCmd($source, $commandLine);
-            else 
-                $code = $this->oldFilterThroughCmd($source, $commandLine);
-            if (empty($code))
-                return $this->error(fmt("Couldn't start commandline '%s'",$commandLine));
+            $commandLine = HIGHLIGHT_EXE . "$args -q -f -S " . escapeshellarg($syntax);
+            $code = $this->filterThroughCmd($source, $commandLine);
+            if (empty($code)) {
+                return $this->error(fmt("Couldn't start commandline"));
+            }
             $pre = HTML::pre(HTML::raw($code));
             $pre->setAttr('class','tightenable top bottom');
             $html->pushContent($pre);
-            $css = $GLOBALS['WikiTheme']->_CSSlink('',empty($color) ? 'highlight.css' : "highlight-$color.css",'');
+            $css = $GLOBALS['WikiTheme']->_CSSlink('', 'highlight.css', '');
             return HTML($css,$html);
         } else {
             return $this->error(fmt("empty source"));
