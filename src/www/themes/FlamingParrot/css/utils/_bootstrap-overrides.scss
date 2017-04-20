@@ -251,9 +251,22 @@ legend {
     font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
     border-color: $color;
     background: $color;
+    outline: none;
 
     &:not(.btn-link) {
         box-shadow: 0 1px 1px rgba(0, 0, 0, .12);
+    }
+
+    &.btn-small {
+        padding: 0 12px;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    &.btn-mini {
+        padding: 0 8px;
+        font-size: 12px;
+        line-height: 20px;
     }
 }
 
@@ -265,26 +278,40 @@ legend {
 }
 
 @mixin dropdown-menu($color) {
-    color: $color;
+    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+
+    > a,
+    > input {
+        color: $color;
+
+        &:hover,
+        &:focus {
+            background: #f3f3f3;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
 }
 
 .btn-group {
-    .btn-primary + .dropdown-menu {
-        > li > * {
-            @include dropdown-menu($main);
-        }
+    .btn-primary + .dropdown-menu > li {
+        @include dropdown-menu($main);
     }
 
     > .dropdown-menu > li {
-        font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+        @include dropdown-menu($main);
 
-        > * {
-            @include dropdown-menu(#747474);
-        }
+        &.dropdown-submenu {
+            > .dropdown-menu > li {
+                @include dropdown-menu($main);
+            }
 
-        &:hover,
-        > *:hover {
-            background: #f3f3f3;
+            &:hover > a,
+            &:hover > input {
+                background: none;
+            }
         }
     }
 }
@@ -353,6 +380,10 @@ legend {
         box-shadow: none !important;
     }
 }
+
+/************
+ * MODALS
+ ************/
 
 .modal {
     border: 1px solid transparent;
