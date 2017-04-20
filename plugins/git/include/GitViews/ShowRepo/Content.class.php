@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -170,7 +170,6 @@ class GitViews_ShowRepo_Content {
         $html .= $gerrit_status->getContent();
         $html .= $this->getCloneUrl();
         $html .= '</div>';
-        $html .= $this->getOnlineEditDiv();
 
         echo $html;
     }
@@ -212,18 +211,6 @@ class GitViews_ShowRepo_Content {
         }
 
         return 'HEAD';
-    }
-
-    private function getOnlineEditDiv() {
-        $html = '';
-
-        $classname = 'not_editable';
-        if ($this->repository->userCanEditOnline($this->current_user)) {
-           $classname = 'editable';
-        }
-        $html .= '<div id="plugin_git_onlinemodif" class="'.$classname.'">';
-
-        return $html;
     }
 
     private function getHeader() {

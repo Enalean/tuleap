@@ -60,7 +60,3 @@ Git plugins depends on gitolite 1.5.9 or 2.3.1 (that depends of git >= 1.7)
 
 More gitolite info can be found on gitolite web site:
 Reference: http://sitaramc.github.com/gitolite/doc/1-INSTALL.html#_package_method
-
-=== Git ===
-
-Minimum version required for online editing >= 1.7.4

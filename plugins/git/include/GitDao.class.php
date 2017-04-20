@@ -1,15 +1,16 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
   *
-  * This file is a part of Codendi.
+  * This file is a part of Tuleap.
   *
-  * Codendi is free software; you can redistribute it and/or modify
+  * Tuleap is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation; either version 2 of the License, or
   * (at your option) any later version.
   *
-  * Codendi is distributed in the hope that it will be useful,
+  * Tuleap is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   * GNU General Public License for more details.
@@ -44,7 +45,6 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_SCOPE            = 'repository_scope';
     const REPOSITORY_NAMESPACE        = 'repository_namespace';
     const REPOSITORY_BACKUP_PATH      = 'repository_backup_path';
-    const ENABLE_ONLINE_EDIT          = "enable_online_edit";
 
     const REPO_NAME_MAX_LENGTH = 255;
 
@@ -504,11 +504,6 @@ class GitDao extends DataAccessObject {
         $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
         $repository->setRemoteServerMigrationStatus($result[self::REMOTE_SERVER_MIGRATION_STATUS]);
         $repository->loadNotifiedMails();
-        /* Here just for reviewer test, will be replaced by real DB data in a future changeset*/
-        $result[self::ENABLE_ONLINE_EDIT] = false;
-        if ($result[self::ENABLE_ONLINE_EDIT] && GitConfig::instance()->isOnlineEditEnabled()) {
-            $repository->enableOnlineEdit();
-        }
     }
 
     /**

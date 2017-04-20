@@ -4,16 +4,6 @@ codendi.locales['git'] = {
     path_placeholder_enabled: 'Entrer un chemin ou laissez vide',
     cannot_get_gerrit_config: 'Impossible de charger la configuration',
     cannot_get_template: 'le modèle ne peut être chargé',
-    cannot_delete_template: 'le modèle n\'a pas pu être détruit',
-    edit_button_value: 'Editer',
-    cancel_button_value: 'Annuler',
-    commit_button_value: 'Commit',
-    commit_message: 'Message de commit',
-    commit_message_value: 'Update of ',
-    commit_description_value : 'Description du commit',
-    not_top_branch : 'Vous ne pouvez pas éditer un fichier qui n\'est pas en haut d\'une branche',
     remove_webhook_title: 'Attendez une minute…',
-    add_branch_permission_placeholder: 'Nom de la branche (master, ma_fonctionnalite…)',
-    add_tag_permission_placeholder: 'Nom du tag (v1, alpha…)',
     regexp_permission_enabled_info: 'Les expressions régulières sont activées, seul \\n ne peut pas être utilisé'
 };
