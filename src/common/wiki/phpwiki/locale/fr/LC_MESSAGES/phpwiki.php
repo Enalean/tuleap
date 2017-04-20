@@ -1962,8 +1962,6 @@ $locale["Viewing the source of pages"] =
    "Visualisation de la source des pages";
 $locale["Visited pages on this wiki, ordered by popularity:"] =
    "Pages visitées sur ce wiki, classées par ordre de popularité :";
-$locale["Visualizes the Wiki structure in a graph using the 'dot' commandline tool from graphviz."] =
-   "Représenter la structure du wiki par un graphe utilisant l'outil dot de graphviz.";
 $locale["W"] =
    "L";
 $locale["WabiSabi"] =

@@ -25,8 +25,7 @@ Some plugins require correctly configured PLUGIN_CACHED and external libraries
 not provided with PhpWiki or PHP, such as 
 * [PHP with GD support | php-function:ref.image] for the text2png plugin, 
 * [LaTeX2HTML | ftp://ftp.dante.de/tex-archive/support/latex2html ] for the TexToPngPlugin and TeX2pngPlugin,
-* [graphviz | http://graphviz.org/] for the GraphVizPlugin and VisualWikiPlugin, 
-* [ploticus | http://ploticus.sourceforge.net/] for the PloticusPlugin, 
+* [ploticus | http://ploticus.sourceforge.net/] for the PloticusPlugin,
 * [phpweather | http://phpweather.sf.net] for the PhpWeatherPlugin,
 * [highlight | http://www.andre-simon.de/] for the SyntaxHighlighterPlugin,
 * a browser with [<iframe> support|http://www.cs.tut.fi/~jkorpela/html/iframe.html] for the TranscludePlugin,
