@@ -21,7 +21,7 @@
 namespace Tuleap\Bugzilla\Reference;
 
 use Tuleap\reference\ReferenceValidator;
-use Valid_HTTPSURI;
+use Valid_HTTPURI;
 
 class ReferenceSaver
 {
@@ -93,7 +93,7 @@ class ReferenceSaver
 
     private function checkServerValidity($server)
     {
-        $http_uri_validator = new Valid_HTTPSURI();
+        $http_uri_validator = new Valid_HTTPURI();
 
         if (! $http_uri_validator->validate($server)) {
             throw new ServerIsInvalidException();
