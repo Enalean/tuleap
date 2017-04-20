@@ -7,15 +7,6 @@
             ],
             "target_dir": "www/themes/default/css"
         },
-        "FlamingParrot": {
-            "files": [
-                "www/themes/FlamingParrot/css/style.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/FlamingParrot/css/utils"
-            ],
-            "target_dir": "www/themes/FlamingParrot/css"
-        },
         "BurningParrot": {
             "files": [
                 "www/themes/BurningParrot/css/style-blue.scss",

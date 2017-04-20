@@ -39,13 +39,15 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
-            {{# sections }}
-                <tr class="hook-section">
-                    <td colspan="3">
+        {{# sections }}
+            <tbody>
+                <tr>
+                    <td class="table-cell-section" colspan="3">
                         {{ label }}
                     </td>
                 </tr>
+            </tbody>
+            <tbody>
                 {{# webhooks }}
                     <tr>
                         <td>{{ webhook_url }}</td>
@@ -73,15 +75,17 @@
                         </td>
                     </tr>
                 {{/ webhooks }}
-            {{/ sections }}
-            {{^ has_sections }}
-                <tr class="empty-table">
-                    <td colspan="3">
+            </tbody>
+        {{/ sections }}
+        {{^ has_sections }}
+            <tbody>
+                <tr>
+                    <td class="table-cell-empty" colspan="3">
                         {{ empty_hooks }}
                     </td>
                 </tr>
-            {{/ has_sections }}
-        </tbody>
+            </tbody>
+        {{/ has_sections }}
     </table>
 </div>
 

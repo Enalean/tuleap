@@ -1,18 +1,14 @@
 @import '../../default/css/style';
 
-@mixin definitions($main) {
-    #global_notifs > thead > tr > th,
-    #siteadmin-config table > thead > tr > th,
-    #tracker_report_table > thead > tr > th {
-        border-bottom-color: $main;
-    }
-
+@mixin definitions($main, $main-background) {
     .widget_content #tracker_report_table > thead > tr > th {
         border-bottom-color: #B2B2B2;
     }
 
     .tracker-report-query {
         border-top: 2px solid $main;
+        border-bottom: 1px solid darken($main-background, 5%);
+        background: $main-background;
     }
 
     .tracker_artifact_fieldset legend {
@@ -34,6 +30,39 @@
         -moz-box-sizing: initial;
     }
 
+    .tracker_report_table,
+    #tracker_report_table {
+        > thead > tr > th,
+        > tbody > tr > td {
+            border-top: 1px solid darken($main-background, 5%);
+            border-right: 1px solid darken($main-background, 5%);
+            border-left: 1px solid darken($main-background, 5%);
+        }
+
+        > tbody > tr:last-child > td {
+            border-bottom: 1px solid darken($main-background, 5%);
+        }
+
+        > thead > tr > th.drop-over {
+            background: $main-background;
+        }
+
+        > thead > tr > th > table > tbody > tr > td > a {
+            color: $main;
+        }
+    }
+
+    #tracker_report_table > tbody > tr.tracker_report_table_aggregates > td > table,
+    .tracker_report_table > tbody > tr.tracker_report_table_aggregates > td > table {
+        > thead > tr > th {
+            background: $main-background;
+        }
+
+        > tbody > tr > td {
+            border-color: darken($main-background, 5%);
+        }
+    }
+
     .tracker_artifact_followup-with_comment {
         border-left: 3px solid $main;
     }
@@ -52,71 +81,64 @@
         width: 25px;
         height: 25px;
     }
-
-    .tracker-deprecated-fields {
-        & > thead > tr > th {
-            border-bottom-color: $main;
-        }
-    }
-
 }
 
 body {
     @import 'variables-orange';
-    @include definitions($main);
+    @include definitions($main, $main-background);
 
     &.FlamingParrot_Blue {
         @import 'variables-blue';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_Green {
         @import 'variables-green';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_BlueGrey {
         @import 'variables-bluegrey';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_Purple {
         @import 'variables-purple';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_Red {
         @import 'variables-red';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_DarkOrange {
         @import 'variables-darkorange';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_DarkBlue {
         @import 'variables-darkblue';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_DarkGreen {
         @import 'variables-darkgreen';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_DarkBlueGrey {
         @import 'variables-darkbluegrey';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_DarkPurple {
         @import 'variables-darkpurple';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 
     &.FlamingParrot_DarkRed {
         @import 'variables-darkred';
-        @include definitions($main);
+        @include definitions($main, $main-background);
     }
 }

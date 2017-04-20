@@ -57,15 +57,15 @@
         {{/ has_notifications }}
 
         {{^ has_notifications }}
-            <tr class="empty-table">
-                <td colspan="2">
+            <tr>
+                <td class="table-cell-empty" colspan="2">
                      {{ empty_notification }}
                 </td>
             </tr>
         {{/ has_notifications }}
             <tr>
-                <td></td>
-                <td {{^ has_notifications }}class="git-notification-mail-list-add-in-empty-table"{{/ has_notifications }}>
+                {{# has_notifications }}<td></td>{{/ has_notifications }}
+                <td {{^ has_notifications }}colspan="2"{{/ has_notifications }}>
                     <input type="hidden"
                            id="add_mail"
                            name="add_mail"

@@ -57,13 +57,15 @@
             {{/ has_listeners }}
 
             {{^ has_listeners }}
-                <tr class="empty-table">
-                    <td colspan="3">{{ empty_state }}</td>
+                <tr>
+                    <td colspan="3" class="table-cell-empty">{{ empty_state }}</td>
                 </tr>
             {{/ has_listeners }}
             <tr>
-                <td></td>
-                <td {{^ has_listeners }}class="docman-notification-add-in-empty-table"{{/ has_listeners }} colspan="2">
+                {{# has_listeners }}<td></td>{{/ has_listeners }}
+                <td {{# has_listeners }}colspan="2"{{/ has_listeners }}
+                    {{^ has_listeners }}colspan="3"{{/ has_listeners }}
+                >
                     <input type="hidden"
                            id="listeners_to_add"
                            name="listeners_to_add"

@@ -107,20 +107,6 @@
     min-width: 960px;
     width: auto;
 
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
-
     & > tbody > tr > td {
         vertical-align: middle;
     }

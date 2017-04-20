@@ -182,20 +182,6 @@ td.plugin_git_first_col {
 #git_repositories_list {
     min-width: 960px;
     width: auto;
-
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
 }
 
 tr.boxitemalt > td {
@@ -457,7 +443,7 @@ fieldset.gerrit_disconnect {
 .git_admin_mirror_table {
     max-width: 960px;
 
-    & > thead > tr > th {
+    > thead > tr > th {
         white-space: nowrap;
     }
 }
@@ -476,20 +462,6 @@ fieldset.gerrit_disconnect {
 
 .mirrors-list {
     max-width: 800px;
-
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
 
     & > thead > tr > th,
     & > tbody > tr > td {
@@ -519,23 +491,12 @@ fieldset.gerrit_disconnect {
 .mass-mirrors-list {
     width: 600px;
 
-    > thead > tr {
-        background: #E4E4E4;
+    > thead > tr > th {
+        padding: 0 40px;
 
-        > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-            padding: 0 40px;
-
-            &:first-child {
-                width: 100%;
-            }
+        &:first-child {
+            width: 100%;
         }
-    }
-
-    > tbody > tr:first-child > td {
-        border-top: none;
     }
 
     > thead > tr > th,
@@ -672,20 +633,6 @@ body.sidebar-expanded .mass-mirrors-list-update-bar {
 .git-admin-mass-update-table {
     max-width: 800px;
 
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
-
     & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
         width: 20px;
         text-align: center;
@@ -782,30 +729,9 @@ h1, h2, h3 {
     }
 }
 
-#git_repomanagement table > tbody > tr.empty-table > td {
-    padding: 50px;
-    font-size: 12px;
-    color: #AAAAAA;
-    text-align: center;
-}
-
 #git-notification-mail-list {
     max-width: 960px;
     margin-bottom: 15px;
-
-    & > thead > tr {
-        background: #E4E4E4;
-
-        & > th {
-            vertical-align: top;
-            border-left-color: #D2D2D2;
-            border-bottom: 2px solid #B2B2B2;
-        }
-    }
-
-    & > tbody > tr:first-child > td {
-        border-top: none;
-    }
 }
 
 .git-notification-mail-list-people {
@@ -862,20 +788,6 @@ h1, h2, h3 {
 .hooks-list {
     max-width: 960px;
 
-    > thead > tr {
-        background: #e4e4e4;
-
-        > th {
-            border-bottom: 2px solid #b2b2b2;
-            border-left-color: #d2d2d2;
-            vertical-align: top;
-        }
-    }
-
-    > tbody > tr:first-child > td {
-        border-top: 0;
-    }
-
     > thead > tr > th,
     > tbody > tr > td {
         vertical-align: middle;
@@ -897,9 +809,6 @@ h1, h2, h3 {
         }
 
         &.action-buttons {
-            display: flex;
-            justify-content: space-around;
-
             > a {
                 margin: 0 5px;
 
@@ -911,34 +820,13 @@ h1, h2, h3 {
             }
         }
     }
-
-    > tbody > tr.hook-section > td {
-        background: #e4e4e4;
-        color: #999999;
-        font-size: 10px;
-        font-weight: 600;
-        line-height: 10px;
-        text-transform: uppercase;
-    }
 }
 
 .hooks-jobs-list {
-
-    > thead > tr {
-        background: #e4e4e4;
-
-        > th {
-            border-bottom: 2px solid #b2b2b2;
-            border-left-color: #d2d2d2;
-            vertical-align: top;
-        }
-    }
-
     > tbody {
         font-size: 12px;
 
         > tr:first-child > td {
-            border-top: 0;
             white-space: nowrap;
         }
 
@@ -1035,20 +923,6 @@ h1, h2, h3 {
     min-width: 800px;
     max-width: 1200px;
 
-    > thead > tr {
-        background: #e4e4e4;
-
-        > th {
-            border-bottom: 2px solid #b2b2b2;
-            border-left-color: #d2d2d2;
-            vertical-align: top;
-        }
-    }
-
-    > tbody > tr:first-child > td {
-        border-top: 0;
-    }
-
     .git-permission-table-selector {
         width: 250px;
     }
@@ -1115,19 +989,17 @@ h1, h2, h3 {
     }
 }
 
-td.git-notification-mail-list-user {
-    vertical-align: middle;
-    padding-left: 37px;
-    position: relative;
+.git-notification-mail-list-people {
+    width: 100%;
 }
 
 .avatar.git-notification-mail-list-user-avatar {
     display: inline-block;
-    position: absolute;
+    position: relative;
+    top: -2px;
     width: 22px;
-    height: 22px;
-    top: 7px;
-    left: 8px
+    height: 22px; margin: 0 2px 0 0;
+    vertical-align: middle;
 }
 
 .git-notification-mail-list-group-icon {
@@ -1137,8 +1009,4 @@ td.git-notification-mail-list-user {
 
 .git-notification-mail-list-submit {
     margin: 15px 0 0;
-}
-
-.table-bordered > tbody > tr > td.git-notification-mail-list-add-in-empty-table {
-    border-left: 0;
 }
