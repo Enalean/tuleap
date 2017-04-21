@@ -1112,6 +1112,8 @@ class ReferenceManager {
         if ($dar->rowCount() > 0) {
             return true;
         }
+
+        return $this->getReferenceValidator()->isReservedKeyword($keyword);
     }
 
     public function checkKeyword($keyword) {
