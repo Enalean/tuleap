@@ -23,9 +23,13 @@ if ( !is_readable($xmlFile) ) {
 
 // FILE PROCESSING
 try {
+    $logger = new TruncateLevelLogger(
+        new Log_ConsoleLogger(),
+        ForgeConfig::get('sys_logger_level')
+    );
     $project = ProjectManager::instance()->getProject($group_id);
     if ($project && ! $project->isError()) {
-        TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()), new Log_ConsoleLogger())
+        TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()), $logger)
             ->createFromXMLFile($project, $xmlFile);
         if ( $GLOBALS['Response']->feedbackHasErrors() ) {
             echo $GLOBALS['Response']->getRawFeedback();

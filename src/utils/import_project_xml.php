@@ -46,7 +46,8 @@ $usage_long_options = array(
     'force::',
     'help',
     'automap::',
-    'type::'
+    'type::',
+    'use-lame-password',
 );
 
 function usage() {
@@ -155,6 +156,11 @@ if (isset($arguments['force']) && trim($arguments['force']) != '') {
     $configuration->setForce($arguments['force']);
 }
 
+$use_lame_password = false;
+if (isset($arguments['use-lame-password'])) {
+    $use_lame_password = true;
+}
+
 if(empty($project_id) && posix_geteuid() != 0) {
     fwrite(STDERR, 'Need superuser powers to be able to create a project. Try importing in an existing project using -p.'.PHP_EOL);
     exit(1);
@@ -164,8 +170,8 @@ $user_manager  = UserManager::instance();
 $security      = new XML_Security();
 $xml_validator = new XML_RNGValidator();
 
-$transformer = new User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager);
-$console     = new Log_ConsoleLogger();
+$transformer = new User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager, $use_lame_password);
+$console     = new TruncateLevelLogger(new Log_ConsoleLogger(), ForgeConfig::get('sys_logger_level'));
 $logger      = new ProjectXMLImporterLogger();
 $broker_log  = new BrokerLogger(array($logger, $console));
 $builder     = new User\XML\Import\UsersToBeImportedCollectionBuilder(
@@ -226,7 +232,7 @@ try {
 
     try {
         if (empty($project_id)) {
-            $factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
+            $factory = new SystemEventProcessor_Factory($broker_log, SystemEventManager::instance(), EventManager::instance());
             $system_event_runner = new Tuleap\Project\SystemEventRunner($factory);
             $xml_importer->importNewFromArchive(
                 $configuration,
