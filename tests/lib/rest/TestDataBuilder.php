@@ -48,12 +48,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
     const KANBAN_ID            = 1;
 
-    const KANBAN_ARTIFACT_ID_2 = 35;
-    const KANBAN_ARTIFACT_ID_3 = 36;
-    const KANBAN_ARTIFACT_ID_4 = 37;
-    const KANBAN_ARTIFACT_ID_5 = 38;
-    const KANBAN_ARTIFACT_ID_6 = 39;
-
     const BURNDOWN_FATHER_ARTIFACT_ID  = 12;
     const BURNDOWN_CHILD_ARTIFACT_ID   = 1;
     const BURNDOWN_CHILD_2_ARTIFACT_ID = 8;
