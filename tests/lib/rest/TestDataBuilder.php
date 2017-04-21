@@ -47,7 +47,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const RELEASE_STATUS_CURRENT_ID = 126;
 
     const KANBAN_ID            = 1;
-    const KANBAN_ARTIFACT_ID_1 = 34;
+
     const KANBAN_ARTIFACT_ID_2 = 35;
     const KANBAN_ARTIFACT_ID_3 = 36;
     const KANBAN_ARTIFACT_ID_4 = 37;
