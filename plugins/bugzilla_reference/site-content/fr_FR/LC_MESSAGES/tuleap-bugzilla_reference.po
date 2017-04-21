@@ -16,6 +16,9 @@ msgstr "Références bugzilla"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Cannot create Bugzilla link. Please check your credentials."
+msgstr "Impossible de créer le lien vers Bugzilla. Merci de vérifier vos identifiants"
+
 msgid "Change password"
 msgstr "Changer de mot de passe"
 
@@ -61,6 +64,9 @@ msgstr "Il manque des champs pour pouvoir modifier la référence"
 msgid "Password"
 msgstr "Mot de passe"
 
+msgid "Please check that you can add private comments in Bugzilla."
+msgstr "Merci de vérifier que vous avez le droit d'ajouter des commentaires privés dans Bugzilla"
+
 msgid "Private"
 msgstr "Privé"
 
@@ -68,13 +74,13 @@ msgid "Public"
 msgstr "Public"
 
 msgid "Reference has been successfully added"
-msgstr "La référence a été ajoutée avec succèes"
+msgstr "La référence a été ajoutée avec succès"
 
 msgid "Reference has been successfully removed"
-msgstr "La référence a été supprimée avec succèes"
+msgstr "La référence a été supprimée avec succès"
 
 msgid "Reference has been successfully updated"
-msgstr "La référence a été modifiée avec succèes"
+msgstr "La référence a été modifiée avec succès"
 
 msgid "References between Bugzilla and Tuleap"
 msgstr "Références entre Bugzilla et Tuleap"

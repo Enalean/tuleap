@@ -13,6 +13,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Cannot create Bugzilla link. Please check your credentials."
+msgstr ""
+
 msgid "Change password"
 msgstr ""
 
@@ -56,6 +59,9 @@ msgid "Missing fields for updating reference"
 msgstr ""
 
 msgid "Password"
+msgstr ""
+
+msgid "Please check that you can add private comments in Bugzilla."
 msgstr ""
 
 msgid "Private"
