@@ -1338,10 +1338,6 @@
 <node name="TocTest1"><label>TocTest1</label><dataref><ref xlink:href="http://reini/wiki/sidebar/TocTest1"/></dataref></node>
 <edge source="TocTest1" target="TocTest1"/>
 
-<node name="TeX2pngPlugin"><label>TeX2pngPlugin</label><dataref><ref xlink:href="http://reini/wiki/sidebar/TeX2pngPlugin"/></dataref></node>
-<edge source="TeX2pngPlugin" target="PhpWikiDocumentation"/>
-<edge source="TeX2pngPlugin" target="WikiPlugin"/>
-
 <node name="PhpWikiAdministrationx2f.Access"><label>PhpWikiAdministration/Access</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PhpWikiAdministration/Access"/></dataref></node>
 
 <node name="AllPagesByAuthor"><label>AllPagesByAuthor</label><dataref><ref xlink:href="http://reini/wiki/sidebar/AllPagesByAuthor"/></dataref></node>
@@ -1544,10 +1540,6 @@
 <node name="PluginRessourcesRss"><label>PluginRessourcesRss</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PluginRessourcesRss"/></dataref></node>
 <edge source="PluginRessourcesRss" target="PluginRessourcesRss"/>
 <edge source="PluginRessourcesRss" target="PluginWiki"/>
-
-<node name="PluginTeX2png"><label>PluginTeX2png</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PluginTeX2png"/></dataref></node>
-<edge source="PluginTeX2png" target="PluginWiki"/>
-<edge source="PluginTeX2png" target="DocumentationDePhpWiki"/>
 
 <node name="QuiEstEnLigne"><label>QuiEstEnLigne</label><dataref><ref xlink:href="http://reini/wiki/sidebar/QuiEstEnLigne"/></dataref></node>
 

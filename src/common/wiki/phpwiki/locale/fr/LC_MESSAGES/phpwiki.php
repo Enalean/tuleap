@@ -1698,10 +1698,6 @@ $locale["TODO: Google can only translate from english and french. Find a transla
    "A FAIRE: Google peut uniquement traduire l'anglais et le français. Trouver un service pour traduire %s en %s";
 $locale["Table Of Contents"] =
    "Table des matières";
-$locale["TeX directory not writable."] =
-   "Répertoire TeX non accessible en écriture.";
-$locale["TeX2png"] =
-   "TeX2png";
 $locale["Template"] =
    "Thème";
 $locale["TextFormattingRules"] =

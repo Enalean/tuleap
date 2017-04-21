@@ -187,9 +187,7 @@ ${POT_FILE}: ../lib/plugin/SiteMap.php
 ${POT_FILE}: ../lib/plugin/SyntaxHighlighter.php
 ${POT_FILE}: ../lib/plugin/SystemInfo.php
 ${POT_FILE}: ../lib/plugin/Template.php
-${POT_FILE}: ../lib/plugin/TeX2png.php
 ${POT_FILE}: ../lib/plugin/text2png.php
-${POT_FILE}: ../lib/plugin/TexToPng.php
 ${POT_FILE}: ../lib/plugin/TitleSearch.php
 ${POT_FILE}: ../lib/plugin/Transclude.php
 ${POT_FILE}: ../lib/plugin/TranslateText.php
