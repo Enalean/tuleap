@@ -150,7 +150,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         }
 
         // If no codendi_svnroot.conf file, force recreate.
-        if (!is_file($GLOBALS['svn_root_file'])) {
+        if (!is_file(ForgeConfig::get('svn_root_file'))) {
             $backendSVN->setSVNApacheConfNeedUpdate();
         }
 

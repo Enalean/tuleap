@@ -53,7 +53,6 @@ class BackendSVNTest extends TuleapTestCase {
 
         $GLOBALS['svn_prefix']                = $this->tmp_dir . '/svnroot';
         $GLOBALS['tmp_dir']                   = $this->tmp_dir . '/tmp';
-        $GLOBALS['svn_root_file']             = dirname(__FILE__) . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf';
         $GLOBALS['sys_dbname']                = 'db';
         $GLOBALS['sys_name']                  = 'MyForge';
         $GLOBALS['sys_dbauth_user']           = 'dbauth_user';
@@ -61,6 +60,7 @@ class BackendSVNTest extends TuleapTestCase {
         $GLOBALS['svnadmin_cmd']              = '/usr/bin/svnadmin --config-dir '. dirname(__FILE__) . '/_fixtures/.subversion';
         ForgeConfig::store();
         ForgeConfig::set('sys_project_backup_path', $this->tmp_dir .'/backup');
+        ForgeConfig::set('svn_root_file', __DIR__ . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf');
         mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
         mkdir($GLOBALS['tmp_dir'], 0777, true);
         mkdir(ForgeConfig::get('sys_project_backup_path'), 0777, true);
@@ -95,7 +95,6 @@ class BackendSVNTest extends TuleapTestCase {
         exec('rm -rf '. escapeshellarg($this->tmp_dir));
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);
-        unset($GLOBALS['svn_root_file']);
         unset($GLOBALS['sys_dbname']);
         unset($GLOBALS['sys_name']);
         unset($GLOBALS['sys_dbauth_user']);
@@ -333,14 +332,14 @@ class BackendSVNTest extends TuleapTestCase {
         $this->backend->setReturnReference('getSVNCacheParameters', $this->cache_parameters);
 
         $this->assertEqual($this->backend->generateSVNApacheConf(),True);
-        $svnroots=file_get_contents($GLOBALS['svn_root_file']);
+        $svnroots=file_get_contents(ForgeConfig::get('svn_root_file'));
 
         $this->assertFalse($svnroots === false);
         $this->assertPattern("/gpig2/",$svnroots,"Project name not found in SVN root");
         $this->assertPattern("/AuthName \"Subversion Authorization \(Guinea Pig is 'back'\)\"/",$svnroots,"Group name double quotes in realm");
 
         // Cleanup
-        unlink($GLOBALS['svn_root_file']);
+        unlink(ForgeConfig::get('svn_root_file'));
     }
     
     public function testSetSVNPrivacy_private() {
