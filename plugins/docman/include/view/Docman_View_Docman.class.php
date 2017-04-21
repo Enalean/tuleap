@@ -1,49 +1,66 @@
 <?php
-
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_Docman
-*/
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-require_once('Docman_View_ProjectHeader.class.php');
-require_once('Docman_View_ToolbarNewDocumentVisitor.class.php');
+class Docman_View_Docman extends Docman_View_ProjectHeader
+{
+    protected function getToolbar(array $params)
+    {
+        $tools = array();
 
-class Docman_View_Docman extends Docman_View_ProjectHeader {
-    /* protected */ function _toolbar($params) {
+        $this->addDocmanTool($params, $tools);
+        $this->addNewDocumentEntry($params, $tools);
 
-        // No toolbar in printer version
-        if(isset($params['pv']) && $params['pv'] > 0) {
-            return;
+        if ($this->_controller->userCanAdmin()) {
+            $tools[] = array(
+                'title' => $GLOBALS['Language']->getText('plugin_docman', 'toolbar_admin'),
+                'url'   => $params['default_url'] .'&amp;action=admin'
+            );
         }
 
-        $tools = array();
-        $this->_addDocmanTool($params, $tools);
-        
-        $dPm  =& Docman_PermissionsManager::instance(($params['group_id']));
-        $user =& $this->_controller->getUser();
-        $oneFolderWritable = $dPm->oneFolderIsWritable($user);
-        if ($oneFolderWritable) {
+        $tools[] = array(
+            'title' => $GLOBALS['Language']->getText('global', 'help'),
+            'url'   => "javascript:help_window('/help/show_help.php?section=doc.html')"
+        );
+
+        return $tools;
+    }
+
+    protected function addDocmanTool(array $params, array &$toolbar)
+    {
+    }
+
+    private function addNewDocumentEntry(array $params, &$tools)
+    {
+        $permission_manager      = Docman_PermissionsManager::instance($params['group_id']);
+        $user                    = $this->_controller->getUser();
+        $has_one_folder_writable = $permission_manager->oneFolderIsWritable($user);
+        if ($has_one_folder_writable) {
             $url_params = array('action' => 'newGlobalDocument');
             if (isset($params['item'])) {
                 $url_params['id'] = $params['item']->accept(new Docman_View_ToolbarNewDocumentVisitor());
             }
-            $tools[] = '<b><a href="'.$this->buildUrl($params['default_url'], $url_params).'">'. $GLOBALS['Language']->getText('plugin_docman', 'new_document') .'</a></b>';
-            
-            if($this->_controller->userCanAdmin()) {
-                $tools[] = '<b><a href="'. $params['default_url'] .'&amp;action=admin">'. $GLOBALS['Language']->getText('plugin_docman', 'toolbar_admin') .'</a></b>';
-            }
+            $tools[] = array(
+                'title' => $GLOBALS['Language']->getText('plugin_docman', 'new_document'),
+                'url'   => $this->buildUrl($params['default_url'], $url_params)
+            );
         }
-        
-        $tools[] = help_button('doc.html',false,$GLOBALS['Language']->getText('global','help'));
-        
-        echo implode(' | ', $tools);
-        echo "\n";
-    }
-    /* protected */ function _addDocmanTool(&$array) {
     }
 }
-
-?>
