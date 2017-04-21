@@ -84,6 +84,17 @@
         width: 25px;
         height: 25px;
     }
+
+    .modal-header-with-side-panels {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .modal-header-side-panel {
+        justify-content: center;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
 
 body {
