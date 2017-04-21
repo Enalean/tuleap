@@ -13,7 +13,7 @@ services:
       - backend-svn
 
   backend-web:
-    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.5
+    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.6
     environment:
       RUN_COMMAND: "php /usr/share/tuleap/tools/distlp/backend-web/run.php"
     volumes:
