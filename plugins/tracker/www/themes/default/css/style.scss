@@ -846,7 +846,6 @@ a:hover .xref-in-title {
 .tracker_artifact_followup_header {
     margin-left: 75px;
     padding: 5px;
-    font-style: italic;
     font-size: 0.9em;
 
     .tracker_artifact_followup_permalink {
@@ -2551,8 +2550,9 @@ body.sidebar-expanded .artifact-submit-button, body.sidebar-expanded .hidden-art
         padding: 15px;
     }
     .tuleap-modal-side-panel-content-content {
-        padding: 0 0 30px 0;
-        background: #FAFAFA;
+        padding: 10px 10px 20px 10px;
+
+
 
         .alert-info {
             font-size: 0.8em;

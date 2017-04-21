@@ -43,6 +43,8 @@
     $action-background-color: #F5F5F5;
     $side-action-background-color: #F5F5F5;
 
+    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+    font-style: normal;
     display: none;
     position: fixed;
     z-index: 2001;
@@ -66,6 +68,12 @@
             width: $side-content-width;
             height: 100%;
             background: $content-background-color;
+
+            .followups-title,
+            .artifact-links-title {
+                font-size: 1em;
+                text-transform: uppercase;
+            }
         }
 
         .tuleap-modal-side-panel-grip {
@@ -152,7 +160,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            min-height: 40px;
         }
 
         i {

@@ -6,10 +6,10 @@
             <span>{{ artifact_links_title }}</span>
         </div>
         <div class="tuleap-modal-side-panel-content">
-            <div class="tuleap-modal-side-panel-content-title">
-                <h3>{{ artifact_links_title }}</h3>
+            <div class="modal-header modal-header-side-panel">
+                <h4 class="artifact-links-title">{{ artifact_links_title }}</h4>
             </div>
-            <div class="tuleap-modal-side-panel-content-content">
+            <div class="tuleap-modal-side-panel-content-content modal-body">
                 <div class="alert alert-info">{{{ artifact_links_readonly }}}</div>
                 <ul class="tracker_artifact_links">
                 {{# artifact_links }}
@@ -24,18 +24,18 @@
                 {{/ artifact_links }}
                 </ul>
             </div>
-            <div class="tuleap-modal-side-panel-content-actions">
+            <div class="tuleap-modal-side-panel-content-actions modal-footer">
             </div>
         </div>
     </div>
 
     <div class="tuleap-modal-main-panel">
         <form enctype="multipart/form-data">
-            <div class="tuleap-modal-title">
-                <i class="icon-remove tuleap-modal-close"></i>
+            <div class="tuleap-modal-title modal-header modal-header-with-side-panels">
+                <i class="tuleap-modal-close close">×</i>
                 <h3>{{ artifact_title }}</h3>
             </div>
-            <div class="tuleap-modal-content">
+            <div class="tuleap-modal-content modal-body">
                 <div id="artifact-form-errors" class="alert alert-error">
                     <h5></h5>
                     <ul></ul>
@@ -55,13 +55,13 @@
                 <input type="hidden" name="from_overlay" value="1">
             {{{ javascript_rules }}}
             </div>
-            <div class="tuleap-modal-actions">
+            <div class="tuleap-modal-actions modal-footer">
                 <textarea id="tracker_followup_comment_new"  class="user-mention" name="artifact_followup_comment" placeholder="{{ add_followup_placeholder }}"></textarea>
                 <div>
+                    <a class="btn tuleap-modal-close">{{ cancel }}</a>
                     {{# user_is_logged_in }}
                         <input type="submit" id="tuleap-modal-submit" class="btn btn-primary" data-normal-text="{{ submit }}" data-loading-text="{{ submit }}..." value="{{ submit }}">
                     {{/ user_is_logged_in }}
-                    <a class="btn tuleap-modal-close">{{ cancel }}</a>
                 </div>
             </div>
         </form>
@@ -72,13 +72,13 @@
             <span>{{ followups_title }}</span>
         </div>
         <div class="tuleap-modal-side-panel-content">
-            <div class="tuleap-modal-side-panel-content-title">
-                <h3>{{ followups_title }}</h3>
+            <div class="modal-header modal-header-side-panel">
+                <h4 class="followups-title">{{ followups_title }}</h4>
             </div>
-            <div class="tuleap-modal-side-panel-content-content">
+            <div class="tuleap-modal-side-panel-content-content modal-body">
                 {{{ follow_ups }}}
             </div>
-            <div class="tuleap-modal-side-panel-content-actions">
+            <div class="tuleap-modal-side-panel-content-actions modal-footer">
             </div>
         </div>
     </div>

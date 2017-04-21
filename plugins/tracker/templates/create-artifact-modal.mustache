@@ -3,8 +3,8 @@
 <div class="tuleap-modal">
     <div class="tuleap-modal-main-panel">
         <form enctype="multipart/form-data">
-            <div class="tuleap-modal-title">
-                <i class="icon-remove tuleap-modal-close"></i>
+            <div class="tuleap-modal-title modal-header">
+                <i class="tuleap-modal-close close">×</i>
                 <h3>{{ tracker_title }}</h3>
             </div>
             <div class="tuleap-modal-content">
@@ -31,10 +31,10 @@
                 <input type="hidden" name="from_overlay" value="1">
             {{{ javascript_rules }}}
             </div>
-            <div class="tuleap-modal-actions">
+            <div class="tuleap-modal-actions modal-footer">
                 <div>
-                    <input type="submit" id="tuleap-modal-submit" class="btn btn-primary" data-normal-text="{{ submit }}" data-loading-text="{{ submit }}..." value="{{ submit }}">
                     <a class="btn tuleap-modal-close">{{ cancel }}</a>
+                    <input type="submit" id="tuleap-modal-submit" class="btn btn-primary" data-normal-text="{{ submit }}" data-loading-text="{{ submit }}..." value="{{ submit }}">
                 </div>
             </div>
         </form>
