@@ -19,13 +19,14 @@
  */
 
 use Tuleap\AgileDashboard\REST\DataBuilder;
+use Tuleap\AgileDashboard\REST\TestBase;
 
 require_once dirname(__FILE__).'/bootstrap.php';
 
 /**
  * @group KanbanTests
  */
-class KanbanTest extends RestBase {
+class KanbanTest extends TestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(

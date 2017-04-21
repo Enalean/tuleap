@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,12 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
+use Tuleap\AgileDashboard\REST\TestBase;
+
 /**
  * @group KanbanTests
  */
-class KanbanColumnsTest extends RestBase {
+class KanbanColumnsTest extends TestBase {
     protected function getResponse($request) {
         return $this->getResponseByToken(
             $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
