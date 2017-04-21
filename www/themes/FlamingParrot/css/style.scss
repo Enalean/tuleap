@@ -31,6 +31,11 @@
     #execution-presences-header {
         border-bottom: 2px solid $main;
     }
+
+    .tuleap-artifact-modal .modal-body fieldset > legend {
+        border-bottom-color: $main;
+        color: $main;
+    }
 }
 
 body {
