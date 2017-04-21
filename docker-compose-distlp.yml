@@ -35,6 +35,8 @@ services:
       - container:tuleap_data
     volumes:
       - .:/usr/share/tuleap
+    env_file:
+      - .env
     depends_on:
       - ldap
       - db

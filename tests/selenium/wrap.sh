@@ -9,7 +9,7 @@ set -ex
 DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml"
 
 clean_env() {
-    $DOCKERCOMPOSE down || true
+    $DOCKERCOMPOSE down --remove-orphans || true
     docker network rm ${BUILD_TAG}tuleap_runtests || true
     docker volume rm ${BUILD_TAG}tuleap_runtests_rabbitmq-data || true
     docker volume rm ${BUILD_TAG}tuleap_runtests_ldap-data || true
@@ -22,7 +22,8 @@ get_test_container_state() {
     docker inspect -f '{{.State.Status}}' $test_container_id || true
 }
 
-rm -f distlp.xml
+mkdir -p test_results || true
+rm -rf test_results/* || true
 clean_env
 
 docker network create ${BUILD_TAG}tuleap_runtests
@@ -41,5 +42,9 @@ while [ "$test_state" = "running" ]; do
     sleep 1
     test_state=$(get_test_container_state)
 done
+
+$DOCKERCOMPOSE logs backend-web > test_results/backend-web.log
+$DOCKERCOMPOSE logs backend-svn > test_results/backend-svn.log
+$DOCKERCOMPOSE logs test > test_results/test.log
 
 clean_env

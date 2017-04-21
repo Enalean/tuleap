@@ -16,20 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tests;
+namespace Tuleap\Tests\Selenium\SVN;
 
-use PHPUnit\Framework\TestCase;
+use Lmc\Steward\Test\AbstractTestCase;
 use SimpleXmlElement;
 
-class SVNTest extends TestCase
+/**
+ * @noBrowser
+ */
+class SVNCLITest extends AbstractTestCase
 {
     private $init_pwd;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->init_pwd = getcwd();
@@ -38,6 +42,7 @@ class SVNTest extends TestCase
 
     public function tearDown()
     {
+        parent::tearDown();
         chdir($this->init_pwd);
         system('/bin/rm -rf /tmp/sample');
     }
