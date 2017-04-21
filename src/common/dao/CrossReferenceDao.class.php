@@ -88,10 +88,25 @@ class CrossReferenceDao extends DataAccessObject {
         return (bool) ($res && !$res->isError() && $res->rowCount() >= 1);
     }
 
+    public function fullReferenceExistInDb($cross_ref)
+    {
+        $sql = "SELECT * from {$this->table_name} WHERE " .
+            "source_id='" . db_es($cross_ref->refSourceId) . "' AND " .
+            "target_id='" . db_es($cross_ref->refTargetId) . "' AND " .
+            "source_gid='" . db_ei($cross_ref->refSourceGid) . "' AND " .
+            "target_gid='" . db_ei($cross_ref->refTargetGid) . "' AND " .
+            "source_type='" . db_es($cross_ref->insertSourceType) . "' AND " .
+            "target_keyword='" . db_es($cross_ref->targetKey) . "' AND " .
+            "target_type='" . db_es($cross_ref->insertTargetType) . "'";
+        $res = $this->da->query($sql);
+
+        return (bool) ($res && ! $res->isError() && $res->rowCount() >= 1);
+    }
+
     public function deleteCrossReference($cross_ref)
     {
         $target_group_id = $this->da->escapeInt($cross_ref->refTargetGid);
-        $target_id       = $this->da->escapeInt($cross_ref->refTargetId);
+        $target_id       = $this->da->quoteSmart($cross_ref->refTargetId);
         $target_ref_type = $this->da->quoteSmart($cross_ref->refTargetType);
 
         $source_group_id = $this->da->escapeInt($cross_ref->refSourceGid);
@@ -120,6 +135,47 @@ class CrossReferenceDao extends DataAccessObject {
                     source_type = $source_type
                   )
                 )";
+        $res = $this->da->query($sql);
+
+        return (bool) $res;
+    }
+
+    public function deleteFullCrossReference(CrossReference $cross_ref)
+    {
+        $target_group_id = $this->da->escapeInt($cross_ref->refTargetGid);
+        $target_id       = $this->da->quoteSmart($cross_ref->refTargetId);
+        $target_ref_type = $this->da->quoteSmart($cross_ref->refTargetType);
+        $target_keyword  = $this->da->quoteSmart($cross_ref->targetKey);
+
+        $source_group_id = $this->da->escapeInt($cross_ref->refSourceGid);
+        $source_id       = $this->da->quoteSmart($cross_ref->refSourceId);
+        $source_type     = $this->da->quoteSmart($cross_ref->refSourceType);
+
+        $sql = "DELETE FROM {$this->table_name} WHERE
+                ( ( target_gid     = $target_group_id AND
+                    target_id      = $target_id AND
+                    target_type    = $target_ref_type AND
+                    target_keyword = $target_keyword
+                  )
+                  AND
+                  ( source_gid  = $source_group_id AND
+                    source_id   = $source_id AND
+                    source_type = $source_type
+                  )
+                )
+                OR
+                ( ( target_gid     = $target_group_id AND
+                    target_id      = $target_id AND
+                    target_type    = $target_ref_type AND
+                    target_keyword = $target_keyword
+                  )
+                  AND
+                  ( source_gid  = $source_group_id AND
+                    source_id   = $source_id AND
+                    source_type = $source_type
+                  )
+                )";
+
         $res = $this->da->query($sql);
 
         return (bool) $res;

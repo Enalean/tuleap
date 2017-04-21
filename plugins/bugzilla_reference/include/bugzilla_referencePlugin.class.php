@@ -21,6 +21,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Bugzilla\Administration\Controller;
 use Tuleap\Bugzilla\Administration\Router;
+use Tuleap\Bugzilla\CrossReferenceCreator;
 use Tuleap\Bugzilla\Plugin\Info;
 use Tuleap\Bugzilla\BugzillaLogger;
 use Tuleap\Bugzilla\Reference\BugzillaReference;
@@ -47,8 +48,10 @@ class bugzilla_referencePlugin extends Plugin
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
+        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook(Event::POST_REFERENCE_EXTRACTED);
         $this->addHook(Event::GET_REFERENCE);
+        $this->addHook(Event::REMOVE_CROSS_REFERENCE);
     }
 
     /**
@@ -108,7 +111,7 @@ class bugzilla_referencePlugin extends Plugin
     public function burning_parrot_get_stylesheets(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/bugzilla_reference') === 0) {
-            $variant                 = $params['variant'];
+            $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() . '/css/style-' . $variant->getName() . '.css';
         }
     }
@@ -118,6 +121,15 @@ class bugzilla_referencePlugin extends Plugin
         foreach ($this->getReferenceRetriever()->getAllReferences() as $reference) {
             $params['keywords'][] = $reference->getKeyword();
         }
+    }
+
+    public function get_available_reference_natures($params)
+    {
+        $params['natures']['bugzilla'] =
+            array(
+                'keyword' => 'bugzilla',
+                'label'   => dgettext('tuleap-bugzilla_reference', 'Bugzilla')
+            );
     }
 
     /**
@@ -130,29 +142,62 @@ class bugzilla_referencePlugin extends Plugin
         return $reference_retriever;
     }
 
+    /** @see \Event::POST_REFERENCE_EXTRACTED */
     public function post_reference_extracted(array $params)
     {
-        $this->getRESTReferenceCreator()->create(
-            $params['source_link'],
-            $params['target_keyword'],
-            $params['source_id'],
-            $params['target_id'],
-            $params['source_keyword']
-        );
+        /** @var CrossReference $cross_reference */
+        $cross_reference = $params['cross_reference'];
+
+        $bugzilla = $this->getBugzillaReferenceFromKeyword($cross_reference->targetKey);
+        if (! $bugzilla) {
+            return;
+        }
+
+        $this->getCrossReferenceCreator()->create($cross_reference);
+        $this->getRESTReferenceCreator()->create($cross_reference, $bugzilla);
+    }
+
+    private function getCrossReferenceCreator()
+    {
+        return new CrossReferenceCreator(new CrossReferenceDao());
     }
 
     private function getRESTReferenceCreator()
     {
-        return new RESTReferenceCreator($this->getReferenceRetriever(), new Http_Client(), new BugzillaLogger());
+        return new RESTReferenceCreator(new Http_Client(), new BugzillaLogger());
     }
 
-    public function get_reference($params)
+    /** @see \Event::GET_REFERENCE */
+    public function get_reference(array $params)
     {
-        $reference = $this->getReferenceRetriever()->getReferenceByKeyword($params['keyword']);
-        if (! $reference) {
+        $bugzilla = $this->getBugzillaReferenceFromKeyword($params['keyword']);
+        if (! $bugzilla) {
             return;
         }
 
-        $params['reference'] = new BugzillaReference($reference);
+        $params['reference'] = new BugzillaReference($bugzilla);
+    }
+
+    /** @see \Event::REMOVE_CROSS_REFERENCE */
+    public function remove_cross_reference(array $params)
+    {
+        /** @var CrossReference $cross_reference */
+        $cross_reference = $params['cross_reference'];
+
+        $bugzilla = $this->getBugzillaReferenceFromKeyword($cross_reference->targetKey);
+        if (! $bugzilla) {
+            return;
+        }
+
+        $dao = new CrossReferenceDao();
+        $params['is_reference_removed'] = $dao->deleteFullCrossReference($cross_reference);
+    }
+
+    /**
+     * @return null|\Tuleap\Bugzilla\Reference\Reference
+     */
+    private function getBugzillaReferenceFromKeyword($keyword)
+    {
+        return $this->getReferenceRetriever()->getReferenceByKeyword($keyword);
     }
 }

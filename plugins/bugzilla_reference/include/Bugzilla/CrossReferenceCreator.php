@@ -18,27 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Bugzilla\Reference;
+namespace Tuleap\Bugzilla;
 
-class BugzillaReference extends \Reference
+use CrossReference;
+use CrossReferenceDao;
+
+class CrossReferenceCreator
 {
     /**
-     * @param Reference $bugzilla
-     *
-     * @return \Reference
+     * @var CrossReferenceDao
      */
-    public function __construct(Reference $bugzilla)
+    private $dao;
+
+    public function __construct(CrossReferenceDao $dao)
     {
-        return parent::__construct(
-            0,
-            $bugzilla->getKeyword(),
-            '',
-            $bugzilla->getServer() . '/show_bug.cgi?id=$1',
-            'S',
-            '',
-            'bugzilla',
-            true,
-            ''
-        );
+        $this->dao = $dao;
+    }
+
+    public function create(CrossReference $cross_reference)
+    {
+        if (! $this->dao->fullReferenceExistInDb($cross_reference)) {
+            $this->dao->createDbCrossRef($cross_reference);
+        }
     }
 }

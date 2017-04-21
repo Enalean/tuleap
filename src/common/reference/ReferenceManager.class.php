@@ -744,57 +744,43 @@ class ReferenceManager {
             }
         }
 
+        if (! $user_id) {
+            $user_id = user_getid();
+        }
         $matches = $this->_extractAllMatches($html);
-
         foreach ($matches as $match) {
-            $key   = strtolower($match['key']);
-            $value = $match['value'];
-
             $reference = $this->getReferenceFromMatch($match);
-            if ($reference) {
-                $ref_instance = new ReferenceInstance($match, $reference, $value);
-                $ref_instance->computeGotoLink($source_key, $source_id, $source_gid);
-                $params = array(
-                    'source_id'         => $source_id,
-                    'target_keyword'    => $reference->getKeyword(),
-                    'target_id'         => $value,
-                    'source_link'       => $ref_instance,
-                    'source_keyword'    => $source_key,
-                );
+            if (! $reference) {
+                continue;
+            }
 
-                EventManager::instance()->processEvent(
-                    Event::POST_REFERENCE_EXTRACTED,
-                    $params
-                );
+            $target_key  = strtolower($match['key']);
+            $target_id   = $match['value'];
+            $target_type = $reference->getNature();
+            $target_gid  = $reference->getGroupId();
 
-                //Cross reference
+            $cross_reference = new CrossReference(
+                $source_id,
+                $source_gid,
+                $source_type,
+                $source_key,
+                $target_id,
+                $target_gid,
+                $target_type,
+                $target_key,
+                $user_id
+            );
 
-                $res = $dao->searchByKeywordAndGroupId($key, $source_gid);
-                if ($key_array = $res->getRow()) {
+            EventManager::instance()->processEvent(
+                Event::POST_REFERENCE_EXTRACTED,
+                array(
+                    'cross_reference' => $cross_reference
+                )
+            );
 
-                    $target_type = $reference->getNature();
-                    $target_id   = $value;
-                    $target_key  = $key;
-                    $target_gid  = $reference->getGroupId();
-
-                    if (! $user_id) {
-                        $user_id = user_getid();
-                    }
-
-                    $this->insertCrossReference(
-                        new CrossReference(
-                            $source_id,
-                            $source_gid,
-                            $source_type,
-                            $source_key,
-                            $target_id,
-                            $target_gid,
-                            $target_type,
-                            $target_key,
-                            $user_id
-                        )
-                    );
-                }
+            $res = $dao->searchByKeywordAndGroupId($target_key, $source_gid);
+            if (count($res)) {
+                $this->insertCrossReference($cross_reference);
             }
         }
 
@@ -810,9 +796,22 @@ class ReferenceManager {
         return true;
     }
 
-    public function removeCrossReference(CrossReference $cross_reference) {
-        $dao = $this->_getCrossReferenceDao();
-        return $dao->deleteCrossReference($cross_reference);
+    public function removeCrossReference(CrossReference $cross_reference)
+    {
+        $is_reference_removed = false;
+        EventManager::instance()->processEvent(
+            Event::REMOVE_CROSS_REFERENCE,
+            array(
+                'cross_reference'      => $cross_reference,
+                'is_reference_removed' => &$is_reference_removed
+            )
+        );
+
+        if ($is_reference_removed) {
+            return true;
+        }
+
+        return $this->_getCrossReferenceDao()->deleteCrossReference($cross_reference);
     }
 
     /**

@@ -4,6 +4,9 @@ msgstr ""
 msgid "An error occured while removing reference"
 msgstr ""
 
+msgid "Bugzilla"
+msgstr ""
+
 msgid "Bugzilla configuration"
 msgstr ""
 
