@@ -1093,7 +1093,7 @@ fi
 %files plugin-bugzilla-reference
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/bugzilla_reference
-%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 
 %files api-explorer
 %defattr(-,root,root,-)
