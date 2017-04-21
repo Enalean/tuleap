@@ -273,7 +273,10 @@ class FileModuleMonitorFactory {
             new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
         );
 
-        $htmlBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail');
+        $request   = HTTPRequest::instance();
+        $goto_link = $request->getServerUrl() .'/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
+            '&package_id=' . urlencode($package->getPackageID());
+        $htmlBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail');
         $htmlBody .= ' <a href="'.$goto_link.'" >'.$package->getName().'</a>';
         $htmlBody .= '<br /><br /><a href="'.get_server_url().'/file/filemodule_monitor.php?group_id='.$package->getGroupID().'&filemodule_id='.$package->getPackageID().'" >'.$GLOBALS['Language']->getText('file_showfiles', 'stop_monitoring').'</a>';
 
@@ -302,7 +305,10 @@ class FileModuleMonitorFactory {
             new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
         );
 
-        $htmlBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail');
+        $request   = HTTPRequest::instance();
+        $goto_link = $request->getServerUrl() .'/file/showfiles.php?group_id=' . urlencode($package->getGroupID()) .
+            '&package_id=' . urlencode($package->getPackageID());
+        $htmlBody  = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail');
         $htmlBody .= ' <a href="'.$goto_link.'" >'.$package->getName().'</a>';
         $htmlBody .= '<br /><br /><a href="'.get_server_url().'/file/filemodule_monitor.php?group_id='.$package->getGroupID().'&filemodule_id='.$package->getPackageID().'" >'.$GLOBALS['Language']->getText('file_showfiles', 'start_monitoring').'</a>';
 
