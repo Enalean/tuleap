@@ -118,6 +118,7 @@ class DocmanPlugin extends Plugin
         $this->addHook('project_admin_ugroup_deletion');
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
+        $this->addHook(Event::SERVICE_CLASSNAMES);
     }
 
     public function getHooksAndCallbacks() {
@@ -135,6 +136,12 @@ class DocmanPlugin extends Plugin
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
+    }
+
+    /** @see Event::SERVICE_CLASSNAMES */
+    public function service_classnames($params)
+    {
+        $params['classnames'][self::SERVICE_SHORTNAME] = 'Tuleap\Docman\ServiceDocman';
     }
 
     public function service_icon($params) {

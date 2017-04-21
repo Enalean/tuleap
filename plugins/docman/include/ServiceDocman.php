@@ -1,6 +1,5 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,13 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_Extra extends Docman_View_Docman
+namespace Tuleap\Docman;
+
+class ServiceDocman extends \Service
 {
-    protected function addDocmanTool($params, &$toolbar)
+    public function displayHeader($title, $toolbar)
     {
-        $toolbar[] = array(
-            'title' => $GLOBALS['Language']->getText('plugin_docman', 'toolbar_docman'),
-            'url'   => $params['default_url']
-        );
+        $GLOBALS['HTML']->includeCalendarScripts();
+
+        $breadcrumbs = array();
+
+        parent::displayHeader($title, $breadcrumbs, $toolbar);
     }
 }

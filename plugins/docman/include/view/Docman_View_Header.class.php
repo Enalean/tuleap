@@ -1,62 +1,73 @@
 <?php
-
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_Header
-*/
-
-require_once('Docman_View_View.class.php');
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* abstract */ class Docman_View_Header extends Docman_View_View {
-    
+
     function _header($params) {
         if (!headers_sent()) {
             header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
             header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
         }
-        
+
         if (isset($params['title'])) {
             $htmlParams['title'] = $params['title'];
         } else {
             $htmlParams['title'] = $this->_getTitle($params);
         }
-        
+
         $htmlParams                 = array_merge($htmlParams, $this->_getAdditionalHtmlParams($params));
         $htmlParams['service_name'] = $params['docman']->plugin->getServiceShortname();
 
-        if(isset($params['pv']) && $params['pv'] > 0) {
+        if (isset($params['pv']) && $params['pv'] > 0) {
             $htmlParams['pv'] = $params['pv'];
             $GLOBALS['HTML']->pv_header($htmlParams);
-        }
-        else {
-            $GLOBALS['HTML']->includeCalendarScripts();
-            site_header($htmlParams);
-        }
-    }
-    
-    /* protected */ function _getTitle($params) {
-        $title = '';
-        $gid = null;
-        if(isset($params['group_id'])) {
-            $gid = $params['group_id'];
-        }
-        elseif(isset($params['item']) && $params['item'] != null) {
-            $gid = $params['item']->getGroupId();
-        }
-        if($gid > 0) {
-            $pm = ProjectManager::instance();
-            $go = $pm->getProject($gid);
-            if($go != false) {
-                $title .= $go->getPublicName().' - ';
+        } else {
+            $project = $this->getProjectFromParams($params);
+            if ($project) {
+                /** @var Tuleap\Docman\ServiceDocman $service */
+                $service = $project->getService($htmlParams['service_name']);
+                $service->displayHeader($htmlParams['title'], $this->getToolbar($params));
+            } else {
+                $GLOBALS['HTML']->includeCalendarScripts();
+                site_header($htmlParams);
             }
         }
+    }
+
+    protected function getToolbar(array $params)
+    {
+        return array();
+    }
+
+    /* protected */ function _getTitle($params) {
+        $title = '';
+        $project = $this->getProjectFromParams($params);
+        if ($project) {
+            $title .= $project->getPublicName().' - ';
+        }
         $title .= $GLOBALS['Language']->getText('plugin_docman','title');
+
         return $title;
     }
-    
+
     /* protected */ function _footer($params) {
         if(isset($params['pv']) && $params['pv'] > 0) {
             $GLOBALS['HTML']->pv_footer(array());
@@ -65,15 +76,39 @@ require_once('Docman_View_View.class.php');
             $GLOBALS['HTML']->footer(array());
         }
     }
-    
+
     /* protected */ function _getAdditionalHtmlParams($params) {
         return  array();
     }
-    
+
     /* protected */ function _feedback($params) {
         //$this->_controller->feedback->display();
     }
-    
-}
 
-?>
+    private function getProjectIdFromParams($params)
+    {
+        $project_id = null;
+        if (isset($params['group_id'])) {
+            $project_id = $params['group_id'];
+        } else if (isset($params['item']) && $params['item'] != null) {
+            $project_id = $params['item']->getGroupId();
+        }
+
+        return $project_id;
+    }
+
+    /**
+     * @return Project|null
+     */
+    private function getProjectFromParams($params)
+    {
+        $project = null;
+
+        $project_id = $this->getProjectIdFromParams($params);
+        if ($project_id > 0) {
+            $project = ProjectManager::instance()->getProject($project_id);
+        }
+
+        return $project;
+    }
+}

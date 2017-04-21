@@ -1,15 +1,23 @@
 <?php
-
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_View
-*/
-require_once(dirname(__FILE__).'/../Docman_VersionFactory.class.php');
-require_once(dirname(__FILE__).'/../Docman_Icons.class.php');
-require_once('Docman_View_GetMenuItemsVisitor.class.php');
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* abstract */ class Docman_View_View {
     var $dfltSortParams = array();
@@ -29,7 +37,6 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
         $this->_header($params);
         $this->_scripts($params);
         $this->_feedback($params);
-        $this->_toolbar($params);
         $this->_title($params);
         $this->_breadCrumbs($params);
         $this->_mode($params);
@@ -43,8 +50,6 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
     /* protected */ function _scripts($params) {
     }
     /* protected */ function _feedback($params) {
-    }
-    /* protected */ function _toolbar($params) {
     }
     /* protected */ function _title($params) {
     }
