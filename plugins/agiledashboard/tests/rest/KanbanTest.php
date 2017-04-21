@@ -168,7 +168,7 @@ class KanbanTest extends RestBase {
             null,
             json_encode(array(
                 'order' => array(
-                    'ids'         => array(REST_TestDataBuilder::KANBAN_ARTIFACT_ID_1),
+                    'ids'         => array($this->kanban_artifact_ids[1]),
                     'direction'   => 'after',
                     'compared_to' => REST_TestDataBuilder::KANBAN_ARTIFACT_ID_2
                 )
@@ -179,7 +179,7 @@ class KanbanTest extends RestBase {
         $this->assertEquals(
             array(
                 REST_TestDataBuilder::KANBAN_ARTIFACT_ID_2,
-                REST_TestDataBuilder::KANBAN_ARTIFACT_ID_1,
+                $this->kanban_artifact_ids[1],
             ),
             $this->getIdsOrderedByPriority($url)
         );
@@ -295,7 +295,7 @@ class KanbanTest extends RestBase {
         $this->assertEquals(
             array(
                 REST_TestDataBuilder::KANBAN_ARTIFACT_ID_2,
-                REST_TestDataBuilder::KANBAN_ARTIFACT_ID_1,
+                $this->kanban_artifact_ids[1],
                 REST_TestDataBuilder::KANBAN_ARTIFACT_ID_6
             ),
             $this->getIdsOrderedByPriority($url)
@@ -488,7 +488,7 @@ class KanbanTest extends RestBase {
     }
 
     public function testGETKanbanItem() {
-        $response = $this->getResponse($this->client->get('kanban_items/' . REST_TestDataBuilder::KANBAN_ARTIFACT_ID_1));
+        $response = $this->getResponse($this->client->get('kanban_items/' . $this->kanban_artifact_ids[1]));
         $item = $response->json();
 
         $this->assertEquals($response->getStatusCode(), 200);
