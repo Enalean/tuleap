@@ -38,6 +38,8 @@ AutoReqProv: no
 Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear
 Requires: %{php_base}-process  %{php_base}-opcache
 
+Requires: highlight
+
 Requires: php-ZendFramework2-Loader
 Requires: php-paragonie-random-compat
 
@@ -74,7 +76,7 @@ Summary: CVS component for Tuleap
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, highlight, perl-CGI
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, perl-CGI
 #Requires: viewvc, viewvc-theme-tuleap >= 1.0.3
 #Requires: cvs-tuleap
 %description core-cvs

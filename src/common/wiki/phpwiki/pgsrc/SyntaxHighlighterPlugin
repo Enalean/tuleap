@@ -19,8 +19,6 @@ syntax |
   (required), See http://www.andre-simon.de/doku/highlight/highlight.html 
 style |
   ~[ "ansi", "gnu", "kr", "java", "linux" ~] (required)
-color |
-  null (optional), see =highlight/themes=
 number |
   0  (optional)
 wrap |
@@ -30,7 +28,7 @@ wrap |
 ! Example
 
 <verbatim>
-<?plugin SyntaxHighlighter syntax=c style=kr color=emacs
+<?plugin SyntaxHighlighter syntax=c style=kr
  #include <stdio.h>
 
  int main() {
@@ -41,7 +39,7 @@ wrap |
 
 =>
 
-<?plugin SyntaxHighlighter syntax=c style=kr color=emacs
+<?plugin SyntaxHighlighter syntax=c style=kr
  #include <stdio.h>
 
  int main() {
