@@ -57,7 +57,9 @@ class RESTReferenceCreator
             return false;
         }
 
-        $this->logger->info("Asking reference between $source_keyword $source_id and bugzilla reference $target_keyword $target_id");
+        $this->logger->info(
+            "Asking reference between $source_keyword $source_id and bugzilla reference $target_keyword $target_id"
+        );
         $message = "A tuleap item [$source_keyword #$source_id] references this bugzilla item. \n";
         $message .= "[$source_keyword #$source_id]: " . $link->getFullGotoLink();
 
@@ -90,6 +92,21 @@ class RESTReferenceCreator
             $this->logger->info("Bugzilla reference added", $this->http_curl_client->getStatusCodeAndReasonPhrase());
         } catch (\Http_ClientException $ex) {
             $this->logger->error($ex->getMessage());
+            $request = $this->http_curl_client->getLastRequest();
+            if (isset($request['http_code']) && 401 === (int) $request['http_code']) {
+                $message = dgettext(
+                    'tuleap-bugzilla_reference',
+                    'Cannot create Bugzilla link. Please check your credentials.'
+                );
+                if ($are_follow_up_private) {
+                    $message .= ' ' . dgettext(
+                        'tuleap-bugzilla_reference',
+                        'Please check that you can add private comments in Bugzilla.'
+                    );
+                }
+
+                $this->logger->error($message);
+            }
         }
     }
 }
