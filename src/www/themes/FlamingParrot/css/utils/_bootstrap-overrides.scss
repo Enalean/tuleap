@@ -280,7 +280,7 @@ legend {
 @mixin dropdown-menu($color) {
     font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
 
-    > a,
+    &:not(.disabled) > a,
     > input {
         color: $color;
 
