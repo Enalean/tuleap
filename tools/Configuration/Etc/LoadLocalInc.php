@@ -49,15 +49,19 @@ class LoadLocalInc
         $vars->setApplicationBaseDir($variables['tuleap_dir']);
         $vars->setApplicationUser($variables['sys_http_user']);
         $vars->setServerName($variables['sys_default_domain']);
+        $vars->setDatabaseServer($variables['sys_dbhost']);
+        $vars->setDbauthuserPassword($variables['sys_dbauth_passwd']);
 
         return $vars;
     }
 
     private function getVariablesOverrideByLocalConf()
     {
-        $variables = $this->getVariables($this->tuleap_base_dir.'/src/etc/local.inc.dist');
-        $variables = array_merge($variables, $this->getVariables($this->base_dir.'/conf/local.inc'));
-        return $variables;
+        return array_merge(
+            $this->getVariables($this->tuleap_base_dir.'/src/etc/local.inc.dist'),
+            $this->getVariables($this->base_dir.'/conf/local.inc'),
+            $this->getVariables($this->base_dir.'/conf/database.inc')
+        );
     }
 
     private function getVariables($file_name)

@@ -26,6 +26,9 @@ class Vars
     private $application_user;
     private $application_base_dir;
     private $server_name;
+    private $database_server;
+    private $database_root_password;
+    private $dbauthuser_password;
 
     public function getApplicationUser()
     {
@@ -42,6 +45,21 @@ class Vars
         return $this->server_name;
     }
 
+    public function getDatabaseServer()
+    {
+        return $this->database_server;
+    }
+
+    public function getDatabaseRootPassword()
+    {
+        return $this->database_root_password;
+    }
+
+    public function getDbauthuserPassword()
+    {
+        return $this->dbauthuser_password;
+    }
+
     public function setApplicationUser($name)
     {
         $this->application_user = $name;
@@ -55,5 +73,20 @@ class Vars
     public function setServerName($name)
     {
         $this->server_name = $name;
+    }
+
+    public function setDatabaseServer($name)
+    {
+        $this->database_server = $name;
+    }
+
+    public function setDatabaseRootPassword($password)
+    {
+        $this->database_root_password = $password;
+    }
+
+    public function setDbauthuserPassword($password)
+    {
+        $this->dbauthuser_password = $password;
     }
 }
