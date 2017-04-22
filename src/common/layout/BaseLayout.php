@@ -297,15 +297,6 @@ abstract class BaseLayout extends Response
         if ($title_displayed) {
             echo '</fieldset>';
         }
-        echo '<fieldset>';
-        echo '<legend id="footer_debug_session" class="'. Toggler::getClassname('footer_debug_session') .'">Session</legend>';
-        echo "<div>";
-        echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reload\');return false;">reload</a>';
-        echo '  |  ';
-        echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reset\');return false;">reset</a>';
-        echo '<pre id="footer_debug_session_data">'.print_r($_SESSION, 1).'</pre>';
-        echo "</div>";
-        echo '</fieldset>';
         echo "</pre>\n";
         echo '</div>';
         echo '</div>';
