@@ -66,6 +66,8 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $project_ids = array();
     protected $tracker_ids = array();
 
+    protected $release_artifact_ids = array();
+
     public function __construct() {
         parent::__construct();
         if (isset($_ENV['TULEAP_HOST'])) {
@@ -107,6 +109,8 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->project_pbi_id            = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
 
         $this->getTrackerIdsForProjectPrivateMember();
+
+        $this->getReleaseArtifactIds();
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -224,5 +228,32 @@ class RestBase extends PHPUnit_Framework_TestCase {
         }
 
         $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::KANBAN_TRACKER_SHORTNAME];
+    }
+
+    private function getReleaseArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->releases_tracker_id,
+            $this->release_artifact_ids
+        );
+    }
+
+    protected function getArtifactIds($tracker_id, array &$retrieved_tracker_ids)
+    {
+        $query = http_build_query(
+            array('order' => 'asc')
+        );
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
+        );
+
+        $artifacts = $response->json();
+        $index     = 1;
+        foreach ($artifacts as $artifact) {
+            $retrieved_tracker_ids[$index] = $artifact['id'];
+            $index++;
+        }
     }
 }

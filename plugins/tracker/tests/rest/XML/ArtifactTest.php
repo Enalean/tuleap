@@ -79,12 +79,12 @@ class ArtifactTest extends RestBase {
     }
 
     public function testGetArtifact() {
-        $response = $this->getResponse($this->xml_client->get('artifacts/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->xml_client->get('artifacts/'.$this->release_artifact_ids[1]));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $artifact_xml = $response->xml();
 
-        $this->assertEquals((int) $artifact_xml->id, REST_TestDataBuilder::RELEASE_ARTIFACT_ID);
+        $this->assertEquals((int) $artifact_xml->id, $this->release_artifact_ids[1]);
         $this->assertEquals((int) $artifact_xml->project->id, $this->project_private_member_id);
     }
 

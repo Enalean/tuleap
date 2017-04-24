@@ -33,12 +33,12 @@ class MilestonesContentTest extends RestBase {
     }
 
     public function testOPTIONSContent() {
-        $response = $this->getResponse($this->client->options('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content'));
+        $response = $this->getResponse($this->client->options('milestones/'.$this->release_artifact_ids[1].'/content'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETContent() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content'));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/content'));
 
         $content_items = $response->json();
 
@@ -72,11 +72,11 @@ class MilestonesContentTest extends RestBase {
     }
 
     public function testPUTContent() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
 
         $this->assertEquals($response_put->getStatusCode(), 200);
 
-        $response_get = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content'));
+        $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/content'));
         $backlog_items = $response_get->json();
 
         $this->assertCount(2, $backlog_items);
@@ -95,7 +95,7 @@ class MilestonesContentTest extends RestBase {
     }
 
     public function testPUTContentWithSameValueAsPreviouslyReturns200() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
 
         $this->assertEquals($response_put->getStatusCode(), 200);
         $this->assertEquals($response_put->json(), array());
@@ -105,18 +105,18 @@ class MilestonesContentTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPUTContentWithoutPermission() {
-        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.']'));
+        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.']'));
 
         $this->assertEquals($response_put->getStatusCode(), 403);
         $this->assertEquals($response_put->json(), array());
     }
 
     public function testPUTContentOnlyOneElement() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
 
         $this->assertEquals($response_put->getStatusCode(), 200);
 
-        $response_get = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content'));
+        $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/content'));
         $backlog_items = $response_get->json();
 
         $this->assertCount(1, $backlog_items);
@@ -127,6 +127,6 @@ class MilestonesContentTest extends RestBase {
         $this->assertEquals($first_backlog_item['status'], "Open");
         $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_4_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
-        $this->getResponse($this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
+        $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.REST_TestDataBuilder::EPIC_1_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
     }
 }

@@ -135,8 +135,8 @@ class TrackersTest extends RestBase {
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/' . REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
+        $this->assertEquals($this->release_artifact_ids[1], $first_artifact_info['id']);
+        $this->assertEquals('artifacts/' . $this->release_artifact_ids[1], $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -148,8 +148,8 @@ class TrackersTest extends RestBase {
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/' . REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
+        $this->assertEquals($this->release_artifact_ids[1], $first_artifact_info['id']);
+        $this->assertEquals('artifacts/' . $this->release_artifact_ids[1], $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -166,8 +166,8 @@ class TrackersTest extends RestBase {
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/' . REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
+        $this->assertEquals($this->release_artifact_ids[1], $first_artifact_info['id']);
+        $this->assertEquals('artifacts/' . $this->release_artifact_ids[1], $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -199,8 +199,8 @@ class TrackersTest extends RestBase {
         $artifacts = $response->json();
 
         $first_artifact_info = $artifacts[0];
-        $this->assertEquals(REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['id']);
-        $this->assertEquals('artifacts/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID, $first_artifact_info['uri']);
+        $this->assertEquals($this->release_artifact_ids[1], $first_artifact_info['id']);
+        $this->assertEquals('artifacts/'.$this->release_artifact_ids[1], $first_artifact_info['uri']);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }

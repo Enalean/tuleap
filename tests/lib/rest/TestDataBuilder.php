@@ -46,13 +46,12 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const RELEASE_FIELD_STATUS_ID   = 173;
     const RELEASE_STATUS_CURRENT_ID = 126;
 
-    const KANBAN_ID            = 1;
+    const KANBAN_ID = 1;
 
     const BURNDOWN_FATHER_ARTIFACT_ID  = 12;
     const BURNDOWN_CHILD_ARTIFACT_ID   = 1;
     const BURNDOWN_CHILD_2_ARTIFACT_ID = 8;
 
-    const RELEASE_ARTIFACT_ID       = 19;
     const SPRINT_ARTIFACT_ID        = 20;
     const EPIC_1_ARTIFACT_ID        = 21;
     const EPIC_2_ARTIFACT_ID        = 22;
@@ -106,6 +105,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
     /** @var string */
     protected $template_path;
+
+    protected $release;
 
     public function __construct() {
         parent::__construct();
@@ -558,8 +559,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
     public function generateMilestones() {
         echo "Create milestones\n";
 
-        $this->tracker_formelement_factory->clearInstance();
-        $this->tracker_formelement_factory->instance();
+        $this->clearFormElementCache();
 
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
@@ -573,8 +573,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             '29'
         );
 
-        $release = $this->tracker_artifact_factory->getArtifactById(self::RELEASE_ARTIFACT_ID);
-        $release->linkArtifact(self::SPRINT_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::SPRINT_ARTIFACT_ID, $user);
 
         return $this;
     }
@@ -594,11 +593,10 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->createEpic($user, 'Third epic', '103');
         $this->createEpic($user, 'Fourth epic', '101');
 
-        $release = $this->tracker_artifact_factory->getArtifactById(self::RELEASE_ARTIFACT_ID);
-        $release->linkArtifact(self::EPIC_1_ARTIFACT_ID, $user);
-        $release->linkArtifact(self::EPIC_2_ARTIFACT_ID, $user);
-        $release->linkArtifact(self::EPIC_3_ARTIFACT_ID, $user);
-        $release->linkArtifact(self::EPIC_4_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::EPIC_1_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::EPIC_2_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::EPIC_3_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::EPIC_4_ARTIFACT_ID, $user);
 
         return $this;
     }
@@ -615,12 +613,11 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $this->createUserStory($user, 'Back', '205');
         $this->createUserStory($user, 'Forward', '205');
 
-        $release = $this->tracker_artifact_factory->getArtifactById(self::RELEASE_ARTIFACT_ID);
-        $release->linkArtifact(self::STORY_1_ARTIFACT_ID, $user);
-        $release->linkArtifact(self::STORY_2_ARTIFACT_ID, $user);
-        $release->linkArtifact(self::STORY_3_ARTIFACT_ID, $user);
-        $release->linkArtifact(self::STORY_4_ARTIFACT_ID, $user);
-        $release->linkArtifact(self::STORY_5_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::STORY_1_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::STORY_2_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::STORY_3_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::STORY_4_ARTIFACT_ID, $user);
+        $this->release->linkArtifact(self::STORY_5_ARTIFACT_ID, $user);
 
         $sprint = $this->tracker_artifact_factory->getArtifactById(self::SPRINT_ARTIFACT_ID);
         $sprint->linkArtifact(self::STORY_1_ARTIFACT_ID, $user);
@@ -845,7 +842,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId()  => $field_status_value
         );
 
-        $this->tracker_artifact_factory->createArtifact(
+        $this->release = $this->tracker_artifact_factory->createArtifact(
             $tracker,
             $fields_data,
             $user,

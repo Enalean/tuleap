@@ -33,12 +33,12 @@ class MilestonesBacklogTest extends RestBase {
     }
 
     public function testOPTIONSBacklog() {
-        $response = $this->getResponse($this->client->options('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
+        $response = $this->getResponse($this->client->options('milestones/'.$this->release_artifact_ids[1].'/backlog'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETBacklog() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/backlog'));
 
         $backlog_items = $response->json();
 
@@ -78,10 +78,10 @@ class MilestonesBacklogTest extends RestBase {
     }
 
     public function testPUTBacklogWithAllIds() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog', null, '['.REST_TestDataBuilder::STORY_5_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_3_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_4_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/backlog', null, '['.REST_TestDataBuilder::STORY_5_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_3_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_4_ARTIFACT_ID.']'));
         $this->assertEquals($response_put->getStatusCode(), 200);
 
-        $response_get = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
+        $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/backlog'));
         $backlog_items = $response_get->json();
         $this->assertCount(3, $backlog_items);
         $this->assertEquals($backlog_items[0]['artifact'], array('id' => REST_TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => $this->user_stories_tracker_id, 'uri' => 'trackers/'.$this->user_stories_tracker_id, 'label' => 'User Stories')));
@@ -93,10 +93,10 @@ class MilestonesBacklogTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPUTBacklogWithoutPermission() {
-        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog', null, '['.REST_TestDataBuilder::STORY_4_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_5_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_3_ARTIFACT_ID.']'));
+        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.$this->release_artifact_ids[1].'/backlog', null, '['.REST_TestDataBuilder::STORY_4_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_5_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_3_ARTIFACT_ID.']'));
         $this->assertEquals($response_put->getStatusCode(), 403);
 
-        $response_get = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
+        $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/backlog'));
         $backlog_items = $response_get->json();
         $this->assertCount(3, $backlog_items);
         $this->assertEquals($backlog_items[0]['artifact'], array(
@@ -129,10 +129,10 @@ class MilestonesBacklogTest extends RestBase {
     }
 
     public function testPUTBacklogWithSomeIds() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog', null, '['.REST_TestDataBuilder::STORY_4_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_3_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/backlog', null, '['.REST_TestDataBuilder::STORY_4_ARTIFACT_ID.','.REST_TestDataBuilder::STORY_3_ARTIFACT_ID.']'));
         $this->assertEquals($response_put->getStatusCode(), 200);
 
-        $response_get = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
+        $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/backlog'));
         $backlog_items = $response_get->json();
         $this->assertCount(3, $backlog_items);
         $this->assertEquals($backlog_items[0]['artifact'], array('id' => REST_TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => $this->user_stories_tracker_id, 'uri' => 'trackers/'.$this->user_stories_tracker_id, 'label' => 'User Stories')));
@@ -146,14 +146,14 @@ class MilestonesBacklogTest extends RestBase {
         );
         $response_post = $this->getResponse(
             $this->client->post(
-                'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog',
+                'milestones/'.$this->release_artifact_ids[1].'/backlog',
                 null,
                 json_encode($post)
             )
         );
         $this->assertEquals($response_post->getStatusCode(), 201);
 
-        $response_get = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
+        $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/backlog'));
         $backlog_items = $response_get->json();
         $last_item = count($backlog_items) -1;
         $this->assertEquals($backlog_items[$last_item]['artifact'], array('id' => REST_TestDataBuilder::STORY_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::STORY_6_ARTIFACT_ID, 'tracker' => array('id' => $this->user_stories_tracker_id, 'uri' => 'trackers/'.$this->user_stories_tracker_id, 'label' => 'User Stories')));
@@ -169,7 +169,7 @@ class MilestonesBacklogTest extends RestBase {
         $response_post = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
             $this->client->post(
-                'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog',
+                'milestones/'.$this->release_artifact_ids[1].'/backlog',
                 null,
                 json_encode($post)
             )
