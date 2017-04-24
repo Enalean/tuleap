@@ -37,7 +37,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
     /**
     * @var Client
     */
-    private $setup_client;
+    protected $setup_client;
 
     /**
      * @var Client
@@ -65,8 +65,6 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     protected $project_ids = array();
     protected $tracker_ids = array();
-
-    protected $kanban_artifact_ids = array();
 
     public function __construct() {
         parent::__construct();
@@ -109,7 +107,6 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->project_pbi_id            = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
 
         $this->getTrackerIdsForProjectPrivateMember();
-        $this->getKanbanArtifactIds();
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -227,24 +224,5 @@ class RestBase extends PHPUnit_Framework_TestCase {
         }
 
         $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::KANBAN_TRACKER_SHORTNAME];
-    }
-
-    private function getKanbanArtifactIds()
-    {
-        $query = http_build_query(
-            array('order' => 'asc')
-        );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->kanban_tracker_id/artifacts?$query")
-        );
-
-        $artifacts = $response->json();
-        $index     = 1;
-        foreach ($artifacts as $kanban_artifact) {
-            $this->kanban_artifact_ids[$index] = $kanban_artifact['id'];
-            $index++;
-        }
     }
 }

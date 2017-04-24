@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All rights reserved
+ * Copyright (c) Enalean, 2015-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,3 +20,4 @@
 
 require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
 require_once dirname(__FILE__).'/DataBuilder.php';
+require_once dirname(__FILE__).'/TestBase.php';
