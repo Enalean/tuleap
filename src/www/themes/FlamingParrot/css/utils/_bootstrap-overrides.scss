@@ -64,24 +64,40 @@ input[type="file"] {
         margin: 0 0 20px;
         color: inherit;
     }
+
+    &.alert-absolute {
+        background: $ui-color-warning-light;
+    }
 }
 
 .alert-success {
     border-left-color: $ui-color-success;
     background: transparentize($ui-color-success, .9);
     color: $ui-color-success;
+
+    &.alert-absolute {
+        background: $ui-color-success-light;
+    }
 }
 
 .alert-info {
     border-left-color: $ui-color-info;
     background: transparentize($ui-color-info, .9);
     color: darken($ui-color-info, 30%);
+
+    &.alert-absolute {
+        background: $ui-color-info-light;
+    }
 }
 
 .alert-error {
     border-left-color: $ui-color-danger;
     background: transparentize($ui-color-danger, .9);
     color: $ui-color-danger;
+
+    &.alert-absolute {
+        background: $ui-color-danger-light;
+    }
 }
 
 .popover[class*="tour"] {
