@@ -67,7 +67,7 @@ class GateKeeper {
     }
 
     private function isRequestFromSelf(HTTPRequest $request) {
-        return $this->getQueryHost($request) === $this->getRefererHost();
+        return strtolower($this->getQueryHost($request)) === strtolower($this->getRefererHost());
     }
 
     private function getQueryHost(HTTPRequest $request) {
@@ -86,7 +86,7 @@ class GateKeeper {
         if (! ForgeConfig::get('sys_rest_api_over_http')) {
             $scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
         }
-        $host   = isset($parsed_url['host'])   ? $parsed_url['host'] : '';
+        $host   = isset($parsed_url['host'])   ? idn_to_ascii($parsed_url['host']) : '';
         $port   = isset($parsed_url['port'])   ? ':' . $parsed_url['port'] : '';
 
         return "$scheme$host$port";

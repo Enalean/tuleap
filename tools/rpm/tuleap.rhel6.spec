@@ -44,7 +44,7 @@ AutoReqProv: no
 
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
-Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd
+Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd, %{php_base}-intl
 Requires: %{php_base}-process
 Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fonts
 
