@@ -83,7 +83,15 @@ class Dao extends \DataAccessObject
     {
         $id = $this->da->escapeInt($id);
 
-        $sql = "DELETE FROM plugin_bugzilla_reference WHERE id = $id";
+        $sql = "DELETE bugzilla, source_ref, target_ref
+                FROM plugin_bugzilla_reference AS bugzilla
+                    LEFT JOIN cross_references AS source_ref ON (
+                        source_ref.source_type = 'bugzilla' AND source_ref.source_keyword = bugzilla.keyword
+                    )
+                    LEFT JOIN cross_references AS target_ref ON (
+                        target_ref.target_type = 'bugzilla' AND target_ref.target_keyword = bugzilla.keyword
+                    )
+                WHERE bugzilla.id = $id";
 
         return $this->update($sql);
     }

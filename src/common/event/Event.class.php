@@ -1361,14 +1361,22 @@ class Event {
     const GET_SITEADMIN_WARNINGS = 'get_siteadmin_warnings';
 
     /**
-     * Event raised to extract references that are defined in plugins
+     * Event raised when references are extracted from a text (commit message, follow-up comments, …).
+     * It's up to the listener of this event to do custom behavior for this reference.
      *
      * Parameters:
-     *  - source_id         => int (IN)
-     *  - target_keyword    => string (IN)
-     *  - target_id         => int (IN)
-     *  - source_link       => ReferenceInstance (IN)
-     *  - source_keyword    => string (IN)
+     *  - cross_reference            => CrossReference (IN)
+     *  - reverse_reference_instance => ReferenceInstance (IN)
      */
     const POST_REFERENCE_EXTRACTED = 'post_reference_extracted';
+
+    /**
+     * Event raised to remove a cross reference in the db.
+     * See @DOES_CROSS_REFERENCE_EXIST
+     *
+     * Parameters
+     *  - cross_reference      => CrossReference (IN)
+     *  - is_reference_removed => bool (OUT)
+     */
+    const REMOVE_CROSS_REFERENCE = 'remove_cross_reference';
 }

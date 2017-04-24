@@ -20,15 +20,13 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
+use CrossReference;
 use Http_Client;
+use ReferenceInstance;
 use Tuleap\Bugzilla\BugzillaLogger;
 
 class RESTReferenceCreator
 {
-    /**
-     * @var ReferenceRetriever
-     */
-    private $retriever;
     /**
      * @var Http_Client
      */
@@ -38,35 +36,29 @@ class RESTReferenceCreator
      */
     private $logger;
 
-    public function __construct(ReferenceRetriever $retriever, Http_Client $http_curl_client, BugzillaLogger $logger)
+    public function __construct(Http_Client $http_curl_client, BugzillaLogger $logger)
     {
-        $this->retriever        = $retriever;
         $this->http_curl_client = $http_curl_client;
         $this->logger           = $logger;
     }
 
-    private function getServerInformations($keyword)
+    public function create(CrossReference $cross_reference, Reference $bugzilla)
     {
-        return $this->retriever->getReferenceByKeyword($keyword);
-    }
-
-    public function create(\ReferenceInstance $link, $target_keyword, $source_id, $target_id, $source_keyword)
-    {
-        $reference = $this->getServerInformations($target_keyword);
-        if (! $reference) {
-            return false;
-        }
+        $source_keyword = $cross_reference->getRefSourceKey();
+        $source_id      = $cross_reference->getRefSourceId();
+        $target_keyword = $cross_reference->getRefTargetKey();
+        $target_id      = $cross_reference->getRefTargetId();
 
         $this->logger->info(
             "Asking reference between $source_keyword $source_id and bugzilla reference $target_keyword $target_id"
         );
         $message = "A tuleap item [$source_keyword #$source_id] references this bugzilla item. \n";
-        $message .= "[$source_keyword #$source_id]: " . $link->getFullGotoLink();
+        $message .= "[$source_keyword #$source_id]: " . $this->getLinkToSource($cross_reference);
 
-        $url                   = $reference->getServer() . '/rest/bug/' . urlencode($target_id) . '/comment';
-        $login                 = $reference->getUsername();
-        $password              = $reference->getPassword();
-        $are_follow_up_private = $reference->getAreFollowupPrivate();
+        $url                   = $bugzilla->getServer() . '/rest/bug/' . urlencode($target_id) . '/comment';
+        $login                 = $bugzilla->getUsername();
+        $password              = $bugzilla->getPassword();
+        $are_follow_up_private = $bugzilla->getAreFollowupPrivate();
 
         $options = array(
             CURLOPT_URL         => $url,
@@ -108,5 +100,17 @@ class RESTReferenceCreator
                 $this->logger->error($message);
             }
         }
+    }
+
+    private function getLinkToSource(CrossReference $cross_reference)
+    {
+        $reverse_reference_instance = new ReferenceInstance(null, null, $cross_reference->getRefTargetId());
+        $reverse_reference_instance->computeGotoLink(
+            $cross_reference->getRefSourceKey(),
+            $cross_reference->getRefSourceId(),
+            $cross_reference->getRefSourceGid()
+        );
+
+        return $reverse_reference_instance->getFullGotoLink();
     }
 }
