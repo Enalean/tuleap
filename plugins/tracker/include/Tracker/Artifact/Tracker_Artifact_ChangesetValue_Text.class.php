@@ -35,12 +35,14 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      */
     const HTML_CONTENT = 'html';
 
+    private static $MAX_LENGTH_FOR_DIFF = 20000;
+
     /** @var string */
     protected $text;
 
     /** @var string */
     private $format;
-    
+
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $text, $format) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->text   = $text;
@@ -53,7 +55,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitText($this);
     }
-    
+
     /**
      * Get the text value of this changeset value
      *
@@ -69,10 +71,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         }
         return $this->format;
     }
-    
+
     /**
      * Return a string that will be use in SOAP API
-     * as the value of this ChangesetValue_Text 
+     * as the value of this ChangesetValue_Text
      *
      * @param PFUser $user
      *
@@ -81,7 +83,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function getSoapValue(PFUser $user) {
         return $this->encapsulateRawSoapValue($this->getText());
     }
- 
+
     /**
      * By default, changeset values are returned as string in 'value' field
      */
@@ -138,8 +140,14 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string The difference between another $changeset_value, false if no differences
      */
     public function diff($changeset_value, $format = 'html', PFUser $user = null) {
-        $previous = explode(PHP_EOL, $changeset_value->getText());
-        $next     = explode(PHP_EOL, $this->getText());
+        $previous_text = $changeset_value->getText();
+        $next_text     = $this->getText();
+        if (strlen($previous_text) > self::$MAX_LENGTH_FOR_DIFF || strlen($next_text) > self::$MAX_LENGTH_FOR_DIFF) {
+            return dgettext('tuleap-tracker', 'changed. (But text is too long, we are unable to compute the differences in a reasonable amount of time.)');
+        }
+
+        $previous = explode(PHP_EOL, $previous_text);
+        $next     = explode(PHP_EOL, $next_text);
         return $this->fetchDiff($previous, $next, $format);
     }
 
@@ -193,7 +201,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             return $this->fetchDiff($previous, $next, $format);
         }
     }
-    
+
     /**
     * Display the diff in changeset
     *

@@ -249,3 +249,8 @@ msgstr ""
 
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
+
+msgid ""
+"changed. (But text is too long, we are unable to compute the differences in "
+"a reasonable amount of time.)"
+msgstr ""
