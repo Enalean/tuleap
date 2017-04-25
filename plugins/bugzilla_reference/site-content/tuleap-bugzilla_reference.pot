@@ -98,6 +98,9 @@ msgstr ""
 msgid "There is nothing here, <br> start by adding a Bugzilla reference"
 msgstr ""
 
+msgid "Unable to create corresponding system reference"
+msgstr ""
+
 msgid "Username"
 msgstr ""
 

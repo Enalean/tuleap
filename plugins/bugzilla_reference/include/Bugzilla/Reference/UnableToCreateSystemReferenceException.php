@@ -20,25 +20,6 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
-class BugzillaReference extends \Reference
+class UnableToCreateSystemReferenceException extends \Exception
 {
-    /**
-     * @param Reference $bugzilla
-     *
-     * @return \Reference
-     */
-    public function __construct(Reference $bugzilla)
-    {
-        return parent::__construct(
-            0,
-            $bugzilla->getKeyword(),
-            '',
-            $bugzilla->getServer() . '/show_bug.cgi?id=$1',
-            'S',
-            '',
-            'bugzilla',
-            true,
-            ''
-        );
-    }
 }
