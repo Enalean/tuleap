@@ -61,9 +61,6 @@ class ReservedKeywordsRetriever
             "rev",
             "revision",
             "patch",
-            "bug",
-            "sr",
-            "task",
             "proj",
             "dossier"
         );
