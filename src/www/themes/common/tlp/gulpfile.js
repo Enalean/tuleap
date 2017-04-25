@@ -27,6 +27,7 @@ var rename      = require('gulp-rename');
 var header      = require('gulp-header');
 var streamqueue = require('streamqueue');
 var babel       = require('gulp-babel');
+var runSequence = require('run-sequence');
 
 var locales = ['en_US', 'fr_FR'];
 var colors  = ['orange', 'blue', 'green', 'red', 'grey', 'purple'];
@@ -54,32 +55,36 @@ var banner  = [
     ''
 ].join('\n');
 
-gulp.task('default', ['assets', 'js', 'sass', 'sass:doc']);
+
+gulp.task('default', ['build']);
+gulp.task('build', ['assets', 'js', 'sass:prod', 'sass:doc']);
 gulp.task('watch', ['sass:watch', 'js:watch']);
 
 /************************************************
  * SASS
  ***********************************************/
-gulp.task('sass', ['sass:lint', 'sass:compress', 'sass:doc']);
+gulp.task('sass:prod', ['sass:compress']);
 
-gulp.task('sass:watch', ['sass'], function() {
+gulp.task('sass:watch', ['sass:compress'], function() {
     gulp.watch('./doc/css/**/*.scss', ['sass:doc']);
-    gulp.watch('./src/scss/**/*.scss', ['sass']);
+    gulp.watch('./src/scss/**/*.scss', ['sass:dev']);
 });
 
 gulp.task('sass:lint', function() {
     return gulp.src('./src/scss/**/*.scss')
         .pipe(scsslint({
             config: '.scss-lint.yml'
-        }));
+        })).pipe(scsslint.failReporter('E'));
 });
 
-gulp.task('sass:compress', colors.map(function (color) { return 'sass:compress-' + color; }));
+var color_tasks = declareSassCompressTasks();
 
-colors.forEach(function (color) {
-    gulp.task('sass:compress-' + color, function() {
-        return compressForAGivenColor(color);
-    });
+gulp.task('sass:compress', function(cb) {
+    return runSequence(color_tasks, cb);
+});
+
+gulp.task('sass:dev', ['sass:lint'], function(cb) {
+    return runSequence('sass:compress', cb);
 });
 
 gulp.task('sass:doc', function() {
@@ -100,8 +105,19 @@ gulp.task('sass:doc', function() {
         .pipe(gulp.dest('./doc/css'));
 });
 
+function declareSassCompressTasks() {
+    return colors.map(function (color) {
+        var color_task_name = 'sass:compress-' + color;
+        gulp.task(color_task_name, function() {
+            return compressForAGivenColor(color);
+        });
+
+        return color_task_name;
+    });
+}
+
 function compressForAGivenColor(color) {
-    gulp.src('./src/scss/tlp-' + color + '.scss')
+    return gulp.src('./src/scss/tlp-' + color + '.scss')
         .pipe(
             sass({
                 outputStyle: 'compressed'
