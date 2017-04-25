@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.5.4\n"
 
 msgid "Add notification"
 msgstr "Ajouter une notification"
@@ -44,11 +44,11 @@ msgstr "Éditer"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
-#, fuzzy, php-format
+#, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
-msgstr[0] "Le groupe '%s' a été ajouté"
-msgstr[1] "Les groupes '%s' ont été ajoutés"
+msgstr[0] "Le groupe '%s' n'a pas pu être ajouté"
+msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
@@ -56,9 +56,8 @@ msgstr "Aucun élément sélectionné."
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
 
-#, fuzzy
 msgid "Notification successfully deleted."
-msgstr "Aucune notification n'a été définie"
+msgstr "La notification a été supprimée"
 
 msgid "Notification successfully saved."
 msgstr "Notification enregistrée avec succès."
@@ -294,11 +293,11 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
 
-#, fuzzy, php-format
+#, php-format
 msgid "User '%s' couldn't be added."
 msgid_plural "Users '%s' couldn't be added."
-msgstr[0] "L'utilisateur '%s' a été ajouté"
-msgstr[1] "Les utilisateurs '%s' ont été ajoutés"
+msgstr[0] "L'utilisateur '%s' n'a pas pu être ajouté"
+msgstr[1] "Les utilisateurs '%s' n'ont pas pu être ajoutés"
 
 msgid "User, group, email"
 msgstr "Utilisateur, groupe, email"
@@ -310,3 +309,10 @@ msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""
 "Vous êtes sur le point de supprimer la notification. Merci de confirmer "
 "votre action."
+
+msgid ""
+"changed. (But text is too long, we are unable to compute the differences in "
+"a reasonable amount of time.)"
+msgstr ""
+"modifié. (Mais le texte étant trop gros, il nous est impossible de calculer "
+"les différences dans un temps raisonnable.)"
