@@ -38,19 +38,19 @@ class MilestonesTest extends RestBase {
     }
 
     public function testOPTIONSMilestonesId() {
-        $response = $this->getResponse($this->client->options('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->options('milestones/'.$this->release_artifact_ids[1]));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETResourcesMilestones() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/milestones',
+                'uri'    => 'milestones/'.$this->release_artifact_ids[1].'/milestones',
                 'accept' => array(
                     'trackers' => array(
                         array(
@@ -68,14 +68,14 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesBacklog() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog',
+                'uri'    => 'milestones/'.$this->release_artifact_ids[1].'/backlog',
                 'accept' => array(
                     'trackers' => array(
                         array(
@@ -91,13 +91,13 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesContent() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content',
+                'uri'    => 'milestones/'.$this->release_artifact_ids[1].'/content',
                 'accept' => array(
                     'trackers' => array(
                         array(
@@ -113,7 +113,7 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesBurndownCardwallEmpty() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();

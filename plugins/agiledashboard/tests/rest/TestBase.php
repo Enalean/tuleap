@@ -36,20 +36,9 @@ class TestBase extends RestBase
 
     private function getKanbanArtifactIds()
     {
-        $query = http_build_query(
-            array('order' => 'asc')
+        $this->getArtifactIds(
+            $this->kanban_tracker_id,
+            $this->kanban_artifact_ids
         );
-
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$this->kanban_tracker_id/artifacts?$query")
-        );
-
-        $artifacts = $response->json();
-        $index     = 1;
-        foreach ($artifacts as $kanban_artifact) {
-            $this->kanban_artifact_ids[$index] = $kanban_artifact['id'];
-            $index++;
-        }
     }
 }
