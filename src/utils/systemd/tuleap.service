@@ -1,0 +1,10 @@
+[Unit]
+Description=Tuleap service
+After=nginx.target httpd.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/tuleap --clear-caches --restore-caches
+
+[Install]
+WantedBy=multi-user.target

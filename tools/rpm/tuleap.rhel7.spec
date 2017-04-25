@@ -448,6 +448,7 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 
 # Install systemd Unit
 %{__install} -d $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
 
 # Install Tuleap executables
@@ -675,12 +676,11 @@ fi
 ${systemd_postun}
 if [ "$1" -eq "1" ]; then
     # Install
-    true
-
+    /usr/bin/systemctl daemon-reload &> /dev/null || :
+    /usr/bin/systemctl enable ${APP_NAME}.service ${APP_NAME}-svn-updater.service &> /dev/null || :
 else
     # Upgrade
-
-    %{_bindir}/tuleap --clear-caches
+    /usr/bin/systemctl restart ${APP_NAME} &> /dev/null || :
 fi
 
 # In any cases fix the context
@@ -931,6 +931,7 @@ fi
 %files core-subversion
 %defattr(-,root,root,-)
 %{perl_vendorlib}/Apache/Tuleap.pm
+%attr(00644,root,root) %{_unitdir}/tuleap.service
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 
 %files core-cvs
