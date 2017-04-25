@@ -20,8 +20,16 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
+use DataAccess;
+
 class Dao extends \DataAccessObject
 {
+    public function __construct(DataAccess $da = null)
+    {
+        parent::__construct($da);
+        $this->enableExceptionsOnError();
+    }
+
     public function save($keyword, $server, $username, $password, $are_followups_private)
     {
         $keyword               = $this->da->quoteSmart($keyword);
@@ -55,19 +63,36 @@ class Dao extends \DataAccessObject
     public function edit($id, $server, $username, $password, $are_followups_private)
     {
         $id                    = $this->da->escapeInt($id);
+        $link                  = $this->da->quoteSmart($server . '/show_bug.cgi?id=$1');
         $server                = $this->da->quoteSmart($server);
         $username              = $this->da->quoteSmart($username);
         $password              = $this->da->quoteSmart($password);
         $are_followups_private = $this->da->escapeInt($are_followups_private);
 
-        $sql_save = "UPDATE plugin_bugzilla_reference SET
-                      server = $server,
-                      username = $username,
-                      password = $password,
-                      are_followup_private = $are_followups_private
-                      WHERE id = $id";
+        $this->da->startTransaction();
 
-        return $this->update($sql_save);
+        $sql = "UPDATE plugin_bugzilla_reference SET
+                  server = $server,
+                  username = $username,
+                  password = $password,
+                  are_followup_private = $are_followups_private
+                WHERE id = $id";
+
+        $this->update($sql);
+
+
+        $sql = "UPDATE reference AS ref
+                    INNER JOIN plugin_bugzilla_reference AS bz ON (
+                        bz.keyword = ref.keyword
+                        AND ref.nature = 'bugzilla'
+                        AND scope = 'S'
+                    )
+                SET ref.link = $link
+                WHERE bz.id = $id";
+
+        $this->update($sql);
+
+        $this->commit();
     }
 
     public function getReferenceById($id)
@@ -83,13 +108,21 @@ class Dao extends \DataAccessObject
     {
         $id = $this->da->escapeInt($id);
 
-        $sql = "DELETE bugzilla, source_ref, target_ref
+        $sql = "DELETE bugzilla, source_ref, target_ref, reference, reference_group
                 FROM plugin_bugzilla_reference AS bugzilla
                     LEFT JOIN cross_references AS source_ref ON (
                         source_ref.source_type = 'bugzilla' AND source_ref.source_keyword = bugzilla.keyword
                     )
                     LEFT JOIN cross_references AS target_ref ON (
                         target_ref.target_type = 'bugzilla' AND target_ref.target_keyword = bugzilla.keyword
+                    )
+                    LEFT JOIN reference ON (
+                        reference.keyword = bugzilla.keyword
+                        AND reference.nature = 'bugzilla'
+                        AND reference.scope = 'S'
+                    )
+                    LEFT JOIN reference_group ON (
+                        reference.id = reference_group.reference_id
                     )
                 WHERE bugzilla.id = $id";
 

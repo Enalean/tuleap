@@ -30,6 +30,7 @@ use Tuleap\Bugzilla\Reference\ReferenceRetriever;
 use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RequiredFieldEmptyException;
 use Tuleap\Bugzilla\Reference\ServerIsInvalidException;
+use Tuleap\Bugzilla\Reference\UnableToCreateSystemReferenceException;
 
 class Controller
 {
@@ -134,6 +135,11 @@ class Controller
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-bugzilla_reference', 'Server is invalid')
+            );
+        } catch (UnableToCreateSystemReferenceException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'Unable to create corresponding system reference')
             );
         }
 

@@ -20,6 +20,8 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
+use Reference;
+use ReferenceManager;
 use Tuleap\reference\ReferenceValidator;
 use Valid_HTTPURI;
 
@@ -38,41 +40,40 @@ class ReferenceSaver
      * @var ReferenceRetriever
      */
     private $reference_retriever;
+    /**
+     * @var ReferenceManager
+     */
+    private $reference_manager;
 
     public function __construct(
         Dao $dao,
         ReferenceValidator $reference_validator,
-        ReferenceRetriever $reference_retriever
+        ReferenceRetriever $reference_retriever,
+        ReferenceManager $reference_manager
     ) {
         $this->dao                 = $dao;
         $this->reference_validator = $reference_validator;
         $this->reference_retriever = $reference_retriever;
+        $this->reference_manager = $reference_manager;
     }
 
     public function save(\Codendi_Request $request)
     {
         $keyword               = $request->get('keyword');
-        $server                = $request->get('server');
+        $server                = trim($request->get('server'));
         $username              = $request->get('username');
         $password              = $request->get('password');
         $are_followups_private = $request->get('are_follow_up_private');
         $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
 
-        if (! $this->areFieldsSet($keyword, $server, $username, $password)) {
+        if (empty($keyword) || empty($server) || empty($username) || empty($password)) {
             throw new RequiredFieldEmptyException();
         }
 
         $this->checkFieldsValidity($keyword, $server);
+        $this->createReferenceForBugzillaServer($keyword, $server);
 
         $this->dao->save($keyword, $server, $username, $password, $are_followups_private);
-    }
-
-    private function areFieldsSet($keyword, $server, $username, $password)
-    {
-        return isset($keyword)
-            && isset($server)
-            && isset($username)
-            && isset($password);
     }
 
     private function checkFieldsValidity($keyword, $server)
@@ -103,23 +104,22 @@ class ReferenceSaver
     public function edit($request)
     {
         $id                    = $request->get('id');
-        $keyword               = $request->get('keyword');
-        $server                = $request->get('server');
+        $server                = trim($request->get('server'));
         $username              = $request->get('username');
-        $password              = $this->getPassowrdToStore($id, $request->get('password'));
+        $password              = $this->getPasswordToStore($id, $request->get('password'));
         $are_followups_private = $request->get('are_follow_up_private');
         $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
 
         $this->checkServerValidity($server);
 
-        if (! $this->areFieldsSet($keyword, $server, $username, $password)) {
+        if (empty($server) || empty($username) || empty($password)) {
             throw new RequiredFieldEmptyException();
         }
 
         $this->dao->edit($id, $server, $username, $password, $are_followups_private);
     }
 
-    private function getPassowrdToStore($id, $password)
+    private function getPasswordToStore($id, $password)
     {
         if ($password !== "") {
             return $password;
@@ -127,5 +127,24 @@ class ReferenceSaver
 
         $reference = $this->dao->getReferenceById($id);
         return $reference['password'];
+    }
+
+    private function createReferenceForBugzillaServer($keyword, $server)
+    {
+        $reference = new Reference(
+            0,
+            $keyword,
+            'Bugzilla reference',
+            $server . '/show_bug.cgi?id=$1',
+            'S',
+            '',
+            'bugzilla',
+            '1',
+            100
+        );
+
+        if (! $this->reference_manager->createSystemReference($reference)) {
+            throw new UnableToCreateSystemReferenceException();
+        }
     }
 }

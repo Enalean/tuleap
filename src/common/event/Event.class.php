@@ -1379,4 +1379,23 @@ class Event {
      *  - is_reference_removed => bool (OUT)
      */
     const REMOVE_CROSS_REFERENCE = 'remove_cross_reference';
+
+    /**
+     * Event raised to know if a reference can be edited/deleted
+     *
+     * Parameters
+     *  - reference      => Reference (IN)
+     *  - can_be_deleted => bool (OUT)
+     *  - can_be_edited  => bool (OUT)
+     */
+    const GET_REFERENCE_ADMIN_CAPABILITIES = 'get_reference_admin_capabilities';
+
+    /**
+     * All natures cannot be used by users
+     *
+     * Parameters
+     *  - nature         => string (IN) The name of the nature
+     *  - can_be_created => bool (OUT)
+     */
+    const CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE = 'can_user_create_reference_with_this_nature';
 }

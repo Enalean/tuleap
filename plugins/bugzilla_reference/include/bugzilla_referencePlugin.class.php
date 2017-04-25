@@ -24,7 +24,6 @@ use Tuleap\Bugzilla\Administration\Router;
 use Tuleap\Bugzilla\CrossReferenceCreator;
 use Tuleap\Bugzilla\Plugin\Info;
 use Tuleap\Bugzilla\BugzillaLogger;
-use Tuleap\Bugzilla\Reference\BugzillaReference;
 use Tuleap\Bugzilla\Reference\Dao;
 use Tuleap\Bugzilla\Reference\ReferenceDestructor;
 use Tuleap\Bugzilla\Reference\ReferenceRetriever;
@@ -50,8 +49,9 @@ class bugzilla_referencePlugin extends Plugin
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook(Event::POST_REFERENCE_EXTRACTED);
-        $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::REMOVE_CROSS_REFERENCE);
+        $this->addHook(Event::GET_REFERENCE_ADMIN_CAPABILITIES);
+        $this->addHook(Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE);
     }
 
     /**
@@ -91,7 +91,8 @@ class bugzilla_referencePlugin extends Plugin
                     new ReferenceDao(),
                     new ReservedKeywordsRetriever(EventManager::instance())
                 ),
-                $this->getReferenceRetriever()
+                $this->getReferenceRetriever(),
+                ReferenceManager::instance()
             ),
             $this->getReferenceRetriever(),
             new ReferenceDestructor(new Dao())
@@ -167,17 +168,6 @@ class bugzilla_referencePlugin extends Plugin
         return new RESTReferenceCreator(new Http_Client(), new BugzillaLogger());
     }
 
-    /** @see \Event::GET_REFERENCE */
-    public function get_reference(array $params)
-    {
-        $bugzilla = $this->getBugzillaReferenceFromKeyword($params['keyword']);
-        if (! $bugzilla) {
-            return;
-        }
-
-        $params['reference'] = new BugzillaReference($bugzilla);
-    }
-
     /** @see \Event::REMOVE_CROSS_REFERENCE */
     public function remove_cross_reference(array $params)
     {
@@ -191,6 +181,26 @@ class bugzilla_referencePlugin extends Plugin
 
         $dao = new CrossReferenceDao();
         $params['is_reference_removed'] = $dao->deleteFullCrossReference($cross_reference);
+    }
+
+    /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
+    public function get_reference_admin_capabilities(array $params)
+    {
+        /** @var Reference $reference */
+        $reference = $params['reference'];
+
+        if ($reference->getNature() === 'bugzilla') {
+            $params['can_be_deleted'] = false;
+            $params['can_be_edited']  = false;
+        }
+    }
+
+    /** @see \Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE */
+    public function can_user_create_reference_with_this_nature(array $params)
+    {
+        if ($params['nature'] === 'bugzilla') {
+            $params['can_create'] = false;
+        }
     }
 
     /**

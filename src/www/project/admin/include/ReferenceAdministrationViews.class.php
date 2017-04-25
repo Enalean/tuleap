@@ -22,14 +22,14 @@
 class ReferenceAdministrationViews extends Views
 {
     protected $natures;
-    
+
     public function __construct($controler, $view=null)
     {
         $this->View($controler, $view);
         $referenceManager = ReferenceManager::instance();
         $this->natures = $referenceManager->getAvailableNatures();
     }
-    
+
     public function header()
     {
         project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_reference','edit_reference'),
@@ -42,7 +42,7 @@ class ReferenceAdministrationViews extends Views
     {
         project_admin_footer(array());
     }
-    
+
     // {{{ Views
     public function browse()
     {
@@ -74,7 +74,7 @@ class ReferenceAdministrationViews extends Views
         echo '
 <HR>
 <TABLE width="100%" cellspacing=0 cellpadding=3 border=0>';
-        
+
         $title_arr=array();
         if ($request->get('group_id')==100) {
             $title_arr[]=$GLOBALS['Language']->getText('project_reference','id');
@@ -114,7 +114,7 @@ class ReferenceAdministrationViews extends Views
             $current_scope=$ref->getScope();
             $this->_display_reference_row($ref, $row_num);
         }
-                
+
         echo '
 </TABLE>
 ';
@@ -123,7 +123,7 @@ class ReferenceAdministrationViews extends Views
 
     /**
      * Return ready to display description of a reference
-     * 
+     *
      * @param Reference $ref Reference
      * @return String
      */
@@ -145,9 +145,18 @@ class ReferenceAdministrationViews extends Views
         return $description;
     }
 
-    public function _display_reference_row($ref, $row_num)
+    public function _display_reference_row($ref)
     {
         $purifier = Codendi_HTMLPurifier::instance();
+
+        $can_be_deleted = ($ref->getScope() != "S") || ($ref->getGroupId() == 100);
+        EventManager::instance()->processEvent(
+            Event::GET_REFERENCE_ADMIN_CAPABILITIES,
+            array(
+                'reference'      => $ref,
+                'can_be_deleted' => &$can_be_deleted
+            )
+        );
 
         if ($ref->getId()==100) return; // 'None' reference
 
@@ -158,23 +167,23 @@ class ReferenceAdministrationViews extends Views
         } else {
             $nature_desc = $purifier->purify($ref->getNature());
         }
-        
-        
-        echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
+
+
+        echo '<TR>';
         if ($ref->getGroupId()==100) {
             echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'.$ref->getId().'</TD>';
         }
         echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'. $purifier->purify($ref->getKeyword()) .'</TD>';
         echo '<TD>'.$description.'</TD>';
         echo '<TD>'.$nature_desc.'</TD>';
-        
+
         echo '<TD align="center">'.( $ref->isActive() ? $GLOBALS['Language']->getText('project_reference','enabled') : $GLOBALS['Language']->getText('project_reference','disabled') ).'</TD>';
         if ($ref->getGroupId()==100) {
             echo'<TD align="center">'. $purifier->purify($GLOBALS['Language']->getText('project_reference','ref_scope_'.$ref->getScope())) .'</TD>';
             echo'<TD align="center">'. $purifier->purify($ref->getServiceShortName()) .'</TD>';
         }
-        
-        if (($ref->getScope()!="S")||($ref->getGroupId()==100)) {
+
+        if ($can_be_deleted) {
             echo '<TD align="center"><a href="/project/admin/reference.php?group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'&action=do_delete" onClick="return confirm(\'';
             if ($ref->getScope()=="S") {
                 echo $purifier->purify($GLOBALS['Language']->getText('project_reference','warning_del_r',$ref->getKeyword()), CODENDI_PURIFIER_JS_QUOTE);
@@ -182,9 +191,10 @@ class ReferenceAdministrationViews extends Views
                 echo $GLOBALS['Language']->getText('project_reference','del_r');
             }
             echo '\')"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
+        } else {
+            echo '<td></td>';
         }
         echo '</TR>';
-        $row_num++;
     }
 
 
@@ -197,7 +207,7 @@ class ReferenceAdministrationViews extends Views
         if (user_is_super_user()) {
             $su=true;
         }
- 
+
         echo '
 <h3>'.$GLOBALS['Language']->getText('project_reference','r_creation').'</h3>
 <form name="form_create" method="post" action="/project/admin/reference.php?group_id='.$group_id.'">
@@ -215,11 +225,21 @@ class ReferenceAdministrationViews extends Views
 <tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_nature_desc').'">'.$GLOBALS['Language']->getText('project_reference','r_nature').'</a>:&nbsp;</td>
 <td>';
         echo '<select name="nature" >';
-        
+
         foreach ($this->natures as $nature_key => $nature_desc) {
-            echo '<option value="'.$nature_key.'">'.$nature_desc['label'].'</option>';
+            $can_create = true;
+            EventManager::instance()->processEvent(
+                Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE,
+                array(
+                    'nature'     => $nature_key,
+                    'can_create' => &$can_create
+                )
+            );
+            if ($can_create) {
+                echo '<option value="'.$nature_key.'">'.$nature_desc['label'].'</option>';
+            }
         }
-        
+
         echo '</select>';
 
         echo '
@@ -267,7 +287,7 @@ class ReferenceAdministrationViews extends Views
 <p><font color="red">*</font>: '.$GLOBALS['Language']->getText('project_reference','fields_required').'</p>
 ';
     }
-   
+
 
     public function edit()
     {
@@ -299,11 +319,19 @@ class ReferenceAdministrationViews extends Views
             $su=true;
         }
         $star='&nbsp;<font color="red">*</font>';
+
         // "Read-only" -> can only edit reference availability (system reference)
-        $ro=false;
-        if ($ref->isSystemReference()&&($ref->getGroupId()!=100)) {
-            $ro=true;
-            $star="";
+        $can_be_edited = true;
+        EventManager::instance()->processEvent(
+            Event::GET_REFERENCE_ADMIN_CAPABILITIES,
+            array(
+                'reference'     => $ref,
+                'can_be_edited' => &$can_be_edited
+            )
+        );
+        $ro = ! $can_be_edited || ($ref->isSystemReference() && $ref->getGroupId() != 100);
+        if ($ro) {
+            $star = "";
         }
 
         echo '
@@ -344,12 +372,22 @@ class ReferenceAdministrationViews extends Views
         } else {
             echo '<select name="nature" >';
             foreach ($this->natures as $nature_key => $nature_desc) {
-                if ($ref->getNature() == $nature_key) {
-                    $selected = 'selected="selected"';
-                } else {
-                    $selected = '';
+                $can_create = true;
+                EventManager::instance()->processEvent(
+                    Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE,
+                    array(
+                        'nature'     => $nature_key,
+                        'can_create' => &$can_create
+                    )
+                );
+                if ($can_create) {
+                    if ($ref->getNature() == $nature_key) {
+                        $selected = 'selected="selected"';
+                    } else {
+                        $selected = '';
+                    }
+                    echo '<option value="' . $purifier->purify($nature_key) . '" ' . $selected . '>' . $purifier->purify($nature_desc['label']) . '</option>';
                 }
-                echo '<option value="'. $purifier->purify($nature_key) .'" '.$selected.'>'. $purifier->purify($nature_desc['label']) .'</option>';
             }
             echo '</select>';
         }
@@ -380,7 +418,11 @@ class ReferenceAdministrationViews extends Views
                 $serv_short_name[] = $serv['short_name'];
                 $serv_label[]=$label;
             }
-            echo html_build_select_box_from_arrays($serv_short_name,$serv_label,"service_short_name",$ref->getServiceShortName());
+            if ($ro) {
+                echo $purifier->purify($ref->getServiceShortName());
+            } else {
+                echo html_build_select_box_from_arrays($serv_short_name,$serv_label,"service_short_name",$ref->getServiceShortName());
+            }
             echo '</td></tr>';
             echo '
 <tr><td><a href="#" title="'.$GLOBALS['Language']->getText('project_reference','r_scope').'">'.$GLOBALS['Language']->getText('project_reference','scope').':</a></td>
