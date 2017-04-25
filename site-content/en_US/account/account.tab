@@ -240,14 +240,6 @@ account_myprojectlist	title	My Project Listing
 account_myprojectlist	grp_list	Group List for <B>$1</B>
 #
 #-----------------------------------------------
-# Script: SF/www/account/pending-resend.php
-#
-account_pending-resend	title	Account Pending Verification
-account_pending-resend	message	<B>Pending Account</B>\n\n<P>Your email confirmation has been resent. Visit the link \nin this email to complete the registration process.
-account_pending-resend	notpending	This account is not pending verification.
-account_pending-resend	needapproval	This account needs to be approved by an administrator.
-#
-#-----------------------------------------------
 # Script: SF/www/account/pending.php
 #
 account_pending	title	Pending Account

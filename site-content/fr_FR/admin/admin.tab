@@ -245,6 +245,8 @@ admin_approve_pending_users	expiry_date	Date d'expiration
 admin_approve_pending_users	expiry_date_directions	Une fois cette date passée, le compte sera suspendu.<br>Ne remplissez pas le champs si vous en souhaitez pas que le compte ait de date d'expiration.
 admin_approve_pending_users	resend	Renvoyer l'email
 admin_approve_pending_users	resend_notice	Renvoyer l'email d'activation du compte
+admin_approve_pending_users	resend_mail_success	L'email à destination de $1 a été renvoyé avec succès
+admin_approve_pending_users	resend_mail_error	Une erreur est survenue lors de l'envoie du mail à destination de $1
 admin_approve_pending_users	users_activated_success	Les utilisateurs ont été activés avec succès
 admin_approve_pending_users	user_activated_success	L'utilisateur a été activé avec succès
 admin_approve_pending_users	users_validated_success	Les utilisateurs ont été validés avec succès
