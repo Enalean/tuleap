@@ -252,7 +252,15 @@ class WebDAVFRS extends Sabre_DAV_Directory {
      */
     public function userCanWrite()
     {
-        return $this->getPermissionsManager()->isAdmin($this->getProject(), $this->getUser());
+        return $this->isWriteEnabledByPlugin() &&
+               $this->getPermissionsManager()->isAdmin($this->getProject(), $this->getUser());
+    }
+
+    private function isWriteEnabledByPlugin()
+    {
+        $utils = $this->getUtils();
+
+        return $utils->userCanWrite($this->getUser(), $this->getGroupId());
     }
 
     /**
