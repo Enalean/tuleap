@@ -50,19 +50,6 @@ class CampaignsTest extends BaseTest {
     }
 
 
-    public function testGetEnvironments() {
-        $campaign = $this->getValid73Campaign();
-
-        $all_environments_request  = $this->client->get('trafficlights_campaigns/'. $campaign['id'] .'/trafficlights_environments');
-        $all_environments_response = $this->getResponse($all_environments_request);
-
-        $environments = $all_environments_response->json();
-        $this->assertCount(3, $environments);
-        $this->assertEquals('CentOS 5 - PHP 5.1', $environments[0]);
-        $this->assertEquals('CentOS 5 - PHP 5.3', $environments[1]);
-        $this->assertEquals('CentOS 6 - PHP 5.3', $environments[2]);
-    }
-
     private function assertExecutionsContains($executions, $summary) {
         foreach ($executions as $execution) {
             if ($summary === $execution['definition']['summary']) {

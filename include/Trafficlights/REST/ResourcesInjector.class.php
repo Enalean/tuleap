@@ -21,7 +21,6 @@
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Trafficlights\REST\v1\CampaignRepresentation;
 use Tuleap\Trafficlights\REST\v1\DefinitionRepresentation;
-use Tuleap\Trafficlights\REST\v1\EnvironmentRepresentation;
 use Tuleap\Trafficlights\REST\v1\NodeReferenceRepresentation;
 
 /**
@@ -41,7 +40,6 @@ class Trafficlights_REST_ResourcesInjector {
         $routes = array(
             CampaignRepresentation::ROUTE,
             DefinitionRepresentation::ROUTE,
-            EnvironmentRepresentation::ROUTE,
             NodeReferenceRepresentation::ROUTE,
         );
         foreach ($routes as $route) {

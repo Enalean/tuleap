@@ -28,7 +28,6 @@ class ExecutionRepresentation {
     const ROUTE = 'trafficlights_executions';
 
     const FIELD_RESULTS        = 'results';
-    const FIELD_ENVIRONMENT    = 'environment';
     const FIELD_ASSIGNED_TO    = 'assigned_to';
     const FIELD_STATUS         = 'status';
     const FIELD_ARTIFACT_LINKS = "artifact_links";
@@ -53,11 +52,6 @@ class ExecutionRepresentation {
      * @var String
      */
     public $status;
-
-    /**
-     * @var String
-     */
-    public $environment;
 
     /**
      * @var String
@@ -87,7 +81,6 @@ class ExecutionRepresentation {
     public function build(
         $artifact_id,
         $status,
-        $environment,
         $results,
         $last_update_date,
         $assigned_to,
@@ -100,7 +93,6 @@ class ExecutionRepresentation {
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->results          = $results;
         $this->status           = $status;
-        $this->environment      = $environment;
         $this->last_update_date = JsonCast::toDate($last_update_date);
         $this->definition       = $definition;
         $this->previous_result  = $previous_result;

@@ -38,7 +38,6 @@ function autoloadc5349f7e0a3ee6c62a9a0857371f9d27($class) {
             'tuleap\\trafficlights\\rest\\v1\\definitionrepresentation' => '/Trafficlights/REST/v1/DefinitionRepresentation.php',
             'tuleap\\trafficlights\\rest\\v1\\definitionrepresentationbuilder' => '/Trafficlights/REST/v1/DefinitionRepresentationBuilder.php',
             'tuleap\\trafficlights\\rest\\v1\\definitionsresource' => '/Trafficlights/REST/v1/DefinitionsResource.class.php',
-            'tuleap\\trafficlights\\rest\\v1\\environmentrepresentation' => '/Trafficlights/REST/v1/EnvironmentRepresentation.php',
             'tuleap\\trafficlights\\rest\\v1\\executioncreator' => '/Trafficlights/REST/v1/ExecutionCreator.class.php',
             'tuleap\\trafficlights\\rest\\v1\\executionrepresentation' => '/Trafficlights/REST/v1/ExecutionRepresentation.php',
             'tuleap\\trafficlights\\rest\\v1\\executionrepresentationbuilder' => '/Trafficlights/REST/v1/ExecutionRepresentationBuilder.php',

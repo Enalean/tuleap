@@ -6,12 +6,12 @@
     ExecutionListFilter.$inject = ['$filter'];
 
     function ExecutionListFilter($filter) {
-        return function(list, keywords, status, environment) {
+        return function(list, keywords, status) {
             var keyword_list  = _.compact(keywords.split(' ')),
                 status_list   = _.compact(_.map(status, function(value, key) { return (value) ? key : false; })),
                 all_results   = [];
 
-            if (! hasAtLeastOneFilter(keyword_list, status_list, environment)) {
+            if (! hasAtLeastOneFilter(keyword_list, status_list)) {
                 return list;
             }
 
@@ -21,10 +21,6 @@
 
             if (hasStatus(status_list)) {
                 all_results.push(statusMatcher(status_list, list));
-            }
-
-            if (hasEnvironment(environment)) {
-                all_results.push(environmentMatcher(environment, list));
             }
 
             all_results = _.intersection.apply(null, all_results);
@@ -40,8 +36,8 @@
             return execution.definition.id;
         }
 
-        function hasAtLeastOneFilter(keyword_list, status_list, environment) {
-            return hasKeywords(keyword_list) || hasStatus(status_list) || hasEnvironment(environment);
+        function hasAtLeastOneFilter(keyword_list, status_list) {
+            return hasKeywords(keyword_list) || hasStatus(status_list);
         }
 
         function hasKeywords(keyword_list) {
@@ -50,10 +46,6 @@
 
         function hasStatus(status_list) {
             return status_list.length > 0;
-        }
-
-        function hasEnvironment(environment) {
-            return environment !== null;
         }
 
         function keywordsMatcher(keyword_list, list) {
@@ -88,10 +80,6 @@
             });
 
             return result;
-        }
-
-        function environmentMatcher(environment, list) {
-            return $filter('filter')(list, { environment: environment });
         }
     }
 })();

@@ -47,7 +47,6 @@ describe ('ExecutionRestService - ', function () {
     it("postTestExecution() - ", function() {
         var execution = {
             id: 4,
-            environment: "CentOS 5 - PHP 5.1",
             status: "notrun"
         };
 
@@ -67,7 +66,6 @@ describe ('ExecutionRestService - ', function () {
     it("putTestExecution() - ", function() {
         var execution = {
             id: 4,
-            environment: "CentOS 5 - PHP 5.1",
             status: "passed",
             previous_result: {
                 result: "",

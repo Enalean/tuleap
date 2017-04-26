@@ -23,7 +23,6 @@ describe ('ExecutionService - ', function () {
             results: [
                 {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -54,7 +53,6 @@ describe ('ExecutionService - ', function () {
                     executions: [
                         {
                             id: 4,
-                            environment: "CentOS 5 - PHP 5.1",
                             definition: {
                                 category: "Svn",
                                 description: "test",
@@ -70,7 +68,6 @@ describe ('ExecutionService - ', function () {
             var execution_results = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -89,7 +86,6 @@ describe ('ExecutionService - ', function () {
                 results: [
                     {
                         id: 4,
-                        environment: "CentOS 5 - PHP 5.1",
                         definition: {
                             category: "Svn",
                             description: "test",
@@ -125,7 +121,6 @@ describe ('ExecutionService - ', function () {
                     executions: [
                         {
                             id: 4,
-                            environment: "CentOS 5 - PHP 5.1",
                             definition: {
                                 category: "Svn",
                                 description: "test",
@@ -142,7 +137,6 @@ describe ('ExecutionService - ', function () {
             var executions_results = [
                 {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -176,7 +170,6 @@ describe ('ExecutionService - ', function () {
             var executions = [
                 {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     status: "notrun",
                     definition: {
                         category: "Svn"
@@ -195,7 +188,6 @@ describe ('ExecutionService - ', function () {
             ExecutionService.addTestExecutions(executions);
             expect(ExecutionService.executions[4]).toEqual({
                 id: 4,
-                environment: "CentOS 5 - PHP 5.1",
                 status: "notrun",
                 definition: {
                     category: "Svn"
@@ -227,14 +219,12 @@ describe ('ExecutionService - ', function () {
 
             var execution_to_save = {
                 id: 4,
-                environment: "CentOS 5 - PHP 5.1",
                 status: "failed"
             };
 
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     previous_result: {
                         status: "notrun"
                     }
@@ -272,14 +262,12 @@ describe ('ExecutionService - ', function () {
 
             var execution_to_save = {
                 id: 4,
-                environment: "CentOS 5 - PHP 5.1",
                 status: "notrun"
             };
 
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     previous_result: {
                         status: "blocked"
                     }
@@ -325,7 +313,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -373,7 +360,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -413,7 +399,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -453,7 +438,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -493,7 +477,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -505,7 +488,6 @@ describe ('ExecutionService - ', function () {
                 },
                 5: {
                     id: 5,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -547,7 +529,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -559,7 +540,6 @@ describe ('ExecutionService - ', function () {
                 },
                 5: {
                     id: 5,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -650,7 +630,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 5: {
                     id: 5,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -687,7 +666,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 5: {
                     id: 5,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -749,7 +727,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 5: {
                     id: 5,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -814,7 +791,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -825,7 +801,6 @@ describe ('ExecutionService - ', function () {
                 },
                 5: {
                     id: 5,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -839,7 +814,6 @@ describe ('ExecutionService - ', function () {
             var results = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -851,7 +825,6 @@ describe ('ExecutionService - ', function () {
                 },
                 5: {
                     id: 5,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -892,7 +865,6 @@ describe ('ExecutionService - ', function () {
             var executions = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",
@@ -908,7 +880,6 @@ describe ('ExecutionService - ', function () {
             var results = {
                 4: {
                     id: 4,
-                    environment: "CentOS 5 - PHP 5.1",
                     definition: {
                         category: "Svn",
                         description: "test",

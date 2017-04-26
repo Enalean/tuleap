@@ -9,7 +9,6 @@ describe('ExecutionListFilter', function() {
             "uri": "executions/24605",
             "results": "",
             "status": "passed",
-            "environment": "CentOS 5 - PHP 5.3",
             "last_update_date": null,
             "assigned_to": null,
             //...
@@ -25,7 +24,6 @@ describe('ExecutionListFilter', function() {
             "uri": "executions/24606",
             "results": "",
             "status": "failed",
-            "environment": "CentOS 5 - PHP 5.3",
             "last_update_date": null,
             "assigned_to": {
                 "id": 101,
@@ -49,7 +47,6 @@ describe('ExecutionListFilter', function() {
             "uri": "executions/24607",
             "results": "",
             "status": "passed",
-            "environment": "CentOS 6 - PHP 5.3",
             "last_update_date": null,
             "assigned_to": {
                 "id": 102,
@@ -104,12 +101,6 @@ describe('ExecutionListFilter', function() {
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
         expect(results[1]).toEqual(jasmine.objectContaining({ id: 24606 }));
         expect(results[2]).toEqual(jasmine.objectContaining({ id: 24607 }));
-    }));
-
-    it('it filters on environment', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {}, 'CentOS 6 - PHP 5.3');
-        expect(results.length).toEqual(1);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24607 }));
     }));
 
     it('it filters on summary and execution status', inject(function($filter) {

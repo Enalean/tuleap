@@ -49,13 +49,12 @@ function ExecutionRestService(
             });
     }
 
-    function postTestExecution(tracker_id, definition_id, environment, status) {
+    function postTestExecution(tracker_id, definition_id, status) {
         return rest
             .one('trafficlights_executions')
             .post('execution', {
                 tracker      : {id: tracker_id},
                 definition_id: definition_id,
-                environment  : environment,
                 status       : status
             })
             .then(function (response) {

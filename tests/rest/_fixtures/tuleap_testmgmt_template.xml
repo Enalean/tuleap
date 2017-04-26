@@ -422,17 +422,6 @@
               <name>descc2</name>
               <label><![CDATA[Desc::C2]]></label>
               <formElements>
-                <formElement type="sb" ID="F11050" rank="0" required="1">
-                  <name>environment</name>
-                  <label><![CDATA[Environment]]></label>
-                  <bind type="static" is_rank_alpha="0">
-                    <items>
-                      <item ID="V13254" label="CentOS 5 - PHP 5.1" is_hidden="0"/>
-                      <item ID="V13255" label="CentOS 5 - PHP 5.3" is_hidden="0"/>
-                      <item ID="V13256" label="CentOS 6 - PHP 5.3" is_hidden="0"/>
-                    </items>
-                  </bind>
-                </formElement>
                 <formElement type="sb" ID="F11051" rank="3">
                   <name>status</name>
                   <label><![CDATA[Status]]></label>
@@ -541,9 +530,6 @@
         <permission scope="field" REF="F11048" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F11048" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F11048" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-        <permission scope="field" REF="F11050" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-        <permission scope="field" REF="F11050" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
-        <permission scope="field" REF="F11050" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F11051" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F11051" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F11051" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

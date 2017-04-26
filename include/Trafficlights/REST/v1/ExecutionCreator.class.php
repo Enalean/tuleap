@@ -65,9 +65,9 @@ class ExecutionCreator {
     /**
      * @return ArtifactReference
      */
-    public function createTestExecution($project_id, PFUser $user, $environment_id, $definition_id) {
+    public function createTestExecution($project_id, PFUser $user, $definition_id) {
         $tracker = $this->getExecutionTrackerReferenceForProject($project_id);
-        $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $environment_id, $definition_id);
+        $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition_id);
 
         return $this->artifact_creator->create($user, $tracker, $values);
     }
@@ -93,16 +93,10 @@ class ExecutionCreator {
     private function getFieldValuesForExecutionArtifactCreation(
         TrackerReference $tracker_reference,
         PFUser $user,
-        $environment_id,
         $definition_id
     ) {
-        $environment_field = $this->getEnvironmentField($tracker_reference, $user);
         $status_field      = $this->getStatusField($tracker_reference, $user);
         $link_field        = $this->getArtifactLinksField($tracker_reference, $user);
-
-        $environment_value                 = new ArtifactValuesRepresentation();
-        $environment_value->field_id       = (int)$environment_field->getId();
-        $environment_value->bind_value_ids = array($environment_id);
 
         $status_value                 = new ArtifactValuesRepresentation();
         $status_value->field_id       = (int)$status_field->getId();
@@ -112,7 +106,7 @@ class ExecutionCreator {
         $link_value->field_id = (int)$link_field->getId();
         $link_value->links    = array(array('id' => $definition_id));
 
-        return array($environment_value, $status_value, $link_value);
+        return array($status_value, $link_value);
     }
 
     /** @return Tracker_FormElement_Field_List */
@@ -124,18 +118,6 @@ class ExecutionCreator {
             $tracker_reference,
             $user,
             ExecutionRepresentation::FIELD_STATUS
-        );
-    }
-
-    /** @return Tracker_FormElement_Field_List */
-    private function getEnvironmentField(
-        TrackerReference $tracker_reference,
-        PFUser $user
-    ) {
-        return $this->getField(
-            $tracker_reference,
-            $user,
-            ExecutionRepresentation::FIELD_ENVIRONMENT
         );
     }
 

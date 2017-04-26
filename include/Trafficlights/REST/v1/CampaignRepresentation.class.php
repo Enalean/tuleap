@@ -103,10 +103,6 @@ class CampaignRepresentation {
                 'uri'  => self::ROUTE . '/' . $this->id . '/' . ExecutionRepresentation::ROUTE
             ),
             array(
-                'type' => EnvironmentRepresentation::ROUTE,
-                'uri'  => self::ROUTE . '/' . $this->id . '/' . EnvironmentRepresentation::ROUTE
-            ),
-            array(
                 'type' => self::ASSIGNEES_ROUTE,
                 'uri'  => self::ROUTE . '/' . $this->id . '/' . self::ASSIGNEES_ROUTE
             )

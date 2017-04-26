@@ -34,8 +34,7 @@ function ExecutionListCtrl(
         showAddTestModal           : showAddTestModal,
         checkActiveClassOnExecution: checkActiveClassOnExecution,
         viewTestExecution          : viewTestExecution,
-        showPresencesModal         : showPresencesModal,
-        selectEnvironmentCreation  : selectEnvironmentCreation
+        showPresencesModal         : showPresencesModal
     });
 
     function checkActiveClassOnExecution(execution) {
@@ -60,27 +59,18 @@ function ExecutionListCtrl(
         }
     }
 
-    function selectEnvironmentCreation(environments) {
-        showAddTestModal(environments);
-    }
-
     function showPresencesModal() {
         ExecutionService.showPresencesModal();
     }
 
-    function showAddTestModal(environments) {
+    function showAddTestModal() {
         var callback = function(artifact_id) {
-            var promises = [];
-            _.forEach(environments, function(environment) {
-                promises.push(ExecutionRestService.postTestExecution(SharedPropertiesService.getExecutionTrackerId(), artifact_id, environment, 'notrun'));
-            });
-            $q.all(promises).then(function(executions) {
-                var execution_ids = _.pluck(executions, 'id');
-                CampaignService.patchCampaign(campaign_id, execution_ids).then(function(executions) {
-                    _.forEach(executions, function(execution) {
-                        ExecutionService.addTestExecutions(execution);
-                    });
-                });
+            var execution_tracker_id = SharedPropertiesService.getExecutionTrackerId();
+
+            ExecutionRestService.postTestExecution(execution_tracker_id, artifact_id, 'notrun').then(function(execution) {
+                return CampaignService.patchCampaign(campaign_id, [execution.id]);
+            }).then(function(executions) {
+                _.forEach(executions, ExecutionService.addTestExecutions);
             });
         };
 
@@ -143,9 +133,7 @@ function ExecutionListCtrl(
 
         $scope.campaign             = CampaignService.getCampaign(campaign_id);
         $scope.categories           = ExecutionService.executions_by_categories_by_campaigns[campaign_id];
-        $scope.environments         = [];
         $scope.search               = '';
-        $scope.selected_environment = null;
         $scope.loading              = loading;
         $scope.status               = {
             passed:  false,
@@ -155,8 +143,6 @@ function ExecutionListCtrl(
         };
         $scope.canCategoryBeDisplayed = canCategoryBeDisplayed;
         $scope.presences_on_campaign  = ExecutionService.presences_on_campaign;
-
-        getEnvironments(campaign_id, 50, 0);
 
         ExecutionService.updateCampaign($scope.campaign);
     }
@@ -171,16 +157,6 @@ function ExecutionListCtrl(
         });
     }
 
-    function getEnvironments(campaign_id, limit, offset) {
-        CampaignService.getEnvironments(campaign_id, limit, offset).then(function(data) {
-            $scope.environments = $scope.environments.concat(data.results);
-
-            if ($scope.environments.length < data.total) {
-                return getEnvironments(campaign_id, limit, offset + limit);
-            }
-        });
-    }
-
     function loading() {
         return ExecutionService.loading[campaign_id] === true;
     }
@@ -189,8 +165,7 @@ function ExecutionListCtrl(
         return $filter('ExecutionListFilter')(
             category.executions,
             $scope.search,
-            $scope.status,
-            $scope.selected_environment
+            $scope.status
         ).length > 0;
     }
 }

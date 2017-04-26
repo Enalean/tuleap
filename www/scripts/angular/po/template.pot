@@ -12,26 +12,8 @@ msgstr ""
 msgid "<i class=\"icon-plus\"></i> New campaign"
 msgstr ""
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "<span class=\"total-definitions\">{{ getFilteredDefinitions(environment.filter).length }}</span> test"
-msgid_plural "<span class='total-definitions'>{{ getFilteredDefinitions(environment.filter).length }}</span> tests"
-msgstr[0] ""
-msgstr[1] ""
-
 #: src/app/execution/execution-list.tpl.html
-msgid "Add a test <span class=\"caret\"></span>"
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "All <strong>{{ environment.nb_selected_all }}</strong> tests are selected."
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "All <strong>{{ environment.nb_selected_all }}</strong> tests on this page are selected."
-msgstr ""
-
-#: src/app/execution/execution-list.tpl.html
-msgid "All environments"
+msgid "Add a test"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
@@ -53,10 +35,6 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaigns list"
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Category"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
@@ -89,7 +67,6 @@ msgid "Failed"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
-#: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
 msgstr ""
@@ -97,10 +74,6 @@ msgstr ""
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Focus graph"
-msgstr ""
-
-#: src/app/execution/execution-list.tpl.html
-msgid "For all"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -111,36 +84,14 @@ msgstr ""
 msgid "Load closed campaigns"
 msgstr ""
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "No tests on this page are selected."
-msgstr ""
-
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Not run"
 msgstr ""
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Oh no!"
-msgstr ""
-
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Please choose the environments for \"{{ campaign.label }}\" campaign:"
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Please choose the environments for the new campaign:"
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid ""
-"Please configure the test execution tracker and\n"
-"                        add environments in order to be able to go further."
 msgstr ""
 
 #: src/app/execution/execution-list.tpl.html
@@ -151,24 +102,12 @@ msgstr ""
 msgid "Score users"
 msgstr ""
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests."
-msgstr ""
-
 #: src/app/execution/execution-detail.tpl.html
 msgid "Show dependencies graph for this test"
 msgstr ""
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Test name"
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Tests Progression"
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Tests are run in an environment."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -181,10 +120,6 @@ msgstr ""
 
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "You have not any environment defined."
 msgstr ""
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html

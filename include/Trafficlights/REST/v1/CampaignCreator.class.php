@@ -72,11 +72,12 @@ class CampaignCreator {
     /**
      * @return ArtifactReference
      */
-    public function createCampaignAndExecutions(PFUser $user, $project_id, $label, $environments) {
+    public function createCampaign(PFUser $user, $project_id, $label) {
         try {
-            $execution_ids = $this->createTestExecutionsForDefinitions($project_id, $user, $environments);
+            $tracker = $this->getCampaignTrackerReferenceForProject($project_id);
+            $values  = $this->getFieldValuesForCampaignArtifactCreation($tracker, $user, $label);
 
-            return $this->createCampaign($project_id, $label, $execution_ids, $user);
+            return $this->artifact_creator->create($user, $tracker, $values);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
@@ -86,56 +87,6 @@ class CampaignCreator {
         } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-    }
-
-    private function createCampaign($project_id, $label, $execution_ids, PFUser $user) {
-        $tracker = $this->getCampaignTrackerReferenceForProject($project_id);
-        $values  = $this->getFieldValuesForCampaignArtifactCreation($tracker, $user, $label, $execution_ids);
-
-        return $this->artifact_creator->create($user, $tracker, $values);
-    }
-
-    /** @return int[] the ids of created executions */
-    private function createTestExecutionsForDefinitions(
-        $project_id,
-        PFUser $user,
-        $environments
-    ) {
-        $execution_ids = array();
-        foreach ($environments as $environment_id => $definition_ids) {
-            $execution_ids = array_merge(
-                $execution_ids,
-                $this->createTestExecutionsInEnvironmentForDefinitions(
-                    $project_id,
-                    $user,
-                    $environment_id,
-                    $definition_ids
-                )
-            );
-        }
-
-        return $execution_ids;
-    }
-
-    /** @return int[] the ids of created executions */
-    private function createTestExecutionsInEnvironmentForDefinitions(
-        $project_id,
-        PFUser $user,
-        $environment_id,
-        array $definition_ids
-    ) {
-        $execution_ids = array();
-        foreach ($definition_ids as $definition_id) {
-            $execution = $this->execution_creator->createTestExecution(
-                $project_id,
-                $user,
-                $environment_id,
-                $definition_id
-            );
-            $execution_ids[] = array('id' => $execution->id);
-        }
-
-        return $execution_ids;
     }
 
     private function getCampaignTrackerReferenceForProject($project_id) {
@@ -158,12 +109,10 @@ class CampaignCreator {
     private function getFieldValuesForCampaignArtifactCreation(
         TrackerReference $tracker_reference,
         PFUser $user,
-        $label,
-        $execution_ids
+        $label
     ) {
         $label_field  = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_NAME);
         $status_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_STATUS);
-        $link_field   = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_ARTIFACT_LINKS);
 
         $label_value           = new ArtifactValuesRepresentation();
         $label_value->field_id = (int)$label_field->getId();
@@ -173,11 +122,7 @@ class CampaignCreator {
         $status_value->field_id       = (int)$status_field->getId();
         $status_value->bind_value_ids = array((int)$status_field->getDefaultValue());
 
-        $link_value           = new ArtifactValuesRepresentation();
-        $link_value->field_id = (int)$link_field->getId();
-        $link_value->links    = $execution_ids;
-
-        return array($label_value, $status_value, $link_value);
+        return array($label_value, $status_value);
     }
 
     private function getField(

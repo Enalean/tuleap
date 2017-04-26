@@ -136,7 +136,6 @@ class ExecutionsResource {
      *
      * @param TrackerReference $tracker       Execution tracker of the execution {@from body}
      * @param int              $definition_id Definition of the execution {@from body}
-     * @param string           $environment   Environment of the execution {@from body}
      * @param string           $status        Status of the execution {@from body} {@choice notrun,passed,failed,blocked}
      * @param string           $results       Result of the execution {@from body}
      * @return ExecutionRepresentation
@@ -148,7 +147,6 @@ class ExecutionsResource {
     protected function post(
         TrackerReference $tracker,
         $definition_id,
-        $environment,
         $status,
         $time = 0,
         $results = ''
@@ -163,7 +161,7 @@ class ExecutionsResource {
                 $this->tracker_factory
             );
 
-            $values = $this->getValuesByFieldsName($user, $tracker->id, $definition_id, $environment, $status, $time, $results);
+            $values = $this->getValuesByFieldsName($user, $tracker->id, $definition_id, $status, $time, $results);
 
             if (! empty($values)) {
                 $artifact_reference = $creator->create($user, $tracker, $values);
@@ -470,12 +468,10 @@ class ExecutionsResource {
         PFUser $user,
         $tracker_id,
         $definition_id,
-        $environment,
         $status,
         $time,
         $results
     ) {
-        $environment_field    = $this->getFieldByName(ExecutionRepresentation::FIELD_ENVIRONMENT, $tracker_id, $user);
         $status_field         = $this->getFieldByName(ExecutionRepresentation::FIELD_STATUS, $tracker_id, $user);
         $time_field           = $this->getFieldByName(ExecutionRepresentation::FIELD_TIME, $tracker_id, $user);
         $results_field        = $this->getFieldByName(ExecutionRepresentation::FIELD_RESULTS, $tracker_id, $user);
@@ -483,8 +479,6 @@ class ExecutionsResource {
 
         $status_field_binds      = $status_field->getBind()->getValuesByKeyword($status);
         $status_field_bind       = array_pop($status_field_binds);
-        $environment_field_binds = $environment_field->getBind()->getValuesByKeyword($environment);
-        $environment_field_bind  = array_pop($environment_field_binds);
 
         $values = array();
 
@@ -492,14 +486,6 @@ class ExecutionsResource {
             intval($status_field->getId()),
             array(
                 (int) $status_field_bind->getId()
-            ),
-            'bind_value_ids'
-        );
-
-        $values[] = $this->createArtifactValuesRepresentation(
-            intval($environment_field->getId()),
-            array(
-                (int) $environment_field_bind->getId()
             ),
             'bind_value_ids'
         );

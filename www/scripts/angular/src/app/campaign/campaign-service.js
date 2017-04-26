@@ -17,7 +17,6 @@ function CampaignService(
     return {
         getCampaign    : getCampaign,
         getCampaigns   : getCampaigns,
-        getEnvironments: getEnvironments,
         createCampaign : createCampaign,
         patchCampaign  : patchCampaign
     };
@@ -35,23 +34,6 @@ function CampaignService(
                 query : {
                     status: campaign_status
                 }
-            })
-            .then(function(response) {
-                result = {
-                    results: response.data,
-                    total: response.headers('X-PAGINATION-SIZE')
-                };
-
-                return result;
-            });
-    }
-
-    function getEnvironments(campaign_id, limit, offset) {
-        return rest.one('trafficlights_campaigns', campaign_id)
-            .all('trafficlights_environments')
-            .getList({
-                limit     : limit,
-                offset    : offset
             })
             .then(function(response) {
                 result = {

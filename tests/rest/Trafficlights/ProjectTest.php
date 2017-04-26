@@ -78,21 +78,4 @@ class ProjectTest extends BaseTest {
 
         $this->assertEquals(sizeof($definitions), 3);
     }
-
-    public function testGetEnvironments() {
-
-        $response = $this->getResponse($this->client->get("projects/$this->project_id/trafficlights_environments"));
-        $environments = $response->json();
-
-        $this->assertArrayHasKey(0, $environments);
-        $this->assertEquals($environments[0]['label'], 'CentOS 5 - PHP 5.1');
-
-        $this->assertArrayHasKey(1, $environments);
-        $this->assertEquals($environments[1]['label'], 'CentOS 5 - PHP 5.3');
-
-        $this->assertArrayHasKey(2, $environments);
-        $this->assertEquals($environments[2]['label'], 'CentOS 6 - PHP 5.3');
-
-        $this->assertTrue(true);
-    }
 }

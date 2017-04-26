@@ -20,15 +20,6 @@
                 font-size: 30px;
                 font-weight: 400;
             }
-
-            > .execution-utils-environment {
-                position: relative;
-                top: 2px;
-
-                > ul > li > a {
-                    cursor: pointer;
-                }
-            }
         }
 
         #execution-utils-avatars {
@@ -282,17 +273,6 @@
                             margin-right: 10px;
                             letter-spacing: 0.05em;
                         }
-                    }
-
-                    & > .execution-item-content-environment {
-                        display: table-cell;
-                        width: 100px;
-                        padding: 0 32px 0 0;
-                        vertical-align: middle;
-                        text-align: right;
-                        font-size: 0.7em;
-                        color: #999;
-                        letter-spacing: -0.03em;
                     }
                 }
 

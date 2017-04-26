@@ -209,64 +209,6 @@ class ProjectResource {
         return $result;
     }
 
-    /**
-     * @url OPTIONS {id}/trafficlights_environments
-     */
-    public function optionsEnvironments($id) {
-        Header::allowOptionsGet();
-    }
-
-    /**
-     * Get test environments
-     *
-     * Get all test environments for a given project
-     *
-     * @url GET {id}/trafficlights_environments
-     *
-     * @param int $id Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
-     *
-     * @return array
-     */
-    protected function getEnvironments($id, $limit = 10, $offset = 0) {
-        $this->optionsEnvironments($id);
-
-        $project = $this->getProject($id);
-
-        $tracker_id = $this->config->getTestExecutionTrackerId($project);
-        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
-        if (! $tracker) {
-            throw new RestException(400, 'The execution tracker id is not well configured');
-        }
-
-        if (! $tracker->userCanView($this->user)) {
-            throw new RestException(403, 'Access denied to the test definition tracker');
-        }
-
-        $execution_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser($tracker_id, ExecutionRepresentation::FIELD_ENVIRONMENT, $this->user);
-
-        if (! $execution_field) {
-            throw new RestException(400, 'The environment field of execution tracker is not well configured');
-        }
-
-
-        $result = array();
-        $field_as_json = $execution_field->fetchFormattedForJson();
-        foreach($field_as_json['values'] as $value) {
-            $environment = new EnvironmentRepresentation();
-            $environment->build(
-                $value['id'],
-                $value['label']
-            );
-            $result[] = $environment;
-        }
-
-        $this->sendPaginationHeaders($limit, $offset, count($result));
-
-        return array_slice($result, $offset, $limit);
-    }
-
     private function getProject($id) {
         $project = $this->project_manager->getProject($id);
         if ($project->isError()) {

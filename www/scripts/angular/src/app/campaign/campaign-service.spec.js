@@ -49,29 +49,9 @@ describe ('CampaignService - ', function () {
         });
     });
 
-    it("getEnvironments() - ", function() {
-        var environments = [
-            "CentOS 5 - PHP 5.1",
-            "CentOS 5 - PHP 5.3"
-        ];
-
-        mockBackend
-            .expectGET('/api/v1/trafficlights_campaigns/6/trafficlights_environments?limit=50&offset=0')
-            .respond(JSON.stringify(environments));
-
-        var promise = CampaignService.getEnvironments(6, 50, 0);
-
-        mockBackend.flush();
-
-        promise.then(function(response) {
-            expect(response.results.length).toEqual(2);
-        });
-    });
-
     it("createCampaign() - ", function() {
         var campaign_to_create = {
             label: 'Release',
-            environments: {},
             project_id: 101
         };
         var campaign_created = {
@@ -101,7 +81,6 @@ describe ('CampaignService - ', function () {
         var executions = [
             {
                 id: 4,
-                environment: "CentOS 5 - PHP 5.1",
                 previous_result: {
                     status: "notrun"
                 }

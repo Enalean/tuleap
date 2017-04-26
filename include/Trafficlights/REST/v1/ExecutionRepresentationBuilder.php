@@ -99,7 +99,6 @@ class ExecutionRepresentationBuilder {
         $execution_representation->build(
             $execution->getId(),
             $execution->getStatus(),
-            $this->getExecutionEnvironment($user, $execution),
             $this->getExecutionResult($user, $execution),
             $execution->getLastUpdateDate(),
             $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
@@ -121,7 +120,6 @@ class ExecutionRepresentationBuilder {
             $execution_representation->build(
                 $execution->getId(),
                 $execution->getStatus(),
-                $this->getExecutionEnvironment($user, $execution),
                 $this->getExecutionResult($user, $execution),
                 $execution->getLastUpdateDate(),
                 $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
@@ -207,22 +205,6 @@ class ExecutionRepresentationBuilder {
         }
 
         return $changeset_value->getValue();
-    }
-
-    private function getExecutionEnvironment(PFUser $user, Tracker_Artifact $execution) {
-        $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser($execution->getTrackerId(), ExecutionRepresentation::FIELD_ENVIRONMENT, $user);
-
-        $changeset_value = $execution->getValue($results_field);
-        if (! $changeset_value) {
-            return '';
-        }
-
-        $first_value = array_pop($changeset_value->getListValues());
-        if (! $first_value) {
-            return '';
-        }
-
-        return $first_value->getLabel();
     }
 
     private function getPreviousResultRepresentationForExecution(

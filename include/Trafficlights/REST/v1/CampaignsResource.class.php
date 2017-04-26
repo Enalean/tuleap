@@ -257,71 +257,6 @@ class CampaignsResource {
     }
 
     /**
-     * @url OPTIONS {id}/trafficlights_environments
-     */
-    public function optionsEnvironments($id) {
-        Header::allowOptionsGet();
-    }
-
-    /**
-     * Get environments
-     *
-     * Get all environments that are used by at least one test execution of the
-     * given campaign
-     *
-     * @url GET {id}/trafficlights_environments
-     *
-     * @param int $id          Id of the campaign
-     * @param int $limit       Number of elements displayed per page {@from path}
-     * @param int $offset      Position of the first element to display {@from path}
-     *
-     * @return array {@type Tuleap\User\REST\UserRepresentation}
-     *
-     * @throws 400
-     * @throws 403
-     * @throws 404
-     */
-    protected function getEnvironments($id, $limit = 10, $offset = 0) {
-        $this->optionsEnvironments($id);
-
-        $user     = $this->user_manager->getCurrentUser();
-        $campaign = $this->getCampaignFromId($id, $user);
-        $project  = $campaign->getTracker()->getProject();
-
-        if ($project->isError()) {
-            throw new RestException(404, 'Project not found');
-        }
-
-        $execution_tracker_id = $this->config->getTestExecutionTrackerId($project);
-        $execution_tracker    = $this->tracker_factory->getTrackerById($execution_tracker_id);
-
-        if (! $execution_tracker) {
-            throw new RestException(400, 'The execution tracker id is not well configured');
-        }
-
-        if (! $execution_tracker->userCanView($user)) {
-            throw new RestException(403, 'Access denied to the test definition tracker');
-        }
-
-        $execution_field = $this->formelement_factory->getUsedFieldByNameForUser($execution_tracker_id, ExecutionRepresentation::FIELD_ENVIRONMENT, $user);
-
-        if (! $execution_field) {
-            throw new RestException(400, 'The environment field of execution tracker is not well configured');
-        }
-
-
-        $result        = array();
-        $field_as_json = $execution_field->fetchFormattedForJson();
-        foreach($field_as_json['values'] as $value) {
-            $result[] = $value['label'];
-        }
-
-        $this->sendPaginationHeaders($limit, $offset, count($result));
-
-        return array_slice($result, $offset, $limit);
-    }
-
-    /**
      * @url OPTIONS
      */
     public function options() {
@@ -337,15 +272,13 @@ class CampaignsResource {
      *
      * @param int    $project_id   Id of the project the campaign will belong to
      * @param string $label        The label of the new campaign
-     * @param array  $environments Associated environments and test definitions
      */
-    protected function post($project_id, $label, $environments) {
+    protected function post($project_id, $label) {
         $this->options();
-        return $this->campaign_creator->createCampaignAndExecutions(
+        return $this->campaign_creator->createCampaign(
             UserManager::instance()->getCurrentUser(),
             $project_id,
-            $label,
-            $environments
+            $label
         );
     }
 
