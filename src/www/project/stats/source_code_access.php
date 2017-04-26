@@ -19,7 +19,11 @@ if ( !$group_id ) {
 $project = ProjectManager::instance()->getProject($group_id);
 
 $who  = $request->getValidated('who', new Valid_WhiteList('who', array('nonmembers', 'members', 'allusers')), 'nonmembers');
-$span = $request->getValidated('span', 'uint', 14);
+
+$unsigned_int_validator = new Valid_UInt();
+$unsigned_int_validator->required();
+$span = $request->getValidated('span', $unsigned_int_validator, 14);
+
 $view = $request->getValidated('view', new Valid_WhiteList('view', array('daily', 'weekly', 'monthly')), 'daily');
 
 if (isset($_REQUEST['SUBMIT'])) {    
