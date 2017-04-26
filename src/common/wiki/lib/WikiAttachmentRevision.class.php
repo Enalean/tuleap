@@ -300,7 +300,7 @@ class WikiAttachmentRevision {
      *
      */
     function getMimeType() {
-        return $this->mimeType;
+        return trim($this->mimeType, "'");
     }
 
 
