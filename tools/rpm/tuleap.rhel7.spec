@@ -680,6 +680,8 @@ if [ "$1" -eq "1" ]; then
     /usr/bin/systemctl enable ${APP_NAME}.service ${APP_NAME}-svn-updater.service &> /dev/null || :
 else
     # Upgrade
+    /usr/bin/systemctl daemon-reload &> /dev/null || :
+    /usr/bin/systemctl enable ${APP_NAME}.service ${APP_NAME}-svn-updater.service &> /dev/null || :
     /usr/bin/systemctl restart ${APP_NAME} &> /dev/null || :
 fi
 
