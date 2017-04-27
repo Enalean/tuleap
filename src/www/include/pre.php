@@ -1,12 +1,23 @@
 <?php
-//
-// Copyright 2011-2017 (c) Enalean
-// Copyright 1999-2000 (c) The SourceForge Crew
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// http://sourceforge.net
-//
-//
+/**
+ * Copyright (c) Enalean, 2011 - 2017. All rights reserved
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 use Tuleap\TimezoneRetriever;
 
@@ -157,11 +168,6 @@ $feedback=''; // Initialize global var
 
 $request = HTTPRequest::instance();
 $request->setTrustedProxies(array_map('trim', explode(',', ForgeConfig::get('sys_trusted_proxies'))));
-
-//library to determine browser settings
-if(!IS_SCRIPT) {
-    require_once('browser.php');
-}
 
 //Language
 if (!$GLOBALS['sys_lang']) {

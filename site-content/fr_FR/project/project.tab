@@ -120,7 +120,6 @@ project_admin_editservice	conf_inherited_yes	Oui
 project_admin_editugroup	name	Nom
 project_admin_editugroup	avoid_special_ch	Veuillez éviter les espaces et les signes de ponctuation dans les noms de groupe
 project_admin_editugroup	desc	Description
-project_admin_editugroup	browser_not_accepted	Désolé, votre navigateur (Netscape 4.x) n'est pas supporté. Pour modifier our créer un groupe d'utilisateur, veuillez utiliser un autre navigateur
 project_admin_editugroup	create_ug	Créer un groupe d'utilisateurs
 project_admin_editugroup	create_ug_for	Créer un nouveau groupe d'utilisateurs pour <B>$1</B>
 project_admin_editugroup	fill_ug_desc	Veuillez remplir le nom et la description de ce nouveau groupe d'utilisateurs&nbsp;:

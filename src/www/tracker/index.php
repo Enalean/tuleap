@@ -1,15 +1,24 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//
-//      Originally by to the SourceForge Team,1999-2000
-//
-//  Written for Codendi by Stephane Bouhet
-//
-
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
@@ -119,10 +128,6 @@ if ( $func == 'gotoid' ) {
             }
             break;
         case 'add' : {
-            if (browser_is_netscape4()) {
-	      exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif')));
-                return;
-            }
                 $ah=new ArtifactHtml($ath);
                 if (!$ah || !is_object($ah)) {
                         exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
@@ -966,15 +971,12 @@ if ( $func == 'gotoid' ) {
                 } else if ($ah->isError()) {
                         exit_error($Language->getText('global','error'),$ah->getErrorMessage());
                 } else {
-                        
+
                         // Check if users can browse anonymously
                         if ( !user_isloggedin() && !$ath->userCanView() ) {
                             exit_not_logged_in();
                         }
-                        
-                        if (browser_is_netscape4()) {
-                            $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif')));
-                        }
+
                         if ( user_ismember($group_id) ) {
                                 require('./mod.php');
                         } else {
@@ -996,23 +998,19 @@ if ( $func == 'gotoid' ) {
                         if ( !user_isloggedin() && !$ath->allowsAnon() ) {
                             exit_not_logged_in();
                         }
-                        
-                        if (browser_is_netscape4()) {
-                            $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','an_artif')));
-                        }
 
 			// !!!! need to specify here for which users we allow to copy artifacts !!!!
                         if ( user_ismember($group_id) ) {
                                 require('./copy.php');
                         } else {
-                             exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));   
+                             exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
                         }
 
 	  }
 	  break;
 	}
 
-       
+
         case 'toggle_section':
             $collapsable_sections = array('results', 'query');
             $em->processEvent('tracker_collapsable_sections', array('sections' => &$collapsable_sections));

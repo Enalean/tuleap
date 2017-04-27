@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All rights reserved
+ * Copyright (c) Enalean, 2012-2017. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('browser.php');
 
 class HTTPRequest extends Codendi_Request {
 
@@ -65,15 +63,6 @@ class HTTPRequest extends Codendi_Request {
         } else {
             return false;
         }
-    }
-
-    /**
-     * Return true if browser used to submit the request is netscape 4.
-     *
-     * @return boolean
-     */
-    public function browserIsNetscape4() {
-        return browser_is_netscape4();
     }
 
     public function getBrowser() {

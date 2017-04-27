@@ -528,11 +528,6 @@ class PageEditor
                                          'cols' => $request->getPref('editWidth'),
                                          'readonly' => (bool) $readonly),
                                    $this->_content);
-        /** <textarea wrap="virtual"> is not valid XHTML but Netscape 4 requires it
-         * to wrap long lines.
-         */
-        if (isBrowserNS4())
-            $textarea->setAttr('wrap', 'virtual');
         if (USE_HTMLAREA)
             return Edit_HtmlArea_Textarea($textarea,$this->_wikicontent,'edit[content]');
         else

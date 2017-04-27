@@ -82,7 +82,6 @@ tracker_import	send_notifications	Envoyer les notifications&nbsp;:
 #
 tracker_index	art_id_necessary	L'ID de l'artefact est nécessaire
 tracker_index	not_create_at	ArtefactType n'a pas pu être créé
-tracker_index	browser_not_supported	Désolé, votre navigateur (Netscape 4.x) n'est pas supporté. Pour créer $1, veuillez utiliser un autre navigateur.
 tracker_index	a_tracker	un outil de suivi
 tracker_index	an_artif	un artefact
 tracker_index	not_create_art	L'artefact n'a pas pu être créé

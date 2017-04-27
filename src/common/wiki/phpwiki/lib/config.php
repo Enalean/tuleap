@@ -72,40 +72,20 @@ function browserVersion() {
         return (float) substr(browserAgent(),8);
 }
 function isBrowserIE() {
-    return (browserDetect('Mozilla/') and 
+    return (browserDetect('Mozilla/') and
             browserDetect('MSIE'));
 }
-// problem with transparent PNG's
-function isBrowserIE55() {
-    return (isBrowserIE() and 
-            browserVersion() > 5.1 and browserVersion() < 6.0);
-}
-// old Netscape prior to Mozilla
-function isBrowserNetscape($version = false) {
-    $agent = (browserDetect('Mozilla/') and 
-            ! browserDetect('Gecko/') and
-            ! browserDetect('MSIE'));
-    if ($version) return $agent and browserVersion() >= $version; 
-    else return $agent;
-}
-// NS3 or less
-function isBrowserNS3() {
-    return (isBrowserNetscape() and browserVersion() < 4.0);
-}
-// NS4 or less
-function isBrowserNS4() {
-    return (isBrowserNetscape() and browserVersion() < 5.0);
-}
+
 // must omit display alternate stylesheets: konqueror 3.1.4
 // http://sourceforge.net/tracker/index.php?func=detail&aid=945154&group_id=6121&atid=106121
 function isBrowserKonqueror($version = false) {
-    if ($version) return browserDetect('Konqueror/') and browserVersion() >= $version; 
+    if ($version) return browserDetect('Konqueror/') and browserVersion() >= $version;
     return browserDetect('Konqueror/');
 }
 // MacOSX Safari has certain limitations. Need detection and patches.
 // * no <object>, only <embed>
 function isBrowserSafari($version = false) {
-    if ($version) return browserDetect('Safari/') and browserVersion() >= $version; 
+    if ($version) return browserDetect('Safari/') and browserVersion() >= $version;
     return browserDetect('Safari/');
 }
 

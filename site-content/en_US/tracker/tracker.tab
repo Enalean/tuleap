@@ -90,7 +90,6 @@ tracker_import	send_notifications	Send Notifications:
 #
 tracker_index	art_id_necessary	Artifact ID is necessary
 tracker_index	not_create_at	ArtifactType could not be created
-tracker_index	browser_not_supported	Sorry, your browser (Netscape 4.x) is not supported. In order to create $1, please use a different browser
 tracker_index	a_tracker	a tracker
 tracker_index	an_artif	an artifact
 tracker_index	not_create_art	Artifact Could Not Be Created

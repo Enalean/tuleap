@@ -1,24 +1,22 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2015 - 2017.
+ * Copyright (c) Enalean, 2015-2017. All rights reserved
  *
- * Originally written by Manuel Vacelet, 2006
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
@@ -316,13 +314,6 @@ class Docman_Controller extends Controler {
         $this->_viewParams['filter'] = $report;
     }
 
-
-    /*private*/ function _checkBrowserCompliance() {
-        if($this->request_type == 'http' && $this->request->browserIsNetscape4()) {
-            $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'docman_browserns4'));
-        }
-    }
-
     function getValueInArrays($key, $array1, $array2) {
         $value = null;
         if(isset($array1[$key])) {
@@ -433,9 +424,6 @@ class Docman_Controller extends Controler {
                 $this->_setView('Error');
                 return;
             }
-
-            // Browser alert
-            $this->_checkBrowserCompliance();
 
             //token for redirection
             $tok = new Docman_Token();
