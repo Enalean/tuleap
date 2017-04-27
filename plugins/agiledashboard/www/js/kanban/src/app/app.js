@@ -15,7 +15,6 @@ angular.module('kanban', [
     'tuleap.artifact-modal',
     'ui.bootstrap',
     'ui.router',
-    'ui.tree',
     'user-preferences',
     'uuid-generator'
 ]);

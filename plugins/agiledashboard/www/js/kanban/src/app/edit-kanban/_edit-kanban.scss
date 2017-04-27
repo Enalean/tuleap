@@ -38,53 +38,16 @@
         }
 
         > .column-configuration {
-            .angular-ui-tree-empty {
-                display: none;
-            }
 
-            > ul.column-configuration-column-list {
+            .column-configuration-column-list {
                 width: 100%;
-                display: table;
-                border-collapse: collapse;
+                display: flex;
+                flex-direction: column;
+                list-style-type: none;
                 margin: 0;
 
-                > li {
-                    position: relative;
-                    display: table-row;
-                    background: none;
-
-                    > div {
-                        display: table-cell;
-                        position: relative;
-
-                        &.cancel-deletion {
-                            > div {
-                                position: absolute;
-                                top: 0;
-                                right: 0;
-                                width: 400px;
-
-                                .btn-small {
-                                    position: relative;
-                                    float: right;
-                                    top: 2px;
-                                }
-                            }
-                        }
-                    }
-
-                    .btn-small {
-                        white-space: nowrap;
-                        margin-left: 10px;
-
-                        &.btn-link {
-                            padding: 2px;
-                        }
-                    }
-
-                    .input-append > input[type="text"] {
-                        width: 150px;
-                    }
+                li:not(.edit-modal-column) {
+                    display: flex;
 
                     &:first-child, &:last-child {
                         color: #888;
@@ -121,48 +84,67 @@
                             margin: 0 3px 0 0;
                         }
                     }
-
-                    &.column {
-                        > div:first-child {
-                            padding: 4px 0 4px 7px;
-                        }
-
-                        &.draggable:not(.editing) {
-                            cursor: move;
-
-                            > div:first-child {
-                                width: 100%;
-                                padding: 4px 0 4px 22px;
-                                background: url('drag.png') no-repeat 5px 8px;
-                            }
-
-                            &:hover {
-                                background: #EEE;
-                            }
-                        }
-                    }
-
-                    &.editing > div {
-                        padding: 4px 0 4px 15px;
-                    }
                 }
+            }
+
+            .column-configuration-reorderable-columns {
+                display: flex;
+                flex-direction: column;
             }
         }
     }
 }
 
-ul.column-configuration-column-list.angular-ui-tree-drag {
-    opacity: 1;
+.edit-modal-column {
+    display: flex;
 
-    > li {
-        float: left;
-        font-size: 13px;
-        padding: 5px 7px 5px 22px;
-        background: #FFFFFF url('drag.png') no-repeat 5px 9px;
-        cursor: move;
-        border-radius: 3px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    .btn-small {
+        margin-left: 10px;
         white-space: nowrap;
+
+        &.btn-link {
+            padding: 2px;
+        }
+    }
+
+    .cancel-deletion {
+        display: flex;
+    }
+
+    &.editing > div {
+        padding: 4px 0 4px 15px;
+    }
+
+    .input-append > input[type="text"] {
+        width: 150px;
+    }
+
+    > div:first-child {
+        padding: 4px 0 4px 7px;
+    }
+
+    &.draggable:not(.editing) {
+        cursor: move;
+
+        > div:first-child {
+            width: 100%;
+            padding: 4px 0 4px 22px;
+            background: url('drag.png') no-repeat 5px 8px;
+        }
+
+        &:hover {
+            background: #eeeeee;
+        }
+    }
+
+    &.gu-mirror {
+        border-radius: 3px;
+        background-color: #ffffff;
+        font-size: 13px;
+        white-space: nowrap;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, .3);
+        cursor: move;
+        opacity: 1;
 
         .btn-small {
             display: none;

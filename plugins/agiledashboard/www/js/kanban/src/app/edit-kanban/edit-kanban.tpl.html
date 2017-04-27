@@ -22,7 +22,7 @@
         </div>
 
         <h3><i class="icon-columns"></i> <span translate>Columns configuration</span></h3>
-        <div ui-tree="edit_modal.reorderColumnsTreeOptions" class="column-configuration">
+        <div class="column-configuration">
             <p ng-if="! edit_modal.columnsCanBeManaged()"
                 class="alert alert-warning"
                 translate
@@ -32,65 +32,97 @@
             <p ng-if="edit_modal.columnsCanBeManaged()" translate>
                 More information about columns are available in the field administration used by the semantic status in the <a href="/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}">tracker</a>.
             </p>
-            <ul ui-tree-nodes ng-model="edit_modal.kanban.columns" class="column-configuration-column-list">
-                <li>
+            <ul class="column-configuration-column-list">
+                <li data-nodrag="true">
                     <div>
                         <i class="icon-inbox"></i> <span translate>Backlog</span>
                     </div>
                 </li>
-                <li ui-tree-node
-                    data-nodrag="{{ ! edit_modal.kanban.user_can_reorder_columns }}"
-                    ng-repeat="column in edit_modal.kanban.columns"
-                    class="column"
-                    ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns, editing: column.editing }"
+                <div
+                    class="column-configuration-reorderable-columns"
+                    dragular="edit_modal.dragularOptionsForEditModal()"
                 >
-                    <div ng-if="! column.editing">{{ column.label }}</div>
-                    <div data-nodrag="true" ng-if="column.editing">
-                        <form ng-submit="edit_modal.editColumn(column)">
-                            <div class="input-append">
-                                <input type="text"
-                                    ng-model="column.label"
-                                    placeholder="{{ 'Column name' | translate }}"
-                                    required
-                                    pattern=".*\S.*"
-                                    auto-focus-input
-                                >
-                                <button class="btn" type="submit" ng-disabled="edit_modal.processing()">
-                                    <i class="icon-spinner icon-spin" ng-show="edit_modal.saving_column"></i>
-                                    <span translate>Save</span>
-                                </button>
-                                <button class="btn" ng-click="edit_modal.cancelEditColumn(column)" ng-disabled="edit_modal.processing()">
-                                    <span translate>Cancel</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    <li
+                        ng-repeat="column in edit_modal.kanban.columns track by $id(column)"
+                        data-nodrag="{{ ! edit_modal.kanban.user_can_reorder_columns }}"
+                        class="edit-modal-column"
+                        ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns, editing: column.editing }"
+                    >
+                        <div ng-if="! column.editing">{{ column.label }}</div>
+                        <div data-nodrag="true" ng-if="column.editing">
+                            <form ng-submit="edit_modal.editColumn(column)">
+                                <div class="input-append">
+                                    <input type="text"
+                                        ng-model="column.label"
+                                        placeholder="{{ 'Column name' | translate }}"
+                                        required
+                                        pattern=".*\S.*"
+                                        auto-focus-input
+                                    >
+                                    <button
+                                        class="btn btn-primary"
+                                        type="submit"
+                                        ng-disabled="edit_modal.processing()"
+                                    >
+                                        <i class="icon-spinner icon-spin" ng-show="edit_modal.saving_column"></i>
+                                        <span translate>Save</span>
+                                    </button>
+                                    <button
+                                        class="btn"
+                                        ng-click="edit_modal.cancelEditColumn(column)"
+                                        ng-disabled="edit_modal.processing()"
+                                    >
+                                        <span translate>Cancel</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
 
-                    <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
-                        <button class="btn btn-small btn-link" ng-if="column.user_can_edit_label" ng-click="edit_modal.turnColumnToEditMode(column)"  ng-disabled="edit_modal.processing()">
-                            <i class="icon-edit"></i> <span translate>Edit</span>
-                        </button>
-                    </div>
-                    <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
-                        <button class="btn btn-small btn-link" ng-if="column.user_can_remove_column" ng-click="edit_modal.removeColumn(column)"  ng-disabled="edit_modal.processing()">
-                            <i class="icon-trash"></i>
-                            <span translate>Remove</span>
-                        </button>
-                    </div>
-
-                    <div data-nodrag="true" ng-if="column.confirm_delete"></div>
-                    <div data-nodrag="true" ng-if="column.confirm_delete" class="cancel-deletion">
-                        <div>
-                            <button class="btn btn-small" ng-if="column.confirm_delete" ng-click="edit_modal.cancelRemoveColumn(column)"  ng-disabled="edit_modal.processing()">
-                                <span translate>Cancel</span>
-                            </button>
-                            <button class="btn btn-small btn-danger" ng-if="column.user_can_remove_column" ng-click="edit_modal.removeColumn(column)"  ng-disabled="edit_modal.processing()">
-                                <span translate>Confirm deletion</span>
+                        <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
+                            <button
+                                class="btn btn-small btn-link"
+                                ng-if="column.user_can_edit_label"
+                                ng-click="edit_modal.turnColumnToEditMode(column)"
+                                ng-disabled="edit_modal.processing()"
+                            >
+                                <i class="icon-edit"></i>
+                                <span translate>Edit</span>
                             </button>
                         </div>
-                    </div>
-                </li>
-                <li ng-if="edit_modal.kanban.user_can_add_columns" class="add-column">
+                        <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
+                            <button
+                                class="btn btn-small btn-link"
+                                ng-if="column.user_can_remove_column"
+                                ng-click="edit_modal.removeColumn(column)"
+                                ng-disabled="edit_modal.processing()"
+                            >
+                                <i class="icon-trash"></i>
+                                <span translate>Remove</span>
+                            </button>
+                        </div>
+                        <div data-nodrag="true" ng-if="column.confirm_delete" class="cancel-deletion">
+                            <button
+                                class="btn btn-small"
+                                ng-if="column.confirm_delete"
+                                ng-click="edit_modal.cancelRemoveColumn(column)"
+                                ng-disabled="edit_modal.processing()"
+                                translate
+                            >Cancel</button>
+                            <button
+                                class="btn btn-small btn-danger"
+                                ng-if="column.user_can_remove_column"
+                                ng-click="edit_modal.removeColumn(column)"
+                                ng-disabled="edit_modal.processing()"
+                                translate
+                            >Confirm deletion</button>
+                        </div>
+                    </li>
+                </div>
+                <li
+                    data-nodrag="true"
+                    ng-if="edit_modal.kanban.user_can_add_columns"
+                    class="add-column"
+                >
                     <div>
                         <form ng-submit="edit_modal.addColumn()" ng-if="edit_modal.adding_column">
                             <div class="input-append">
@@ -101,22 +133,35 @@
                                     pattern=".*\S.*"
                                     auto-focus-input
                                 >
-                                <button class="btn" type="submit" ng-disabled="edit_modal.processing()">
+                                <button
+                                    class="btn btn-primary"
+                                    type="submit"
+                                    ng-disabled="edit_modal.processing()"
+                                >
                                     <i class="icon-spinner icon-spin" ng-show="edit_modal.saving_new_column"></i>
                                     <i class="icon-plus" ng-show="! edit_modal.adding_column"></i>
                                     <span translate>Add</span>
                                 </button>
-                                <button class="btn" ng-click="edit_modal.cancelAddColumn()" ng-disabled="edit_modal.processing()">
+                                <button
+                                    class="btn"
+                                    ng-click="edit_modal.cancelAddColumn()"
+                                    ng-disabled="edit_modal.processing()"
+                                >
                                     <span translate>Cancel</span>
                                 </button>
                             </div>
                         </form>
-                        <button class="btn" ng-disabled="edit_modal.processing()" ng-click="edit_modal.addColumn()" ng-show="! edit_modal.adding_column">
+                        <button
+                            class="btn"
+                            ng-disabled="edit_modal.processing()"
+                            ng-click="edit_modal.addColumn()"
+                            ng-show="! edit_modal.adding_column"
+                        >
                             <i class="icon-plus"></i> <span translate>Add a column</span>
                         </button>
                     </div>
                 </li>
-                <li>
+                <li data-nodrag="true">
                     <div>
                         <i class="icon-archive"></i> <span translate>Archive</span>
                     </div>
@@ -127,13 +172,22 @@
         <h3><i class="icon-warning-sign"></i> <span translate>Danger zone</span></h3>
         <div class="danger-zone">
             <p translate>The deletion of a Kanban is irreversible. Please be certain before doing it.</p>
-            <button class="btn btn-danger" ng-class="{'btn-danger': edit_modal.confirm_delete }" ng-click="edit_modal.deleteKanban()" ng-disabled="edit_modal.processing()">
+            <button
+                class="btn btn-danger"
+                ng-click="edit_modal.deleteKanban()"
+                ng-disabled="edit_modal.processing()"
+            >
                 <i class="icon-spinner icon-spin" ng-show="edit_modal.deleting"></i>
                 <i class="icon-trash" ng-hide="edit_modal.deleting"></i>
                 <span ng-if="edit_modal.confirm_delete" translate>Confirm deletion of this Kanban</span>
                 <span ng-if="! edit_modal.confirm_delete" translate>Delete this Kanban</span>
             </button>
-            <button class="btn" ng-if="edit_modal.confirm_delete" ng-click="edit_modal.cancelDeleteKanban()" ng-disabled="edit_modal.processing()">
+            <button
+                class="btn"
+                ng-if="edit_modal.confirm_delete"
+                ng-click="edit_modal.cancelDeleteKanban()"
+                ng-disabled="edit_modal.processing()"
+            >
                 <span translate>Cancel</span>
             </button>
         </div>

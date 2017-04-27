@@ -9,7 +9,6 @@
     "angular-ui-router": "~0.2.10",
     "restangular": "~1.4.0",
     "angular-moment": "~0.8.3",
-    "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
     "angular-ui-bootstrap-bower": "~0.8.0",
     "ng-scrollbar": "~0.0.7",
     "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#4956057b41d3dbc44835d2efb23412d123561df9",

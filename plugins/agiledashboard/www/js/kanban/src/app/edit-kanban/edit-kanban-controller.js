@@ -3,6 +3,7 @@ angular
     .controller('EditKanbanCtrl', EditKanbanCtrl);
 
 EditKanbanCtrl.$inject = [
+    '$scope',
     '$modalInstance',
     'KanbanService',
     'kanban',
@@ -13,6 +14,7 @@ EditKanbanCtrl.$inject = [
 ];
 
 function EditKanbanCtrl(
+    $scope,
     $modalInstance,
     KanbanService,
     kanban,
@@ -24,38 +26,81 @@ function EditKanbanCtrl(
     var self = this;
 
     _.extend(self, {
-        kanban                   : kanban,
-        saving                   : false,
-        deleting                 : false,
-        confirm_delete           : false,
-        saving_new_column        : false,
-        saving_column            : false,
-        cancel                   : cancel,
-        adding_column            : false,
-        new_column_label         : '',
-        reorderColumnsTreeOptions: {
-            dropped: columnDropped
-        },
-        processing          : processing,
-        deleteKanban        : deleteKanban,
-        cancelDeleteKanban  : cancelDeleteKanban,
-        saveModifications   : saveModifications,
-        addColumn           : addColumn,
-        cancelAddColumn     : cancelAddColumn,
-        removeColumn        : removeColumn,
-        cancelRemoveColumn  : cancelRemoveColumn,
-        turnColumnToEditMode: turnColumnToEditMode,
-        cancelEditColumn    : cancelEditColumn,
-        editColumn          : editColumn,
-        columnsCanBeManaged : columnsCanBeManaged
+        kanban           : kanban,
+        saving           : false,
+        deleting         : false,
+        confirm_delete   : false,
+        saving_new_column: false,
+        saving_column    : false,
+        cancel           : cancel,
+        adding_column    : false,
+        new_column_label : '',
+
+        initModalValues            : initModalValues,
+        initDragular               : initDragular,
+        dragularOptionsForEditModal: dragularOptionsForEditModal,
+        processing                 : processing,
+        deleteKanban               : deleteKanban,
+        cancelDeleteKanban         : cancelDeleteKanban,
+        saveModifications          : saveModifications,
+        addColumn                  : addColumn,
+        cancelAddColumn            : cancelAddColumn,
+        removeColumn               : removeColumn,
+        cancelRemoveColumn         : cancelRemoveColumn,
+        turnColumnToEditMode       : turnColumnToEditMode,
+        cancelEditColumn           : cancelEditColumn,
+        editColumn                 : editColumn,
+        columnsCanBeManaged        : columnsCanBeManaged
     });
 
-    initModalValues();
+    self.initModalValues();
+    self.initDragular();
 
     function initModalValues() {
         _.each(self.kanban.columns, function(column) {
             column.editing        = false;
             column.confirm_delete = false;
+        });
+    }
+
+    function initDragular() {
+        $scope.$on('dragulardrop', dragularDrop);
+    }
+
+    function dragularOptionsForEditModal() {
+        return {
+            containersModel: self.kanban.columns,
+            scope          : $scope,
+            revertOnSpill  : true,
+            nameSpace      : 'dragular-columns',
+            moves          : isItemDraggable
+        };
+    }
+
+    function isItemDraggable(element_to_drag, container, handle_element) {
+        return (! ancestorCannotBeDragged(handle_element));
+    }
+
+    function ancestorCannotBeDragged(handle_element) {
+        return (
+            angular.element(handle_element)
+                .parentsUntil('.column')
+                .andSelf()
+                .filter('[data-nodrag="true"]')
+                .length > 0
+        );
+    }
+
+    function dragularDrop(
+        event
+    ) {
+        event.stopPropagation();
+
+        var sorted_columns_ids = _.map(self.kanban.columns, 'id');
+
+        KanbanService.reorderColumns(self.kanban.id, sorted_columns_ids)
+        .catch(function(response) {
+            $modalInstance.dismiss(response);
         });
     }
 
@@ -82,7 +127,6 @@ function EditKanbanCtrl(
             }, function (response) {
                 $modalInstance.dismiss(response);
             });
-
         } else {
             self.confirm_delete = true;
         }
@@ -114,25 +158,10 @@ function EditKanbanCtrl(
             }, function (response) {
                 $modalInstance.dismiss(response);
             });
-
         } else {
             self.adding_column    = true;
             self.new_column_label = '';
         }
-    }
-
-    function columnDropped() {
-        var sorted_columns_ids = [];
-
-        _.forEach(kanban.columns, function(column) {
-            sorted_columns_ids.push(column.id);
-        });
-
-        KanbanService.reorderColumns(kanban.id, sorted_columns_ids).then(function() {
-            // nothing to do
-        }, function(response) {
-            $modalInstance.dismiss(response);
-        });
     }
 
     function editColumn(column) {
@@ -142,7 +171,6 @@ function EditKanbanCtrl(
             self.saving_column    = false;
             column.editing        = false;
             column.original_label = column.label;
-
         }, function (response) {
             $modalInstance.dismiss(response);
         });
@@ -162,12 +190,11 @@ function EditKanbanCtrl(
         if (column_to_remove.confirm_delete) {
             KanbanService.removeColumn(kanban.id, column_to_remove.id).then(function() {
                 removeColumnToKanban(column_to_remove.id);
-
             }, function(response) {
                 $modalInstance.dismiss(response);
             });
         } else {
-           column_to_remove.confirm_delete = true;
+            column_to_remove.confirm_delete = true;
         }
     }
 
