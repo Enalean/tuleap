@@ -53,7 +53,6 @@ var fat_combined_files = [
         'src/www/scripts/codendi/Tooltip.js',
         'src/www/scripts/codendi/Tooltip-loader.js',
         'src/www/scripts/codendi/Toggler.js',
-        'src/www/scripts/codendi/LayoutManager.js',
         'src/www/scripts/codendi/DropDownPanel.js',
         'src/www/scripts/codendi/colorpicker.js',
         'src/www/scripts/autocomplete.js',
