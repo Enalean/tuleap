@@ -57,7 +57,7 @@
 
     <div id="campaign-list-content-load">
         <a ng-if="! closed_campaigns_loaded || closed_campaigns_hidden" ng-click="getClosedCampaigns()" translate>Load closed campaigns </a>
-        <a ng-if="! closed_campaigns_hidden && campaigns_closed.length > 0" ng-click="hideClosedCampaigns()" translate>Hide closed campaigns </a>
+        <a ng-if="closed_campaigns_loaded && ! closed_campaigns_hidden" ng-click="hideClosedCampaigns()" translate>Hide closed campaigns </a>
     </div>
 
     <img src="scripts/angular/bin/assets/loader.gif" ng-if="loading" class="loader">

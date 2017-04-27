@@ -23,24 +23,46 @@ function CampaignListCtrl($scope, CampaignService, SharedPropertiesService) {
 
     function getCampaigns(project_id, campaign_status, limit, offset) {
         CampaignService.getCampaigns(project_id, campaign_status, limit, offset).then(function(data) {
-            $scope.campaigns        = $scope.campaigns.concat(data.results);
-            total_campaigns         = data.total;
-
-            if ($scope.campaigns.length < total_campaigns) {
-                getCampaigns(project_id, campaign_status, limit, offset + limit);
-            } else {
-                $scope.loading = false;
-
-                if (campaign_status === 'closed') {
-                    $scope.campaigns_closed        = data.results;
-                    $scope.closed_campaigns_loaded = true;
-                }
-
-                if (campaign_status === 'open') {
-                    $scope.open_campaigns_loaded = true;
-                }
+            total_campaigns  = data.total;
+            $scope.campaigns = $scope.campaigns.concat(data.results);
+            if (campaign_status === 'closed') {
+                $scope.campaigns_closed        = $scope.campaigns_closed.concat(data.results);
+                $scope.closed_campaigns_loaded = loadCampaigns(
+                    campaign_status,
+                    $scope.closed_campaigns_loaded,
+                    $scope.campaigns_closed,
+                    total_campaigns,
+                    limit,
+                    offset
+                );
+            } else if (campaign_status === 'open') {
+                $scope.open_campaigns_loaded = loadCampaigns(
+                    campaign_status,
+                    $scope.open_campaigns_loaded,
+                    $scope.campaigns,
+                    total_campaigns,
+                    limit,
+                    offset
+                );
             }
         });
+    }
+
+    function loadCampaigns(
+        campaign_status,
+        are_campaigns_loaded,
+        campaigns,
+        total_campaigns,
+        limit,
+        offset
+    ) {
+        if (campaigns.length < total_campaigns) {
+            getCampaigns(project_id, campaign_status, limit, offset + limit);
+        } else {
+            $scope.loading       = false;
+            are_campaigns_loaded = true;
+        }
+        return are_campaigns_loaded;
     }
 
     function getClosedCampaigns() {

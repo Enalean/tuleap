@@ -34,17 +34,18 @@ class ArtifactDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
-        $sql = "SELECT A.*
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS A.*, A.*
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
-                    INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)          -- Last changeset is needed (no need of history)
-                    LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
+                    INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)
+                    LEFT JOIN (
                         tracker_semantic_status as SS
                         INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
                     ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
                 WHERE (
-                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        SS.field_id IS NULL
                         OR
                         CVL2.bindvalue_id = SS.open_value_id
                      )
@@ -58,7 +59,7 @@ class ArtifactDao extends DataAccessObject
         $tracker_id = $this->da->escapeInt($tracker_id);
         $limit      = $this->da->escapeInt($limit);
         $offset     = $this->da->escapeInt($offset);
-        $sql = "SELECT a.*
+        $sql = "SELECT SQL_CALC_FOUND_ROWS a.*, a.*
                 FROM tracker_artifact AS a
                     INNER JOIN tracker AS t ON (a.tracker_id = t.id)
                     INNER JOIN tracker_semantic_status AS ss USING(tracker_id)
