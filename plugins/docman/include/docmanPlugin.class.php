@@ -445,7 +445,7 @@ class DocmanPlugin extends Plugin
                 'group_id' => $params['group_id'],
                 'action'   => 'ajax_reference_tooltip'
             ));
-            $controler = $this->getCoreController($request);
+            $controler = $this->getHTTPController($request);
             $controler->process();
         }
     }
@@ -899,10 +899,6 @@ class DocmanPlugin extends Plugin
             $request = HTTPRequest::instance();
         }
         return $this->getController('Docman_HTTPController', $request);
-    }
-
-    protected function getCoreController($request) {
-        return $this->getController('Docman_CoreController', $request);
     }
 
     protected function getSOAPController($request) {

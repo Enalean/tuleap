@@ -107,7 +107,6 @@ plugin_tracker_import	cannot_create	The tracker '$1' cannot be created
 #
 plugin_tracker_index	art_id_necessary	Artifact ID is necessary
 plugin_tracker_index	not_create_at	ArtifactTracker could not be created
-plugin_tracker_index	browser_not_supported	Sorry, your browser (Netscape 4.x) is not supported. In order to create $1, please use a different browser
 plugin_tracker_index	a_tracker	a tracker
 plugin_tracker_index	an_artif	an artifact
 plugin_tracker_index	not_create_art	Artifact Could Not Be Created

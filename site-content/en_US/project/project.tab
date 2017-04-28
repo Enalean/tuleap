@@ -120,7 +120,6 @@ project_admin_editservice	conf_inherited_yes	Yes
 project_admin_editugroup	name	Name
 project_admin_editugroup	avoid_special_ch	Please avoid space and punctuation in user group names
 project_admin_editugroup	desc	Description
-project_admin_editugroup	browser_not_accepted	Sorry, your browser (Netscape 4.x) is not supported. In order to edit or create a user group, please use a different browser
 project_admin_editugroup	create_ug	Create User Group
 project_admin_editugroup	create_ug_for	Creating new user group for <B>$1</B>
 project_admin_editugroup	fill_ug_desc	Please, fill the name and description of this new user group:

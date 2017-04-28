@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -235,9 +235,7 @@ class WikiServiceViews extends WikiViews {
    * header - public
    */
   function header() {
-    if(!browser_is_netscape4()) {
-      $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki.css';
-    }
+    $this->html_params['stylesheet'][] = '/wiki/themes/Codendi/phpwiki.css';
     parent::header();
   }
 

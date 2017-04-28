@@ -64,26 +64,21 @@ if ($group_id && !$atid) {
 	}
 
 	$atf = new ArtifactTypeFactory($group);
-    
+
     $func = $request->getValidated('func', 'string', '');
-    
+
 	switch ( $func ) {
 	case 'create':
 		if ( !user_isloggedin() ) {
 			exit_not_logged_in();
 			return;
 		}
-		
+
 	    if ( !user_ismember($group_id,'A') ) {
 			exit_permission_denied();
 			return;
 		}
-	
-        if (browser_is_netscape4()) {
-            exit_error($Language->getText('global','error'),$Language->getText('tracker_index','browser_not_supported',$Language->getText('tracker_index','a_tracker')));
-            return;
-        }
-        
+
         if($request->exist('feedback')) {
             $GLOBALS['feedback'] .= htmlspecialchars($request->get('feedback'));
         }

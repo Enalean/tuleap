@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,9 +44,6 @@ class WebDAV_DocmanController extends Docman_Controller {
     }
 
     public function viewsManagement() {
-    }
-
-    public function _checkBrowserCompliance() {
     }
 
     public function _includeView() {
