@@ -130,6 +130,7 @@ clean-rng:
 
 post-checkout: generate-mo dev-clear-cache dev-forgeupgrade ## Clear caches, run forgeupgrade, build assets and generate language files
 	npm run build
+	git clean -fd plugins/*/www/themes/FlamingParrot
 	@$(DOCKER) exec tuleap-web service httpd restart
 
 generate-po: ## Generate translatable strings
