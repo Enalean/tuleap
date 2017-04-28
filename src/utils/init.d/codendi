@@ -104,7 +104,7 @@ restart()
 
 status()
 {
-    cmp -s "$DST_CRON_SCRIPT" "SRC_CRON_SCRIPT_ON"
+    cmp -s "$DST_CRON_SCRIPT" "$SRC_CRON_SCRIPT_ON"
     RETVAL=$?
     return $RETVAL
 }
@@ -140,6 +140,12 @@ case "$1" in
 'status')
     status
     RETVAL=$?
+    if [ $RETVAL -eq 0 ]
+    then
+        echo "Tuleap is running"
+    else
+        echo "Tuleap is stopped"
+    fi
     ;;
 
 *)
