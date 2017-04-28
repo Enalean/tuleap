@@ -126,26 +126,26 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesBurndown() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown',
+                'uri'    => 'milestones/'.$this->sprint_artifact_ids[1].'/burndown',
             ),
             $milestone['resources']['burndown']
         );
     }
 
     public function testGETResourcesCardwall() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1]));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall',
+                'uri'    => 'milestones/'.$this->sprint_artifact_ids[1].'/cardwall',
             ),
             $milestone['resources']['cardwall']
         );

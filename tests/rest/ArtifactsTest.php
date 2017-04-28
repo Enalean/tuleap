@@ -598,7 +598,7 @@ class ArtifactsTest extends RestBase {
 
     public function testAnonymousGETArtifact() {
         try {
-            $this->client->get('artifacts/'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID)->send();
+            $this->client->get('artifacts/'.$this->story_artifact_ids[1])->send();
         } catch (Exception $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
         }

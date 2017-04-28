@@ -433,32 +433,32 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic pic");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[5], 'uri' => 'artifacts/'.$this->epic_artifact_ids[5], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[6], 'uri' => 'artifacts/'.$this->epic_artifact_ids[6], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic epoc");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[7], 'uri' => 'artifacts/'.$this->epic_artifact_ids[7], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
     }
 
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPUTbacklogWithoutPermission() {
-        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID.']'));
+        $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 403);
     }
 
     public function testPUTbacklog() {
-        $response_put = $this->getResponse($this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 200);
 
@@ -471,23 +471,23 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic epoc");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[7], 'uri' => 'artifacts/'.$this->epic_artifact_ids[7], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic pic");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[5], 'uri' => 'artifacts/'.$this->epic_artifact_ids[5], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[6], 'uri' => 'artifacts/'.$this->epic_artifact_ids[6], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
     }
 
     public function testPUTbacklogOnlyTwoItems() {
-        $response_put = $this->getResponse($this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.$this->epic_artifact_ids[6].','.$this->epic_artifact_ids[7].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 200);
 
@@ -500,19 +500,19 @@ class ProjectTest extends RestBase {
         $this->assertArrayHasKey('id', $first_backlog_item);
         $this->assertEquals($first_backlog_item['label'], "Epic pic");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[5], 'uri' => 'artifacts/'.$this->epic_artifact_ids[5], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
         $this->assertEquals($second_backlog_item['label'], "Epic c'est tout");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[6], 'uri' => 'artifacts/'.$this->epic_artifact_ids[6], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
         $this->assertEquals($third_backlog_item['label'], "Epic epoc");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[7], 'uri' => 'artifacts/'.$this->epic_artifact_ids[7], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
     }
 
     public function testOPTIONSUserGroups() {
@@ -618,7 +618,7 @@ class ProjectTest extends RestBase {
             REST_TestDataBuilder::TEST_USER_2_NAME,
             $this->client->put('projects/'.$this->project_private_member_id.'/backlog',
             null,
-            '['.REST_TestDataBuilder::EPIC_7_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_5_ARTIFACT_ID.','.REST_TestDataBuilder::EPIC_6_ARTIFACT_ID.']')
+            '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']')
         );
 
         $this->assertEquals($response_patch->getStatusCode(), 403);

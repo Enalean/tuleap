@@ -33,7 +33,7 @@ class MilestonesMilestonesTest extends RestBase {
     }
 
     public function testPUTRemoveSubMilestones() {
-        $this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.']');
+        $this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']');
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '[]'));
         $this->assertEquals($response_put->getStatusCode(), 200);
         $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/milestones', null));
@@ -43,17 +43,17 @@ class MilestonesMilestonesTest extends RestBase {
     }
 
     public function testPUTOnlyOneSubMilestone() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']'));
         $this->assertEquals($response_put->getStatusCode(), 200);
         $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/milestones', null));
         $submilestones = $response_get->json();
 
         $this->assertCount(1, $submilestones);
-        $this->assertEquals(REST_TestDataBuilder::SPRINT_ARTIFACT_ID, $submilestones[0]['id']);
+        $this->assertEquals($this->sprint_artifact_ids[1], $submilestones[0]['id']);
     }
 
     public function testPUTOnlyOneSubMilestoneAlreadyAdded() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']'));
         $this->assertEquals($response_put->getStatusCode(), 200);
         $this->assertEquals($response_put->json(), array());
     }
@@ -62,7 +62,7 @@ class MilestonesMilestonesTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPUTOnlyOneSubMilestoneTwice() {
-        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.','.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.']'));
+        $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].','.$this->sprint_artifact_ids[1].']'));
         $this->assertEquals($response_put->getStatusCode(), 400);
         $response_get = $this->getResponse($this->client->get('milestones/'.$this->release_artifact_ids[1].'/milestones', null));
         $submilestones = $response_get->json();

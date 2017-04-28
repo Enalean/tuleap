@@ -371,7 +371,7 @@ class ArtifactFilesTest extends RestBase {
      * @depends testPutArtifactFileId
      */
     public function testAttachFileToPutArtifact($file_id) {
-        $artifact_id = REST_TestDataBuilder::STORY_1_ARTIFACT_ID;
+        $artifact_id = $this->story_artifact_ids[1];
 
         $request = $this->client->get('trackers/'. $this->user_stories_tracker_id);
         $structure = json_decode($this->getResponse($request)->getBody(true), true);

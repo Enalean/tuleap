@@ -67,6 +67,9 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $tracker_ids = array();
 
     protected $release_artifact_ids = array();
+    protected $epic_artifact_ids    = array();
+    protected $story_artifact_ids   = array();
+    protected $sprint_artifact_ids  = array();
 
     public function __construct() {
         parent::__construct();
@@ -111,6 +114,9 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->getTrackerIdsForProjectPrivateMember();
 
         $this->getReleaseArtifactIds();
+        $this->getEpicArtifactIds();
+        $this->getStoryArtifactIds();
+        $this->getSprintArtifactIds();
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -235,6 +241,30 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->getArtifactIds(
             $this->releases_tracker_id,
             $this->release_artifact_ids
+        );
+    }
+
+    private function getEpicArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->epic_tracker_id,
+            $this->epic_artifact_ids
+        );
+    }
+
+    private function getStoryArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->user_stories_tracker_id,
+            $this->story_artifact_ids
+        );
+    }
+
+    private function getSprintArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->sprints_tracker_id,
+            $this->sprint_artifact_ids
         );
     }
 
