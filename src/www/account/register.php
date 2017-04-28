@@ -23,7 +23,7 @@ $confirmation_register = false;
 // ###### function register_valid()
 // ###### checks for valid register from form post
 if($page == "admin_creation"){
-   session_require(array('group'=>'1','admin_flags'=>'A'));
+    $request->checkUserIsSuperUser();
 }
 
 $is_register_page_accessible = true;

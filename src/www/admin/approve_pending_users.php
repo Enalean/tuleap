@@ -12,14 +12,15 @@ require_once('account.php');
 require_once('proj_email.php');
 require_once('www/admin/admin_utils.php');
 
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
+
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/pending-users.js');
 
 define('ADMIN_APPROVE_PENDING_PAGE_PENDING', 'pending');
 define('ADMIN_APPROVE_PENDING_PAGE_VALIDATED', 'validated');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
 $hp = Codendi_HTMLPurifier::instance();
-$request = HTTPRequest:: instance();
 $action_select = '';
 $status= '';
 $users_array = array();

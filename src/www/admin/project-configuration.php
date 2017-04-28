@@ -29,9 +29,9 @@ use Tuleap\Project\Webhook\WebhookDao;
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
-$request    = HTTPRequest::instance();
 $csrf_token = new CSRFSynchronizerToken('/admin/project-configuration.php');
 
 $webhook_dao = new WebhookDao();

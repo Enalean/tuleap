@@ -53,7 +53,7 @@ class UserLogRouter
      */
     public function route(HTTPRequest $request)
     {
-        $this->checkAccess();
+        $this->checkAccess($request);
 
         $offset = $this->validAndExtractOffset($request);
         $day    = $this->validAndExtractDate($request);
@@ -76,9 +76,9 @@ class UserLogRouter
         }
     }
 
-    private function checkAccess()
+    private function checkAccess(HTTPRequest $request)
     {
-        session_require(array('group' => '1', 'admin_flags' => 'A'));
+        $request->checkUserIsSuperUser();
     }
 
     private function validAndExtractOffset(HTTPRequest $request)

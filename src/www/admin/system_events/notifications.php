@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,9 @@
 
 require_once 'pre.php';
 
-session_require(array('group'=>'1', 'admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
+
 $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
 
 $token = new CSRFSynchronizerToken('/admin/system_events/notifications.php');

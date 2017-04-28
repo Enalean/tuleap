@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -27,9 +27,11 @@ use Tuleap\Project\Admin\ProjectHistorySearchPresenter;
 require_once('pre.php');
 require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_history.php');
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-history.js');
 
-session_require(array('group' => '1', 'admin_flags' => 'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
+
+$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/project-history.js');
 
 $project = ProjectManager::instance()->getProject($group_id);
 

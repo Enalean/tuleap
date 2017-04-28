@@ -293,6 +293,16 @@ class Codendi_Request {
         return $this->current_user;
     }
 
+    public function checkUserIsSuperUser()
+    {
+        if (! $this->getCurrentUser()->isSuperUser()) {
+            exit_error(
+                $GLOBALS['Language']->getText('include_session', 'insufficient_access'),
+                $GLOBALS['Language']->getText('include_session', 'no_access')
+            );
+        }
+    }
+
     /**
      * Set a current user (should be used only for tests)
      *

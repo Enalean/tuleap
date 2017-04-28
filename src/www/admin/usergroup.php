@@ -4,7 +4,7 @@
  * Copyright 1999-2000 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,10 +33,11 @@ require_once('account.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/system_event/SystemEventManager.class.php');
 
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
+
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/userdetails.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
-
-session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $request = HTTPRequest::instance();
 $um      = UserManager::instance();

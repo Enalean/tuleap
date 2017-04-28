@@ -1,8 +1,8 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ *
+ *
  *
  * PluginCreationWizard
  */
@@ -11,15 +11,15 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('PluginCreationWizardViews.class.php');
 require_once('PluginCreationWizardActions.class.php');
 class PluginCreationWizard extends Controler {
-    
+
     function PluginCreationWizard() {
-        session_require(array('group'=>'1','admin_flags'=>'A'));
+        HTTPRequest::instance()->checkUserIsSuperUser();
     }
-    
+
     function request() {
         $request =& HTTPRequest::instance();
         $views    = array('introduction', 'descriptor', 'webspace',       'hooks', 'database', 'finish');
-        
+
         if (!isset($_SESSION['PluginCreationWizard_view']) || $request->exist('cancel')) {
             $_SESSION['PluginCreationWizard_view']   = 0;
             $_SESSION['PluginCreationWizard_params'] = array();
@@ -38,13 +38,13 @@ class PluginCreationWizard extends Controler {
             $_SESSION['PluginCreationWizard_view'] = count($views) - 1;
         }
         $this->view = $views[$_SESSION['PluginCreationWizard_view']];
-        
-        
+
+
         if ($request->exist('goto') && (($key = array_search($request->get('goto'), $views)) !== false)) {
             $this->view                            = $request->get('goto');
             $_SESSION['PluginCreationWizard_view'] = $key;
         }
-        
+
         if ($request->exist('finish')) {
             unset($_SESSION['PluginCreationWizard_view']);
             $this->action = 'create';

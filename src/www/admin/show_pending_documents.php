@@ -26,11 +26,11 @@ require_once('www/admin/admin_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/wiki/lib/WikiAttachment.class.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
-
 $request = HTTPRequest::instance();
-$em      = EventManager::instance();
-$pm      = ProjectManager::instance();
+$request->checkUserIsSuperUser();
+
+$em = EventManager::instance();
+$pm = ProjectManager::instance();
 
 $vFunc = new Valid_WhiteList('func', array('confirm_restore_frs_file', 'confirm_restore_wiki_attachment'));
 $vFunc->required();

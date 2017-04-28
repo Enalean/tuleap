@@ -30,7 +30,9 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_history.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
+
 $pm            = ProjectManager::instance();
 $event_manager = EventManager::instance();
 $group = $pm->getProject($group_id);

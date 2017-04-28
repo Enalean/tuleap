@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012 - 2017. All rights reserved
  *
@@ -20,7 +19,8 @@
  */
 require_once 'pre.php';
 
-session_require(array('group'=>'1', 'admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
 $user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory($permissions_dao, EventManager::instance());

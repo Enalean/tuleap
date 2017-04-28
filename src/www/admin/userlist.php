@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -28,7 +28,8 @@ require_once('common/event/EventManager.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/SessionDao.class.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+$request = HTTPRequest::instance();
+$request->checkUserIsSuperUser();
 
 /**
 *   select the fields sort order and the header arrow direction

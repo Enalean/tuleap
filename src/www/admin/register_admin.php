@@ -1,6 +1,26 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // the administrator can create a user account; we display the same page as user registration under the admin menu
- require_once('pre.php');
- session_require(array('group'=>'1','admin_flags'=>'A')); 
- require_once 'www/account/register.php';
-?>
+require_once('pre.php');
+
+HTTPRequest::instance()->checkUserIsSuperUser();
+
+require_once 'www/account/register.php';
