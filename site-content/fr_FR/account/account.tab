@@ -233,14 +233,6 @@ account_myprojectlist	title	Ma liste de projets
 account_myprojectlist	grp_list	Liste de projets pour <B>$1</B>
 #
 #-----------------------------------------------
-# Script: SF/www/account/pending-resend.php
-#
-account_pending-resend	title	Vérification de compte utilisateur en attente
-account_pending-resend	message	<B>Compte utilisateur en attente</B><P>Votre e-mail de confirmation vient d'être envoyé à nouveau. Visitez le lien inclus dans cet e-mail pour terminer le processus d'enregistrement.
-account_pending-resend	notpending	Ce compte utilisateur n'est pas en attente de vérification.
-account_pending-resend	needapproval	Ce compte doit être approuvé par un administrateur.
-#
-#-----------------------------------------------
 # Script: SF/www/account/pending.php
 #
 account_pending	title	Compte utilisateur en attente
