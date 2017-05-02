@@ -76,9 +76,6 @@ class ExecutionsResource {
     /** @var AssignedToRepresentationBuilder */
     private $assigned_to_representation_builder;
 
-    /** @var ConfigConformanceValidator */
-    private $conformance_validator;
-
     /** @var NodeJSClient */
     private $node_js_client;
 
@@ -86,17 +83,18 @@ class ExecutionsResource {
     private $permissions_serializer;
 
     public function __construct() {
+        $config                      = new Config(new Dao());
+        $conformance_validator       = new ConfigConformanceValidator($config);
+
         $this->user_manager          = UserManager::instance();
         $this->tracker_factory       = TrackerFactory::instance();
         $this->formelement_factory   = Tracker_FormElementFactory::instance();
         $this->artifact_factory      = Tracker_ArtifactFactory::instance();
         $this->trafficlights_artifact_factory = new ArtifactFactory(
+            $config,
+            $conformance_validator,
             $this->artifact_factory,
             new ArtifactDao()
-        );
-        $config                      = new Config(new Dao());
-        $this->conformance_validator = new ConfigConformanceValidator(
-            $config
         );
 
         $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
@@ -107,7 +105,7 @@ class ExecutionsResource {
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
-            $this->conformance_validator,
+            $conformance_validator,
             $this->assigned_to_representation_builder
         );
 
@@ -241,10 +239,11 @@ class ExecutionsResource {
                 'previous_user'   => $previous_user
             );
             $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $campaign = $this->trafficlights_artifact_factory->getCampaignForExecution($user, $artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
-                'trafficlights_' . $artifact->getParent($user)->getId(),
+                'trafficlights_' . $campaign->getId(),
                 $rights,
                 'trafficlights_execution:update',
                 $data
@@ -289,10 +288,11 @@ class ExecutionsResource {
                 )
             );
             $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $campaign = $this->trafficlights_artifact_factory->getCampaignForExecution($user, $artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
-                'trafficlights_' . $artifact->getParent($user)->getId(),
+                'trafficlights_' . $campaign->getId(),
                 $rights,
                 'trafficlights_user:presence',
                 $data

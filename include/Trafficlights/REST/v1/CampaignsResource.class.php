@@ -98,15 +98,17 @@ class CampaignsResource {
         $this->user_manager                   = UserManager::instance();
         $this->tracker_factory                = TrackerFactory::instance();
         $this->artifact_factory               = Tracker_ArtifactFactory::instance();
-        $this->trafficlights_artifact_factory = new ArtifactFactory(
-            $this->artifact_factory,
-            new ArtifactDao()
-        );
-        $this->formelement_factory            = Tracker_FormElementFactory::instance();
         $this->config                         = new Config(new Dao());
         $this->conformance_validator          = new ConfigConformanceValidator(
             $this->config
         );
+        $this->trafficlights_artifact_factory = new ArtifactFactory(
+            $this->config,
+            $this->conformance_validator,
+            $this->artifact_factory,
+            new ArtifactDao()
+        );
+        $this->formelement_factory            = Tracker_FormElementFactory::instance();
 
         $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
             $this->formelement_factory,

@@ -21,6 +21,7 @@
 namespace Tuleap\Trafficlights;
 
 use Tracker_Artifact;
+use PFUser;
 
 class ConfigConformanceValidator {
 
@@ -72,7 +73,7 @@ class ConfigConformanceValidator {
     /**
      * @return boolean
      */
-    public function isArtifactAnExecutionOfCampaign(Tracker_Artifact $execution, Tracker_Artifact $campaign) {
+    public function isArtifactAnExecutionOfCampaign(PFUser $user, Tracker_Artifact $execution, Tracker_Artifact $campaign) {
         if (! $this->isArtifactACampaign($campaign)) {
             return false;
         }
@@ -81,10 +82,7 @@ class ConfigConformanceValidator {
             return false;
         }
 
-        $campaign_project  = $campaign->getTracker()->getProject();
-        $execution_project = $execution->getTracker()->getProject();
-
-        return $campaign_project == $execution_project;
+        return $this->areExecutionAndCampaignLinked($user, $execution, $campaign);
     }
 
     /**
@@ -103,5 +101,25 @@ class ConfigConformanceValidator {
         $execution_project  = $execution->getTracker()->getProject();
 
         return $definition_project == $execution_project;
+    }
+
+    /**
+     * @return boolean
+     */
+    private function areExecutionAndCampaignLinked(PFUser $user, Tracker_Artifact $execution, Tracker_Artifact $campaign)
+    {
+        foreach ($campaign->getLinkedArtifacts($user) as $linked_artifact) {
+            if ($linked_artifact === $execution) {
+                return true;
+            }
+        }
+
+        foreach ($execution->getLinkedArtifacts($user) as $linked_artifact) {
+            if ($linked_artifact === $campaign) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

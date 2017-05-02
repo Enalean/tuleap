@@ -70,9 +70,12 @@ class ProjectResource {
 
     public function __construct() {
         $this->config                            = new Config(new Dao());
+        $conformance_validator                   = new ConfigConformanceValidator($this->config);
         $this->project_manager                   = ProjectManager::instance();
         $this->tracker_factory                   = TrackerFactory::instance();
         $this->trafficlights_artifact_factory    = new ArtifactFactory(
+            $this->config,
+            $conformance_validator,
             Tracker_ArtifactFactory::instance(),
             new ArtifactDao()
         );
@@ -82,9 +85,7 @@ class ProjectResource {
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $this->user_manager,
             $this->tracker_form_element_factory,
-            new ConfigConformanceValidator(
-                $this->config
-            )
+            $conformance_validator
         );
         $this->campaign_representation_builder   = new CampaignRepresentationBuilder(
             $this->user_manager,
