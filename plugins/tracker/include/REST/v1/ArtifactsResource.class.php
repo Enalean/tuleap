@@ -382,9 +382,7 @@ class ArtifactsResource extends AuthenticatedResource {
     /**
      * Create artifact
      *
-     * Create an artifact in a tracker
-     *
-     * <p>Things to take into account:</p>
+     * Things to take into account:
      * <ol>
      *  <li>You don't need to set all "values" of the artifact, you can pass only the ones you want to add,
      *      together with those that are required (depends on a given tracker's configuration).
@@ -440,45 +438,22 @@ class ArtifactsResource extends AuthenticatedResource {
      *  </li>
      * </ol>
      *
-     * You can create artifact with <code>values</code>, <code>values_by_field</code>, or <code>from_artifact_id</code>.
-     *
-     * With <code>from_artifact_id</code>, the source artifact will be copied into the new one, even if they are not in
-     * the same tracker. For now it will only copy the semantic title.
-     *
-     * <pre>
-     * /!\ This Copy mechanism is under construction and subject to changes /!\
-     * </pre>
-     *
      * @url POST
-     * @param TrackerReference  $tracker         Tracker in which the artifact must be created {@from body}
-     * @param array             $values          Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
-     * @param array             $values_by_field Artifact fields values indexed by field {@from body}
-     * @param ArtifactReference $from_artifact   Id of the artifact to copy {@from body}
-     *
+     * @param TrackerReference $tracker   Id of the artifact {@from body}
+     * @param array  $values              Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
+     * @param array  $values_by_field     Artifact fields values indexed by field {@from body}
      * @status 201
      * @return ArtifactReference
      */
-    protected function post(
-        TrackerReference $tracker,
-        array $values = array(),
-        array $values_by_field = array(),
-        ArtifactReference $from_artifact = null
-    ) {
+    protected function post(TrackerReference $tracker, array $values = array(), array $values_by_field = array()) {
         $this->options();
 
-        $this->checkThatThereIsOnlyOneSourceOfValuesToCreateArtifact($values, $values_by_field, $from_artifact);
+        if (! empty($values) && ! empty($values_by_field)) {
+            throw new RestException(400, 'Not able to deal with both formats at the same time');
+        }
 
         try {
-            $user = UserManager::instance()->getCurrentUser();
-
-            if (! empty($from_artifact)) {
-                $source_artifact = $this->getArtifactById($user, $from_artifact->id);
-                $target_tracker  = $this->getTrackerById($user, $tracker->id);
-
-                $values = $this->moved_value_builder->getValues($source_artifact, $target_tracker);
-                $target_tracker->getWorkflow()->disable();
-            }
-
+            $user    = UserManager::instance()->getCurrentUser();
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
                 new Tracker_REST_Artifact_ArtifactValidator(
                     $this->formelement_factory
@@ -501,8 +476,6 @@ class ArtifactsResource extends AuthenticatedResource {
             $this->sendETagHeader($artifact_reference->getArtifact());
             $this->sendLocationHeader($artifact_reference->uri);
             return $artifact_reference;
-        } catch (SemanticTitleNotDefinedException $exception) {
-            throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
@@ -514,6 +487,49 @@ class ArtifactsResource extends AuthenticatedResource {
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
+    }
+
+    /**
+     * Move artifact
+     *
+     * For now move will only preserve semantics title
+     *
+     * <pre>
+     * /!\ Move REST route is under construction and subject to changes /!\
+     * </pre>
+     *
+     *
+     * @url POST {id}/move
+     *
+     * @param int $id
+     * @param int $tracker_id     Tracker id where artifact will be moved {@from body}
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     *
+     * @return ArtifactReference
+     */
+    protected function moveArtifact($id, $tracker_id)
+    {
+        $this->options();
+        $user = UserManager::instance()->getCurrentUser();
+
+        $artifact = $this->getArtifactById($user, $id);
+        $tracker  = $this->getTrackerById($user, $tracker_id);
+
+        $reference = new TrackerReference();
+        $reference->build($tracker);
+
+        try {
+            $values = $this->moved_value_builder->getValues($artifact, $tracker);
+        } catch (SemanticTitleNotDefinedException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
+
+        $tracker->getWorkflow()->disable();
+
+        return $this->post($reference, $values);
     }
 
     private function getTrackerById(PFUser $user, $tracker_id)
@@ -578,31 +594,5 @@ class ArtifactsResource extends AuthenticatedResource {
         $uri_with_api_version = '/api/v1/' . $uri;
 
         Header::Location($uri_with_api_version);
-    }
-
-    /**
-     * @param array $values
-     * @param array $values_by_field
-     * @param $from_artifact
-     * @throws RestException
-     */
-    private function checkThatThereIsOnlyOneSourceOfValuesToCreateArtifact(
-        array $values,
-        array $values_by_field,
-        $from_artifact
-    ) {
-        $nb_sources_to_create_artifact = 0;
-        if (! empty($values)) {
-            $nb_sources_to_create_artifact++;
-        }
-        if (! empty($values_by_field)) {
-            $nb_sources_to_create_artifact++;
-        }
-        if (! empty($from_artifact)) {
-            $nb_sources_to_create_artifact++;
-        }
-        if ($nb_sources_to_create_artifact > 1) {
-            throw new RestException(400, 'Not able to deal with both formats at the same time');
-        }
     }
 }

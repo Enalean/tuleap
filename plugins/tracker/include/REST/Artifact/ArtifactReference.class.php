@@ -27,17 +27,17 @@ use \Tracker_Artifact;
 class ArtifactReference {
 
     /**
-     * @var int ID of the milestone {@type int} {@required true}
+     * @var int ID of the milestone
      */
     public $id;
 
     /**
-     * @var string URI of the milestone {@type string} {@required false}
+     * @var string URI of the milestone
      */
     public $uri;
 
     /**
-     * @var \Tuleap\Tracker\REST\TrackerReference {@type \Tuleap\Tracker\REST\TrackerReference} {@required false}
+     * @var \Tuleap\Tracker\REST\TrackerReference
      */
     public $tracker;
 
