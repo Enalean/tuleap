@@ -41,7 +41,7 @@ class ThemeManager
 
     private function getFirstValidTheme(PFUser $current_user, array $theme_names)
     {
-        if ($this->isInSiteAdmin($current_user)) {
+        if ($this->isInSiteAdmin($current_user) || $this->isInDashboard()) {
             return $this->getValidTheme($current_user, self::$BURNING_PARROT);
         }
 
@@ -62,6 +62,21 @@ class ThemeManager
         }
 
         return true;
+    }
+
+    private function isInDashboard()
+    {
+        if (IS_SCRIPT) {
+            return false;
+        }
+
+        if (! ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            return false;
+        }
+
+        $uri = $_SERVER['REQUEST_URI'];
+
+        return $uri === '/my/' || preg_match('`^/projects/[^/]+/$`', $uri);
     }
 
     private function isInSiteAdmin(PFUser $current_user)
