@@ -49,6 +49,9 @@ class HeaderPresenterBuilder
     private $title;
 
     /** @var array */
+    private $body_classes;
+
+    /** @var array */
     private $main_classes;
 
     /** @var SidebarPresenter */
@@ -61,6 +64,7 @@ class HeaderPresenterBuilder
         $imgroot,
         $title,
         $feedback_logs,
+        $body_classes,
         $main_classes,
         $sidebar,
         URLRedirect $url_redirect
@@ -70,6 +74,7 @@ class HeaderPresenterBuilder
         $this->current_user             = $current_user;
         $this->imgroot                  = $imgroot;
         $this->title                    = $title;
+        $this->body_classes             = $body_classes;
         $this->main_classes             = $main_classes;
         $this->sidebar                  = $sidebar;
 
@@ -88,6 +93,7 @@ class HeaderPresenterBuilder
             $color,
             $this->getStylesheets($color),
             $feedback_logs,
+            $this->getBodyClassesAsString(),
             $this->getMainClassesAsString(),
             $this->sidebar
         );
@@ -189,5 +195,10 @@ class HeaderPresenterBuilder
     private function getMainClassesAsString()
     {
         return implode(' ', $this->main_classes);
+    }
+
+    private function getBodyClassesAsString()
+    {
+        return implode(' ', $this->body_classes);
     }
 }

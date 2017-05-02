@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -62,6 +62,7 @@ class BurningParrotTheme extends Layout
     {
         $url_redirect             = new URLRedirect(EventManager::instance());
         $header_presenter_builder = new HeaderPresenterBuilder();
+        $body_classes             = $this->getArrayOfClassnamesForBodyTag($params);
         $main_classes             = isset($params['main_classes']) ? $params['main_classes'] : array();
         $sidebar                  = isset($params['sidebar']) ? $params['sidebar'] : array();
 
@@ -72,12 +73,18 @@ class BurningParrotTheme extends Layout
             $this->imgroot,
             $params['title'],
             $this->_feedback->logs,
+            $body_classes,
             $main_classes,
             $sidebar,
             $url_redirect
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
+    }
+
+    private function getArrayOfClassnamesForBodyTag($params)
+    {
+        return isset($params['body_class']) ? $params['body_class'] : array();
     }
 
     public function footer(array $params)
