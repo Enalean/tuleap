@@ -33,12 +33,12 @@ class MilestonesCardwallTest extends RestBase {
     }
 
     public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET() {
-        $response = $this->getResponse($this->client->options('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall'));
+        $response = $this->getResponse($this->client->options('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETCardwall() {
-        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall'));
+        $response = $this->getResponse($this->client->get('milestones/'.$this->sprint_artifact_ids[1].'/cardwall'));
 
         $cardwall = $response->json();
 
@@ -63,9 +63,9 @@ class MilestonesCardwallTest extends RestBase {
         $first_swimlane = $swimlanes[0];
 
         $first_swimlane_card = $first_swimlane['cards'][0];
-        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID.'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card['id']);
+        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID.'_'.$this->story_artifact_ids[1], $first_swimlane_card['id']);
         $this->assertEquals("Believe", $first_swimlane_card['label']);
-        $this->assertEquals("cards/".REST_TestDataBuilder::PLANNING_ID."_".REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card['uri']);
+        $this->assertEquals("cards/".REST_TestDataBuilder::PLANNING_ID."_".$this->story_artifact_ids[1], $first_swimlane_card['uri']);
         $this->assertEquals(REST_TestDataBuilder::PLANNING_ID, $first_swimlane_card['planning_id']);
         $this->assertEquals("Open", $first_swimlane_card['status']);
         $this->assertEquals(null, $first_swimlane_card['accent_color']);
@@ -78,8 +78,8 @@ class MilestonesCardwallTest extends RestBase {
         $this->assertEquals("projects/$this->project_private_member_id", $first_swimlane_card_project_reference['uri']);
 
         $first_swimlane_card_artifact_reference = $first_swimlane_card['artifact'];
-        $this->assertEquals(REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card_artifact_reference['id']);
-        $this->assertEquals("artifacts/".REST_TestDataBuilder::STORY_1_ARTIFACT_ID, $first_swimlane_card_artifact_reference['uri']);
+        $this->assertEquals($this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['id']);
+        $this->assertEquals("artifacts/".$this->story_artifact_ids[1], $first_swimlane_card_artifact_reference['uri']);
 
         $first_swimlane_card_artifact_tracker_reference = $first_swimlane_card_artifact_reference['tracker'];
         $this->assertEquals($this->user_stories_tracker_id, $first_swimlane_card_artifact_tracker_reference['id']);

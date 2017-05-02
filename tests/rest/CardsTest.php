@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -38,13 +38,13 @@ class CardsTest extends RestBase {
     }
 
     public function testPUTCardsWithId() {
-        $card_id        = REST_TestDataBuilder::PLANNING_ID .'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID;
+        $card_id        = REST_TestDataBuilder::PLANNING_ID .'_'.$this->story_artifact_ids[1];
         $test_label     = "Ieatlaughingcow";
         $test_column_id = 2;
 
         // Keep original values
         $original_card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/'. REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'/cardwall'))->json(),
+            $this->getResponse($this->client->get('milestones/'. $this->sprint_artifact_ids[1] .'/cardwall'))->json(),
             $card_id
         );
 
@@ -58,7 +58,7 @@ class CardsTest extends RestBase {
         $this->assertEquals($response_put->getStatusCode(), 200);
 
         $card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/'. REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'/cardwall'))->json(),
+            $this->getResponse($this->client->get('milestones/'. $this->sprint_artifact_ids[1] .'/cardwall'))->json(),
             $card_id
         );
 
@@ -86,7 +86,7 @@ class CardsTest extends RestBase {
     }
 
     public function testOPTIONSCardsWithId() {
-        $response = $this->getResponse($this->client->options('cards/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->options('cards/'.$this->sprint_artifact_ids[1] .'_'.$this->story_artifact_ids[1]));
         $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }
 }

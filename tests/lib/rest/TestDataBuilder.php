@@ -52,21 +52,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const BURNDOWN_CHILD_ARTIFACT_ID   = 1;
     const BURNDOWN_CHILD_2_ARTIFACT_ID = 8;
 
-    const SPRINT_ARTIFACT_ID        = 20;
-    const EPIC_1_ARTIFACT_ID        = 21;
-    const EPIC_2_ARTIFACT_ID        = 22;
-    const EPIC_3_ARTIFACT_ID        = 23;
-    const EPIC_4_ARTIFACT_ID        = 24;
-    const STORY_1_ARTIFACT_ID       = 25;
-    const STORY_2_ARTIFACT_ID       = 26;
-    const STORY_3_ARTIFACT_ID       = 27;
-    const STORY_4_ARTIFACT_ID       = 28;
-    const STORY_5_ARTIFACT_ID       = 29;
-    const STORY_6_ARTIFACT_ID       = 30;
-    const EPIC_5_ARTIFACT_ID        = 31;
-    const EPIC_6_ARTIFACT_ID        = 32;
-    const EPIC_7_ARTIFACT_ID        = 33;
-
     const LEVEL_ONE_ARTIFACT_A_ID   = 40;
 
     const LEVEL_TWO_ARTIFACT_B_ID   = 41;
@@ -107,6 +92,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
     protected $template_path;
 
     protected $release;
+    protected $sprint;
 
     public function __construct() {
         parent::__construct();
@@ -564,7 +550,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
         $this->createRelease($user, 'Release 1.0', '126');
-        $this->createSprint(
+        $this->sprint = $this->createSprint(
             $user,
             'Sprint A',
             '150',
@@ -573,7 +559,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             '29'
         );
 
-        $this->release->linkArtifact(self::SPRINT_ARTIFACT_ID, $user);
+        $this->release->linkArtifact($this->sprint->getId(), $user);
 
         return $this;
     }
@@ -588,15 +574,15 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
-        $this->createEpic($user, 'First epic', '101');
-        $this->createEpic($user, 'Second epic', '102');
-        $this->createEpic($user, 'Third epic', '103');
-        $this->createEpic($user, 'Fourth epic', '101');
+        $epic_1 = $this->createEpic($user, 'First epic', '101');
+        $epic_2 = $this->createEpic($user, 'Second epic', '102');
+        $epic_3 = $this->createEpic($user, 'Third epic', '103');
+        $epic_4 = $this->createEpic($user, 'Fourth epic', '101');
 
-        $this->release->linkArtifact(self::EPIC_1_ARTIFACT_ID, $user);
-        $this->release->linkArtifact(self::EPIC_2_ARTIFACT_ID, $user);
-        $this->release->linkArtifact(self::EPIC_3_ARTIFACT_ID, $user);
-        $this->release->linkArtifact(self::EPIC_4_ARTIFACT_ID, $user);
+        $this->release->linkArtifact($epic_1->getId(), $user);
+        $this->release->linkArtifact($epic_2->getId(), $user);
+        $this->release->linkArtifact($epic_3->getId(), $user);
+        $this->release->linkArtifact($epic_4->getId(), $user);
 
         return $this;
     }
@@ -606,22 +592,21 @@ class REST_TestDataBuilder extends TestDataBuilder {
 
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
 
-        $this->createUserStory($user, 'Believe', '206');
-        $this->createUserStory($user, 'Break Free', '205');
-        $this->createUserStory($user, 'Hughhhhhhh', '205');
-        $this->createUserStory($user, 'Kill you', '205');
-        $this->createUserStory($user, 'Back', '205');
+        $story_1 = $this->createUserStory($user, 'Believe', '206');
+        $story_2 = $this->createUserStory($user, 'Break Free', '205');
+        $story_3 = $this->createUserStory($user, 'Hughhhhhhh', '205');
+        $story_4 = $this->createUserStory($user, 'Kill you', '205');
+        $story_5 = $this->createUserStory($user, 'Back', '205');
         $this->createUserStory($user, 'Forward', '205');
 
-        $this->release->linkArtifact(self::STORY_1_ARTIFACT_ID, $user);
-        $this->release->linkArtifact(self::STORY_2_ARTIFACT_ID, $user);
-        $this->release->linkArtifact(self::STORY_3_ARTIFACT_ID, $user);
-        $this->release->linkArtifact(self::STORY_4_ARTIFACT_ID, $user);
-        $this->release->linkArtifact(self::STORY_5_ARTIFACT_ID, $user);
+        $this->release->linkArtifact($story_1->getId(), $user);
+        $this->release->linkArtifact($story_2->getId(), $user);
+        $this->release->linkArtifact($story_3->getId(), $user);
+        $this->release->linkArtifact($story_4->getId(), $user);
+        $this->release->linkArtifact($story_5->getId(), $user);
 
-        $sprint = $this->tracker_artifact_factory->getArtifactById(self::SPRINT_ARTIFACT_ID);
-        $sprint->linkArtifact(self::STORY_1_ARTIFACT_ID, $user);
-        $sprint->linkArtifact(self::STORY_2_ARTIFACT_ID, $user);
+        $this->sprint->linkArtifact($story_1->getId(), $user);
+        $this->sprint->linkArtifact($story_2->getId(), $user);
 
         return $this;
     }
@@ -860,7 +845,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId()  => $field_status_value
         );
 
-        $this->tracker_artifact_factory->createArtifact(
+        return $this->tracker_artifact_factory->createArtifact(
             $tracker,
             $fields_data,
             $user,
@@ -888,7 +873,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'capacity')->getId()   => $field_capacity_value,
         );
 
-        $this->tracker_artifact_factory->createArtifact(
+        return $this->tracker_artifact_factory->createArtifact(
             $tracker,
             $fields_data,
             $user,
@@ -906,7 +891,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
             $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'status')->getId()    => $field_status_value
         );
 
-        $this->tracker_artifact_factory->createArtifact(
+        return $this->tracker_artifact_factory->createArtifact(
             $tracker,
             $fields_data,
             $user,
