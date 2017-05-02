@@ -21,12 +21,15 @@
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\My\UserPresenter;
 
 require_once('pre.php');
 require_once('my_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('../admin/admin_utils.php');
+
+$request = HTTPRequest::instance();
 
 $hp = Codendi_HTMLPurifier::instance();
 if (user_isloggedin()) {
@@ -39,6 +42,19 @@ if (user_isloggedin()) {
     header("Pragma: no-cache");  // for HTTP 1.0
 
     $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
+    if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+        $current_user = $request->getCurrentUser();
+        $GLOBALS['Response']->header(array('title' => $title));
+        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('tuleap_dir'). '/src/templates/my');
+        $renderer->renderToPage('my', new UserPresenter(
+                $current_user->getRealName(),
+                $current_user->getUnixName()
+            )
+        );
+        $GLOBALS['Response']->footer(array());
+        exit;
+    }
+
     my_header(array('title'=>$title, 'body_class' => array('widgetable')));
 
     if (user_is_super_user()) {
@@ -56,10 +72,6 @@ if (user_isloggedin()) {
         $GLOBALS['Response']->addTour(new Tuleap_Tour_WelcomeTour($current_user));
     }
 
-    ?>
-    </span>
-<?php
-    $request = HTTPRequest::instance();
     if ($request->get('pv') == 2) {
         $GLOBALS['Response']->pv_footer(array());
     } else {

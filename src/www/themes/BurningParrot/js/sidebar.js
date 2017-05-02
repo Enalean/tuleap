@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,10 @@
     var sidebar_collapsers = document.querySelectorAll('.sidebar-collapser'),
         sidebar            = document.querySelector('.siteadmin-sidebar'),
         logo               = document.getElementById('logo');
+
+    if (! sidebar) {
+        return;
+    }
 
     bindSidebarEvent();
 
