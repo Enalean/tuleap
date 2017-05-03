@@ -53,11 +53,13 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         ForgeConfig::store();
         ForgeConfig::set('codendi_cache_dir', '/tmp/');
 
+        $reference_manager = mock('ReferenceManager');
+
         $this->dao = new Dao();
         $this->inline_comments_dao = mock('Tuleap\PullRequest\InlineComment\Dao');
         $this->git_repository_factory = mock('GitRepositoryFactory');
         $this->pull_request_updater = new PullRequestUpdater(
-            new Factory($this->dao),
+            new Factory($this->dao, $reference_manager),
             mock('Tuleap\PullRequest\PullRequestMerger'),
             $this->inline_comments_dao,
             mock('Tuleap\PullRequest\InlineComment\InlineCommentUpdater'),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,8 +71,10 @@ class PullRequestCloserTest extends TuleapTestCase
         file_put_contents("$this->git_repository_dir/preguilt", "semibarbarous");
         system("cd $this->git_repository_dir && git add . && git commit --quiet -m 'Add preguilt'");
 
+        $reference_manager = mock('ReferenceManager');
+
         $this->dao                 = mock('Tuleap\PullRequest\Dao');
-        $this->factory             = new Factory($this->dao);
+        $this->factory             = new Factory($this->dao, $reference_manager);
         $this->pull_request_closer = new PullRequestCloser($this->factory, mock('Tuleap\PullRequest\PullRequestMerger'));
         $this->git_repository      = stub('GitRepository')->getFullPath()->returns($this->git_repository_dir);
         $this->git_exec            = new GitExec($this->git_repository_dir);
