@@ -1,3 +1,6 @@
+msgid "Add dashboard"
+msgstr ""
+
 msgid "Agile Dashboard"
 msgstr ""
 
@@ -7,10 +10,22 @@ msgstr ""
 msgid "CVS"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
 msgid "Close"
 msgstr ""
 
 msgid "Configure services"
+msgstr ""
+
+msgid "Dashboard creation failed."
+msgstr ""
+
+msgid "Dashboard has been successfully created."
+msgstr ""
+
+msgid "Dashboard name"
 msgstr ""
 
 msgid "Dashboard of the project"
@@ -98,7 +113,18 @@ msgid "Sidebar (project)"
 msgstr ""
 
 #, php-format
+msgid "The dashboard \"%s\" already exists."
+msgstr ""
+
+#, php-format
+msgid "The dashboard '%s' doesn't exist."
+msgstr ""
+
+#, php-format
 msgid "The entered value '%s' is invalid."
+msgstr ""
+
+msgid "The name is missing for creating a dashboard."
 msgstr ""
 
 msgid "This reference does not exist"

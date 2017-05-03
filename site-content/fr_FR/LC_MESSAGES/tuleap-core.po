@@ -9,8 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add dashboard"
+msgstr "Ajouter un tableau de bord"
 
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
@@ -21,11 +24,23 @@ msgstr "Et plus ..."
 msgid "CVS"
 msgstr "CVS"
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Close"
 msgstr "Fermer"
 
 msgid "Configure services"
 msgstr "Configurer les services"
+
+msgid "Dashboard creation failed."
+msgstr "La création du tableau de bord a échouée."
+
+msgid "Dashboard has been successfully created."
+msgstr "Le tableau de bord a correctement été créé."
+
+msgid "Dashboard name"
+msgstr "Nom du tableau de bord"
 
 msgid "Dashboard of the project"
 msgstr "Dashboard du projet"
@@ -114,8 +129,19 @@ msgid "Sidebar (project)"
 msgstr "Barre de service (projet)"
 
 #, php-format
+msgid "The dashboard \"%s\" already exists."
+msgstr "Le tableau de bord \"%s\" existe déjà."
+
+#, fuzzy, php-format
+msgid "The dashboard '%s' doesn't exist."
+msgstr "Le tableau de bord \"%s\" n’existe pas."
+
+#, php-format
 msgid "The entered value '%s' is invalid."
 msgstr "La valeur saisie '%s' est invalide."
+
+msgid "The name is missing for creating a dashboard."
+msgstr "Il manque le nom pour créer un tableau de bord."
 
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"

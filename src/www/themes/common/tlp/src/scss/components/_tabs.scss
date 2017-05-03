@@ -24,6 +24,8 @@ $tlp-tabs-transition: 75ms ease-out;
 .tlp-tabs {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    min-height: 44px;
     margin: 0 0 $tlp-spacing;
     padding: 0 $tlp-spacing;
     background: $tlp-ui-white;
