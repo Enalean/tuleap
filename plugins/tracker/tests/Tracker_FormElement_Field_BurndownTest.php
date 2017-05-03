@@ -116,7 +116,8 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
             'Tracker_FormElement_Field_Burndown',
             array(
                 'getCurrentUser',
-                'isCacheBurndownAlreadyAsked'
+                'isCacheBurndownAlreadyAsked',
+                'getLogger'
             )
         );
 
@@ -124,6 +125,7 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
         stub($this->user)->isAdmin()->returns(true);
         stub($this->burndown_field)->getCurrentUser()->returns($this->user);
         stub($this->burndown_field)->isCacheBurndownAlreadyAsked()->returns(false);
+        stub($this->burndown_field)->getLogger()->returns(mock('Tuleap\\Tracker\\FormElement\\BurndownLogger'));
     }
 
     private function getAStartDateField($value)
@@ -308,12 +310,16 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     {
         $time_period    = new TimePeriodWithWeekEnd($this->timestamp, $this->duration);
         $burndown_data  = new Tracker_Chart_Data_Burndown($time_period);
-        $this->field    = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData'));
+        $this->field    = TestHelper::getPartialMock(
+            'Tracker_FormElement_Field_Burndown',
+            array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData', 'getLogger')
+        );
         $this->burndown_view = mock('Tracker_Chart_BurndownView');
 
         stub($this->field)->getBurndown($burndown_data)->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
         stub($this->field)->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration)->returns($burndown_data);
+        stub($this->field)->getLogger()->returns(mock('Tuleap\\Tracker\\FormElement\\BurndownLogger'));
 
         $timestamp            = mktime(0, 0, 0, 7, 3, 2011);
         $start_date_field     = stub('Tracker_FormElement_Field_Date');
