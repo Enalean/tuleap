@@ -1462,6 +1462,10 @@ if [ -d "$INSTALL_DIR/plugins/git" ]; then
     su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php git' -l codendiadm
 fi
 
+if [ -d "$INSTALL_DIR/plugins/svn" ]; then
+    echo "Install SVN"
+    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php svn' -l codendiadm
+fi
 
 ##############################################
 # Templates
