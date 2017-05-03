@@ -39,6 +39,10 @@
 @import 'siteadmin-news';
 @import 'siteadmin-templates';
 
+.in-siteadmin {
+    padding: $navbar-height 0 0 $sidebar-expanded-width;
+}
+
 .siteadmin-trovecat-list-category {
     width: 100%;
 }

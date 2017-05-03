@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,7 @@ class AdminPageRenderer
         $GLOBALS['HTML']->header(
             array(
                 'title'        => $title,
+                'body_class'   => array('in-siteadmin'),
                 'main_classes' => $is_framed ? array('tlp-framed') : array(),
                 'sidebar'      => new SidebarPresenter('siteadmin-sidebar', $this->renderSideBar())
             )

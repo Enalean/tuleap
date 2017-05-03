@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,6 +53,9 @@ class HeaderPresenter
     public $has_feedbacks;
 
     /** @var string */
+    public $body_classes;
+
+    /** @var string */
     public $main_classes;
 
     /** @var SidebarPresenter */
@@ -65,6 +68,7 @@ class HeaderPresenter
         ThemeVariantColor $color,
         array $stylesheets,
         array $feedback_logs,
+        $body_classes,
         $main_classes,
         $sidebar
     ) {
@@ -74,6 +78,7 @@ class HeaderPresenter
         $this->stylesheets      = $stylesheets;
         $this->color_name       = $color->getName();
         $this->color_code       = $color->getHexaCode();
+        $this->body_classes     = $body_classes;
         $this->main_classes     = $main_classes;
         $this->sidebar          = $sidebar;
 
