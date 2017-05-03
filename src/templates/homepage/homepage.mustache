@@ -1,64 +1,37 @@
-<section class="homepage-head-cta {{# display_homepage_news }}with-news{{/ display_homepage_news }}">
-    <div class="head">
-        <div class="container">
-            <div class="row-fluid">
-                <div class="span12">
-                    <img src="{{ path_logo }}" alt="Logo" />
-                    <p>{{ headline }}</p>
-                </div>
+<div class="homepage-content">
+    <section class="homepage-sign-in-section">
+        <div class="homepage-sign-in-container">
+            <div class="homepage-logo-container">
+                {{# is_custom_logo_used }}
+                    <img class="homepage-platform-logo" src="{{ path_custom_logo }}" alt="Logo" />
+                {{/is_custom_logo_used}}
+                {{^ is_custom_logo_used }}
+                    <svg class="homepage-platform-logo" width="250" height="80" viewBox="0 0 813 258">
+                        <use
+                            href="/themes/BurningParrot/images/homepage-logo.svg#logo"
+                            class="homepage-colored-logo"
+                        ></use>
+                    </svg>
+                {{/is_custom_logo_used}}
             </div>
-        </div>
-    </div>
-
-    <div class="container cta">
-        <div class="row-fluid">
             {{# display_homepage_login_form }}
-                {{# display_homepage_news }}
-                    <div class="homepage-news span5">
-                        {{> homepage-news }}
-                    </div>
-
-                    <div class="statistics span4">
-                        {{> homepage-stats }}
-                    </div>
-                {{/ display_homepage_news }}
-                {{^ display_homepage_news }}
-                    <div class="homepage-discover span9">
-                    </div>
-                {{/ display_homepage_news }}
-
                 {{> homepage-signin }}
-            {{/ display_homepage_login_form }}
-
-            {{^ display_homepage_login_form }}
-                {{# display_homepage_news }}
-                    <div class="homepage-news span7">
-                        {{> homepage-news }}
-                    </div>
-
-                    <div class="statistics span5">
-                        {{> homepage-stats }}
-                    </div>
-                {{/ display_homepage_news }}
-                {{^ display_homepage_news }}
-                    <div class="homepage-discover span12">
-                    </div>
-                {{/ display_homepage_news }}
-            {{/ display_homepage_login_form }}
-        </div>
-    </div>
-</section>
-
-{{# display_homepage_news }}
-    <section class="homepage-discover">
-        <div class="container">
-            <div class="row-fluid">
-                <div class="span12">
-                    <h2>{{{ discover_tuleap_awesomeness }}}</h2>
-                </div>
-            </div>
+            {{/display_homepage_login_form}}
         </div>
     </section>
-{{/ display_homepage_news }}
-
-{{{ awesomeness }}}
+    <section class="homepage-create-account-section">
+        <div class="homepage-welcome-wrapper">
+            <h2 class="homepage-welcome-title">{{{ purified_welcome_message }}}</h2>
+            <p class="homepage-headline">{{ headline }}</p>
+            <a href="{{ most_secure_url }}/account/register.php"
+               class="tlp-button-secondary tlp-button-large homepage-create-account-button"
+               role="button"
+            >{{ create_account_label }}<i class="fa fa-heart tlp-button-icon-right homepage-create-account-button-icon"></i></a>
+        </div>
+        <img
+            class="homepage-screenshots"
+            src="/themes/BurningParrot/images/homepage/tuleap-homepage-hero-screenshots.png"
+            alt="Screenshots"
+        >
+    </section>
+</div>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,9 +23,12 @@ namespace Tuleap\Theme\BurningParrot;
 class FooterPresenter
 {
     public $javascript_in_footer = array();
+    public $tuleap_version;
 
-    public function __construct(array $javascript_in_footer)
-    {
+    public function __construct(
+        array $javascript_in_footer,
+        $tuleap_version
+    ) {
         foreach ($javascript_in_footer as $javascript) {
             if (isset($javascript['file'])) {
                 $content    = $javascript['file'];
@@ -36,5 +39,6 @@ class FooterPresenter
             }
             $this->javascript_in_footer[] = new JavascriptPresenter($content, $is_snippet);
         }
+        $this->tuleap_version = $tuleap_version;
     }
 }

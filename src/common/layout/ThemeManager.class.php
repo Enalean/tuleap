@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class ThemeManager
 
     private function getFirstValidTheme(PFUser $current_user, array $theme_names)
     {
-        if ($this->isInSiteAdmin($current_user) || $this->isInDashboard()) {
+        if ($this->isInBurningParrotCompatiblePage($current_user)) {
             return $this->getValidTheme($current_user, self::$BURNING_PARROT);
         }
 
@@ -66,12 +66,19 @@ class ThemeManager
         return true;
     }
 
-    private function isInDashboard()
+    private function isInBurningParrotCompatiblePage(PFUser $current_user)
     {
         if (IS_SCRIPT) {
             return false;
         }
 
+        return $this->isInSiteAdmin($current_user)
+            || $this->isInDashboard()
+            || $this->isInHomepage();
+    }
+
+    private function isInDashboard()
+    {
         if (! ForgeConfig::get('sys_use_tlp_in_dashboards')) {
             return false;
         }
@@ -81,12 +88,13 @@ class ThemeManager
         return preg_match('`^/my/`', $uri) || preg_match('`^/projects/[^/]+/?$`', $uri);
     }
 
+    private function isInHomepage()
+    {
+        return ($_SERVER['REQUEST_URI'] === '/');
+    }
+
     private function isInSiteAdmin(PFUser $current_user)
     {
-        if (IS_SCRIPT) {
-            return false;
-        }
-
         $is_in_site_admin = false;
         EventManager::instance()->processEvent(
             Event::IS_IN_SITEADMIN,

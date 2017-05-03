@@ -1,0 +1,163 @@
+.provider-button {
+    /* scss-lint:disable SelectorFormat */
+    &.inca_silver {
+        border-color: $tlp-swatch-inca-silver;
+        background: $tlp-swatch-inca-silver;
+
+        &:hover {
+            border-color: darken($tlp-swatch-inca-silver, 5%);
+            background: darken($tlp-swatch-inca-silver, 5%);
+        }
+    }
+
+    &.chrome_silver {
+        border-color: $tlp-swatch-chrome-silver;
+        background: $tlp-swatch-chrome-silver;
+
+        &:hover {
+            border-color: darken($tlp-swatch-chrome-silver, 5%);
+            background: darken($tlp-swatch-chrome-silver, 5%);
+        }
+    }
+
+    &.fiesta_red {
+        border-color: $tlp-swatch-fiesta-red;
+        background: $tlp-swatch-fiesta-red;
+
+        &:hover {
+            border-color: darken($tlp-swatch-fiesta-red, 5%);
+            background: darken($tlp-swatch-fiesta-red, 5%);
+        }
+    }
+
+    &.teddy_brown {
+        border-color: $tlp-swatch-teddy-brown;
+        background: $tlp-swatch-teddy-brown;
+
+        &:hover {
+            border-color: darken($tlp-swatch-teddy-brown, 5%);
+            background: darken($tlp-swatch-teddy-brown, 5%);
+        }
+    }
+
+    &.clockwork_orange {
+        border-color: $tlp-swatch-clockwork-orange;
+        background: $tlp-swatch-clockwork-orange;
+
+        &:hover {
+            border-color: darken($tlp-swatch-clockwork-orange, 5%);
+            background: darken($tlp-swatch-clockwork-orange, 5%);
+        }
+    }
+
+    &.red_wine {
+        border-color: $tlp-swatch-red-wine;
+        background: $tlp-swatch-red-wine;
+
+        &:hover {
+            border-color: darken($tlp-swatch-red-wine, 5%);
+            background: darken($tlp-swatch-red-wine, 5%);
+        }
+    }
+
+    &.acid_green {
+        border-color: $tlp-swatch-acid-green;
+        background: $tlp-swatch-acid-green;
+
+        &:hover {
+            border-color: darken($tlp-swatch-acid-green, 5%);
+            background: darken($tlp-swatch-acid-green, 5%);
+        }
+    }
+
+    &.army_green {
+        border-color: $tlp-swatch-army-green;
+        background: $tlp-swatch-army-green;
+
+        &:hover {
+            border-color: darken($tlp-swatch-army-green, 5%);
+            background: darken($tlp-swatch-army-green, 5%);
+        }
+    }
+
+    &.sherwood_green {
+        border-color: $tlp-swatch-sherwood-green;
+        background: $tlp-swatch-sherwood-green;
+
+        &:hover {
+            border-color: darken($tlp-swatch-sherwood-green, 5%);
+            background: darken($tlp-swatch-sherwood-green, 5%);
+        }
+    }
+
+    &.ocean_turquoise {
+        border-color: $tlp-swatch-ocean-turquoise;
+        background: $tlp-swatch-ocean-turquoise;
+
+        &:hover {
+            border-color: darken($tlp-swatch-ocean-turquoise, 5%);
+            background: darken($tlp-swatch-ocean-turquoise, 5%);
+        }
+    }
+
+    &.daphne_blue {
+        border-color: $tlp-swatch-daphne-blue;
+        background: $tlp-swatch-daphne-blue;
+
+        &:hover {
+            border-color: darken($tlp-swatch-daphne-blue, 5%);
+            background: darken($tlp-swatch-daphne-blue, 5%);
+        }
+    }
+
+    &.lake_placid_blue {
+        border-color: $tlp-swatch-lake-placid-blue;
+        background: $tlp-swatch-lake-placid-blue;
+
+        &:hover {
+            border-color: darken($tlp-swatch-lake-placid-blue, 5%);
+            background: darken($tlp-swatch-lake-placid-blue, 5%);
+        }
+    }
+
+    &.deep_blue {
+        border-color: $tlp-swatch-deep-blue;
+        background: $tlp-swatch-deep-blue;
+
+        &:hover {
+            border-color: darken($tlp-swatch-deep-blue, 5%);
+            background: darken($tlp-swatch-deep-blue, 5%);
+        }
+    }
+
+    &.plum_crazy {
+        border-color: $tlp-swatch-plum-crazy;
+        background: $tlp-swatch-plum-crazy;
+
+        &:hover {
+            border-color: darken($tlp-swatch-plum-crazy, 5%);
+            background: darken($tlp-swatch-plum-crazy, 5%);
+        }
+    }
+
+    &.peggy_pink {
+        border-color: $tlp-swatch-peggy-pink;
+        background: $tlp-swatch-peggy-pink;
+
+        &:hover {
+            border-color: darken($tlp-swatch-peggy-pink, 5%);
+            background: darken($tlp-swatch-peggy-pink, 5%);
+        }
+    }
+
+    &.flamingo_pink {
+        border-color: $tlp-swatch-flamingo-pink;
+        background: $tlp-swatch-flamingo-pink;
+
+        &:hover {
+            border-color: darken($tlp-swatch-flamingo-pink, 5%);
+            background: darken($tlp-swatch-flamingo-pink, 5%);
+        }
+    }
+
+}

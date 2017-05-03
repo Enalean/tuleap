@@ -2,7 +2,7 @@
 #  *
 #  * Top level scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -36,12 +36,15 @@ homepage	nb_users_label	Users
 homepage	sign_in_title	Sign in
 homepage	username_placeholder	Username
 homepage	password_placeholder	Password
-homepage	sign_in_submit	Sign in
-homepage	forgot_password	 Oops, I forgot my password
+homepage	sign_in_submit	Login
+homepage	forgot_password	 Ooops, I forgot my password
 homepage	sign_in_or	or
 homepage	not_a_member	Not a member?
+homepage	create_account	Create account
 homepage	register	Register
 homepage	welcome_back	Welcome back
+homepage	welcome_title	Hello,<br> Welcome to Tuleap!
+homepage	my_personal_page	My personal page
 #
 #-----------------------------------------------
 # Script: SF/www/sendmessage.php
