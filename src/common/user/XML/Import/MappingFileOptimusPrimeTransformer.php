@@ -35,8 +35,14 @@ class MappingFileOptimusPrimeTransformer {
      */
     private $user_manager;
 
-    public function __construct(UserManager $user_manager) {
+    /**
+     * @var bool
+     */
+    private $use_lame_password;
+
+    public function __construct(UserManager $user_manager, $use_lame_password = false) {
         $this->user_manager = $user_manager;
+        $this->use_lame_password = $use_lame_password;
     }
 
     /** @return User\XML\Import\ReadyToBeImportedUsersCollection */
@@ -45,7 +51,7 @@ class MappingFileOptimusPrimeTransformer {
         return $this->buildCollectionForImport($collection_from_archive, $csv_lines);
     }
 
-    /** @return User\XML\Import\ReadyToBeImportedUsersCollection */
+    /** @return \User\XML\Import\ReadyToBeImportedUsersCollection */
     public function transformWithoutMap(UsersToBeImportedCollection $collection_from_archive, $default_action) {
         $collection_for_import = new ReadyToBeImportedUsersCollection();
         foreach ($collection_from_archive->toArray() as $username => $to_be_imported_user) {
@@ -159,7 +165,8 @@ class MappingFileOptimusPrimeTransformer {
             $to_be_imported_user->getRealName(),
             $to_be_imported_user->getEmail(),
             $status,
-            $to_be_imported_user->getOriginalLdapId()
+            $to_be_imported_user->getOriginalLdapId(),
+            $this->use_lame_password
         );
     }
 

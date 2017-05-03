@@ -47,18 +47,23 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
     /** @var string */
     private $ldap_id;
 
+    /** @var bool */
+    private $use_lame_password;
+
     public function __construct(
         $username,
         $realname,
         $email,
         $status,
-        $ldap_id
+        $ldap_id,
+        $use_lame_password = false
     ) {
         $this->username = $username;
         $this->realname = $realname;
         $this->email    = $email;
         $this->status   = $status;
         $this->ldap_id  = $ldap_id;
+        $this->use_lame_password = $use_lame_password;
     }
 
     public function getUserName() {
@@ -77,14 +82,20 @@ class WillBeCreatedUser implements ReadyToBeImportedUser {
         return $this->status;
     }
 
-    public function process(UserManager $user_manager, Logger $logger) {
+    private function getPassword() {
+        if ($this->use_lame_password) {
+            return 'Correct Horse Battery Staple';
+        }
         $random_generator = new RandomNumberGenerator();
-        $random_password  = $random_generator->getNumber();
+        return $random_generator->getNumber();
+    }
+
+    public function process(UserManager $user_manager, Logger $logger) {
 
         $fake_user = new PFUser();
         $fake_user->setUserName($this->username);
         $fake_user->setRealName($this->realname);
-        $fake_user->setPassword($random_password);
+        $fake_user->setPassword($this->getPassword());
         $fake_user->setLdapId($this->ldap_id);
         $fake_user->setRegisterPurpose('Created by xml import');
         $fake_user->setEmail($this->email);
