@@ -22,6 +22,7 @@ namespace Tuleap\Configuration\Apache;
 
 use Tuleap\Configuration\Logger\LoggerInterface;
 use Tuleap\Configuration\Logger\Wrapper;
+use Tuleap\Configuration\Setup\DistributedSVN;
 
 class BackendSVN
 {
@@ -31,16 +32,19 @@ class BackendSVN
      * @var LoggerInterface
      */
     private $logger;
+    private $pidOne;
 
-    public function __construct(LoggerInterface $logger, $application_user)
+    public function __construct(LoggerInterface $logger, $application_user, $pidOne)
     {
         $this->application_user = $application_user;
         $this->logger           = new Wrapper($logger, 'Apache');
+        $this->pidOne           = $pidOne;
     }
 
     public function configure()
     {
         $this->apacheListenOnLocalAsApplicationUser();
+        $this->deployLogrotate();
     }
 
     private function apacheListenOnLocalAsApplicationUser()
@@ -67,10 +71,62 @@ class BackendSVN
         file_put_contents('/etc/httpd/conf/httpd.conf', $conf);
     }
 
+    private function deployLogrotate()
+    {
+        $httpd_logrotate = '/etc/logrotate.d/httpd';
+        if (! $this->fileContains($httpd_logrotate, '/usr/share/tuleap/src/utils/httpd/postrotate.php')) {
+            $this->logger->info('Deploy logrotate');
+            if (file_exists($httpd_logrotate)) {
+                unlink($httpd_logrotate);
+            }
+            $this->replacePlaceHolderInto(
+                '/usr/share/tuleap/src/etc/el7/httpd/logrotate',
+                $httpd_logrotate,
+                array(
+                    '%service_restart%'
+                ),
+                array(
+                    $this->getServiceRestartCommand()
+                )
+            );
+            chmod($httpd_logrotate, 0644);
+        } else {
+            $this->logger->warn('Logrotate contains reference to postrotate.php, skip configuration');
+        }
+    }
+
+    private function getServiceRestartCommand()
+    {
+        if ($this->pidOne == DistributedSVN::PID_ONE_SYSTEMD) {
+            return '/bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true';
+        }
+        return 'pkill -U 0 -USR1 httpd';
+    }
+
+    private function fileContains($filepath, $needle)
+    {
+        if (file_exists($filepath)) {
+            return strpos(file_get_contents($filepath), $needle) !== false;
+        }
+        return false;
+    }
+
     private function backupOriginalFile($file)
     {
         if (! file_exists($file.'.orig')) {
             copy($file, $file.'.orig');
         }
+    }
+
+    private function replacePlaceHolderInto($template_path, $target_path, array $variables, array $values)
+    {
+        file_put_contents(
+            $target_path,
+            str_replace(
+                $variables,
+                $values,
+                file_get_contents($template_path)
+            )
+        );
     }
 }

@@ -28,6 +28,9 @@ class DistributedSVN
     const OPT_REVERSE_PROXY = 'reverse-proxy';
     const OPT_BACKEND_SVN   = 'backend-svn';
 
+    const PID_ONE_SYSTEMD     = 'systemd';
+    const PID_ONE_SUPERVISORD = 'supervisord';
+
     /**
      * @var Configuration\Logger\Console
      */
@@ -80,13 +83,13 @@ class DistributedSVN
         exit(1);
     }
 
-    public function backendSVN()
+    public function backendSVN($pidOne = self::PID_ONE_SYSTEMD)
     {
         $vars = $this->getVars();
 
         $fpm           = new Configuration\FPM\BackendSVN($this->logger, $vars->getApplicationBaseDir(), $vars->getApplicationUser());
         $nginx         = new Configuration\Nginx\BackendSVN($this->logger, $vars->getApplicationBaseDir(), '/etc/nginx', $vars->getServerName());
-        $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser());
+        $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), $pidOne);
 
         $fpm->configure();
         $nginx->configure();
