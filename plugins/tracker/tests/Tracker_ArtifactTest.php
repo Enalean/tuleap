@@ -35,6 +35,7 @@ Mock::generatePartial(
         'getChangeset',
         'getUserManager',
         'getArtifactFactory',
+        'getHierarchyFactory',
         'getWorkflow',
     )
 );
@@ -355,6 +356,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $field3->expectNever('saveNewChangeset');
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
         $factory->setReturnValue('getAllFormElementsForTracker', array());
+        $factory->setReturnValue('getUsedArtifactLinkFields', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', false);
@@ -366,11 +368,15 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
         $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
 
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getChildren()->returns(array());
+
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getChangesetDao', $dao);
         $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getArtifactFactory', mock('Tracker_ArtifactFactory'));
+        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
         $artifact->setReturnReference('getReferenceManager', mock('ReferenceManager'));
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
@@ -469,6 +475,9 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $art_factory = new MockTracker_ArtifactFactory();
 
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getChildren()->returns(array());
+
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getChangesetDao', $dao);
         $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
@@ -479,6 +488,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getChangeset', $new_changeset);
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
         stub($art_factory)->save()->returns(true);
         $art_factory->expectOnce('save');
@@ -578,6 +588,9 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $art_factory = new MockTracker_ArtifactFactory();
 
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getChildren()->returns(array());
+
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getChangesetDao', $dao);
         $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
@@ -588,6 +601,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getChangeset', $new_changeset);
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
         $workflow->setReturnValue('validate', true);
@@ -687,6 +701,9 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $art_factory = new MockTracker_ArtifactFactory();
 
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getChildren()->returns(array());
+
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getChangesetDao', $dao);
         $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
@@ -697,6 +714,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getChangeset', $new_changeset);
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
         stub($art_factory)->save()->returns(true);
         $art_factory->expectOnce('save');
