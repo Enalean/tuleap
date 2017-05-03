@@ -2149,12 +2149,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         return new SourceOfAssociationCollectionBuilder(
             new SubmittedValueConvertor(
-                Tracker_ArtifactFactory::instance(),
+                $this->getArtifactFactory(),
                 new SourceOfAssociationDetector(
-                    Tracker_HierarchyFactory::instance()
+                    $this->getHierarchyFactory()
                 )
             ),
-            Tracker_FormElementFactory::instance()
+            $this->getFormElementFactory()
         );
     }
 
