@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Enalean, 2015. All Rights Reserved.
+// Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -43,6 +43,13 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, EventManager $eve
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'incorrect_old_password'));
 		return 0;
 	}
+	if (! $old_password_required && ! $user->isLoggedIn()) {
+        $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('account_change_pw', 'error_no_rights_to_change_password')
+        );
+        return 0;
+    }
 
     try {
         $status_manager = new User_UserStatusManager();

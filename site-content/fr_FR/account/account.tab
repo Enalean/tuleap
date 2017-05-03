@@ -127,6 +127,7 @@ account_change_pw	title	Changement du mot de passe
 account_change_pw	old_password	Ancien mot de passe
 account_change_pw	new_password	Mot de passe
 account_change_pw	new_password2	Répétez le mot de passe
+account_change_pw	error_no_rights_to_change_password	Vous ne pouvez pas modifier le mot de passe d'un autre utilisateur.
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_realname.php

@@ -142,6 +142,7 @@ account_change_pw	password_needed	You must supply a password.
 account_change_pw	password_not_match	Passwords do not match.
 account_change_pw	identical_password	Old and new passwords are identical.
 account_change_pw	internal_error_update	Internal error: Could not update password.
+account_change_pw	error_no_rights_to_change_password	You can not change the password of another user.
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_realname.php
