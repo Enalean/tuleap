@@ -76,7 +76,7 @@ class ThemeManager
 
         $uri = $_SERVER['REQUEST_URI'];
 
-        return $uri === '/my/' || preg_match('`^/projects/[^/]+/$`', $uri);
+        return $uri === '/my/' || preg_match('`^/projects/[^/]+/?$`', $uri);
     }
 
     private function isInSiteAdmin(PFUser $current_user)

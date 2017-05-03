@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
+namespace Tuleap\Dashboard;
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/sidebar-collapsed';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/dashboard';
-@import 'includes/my';
+use Project;
+use ProjectManager;
+
+class ProjectPresenter
+{
+    public $name;
+    public $parent_name = '';
+    public $has_parent  = false;
+
+    public function __construct(Project $project, ProjectManager $project_manager)
+    {
+        $this->name = $project->getUnconvertedPublicName();
+        $parent_project = $project_manager->getParentProject($project->getID());
+        if ($parent_project) {
+            $this->has_parent  = true;
+            $this->parent_name = $parent_project->getUnconvertedPublicName();
+        }
+    }
+}
