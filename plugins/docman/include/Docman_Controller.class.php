@@ -58,9 +58,8 @@ class Docman_Controller extends Controler {
         $this->view           = null;
         $this->reportId       = null;
         $this->hierarchy      = array();
-        $this->feedback       = false;
 
-        $this->feedback = $GLOBALS['Response']->_feedback;
+        $this->feedback = new \Tuleap\Docman\ResponseFeedbackWrapper();
 
         $event_manager = $this->_getEventManager();
 

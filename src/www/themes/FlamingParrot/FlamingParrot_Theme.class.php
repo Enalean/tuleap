@@ -20,7 +20,6 @@
 
 require_once 'common/templating/TemplateRenderer.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
-require_once 'common/layout/DivBasedTabbedLayout.class.php';
 require_once 'HeaderPresenter.class.php';
 require_once 'BodyPresenter.class.php';
 require_once 'ContainerPresenter.class.php';
@@ -40,7 +39,7 @@ require_once 'SearchFormPresenter.class.php';
 require_once 'FlamingParrot_CSSFilesProvider.class.php';
 require_once 'keyboard_navigation/KeyboardNavigationModalPresenter.class.php';
 
-class FlamingParrot_Theme extends DivBasedTabbedLayout {
+class FlamingParrot_Theme extends Layout {
 
     /**
      * @var TemplateRenderer

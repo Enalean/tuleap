@@ -226,10 +226,8 @@ $event_manager->processEvent(
 date_default_timezone_set(TimezoneRetriever::getUserTimezone($current_user));
 
 $theme_manager = new ThemeManager();
-$HTML          = $theme_manager->getTheme($current_user);
-if (!IS_SCRIPT && $HTML === false) {
-    die('No theme has been found. Do you have installed BurningParrot?');
-}
+
+$HTML = $theme_manager->getTheme($current_user);
 
 // Check if anonymous user is allowed to browse the site
 // Bypass the test for:
