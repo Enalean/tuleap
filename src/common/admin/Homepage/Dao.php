@@ -70,14 +70,6 @@ class Admin_Homepage_Dao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function doNotUseStandardHomepage() {
-        $this->resetUsageOfStandardHomepage();
-
-        $sql = "REPLACE INTO homepage (use_standard_homepage) VALUES (0)";
-
-        return $this->update($sql);
-    }
-
     private function resetUsageOfStandardHomepage() {
         $sql = "TRUNCATE TABLE homepage";
 

@@ -88,8 +88,6 @@ class Admin_Homepage_Controller {
 
         if ($this->request->get('use_standard_homepage')) {
             $this->dao->useStandardHomepage();
-        } else {
-            $this->dao->doNotUseStandardHomepage();
         }
 
         $headlines = $this->request->get('headlines');

@@ -8,6 +8,7 @@
         {{> csrf_token_input }}
     {{/ csrf_token }}
 
+    {{^ use_standard_homepage }}
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
@@ -28,6 +29,7 @@
             </section>
         </div>
     </section>
+    {{/ use_standard_homepage }}
 
     {{# use_standard_homepage }}
     <section class="tlp-pane">
