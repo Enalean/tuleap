@@ -354,20 +354,6 @@ class FlamingParrot_Theme extends Layout {
         $this->render('keyboard_navigation_help_modal', new KeyboardNavigationModalPresenter());
     }
 
-    /**
-     * A "project tab" is a link towards a project service.
-     * The parent method getProjectTabs() generates an array of these links.
-     * However, the first element is a link to the forge homepage and we don't
-     * want it in this theme.
-     *
-     */
-    private function getProjectTabs($params, $project) {
-        $tabs = parent::_getProjectTabs($params['toptab'], $project);
-        array_shift($tabs);
-
-        return $tabs;
-    }
-
     private function getProjectLink(Project $project) {
         return '/projects/' . $project->getUnixName() . '/';
     }
