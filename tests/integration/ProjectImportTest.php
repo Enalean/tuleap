@@ -22,6 +22,7 @@ use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Project\UserRemover;
 
 require_once 'exit.php';
 require_once 'html.php';
@@ -147,7 +148,7 @@ class ProjectImportTest extends TuleapDbTestCase
             new Log_ConsoleLogger(),
             $ugroup_duplicator,
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
-            new NatureDao()
+            new UserRemover()
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
@@ -202,7 +203,7 @@ class ProjectImportTest extends TuleapDbTestCase
             new Log_ConsoleLogger(),
             $ugroup_duplicator,
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
-            new NatureDao()
+            new UserRemover()
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');

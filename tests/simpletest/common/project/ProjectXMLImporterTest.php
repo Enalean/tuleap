@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,7 +49,9 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $this->logger            = mock('ProjectXMLImporterLogger');
         $this->ugroup_duplicator = mock('Tuleap\Project\UgroupDuplicator');
         $frs_permissions_creator = mock('Tuleap\FRS\FRSPermissionCreator');
-        $this->xml_importer      = new ProjectXMLImporter(
+        $user_removal            = mock('Tuleap\Project\UserRemover');
+
+        $this->xml_importer = new ProjectXMLImporter(
             $this->event_manager,
             $this->project_manager,
             $this->user_manager,
@@ -59,7 +61,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             mock('ServiceManager'),
             $this->logger,
             $this->ugroup_duplicator,
-            $frs_permissions_creator
+            $frs_permissions_creator,
+            $user_removal
         );
 
         $this->xml_file_path              = dirname(__FILE__).'/_fixtures/fake_project.xml';

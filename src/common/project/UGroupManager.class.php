@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,9 @@
  */
 
 use Tuleap\User\UserGroup\NameTranslator;
+use Tuleap\Project\UserRemover;
 
 require_once('www/project/admin/ugroup_utils.php');
-require_once('www/include/account.php');
 
 class UGroupManager {
 
@@ -442,7 +442,8 @@ class UGroupManager {
 
     private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user) {
         if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
-            return account_remove_user_from_group($user_group->getProjectId(), $user->getId());
+            $user_removal = new UserRemover();
+            return $user_removal->removeUserFromProject($user_group->getProjectId(), $user->getId());
         }
 
         return $user_group->removeUser($user);

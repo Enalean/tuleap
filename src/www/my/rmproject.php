@@ -1,19 +1,28 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
-//
-// Modified by Laurent Julliard, Xerox.
-//
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('common/mail/Mail.class.php');
 require_once('www/include/account.php');
 require_once('www/project/admin/ugroup_utils.php');
-
 
 if (user_isloggedin()) {
 	$user_id = user_getid();
@@ -25,8 +34,10 @@ if (user_isloggedin()) {
     } else {
         exit_no_group();
     }
+
+    $user_removal = new \Tuleap\Project\UserRemover();
     //Process MEMBERSHIP_DELETE event
-    account_remove_user_from_group($group_id,$user_id, false);
+    $user_removal->removeUserFromProject($group_id,$user_id, false);
 
 	/********* mail the changes so the admins know what happened *********/
 	$res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "
@@ -57,9 +68,5 @@ if (user_isloggedin()) {
 	session_redirect("/my/");
 
 } else {
-
 	exit_not_logged_in();
-
 }
-
-?>
