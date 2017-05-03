@@ -46,8 +46,8 @@ class Parser
             \s
             \"(?P<svncommand>.*)\"$/x';
 
-        $fh = fopen($file, 'r');
-        while (($line = fgets($fh)) !== false) {
+        $file_handler = fopen($file, 'r');
+        while (($line = fgets($file_handler)) !== false) {
             trim($line);
             $matches = array();
             if (preg_match($parse_regexp, $line, $matches) === 1) {
@@ -61,7 +61,7 @@ class Parser
                 );
             }
         }
-        fclose($fh);
+        fclose($file_handler);
 
         return $log_cache;
     }
