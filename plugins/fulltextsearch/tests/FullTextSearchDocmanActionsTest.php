@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,7 @@
  */
 
 require_once dirname(__FILE__) .'/../include/autoload.php';
-require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
-require_once dirname(__FILE__) .'/../../docman/include/Docman_MetadataFactory.class.php';
+require_once dirname(__FILE__) .'/../../docman/include/autoload.php';
 require_once dirname(__FILE__).'/Constants.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
 
