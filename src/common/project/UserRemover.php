@@ -20,12 +20,77 @@
 
 namespace Tuleap\Project;
 
-require_once 'account.php';
+use ProjectManager;
+use EventManager;
+use ArtifactTypeFactory;
 
 class UserRemover
 {
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(ProjectManager $project_manager, EventManager $event_manager)
+    {
+        $this->project_manager = $project_manager;
+        $this->event_manager   = $event_manager;
+    }
+
     public function removeUserFromProject($project_id, $user_id, $admin_action = true)
     {
-        return account_remove_user_from_group($project_id, $user_id, $admin_action);
+        $res=db_query("DELETE FROM user_group WHERE group_id='$project_id' AND user_id='$user_id' AND admin_flags <> 'A'");
+
+        if (!$res || db_affected_rows($res) < 1) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','user_not_removed'));
+        } else {
+            $this->event_manager->processEvent('project_admin_remove_user', array(
+                'group_id' => $project_id,
+                'user_id'  => $user_id
+            ));
+
+            $project = $this->project_manager->getProject($project_id);
+            if (!$project || !is_object($project) || $project->isError()) {
+                exit_no_group();
+            }
+
+            $atf = new ArtifactTypeFactory($project);
+            if (!$project || !is_object($project) || $project->isError()) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','not_get_atf'));
+            }
+
+            $at_arr = $atf->getArtifactTypes();
+
+            if ($at_arr && count($at_arr) > 0) {
+                for ($j = 0; $j < count($at_arr); $j++) {
+                    if ( !$at_arr[$j]->deleteUser($user_id) ) {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','del_tracker_perm_fail',$at_arr[$j]->getName()));
+                    }
+                }
+            }
+
+            if (! ugroup_delete_user_from_project_ugroups($project_id,$user_id)) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','del_user_from_ug_fail'));
+            }
+
+            $name = user_getname($user_id);
+
+            if ($admin_action) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','user_removed').' ('.$name.')');
+            } else {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','self_user_remove').' ('.$project->getPublicName().')');
+            }
+
+            group_add_history('removed_user',user_getname($user_id)." ($user_id)",$project_id);
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -71,7 +71,7 @@ class ProjectXMLImporter {
     /**
      * @var UserRemover
      */
-    private $user_removal;
+    private $user_remover;
 
     public function __construct(
         EventManager $event_manager,
@@ -84,7 +84,7 @@ class ProjectXMLImporter {
         Logger $logger,
         UgroupDuplicator $ugroup_duplicator,
         FRSPermissionCreator $frs_permissions_creator,
-        UserRemover $user_removal
+        UserRemover $user_remover
     ) {
         $this->event_manager           = $event_manager;
         $this->project_manager         = $project_manager;
@@ -96,7 +96,7 @@ class ProjectXMLImporter {
         $this->service_manager         = $service_manager;
         $this->ugroup_duplicator       = $ugroup_duplicator;
         $this->frs_permissions_creator = $frs_permissions_creator;
-        $this->user_removal            = $user_removal;
+        $this->user_remover            = $user_remover;
 
         $send_notifications = false;
         $force_activation   = true;
@@ -350,7 +350,7 @@ class ProjectXMLImporter {
     private function cleanProjectMembersFromUserCreator(Project $project, array $users, PFUser $user_creator)
     {
         if (! empty($users) && ! in_array($user_creator, $users)) {
-            $this->user_removal->removeUserFromProject($project->getID(), $user_creator->getId());
+            $this->user_remover->removeUserFromProject($project->getID(), $user_creator->getId());
         }
     }
 
