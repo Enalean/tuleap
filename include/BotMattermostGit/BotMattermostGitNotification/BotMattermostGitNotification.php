@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,26 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermostGit\BotGit;
+namespace Tuleap\BotMattermostGit\BotMattermostGitNotification;
 
 use Tuleap\BotMattermost\Bot\Bot;
 
-class BotGit
+class BotMattermostGitNotification
 {
     private $bot;
     private $repository_ids;
+    private $channels;
 
     public function __construct(
         Bot $bot,
-        array $repository_ids
+        $repository_id,
+        $channels
     ) {
         $this->bot            = $bot;
-        $this->repository_ids = $repository_ids;
+        $this->repository_ids = $repository_id;
+        $this->channels       = $channels;
     }
 
     public function getBot()
     {
-        $this->bot;
+        return $this->bot;
+    }
+
+    /**
+     * @return array
+     */
+    public function getChannels()
+    {
+        return $this->channels;
     }
 
     public function toArray($repository_id)
@@ -47,8 +58,8 @@ class BotGit
             'name'           => $this->bot->getName(),
             'webhook_url'    => $this->bot->getWebhookUrl(),
             'avatar'         => $this->bot->getAvatarUrl(),
-            'channels_names' => $this->bot->getChannelsNamesInOneRow(),
-            'is_assigned'    => in_array($repository_id, $this->repository_ids)
+            'channels'       => implode(', ', $this->channels),
+            'is_assigned'    => $repository_id !== null
         );
     }
 }

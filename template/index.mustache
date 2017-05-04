@@ -1,42 +1,29 @@
-<form name="edit_git_botmattermost" method="post" action="/plugins/botmattermost_git/?group_id={{ project_id }}">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-    <h3>{{title}}</h3>
-    <fieldset>
-        <input type="hidden" name="action" value="edit_notification" />
-        <input type="hidden" name="repository_id" value="{{ repository_id }}" />
+<div id="git-notification-mattermost-section">
+<h3>{{title}}</h3>
+    {{^ bot_assigned }}
+        <p>{{ any_configured_notification }}</p>
+        <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
+            {{ button_config }}
+        </button>
+        {{> modal-add-bot }}
+    {{/ bot_assigned }}
+    {{# bot_assigned }}
+        <div>
+            <p class="bot-assigned-label">{{ label_bot_name }}</p>
+            <p>{{# avatar }}<img class="avatar img-circle" src="{{ avatar }}">{{/ avatar }}{{ name }}</p>
+        </div>
+        <div>
+            <p class="bot-assigned-label">{{ label_channels_handles }}</p>
+            <p>{{ channels }}</p>
+        </div>
 
-        <p>{{ description }}</p>
-        <table class="table table-bordered table-striped" id="bot_list">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Avatar</th>
-                    <th>{{ table_col_name }}</th>
-                    <th>{{ table_col_webhook_url }}</th>
-                    <th>Channels</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{# botListIsEmpty }}
-                <tr>
-                    <td>{{ empty_bot_list }}</td>
-                </tr>
-                {{/ botListIsEmpty }}
-                {{^ botListIsEmpty }}
-                {{# bots }}
-                    <tr>
-                        <td><input type="checkbox" name="bots_ids[]" value="{{ id }}" {{# is_assigned }}checked="checked"{{/ is_assigned }}></td>
-                        <td>{{# avatar }}<img src="{{ avatar }}" class="img-circle" width="30" height="30">{{/ avatar }}</td>
-                        <td>{{ name }}</td>
-                        <td>{{ webhook_url }}</td>
-                        <td>{{ channels_names }}</td>
-                    </tr>
-                {{/ bots }}
-                {{/ botListIsEmpty }}
-            </tbody>
-        </table>
-        <input type="submit" name="save" class="btn" value="{{ btn_save }}" />
-    </fieldset>
-</form>
+        <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-edit-{{ id }}">
+            <i class="icon-edit"></i> {{ button_edit }}
+        </button>
+        {{> modal-edit-bot }}
+        <button class="btn btn-danger" data-toggle="modal" href="#admin-config-bot-delete-{{ id }}">
+            <i class="icon-trash"></i> {{ button_delete }}
+        </button>
+        {{> modal-delete-bot }}
+    {{/ bot_assigned }}
+</div>

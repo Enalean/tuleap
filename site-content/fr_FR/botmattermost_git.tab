@@ -5,8 +5,27 @@ plugin_botmattermost_git	descriptor_name	Robot Mattermost-Git Plugin
 plugin_botmattermost_git	alert_success_update	Changement(s) effectué(s) avec succès
 plugin_botmattermost_git	alert_invalid_post	Erreur dans la requête : Le robot n'a pas été trouvé
 
+plugin_botmattermost_git	alert_error_create_bot_notification	L'ajout du robot de notification a échoué
+plugin_botmattermost_git	alert_error_delete_bot_notification	La suppression du robot de notification a échoué
+plugin_botmattermost_git	alert_error_update_bot_notification	La mise à jour du robot de notification a échoué
+
 plugin_botmattermost_git	title	Notification dans Mattermost
 plugin_botmattermost_git	description	Choix de robot(s) afin d'envoyer des notifications dans Mattermost lorsqu'un push à lieu dans ce dépot.
 
 
 plugin_botmattermost_git	push_notification_text	a publié un nouveau commit sur
+
+
+plugin_botmattermost_git	any_configured_notification	Il n'y a rien ici, commencez par configurer les notifications.
+
+plugin_botmattermost_git	button_configure_notification	Configuration des notifications
+plugin_botmattermost_git	button_confirm	Confirmer
+
+plugin_botmattermost_git	modal_header_configure_notification	Configuration des notifications
+plugin_botmattermost_git	modal_header_edit_configure_notification	Edition de la configuration des notifications
+plugin_botmattermost_git	modal_header_delete_configure_notification	Suppression de la configuration des notifications
+plugin_botmattermost_git	modal_delete_content	Cette suppression est irréversible. Veuillez confirmer la suppression de la configuration des notifications.
+
+plugin_botmattermost_git	configuration_info_channels_handles	L'indentifiant du salon de discussion est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/monsalondediscussion<br>identifiant : monsalondediscussion
+plugin_botmattermost_git	configuration_label_channels_handles	Liste des identifiants des salons de discussion
+plugin_botmattermost_git	configuration_input_channels_handles	salon1, salon2, salon3
