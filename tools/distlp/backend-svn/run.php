@@ -36,18 +36,20 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 $configuration_loader = new \Tuleap\Configuration\Etc\LoadLocalInc('/data/etc/tuleap');
 $vars                 = $configuration_loader->getVars();
+$vars->setDatabaseRootPassword($_SERVER['MYSQL_ROOT_PASSWORD']);
 
 $tuleap_user        = new \Tuleap\Configuration\Docker\ApplicationUserFromPath($vars->getApplicationUser(), '/data/etc/tuleap');
 $default_paths      = new \Tuleap\Configuration\DefaultPaths($vars->getApplicationUser());
 $links              = new \Tuleap\Configuration\Docker\LinkFromDataVolume();
 $supervisord        = new \Tuleap\Configuration\Docker\BackendSVN($vars->getApplicationBaseDir());
 $tuleap_auth_module = new \Tuleap\Configuration\Apache\TuleapAuthModule($vars->getApplicationBaseDir());
-
+$mysql_config       = new \Tuleap\Configuration\Mysql\BackendSVN($vars, gethostbyname(gethostname()));
 $tuleap_user->configure();
 $default_paths->configure();
 $links->configure();
 $tuleap_auth_module->configure();
 $supervisord->configure();
+$mysql_config->configure();
 
 $setup = new \Tuleap\Configuration\Setup\DistributedSVN();
 $setup->backendSVN(\Tuleap\Configuration\Setup\DistributedSVN::PID_ONE_SUPERVISORD);
