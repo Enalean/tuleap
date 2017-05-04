@@ -19,4 +19,6 @@
  */
 
 require_once dirname(__FILE__).'/../../include/autoload.php';
+require_once dirname(__FILE__).'/../../include/constants.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/all.php';
+require_once dirname(__FILE__).'/../../../../src/common/include/Codendi_HTMLPurifier.class.php';

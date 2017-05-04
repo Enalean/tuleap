@@ -40,6 +40,7 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
         $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
         $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
@@ -55,6 +56,34 @@ class TrafficlightsPlugin extends Plugin {
 
     public function service_classnames($params) {
         $params['classnames'][$this->getServiceShortname()] = 'Trafficlights\\Service';
+    }
+
+    /**
+     * Configure project's TrafficLights service
+     *
+     * @param array $params The project id and service usage
+     *
+     */
+    public function service_is_used($params)
+    {
+        if ($params['shortname'] !== $this->getServiceShortname()) {
+            return;
+        }
+
+        if (! $params['is_used']) {
+            return;
+        }
+
+        $config = new Config(new Dao());
+        $project = ProjectManager::instance()->getProject($params['group_id']);
+
+        $config_creator = new FirstConfigCreator(
+            $config,
+            TrackerFactory::instance(),
+            TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
+            new BackendLogger()
+        );
+        $config_creator->createConfigForProjectFromXml($project);
     }
 
     public function tracker_event_complement_reference_information(array $params) {
@@ -122,7 +151,12 @@ class TrafficlightsPlugin extends Plugin {
             return;
         }
 
-        $config_creator = new FirstConfigCreator($config);
+        $config_creator = new FirstConfigCreator(
+            $config,
+            TrackerFactory::instance(),
+            TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
+            new BackendLogger()
+        );
         $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $params['tracker_mapping']);
     }
 
@@ -153,7 +187,7 @@ class TrafficlightsPlugin extends Plugin {
     }
 
     function process(Codendi_Request $request) {
-        $config = new \Tuleap\Trafficlights\Config(new \Tuleap\Trafficlights\Dao());
+        $config = new Config(new Dao());
         $router = new Tuleap\Trafficlights\Router($this, $config);
         $router->route($request);
     }
