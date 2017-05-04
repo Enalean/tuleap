@@ -18,11 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'constants.php';
 
-use \Tuleap\Trafficlights\Dao;
-use \Tuleap\Trafficlights\Config;
-use \Tuleap\Trafficlights\FirstConfigCreator;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Trafficlights\Config;
+use Tuleap\Trafficlights\Dao;
+use Tuleap\Trafficlights\FirstConfigCreator;
+use Tuleap\Trafficlights\Nature\NatureCoveredByPresenter;
+
+require_once 'constants.php';
 
 class TrafficlightsPlugin extends Plugin {
 
@@ -40,14 +45,21 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
         $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
         $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
+        $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
     }
 
     public function getServiceShortname() {
         return 'plugin_trafficlights';
+    }
+
+    public function isUsedByProject(Project $project)
+    {
+        return $project->usesService($this->getServiceShortname());
     }
 
     public function service_icon($params) {
@@ -56,6 +68,17 @@ class TrafficlightsPlugin extends Plugin {
 
     public function service_classnames($params) {
         $params['classnames'][$this->getServiceShortname()] = 'Trafficlights\\Service';
+    }
+
+    public function register_project_creation($params)
+    {
+        $project_manager = ProjectManager::instance();
+        $template        = $project_manager->getProject($params['template_id']);
+        $project         = $project_manager->getProject($params['group_id']);
+
+        if ($params['project_creation_data']->projectShouldInheritFromTemplate() && $this->isUsedByProject($template)) {
+            $this->allowProjectToUseNature($project_manager, $template, $project);
+        }
     }
 
     /**
@@ -74,8 +97,9 @@ class TrafficlightsPlugin extends Plugin {
             return;
         }
 
-        $config = new Config(new Dao());
-        $project = ProjectManager::instance()->getProject($params['group_id']);
+        $project_manager = ProjectManager::instance();
+        $config          = new Config(new Dao());
+        $project         = $project_manager->getProject($params['group_id']);
 
         $config_creator = new FirstConfigCreator(
             $config,
@@ -84,6 +108,24 @@ class TrafficlightsPlugin extends Plugin {
             new BackendLogger()
         );
         $config_creator->createConfigForProjectFromXml($project);
+        $this->allowProjectToUseNature($project_manager, $project, $project);
+    }
+
+    private function allowProjectToUseNature(ProjectManager $project_manager, Project $template, Project $project)
+    {
+        $config  = new AllowedProjectsConfig(
+            $project_manager,
+            new AllowedProjectsDao()
+        );
+
+        if (! $config->isProjectAllowedToUseNature($template)) {
+            $config->addProject($project);
+        }
+    }
+
+    public function event_get_artifactlink_natures($params)
+    {
+        $params['natures'][] = new NatureCoveredByPresenter();
     }
 
     public function tracker_event_complement_reference_information(array $params) {
