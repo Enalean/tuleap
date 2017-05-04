@@ -138,20 +138,19 @@
                 return;
             }
 
-            event.preventDefault();
-
             if (! $('.use-regexp').is(":checked") &&
                 $('.save-permissions-with-regexp').attr('data-are-regexp-enabled') == 1
             ) {
+                event.preventDefault();
                 $('#modal-regexp-delete').modal('toggle');
             } else if ($('.use-regexp').is(":checked") &&
                 $('.save-permissions-with-regexp').attr('data-are-regexp-confliting') == 1
             ) {
+                event.preventDefault();
                 $('#modal-regexp-delete').modal('toggle');
                 $('.use-regexp').attr('checked', false);
             } else {
                 already_check_modal = true;
-                $(this).trigger('click', 'submit');
             }
         });
 
