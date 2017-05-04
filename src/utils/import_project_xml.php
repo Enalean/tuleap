@@ -27,6 +27,7 @@ use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\XML\Import\ImportNotValidException;
+use Tuleap\Project\UserRemover;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -227,7 +228,8 @@ try {
         ServiceManager::instance(),
         $broker_log,
         $ugroup_duplicator,
-        new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao())
+        new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
+        new UserRemover()
     );
 
     try {

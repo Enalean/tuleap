@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * http://sourceforge.net
@@ -73,8 +73,9 @@ if ($request->isPost() && $request->valid($vFunc)) {
 
     case 'rmuser':
         // remove a user from this portal
-        $rm_id = $request->getValidated('rm_id', 'uint', 0);
-        account_remove_user_from_group($group_id, $rm_id);
+        $rm_id        = $request->getValidated('rm_id', 'uint', 0);
+        $user_removal = new \Tuleap\Project\UserRemover();
+        $user_removal->removeUserFromProject($group_id, $rm_id);
         break;
 
     case 'change_group_type':

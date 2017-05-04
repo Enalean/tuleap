@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ require_once 'ProjectCreator.class.php';
 require_once 'common/soap/SOAP_RequestLimitator.class.php';
 require_once 'www/include/account.php';
 require_once 'www/include/utils_soap.php';
+
+use Tuleap\Project\UserRemover;
 
 /**
  * Wrapper for project related SOAP methods
@@ -268,10 +270,13 @@ class Project_SOAPServer {
      *
      * @return Boolean
      */
-    public function removeProjectMember($sessionKey, $groupId, $userLogin) {
-        $project   = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
-        $userToAdd = $this->getProjectMember($project, $userLogin);
-        $result    = account_remove_user_from_group($groupId, $userToAdd->getId());
+    public function removeProjectMember($sessionKey, $groupId, $userLogin)
+    {
+        $project      = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
+        $userToAdd    = $this->getProjectMember($project, $userLogin);
+        $user_removal = new UserRemover();
+        $result       = $user_removal->removeUserFromProject($groupId, $userToAdd->getId());
+
         return $this->returnFeedbackToSoapFault($result);
     }
 

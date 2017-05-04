@@ -21,6 +21,7 @@
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Project\UserRemover;
 
 class REST_TestDataBuilder extends TestDataBuilder {
 
@@ -526,7 +527,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
                 new FRSPermissionDao(),
                 new UGroupDao()
             ),
-            new NatureDao()
+            new UserRemover()
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
         $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);

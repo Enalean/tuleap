@@ -27,6 +27,7 @@ require_once 'constants.php';
 
 use Tuleap\LDAP\NonUniqueUidRetriever;
 use Tuleap\User\Admin\UserDetailsPresenter;
+use Tuleap\Project\UserRemover;
 
 class LdapPlugin extends Plugin {
     /**
@@ -1163,8 +1164,23 @@ class LdapPlugin extends Plugin {
     /**
      * @return LDAP_ProjectGroupManager
      */
-    private function getLdapProjectGroupManager()
+    public function getLdapProjectGroupManager()
     {
-        return new LDAP_ProjectGroupManager($this->getLdap(), $this->getLdapUserManager());
+        return new LDAP_ProjectGroupManager(
+            $this->getLdap(),
+            $this->getLdapUserManager(),
+            $this->getLdapProjectGroupDao()
+        );
+    }
+
+    /**
+     * @return LDAP_ProjectGroupDao
+     */
+    private function getLdapProjectGroupDao()
+    {
+        return new LDAP_ProjectGroupDao(
+            CodendiDataAccess::instance(),
+            new UserRemover()
+        );
     }
 }

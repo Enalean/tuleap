@@ -24,6 +24,19 @@
  */
 class LDAP_ProjectGroupManager extends LDAP_GroupManager
 {
+
+    /**
+     * @var LDAP_ProjectGroupDao
+     */
+    private $dao;
+
+    public function __construct(LDAP $ldap, LDAP_UserManager $ldap_user_manager, LDAP_ProjectGroupDao $dao)
+    {
+        parent::__construct($ldap, $ldap_user_manager);
+
+        $this->dao = $dao;
+    }
+
     /**
      * Add user to a project
      *
@@ -73,7 +86,7 @@ class LDAP_ProjectGroupManager extends LDAP_GroupManager
      */
     protected function getDao()
     {
-        return new LDAP_ProjectGroupDao(CodendiDataAccess::instance());
+        return $this->dao;
     }
 
     public function isProjectBindingSynchronized($project_id)

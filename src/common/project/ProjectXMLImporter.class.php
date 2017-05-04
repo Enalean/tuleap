@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\Project\UserRemover;
 
 /**
  * This class import a project from a xml content
@@ -67,6 +68,11 @@ class ProjectXMLImporter {
     /** @var FRSPermissionCreator */
     private $frs_permissions_creator;
 
+    /**
+     * @var UserRemover
+     */
+    private $user_removal;
+
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
@@ -77,7 +83,8 @@ class ProjectXMLImporter {
         ServiceManager $service_manager,
         Logger $logger,
         UgroupDuplicator $ugroup_duplicator,
-        FRSPermissionCreator $frs_permissions_creator
+        FRSPermissionCreator $frs_permissions_creator,
+        UserRemover $user_removal
     ) {
         $this->event_manager           = $event_manager;
         $this->project_manager         = $project_manager;
@@ -89,6 +96,7 @@ class ProjectXMLImporter {
         $this->service_manager         = $service_manager;
         $this->ugroup_duplicator       = $ugroup_duplicator;
         $this->frs_permissions_creator = $frs_permissions_creator;
+        $this->user_removal            = $user_removal;
 
         $send_notifications = false;
         $force_activation   = true;
@@ -342,7 +350,7 @@ class ProjectXMLImporter {
     private function cleanProjectMembersFromUserCreator(Project $project, array $users, PFUser $user_creator)
     {
         if (! empty($users) && ! in_array($user_creator, $users)) {
-            account_remove_user_from_group($project->getID(), $user_creator->getId());
+            $this->user_removal->removeUserFromProject($project->getID(), $user_creator->getId());
         }
     }
 

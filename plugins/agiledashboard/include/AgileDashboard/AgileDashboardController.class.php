@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FrsPermissionDao;
+use Tuleap\Project\UserRemover;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -285,7 +286,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                         new FRSPermissionCreator(
                             new FRSPermissionDao(),
                             new UGroupDao()
-                        )
+                        ),
+                        new UserRemover()
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
