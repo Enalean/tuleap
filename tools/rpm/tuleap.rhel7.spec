@@ -35,7 +35,7 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear
+Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, %{php_base}-intl
 Requires: %{php_base}-process  %{php_base}-opcache
 
 Requires: highlight

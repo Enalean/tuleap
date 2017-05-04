@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,6 +83,33 @@ class GateKeeper_CSRF_Test extends GateKeeperTest {
     public function itLetPassWhenReferMatchesHost() {
         $_SERVER['HTTP_REFERER'] = 'http://example.com/bla';
         stub($this->request)->getServerUrl()->returns('http://example.com');
+
+        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->assertTrue(true, 'No exception should be raised');
+    }
+
+    public function itLetPassWhenReferMatchesAnEquivalentHostWithCase()
+    {
+        $_SERVER['HTTP_REFERER'] = 'https://example.com/';
+        stub($this->request)->getServerUrl()->returns('https://EXAMPLE.COM');
+
+        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->assertTrue(true, 'No exception should be raised');
+    }
+
+    public function itLetPassWhenReferMatchesAnEquivalentIDNHost()
+    {
+        $_SERVER['HTTP_REFERER'] = 'https://チューリップ.example.com/';
+        stub($this->request)->getServerUrl()->returns('https://xn--7cke4dscza1i.example.com');
+
+        $this->gate_keeper->assertAccess($this->user, $this->request);
+        $this->assertTrue(true, 'No exception should be raised');
+    }
+
+    public function itLetPassWhenReferMatchesAnEquivalentIDNHostWithCase()
+    {
+        $_SERVER['HTTP_REFERER'] = 'https://チューリップ.example.com/';
+        stub($this->request)->getServerUrl()->returns('https://チューリップ.EXAMPLE.COM');
 
         $this->gate_keeper->assertAccess($this->user, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
