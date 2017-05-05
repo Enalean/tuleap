@@ -74,6 +74,7 @@ class GitPresenters_AccessControlPresenter
     public $regexp_incoherence_label;
     public $is_regexp_enabled;
     public $warnings;
+    public $fine_grained_permissions_fork_warning;
 
     public function __construct(
         $is_control_limited,
