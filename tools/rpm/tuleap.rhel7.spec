@@ -43,6 +43,9 @@ Requires: highlight
 Requires: php-ZendFramework2-Loader
 Requires: php-paragonie-random-compat
 
+# Unit file
+Requires: systemd
+
 %description
 Tuleap is a web based application that address all the aspects of product development.
 
@@ -675,16 +678,8 @@ fi
 #
 #
 %post
-${systemd_postun}
-if [ "$1" -eq "1" ]; then
-    # Install
-    /usr/bin/systemctl daemon-reload &> /dev/null || :
-    /usr/bin/systemctl enable ${APP_NAME}.service ${APP_NAME}-svn-updater.service &> /dev/null || :
-else
-    # Upgrade
-    /usr/bin/systemctl daemon-reload &> /dev/null || :
-    /usr/bin/systemctl enable ${APP_NAME}.service ${APP_NAME}-svn-updater.service &> /dev/null || :
-    /usr/bin/systemctl restart ${APP_NAME} &> /dev/null || :
+if [ $1 -eq 1 ]; then
+    /usr/bin/systemctl enable tuleap.service tuleap-svn-updater.service &>/dev/null || :
 fi
 
 # In any cases fix the context
@@ -793,9 +788,15 @@ fi
 #
 #
 #
+
+%preun
+if [ $1 -eq 0 ]; then
+    /usr/bin/systemctl stop tuleap.service &>/dev/null || :
+    /usr/bin/systemctl disable tuleap.service tuleap-svn-updater.service &>/dev/null || :
+fi
+
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
-
 
 #
 #
