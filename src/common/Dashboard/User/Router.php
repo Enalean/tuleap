@@ -50,12 +50,7 @@ class Router
 
         switch ($action) {
             case 'add-dashboard':
-                $dashboard_id = $this->user_dashboard_controller->createDashboard($request);
-                if ($dashboard_id) {
-                    $GLOBALS['Response']->redirect('/my/?dashboard_id='. $dashboard_id);
-                } else {
-                    $GLOBALS['Response']->redirect('/my/');
-                }
+                $this->user_dashboard_controller->createDashboard($request);
                 break;
             case 'delete-dashboard':
                 $this->user_dashboard_controller->deleteDashboard($request);
