@@ -56,7 +56,7 @@ class PresenterBuilder
 
         return new Presenter(
             new GlobalNavPresenter(
-                $this->getGlobalMenuItems(),
+                $this->getGlobalMenuItems($current_user),
                 $this->getGlobalNavbarDropdownMenuItems()
             ),
             new SearchPresenter(),
@@ -106,16 +106,20 @@ class PresenterBuilder
         return $global_navbar_dropdown_menu_items;
     }
 
-    private function getGlobalMenuItems()
+    private function getGlobalMenuItems(PFUser $current_user)
     {
-        return array(
-            new GlobalMenuItemPresenter(
+        $global_menu_items = array();
+
+        if ($current_user->isSuperUser()) {
+            $global_menu_items[] = new GlobalMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'site_admin'),
                 '/admin/',
                 'fa fa-cog',
                 'go-to-admin'
-            )
-        );
+            );
+        }
+
+        return $global_menu_items;
     }
 
     private function displayNewAccountMenuItem()
