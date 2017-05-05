@@ -1,9 +1,28 @@
-<main class="tlp-framed-vertically">
-    <div class="tlp-framed-horizontally">
-        <h1 class="user-my-realname">
-            {{ real_name }}
-            <small class="user-my-login">@{{ login }}</small>
-        </h1>
+<div class="tlp-framed-vertically">
+    {{# user_presenter }}
+        <div class="tlp-framed-horizontally">
+            <h1 class="user-my-realname">
+                {{ real_name }}
+                <small class="user-my-login">@{{ login }}</small>
+            </h1>
 
-    </div>
-</main>
+        </div>
+    {{/ user_presenter }}
+    <nav class="tlp-tabs user-dashboards">
+        {{# user_dashboards }}
+            <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="?dashboard_id={{ id }}">
+                {{ name }}
+            </a>
+        {{/ user_dashboards }}
+        <a href="javascript:;"
+           id="add-dashboard-button"
+           class="tlp-button-primary tlp-button-mini tlp-button-outline"
+           data-target="add-dashboard"
+        >
+            <i class="fa fa-plus tlp-button-icon"></i>
+            {{ add_dashboard_label }}
+        </a>
+    </nav>
+</div>
+
+{{> add-dashboard-modal }}
