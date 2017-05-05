@@ -2,10 +2,10 @@
 
 set -ex
 
-if [ ! -d "/data/etc/tuleap" ]; then
-    echo "Missing data mount point";
-    exit 1;
-fi
+while [ ! -f "/data/etc/tuleap/conf/local.inc" ]; do
+    echo "Data mount point no ready yet";
+    sleep 1
+done
 
 /opt/rh/rh-php56/root/bin/php /usr/share/tuleap/tools/distlp/backend-svn/run.php
 

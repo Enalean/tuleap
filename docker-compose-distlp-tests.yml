@@ -1,0 +1,111 @@
+version: "2"
+
+services:
+  test:
+    container_name: ${BUILD_TAG}tuleap_runtests_test
+    image: tuleap-run-tests
+    build:
+      context: tools/distlp/tests/DockerImage
+    command: /tuleap/tools/distlp/tests/run.sh
+    volumes:
+      - .:/tuleap
+      - .:/output
+    depends_on:
+      - reverse-proxy
+    networks:
+      - tuleap
+
+  reverse-proxy:
+    container_name: ${BUILD_TAG}tuleap_runtests_reverse-proxy
+    image: enalean/tuleap-reverseproxy:distlp-1.1
+    command: /tuleap/tools/distlp/reverse-proxy/run.sh
+    volumes:
+      - .:/tuleap
+      - tests-tuleap-data:/data # Needed for configuration (platform name)
+    depends_on:
+      - backend-web
+      - backend-svn
+    networks:
+      - tuleap
+
+  backend-web:
+    container_name: ${BUILD_TAG}tuleap_runtests_backend-web
+    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.6
+    environment:
+      RUN_COMMAND: "php /usr/share/tuleap/tools/distlp/backend-web/run.php test"
+      MYSQL_ROOT_PASSWORD: DumpPass4Tests
+      LDAP_MANAGER_PASSWORD: DumpPass4Tests
+      VIRTUAL_HOST: reverse-proxy
+    volumes:
+      - .:/usr/share/tuleap
+      - tests-tuleap-data:/data
+    depends_on:
+      - ldap
+      - db
+      - rabbitmq
+    networks:
+      - tuleap
+
+  backend-svn:
+    container_name: ${BUILD_TAG}tuleap_runtests_backend-svn
+    image: enalean/tuleap-dev:1.4
+    command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
+    volumes:
+      - .:/usr/share/tuleap
+      - tests-tuleap-data:/data
+    environment:
+      MYSQL_ROOT_PASSWORD: DumpPass4Tests
+    depends_on:
+      - ldap
+      - db
+      - rabbitmq
+    networks:
+      - tuleap
+
+  ldap:
+    container_name: ${BUILD_TAG}tuleap_runtests_ldap
+    image: enalean/ldap
+    environment:
+      LDAP_ROOT_PASSWORD: DumpPass4Tests
+      LDAP_MANAGER_PASSWORD: DumpPass4Tests
+    volumes:
+      - tests-ldap-data:/data
+    networks:
+      - tuleap
+
+  db:
+    container_name: ${BUILD_TAG}tuleap_runtests_db
+    image: mysql:5.5
+    environment:
+      MYSQL_ROOT_PASSWORD: DumpPass4Tests
+    volumes:
+      - tests-db-data:/var/lib/mysql
+    networks:
+      - tuleap
+
+  rabbitmq:
+    container_name: ${BUILD_TAG}tuleap_runtests_rabbitmq
+    image: rabbitmq:3.6
+    volumes:
+      - tests-rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - tuleap
+
+volumes:
+  tests-rabbitmq-data:
+    external:
+      name: ${BUILD_TAG}tuleap_runtests_rabbitmq-data
+  tests-db-data:
+    external:
+      name: ${BUILD_TAG}tuleap_runtests_db-data
+  tests-ldap-data:
+    external:
+      name: ${BUILD_TAG}tuleap_runtests_ldap-data
+  tests-tuleap-data:
+    external:
+      name: ${BUILD_TAG}tuleap_runtests_tuleap-data
+
+networks:
+  tuleap:
+    external:
+      name: ${BUILD_TAG}tuleap_runtests

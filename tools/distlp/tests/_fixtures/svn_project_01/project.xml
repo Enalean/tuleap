@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project access="public" description="" full-name="SVN Project 01" unix-name="svn-project-01">
+    <long-description/>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">alice</member>
+                <member format="username">bob</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">alice</member>
+            </members>
+        </ugroup>
+        <ugroup name="Contributors" description="">
+            <members>
+                <member format="username">bob</member>
+            </members>
+        </ugroup>
+        <ugroup name="Integrators" description="">
+            <members>
+                <member format="username">alice</member>
+            </members>
+        </ugroup>
+    </ugroups>
+
+    <services>
+        <service shortname="plugin_svn" enabled="true"/>
+    </services>
+    <svn>
+        <repository name="sample" dump-file="data/svn.dump">
+            <access-file><![CDATA[
+[/]
+* =
+@members = r
+@Integrators = rw
+
+[/trunk]
+@Contributors = rw
+]]>
+            </access-file>
+        </repository>
+    </svn>
+</project>
