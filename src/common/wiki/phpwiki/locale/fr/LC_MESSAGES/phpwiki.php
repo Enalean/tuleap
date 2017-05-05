@@ -950,8 +950,6 @@ $locale["Layout tables using a very rich markup style."] =
    "Un système de marques pour faire des tableaux sophistiqués.";
 $locale["Layout tables using the old markup style."] =
    "Apparences de tableaux utilisant l'ancien modèle de balisage.";
-$locale["LdapSearch"] =
-   "LdapChercher";
 $locale["Leading %s not allowed"] =
    "Mener %s n'est pas permis";
 $locale["Legend"] =

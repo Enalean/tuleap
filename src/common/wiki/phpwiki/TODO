@@ -94,7 +94,6 @@ already done lately:
 * pdf button when an external html2pdf app is defined
   (enabled at PhpWikiDemo)
 * enhanced WikiPluginCached (static, ondemand)
-* added LdapSearchPlugin 
 * more PageList options
 
 2004-11-10 20:25:13 rurban
