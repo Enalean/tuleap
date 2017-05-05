@@ -1,9 +1,13 @@
+import kanban_module from './app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("ColumnCollectionService -", function() {
     var ColumnCollectionService,
         SharedPropertiesService;
 
     beforeEach(function() {
-        module('kanban', function($provide) {
+        angular.mock.module(kanban_module, function($provide) {
             $provide.decorator('SharedPropertiesService', function($delegate) {
                 spyOn($delegate, "getKanban");
 
@@ -11,7 +15,7 @@ describe("ColumnCollectionService -", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _ColumnCollectionService_,
             _SharedPropertiesService_
         ) {

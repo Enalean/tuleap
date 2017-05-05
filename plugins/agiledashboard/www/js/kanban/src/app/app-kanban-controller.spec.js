@@ -1,3 +1,7 @@
+import kanban_module from './app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe('KanbanCtrl - ', function() {
     var $rootScope,
         $scope,
@@ -20,9 +24,9 @@ describe('KanbanCtrl - ', function() {
     }
 
     beforeEach(function() {
-        module('kanban');
+        angular.mock.module(kanban_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$controller_,
             _$q_,
             _$rootScope_,

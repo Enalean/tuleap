@@ -1,6 +1,4 @@
-angular
-    .module('kanban')
-    .directive('autoFocusInput', AutoFocusInput);
+export default AutoFocusInput;
 
 AutoFocusInput.$inject = ['$timeout'];
 

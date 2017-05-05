@@ -1,15 +1,15 @@
-angular
-    .module('kanban')
-    .directive('wipPopover', WipPopover);
+import './wip-popover.tpl.html';
+
+export default WipPopover;
 
 WipPopover.$inject = ['$timeout'];
 
 function WipPopover($timeout) {
     return {
-        restrict: 'E',
-        templateUrl: 'wip-popover/wip-popover.tpl.html',
-        scope: {
-            column: '=',
+        restrict   : 'E',
+        templateUrl: 'wip-popover.tpl.html',
+        scope      : {
+            column     : '=',
             userIsAdmin: '&userIsAdmin',
             setWipLimit: '&setWipLimit'
         },

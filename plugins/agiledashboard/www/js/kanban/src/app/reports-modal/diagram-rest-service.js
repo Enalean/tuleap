@@ -1,6 +1,4 @@
-angular
-    .module('kanban')
-    .service('DiagramRestService', DiagramRestService);
+export default DiagramRestService;
 
 DiagramRestService.$inject = [
     '$http',

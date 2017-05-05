@@ -1,6 +1,4 @@
-angular
-    .module('user-preferences')
-    .service('UserPreferencesService', UserPreferencesService);
+export default UserPreferencesService;
 
 UserPreferencesService.$inject = ['Restangular', '$q'];
 

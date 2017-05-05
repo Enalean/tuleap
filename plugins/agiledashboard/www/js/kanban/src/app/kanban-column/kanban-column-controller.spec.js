@@ -1,3 +1,7 @@
+import kanban_module from '../app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("KanbanColumnController -", function() {
     var $rootScope,
         $scope,
@@ -9,12 +13,12 @@ describe("KanbanColumnController -", function() {
         DroppedService;
 
     beforeEach(function() {
-        module('kanban-column');
+        angular.mock.module(kanban_module);
 
         var $controller,
             $element;
 
-        inject(function(
+        angular.mock.inject(function(
             _$controller_,
             _$rootScope_,
             _$q_,

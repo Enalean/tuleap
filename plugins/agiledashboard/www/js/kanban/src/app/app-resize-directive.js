@@ -1,6 +1,4 @@
-angular
-    .module('kanban')
-    .directive('resize', ResizeDirective);
+export default ResizeDirective;
 
 ResizeDirective.$inject = ['$window', '$timeout'];
 

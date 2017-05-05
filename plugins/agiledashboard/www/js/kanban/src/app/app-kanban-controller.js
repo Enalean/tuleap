@@ -1,6 +1,9 @@
-angular
-    .module('kanban')
-    .controller('KanbanCtrl', KanbanCtrl);
+import './error/error.tpl.html';
+import './edit-kanban/edit-kanban.tpl.html';
+import './reports-modal/reports-modal.tpl.html';
+import _ from 'lodash';
+
+export default KanbanCtrl;
 
 KanbanCtrl.$inject = [
     '$scope',
@@ -282,12 +285,11 @@ function KanbanCtrl(
 
     function reload(response) {
         $modal.open({
-            keyboard: false,
-            backdrop: 'static',
-            templateUrl: 'error/error.tpl.html',
-            controller: ErrorCtrl,
-            controllerAs: 'modal',
-            resolve: {
+            keyboard   : false,
+            backdrop   : 'static',
+            templateUrl: 'error.tpl.html',
+            controller : 'ErrorCtrl as modal',
+            resolve    : {
                 message: function () {
                     var message = response.status + ' ' + response.statusText;
                     if (response.data.error) {
@@ -306,10 +308,10 @@ function KanbanCtrl(
 
     function editKanban() {
         $modal.open({
-            backdrop: true,
-            templateUrl: 'edit-kanban/edit-kanban.tpl.html',
-            controller: 'EditKanbanCtrl as edit_modal',
-            resolve: {
+            backdrop    : true,
+            templateUrl : 'edit-kanban.tpl.html',
+            controller  : 'EditKanbanCtrl as edit_modal',
+            resolve     : {
                 kanban: function() {
                     return kanban;
                 },
@@ -333,10 +335,10 @@ function KanbanCtrl(
 
     function openReportModal() {
         $modal.open({
-            backdrop   : true,
-            templateUrl: 'reports-modal/reports-modal.tpl.html',
-            controller : 'ReportsModalController as reports_modal',
-            windowClass: 'reports-modal'
+            backdrop    : true,
+            templateUrl : 'reports-modal.tpl.html',
+            controller  : 'ReportsModalController as reports_modal',
+            windowClass : 'reports-modal'
         }).result.catch(
             reloadIfSomethingIsWrong
         );

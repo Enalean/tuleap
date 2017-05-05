@@ -1,6 +1,4 @@
-angular
-    .module('jwt')
-    .service('JWTService', JWTService);
+export default JWTService;
 
 JWTService.$inject = [
     'Restangular',

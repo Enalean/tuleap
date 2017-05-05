@@ -1,9 +1,13 @@
+import kanban_module from './app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("DroppedService -", function() {
     var DroppedService,
         KanbanService;
 
     beforeEach(function() {
-        module('kanban', function($provide) {
+        angular.mock.module('kanban', function($provide) {
             $provide.decorator('KanbanService', function($delegate, $q) {
                 spyOn($delegate, "moveInArchive").and.returnValue($q.when());
                 spyOn($delegate, "moveInBacklog").and.returnValue($q.when());
@@ -16,7 +20,7 @@ describe("DroppedService -", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _DroppedService_,
             _KanbanService_
         ) {

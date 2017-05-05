@@ -1,6 +1,4 @@
-angular
-    .module('kanban')
-    .filter('InPropertiesFilter', InPropertiesFilter);
+export default InPropertiesFilter;
 
 InPropertiesFilter.$inject = ['$filter'];
 

@@ -1,3 +1,7 @@
+import kanban_module from '../app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe('InPropertiesItemFilter', function() {
     var in_properties_filter,
         list = [{
@@ -24,10 +28,10 @@ describe('InPropertiesItemFilter', function() {
         }];
 
     beforeEach(function() {
-        module('kanban');
+        angular.mock.module('kanban');
 
         var $filter, moment;
-        inject(function(
+        angular.mock.inject(function(
             _$filter_,
             _moment_
         ) {

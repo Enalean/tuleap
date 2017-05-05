@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,17 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-var tuleap = tuleap || {};
-tuleap.charts = tuleap.charts || {};
 
-tuleap.charts.cumulativeFlowChartFactory = function (options) {
+import moment from 'moment';
+import * as d3 from 'd3';
+import cumulativeFlowChart from './cumulative-chart.js';
+
+export default function (options) {
     options = options || {};
 
-    function chart() {
-        tuleap.charts.cumulativeFlowChart(chart);
+    var chart = {};
+    function factory() {
+        cumulativeFlowChart(chart);
         chart.setOptions(options);
         chart.init(options);
     }
@@ -548,5 +551,5 @@ tuleap.charts.cumulativeFlowChartFactory = function (options) {
         }
     }
 
-    return chart;
+    return factory;
 };

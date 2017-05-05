@@ -1,6 +1,4 @@
-angular
-    .module('kanban')
-    .controller('ErrorCtrl', ErrorCtrl);
+export default ErrorCtrl;
 
 ErrorCtrl.$inject = ['$scope', '$window', 'message'];
 

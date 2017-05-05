@@ -1,5 +1,18 @@
 <link rel="stylesheet" href="js/kanban/bin/assets/kanban.css">
-<div id="kanban-app" ng-app="kanban" ng-controller="MainCtrl" ng-init="init({{ kanban_representation }}, {{ user_id }}, {{ user_is_kanban_admin }}, '{{ language }}', {{ project_id }}, '{{ view_mode }}', '{{ nodejs_server }}')">
+<div
+    id="kanban-app"
+    ng-app="kanban"
+    ng-controller="MainCtrl"
+    ng-init="init(
+        {{ kanban_representation }},
+        {{ user_id }},
+        {{ user_is_kanban_admin }},
+        '{{ language }}',
+        {{ project_id }},
+        '{{ view_mode }}',
+        '{{ nodejs_server }}'
+    )"
+>
     <ui-view></ui-view>
 </div>
 <script type="text/javascript" src="js/kanban/bin/assets/kanban.js"></script>

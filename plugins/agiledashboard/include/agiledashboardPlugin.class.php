@@ -395,10 +395,7 @@ class AgileDashboardPlugin extends Plugin {
             if ($this->isPlanningV2URL()) {
                 echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
             } elseif ($this->isKanbanURL()) {
-                echo '<script type="text/javascript" src="/scripts/d3/v4/d3.min.js"></script>'."\n";
                 echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
-                echo '<script type="text/javascript" src="js/cumulative-chart.js"></script>'."\n";
-                echo '<script type="text/javascript" src="js/cumulative-chart-factory.js"></script>'."\n";
             } else {
                 echo $this->getMinifiedAssetHTML()."\n";
             }

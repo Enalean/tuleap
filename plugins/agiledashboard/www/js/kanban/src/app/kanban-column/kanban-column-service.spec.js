@@ -1,3 +1,7 @@
+import kanban_module from '../app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("KanbanColumnService -", function() {
     var $filter,
         $q,
@@ -7,7 +11,7 @@ describe("KanbanColumnService -", function() {
         KanbanFilterValue;
 
     beforeEach(function() {
-        module('kanban', function($provide) {
+        angular.mock.module(kanban_module, function($provide) {
             $provide.decorator('$filter', function() {
                 return jasmine.createSpy("$filter").and.callFake(function() {
                     return function() {};
@@ -27,7 +31,7 @@ describe("KanbanColumnService -", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _$filter_,
             _$q_,
             _$rootScope_,

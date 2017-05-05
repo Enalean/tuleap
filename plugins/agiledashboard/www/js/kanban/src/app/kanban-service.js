@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .service('KanbanService', KanbanService);
+import _ from 'lodash';
+
+export default KanbanService;
 
 KanbanService.$inject = [
     'Restangular',

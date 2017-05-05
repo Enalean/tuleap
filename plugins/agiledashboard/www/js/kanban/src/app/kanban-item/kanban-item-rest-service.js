@@ -1,6 +1,6 @@
-angular
-    .module('kanban')
-    .service('KanbanItemRestService', KanbanItemRestService);
+import _ from 'lodash';
+
+export default KanbanItemRestService;
 
 KanbanItemRestService.$inject = [
     '$q',

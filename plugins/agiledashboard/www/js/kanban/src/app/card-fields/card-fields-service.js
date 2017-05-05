@@ -1,6 +1,6 @@
-angular
-    .module('card-fields')
-    .service('CardFieldsService', CardFieldsService);
+import _ from 'lodash';
+
+export default CardFieldsService;
 
 CardFieldsService.$inject = [
     '$sce',

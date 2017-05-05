@@ -1,10 +1,14 @@
+import kanban_module from './app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("KanbanService -", function() {
     var $httpBackend,
         KanbanService,
         RestErrorService;
 
     beforeEach(function() {
-        module('kanban', function($provide) {
+        angular.mock.module(kanban_module, function($provide) {
             $provide.decorator('RestErrorService', function($delegate) {
                 spyOn($delegate, "reload");
 
@@ -12,7 +16,7 @@ describe("KanbanService -", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _$httpBackend_,
             _KanbanService_,
             _RestErrorService_

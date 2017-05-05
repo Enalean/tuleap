@@ -1,6 +1,6 @@
-angular
-    .module('socket')
-    .directive('socketDisconnect', SocketDisconnectDirective);
+import './socket-disconnect.tpl.html';
+
+export default SocketDisconnectDirective;
 
 SocketDisconnectDirective.$inject = [
     'SocketService'
@@ -12,7 +12,7 @@ function SocketDisconnectDirective(
     return {
         restrict   : 'E',
         scope      : {},
-        templateUrl: 'socket/socket-disconnect.tpl.html',
+        templateUrl: 'socket-disconnect.tpl.html',
         link       : function(scope) {
             scope.checkDisconnect = SocketService.checkDisconnect;
         }

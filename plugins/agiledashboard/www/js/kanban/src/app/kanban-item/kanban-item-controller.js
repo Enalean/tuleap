@@ -1,6 +1,6 @@
-angular
-    .module('kanban-item')
-    .controller('KanbanItemController', KanbanItemController);
+import _ from 'lodash';
+
+export default KanbanItemController;
 
 KanbanItemController.$inject = [
     'CardFieldsService',

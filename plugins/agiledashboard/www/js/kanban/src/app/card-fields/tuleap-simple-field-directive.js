@@ -1,6 +1,6 @@
-angular
-    .module('card-fields')
-    .directive('tuleapSimpleField', tuleapSimpleField);
+import _ from 'lodash';
+
+export default tuleapSimpleField;
 
 tuleapSimpleField.$inject = [
     '$sce'
