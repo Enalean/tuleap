@@ -1776,6 +1776,7 @@ plugin_tracker_artifact_links_natures	cannot_format	Cannot be formatted because 
 plugin_tracker_artifact_links_natures	unsupported_field	A field needed for the format cannot be formatted.
 plugin_tracker_artifact_links_natures	no_child	As per config (hierarchy), the type _is_child cannot be used for the link to artifact #$1
 plugin_tracker_artifact_links_natures	force_child	As per config (hierarchy), force use of _is_child type for the link to artifact #$1
+plugin_tracker_artifact_links_natures	override_nature	Override link type "$2" to artifact #$1 with type "$3" returned by another service
 plugin_tracker_artifact_links_natures	cancel_modal	Cancel
 plugin_tracker	pending_tv5_removal	Trackers Pending for Deletion
 plugin_tracker	no_pending	No Tracker pending for Deletion

@@ -1620,7 +1620,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             new Tracker_ReferenceManager(
                 ReferenceManager::instance(),
                 Tracker_ArtifactFactory::instance()
-            )
+            ),
+            EventManager::instance()
         );
     }
 

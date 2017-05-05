@@ -44,7 +44,7 @@ define('TRACKER_EVENT_TRACKERS_DUPLICATED', 'tracker_event_trackers_duplicated')
  * 'request'  => The initial request
  * 'artifact' => The involved artifact
  *
- * Either a redirection has been done or nothing has been done 
+ * Either a redirection has been done or nothing has been done
  * (in this case plugins/tracker will commpute the redirection)
  */
 define('TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE', 'tracker_event_redirect_after_artifact_creation_or_update');
@@ -56,7 +56,7 @@ define('TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE', 'tracker_even
  * 'request'          => The initial request
  * 'query_parameters' => The actual form action parameters
  *
- * No expected results than the query_parameters modified if needed 
+ * No expected results than the query_parameters modified if needed
  */
 define('TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION', 'tracker_event_build_artifact_form_action');
 
@@ -74,6 +74,19 @@ define('TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION', 'tracker_event_build_artifact
  *  No expected results
  */
 define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_association_edited');
+
+/**
+ * Request a custom nature from other plugins for a new artifact link
+ *
+ * Parameters:
+ * 'project_id'      => The id of the target project
+ * 'to_artifact'     => The artifact linked to
+ * 'submitted_value' => Values from the artifact form
+ *
+ * Expected results:
+ * 'nature'          => string the nature proposed by the plugin
+ */
+define('TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED', 'tracker_event_artifact_link_nature_requested');
 
 /**
  * Should we display a selector to choose the parent of an item during creation?

@@ -114,7 +114,8 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         $this->saver = new ArtifactLinkValueSaver(
             $this->artifact_factory,
             $this->dao,
-            $this->reference_manager
+            $this->reference_manager,
+            mock('EventManager')
         );
 
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);

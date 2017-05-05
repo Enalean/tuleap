@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use EventManager;
 use Tracker_Artifact;
 use Tracker_ArtifactLinkInfo;
 use Tracker_ArtifactFactory;
@@ -47,14 +48,21 @@ class ArtifactLinkValueSaver {
      */
     private $artifact_factory;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElement_Field_Value_ArtifactLinkDao $dao,
-        Tracker_ReferenceManager $reference_manager
+        Tracker_ReferenceManager $reference_manager,
+        EventManager $event_manager
     ) {
         $this->artifact_factory  = $artifact_factory;
         $this->dao               = $dao;
         $this->reference_manager = $reference_manager;
+        $this->event_manager     = $event_manager;
     }
 
     /**
@@ -95,8 +103,13 @@ class ArtifactLinkValueSaver {
         return $this->updateCrossReferences($user, $artifact, $submitted_value);
     }
 
-    private function getNature(Tracker_ArtifactLinkInfo $artifactlinkinfo, Tracker $from_tracker, Tracker $to_tracker)
-    {
+    private function getNature(
+        Tracker_Artifact $from_artifact,
+        Tracker_ArtifactLinkInfo $artifactlinkinfo,
+        Tracker $from_tracker,
+        Tracker $to_tracker,
+        array $submitted_value
+    ) {
         $existing_nature     = $artifactlinkinfo->getNature();
         $nature_by_hierarchy = $this->getNatureDefinedByHierarchy(
             $artifactlinkinfo,
@@ -104,9 +117,20 @@ class ArtifactLinkValueSaver {
             $to_tracker,
             $existing_nature
         );
-
         if ($nature_by_hierarchy !== null) {
             return $nature_by_hierarchy;
+        }
+
+        $nature_by_plugin = $this->getNatureDefinedByPlugin(
+            $artifactlinkinfo,
+            $from_artifact,
+            $artifactlinkinfo->getArtifact(),
+            $existing_nature,
+            $submitted_value
+        );
+
+        if (! empty($nature_by_plugin)) {
+            return $nature_by_plugin;
         }
 
         if (! empty($existing_nature)) {
@@ -168,6 +192,49 @@ class ArtifactLinkValueSaver {
                     'plugin_tracker_artifact_links_natures',
                     'force_child',
                     $artifactlinkinfo->getArtifactId()
+                )
+            );
+        }
+    }
+
+    private function getNatureDefinedByPlugin(
+        Tracker_ArtifactLinkInfo $artifactlinkinfo,
+        Tracker_Artifact $from_artifact,
+        Tracker_Artifact $to_artifact,
+        $existing_nature,
+        array $submitted_value
+    ) {
+        $nature_by_plugin = null;
+        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED, array(
+            'project_id'      => $artifactlinkinfo->getGroupId(),
+            'to_artifact'     => $to_artifact,
+            'submitted_value' => $submitted_value,
+            'nature'          => &$nature_by_plugin
+        ));
+
+        if (! empty($nature_by_plugin) && $existing_nature !== $nature_by_plugin) {
+            $this->warnOverrideOfExistingNature(
+                $artifactlinkinfo,
+                $from_artifact->getTracker(),
+                $existing_nature,
+                $nature_by_plugin);
+        }
+        return $nature_by_plugin;
+    }
+
+    private function warnOverrideOfExistingNature(
+        Tracker_ArtifactLinkInfo $artifactlinkinfo,
+        Tracker $from_tracker,
+        $existing_nature,
+        $nature_by_plugin
+    ) {
+        if ($from_tracker->isProjectAllowedToUseNature()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText(
+                    'plugin_tracker_artifact_links_natures',
+                    'override_nature',
+                    array($artifactlinkinfo->getArtifactId(), $existing_nature, $nature_by_plugin)
                 )
             );
         }
@@ -241,7 +308,7 @@ class ArtifactLinkValueSaver {
             $artifact_to_link = $artifactlinkinfo->getArtifact();
             if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
                 $tracker = $artifact_to_link->getTracker();
-                $nature  = $this->getNature($artifactlinkinfo, $from_tracker, $tracker);
+                $nature  = $this->getNature($artifact, $artifactlinkinfo, $from_tracker, $tracker, $submitted_value);
 
                 if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
                     $all_artifact_to_be_linked[$tracker->getId()] = array(
