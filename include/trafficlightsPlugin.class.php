@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Trafficlights\Config;
 use Tuleap\Trafficlights\Dao;
 use Tuleap\Trafficlights\FirstConfigCreator;
+use Tuleap\Trafficlights\Nature\NatureCoveredByOverrider;
 use Tuleap\Trafficlights\Nature\NatureCoveredByPresenter;
 
 require_once 'constants.php';
@@ -48,6 +49,7 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
+        $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED);
         $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
         $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
@@ -133,6 +135,23 @@ class TrafficlightsPlugin extends Plugin {
     {
         if ($params['shortname'] === NatureCoveredByPresenter::NATURE_COVERED_BY) {
             $params['presenter'] = new NatureCoveredByPresenter();
+        }
+    }
+
+    public function tracker_event_artifact_link_nature_requested(array $params)
+    {
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($params['project_id']);
+        if ($this->isUsedByProject($project)) {
+            $to_artifact             = $params['to_artifact'];
+            $new_linked_artifact_ids = explode(',', $params['submitted_value']['new_values']);
+
+            $overrider        = new NatureCoveredByOverrider(new Config(new Dao()));
+            $overridingNature = $overrider->getOverridingNature($project, $to_artifact, $new_linked_artifact_ids);
+
+            if (! empty($overridingNature)) {
+                $params['nature'] = $overridingNature;
+            }
         }
     }
 
