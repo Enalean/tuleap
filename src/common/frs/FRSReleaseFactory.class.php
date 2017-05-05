@@ -438,6 +438,7 @@ class FRSReleaseFactory {
     function emailNotification(FRSRelease $release) {
         $fmmf   = new FileModuleMonitorFactory();
         $result = $fmmf->whoIsMonitoringPackageById($release->getGroupID(), $release->getPackageID());
+        $user_manager = $this->getUserManager();
 
         if ($result && count($result) > 0) {
             $package = $this->_getFRSPackageFactory()->getFRSPackageFromDb($release->getPackageID());
@@ -445,7 +446,17 @@ class FRSReleaseFactory {
             // To
             $array_emails = array ();
             foreach ($result as $res) {
-                $array_emails[] = $res['email'];
+                $user = $user_manager->getUserById($res['user_id']);
+                $user_can_read = $this->userCanRead(
+                    $release->getGroupID(),
+                    $release->getPackageID(),
+                    $release->getReleaseID(),
+                    $user->getID()
+                );
+                $user_can_admin = $this->userCanAdmin($user,$release->getGroupID());
+                if ($user_can_admin || ($user_can_read && $release->isActive())) {
+                    $array_emails[] = $res['email'];
+                }
             }
 
             $notification    = $this->getNotification($release, $package, $array_emails);
