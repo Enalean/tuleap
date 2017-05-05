@@ -1,0 +1,13 @@
+<div class="tlp-framed-vertically">
+    <div class="tlp-framed-horizontally">
+        <h1 class="dashboard-project-title">
+            {{# has_parent }}
+                <small class="dashboard-project-title-parent">{{ parent_name }}</small>
+                <svg xmlns="http://www.w3.org/2000/svg" class="dashboard-project-title-parent-icon">
+                    <path d="M1,27 L1,28 L11,28 L11,30 L14,27 L11,24 L11,26 L3,26 L3,20 L1,20 L1,27 Z" transform="translate(-1 -20)"/>
+                </svg>
+            {{/ has_parent }}
+            <span class="dashboard-project-title-name">{{ name }}</span>
+        </h1>
+    </div>
+</div>

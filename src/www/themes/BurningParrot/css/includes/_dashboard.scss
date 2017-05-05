@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
+.dashboard-project-title {
+    color: $tlp-theme-color;
+    font-size: 40px;
+    font-weight: 300;
+    text-transform: uppercase;
+}
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/sidebar-collapsed';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/dashboard';
-@import 'includes/my';
+.dashboard-project-title-parent {
+    display: block;
+    margin: 0 0 1px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.dashboard-project-title-parent-icon {
+    width: 13px;
+    height: 10px;
+    margin: 2px 0 0;
+    vertical-align: top;
+    fill: $tlp-ui-dimmed;
+
+    + .dashboard-project-title-name {
+        margin: 0 0 0 -7px;
+    }
+}

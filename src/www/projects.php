@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\ProjectPresenter;
+
 require_once('pre.php');
 
 $default_content_type = 'text/html';
@@ -50,6 +52,26 @@ if ($project && !$project->isError()) {
     // otherwise we display the first active service on the list
 
     if ($project->usesService('summary')) {
+        Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
+        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            site_project_header(
+                array(
+                    'title'  => $project->getUnconvertedPublicName(),
+                    'group'  => $project->getID(),
+                    'toptab' => 'summary'
+                )
+            );
+            $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('tuleap_dir'). '/src/templates/dashboard');
+            $renderer->renderToPage(
+                'project',
+                new ProjectPresenter(
+                    $project,
+                    ProjectManager::instance()
+                )
+            );
+            site_project_footer(array());
+            exit;
+        }
         //now show the project page
         include_once 'project_home.php';
     } else {
