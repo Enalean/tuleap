@@ -18,17 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\My\Dashboards\User;
+namespace Tuleap\Dashboard\User;
 
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
 use ForgeConfig;
 use HttpRequest;
-use PFUser;
 use TemplateRendererFactory;
-use Tuleap\My\Dashboards\MyPresenter;
-use Tuleap\My\UserPresenter;
 
 class Controller
 {
@@ -84,7 +81,7 @@ class Controller
 
         $GLOBALS['Response']->header(array('title' => $this->title));
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('tuleap_dir'). '/src/templates/my'
+            ForgeConfig::get('tuleap_dir'). '/src/templates/dashboard'
         );
         $renderer->renderToPage(
             'my',
