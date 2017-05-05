@@ -14,8 +14,9 @@
                 {{ name }}
                 {{# is_active }}
                     <button class="tlp-button-primary tlp-button-outline tlp-button-mini dashboard-edit-button"
-                            disabled
                             title="{{ edit_dashboard_title }}"
+                            id="edit-dashboard-button"
+                            data-target-modal-id="edit-dashboard-modal"
                     >
                         <i class="fa fa-pencil"></i>
                     </button>
@@ -44,5 +45,6 @@
 {{# user_dashboards }}
     {{# is_active }}
         {{> delete-dashboard-modal }}
+        {{> edit-dashboard-modal }}
     {{/ is_active }}
 {{/ user_dashboards }}

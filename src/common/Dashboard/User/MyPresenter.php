@@ -45,6 +45,7 @@ class MyPresenter
     public $delete_dashboard_label;
     public $edit_dashboard_label;
     public $delete_dashboard_title;
+    public $edit_dashboard_title;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -68,6 +69,10 @@ class MyPresenter
             'Delete dashboard'
         );
         $this->edit_dashboard_title  = dgettext(
+            'tuleap-core',
+            'Edit dashboard'
+        );
+        $this->edit_dashboard_label = dgettext(
             'tuleap-core',
             'Edit dashboard'
         );

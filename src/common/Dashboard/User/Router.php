@@ -60,6 +60,9 @@ class Router
             case 'delete-dashboard':
                 $this->user_dashboard_controller->deleteDashboard($request);
                 break;
+            case 'edit-dashboard':
+                $this->user_dashboard_controller->editDashboard($request);
+                break;
             default:
                 $this->user_dashboard_controller->display($request);
                 break;
