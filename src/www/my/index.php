@@ -21,11 +21,11 @@
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
-use Tuleap\My\Dashboards\Router;
-use Tuleap\My\Dashboards\User\Controller;
-use Tuleap\My\Dashboards\User\Dao;
-use Tuleap\My\Dashboards\User\Retriever;
-use Tuleap\My\Dashboards\User\Saver;
+use Tuleap\Dashboard\User\Router;
+use Tuleap\Dashboard\User\Controller;
+use Tuleap\Dashboard\User\Dao;
+use Tuleap\Dashboard\User\Retriever;
+use Tuleap\Dashboard\User\Saver;
 
 require_once('pre.php');
 require_once('my_utils.php');

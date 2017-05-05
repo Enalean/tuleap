@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Copyright (c) Enalean, 2017. All rights reserved
 *
@@ -18,11 +17,10 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/
 */
-namespace Tuleap\My\Dashboards;
+
+namespace Tuleap\Dashboard\User;
 
 use CSRFSynchronizerToken;
-use Tuleap\My\Dashboards\User\DashboardPresenter;
-use Tuleap\My\UserPresenter;
 
 class MyPresenter
 {

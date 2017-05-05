@@ -18,33 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\My\Dashboards\User;
+namespace Tuleap\Dashboard\User;
 
-class Dashboard
+use PFUser;
+
+class Saver
 {
-    private $id;
-    private $user_id;
-    private $name;
+    /**
+     * @var Dao
+     */
+    private $dao;
 
-    public function __construct($id, $user_id, $name)
+    public function __construct(Dao $dao)
     {
-        $this->id      = $id;
-        $this->user_id = $user_id;
-        $this->name    = $name;
+        $this->dao = $dao;
     }
 
-    public function getId()
+    /**
+     * @param PFUser $user
+     * @param $name
+     * @return bool
+     * @throws NameDashboardAlreadyExistsException
+     * @throws NameDashboardDoesNotExistException
+     */
+    public function save(PFUser $user, $name)
     {
-        return $this->id;
-    }
+        if (! $name) {
+            throw new NameDashboardDoesNotExistException();
+        }
 
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
+        if ($this->dao->searchByUserIdAndName($user, $name)->count() > 0) {
+            throw new NameDashboardAlreadyExistsException();
+        }
+        return $this->dao->save($user, $name);
     }
 }
