@@ -9,6 +9,27 @@
     font-size: 20px;
 }
 
-.user-dashboards a:nth-last-child(2) {
-    margin: 0 40px 0 0;
+#add-dashboard-button {
+    margin: 11px 0 11px $tlp-double-spacing;
+
+    &:first-child {
+        margin: 11px 0;
+    }
+}
+
+.dashboard-edit-button {
+    display: none;
+    margin: -5px 0 -5px $tlp-spacing;
+}
+
+.dashboard-delete-button {
+    display: none;
+    margin: -5px 0 -5px $tlp-half-spacing;
+}
+
+.user-dashboards > .tlp-tab-active:hover {
+    > .dashboard-edit-button,
+    > .dashboard-delete-button {
+        display: block;
+    }
 }

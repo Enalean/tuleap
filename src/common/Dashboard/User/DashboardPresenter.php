@@ -27,6 +27,7 @@ class DashboardPresenter
     public $id;
 
     public $is_active;
+    public $delete_confirm;
 
     public function __construct(Dashboard $dashboard, $is_active)
     {
@@ -35,5 +36,14 @@ class DashboardPresenter
         $this->name    = $dashboard->getName();
 
         $this->is_active = $is_active;
+
+        $this->delete_confirm  = sprintf(
+            dgettext(
+                'tuleap-core',
+                'You are about to delete the dashboard "%s".
+                This action is irreversible. Do you confirm this deletion?'
+            ),
+            $this->name
+        );
     }
 }

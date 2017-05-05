@@ -13,6 +13,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Cannot delete the requested dashboard."
+msgstr ""
+
 msgid "Close"
 msgstr ""
 
@@ -25,16 +28,25 @@ msgstr ""
 msgid "Dashboard has been successfully created."
 msgstr ""
 
+msgid "Dashboard has been successfully deleted."
+msgstr ""
+
 msgid "Dashboard name"
 msgstr ""
 
 msgid "Dashboard of the project"
 msgstr ""
 
+msgid "Delete dashboard"
+msgstr ""
+
 msgid "Documents"
 msgstr ""
 
 msgid "Don't forget to use tab/shift+tab to navigate in dropdown"
+msgstr ""
+
+msgid "Edit dashboard"
 msgstr ""
 
 msgid "Escape from input/textarea, close dropdown or modal"
@@ -143,4 +155,10 @@ msgid "Update successful"
 msgstr ""
 
 msgid "Wiki"
+msgstr ""
+
+#, php-format
+msgid ""
+"You are about to delete the dashboard \"%s\".\n"
+"                This action is irreversible. Do you confirm this deletion?"
 msgstr ""

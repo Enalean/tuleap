@@ -57,6 +57,9 @@ class Router
                     $GLOBALS['Response']->redirect('/my/');
                 }
                 break;
+            case 'delete-dashboard':
+                $this->user_dashboard_controller->deleteDashboard($request);
+                break;
             default:
                 $this->user_dashboard_controller->display($request);
                 break;

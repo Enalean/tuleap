@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Add dashboard"
@@ -27,6 +27,9 @@ msgstr "CVS"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Cannot delete the requested dashboard."
+msgstr "Impossible de supprimer le tableau de bord demandé."
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -39,11 +42,17 @@ msgstr "La création du tableau de bord a échouée."
 msgid "Dashboard has been successfully created."
 msgstr "Le tableau de bord a correctement été créé."
 
+msgid "Dashboard has been successfully deleted."
+msgstr "Le tableau de bord a correctement été supprimé."
+
 msgid "Dashboard name"
 msgstr "Nom du tableau de bord"
 
 msgid "Dashboard of the project"
 msgstr "Dashboard du projet"
+
+msgid "Delete dashboard"
+msgstr "Supprimer le tableau de bord"
 
 msgid "Documents"
 msgstr "Documents"
@@ -52,6 +61,9 @@ msgid "Don't forget to use tab/shift+tab to navigate in dropdown"
 msgstr ""
 "N'oubliez pas d'utiliser tab/shift+tab pour naviguer dans les menus "
 "déroulants"
+
+msgid "Edit dashboard"
+msgstr "Éditer le tableau de bord"
 
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
@@ -132,7 +144,7 @@ msgstr "Barre de service (projet)"
 msgid "The dashboard \"%s\" already exists."
 msgstr "Le tableau de bord \"%s\" existe déjà."
 
-#, fuzzy, php-format
+#, php-format
 msgid "The dashboard '%s' doesn't exist."
 msgstr "Le tableau de bord \"%s\" n’existe pas."
 
@@ -160,3 +172,11 @@ msgstr "Mis à jour avec succès"
 
 msgid "Wiki"
 msgstr "Wiki"
+
+#, php-format
+msgid ""
+"You are about to delete the dashboard \"%s\".\n"
+"                This action is irreversible. Do you confirm this deletion?"
+msgstr ""
+"Vous êtes sur le point de supprimer le tableau de bord \"%s\". Cette action "
+"est irréversible. Confirmez-vous cette suppression ?"
