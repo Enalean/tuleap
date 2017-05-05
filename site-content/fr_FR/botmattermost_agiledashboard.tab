@@ -5,6 +5,10 @@ plugin_botmattermost_agiledashboard	descriptor_name	Robot Mattermost Agile Dashb
 plugin_botmattermost_agiledashboard	alert_success_update	Changement(s) effectué(s) avec succès
 plugin_botmattermost_agiledashboard	alert_invalid_post	Erreur dans la requête : les informations renseignées sont invalides
 
+plugin_botmattermost_agiledashboard	alert_error_create_bot_notification	L'ajout du robot de notification pour le résumé des stand-up a échoué
+plugin_botmattermost_agiledashboard	alert_error_delete_bot_notification	La suppression du robot de notification pour le résumé des stand-up a échoué
+plugin_botmattermost_agiledashboard	alert_error_update_bot_notification	La mise à jour du robot de notification pour le résumé des stand-up a échoué
+
 plugin_botmattermost_agiledashboard	admin_notification_title	Notification dans Mattermost
 plugin_botmattermost_agiledashboard	admin_notification_description	Choix de robot(s) afin d'envoyer le résumé du stand-up dans Mattermost.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Heure d'envoie du rapport
@@ -26,3 +30,17 @@ plugin_botmattermost_agiledashboard	notification_builder_quick_access	Accès rap
 plugin_botmattermost_agiledashboard	notification_builder_artifact_title	Titre
 plugin_botmattermost_agiledashboard	notification_builder_artifact_status	Status
 plugin_botmattermost_agiledashboard	notification_builder_artifact_last_modification	Dernière modification
+
+plugin_botmattermost_agiledashboard	any_configured_notification	Il n'y a rien ici, commencez par configurer les notifications.
+
+plugin_botmattermost_agiledashboard	button_configure_notification	Configuration des notifications
+plugin_botmattermost_agiledashboard	button_confirm	Confirmer
+
+plugin_botmattermost_agiledashboard	modal_header_configure_notification	Configuration des notifications
+plugin_botmattermost_agiledashboard	modal_header_edit_configure_notification	Edition de la configuration des notifications
+plugin_botmattermost_agiledashboard	modal_header_delete_configure_notification	Suppression de la configuration des notifications
+plugin_botmattermost_agiledashboard	modal_delete_content	Cette suppression est irréversible. Veuillez confirmer la suppression de la configuration des notifications.
+
+plugin_botmattermost_agiledashboard	configuration_info_channels_handles	L'indentifiant du salon de discussion est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/monsalondediscussion<br>identifiant : monsalondediscussion
+plugin_botmattermost_agiledashboard	configuration_label_channels_handles	Liste des identifiants des salons de discussion
+plugin_botmattermost_agiledashboard	configuration_input_channels_handles	salon1, salon2, salon3

@@ -23,12 +23,13 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Dao;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
 use Tuleap\BotMattermostAgileDashboard\Plugin\PluginInfo;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostAgileDashboard\Controller;
-use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardFactory;
-use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardDao;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder;
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
@@ -84,6 +85,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
         $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
         if (strpos($_SERVER['REQUEST_URI'], $agiledashboard_plugin->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/timepicker.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/autocompleter.js"></script>';
         }
     }
 
@@ -108,8 +110,8 @@ class botmattermost_agiledashboardPlugin extends Plugin
         $logger = new BotMattermostLogger();
 
         $stand_up_notification_sender = new StandUpNotificationSender(
-            new BotAgileDashboardFactory(
-                new BotAgileDashboardDao,
+            new Factory(
+                new Dao,
                 new BotFactory(new BotDao()),
                 $logger
             ),
@@ -155,12 +157,13 @@ class botmattermost_agiledashboardPlugin extends Plugin
         return new Controller(
             $request,
             new CSRFSynchronizerToken(AGILEDASHBOARD_BASE_URL.'/?group_id='.$project_id.'&action=admin&pane=notification'),
-            new BotAgileDashboardFactory(
-                new BotAgileDashboardDao(),
+            new Factory(
+                new Dao(),
                 $bot_factory,
                 new BotMattermostLogger()
             ),
-            $bot_factory
+            $bot_factory,
+            new Validator($bot_factory)
         );
     }
 
@@ -173,7 +176,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
     {
         $request = $this->getRequest();
         if ($this->isAllowed($request->getProject()->getID())) {
-            $this->getController($request)->save();
+            $this->getController($request)->process();
         }
     }
 }

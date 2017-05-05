@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use ProjectManager;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\SenderServices\Sender;
-use Tuleap\BotMattermostAgileDashboard\BotAgileDashboard\BotAgileDashboardFactory;
+use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
 
 class StandUpNotificationSender
 {
@@ -36,7 +36,7 @@ class StandUpNotificationSender
     private $logger;
 
     public function __construct(
-        BotAgileDashboardFactory $bot_agiledashboard_factory,
+        Factory $bot_agiledashboard_factory,
         Sender $sender,
         StandUpNotificationBuilder $notification_builder,
         ProjectManager $project_manager,
@@ -56,14 +56,10 @@ class StandUpNotificationSender
             $projects_ids         = $this->getProjectsIdsFromAgileDashboardBots($agile_dashboard_bots);
 
             foreach ($projects_ids as $project_id) {
-                $bots    = $this->getBotsByProjectId($agile_dashboard_bots, $project_id);
-                $project = $this->project_manager->getProject($project_id);
-                $admins  = $project->getAdmins();
-                $text    = $this->notification_builder->buildNotificationText(
-                    $http_request,
-                    $admins[0],
-                    $project
-                );
+                $bot_assigned = $this->bot_agiledashboard_factory->getBotNotification($project_id);
+                $project      = $this->project_manager->getProject($project_id);
+                $admins       = $project->getAdmins();
+                $text         = $this->notification_builder->buildNotificationText($http_request, $admins[0], $project);
 
                 $this->logger->info('start stand up notification in project '.$project->getPublicName());
                 $this->logger->debug('project: #'.$project_id.' '.$project->getPublicName());
@@ -71,7 +67,7 @@ class StandUpNotificationSender
                     $this->logger->warn('No text');
                 }
 
-                $this->sender->pushNotifications($bots, $text);
+                $this->sender->pushNotification($bot_assigned->getBot(), $bot_assigned->getChannels(), $text);
             }
         } catch (BotNotFoundException $e) {
             $this->logger->error('', $e);
@@ -93,17 +89,5 @@ class StandUpNotificationSender
         }
 
         return $projects_ids;
-    }
-
-    private function getBotsByProjectId(array $agile_dashboard_bots, $project_id)
-    {
-        $bots = array();
-        foreach ($agile_dashboard_bots as $bot_agile_dashboard) {
-            if ($bot_agile_dashboard->getProjectId() === $project_id) {
-                $bots[] = $bot_agile_dashboard->getBot();
-            }
-        }
-
-        return $bots;
     }
 }
