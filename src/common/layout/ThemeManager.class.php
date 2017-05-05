@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -52,7 +52,9 @@ class ThemeManager
             }
         }
 
-        return new DivBasedTabbedLayout('/themes/common');
+        if (! IS_SCRIPT ) {
+            throw new Exception('No theme has been found. Do you have installed BurningParrot?');
+        }
     }
 
     private function isAllowedTheme(PFUser $current_user, $name)

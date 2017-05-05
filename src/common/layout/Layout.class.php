@@ -93,6 +93,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         // Constructor for parent class...
         parent::__construct($root);
 
+        $this->imgroot = $root . '/images/';
+
         $this->feeds       = array();
         $this->javascript  = array();
         $this->breadcrumbs = array();
@@ -1014,13 +1016,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $action_button .= '</form>';
         $action_button .= '</div>';
         return $action_button;
-    }
-
-    function _getTogglePlusForWidgets() {
-        return 'ic/toggle_plus.png';
-    }
-    function _getToggleMinusForWidgets() {
-        return 'ic/toggle_minus.png';
     }
 
     public function getDropdownPanel($id, $content) {
@@ -1956,11 +1951,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      */
     function searchBox() {
         echo "\t<CENTER>\n".$this->getSearchBox()."\t</CENTER>\n";
-    }
-
-    //diplaying search box in body
-    function bodySearchBox() {
-        $this->searchBox();
     }
 
 
