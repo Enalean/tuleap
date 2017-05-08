@@ -2126,19 +2126,6 @@ msgstr "JabberPresence"
 msgid "Simple jabber presence plugin"
 msgstr ""
 
-# lib/stdlib.php:207 lib/stdlib.php:215
-#: ../lib/plugin/LdapSearch.php:57
-msgid "LdapSearch"
-msgstr "LdapChercher"
-
-#: ../lib/plugin/LdapSearch.php:60
-msgid "Search an LDAP directory"
-msgstr ""
-
-#: ../lib/plugin/LdapSearch.php:83
-msgid "Failed to set LDAP protocol version to 3"
-msgstr ""
-
 #: ../lib/plugin/LikePages.php:32
 #: ../themes/Codendi-lite/templates/navbar.tmpl:33
 #: ../themes/Codendi/templates/navbar.tmpl:33

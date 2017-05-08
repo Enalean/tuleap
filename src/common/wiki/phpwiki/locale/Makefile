@@ -150,7 +150,6 @@ ${POT_FILE}: ../lib/plugin/IncludePages.php
 ${POT_FILE}: ../lib/plugin/IncludeSiteMap.php
 ${POT_FILE}: ../lib/plugin/InterWikiSearch.php
 ${POT_FILE}: ../lib/plugin/JabberPresence.php
-${POT_FILE}: ../lib/plugin/LdapSearch.php
 ${POT_FILE}: ../lib/plugin/LikePages.php
 ${POT_FILE}: ../lib/plugin/LinkDatabase.php
 ${POT_FILE}: ../lib/plugin/ListPages.php
