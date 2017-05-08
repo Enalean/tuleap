@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\SvnPermissionManager;
 use Tuleap\Svn\ViewVC\AccessHistorySaver;
-use Tuleap\Svn\ViewVC\ViewVCProxyFactory;
+use Tuleap\Svn\ViewVC\ViewVCProxy;
 
 class RepositoryDisplayController
 {
@@ -50,20 +50,14 @@ class RepositoryDisplayController
 
     public function __construct(
         RepositoryManager $repository_manager,
-        ProjectManager $project_manager,
         SvnPermissionManager $permissions_manager,
-        AccessHistorySaver $access_history_saver,
-        ViewVCProxyFactory $viewvc_proxy_factory,
+        ViewVCProxy $viewvc_proxy,
         EventManager $event_manager
     ) {
         $this->permissions_manager = $permissions_manager;
         $this->repository_manager  = $repository_manager;
-        $this->proxy               = $viewvc_proxy_factory->getViewVCProxy(
-            $repository_manager,
-            $project_manager,
-            $access_history_saver
-        );
-        $this->event_manager = $event_manager;
+        $this->proxy               = $viewvc_proxy;
+        $this->event_manager       = $event_manager;
     }
 
     public function displayRepository(ServiceSvn $service, HTTPRequest $request)

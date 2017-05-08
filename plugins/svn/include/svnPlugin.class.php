@@ -56,7 +56,7 @@ use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\Reference\Extractor;
-use Tuleap\Svn\ViewVC\ViewVCProxyFactory;
+use Tuleap\Svn\ViewVC\ViewVCProxy;
 use Tuleap\Svn\XMLImporter;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnAdmin;
@@ -66,7 +66,6 @@ use Tuleap\Svn\ViewVC\AccessHistorySaver;
 use Tuleap\Svn\ViewVC\AccessHistoryDao;
 use Tuleap\Svn\Logs\QueryBuilder;
 use Tuleap\Svn\XMLSvnExporter;
-use Tuleap\ViewVCVersionChecker;
 use Tuleap\Svn\Service\ServiceActivator;
 /**
  * SVN plugin
@@ -362,15 +361,6 @@ class SvnPlugin extends Plugin {
         return new User_ForgeUserGroupFactory(new UserGroupDao());
     }
 
-    /**
-     * @return ViewVCVersionChecker
-     */
-    private function getViewVCVersionChecker()
-    {
-        return new ViewVCVersionChecker();
-    }
-
-
     public function process(HTTPRequest $request)
     {
         $project = $request->getProject();
@@ -428,10 +418,6 @@ class SvnPlugin extends Plugin {
 
     public function cssFile($params) {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $viewvc_version_checker = $this->getViewVCVersionChecker();
-            if ($viewvc_version_checker->isTuleapViewVCInstalled()) {
-                echo '<link rel="stylesheet" type="text/css" href="/viewvc-static/styles.css" />';
-            }
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
@@ -514,10 +500,12 @@ class SvnPlugin extends Plugin {
             ),
             new RepositoryDisplayController(
                 $repository_manager,
-                ProjectManager::instance(),
                 $permissions_manager,
-                new AccessHistorySaver(new AccessHistoryDao()),
-                new ViewVCProxyFactory($this->getViewVCVersionChecker()),
+                new ViewVCProxy(
+                    $repository_manager,
+                    ProjectManager::instance(),
+                    new AccessHistorySaver(new AccessHistoryDao())
+                ),
                 EventManager::instance()
             ),
             new ImmutableTagController(
