@@ -74,7 +74,12 @@ if ($request->isPost() && $request->valid($vFunc)) {
     case 'rmuser':
         // remove a user from this portal
         $rm_id        = $request->getValidated('rm_id', 'uint', 0);
-        $user_remover = new \Tuleap\Project\UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false));
+        $user_remover = new \Tuleap\Project\UserRemover(
+            ProjectManager::instance(),
+            EventManager::instance(),
+            new ArtifactTypeFactory(false),
+            new \Tuleap\Project\UserRemoverDao()
+        );
         $user_remover->removeUserFromProject($group_id, $rm_id);
         break;
 

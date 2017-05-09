@@ -23,6 +23,7 @@ require_once 'www/include/account.php';
 require_once 'www/include/utils_soap.php';
 
 use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 
 /**
  * Wrapper for project related SOAP methods
@@ -274,8 +275,14 @@ class Project_SOAPServer {
     {
         $project      = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         $userToAdd    = $this->getProjectMember($project, $userLogin);
-        $user_removal = new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false));
-        $result       = $user_removal->removeUserFromProject($groupId, $userToAdd->getId());
+        $user_removal = new UserRemover(
+            ProjectManager::instance(),
+            EventManager::instance(),
+            new ArtifactTypeFactory(false),
+            new UserRemoverDao()
+        );
+
+        $result = $user_removal->removeUserFromProject($groupId, $userToAdd->getId());
 
         return $this->returnFeedbackToSoapFault($result);
     }

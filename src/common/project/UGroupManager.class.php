@@ -21,6 +21,7 @@
 
 use Tuleap\User\UserGroup\NameTranslator;
 use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 
 require_once('www/project/admin/ugroup_utils.php');
 require_once('www/include/account.php');
@@ -457,7 +458,8 @@ class UGroupManager {
         return new UserRemover(
             ProjectManager::instance(),
             $this->getEventManager(),
-            new ArtifactTypeFactory(false)
+            new ArtifactTypeFactory(false),
+            new UserRemoverDao()
         );
     }
 }
