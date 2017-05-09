@@ -22,6 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Layout\ProjectSidebarBuilder;
 
 /**
  *
@@ -57,7 +58,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         'Trackers' => 'ic/tracker20w.png'
         );
 
-    const DEFAULT_SERVICE_ICON = 'tuleap-services-angle-double-right';
     const INCLUDE_FAT_COMBINED = 'include_fat_combined';
 
     /**
@@ -1609,183 +1609,14 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             print "\t".'<A class="menus" href="'.$link.'">'.$title.'</A> &nbsp;<img src="'.util_get_image_theme("point1.png").'" alt=" " width="7" height="7"><br>';
     }
 
-        /*!     @function tab_entry
-                @abstract Prints out the a themed tab, used by project_tabs
-                @param  $url is the URL to link to
-            $icon is the image to use (if the theme uses it) NOT USED
-            $title is the title to use in the link tags
-            $selected is a boolean to test if the tab is 'selected'
-                @result text - echos HTML to the screen directly
-        */
-    function tab_entry($url, $icon='', $title='Home', $selected=0, $description=null) {
-            print '
-                <A ';
-            if ($selected){
-                    print 'class=tabselect ';
-            } else {
-                    print 'class=tabs ';
-            }
-                if (substr($url, 0, 1)!="/") {
-                    // Absolute link -> open new window on click
-                    print "target=\"_blank\" rel=\"noreferrer\" ";
-                }
-                if ($description) {
-                    print "title=\"$description\" ";
-                }
-            print 'href="'. $url .'">' . $title . '</A>&nbsp;|&nbsp;';
-    }
-
-    /*!     @function project_tabs
-            @abstract Prints out the project tabs, contained here in case
-            we want to allow it to be overriden
-            @param     $toptab is the tab currently selected ('short_name' of the service)
-            $group is the group we should look up get title info
-            @result text - echos HTML to the screen directly
-    */
-    function project_tabs($toptab,$group_id) {
-
-      global $sys_default_domain,$Language;
-
-            // get group info using the common result set
-            $pm = ProjectManager::instance();
-            $project=$pm->getProject($group_id);
-            if ($project->isError()) {
-                //wasn't found or some other problem
-                return;
-            }
-
-            print '<H2>'. $project->getPublicName() .' - '. $project->getServiceLabel($toptab).'</H2>';
-
-        print '
-        <P>
-    <HR SIZE="1" NoShade>';
-            $tabs = $this->_getProjectTabs($toptab, $project);
-            foreach($tabs as $tab) {
-                $this->tab_entry($tab['link'],$tab['icon'],$tab['label'],$tab['enabled'],$tab['description']);
-            }
-
-            print '<HR SIZE="1" NoShade><P>';
-    }
-
-    function _getProjectTabs($toptab,&$project) {
-        global $sys_default_domain;
-        $pm = ProjectManager::instance();
-        $tabs = array();
-        $group_id = $project->getGroupId();
-
-        $user = UserManager::instance()->getCurrentUser();
-
-        if ($this->restrictedMemberIsNotProjectMember($user, $group_id)) {
-            $allowed_services = array('summary');
-            $this->getEventManager()->processEvent(
-                Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED,
-                array(
-                    'allowed_services' => &$allowed_services,
-                )
-            );
-        }
-
-        foreach ($project->getServicesData() as $short_name => $service_data) {
-               if ((string)$short_name == "admin") {
-                // for the admin service, we will check if the user is allowed to use the service
-                // it means : 1) to be a super user, or
-                //            2) to be project admin
-                if (!user_is_super_user()) {
-                    if (!user_isloggedin()) {
-                        continue;   // we don't include the service in the $tabs
-                    } else {
-                        if (!user_ismember($group_id, 'A')) {
-                            continue;   // we don't include the service in the $tabs
-                        }
-                    }
-                }
-            }
-
-             $permissions_overrider = PermissionsOverrider_PermissionsOverriderManager::instance();
-
-            if (! $this->isProjectSuperPublic($group_id)
-                    && $this->restrictedMemberIsNotProjectMember($user, $group_id)
-                    && ! $permissions_overrider->doesOverriderAllowUserToAccessProject($user, $project)
-            ) {
-                if (! in_array($short_name, $allowed_services)) {
-                    continue;
-                }
-            }
-
-            if (!$service_data['is_used']) continue;
-            if (!$service_data['is_active']) continue;
-            $hp = Codendi_HTMLPurifier::instance();
-            // Get URL, and eval variables
-            //$project->services[$short_name]->getUrl(); <- to use when service will be fully served by satellite
-            if ($service_data['is_in_iframe']) {
-                $link = '/service/?group_id='. $group_id .'&amp;id='. $service_data['service_id'];
-            } else {
-                $link = $hp->purify($service_data['link']);
-            }
-            if ($group_id==100) {
-                if (strstr($link,'$projectname')) {
-                    // NOTE: if you change link variables here, change them also in src/common/project/RegisterProjectStep_Confirmation.class.php and src/www/project/admin/servicebar.php
-                    // Don't check project name if not needed.
-                    // When it is done here, the service bar will not appear updated on the current page
-                    $link=str_replace('$projectname',$pm->getProject($group_id)->getUnixName(),$link);
-                }
-                $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
-                if ($GLOBALS['sys_force_ssl']) {
-                    $sys_default_protocol='https';
-                } else { $sys_default_protocol='http'; }
-                $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
-                $link=str_replace('$group_id',$group_id,$link);
-            }
-            $enabled = (is_numeric($toptab) && $toptab == $service_data['service_id']) || ($short_name && ($toptab == $short_name));
-            if ($short_name == 'summary') {
-
-                $label = '<span>';
-                if (ForgeConfig::get('sys_display_project_privacy_in_service_bar')) {
-                    // Add a default tab to explain project privacy
-                    if ($project->isPublic()) {
-                        $privacy = 'public';
-                    } else {
-                        $privacy = 'private';
-                    }
-                    $privacy_text = $GLOBALS['Language']->getText('project_privacy', 'tooltip_' . $this->getProjectPrivacy($project));
-                    $label .= '<span class="project-title-container project_privacy_'.$privacy.'" data-content="'. $privacy_text .'" data-placement="bottom">[';
-                    $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
-                    $label .= ']</span>';
-
-                    $label .= '&nbsp;';
-                }
-                $label .= $hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;</span>';
-            } else {
-                $label  = '<span title="'.$hp->purify($service_data['description']).'">';
-                $label .= $hp->purify($service_data['label']).'</span>';
-            }
-
-            $name = $hp->purify($service_data['label']);
-
-            $icon = $this->getServiceIcon($short_name);
-            if (isset($service_data['icon'])) {
-                $icon = $service_data['icon'];
-            }
-            $tabs[] = array('link'        => $link,
-                            'icon'        => $icon,
-                            'name'        => $name,
-                            'label'       => $label,
-                            'enabled'     => $enabled,
-                            'description' => $hp->purify($service_data['description']),
-                            'id'          => $hp->purify('sidebar-'.$short_name)
-                    );
-        }
-        return $tabs;
-    }
-
-    private function restrictedMemberIsNotProjectMember(PFUser $user, $project_id) {
-        return $user->isRestricted() && ! $user->isMember($project_id);
-    }
-
-    private function isProjectSuperPublic($project_id) {
-        $projects = ForgeConfig::getSuperPublicProjectsFromRestrictedFile();
-
-        return in_array($project_id, $projects);
+    protected function getProjectTabs($params, $project) {
+        $builder = new ProjectSidebarBuilder(
+            EventManager::instance(),
+            ProjectManager::instance(),
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            $this->purifier
+        );
+        return $builder->getSidebar($this->getUser(), $params['toptab'], $project);
     }
 
     protected function getProjectPrivacy(Project $project) {
@@ -1803,10 +1634,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
 
         return $privacy;
-    }
-
-    private function getServiceIcon($service_name) {
-        return self::DEFAULT_SERVICE_ICON . ' tuleap-services-' . $service_name;
     }
 
     protected function getSearchEntries() {

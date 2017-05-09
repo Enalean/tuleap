@@ -1,6 +1,6 @@
 <?php
 /*
-* Copyright (c) Enalean 2015. All Rights Reserved.
+* Copyright (c) Enalean 2015 - 2017. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -51,7 +51,7 @@ class PermissionsOverrider_PermissionsOverriderManager {
     /**
      * The singleton method
      *
-     * @return EventManager
+     * @return PermissionsOverrider_PermissionsOverriderManager
      */
     public static function instance() {
         if (! self::$instance) {
