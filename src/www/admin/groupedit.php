@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
-use Tuleap\Project\Admin\ProjectAccessPresenter;
+use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 
 require_once('pre.php');

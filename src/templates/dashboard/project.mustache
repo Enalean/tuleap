@@ -1,5 +1,5 @@
 <div class="tlp-framed-vertically">
-    <div class="tlp-framed-horizontally">
+    <div class="tlp-framed-horizontally dashboard-project-header">
         <h1 class="dashboard-project-title">
             {{# has_parent }}
                 <small class="dashboard-project-title-parent">{{ parent_name }}</small>
@@ -9,5 +9,24 @@
             {{/ has_parent }}
             <span class="dashboard-project-title-name">{{ name }}</span>
         </h1>
+        {{# access }}
+            <span
+                class="tlp-badge-primary
+                    dashboard-project-header-access
+                    {{# is_public_incl_restricted }}
+                        tlp-tooltip tlp-tooltip-bottom
+                    {{/ is_public_incl_restricted }}
+                "
+                {{# is_public_incl_restricted }}
+                    data-tlp-tooltip="{{ incl_restricted_label }}"
+                {{/ is_public_incl_restricted }}
+            >
+                <i class="tlp-badge-icon fa
+                    {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
+                    {{# is_open }}fa-unlock-alt{{/ is_open }}
+                    {{# is_closed }}fa-lock{{/ is_closed }}"
+                ></i> {{ access }}
+            </span>
+        {{/ access }}
     </div>
 </div>

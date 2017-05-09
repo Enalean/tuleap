@@ -22,16 +22,20 @@ namespace Tuleap\Dashboard;
 
 use Project;
 use ProjectManager;
+use Tuleap\Project\ProjectAccessPresenter;
 
 class ProjectPresenter
 {
     public $name;
     public $parent_name = '';
     public $has_parent  = false;
+    public $access;
 
     public function __construct(Project $project, ProjectManager $project_manager)
     {
-        $this->name = $project->getUnconvertedPublicName();
+        $this->name   = $project->getUnconvertedPublicName();
+        $this->access = new ProjectAccessPresenter($project->getAccess());
+
         $parent_project = $project_manager->getParentProject($project->getID());
         if ($parent_project) {
             $this->has_parent  = true;

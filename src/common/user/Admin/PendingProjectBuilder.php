@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ use DateHelper;
 use Project;
 use ProjectManager;
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
-use Tuleap\Project\Admin\ProjectAccessPresenter;
+use Tuleap\Project\ProjectAccessPresenter;
 use UserManager;
 
 class PendingProjectBuilder
