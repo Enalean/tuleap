@@ -50,11 +50,17 @@ class BurningParrotTheme extends Layout
     /** @var HTTPRequest */
     private $request;
 
+    private $show_sidebar = false;
+
+    /** @var EventManager */
+    private $event_manager;
+
     public function __construct($root, PFUser $user)
     {
         parent::__construct($root);
         $this->user            = $user;
         $this->project_manager = ProjectManager::instance();
+        $this->event_manager   = EventManager::instance();
         $this->request         = HTTPRequest::instance();
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $this->includeFooterJavascriptFile('/themes/common/tlp/dist/tlp.' . $user->getLocale() . '.min.js');
@@ -96,6 +102,19 @@ class BurningParrotTheme extends Layout
         $this->renderer->renderToPage('header', $header_presenter);
     }
 
+    public function displayContactPage()
+    {
+        echo "<h2>" . $GLOBALS['Language']->getText('contact', 'title') . "</h2>";
+
+        include($GLOBALS['Language']->getContent('contact/contact'));
+    }
+
+    public function displayHelpPage()
+    {
+        $this->event_manager->processEvent('site_help', null);
+        include($GLOBALS['Language']->getContent('help/site'));
+    }
+
     private function getArrayOfClassnamesForBodyTag($params, $sidebar)
     {
         $body_classes = array();
@@ -133,6 +152,7 @@ class BurningParrotTheme extends Layout
 
         $footer = new FooterPresenter(
             $this->javascript_in_footer,
+            $this->canShowFooter($params),
             $this->getTuleapVersion()
         );
         $this->renderer->renderToPage('footer', $footer);
@@ -140,6 +160,28 @@ class BurningParrotTheme extends Layout
         if ($this->isInDebugMode()) {
             $this->showDebugInfo();
         }
+    }
+
+    /**
+     * Only show the footer if the sidebar is not present. The sidebar is used
+     * for project navigation.
+     * Note: there is an ugly dependency on the page content being rendered first.
+     * Although this is the case, it's worth bearing in mind when refactoring.
+     *
+     * @param array $params
+     * @return boolean
+     */
+    private function canShowFooter($params)
+    {
+        if (! empty($params['without_content'])) {
+            return false;
+        }
+
+        if (empty($params['group']) && ! $this->show_sidebar) {
+            return true;
+        }
+
+        return false;
     }
 
     public function displayStaticWidget(Widget_Static $widget)
@@ -201,10 +243,11 @@ class BurningParrotTheme extends Layout
     private function getSidebarFromParams(array $params)
     {
         if (isset($params['sidebar'])) {
+            $this->show_sidebar = true;
             return $params['sidebar'];
         } else if (! empty($params['group'])) {
             $project = $this->project_manager->getProject($params['group']);
-
+            $this->show_sidebar = true;
             return $this->getSidebarPresenterForProject($project, $params);
         }
 

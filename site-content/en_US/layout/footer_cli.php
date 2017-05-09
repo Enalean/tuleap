@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-?><h3>API</h3>
-<ul class="unstyled">
-    <li><?= $GLOBALS['sys_name']?> provides a <a href="/help/api.php">REST&nbsp;API </a>.
-    </li>
-</ul>
+?>
+<h3 class="footer-section-title">API</h3>
+<p class="footer-paragraph"><?= $GLOBALS['sys_name']?> provides a <a href="/help/api.php">REST&nbsp;API</a>.</p>

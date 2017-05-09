@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 ?>
-<h3>A propos de Tuleap</h3>
-Tuleap est la première suite ALM d'Entreprise 100% Libre utilisée par les plus grandes entreprises et start-up innovantes. Plus d'infos sur <a href="https://www.tuleap.org" target="_blank" rel="noreferrer">www.tuleap.org</a>.
-<div style="margin-top: 10px">
-    <a href="https://twitter.com/TuleapOpenALM" target="_blank" rel="noreferrer">Suivre @TuleapOpenALM</a>
-    <br><a href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank" rel="noreferrer">Rejoindre Tuleap sur LinkedIn</a>
-</div>
-<?php
-?>
+<h3 class="footer-section-title">Contact</h3>
+<p class="footer-paragraph">
+    <a class="footer-link" href="/contact.php"><i class="fa fa-fw fa-envelope"></i> Contactez-nous</a>
+    <br>
+    <a class="footer-link" href="https://twitter.com/TuleapOpenALM" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-twitter"></i> @TuleapOpenALM</a>
+    <br>
+    <a class="footer-link" href="https://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-linkedin"></i> Tuleap Community</a>
+</p>

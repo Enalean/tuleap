@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-?><h3>About</h3>
-<ul class="unstyled">
-    <li><?= $GLOBALS['Language']->getText('global','powered_by'); ?> version <?= $version ?>.</li>
-    <li><?= $GLOBALS['Language']->getText('global','copyright'); ?>.</li>
-</ul>
-<?php
 ?>
+<h3 class="footer-section-title">Tuleap</h3>
+<p class="footer-paragraph">
+    Tuleap, 100% open source agile and software development tool. <a href="https://www.tuleap.org" target="_blank" rel="noreferrer">www.tuleap.org</a>.
+</p>
+<p class="footer-paragraph">
+    <?= $GLOBALS['Language']->getText('global', 'powered_by'); ?> version <?= $version ?>
+    <br><?= $GLOBALS['Language']->getText('global', 'copyright'); ?>.
+</p>

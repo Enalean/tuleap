@@ -109,7 +109,7 @@ class UserDashboardController
 
         $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/dashboards/dashboard-modals.js');
         $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/dashboards/dashboard-dropdowns.js');
-        $GLOBALS['Response']->footer(array());
+        $GLOBALS['Response']->footer(array('without_content' => true));
     }
 
     /**

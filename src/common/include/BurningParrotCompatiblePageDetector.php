@@ -46,7 +46,9 @@ class BurningParrotCompatiblePageDetector
 
         return $this->isInSiteAdmin($current_user)
             || $this->isInDashboard()
-            || $this->isInHomepage();
+            || $this->isInHomepage()
+            || $this->isInContact()
+            || $this->isInHelp();
     }
 
     public function isInSiteAdmin(PFUser $current_user)
@@ -62,12 +64,13 @@ class BurningParrotCompatiblePageDetector
         $uri = $_SERVER['REQUEST_URI'];
 
         $is_in_site_admin = $is_in_site_admin ||
-        (
             (
-                strpos($uri, '/admin/') === 0 ||
-                strpos($uri, '/tracker/admin/restore.php') === 0
-            ) && strpos($uri, '/admin/register_admin.php') !== 0
-        );
+                (
+                    strpos($uri, '/admin/') === 0 ||
+                    strpos($uri, '/tracker/admin/restore.php') === 0
+                ) &&
+                strpos($uri, '/admin/register_admin.php') !== 0
+            );
 
         return $current_user->isSuperUser() && $is_in_site_admin;
     }
@@ -88,5 +91,15 @@ class BurningParrotCompatiblePageDetector
     {
         return $_SERVER['REQUEST_URI'] === '/'
             && $this->homepage_dao->isStandardHomepageUsed();
+    }
+
+    private function isInContact()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/contact.php') === 0;
+    }
+
+    private function isInHelp()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/help/') === 0;
     }
 }
