@@ -132,6 +132,7 @@ class Controller
                     'Dashboard has been successfully created.'
                 )
             );
+            $this->redirectToDashboard($dashboard_id);
         } catch (NameDashboardAlreadyExistsException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
@@ -161,7 +162,7 @@ class Controller
             );
         }
 
-        return $dashboard_id;
+        $this->redirectToDefaultDashboard();
     }
 
     /**
