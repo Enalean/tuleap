@@ -27,10 +27,11 @@ define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
  * The trackers from a project have been duplicated in another project
  *
  * Parameters:
- * 'tracker_mapping' => The mapping between source and target project trackers
- * 'field_mapping'   => The mapping between source and target fields
- * 'group_id'        => The id of the target project
- * 'ugroups_mapping' => The mapping between source and target ugroups
+ * 'tracker_mapping'   => The mapping between source and target project trackers
+ * 'field_mapping'     => The mapping between source and target fields
+ * 'group_id'          => The id of the target project
+ * 'ugroups_mapping'   => The mapping between source and target ugroups
+ * 'source_project_id' => The id of the source project
  *
  * No expected results
  */
