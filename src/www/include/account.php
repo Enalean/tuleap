@@ -132,65 +132,6 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
     return false;
 }
 
-/**
- * Remove a user from a project
- *
- * @param Integer $groupId      Project id
- * @param Integer $userId       User id
- * @param Boolean $adminAction  Default value set to true, manage the displayed message according to the person that asked for the action (admin/self remove)
- */
-function account_remove_user_from_group($groupId, $userId, $adminAction = true) {
-    $pm = ProjectManager::instance();
-    $res=db_query("DELETE FROM user_group WHERE group_id='$groupId' AND user_id='$userId' AND admin_flags <> 'A'");
-    if (!$res || db_affected_rows($res) < 1) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','user_not_removed'));
-    } else {
-        // Raise an event
-        $em = EventManager::instance();
-        $em->processEvent('project_admin_remove_user', array(
-                'group_id' => $groupId,
-                'user_id' => $userId
-        ));
-
-        //
-        //  get the Group object
-        //
-        $group = $pm->getProject($groupId);
-        if (!$group || !is_object($group) || $group->isError()) {
-            exit_no_group();
-        }
-        $atf = new ArtifactTypeFactory($group);
-        if (!$group || !is_object($group) || $group->isError()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','not_get_atf'));
-        }
-
-        // Get the artfact type list
-        $at_arr = $atf->getArtifactTypes();
-
-        if ($at_arr && count($at_arr) > 0) {
-            for ($j = 0; $j < count($at_arr); $j++) {
-                if ( !$at_arr[$j]->deleteUser($userId) ) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','del_tracker_perm_fail',$at_arr[$j]->getName()));
-                }
-            }
-        }
-
-        // Remove user from ugroups attached to this project
-        if (!ugroup_delete_user_from_project_ugroups($groupId,$userId)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index','del_user_from_ug_fail'));
-        }
-        $name = user_getname($userId);
-        if ($adminAction) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','user_removed').' ('.$name.')');
-        } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index','self_user_remove').' ('.$group->getPublicName().')');
-        }
-        group_add_history ('removed_user',user_getname($userId)." ($userId)",$groupId);
-        return true;
-    }
-    return false;
-}
-
 // Generate a valid Unix login name from the email address.
 function account_make_login_from_email($email) {
     $pattern = "/^(.*)@.*$/";

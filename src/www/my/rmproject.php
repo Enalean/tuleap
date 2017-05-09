@@ -35,9 +35,9 @@ if (user_isloggedin()) {
         exit_no_group();
     }
 
-    $user_removal = new \Tuleap\Project\UserRemover();
+    $user_remover = new \Tuleap\Project\UserRemover(ProjectManager::instance(), EventManager::instance());
     //Process MEMBERSHIP_DELETE event
-    $user_removal->removeUserFromProject($group_id,$user_id, false);
+    $user_remover->removeUserFromProject($group_id,$user_id, false);
 
 	/********* mail the changes so the admins know what happened *********/
 	$res_admin = db_query("SELECT user.user_id AS user_id, user.email AS email, user.user_name AS user_name FROM user,user_group "

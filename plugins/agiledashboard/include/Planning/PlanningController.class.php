@@ -404,7 +404,7 @@ class Planning_Controller extends MVC2_PluginController {
                 new FRSPermissionDao(),
                 new UGroupDao()
             ),
-            new UserRemover()
+            new UserRemover(ProjectManager::instance(), EventManager::instance())
         );
 
         try {

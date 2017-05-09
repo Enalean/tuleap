@@ -23,6 +23,7 @@ use Tuleap\User\UserGroup\NameTranslator;
 use Tuleap\Project\UserRemover;
 
 require_once('www/project/admin/ugroup_utils.php');
+require_once('www/include/account.php');
 
 class UGroupManager {
 
@@ -442,10 +443,20 @@ class UGroupManager {
 
     private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user) {
         if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
-            $user_removal = new UserRemover();
-            return $user_removal->removeUserFromProject($user_group->getProjectId(), $user->getId());
+            return $this->getUserRemover()->removeUserFromProject($user_group->getProjectId(), $user->getId());
         }
 
         return $user_group->removeUser($user);
+    }
+
+    /**
+     * @return UserRemover
+     */
+    private function getUserRemover()
+    {
+        return new UserRemover(
+            ProjectManager::instance(),
+            $this->getEventManager()
+        );
     }
 }

@@ -274,7 +274,7 @@ class Project_SOAPServer {
     {
         $project      = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         $userToAdd    = $this->getProjectMember($project, $userLogin);
-        $user_removal = new UserRemover();
+        $user_removal = new UserRemover(ProjectManager::instance(), EventManager::instance());
         $result       = $user_removal->removeUserFromProject($groupId, $userToAdd->getId());
 
         return $this->returnFeedbackToSoapFault($result);
