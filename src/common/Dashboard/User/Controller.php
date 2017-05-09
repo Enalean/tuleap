@@ -42,17 +42,23 @@ class Controller
      */
     private $saver;
     private $title;
+    /**
+     * @var Deletor
+     */
+    private $deletor;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         Retriever $retriever,
-        Saver $saver
+        Saver $saver,
+        Deletor $deletor
     ) {
         $this->csrf      = $csrf;
         $this->title     = $title;
         $this->retriever = $retriever;
         $this->saver     = $saver;
+        $this->deletor   = $deletor;
     }
 
     /**
@@ -81,7 +87,7 @@ class Controller
 
         $GLOBALS['Response']->header(array('title' => $this->title));
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('tuleap_dir'). '/src/templates/dashboard'
+            ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
         );
         $renderer->renderToPage(
             'my',
@@ -95,7 +101,7 @@ class Controller
             )
         );
 
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/dashboards/new-dashboard-modal.js');
+        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/dashboards/dashboard-modals.js');
         $GLOBALS['Response']->footer(array());
     }
 
@@ -103,7 +109,7 @@ class Controller
      * @param HttpRequest $request
      * @return integer|null
      */
-    public function createDashboard(HttpRequest $request)
+    public function createDashboard(HTTPRequest $request)
     {
         $this->csrf->check();
 
@@ -148,6 +154,7 @@ class Controller
                 )
             );
         }
+
         return $dashboard_id;
     }
 
@@ -185,6 +192,41 @@ class Controller
                 return true;
             }
         }
+
         return false;
+    }
+
+    public function deleteDashboard(HTTPRequest $request)
+    {
+        $this->csrf->check();
+
+        $current_user = $request->getCurrentUser();
+        $dashboard_id = $request->get('dashboard-id');
+
+        try {
+            $this->deletor->delete($current_user, $dashboard_id);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext(
+                    'tuleap-core',
+                    'Dashboard has been successfully deleted.'
+                )
+            );
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'Cannot delete the requested dashboard.'
+                )
+            );
+        }
+
+        $this->redirectToDefaultDashboard();
+    }
+
+    private function redirectToDefaultDashboard()
+    {
+        $GLOBALS['Response']->redirect('/my/');
     }
 }

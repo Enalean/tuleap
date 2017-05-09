@@ -21,6 +21,7 @@
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\Dashboard\User\Deletor;
 use Tuleap\Dashboard\User\Router;
 use Tuleap\Dashboard\User\Controller;
 use Tuleap\Dashboard\User\Dao;
@@ -47,12 +48,15 @@ $title = $Language->getText(
 $user_dashboard_dao = new Dao();
 $router             = new Router(
     new Controller(
-        new CSRFSynchronizerToken('/dashboards/'),
+        new CSRFSynchronizerToken('/my/'),
         $title,
         new Retriever(
             $user_dashboard_dao
         ),
         new Saver(
+            $user_dashboard_dao
+        ),
+        new Deletor(
             $user_dashboard_dao
         )
     )

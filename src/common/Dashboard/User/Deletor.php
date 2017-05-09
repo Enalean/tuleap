@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -10,23 +11,31 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-(function () {
-    var modal_add_dashboard = document.getElementById('add-dashboard');
+namespace Tuleap\Dashboard\User;
 
-    if (! modal_add_dashboard) {
-        return;
+use PFUser;
+
+class Deletor
+{
+    /**
+     * @var Dao
+     */
+    private $dao;
+
+    public function __construct(Dao $dao)
+    {
+        $this->dao = $dao;
     }
 
-    var modal_add_dashboard_content = tlp.modal(modal_add_dashboard);
-
-    document.getElementById('add-dashboard-button').addEventListener('click', function () {
-        modal_add_dashboard_content.toggle();
-    });
-} ());
+    public function delete(PFUser $user, $dashboard_id)
+    {
+        $this->dao->delete($user->getId(), $dashboard_id);
+    }
+}

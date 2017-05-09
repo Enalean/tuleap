@@ -42,6 +42,9 @@ class MyPresenter
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
+    public $delete_dashboard_label;
+    public $edit_dashboard_label;
+    public $delete_dashboard_title;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -55,6 +58,18 @@ class MyPresenter
         $this->add_dashboard_label  = dgettext(
             'tuleap-core',
             'Add dashboard'
+        );
+        $this->delete_dashboard_title  = dgettext(
+            'tuleap-core',
+            'Delete dashboard'
+        );
+        $this->delete_dashboard_label  = dgettext(
+            'tuleap-core',
+            'Delete dashboard'
+        );
+        $this->edit_dashboard_title  = dgettext(
+            'tuleap-core',
+            'Edit dashboard'
         );
         $this->dashboard_name_label = dgettext(
             'tuleap-core',

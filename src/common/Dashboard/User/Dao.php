@@ -71,4 +71,17 @@ class Dao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function delete($user_id, $dashboard_id)
+    {
+        $user_id      = $this->da->escapeInt($user_id);
+        $dashboard_id = $this->da->escapeInt($dashboard_id);
+
+        $sql = "DELETE FROM user_dashboards WHERE user_id = $user_id AND id = $dashboard_id";
+
+        $this->update($sql);
+        if ($this->da->affectedRows() === 0) {
+            throw new \DataAccessException();
+        }
+    }
 }
