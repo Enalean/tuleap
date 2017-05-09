@@ -8,38 +8,55 @@
 
         </div>
     {{/ user_presenter }}
-    <nav class="tlp-tabs user-dashboards">
-        {{# user_dashboards }}
-            <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="?dashboard_id={{ id }}">
-                {{ name }}
-                {{# is_active }}
-                    <button class="tlp-button-primary tlp-button-outline tlp-button-mini dashboard-edit-button"
-                            title="{{ edit_dashboard_title }}"
-                            id="edit-dashboard-button"
-                            data-target-modal-id="edit-dashboard-modal"
-                    >
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                    <button class="tlp-button-danger tlp-button-outline tlp-button-mini dashboard-delete-button"
-                            title="{{ delete_dashboard_title }}"
-                            id="delete-dashboard-button"
-                            data-target-modal-id="delete-dashboard-modal"
-                    >
-                        <i class="fa fa-trash-o"></i>
-                    </button>
-                {{/ is_active }}
+    {{# has_dashboard }}
+        <nav class="tlp-tabs user-dashboards">
+            {{# user_dashboards }}
+                <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="?dashboard_id={{ id }}">
+                    {{ name }}
+                    {{# is_active }}
+                        <button class="tlp-button-primary tlp-button-outline tlp-button-mini dashboard-edit-button"
+                                title="{{ edit_dashboard_title }}"
+                                id="edit-dashboard-button"
+                                data-target-modal-id="edit-dashboard-modal"
+                        >
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        <button class="tlp-button-danger tlp-button-outline tlp-button-mini dashboard-delete-button"
+                                title="{{ delete_dashboard_title }}"
+                                id="delete-dashboard-button"
+                                data-target-modal-id="delete-dashboard-modal"
+                        >
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    {{/ is_active }}
+                </a>
+            {{/ user_dashboards }}
+            <a href="javascript:;"
+               id="add-dashboard-button"
+               class="tlp-button-primary tlp-button-mini tlp-button-outline"
+               data-target-modal-id="add-dashboard"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i>
+                {{ add_dashboard_label }}
             </a>
-        {{/ user_dashboards }}
-        <a href="javascript:;"
-           id="add-dashboard-button"
-           class="tlp-button-primary tlp-button-mini tlp-button-outline"
-           data-target-modal-id="add-dashboard"
+        </nav>
+    {{/ has_dashboard }}
+</div>
+
+{{^ has_dashboard }}
+    <div class="empty-page">
+        <p class="empty-page-text">{{ no_dashboard_label }}</p>
+        <button
+            type="button"
+            id="add-dashboard-button"
+            class="tlp-button-primary tlp-button-large"
+            data-target-modal-id="add-dashboard"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             {{ add_dashboard_label }}
-        </a>
-    </nav>
-</div>
+        </button>
+    </div>
+{{/ has_dashboard }}
 
 {{> add-dashboard-modal }}
 {{# user_dashboards }}

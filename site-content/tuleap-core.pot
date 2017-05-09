@@ -171,3 +171,6 @@ msgid ""
 "You are about to delete the dashboard \"%s\".\n"
 "                This action is irreversible. Do you confirm this deletion?"
 msgstr ""
+
+msgid "You don't have any dashboards."
+msgstr ""

@@ -189,3 +189,6 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le tableau de bord \"%s\". Cette action "
 "est irréversible. Confirmez-vous cette suppression ?"
+
+msgid "You don't have any dashboards."
+msgstr "Vous n'avez aucun tableau de bord."
