@@ -229,7 +229,7 @@ try {
         $broker_log,
         $ugroup_duplicator,
         new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
-        new UserRemover(ProjectManager::instance(), EventManager::instance())
+        new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false))
     );
 
     try {

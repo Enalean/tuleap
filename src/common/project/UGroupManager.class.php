@@ -456,7 +456,8 @@ class UGroupManager {
     {
         return new UserRemover(
             ProjectManager::instance(),
-            $this->getEventManager()
+            $this->getEventManager(),
+            new ArtifactTypeFactory(false)
         );
     }
 }

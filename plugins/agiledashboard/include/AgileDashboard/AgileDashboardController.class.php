@@ -287,7 +287,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                             new FRSPermissionDao(),
                             new UGroupDao()
                         ),
-                        new UserRemover(ProjectManager::instance(), EventManager::instance())
+                        new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false))
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),

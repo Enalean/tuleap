@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -56,7 +56,8 @@ class ArtifactTypeFactory {
 	 *	@param	object	The Group object to which this ArtifactTypeFactory is associated
 	 *	@return	boolean	success.
 	 */
-	function ArtifactTypeFactory($Group) {
+	public function __construct($Group)
+    {
 		if ( $Group ) {
 			if ($Group->isError()) {
 				$this->setError('ArtifactTypeFactory:: '.$Group->getErrorMessage());
@@ -159,7 +160,8 @@ class ArtifactTypeFactory {
 	 *
 	 *  @return	array
 	 */
-	function getArtifactTypesFromId($group_id) {
+	public function getArtifactTypesFromId($group_id)
+    {
 	  global $Language;
 
           $sql="SELECT group_artifact_id FROM artifact_group_list
