@@ -25,6 +25,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -404,7 +405,12 @@ class Planning_Controller extends MVC2_PluginController {
                 new FRSPermissionDao(),
                 new UGroupDao()
             ),
-            new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false))
+            new UserRemover(
+                ProjectManager::instance(),
+                EventManager::instance(),
+                new ArtifactTypeFactory(false),
+                new UserRemoverDao()
+            )
         );
 
         try {

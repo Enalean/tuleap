@@ -28,6 +28,7 @@ require_once 'constants.php';
 use Tuleap\LDAP\NonUniqueUidRetriever;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 
 class LdapPlugin extends Plugin {
     /**
@@ -1180,7 +1181,12 @@ class LdapPlugin extends Plugin {
     {
         return new LDAP_ProjectGroupDao(
             CodendiDataAccess::instance(),
-            new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false))
+            new UserRemover(
+                ProjectManager::instance(),
+                EventManager::instance(),
+                new ArtifactTypeFactory(false),
+                new UserRemoverDao()
+            )
         );
     }
 }

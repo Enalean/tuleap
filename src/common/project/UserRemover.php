@@ -23,6 +23,7 @@ namespace Tuleap\Project;
 use ProjectManager;
 use EventManager;
 use ArtifactTypeFactory;
+use Feedback;
 
 class UserRemover
 {
@@ -41,67 +42,71 @@ class UserRemover
      */
     private $tv3_tracker_factory;
 
+    /**
+     * @var UserRemoverDao
+     */
+    private $dao;
+
     public function __construct(
         ProjectManager $project_manager,
         EventManager $event_manager,
-        ArtifactTypeFactory $tv3_tracker_factory
+        ArtifactTypeFactory $tv3_tracker_factory,
+        UserRemoverDao $dao
     ) {
         $this->project_manager     = $project_manager;
         $this->event_manager       = $event_manager;
         $this->tv3_tracker_factory = $tv3_tracker_factory;
+        $this->dao                 = $dao;
     }
 
     public function removeUserFromProject($project_id, $user_id, $admin_action = true)
     {
-        $res = db_query("DELETE FROM user_group WHERE group_id='$project_id' AND user_id='$user_id' AND admin_flags <> 'A'");
+        if (! $this->dao->removeUserFromProject($project_id, $user_id)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('project_admin_index', 'user_not_removed')
+            );
 
-        if (!$res || db_affected_rows($res) < 1) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'user_not_removed'));
-        } else {
-            $this->event_manager->processEvent('project_admin_remove_user', array(
-                'group_id' => $project_id,
-                'user_id'  => $user_id
-            ));
-
-            $project = $this->project_manager->getProject($project_id);
-            if (! $project || ! is_object($project) || $project->isError()) {
-                exit_no_group();
-            }
-
-            if (!$project || !is_object($project) || $project->isError()) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'not_get_atf'));
-            }
-
-            $tv3_trackers = $this->tv3_tracker_factory->getArtifactTypesFromId($project_id);
-
-            if ($tv3_trackers && count($tv3_trackers) > 0) {
-                for ($j = 0; $j < count($tv3_trackers); $j++) {
-                    if (! $tv3_trackers[$j]->deleteUser($user_id)) {
-                        $GLOBALS['Response']->addFeedback(
-                            'error',
-                            $GLOBALS['Language']->getText('project_admin_index', 'del_tracker_perm_fail', $tv3_trackers[$j]->getName())
-                        );
-                    }
-                }
-            }
-
-            if (! ugroup_delete_user_from_project_ugroups($project_id, $user_id)) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'del_user_from_ug_fail'));
-            }
-
-            $name = user_getname($user_id);
-
-            if ($admin_action) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'user_removed').' ('.$name.')');
-            } else {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove').' ('.$project->getPublicName().')');
-            }
-
-            group_add_history('removed_user', user_getname($user_id)." ($user_id)", $project_id);
-
-            return true;
+            return false;
         }
 
-        return false;
+        $this->event_manager->processEvent('project_admin_remove_user', array(
+            'group_id' => $project_id,
+            'user_id'  => $user_id
+        ));
+
+        $project = $this->project_manager->getProject($project_id);
+        if (! $project || ! is_object($project) || $project->isError()) {
+            exit_no_group();
+        }
+
+        $tv3_trackers = $this->tv3_tracker_factory->getArtifactTypesFromId($project_id);
+
+        if ($tv3_trackers && count($tv3_trackers) > 0) {
+            for ($j = 0; $j < count($tv3_trackers); $j++) {
+                if (! $tv3_trackers[$j]->deleteUser($user_id)) {
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        $GLOBALS['Language']->getText('project_admin_index', 'del_tracker_perm_fail', $tv3_trackers[$j]->getName())
+                    );
+                }
+            }
+        }
+
+        if (! ugroup_delete_user_from_project_ugroups($project_id, $user_id)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'del_user_from_ug_fail'));
+        }
+
+        $name = user_getname($user_id);
+
+        if ($admin_action) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'user_removed').' ('.$name.')');
+        } else {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove').' ('.$project->getPublicName().')');
+        }
+
+        group_add_history('removed_user', user_getname($user_id)." ($user_id)", $project_id);
+
+        return true;
     }
 }

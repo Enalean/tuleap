@@ -27,6 +27,7 @@ use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FrsPermissionDao;
 use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -287,7 +288,12 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                             new FRSPermissionDao(),
                             new UGroupDao()
                         ),
-                        new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false))
+                        new UserRemover(
+                            ProjectManager::instance(),
+                            EventManager::instance(),
+                            new ArtifactTypeFactory(false),
+                            new UserRemoverDao()
+                        )
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),

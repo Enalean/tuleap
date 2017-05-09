@@ -35,7 +35,12 @@ if (user_isloggedin()) {
         exit_no_group();
     }
 
-    $user_remover = new \Tuleap\Project\UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false));
+    $user_remover = new \Tuleap\Project\UserRemover(
+        ProjectManager::instance(),
+        EventManager::instance(),
+        new ArtifactTypeFactory(false),
+        new \Tuleap\Project\UserRemoverDao()
+    );
     //Process MEMBERSHIP_DELETE event
     $user_remover->removeUserFromProject($group_id,$user_id, false);
 
