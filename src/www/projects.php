@@ -61,12 +61,21 @@ if ($project && !$project->isError()) {
                     'toptab' => 'summary'
                 )
             );
+            $trove_cats = array();
+            if (ForgeConfig::get('sys_use_trove')) {
+                $trove_dao = new \Tuleap\TroveCat\TroveCatLinkDao();
+                foreach ($trove_dao->searchTroveCatForProject($project->getID()) as $row_trovecat) {
+                    $trove_cats[] = $row_trovecat['fullname'];
+                }
+            }
             $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('tuleap_dir'). '/src/templates/dashboard');
             $renderer->renderToPage(
                 'project',
                 new ProjectPresenter(
                     $project,
-                    ProjectManager::instance()
+                    ProjectManager::instance(),
+                    $request->getCurrentUser(),
+                    $trove_cats
                 )
             );
             site_project_footer(array());

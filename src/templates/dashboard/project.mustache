@@ -1,5 +1,5 @@
-<div class="tlp-framed-vertically">
-    <div class="tlp-framed-horizontally dashboard-project-header">
+<div class="dashboard-project-header">
+    <div class="dashboard-project-header-main">
         <h1 class="dashboard-project-title">
             {{# has_parent }}
                 <small class="dashboard-project-title-parent">{{ parent_name }}</small>
@@ -28,5 +28,20 @@
                 ></i> {{ access }}
             </span>
         {{/ access }}
+        <span class="tlp-badge-primary dashboard-project-header-members">
+            <i class="tlp-badge-icon fa fa-users"></i>
+            {{ nb_members }}
+        </span>
     </div>
+    {{# has_trove_cat }}
+        <div class="dashboard-project-header-trovecat">
+            <i class="fa fa-tags dashboard-project-header-trovecat-icon"></i>
+            {{ trove_cats }}
+        </div>
+    {{/ has_trove_cat }}
+    {{# should_display_a_warning_message_for_no_trove_cat }}
+        <div class="dashboard-project-header-trovecat">
+            <span class="tlp-text-danger"><i class="fa fa-warning"></i> {{ warning_no_trove_cat }}</span>
+        </div>
+    {{/ should_display_a_warning_message_for_no_trove_cat }}
 </div>

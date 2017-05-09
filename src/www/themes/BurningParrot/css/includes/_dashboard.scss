@@ -19,12 +19,33 @@
 
 .dashboard-project-header {
     display: flex;
+    justify-content: space-between;
     align-items: flex-end;
-    margin: 0 0 30px;
+    margin: $tlp-spacing;
+}
+
+.dashboard-project-header-main {
+    display: flex;
+    align-items: flex-end;
 }
 
 .dashboard-project-header-access {
+    margin: 0 $tlp-half-spacing 7px 0;
+}
+
+.dashboard-project-header-members {
     margin: 0 0 7px;
+}
+
+.dashboard-project-header-trovecat {
+    margin: 0 0 12px;
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+}
+
+.dashboard-project-header-trovecat-icon {
+    margin: 0 3px 0 0;
+    color: $tlp-theme-color;
 }
 
 .dashboard-project-title {

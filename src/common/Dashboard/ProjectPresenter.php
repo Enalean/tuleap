@@ -20,6 +20,7 @@
 
 namespace Tuleap\Dashboard;
 
+use PFUser;
 use Project;
 use ProjectManager;
 use Tuleap\Project\ProjectAccessPresenter;
@@ -30,16 +31,38 @@ class ProjectPresenter
     public $parent_name = '';
     public $has_parent  = false;
     public $access;
+    public $nb_members;
+    public $trove_cats;
+    public $has_trove_cat;
+    public $should_display_a_warning_message_for_no_trove_cat;
 
-    public function __construct(Project $project, ProjectManager $project_manager)
-    {
-        $this->name   = $project->getUnconvertedPublicName();
-        $this->access = new ProjectAccessPresenter($project->getAccess());
+    public function __construct(
+        Project $project,
+        ProjectManager $project_manager,
+        PFUser $current_user,
+        array $trove_cats
+    ) {
+        $this->name          = $project->getUnconvertedPublicName();
+        $this->access        = new ProjectAccessPresenter($project->getAccess());
+        $this->trove_cats    = implode(', ', $trove_cats);
+        $this->has_trove_cat = ! empty($this->trove_cats);
+
+        $this->should_display_a_warning_message_for_no_trove_cat = $current_user->isAdmin($project->getID())
+            && ! $this->has_trove_cat
+            && \ForgeConfig::get('sys_use_trove')
+            && \ForgeConfig::get('sys_trove_cat_mandatory');
+        $this->warning_no_trove_cat = _('This project is not categorized yet.');
 
         $parent_project = $project_manager->getParentProject($project->getID());
         if ($parent_project) {
             $this->has_parent  = true;
             $this->parent_name = $parent_project->getUnconvertedPublicName();
         }
+
+        $nb_members       = count($project->getMembers());
+        $this->nb_members = sprintf(
+            ngettext('%d member', '%d members', $nb_members),
+            $nb_members
+        );
     }
 }

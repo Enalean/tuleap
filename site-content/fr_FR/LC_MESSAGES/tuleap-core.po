@@ -9,8 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#, php-format
+msgid "%d member"
+msgid_plural "%d members"
+msgstr[0] "%d membre"
+msgstr[1] "%d membres"
 
 msgid "Add dashboard"
 msgstr "Ajouter un tableau de bord"
@@ -163,6 +169,9 @@ msgstr "Il manque le nom pour créer un tableau de bord."
 
 msgid "The name is missing for editing the dashboard."
 msgstr "Il manque le nom pour éditer le tableau de bord."
+
+msgid "This project is not categorized yet."
+msgstr "Ce projet n'est pas encore catégorisé."
 
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"

@@ -135,15 +135,11 @@ if ($GLOBALS['sys_use_trove'] != 0) {
 
 <UL>';
 
-    // list all trove categories
-    $res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
-			 .'trove_cat.trove_cat_id AS trove_cat_id '
-			 .'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
-			 .'trove_group_link.trove_cat_id AND trove_group_link.group_id='.$group_id
-			 .' ORDER BY trove_cat.fullpath');
-    while ($row_trovecat = db_fetch_array($res_trovecat)) {
-        print ('<LI>'.$row_trovecat['fullpath'].' '
-               .help_button('trove_cat',$row_trovecat['trove_cat_id'])."\n");
+    $trove_dao = new \Tuleap\TroveCat\TroveCatLinkDao();
+    foreach ($trove_dao->searchTroveCatForProject($group_id) as $row_trovecat) {
+        echo '<li>';
+        echo $row_trovecat['fullpath'].' '.help_button('trove_cat',$row_trovecat['trove_cat_id']);
+        echo '</li>';
     }
 
     print '
