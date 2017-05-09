@@ -16,6 +16,9 @@ msgstr ""
 msgid "Cannot delete the requested dashboard."
 msgstr ""
 
+msgid "Cannot update the requested dashboard."
+msgstr ""
+
 msgid "Close"
 msgstr ""
 
@@ -29,6 +32,9 @@ msgid "Dashboard has been successfully created."
 msgstr ""
 
 msgid "Dashboard has been successfully deleted."
+msgstr ""
+
+msgid "Dashboard has been successfully updated."
 msgstr ""
 
 msgid "Dashboard name"
@@ -137,6 +143,9 @@ msgid "The entered value '%s' is invalid."
 msgstr ""
 
 msgid "The name is missing for creating a dashboard."
+msgstr ""
+
+msgid "The name is missing for editing the dashboard."
 msgstr ""
 
 msgid "This reference does not exist"

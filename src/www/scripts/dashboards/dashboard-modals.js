@@ -20,7 +20,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     var buttons = [
         document.getElementById('add-dashboard-button'),
-        document.getElementById('delete-dashboard-button')
+        document.getElementById('delete-dashboard-button'),
+        document.getElementById('edit-dashboard-button')
     ];
 
     buttons.forEach(function (button) {

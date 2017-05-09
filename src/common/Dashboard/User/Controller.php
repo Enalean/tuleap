@@ -46,19 +46,25 @@ class Controller
      * @var Deletor
      */
     private $deletor;
+    /**
+     * @var Updator
+     */
+    private $updator;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         Retriever $retriever,
         Saver $saver,
-        Deletor $deletor
+        Deletor $deletor,
+        Updator $updator
     ) {
         $this->csrf      = $csrf;
         $this->title     = $title;
         $this->retriever = $retriever;
         $this->saver     = $saver;
         $this->deletor   = $deletor;
+        $this->updator   = $updator;
     }
 
     /**
@@ -228,5 +234,59 @@ class Controller
     private function redirectToDefaultDashboard()
     {
         $GLOBALS['Response']->redirect('/my/');
+    }
+
+    private function redirectToDashboard($dashboard_id)
+    {
+        $GLOBALS['Response']->redirect('/my/?dashboard_id='. urlencode($dashboard_id));
+    }
+
+    public function editDashboard(HTTPRequest $request)
+    {
+        $this->csrf->check();
+
+        $current_user   = $request->getCurrentUser();
+        $dashboard_id   = $request->get('dashboard-id');
+        $dashboard_name = $request->get('dashboard-name');
+
+        try {
+            $this->updator->update($current_user, $dashboard_id, $dashboard_name);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext(
+                    'tuleap-core',
+                    'Dashboard has been successfully updated.'
+                )
+            );
+        } catch (NameDashboardAlreadyExistsException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext(
+                        'tuleap-core',
+                        'The dashboard "%s" already exists.'
+                    ),
+                    $dashboard_name
+                )
+            );
+        } catch (NameDashboardDoesNotExistException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'The name is missing for editing the dashboard.'
+                )
+            );
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'Cannot update the requested dashboard.'
+                )
+            );
+        }
+
+        $this->redirectToDashboard($dashboard_id);
     }
 }

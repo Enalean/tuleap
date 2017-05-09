@@ -27,6 +27,7 @@ use Tuleap\Dashboard\User\Controller;
 use Tuleap\Dashboard\User\Dao;
 use Tuleap\Dashboard\User\Retriever;
 use Tuleap\Dashboard\User\Saver;
+use Tuleap\Dashboard\User\Updator;
 
 require_once('pre.php');
 require_once('my_utils.php');
@@ -57,6 +58,9 @@ $router             = new Router(
             $user_dashboard_dao
         ),
         new Deletor(
+            $user_dashboard_dao
+        ),
+        new Updator(
             $user_dashboard_dao
         )
     )

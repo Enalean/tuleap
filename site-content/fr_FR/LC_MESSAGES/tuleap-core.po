@@ -30,6 +30,9 @@ msgstr "Annuler"
 msgid "Cannot delete the requested dashboard."
 msgstr "Impossible de supprimer le tableau de bord demandé."
 
+msgid "Cannot update the requested dashboard."
+msgstr "Impossible d'éditer le tableau de bord demandé."
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -44,6 +47,9 @@ msgstr "Le tableau de bord a correctement été créé."
 
 msgid "Dashboard has been successfully deleted."
 msgstr "Le tableau de bord a correctement été supprimé."
+
+msgid "Dashboard has been successfully updated."
+msgstr "Le tableau de bord a correctement été modifié."
 
 msgid "Dashboard name"
 msgstr "Nom du tableau de bord"
@@ -154,6 +160,9 @@ msgstr "La valeur saisie '%s' est invalide."
 
 msgid "The name is missing for creating a dashboard."
 msgstr "Il manque le nom pour créer un tableau de bord."
+
+msgid "The name is missing for editing the dashboard."
+msgstr "Il manque le nom pour éditer le tableau de bord."
 
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"

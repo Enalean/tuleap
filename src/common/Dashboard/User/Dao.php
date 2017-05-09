@@ -84,4 +84,21 @@ class Dao extends DataAccessObject
             throw new \DataAccessException();
         }
     }
+
+    public function edit($user_id, $id, $name)
+    {
+        $user_id = $this->da->escapeInt($user_id);
+        $id      = $this->da->escapeInt($id);
+        $name    = $this->da->quoteSmart($name);
+
+        $sql = "UPDATE
+                user_dashboards
+                SET name = $name
+                WHERE user_id = $user_id AND id = $id";
+
+        $this->update($sql);
+        if ($this->da->affectedRows() === 0) {
+            throw new \DataAccessException();
+        }
+    }
 }
