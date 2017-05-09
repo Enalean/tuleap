@@ -527,7 +527,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
                 new FRSPermissionDao(),
                 new UGroupDao()
             ),
-            new UserRemover(ProjectManager::instance(), EventManager::instance())
+            new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false))
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
         $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);

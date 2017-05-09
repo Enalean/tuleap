@@ -1180,7 +1180,7 @@ class LdapPlugin extends Plugin {
     {
         return new LDAP_ProjectGroupDao(
             CodendiDataAccess::instance(),
-            new UserRemover(ProjectManager::instance(), EventManager::instance())
+            new UserRemover(ProjectManager::instance(), EventManager::instance(), new ArtifactTypeFactory(false))
         );
     }
 }

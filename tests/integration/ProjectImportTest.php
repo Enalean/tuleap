@@ -148,7 +148,7 @@ class ProjectImportTest extends TuleapDbTestCase
             new Log_ConsoleLogger(),
             $ugroup_duplicator,
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
-            new UserRemover(mock('ProjectManager'), mock('EventManager'))
+            new UserRemover(mock('ProjectManager'), mock('EventManager'), mock('ArtifactTypeFactory'))
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
@@ -203,7 +203,7 @@ class ProjectImportTest extends TuleapDbTestCase
             new Log_ConsoleLogger(),
             $ugroup_duplicator,
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
-            new UserRemover(mock('ProjectManager'), mock('EventManager'))
+            new UserRemover(mock('ProjectManager'), mock('EventManager'), mock('ArtifactTypeFactory'))
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
