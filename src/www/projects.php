@@ -54,6 +54,26 @@ if ($project && !$project->isError()) {
     if ($project->usesService('summary')) {
         Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
         if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            $trove_cats = array();
+            if (ForgeConfig::get('sys_use_trove')) {
+                $trove_dao = new \Tuleap\TroveCat\TroveCatLinkDao();
+                foreach ($trove_dao->searchTroveCatForProject($project->getID()) as $row_trovecat) {
+                    $trove_cats[] = $row_trovecat['fullname'];
+                }
+
+                if (ForgeConfig::get('sys_trove_cat_mandatory')
+                    && $request->getCurrentUser()->isAdmin($project->getID())
+                    && empty($trove_cats)
+                ) {
+                    $trove_url = '/project/admin/group_trove.php?group_id='.$group_id;
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::WARN,
+                        $GLOBALS['Language']->getText('include_html', 'no_trovcat', $trove_url),
+                        CODENDI_PURIFIER_DISABLED
+                    );
+                }
+            }
+
             site_project_header(
                 array(
                     'title'  => $project->getUnconvertedPublicName(),
@@ -61,20 +81,12 @@ if ($project && !$project->isError()) {
                     'toptab' => 'summary'
                 )
             );
-            $trove_cats = array();
-            if (ForgeConfig::get('sys_use_trove')) {
-                $trove_dao = new \Tuleap\TroveCat\TroveCatLinkDao();
-                foreach ($trove_dao->searchTroveCatForProject($project->getID()) as $row_trovecat) {
-                    $trove_cats[] = $row_trovecat['fullname'];
-                }
-            }
             $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('tuleap_dir'). '/src/templates/dashboard');
             $renderer->renderToPage(
                 'project',
                 new ProjectPresenter(
                     $project,
                     ProjectManager::instance(),
-                    $request->getCurrentUser(),
                     $trove_cats
                 )
             );
