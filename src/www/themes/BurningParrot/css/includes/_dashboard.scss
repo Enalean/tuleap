@@ -17,7 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.dashboard-project-header {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 30px;
+}
+
+.dashboard-project-header-access {
+    margin: 0 0 7px;
+}
+
 .dashboard-project-title {
+    margin: 0 $tlp-spacing 0 0;
     color: $tlp-theme-color;
     font-size: 40px;
     font-weight: 300;

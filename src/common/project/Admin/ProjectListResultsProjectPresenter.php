@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 namespace Tuleap\Project\Admin;
+
+use Tuleap\Project\ProjectAccessPresenter;
 
 class ProjectListResultsProjectPresenter
 {
