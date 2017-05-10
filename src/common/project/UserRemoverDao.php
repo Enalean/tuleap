@@ -37,4 +37,18 @@ class UserRemoverDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function removeUserFromProjectUgroups($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+
+        $sql = "DELETE ugroup_user
+                FROM ugroup
+                    INNER JOIN ugroup_user USING (ugroup_id)
+                WHERE ugroup.group_id = $project_id
+                AND ugroup_user.user_id = $user_id";
+
+        return $this->update($sql);
+    }
 }

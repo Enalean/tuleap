@@ -26,6 +26,9 @@ use ArtifactTypeFactory;
 use Feedback;
 use UserManager;
 use ProjectHistoryDao;
+use PFUser;
+use Project;
+use UGroupManager;
 
 class UserRemover
 {
@@ -48,14 +51,21 @@ class UserRemover
      * @var UserRemoverDao
      */
     private $dao;
+
     /**
      * @var UserManager
      */
     private $user_manager;
+
     /**
      * @var ProjectHistoryDao
      */
     private $project_history_dao;
+
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
 
     public function __construct(
         ProjectManager $project_manager,
@@ -63,7 +73,8 @@ class UserRemover
         ArtifactTypeFactory $tv3_tracker_factory,
         UserRemoverDao $dao,
         UserManager $user_manager,
-        ProjectHistoryDao $project_history_dao
+        ProjectHistoryDao $project_history_dao,
+        UGroupManager $ugroup_manager
     ) {
         $this->project_manager     = $project_manager;
         $this->event_manager       = $event_manager;
@@ -71,6 +82,7 @@ class UserRemover
         $this->dao                 = $dao;
         $this->user_manager        = $user_manager;
         $this->project_history_dao = $project_history_dao;
+        $this->ugroup_manager      = $ugroup_manager;
     }
 
     public function removeUserFromProject($project_id, $user_id, $admin_action = true)
@@ -107,7 +119,7 @@ class UserRemover
             }
         }
 
-        if (! ugroup_delete_user_from_project_ugroups($project_id, $user_id)) {
+        if (! $this->removeUserFromProjectUgroups($project, $user_id)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'del_user_from_ug_fail'));
         }
 
@@ -130,6 +142,28 @@ class UserRemover
             $user_name." ($user_id)",
             $project_id
         );
+
+        return true;
+    }
+
+    private function removeUserFromProjectUgroups(Project $project, $user_id)
+    {
+        $project_id = $project->getID();
+        $ugroup_ids = array();
+
+        foreach ($this->ugroup_manager->getStaticUGroups($project) as $ugroup) {
+            $ugroup_ids[] = $ugroup->getId();
+        }
+
+        if (! $this->dao->removeUserFromProjectUgroups($project_id, $user_id)) {
+            return false;
+        }
+
+        $this->event_manager->processEvent('project_admin_remove_user_from_project_ugroups', array(
+            'group_id' => $project_id,
+            'user_id'  => $user_id,
+            'ugroups'  => $ugroup_ids
+        ));
 
         return true;
     }

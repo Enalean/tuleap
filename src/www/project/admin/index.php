@@ -80,7 +80,8 @@ if ($request->isPost() && $request->valid($vFunc)) {
             new ArtifactTypeFactory(false),
             new \Tuleap\Project\UserRemoverDao(),
             UserManager::instance(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new UGroupManager()
         );
         $user_remover->removeUserFromProject($group_id, $rm_id);
         break;
