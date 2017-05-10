@@ -292,7 +292,9 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                             ProjectManager::instance(),
                             EventManager::instance(),
                             new ArtifactTypeFactory(false),
-                            new UserRemoverDao()
+                            new UserRemoverDao(),
+                            UserManager::instance(),
+                            new ProjectHistoryDao()
                         )
                     )
                 ),

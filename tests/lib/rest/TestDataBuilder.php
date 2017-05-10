@@ -531,7 +531,9 @@ class REST_TestDataBuilder extends TestDataBuilder {
                 ProjectManager::instance(),
                 EventManager::instance(),
                 new ArtifactTypeFactory(false),
-                new UserRemoverDao()
+                new UserRemoverDao(),
+                UserManager::instance(),
+                new ProjectHistoryDao()
             )
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);

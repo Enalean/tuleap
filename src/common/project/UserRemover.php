@@ -24,6 +24,8 @@ use ProjectManager;
 use EventManager;
 use ArtifactTypeFactory;
 use Feedback;
+use UserManager;
+use ProjectHistoryDao;
 
 class UserRemover
 {
@@ -46,17 +48,29 @@ class UserRemover
      * @var UserRemoverDao
      */
     private $dao;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
 
     public function __construct(
         ProjectManager $project_manager,
         EventManager $event_manager,
         ArtifactTypeFactory $tv3_tracker_factory,
-        UserRemoverDao $dao
+        UserRemoverDao $dao,
+        UserManager $user_manager,
+        ProjectHistoryDao $project_history_dao
     ) {
         $this->project_manager     = $project_manager;
         $this->event_manager       = $event_manager;
         $this->tv3_tracker_factory = $tv3_tracker_factory;
         $this->dao                 = $dao;
+        $this->user_manager        = $user_manager;
+        $this->project_history_dao = $project_history_dao;
     }
 
     public function removeUserFromProject($project_id, $user_id, $admin_action = true)
@@ -97,15 +111,25 @@ class UserRemover
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'del_user_from_ug_fail'));
         }
 
-        $name = user_getname($user_id);
+        $user = $this->user_manager->getUserById($user_id);
+
+        if (! $user) {
+            $user_name = $GLOBALS['Language']->getText('include_user', 'invalid_u_id');
+        } else {
+            $user_name = $user->getUserName();
+        }
 
         if ($admin_action) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'user_removed').' ('.$name.')');
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'user_removed').' ('.$user_name.')');
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove').' ('.$project->getPublicName().')');
         }
 
-        group_add_history('removed_user', user_getname($user_id)." ($user_id)", $project_id);
+        $this->project_history_dao->groupAddHistory(
+            'removed_user',
+            $user_name." ($user_id)",
+            $project_id
+        );
 
         return true;
     }
