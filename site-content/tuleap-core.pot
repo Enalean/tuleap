@@ -1,3 +1,9 @@
+#, php-format
+msgid "%d member"
+msgid_plural "%d members"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Add dashboard"
 msgstr ""
 
@@ -146,6 +152,9 @@ msgid "The name is missing for creating a dashboard."
 msgstr ""
 
 msgid "The name is missing for editing the dashboard."
+msgstr ""
+
+msgid "This project is not categorized yet."
 msgstr ""
 
 msgid "This reference does not exist"
