@@ -252,13 +252,16 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
     private function getArtifactValueHTML($artifact_id, $can_user_restrict_permissions_to_nobody, $is_read_only)
     {
-        $html   = $this->fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $is_read_only);
-        $html  .= $this->fetchUserGroupList($is_read_only, $artifact_id);
+        $changeset_values   = $this->getLastChangesetValues($artifact_id);
+        $is_expecting_input = $this->isRequired() && empty($changeset_values);
+
+        $html   = $this->fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $is_read_only, $is_expecting_input);
+        $html  .= $this->fetchUserGroupList($is_read_only, $changeset_values);
 
         return $html;
     }
 
-    private function fetchUserGroupList($is_read_only, $artifact_id)
+    private function fetchUserGroupList($is_read_only, array $changeset_values)
     {
         $field_id          = $this->getId();
         $element_name      = 'artifact['.$field_id.'][u_groups][]';
@@ -272,7 +275,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             . (($this->isRequired()) ? 'required="required"' : '' )
             . (($is_read_only) ? 'disabled="disabled"' : '' )
             .'>';
-        $html .= $this->getOptions($this->getAllUserGroups(), $this->getLastChangesetValues($artifact_id));
+        $html .= $this->getOptions($this->getAllUserGroups(), $changeset_values);
         $html .= '</select>';
 
         return $html;
@@ -333,8 +336,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     protected function fetchAdminFormElement()
     {
-        $html   = $this->fetchRestrictCheckbox(false, true);
-        $html  .= $this->fetchUserGroupList(true, 0);
+        $changeset_values = $this->getLastChangesetValues(0);
+
+        $html   = $this->fetchRestrictCheckbox(false, true, false);
+        $html  .= $this->fetchUserGroupList(true, $changeset_values);
 
         return $html;
     }
@@ -879,9 +884,15 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return string
      */
-    private function fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $disabled)
+    private function fetchRestrictCheckbox($can_user_restrict_permissions_to_nobody, $disabled, $is_expecting_input)
     {
-        $html = '<p class="tracker_field_permissionsonartifact">';
+        $empty_value_class = '';
+        if ($is_expecting_input) {
+            $empty_value_class = 'empty_value';
+        }
+
+
+        $html = '<p class="tracker_field_permissionsonartifact ' . $empty_value_class . '">';
         if ($this->isRequired() == false) {
             $html .= '<input type="hidden" name="artifact[' . $this->getId(
                 ) . '][use_artifact_permissions]" value="0" />';
