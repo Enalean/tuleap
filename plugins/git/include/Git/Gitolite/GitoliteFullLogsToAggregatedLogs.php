@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Gitolite;
 
-use DataAccessObject;
 use DateTime;
 use DateInterval;
 use Logger;
@@ -64,7 +63,8 @@ class GitoliteFullLogsToAggregatedLogs extends \DataAccessObject
           SELECT repository_id, user_id, DATE_FORMAT(FROM_UNIXTIME(time), '%Y%m%d') as day, count(*)
           FROM plugin_git_full_history
           WHERE time > $start_timestamp AND time <= $end_timestamp
-          GROUP BY repository_id, user_id, day";
+          GROUP BY repository_id, user_id, day
+          ON DUPLICATE KEY UPDATE git_read=git_read+VALUES(git_read)";
         $this->update($sql);
 
         $sql = "TRUNCATE TABLE plugin_git_full_history_checkpoint";
