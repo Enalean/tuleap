@@ -459,7 +459,9 @@ class UGroupManager {
             ProjectManager::instance(),
             $this->getEventManager(),
             new ArtifactTypeFactory(false),
-            new UserRemoverDao()
+            new UserRemoverDao(),
+            UserManager::instance(),
+            new ProjectHistoryDao()
         );
     }
 }

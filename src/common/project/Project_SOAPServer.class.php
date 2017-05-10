@@ -279,7 +279,9 @@ class Project_SOAPServer {
             ProjectManager::instance(),
             EventManager::instance(),
             new ArtifactTypeFactory(false),
-            new UserRemoverDao()
+            new UserRemoverDao(),
+            UserManager::instance(),
+            new ProjectHistoryDao()
         );
 
         $result = $user_removal->removeUserFromProject($groupId, $userToAdd->getId());

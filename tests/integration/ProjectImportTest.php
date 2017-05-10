@@ -152,7 +152,9 @@ class ProjectImportTest extends TuleapDbTestCase
                 mock('ProjectManager'),
                 mock('EventManager'),
                 mock('ArtifactTypeFactory'),
-                mock('Tuleap\Project\UserRemoverDao')
+                mock('Tuleap\Project\UserRemoverDao'),
+                mock('UserManager'),
+                mock('ProjectHistoryDao')
             )
         );
 
@@ -212,7 +214,9 @@ class ProjectImportTest extends TuleapDbTestCase
                 mock('ProjectManager'),
                 mock('EventManager'),
                 mock('ArtifactTypeFactory'),
-                mock('Tuleap\Project\UserRemoverDao')
+                mock('Tuleap\Project\UserRemoverDao'),
+                mock('UserManager'),
+                mock('ProjectHistoryDao')
             )
         );
 
