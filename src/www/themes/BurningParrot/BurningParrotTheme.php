@@ -23,6 +23,9 @@ use CSRFSynchronizerToken;
 use Event;
 use EventManager;
 use Layout;
+use Project;
+use ProjectManager;
+use Tuleap\Layout\SidebarPresenter;
 use URLRedirect;
 use User_LoginPresenterBuilder;
 use UserManager;
@@ -35,6 +38,9 @@ use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder
 
 class BurningParrotTheme extends Layout
 {
+    /** @var ProjectManager */
+    private $project_manager;
+
     /** @var \MustacheRenderer */
     private $renderer;
 
@@ -47,10 +53,11 @@ class BurningParrotTheme extends Layout
     public function __construct($root, PFUser $user)
     {
         parent::__construct($root);
-        $this->user     = $user;
-        $this->request  = HTTPRequest::instance();
-        $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->includeFooterJavascriptFile('/themes/common/tlp/dist/tlp.'. $user->getLocale() .'.min.js');
+        $this->user            = $user;
+        $this->project_manager = ProjectManager::instance();
+        $this->request         = HTTPRequest::instance();
+        $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
+        $this->includeFooterJavascriptFile('/themes/common/tlp/dist/tlp.' . $user->getLocale() . '.min.js');
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burningparrot.js'));
     }
 
@@ -64,11 +71,12 @@ class BurningParrotTheme extends Layout
 
     public function header(array $params)
     {
-        $url_redirect             = new URLRedirect(EventManager::instance());
-        $header_presenter_builder = new HeaderPresenterBuilder();
-        $body_classes             = $this->getArrayOfClassnamesForBodyTag($params);
-        $main_classes             = isset($params['main_classes']) ? $params['main_classes'] : array();
-        $sidebar                  = isset($params['sidebar']) ? $params['sidebar'] : array();
+        $url_redirect                = new URLRedirect(EventManager::instance());
+        $header_presenter_builder    = new HeaderPresenterBuilder();
+        $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : array();
+        $sidebar                     = $this->getSidebarFromParams($params);
+        $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar);
+        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($params);
 
         $header_presenter = $header_presenter_builder->build(
             new NavbarPresenterBuilder(),
@@ -80,15 +88,33 @@ class BurningParrotTheme extends Layout
             $body_classes,
             $main_classes,
             $sidebar,
+            $current_project_navbar_info,
+            $this->getListOfIconUnicodes(),
             $url_redirect
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
     }
 
-    private function getArrayOfClassnamesForBodyTag($params)
+    private function getArrayOfClassnamesForBodyTag($params, $sidebar)
     {
-        return isset($params['body_class']) ? $params['body_class'] : array();
+        $body_classes = array();
+
+        if (isset($params['body_class'])) {
+            $body_classes = $params['body_class'];
+        }
+
+        if (! $sidebar) {
+            return $body_classes;
+        }
+
+        $body_classes[] = 'has-sidebar';
+
+        if ($this->shouldIncludeSitebarStatePreference($params)) {
+            $body_classes[] = $this->user->getPreference('sidebar_state');
+        }
+
+        return $body_classes;
     }
 
     public function footer(array $params)
@@ -169,6 +195,56 @@ class BurningParrotTheme extends Layout
 
     private function getTuleapVersion()
     {
-        return trim(file_get_contents($GLOBALS['tuleap_dir'].'/VERSION'));
+        return trim(file_get_contents($GLOBALS['tuleap_dir'] . '/VERSION'));
+    }
+
+    private function getSidebarFromParams(array $params)
+    {
+        if (isset($params['sidebar'])) {
+            return $params['sidebar'];
+        } else if (! empty($params['group'])) {
+            $project = $this->project_manager->getProject($params['group']);
+
+            return $this->getSidebarPresenterForProject($project, $params);
+        }
+
+        return false;
+    }
+
+    private function getSidebarPresenterForProject(Project $project, array $params)
+    {
+        $project_sidebar_presenter = new ProjectSidebarPresenter(
+            $this->getUser(),
+            $project,
+            $this->getProjectSidebar($params, $project),
+            $this->getProjectPrivacy($project)
+        );
+
+        return new SidebarPresenter(
+            'project-sidebar',
+            $this->renderer->renderToString('project-sidebar', $project_sidebar_presenter)
+        );
+    }
+
+    private function getCurrentProjectNavbarInfo(array $params)
+    {
+        if (empty($params['group'])) {
+            return false;
+        }
+
+        $project = $this->project_manager->getProject($params['group']);
+
+        return new CurrentProjectNavbarInfoPresenter(
+            $project,
+            $this->getProjectPrivacy($project)
+        );
+    }
+
+    private function shouldIncludeSitebarStatePreference(array $params)
+    {
+        $is_in_siteadmin     = isset($params['in_siteadmin']) && $params['in_siteadmin'] === true;
+        $user_has_preference = $this->user->getPreference('sidebar_state');
+
+        return ! $is_in_siteadmin && $user_has_preference;
     }
 }

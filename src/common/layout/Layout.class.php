@@ -1609,7 +1609,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             print "\t".'<A class="menus" href="'.$link.'">'.$title.'</A> &nbsp;<img src="'.util_get_image_theme("point1.png").'" alt=" " width="7" height="7"><br>';
     }
 
-    protected function getProjectTabs($params, $project) {
+    protected function getProjectSidebar($params, $project) {
         $builder = new ProjectSidebarBuilder(
             EventManager::instance(),
             ProjectManager::instance(),
@@ -1891,5 +1891,19 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             $this->version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
         }
         return $this->version;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getListOfIconUnicodes()
+    {
+        $list_of_icon_unicodes = array();
+
+        EventManager::instance()->processEvent(Event::SERVICE_ICON, array(
+            'list_of_icon_unicodes' => &$list_of_icon_unicodes
+        ));
+
+        return $list_of_icon_unicodes;
     }
 }

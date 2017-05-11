@@ -141,11 +141,6 @@ header {
     width: $sidebar-expanded-width;
     height: $navbar-height;
     background: $tlp-theme-color url('../images/organization_logo.png') no-repeat center center;
-
-    &.logo-collapsed {
-        width: $sidebar-collapsed-width;
-        background: $tlp-theme-color url('../images/organization_logo_small.png') no-repeat center center;
-    }
 }
 
 .header-container {
@@ -207,4 +202,27 @@ header {
             }
         }
     }
+}
+
+#current-project-nav {
+    display: flex;
+    align-items: center;
+    padding: 0 $tlp-spacing;
+    border-right: 1px solid $tlp-ui-border-normal;
+}
+
+.current-project-name {
+    display: flex;
+    align-items: baseline;
+    color: $tlp-theme-color;
+    font-size: 18px;
+    letter-spacing: 1.1px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.current-project-icon {
+    margin: 0 $tlp-half-spacing 0 0;
+    color: $tlp-theme-color;
+    font-size: 16px;
 }

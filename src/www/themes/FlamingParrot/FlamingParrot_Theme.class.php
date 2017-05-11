@@ -25,6 +25,7 @@ require_once 'BodyPresenter.class.php';
 require_once 'ContainerPresenter.class.php';
 require_once 'HomepagePresenter.php';
 require_once 'FooterPresenter.class.php';
+require_once 'CurrentProjectNavbarInfoPresenter.php';
 require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
 require_once 'NavBarItemPresentersCollection.php';
@@ -143,12 +144,9 @@ class FlamingParrot_Theme extends Layout {
     }
 
     private function displayStylesheetForPluginsSidebarIcons() {
-        echo '<style>'. PHP_EOL;
-        $list_of_icon_unicodes = array();
+        $list_of_icon_unicodes = $this->getListOfIconUnicodes();
 
-        EventManager::instance()->processEvent('service_icon', array(
-            'list_of_icon_unicodes' => &$list_of_icon_unicodes
-        ));
+        echo '<style>'. PHP_EOL;
 
         foreach ($list_of_icon_unicodes as $service_name => $unicode) {
             echo ".tuleap-services-$service_name:before { content: '$unicode'; }". PHP_EOL;
@@ -171,7 +169,7 @@ class FlamingParrot_Theme extends Layout {
 
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
         $body_class       = isset($params['body_class']) ? $params['body_class'] : array();
-        $has_sidebar      = isset($params['group']) ? 'has_sidebar' : '';
+        $has_sidebar      = isset($params['group']) ? 'has-sidebar' : '';
         $sidebar_state    = 'sidebar-expanded';
 
         $this->addBodyClassDependingThemeVariant($current_user, $body_class);
@@ -212,13 +210,15 @@ class FlamingParrot_Theme extends Layout {
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
         list($search_options, $selected_entry, $hidden_fields) = $this->getSearchEntries();
 
+        $project_id_from_params = $this->getProjectIdFromParams($params);
+
         $search_type = $selected_entry['value'];
         EventManager::instance()->processEvent(
             Event::REDEFINE_SEARCH_TYPE,
             array(
                 'type'         => &$search_type,
                 'service_name' => (isset($params['service_name'])) ? $params['service_name'] : '',
-                'project_id'   => $this->getProjectIdFromParams($params),
+                'project_id'   => $project_id_from_params,
                 'user'         => $current_user
             )
         );
@@ -238,11 +238,14 @@ class FlamingParrot_Theme extends Layout {
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
         $url_redirect          = new URLRedirect(EventManager::instance());
 
+        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params);
+
         $this->showFlamingParrotBurningParrotUnificationTour($current_user);
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,
                 $current_user,
+                $current_project_navbar_info,
                 $_SERVER['REQUEST_URI'],
                 $selected_top_tab,
                 HTTPRequest::instance(),
@@ -258,6 +261,20 @@ class FlamingParrot_Theme extends Layout {
         );
 
         $this->container($params, $project_manager, $current_user);
+    }
+
+    private function getCurrentProjectNavbarInfo(ProjectManager $project_manager, array $params)
+    {
+        if (empty($params['group'])) {
+            return false;
+        }
+
+        $project = $project_manager->getProject($params['group']);
+
+        return new FlamingParrot_CurrentProjectNavbarInfoPresenter(
+            $project,
+            $this->getProjectPrivacy($project)
+        );
     }
 
     private function showFlamingParrotBurningParrotUnificationTour(PFUser $current_user)
@@ -320,7 +337,7 @@ class FlamingParrot_Theme extends Layout {
 
             $project = ProjectManager::instance()->getProject($params['group']);
 
-            $project_tabs        = $this->getProjectTabs($params, $project);
+            $project_tabs        = $this->getProjectSidebar($params, $project);
             $project_name        = $project->getPublicName();
             $project_link        = $this->getProjectLink($project);
             $project_is_public   = $project->isPublic();

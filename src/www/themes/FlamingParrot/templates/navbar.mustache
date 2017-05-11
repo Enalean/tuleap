@@ -4,6 +4,21 @@
     <div class="navbar-inner">
         <div class="container-fluid">
             <ul class="nav">
+                {{# current_project_navbar_info }}
+                    <li class="current-project">
+                        <a href="{{ project_link }}" class="project-title" title="{{{ project_privacy }}">
+                            {{# project_is_public }}
+                                <i class="icon-unlock"></i>
+                            {{/ project_is_public }}
+                            {{^ project_is_public }}
+                                <i class="icon-lock"></i>
+                            {{/ project_is_public }}
+
+                            {{ project_name }}
+                        </a>
+                    </li>
+                {{/ current_project_navbar_info }}
+
                 {{# navbar_items }}
                     {{# is_projects }}
                         {{> navbar-projects }}

@@ -76,7 +76,7 @@ class SkinTuleap123 extends SkinTemplate {
             $sidebar_state = 'sidebar-expanded';
         }
 
-        $bodyAttrs['class'] .= ' has_sidebar ' . $sidebar_state;
+        $bodyAttrs['class'] .= ' has-sidebar ' . $sidebar_state;
 
         $theme_manager    = new ThemeManager(new Admin_Homepage_Dao());
         $user_theme       = $current_user->getTheme();

@@ -1,0 +1,31 @@
+<a href="{{ project_link }}" class="project-sidebar-title" title="{{{ project_privacy }}}">
+    {{# project_is_public }}
+        <i class="fa fa-unlock project-sidebar-title-icon"></i>
+    {{/ project_is_public }}
+    {{^ project_is_public }}
+        <i class="fa fa-lock project-sidebar-title-icon"></i>
+    {{/ project_is_public }}
+
+    {{ project_name }}
+</a>
+
+<nav class="project-sidebar-nav">
+    {{# sidebar }}
+        <a id="{{ id }}"
+            href="{{{ link }}}"
+            class="project-sidebar-nav-item {{# enabled }}active{{/ enabled}}"
+            aria-label="{{{ name }}}"
+            title="{{{ name }}}"
+        >
+            <i class="{{ icon }} project-sidebar-nav-item-icon"></i> {{{ label }}}
+        </a>
+    {{/ sidebar }}
+</nav>
+
+{{# is_sidebar_collapsable }}
+    <i class="sidebar-collapser project-sidebar-collapser-icon sidebar-collapser-icon fa"
+        title="Collapse sidebar"
+        data-user-preference-name="sidebar_state"
+        data-collapsed-class="sidebar-collapsed"
+    ></i>
+{{/ is_sidebar_collapsable }}

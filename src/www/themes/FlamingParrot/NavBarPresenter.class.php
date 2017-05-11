@@ -25,6 +25,8 @@ class FlamingParrot_NavBarPresenter {
     /** @var PFUser */
     private $user;
 
+    public $current_project_navbar_info;
+
     private $request_uri;
 
     /** @var HTTPRequest */
@@ -75,6 +77,7 @@ class FlamingParrot_NavBarPresenter {
     public function __construct(
         $imgroot,
         PFUser $user,
+        $current_project_navbar_info,
         $request_uri,
         $selected_top_tab,
         HTTPRequest $request,
@@ -87,21 +90,22 @@ class FlamingParrot_NavBarPresenter {
         CSRFSynchronizerToken $logout_csrf,
         URLRedirect $url_redirect
     ) {
-        $this->imgroot                = $imgroot;
-        $this->user                   = $user;
-        $this->request_uri            = $request_uri;
-        $this->request                = $request;
-        $this->selected_top_tab       = $selected_top_tab;
-        $this->title                  = $title;
-        $this->search_form_presenter  = $search_form_presenter;
-        $this->display_new_account    = $display_new_account;
-        $this->motd                   = $motd;
-        $this->has_motd               = ! empty($motd);
-        $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
-        $this->navbar_items           = $navbar_items_collection->getItems();
-        $this->user_actions           = $user_actions;
-        $this->logout_csrf            = $logout_csrf;
-        $this->url_redirect           = $url_redirect;
+        $this->imgroot                     = $imgroot;
+        $this->user                        = $user;
+        $this->current_project_navbar_info = $current_project_navbar_info;
+        $this->request_uri                 = $request_uri;
+        $this->request                     = $request;
+        $this->selected_top_tab            = $selected_top_tab;
+        $this->title                       = $title;
+        $this->search_form_presenter       = $search_form_presenter;
+        $this->display_new_account         = $display_new_account;
+        $this->motd                        = $motd;
+        $this->has_motd                    = ! empty($motd);
+        $this->number_of_page_results      = Search_SearchPlugin::RESULTS_PER_QUERY;
+        $this->navbar_items                = $navbar_items_collection->getItems();
+        $this->user_actions                = $user_actions;
+        $this->logout_csrf                 = $logout_csrf;
+        $this->url_redirect                = $url_redirect;
 
         $this->logout_label     = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label = $GLOBALS['Language']->getText('my_index','account_maintenance');

@@ -1,0 +1,117 @@
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.project-sidebar-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    transition: background 100ms;
+    background: darken($tlp-theme-sidebar-background-color, 2%);
+    color: $tlp-ui-border-dark;
+    font-size: 22px;
+    text-decoration: none;
+
+    &:hover {
+        background: darken($tlp-theme-sidebar-background-color, 4%);
+    }
+}
+
+.project-sidebar-title-icon {
+    margin: 0 10px 0 0;
+    color: transparentize($tlp-ui-border-dark, .3);
+    font-size: 16px;
+}
+
+.project-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 $tlp-spacing;
+}
+
+.project-sidebar-nav-item {
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: $navbar-height;
+    padding: 0 0 0 12px;
+    border-left: 3px solid transparent;
+    color: $tlp-ui-border-dark;
+    font-size: 14px;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        background: darken($tlp-theme-sidebar-background-color, 2%);
+    }
+
+    &.active {
+        border-left-color: $tlp-theme-color;
+        background: darken($tlp-theme-sidebar-background-color, 2%);
+
+        &::before {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 0;
+            height: 0;
+            transform: translateY(-50%);
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent $tlp-theme-background-color transparent transparent;
+            content: '';
+        }
+    }
+}
+
+.project-sidebar-nav-item-icon {
+    margin: 0 7px 0 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+.project-sidebar-collapser-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto $tlp-spacing;
+    transition: background 100ms;
+    border-radius: 50px;
+    background: darken($tlp-theme-sidebar-background-color, 2%);
+    color: transparentize($tlp-ui-border-dark, .4);
+    font-size: 12px;
+    cursor: pointer;
+    z-index: 10001;
+
+    // scss-lint:disable PseudoElement
+    &.fa-chevron-left:before {
+        position: relative;
+        left: -1.5px;
+    }
+
+    &.fa-chevron-right:before {
+        position: relative;
+        left: 1px;
+    }
+
+    &:hover {
+        background: darken($tlp-theme-sidebar-background-color, 4%);
+    }
+}

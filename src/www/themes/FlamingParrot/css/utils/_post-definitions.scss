@@ -29,7 +29,7 @@
         position: relative;
     }
 
-    &.has_sidebar.sidebar-collapsed {
+    &.has-sidebar.sidebar-collapsed {
         .logo {
             width: $sidebar-width-collapsed;
             max-width: $sidebar-width-collapsed;
@@ -39,21 +39,18 @@
         .sidebar-nav {
             width: $sidebar-width-collapsed;
 
-            .project-title-container {
-                width: $sidebar-width;
-                visibility: hidden;
+            .project-title-container,
+            .sidebar-about {
+                display: none;
             }
 
             li a {
                 width: $sidebar-width-collapsed;
+                font-size: 18px;
 
                 & > span {
                     display: none;
                 }
-            }
-
-            .sidebar-about {
-                display: none;
             }
         }
 
@@ -66,7 +63,7 @@
         margin: 0;
     }
 
-    &.has_sidebar .main {
+    &.has-sidebar .main {
         margin: 0 0 0 $sidebar-width;
     }
 

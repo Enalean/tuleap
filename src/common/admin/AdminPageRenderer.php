@@ -21,6 +21,7 @@
 namespace Tuleap\Admin;
 
 use ForgeConfig;
+use UserManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\SidebarPresenter;
 
@@ -28,10 +29,18 @@ class AdminPageRenderer
 {
     public function header($title, $is_framed = true)
     {
+        $current_user = UserManager::instance()->getCurrentUser();
+        $body_class   = array();
+
+        if ($current_user->getPreference('admin_sidebar_state')) {
+            $body_class[] = $current_user->getPreference('admin_sidebar_state');
+        }
+
         $GLOBALS['HTML']->header(
             array(
+                'in_siteadmin' => true,
                 'title'        => $title,
-                'body_class'   => array('in-siteadmin'),
+                'body_class'   => $body_class,
                 'main_classes' => $is_framed ? array('tlp-framed') : array(),
                 'sidebar'      => new SidebarPresenter('siteadmin-sidebar', $this->renderSideBar())
             )

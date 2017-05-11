@@ -58,8 +58,14 @@ class HeaderPresenter
     /** @var string */
     public $main_classes;
 
+    /** @var array */
+    public $unicode_icons;
+
     /** @var SidebarPresenter */
     public $sidebar;
+
+    /** @var CurrentProjectNavbarInfoPresenter */
+    public $current_project_navbar_info_presenter;
 
     public function __construct(
         $title,
@@ -70,17 +76,21 @@ class HeaderPresenter
         array $feedback_logs,
         $body_classes,
         $main_classes,
-        $sidebar
+        $sidebar,
+        $current_project_navbar_info_presenter,
+        $unicode_icons
     ) {
-        $this->title            = html_entity_decode($title);
-        $this->imgroot          = $imgroot;
-        $this->navbar_presenter = $navbar_presenter;
-        $this->stylesheets      = $stylesheets;
-        $this->color_name       = $color->getName();
-        $this->color_code       = $color->getHexaCode();
-        $this->body_classes     = $body_classes;
-        $this->main_classes     = $main_classes;
-        $this->sidebar          = $sidebar;
+        $this->title                                 = html_entity_decode($title);
+        $this->imgroot                               = $imgroot;
+        $this->navbar_presenter                      = $navbar_presenter;
+        $this->stylesheets                           = $stylesheets;
+        $this->color_name                            = $color->getName();
+        $this->color_code                            = $color->getHexaCode();
+        $this->body_classes                          = $body_classes;
+        $this->main_classes                          = $main_classes;
+        $this->sidebar                               = $sidebar;
+        $this->current_project_navbar_info_presenter = $current_project_navbar_info_presenter;
+        $this->unicode_icons                         = $unicode_icons;
 
         $this->buildFeedbacks($feedback_logs);
 

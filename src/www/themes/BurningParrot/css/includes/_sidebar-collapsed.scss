@@ -17,18 +17,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// scss-lint:disable QualifyingElement
-body.sidebar-fully-collpased {
+.has-sidebar {
+    padding: $navbar-height 0 0 $sidebar-expanded-width;
+}
+
+.sidebar-collapsed {
+    padding: $navbar-height 0 0 $sidebar-collapsed-width;
+
+    .sidebar {
+        width: $sidebar-collapsed-width;
+    }
+
+    .project-sidebar-nav-item-icon {
+        margin: 0;
+        font-size: 18px;
+
+        + span {
+            display: none;
+        }
+    }
+}
+
+.sidebar-fully-collapsed {
     padding: $navbar-height 0 0 $sidebar-fully-collapsed-width;
 
-    .siteadmin-sidebar {
+    .sidebar {
         width: $sidebar-fully-collapsed-width;
-        cursor: e-resize;
 
-        > .scroll-content,
-        > .scrollbar-track {
+        .admin-sidebar-section,
+        .scrollbar-track {
             opacity: 0;
             pointer-events: none;
         }
+    }
+
+    .sidebar-collapser-bar {
+        cursor: e-resize;
+    }
+}
+
+.sidebar-collapsed,
+.sidebar-fully-collapsed {
+    #logo {
+        width: $sidebar-collapsed-width;
+        background: $tlp-theme-color url('../images/organization_logo_small.png') no-repeat center center;
+    }
+
+    .project-sidebar-title,
+    .sidebar-about {
+        display: none;
+    }
+
+    .sidebar-collapser-icon::before {
+        content: '\f054';
     }
 }

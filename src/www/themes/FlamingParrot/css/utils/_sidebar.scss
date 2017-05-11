@@ -28,76 +28,91 @@
     }
 
     a.project-title {
-        width: $sidebar-width;
-        color: $white;
-        text-align: center;
-        font-size: 1.6em;
-        line-height: 1.5em;
-        box-shadow: inset 0 -7px 30px -10px darken($sidebar-background, 5%);
-        margin: 0 0 20px 0;
-        padding: 10px 0;
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 10px;
+        transition: background 100ms;
+        background: darken($sidebar-background, 2%);
+        color: transparentize(#ffffff, .2);
+        font-size: 22px;
+        text-decoration: none;
 
         &:hover {
-            text-decoration: none;
-            box-shadow: inset 0 -10px 30px -10px darken($sidebar-background, 7%);
+            background: darken($sidebar-background, 4%);
         }
 
         i {
-            font-size: 0.7em;
+            margin-right: 10px;
             color: $grey;
-            margin-right: 5px;
+            font-size: 16px;
         }
     }
 
     li > a {
-        display: block;
+        display: flex;
+        position: relative;
+        align-items: center;
         width: $sidebar-width;
-        padding: 7px 12px 7px 10px;
+        height: $navbar-height;
+        padding: 0 0 0 12px;
         border-left: 3px solid transparent;
-        color: transparentize(#ffffff, .3);
+        color: transparentize(#ffffff, .2);
         text-shadow: none;
         box-sizing: border-box;
+
+        > i {
+            -webkit-font-smoothing: antialiased;
+        }
     }
 
     .nav-list > .active > a, .nav-list > .active > a:hover, .nav-list > .active > a:focus {
-        background: none;
         font-weight: normal;
         color: lighten($grey, 25%);
         border-left: 3px solid $main;
-        background: darken($sidebar-background, 3%) url('../images/sidebar_active.png') right center no-repeat;
+        background: darken($sidebar-background, 2%);
+
+        &::before {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 0;
+            height: 0;
+            transform: translateY(-50%);
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent $main-background transparent transparent;
+            content: '';
+        }
     }
 
     .nav > li > a:hover, .nav > li > a:focus {
-        background: none;
-        border-left: 3px solid darken($sidebar-background, 3%);
-        background: darken($sidebar-background, 3%);
+        border-left: 3px solid transparent;
+        background: darken($sidebar-background, 2%);
     }
 
     i.sidebar-collapse {
         flex: 0 0 auto;
-        color: $grey;
-        background: darken($sidebar-background, 5%);
+        color: transparentize(#ffffff, .3);
+        background: darken($sidebar-background, 2%);
         font-size: 1em;
         display: block;
         text-align: center;
         width: 30px;
         height: 30px;
         box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        margin: 10px auto;
+        margin: 20px auto;
         border-radius: 50%;
         padding: 8px 2px 0 0;
         cursor: pointer;
 
         &.icon-chevron-right {
-            margin: 10px 8px;
-            padding: 8px 0 0 0;
+            padding: 8px 0 0;
         }
 
         &:hover {
             color: lighten($grey, 10%);
-            background: darken($sidebar-background, 3%);
+            background: darken($sidebar-background, 4%);
         }
     }
 }
@@ -112,23 +127,23 @@
     padding: 33px 0 20px 0;
     height: 75px;
     text-align: center;
-    color: lighten($sidebar-background, 20%);
+    color: lighten($sidebar-background, 15%);
 
     > .admin-sidebar-tuleap {
-        margin: 0 0 10px;
-        fill: lighten($sidebar-background, 20%);
+        margin: 0 0 8px;
+        fill: lighten($sidebar-background, 15%);
     }
 
     p {
-        font-size: 0.8em;
+        font-size: 12px;
         margin: 0;
 
         a {
-            color: lighten($sidebar-background, 20%);
+            color: lighten($sidebar-background, 15%);
+            text-decoration: none;
 
             &:hover {
-                opacity: .7;
-                text-decoration: none;
+                color: $main;
             }
         }
     }

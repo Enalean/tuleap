@@ -63,7 +63,6 @@ class AdminSidebarPresenterBuilder
             $this->pendingNewsCount(),
             $this->areTroveCategoriesEnabled(),
             $this->getAdditionalTrackerEntries(),
-            $this->getTuleapVersion(),
             $this->getPlugins()
         );
     }
@@ -143,10 +142,5 @@ class AdminSidebarPresenterBuilder
         );
 
         return $additional_tracker_entries;
-    }
-
-    private function getTuleapVersion()
-    {
-        return trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
     }
 }

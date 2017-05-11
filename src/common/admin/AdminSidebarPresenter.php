@@ -31,7 +31,6 @@ class AdminSidebarPresenter
     public $ppending_news_count;
     public $are_trove_categories_enabled;
     public $additional_tracker_entries;
-    public $tuleap_version;
     public $plugins;
 
     public $users_section_title;
@@ -73,7 +72,6 @@ class AdminSidebarPresenter
         $pending_news_count,
         $are_trove_categories_enabled,
         $additional_tracker_entries,
-        $tuleap_version,
         $plugins
     ) {
         $this->all_users_count              = $all_users_count;
@@ -85,7 +83,6 @@ class AdminSidebarPresenter
         $this->pending_news_count           = $pending_news_count;
         $this->are_trove_categories_enabled = $are_trove_categories_enabled;
         $this->additional_tracker_entries   = $additional_tracker_entries;
-        $this->tuleap_version               = $tuleap_version;
         $this->plugins                      = $plugins;
 
         $this->users_section_title                     = $GLOBALS['Language']->getText('admin_sidebar', 'users_section_title');
@@ -118,6 +115,7 @@ class AdminSidebarPresenter
         $this->utils_nav_mass_mail                     = $GLOBALS['Language']->getText('admin_sidebar', 'utils_nav_mass_mail');
 
         $this->links_nav_doc                           = $GLOBALS['Language']->getText('admin_sidebar', 'links_nav_doc');
+        $this->collapse_sidebar_label                  = $GLOBALS['Language']->getText('admin_sidebar', 'collapse_sidebar_label');
 
         $this->plugins_section_title = $GLOBALS['Language']->getText('admin_main', 'header_plugins');
         $this->plugins_manage_all    = $GLOBALS['Language']->getText('admin_main', 'manage_all_plugins');
