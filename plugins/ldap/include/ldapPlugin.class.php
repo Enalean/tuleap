@@ -936,8 +936,12 @@ class LdapPlugin extends Plugin {
             $ldapQuery->syncAll();
 
             $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
-            if($retentionPeriod != NULL && $retentionPeriod!= "") {
-                $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
+            if ($retentionPeriod != NULL && $retentionPeriod != "") {
+                $ldapCleanUpManager = new LDAP_CleanUpManager(
+                    $this->getUserRemover(),
+                    $retentionPeriod
+                );
+
                 $ldapCleanUpManager->cleanAll();
             }
 
@@ -1181,15 +1185,20 @@ class LdapPlugin extends Plugin {
     {
         return new LDAP_ProjectGroupDao(
             CodendiDataAccess::instance(),
-            new UserRemover(
-                ProjectManager::instance(),
-                EventManager::instance(),
-                new ArtifactTypeFactory(false),
-                new UserRemoverDao(),
-                UserManager::instance(),
-                new ProjectHistoryDao(),
-                new UGroupManager()
-            )
+            $this->getUserRemover()
+        );
+    }
+
+    private function getUserRemover()
+    {
+        return new UserRemover(
+            ProjectManager::instance(),
+            EventManager::instance(),
+            new ArtifactTypeFactory(false),
+            new UserRemoverDao(),
+            UserManager::instance(),
+            new ProjectHistoryDao(),
+            new UGroupManager()
         );
     }
 }
