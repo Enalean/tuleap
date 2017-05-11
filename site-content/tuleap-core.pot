@@ -10,6 +10,11 @@ msgstr ""
 msgid "Agile Dashboard"
 msgstr ""
 
+msgid ""
+"An error occured with your upload. Please select a picture smaller than "
+"300Kb."
+msgstr ""
+
 msgid "And more..."
 msgstr ""
 

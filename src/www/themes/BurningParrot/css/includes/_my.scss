@@ -1,4 +1,10 @@
+.dashboard-user-title {
+    display: flex;
+    align-items: center;
+}
+
 .user-my-realname {
+    margin: 0 0 0 $tlp-half-spacing;
     color: $tlp-theme-color;
     font-size: 40px;
     font-weight: 300;
@@ -6,6 +12,7 @@
 
 .user-my-login {
     display: block;
+    margin: 0;
     font-size: 20px;
 }
 

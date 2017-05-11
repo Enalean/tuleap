@@ -102,10 +102,7 @@ class UserDashboardController
             new MyPresenter(
                 $this->csrf,
                 '/my/',
-                new UserPresenter(
-                    $current_user->getRealName(),
-                    $current_user->getUnixName()
-                ),
+                new UserPresenter($current_user),
                 $user_dashboards_presenter
             )
         );

@@ -1,6 +1,11 @@
 <div class="tlp-framed-vertically">
     {{# user_presenter }}
-        <div class="tlp-framed-horizontally">
+        <div class="tlp-framed-horizontally dashboard-user-title">
+            <div class="tlp-avatar-jumbo">
+                {{# has_avatar }}
+                    <img src="{{ avatar_url }}">
+                {{/ has_avatar }}
+            </div>
             <h1 class="user-my-realname">
                 {{ real_name }}
                 <small class="user-my-login">@{{ login }}</small>
