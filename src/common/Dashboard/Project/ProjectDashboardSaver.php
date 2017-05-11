@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Project;
 
 use PFUser;
 use Project;
+use Tuleap\Dashboard\DashboardDoesNotExistException;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 
@@ -45,7 +46,7 @@ class ProjectDashboardSaver
      */
     public function save(PFUser $user, Project $project, $name)
     {
-        $this->checkUserCanSave($user, $project, $name);
+        $this->checkUserCanSaveByDashboardName($user, $project, $name);
         return $this->dao->save($project->getID(), $name);
     }
 
@@ -58,11 +59,23 @@ class ProjectDashboardSaver
      */
     public function update(PFUser $user, Project $project, $id, $name)
     {
-        $this->checkUserCanSave($user, $project, $name);
+        $this->checkUserCanSaveByDashboardName($user, $project, $name);
         return $this->dao->edit($id, $name);
     }
 
-    private function checkUserCanSave(PFUser $user, Project $project, $name)
+    /**
+     * @param PFUser $user
+     * @param Project $project
+     * @param $dashboard_id
+     * @return bool
+     */
+    public function delete(PFUser $user, Project $project, $dashboard_id)
+    {
+        $this->checkUserCanDeleteByDashboardId($user, $project, $dashboard_id);
+        return $this->dao->delete($project->getId(), $dashboard_id);
+    }
+
+    private function checkUserCanSaveByDashboardName(PFUser $user, Project $project, $name)
     {
         if (! $user->isAdmin($project->getID())) {
             throw new UserCanNotUpdateProjectDashboardException();
@@ -74,6 +87,17 @@ class ProjectDashboardSaver
 
         if ($this->dao->searchByProjectIdAndName($project->getID(), $name)->count() > 0) {
             throw new NameDashboardAlreadyExistsException();
+        }
+    }
+
+    private function checkUserCanDeleteByDashboardId(PFUser $user, Project $project, $dashboard_id)
+    {
+        if (! $user->isAdmin($project->getID())) {
+            throw new UserCanNotUpdateProjectDashboardException();
+        }
+
+        if ($this->dao->searchById($dashboard_id)->count() <= 0) {
+            throw new DashboardDoesNotExistException();
         }
     }
 }
