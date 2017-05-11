@@ -11,7 +11,7 @@
     {{# has_dashboard }}
         <nav class="tlp-tabs user-dashboards">
             {{# user_dashboards }}
-                <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="?dashboard_id={{ id }}">
+                <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}?dashboard_id={{ id }}">
                     {{ name }}
                     {{# is_active }}
                         <button class="tlp-button-primary tlp-button-outline tlp-button-mini dashboard-edit-button"

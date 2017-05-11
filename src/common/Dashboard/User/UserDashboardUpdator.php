@@ -21,39 +21,31 @@
 namespace Tuleap\Dashboard\User;
 
 use PFUser;
+use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
+use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 
-class Retriever
+class UserDashboardUpdator
 {
     /**
-     * @var Dao
+     * @var UserDashboardDao
      */
     private $dao;
 
-    public function __construct(Dao $dao)
+    public function __construct(UserDashboardDao $dao)
     {
         $this->dao = $dao;
     }
 
-    /**
-     * @return Dashboard[]
-     */
-    public function getAllUserDashboards(PFUser $user)
+    public function update(PFUser $user, $id, $name)
     {
-        $user_dashboards = array();
-
-        foreach ($this->dao->searchAllUserDashboards($user) as $row) {
-            $user_dashboards[] = $this->instantiateFromRow($row);
+        if (! $name) {
+            throw new NameDashboardDoesNotExistException();
         }
 
-        return $user_dashboards;
-    }
+        if ($this->dao->searchByUserIdAndName($user, $name)->count() > 0) {
+            throw new NameDashboardAlreadyExistsException();
+        }
 
-    private function instantiateFromRow(array $user_dashboards)
-    {
-        return new Dashboard(
-            $user_dashboards['id'],
-            $user_dashboards['user_id'],
-            $user_dashboards['name']
-        );
+        return $this->dao->edit($user->getId(), $id, $name);
     }
 }

@@ -18,32 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard;
 
-class DashboardPresenter
+class Dashboard
 {
-    public $user_id;
-    public $name;
-    public $id;
+    private $id;
+    private $name;
 
-    public $is_active;
-    public $delete_confirm;
-
-    public function __construct(Dashboard $dashboard, $is_active)
+    public function __construct($id, $name)
     {
-        $this->id      = $dashboard->getId();
-        $this->user_id = $dashboard->getUserId();
-        $this->name    = $dashboard->getName();
+        $this->id   = $id;
+        $this->name = $name;
+    }
 
-        $this->is_active = $is_active;
+    public function getId()
+    {
+        return $this->id;
+    }
 
-        $this->delete_confirm  = sprintf(
-            dgettext(
-                'tuleap-core',
-                'You are about to delete the dashboard "%s".
-                This action is irreversible. Do you confirm this deletion?'
-            ),
-            $this->name
-        );
+    public function getName()
+    {
+        return $this->name;
     }
 }

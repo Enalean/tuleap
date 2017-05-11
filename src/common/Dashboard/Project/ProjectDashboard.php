@@ -18,10 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Project;
 
-use Exception;
+use Tuleap\Dashboard\Dashboard;
 
-class NameDashboardAlreadyExistsException extends Exception
+class ProjectDashboard extends Dashboard
 {
+    private $project_id;
+
+    public function __construct($id, $project_id, $name)
+    {
+        parent::__construct($id, $name);
+        $this->project_id = $project_id;
+    }
+
+    public function getProjectId()
+    {
+        return $this->project_id;
+    }
 }

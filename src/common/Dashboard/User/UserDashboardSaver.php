@@ -21,21 +21,37 @@
 namespace Tuleap\Dashboard\User;
 
 use PFUser;
+use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
+use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 
-class Deletor
+class UserDashboardSaver
 {
     /**
-     * @var Dao
+     * @var UserDashboardDao
      */
     private $dao;
 
-    public function __construct(Dao $dao)
+    public function __construct(UserDashboardDao $dao)
     {
         $this->dao = $dao;
     }
 
-    public function delete(PFUser $user, $dashboard_id)
+    /**
+     * @param PFUser $user
+     * @param $name
+     * @return bool
+     * @throws NameDashboardAlreadyExistsException
+     * @throws NameDashboardDoesNotExistException
+     */
+    public function save(PFUser $user, $name)
     {
-        $this->dao->delete($user->getId(), $dashboard_id);
+        if (! $name) {
+            throw new NameDashboardDoesNotExistException();
+        }
+
+        if ($this->dao->searchByUserIdAndName($user, $name)->count() > 0) {
+            throw new NameDashboardAlreadyExistsException();
+        }
+        return $this->dao->save($user, $name);
     }
 }

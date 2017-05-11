@@ -18,33 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Project;
 
 use CSRFSynchronizerToken;
 use Tuleap\Dashboard\PagePresenter;
 
-class MyPresenter extends PagePresenter
+class ProjectPagePresenter extends PagePresenter
 {
     /**
-     * @var UserPresenter
+     * @var ProjectPresenter
      */
-    public $user_presenter;
+    public $project_presenter;
     /**
-     * @var UserDashboardPresenter[]
+     * @var ProjectDashboardPresenter[]
      */
-    public $user_dashboards;
+    public $project_dashboards;
     public $has_dashboard;
+    public $is_page_read_only;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $url,
-        UserPresenter $user_presenter,
-        array $user_dashboards
+        ProjectPresenter $project_presenter,
+        array $project_dashboards,
+        $is_page_read_only
     ) {
         parent::__construct($csrf, $url);
 
-        $this->user_presenter  = $user_presenter;
-        $this->user_dashboards = $user_dashboards;
-        $this->has_dashboard   = count($user_dashboards) > 0;
+        $this->project_presenter  = $project_presenter;
+        $this->project_dashboards = $project_dashboards;
+        $this->has_dashboard      = count($project_dashboards) > 0;
+        $this->is_page_read_only  = $is_page_read_only;
     }
 }

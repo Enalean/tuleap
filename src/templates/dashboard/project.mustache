@@ -1,44 +1,92 @@
 <div class="dashboard-project-header">
-    <div class="dashboard-project-header-main">
-        <h1 class="dashboard-project-title">
-            {{# has_parent }}
-                <small class="dashboard-project-title-parent">{{ parent_name }}</small>
-                <svg xmlns="http://www.w3.org/2000/svg" class="dashboard-project-title-parent-icon">
-                    <path d="M1,27 L1,28 L11,28 L11,30 L14,27 L11,24 L11,26 L3,26 L3,20 L1,20 L1,27 Z" transform="translate(-1 -20)"/>
-                </svg>
-            {{/ has_parent }}
-            <span class="dashboard-project-title-name">{{ name }}</span>
-        </h1>
-        {{# access }}
-            <span
-                class="tlp-badge-primary
-                    dashboard-project-header-access
+    {{# project_presenter }}
+        <div class="dashboard-project-header-main">
+            <h1 class="dashboard-project-title">
+                {{# has_parent }}
+                    <small class="dashboard-project-title-parent">{{ parent_name }}</small>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="dashboard-project-title-parent-icon">
+                        <path d="M1,27 L1,28 L11,28 L11,30 L14,27 L11,24 L11,26 L3,26 L3,20 L1,20 L1,27 Z" transform="translate(-1 -20)"/>
+                    </svg>
+                {{/ has_parent }}
+                <span class="dashboard-project-title-name">{{ name }}</span>
+            </h1>
+            {{# access }}
+                <span
+                        class="tlp-badge-primary
+                        dashboard-project-header-access
+                        {{# is_public_incl_restricted }}
+                            tlp-tooltip tlp-tooltip-bottom
+                        {{/ is_public_incl_restricted }}
+                    "
                     {{# is_public_incl_restricted }}
-                        tlp-tooltip tlp-tooltip-bottom
+                        data-tlp-tooltip="{{ incl_restricted_label }}"
                     {{/ is_public_incl_restricted }}
-                "
-                {{# is_public_incl_restricted }}
-                    data-tlp-tooltip="{{ incl_restricted_label }}"
-                {{/ is_public_incl_restricted }}
-            >
-                <i class="tlp-badge-icon fa
-                    {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
-                    {{# is_open }}fa-unlock-alt{{/ is_open }}
-                    {{# is_closed }}fa-lock{{/ is_closed }}"
-                ></i> {{ access }}
+                >
+                    <i class="tlp-badge-icon fa
+                        {{# is_wide_open }}fa-unlock{{/ is_wide_open }}
+                        {{# is_open }}fa-unlock-alt{{/ is_open }}
+                        {{# is_closed }}fa-lock{{/ is_closed }}"
+                    ></i> {{ access }}
+                </span>
+            {{/ access }}
+            <span class="tlp-badge-primary dashboard-project-header-members">
+                <i class="tlp-badge-icon fa fa-users"></i>
+                {{ nb_members }}
             </span>
-        {{/ access }}
-        <span class="tlp-badge-primary dashboard-project-header-members">
-            <i class="tlp-badge-icon fa fa-users"></i>
-            {{ nb_members }}
-        </span>
-    </div>
-    {{# use_trove_cat }}
-        {{# trove_cats }}
+        </div>
+        {{# has_trove_cat }}
             <div class="dashboard-project-header-trovecat">
                 <i class="fa fa-tags dashboard-project-header-trovecat-icon"></i>
                 {{ trove_cats }}
             </div>
-        {{/ trove_cats }}
-    {{/ use_trove_cat }}
+        {{/ has_trove_cat }}
+        {{# should_display_a_warning_message_for_no_trove_cat }}
+            <div class="dashboard-project-header-trovecat">
+                <span class="tlp-text-danger"><i class="fa fa-warning"></i> {{ warning_no_trove_cat }}</span>
+            </div>
+        {{/ should_display_a_warning_message_for_no_trove_cat }}
+    {{/ project_presenter }}
 </div>
+
+<div class="tlp-framed-vertically">
+    {{# has_dashboard }}
+        <nav class="tlp-tabs user-dashboards">
+            {{# project_dashboards }}
+                <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}?dashboard_id={{ id }}">
+                    {{ name }}
+                </a>
+            {{/ project_dashboards }}
+            {{^ is_page_read_only }}
+                <a href="javascript:;"
+                   id="add-dashboard-button"
+                   class="tlp-button-primary tlp-button-mini tlp-button-outline"
+                   data-target-modal-id="add-dashboard"
+                >
+                    <i class="fa fa-plus tlp-button-icon"></i>
+                    {{ add_dashboard_label }}
+                </a>
+            {{/ is_page_read_only }}
+        </nav>
+    {{/ has_dashboard }}
+</div>
+
+{{^ has_dashboard }}
+    <div class="empty-page">
+        <p class="empty-page-text">{{ no_dashboard_label }}</p>
+        {{^ is_page_read_only }}
+            <button
+                    type="button"
+                    id="add-dashboard-button"
+                    class="tlp-button-primary tlp-button-large"
+                    data-target-modal-id="add-dashboard"
+            >
+                <i class="fa fa-plus tlp-button-icon"></i>
+                {{ add_dashboard_label }}
+            </button>
+        {{/ is_page_read_only }}
+    </div>
+{{/ has_dashboard }}
+
+{{^ is_page_read_only }}
+    {{> add-dashboard-modal }}
+{{/ is_page_read_only }}

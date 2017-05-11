@@ -18,33 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Project;
 
-use CSRFSynchronizerToken;
-use Tuleap\Dashboard\PagePresenter;
+use Exception;
 
-class MyPresenter extends PagePresenter
+class UserCanNotUpdateProjectDashboardException extends Exception
 {
-    /**
-     * @var UserPresenter
-     */
-    public $user_presenter;
-    /**
-     * @var UserDashboardPresenter[]
-     */
-    public $user_dashboards;
-    public $has_dashboard;
-
-    public function __construct(
-        CSRFSynchronizerToken $csrf,
-        $url,
-        UserPresenter $user_presenter,
-        array $user_dashboards
-    ) {
-        parent::__construct($csrf, $url);
-
-        $this->user_presenter  = $user_presenter;
-        $this->user_dashboards = $user_dashboards;
-        $this->has_dashboard   = count($user_dashboards) > 0;
-    }
 }

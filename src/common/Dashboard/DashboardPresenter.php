@@ -18,33 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard;
 
-use CSRFSynchronizerToken;
-use Tuleap\Dashboard\PagePresenter;
-
-class MyPresenter extends PagePresenter
+class DashboardPresenter
 {
-    /**
-     * @var UserPresenter
-     */
-    public $user_presenter;
-    /**
-     * @var UserDashboardPresenter[]
-     */
-    public $user_dashboards;
-    public $has_dashboard;
+    public $name;
+    public $id;
 
-    public function __construct(
-        CSRFSynchronizerToken $csrf,
-        $url,
-        UserPresenter $user_presenter,
-        array $user_dashboards
-    ) {
-        parent::__construct($csrf, $url);
+    public $is_active;
+    public $delete_confirm;
 
-        $this->user_presenter  = $user_presenter;
-        $this->user_dashboards = $user_dashboards;
-        $this->has_dashboard   = count($user_dashboards) > 0;
+    public function __construct(Dashboard $dashboard, $is_active)
+    {
+        $this->id   = $dashboard->getId();
+        $this->name = $dashboard->getName();
+
+        $this->is_active = $is_active;
+
+        $this->delete_confirm = sprintf(
+            _(
+                'You are about to delete the dashboard "%s".
+                This action is irreversible. Do you confirm this deletion?'
+            ),
+            $this->name
+        );
     }
 }

@@ -18,32 +18,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Project;
 
 use PFUser;
+use Project;
+use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
+use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 
-class Updator
+class ProjectDashboardSaver
 {
     /**
-     * @var Dao
+     * @var ProjectDashboardDao
      */
     private $dao;
 
-    public function __construct(Dao $dao)
+    public function __construct(ProjectDashboardDao $dao)
     {
         $this->dao = $dao;
     }
 
-    public function update(PFUser $user, $id, $name)
+    /**
+     * @param PFUser $user
+     * @param Project $project
+     * @param $name
+     * @return int
+     * @throws NameDashboardAlreadyExistsException
+     * @throws NameDashboardDoesNotExistException
+     * @throws UserCanNotUpdateProjectDashboardException
+     */
+    public function save(PFUser $user, Project $project, $name)
     {
+        if (! $user->isAdmin($project->getID())) {
+            throw new UserCanNotUpdateProjectDashboardException();
+        }
+
         if (! $name) {
             throw new NameDashboardDoesNotExistException();
         }
 
-        if ($this->dao->searchByUserIdAndName($user, $name)->count() > 0) {
+        if ($this->dao->searchByProjectIdAndName($project->getID(), $name)->count() > 0) {
             throw new NameDashboardAlreadyExistsException();
         }
-
-        return $this->dao->edit($user->getId(), $id, $name);
+        return $this->dao->save($project->getID(), $name);
     }
 }

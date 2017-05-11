@@ -24,7 +24,7 @@ use DataAccess;
 use DataAccessObject;
 use PFUser;
 
-class Dao extends DataAccessObject
+class UserDashboardDao extends DataAccessObject
 {
 
     public function __construct(DataAccess $da = null)
