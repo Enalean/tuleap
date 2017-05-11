@@ -29,12 +29,15 @@ homepage	nb_users_label	Utilisateurs
 homepage	sign_in_title	Connexion
 homepage	username_placeholder	Nom d'utilisateur
 homepage	password_placeholder	Mot de passe
-homepage	sign_in_submit	Connexion
-homepage	forgot_password	Oups, j'ai oublié mon mot de passe
+homepage	sign_in_submit	Se connecter
+homepage	forgot_password	Oups, j'ai perdu mon mot de passe
 homepage	sign_in_or	ou
 homepage	not_a_member	Pas encore membre ?
+homepage	create_account	Créer un compte
 homepage	register	Créer un compte
 homepage	welcome_back	Bienvenue
+homepage	welcome_title	Bonjour,<br/> Bienvenue sur Tuleap !
+homepage	my_personal_page	Ma page personnelle
 
 #
 #-----------------------------------------------

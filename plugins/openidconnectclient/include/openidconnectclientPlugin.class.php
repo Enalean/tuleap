@@ -103,7 +103,7 @@ class openidconnectclientPlugin extends Plugin {
 
     public function burning_parrot_get_stylesheets($params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
+        if ($this->isInBurningParrotCompatiblePage()) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
         }
@@ -114,6 +114,17 @@ class openidconnectclientPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['javascript_files'][] = $this->getPluginPath().'/scripts/open-id-connect-client.js';
         }
+    }
+
+    private function isInBurningParrotCompatiblePage()
+    {
+        $uri = $_SERVER['REQUEST_URI'];
+
+        return (
+            strpos($uri, '/account') === 0
+            || strpos($uri, '/plugins/openidconnectclient') === 0
+            || $uri === '/'
+        );
     }
 
     private function loadLibrary() {

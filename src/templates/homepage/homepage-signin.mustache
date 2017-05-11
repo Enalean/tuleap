@@ -1,36 +1,71 @@
 {{# user_is_anonymous }}
-    <form class="span3 sign-in" action="{{ most_secure_url }}/account/login.php" method="POST">
-        <h3>{{ sign_in_title }}</h3>
-
+    <form class="homepage-sign-in" action="{{ most_secure_url }}/account/login.php" method="POST">
         {{# login }}
-            <div class="input-prepend">
-                <span class="add-on"><i class="icon-user"></i></span>
-                <input type="text" name="form_loginname" placeholder="{{ username_placeholder }}">
+            <div class="sign-in-avatar">
+                <div class="tlp-avatar-extra-large"></div>
             </div>
-            <div class="input-prepend">
-                <span class="add-on"><i class="icon-lock"></i></span>
-                <input type="password" name="form_pw" placeholder="{{ password_placeholder }}">
+
+            <div class="tlp-form-element">
+                <label for="form_loginname" class="tlp-label">{{ username_placeholder }}</label>
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="form_loginname"
+                    name="form_loginname"
+                    placeholder="{{ username_placeholder }}"
+                    tabindex="1"
+                >
+
+                {{# allow_password_recovery }}
+                    <p class="tlp-text-info sign-in-forgot-password">
+                        <a href="{{ most_secure_url }}/account/lostpw.php">{{ forgot_password }}</a>
+                    </p>
+                {{/ allow_password_recovery }}
             </div>
+
+            <div class="tlp-form-element">
+                <label for="form_pw" class="tlp-label">{{ password_placeholder }}</label>
+                <input
+                    type="password"
+                    class="tlp-input"
+                    id="form_pw"
+                    name="form_pw"
+                    placeholder="{{ password_placeholder }}"
+                    tabindex="2"
+                >
+            </div>
+
             <input type="hidden" name="{{ csrf_token_name }}" value="{{ csrf_token_value }}">
-            <button type="submit" name="login" class="btn btn-large btn-primary">{{ sign_in_submit }}</button>
-            {{# allow_password_recovery }}
-                <a class="lost-password" href="{{ most_secure_url }}/account/lostpw.php">{{ forgot_password }}</a>
-                <span class="sign-in-or-line"></span><span class="sign-in-or">{{ sign_in_or }}</span><span class="sign-in-or-line"></span>
-                <span class="sign-in-register">{{ not_a_member }} <a href="{{ most_secure_url }}/account/register.php">{{ register }}</a></span>
-            {{/ allow_password_recovery }}
+            <button
+                type="submit"
+                name="login"
+                class="tlp-button-primary tlp-button-large tlp-button-wide sign-in-button"
+                tabindex="3"
+            >{{ sign_in_submit }}</button>
+
+            {{{ additional_connectors }}}
+
+            <span class="sign-in-register">{{ not_a_member }} <a href="{{ most_secure_url }}/account/register.php">{{ create_account_label }}</a></span>
         {{/ login }}
     </form>
 {{/ user_is_anonymous }}
 
 {{^ user_is_anonymous }}
-    <div class="span3 welcome-back">
+    <div class="homepage-already-signed-in">
         {{# user }}
-            {{{ fetchHtmlAvatar }}}
-            <h3>
-                {{ welcome_back }}
-                <br>
-                <strong>{{ getRealName }}</strong>!
-            </h3>
+            <div class="tlp-avatar-extra-large homepage-avatar">
+                {{{ fetchHtmlAvatar }}}
+            </div>
+            <div class="homepage-already-signed-in-welcome">
+                <h2 class="homepage-already-signed-in-welcome-title">{{ welcome_back }}</h2>
+                <span class="homepage-user-real-name">{{ getRealName }}</span>
+                <span class="homepage-user-login-name">@{{ getUnixName }}</span>
+            </div>
+            <a
+                href="/my/"
+                class="tlp-button-primary tlp-button-large homepage-my-personal-page"
+                role="button"
+            >{{ my_personal_page }}</a>
         {{/ user }}
     </div>
 {{/ user_is_anonymous }}
