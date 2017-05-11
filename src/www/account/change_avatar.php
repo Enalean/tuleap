@@ -31,38 +31,46 @@ if ($user->isAnonymous()) {
 $csrf = new CSRFSynchronizerToken('/account/change_avatar.php');
 
 if (isset($_FILES['avatar'])) {
-    $handle = new Upload($_FILES['avatar']);
-    list($width, $height) = getimagesize($_FILES['avatar']['tmp_name']);
-    $max_size = 100;
-    if ($width > $max_size || $height > $max_size) {
-        $handle->image_resize     = true;
-        $handle->image_ratio_crop = 'L';
-        $handle->image_y          = $max_size;
-        $handle->image_x          = $max_size;
-    }
-    $handle->image_background_color = '#FFFFFF';
-    $handle->image_convert          = 'png';
-    $handle->file_new_name_body     = 'avatar';
-    $handle->file_safe_name         = false;
-    $handle->file_force_extension   = false;
-    $handle->file_new_name_ext      = '';
-    $handle->allowed                = 'image/*';
-    $handle->file_overwrite         = true;
+    if ($_FILES['avatar']['error']) {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            _('An error occured with your upload. Please select a picture smaller than 300Kb.')
+        );
+    } else {
+        $handle = new Upload($_FILES['avatar']);
+        list($width, $height) = getimagesize($_FILES['avatar']['tmp_name']);
+        $max_size = 100;
+        if ($width > $max_size || $height > $max_size) {
+            $handle->image_resize = true;
+            $handle->image_ratio_crop = 'L';
+            $handle->image_y = $max_size;
+            $handle->image_x = $max_size;
+        }
+        $handle->image_background_color = '#FFFFFF';
+        $handle->image_convert = 'png';
+        $handle->file_new_name_body = 'avatar';
+        $handle->file_safe_name = false;
+        $handle->file_force_extension = false;
+        $handle->file_new_name_ext = '';
+        $handle->allowed = 'image/*';
+        $handle->file_overwrite = true;
 
-    if ($handle->uploaded && ForgeConfig::get('sys_enable_avatars', true)) {
-        $csrf->check();
+        if ($handle->uploaded && ForgeConfig::get('sys_enable_avatars', true)) {
+            $csrf->check();
 
-        $user_id     = (string)$user->getId();
-        $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') .'/user/avatar/');
-        $path        =  "$avatar_path/". substr($user_id, -2, 1) .'/'. substr($user_id, -1, 1) ."/$user_id";
-        $handle->process($path);
-        if ($handle->processed) {
-            $user->sethasAvatar();
-            $user_manager->updateDb($user);
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_change_avatar', 'success'));
-            $GLOBALS['Response']->redirect('/account/');
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $handle->error);
+            $user_id = (string)$user->getId();
+            $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') . '/user/avatar/');
+            $path = "$avatar_path/" . substr($user_id, -2, 1) . '/' . substr($user_id, -1, 1) . "/$user_id";
+            $handle->process($path);
+            if ($handle->processed) {
+                $user->sethasAvatar();
+                $user_manager->updateDb($user);
+                $GLOBALS['Response']->addFeedback('info',
+                    $GLOBALS['Language']->getText('account_change_avatar', 'success'));
+                $GLOBALS['Response']->redirect('/account/');
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $handle->error);
+            }
         }
     }
 }

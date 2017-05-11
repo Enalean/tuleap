@@ -20,14 +20,20 @@
 
 namespace Tuleap\Dashboard\User;
 
+use PFUser;
+
 class UserPresenter
 {
     public $real_name;
     public $login;
+    public $avatar_url;
+    public $has_avatar;
 
-    public function __construct($real_name, $login)
+    public function __construct(PFUser $user)
     {
-        $this->real_name = $real_name;
-        $this->login     = $login;
+        $this->real_name  = $user->getRealName();
+        $this->login      = $user->getUnixName();
+        $this->has_avatar = $user->hasAvatar();
+        $this->avatar_url = $user->getAvatarUrl();
     }
 }

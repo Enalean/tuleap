@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, php-format
@@ -23,6 +23,13 @@ msgstr "Ajouter un tableau de bord"
 
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
+
+msgid ""
+"An error occured with your upload. Please select a picture smaller than "
+"300Kb."
+msgstr ""
+"Une erreur est survenue lors de votre téléversement. Merci de sélectionner "
+"une image plus petite que 300Ko."
 
 msgid "And more..."
 msgstr "Et plus ..."
