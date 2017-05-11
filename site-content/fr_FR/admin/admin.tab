@@ -124,7 +124,7 @@ admin_main	placeholder_headline	Entrez une accroche percutante...
 admin_main	headline	Accroche
 admin_main	headline_help	Écrire une accroche percutante est nécessaire pour inciter les visiteurs à s'inscrire. Choisissez une accroche attirante qui décrit ce qu'est Tuleap dans votre environnement. Ne soyez pas trop verbeux cependant ;)
 admin_main	use_standard_homepage_label	Utiliser la page d'accueil standard de Tuleap
-admin_main	use_standard_homepage_help	La page d'accueil standard de Tuleap n'est disponible que pour les utilisateurs du thème FlamingParrot. Les autres auront l'ancienne page qui est customisable via les fichiers /etc/tuleap/site-content/…/homepage/*.
+admin_main	use_standard_homepage_help	Vous utilisez l'ancienne page d'accueil qui est personnalisable via les fichiers /etc/tuleap/site-content/…/homepage/*. Si vous passez à la page d'accueil standard (qui n'est pas personnalisable), il ne sera plus possible de revenir sur la page d'accueil personnalisée.
 admin_main	successfully_updated	Mise à jour effectuée.
 admin_main	homepage_logo	Logo de la page d'accueil
 admin_main	homepage_logo_help	Vous pouvez afficher votre propre logo sur la page d'accueil. Afin de ne pas trop perturber le design de la page d'accueil, nous vous demandons d'uploader une image au format png avec un fond transparent et une hauteur de 100px.
