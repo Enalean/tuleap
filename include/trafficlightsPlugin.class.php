@@ -20,6 +20,10 @@
 
 require_once 'constants.php';
 
+use \Tuleap\Trafficlights\Dao;
+use \Tuleap\Trafficlights\Config;
+use \Tuleap\Trafficlights\FirstConfigCreator;
+
 class TrafficlightsPlugin extends Plugin {
 
     /**
@@ -37,6 +41,8 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
+        $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
+        $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
     }
 
     public function getServiceShortname() {
@@ -74,6 +80,53 @@ class TrafficlightsPlugin extends Plugin {
     }
 
     /**
+     * List TrafficLights trackers to duplicate
+     *
+     * @param array $params The project duplication parameters (source project id, tracker ids list)
+     *
+     */
+    public function tracker_event_project_creation_trackers_required(array $params)
+    {
+        $config = new Config(new Dao());
+        $project = ProjectManager::instance()->getProject($params['project_id']);
+
+        $plugin_trafficlights_is_used = $project->usesService($this->getServiceShortname());
+        if (! $plugin_trafficlights_is_used) {
+            return;
+        }
+
+        $params['tracker_ids_list'] = array_merge(
+            $params['tracker_ids_list'],
+            array(
+                $config->getCampaignTrackerId($project),
+                $config->getTestDefinitionTrackerId($project),
+                $config->getTestExecutionTrackerId($project)
+            )
+        );
+    }
+
+    /**
+     * Configure new project's TrafficLights trackers
+     *
+     * @param mixed array $params The duplication params (tracker_mapping array, field_mapping array)
+     *
+     */
+    public function tracker_event_trackers_duplicated(array $params)
+    {
+        $config = new Config(new Dao());
+        $from_project = ProjectManager::instance()->getProject($params['source_project_id']);
+        $to_project = ProjectManager::instance()->getProject($params['group_id']);
+
+        $plugin_trafficlights_is_used = $to_project->usesService($this->getServiceShortname());
+        if (! $plugin_trafficlights_is_used) {
+            return;
+        }
+
+        $config_creator = new FirstConfigCreator($config);
+        $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $params['tracker_mapping']);
+    }
+
+    /**
      * @return TrafficlightsPluginInfo
      */
     function getPluginInfo() {
@@ -82,7 +135,7 @@ class TrafficlightsPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
+
     function cssfile($params) {
         // Only show the stylesheet if we're actually in the Trafficlights pages.
         // This stops styles inadvertently clashing with the main site.
@@ -98,7 +151,7 @@ class TrafficlightsPlugin extends Plugin {
             echo '<script type="text/javascript" src="scripts/resize-content.js"></script>'."\n";
         }
     }
-    
+
     function process(Codendi_Request $request) {
         $config = new \Tuleap\Trafficlights\Config(new \Tuleap\Trafficlights\Dao());
         $router = new Tuleap\Trafficlights\Router($this, $config);
