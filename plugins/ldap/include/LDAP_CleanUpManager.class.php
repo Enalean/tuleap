@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\UserRemover;
+
 class LDAP_CleanUpManager {
 
     /*
@@ -28,8 +31,15 @@ class LDAP_CleanUpManager {
      */
     private $retentionPeriod;
 
-    public function __construct($period) {
+    /**
+     * @var UserRemover
+     */
+    private $user_remover;
+
+    public function __construct(UserRemover $user_remover, $period)
+    {
         $this->retentionPeriod = $period;
+        $this->user_remover    = $user_remover;
     }
 
     /**
@@ -97,12 +107,13 @@ class LDAP_CleanUpManager {
      * @param PFUser user
      *
      */
-    private function removeUserFromProjects(PFUser $user) {
-        $projectList  = $this->getUserProjects($user);
-        $userGroupDao = new UserGroupDao();
-        foreach ($projectList as $project) {
-            $removalResult = $userGroupDao->removeUserFromProject($user->getId(), $project->getId());
-            if(!$removalResult) {
+    private function removeUserFromProjects(PFUser $user)
+    {
+        $project_list = $this->getUserProjects($user);
+        foreach ($project_list as $project) {
+            $removal_result = $this->user_remover->removeUserFromProject($project->getID(), $user->getId());
+
+            if (! $removal_result) {
                 $this->getBackendLogger()->warn("[LDAP Clean Up] Unable to remove user ".$user->getUserName())." from project ".$project->getId();
             }
         }
@@ -156,4 +167,3 @@ class LDAP_CleanUpManager {
          return new BackendLogger();
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
  * 
  * Originally written by Manuel VACELET, 2009.
@@ -25,6 +25,9 @@
 require_once 'LDAP.class.php';
 require_once 'LDAP_UserManager.class.php';
 require_once 'LDAP_SyncNotificationManager.class.php';
+
+use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 
 class LDAP_DirectorySynchronization {
     /**
@@ -182,11 +185,28 @@ class LDAP_DirectorySynchronization {
         return ProjectManager::instance();
     }
 
-    protected function getCleanUpManager(){
-        return new LDAP_CleanUpManager($this->ldap->getLDAPParam('daily_sync_retention_period'));
+    protected function getCleanUpManager()
+    {
+        return new LDAP_CleanUpManager(
+            $this->getUserRemover(),
+            $this->ldap->getLDAPParam('daily_sync_retention_period')
+        );
     }
 
     private function getEventManager() {
         return EventManager::instance();
+    }
+
+    private function getUserRemover()
+    {
+        return new UserRemover(
+            ProjectManager::instance(),
+            EventManager::instance(),
+            new ArtifactTypeFactory(false),
+            new UserRemoverDao(),
+            UserManager::instance(),
+            new ProjectHistoryDao(),
+            new UGroupManager()
+        );
     }
 }

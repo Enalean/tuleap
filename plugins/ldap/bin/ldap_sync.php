@@ -63,8 +63,19 @@ if ($pluginManager->isPluginAvailable($ldapPlugin)) {
     } else{
         $ldapQuery->syncAll();
         $retentionPeriod = $ldapPlugin->getLdap()->getLDAPParam('daily_sync_retention_period');
-        if($retentionPeriod != NULL && $retentionPeriod!= "") {
-            $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
+        if ($retentionPeriod != NULL && $retentionPeriod!= "") {
+
+            $user_remover = new \Tuleap\Project\UserRemover(
+                ProjectManager::instance(),
+                EventManager::instance(),
+                new ArtifactTypeFactory(false),
+                new \Tuleap\Project\UserRemoverDao(),
+                UserManager::instance(),
+                new ProjectHistoryDao(),
+                new UGroupManager()
+            );
+
+            $ldapCleanUpManager = new LDAP_CleanUpManager($user_remover, $retentionPeriod);
             $ldapCleanUpManager->cleanAll();
         }
 
@@ -75,4 +86,3 @@ if ($pluginManager->isPluginAvailable($ldapPlugin)) {
         echo "LDAP time: ".$ldapQuery->getElapsedLdapTime()."\n";
     }
 }
-?>
