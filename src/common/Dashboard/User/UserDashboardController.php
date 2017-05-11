@@ -26,38 +26,40 @@ use Feedback;
 use ForgeConfig;
 use HttpRequest;
 use TemplateRendererFactory;
+use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
+use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 
-class Controller
+class UserDashboardController
 {
     /**
      * @var CSRFSynchronizerToken
      */
     private $csrf;
     /**
-     * @var Retriever
+     * @var UserDashboardRetriever
      */
     private $retriever;
     /**
-     * @var Saver
+     * @var UserDashboardSaver
      */
     private $saver;
     private $title;
     /**
-     * @var Deletor
+     * @var UserDashboardDeletor
      */
     private $deletor;
     /**
-     * @var Updator
+     * @var UserDashboardUpdator
      */
     private $updator;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
-        Retriever $retriever,
-        Saver $saver,
-        Deletor $deletor,
-        Updator $updator
+        UserDashboardRetriever $retriever,
+        UserDashboardSaver $saver,
+        UserDashboardDeletor $deletor,
+        UserDashboardUpdator $updator
     ) {
         $this->csrf      = $csrf;
         $this->title     = $title;
@@ -99,6 +101,7 @@ class Controller
             'my',
             new MyPresenter(
                 $this->csrf,
+                '/my/',
                 new UserPresenter(
                     $current_user->getRealName(),
                     $current_user->getUnixName()
@@ -168,7 +171,7 @@ class Controller
     /**
      * @param $dashboard_id
      * @param array $user_dashboards
-     * @return DashboardPresenter[]
+     * @return UserDashboardPresenter[]
      */
     private function getUserDashboardsPresenter($dashboard_id, array $user_dashboards)
     {
@@ -181,7 +184,7 @@ class Controller
                 $is_active = $dashboard->getId() === $dashboard_id;
             }
 
-            $user_dashboards_presenter[] = new DashboardPresenter($dashboard, $is_active);
+            $user_dashboards_presenter[] = new UserDashboardPresenter($dashboard, $is_active);
         }
 
         return $user_dashboards_presenter;

@@ -21,13 +21,13 @@
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
-use Tuleap\Dashboard\User\Deletor;
-use Tuleap\Dashboard\User\Router;
-use Tuleap\Dashboard\User\Controller;
-use Tuleap\Dashboard\User\Dao;
-use Tuleap\Dashboard\User\Retriever;
-use Tuleap\Dashboard\User\Saver;
-use Tuleap\Dashboard\User\Updator;
+use Tuleap\Dashboard\User\UserDashboardDeletor;
+use Tuleap\Dashboard\User\UserDashboardRouter;
+use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\User\UserDashboardUpdator;
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardSaver;
 
 require_once('pre.php');
 require_once('my_utils.php');
@@ -46,21 +46,21 @@ $title = $Language->getText(
             CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'
         )
 );
-$user_dashboard_dao = new Dao();
-$router             = new Router(
-    new Controller(
+$user_dashboard_dao = new UserDashboardDao();
+$router             = new UserDashboardRouter(
+    new UserDashboardController(
         new CSRFSynchronizerToken('/my/'),
         $title,
-        new Retriever(
+        new UserDashboardRetriever(
             $user_dashboard_dao
         ),
-        new Saver(
+        new UserDashboardSaver(
             $user_dashboard_dao
         ),
-        new Deletor(
+        new UserDashboardDeletor(
             $user_dashboard_dao
         ),
-        new Updator(
+        new UserDashboardUpdator(
             $user_dashboard_dao
         )
     )

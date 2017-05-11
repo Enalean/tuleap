@@ -18,10 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Project;
 
-use Exception;
+use Tuleap\Dashboard\DashboardPresenter;
 
-class NameDashboardDoesNotExistException extends Exception
+class ProjectDashboardPresenter extends DashboardPresenter
 {
+    public $project_id;
+
+    public function __construct(ProjectDashboard $dashboard, $is_active)
+    {
+        parent::__construct($dashboard, $is_active);
+        $this->project_id = $dashboard->getProjectId();
+    }
 }

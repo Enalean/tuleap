@@ -18,33 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard;
 
-class Dashboard
+use Exception;
+
+class NameDashboardAlreadyExistsException extends Exception
 {
-    private $id;
-    private $user_id;
-    private $name;
-
-    public function __construct($id, $user_id, $name)
-    {
-        $this->id      = $id;
-        $this->user_id = $user_id;
-        $this->name    = $name;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
 }

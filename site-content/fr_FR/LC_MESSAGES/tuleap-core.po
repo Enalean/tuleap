@@ -170,6 +170,9 @@ msgstr "Il manque le nom pour créer un tableau de bord."
 msgid "The name is missing for editing the dashboard."
 msgstr "Il manque le nom pour éditer le tableau de bord."
 
+msgid "The requested dashboard does not exist."
+msgstr "Le tableau de bord demandé n’existe pas."
+
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."
 
@@ -201,3 +204,9 @@ msgstr ""
 
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
+
+#, php-format
+msgid "You have not rights to update dashboards of the project \"%s\"."
+msgstr ""
+"Vous n’avez pas les droits pour mettre à jour des tableaux de bord du projet "
+"\"%s\"."

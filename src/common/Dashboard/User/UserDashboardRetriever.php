@@ -20,31 +20,40 @@
 
 namespace Tuleap\Dashboard\User;
 
-use CSRFSynchronizerToken;
-use Tuleap\Dashboard\PagePresenter;
+use PFUser;
 
-class MyPresenter extends PagePresenter
+class UserDashboardRetriever
 {
     /**
-     * @var UserPresenter
+     * @var UserDashboardDao
      */
-    public $user_presenter;
+    private $dao;
+
+    public function __construct(UserDashboardDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
     /**
-     * @var UserDashboardPresenter[]
+     * @return UserDashboard[]
      */
-    public $user_dashboards;
-    public $has_dashboard;
+    public function getAllUserDashboards(PFUser $user)
+    {
+        $user_dashboards = array();
 
-    public function __construct(
-        CSRFSynchronizerToken $csrf,
-        $url,
-        UserPresenter $user_presenter,
-        array $user_dashboards
-    ) {
-        parent::__construct($csrf, $url);
+        foreach ($this->dao->searchAllUserDashboards($user) as $row) {
+            $user_dashboards[] = $this->instantiateFromRow($row);
+        }
 
-        $this->user_presenter  = $user_presenter;
-        $this->user_dashboards = $user_dashboards;
-        $this->has_dashboard   = count($user_dashboards) > 0;
+        return $user_dashboards;
+    }
+
+    private function instantiateFromRow(array $user_dashboards)
+    {
+        return new UserDashboard(
+            $user_dashboards['id'],
+            $user_dashboards['user_id'],
+            $user_dashboards['name']
+        );
     }
 }

@@ -18,19 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard\User;
+namespace Tuleap\Dashboard\Project;
 
 use ForgeConfig;
 use HTTPRequest;
 
-class Router
+class ProjectDashboardRouter
 {
-    /** @var Controller  */
-    private $user_dashboard_controller;
+    /**
+     * @var ProjectDashboardController
+     */
+    private $project_dashboard_controller;
 
-    public function __construct(Controller $user_dashboard_controller)
+    public function __construct(ProjectDashboardController $project_dashboard_controller)
     {
-        $this->user_dashboard_controller = $user_dashboard_controller;
+        $this->project_dashboard_controller = $project_dashboard_controller;
     }
 
     /**
@@ -40,9 +42,7 @@ class Router
      */
     public function route(HTTPRequest $request)
     {
-        if (! $request->getCurrentUser()->isLoggedIn()
-            || ! ForgeConfig::get('sys_use_tlp_in_dashboards')
-        ) {
+        if (! ForgeConfig::get('sys_use_tlp_in_dashboards')) {
             return;
         }
 
@@ -50,16 +50,10 @@ class Router
 
         switch ($action) {
             case 'add-dashboard':
-                $this->user_dashboard_controller->createDashboard($request);
-                break;
-            case 'delete-dashboard':
-                $this->user_dashboard_controller->deleteDashboard($request);
-                break;
-            case 'edit-dashboard':
-                $this->user_dashboard_controller->editDashboard($request);
+                $this->project_dashboard_controller->createDashboard($request);
                 break;
             default:
-                $this->user_dashboard_controller->display($request);
+                $this->project_dashboard_controller->display($request);
                 break;
         }
     }
