@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
 
     protected $server_base_url;
     protected $base_wsdl;
+    protected $project_wsdl;
     protected $server_name;
     protected $server_port;
     protected $login;
@@ -33,19 +34,29 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
     /** @var SoapClient */
     protected $soap_base;
 
+    /** @var SoapClient */
+    protected $soap_project;
+
     public function setUp() {
         parent::setUp();
 
-        $this->login           = SOAP_TestDataBuilder::TEST_USER_1_NAME;
-        $this->password        = SOAP_TestDataBuilder::TEST_USER_1_PASS;
-        $this->server_base_url = 'http://localhost/soap/?wsdl';
-        $this->base_wsdl       = '/soap/codendi.wsdl.php';
-        $this->server_name     = 'localhost';
-        $this->server_port     = '80';
+        $this->login              = SOAP_TestDataBuilder::TEST_USER_1_NAME;
+        $this->password           = SOAP_TestDataBuilder::TEST_USER_1_PASS;
+        $this->server_base_url    = 'http://localhost/soap/?wsdl';
+        $this->server_project_url = 'http://localhost/soap/project/?wsdl';
+        $this->base_wsdl          = '/soap/codendi.wsdl.php';
+        $this->server_name        = 'localhost';
+        $this->server_port        = '80';
 
         // Connecting to the soap's tracker client
         $this->soap_base = new SoapClient(
             $this->server_base_url,
+            array('cache_wsdl' => WSDL_CACHE_NONE)
+        );
+
+        // Connecting to the soap's tracker client
+        $this->soap_project = new SoapClient(
+            $this->server_project_url,
             array('cache_wsdl' => WSDL_CACHE_NONE)
         );
     }
