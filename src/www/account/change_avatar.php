@@ -32,10 +32,14 @@ $csrf = new CSRFSynchronizerToken('/account/change_avatar.php');
 
 if (isset($_FILES['avatar'])) {
     $handle = new Upload($_FILES['avatar']);
-    $handle->image_resize           = true;
-    $handle->image_ratio_crop       = 'L';
-    $handle->image_y                = 50;
-    $handle->image_x                = 50;
+    list($width, $height) = getimagesize($_FILES['avatar']['tmp_name']);
+    $max_size = 100;
+    if ($width > $max_size || $height > $max_size) {
+        $handle->image_resize     = true;
+        $handle->image_ratio_crop = 'L';
+        $handle->image_y          = $max_size;
+        $handle->image_x          = $max_size;
+    }
     $handle->image_background_color = '#FFFFFF';
     $handle->image_convert          = 'png';
     $handle->file_new_name_body     = 'avatar';
