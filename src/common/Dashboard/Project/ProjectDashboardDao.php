@@ -70,4 +70,22 @@ class ProjectDashboardDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    /**
+     * @param $id
+     * @param $name
+     * @return bool
+     */
+    public function edit($id, $name)
+    {
+        $id   = $this->da->escapeInt($id);
+        $name = $this->da->quoteSmart($name);
+
+        $sql = "UPDATE
+                project_dashboards
+                SET name = $name
+                WHERE id = $id";
+
+        return $this->update($sql);
+    }
 }

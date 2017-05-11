@@ -42,11 +42,27 @@ class ProjectDashboardSaver
      * @param Project $project
      * @param $name
      * @return int
-     * @throws NameDashboardAlreadyExistsException
-     * @throws NameDashboardDoesNotExistException
-     * @throws UserCanNotUpdateProjectDashboardException
      */
     public function save(PFUser $user, Project $project, $name)
+    {
+        $this->checkUserCanSave($user, $project, $name);
+        return $this->dao->save($project->getID(), $name);
+    }
+
+    /**
+     * @param PFUser $user
+     * @param Project $project
+     * @param $id
+     * @param $name
+     * @return bool
+     */
+    public function update(PFUser $user, Project $project, $id, $name)
+    {
+        $this->checkUserCanSave($user, $project, $name);
+        return $this->dao->edit($id, $name);
+    }
+
+    private function checkUserCanSave(PFUser $user, Project $project, $name)
     {
         if (! $user->isAdmin($project->getID())) {
             throw new UserCanNotUpdateProjectDashboardException();
@@ -59,6 +75,5 @@ class ProjectDashboardSaver
         if ($this->dao->searchByProjectIdAndName($project->getID(), $name)->count() > 0) {
             throw new NameDashboardAlreadyExistsException();
         }
-        return $this->dao->save($project->getID(), $name);
     }
 }

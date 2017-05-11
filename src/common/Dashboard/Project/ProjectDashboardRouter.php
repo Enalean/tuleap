@@ -52,6 +52,9 @@ class ProjectDashboardRouter
             case 'add-dashboard':
                 $this->project_dashboard_controller->createDashboard($request);
                 break;
+            case 'edit-dashboard':
+                $this->project_dashboard_controller->editDashboard($request);
+                break;
             default:
                 $this->project_dashboard_controller->display($request);
                 break;

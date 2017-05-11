@@ -54,6 +54,17 @@
             {{# project_dashboards }}
                 <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}?dashboard_id={{ id }}">
                     {{ name }}
+                    {{^ is_page_read_only }}
+                        {{# is_active }}
+                            <button class="tlp-button-primary tlp-button-outline tlp-button-mini dashboard-edit-button"
+                                    title="{{ edit_dashboard_title }}"
+                                    id="edit-dashboard-button"
+                                    data-target-modal-id="edit-dashboard-modal"
+                            >
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                        {{/ is_active }}
+                    {{/ is_page_read_only }}
                 </a>
             {{/ project_dashboards }}
             {{^ is_page_read_only }}
@@ -89,4 +100,10 @@
 
 {{^ is_page_read_only }}
     {{> add-dashboard-modal }}
+    {{# project_dashboards }}
+        {{# is_active }}
+            {{> delete-dashboard-modal }}
+            {{> edit-dashboard-modal }}
+        {{/ is_active }}
+    {{/ project_dashboards }}
 {{/ is_page_read_only }}
