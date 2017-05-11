@@ -26,7 +26,6 @@ use ArtifactTypeFactory;
 use Feedback;
 use UserManager;
 use ProjectHistoryDao;
-use PFUser;
 use Project;
 use UGroupManager;
 
@@ -87,6 +86,8 @@ class UserRemover
 
     public function removeUserFromProject($project_id, $user_id, $admin_action = true)
     {
+        $project = $this->getProject($project_id);
+
         if (! $this->dao->removeUserFromProject($project_id, $user_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
@@ -101,41 +102,15 @@ class UserRemover
             'user_id'  => $user_id
         ));
 
-        $project = $this->project_manager->getProject($project_id);
-        if (! $project || ! is_object($project) || $project->isError()) {
-            exit_no_group();
-        }
-
-        $tv3_trackers = $this->tv3_tracker_factory->getArtifactTypesFromId($project_id);
-
-        if ($tv3_trackers && count($tv3_trackers) > 0) {
-            for ($j = 0; $j < count($tv3_trackers); $j++) {
-                if (! $tv3_trackers[$j]->deleteUser($user_id)) {
-                    $GLOBALS['Response']->addFeedback(
-                        'error',
-                        $GLOBALS['Language']->getText('project_admin_index', 'del_tracker_perm_fail', $tv3_trackers[$j]->getName())
-                    );
-                }
-            }
-        }
+        $this->removeUserFromTrackerV3($project_id, $user_id);
 
         if (! $this->removeUserFromProjectUgroups($project, $user_id)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_index', 'del_user_from_ug_fail'));
         }
 
-        $user = $this->user_manager->getUserById($user_id);
+        $user_name = $this->getUserName($user_id);
 
-        if (! $user) {
-            $user_name = $GLOBALS['Language']->getText('include_user', 'invalid_u_id');
-        } else {
-            $user_name = $user->getUserName();
-        }
-
-        if ($admin_action) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'user_removed').' ('.$user_name.')');
-        } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove').' ('.$project->getPublicName().')');
-        }
+        $this->displayFeedback($project, $user_name, $admin_action);
 
         $this->project_history_dao->groupAddHistory(
             'removed_user',
@@ -144,6 +119,61 @@ class UserRemover
         );
 
         return true;
+    }
+
+    private function displayFeedback(Project $project, $user_name, $admin_action)
+    {
+        if ($admin_action) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('project_admin_index', 'user_removed').' ('.$user_name.')'
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('project_admin_index', 'self_user_remove').' ('.$project->getPublicName().')'
+            );
+        }
+    }
+
+    private function removeUserFromTrackerV3($project_id, $user_id)
+    {
+        $tv3_trackers = $this->tv3_tracker_factory->getArtifactTypesFromId($project_id);
+
+        if (! $tv3_trackers) {
+            return true;
+        }
+
+        foreach ($tv3_trackers as $tv3_tracker) {
+            if (! $tv3_tracker->deleteUser($user_id)) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('project_admin_index', 'del_tracker_perm_fail', $tv3_tracker->getName())
+                );
+            }
+        }
+    }
+
+    private function getUserName($user_id)
+    {
+        $user = $this->user_manager->getUserById($user_id);
+
+        if (! $user) {
+            return $GLOBALS['Language']->getText('include_user', 'invalid_u_id');
+        }
+
+        return $user->getUserName();
+    }
+
+    private function getProject($project_id)
+    {
+        $project = $this->project_manager->getProject($project_id);
+
+        if (! $project || ! is_object($project) || $project->isError()) {
+            exit_no_group();
+        }
+
+        return $project;
     }
 
     private function removeUserFromProjectUgroups(Project $project, $user_id)

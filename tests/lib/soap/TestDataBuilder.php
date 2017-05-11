@@ -55,6 +55,15 @@ class SOAP_TestDataBuilder extends TestDataBuilder {
         $this->user_manager->createAccount($user_1);
         $user_1->setLabFeatures(true);
 
+        $user_2 = new PFUser();
+        $user_2->setUserName(self::TEST_USER_2_NAME);
+        $user_2->setPassword(self::TEST_USER_2_PASS);
+        $user_2->setStatus(self::TEST_USER_2_STATUS);
+        $user_2->setEmail(self::TEST_USER_2_EMAIL);
+        $user_2->setLanguage($GLOBALS['Language']);
+        $this->user_manager->createAccount($user_2);
+        $user_2->setLabFeatures(true);
+
         return $this;
     }
 
