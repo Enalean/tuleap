@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
+use PFUser;
+use Tuleap\BurningParrotCompatiblePageDetector;
+
 class Presenter
 {
     /** @var GlobalNavPresenter */
@@ -30,14 +33,37 @@ class Presenter
 
     /** @var UserNavPresenter */
     public $user_nav_presenter;
+    public $display_search_and_user_nav;
+
+    /**
+     * @var PFUser
+     */
+    private $current_user;
+    /**
+     * @var BurningParrotCompatiblePageDetector
+     */
+    private $page_detector;
 
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,
         SearchPresenter $search_presenter,
-        UserNavPresenter $user_nav_presenter
+        UserNavPresenter $user_nav_presenter,
+        BurningParrotCompatiblePageDetector $page_detector,
+        PFUser $current_user
     ) {
-        $this->global_nav_presenter = $global_nav_presenter;
-        $this->search_presenter     = $search_presenter;
-        $this->user_nav_presenter   = $user_nav_presenter;
+        $this->global_nav_presenter        = $global_nav_presenter;
+        $this->search_presenter            = $search_presenter;
+        $this->user_nav_presenter          = $user_nav_presenter;
+        $this->current_user                = $current_user;
+        $this->page_detector               = $page_detector;
+        $this->display_search_and_user_nav = (! $this->hideSearchAndUserNav());
+    }
+
+    private function hideSearchAndUserNav()
+    {
+        return (
+            ! $this->current_user->isLoggedIn()
+            && $this->page_detector->isInHomepage()
+        );
     }
 }

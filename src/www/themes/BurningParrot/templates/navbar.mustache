@@ -6,10 +6,12 @@
         {{> navbar-global-nav }}
     </div>
 
-    <div class="header-container">
-        {{> navbar-search }}
+    {{# display_search_and_user_nav }}
+        <div class="header-container">
+            {{> navbar-search }}
 
-        {{> navbar-user-nav }}
-    </div>
+            {{> navbar-user-nav }}
+        </div>
+    {{/ display_search_and_user_nav }}
 </header>
 {{/ navbar_presenter }}

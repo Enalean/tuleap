@@ -20,9 +20,11 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
+use Admin_Homepage_Dao;
 use HTTPRequest;
 use PFUser;
 use EventManager;
+use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownItemsPresenterBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenterBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\Project\ProjectPresenterBuilder;
@@ -65,7 +67,11 @@ class PresenterBuilder
                 $this->current_user,
                 $this->displayNewAccountMenuItem(),
                 $url_redirect
-            )
+            ),
+            new BurningParrotCompatiblePageDetector(
+                new Admin_Homepage_Dao()
+            ),
+            $this->current_user
         );
     }
 
