@@ -411,7 +411,8 @@ class Planning_Controller extends MVC2_PluginController {
                 new ArtifactTypeFactory(false),
                 new UserRemoverDao(),
                 UserManager::instance(),
-                new ProjectHistoryDao()
+                new ProjectHistoryDao(),
+                new UGroupManager()
             )
         );
 

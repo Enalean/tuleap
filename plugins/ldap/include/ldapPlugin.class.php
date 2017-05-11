@@ -1187,7 +1187,8 @@ class LdapPlugin extends Plugin {
                 new ArtifactTypeFactory(false),
                 new UserRemoverDao(),
                 UserManager::instance(),
-                new ProjectHistoryDao()
+                new ProjectHistoryDao(),
+                new UGroupManager()
             )
         );
     }

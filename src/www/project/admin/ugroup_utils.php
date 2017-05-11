@@ -391,41 +391,6 @@ function ugroup_get_all_dynamic_members($group_id, $atid=0) {
 }
 
 /**
- * Remove user from all ugroups attached to the given project
- *
- * @return true
- */
-function ugroup_delete_user_from_project_ugroups($group_id,$user_id) {
-
-    // First, retrieve all possible ugroups for this project
-    $sql="SELECT ugroup_id FROM ugroup WHERE group_id='".db_ei($group_id)."'";
-    $res=db_query($sql);
-    $ugroups_list='';
-    if (db_numrows($res)<1) {
-        return true;
-    } else { 
-        while ($row = db_fetch_array($res)) {
-            if ($ugroups_list) { $ugroups_list.= ' ,';}
-            $ugroups_list .= $row['ugroup_id'] ;
-        }
-    }
-    // Then delete membership
-    db_query("DELETE FROM ugroup_user WHERE user_id=".db_ei($user_id)." AND ugroup_id IN (".$ugroups_list.")");
-    
-    // Raise an event
-    $em =& EventManager::instance();
-    $em->processEvent('project_admin_remove_user_from_project_ugroups', array(
-        'group_id' => $group_id,
-        'user_id' => $user_id,
-        'ugroups' => explode(' ,', $ugroups_list)
-    ));
-    
-    return true;
-}
-
-
-
-/**
  * Create a new ugroup
  *
  * @return ugroup_id

@@ -41,7 +41,8 @@ if (user_isloggedin()) {
         new ArtifactTypeFactory(false),
         new \Tuleap\Project\UserRemoverDao(),
         UserManager::instance(),
-        new ProjectHistoryDao()
+        new ProjectHistoryDao(),
+        new UGroupManager()
     );
     //Process MEMBERSHIP_DELETE event
     $user_remover->removeUserFromProject($group_id,$user_id, false);
