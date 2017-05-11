@@ -1280,7 +1280,7 @@ plugin_tracker_admin_semantic	description_impossible	Vous ne pouvez pas définir
 plugin_tracker_admin_semantic	description_now	La description est maintenant : $1
 plugin_tracker_admin_semantic	unable_save_description	Impossible de sauvegarder la description
 plugin_tracker_admin_semantic	deleted_description	La sémantique description a été réinitialisée.
-
+plugin_tracker_admin_semantic	description_warning	Les champs de type chaîne de caractères ne sont plus supportés en tant que sémantique description. Veuillez la mettre à jour.
 plugin_tracker_admin_semantic	unset	Réinitialiser cette sémantique
 plugin_tracker_admin_semantic	choose_one_advice	N'hésitez pas à en choisir un :
 plugin_tracker_admin_semantic	status_label	État
