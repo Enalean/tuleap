@@ -85,7 +85,8 @@ class ThemeManager
 
         $uri = $_SERVER['REQUEST_URI'];
 
-        return preg_match('`^/my/`', $uri) || preg_match('`^/projects/[^/]+(/?.*=[0-9]+)*/?$`', $uri);
+        return strpos($uri, '/my/') === 0 ||
+            strpos($uri, '/projects/') === 0;
     }
 
     private function isInHomepage()
