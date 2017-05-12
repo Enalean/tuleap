@@ -291,7 +291,8 @@ class URLVerification {
     protected function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
         // This assume that we already checked that project is accessible to restricted prior to function call.
         // Hence, summary page is ALWAYS accessible
-        if ($script_name === '/projects') {
+        if ($script_name === '/projects.php')
+        {
             return true;
         }
 

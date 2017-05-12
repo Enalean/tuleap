@@ -31,15 +31,15 @@ project_admin_editgroupinfo	ancestor_exception	Un lien de parenté existe déjà
 project_admin_editgroupinfo	visibility_section	Accès
 project_admin_editgroupinfo	private_label	privé
 project_admin_editgroupinfo	public_label	publique
-project_admin_editgroupinfo	choose_visbility	Choissez la visibilité du projet
+project_admin_editgroupinfo	choose_visbility	Choisissez la visibilité du projet
 project_admin_editgroupinfo	use_truncated_emails	Utiliser les courriels tronqués
 project_admin_editgroupinfo	truncated_emails_title	Courriels Tronqués
 project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	Les courriels tronqués sont des courriels dont le contenu a été vidé (pour des raisons de confidentialité) et a été remplacé par un lien vers la ressource modifée.
 project_admin_editgroupinfo	truncated_emails_impacted_services_no_available	Aucun service utilisant les courriels tronqués n'est activé.
 project_admin_editgroupinfo	truncated_emails_impacted_services_impacted_services	Services impactés :
-project_admin_editgroupinfo	unrestricted_label	publique incluant les utilsateurs restreints
-project_admin_editgroupinfo	restricted_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b>. <br>Un projet <b>publique</b> est accessible à tous, <b>sauf les utilsateurs restreints</b>. <br>Il est <b>déconseillé d'autoriser l'accès</b> à un projet publique à des <b>utilsateurs restreints</b> sans bonne raison.<br />Notez que <b>Publique incluant les utilisateurs restreints</b> ne s'applique qu'à <em>la page sommaire</em>, à <em>Mediawiki</em> et aux <em>dépôts git</em>.
-project_admin_editgroupinfo	general_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b> <br>Un projet <b>publique</b> est accessible à tous.
+project_admin_editgroupinfo	unrestricted_label	publique incluant les utilisateurs restreints
+project_admin_editgroupinfo	restricted_warning	Seuls ses membres peuvent accéder à un projet <b>privé</b>. <br>Un projet <b>public</b> est accessible à tous, <b>sauf les utilsateurs restreints</b>. <br>Il est <b>déconseillé d'autoriser l'accès</b> à un projet public à des <b>utilsateurs restreints</b> sans bonne raison.<br />Notez que la visibilité <b>Publique incluant les utilisateurs restreints</b> ne s'applique qu'à <em>la page d'accueil du projet</em>, à <em>Mediawiki</em> et aux <em>dépôts Git</em>.
+project_admin_editgroupinfo	general_warning	Seuls ses membres peuvent accéder à un projet <b>privé</b> <br>Un projet <b>public</b> est accessible à tous.
 project_admin_editgroupinfo	under_construction	Page en cours de construction.
 project_admin_editgroupinfo	term_of_service	Merci d'accepter les <a href='/tos/tos.php'>conditions générales d'utilisation</a> de la plateforme
 #
