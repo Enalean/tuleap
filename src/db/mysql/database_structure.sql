@@ -1691,10 +1691,10 @@ CREATE TABLE forgeconfig (
 
 DROP TABLE IF EXISTS user_dashboards;
 CREATE TABLE user_dashboards (
-  id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   user_id INT(11) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id, user_id, name)
+  INDEX idx(user_id, name(5))
 );
 
 DROP TABLE IF EXISTS project_dashboards;
