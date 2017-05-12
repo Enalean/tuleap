@@ -61,6 +61,7 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 }
 
 .homepage-create-account-button {
+    margin: 0 0 30px;
     padding: 5px 25px;
     background: $homepage-white-color;
     color: $tlp-theme-color;
@@ -99,13 +100,15 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 }
 
 %homepage-sign-in-grow {
-    flex: 1 0 auto;
+    flex: 0 1 auto;
 }
 
 .homepage-sign-in {
     @extend %homepage-sign-in-grow;
     padding: 40px 70px;
+    border-radius: 3px;
     background: $homepage-white-color;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
 
     .tlp-label {
         margin: 0 0 5px;
@@ -157,8 +160,10 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 .homepage-already-signed-in {
     @extend %homepage-sign-in-grow;
     padding: 40px;
+    border-radius: 3px;
     background: $homepage-white-color;
     text-align: center;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
 
     > .homepage-avatar {
         margin: 0 0 45px;
