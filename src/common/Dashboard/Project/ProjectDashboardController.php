@@ -29,6 +29,7 @@ use PFUser;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
+use Tuleap\Dashboard\DashboardDoesNotExistException;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\TroveCat\TroveCatLinkDao;
@@ -235,6 +236,55 @@ class ProjectDashboardController
         }
 
         $this->redirectToDashboard($dashboard_id);
+    }
+
+    /**
+     * @param HttpRequest $request
+     */
+    public function deleteDashboard(HTTPRequest $request)
+    {
+        $this->csrf->check();
+
+        $user         = $request->getCurrentUser();
+        $project      = $request->getProject();
+        $dashboard_id = $request->get('dashboard-id');
+
+        try {
+            $this->saver->delete($user, $project, $dashboard_id);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext(
+                    'tuleap-core',
+                    'Dashboard has been successfully deleted.'
+                )
+            );
+        } catch (UserCanNotUpdateProjectDashboardException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    _('You have not rights to update dashboards of the project "%s".'),
+                    $project->getUnconvertedPublicName()
+                )
+            );
+        } catch (DashboardDoesNotExistException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'The requested dashboard does not exist.'
+                )
+            );
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'Cannot delete the requested dashboard.'
+                )
+            );
+        }
+
+        $this->redirectToDefaultDashboard();
     }
 
     /**

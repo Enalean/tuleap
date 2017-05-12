@@ -59,6 +59,26 @@ class ProjectDashboardDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
+    /**
+     * @param $dashboard_id
+     * @return \DataAccessResult|false
+     */
+    public function searchById($dashboard_id)
+    {
+        $dashboard_id = $this->da->escapeInt($dashboard_id);
+
+        $sql = "SELECT *
+                FROM project_dashboards
+                WHERE id=$dashboard_id";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @param $project_id
+     * @param $name
+     * @return \DataAccessResult|false
+     */
     public function searchByProjectIdAndName($project_id, $name)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -85,6 +105,21 @@ class ProjectDashboardDao extends DataAccessObject
                 project_dashboards
                 SET name = $name
                 WHERE id = $id";
+
+        return $this->update($sql);
+    }
+
+    /**
+     * @param $project_id
+     * @param $dashboard_id
+     * @return bool
+     */
+    public function delete($project_id, $dashboard_id)
+    {
+        $project_id   = $this->da->escapeInt($project_id);
+        $dashboard_id = $this->da->escapeInt($dashboard_id);
+
+        $sql = "DELETE FROM project_dashboards WHERE project_id = $project_id AND id = $dashboard_id";
 
         return $this->update($sql);
     }

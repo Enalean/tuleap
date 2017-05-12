@@ -55,6 +55,9 @@ class ProjectDashboardRouter
             case 'edit-dashboard':
                 $this->project_dashboard_controller->editDashboard($request);
                 break;
+            case 'delete-dashboard':
+                $this->project_dashboard_controller->deleteDashboard($request);
+                break;
             default:
                 $this->project_dashboard_controller->display($request);
                 break;
