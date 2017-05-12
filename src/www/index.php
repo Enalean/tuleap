@@ -37,7 +37,8 @@ $header_params = array(
 
 Tuleap\Instrument\Collect::increment('service.homepage.accessed');
 
-if ($HTML->canDisplayStandardHomepage()) {
+$homepage_dao = new Admin_Homepage_Dao();
+if ($homepage_dao->isStandardHomepageUsed()) {
     $header_params['body_class'] = array('homepage');
 
     $HTML->header($header_params);

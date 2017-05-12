@@ -366,12 +366,6 @@ class FlamingParrot_Theme extends Layout {
         $this->endOfPage();
     }
 
-    public function canDisplayStandardHomepage() {
-        $dao = new Admin_Homepage_Dao();
-
-        return $dao->isStandardHomepageUsed();
-    }
-
     public function displayStandardHomepage($display_homepage_news, $display_homepage_login_form, $is_secure) {
         $dao          = new Admin_Homepage_Dao();
         $current_user = UserManager::instance()->getCurrentUser();

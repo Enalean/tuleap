@@ -28,6 +28,16 @@ class ThemeManager
     private static $LEGACY_EXTENSION = '_Theme.class.php';
     private static $PSR2_EXTENSION   = 'Theme.php';
 
+    /**
+     * @var Admin_Homepage_Dao
+     */
+    private $homepage_dao;
+
+    public function __construct(Admin_Homepage_Dao $homepage_dao)
+    {
+        $this->homepage_dao = $homepage_dao;
+    }
+
     public function getTheme(PFUser $current_user)
     {
         $GLOBALS['Response'] = $this->getFirstValidTheme($current_user, array(
@@ -91,7 +101,8 @@ class ThemeManager
 
     private function isInHomepage()
     {
-        return ($_SERVER['REQUEST_URI'] === '/');
+        return $_SERVER['REQUEST_URI'] === '/'
+            && $this->homepage_dao->isStandardHomepageUsed();
     }
 
     private function isInSiteAdmin(PFUser $current_user)

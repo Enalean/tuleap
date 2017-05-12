@@ -1886,10 +1886,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         );
     }
 
-    public function canDisplayStandardHomepage() {
-        return false;
-    }
-
     protected function getVersion() {
         if ($this->version === null) {
             $this->version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
