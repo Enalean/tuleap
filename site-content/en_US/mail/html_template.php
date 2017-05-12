@@ -28,7 +28,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        
+
         <title><?php echo $title; ?></title>
 <style type="text/css">
 /* Client-specific Styles */
@@ -291,11 +291,11 @@ height:auto;
     float:left;
 }
 .bodyContent .tracker_artifact_followup_title_user {
-    font-size:1.1em; 
-    font-weight:bold; 
+    font-size:1.1em;
+    font-weight:bold;
     color:#999;
 }
-.bodyContent .tracker_artifact_followup_comment_edited_by {    
+.bodyContent .tracker_artifact_followup_comment_edited_by {
     font-size:0.8em;
     color:#999;
 }
@@ -347,21 +347,24 @@ height:auto;
 }
 .bodyContent .tracker_artifact_followup_header,
 .bodyContent .tracker_artifact_followup_content,
-.bodyContent .tracker_artifact_followup.boxitemalt .tracker_artifact_followup_header, 
+.bodyContent .tracker_artifact_followup.boxitemalt .tracker_artifact_followup_header,
 .bodyContent .tracker_artifact_followup.boxitemalt .tracker_artifact_followup_content{
      background-color: #f6f6f6;
 }
-.bodyContent .tracker_artifact_followup.boxitem .tracker_artifact_followup_header, 
+.bodyContent .tracker_artifact_followup.boxitem .tracker_artifact_followup_header,
 .bodyContent .tracker_artifact_followup.boxitem .tracker_artifact_followup_content{
     background-color: #f0f0f0;
 }
 .bodyContent div.avatar {
     background: transparent url(<?php echo $img_path ?>/avatar_default.png) 0 0 no-repeat;
+    background-size: contain;
     width:50px;
     height:50px;
 }
 .bodyContent div.avatar img {
     border-radius: 50%;
+    width: 100%;
+    height: 100%;
 }
 .bodyContent span.cta a,
 .bodyContent span.cta a:link,
@@ -573,7 +576,7 @@ display:inline;
                                  <table border="0" cellpadding="10" cellspacing="0" width="750" id="templateFooter">
                                      <tr>
                                          <td valign="top" class="footerContent">
-                                            
+
                                                 <!-- // Begin Module: Standard Footer \\ -->
                                                 <table border="0" cellpadding="10" cellspacing="0" width="100%">
                                                     <tr>
