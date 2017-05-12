@@ -17,60 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin: $tlp-spacing;
-}
+#add-dashboard-button {
+    margin: 11px 0 11px $tlp-double-spacing;
 
-.dashboard-project-header-main {
-    display: flex;
-    align-items: flex-end;
-}
-
-.dashboard-project-header-access {
-    margin: 0 $tlp-half-spacing 7px 0;
-}
-
-.dashboard-project-header-members {
-    margin: 0 0 7px;
-}
-
-.dashboard-project-header-trovecat {
-    margin: 0 0 12px;
-    color: $tlp-ui-dimmed;
-    font-size: 14px;
-}
-
-.dashboard-project-header-trovecat-icon {
-    margin: 0 3px 0 0;
-    color: $tlp-theme-color;
-}
-
-.dashboard-project-title {
-    margin: 0 $tlp-spacing 0 0;
-    color: $tlp-theme-color;
-    font-size: 40px;
-    font-weight: 300;
-    text-transform: uppercase;
-}
-
-.dashboard-project-title-parent {
-    display: block;
-    margin: 0 0 1px;
-    font-size: 12px;
-    font-weight: 400;
-}
-
-.dashboard-project-title-parent-icon {
-    width: 13px;
-    height: 10px;
-    margin: 2px 0 0;
-    vertical-align: top;
-    fill: $tlp-ui-dimmed;
-
-    + .dashboard-project-title-name {
-        margin: 0 0 0 -7px;
+    &:first-child {
+        margin: 11px 0;
     }
 }
+
+.dashboard-edit-button {
+    display: none;
+    margin: -5px 0 -5px $tlp-spacing;
+}
+
+.dashboard-delete-button {
+    display: none;
+    margin: -5px 0 -5px $tlp-half-spacing;
+}
+
+.dashboard-tabs > .tlp-tab-active:hover {
+    > .dashboard-edit-button,
+    > .dashboard-delete-button {
+        display: block;
+    }
+}
+
+@import 'dashboard-project';
+@import 'dashboard-user';
