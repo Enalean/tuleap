@@ -177,6 +177,67 @@ class ProjectDashboardController
     }
 
     /**
+     * @param HttpRequest $request
+     */
+    public function editDashboard(HTTPRequest $request)
+    {
+        $this->csrf->check();
+
+        $user           = $request->getCurrentUser();
+        $project        = $request->getProject();
+        $dashboard_id   = $request->get('dashboard-id');
+        $dashboard_name = $request->get('dashboard-name');
+
+        try {
+            $this->saver->update($user, $project, $dashboard_id, $dashboard_name);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext(
+                    'tuleap-core',
+                    'Dashboard has been successfully updated.'
+                )
+            );
+        } catch (UserCanNotUpdateProjectDashboardException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    _('You have not rights to update dashboards of the project "%s".'),
+                    $project->getUnconvertedPublicName()
+                )
+            );
+        } catch (NameDashboardAlreadyExistsException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext(
+                        'tuleap-core',
+                        'The dashboard "%s" already exists.'
+                    ),
+                    $dashboard_name
+                )
+            );
+        } catch (NameDashboardDoesNotExistException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'The name is missing for editing the dashboard.'
+                )
+            );
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'Cannot update the requested dashboard.'
+                )
+            );
+        }
+
+        $this->redirectToDashboard($dashboard_id);
+    }
+
+    /**
      * @param $dashboard_id
      * @param array $project_dashboards
      * @return ProjectDashboardPresenter[]
