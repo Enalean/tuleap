@@ -132,7 +132,7 @@ admin_main	placeholder_headline	Enter meaningful headline...
 admin_main	headline	Headline
 admin_main	headline_help	Writing a compelling headline is a necessary step in order to encourage your users to sign in. Choose a catchy headline to summarize what Tuleap in your context is about. Don't be verbose though, keep the headline short.
 admin_main	use_standard_homepage_label	Use the standard Tuleap homepage
-admin_main	use_standard_homepage_help	The standard Tuleap homepage is only available to users with FlamingParrot theme. Others will always see the legacy homepage which can be customized via /etc/tuleap/site-content/…/homepage/* files.
+admin_main	use_standard_homepage_help	You are using the legacy homepage which can be customized via /etc/tuleap/site-content/…/homepage/* files. Once you switch to the standard homepage (which cannot be customized), it won't be possible to switch back to the custom homepage.
 admin_main	successfully_updated	Successfully updated.
 admin_main	homepage_logo	Homepage logo
 admin_main	homepage_logo_help	You can upload your own logo. In order to not ruin the design of the homepage, your logo should have a transparent background and a height of 100px.
