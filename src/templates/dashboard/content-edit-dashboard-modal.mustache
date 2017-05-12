@@ -1,0 +1,33 @@
+<div class="tlp-modal-header">
+    <h1 class="tlp-modal-title" id="edit-dashboard-label">
+        <i class="fa fa-pencil tlp-modal-title-icon"></i>
+        {{ edit_dashboard_label }}
+    </h1>
+    <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close }}">
+        &times;
+    </div>
+</div>
+<div class="tlp-modal-body">
+    <input type="hidden" name="dashboard-id" value="{{ id }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/csrf_token}}
+
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="dashboard-name">{{ dashboard_name_label }} <i class="fa fa-asterisk"></i></label>
+        <input type="text"
+               class="tlp-input"
+               id="dashboard-name"
+               name="dashboard-name"
+               placeholder="{{ dashboard_name_label }}"
+               value="{{ name }}"
+               required>
+    </div>
+</div>
+<div class="tlp-modal-footer">
+    <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel }}</button>
+    <button type="submit" class="tlp-button-primary tlp-modal-action">
+        <i class="fa fa-pencil tlp-button-icon"></i>
+        {{ edit_dashboard_label }}
+    </button>
+</div>

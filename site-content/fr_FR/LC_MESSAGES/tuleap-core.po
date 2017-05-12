@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, php-format
@@ -180,6 +180,9 @@ msgstr "Il manque le nom pour éditer le tableau de bord."
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 
+msgid "There is no widgets here."
+msgstr "Il n’y a aucun widget."
+
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."
 
@@ -197,6 +200,12 @@ msgstr "Mettre à jour"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
+
+msgid ""
+"Why do not start by editing your dashboard <br> and adding some widgets?"
+msgstr ""
+"Pourquoi ne pas commencer par éditer votre tableau de bord <br> et ajouter "
+"des widgets?"
 
 msgid "Wiki"
 msgstr "Wiki"

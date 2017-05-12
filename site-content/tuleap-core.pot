@@ -162,6 +162,9 @@ msgstr ""
 msgid "The requested dashboard does not exist."
 msgstr ""
 
+msgid "There is no widgets here."
+msgstr ""
+
 msgid "This project is not categorized yet."
 msgstr ""
 
@@ -178,6 +181,10 @@ msgid "Update"
 msgstr ""
 
 msgid "Update successful"
+msgstr ""
+
+msgid ""
+"Why do not start by editing your dashboard <br> and adding some widgets?"
 msgstr ""
 
 msgid "Wiki"
