@@ -45,6 +45,26 @@
                 {{ add_dashboard_label }}
             </a>
         </nav>
+        {{# user_dashboards }}
+            {{# is_active }}
+                {{^ has_widget }}
+                    <div class="empty-page">
+                        <p class="empty-page-text">{{ no_widget_label }}</p>
+                        <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
+                        <button
+                                type="button"
+                                id="no-widgets-edit-dashboard-button"
+                                class="tlp-button-primary tlp-button-large"
+                                data-target-modal-id="no-widgets-edit-dashboard-modal"
+                        >
+                            <i class="fa fa-plus tlp-button-icon"></i>
+                            {{ edit_dashboard_label }}
+                        </button>
+                        {{> no-widgets-edit-dashboard-modal }}
+                    </div>
+                {{/ has_widget }}
+            {{/ is_active }}
+        {{/ user_dashboards }}
     {{/ has_dashboard }}
 </div>
 

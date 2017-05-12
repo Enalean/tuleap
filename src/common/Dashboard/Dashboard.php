@@ -40,4 +40,9 @@ class Dashboard
     {
         return $this->name;
     }
+
+    public function getWidgets()
+    {
+        return array();
+    }
 }

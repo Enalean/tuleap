@@ -20,6 +20,7 @@
 
 namespace Tuleap\Dashboard;
 
+use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 
 class PagePresenter
@@ -27,6 +28,8 @@ class PagePresenter
     public $add_dashboard_label;
     public $dashboard_name_label;
     public $no_dashboard_label;
+    public $no_widget_label;
+    public $purified_no_widget_action_label;
 
     public $cancel;
     public $close;
@@ -46,13 +49,18 @@ class PagePresenter
         $this->csrf_token = $csrf;
         $this->url        = $url;
 
-        $this->add_dashboard_label    = _('Add dashboard');
-        $this->delete_dashboard_title = _('Delete dashboard');
-        $this->delete_dashboard_label = _('Delete dashboard');
-        $this->edit_dashboard_title   = _('Edit dashboard');
-        $this->edit_dashboard_label   = _('Edit dashboard');
-        $this->dashboard_name_label   = _('Dashboard name');
-        $this->no_dashboard_label     = _("You don't have any dashboards.");
+        $this->add_dashboard_label             = _('Add dashboard');
+        $this->delete_dashboard_title          = _('Delete dashboard');
+        $this->delete_dashboard_label          = _('Delete dashboard');
+        $this->edit_dashboard_title            = _('Edit dashboard');
+        $this->edit_dashboard_label            = _('Edit dashboard');
+        $this->dashboard_name_label            = _('Dashboard name');
+        $this->no_dashboard_label              = _("You don't have any dashboards.");
+        $this->no_widget_label                 = _('There is no widgets here.');
+        $this->purified_no_widget_action_label = Codendi_HTMLPurifier::instance()->purify(
+            _("Why do not start by editing your dashboard <br> and adding some widgets?"),
+            CODENDI_PURIFIER_LIGHT
+        );
 
         $this->cancel = _('Cancel');
         $this->close  = _('Close');
