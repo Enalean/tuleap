@@ -82,7 +82,7 @@ $tlp-button-secondary-outline-color: #888888;
     overflow: hidden;
     vertical-align: middle;
 
-    &:hover:not(:disabled):not(.disabled):not(:active),
+    &:hover,
     &:active,
     &:focus {
         transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
@@ -104,225 +104,110 @@ $tlp-button-secondary-outline-color: #888888;
     }
 }
 
+@mixin tlp-button-darken($color, $percentage) {
+    border-color: darken($color, $percentage);
+    background: darken($color, $percentage);
+}
+
+@mixin tlp-button-disabled($background-color, $text-color) {
+    border-color: transparent;
+    background: transparentize($background-color, .4);
+    color: transparentize($text-color, .4);
+}
+
+@mixin tlp-button-outline($outline-color, $outline-border-color: $outline-color) {
+    border: 1px solid $outline-border-color;
+    background: transparent;
+    color: $outline-color;
+
+    &:hover {
+        background: $tlp-button-outline-hover-color;
+    }
+
+    &:active {
+        background: darken($tlp-button-outline-hover-color, 5%);
+    }
+
+    &:disabled,
+    &.disabled {
+        border-color: transparentize($outline-color, .4);
+        color: transparentize($outline-color, .4);
+    }
+}
+
+@mixin tlp-button-type($button-color, $disabled-button-text-color) {
+    border-color: $button-color;
+    background: $button-color;
+
+    &:hover {
+        @include tlp-button-darken($button-color, 5%);
+    }
+
+    &:active {
+        @include tlp-button-darken($button-color, 10%);
+    }
+
+    &:disabled,
+    &.disabled {
+        @include tlp-button-disabled($button-color, $disabled-button-text-color);
+    }
+
+    &.tlp-button-outline {
+        @include tlp-button-outline($button-color);
+    }
+}
+
 /**
  * Types
  */
 .tlp-button-primary {
     @extend %tlp-button;
-
-    border-color: $tlp-theme-color;
-    background: $tlp-theme-color;
-
-    &:disabled,
-    &.disabled {
-        border-color: transparent;
-        background: transparentize($tlp-theme-color, .4);
-        color: transparentize($tlp-button-color, .4);
-    }
-
-    &:hover:not(:disabled):not(.disabled):not(:active) {
-        border-color: darken($tlp-theme-color, 5%);
-        background: darken($tlp-theme-color, 5%);
-    }
-
-    &:active:not(.disabled) {
-        border-color: darken($tlp-theme-color, 10%);
-        background: darken($tlp-theme-color, 10%);
-    }
-
-    &.tlp-button-outline {
-        border: 1px solid $tlp-theme-color;
-        background: transparent;
-        color: $tlp-theme-color;
-
-        &:disabled,
-        &.disabled {
-            border-color: transparentize($tlp-theme-color, .4);
-            color: transparentize($tlp-theme-color, .4);
-        }
-    }
+    @include tlp-button-type($tlp-theme-color, $tlp-button-color);
 }
 
 .tlp-button-secondary {
     @extend %tlp-button;
-
     border-color: $tlp-button-secondary-background;
     background: $tlp-button-secondary-background;
     color: $tlp-button-secondary-color;
     box-shadow: 0 1px 1px $tlp-button-secondary-box-shadow;
 
+    &:hover {
+        @include tlp-button-darken($tlp-button-secondary-background, 5%);
+    }
+
+    &:active {
+        @include tlp-button-darken($tlp-button-secondary-background, 10%);
+    }
+
     &:disabled,
     &.disabled {
-        border-color: transparent;
-        background: transparentize($tlp-button-secondary-background, .4);
-        color: transparentize($tlp-button-secondary-color, .4);
-    }
-
-    &:hover:not(:disabled):not(.disabled):not(:active):not(.tlp-button-outline) {
-        border-color: darken($tlp-button-secondary-background, 5%);
-        background: darken($tlp-button-secondary-background, 5%);
-    }
-
-    &:active:not(.disabled):not(.tlp-button-outline) {
-        border-color: darken($tlp-button-secondary-background, 10%);
-        background: darken($tlp-button-secondary-background, 10%);
+        @include tlp-button-disabled($tlp-button-secondary-background, $tlp-button-secondary-color);
     }
 
     &.tlp-button-outline {
-        border: 1px solid $tlp-button-secondary-outline-border;
-        background: transparent;
-        color: $tlp-button-secondary-outline-color;
-
-        &:disabled,
-        &.disabled {
-            border-color: transparentize($tlp-button-secondary-outline-color, .4);
-            color: transparentize($tlp-button-secondary-outline-color, .4);
-        }
+        @include tlp-button-outline($tlp-button-secondary-outline-color, $tlp-button-secondary-outline-border);
     }
 }
 
 .tlp-button-info {
     @extend %tlp-button;
-
-    border-color: $tlp-ui-info;
-    background: $tlp-ui-info;
-
-    &:disabled,
-    &.disabled {
-        border-color: transparent;
-        background: transparentize($tlp-ui-info, .4);
-        color: transparentize($tlp-button-color, .4);
-    }
-
-    &:hover:not(:disabled):not(.disabled):not(:active) {
-        border-color: darken($tlp-ui-info, 5%);
-        background: darken($tlp-ui-info, 5%);
-    }
-
-    &:active:not(.disabled) {
-        border-color: darken($tlp-ui-info, 10%);
-        background: darken($tlp-ui-info, 10%);
-    }
-
-    &.tlp-button-outline {
-        border: 1px solid $tlp-ui-info;
-        background: transparent;
-        color: $tlp-ui-info;
-
-        &:disabled,
-        &.disabled {
-            border-color: transparentize($tlp-ui-info, .4);
-            color: transparentize($tlp-ui-info, .4);
-        }
-    }
+    @include tlp-button-type($tlp-ui-info, $tlp-button-color);
 }
 
 .tlp-button-success {
     @extend %tlp-button;
-
-    border-color: $tlp-ui-success;
-    background: $tlp-ui-success;
-
-    &:disabled,
-    &.disabled {
-        border-color: transparent;
-        background: transparentize($tlp-ui-success, .4);
-        color: transparentize($tlp-button-color, .4);
-    }
-
-    &:hover:not(:disabled):not(.disabled):not(:active) {
-        border-color: darken($tlp-ui-success, 5%);
-        background: darken($tlp-ui-success, 5%);
-    }
-
-    &:active:not(.disabled) {
-        border-color: darken($tlp-ui-success, 10%);
-        background: darken($tlp-ui-success, 10%);
-    }
-
-    &.tlp-button-outline {
-        border: 1px solid $tlp-ui-success;
-        background: transparent;
-        color: $tlp-ui-success;
-
-        &:disabled,
-        &.disabled {
-            border-color: transparentize($tlp-ui-success, .4);
-            color: transparentize($tlp-ui-success, .4);
-        }
-    }
+    @include tlp-button-type($tlp-ui-success, $tlp-button-color);
 }
 
 .tlp-button-warning {
     @extend %tlp-button;
-
-    border-color: $tlp-ui-warning;
-    background: $tlp-ui-warning;
-
-    &:disabled,
-    &.disabled {
-        border-color: transparent;
-        background: transparentize($tlp-ui-warning, .4);
-        color: transparentize($tlp-button-color, .4);
-    }
-
-    &:hover:not(:disabled):not(.disabled):not(:active) {
-        border-color: darken($tlp-ui-warning, 5%);
-        background: darken($tlp-ui-warning, 5%);
-    }
-
-    &:active:not(.disabled) {
-        border-color: darken($tlp-ui-warning, 10%);
-        background: darken($tlp-ui-warning, 10%);
-    }
-
-    &.tlp-button-outline {
-        border: 1px solid $tlp-ui-warning;
-        background: transparent;
-        color: $tlp-ui-warning;
-
-        &:disabled,
-        &.disabled {
-            border-color: transparentize($tlp-ui-warning, .4);
-            color: transparentize($tlp-ui-warning, .4);
-        }
-    }
+    @include tlp-button-type($tlp-ui-warning, $tlp-button-color);
 }
 
 .tlp-button-danger {
     @extend %tlp-button;
-
-    border-color: $tlp-ui-danger;
-    background: $tlp-ui-danger;
-
-    &:disabled,
-    &.disabled {
-        border-color: transparent;
-        background: transparentize($tlp-ui-danger, .4);
-        color: transparentize($tlp-button-color, .4);
-    }
-
-    &:hover:not(:disabled):not(.disabled):not(:active) {
-        border-color: darken($tlp-ui-danger, 5%);
-        background: darken($tlp-ui-danger, 5%);
-    }
-
-    &:active:not(.disabled) {
-        border-color: darken($tlp-ui-danger, 10%);
-        background: darken($tlp-ui-danger, 10%);
-    }
-
-    &.tlp-button-outline {
-        border: 1px solid $tlp-ui-danger;
-        background: transparent;
-        color: $tlp-ui-danger;
-
-        &:disabled,
-        &.disabled {
-            border-color: transparentize($tlp-ui-danger, .4);
-            color: transparentize($tlp-ui-danger, .4);
-        }
-    }
+    @include tlp-button-type($tlp-ui-danger, $tlp-button-color);
 }
 
 /**
@@ -353,19 +238,6 @@ $tlp-button-secondary-outline-color: #888888;
     font-size: $tlp-button-mini-font-size;
     font-weight: $tlp-button-mini-font-weight;
     line-height: $tlp-button-mini-line-height;
-}
-
-/**
- * Outline
- */
-.tlp-button-outline {
-    &:hover:not(:disabled):not(.disabled):not(:active) {
-        background: $tlp-button-outline-hover-color;
-    }
-
-    &:active:not(.disabled) {
-        background: darken($tlp-button-outline-hover-color, 5%);
-    }
 }
 
 /**
