@@ -1702,7 +1702,7 @@ CREATE TABLE project_dashboards (
   id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   project_id INT(11) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  INDEX project_id (project_id)
+  INDEX idx(project_id, name(5))
 );
 #
 # EOF
