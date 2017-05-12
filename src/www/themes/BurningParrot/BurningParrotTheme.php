@@ -131,13 +131,6 @@ class BurningParrotTheme extends Layout
         return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 
-    public function canDisplayStandardHomepage()
-    {
-        $homepage_dao = $this->getAdminHomepageDao();
-
-        return $homepage_dao->isStandardHomepageUsed();
-    }
-
     public function displayStandardHomepage(
         $display_homepage_news,
         $display_homepage_login_form,

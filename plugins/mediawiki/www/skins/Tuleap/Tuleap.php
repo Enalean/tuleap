@@ -85,7 +85,7 @@ class SkinTuleap extends SkinTemplate {
 
         $bodyAttrs['class'] .= ' has_sidebar ' . $sidebar_state;
 
-        $theme_manager    = new ThemeManager();
+        $theme_manager    = new ThemeManager(new Admin_Homepage_Dao());
         $user_theme       = $current_user->getTheme();
         $prefered_variant = $current_user->getPreference('theme_variant');
 

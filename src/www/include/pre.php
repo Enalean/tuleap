@@ -225,7 +225,7 @@ $event_manager->processEvent(
 */
 date_default_timezone_set(TimezoneRetriever::getUserTimezone($current_user));
 
-$theme_manager = new ThemeManager();
+$theme_manager = new ThemeManager(new Admin_Homepage_Dao());
 
 $HTML = $theme_manager->getTheme($current_user);
 
