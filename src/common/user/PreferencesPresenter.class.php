@@ -160,8 +160,32 @@ class User_PreferencesPresenter {
         return $this->can_change_email;
     }
 
+    public function password_label() {
+        return $GLOBALS['Language']->getText('account_options', 'password_label');
+    }
+
     public function change_email() {
         return $GLOBALS['Language']->getText('account_options', 'change_email_address');
+    }
+
+    public function change_avatar() {
+        return $GLOBALS['Language']->getText('account_options', 'change_avatar');
+    }
+
+    public function select_avatar() {
+        return $GLOBALS['Language']->getText('account_options', 'select_avatar');
+    }
+
+    public function use_default_avatar() {
+        return $GLOBALS['Language']->getText('account_options', 'use_default_avatar');
+    }
+
+    public function change_avatar_desc() {
+        return $GLOBALS['Language']->getText('account_options', 'change_avatar_desc');
+    }
+
+    public function btn_save_avatar_label() {
+        return $GLOBALS['Language']->getText('account_options', 'btn_save_avatar_label');
     }
 
     public function can_change_password() {

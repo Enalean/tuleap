@@ -28,26 +28,43 @@ $user = $user_manager->getCurrentUser();
 if ($user->isAnonymous()) {
     session_redirect("/account/");
 }
-$csrf = new CSRFSynchronizerToken('/account/change_avatar.php');
+$csrf = new CSRFSynchronizerToken('/account/index.php');
+$csrf->check();
 
-if (isset($_FILES['avatar'])) {
+$request = HTTPRequest::instance();
+
+if ($request->get('use-default-avatar')) {
+    $user->setHasAvatar(false);
+    if ($user_manager->updateDb($user)) {
+        $level    = Feedback::INFO;
+        $feedback = $GLOBALS['Language']->getText('account_change_avatar', 'success');
+    } else {
+        $level    = Feedback::ERROR;
+        $feedback = $GLOBALS['Language']->getText('account_change_avatar', 'error');
+    }
+    $GLOBALS['Response']->addFeedback($level, $feedback);
+} elseif (isset($_FILES['avatar'])) {
     if ($_FILES['avatar']['error']) {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
-            _('An error occured with your upload. Please select a picture smaller than 300Kb.')
+            _('An error occured with your upload. Please try again or choose another image.')
         );
     } else {
         $handle = new Upload($_FILES['avatar']);
         list($width, $height) = getimagesize($_FILES['avatar']['tmp_name']);
         $max_size = 100;
+        //always resize in order to generate a background color
+        $handle->image_resize = true;
+        $handle->image_y = $height;
+        $handle->image_x = $width;
         if ($width > $max_size || $height > $max_size) {
-            $handle->image_resize = true;
-            $handle->image_ratio_crop = 'L';
+            $handle->image_ratio_crop = true;
             $handle->image_y = $max_size;
             $handle->image_x = $max_size;
         }
         $handle->image_background_color = '#FFFFFF';
         $handle->image_convert = 'png';
+        $handle->png_compression = 9;
         $handle->file_new_name_body = 'avatar';
         $handle->file_safe_name = false;
         $handle->file_force_extension = false;
@@ -56,8 +73,6 @@ if (isset($_FILES['avatar'])) {
         $handle->file_overwrite = true;
 
         if ($handle->uploaded && ForgeConfig::get('sys_enable_avatars', true)) {
-            $csrf->check();
-
             $user_id = (string)$user->getId();
             $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') . '/user/avatar/');
             $path = "$avatar_path/" . substr($user_id, -2, 1) . '/' . substr($user_id, -1, 1) . "/$user_id";
@@ -67,7 +82,6 @@ if (isset($_FILES['avatar'])) {
                 $user_manager->updateDb($user);
                 $GLOBALS['Response']->addFeedback('info',
                     $GLOBALS['Language']->getText('account_change_avatar', 'success'));
-                $GLOBALS['Response']->redirect('/account/');
             } else {
                 $GLOBALS['Response']->addFeedback('error', $handle->error);
             }
@@ -75,17 +89,4 @@ if (isset($_FILES['avatar'])) {
     }
 }
 
-$title = $Language->getText('account_change_avatar', 'title');
-$HTML->header(array('title' => $title));
-
-echo '<h2>'. $title .'</h2>';
-echo $user->fetchHtmlAvatar();
-echo '<form action="/account/change_avatar.php" method="POST" enctype="multipart/form-data">';
-echo '<input type="hidden" name="MAX_FILE_SIZE" value="300000" />';
-echo $csrf->fetchHTMLInput();
-echo '<input type="file" name="avatar" /><br>';
-echo '<input class="btn btn-primary" type="submit" value="'. $Language->getText('global', 'btn_update') .'" /></p>';
-echo '</form>';
-$HTML->footer(array());
-
-?>
+$GLOBALS['Response']->redirect('/account/');

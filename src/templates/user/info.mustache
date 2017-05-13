@@ -1,25 +1,41 @@
 <div id="account-user-info">
     <div class="first-user-info">
     {{# has_avatar }}
-        <div class="user-personnal-info" id="user-avatar">
-            <a href="/account/change_avatar.php">{{{ avatar }}}</a>
+        <div id="user-avatar">
+            {{{ avatar }}}
+            <a href="#change-avatar-modal" data-toggle="modal" class="btn btn-small user-avatar-change">
+                {{ change_avatar }}
+            </a>
         </div>
     {{/ has_avatar }}
-        <div class="user-personnal-info">
-            <span class="user-real-name">{{ real_name }}</span>
-            {{# can_change_real_name }}<a href="change_realname.php" class="btn btn-small">{{ change_real_name }}</a>{{/ can_change_real_name }}
-            {{# can_change_password }}<a href="change_pw.php" class="btn btn-small">{{ change_password }}</a>{{/ can_change_password }}
-            <span class="user-username">{{ user_username }}</span>
+        <div>
+            <h1>
+                {{ real_name }}
+                {{# can_change_real_name }}
+                    <a href="change_realname.php" class="btn btn-small user-real-name-change">
+                        {{ change_real_name }}
+                    </a>
+                {{/ can_change_real_name }}
+            </h1>
+            <span class="user-username">@{{ user_username }}</span>
         </div>
     </div>
-
-    <div style="clear:both"></div>
 
     <table class="user-info-table">
         <tr>
             <td class="user-info-label table-label">{{ user_id_label }}</td>
             <td>{{ user_id_value }}</td>
         </tr>
+        {{# can_change_password }}
+            <tr>
+                <td class="user-info-label table-label">{{ password_label }}</td>
+                <td>
+                    <a href="change_pw.php" class="btn btn-small">
+                        {{ change_password }}
+                    </a>
+                </td>
+            </tr>
+        {{/ can_change_password }}
         <tr>
             <td class="user-info-label table-label">{{ user_email_label }}</td>
             <td>{{ user_email_value }} {{# can_change_email }}<a href="change_email.php" class="btn btn-small">{{ change_email }}</a>{{/ can_change_email }}</td>
@@ -40,3 +56,7 @@
         {{/ extra_user_info }}
     </table>
 </div>
+
+{{# has_avatar }}
+    {{> change-avatar-modal }}
+{{/ has_avatar }}

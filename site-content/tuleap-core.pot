@@ -11,8 +11,7 @@ msgid "Agile Dashboard"
 msgstr ""
 
 msgid ""
-"An error occured with your upload. Please select a picture smaller than "
-"300Kb."
+"An error occured with your upload. Please try again or choose another image."
 msgstr ""
 
 msgid "And more..."
