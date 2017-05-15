@@ -156,7 +156,7 @@ if (($func=='do_create')||($func=='do_update')) {
     $short_name  = $request->getValidated('short_name', 'string', '');
     $label       = $request->getValidated('label', 'string', '');
     $description = $request->getValidated('description', 'string', '');
-    $link        = $request->getValidated('link', 'string', '');
+    $link        = $request->getValidated('link', 'localuri', '');
     $rank        = $request->getValidated('rank', 'int', 500);
     $is_active   = $request->getValidated('is_active', 'uint', 0);
     // Sanity check

@@ -28,6 +28,7 @@ use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use Project;
 use ProjectManager;
+use Tuleap\Sanitizer\URISanitizer;
 
 class ProjectSidebarBuilder
 {
@@ -47,17 +48,23 @@ class ProjectSidebarBuilder
      * @var Codendi_HTMLPurifier
      */
     private $purifier;
+    /**
+     * @var URISanitizer
+     */
+    private $uri_sanitizer;
 
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
         PermissionsOverrider_PermissionsOverriderManager $permission_overrider,
-        Codendi_HTMLPurifier $purifier
+        Codendi_HTMLPurifier $purifier,
+        URISanitizer $uri_sanitizer
     ) {
         $this->event_manager        = $event_manager;
         $this->project_manager      = $project_manager;
         $this->permission_overrider = $permission_overrider;
         $this->purifier             = $purifier;
+        $this->uri_sanitizer        = $uri_sanitizer;
     }
 
     /** @return array[] Array of sidebar entries */
@@ -196,7 +203,7 @@ class ProjectSidebarBuilder
             $link = str_replace('$group_id', $project_id, $link);
         }
 
-        return $link;
+        return $this->uri_sanitizer->sanitizeForHTMLAttribute($link);
     }
 
     /**

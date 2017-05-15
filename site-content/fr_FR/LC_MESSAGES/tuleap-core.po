@@ -141,6 +141,9 @@ msgstr "Ouvre/Ferme la barre de service"
 msgid "Please accept term of service"
 msgstr "Merci d'accepter les conditions d'utilisation"
 
+msgid "Please, enter a http:// or https:// link"
+msgstr "Veuillez utiliser un lien http:// ou https://"
+
 msgid "Project name"
 msgstr "Nom du projet"
 

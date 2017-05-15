@@ -83,7 +83,8 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').':&nbsp;</a><font color="red">*</font></td>
 <td>';
   if (((!$ro)||($hp)) && (!$is_legacy_docman || $su)) {
-    echo '<input type="text" name="link" size="70" maxlength="255" value="'.$hp->purify($service['link']).'">';
+      $link_expected_title = _('Please, enter a http:// or https:// link');
+    echo '<input type="text" name="link" size="70" maxlength="255" pattern="(https?://|#|/|\?).+" title="' . $link_expected_title . '" value="'.$hp->purify($service['link']).'">';
   } else {
     echo $service['link'];
     echo '<input type="hidden" name="link" VALUE="'.$service['link'].'">';
@@ -167,7 +168,8 @@ function display_service_creation_form($group_id,$su) {
     global $sys_default_domain,$Language;
     $pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
- 
+
+    $link_expected_title = _('Please, enter a http:// or https:// link');
     echo '
 <h3>'.$Language->getText('project_admin_editservice','s_creation').'</h3>
 <form name="form_create" method="post" action="/project/admin/servicebar.php?group_id='.$group_id.'">
@@ -179,7 +181,7 @@ function display_service_creation_form($group_id,$su) {
 <tr><td width="10%"><a href="#" title="'.$Language->getText('project_admin_editservice','s_name_in_bar').'">'.$Language->getText('project_admin_editservice','s_label').':</a>&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="label" size="30" maxlength="40"></td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','url').'">'.$Language->getText('project_admin_editservice','s_link').'</a>:&nbsp;<font color="red">*</font></td>
-<td><input type="text" name="link" size="70" maxlength="255"></td></tr>';
+<td><input type="text" name="link" size="70" maxlength="255" pattern="(https?://|#|/|\?).+" title="' . $link_expected_title . '"></td></tr>';
 if (($group_id==100)&&($su)) {
     echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_short_name').$Language->getText('project_admin_editservice','mandatory').'">'.$Language->getText('project_admin_editservice','short_name').'</a>:&nbsp;<font color="red">*</font> </td>
