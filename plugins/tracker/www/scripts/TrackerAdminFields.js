@@ -1,5 +1,6 @@
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Tuleap, 2017. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -18,6 +19,22 @@
  */
 
 document.observe('dom:loaded', function () {
+
+    function initTextboxlistForDefaultValues() {
+        if ($('tracker_artifact_textboxlist_default')) {
+            var field_id = $('field_id').value;
+            codendi.tracker.textboxlist[0] = new ProtoMultiSelect(
+                'tracker_field_default',
+                'tracker_artifact_textboxlist_default',
+                {
+                    fetchFile: codendi.tracker.base_url + '?formElement=' + field_id + '&func=textboxlist',
+                    loadOnInit: false,
+                    newValues: false,
+                    newValuePrefix: '!'
+                }
+            );
+        }
+    }
 
     function tracker_register_hide_value() {
         $$('.tracker_admin_static_value_hidden_chk').each(function (checkbox) {
@@ -247,6 +264,8 @@ document.observe('dom:loaded', function () {
 
                             //register hide action
                             tracker_register_hide_value();
+
+                            initTextboxlistForDefaultValues();
                         }
                     }
                 );

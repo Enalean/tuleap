@@ -429,7 +429,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $html .= self::fetchSelectUgroups('bind[values][]', $this->field, $this->values);
 
         //Select default values
-        $html .= $this->getSelectDefaultValues();
+        $html .= $this->getField()->getSelectDefaultValues($this->default_values);
 
         return $html;
     }

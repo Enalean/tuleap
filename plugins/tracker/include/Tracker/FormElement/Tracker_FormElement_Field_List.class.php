@@ -1404,4 +1404,28 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function addBindValue($new_value) {
         return $this->getBind()->addValue($new_value);
     }
+
+    /**
+     * Get the html to select a default value
+     *
+     * @return string html
+     */
+    public function getSelectDefaultValues($default_values)
+    {
+        $hp = Codendi_HTMLPurifier::instance();
+        $html = '';
+
+        //Select default values
+        $html .= '<p>';
+        $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','select_default_value'). '</strong><br />';
+        $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
+        foreach ($this->getAllValues() as $v) {
+            $selected = isset($default_values[$v->getId()]) ? 'selected="selected"' : '';
+            $html .= '<option value="'. $v->getId() .'" '. $selected .'>'. $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
+        }
+        $html .= '</select>';
+        $html .= '</p>';
+
+        return $html;
+    }
 }

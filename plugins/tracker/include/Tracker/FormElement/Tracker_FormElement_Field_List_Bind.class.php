@@ -377,12 +377,11 @@ abstract class Tracker_FormElement_Field_List_Bind implements
             $redirect = true;
         }
 
-        $default = array();
         if (isset($params['default'])) {
-            $default = $params['default'];
+            $default = $this->extractDefaultValues($params);
+            $this->getDefaultValueDao()->save($this->field->getId(), $default);
+            $redirect = true;
         }
-        $this->getDefaultValueDao()->save($this->field->getId(), $default);
-        $redirect = true;
 
         if (!$no_redirect && $redirect) {
             $GLOBALS['Response']->redirect('?'. http_build_query(array(
@@ -391,6 +390,23 @@ abstract class Tracker_FormElement_Field_List_Bind implements
             )));
         }
         return $redirect;
+    }
+
+    private function extractDefaultValues(array $params)
+    {
+        $default = array();
+        if (isset($params['default'])) {
+            if (isset($params['default'][0])) {
+                $bind_default = str_replace('b', '', $params['default'][0]);
+                $bind_default = explode(',', $bind_default);
+
+                return $bind_default;
+            }
+
+            $default = $params['default'];
+        }
+
+        return $default;
     }
 
     /**
@@ -456,29 +472,6 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @return Tracker_FormElement_Field_List_BindValue
      */
     public abstract function getBindValueById($bindvalue_id);
-
-    /**
-     * Get the html to select a default value
-     *
-     * @return string html
-     */
-    protected function getSelectDefaultValues() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-
-        //Select default values
-        $html .= '<p>';
-        $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','select_default_value'). '</strong><br />';
-        $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
-        foreach ($this->getAllValues() as $v) {
-            $selected = isset($this->default_values[$v->getId()]) ? 'selected="selected"' : '';
-            $html .= '<option value="'. $v->getId() .'" '. $selected .'>'. $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
-        }
-        $html .= '</select>';
-        $html .= '</p>';
-
-        return $html;
-    }
 
     /**
      * Fetch sql snippets needed to compute aggregate functions on this field.

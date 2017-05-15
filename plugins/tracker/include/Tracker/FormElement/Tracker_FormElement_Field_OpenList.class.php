@@ -235,20 +235,6 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return json_encode($json_values);
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        parent::process($layout, $request, $current_user);
-        switch($request->get('func')) {
-            case 'textboxlist':
-                if ($request->get('keyword')) {
-                    echo $this->textboxlist($request->get('keyword'));
-                } else {
-                    echo '[]';
-                }
-                exit;
-                break;
-        }
-    }
-
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -953,5 +939,54 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         BindParameters $parameters
     ) {
         return '';
+    }
+
+    /**
+     * @see Tracker_FormElement::process()
+     */
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    {
+        parent::process($layout, $request, $current_user);
+
+        if ($request->get('func') === 'textboxlist') {
+            echo $this->textboxlist($request->get('keyword'), $limit = 10);
+        }
+    }
+
+    public function getSelectDefaultValues($default_values)
+    {
+        $hp   = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $html .= '<p>';
+        $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','select_default_value'). '</strong><br />';
+        $html .= '<div class="textboxlist">
+                    <input id="tracker_field_default"
+                           name="bind[default][]"
+                           style="width:98%"
+                           type="text"></div>
+                    <input id="field_id" type="hidden"
+                           value="' . $this->getId() . '">
+                  </div>';
+
+        $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_default">';
+        $html .= '<ul class="feed">';
+
+        $user_manager = UserManager::instance();
+        //Field values
+        foreach ($default_values as $key => $value) {
+            if ($key != 100) {
+                $user = $user_manager->getUserById($key);
+                if ($user) {
+                    $html .= '<li value="' . $user->getId() . '">';
+                    $html .= $hp->purify($user->getName());
+                    $html .= '</li>';
+                }
+            }
+        }
+        $html .= '</ul>';
+        $html .= '</div>';
+        $html .= '</p>';
+
+        return $html;
     }
 }
