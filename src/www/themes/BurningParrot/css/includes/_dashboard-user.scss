@@ -1,0 +1,18 @@
+.dashboard-user-title {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-spacing;
+}
+
+.dashboard-user-title-name {
+    margin: 0 0 0 $tlp-half-spacing;
+    color: $tlp-theme-color;
+    font-size: 40px;
+    font-weight: 300;
+}
+
+.dashboard-user-title-login {
+    display: block;
+    margin: 0;
+    font-size: 20px;
+}

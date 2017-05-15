@@ -6,15 +6,15 @@
                     <img src="{{ avatar_url }}">
                 {{/ has_avatar }}
             </div>
-            <h1 class="user-my-realname">
+            <h1 class="dashboard-user-title-name">
                 {{ real_name }}
-                <small class="user-my-login">@{{ login }}</small>
+                <small class="dashboard-user-title-login">@{{ login }}</small>
             </h1>
 
         </div>
     {{/ user_presenter }}
     {{# has_dashboard }}
-        <nav class="tlp-tabs user-dashboards">
+        <nav class="tlp-tabs dashboard-tabs">
             {{# user_dashboards }}
                 <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}?dashboard_id={{ id }}">
                     {{ name }}
