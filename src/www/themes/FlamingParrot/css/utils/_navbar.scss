@@ -236,10 +236,15 @@
         li.current-project > a {
             height: $navbar-height;
             background-color: $white;
+            border-right: 1px solid #e3e5ed;
             text-align: left;
             white-space: nowrap;
             overflow: hidden;
             box-sizing: border-box;
+            color: $navbar-color;
+            font-size: 18px;
+            font-weight: normal;
+            letter-spacing: 1.1px;
 
             &:before {
                 content: '';
@@ -247,6 +252,7 @@
 
             i {
                 margin-right: 5px;
+                font-size: 16px;
             }
         }
         li.current-project.cutted > a {

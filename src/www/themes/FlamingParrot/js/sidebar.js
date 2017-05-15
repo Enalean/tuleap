@@ -18,7 +18,7 @@
  */
 
 !function($) {
-    var width_collapsed = '45px';
+    var width_collapsed = '50px';
     var width_expanded  = '250px';
     var api;
     var throttleTimeout;
@@ -37,7 +37,10 @@
         $.ajax({
             type: 'POST',
             url: '/account/update-sidebar-preference.php',
-            data: { sidebar_state: state }
+            data: {
+                user_preference_name: 'sidebar_state',
+                sidebar_state       : state
+            }
         });
 
         $('body').removeClass('sidebar-expanded sidebar-collapsed').addClass(state);
@@ -48,7 +51,7 @@
 
         $('.sidebar-nav').animate({
             width: new_width
-        }, duration, updateNavbar(new_width));
+        }, duration);
         $('.sidebar-nav li a').css({
             width: new_width
         });
@@ -73,19 +76,6 @@
             logo.classList.remove('logo-collapsed');
         } else {
             logo.classList.add('logo-collapsed');
-        }
-    }
-
-    function updateNavbar(new_width) {
-        if (new_width == width_expanded) {
-            $('.navbar .nav:first-child li.current-project').remove();
-
-        } else {
-            $('.navbar .nav:first-child').prepend('<li class="current-project">' + $('.project-title-container').html() + '</li>');
-
-            if ($('.current-project').outerWidth() >= 180) {
-                $('.current-project').addClass('cutted');
-            }
         }
     }
 
@@ -180,7 +170,6 @@
             } else {
                 updateSidebarIcon('right', true);
                 updateSidebarServices(true, 100);
-                updateNavbar(width_collapsed);
             }
 
             $('.sidebar-collapse').click(function() {

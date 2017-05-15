@@ -20,14 +20,25 @@
 
 namespace Tuleap\Layout;
 
+use ForgeConfig;
+
 class SidebarPresenter
 {
     public $classname;
     public $content;
+    public $powered_by;
+    public $copyright;
 
     public function __construct($classname, $content)
     {
-        $this->classname = $classname;
-        $this->content   = $content;
+        $this->classname  = $classname;
+        $this->content    = $content;
+        $this->powered_by = $GLOBALS['Language']->getText('global', 'powered_by') . ' ' . $this->getForgeVersion();
+        $this->copyright  = $GLOBALS['Language']->getText('global', 'copyright');
+    }
+
+    private function getForgeVersion()
+    {
+        return trim(file_get_contents(ForgeConfig::get('codendi_dir').'/VERSION'));
     }
 }

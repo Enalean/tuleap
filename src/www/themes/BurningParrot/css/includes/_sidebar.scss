@@ -1,0 +1,74 @@
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.sidebar {
+    display: flex;
+    position: fixed;
+    top: $navbar-height;
+    left: 0;
+    flex-direction: column;
+    width: $sidebar-expanded-width;
+    height: calc(100vh - #{$navbar-height});
+    background: $tlp-theme-sidebar-background-color;
+    z-index: 10000;
+}
+
+.sidebar-collapser-icon::before {
+    content: '\f053';
+}
+
+.sidebar-about {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 0 $tlp-spacing;
+    color: lighten($tlp-theme-sidebar-background-color, 15%);
+    cursor: default;
+
+    p {
+        margin: 0 0 5px;
+        font-size: 12px;
+        line-height: normal;
+    }
+
+    a {
+        color: lighten($tlp-theme-sidebar-background-color, 15%);
+        text-decoration: none;
+
+        &:hover {
+            color: $tlp-theme-color;
+        }
+    }
+
+    > .sidebar-about-tuleap {
+        margin: 0 0 10px;
+        transition: fill 100ms;
+        fill: lighten($tlp-theme-sidebar-background-color, 15%);
+
+        &:hover {
+            fill: $tlp-theme-color;
+        }
+    }
+}
+
+@import 'includes/sidebar-project';
+@import 'includes/sidebar-siteadmin';
+@import 'includes/sidebar-collapsed';

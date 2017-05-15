@@ -61,6 +61,7 @@ main[role=main]:not(.tlp-framed) > #feedback {
     margin: 0 0 30px;
 }
 
+@import 'sidebar';
 @import 'navbar';
 @import 'navbar-dropdown';
 @import 'navbar-dropdown-projects';

@@ -104,7 +104,13 @@ class ProjectDashboardController
         }
 
 
-        $GLOBALS['Response']->header(array('title' => $this->project->getUnconvertedPublicName()));
+        site_project_header(
+            array(
+                'title'  => $project->getUnconvertedPublicName(),
+                'group'  => $project->getID(),
+                'toptab' => 'summary'
+            )
+        );
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
         );

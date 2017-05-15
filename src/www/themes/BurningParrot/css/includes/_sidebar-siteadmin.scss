@@ -17,18 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.siteadmin-sidebar {
-    display: flex;
-    position: fixed;
-    top: $navbar-height;
-    left: 0;
-    flex-direction: column;
-    width: $sidebar-expanded-width;
-    height: calc(100vh - #{$navbar-height});
-    background: $tlp-theme-sidebar-background-color;
-    z-index: 10000;
-}
-
 .sidebar-collapser-bar {
     position: absolute;
     top: 0;
@@ -37,14 +25,14 @@
     height: 100%;
     transition: background 100ms;
     z-index: 10001;
+    cursor: w-resize;
 
     &:hover {
         background: darken($tlp-theme-sidebar-background-color, 6%);
-        cursor: w-resize;
     }
 }
 
-.sidebar-collapser-icon {
+.admin-sidebar-collapser-icon {
     display: flex;
     position: absolute;
     top: 20px;
@@ -180,38 +168,5 @@
     > .fa-life-saver {
         margin: 0 0 15px;
         font-size: 30px;
-    }
-}
-
-.admin-sidebar-version {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 60px 0 0;
-}
-
-.admin-sidebar-version-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 0 $tlp-spacing;
-    transition: color 100ms;
-    color: lighten($tlp-theme-sidebar-background-color, 15%);
-    font-size: 12px;
-    cursor: default;
-
-    > .admin-sidebar-tuleap {
-        margin: 0 0 10px;
-        transition: fill 100ms;
-        fill: lighten($tlp-theme-sidebar-background-color, 15%);
-    }
-
-    &:hover {
-        color: $tlp-theme-color;
-
-        > .admin-sidebar-tuleap {
-            fill: $tlp-theme-color;
-        }
     }
 }

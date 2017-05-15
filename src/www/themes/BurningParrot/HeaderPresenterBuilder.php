@@ -57,6 +57,9 @@ class HeaderPresenterBuilder
     /** @var SidebarPresenter */
     private $sidebar;
 
+    /** @var CurrentProjectNavbarInfoPresenter */
+    private $current_project_navbar_info_presenter;
+
     public function build(
         NavbarPresenterBuilder $navbar_presenter_builder,
         HTTPRequest $request,
@@ -67,16 +70,19 @@ class HeaderPresenterBuilder
         $body_classes,
         $main_classes,
         $sidebar,
+        $current_project_navbar_info_presenter,
+        $unicode_icons,
         URLRedirect $url_redirect
     ) {
-        $this->navbar_presenter_builder = $navbar_presenter_builder;
-        $this->request                  = $request;
-        $this->current_user             = $current_user;
-        $this->imgroot                  = $imgroot;
-        $this->title                    = $title;
-        $this->body_classes             = $body_classes;
-        $this->main_classes             = $main_classes;
-        $this->sidebar                  = $sidebar;
+        $this->navbar_presenter_builder              = $navbar_presenter_builder;
+        $this->request                               = $request;
+        $this->current_user                          = $current_user;
+        $this->imgroot                               = $imgroot;
+        $this->title                                 = $title;
+        $this->body_classes                          = $body_classes;
+        $this->main_classes                          = $main_classes;
+        $this->sidebar                               = $sidebar;
+        $this->current_project_navbar_info_presenter = $current_project_navbar_info_presenter;
 
         $color = $this->getMainColor();
 
@@ -95,8 +101,24 @@ class HeaderPresenterBuilder
             $feedback_logs,
             $this->getBodyClassesAsString(),
             $this->getMainClassesAsString(),
-            $this->sidebar
+            $this->sidebar,
+            $this->current_project_navbar_info_presenter,
+            $this->buildUnicodeIcons($unicode_icons)
         );
+    }
+
+    private function buildUnicodeIcons($unicode_icons)
+    {
+        $list_of_icon_unicodes = array();
+
+        foreach ($unicode_icons as $service_name => $unicode) {
+            $list_of_icon_unicodes[] = array(
+                'service_name' => $service_name,
+                'unicode'      => $unicode
+            );
+        }
+
+        return $list_of_icon_unicodes;
     }
 
     private function getExtraTabs()

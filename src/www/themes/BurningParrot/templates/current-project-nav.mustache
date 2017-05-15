@@ -1,0 +1,14 @@
+{{# current_project_navbar_info_presenter }}
+<nav id="current-project-nav">
+    <a href="{{ project_link }}" class="current-project-name" title="{{{ project_privacy }}}">
+        {{# project_is_public }}
+        <i class="fa fa-unlock current-project-icon"></i>
+        {{/ project_is_public }}
+        {{^ project_is_public }}
+        <i class="fa fa-lock current-project-icon"></i>
+        {{/ project_is_public }}
+
+        {{ project_name }}
+    </a>
+</nav>
+{{/ current_project_navbar_info_presenter }}
