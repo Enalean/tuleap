@@ -93,8 +93,8 @@ Version: 1.2
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.4
-Requires: python, MySQL-python, python-ldap
-Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-LDAP, perl-DBD-MySQL
+Requires: python, MySQL-python
+Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-DBD-MySQL
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
 %description core-subversion
@@ -143,7 +143,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{php_base}-ldap, perl-LDAP, python-ldap
+Requires: %{php_base}-ldap, perl-LDAP, python-ldap
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
