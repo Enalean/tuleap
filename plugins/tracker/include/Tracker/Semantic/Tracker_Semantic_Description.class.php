@@ -94,17 +94,30 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      * @return string html
      */
     public function display() {
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_long_desc');
-        if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
+        $warning = '';
+        $field   = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
+
+        if ($field) {
             $purifier = Codendi_HTMLPurifier::instance();
-            echo $GLOBALS['Language']->getText(
+            $content  =  $GLOBALS['Language']->getText(
                 'plugin_tracker_admin_semantic',
                 'description_field',
                 array($purifier->purify($field->getLabel()))
             );
+
+            if (Tracker_FormElementFactory::instance()->getUsedFieldByIdAndType($this->tracker, $field->getId(), array('string', 'ref'))) {
+                $warning = '<p class="alert alert-warning">'.
+                            $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_warning').
+                            '</p>';
+            }
+
         } else {
-            echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_no_field');
+            $content = $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_no_field');
         }
+
+        echo $warning;
+        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_long_desc');
+        echo $content;
     }
 
     /**
@@ -117,13 +130,19 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return string html
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+    public function displayAdmin(
+        Tracker_SemanticManager $sm,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user
+    ) {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
 
-        if ($text_fields = Tracker_FormElementFactory::instance()->getUsedTextFields($this->tracker)) {
+        $text_fields = Tracker_FormElementFactory::instance()->getUsedFormElementsByType($this->tracker, array('text'));
 
+        if ($text_fields) {
             $html .= '<form method="POST" action="'. $this->getUrl() .'">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="text_field_id">';
@@ -174,10 +193,15 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+    public function process(
+        Tracker_SemanticManager $sm,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user
+    ) {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();
-            if ($field = Tracker_FormElementFactory::instance()->getUsedTextFieldById($this->tracker, $request->get('text_field_id'))) {
+            if ($field = Tracker_FormElementFactory::instance()->getUsedFieldByIdAndType($this->tracker, $request->get('text_field_id'), array('text'))) {
                 $this->text_field = $field;
                 if ($this->save()) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','description_now', array($field->getLabel())));

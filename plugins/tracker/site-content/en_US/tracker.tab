@@ -1281,6 +1281,7 @@ plugin_tracker_admin_semantic	description_impossible	You cannot define the <em>d
 plugin_tracker_admin_semantic	description_now	The description is now: $1
 plugin_tracker_admin_semantic	unable_save_description	Unable to save the description
 plugin_tracker_admin_semantic	deleted_description	Description semantic has been unset
+plugin_tracker_admin_semantic	description_warning	String fields are no longer supported for description semantic. Please update.
 
 plugin_tracker_admin_semantic	unset	Unset this semantic
 plugin_tracker_admin_semantic	choose_one_advice	Feel free to choose one:
