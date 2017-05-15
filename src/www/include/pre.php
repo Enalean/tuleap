@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\TimezoneRetriever;
 
 if (version_compare(phpversion(), '5.3', '<') && version_compare(phpversion(), '7', '>=')) {
@@ -225,8 +226,11 @@ $event_manager->processEvent(
 */
 date_default_timezone_set(TimezoneRetriever::getUserTimezone($current_user));
 
-$theme_manager = new ThemeManager(new Admin_Homepage_Dao());
-
+$theme_manager = new ThemeManager(
+    new BurningParrotCompatiblePageDetector(
+        new Admin_Homepage_Dao()
+    )
+);
 $HTML = $theme_manager->getTheme($current_user);
 
 // Check if anonymous user is allowed to browse the site

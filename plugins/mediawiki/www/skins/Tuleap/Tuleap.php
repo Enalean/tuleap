@@ -10,6 +10,7 @@
  * @ingroup Skins
  */
 
+use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
 require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
@@ -85,7 +86,11 @@ class SkinTuleap extends SkinTemplate {
 
         $bodyAttrs['class'] .= ' has-sidebar ' . $sidebar_state;
 
-        $theme_manager    = new ThemeManager(new Admin_Homepage_Dao());
+        $theme_manager    = new ThemeManager(
+            new BurningParrotCompatiblePageDetector(
+                new Admin_Homepage_Dao()
+            )
+        );
         $user_theme       = $current_user->getTheme();
         $prefered_variant = $current_user->getPreference('theme_variant');
 

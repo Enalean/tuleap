@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BurningParrotCompatiblePageDetector;
+
 /**
  * Instanciate the right theme according to user and platform preferences
  * and theme availability
@@ -29,13 +31,14 @@ class ThemeManager
     private static $PSR2_EXTENSION   = 'Theme.php';
 
     /**
-     * @var Admin_Homepage_Dao
+     * @var BurningParrotCompatiblePageDetector
      */
-    private $homepage_dao;
+    private $page_detector;
 
-    public function __construct(Admin_Homepage_Dao $homepage_dao)
-    {
-        $this->homepage_dao = $homepage_dao;
+    public function __construct(
+        BurningParrotCompatiblePageDetector $page_detector
+    ) {
+        $this->page_detector = $page_detector;
     }
 
     public function getTheme(PFUser $current_user)
@@ -51,7 +54,7 @@ class ThemeManager
 
     private function getFirstValidTheme(PFUser $current_user, array $theme_names)
     {
-        if ($this->isInBurningParrotCompatiblePage($current_user)) {
+        if ($this->page_detector->isInCompatiblePage($current_user)) {
             return $this->getValidTheme($current_user, self::$BURNING_PARROT);
         }
 
@@ -62,7 +65,7 @@ class ThemeManager
             }
         }
 
-        if (! IS_SCRIPT ) {
+        if (! IS_SCRIPT) {
             throw new Exception('No theme has been found. Do you have installed BurningParrot?');
         }
     }
@@ -70,69 +73,10 @@ class ThemeManager
     private function isAllowedTheme(PFUser $current_user, $name)
     {
         if ($name === self::$BURNING_PARROT) {
-            return $this->isInSiteAdmin($current_user);
+            return $this->page_detector->isInSiteAdmin($current_user);
         }
 
         return true;
-    }
-
-    private function isInBurningParrotCompatiblePage(PFUser $current_user)
-    {
-        if (IS_SCRIPT) {
-            return false;
-        }
-
-        return $this->isInSiteAdmin($current_user)
-            || $this->isInDashboard()
-            || $this->isInHomepage();
-    }
-
-    private function isInDashboard()
-    {
-        if (! ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            return false;
-        }
-
-        $uri = $_SERVER['REQUEST_URI'];
-
-        return strpos($uri, '/my/') === 0 ||
-            strpos($uri, '/projects/') === 0;
-    }
-
-    private function isInHomepage()
-    {
-        return $_SERVER['REQUEST_URI'] === '/'
-            && $this->homepage_dao->isStandardHomepageUsed();
-    }
-
-    private function isInSiteAdmin(PFUser $current_user)
-    {
-        $is_in_site_admin = false;
-        EventManager::instance()->processEvent(
-            Event::IS_IN_SITEADMIN,
-            array(
-                'is_in_siteadmin' => &$is_in_site_admin
-            )
-        );
-
-        $is_in_site_admin = $is_in_site_admin ||
-            preg_match(
-                '`(
-                    ^/admin/
-                    |
-                    ^/admin/news.php
-                    |
-                    ^/tracker/admin/restore.php
-                )`x',
-                $_SERVER['REQUEST_URI']
-            ) && ! preg_match(
-                '`(
-                    ^/admin/register_admin.php
-                )`x',
-                $_SERVER['REQUEST_URI']
-            );
-
-        return $current_user->isSuperUser() && $is_in_site_admin;
     }
 
     private function getValidTheme(PFUser $current_user, $name)
