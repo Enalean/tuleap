@@ -46,6 +46,13 @@ class FirstConfigCreator
         $template_test_definition_tracker_id = $this->config->getTestDefinitionTrackerId($template);
         $template_test_execution_tracker_id  = $this->config->getTestExecutionTrackerId($template);
 
+        if (! isset($tracker_mapping[$template_campaign_tracker_id]) ||
+            ! isset($tracker_mapping[$template_test_definition_tracker_id]) ||
+            ! isset($tracker_mapping[$template_test_execution_tracker_id])
+        ) {
+            return;
+        }
+
         $this->config->setProjectConfiguration(
             $project,
             $tracker_mapping[$template_campaign_tracker_id],
