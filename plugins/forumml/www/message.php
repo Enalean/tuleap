@@ -1,23 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
  *
  * Originally written by Jean-Philippe Giola, 2005
  *
- * This file is a part of codendi.
+ * This file is a part of Tuleap.
  *
- * codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Id$
@@ -205,19 +206,26 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			echo "<H2>".$GLOBALS["Language"]->getText('plugin_forumml','empty_archives')."</H2>";
 		}
 	} else {
-		// search archives		
-		$pattern = "%".$request->get('search')."%";
-		$sql = sprintf('SELECT mh.id_message, mh.value'.
+		// search archives
+		$dao = new DataAccessObject();
+        $sql = sprintf('SELECT mh.id_message, mh.value'.
 						' FROM plugin_forumml_message m, plugin_forumml_messageheader mh'.
 						' WHERE mh.id_header = %s'.
 						' AND m.id_list = %d'.
 						' AND m.id_parent = 0'.
 						' AND m.id_message = mh.id_message'.
 						' AND mh.value LIKE "%s"',
-						FORUMML_SUBJECT,db_ei($list_id),db_es($pattern));
-		$result = db_query($sql);
-		echo "<H3>".$GLOBALS['Language']->getText('plugin_forumml','search_result',$purified_search)." (".db_numrows($result)." ".$GLOBALS["Language"]->getText('plugin_forumml','found').")</H3>";
-		if (db_numrows($result) > 0) {
+						FORUMML_SUBJECT,
+						$dao->da->escapeInt($list_id),
+						$dao->da->quoteLikeValueSurround($request->get('search'))
+		);
+        $result           = $dao->retrieve($sql);
+        $number_of_result = 0;
+        if ($result !== false) {
+            $number_of_result = $result->rowCount();
+		}
+		echo "<H3>".$GLOBALS['Language']->getText('plugin_forumml','search_result',$purified_search)." (".$hp->purify($number_of_result)." ".$GLOBALS["Language"]->getText('plugin_forumml','found').")</H3>";
+		if ($number_of_result > 0) {
 			plugin_forumml_show_search_results($p,$result,$group_id,$list_id);
 		}
 	}

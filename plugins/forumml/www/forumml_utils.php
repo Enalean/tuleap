@@ -1,6 +1,6 @@
 <?php
 #
-# Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+# Copyright (c) Enalean, 2012-2017. All Rights Reserved.
 # Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
 
  # Originally written by Jean-Philippe Giola, 2005
@@ -49,7 +49,8 @@ function plugin_forumml_get_message_headers($id_message) {
 }
 
 // Display search results
-function plugin_forumml_show_search_results($p,$result,$group_id,$list_id) {
+function plugin_forumml_show_search_results($p, DataAccessResult $result,$group_id,$list_id)
+{
 	
 	echo "<table width='100%'>
 			<tr>
@@ -66,7 +67,7 @@ function plugin_forumml_show_search_results($p,$result,$group_id,$list_id) {
 
 	$idx = 0;
 	// Build a table full of search results
-	while ($rows = db_fetch_array($result)) {
+	while ($rows = $result->getRow()) {
 		$idx++;
 		if ($idx % 2 == 0) {
 			$class="boxitemalt";
