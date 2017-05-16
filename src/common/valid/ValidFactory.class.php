@@ -127,6 +127,17 @@ class Valid_HTTPSURI extends Valid_String {
 }
 
 /**
+ * Check that value is a possible local URI
+ */
+class Valid_LocalURI extends Valid_String {
+    public function validate($value)
+    {
+        $this->addRule(new Rule_Regexp('/^(http:\/\/|https:\/\/|#|\/|\?)/i'));
+        return parent::validate($value);
+    }
+}
+
+/**
  * Check that value is an array.
  */
 class Valid_Array

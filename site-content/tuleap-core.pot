@@ -122,6 +122,9 @@ msgstr ""
 msgid "Please accept term of service"
 msgstr ""
 
+msgid "Please, enter a http:// or https:// link"
+msgstr ""
+
 msgid "Project name"
 msgstr ""
 

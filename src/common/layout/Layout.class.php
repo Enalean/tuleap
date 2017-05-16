@@ -38,6 +38,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      */
     protected $purifier;
 
+    /**
+     * @var \Tuleap\Sanitizer\URISanitizer
+     */
+    private $uri_sanitizer;
+
     private $javascript;
 
     private $version;
@@ -113,7 +118,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
 
-        $this->purifier = Codendi_HTMLPurifier::instance();
+        $this->purifier      = Codendi_HTMLPurifier::instance();
+        $this->uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_LocalURI());
     }
 
     function getChartColors() {
@@ -687,9 +693,10 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     }
 
     function iframe($url, $html_options = array()) {
-        $html = '';
-        $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
-        $args = ' src="'. $url .'" ';
+        $url_purified = $this->purifier->purify($this->uri_sanitizer->sanitizeForHTMLAttribute($url));
+
+        $html = '<div class="iframe_showonly"><a id="link_show_only" href="'. $url_purified .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
+        $args = ' src="'. $url_purified .'" ';
         foreach($html_options as $key => $value) {
             $args .= ' '. $key .'="'. $value .'" ';
         }
@@ -1614,7 +1621,8 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             EventManager::instance(),
             ProjectManager::instance(),
             PermissionsOverrider_PermissionsOverriderManager::instance(),
-            $this->purifier
+            $this->purifier,
+            $this->uri_sanitizer
         );
         return $builder->getSidebar($this->getUser(), $params['toptab'], $project);
     }
