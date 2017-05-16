@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -22,7 +23,7 @@ require_once 'common/widget/Widget.class.php';
 
 /**
  * Widget_TrackerRenderer
- * 
+ *
  * Tracker Renderer
  */
 abstract class Tracker_Widget_Renderer extends Widget {
@@ -71,24 +72,24 @@ abstract class Tracker_Widget_Renderer extends Widget {
         return true;
     }
 
-    function getInstallPreferences($owner_id) {
-        return $this->getPreferences($owner_id);
+    function getInstallPreferences() {
+        return $this->getPreferences();
     }
 
-    function getPreferences($owner_id) {
+    function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
-        
+
         $prefs  = '';
         $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="renderer[title]" value="'. $hp->purify($this->renderer_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '<tr><td>Renderer Id:</td><td>';
-        
+
         $prefs .= '<input type="text" name="renderer[renderer_id]" value="'. ((int)$this->renderer_id ? (int)$this->renderer_id : '') .'" />';
-        
+
         $prefs .= '</td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
-    
+
     function cloneContent($id, $owner_id, $owner_type) {
         $sql = "INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) 
         SELECT  ". $owner_id .", '". $owner_type ."', title, renderer_id
@@ -159,7 +160,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
     function isUnique() {
         return false;
     }
-    
+
     function getCategory() {
         return 'trackers';
     }

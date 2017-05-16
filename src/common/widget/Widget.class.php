@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -23,7 +23,7 @@
 * Widget
 */
 /* abstract */ class Widget {
-    
+
     var $content_id;
     var $id;
     var $hasPreferences;
@@ -36,7 +36,7 @@
         $this->id = $id;
         $this->content_id = 0;
     }
-    
+
     function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences, $owner_id, $owner_type) {
         $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type);
     }
@@ -50,7 +50,7 @@
         $prefs  = '';
         $prefs .= '<form method="POST" action="/widgets/widget.php?owner='. $owner_type.$owner_id .'&amp;action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
         $prefs .= '<fieldset><legend>'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'</legend>';
-        $prefs .= $this->getPreferences($owner_id);
+        $prefs .= $this->getPreferences();
         $prefs .= '<br />';
         $prefs .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />&nbsp;';
         $prefs .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
@@ -65,10 +65,10 @@
     function getInstallNotAllowedMessage() {
         return '';
     }
-    function getInstallPreferences($owner_id) {
+    function getInstallPreferences() {
         return '';
     }
-    function getPreferences($owner_id) {
+    function getPreferences() {
         return '';
     }
     function hasPreferences() {
@@ -110,9 +110,9 @@
     }
     /**
     * cloneContent
-    * 
+    *
     * Take the content of a widget, clone it and return the id of the new content
-    * 
+    *
     * @param $id the id of the content to clone
     * @param $owner_id the owner of the widget of the new widget
     * @param $owner_type the type of the owner of the new widget (see WidgetLayoutManager)
@@ -145,7 +145,7 @@
                 break;
             case 'mylatestsvncommits':
                 $o = new Widget_MyLatestSvnCommits();
-                break;  
+                break;
             case 'myartifacts':
                 $o = new Widget_MyArtifacts();
                 break;
@@ -234,12 +234,12 @@
             case WidgetLayoutManager::OWNER_TYPE_USER:
                 $widgets = array('myadmin', 'myprojects', 'mybookmarks',
                     'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
-                    'mytasks', 'mysrs', 'myimageviewer', 
+                    'mytasks', 'mysrs', 'myimageviewer',
                     'mylatestsvncommits', 'mysystemevent', 'myrss',
                 );
                 break;
             case WidgetLayoutManager::OWNER_TYPE_GROUP:
-                $widgets = array('projectdescription', 'projectmembers', 
+                $widgets = array('projectdescription', 'projectmembers',
                     'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
                     'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
                     'projectrss', 'projectimageviewer', 'projectcontacts'
@@ -255,11 +255,11 @@
                 $widgets = array();
                 break;
         }
-        
+
         $plugins_widgets = array();
         $em = EventManager::instance();
         $em->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
-        
+
         if (is_array($plugins_widgets)) {
             $widgets = array_merge($widgets, $plugins_widgets);
         }
@@ -282,17 +282,17 @@
                 $widgets = array();
                 break;
         }
-        
+
         $plugins_widgets = array();
         $em = EventManager::instance();
         $em->processEvent('widgets', array('external_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
-        
+
         if (is_array($plugins_widgets)) {
             $widgets = array_merge($widgets, $plugins_widgets);
         }
         return $widgets;
     }
-    
+
     function getCategory() {
         return 'general';
     }

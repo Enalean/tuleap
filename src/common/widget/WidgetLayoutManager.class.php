@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -534,7 +534,7 @@ class WidgetLayoutManager {
                         $row .= '<strong>'. $widget->getTitle()  .'</strong>';
                         $row .= '<p>'. $widget->getDescription() .'</p>';
                         if ($widget->isInstallAllowed()) {
-                            $row .= $widget->getInstallPreferences($owner_id);
+                            $row .= $widget->getInstallPreferences();
                             $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;">';
                             if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
                                 $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
