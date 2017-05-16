@@ -85,8 +85,11 @@ extends WikiPlugin
             return $this->error(_("Bad url in src: remove all of <, >, \""));
         }
 
+        $uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_LocalURI());
+        $sanitized_src = $uri_sanitizer->sanitizeForHTMLAttribute($src);
+
         $params = array('title' => _("Transcluded page"),
-                        'src' => $src,
+                        'src' => $sanitized_src,
                         'width' => "100%",
                         'height' => $height,
                         'marginwidth' => 0,
@@ -94,7 +97,7 @@ extends WikiPlugin
                         'class' => 'transclude',
                         "onload" => "adjust_iframe_height(this);");
 
-        $noframe_msg[] = fmt("See: %s", HTML::a(array('href' => $src), $src));
+        $noframe_msg[] = fmt("See: %s", HTML::a(array('href' => $sanitized_src), $src));
 
         $noframe_msg = HTML::div(array('class' => 'transclusion'),
                                  HTML::p(array(), $noframe_msg));
@@ -106,7 +109,7 @@ extends WikiPlugin
         */
 
         return HTML(HTML::p(array('class' => 'transclusion-title'),
-                            fmt("Transcluded from %s", LinkURL($src))),
+                            fmt("Transcluded from %s", LinkURL($sanitized_src))),
                     $this->_js(), $iframe);
     }
 
