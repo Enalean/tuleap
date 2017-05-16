@@ -237,6 +237,16 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
     },
 
     createAndInjectTemporaryContainer : function () {
+        var clickable     = this.getClickableArea(),
+            clickable_div = document.createElement('div');
+
+        clickable_div.textContent = clickable;
+        this.element.update(clickable_div);
+
+        return clickable_div;
+    },
+
+    getClickableArea : function() {
         var autocompute_label = '';
 
         if (this.element.readAttribute('data-field-is-autocomputed') === '1') {
@@ -244,14 +254,10 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
         }
 
         if (this.element.innerHTML === '') {
-            this.element.textContent = ' - ';
+            return ' - ';
         }
 
-        this.element.textContent = this.element.textContent + autocompute_label;
-
-        this.element.wrap('div');
-
-        return this.element;
+        return this.element.textContent + autocompute_label;
     },
 
     ajaxCallback : function() {
