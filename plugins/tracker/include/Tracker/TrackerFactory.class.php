@@ -88,6 +88,21 @@ class TrackerFactory {
     }
 
     /**
+     * @param string $shortname the shortname of the tracker we are looking for
+     * @param int $project_id the id of the project from wich to retrieve the tracker
+     * @return Tracker identified by shortname (null if not found)
+     */
+    public function getTrackerByShortnameAndProjectId($shortname, $project_id)
+    {
+        $row = $this->getDao()->searchByItemNameAndProjectId($shortname, $project_id)->getRow();
+
+        if ($row) {
+            return $this->getCachedInstanceFromRow($row);
+        }
+        return null;
+    }
+
+    /**
      * Retrieve the list of deleted trackers.
      *
      * @return array
