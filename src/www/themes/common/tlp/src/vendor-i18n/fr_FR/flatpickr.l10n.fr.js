@@ -1,4 +1,5 @@
 /* French locals for flatpickr */
+import flatpickr from 'flatpickr';
 
 flatpickr.init.prototype.l10n.weekdays = {
 	shorthand: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
@@ -17,3 +18,5 @@ flatpickr.init.prototype.l10n.ordinal = function (nth) {
 
 	return "er";
 };
+
+export default flatpickr;

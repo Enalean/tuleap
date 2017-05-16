@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,12 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tlp = tlp || { };
+import jQuery from 'jquery';
+import 'select2';
 
-tlp.select2 = function(element, options) {
+import default_locale from '../js/default_locale.js';
+
+export default function overrideSelect2(element, options) {
     options = options || {};
 
-    options.language = options.language || tlp.locale;
+    options.language = options.language || default_locale;
 
     options.theme = 'tlp-select2';
 

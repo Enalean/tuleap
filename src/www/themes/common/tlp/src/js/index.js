@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+export {
+    default as locale
+} from './default_locale.js';
 
-(() => {
-    if (typeof window.CustomEvent !== 'function') {
-        CustomEvent.prototype = window.Event.prototype;
+export {
+    default as modal
+} from './modal.js';
 
-        window.CustomEvent = CustomEvent;
-    }
+export {
+    default as dropdown
+} from './dropdowns.js';
 
-    function CustomEvent(event, { bubbles = false, cancelable = false, detail = undefined }) {
-        var evt = document.createEvent('CustomEvent');
-        evt.initCustomEvent(event, bubbles, cancelable, detail);
-        return evt;
-    }
-})();
+export {
+    default as filterInlineTable
+} from './filter-inline-table.js';
+
+
+import jQuery from 'jquery';
+// Many scripts still depend on jQuery being on window
+window.jQuery = jQuery;
+
+export {
+    default as select2
+} from '../vendor-overrides/select2.js';
+
+export {
+    default as datePicker
+} from '../vendor-overrides/flatpickr.js';

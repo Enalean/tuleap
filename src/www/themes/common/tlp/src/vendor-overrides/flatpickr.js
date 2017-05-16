@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import flatpickr from 'flatpickr';
+
 flatpickr.init.prototype.defaultConfig.prevArrow = "<i class='fa fa-angle-left'></i>";
 flatpickr.init.prototype.defaultConfig.nextArrow = "<i class='fa fa-angle-right'></i>";
 flatpickr.init.prototype.l10n.firstDayOfWeek = 1;
 
-var tlp = tlp || { };
+export default datePicker;
 
-tlp.datePicker = function(element, options) {
+function datePicker(element, options) {
     if (isNaN(Date.parse(element.value))) {
         element.value = null;
     }
@@ -40,4 +42,4 @@ tlp.datePicker = function(element, options) {
     element.setAttribute('placeholder', placeholder);
 
     return flatpickr(element, options);
-};
+}

@@ -17,5 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../node_modules/flatpickr/dist/flatpickr.min';
-@import '../../node_modules/select2/dist/css/select2.min';
+export {
+    findClosestElement
+};
+
+function findAncestorElement(element, ancestor) {
+    while ((element = element.parentElement) && element != ancestor) {}
+    return element;
+}
+
+function findClosestElement(element, ancestor) {
+    if (element == ancestor) {
+        return element;
+    }
+
+    return findAncestorElement(element, ancestor);
+}
