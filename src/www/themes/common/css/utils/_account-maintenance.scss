@@ -30,18 +30,8 @@ h3.account-title {
     }
 }
 
-.user-personnal-info {
-    float: left;
-    display: table-cell;
-    vertical-align: middle;
-    padding-top: 16px;
-}
-
-.user-real-name {
-    font-size: 2em;
-    font-weight: bold;
-    margin: 10px 10px 0 0;
-    vertical-align: inherit;
+.user-real-name-change {
+    font-weight: normal;
 }
 
 .user-username {
@@ -49,7 +39,6 @@ h3.account-title {
     font-weight: bold;
     color: grey;
     display: block;
-    margin-top: 15px;
 }
 
 #account-shell .ssh-keys-table,
@@ -95,12 +84,69 @@ h3.account-title {
 }
 
 #user-avatar {
-    margin-right: 40px;
-    padding-top: 19px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px 0 0;
+
+    > .avatar {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+.user-avatar-change {
+    margin: 10px 0 0;
+    white-space: nowrap;
+}
+
+.change-avatar-modal-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0 5px;
+
+    > .avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    &.change-avatar-modal-content-preview > .avatar {
+        background: #ffffff;
+    }
+}
+
+.change-avatar-modal-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 0 20px;
+}
+
+.change-avatar-modal-actions-select {
+    position: relative;
+    margin: 0 0 10px;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+body input[type=file].change-avatar-modal-actions-select-file {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    opacity: 0;
+    cursor: pointer;
 }
 
 .first-user-info {
-    padding-top: 15px;
+    display: flex;
+    padding: 15px 0 0;
 }
 
 .user-info-table {

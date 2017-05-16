@@ -12,6 +12,7 @@ account_options	member_since	Membre depuis :
 account_options	user_id	Id utilisateur :
 account_options	login_name	Nom $1
 account_options	ldap_name	Login LDAP
+account_options	password_label	Mot de passe :
 account_options	change_password	Changer le mot de passe
 account_options	real_name	Nom complet
 account_options	change_real_name	Changer le nom complet
@@ -20,6 +21,11 @@ account_options	timezone	Fuseau horaire :
 account_options	change_timezone	Changer le fuseau horaire
 account_options	email_address		Adresse e-mail :
 account_options	change_email_address	Changer l'adresse e-mail
+account_options	change_avatar	Changer l'avatar
+account_options	change_avatar_desc	Merci de sélectionner une image pour votre avatar. L'image sera ensuite réduite à 100×100 pixels.
+account_options	use_default_avatar	Utiliser l'avatar par défaut
+account_options	select_avatar	Sélectionner
+account_options	btn_save_avatar_label	Sauvegarder l'avatar
 account_options	preferences	Préférences
 account_options	theme	Thème :
 account_options	theme_variant	Choisissez une couleur :
@@ -137,8 +143,7 @@ account_change_realname	title	Changement de nom complet
 account_change_realname	new_name	Nouveau nom complet
 
 account_change_avatar	success	Avatar changé !
-account_change_avatar	title	Changement de l'avatar
-account_change_avatar	link	changer l'avatar
+account_change_avatar	error	Une erreur est survenue lors de la sauvegarde de l'avatar.
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_timezone.php

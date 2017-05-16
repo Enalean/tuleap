@@ -1,0 +1,47 @@
+<div id="change-avatar-modal"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="change-avatar-modal-title"
+     aria-hidden="true"
+>
+    <div class="modal-header">
+        <h3>
+            <i class="icon-user"></i>
+            <span id="change-avatar-modal-title">{{ change_avatar }}</span></h3>
+    </div>
+
+    <form action="/account/change_avatar.php" method="POST" enctype="multipart/form-data">
+        <div class="modal-body">
+            <p>{{ change_avatar_desc }}</p>
+            <section class="change-avatar-modal-content">
+                {{{ avatar }}}
+                <div class="change-avatar-modal-actions">
+                    <span class="btn change-avatar-modal-actions-select">
+                        <i class="icon-upload-alt"></i>
+                        {{ select_avatar }}
+                        <input type="file"
+                               name="avatar"
+                               id="change-avatar-modal-actions-select-file"
+                               class="change-avatar-modal-actions-select-file"
+                               accept="image/*">
+                    </span>
+                    <button type="button" class="btn" id="use-default-avatar-btn">
+                        <i class="icon-trash"></i>
+                        {{ use_default_avatar }}
+                    </button>
+                    <input type="hidden" name="use-default-avatar" value="0" id="use-default-avatar">
+                </div>
+            </section>
+            {{{ csrf_input_html }}}
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close_label }}</button>
+            <button type="submit" class="btn btn-primary" name="add-keys">
+                <i class="icon-save"></i>
+                {{ btn_save_avatar_label }}
+            </button>
+        </div>
+    </form>
+</div>
