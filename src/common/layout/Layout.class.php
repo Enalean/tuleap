@@ -954,7 +954,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                     $csrf_token
                 );
             }
-            if (strlen($widget->getPreferences($owner_id))) {
+            if (strlen($widget->getPreferences())) {
                 $preference_parameters = array(
                     'owner' => $owner_type.$owner_id,
                     'action' => 'preferences',

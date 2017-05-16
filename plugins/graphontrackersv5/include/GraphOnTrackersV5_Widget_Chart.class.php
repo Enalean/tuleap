@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -22,7 +23,7 @@ require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
 
 /**
 * GraphOnTrackersV5_Widget_Chart
-* 
+*
 * Tracker Chart
 */
 abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
@@ -57,24 +58,24 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         return false;
     }
 
-    public function getInstallPreferences($owner_id) {
-        return $this->getPreferences($owner_id);
+    public function getInstallPreferences() {
+        return $this->getPreferences();
     }
 
-    public function getPreferences($owner_id) {
+    public function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
-        
+
         $prefs  = '';
         $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="chart[title]" value="'. $hp->purify($this->chart_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '<tr><td>Chart Id:</td><td>';
-        
+
         $prefs .= '<input name="chart[chart_id]" type="text" value="'. $hp->purify($this->chart_id, CODENDI_PURIFIER_CONVERT_HTML) .'" />';
-        
+
         $prefs .= '</td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
-    
+
     function cloneContent($id, $owner_id, $owner_type) {
         $sql = "INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) 
         SELECT  ". $owner_id .", '". $owner_type ."', title, chart_id
@@ -140,7 +141,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
     function isUnique() {
         return false;
     }
-    
+
     function getCategory() {
         return 'trackers';
     }
