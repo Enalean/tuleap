@@ -145,8 +145,8 @@ if (!IS_SCRIPT) {
     header('Referrer-Policy: no-referrer-when-downgrade, strict-origin, same-origin');
 
     // Protection against clickjacking
-    header('X-Frame-Options: SAMEORIGIN');
-    $csp_rules = "frame-ancestors 'self'; ";
+    header('X-Frame-Options: DENY');
+    $csp_rules = "frame-ancestors 'none'; ";
 
     // XSS prevention
     header('X-Content-Type-Options: nosniff');
