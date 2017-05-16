@@ -107,7 +107,7 @@ class TrafficlightsPlugin extends Plugin {
             TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
             new BackendLogger()
         );
-        $config_creator->createConfigForProjectFromXml($project);
+        $config_creator->createConfigForProjectFromXML($project);
         $this->allowProjectToUseNature($project_manager, $project, $project);
     }
 

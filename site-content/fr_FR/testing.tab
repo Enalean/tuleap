@@ -18,6 +18,6 @@ plugin_trafficlights	misconfigured_message	Vous devriez configurer la chose avan
 plugin_trafficlights	references_graph_title	Graphe
 plugin_trafficlights	references_graph_url	Voir le graphe de dépendances
 
-plugin_trafficlights_first_config	error_existing_tracker	Un outil de suivi existant ($1) a empêché la configuration initiale de TrafficLights.
+plugin_trafficlights_first_config	error_existing_tracker	Un outil de suivi existant ($1) utilise le moteur d'outil de suivi version 3, empêchant la configuration initiale de TrafficLights.
 plugin_trafficlights_first_config	internal_error	Une erreur interne a empêché la configuration initiale de TrafficLights.
 plugin_trafficlights_first_config	created	La configuration initiale de TrafficLights a été effectuée pour vous.

@@ -18,6 +18,6 @@ plugin_trafficlights	misconfigured_message	You should configure things before be
 plugin_trafficlights	references_graph_title	Graph
 plugin_trafficlights	references_graph_url	See graph of dependencies
 
-plugin_trafficlights_first_config	error_existing_tracker	We tried to configure TrafficLights for you but an existing tracker ($1) prevented it.
+plugin_trafficlights_first_config	tracker_engine_version_error	We tried to configure TrafficLights for you but an existing tracker ($1) is using Tracker Engine v3 and prevented it.
 plugin_trafficlights_first_config	internal_error	We tried to configure TrafficLights for you but an internal error prevented it.
 plugin_trafficlights_first_config	created	We configured TrafficLights for you. Enjoy!

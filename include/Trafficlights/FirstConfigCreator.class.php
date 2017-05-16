@@ -61,24 +61,27 @@ class FirstConfigCreator
             return;
         }
 
-        $tracker_ids = array(
-            'campaign'  => $this->config->getCampaignTrackerId($template),
-            'test_def'  => $this->config->getTestDefinitionTrackerId($template),
-            'test_exec' => $this->config->getTestExecutionTrackerId($template)
+        $template_tracker_ids = array(
+            CAMPAIGN_TRACKER_SHORTNAME   => $this->config->getCampaignTrackerId($template),
+            DEFINITION_TRACKER_SHORTNAME => $this->config->getTestDefinitionTrackerId($template),
+            EXECUTION_TRACKER_SHORTNAME  => $this->config->getTestExecutionTrackerId($template)
         );
+        $project_tracker_ids = array();
 
-        if (! isset($tracker_mapping[$tracker_ids['campaign']]) ||
-            ! isset($tracker_mapping[$tracker_ids['test_def']]) ||
-            ! isset($tracker_mapping[$tracker_ids['test_exec']])
-        ) {
-            return;
+        foreach($template_tracker_ids as $tracker_itemname => $tracker_id) {
+            if (! isset($tracker_mapping[$tracker_id])) {
+                $tracker = $this->createTrackerFromXML($project, $tracker_itemname);
+                $project_tracker_ids[$tracker_itemname] = $tracker->getId();
+            } else {
+                $project_tracker_ids[$tracker_itemname] = $tracker_mapping[$tracker_id];
+            }
         }
 
         $this->config->setProjectConfiguration(
             $project,
-            $tracker_mapping[$tracker_ids['campaign']],
-            $tracker_mapping[$tracker_ids['test_def']],
-            $tracker_mapping[$tracker_ids['test_exec']]
+            $project_tracker_ids[CAMPAIGN_TRACKER_SHORTNAME],
+            $project_tracker_ids[DEFINITION_TRACKER_SHORTNAME],
+            $project_tracker_ids[EXECUTION_TRACKER_SHORTNAME]
         );
     }
 
@@ -89,42 +92,32 @@ class FirstConfigCreator
                (! $this->config->getTestExecutionTrackerId($project));
     }
 
-    public function createConfigForProjectFromXml(Project $project)
+    public function createConfigForProjectFromXML(Project $project)
     {
-        $tracker_ids            = array();
-        $template_paths         = array(
-            TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_campaign.xml',
-            TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_test_def.xml',
-            TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_test_exec.xml'
+        $tracker_ids       = array();
+        $tracker_itemnames = array(
+            CAMPAIGN_TRACKER_SHORTNAME,
+            DEFINITION_TRACKER_SHORTNAME,
+            EXECUTION_TRACKER_SHORTNAME
         );
 
         if (! $this->isConfigNeeded($project)) {
             return;
         }
 
-        foreach($template_paths as $template_path) {
-            $tracker_itemname = $this->xml_import->getTrackerItemNameFromXMLFile($template_path);
-
+        foreach($tracker_itemnames as $tracker_itemname) {
             if ($this->isTrackerAlreadyCreated($project, $tracker_itemname)) {
-                $this->warn(
-                    $GLOBALS['Language']->getText(
-                        'plugin_trafficlights_first_config',
-                        'error_existing_tracker',
-                        $tracker_itemname
-                    )
+                $tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
+                    $tracker_itemname,
+                    $project->getId()
                 );
-                return;
-            }
 
-            $tracker = $this->importTrackerStructure($project, $template_path);
-            if (! $tracker) {
-                $this->warn(
-                    $GLOBALS['Language']->getText(
-                        'plugin_trafficlights_first_config',
-                        'internal_error'
-                    )
-                );
-               return;
+                if (! $tracker) {
+                    # Tracker using this shortname is from TrackerEngine v3
+                    $this->warn('tracker_engine_version_error', $tracker->getId());
+                }
+            } else {
+                $tracker = $this->createTrackerFromXML($project, $tracker_itemname);
             }
 
             $tracker_ids[$tracker_itemname] = $tracker->getId();
@@ -132,24 +125,48 @@ class FirstConfigCreator
 
         $this->config->setProjectConfiguration(
             $project,
-            $tracker_ids['campaign'],
-            $tracker_ids['test_def'],
-            $tracker_ids['test_exec']
+            $tracker_ids[CAMPAIGN_TRACKER_SHORTNAME],
+            $tracker_ids[DEFINITION_TRACKER_SHORTNAME],
+            $tracker_ids[EXECUTION_TRACKER_SHORTNAME]
         );
 
+        $this->success();
+    }
+
+    private function success()
+    {
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
             $GLOBALS['Language']->getText(
                 'plugin_trafficlights_first_config',
                 'created'
-            ),
-            CODENDI_PURIFIER_DISABLED
+            )
         );
     }
 
     private function warn($message)
     {
-        $GLOBALS['Response']->addFeedback(Feedback::WARN, $message);
+        $GLOBALS['Response']->addFeedback(
+            Feedback::WARN,
+            $GLOBALS['Language']->getText(
+                'plugin_trafficlights_first_config',
+                $message
+            )
+        );
+    }
+
+    /** @return Tracker */
+    private function createTrackerFromXML(Project $project, $tracker_itemname)
+    {
+        $template_path = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_'.$tracker_itemname.'.xml';
+
+        $tracker = $this->importTrackerStructure($project, $template_path);
+        if (! $tracker) {
+            $this->warn('internal_error');
+           return;
+        }
+
+        return $tracker;
     }
 
     /** @return Tracker */
