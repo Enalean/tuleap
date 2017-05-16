@@ -101,13 +101,23 @@ class URL {
                 $group_id=$group_id['group_id'];
 
                 // News
-                if ($group_id==$GLOBALS['sys_news_group']) {
+                if ($group_id == $GLOBALS['sys_news_group']) {
+                    $group_id = $this->getGroupIdForNewsFromForumId($_REQUEST['forum_id']);
+                }
+            }
+
+            if (array_key_exists('msg_id', $_REQUEST) && $_REQUEST['msg_id']) {
+                // Get corresponding project
+                $dao = $this->getForumDao();
+                $row = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
+                $group_id=$row['group_id'];
+
+
+                // News
+                if ($group_id == $GLOBALS['sys_news_group']) {
                     // Otherwise, get group_id of corresponding news
-                    $dao = $this->getNewsBytesDao();
-                    $result = $dao->searchByForumId($_REQUEST['forum_id']);
-                    $group_id = $result->getRow();
-                    $group_id = $group_id['group_id'];
-                     
+                    $group_id = $this->getGroupIdForNewsFromForumId($_REQUEST['forum_id']);
+
                 }
             }
         }
@@ -143,6 +153,14 @@ class URL {
         }
 
         return null;
+    }
+
+    private function getGroupIdForNewsFromForumId($forum_id)
+    {
+        $dao = $this->getNewsBytesDao();
+        $result = $dao->searchByForumId($forum_id);
+        $group_id = $result->getRow();
+        return $group_id['group_id'];
     }
 
     function getProjectDao() {

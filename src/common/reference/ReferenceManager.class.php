@@ -951,7 +951,7 @@ class ReferenceManager {
                 break;
             case self::REFERENCE_NATURE_FORUMMESSAGE:
                 $forum_dao            = new ForumDao();
-                $message_group_id_row = $forum_dao->getMessageProjectId($value);
+                $message_group_id_row = $forum_dao->getMessageProjectIdAndForumId($value);
 
                 if ($message_group_id_row) {
                     $ref_gid = $message_group_id_row['group_id'];
