@@ -254,6 +254,7 @@ $tlp-button-secondary-outline-color: #888888;
 a[class*="tlp-button"] {
     height: auto;
     line-height: $tlp-button-normal-height - 2px;
+    text-align: center;
 }
 // scss-lint:disable QualifyingElement
 a.tlp-button-large[class*="tlp-button"] {
