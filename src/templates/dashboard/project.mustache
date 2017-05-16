@@ -50,42 +50,9 @@
 
 <div class="tlp-framed-vertically">
     {{# has_dashboard }}
-        <nav class="tlp-tabs dashboard-tabs">
-            {{# project_dashboards }}
-                <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}?dashboard_id={{ id }}">
-                    {{ name }}
-                    {{^ is_page_read_only }}
-                        {{# is_active }}
-                            <button class="tlp-button-primary tlp-button-outline tlp-button-mini dashboard-edit-button"
-                                    title="{{ edit_dashboard_title }}"
-                                    id="edit-dashboard-button"
-                                    data-target-modal-id="edit-dashboard-modal"
-                            >
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button class="tlp-button-danger tlp-button-outline tlp-button-mini dashboard-delete-button"
-                                    title="{{ delete_dashboard_title }}"
-                                    id="delete-dashboard-button"
-                                    data-target-modal-id="delete-dashboard-modal"
-                            >
-                                <i class="fa fa-trash-o"></i>
-                            </button>
-                        {{/ is_active }}
-                    {{/ is_page_read_only }}
-                </a>
-            {{/ project_dashboards }}
-            {{^ is_page_read_only }}
-                <a href="javascript:;"
-                   id="add-dashboard-button"
-                   class="tlp-button-primary tlp-button-mini tlp-button-outline"
-                   data-target-modal-id="add-dashboard"
-                >
-                    <i class="fa fa-plus tlp-button-icon"></i>
-                    {{ add_dashboard_label }}
-                </a>
-            {{/ is_page_read_only }}
-        </nav>
-        {{# project_dashboards }}
+        {{> dashboard-tabs }}
+
+        {{# dashboards }}
             {{# is_active }}
                 {{^ has_widget }}
                     <div class="empty-page">
@@ -106,7 +73,7 @@
                     </div>
                 {{/ has_widget }}
             {{/ is_active }}
-        {{/ project_dashboards }}
+        {{/ dashboards }}
     {{/ has_dashboard }}
 </div>
 
@@ -129,10 +96,10 @@
 
 {{^ is_page_read_only }}
     {{> add-dashboard-modal }}
-    {{# project_dashboards }}
+    {{# dashboards }}
         {{# is_active }}
             {{> delete-dashboard-modal }}
             {{> edit-dashboard-modal }}
         {{/ is_active }}
-    {{/ project_dashboards }}
+    {{/ dashboards }}
 {{/ is_page_read_only }}
