@@ -69,12 +69,21 @@ $tlp-dropdown-transition: 75ms ease-out;
         border-bottom-color: $tlp-ui-white;
     }
 
+    &.tlp-dropdown-menu-on-icon {
+        left: -$tlp-half-spacing;
+    }
+
     &.tlp-dropdown-menu-right {
         right: 0;
 
         &::before,
         &::after {
             right: 20px;
+            left: auto;
+        }
+
+        &.tlp-dropdown-menu-on-icon {
+            right: -$tlp-half-spacing;
             left: auto;
         }
     }
