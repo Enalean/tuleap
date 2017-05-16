@@ -1904,28 +1904,9 @@ msgstr ""
 msgid "Sound Score"
 msgstr ""
 
-#: ../lib/plugin/GoogleMaps.php:63
-msgid "GoogleMaps"
-msgstr ""
-
-#: ../lib/plugin/GoogleMaps.php:67
-msgid ""
-"Displays a marker with further infos (when clicking) on given coordinates"
-msgstr ""
-
-#: ../lib/plugin/GoogleMaps.php:96 ../lib/plugin/GoogleMaps.php:99
 #: ../lib/plugin/Transclude.php:76
 #, php-format
 msgid "%s parameter missing"
-msgstr ""
-
-#: ../lib/plugin/GoogleMaps.php:108
-#, php-format
-msgid "invalid argument %s"
-msgstr ""
-
-#: ../lib/plugin/GoogleMaps.php:128
-msgid "new&nbsp;window"
 msgstr ""
 
 #: ../lib/plugin/GooglePlugin.php:43
