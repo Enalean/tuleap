@@ -53,15 +53,19 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
      *
      * @return string html
      */
-    protected function fetchNotifications() {
+    protected function fetchNotifications()
+    {
         $html = '';
         if ($this->formElement->isNotificationsSupported()) {
-            $html .=' <p>';
+            $html .= ' <p>';
+            $html .= ' <label for="formElement_notifications" class="checkbox">';
             $html .= '<input type="hidden" name="formElement_data[notifications]" value="0" />';
-            $html .= '<input type="checkbox" name="formElement_data[notifications]" id="formElement_notifications" value="1" '. ($this->formElement->notifications ? 'checked="checked"' : '') .'" />';
-            $html .= '<label for="formElement_notifications">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'notifications');
+            $html .= '<input type="checkbox" name="formElement_data[notifications]" id="formElement_notifications" value="1" ' . ($this->formElement->notifications ? 'checked="checked"' : '') . '" />';
+            $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_field', 'notifications');
+            $html .= '</label>';
             $html .= '</p>';
         }
+
         return $html;
     }
     
