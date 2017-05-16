@@ -32,19 +32,19 @@ class MyPresenter extends PagePresenter
     /**
      * @var UserDashboardPresenter[]
      */
-    public $user_dashboards;
+    public $dashboards;
     public $has_dashboard;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $url,
         UserPresenter $user_presenter,
-        array $user_dashboards
+        array $dashboards
     ) {
         parent::__construct($csrf, $url);
 
-        $this->user_presenter  = $user_presenter;
-        $this->user_dashboards = $user_dashboards;
-        $this->has_dashboard   = count($user_dashboards) > 0;
+        $this->user_presenter = $user_presenter;
+        $this->dashboards     = $dashboards;
+        $this->has_dashboard  = count($dashboards) > 0;
     }
 }

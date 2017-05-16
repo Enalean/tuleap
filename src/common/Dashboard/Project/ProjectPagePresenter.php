@@ -32,7 +32,7 @@ class ProjectPagePresenter extends PagePresenter
     /**
      * @var ProjectDashboardPresenter[]
      */
-    public $project_dashboards;
+    public $dashboards;
     public $has_dashboard;
     public $is_page_read_only;
 
@@ -40,14 +40,14 @@ class ProjectPagePresenter extends PagePresenter
         CSRFSynchronizerToken $csrf,
         $url,
         ProjectPresenter $project_presenter,
-        array $project_dashboards,
+        array $dashboards,
         $is_page_read_only
     ) {
         parent::__construct($csrf, $url);
 
-        $this->project_presenter  = $project_presenter;
-        $this->project_dashboards = $project_dashboards;
-        $this->has_dashboard      = count($project_dashboards) > 0;
-        $this->is_page_read_only  = $is_page_read_only;
+        $this->project_presenter = $project_presenter;
+        $this->dashboards        = $dashboards;
+        $this->has_dashboard     = count($dashboards) > 0;
+        $this->is_page_read_only = $is_page_read_only;
     }
 }
