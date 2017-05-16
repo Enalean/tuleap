@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 %homepage-section {
-    flex: 0 0 50%;
+    flex: 1 1 50%;
 }
 
 $homepage-light-theme-color: transparentize($tlp-theme-color, .25);
@@ -46,7 +46,7 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 
 .homepage-welcome-wrapper {
     flex: 1 0 auto;
-    margin: 0 0 10px;
+    width: 100%;
     padding: 80px 60px 0;
 }
 
@@ -55,6 +55,7 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 }
 
 .homepage-headline {
+    width: 100%;
     margin: 0 0 30px;
     font-size: 17px;
     line-height: 30px;
@@ -72,9 +73,8 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 }
 
 .homepage-screenshots {
-    display: flex;
     max-width: 85%;
-    height: auto;
+    min-height: 1px; // Fix IE11 sorcery
     margin: auto;
 }
 
