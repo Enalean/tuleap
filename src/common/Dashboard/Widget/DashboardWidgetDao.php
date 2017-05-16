@@ -169,4 +169,39 @@ class DashboardWidgetDao extends DataAccessObject
             throw new \DataAccessException();
         }
     }
+
+    public function searchWidgetById($widget_id)
+    {
+        $widget_id = $this->da->escapeInt($widget_id);
+
+        $sql = "SELECT *
+                FROM dashboards_lines_columns_widgets
+                WHERE id=$widget_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function updateColumnIdByWidgetId($widget_id, $column_id)
+    {
+        $widget_id = $this->da->escapeInt($widget_id);
+        $column_id = $this->da->escapeInt($column_id);
+
+        $sql = "UPDATE dashboards_lines_columns_widgets
+                SET column_id=$column_id
+                WHERE id=$widget_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function updateWidgetRankByWidgetId($widget_id, $rank)
+    {
+        $widget_id = $this->da->escapeInt($widget_id);
+        $rank      = $this->da->escapeInt($rank);
+
+        $sql = "UPDATE dashboards_lines_columns_widgets
+                SET rank=$rank
+                WHERE id=$widget_id";
+
+        return $this->retrieve($sql);
+    }
 }

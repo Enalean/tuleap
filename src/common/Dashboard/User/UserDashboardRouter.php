@@ -22,15 +22,25 @@ namespace Tuleap\Dashboard\User;
 
 use ForgeConfig;
 use HTTPRequest;
+use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 class UserDashboardRouter
 {
+    const DASHBOARD_TYPE = 'user';
+
     /** @var UserDashboardController  */
     private $user_dashboard_controller;
+    /**
+     * @var WidgetDashboardController
+     */
+    private $widget_dashboard_controller;
 
-    public function __construct(UserDashboardController $user_dashboard_controller)
-    {
-        $this->user_dashboard_controller = $user_dashboard_controller;
+    public function __construct(
+        UserDashboardController $user_dashboard_controller,
+        WidgetDashboardController $widget_dashboard_controller
+    ) {
+        $this->user_dashboard_controller   = $user_dashboard_controller;
+        $this->widget_dashboard_controller = $widget_dashboard_controller;
     }
 
     /**
@@ -49,6 +59,9 @@ class UserDashboardRouter
         $action = $request->get('action');
 
         switch ($action) {
+            case 'reorder-widgets':
+                $this->widget_dashboard_controller->reorderWidgets($request, self::DASHBOARD_TYPE);
+                break;
             case 'add-dashboard':
                 $this->user_dashboard_controller->createDashboard($request);
                 break;

@@ -1,0 +1,19 @@
+{
+  "name": "dashboard",
+  "version": "0.1.0",
+  "description": "Tuleap widget dashboards",
+  "main": "dashboards.js",
+  "author": "Enalean Team",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "dragula": "^3.7.2"
+  },
+  "devDependencies": {
+    "webpack": "^2.5.1"
+  },
+  "scripts": {
+    "build": "webpack --optimize-minimize",
+    "watch": "webpack --watch"
+  }
+}

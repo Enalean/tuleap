@@ -167,7 +167,8 @@ var fat_combined_files = [
     components_paths = [
         'plugins/tracker/',
         'plugins/tracker/grammar/',
-        'src/www/themes/common/tlp/'
+        'src/www/themes/common/tlp/',
+        'src/www/scripts/dashboards/'
     ],
     asset_dir = 'www/assets';
 
@@ -182,7 +183,7 @@ gulp.task('clean-js-core', function() {
     del('src/' + asset_dir + '/*');
 });
 
-gulp.task('js-core', ['clean-js-core'], function() {
+gulp.task('js-core', function() {
     var target_dir = path.join('src', asset_dir);
     var files_hash = {
         tuleap                     : fat_combined_files,

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import '../../../../scripts/dashboards/node_modules/dragula/dist/dragula.min';
+
 #add-dashboard-button {
     margin: 11px 0 11px $tlp-double-spacing;
 
@@ -61,6 +63,11 @@
     display: flex;
     flex: 1;
     flex-direction: row;
+    transition: box-shadow 100ms;
+
+    &.dragging {
+        min-height: 40px;
+    }
 }
 
 .dashboard-widgets-column {
@@ -84,6 +91,7 @@
 
 .dashboard-widget {
     flex: 1 1 auto;
+    cursor: move;
 }
 
 .two-columns-small-big {

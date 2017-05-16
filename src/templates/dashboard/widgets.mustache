@@ -1,10 +1,13 @@
-<div class="dashboard-widgets-container">
+<div class="dashboard-widgets-container dragula-container" data-dashboard-id="{{ id }}">
     {{# widget_lines }}
-        <div class="tlp-framed-horizontally dashboard-widgets-row {{ layout }}">
+        <div class="tlp-framed-horizontally dashboard-widgets-row {{ layout }} dragula-container" data-line-id="{{ line_id }}">
             {{# widget_columns}}
-                <div class="dashboard-widgets-column">
+                <div class="dashboard-widgets-column dragula-container" data-column-id="{{ column_id }}">
                     {{# widgets }}
-                        <section class="tlp-pane dashboard-widget">
+                        <section class="tlp-pane dashboard-widget" data-widget-id="{{ widget_id }}">
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
                             <div class="tlp-pane-container">
                                 <div class="tlp-pane-header dashboard-widget-header">
                                     <h1 class="tlp-pane-title">{{ title }}</h1>

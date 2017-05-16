@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+export default init;
+
+function init() {
     var buttons = [
         document.getElementById('add-dashboard-button'),
         document.getElementById('delete-dashboard-button'),
@@ -32,12 +34,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var modal_id = button.dataset.targetModalId;
         if (! modal_id) {
-            throw "Missing data-target-modal-id attribute for button "+ button.id;
+            throw "Missing data-target-modal-id attribute for button " + button.id;
         }
 
         var modal_content = document.getElementById(modal_id);
         if (! modal_content) {
-            throw "Cannot find the modal "+ modal_id;
+            throw "Cannot find the modal " + modal_id;
         }
 
         var modal = tlp.modal(modal_content);
@@ -46,4 +48,4 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.toggle();
         });
     });
-});
+}

@@ -30,7 +30,9 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardSaver;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
+use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 require_once('pre.php');
 require_once('my_utils.php');
@@ -49,27 +51,28 @@ $title = $Language->getText(
             CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'
         )
 );
-$user_dashboard_dao = new UserDashboardDao();
-$router             = new UserDashboardRouter(
+$csrf_token                = new CSRFSynchronizerToken('/my/');
+$user_dashboard_dao        = new UserDashboardDao();
+$user_dashboard_widget_dao = new DashboardWidgetDao();
+$router                    = new UserDashboardRouter(
     new UserDashboardController(
-        new CSRFSynchronizerToken('/my/'),
+        $csrf_token,
         $title,
-        new UserDashboardRetriever(
-            $user_dashboard_dao
-        ),
-        new UserDashboardSaver(
-            $user_dashboard_dao
-        ),
-        new UserDashboardDeletor(
-            $user_dashboard_dao
-        ),
-        new UserDashboardUpdator(
-            $user_dashboard_dao
-        ),
-        new DashboardWidgetRetriever(
-            new DashboardWidgetDao()
-        ),
+        new UserDashboardRetriever($user_dashboard_dao),
+        new UserDashboardSaver($user_dashboard_dao),
+        new UserDashboardDeletor($user_dashboard_dao),
+        new UserDashboardUpdator($user_dashboard_dao),
+        new DashboardWidgetRetriever(new DashboardWidgetDao()),
         new DashboardWidgetPresenterBuilder()
+    ),
+    new WidgetDashboardController(
+        $csrf_token,
+        new DashboardWidgetRetriever(
+            $user_dashboard_widget_dao
+        ),
+        new DashboardWidgetReorder(
+            $user_dashboard_widget_dao
+        )
     )
 );
 $router->route($request);
