@@ -26,3 +26,28 @@ table#tracker_report_table th {
 #tracker_query {
     padding-bottom: 1em;
 }
+
+.nav-pills, .tracker-artifact-nav, .icon-pushpin, .tracker_artifact_field-art_link,
+.tracker_artifact_followup_comments_display_settings, .boxitem, .artifact-references, .sidebar-nav,
+.tracker-artifact-actions, .tracker_artifact_followup_comment_controls_edit, .tracker_artifact_followup_permalink,
+.burndown-button-generate, .navbar-inner, .delete_ref, .rte_format, #tracker_followup_comment_new,
+.notification-placeholder, .navbar-fixed-top, .jspScrollable {
+    display: none !important;
+}
+
+@page {
+   margin: 35pt 0 !important;
+}
+
+.widgetable {
+    padding: 0!important;
+    margin: 0 !important;
+}
+
+.container-fluid {
+    margin: 5px 0 0 0 !important;
+}
+
+#tracker_artifact_followup_comments {
+    position: relative !important;
+}
