@@ -155,7 +155,7 @@ class Tracker_Action_CopyArtifact {
 
         $no_child = count($xml_artifacts->artifact) == 1;
         if($no_child) {
-            $this->deleteArtLinksFromXML($xml_artifacts);
+            $this->removeArtLinksValueNodeFromXML($xml_artifacts);
         }
 
         $new_artifacts = $this->importBareArtifacts($xml_artifacts);
@@ -231,13 +231,15 @@ class Tracker_Action_CopyArtifact {
         );
     }
 
-    private function deleteArtLinksFromXML(SimpleXMLElement &$xml_artifacts) {
+    private function removeArtLinksValueNodeFromXML(SimpleXMLElement &$xml_artifacts) {
         $xml_artifact = $xml_artifacts->artifact[0];
         foreach ($xml_artifact->changeset as $xml_changeset) {
             foreach ($xml_changeset->field_change as $xml_field_change) {
                 if($xml_field_change['type'] == 'art_link') {
                     $dom = dom_import_simplexml($xml_field_change);
-                    $dom->parentNode->removeChild($dom);
+                    foreach ($dom->childNodes as $child_node) {
+                        $dom->removeChild($child_node);
+                    }
                 }
             }
         }
