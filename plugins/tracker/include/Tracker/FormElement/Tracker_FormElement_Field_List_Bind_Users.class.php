@@ -585,7 +585,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $html .= self::fetchSelectUsers('bind[value_function][]', $this->field, $this->value_function);
 
         //Select default values
-        $html .= $this->getSelectDefaultValues();
+        $html .= $this->getField()->getSelectDefaultValues($this->default_values);
 
         return $html;
     }

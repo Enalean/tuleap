@@ -499,7 +499,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '</p>';
 
         //Select default values
-        $html .= $this->getSelectDefaultValues();
+        $html .= $this->getField()->getSelectDefaultValues($this->default_values);
 
         return $html;
     }
