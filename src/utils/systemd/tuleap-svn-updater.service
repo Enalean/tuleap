@@ -1,7 +1,7 @@
 [Unit]
 Description=SVN Updater Service
-PartOf=tuleap.service
 After=tuleap.service
+PartOf=tuleap.service
 
 [Service]
 Type=simple
