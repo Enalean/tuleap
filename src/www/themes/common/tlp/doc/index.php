@@ -1,5 +1,10 @@
 <?php
 
+require_once('common/layout/IncludeAssets.php');
+require_once('common/layout/IncludeAssetsException.php');
+
+use Tuleap\Layout\IncludeAssets;
+
 function discoverSection($basepath) {
     $discovery = array();
     $manifest_file = "$basepath/manifest.json";
@@ -39,6 +44,9 @@ if (isset($_GET['section']) && isset($sections[$_GET['section']])) {
     $current_section = $_GET['section'];
 }
 $sections[$current_section]['selected'] = true;
+
+$include_asset  = new IncludeAssets(__DIR__ . '/../dist', '../dist');
+$tlp_script_tag = $include_asset->getHTMLSnippet('tlp.en_US.min.js');
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -227,7 +235,7 @@ $sections[$current_section]['selected'] = true;
     <?php endforeach; ?>
     <a href="#" title="Back to top" id="back-to-top"><i class="fa fa-arrow-up"></i></a>
 </main>
-<script type="text/javascript" src="../dist/tlp.en_US.min.js"></script>
+<?php echo $tlp_script_tag; ?>
 <script type="text/javascript" src="js/polyfills.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <script src="codemirror/5.12.2/codemirror-compressed.js"></script>

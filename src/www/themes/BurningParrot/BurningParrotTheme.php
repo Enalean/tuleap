@@ -35,6 +35,7 @@ use HTTPRequest;
 use PFUser;
 use ForgeConfig;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
+use Tuleap\Layout\IncludeAssets;
 
 class BurningParrotTheme extends Layout
 {
@@ -57,7 +58,8 @@ class BurningParrotTheme extends Layout
         $this->project_manager = ProjectManager::instance();
         $this->request         = HTTPRequest::instance();
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->includeFooterJavascriptFile('/themes/common/tlp/dist/tlp.' . $user->getLocale() . '.min.js');
+        $tlp_include_assets    = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist', '/themes/common/tlp/dist');
+        $this->includeFooterJavascriptFile($tlp_include_assets->getFileURL('tlp.' . $user->getLocale() . '.min.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burningparrot.js'));
     }
 
