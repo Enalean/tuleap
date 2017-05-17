@@ -17,10 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
-    var cogs = document.querySelectorAll('.dashboard-widget-actions, #dashboard-tabs-dropdown-trigger');
+.dashboard-widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    [].forEach.call(cogs, function (cog) {
-        tlp.dropdown(cog);
-    });
-});
+.dashboard-widget-actions {
+    transition: color 100ms, opacity 100ms;
+    color: $tlp-ui-dimmed;
+    cursor: pointer;
+    opacity: .2;
+
+    &:hover {
+        color: $tlp-theme-color;
+        opacity: 1;
+    }
+}
+
+.dashboard-widget-imageviewver-img {
+    width: 100%;
+}

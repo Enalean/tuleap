@@ -30,11 +30,12 @@
 }
 
 #dashboard-tabs-dropdown-trigger {
-    transition: opacity .25s;
+    transition: color 100ms, opacity 100ms;
     color: $tlp-ui-dimmed;
     opacity: .5;
 
     &:hover {
+        color: $tlp-theme-color;
         opacity: 1;
     }
 }
@@ -152,5 +153,6 @@
     }
 }
 
+@import 'dashboard-widgets';
 @import 'dashboard-project';
 @import 'dashboard-user';

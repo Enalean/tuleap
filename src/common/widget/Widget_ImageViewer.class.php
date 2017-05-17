@@ -48,6 +48,20 @@ class Widget_ImageViewer extends Widget {
         }
         return $content;
     }
+
+    public function getContentForBurningParrot()
+    {
+        if (!$this->image_url) {
+            return '';
+        }
+
+        $hp = Codendi_HTMLPurifier::instance();
+
+        return '<img class="dashboard-widget-imageviewver-img"
+            src="' . $hp->purify($this->image_url) . '"
+            alt="' . $hp->purify($this->getTitle()) . '" />';
+    }
+
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';

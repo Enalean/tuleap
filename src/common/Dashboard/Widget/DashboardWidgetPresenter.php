@@ -22,4 +22,24 @@ namespace Tuleap\Dashboard\Widget;
 
 class DashboardWidgetPresenter
 {
+    public $title;
+    public $content;
+    public $is_editable;
+    public $has_rss;
+    public $rss_url;
+
+    public function __construct()
+    {
+        $widget = \Widget::getInstance('myimageviewer');
+        //$widget = \Widget::getInstance('myprojects');
+        $widget->owner_id   = 102;
+        $widget->owner_type = 'u';
+        $widget->loadContent(1);
+
+        $this->title       = $widget->getTitle();
+        $this->content     = $widget->getContentForBurningParrot();
+        $this->is_editable = strlen($widget->getPreferences()) !== 0;
+        $this->has_rss     = $widget->hasRss();
+        $this->rss_url     = $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+    }
 }

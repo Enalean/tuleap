@@ -69,6 +69,9 @@ msgstr "Nom du tableau de bord"
 msgid "Dashboard of the project"
 msgstr "Dashboard du projet"
 
+msgid "Delete"
+msgstr "Supprimer"
+
 msgid "Delete dashboard"
 msgstr "Supprimer le tableau de bord"
 
@@ -79,6 +82,9 @@ msgid "Don't forget to use tab/shift+tab to navigate in dropdown"
 msgstr ""
 "N'oubliez pas d'utiliser tab/shift+tab pour naviguer dans les menus "
 "déroulants"
+
+msgid "Edit"
+msgstr "Éditer"
 
 msgid "Edit dashboard"
 msgstr "Éditer le tableau de bord"
@@ -151,6 +157,9 @@ msgstr "Patrons de projet"
 
 msgid "Project web site"
 msgstr "Site web du projet"
+
+msgid "RSS"
+msgstr "RSS"
 
 msgid "SVN"
 msgstr "SVN"
