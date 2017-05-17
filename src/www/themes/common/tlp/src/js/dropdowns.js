@@ -89,7 +89,9 @@ var tlp = tlp || { };
         }
 
         listenOpenEvents() {
-            this.trigger.addEventListener('click', () => {
+            this.trigger.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 this.toggle();
             });
         }

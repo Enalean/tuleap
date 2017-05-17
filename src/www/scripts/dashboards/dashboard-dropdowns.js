@@ -17,44 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#add-dashboard-button {
-    margin: 11px 0 11px $tlp-double-spacing;
+document.addEventListener('DOMContentLoaded', function () {
+    var dashboard_actions = document.getElementById('dashboard-tabs-dropdown-trigger');
 
-    &:first-child {
-        margin: 11px 0;
+    if (! dashboard_actions) {
+        return;
     }
-}
 
-.dashboard-tabs-dropdown {
-    margin: 0 0 0 $tlp-half-spacing;
-}
-
-#dashboard-tabs-dropdown-trigger {
-    transition: opacity .25s;
-    color: $tlp-ui-dimmed;
-    opacity: .5;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-.dashboard-edit-button {
-    display: none;
-    margin: -5px 0 -5px $tlp-spacing;
-}
-
-.dashboard-delete-button {
-    display: none;
-    margin: -5px 0 -5px $tlp-half-spacing;
-}
-
-.dashboard-tabs > .tlp-tab-active:hover {
-    > .dashboard-edit-button,
-    > .dashboard-delete-button {
-        display: block;
-    }
-}
-
-@import 'dashboard-project';
-@import 'dashboard-user';
+    tlp.dropdown(dashboard_actions);
+});
