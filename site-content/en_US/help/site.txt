@@ -1,14 +1,24 @@
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-life-ring tlp-pane-title-icon"></i>
+                Get help
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
 
-<h2>Get help</h2>
+            <h2 class="tlp-pane-subtitle">Access Tuleap documentation</h2>
 
-<h3>Access Tuleap documentation</a></h3>
-If you have a question about Tuleap usage or are stumped by an issue, you should first take a look at the <a href="/doc/en/index.html">documentation</a>.
+            <p>If you have a question about Tuleap usage or are stumped by an issue, you should first take a look at the <a href="/doc/en/index.html">documentation</a>.</p>
 
-<h3>Ask question</h3>
-Troubleshooting, find a bug? Post your questions and get answers in the <a href="/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel mailing-list</a>
-To consult current discussions and post a new thread, create a <a href="/account/register.php">user account</a> on Tuleap.
+            <h2 class="tlp-pane-subtitle">Ask question</h2>
 
-<h3>Contact Us</h3>
-For all other inquiries, <a href="/contact.php">get in touch</a> with us.
+            <p>Troubleshooting, find a bug? Post your questions and get answers in the <a href="/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel mailing-list</a>
+            To consult current discussions and post a new thread, create a <a href="/account/register.php">user account</a> on Tuleap.</p>
 
-
+            <h2 class="tlp-pane-subtitle">Contact Us</h2>
+            <p>For all other inquiries, <a href="/contact.php">get in touch</a> with us.</p>
+        </section>
+    </div>
+</section>
