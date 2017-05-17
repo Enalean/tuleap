@@ -194,3 +194,9 @@
         }
     }
 }
+
+#dropdown-icon-right-example {
+    transition: color .25s;
+    color: transparentize($tlp-ui-dimmed, .2);
+    cursor: pointer;
+}

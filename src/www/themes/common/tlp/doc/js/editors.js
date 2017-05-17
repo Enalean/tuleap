@@ -175,6 +175,11 @@
             if (dropdown_trigger) {
                 tlp.dropdown(dropdown_trigger);
             }
+
+            var dropdown_icon_trigger = document.getElementById('dropdown-icon-right-example');
+            if (dropdown_icon_trigger) {
+                tlp.dropdown(dropdown_icon_trigger);
+            }
         }
         setTimeout(updatePreview, 10);
     });
