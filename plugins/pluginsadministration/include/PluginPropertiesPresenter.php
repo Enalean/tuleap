@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,6 +42,10 @@ class PluginPropertiesPresenter
     public $properties;
     public $are_there_additional_options;
     public $additional_options;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
     public function __construct(
         $id,
@@ -60,7 +64,8 @@ class PluginPropertiesPresenter
         $are_there_properties,
         $properties,
         $are_there_additional_options,
-        $additional_options
+        $additional_options,
+        \CSRFSynchronizerToken $csrf_token
     ) {
         $this->id                           = $id;
         $this->name                         = $name;
@@ -79,6 +84,7 @@ class PluginPropertiesPresenter
         $this->properties                   = $properties;
         $this->are_there_additional_options = $are_there_additional_options;
         $this->additional_options           = $additional_options;
+        $this->csrf_token                   = $csrf_token;
 
         $this->properties_pane_title              = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_pane_title');
         $this->properties_pane_name               = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_pane_name');

@@ -54,6 +54,9 @@
 
 
         <form action="?" method="POST">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
             <input type="hidden" name="plugin_id" value="{{ id }}">
             <input type="hidden" name="action" value="change_plugin_properties">
             {{# are_there_properties }}
