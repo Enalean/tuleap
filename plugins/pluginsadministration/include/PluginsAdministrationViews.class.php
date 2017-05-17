@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -217,6 +217,10 @@ class PluginsAdministrationViews extends Views {
         );
         $is_there_enable_switch = ! empty($enable_switch);
 
+        $csrf_token = new CSRFSynchronizerToken(
+            '/plugins/pluginsadministration/?view=properties&plugin_id=' . urlencode($plugin->getId())
+        );
+
         return new PluginPropertiesPresenter(
             $plugin->getId(),
             $name,
@@ -234,7 +238,8 @@ class PluginsAdministrationViews extends Views {
             $are_there_properties,
             $properties,
             $are_there_additional_options,
-            $additional_options
+            $additional_options,
+            $csrf_token
         );
     }
 

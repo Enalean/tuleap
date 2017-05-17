@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -168,16 +168,22 @@ class PluginsAdministrationActions extends Actions {
         }
     }
 
-    function changePluginProperties() {
+    public function changePluginProperties()
+    {
         $request = HTTPRequest::instance();
+        $plugin  = $this->_getPluginFromRequest();
+        if (! $plugin) {
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
+        }
+        $plugin_properties_url = '/plugins/pluginsadministration/?view=properties&plugin_id='.urlencode($plugin['plugin']->getId());
+        if (! $request->isPost()) {
+            $GLOBALS['Response']->redirect($plugin_properties_url);
+        }
+        $this->checkSynchronizerToken($plugin_properties_url);
         if($request->exist('gen_prop')) {
             $this->_changePluginGenericProperties($request->get('gen_prop'));
         }
         $user_properties = $request->get('properties');
-        $plugin = $this->_getPluginFromRequest();
-        if (! $plugin) {
-            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
-        }
 
         if ($user_properties) {
             $plug_info =& $plugin['plugin']->getPluginInfo();
@@ -202,7 +208,7 @@ class PluginsAdministrationActions extends Actions {
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_updated'));
         }
 
-        $GLOBALS['Response']->redirect('/plugins/pluginsadministration/?view=properties&plugin_id='.$plugin['plugin']->getId());
+        $GLOBALS['Response']->redirect($plugin_properties_url);
     }
 
 
