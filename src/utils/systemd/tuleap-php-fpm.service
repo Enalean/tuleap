@@ -1,0 +1,16 @@
+[Unit]
+Description=The PHP FastCGI Process Manager for Tuleap
+After=tuleap.service
+PartOf=tuleap.service
+Conflicts=rh-php56-php-fpm.service
+
+[Service]
+Type=notify
+PIDFile=/var/opt/rh/rh-php56/run/php-fpm/php-fpm.pid
+EnvironmentFile=/etc/opt/rh/rh-php56/sysconfig/php-fpm
+ExecStart=/opt/rh/rh-php56/root/usr/sbin/php-fpm --nodaemonize
+ExecReload=/bin/kill -USR2 $MAINPID
+PrivateTmp=false
+
+[Install]
+WantedBy=tuleap.service

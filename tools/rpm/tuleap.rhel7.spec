@@ -43,6 +43,7 @@ Requires: highlight
 Requires: htmlpurifier >= 4.5
 Requires: php-ZendFramework2-Loader
 Requires: php-paragonie-random-compat
+Requires: rh-php56-php-fpm
 
 # Unit file
 Requires: systemd
@@ -455,6 +456,7 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 %{__install} src/utils/systemd/tuleap.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-svn-log-parser.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
 
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{_bindir}
@@ -683,7 +685,11 @@ fi
 #
 %post
 if [ $1 -eq 1 ]; then
-    /usr/bin/systemctl enable tuleap.service tuleap-svn-updater.service &>/dev/null || :
+    /usr/bin/systemctl enable \
+        tuleap.service \
+        tuleap-svn-updater.service \
+        tuleap-svn-log-parser.service \
+        tuleap-php-fpm.service &>/dev/null || :
 fi
 
 # In any cases fix the context
@@ -796,7 +802,17 @@ fi
 %preun
 if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
-    /usr/bin/systemctl disable tuleap.service tuleap-svn-updater.service &>/dev/null || :
+    /usr/bin/systemctl disable \
+        tuleap.service \
+        tuleap-svn-updater.service \
+        tuleap-svn-log-parser.service \
+        tuleap-php-fpm &>/dev/null || :
+fi
+
+%postun
+/usr/bin/systemctl daemon-reload &>/dev/null || :
+if [ $1 -eq 1 ]; then
+    /usr/bin/systemctl restart tuleap.service &>/dev/null || :
 fi
 
 %clean
@@ -943,6 +959,7 @@ fi
 %attr(00644,root,root) %{_unitdir}/tuleap.service
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-log-parser.service
+%attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service
 
 %files core-cvs
 %defattr(-,root,root,-)
