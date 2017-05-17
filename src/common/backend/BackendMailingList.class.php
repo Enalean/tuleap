@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  *
  */
@@ -66,7 +67,9 @@ class BackendMailingList extends Backend {
             }
             fclose($fp);
 
-            if (system($GLOBALS['mailman_bin_dir']."/config_list -i $config_file ".$list->getListName()) !== false) {
+            if (system(
+                $GLOBALS['mailman_bin_dir']. '/config_list -i ' . escapeshellarg($config_file) . ' ' . escapeshellarg($list->getListName())
+                ) !== false) {
                 if (unlink($config_file)) {
                     return true;
                 }
@@ -96,7 +99,8 @@ class BackendMailingList extends Backend {
 
             if ((! is_dir($list_dir))&&($list->getIsPublic() != 9)) {
                 // Create list
-                system($GLOBALS['mailman_bin_dir']."/newlist -q ".$list->getListName()." $list_admin_email ".$list->getListPassword()." >/dev/null");
+                system($GLOBALS['mailman_bin_dir']. '/newlist -q ' . escapeshellarg($list->getListName()) . ' ' .
+                    escapeshellarg($list_admin_email) . ' ' . escapeshellarg($list->getListPassword()) . ' >/dev/null');
 
                 // Then update configuraion
                 return $this->updateListConfig($list);
@@ -122,11 +126,11 @@ class BackendMailingList extends Backend {
                 // Archive first
                 $list_archive_dir = $GLOBALS['mailman_list_dir']."/../archives/private/".$list->getListName(); // Does it work? TODO
                 $backupfile=ForgeConfig::get('sys_project_backup_path')."/".$list->getListName()."-mailman.tgz";
-                system("tar cfz $backupfile $list_dir $list_archive_dir");
+                system('tar cfz ' . escapeshellarg($backupfile) . ' ' . escapeshellarg($list_dir) . ' ' . escapeshellarg($list_archive_dir));
                 chmod($backupfile,0600);
 
                 // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
-                system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. $list->getListName() .' >/dev/null');
+                system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. escapeshellarg($list->getListName()) .' >/dev/null');
                 return $this->_getMailingListDao()->deleteListDefinitively($group_list_id);
             }
         }
