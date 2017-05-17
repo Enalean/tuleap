@@ -139,7 +139,6 @@ ${POT_FILE}: ../lib/plugin/FileInfo.php
 ${POT_FILE}: ../lib/plugin/FrameInclude.php
 ${POT_FILE}: ../lib/plugin/FullTextSearch.php
 ${POT_FILE}: ../lib/plugin/FuzzyPages.php
-${POT_FILE}: ../lib/plugin/GoogleMaps.php
 ${POT_FILE}: ../lib/plugin/GooglePlugin.php
 ${POT_FILE}: ../lib/plugin/GoTo.php
 ${POT_FILE}: ../lib/plugin/_GroupInfo.php
