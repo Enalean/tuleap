@@ -24,6 +24,9 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Project\ProjectDashboardRouter;
 use Tuleap\Dashboard\Project\ProjectDashboardSaver;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
 require_once('pre.php');
 
@@ -64,7 +67,11 @@ if ($project && !$project->isError()) {
                     new CSRFSynchronizerToken('/project/'),
                     $project,
                     new ProjectDashboardRetriever($project_dashboard_dao),
-                    new ProjectDashboardSaver($project_dashboard_dao)
+                    new ProjectDashboardSaver($project_dashboard_dao),
+                    new DashboardWidgetRetriever(
+                        new DashboardWidgetDao()
+                    ),
+                    new DashboardWidgetPresenterBuilder()
                 )
             );
             $router->route($request);

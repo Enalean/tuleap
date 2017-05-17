@@ -18,26 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard;
+namespace Tuleap\Dashboard\Widget;
 
-class Dashboard
+class DashboardWidgetLinePresenter
 {
-    private $id;
-    private $name;
+    public $layout;
+    /**
+     * @var DashboardWidgetColumnPresenter[]
+     */
+    public $widget_columns;
 
-    public function __construct($id, $name)
-    {
-        $this->id   = $id;
-        $this->name = $name;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
+    public function __construct(
+        $layout,
+        array $widget_columns
+    ) {
+        $this->layout         = $layout;
+        $this->widget_columns = $widget_columns;
     }
 }

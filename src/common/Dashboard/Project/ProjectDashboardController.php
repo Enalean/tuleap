@@ -32,10 +32,13 @@ use TemplateRendererFactory;
 use Tuleap\Dashboard\DashboardDoesNotExistException;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
+use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
 {
+    const DASHBOARD_TYPE = 'project';
     /**
      * @var CSRFSynchronizerToken
      */
@@ -52,17 +55,29 @@ class ProjectDashboardController
      * @var Project
      */
     private $project;
+    /**
+     * @var DashboardWidgetRetriever
+     */
+    private $widget_retriever;
+    /**
+     * @var DashboardWidgetPresenterBuilder
+     */
+    private $widget_presenter_builder;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Project $project,
         ProjectDashboardRetriever $retriever,
-        ProjectDashboardSaver $saver
+        ProjectDashboardSaver $saver,
+        DashboardWidgetRetriever $widget_retriever,
+        DashboardWidgetPresenterBuilder $widget_presenter_builder
     ) {
-        $this->csrf      = $csrf;
-        $this->project   = $project;
-        $this->retriever = $retriever;
-        $this->saver     = $saver;
+        $this->csrf                     = $csrf;
+        $this->project                  = $project;
+        $this->retriever                = $retriever;
+        $this->saver                    = $saver;
+        $this->widget_retriever         = $widget_retriever;
+        $this->widget_presenter_builder = $widget_presenter_builder;
     }
 
     /**
@@ -309,7 +324,15 @@ class ProjectDashboardController
                 $is_active = $dashboard->getId() === $dashboard_id;
             }
 
-            $project_dashboards_presenter[] = new ProjectDashboardPresenter($dashboard, $is_active);
+            $widgets_presenter = array();
+            if ($is_active) {
+                $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
+                if ($widgets_lines) {
+                    $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter($widgets_lines);
+                }
+            }
+
+            $project_dashboards_presenter[] = new ProjectDashboardPresenter($dashboard, $is_active, $widgets_presenter);
         }
 
         return $project_dashboards_presenter;

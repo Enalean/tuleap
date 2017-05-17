@@ -42,5 +42,101 @@
     }
 }
 
+.dashboard-widgets-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-widgets-row {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+}
+
+.dashboard-widgets-column {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 0 $tlp-spacing / 2;
+
+    &:first-of-type {
+        padding: 0 $tlp-spacing / 2 0 0;
+    }
+
+    &:last-child {
+        padding: 0 0 0 $tlp-spacing / 2;
+    }
+
+    &:first-of-type:last-child {
+        padding: 0;
+    }
+}
+
+.dashboard-widget {
+    flex: 1 1 auto;
+}
+
+.two-columns-small-big {
+    > :first-child {
+        flex: 1 1;
+    }
+
+    > :nth-child(2) {
+        flex: 2 1;
+    }
+}
+
+.two-columns-big-small {
+    > :first-child {
+        flex: 2 1;
+    }
+
+    > :nth-child(2) {
+        flex: 1 1;
+    }
+}
+
+.three-columns-small-big-small {
+    > :first-child {
+        flex: 1 1;
+    }
+
+    > :nth-child(2) {
+        flex: 2 1;
+    }
+
+    > :last-child {
+        flex: 1 1;
+    }
+}
+
+.three-columns-big-small-small {
+    > :first-child {
+        flex: 2 1;
+    }
+
+    > :nth-child(2) {
+        flex: 1 1;
+    }
+
+    > :last-child {
+        flex: 1 1;
+    }
+}
+
+.three-columns-small-small-big {
+    > :first-child {
+        flex: 1 1;
+    }
+
+    > :nth-child(2) {
+        flex: 1 1;
+    }
+
+    > :last-child {
+        flex: 2 1;
+    }
+}
+
 @import 'dashboard-project';
 @import 'dashboard-user';

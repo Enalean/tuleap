@@ -18,26 +18,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Dashboard;
+namespace Tuleap\Dashboard\Widget;
 
-class Dashboard
+class DashboardWidget
 {
     private $id;
-    private $name;
+    private $column_id;
+    private $rank;
 
-    public function __construct($id, $name)
-    {
-        $this->id   = $id;
-        $this->name = $name;
+    public function __construct(
+        $id,
+        $column_id,
+        $rank
+    ) {
+        $this->id        = $id;
+        $this->column_id = $column_id;
+        $this->rank      = $rank;
     }
 
+    /**
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function getName()
+    /**
+     * @return integer
+     */
+    public function getColumnId()
     {
-        return $this->name;
+        return $this->column_id;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getRank()
+    {
+        return $this->rank;
     }
 }

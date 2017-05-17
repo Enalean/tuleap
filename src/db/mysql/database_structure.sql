@@ -1704,6 +1704,32 @@ CREATE TABLE project_dashboards (
   name VARCHAR(255) NOT NULL,
   INDEX idx(project_id, name(5))
 );
+
+DROP TABLE IF EXISTS dashboards_lines;
+CREATE TABLE dashboards_lines (
+  id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  dashboard_id INT(11) UNSIGNED NOT NULL,
+  dashboard_type VARCHAR(255) NOT NULL,
+  layout VARCHAR(255) NOT NULL,
+  rank INT(11) NOT NULL,
+  INDEX idx(dashboard_id, dashboard_type(3))
+);
+
+DROP TABLE IF EXISTS dashboards_lines_columns;
+CREATE TABLE dashboards_lines_columns (
+  id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  line_id INT(11) UNSIGNED NOT NULL,
+  rank INT(11) NOT NULL,
+  INDEX idx(line_id)
+);
+
+DROP TABLE IF EXISTS dashboards_lines_columns_widgets;
+CREATE TABLE dashboards_lines_columns_widgets (
+  column_id INT(11) UNSIGNED NOT NULL,
+  widget_id INT(11) UNSIGNED NOT NULL,
+  rank INT(11) NOT NULL,
+  PRIMARY KEY (column_id, widget_id)
+);
 #
 # EOF
 #

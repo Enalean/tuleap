@@ -26,9 +26,9 @@ class ProjectDashboardPresenter extends DashboardPresenter
 {
     public $project_id;
 
-    public function __construct(ProjectDashboard $dashboard, $is_active)
+    public function __construct(ProjectDashboard $dashboard, $is_active, array $widgets)
     {
-        parent::__construct($dashboard, $is_active);
+        parent::__construct($dashboard, $is_active, $widgets);
         $this->project_id = $dashboard->getProjectId();
     }
 }

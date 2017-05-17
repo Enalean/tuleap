@@ -27,15 +27,15 @@ class DashboardPresenter
 
     public $is_active;
     public $delete_confirm;
-    public $widgets;
     public $has_widget;
+    public $widget_lines;
 
-    public function __construct(Dashboard $dashboard, $is_active)
+    public function __construct(Dashboard $dashboard, $is_active, array $widget_lines)
     {
-        $this->id         = $dashboard->getId();
-        $this->name       = $dashboard->getName();
-        $this->widgets    = $dashboard->getWidgets();
-        $this->has_widget = count($this->widgets) > 0;
+        $this->id           = $dashboard->getId();
+        $this->name         = $dashboard->getName();
+        $this->widget_lines = $widget_lines;
+        $this->has_widget   = count($this->widget_lines) > 0;
 
         $this->is_active = $is_active;
 

@@ -28,6 +28,9 @@ use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardUpdator;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardSaver;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
 require_once('pre.php');
 require_once('my_utils.php');
@@ -62,7 +65,11 @@ $router             = new UserDashboardRouter(
         ),
         new UserDashboardUpdator(
             $user_dashboard_dao
-        )
+        ),
+        new DashboardWidgetRetriever(
+            new DashboardWidgetDao()
+        ),
+        new DashboardWidgetPresenterBuilder()
     )
 );
 $router->route($request);

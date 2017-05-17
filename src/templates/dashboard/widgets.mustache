@@ -1,0 +1,21 @@
+<div class="dashboard-widgets-container">
+    {{# widget_lines }}
+        <div class="tlp-framed-horizontally dashboard-widgets-row {{ layout }}">
+            {{# widget_columns}}
+                <div class="dashboard-widgets-column">
+                    {{# widgets }}
+                        <section class="tlp-pane dashboard-widget">
+                            <div class="tlp-pane-container">
+                                <div class="tlp-pane-header">
+                                    <h1 class="tlp-pane-title">One pane</h1>
+                                </div>
+                                <section class="tlp-pane-section">
+                                </section>
+                            </div>
+                        </section>
+                    {{/ widgets }}
+                </div>
+            {{/ widget_columns }}
+        </div>
+    {{/ widget_lines }}
+</div>
