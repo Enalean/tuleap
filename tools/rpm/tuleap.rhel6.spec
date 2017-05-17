@@ -667,6 +667,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 
+#Plugin archivedeleteditems
+%{__install} plugins/archivedeleteditems/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_archivedeleteditems
+
 # Plugin im
 %{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
@@ -1192,6 +1195,8 @@ fi
 %files plugin-archivedeleteditems
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/archivedeleteditems
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
 
 %files plugin-fusionforge_compat
 

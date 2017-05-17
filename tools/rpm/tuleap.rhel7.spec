@@ -580,6 +580,9 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 #%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 #%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 #
+## plugin archivedeleted_items
+#%{__install} plugins/archivedeleteditems/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_archivedeleteditems
+#
 ## Symlink for compatibility with older version
 #%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
 #%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
@@ -1048,6 +1051,8 @@ fi
 %files plugin-archivedeleteditems
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/archivedeleteditems
+#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
+#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
 
 %files plugin-mediawiki
 %defattr(-,root,root,-)
