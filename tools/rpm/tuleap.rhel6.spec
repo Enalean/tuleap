@@ -670,6 +670,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 #Plugin archivedeleteditems
 %{__install} plugins/archivedeleteditems/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_archivedeleteditems
 
+# Plugin hudson_git
+%{__install} plugins/hudson_git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_git
+
 # Plugin im
 %{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
@@ -1153,6 +1156,8 @@ fi
 %files plugin-hudson-git
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson_git
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_git
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_git
 
 %files plugin-webdav
 %defattr(-,%{APP_USER},%{APP_USER},-)

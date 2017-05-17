@@ -1,0 +1,6 @@
+/var/log/tuleap/hudson_git_syslog {
+    missingok
+    notifempty
+    compress
+    delaycompress
+}
