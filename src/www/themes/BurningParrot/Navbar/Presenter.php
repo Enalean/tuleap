@@ -33,7 +33,7 @@ class Presenter
 
     /** @var UserNavPresenter */
     public $user_nav_presenter;
-    public $display_search_and_user_nav;
+    public $is_search_and_user_nav_displayed;
 
     /**
      * @var PFUser
@@ -51,12 +51,12 @@ class Presenter
         BurningParrotCompatiblePageDetector $page_detector,
         PFUser $current_user
     ) {
-        $this->global_nav_presenter        = $global_nav_presenter;
-        $this->search_presenter            = $search_presenter;
-        $this->user_nav_presenter          = $user_nav_presenter;
-        $this->current_user                = $current_user;
-        $this->page_detector               = $page_detector;
-        $this->display_search_and_user_nav = (! $this->hideSearchAndUserNav());
+        $this->global_nav_presenter             = $global_nav_presenter;
+        $this->search_presenter                 = $search_presenter;
+        $this->user_nav_presenter               = $user_nav_presenter;
+        $this->current_user                     = $current_user;
+        $this->page_detector                    = $page_detector;
+        $this->is_search_and_user_nav_displayed = (! $this->hideSearchAndUserNav());
     }
 
     private function hideSearchAndUserNav()

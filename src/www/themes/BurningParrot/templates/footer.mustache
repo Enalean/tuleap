@@ -1,15 +1,19 @@
             </main>
         </div>
+        {{# is_footer_shown }}
+            <footer class="footer">
+                {{{ footer }}}
+            </footer>
+        {{/ is_footer_shown }}
         {{# javascript_in_footer }}
             {{# is_snippet }}
                 <script type="text/javascript">
-                    {{ javascript }}
+                        {{ javascript }}
                 </script>
             {{/ is_snippet }}
             {{^ is_snippet }}
                 <script type="text/javascript" src="{{ javascript }}"></script>
             {{/ is_snippet }}
         {{/ javascript_in_footer }}
-        <!-- version {{ tuleap_version }} -->
     </body>
 </html>

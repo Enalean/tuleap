@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-?><h3>Need help?</h3>
-<ul class="unstyled">
-    <li>Access <a href="/help/">documentation</a></li>
-    <li><a href="https://www.tuleap.net" target="_blank" rel="noreferrer">Tuleap community</a></li>
-    <li><a href="/contact.php">Contact us</a></li>
-</ul>
-<?php
 ?>
+<h3 class="footer-section-title">Help</h3>
+<p class="footer-paragraph">
+    <a class="footer-link" href="/help/" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-life-ring"></i> Documentation</a>
+    <br>
+    <a class="footer-link" href="https://www.tuleap.net" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-users"></i> Tuleap community</a>
+    <br>
+    <a class="footer-link" href="https://www.tuleap.org/support#professional-support" target="_blank" rel="noreferrer"><i class="fa fa-fw fa-ticket"></i> Technical client support</a>
+</p>

@@ -24,7 +24,6 @@ require_once 'HeaderPresenter.class.php';
 require_once 'BodyPresenter.class.php';
 require_once 'ContainerPresenter.class.php';
 require_once 'HomepagePresenter.php';
-require_once 'FooterPresenter.class.php';
 require_once 'CurrentProjectNavbarInfoPresenter.php';
 require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
@@ -377,7 +376,7 @@ class FlamingParrot_Theme extends Layout {
 
     public function footer(array $params) {
         if ($this->canShowFooter($params)) {
-            $this->render('footer', new FlamingParrot_FooterPresenter($this));
+            $this->render('footer', array());
         }
 
         $this->endOfPage();

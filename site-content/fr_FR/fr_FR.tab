@@ -1,5 +1,5 @@
 #
-# Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+# Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #
 # This file is a part of Tuleap.
@@ -112,5 +112,5 @@ global	error_synchronizertoken	Votre requête ne semble pas être valide. Merci 
 global	operation_not_allowed	Opération non permise
 global	settings	Propriétés
 global	usage	Utilisation
-global	powered_by	Propulsé par <a href="https://tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Tuleap&trade;</a>
+global	powered_by	<a href="https://tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Tuleap&trade;</a>
 global	copyright	Copyright &copy; 2011-2017 <a href="https://www.enalean.com/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Enalean</a>

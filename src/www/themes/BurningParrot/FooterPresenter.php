@@ -24,9 +24,12 @@ class FooterPresenter
 {
     public $javascript_in_footer = array();
     public $tuleap_version;
+    public $is_footer_shown;
+    public $footer;
 
     public function __construct(
         array $javascript_in_footer,
+        $is_footer_shown,
         $tuleap_version
     ) {
         foreach ($javascript_in_footer as $javascript) {
@@ -39,6 +42,16 @@ class FooterPresenter
             }
             $this->javascript_in_footer[] = new JavascriptPresenter($content, $is_snippet);
         }
-        $this->tuleap_version = $tuleap_version;
+        $this->tuleap_version  = $tuleap_version;
+        $this->is_footer_shown = $is_footer_shown;
+        $this->footer          = $this->getFooter();
+    }
+
+    private function getFooter()
+    {
+        $version = $this->tuleap_version;
+        ob_start();
+        include($GLOBALS['Language']->getContent('layout/footer'));
+        return ob_get_clean();
     }
 }

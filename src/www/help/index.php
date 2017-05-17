@@ -21,12 +21,9 @@
 
 require_once('pre.php');
 
-$em = EventManager::instance();
-$em->processEvent('site_help', null);
-
-$title = $Language->getText('include_layout','Help');
-site_header(array('title' => $title));
-
-include($Language->getContent('help/site'));
-
-site_footer(array());
+$HTML->header(array(
+    'title'=>$Language->getText('include_layout', 'Help'),
+    'main_classes' => array('tlp-framed')
+));
+$HTML->displayHelpPage();
+$HTML->footer(array());
