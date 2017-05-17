@@ -28,9 +28,12 @@ use HttpRequest;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
+use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
 class UserDashboardController
 {
+    const DASHBOARD_TYPE = 'user';
     /**
      * @var CSRFSynchronizerToken
      */
@@ -52,6 +55,14 @@ class UserDashboardController
      * @var UserDashboardUpdator
      */
     private $updator;
+    /**
+     * @var DashboardWidgetRetriever
+     */
+    private $widget_retriever;
+    /**
+     * @var DashboardWidgetPresenterBuilder
+     */
+    private $widget_presenter_builder;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -59,14 +70,18 @@ class UserDashboardController
         UserDashboardRetriever $retriever,
         UserDashboardSaver $saver,
         UserDashboardDeletor $deletor,
-        UserDashboardUpdator $updator
+        UserDashboardUpdator $updator,
+        DashboardWidgetRetriever $widget_retriever,
+        DashboardWidgetPresenterBuilder $widget_presenter_builder
     ) {
-        $this->csrf      = $csrf;
-        $this->title     = $title;
-        $this->retriever = $retriever;
-        $this->saver     = $saver;
-        $this->deletor   = $deletor;
-        $this->updator   = $updator;
+        $this->csrf                     = $csrf;
+        $this->title                    = $title;
+        $this->retriever                = $retriever;
+        $this->saver                    = $saver;
+        $this->deletor                  = $deletor;
+        $this->updator                  = $updator;
+        $this->widget_retriever         = $widget_retriever;
+        $this->widget_presenter_builder = $widget_presenter_builder;
     }
 
     /**
@@ -182,7 +197,15 @@ class UserDashboardController
                 $is_active = $dashboard->getId() === $dashboard_id;
             }
 
-            $user_dashboards_presenter[] = new UserDashboardPresenter($dashboard, $is_active);
+            $widgets_presenter = array();
+            if ($is_active) {
+                $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
+                if ($widgets_lines) {
+                    $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter($widgets_lines);
+                }
+            }
+
+            $user_dashboards_presenter[] = new UserDashboardPresenter($dashboard, $is_active, $widgets_presenter);
         }
 
         return $user_dashboards_presenter;

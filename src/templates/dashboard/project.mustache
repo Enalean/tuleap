@@ -54,6 +54,9 @@
 
         {{# dashboards }}
             {{# is_active }}
+                {{# has_widget }}
+                    {{> widgets }}
+                {{/ has_widget }}
                 {{^ has_widget }}
                     <div class="empty-page">
                         <p class="empty-page-text">{{ no_widget_label }}</p>
