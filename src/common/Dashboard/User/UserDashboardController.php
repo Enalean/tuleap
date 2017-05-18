@@ -25,11 +25,13 @@ use Exception;
 use Feedback;
 use ForgeConfig;
 use HttpRequest;
+use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\OwnerInfo;
 
 class UserDashboardController
 {
@@ -106,7 +108,7 @@ class UserDashboardController
             );
         }
 
-        $user_dashboards_presenter = $this->getUserDashboardsPresenter($dashboard_id, $user_dashboards);
+        $user_dashboards_presenter = $this->getUserDashboardsPresenter($current_user, $dashboard_id, $user_dashboards);
 
         $GLOBALS['Response']->header(array('title' => $this->title));
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -186,7 +188,7 @@ class UserDashboardController
      * @param array $user_dashboards
      * @return UserDashboardPresenter[]
      */
-    private function getUserDashboardsPresenter($dashboard_id, array $user_dashboards)
+    private function getUserDashboardsPresenter(PFUser $user, $dashboard_id, array $user_dashboards)
     {
         $user_dashboards_presenter = array();
 
@@ -201,7 +203,10 @@ class UserDashboardController
             if ($is_active) {
                 $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
                 if ($widgets_lines) {
-                    $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter($widgets_lines);
+                    $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter(
+                        OwnerInfo::createForUser($user),
+                        $widgets_lines
+                    );
                 }
             }
 

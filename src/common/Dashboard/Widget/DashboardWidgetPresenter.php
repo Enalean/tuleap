@@ -20,6 +20,8 @@
 
 namespace Tuleap\Dashboard\Widget;
 
+use Widget;
+
 class DashboardWidgetPresenter
 {
     public $title;
@@ -28,14 +30,8 @@ class DashboardWidgetPresenter
     public $has_rss;
     public $rss_url;
 
-    public function __construct()
+    public function __construct(Widget $widget)
     {
-        $widget = \Widget::getInstance('myimageviewer');
-        //$widget = \Widget::getInstance('myprojects');
-        $widget->owner_id   = 102;
-        $widget->owner_type = 'u';
-        $widget->loadContent(1);
-
         $this->title       = $widget->getTitle();
         $this->content     = $widget->getContentForBurningParrot();
         $this->is_editable = strlen($widget->getPreferences()) !== 0;
