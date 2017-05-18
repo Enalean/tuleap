@@ -7,7 +7,13 @@ msgstr[1] ""
 msgid "Add dashboard"
 msgstr ""
 
+msgid "Add widget"
+msgstr ""
+
 msgid "Agile Dashboard"
+msgstr ""
+
+msgid "An error occured while trying to add the widget to the dashboard"
 msgstr ""
 
 msgid ""
@@ -173,7 +179,7 @@ msgstr ""
 msgid "The requested dashboard does not exist."
 msgstr ""
 
-msgid "There is no widgets here."
+msgid "There are no widgets here."
 msgstr ""
 
 msgid "This project is not categorized yet."
@@ -195,7 +201,7 @@ msgid "Update successful"
 msgstr ""
 
 msgid ""
-"Why do not start by editing your dashboard <br> and adding some widgets?"
+"Why don't you start by editing your dashboard <br> and adding some widgets?"
 msgstr ""
 
 msgid "Wiki"

@@ -33,6 +33,8 @@ if (user_isloggedin()) {
     $vLayoutId      = new Valid_UInt('layout_id');
     $vLayoutId->required();
 
+    $use_new_dashboards = $request->get('dashboard_id') && ForgeConfig::get('sys_use_tlp_in_dashboards');
+
     $vOwner = new Valid_Widget_Owner('owner');
     $vOwner->required();
     if ($request->valid($vOwner)) {
@@ -46,7 +48,14 @@ if (user_isloggedin()) {
 
                 $title = $Language->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
                 my_header(array('title'=>$title, 'selected_top_tab' => '/my/'));
-                if ($request->valid($vLayoutId)) {
+                if ($use_new_dashboards) {
+                    $layout_manager->displayAvailableWidgetsForNewDashboards(
+                        user_getid(),
+                        WidgetLayoutManager::OWNER_TYPE_USER,
+                        $request->get('dashboard_id'),
+                        $csrk_token
+                    );
+                } else if ($request->valid($vLayoutId)) {
                     $layout_id = $request->get('layout_id');
                     $layout_manager->displayAvailableWidgets(
                         user_getid(),
@@ -67,7 +76,14 @@ if (user_isloggedin()) {
                     if (user_ismember($group_id, 'A') || user_is_super_user()) {
                         $title = $Language->getText('include_project_home','proj_info').' - '. $project->getPublicName();
                         site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));
-                        if ($request->valid($vLayoutId)) {
+                        if ($use_new_dashboards) {
+                            $layout_manager->displayAvailableWidgetsForNewDashboards(
+                                $group_id,
+                                WidgetLayoutManager::OWNER_TYPE_GROUP,
+                                $request->get('dashboard_id'),
+                                $csrk_token
+                            );
+                        } else if ($request->valid($vLayoutId)) {
                             $layout_id = $request->get('layout_id');
                             $layout_manager->displayAvailableWidgets(
                                 $group_id,

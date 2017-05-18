@@ -21,8 +21,15 @@ msgstr[1] "%d membres"
 msgid "Add dashboard"
 msgstr "Ajouter un tableau de bord"
 
+msgid "Add widget"
+msgstr "Ajouter un widget"
+
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
+
+msgid "An error occured while trying to add the widget to the dashboard"
+msgstr ""
+"Une erreur est survenue lors de l'ajout du widget sur le tableau de bord"
 
 msgid ""
 "An error occured with your upload. Please try again or choose another image."
@@ -191,7 +198,7 @@ msgstr "Il manque le nom pour éditer le tableau de bord."
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
 
-msgid "There is no widgets here."
+msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
 
 msgid "This project is not categorized yet."
@@ -213,7 +220,7 @@ msgid "Update successful"
 msgstr "Mis à jour avec succès"
 
 msgid ""
-"Why do not start by editing your dashboard <br> and adding some widgets?"
+"Why don't you start by editing your dashboard <br> and adding some widgets?"
 msgstr ""
 "Pourquoi ne pas commencer par éditer votre tableau de bord <br> et ajouter "
 "des widgets?"
