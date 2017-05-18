@@ -157,3 +157,5 @@ wiki_views_wkserviews	doc_delete	Delete ?
 wiki_attachment_upload	err_not_exist	This attachment doesn't exist. Please Check the url.
 
 wiki_service	search_wiki_type	Wiki pages
+
+wiki_action_denied	import_page	Only the sandbox can be restored

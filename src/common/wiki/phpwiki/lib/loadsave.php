@@ -1089,32 +1089,6 @@ function LoadZip (&$request, $zipfile, $files = false, $exclude = false) {
     }
 }
 
-function LoadDir (&$request, $dirname, $files = false, $exclude = false) {
-    $fileset = new LimitedFileSet($dirname, $files, $exclude);
-
-    if (!$files and ($skiplist = $fileset->getSkippedFiles())) {
-        PrintXML(HTML::dt(HTML::strong(_("Skipping"))));
-        $list = HTML::ul();
-        foreach ($skiplist as $file)
-            $list->pushContent(HTML::li(WikiLink($file)));
-        PrintXML(HTML::dd($list));
-    }
-
-    // Defer HomePage loading until the end. If anything goes wrong
-    // the pages can still be loaded again.
-    $files = $fileset->getFiles();
-    if (in_array(HOME_PAGE, $files)) {
-        $files = array_diff($files, array(HOME_PAGE));
-        $files[] = HOME_PAGE;
-    }
-    $timeout = (! $request->getArg('start_debug')) ? 20 : 120;
-    foreach ($files as $file) {
-        longer_timeout($timeout); 	// longer timeout per page
-        if (substr($file,-1,1) != '~')  // refuse to load backup files
-            LoadFile($request, "$dirname/$file");
-    }
-}
-
 class LimitedFileSet extends FileSet {
     function LimitedFileSet($dirname, $_include, $exclude) {
         $this->_includefiles = $_include;
@@ -1189,15 +1163,10 @@ function LoadAny (&$request, $file_or_dir, $files = false, $exclude = false)
         $type = ($mode >> 12) & 017;
         if ($type == 010)
             $type = 'file';
-        elseif ($type == 004)
-            $type = 'dir';
     }
 
     if (! $type) {
         $request->finish(fmt("Unable to load: %s", $file_or_dir));
-    }
-    else if ($type == 'dir') {
-        LoadDir($request, $file_or_dir, $files, $exclude);
     }
     else if ($type != 'file' && !preg_match('/^(http|ftp):/', $file_or_dir))
     {
@@ -1218,10 +1187,13 @@ function LoadFileOrDir (&$request)
     $finder = new FileFinder;
     $source = $finder->slashifyPath($source);
     $page = rawurldecode(basename($source));
-    StartLoadDump($request, fmt("Loading '%s'", 
+    StartLoadDump($request, fmt("Loading '%s'",
     	HTML(dirname($source),
              dirname($source) ? "/" : "",
              WikiLink($page,'auto'))));
+    if ($source !== 'pgsrc/SandBox') {
+        trigger_error($GLOBALS['Language']->getText('wiki_action_denied', 'import_page'), E_USER_ERROR);
+    }
     echo "<dl>\n";
     LoadAny($request, $source);
     echo "</dl>\n";
@@ -1339,8 +1311,6 @@ function LoadPostFile (&$request)
     $fd = $upload->open();
     if (IsZipFile($fd))
         LoadZip($request, $fd, false, array(_("RecentChanges")));
-    else
-        LoadFile($request, $upload->getName(), $upload->getContents());
 
     echo "</dl>\n";
     EndLoadDump($request);
