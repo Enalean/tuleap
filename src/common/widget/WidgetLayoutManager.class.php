@@ -224,11 +224,12 @@ class WidgetLayoutManager {
     }
 
     /**
-    * displayAvailableWidgets
-    *
-    * Display all widget that the user can add to the layout
-    */
-    function displayAvailableWidgets($owner_id, $owner_type, $layout_id, CSRFSynchronizerToken $csrf_token) {
+     * displayAvailableWidgets
+     *
+     * Display all widget that the user can add to the layout
+     */
+    public function displayAvailableWidgets($owner_id, $owner_type, $layout_id, CSRFSynchronizerToken $csrf_token)
+    {
         $used_widgets = array();
         $sql = "SELECT *
         FROM layouts_contents
@@ -255,89 +256,12 @@ class WidgetLayoutManager {
             $parameters['layout_id'] = $layout_id;
         }
         echo '</ul>';
-        echo '<form action="/widgets/updatelayout.php?'. http_build_query($parameters) .'" method="POST">';
-        echo $csrf_token->fetchHTMLInput();
+
         if ($update_layout) {
-            $sql = "SELECT * FROM layouts WHERE scope='S' ORDER BY id ";
-            $req_layouts = db_query($sql);
-            echo '<table cellspacing="0" cellpading="0">';
-            $is_custom = true;
-            while ($data = db_fetch_array($req_layouts)) {
-                $checked = $layout_id == $data['id'] ? 'checked="checked"' : '';
-                $is_custom = $is_custom && !$checked;
-                echo '<tr class="layout-manager-chooser '. ($checked ? 'layout-manager-chooser_selected' : '') .'" ><td>';
-                echo '<input type="radio" name="layout_id" value="'. $data['id'] .'" id="layout_'. $data['id'] .'" '. $checked .'/>';
-                echo '</td><td>';
-                echo '<label for="layout_'. $data['id'] .'">';
-                echo $GLOBALS['HTML']->getImage('layout/'. strtolower(preg_replace('/(\W+)/', '-', $data['name'])) .'.png');
-                echo '</label>';
-                echo '</td><td>';
-                echo '<label for="layout_'. $data['id'] .'"><strong>'. $data['name'] .'</strong><br />';
-                echo $data['description'];
-                echo '</label>';
-                echo '</td></tr>';
-            }
-            /* Custom layout are not available yet */
-            $checked = $is_custom ? 'checked="checked"' : '';
-            echo '<tr class="layout-manager-chooser '. ($checked ? 'layout-manager-chooser_selected' : '') .'"><td>';
-            echo '<input type="radio" name="layout_id" value="-1" id="layout_custom" '. $checked .'/>';
-            echo '</td><td>';
-            echo '<label for="layout_custom">';
-            echo $GLOBALS['HTML']->getImage('layout/custom.png', array('style' => 'vertical-align:top;float:left;'));
-            echo '</label>';
-            echo '</td><td>';
-            echo '<label for="layout_custom"><strong>'. 'Custom' .'</strong><br />';
-            echo 'Define your own layout:';
-            echo '</label>';
-            echo '<table id="layout-manager" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td>
-                        <div class="layout-manager-row-add">+</div>';
-            $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. db_ei($layout_id) .' ORDER BY rank';
-            $req_rows = db_query($sql);
-            while ($data = db_fetch_array($req_rows)) {
-                echo '<table class="layout-manager-row" cellspacing="5" cellpadding="2" border="0">
-                        <tr>
-                          <td class="layout-manager-column-add">+</td>';
-                $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. db_ei($data['id']);
-                $req_cols = db_query($sql);
-                while ($data = db_fetch_array($req_cols)) {
-                    echo '<td class="layout-manager-column">
-                            <div class="layout-manager-column-remove">x</div>
-                            <div class="layout-manager-column-width">
-                                <input type="text" value="'. $data['width'] .'" autocomplete="off" size="1" maxlength="3" />%
-                            </div>
-                          </td>
-                          <td class="layout-manager-column-add">+</td>';
-                }
-                echo '  </tr>
-                      </table>
-                      <div class="layout-manager-row-add">+</div>';
-            }
-            echo '    </td>
-                    </tr>
-                  </table>';
-            echo '</td></tr>';
-            echo '</table>';
-            echo '<input type="submit" id="save" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+            $this->displayUpdateLayout($layout_id, $parameters, $csrf_token);
         } else {
-            $after = '';
-            echo '<table cellpadding="0" cellspacing="0">
-                    <tbody>
-                        <tr valign="top">
-                            <td>';
-                            echo '<table cellpadding="2" cellspacing="0">
-                                    <tbody>';
-                                    $after .= $this->_displayWidgetsSelectionForm($owner_id, $GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']), Widget::getCodendiWidgets($owner_type), $used_widgets);
-                                    echo '</tbody>
-                                </table>';
-                            echo '</td>
-                            <td id="widget-content-categ">'. $after .'</td>
-                        </tr>
-                    </tbody>
-                </table>';
+            $this->displayAddWidgetForm($owner_id, $owner_type, $parameters, $csrf_token, $used_widgets);
         }
-        echo '</form>';
     }
 
     function updateLayout($owner_id, $owner_type, $layout, $custom_layout) {
@@ -863,5 +787,105 @@ class WidgetLayoutManager {
         }
         return $diff;
     }
+
+    private function displayUpdateLayout($layout_id, array $parameters, CSRFSynchronizerToken $csrf_token)
+    {
+        $sql         = "SELECT * FROM layouts WHERE scope='S' ORDER BY id ";
+        $req_layouts = db_query($sql);
+        echo '<form action="/widgets/updatelayout.php?'. http_build_query($parameters) .'" method="POST">';
+        echo $csrf_token->fetchHTMLInput();
+        echo '<table cellspacing="0" cellpading="0">';
+        $is_custom = true;
+        while ($data = db_fetch_array($req_layouts)) {
+            $checked   = $layout_id == $data['id'] ? 'checked="checked"' : '';
+            $is_custom = $is_custom && ! $checked;
+            echo '<tr class="layout-manager-chooser ' . ($checked ? 'layout-manager-chooser_selected' : '') . '" ><td>';
+            echo '<input type="radio" name="layout_id" value="' . $data['id'] . '" id="layout_' . $data['id'] . '" ' . $checked . '/>';
+            echo '</td><td>';
+            echo '<label for="layout_' . $data['id'] . '">';
+            echo $GLOBALS['HTML']->getImage('layout/' . strtolower(preg_replace('/(\W+)/', '-',
+                    $data['name'])) . '.png');
+            echo '</label>';
+            echo '</td><td>';
+            echo '<label for="layout_' . $data['id'] . '"><strong>' . $data['name'] . '</strong><br />';
+            echo $data['description'];
+            echo '</label>';
+            echo '</td></tr>';
+        }
+        /* Custom layout are not available yet */
+        $checked = $is_custom ? 'checked="checked"' : '';
+        echo '<tr class="layout-manager-chooser ' . ($checked ? 'layout-manager-chooser_selected' : '') . '"><td>';
+        echo '<input type="radio" name="layout_id" value="-1" id="layout_custom" ' . $checked . '/>';
+        echo '</td><td>';
+        echo '<label for="layout_custom">';
+        echo $GLOBALS['HTML']->getImage('layout/custom.png', array('style' => 'vertical-align:top;float:left;'));
+        echo '</label>';
+        echo '</td><td>';
+        echo '<label for="layout_custom"><strong>' . 'Custom' . '</strong><br />';
+        echo 'Define your own layout:';
+        echo '</label>';
+        echo '<table id="layout-manager" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td>
+                        <div class="layout-manager-row-add">+</div>';
+        $sql      = 'SELECT * FROM layouts_rows WHERE layout_id = ' . db_ei($layout_id) . ' ORDER BY rank';
+        $req_rows = db_query($sql);
+        while ($data = db_fetch_array($req_rows)) {
+            echo '<table class="layout-manager-row" cellspacing="5" cellpadding="2" border="0">
+                        <tr>
+                          <td class="layout-manager-column-add">+</td>';
+            $sql      = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = ' . db_ei($data['id']);
+            $req_cols = db_query($sql);
+            while ($data = db_fetch_array($req_cols)) {
+                echo '<td class="layout-manager-column">
+                            <div class="layout-manager-column-remove">x</div>
+                            <div class="layout-manager-column-width">
+                                <input type="text" value="' . $data['width'] . '" autocomplete="off" size="1" maxlength="3" />%
+                            </div>
+                          </td>
+                          <td class="layout-manager-column-add">+</td>';
+            }
+            echo '  </tr>
+                      </table>
+                      <div class="layout-manager-row-add">+</div>';
+        }
+        echo '    </td>
+                    </tr>
+                  </table>';
+        echo '</td></tr>';
+        echo '</table>';
+        echo '<input type="submit" id="save" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
+        echo '</form>';
+    }
+
+    private function displayAddWidgetForm(
+        $owner_id,
+        $owner_type,
+        array $parameters,
+        CSRFSynchronizerToken $csrf_token,
+        array $used_widgets
+    ) {
+        echo '<form action="/widgets/updatelayout.php?' . http_build_query($parameters) . '" method="POST">';
+        echo $csrf_token->fetchHTMLInput();
+        echo '<table cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr valign="top">
+                            <td>
+                                <table cellpadding="2" cellspacing="0">
+                                    <tbody>';
+        $after = $this->_displayWidgetsSelectionForm(
+            $owner_id,
+            $GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']),
+            Widget::getCodendiWidgets($owner_type),
+            $used_widgets
+        );
+        echo '                      </tbody>
+                                </table>
+                            </td>
+                            <td id="widget-content-categ">'. $after .'</td>
+                        </tr>
+                    </tbody>
+                </table>';
+        echo '</form>';
+    }
 }
-?>
