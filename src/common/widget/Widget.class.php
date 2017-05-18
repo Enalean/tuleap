@@ -82,7 +82,15 @@
     }
     function getRssUrl($owner_id, $owner_type) {
         if ($this->hasRss()) {
-            return '/widgets/widget.php?owner='.$owner_type.$owner_id.'&amp;action=rss&amp;name['. $this->id .']='. $this->getInstanceId();
+            return '/widgets/widget.php?'. http_build_query(
+                array(
+                    'owner'  => $owner_type . $owner_id,
+                    'action' => 'rss',
+                    'name'   => array(
+                        $this->id => $this->getInstanceId()
+                    )
+                )
+            );
         } else {
             return false;
         }
@@ -316,5 +324,10 @@
     }
     function getIframeUrl($owner_id, $owner_type) {
         return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=iframe&name['. $this->id .']='. $this->getInstanceId();
+    }
+
+    public function getContentForBurningParrot()
+    {
+        return $this->getContent();
     }
 }

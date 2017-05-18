@@ -6,10 +6,29 @@
                     {{# widgets }}
                         <section class="tlp-pane dashboard-widget">
                             <div class="tlp-pane-container">
-                                <div class="tlp-pane-header">
-                                    <h1 class="tlp-pane-title">One pane</h1>
+                                <div class="tlp-pane-header dashboard-widget-header">
+                                    <h1 class="tlp-pane-title">{{ title }}</h1>
+                                    <div class="tlp-dropdown">
+                                        <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>
+                                        <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right" role="menu">
+                                            {{# has_rss }}
+                                                <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
+                                                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-rss"></i> {{ rss_label }}
+                                                </a>
+                                            {{/ has_rss }}
+                                            {{# is_editable }}
+                                                <a href="javascript:;" class="tlp-dropdown-menu-item">
+                                                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
+                                                </a>
+                                            {{/ is_editable }}
+                                            <a href="javascript:;" class="tlp-dropdown-menu-item">
+                                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 <section class="tlp-pane-section">
+                                    {{{ content }}}
                                 </section>
                             </div>
                         </section>

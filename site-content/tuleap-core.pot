@@ -53,6 +53,9 @@ msgstr ""
 msgid "Dashboard of the project"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
 msgid "Delete dashboard"
 msgstr ""
 
@@ -60,6 +63,9 @@ msgid "Documents"
 msgstr ""
 
 msgid "Don't forget to use tab/shift+tab to navigate in dropdown"
+msgstr ""
+
+msgid "Edit"
 msgstr ""
 
 msgid "Edit dashboard"
@@ -132,6 +138,9 @@ msgid "Project templates"
 msgstr ""
 
 msgid "Project web site"
+msgstr ""
+
+msgid "RSS"
 msgstr ""
 
 msgid "SVN"

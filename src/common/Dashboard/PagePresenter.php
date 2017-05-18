@@ -30,6 +30,9 @@ class PagePresenter
     public $no_dashboard_label;
     public $no_widget_label;
     public $purified_no_widget_action_label;
+    public $rss_label;
+    public $edit_label;
+    public $delete_label;
 
     public $cancel;
     public $close;
@@ -61,6 +64,10 @@ class PagePresenter
             _("Why do not start by editing your dashboard <br> and adding some widgets?"),
             CODENDI_PURIFIER_LIGHT
         );
+
+        $this->rss_label    = _('RSS');
+        $this->edit_label   = _('Edit');
+        $this->delete_label = _('Delete');
 
         $this->cancel = _('Cancel');
         $this->close  = _('Close');
