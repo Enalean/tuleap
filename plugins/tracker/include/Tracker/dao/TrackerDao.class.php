@@ -92,6 +92,25 @@ class TrackerDao extends DataAccessObject {
         return count($this->retrieve($sql));
     }
 
+   /**
+    * Retrieve the Tracker with the specified item_name from the Project with the given ID
+    * @param string $item_name the shortname of the tracker we are looking for
+    * @param int $project_id the ID of the project
+    * @return DataAccessResult
+    */
+    public function searchByItemNameAndProjectId($item_name, $project_id)
+    {
+        $item_name = $this->da->quoteSmart($item_name);
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT *
+                FROM $this->table_name
+                WHERE item_name = $item_name
+                  AND group_id = $project_id
+                  AND deletion_date IS NULL";
+        return $this->retrieve($sql);
+    }
+
     public function markAsDeleted($id) {
         $id = $this->da->escapeInt($id);
         $deletion_date = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
