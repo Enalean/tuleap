@@ -23,6 +23,9 @@ msgstr ""
 msgid "And more..."
 msgstr ""
 
+msgid "Beyond 3 columns, each column<br>will have the same size."
+msgstr ""
+
 msgid "CVS"
 msgstr ""
 

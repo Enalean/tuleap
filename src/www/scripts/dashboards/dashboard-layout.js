@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,117 +17,106 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import dragula from 'dragula';
-import $ from 'jquery';
+import { post }         from 'jquery';
+import { findAncestor } from './dom-tree-walker.js';
 
-export default init;
+export {
+    applyAutomaticLayout,
+    applyLayout
+};
 
-function init() {
-    dragulaInit();
-}
+var one_column_layout            = 'one-column';
+var default_two_columns_layout   = 'two-columns';
+var default_three_columns_layout = 'three-columns';
+var too_many_columns_layout      = 'too-many-columns';
 
-function dragulaInit() {
-    var drake = dragula({
-        isContainer: function (el) {
-            return el.classList.contains('dragula-container');
-        },
-        moves: function (el, source, handle, sibling) {
-            return handle.dataset.draggable === 'true';
-        }
-    });
+var number_of_columns_for_layout = {
+    1: ['one-column'],
+    2: ['two-columns', 'two-columns-small-big', 'two-columns-big-small'],
+    3: [
+        'three-columns',
+        'three-columns-small-big-small',
+        'three-columns-big-small-small',
+        'three-columns-small-small-big'
+    ]
+};
 
-    cancelDropOnEscape(drake);
+var column_css_classes = ['dashboard-widgets-row', 'dragula-container'];
 
-    drake.on('drop', function(el, target) {
-        updateParent(el, target);
-        reorderWidget(el, el.parentNode);
-    });
-}
+function applyAutomaticLayout(row) {
+    var current_layout = row.dataset.currentLayout;
+    var nb_columns     = row.querySelectorAll('.dashboard-widgets-column').length;
 
-function cancelDropOnEscape(drake) {
-    document.onkeydown = function(event) {
-        event = event || window.event;
-        if (event.keyCode === 27) {
-            drake.cancel(true);
-        }
-    };
-}
-
-function updateParent(widget, target) {
-    if (target && ! target.classList.contains('dashboard-widgets-column')) {
-        var column = document.createElement('div');
-        column.classList.add('dashboard-widgets-column', 'dragula-container');
-
-        target.insertBefore(column, widget);
-        column.appendChild(widget);
-
-        if (column.parentNode && ! column.parentNode.classList.contains('dashboard-widgets-row')) {
-            var line = document.createElement('div');
-            line.classList.add('dashboard-widgets-row', 'dragula-container', 'tlp-framed-horizontally');
-
-            column.parentNode.insertBefore(line, column);
-            line.appendChild(column);
-        }
-    }
-}
-
-function reorderWidget(widget, column) {
-    var line            = column.parentNode;
-    var csrf_token      = widget.querySelector('input[name=challenge]').value;
-    var dashboard_id    = document.querySelector('.dashboard-widgets-container').dataset.dashboardId;
-    var widget_id       = widget.dataset.widgetId;
-    var new_column_id   = column.dataset.columnId;
-    var new_line_id     = line.dataset.lineId;
-    var new_widget_rank = getRankOfElement(widget);
-    var new_column_rank = getRankOfElement(column);
-    var new_line_rank   = getRankOfElement(line);
-
-    if (! dashboard_id || ! widget_id) {
+    if (isLayoutFitForNbColumns(current_layout, nb_columns)) {
         return;
     }
 
-    $.ajax({
-        url : window.location.href,
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            'challenge'      : csrf_token,
-            'action'         : 'reorder-widgets',
-            'dashboard-id'   : dashboard_id,
-            'new-line-id'    : new_line_id,
-            'new-column-id'  : new_column_id,
-            'widget-id'      : widget_id,
-            'new-widget-rank': new_widget_rank,
-            'new-column-rank': new_column_rank,
-            'new-line-rank'  : new_line_rank
-        }
-    }).done(function (response) {
-        if (response.new_ids && response.new_ids.new_line_id) {
-            line.setAttribute('data-line-id', response.new_ids.new_line_id);
-        }
+    var top_container = findAncestor(row, 'dashboard-widgets-container');
+    var csrf_token    = top_container.querySelector('input[name=challenge]').value;
+    var line_id       = row.dataset.lineId;
+    var layout_name   = getDefaultLayoutForNbColumns(nb_columns);
 
-        if (response.new_ids && response.new_ids.new_column_id) {
-            column.setAttribute('data-column-id', response.new_ids.new_column_id);
-        }
+    applyLayoutToRow(row, layout_name);
+    saveLayoutChoiceInBackend(csrf_token, line_id, layout_name);
+}
 
-        if (response.deleted_ids && response.deleted_ids.deleted_line_id) {
-            var line_to_delete = document.querySelector("[data-line-id='" + response.deleted_ids.deleted_line_id + "']");
-            if (line_to_delete) {
-                line_to_delete.parentNode.removeChild(line_to_delete);
-            }
-        }
+function applyLayout(row, layout_name) {
+    var top_container = findAncestor(row, 'dashboard-widgets-container');
+    var csrf_token    = top_container.querySelector('input[name=challenge]').value;
+    var line_id       = row.dataset.lineId;
 
-        if (response.deleted_ids && response.deleted_ids.deleted_column_id) {
-            var column_to_delete = document.querySelector("[data-column-id='" + response.deleted_ids.deleted_column_id + "']");
-            if (column_to_delete) {
-                column_to_delete.parentNode.removeChild(column_to_delete);
-            }
+    applyLayoutToRow(row, layout_name);
+    saveLayoutChoiceInBackend(csrf_token, line_id, layout_name);
+}
+
+function isLayoutFitForNbColumns(current_layout, nb_columns) {
+    if (nb_columns > 3) {
+        return (current_layout === too_many_columns_layout);
+    }
+
+    var fit_layouts = number_of_columns_for_layout[nb_columns];
+    var found       = false;
+    fit_layouts.forEach(function(fit_layout) {
+        if (current_layout === fit_layout) {
+            found = true;
+            return;
         }
+    });
+
+    return found;
+}
+
+function getDefaultLayoutForNbColumns(nb_columns) {
+    var layout_name = one_column_layout;
+    if (nb_columns === 2) {
+        layout_name = default_two_columns_layout;
+    } else if (nb_columns === 3) {
+        layout_name = default_three_columns_layout;
+    } else if (nb_columns > 3) {
+        layout_name = too_many_columns_layout;
+    }
+
+    return layout_name;
+}
+
+function applyLayoutToRow(row, layout_classname) {
+    row.dataset.currentLayout = layout_classname;
+    var classes = column_css_classes.concat([layout_classname]);
+
+    row.classList.value = '';
+
+    classes.forEach(function(classname) {
+        row.classList.add(classname);
     });
 }
 
-function getRankOfElement(element) {
-    var parent   = element.parentElement;
-    var children = parent.children;
-    return [].indexOf.call(children, element);
+function saveLayoutChoiceInBackend(csrf_token, line_id, layout_name) {
+    var params = {
+        action   : 'edit-widget-line',
+        challenge: csrf_token,
+        'line-id': line_id,
+        layout   : layout_name
+    };
+
+    post(window.location.href, params);
 }

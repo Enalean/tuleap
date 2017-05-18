@@ -18,6 +18,7 @@
  */
 
 import { get } from 'jquery';
+import { modal as createModal } from 'tlp';
 
 export default init;
 
@@ -48,7 +49,7 @@ function init() {
             throw "Cannot find the modal " + modal_id;
         }
 
-        var modal = tlp.modal(modal_content);
+        var modal = createModal(modal_content);
         button.addEventListener('click', function (event) {
             event.preventDefault();
             modal.toggle();

@@ -80,6 +80,9 @@ class ProjectDashboardRouter
             case 'delete-dashboard':
                 $this->project_dashboard_controller->deleteDashboard($request);
                 break;
+            case 'edit-widget-line':
+                $this->widget_dashboard_controller->editWidgetLine($request, self::DASHBOARD_TYPE);
+                break;
             default:
                 $this->project_dashboard_controller->display($request);
                 break;

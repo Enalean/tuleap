@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, php-format
@@ -39,6 +39,9 @@ msgstr ""
 
 msgid "And more..."
 msgstr "Et plus ..."
+
+msgid "Beyond 3 columns, each column<br>will have the same size."
+msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
 
 msgid "CVS"
 msgstr "CVS"

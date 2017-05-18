@@ -99,8 +99,8 @@ var tlp = tlp || { };
         listenCloseEvents() {
             document.addEventListener('click', (event) => {
                 if (this.is_shown
-                    && ! findClosest(event.target, this.dropdown_menu)
-                    && ! findClosest(event.target, this.trigger)
+                    && ! findClosestElement(event.target, this.dropdown_menu)
+                    && ! findClosestElement(event.target, this.trigger)
                 ) {
                     this.hide();
                 }
@@ -146,25 +146,16 @@ var tlp = tlp || { };
         }
     }
 
-    function findClosest(element, classname) {
-        if (hasClassNamed(element, classname)) {
-            return element;
-        }
-
-        return findAncestor(element, classname);
-    }
-
-    function findAncestor(element, classname) {
-        while ((element = element.parentElement) && ! hasClassNamed(element, classname)) {}
+    function findAncestorElement(element, ancestor) {
+        while ((element = element.parentElement) && element != ancestor) {}
         return element;
     }
 
-    function hasClassNamed(element, classname) {
-        if (element.classList) {
-            return element.classList.contains(classname);
-        // IE11 SVG elements don't have classList
-        } else if (element.getAttribute('class')) {
-            return (element.getAttribute('class').indexOf(classname) !== -1);
+    function findClosestElement(element, ancestor) {
+        if (element == ancestor) {
+            return element;
         }
+
+        return findAncestorElement(element, ancestor);
     }
 })();

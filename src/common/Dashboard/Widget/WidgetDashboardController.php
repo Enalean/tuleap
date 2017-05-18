@@ -31,7 +31,6 @@ class WidgetDashboardController
      * @var CSRFSynchronizerToken
      */
     private $csrf;
-
     /**
      * @var DashboardWidgetRetriever
      */
@@ -52,6 +51,10 @@ class WidgetDashboardController
      * @var DashboardWidgetDeletor
      */
     private $widget_deletor;
+    /**
+     * @var DashboardWidgetLineUpdater
+     */
+    private $widget_line_updater;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -59,21 +62,23 @@ class WidgetDashboardController
         DashboardWidgetRetriever $widget_retriever,
         DashboardWidgetReorder $widget_reorder,
         DashboardWidgetChecker $widget_checker,
-        DashboardWidgetDeletor $widget_deletor
+        DashboardWidgetDeletor $widget_deletor,
+        DashboardWidgetLineUpdater $widget_line_updater
     ) {
-        $this->csrf             = $csrf;
-        $this->widget_retriever = $widget_retriever;
-        $this->widget_reorder   = $widget_reorder;
-        $this->widget_creator   = $widget_creator;
-        $this->widget_checker   = $widget_checker;
-        $this->widget_deletor   = $widget_deletor;
+        $this->csrf                = $csrf;
+        $this->widget_retriever    = $widget_retriever;
+        $this->widget_reorder      = $widget_reorder;
+        $this->widget_creator      = $widget_creator;
+        $this->widget_checker      = $widget_checker;
+        $this->widget_deletor      = $widget_deletor;
+        $this->widget_line_updater = $widget_line_updater;
     }
 
     public function reorderWidgets(HTTPRequest $request, $dashboard_type)
     {
         $this->csrf->check();
 
-        if (! $this->hasReorderRights($request, $dashboard_type)) {
+        if (! $this->hasEditPermission($request, $dashboard_type)) {
             return;
         }
 
@@ -145,7 +150,7 @@ class WidgetDashboardController
      * @param $dashboard_type
      * @return bool
      */
-    private function hasReorderRights(HTTPRequest $request, $dashboard_type)
+    private function hasEditPermission(HTTPRequest $request, $dashboard_type)
     {
         $user = $request->getCurrentUser();
         if ($dashboard_type === self::USER_DASHBOARD_TYPE) {
@@ -240,5 +245,23 @@ class WidgetDashboardController
             $this->widget_deletor->deleteLineByColumn($old_column);
         }
         return $deleted_ids;
+    }
+
+    public function editWidgetLine(HTTPRequest $request, $dashboard_type)
+    {
+        $this->csrf->check();
+
+        $dashboard_line_id = $request->get('line-id');
+        $layout            = $request->get('layout');
+
+        if (! isset($dashboard_line_id) || ! isset($layout)) {
+            return;
+        }
+
+        if (! $this->hasEditPermission($request, $dashboard_type)) {
+            return;
+        }
+
+        $this->widget_line_updater->updateLayout($dashboard_line_id, $layout);
     }
 }
