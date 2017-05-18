@@ -56,7 +56,7 @@ class Widget_MyMonitoredForums extends Widget {
             $html_my_monitored_forums .= $GLOBALS['Language']->getText('my_index', 'my_forums_msg');
         } else {
             $request =& HTTPRequest::instance();
-            $html_my_monitored_forums .= '<table style="width:100%">';
+            $html_my_monitored_forums .= '<table class="tlp-table" style="width:100%">';
             for ($j=0; $j<$rows; $j++) {
                 $group_id = db_result($result,$j,'group_id');
         
@@ -106,8 +106,7 @@ class Widget_MyMonitoredForums extends Widget {
                         stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
                         '<TD ALIGN="center"><A HREF="/my/stop_monitor.php?forum_id='.$group_forum_id.
                         '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'stop_forum').'\')">'.
-                        '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
-                        'BORDER=0 ALT="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></A></TD></TR>';
+                        '<i class="icon-trash fa fa-trash-o" title="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></i></A></TD></TR>';
                     }
                 }
         

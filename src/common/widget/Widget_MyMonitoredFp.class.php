@@ -55,7 +55,7 @@ class Widget_MyMonitoredFp extends Widget {
         if (!$result || $rows < 1) {
             $html_my_monitored_fp .= $GLOBALS['Language']->getText('my_index', 'my_files_msg');
         } else {
-            $html_my_monitored_fp .= '<table style="width:100%">';
+            $html_my_monitored_fp .= '<table class="tlp-table" style="width:100%">';
             $request =& HTTPRequest::instance();
             for ($j=0; $j<$rows; $j++) {
                 $group_id = db_result($result,$j,'group_id');
@@ -103,8 +103,7 @@ class Widget_MyMonitoredFp extends Widget {
                             '<TD><A HREF="/file/filemodule_monitor.php?filemodule_id='.
                             db_result($result2,$i,'filemodule_id').'&group_id='.$group_id.
                             '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'stop_file').'\')">'.
-                            '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
-                            'BORDER=0" ALT="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></A></TD></TR>';
+                            '<i class="icon-trash fa fa-trash-o" title="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></i></A></TD></TR>';
                     }
                 }
                 
