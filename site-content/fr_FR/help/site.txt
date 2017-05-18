@@ -1,15 +1,29 @@
-<h2>Aide</h2>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-life-ring tlp-pane-title-icon"></i>
+                Aide
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
 
-<h3>Consultez la documentation Tuleap</a></h3>
-Vous avez une question sur Tuleap ou êtes bloqué?  
-Nous vous suggérons de commencer par regarder dans la documentation:
-<ul>
-	<li><a href="/doc/fr/">Guide Utilisateur</a></li>
-	<li><a href="/doc/en/">Guide Utilisateur (anglais)</a></li>
-</ul>
+            <h2 class="tlp-pane-subtitle">Consultez la documentation Tuleap</h2>
 
-<h3>Posez vos questions</h3>
-Question technique, problème, bug? Poster vos questions, obtenez des réponses en écrivant à la 
-liste de distribution de la communauté Tuleap <a href="http://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel</a>.
+            <p>Vous avez une question sur Tuleap ou vous êtes bloqué?
+               Nous vous suggérons de commencer par regarder dans la documentation :</p>
 
-Pour consulter les discussions actuelles ou en soumettre une nouvelle, <a href="http://tuleap.net/account/register.php">enregistrez vous </a> sur la forge communautaire de Tuleap.
+            <ul>
+                <li><a href="/doc/fr/">Guide Utilisateur</a></li>
+                <li><a href="/doc/en/">Guide Utilisateur (anglais)</a></li>
+            </ul>
+
+            <h2 class="tlp-pane-subtitle">Posez vos questions</h2>
+
+            <p>Question technique, problème, bug? Poster vos questions, obtenez des réponses en écrivant à la
+            liste de distribution de la communauté Tuleap <a href="http://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel</a>.</p>
+
+            <p>Pour consulter les discussions actuelles ou en soumettre une nouvelle, <a href="http://tuleap.net/account/register.php">enregistrez vous </a> sur la forge communautaire de Tuleap.</p>
+        </section>
+    </div>
+</section>

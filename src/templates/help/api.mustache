@@ -1,45 +1,59 @@
-<div class="row-fluid">
-    <div class="span12">
-        <h1>Tuleap API</h1>
+<h1>Tuleap API</h1>
 
-        <h2>REST API</h2>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">REST API</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>The recommended way to interact with Tuleap is to leverage on the REST
+                API. REST API has broad test coverage in Tuleap developers test suite and
+                there is a large number of end points. Modern features (Kanban, Scrum Planning,
+                etc) are using those APIs.</p>
 
-        <p>The recommended way to interact with Tuleap is to leverage on the REST
-        API. REST API has broad test coverage in Tuleap developers test suite and
-        there is a large number of end points. Modern features (Kanban, Scrum Planning,
-        etc) are using those APIs.</p>
+            <p>You can <a href="/doc/en/user-guide/rest.html">get started</a> from the
+                documentation.<p>
 
-        <p>You can <a href="/doc/en/user-guide/rest.html">get started</a> from the
-            documentation.<p>
-
-        {{# explorer_available }}
-            <p>You can also <a href="/api/explorer/">discover and test online</a> the
-            various routes.</p>
-        {{/ explorer_available }}
-
-        <h2>Legacy APIs</h2>
-
-        <div class="alert alert-warning">Those APIs are deprecated. Whenever possible
-            there shouldn't be any new developments done relying on them.</div>
-
-        <h3>SOAP</h3>
-
-        <p>More informations available in the <a href="https://tuleap.net/wiki/index.php?group_id=101&pagename=HowToUseTuleapSoapApi">documentation</a> on Tuleap.net.</p>
-
-        {{# end_points }}
-            <h4>{{ title }} - v{{ version }}</h4>
-            <ul>
-                <li><a href="{{ changelog }}">ChangeLog</a></li>
-                <li><a href="{{ wsdl_viewer }}">WSDL Documentation</a></li>
-                <li><a href="{{ wsdl }}">WSDL</a></li>
-            </ul>
-            {{{ description }}}
-        {{/ end_points }}
-
-        <h3>CLI</h3>
-        <p>You can also use a Command-Line Interface client based on the API.
-        <a href="/downloads/Tuleap_CLI.zip"><i class="icon-download-alt"></i> Download</a> or read its <a href="/documentation/cli/html/en_US/">documentation</a>.
-        </p>
-
+            {{# explorer_available }}
+                <p>You can also <a href="/api/explorer/">discover and test online</a> the
+                    various routes.</p>
+            {{/ explorer_available }}
+        </section>
     </div>
-</div>
+</section>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">Legacy APIs</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="tlp-alert-warning">Those APIs are deprecated. Whenever possible
+                there shouldn't be any new developments done relying on them.</div>
+
+            <h2 class="tlp-pane-subtitle">SOAP</h2>
+
+            <p>More informations available in the <a href="https://tuleap.net/wiki/index.php?group_id=101&pagename=HowToUseTuleapSoapApi">documentation</a> on Tuleap.net.</p>
+
+            <ul>
+            {{# end_points }}
+                <li>{{ title }} - v{{ version }}
+                    <p>{{{ description }}}</p>
+                    <ul>
+                        <li><a href="{{ changelog }}">ChangeLog</a></li>
+                        <li><a href="{{ wsdl_viewer }}">WSDL Documentation</a></li>
+                        <li><a href="{{ wsdl }}">WSDL</a></li>
+                    </ul>
+                </li>
+            {{/ end_points }}
+            </ul>
+        </section>
+
+        <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle">CLI</h2>
+            <p>You can also use a Command-Line Interface client based on the SOAP API.
+                <a href="/downloads/Tuleap_CLI.zip"><i class="icon-download-alt"></i> Download</a> or read its <a href="/documentation/cli/html/en_US/">documentation</a>.
+            </p>
+        </section>
+    </div>
+</section>

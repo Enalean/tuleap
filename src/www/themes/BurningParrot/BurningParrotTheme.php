@@ -106,8 +106,6 @@ class BurningParrotTheme extends Layout
 
     public function displayContactPage()
     {
-        echo "<h2>" . $GLOBALS['Language']->getText('contact', 'title') . "</h2>";
-
         include($GLOBALS['Language']->getContent('contact/contact'));
     }
 

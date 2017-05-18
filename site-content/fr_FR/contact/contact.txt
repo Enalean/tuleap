@@ -1,23 +1,15 @@
-<!--
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// This file is licensed under the GNU General Public License version 2. See the file COPYING.
-// 
-//
--->
-
-<!--
-Note: 
-if you use the generic trackers in the Admin project, instead of the legacy Bug and Service Request trackers, 
-you need to update the links below:
-SR link:  <A HREF="/tracker/?func=add&group_id=1&atid=XXX"> where XXX is the id of the SR tracker for the Admin project (103?)
-Bug link: <A HREF="/tracker/?func=add&group_id=1&atid=YYY"> where YYY is the id of the Bug tracker for the Admin project (101?)
--->
-
-<h2>Points de contact</h2>
-
-<ul>
-<li><b>Autres demandes</b>&nbsp;: toutes les autres demandes doivent être envoyées par courrier électronique au  
-<A href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>">[ Contact <?php print $GLOBALS['sys_name']; ?> ]</A><br><br>
-</ul>
-
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-envelope-o tlp-pane-title-icon"></i>
+                Contactez-nous
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>Toutes les demandes doivent être envoyées par courrier électronique à
+                <a href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>"><?php print $GLOBALS['sys_email_contact']; ?></a>.
+            </p>
+        </section>
+    </div>
+</section>
