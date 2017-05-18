@@ -45,7 +45,7 @@ $rabbitmq->configure();
 if (isset($argv[1]) && $argv[1] == 'test') {
     try {
         $exec = new \Tuleap\Configuration\Common\Exec();
-        $exec->command("/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/import_project_xml.php -u admin --automap=no-email,create:A -i /usr/share/tuleap/tools/distlp/tests/_fixtures/svn_project_01 --use-lame-password");
+        $exec->command("/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/import_project_xml.php -u admin --automap=no-email,create:A -i /usr/share/tuleap/tests/selenium/_fixtures/svn_project_01 --use-lame-password");
         $exec->command("/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/svn/svnroot_push.php");
     } catch (Exception $e) {
         die($e->getMessage());

@@ -1,15 +1,21 @@
 version: "2"
 
 services:
+  firefox:
+    container_name: ${BUILD_TAG}tuleap_runtests_firefox
+    image: selenium/standalone-firefox
+    networks:
+      - tuleap
+
   test:
     container_name: ${BUILD_TAG}tuleap_runtests_test
-    image: tuleap-run-tests
+    image: tuleap-run-tests-v2
     build:
-      context: tools/distlp/tests/DockerImage
-    command: /tuleap/tools/distlp/tests/run.sh
+      context: tests/selenium/DockerImage
+    command: /tuleap/tests/selenium/run.sh
     volumes:
       - .:/tuleap
-      - .:/output
+      - ./test_results/:/output
     depends_on:
       - reverse-proxy
     networks:

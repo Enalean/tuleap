@@ -55,3 +55,6 @@ node_modules/
 src/www/assets/*
 plugins/*/www/assets/*
 src/www/themes/BurningParrot/css/vendor/*.scss
+tests/selenium/vendor
+tests/selenium/logs
+test_results/*
