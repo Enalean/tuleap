@@ -43,7 +43,7 @@ class Widget_MyBookmarks extends Widget {
             $html_my_bookmarks .= db_error();
         } else {
             $purifier = Codendi_HTMLPurifier::instance();
-            $html_my_bookmarks .= '<table style="width:100%">';
+            $html_my_bookmarks .= '<table class="tlp-table" style="width:100%">';
             for ($i=0; $i<$rows; $i++) {
                 $bookmark_url = $purifier->purify(db_result($result,$i,'bookmark_url'),CODENDI_PURIFIER_CONVERT_HTML);
                 if (my_has_URL_invalid_content($bookmark_url)) {
@@ -54,7 +54,7 @@ class Widget_MyBookmarks extends Widget {
                 $html_my_bookmarks .= '<A HREF="'. $bookmark_url .'">'. $bookmark_title .'</A> ';
                 $html_my_bookmarks .= '<small><A HREF="/my/bookmark_edit.php?bookmark_id='. db_result($result,$i,'bookmark_id') .'">['.$GLOBALS['Language']->getText('my_index', 'edit_link').']</A></SMALL></TD>';
                 $html_my_bookmarks .= '<td style="text-align:right"><A HREF="/my/bookmark_delete.php?bookmark_id='. db_result($result,$i,'bookmark_id').'">';
-                $html_my_bookmarks .= '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></td></tr>';
+                $html_my_bookmarks .= '<i class="icon-trash fa fa-trash-o" title="'. _('Delete') .'"></A></td></tr>';
             }
             $html_my_bookmarks .= '</table>';
         }
@@ -65,4 +65,3 @@ class Widget_MyBookmarks extends Widget {
         return $GLOBALS['Language']->getText('widget_description_my_bookmarks','description');
     }
 }
-?>
