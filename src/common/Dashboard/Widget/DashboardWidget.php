@@ -23,17 +23,17 @@ namespace Tuleap\Dashboard\Widget;
 class DashboardWidget
 {
     private $id;
-    private $column_id;
-    private $rank;
+    private $name;
+    private $content_id;
 
     public function __construct(
         $id,
-        $column_id,
-        $rank
+        $name,
+        $content_id
     ) {
-        $this->id        = $id;
-        $this->column_id = $column_id;
-        $this->rank      = $rank;
+        $this->id         = $id;
+        $this->name       = $name;
+        $this->content_id = $content_id;
     }
 
     /**
@@ -45,18 +45,18 @@ class DashboardWidget
     }
 
     /**
-     * @return integer
+     * @return string
      */
-    public function getColumnId()
+    public function getName()
     {
-        return $this->column_id;
+        return $this->name;
     }
 
     /**
      * @return integer
      */
-    public function getRank()
+    public function getContentId()
     {
-        return $this->rank;
+        return $this->content_id;
     }
 }

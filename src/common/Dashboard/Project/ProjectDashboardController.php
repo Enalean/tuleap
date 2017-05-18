@@ -34,6 +34,7 @@ use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -97,7 +98,7 @@ class ProjectDashboardController
             );
         }
 
-        $project_dashboards_presenter = $this->getProjectDashboardsPresenter($dashboard_id, $project_dashboards);
+        $project_dashboards_presenter = $this->getProjectDashboardsPresenter($project, $dashboard_id, $project_dashboards);
         $trove_cats                   = array();
         if (ForgeConfig::get('sys_use_trove')) {
             $trove_dao = new TroveCatLinkDao();
@@ -314,7 +315,7 @@ class ProjectDashboardController
      * @param array $project_dashboards
      * @return ProjectDashboardPresenter[]
      */
-    private function getProjectDashboardsPresenter($dashboard_id, array $project_dashboards)
+    private function getProjectDashboardsPresenter(Project $project, $dashboard_id, array $project_dashboards)
     {
         $project_dashboards_presenter = array();
 
@@ -329,7 +330,10 @@ class ProjectDashboardController
             if ($is_active) {
                 $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
                 if ($widgets_lines) {
-                    $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter($widgets_lines);
+                    $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter(
+                        OwnerInfo::createForProject($project),
+                        $widgets_lines
+                    );
                 }
             }
 

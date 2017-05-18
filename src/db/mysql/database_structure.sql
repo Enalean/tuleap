@@ -1027,12 +1027,12 @@ CREATE TABLE cvs_tags (
   KEY branchid (branchid)
 );
 
-CREATE TABLE cvs_branches ( 
+CREATE TABLE cvs_branches (
   id mediumint(9) NOT NULL auto_increment,
-  branch varchar(64) binary DEFAULT '' NOT NULL, 
-  PRIMARY KEY (id), 
-  UNIQUE branch (branch)  
-); 
+  branch varchar(64) binary DEFAULT '' NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE branch (branch)
+);
 
 # CREATE SVN support tables
 # There can be two (commitid,dirid,fileid) triplets with the same values
@@ -1128,7 +1128,7 @@ CREATE TABLE service (
 #
 # ugroup table, used to store the description of groups of users (see also ugroup_user table)
 #
-CREATE TABLE ugroup (  
+CREATE TABLE ugroup (
   ugroup_id int(11) NOT NULL auto_increment,
   name text NOT NULL,
   description text NOT NULL,
@@ -1184,7 +1184,7 @@ CREATE TABLE wiki_group_list (
 	description varchar(255) NOT NULL default '',
 	rank int(11) NOT NULL default '0',
         language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
-	PRIMARY KEY (id)	
+	PRIMARY KEY (id)
 );
 
 # Table for Wiki access logs
@@ -1234,7 +1234,7 @@ CREATE TABLE wiki_attachment_revision (
 
 CREATE TABLE wiki_attachment_log (
   user_id int(11) NOT NULL default '0',
-  group_id int(11) NOT NULL default '0', 
+  group_id int(11) NOT NULL default '0',
   wiki_attachment_id int(11) NOT NULL default '0',
   wiki_attachment_revision_id int(11) NOT NULL default '0',
   time int(11) NOT NULL default '0',
@@ -1325,7 +1325,7 @@ plugin_id INT NOT NULL
 #
 # Table structure for table 'reference'
 #
-# Notes: 
+# Notes:
 #   - scope='S' means a reference available to all projects
 # (defined by site administrators, group_id =100)
 #   - scope='P' means a reference available to one project
@@ -1376,9 +1376,9 @@ CREATE TABLE notifications (
   PRIMARY KEY  (user_id,object_id,type)
 );
 
-# 
+#
 # Table structure of 'layouts'
-# 
+#
 
 DROP TABLE IF EXISTS layouts;
 CREATE TABLE IF NOT EXISTS layouts (
@@ -1391,9 +1391,9 @@ CREATE TABLE IF NOT EXISTS layouts (
 
 # --------------------------------------------------------
 
-# 
+#
 # Table structure of 'layouts_rows'
-# 
+#
 
 DROP TABLE IF EXISTS layouts_rows;
 CREATE TABLE IF NOT EXISTS layouts_rows (
@@ -1406,9 +1406,9 @@ CREATE TABLE IF NOT EXISTS layouts_rows (
 
 # --------------------------------------------------------
 
-# 
+#
 # Table structure of 'layouts_rows_columns'
-# 
+#
 
 DROP TABLE IF EXISTS layouts_rows_columns;
 CREATE TABLE IF NOT EXISTS layouts_rows_columns (
@@ -1421,9 +1421,9 @@ CREATE TABLE IF NOT EXISTS layouts_rows_columns (
 
 # --------------------------------------------------------
 
-# 
+#
 # Table structure of 'owner_layouts'
-# 
+#
 
 DROP TABLE IF EXISTS owner_layouts;
 CREATE TABLE IF NOT EXISTS owner_layouts (
@@ -1436,9 +1436,9 @@ CREATE TABLE IF NOT EXISTS owner_layouts (
 
 # --------------------------------------------------------
 
-# 
+#
 # Table structure of 'layouts_contents'
-# 
+#
 
 DROP TABLE IF EXISTS layouts_contents;
 CREATE TABLE IF NOT EXISTS layouts_contents (
@@ -1499,12 +1499,12 @@ CREATE TABLE IF NOT EXISTS widget_wikipage (
 
 
 
-# 
+#
 # cross_references Table
-# 
+#
 DROP TABLE IF EXISTS cross_references;
 CREATE TABLE IF NOT EXISTS cross_references (
-  id int(11) unsigned NOT NULL AUTO_INCREMENT, 
+  id int(11) unsigned NOT NULL AUTO_INCREMENT,
   created_at INT(11) NOT NULL DEFAULT '0',
   user_id INT(11) unsigned NOT NULL DEFAULT '0',
   source_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
@@ -1516,19 +1516,19 @@ CREATE TABLE IF NOT EXISTS cross_references (
   target_id VARCHAR( 255 )  NOT NULL DEFAULT '0',
   target_gid INT(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
-  
+
 );
 
 
 # --------------------------------------------------------
 
-# 
+#
 # Table structure for System Events
-# 
+#
 # type        : one of "PROJECT_CREATE", "PROJECT_DELETE", "USER_CREATE", etc.
 # parameters  : event parameters (group_id, etc.) depending on event type
 # priority    : event priority from 3 (high prio) to 1 (low prio)
-# status      : event status: 'NEW' = nothing done yet, 'RUNNING' = event is being processed, 
+# status      : event status: 'NEW' = nothing done yet, 'RUNNING' = event is being processed,
 #               'DONE', 'ERROR', 'WARNING' = event processed successfully, with error, or with a warning message respectively.
 # create_date : date when the event was created in the DB
 # process_date: date when event processing started
@@ -1536,7 +1536,7 @@ CREATE TABLE IF NOT EXISTS cross_references (
 # log         : log message after processing (useful for e.g. error messages or warnings).
 DROP TABLE IF EXISTS system_event;
 CREATE TABLE IF NOT EXISTS system_event (
-  id INT(11) unsigned NOT NULL AUTO_INCREMENT, 
+  id INT(11) unsigned NOT NULL AUTO_INCREMENT,
   type VARCHAR(255) NOT NULL default '',
   parameters TEXT,
   priority TINYINT(1) NOT NULL default '0',
@@ -1551,7 +1551,7 @@ CREATE TABLE IF NOT EXISTS system_event (
 );
 
 CREATE TABLE system_events_followers (
-  id INT(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  id INT(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
   emails TEXT NOT NULL ,
   types VARCHAR( 31 ) NOT NULL
 );
@@ -1587,11 +1587,11 @@ CREATE TABLE groups_notif_delegation_message (
 --
 -- Tables for id sharing
 --
-CREATE TABLE IF NOT EXISTS tracker_idsharing_artifact( 
-    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY 
+CREATE TABLE IF NOT EXISTS tracker_idsharing_artifact(
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
 );
-CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker( 
-    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY 
+CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker(
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS soap_call_counter (
@@ -1725,10 +1725,12 @@ CREATE TABLE dashboards_lines_columns (
 
 DROP TABLE IF EXISTS dashboards_lines_columns_widgets;
 CREATE TABLE dashboards_lines_columns_widgets (
-  column_id INT(11) UNSIGNED NOT NULL,
-  widget_id INT(11) UNSIGNED NOT NULL,
-  rank INT(11) NOT NULL,
-  PRIMARY KEY (column_id, widget_id)
+    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    column_id INT(11) UNSIGNED NOT NULL,
+    rank INT(11) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    content_id INT DEFAULT '0' NOT NULL,
+    INDEX col_idx(column_id)
 );
 #
 # EOF

@@ -81,9 +81,9 @@ class DashboardWidgetRetriever
     {
         foreach ($this->dao->searchAllWidgetByColumnId($widget_column->getId()) as $row) {
             $widget_column->addWidget(new DashboardWidget(
-                $row['widget_id'],
-                $row['column_id'],
-                $row['rank']
+                $row['id'],
+                $row['name'],
+                $row['content_id']
             ));
         }
     }
