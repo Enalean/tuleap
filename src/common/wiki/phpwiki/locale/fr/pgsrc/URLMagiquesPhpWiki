@@ -25,7 +25,7 @@ __phpwiki:__''nomdelapage''__?__''arguments''
 
 Le paramètre "action=''x''" doit presque toujours être donné. Il peut valoir
 __browse__, __info__, __diff__, __search__, __edit__,
-__zip__, __dumpserial__, __loadserial__,
+__zip__, __loadserial__,
 __remove__, __lock__, __unlock__,
 __login__, __logout__, __setprefs__ ou __save__.
 L'action par défaut est __browse__.

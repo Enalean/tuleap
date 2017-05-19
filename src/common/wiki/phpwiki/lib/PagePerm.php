@@ -173,8 +173,6 @@ function action2access ($action) {
         return 'view';
     case 'zip':
     case 'ziphtml':
-    case 'dumpserial':
-    case 'dumphtml':
         return 'dump';
     case 'revert':
     case 'edit':

@@ -82,16 +82,6 @@ computer.
 If your php has _zlib_ support, the files in the archive will be
 compressed, otherwise they will just be stored.
 
-!! Dump to directory
-
-Here you can dump pages of your Wiki into a directory of your choice.
-
-  <?plugin WikiForm action=dumpserial?>
-
-The most recent version of each page will written out to the
-directory, one page per file. Your server must have write permissions
-to the directory!
-
 -----------
 !!! Restoring
 
@@ -160,14 +150,12 @@ these three types of files, and handle them accordingly.
 
 !!! Dump pages as XHTML
 
-  <?plugin WikiForm action=dumphtml?>
-
 This will generate a directory of static pages suitable for
 distribution on disk where no web server is available. The various
 links for page editing functions and navigation are removed from the
 pages.
 
-  The XHTML file collection can also be downloaded as an
+  The XHTML file collection can be downloaded as an
   *[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]*.
 
 ----
