@@ -539,10 +539,10 @@ class TrackerXmlImport
         $att = $xml->attributes();
         $row = array(
             'id'                  => 0,
-            'name'                => $name,
-            'group_id'            => $project->getId(),
-            'description'         => $description,
-            'item_name'           => $itemname,
+            'name'                => (string)$name,
+            'group_id'            => (int)$project->getId(),
+            'description'         => (string)$description,
+            'item_name'           => (string)$itemname,
             'submit_instructions' => (string)$xml->submit_instructions,
             'browse_instructions' => (string)$xml->browse_instructions,
             'status'              => '',
