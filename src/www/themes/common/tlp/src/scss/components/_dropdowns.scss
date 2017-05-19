@@ -113,6 +113,11 @@ $tlp-dropdown-transition: 75ms ease-out;
     }
 }
 
+.tlp-dropdown-menu-separator {
+    margin: $tlp-half-spacing 0;
+    border-top: 1px solid $tlp-ui-border-light;
+}
+
 .tlp-dropdown-menu-item {
     padding: $tlp-spacing / 2 $tlp-spacing;
     font-size: 14px;
