@@ -21,7 +21,7 @@
 set -e
 
 if [ -z "$1" ]; then
-    (>&2 echo "Usage: $0 path_to_existing_ssh_keys_file")
+    (>&2 echo "Usage: $0 path_to_existing_authorized_keys_file")
     exit 1
 fi
 

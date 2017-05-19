@@ -60,7 +60,7 @@ class User_SSHKeyValidator {
         if ($written === strlen($key)) {
             $return = 1;
             $output = array();
-            exec('/usr/share/tuleap/src/utils/ssh-keys-validity-checker.sh ' . escapeshellarg($key_file), $output, $return);
+            exec('ssh-keygen -l -f ' . escapeshellarg($key_file) . ' > /dev/null 2>&1', $output, $return);
             if ($return === 0) {
                 return true;
             }
