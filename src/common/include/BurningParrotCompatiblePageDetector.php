@@ -81,10 +81,7 @@ class BurningParrotCompatiblePageDetector
             return false;
         }
 
-        $uri = $_SERVER['REQUEST_URI'];
-
-        return strpos($uri, '/my/') === 0 ||
-            strpos($uri, '/projects/') === 0;
+        return $this->isInPersonalDasboard() || $this->isInProjectDashboard();
     }
 
     public function isInHomepage()
@@ -101,5 +98,17 @@ class BurningParrotCompatiblePageDetector
     private function isInHelp()
     {
         return strpos($_SERVER['REQUEST_URI'], '/help/') === 0;
+    }
+
+    private function isInPersonalDasboard()
+    {
+        $is_managing_bookmarks = strpos($_SERVER['REQUEST_URI'], '/my/bookmark') === 0;
+
+        return ! $is_managing_bookmarks && strpos($_SERVER['REQUEST_URI'], '/my/') === 0;
+    }
+
+    private function isInProjectDashboard()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 }
