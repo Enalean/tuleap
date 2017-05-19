@@ -3,38 +3,42 @@
         <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}?dashboard_id={{ id }}">
             {{ name }}
             {{# is_active }}
-                <div class="tlp-dropdown dashboard-tabs-dropdown">
-                    <i class="fa fa-cog fa-fw" id="dashboard-tabs-dropdown-trigger"></i>
-                    <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
-                        <span class="tlp-dropdown-menu-item"
-                              id="edit-dashboard-button"
-                              data-target-modal-id="edit-dashboard-modal"
-                        >
-                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-edit"></i> {{ edit_dashboard_title }}
-                        </span>
-                        <span class="tlp-dropdown-menu-item"
-                              id="add-widget-button"
-                              data-href="{{ url_add_widget }}"
-                        >
-                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-th-large"></i> {{ add_widget_title }}
-                        </span>
-                        <span class="tlp-dropdown-menu-item tlp-text-danger"
-                              id="delete-dashboard-button"
-                              data-target-modal-id="delete-dashboard-modal"
-                        >
-                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_dashboard_title }}
-                        </span>
+                {{^ is_page_read_only }}
+                    <div class="tlp-dropdown dashboard-tabs-dropdown">
+                        <i class="fa fa-cog fa-fw" id="dashboard-tabs-dropdown-trigger"></i>
+                        <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
+                            <span class="tlp-dropdown-menu-item"
+                                  id="edit-dashboard-button"
+                                  data-target-modal-id="edit-dashboard-modal"
+                            >
+                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-edit"></i> {{ edit_dashboard_title }}
+                            </span>
+                            <span class="tlp-dropdown-menu-item"
+                                  id="add-widget-button"
+                                  data-href="{{ url_add_widget }}"
+                            >
+                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-th-large"></i> {{ add_widget_title }}
+                            </span>
+                            <span class="tlp-dropdown-menu-item tlp-text-danger"
+                                  id="delete-dashboard-button"
+                                  data-target-modal-id="delete-dashboard-modal"
+                            >
+                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_dashboard_title }}
+                            </span>
+                        </div>
                     </div>
-                </div>
+                {{/ is_page_read_only }}
             {{/ is_active }}
         </a>
     {{/ dashboards }}
-    <a href="javascript:;"
-       id="add-dashboard-button"
-       class="tlp-button-primary tlp-button-mini tlp-button-outline"
-       data-target-modal-id="add-dashboard"
-    >
-        <i class="fa fa-plus tlp-button-icon"></i>
-        {{ add_dashboard_label }}
-    </a>
+    {{^ is_page_read_only }}
+        <a href="javascript:;"
+           id="add-dashboard-button"
+           class="tlp-button-primary tlp-button-mini tlp-button-outline"
+           data-target-modal-id="add-dashboard"
+        >
+            <i class="fa fa-plus tlp-button-icon"></i>
+            {{ add_dashboard_label }}
+        </a>
+    {{/ is_page_read_only }}
 </nav>
