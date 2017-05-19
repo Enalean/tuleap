@@ -170,6 +170,10 @@ class PluginsAdministrationActions extends Actions {
 
     public function changePluginProperties()
     {
+        if (! ForgeConfig::get('sys_plugins_editable_configuration')) {
+            $GLOBALS['Response']->redirect('/plugins/pluginsadministration/');
+        }
+
         $request = HTTPRequest::instance();
         $plugin  = $this->_getPluginFromRequest();
         if (! $plugin) {

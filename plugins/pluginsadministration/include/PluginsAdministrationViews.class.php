@@ -187,22 +187,24 @@ class PluginsAdministrationViews extends Views {
         $hooks           = implode(', ', $the_hooks);
         $are_there_hooks = ! empty($hooks);
 
-        $descs                = $plugin_info->getPropertyDescriptors();
-        $keys                 = $descs->getKeys();
-        $iter                 = $keys->iterator();
-        $properties           = array();
-        while($iter->valid()) {
-            $key       = $iter->current();
-            $desc      = $descs->get($key);
-            $prop_name = $desc->getName();
+        $properties = array();
+        if (ForgeConfig::get('sys_plugins_editable_configuration')) {
+            $descs = $plugin_info->getPropertyDescriptors();
+            $keys  = $descs->getKeys();
+            $iter  = $keys->iterator();
+            while ($iter->valid()) {
+                $key       = $iter->current();
+                $desc      = $descs->get($key);
+                $prop_name = $desc->getName();
 
-            $properties[] = array(
-                'name'    => $prop_name,
-                'is_bool' => is_bool($desc->getValue()),
-                'value'   => $desc->getValue()
-            );
+                $properties[] = array(
+                    'name' => $prop_name,
+                    'is_bool' => is_bool($desc->getValue()),
+                    'value' => $desc->getValue()
+                );
 
-            $iter->next();
+                $iter->next();
+            }
         }
         $are_there_properties = ! empty($properties);
 

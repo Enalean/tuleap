@@ -232,6 +232,12 @@ $sys_custompluginspath = '/customplugins';
 // Comma separated paths where Tuleap can find plugins
 $sys_extra_plugin_path = '';
 
+// Enable the edition of the plugins configuration files from the web UI
+// / ! \ Enabling this feature expose your Tuleap instance to security
+// / ! \ issues. This parameter only exist to support legacy instances,
+// / ! \ it is really not recommended to enable it.
+$sys_plugins_editable_configuration = 1;
+
 // Themeing related paths
 $sys_themeroot = $codendi_dir . '/src/www/themes/';
 $sys_custom_themeroot = $sys_custom_dir . '/themes';
