@@ -51,6 +51,7 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
         $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
+        $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
     }
 
     public function getServiceShortname() {
@@ -126,6 +127,13 @@ class TrafficlightsPlugin extends Plugin {
     public function event_get_artifactlink_natures($params)
     {
         $params['natures'][] = new NatureCoveredByPresenter();
+    }
+
+    public function event_get_nature_presenter($params)
+    {
+        if ($params['shortname'] === NatureCoveredByPresenter::NATURE_COVERED_BY) {
+            $params['presenter'] = new NatureCoveredByPresenter();
+        }
     }
 
     public function tracker_event_complement_reference_information(array $params) {
