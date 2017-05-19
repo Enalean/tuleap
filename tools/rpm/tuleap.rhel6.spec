@@ -673,6 +673,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # Plugin hudson_git
 %{__install} plugins/hudson_git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_git
 
+# Plugin hudson_svn
+%{__install} plugins/hudson_svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_svn
+
 # Plugin im
 %{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
@@ -1152,6 +1155,8 @@ fi
 %files plugin-hudson-svn
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson_svn
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_svn
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_svn
 
 %files plugin-hudson-git
 %defattr(-,%{APP_USER},%{APP_USER},-)
