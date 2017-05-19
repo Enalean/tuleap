@@ -690,9 +690,14 @@ fi
 if [ $1 -eq 1 ]; then
     /usr/bin/systemctl enable \
         tuleap.service \
-        tuleap-svn-updater.service \
-        tuleap-svn-log-parser.service \
         tuleap-php-fpm.service &>/dev/null || :
+fi
+
+%post core-subversion
+if [ $1 -eq 1 ]; then
+    /usr/bin/systemctl enable \
+        tuleap-svn-updater.service \
+        tuleap-svn-log-parser.service &>/dev/null || :
 fi
 
 # In any cases fix the context
@@ -807,15 +812,29 @@ if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
     /usr/bin/systemctl disable \
         tuleap.service \
-        tuleap-svn-updater.service \
-        tuleap-svn-log-parser.service \
         tuleap-php-fpm &>/dev/null || :
+fi
+
+%preun core-subversion
+if [ $1 -eq 0 ]; then
+    /usr/bin/systemctl stop tuleap.service &>/dev/null || :
+    /usr/bin/systemctl disable \
+        tuleap-svn-updater.service \
+        tuleap-svn-log-parser.service &>/dev/null || :
 fi
 
 %postun
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 if [ $1 -eq 1 ]; then
     /usr/bin/systemctl restart tuleap.service &>/dev/null || :
+fi
+
+%postun core-subversion
+/usr/bin/systemctl daemon-reload &>/dev/null || :
+if [ $1 -eq 1 ]; then
+    /usr/bin/systemctl restart \
+        tuleap-svn-updater.service \
+        tuleap-svn-log-parser.service &>/dev/null || :
 fi
 
 %clean
@@ -942,6 +961,9 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
 #%attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
 
+%attr(00644,root,root) %{_unitdir}/tuleap.service
+%attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service
+
 #
 # Install
 #
@@ -959,10 +981,8 @@ fi
 %files core-subversion
 %defattr(-,root,root,-)
 %{perl_vendorlib}/Apache/Tuleap.pm
-%attr(00644,root,root) %{_unitdir}/tuleap.service
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-updater.service
 %attr(00644,root,root) %{_unitdir}/tuleap-svn-log-parser.service
-%attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service
 
 %files core-cvs
 %defattr(-,root,root,-)
