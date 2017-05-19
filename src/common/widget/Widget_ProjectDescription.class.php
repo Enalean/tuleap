@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -23,7 +24,7 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 /**
 * Widget_ProjectDescription
-* 
+*
 */
 class Widget_ProjectDescription extends Widget {
     public function __construct() {
@@ -38,22 +39,26 @@ class Widget_ProjectDescription extends Widget {
         $pm = ProjectManager::instance();
         $project = $pm->getProject($group_id);
         $hp =& Codendi_HTMLPurifier::instance();
-        
+
+        $html = '';
+
         if ($project->getStatus() == 'H') {
-            echo '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home','not_official_site',$GLOBALS['sys_name']) . '</p>';
+            $html .= '<p style="font-size:1.4em;">' . $GLOBALS['Language']->getText('include_project_home','not_official_site',$GLOBALS['sys_name']) . '</p>';
         }
-        
+
         if ($project->getDescription()) {
-            echo '<p style="font-size:1.4em;">' . $hp->purify($project->getDescription(), CODENDI_PURIFIER_LIGHT, $group_id) . "</p>";
+            $html .= '<p style="font-size:1.4em;">' . $hp->purify($project->getDescription(), CODENDI_PURIFIER_LIGHT, $group_id) . "</p>";
             $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home','more_info') . '...]';
         } else {
-            echo '<p>' . $GLOBALS['Language']->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id") . '</p>';
+            $html .= '<p>' . $GLOBALS['Language']->getText('include_project_home','no_short_desc',"/project/admin/editgroupinfo.php?group_id=$group_id") . '</p>';
             $details_prompt = '[' . $GLOBALS['Language']->getText('include_project_home','other_info') . '...]';
         }
-        
-        echo '<a href="/project/showdetails.php?group_id='.$group_id.'"> ' . $details_prompt . '</a>';
-        
+
+        $html .= '<a href="/project/showdetails.php?group_id='.$group_id.'"> ' . $details_prompt . '</a>';
+
+        return $html;
     }
+
     public function canBeUsedByProject(&$project) {
         return true;
     }

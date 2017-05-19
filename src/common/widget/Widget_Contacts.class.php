@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,14 +51,15 @@ class Widget_Contacts extends Widget {
         $template_factory = TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
-        echo '<a
+        $html = '<a
             href="#massmail-project-members"
             data-project-id="'. $group_id .'"
             class="massmail-project-member-link project_home_contact_admins"
             data-toggle="modal">
-                <i class="icon-envelope-alt"></i> '. $GLOBALS['Language']->getText('include_project_home', 'contact_admins') .'</a>';
-        echo $renderer->renderToString('massmail', $presenter);
+                <i class="icon-envelope-alt fa fa-envelope-o"></i> '. $GLOBALS['Language']->getText('include_project_home', 'contact_admins') .'</a>';
+        $html .= $renderer->renderToString('massmail', $presenter);
 
+        return $html;
     }
 
     function canBeUsedByProject(&$project) {
