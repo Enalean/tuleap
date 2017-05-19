@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -484,12 +484,13 @@ class UserManager {
             $password_expiration_checker->warnUserAboutPasswordExpiration($user);
             $this->warnUserAboutAuthenticationAttempts($user);
 
+            $this->getDao()->storeLoginSuccess($user->getId(), $_SERVER['REQUEST_TIME']);
+
             Tuleap\Instrument\Collect::increment('service.accounts.authentication.password.succeeded');
             return $this->setCurrentUser($user);
 
         } catch (User_InvalidPasswordWithUserException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            $accessInfo = $this->getUserAccessInfo($exception->getUser());
             $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME']);
 
         } catch (User_InvalidPasswordException $exception) {
