@@ -7,12 +7,13 @@
 .dashboard-user-title-name {
     margin: 0 0 0 $tlp-half-spacing;
     color: $tlp-theme-color;
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 300;
+    line-height: 26px;
 }
 
 .dashboard-user-title-login {
     display: block;
-    margin: 0;
-    font-size: 20px;
+    margin: 2px 0 0;
+    font-size: 16px;
 }
