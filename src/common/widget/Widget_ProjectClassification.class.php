@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -33,10 +34,16 @@ class Widget_ProjectClassification extends Widget {
     public function getContent() {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
+        $html = '';
         if ($GLOBALS['sys_use_trove'] != 0) {
-            trove_getcatlisting($group_id,0,1);
-        }       
+            ob_start();
+            trove_getcatlisting($group_id, 0, 1);
+            $html = ob_get_clean();
+        }
+
+        return $html;
     }
+
     public function canBeUsedByProject(&$project) {
         return true;
     }
