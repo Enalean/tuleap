@@ -34,7 +34,6 @@ class ProjectPagePresenter extends PagePresenter
      */
     public $dashboards;
     public $has_dashboard;
-    public $is_page_read_only;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
