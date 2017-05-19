@@ -35,6 +35,7 @@ use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -72,6 +73,10 @@ class ProjectDashboardController
      * @var WidgetMinimizor
      */
     private $widget_minimizor;
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -81,7 +86,8 @@ class ProjectDashboardController
         DashboardWidgetRetriever $widget_retriever,
         DashboardWidgetPresenterBuilder $widget_presenter_builder,
         WidgetDeletor $widget_deletor,
-        WidgetMinimizor $widget_minimizor
+        WidgetMinimizor $widget_minimizor,
+        IncludeAssets $include_assets
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -91,6 +97,7 @@ class ProjectDashboardController
         $this->widget_presenter_builder = $widget_presenter_builder;
         $this->widget_deletor           = $widget_deletor;
         $this->widget_minimizor         = $widget_minimizor;
+        $this->include_assets           = $include_assets;
     }
 
     /**
@@ -158,7 +165,7 @@ class ProjectDashboardController
             )
         );
 
-        $GLOBALS['Response']->includeFooterJavascriptFile('/assets/dashboard.min.js');
+        $GLOBALS['Response']->includeFooterJavascriptFile($this->include_assets->getFileUrl('dashboard.js'));
         $GLOBALS['Response']->footer(array());
     }
 
