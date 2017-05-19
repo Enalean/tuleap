@@ -46,7 +46,7 @@ require_once('common/date/DateHelper.class.php');
                 mkdir($GLOBALS['codendi_cache_dir'] .'/rss');
             }
             $rss = new SimplePie($this->rss_url, $GLOBALS['codendi_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
-            $content .= '<table width="100%">';
+            $content .= '<table class="tlp-table" width="100%">';
             $i = 0;
             foreach($rss->get_items(0, 10) as $item) {
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
