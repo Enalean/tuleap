@@ -46,6 +46,7 @@ class PagePresenter
     public $edit_dashboard_label;
     public $delete_dashboard_title;
     public $edit_dashboard_title;
+    public $add_widget_title;
 
     public function __construct(CSRFSynchronizerToken $csrf, $url)
     {
@@ -56,12 +57,13 @@ class PagePresenter
         $this->delete_dashboard_title          = _('Delete dashboard');
         $this->delete_dashboard_label          = _('Delete dashboard');
         $this->edit_dashboard_title            = _('Edit dashboard');
+        $this->add_widget_title                = _('Add widget');
         $this->edit_dashboard_label            = _('Edit dashboard');
         $this->dashboard_name_label            = _('Dashboard name');
         $this->no_dashboard_label              = _("You don't have any dashboards.");
-        $this->no_widget_label                 = _('There is no widgets here.');
+        $this->no_widget_label                 = _('There are no widgets here.');
         $this->purified_no_widget_action_label = Codendi_HTMLPurifier::instance()->purify(
-            _("Why do not start by editing your dashboard <br> and adding some widgets?"),
+            _("Why don't you start by editing your dashboard <br> and adding some widgets?"),
             CODENDI_PURIFIER_LIGHT
         );
 

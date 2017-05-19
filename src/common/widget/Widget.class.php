@@ -37,6 +37,11 @@
         $this->content_id = 0;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences, $owner_id, $owner_type) {
         $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type);
     }

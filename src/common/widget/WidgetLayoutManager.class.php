@@ -264,6 +264,19 @@ class WidgetLayoutManager {
         }
     }
 
+    public function displayAvailableWidgetsForNewDashboards($owner_id, $owner_type, $dashboard_id, CSRFSynchronizerToken $csrf_token)
+    {
+        $parameters = array(
+            'owner'        => $owner_type . $owner_id,
+            'action'       => 'widget',
+            'dashboard_id' => $dashboard_id
+        );
+
+        $used_widgets = array();
+
+        $this->displayAddWidgetForm($owner_id, $owner_type, $parameters, $csrf_token, $used_widgets);
+    }
+
     function updateLayout($owner_id, $owner_type, $layout, $custom_layout) {
         $sql = "SELECT l.*
             FROM layouts AS l INNER JOIN owner_layouts AS o ON(l.id = o.layout_id)

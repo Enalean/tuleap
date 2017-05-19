@@ -29,6 +29,13 @@ class UserDashboardPresenter extends DashboardPresenter
     public function __construct(UserDashboard $dashboard, $is_active, array $widgets)
     {
         parent::__construct($dashboard, $is_active, $widgets);
-        $this->user_id = $dashboard->getUserId();
+
+        $this->user_id        = $dashboard->getUserId();
+        $this->url_add_widget = '/widgets/widgets.php?'. http_build_query(
+            array(
+                'owner'        => "u{$this->user_id}",
+                'dashboard_id' => $this->id
+            )
+        );
     }
 }

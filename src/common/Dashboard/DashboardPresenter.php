@@ -20,7 +20,7 @@
 
 namespace Tuleap\Dashboard;
 
-class DashboardPresenter
+abstract class DashboardPresenter
 {
     public $name;
     public $id;
@@ -29,6 +29,8 @@ class DashboardPresenter
     public $delete_confirm;
     public $has_widget;
     public $widget_lines;
+
+    public $url_add_widget;
 
     public function __construct(Dashboard $dashboard, $is_active, array $widget_lines)
     {
