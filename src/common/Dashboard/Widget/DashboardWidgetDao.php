@@ -88,13 +88,15 @@ class DashboardWidgetDao extends DataAccessObject
 
     private function getFirstColumnIdOfDashboard($dashboard_id, $dashboard_type)
     {
-        $dashboard_id = $this->da->escapeInt($dashboard_id);
+        $id   = $this->da->escapeInt($dashboard_id);
+        $type = $this->da->quoteSmart($dashboard_type);
 
         $sql = "SELECT col.id
                 FROM dashboards_lines_columns AS col
                     INNER JOIN dashboards_lines AS line ON (
                         line.id = col.line_id
-                        AND line.dashboard_id = $dashboard_id
+                        AND line.dashboard_id = $id
+                        AND line.dashboard_type = $type
                     )
                 ORDER BY line.rank ASC, col.rank ASC
                 LIMIT 1";
