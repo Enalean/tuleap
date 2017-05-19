@@ -36,7 +36,7 @@ services:
 
   backend-web:
     container_name: ${BUILD_TAG}tuleap_runtests_backend-web
-    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.6
+    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.7
     environment:
       RUN_COMMAND: "php /usr/share/tuleap/tools/distlp/backend-web/run.php test"
       MYSQL_ROOT_PASSWORD: DumpPass4Tests
@@ -54,7 +54,7 @@ services:
 
   backend-svn:
     container_name: ${BUILD_TAG}tuleap_runtests_backend-svn
-    image: enalean/tuleap-dev:1.4
+    image: enalean/tuleap-dev:1.5
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap
