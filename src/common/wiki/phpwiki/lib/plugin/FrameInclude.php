@@ -106,14 +106,6 @@ extends WikiPlugin
                                         $src));
         }
 
-        static $noframes = false;
-        if ($noframes) {
-            // Content for noframes version of page.
-            return HTML::p(fmt("See %s",
-                               HTML::a(array('href' => $src), $src)));
-        }
-        $noframes = true;
-
         if (($which = $request->getArg('frame'))) {
             // Generate specialized frame output (header, footer, etc...)
             $request->discardOutput();
@@ -121,9 +113,12 @@ extends WikiPlugin
             $request->finish(); //noreturn
         }
 
+        $uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_LocalURI());
+        $sanitized_src = $uri_sanitizer->sanitizeForHTMLAttribute($src);
+
         // Generate the outer frameset
         $frame = HTML::frame(array('name' => $name,
-                                   'src' => $src,
+                                   'src' => $sanitized_src,
                                    'title' => $title,
                                    'frameborder' => (int)$frameborder,
                                    'scrolling' => (string)$scrolling,
