@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -324,14 +324,14 @@ class ProjectCreator {
 
         // make group entry
         $insert_data = array(
-            'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data->getFullName())) ."'",
+            'group_name'          => "'". db_es(htmlspecialchars($data->getFullName())) ."'",
             'access'              => "'".$access."'",
             'unix_group_name'     => "'". db_es($data->getUnixName()) ."'",
             'http_domain'         => "'". db_es($http_domain) ."'",
             'status'              => "'P'",
             'unix_box'            => "'shell1'",
             'cvs_box'             => "'cvs1'",
-            'short_description'   => "'". htmlspecialchars(mysql_real_escape_string($data->getShortDescription())) ."'",
+            'short_description'   => "'". db_es(htmlspecialchars($data->getShortDescription())) ."'",
             'register_time'       => time(),
             'rand_hash'           => "'". md5($random_num) ."'",
             'built_from_template' => db_ei($data->getTemplateId()),
