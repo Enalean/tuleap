@@ -33,22 +33,4 @@ class NewsBytesDao extends DataAccessObject {
                 WHERE forum_id = $forum_id";
         return $this->retrieve($sql);
     }
-
-    public function isThereNewsToDisplayInHomepage() {
-        $sql = "SELECT news_bytes.id
-                FROM news_bytes
-                    INNER JOIN groups ON (news_bytes.group_id = groups.group_id)
-                    LEFT JOIN forum ON (forum.group_forum_id = news_bytes.forum_id)
-                WHERE news_bytes.is_approved = 1
-                  AND groups.status = 'A'
-                GROUP BY news_bytes.forum_id";
-
-        $rows = $this->retrieve($sql);
-
-        if ($rows->count() > 0) {
-            return true;
-        }
-
-        return false;
-    }
 }

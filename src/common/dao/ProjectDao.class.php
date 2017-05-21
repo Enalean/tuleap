@@ -549,17 +549,6 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function countActiveProjects() {
-        $sql = "SELECT count(*) AS nb
-                FROM groups
-                WHERE status = 'A'
-                  AND group_id > 100";
-
-        $row = $this->retrieve($sql)->getRow();
-
-        return $row['nb'];
-    }
-
     public function setIsPrivate($project_id) {
         $access     = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
         $project_id = $this->da->escapeInt($project_id);

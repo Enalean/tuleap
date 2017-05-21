@@ -20,21 +20,12 @@ contact	title	Contactez-nous
 homepage	title	Bienvenue
 homepage	news_title	Dernières annonces
 homepage	news_title2	Dernières annonces - Format RSS
-homepage	discover_tuleap_awesomeness	Découvrez toute la <strong>puissance</strong> de Tuleap
-homepage	latest_news	Dernières actualités
-homepage	nb_project_label	Projet
-homepage	nb_user_label	Utilisateur
-homepage	nb_projects_label	Projets
-homepage	nb_users_label	Utilisateurs
-homepage	sign_in_title	Connexion
 homepage	username_placeholder	Nom d'utilisateur
 homepage	password_placeholder	Mot de passe
 homepage	sign_in_submit	Se connecter
 homepage	forgot_password	Oups, j'ai perdu mon mot de passe
-homepage	sign_in_or	ou
 homepage	not_a_member	Pas encore membre ?
 homepage	create_account	Créer un compte
-homepage	register	Créer un compte
 homepage	welcome_back	Bienvenue
 homepage	welcome_title	Bonjour,<br/> Bienvenue sur Tuleap !
 homepage	my_personal_page	Ma page personnelle

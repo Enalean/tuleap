@@ -23,7 +23,6 @@ require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'HeaderPresenter.class.php';
 require_once 'BodyPresenter.class.php';
 require_once 'ContainerPresenter.class.php';
-require_once 'HomepagePresenter.php';
 require_once 'CurrentProjectNavbarInfoPresenter.php';
 require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
@@ -380,53 +379,6 @@ class FlamingParrot_Theme extends Layout {
         }
 
         $this->endOfPage();
-    }
-
-    public function displayStandardHomepage($display_homepage_news, $display_homepage_login_form, $is_secure) {
-        $dao          = new Admin_Homepage_Dao();
-        $current_user = UserManager::instance()->getCurrentUser();
-
-        $project_dao = new UserDao();
-        $nb_users    = $project_dao->countActiveAndRestrictedUsers();
-
-        $project_dao = new ProjectDao();
-        $nb_projects = $project_dao->countActiveProjects();
-
-        $most_secure_url = '';
-        if (ForgeConfig::get('sys_https_host')) {
-            $most_secure_url = 'https://'. ForgeConfig::get('sys_https_host');
-        }
-
-        $login_presenter_builder = new User_LoginPresenterBuilder();
-        $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
-        $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure, $login_csrf);
-
-        $headline = $dao->getHeadlineByLanguage($current_user->getLocale());
-
-        $news_bytes_dao = new NewsBytesDao();
-        $news           = false;
-
-        if ($display_homepage_news && $news_bytes_dao->isThereNewsToDisplayInHomepage()) {
-            $news = news_show_latest($GLOBALS['sys_news_group'], 2, true, false, true, 0);
-        }
-
-        $awesomeness = file_get_contents($GLOBALS['Language']->getContent('homepage/awesomeness', null, null, '.html'));
-
-        $templates_dir = ForgeConfig::get('codendi_dir') .'/src/templates/homepage/';
-        $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
-        $presenter     = new FlamingParrot_HomepagePresenter(
-            $headline,
-            $nb_projects,
-            $nb_users,
-            $most_secure_url,
-            $login_presenter,
-            $display_homepage_news,
-            $display_homepage_login_form,
-            $news,
-            $current_user,
-            $awesomeness
-        );
-        $renderer->renderToPage('homepage', $presenter);
     }
 
     /**

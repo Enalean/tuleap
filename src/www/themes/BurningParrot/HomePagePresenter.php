@@ -36,7 +36,6 @@ class HomePagePresenter
     public $user_is_anonymous;
     public $welcome_back;
     public $most_secure_url;
-    public $sign_in_title;
     public $login;
     public $username_placeholder;
     public $password_placeholder;
