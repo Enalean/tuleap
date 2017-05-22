@@ -37,23 +37,11 @@ $nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
 }
 
 .nav-dropdown-content-projects-lists {
+    display: flex;
+    flex-direction: column;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: normal;
-}
-
-.nav-dropdown-content-projects-list {
-    display: flex;
-    flex-direction: column;
-}
-
-.nav-dropdown-content-projects-list-title {
-    padding: $nav-dropdown-content-projects-content-padding;
-    background-color: transparentize($tlp-theme-color, .9);
-    color: $tlp-theme-color;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
 }
 
 .nav-dropdown-content-projects-list-project {

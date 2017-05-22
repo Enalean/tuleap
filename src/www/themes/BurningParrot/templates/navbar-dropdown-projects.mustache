@@ -9,47 +9,20 @@
         </a>
     </div>
     <div class="nav-dropdown-content-projects-lists">
-        {{# has_projects_user_admins }}
-            <div class="nav-dropdown-content-projects-list-title">
-                {{ projects_user_admins_title }}
+        {{# projects }}
+            <div class="nav-dropdown-content-projects-list-project">
+                <a href="{{ project_uri }}" class="nav-dropdown-content-projects-list-project-name">
+                    {{# is_private }}
+                        <i class="fa fa-lock nav-dropdown-content-projects-list-project-name-access"></i>
+                    {{/ is_private }}
+                    {{^ is_private }}
+                        <i class="fa fa-unlock nav-dropdown-content-projects-list-project-name-access"></i>
+                    {{/ is_private }}
+                    {{ project_name }}
+                </a>
+                <a href="{{ project_config_uri }}" class="nav-dropdown-content-projects-list-project-config"><i class="fa fa-cog"></i></a>
             </div>
-            <div class="nav-dropdown-content-projects-list">
-                {{# projects_user_admins }}
-                    <div class="nav-dropdown-content-projects-list-project">
-                        <a href="{{ project_uri }}" class="nav-dropdown-content-projects-list-project-name">
-                            {{# is_private }}
-                                <i class="fa fa-lock nav-dropdown-content-projects-list-project-name-access"></i>
-                            {{/ is_private }}
-                            {{^ is_private }}
-                                <i class="fa fa-unlock nav-dropdown-content-projects-list-project-name-access"></i>
-                            {{/ is_private }}
-                            {{ project_name }}
-                        </a>
-                        <a href="{{ project_config_uri }}" class="nav-dropdown-content-projects-list-project-config"><i class="fa fa-cog"></i></a>
-                    </div>
-                {{/ projects_user_admins }}
-            </div>
-        {{/ has_projects_user_admins }}
-        {{# has_projects_user_belongs }}
-            <div class="nav-dropdown-content-projects-list-title">
-                {{ projects_user_belongs_title }}
-            </div>
-            <div class="nav-dropdown-content-projects-list">
-                {{# projects_user_belongs }}
-                    <div class="nav-dropdown-content-projects-list-project">
-                        <a href="{{ project_uri }}" class="nav-dropdown-content-projects-list-project-name">
-                            {{# is_private }}
-                                <i class="fa fa-lock nav-dropdown-content-projects-list-project-name-access"></i>
-                            {{/ is_private }}
-                            {{^ is_private }}
-                                <i class="fa fa-unlock nav-dropdown-content-projects-list-project-name-access"></i>
-                            {{/ is_private }}
-                            {{ project_name }}
-                        </a>
-                    </div>
-                {{/ projects_user_belongs }}
-            </div>
-        {{/ has_projects_user_belongs }}
+        {{/ projects }}
     </div>
     <div class="nav-dropdown-content-projects-new">
         <a href="/project/register.php" class="tlp-button-primary">

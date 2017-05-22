@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,40 +27,15 @@ class DropdownProjectsPresenter extends DropdownPresenter
     public $is_projects = true;
 
     /** @var ProjectPresenter[] */
-    public $projects_user_admins;
-
-    /** @var ProjectPresenter[] */
-    public $projects_user_belongs;
-
-    /** @var boolean */
-    public $has_projects_user_admins;
-
-    /** @var boolean */
-    public $has_projects_user_belongs;
+    public $projects;
 
     public function __construct(
         $id,
-        array $projects_user_admins,
-        array $projects_user_belongs,
-        $has_projects_user_admins,
-        $has_projects_user_belongs
+        array $projects
     ) {
         parent::__construct($id);
 
-        $this->projects_user_admins      = $projects_user_admins;
-        $this->projects_user_belongs     = $projects_user_belongs;
-        $this->has_projects_user_admins  = $has_projects_user_admins;
-        $this->has_projects_user_belongs = $has_projects_user_belongs;
-    }
-
-    public function projects_user_admins_title()
-    {
-        return $GLOBALS['Language']->getText('include_menu', 'projects_user_admin');
-    }
-
-    public function projects_user_belongs_title()
-    {
-        return $GLOBALS['Language']->getText('include_menu', 'projects_user_belong');
+        $this->projects = $projects;
     }
 
     public function browse_all()
