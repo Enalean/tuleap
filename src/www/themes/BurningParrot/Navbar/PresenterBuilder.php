@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,7 @@ use PFUser;
 use EventManager;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownItemsPresenterBuilder;
+use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenterBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\Project\ProjectPresenterBuilder;
 use URLRedirect;
@@ -80,9 +81,11 @@ class PresenterBuilder
         $navbar_dropdown_items_builder     = new DropdownItemsPresenterBuilder();
         $global_navbar_dropdown_menu_items = array();
 
-        $projects_builder                 = new ProjectPresenterBuilder();
-        $navbar_dropdown_projects_builder = new DropdownProjectsPresenterBuilder();
-        $projects                         = $navbar_dropdown_projects_builder->build($projects_builder->build($this->current_user));
+        $projects_builder = new ProjectPresenterBuilder();
+        $projects         = new DropdownProjectsPresenter(
+            'projects',
+            $projects_builder->build($this->current_user)
+        );
         if ($projects) {
             $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
