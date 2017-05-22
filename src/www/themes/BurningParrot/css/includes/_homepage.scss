@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 %homepage-section {
     flex: 1 1 50%;
 }
 
-$homepage-light-theme-color: transparentize($tlp-theme-color, .25);
 $homepage-white-color: #ffffff;
 $tlp-theme-homepage-background-color: #f6f6f6;
 
@@ -31,23 +31,25 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 
 .homepage-sign-in-section {
     @extend %homepage-section;
+
     display: flex;
     background: $tlp-theme-homepage-background-color;
 }
 
 .homepage-create-account-section {
     @extend %homepage-section;
+
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    background: $homepage-light-theme-color;
+    background: $tlp-theme-color;
     color: $homepage-white-color;
 }
 
 .homepage-welcome-wrapper {
     flex: 1 0 auto;
     width: 100%;
-    padding: 80px 60px 0;
+    padding: 80px 60px 40px;
 }
 
 .homepage-welcome-title {
@@ -83,7 +85,7 @@ $tlp-theme-homepage-background-color: #f6f6f6;
     flex-direction: column;
     width: 440px;
     margin: 0 auto;
-    padding: 50px 0 0;
+    padding: 50px 20px;
 }
 
 .homepage-logo-container {
@@ -105,6 +107,7 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 
 .homepage-sign-in {
     @extend %homepage-sign-in-grow;
+
     padding: 40px 70px;
     border-radius: 3px;
     background: $homepage-white-color;
@@ -117,22 +120,22 @@ $tlp-theme-homepage-background-color: #f6f6f6;
     }
 
     .tlp-input {
-        border-color: $homepage-light-theme-color;
+        border-color: $tlp-theme-color;
 
         &::placeholder {
-            color: lighten($homepage-light-theme-color, 20%);
+            color: lighten($tlp-theme-color, 20%);
         }
     }
 }
 
 .sign-in-avatar {
-    margin: 0 0 45px;
+    margin: 0 0 40px;
     text-align: center;
 }
 
 .sign-in-forgot-password {
     float: right;
-    color: $homepage-light-theme-color;
+    color: $tlp-theme-color;
 }
 
 .sign-in-forgot-password,
@@ -159,6 +162,7 @@ $tlp-theme-homepage-background-color: #f6f6f6;
 
 .homepage-already-signed-in {
     @extend %homepage-sign-in-grow;
+
     padding: 40px;
     border-radius: 3px;
     background: $homepage-white-color;
