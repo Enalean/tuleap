@@ -120,13 +120,19 @@ $tlp-dropdown-transition: 75ms ease-out;
 
 .tlp-dropdown-menu-item {
     padding: $tlp-spacing / 2 $tlp-spacing;
+    border: 0;
+    background: $tlp-ui-white;
+    color: $tlp-theme-color;
+    font-family: $tlp-font-family;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: normal;
+    line-height: 14px;
     text-align: left;
     text-decoration: none;
     text-transform: none;
     white-space: nowrap;
+    cursor: pointer;
 
     &:hover {
         background: $tlp-ui-border-light;

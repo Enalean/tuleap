@@ -59,6 +59,9 @@ class ProjectDashboardRouter
         $action = $request->get('action');
 
         switch ($action) {
+            case 'delete-widget':
+                $this->project_dashboard_controller->deleteWidget($request);
+                break;
             case 'reorder-widgets':
                 $this->widget_dashboard_controller->reorderWidgets($request, self::DASHBOARD_TYPE);
                 break;

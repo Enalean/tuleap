@@ -65,6 +65,10 @@ class UserDashboardController
      * @var DashboardWidgetPresenterBuilder
      */
     private $widget_presenter_builder;
+    /**
+     * @var WidgetDeletor
+     */
+    private $widget_deletor;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -74,7 +78,8 @@ class UserDashboardController
         UserDashboardDeletor $deletor,
         UserDashboardUpdator $updator,
         DashboardWidgetRetriever $widget_retriever,
-        DashboardWidgetPresenterBuilder $widget_presenter_builder
+        DashboardWidgetPresenterBuilder $widget_presenter_builder,
+        WidgetDeletor $widget_deletor
     ) {
         $this->csrf                     = $csrf;
         $this->title                    = $title;
@@ -84,6 +89,7 @@ class UserDashboardController
         $this->updator                  = $updator;
         $this->widget_retriever         = $widget_retriever;
         $this->widget_presenter_builder = $widget_presenter_builder;
+        $this->widget_deletor           = $widget_deletor;
     }
 
     /**
@@ -312,6 +318,36 @@ class UserDashboardController
                 dgettext(
                     'tuleap-core',
                     'Cannot update the requested dashboard.'
+                )
+            );
+        }
+
+        $this->redirectToDashboard($dashboard_id);
+    }
+
+    public function deleteWidget(HTTPRequest $request)
+    {
+        $this->csrf->check();
+
+        $current_user = $request->getCurrentUser();
+        $dashboard_id = $request->get('dashboard-id');
+        $widget_id    = $request->get('widget-id');
+
+        try {
+            $this->widget_deletor->delete($current_user, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext(
+                    'tuleap-core',
+                    'Widget has been successfully deleted.'
+                )
+            );
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'Cannot delete the widget.'
                 )
             );
         }

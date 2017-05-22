@@ -13,7 +13,11 @@
                                     <h1 class="tlp-pane-title">{{ title }}</h1>
                                     <div class="tlp-dropdown">
                                         <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>
-                                        <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right" role="menu">
+                                        <form class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right"
+                                              role="menu"
+                                              method="POST"
+                                              action="{{ url }}"
+                                        >
                                             {{# has_rss }}
                                                 <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
                                                     <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-rss"></i> {{ rss_label }}
@@ -24,10 +28,15 @@
                                                     <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
                                                 </a>
                                             {{/ is_editable }}
-                                            <a href="javascript:;" class="tlp-dropdown-menu-item">
+                                            <button type="submit" name="action" value="delete-widget" class="tlp-dropdown-menu-item">
                                                 <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
-                                            </a>
-                                        </div>
+                                            </button>
+                                            <input type="hidden" name="dashboard-id" value="{{ id }}">
+                                            <input type="hidden" name="widget-id" value="{{ widget_id }}">
+                                            {{# csrf_token }}
+                                                {{> csrf_token_input }}
+                                            {{/csrf_token}}
+                                        </form>
                                     </div>
                                 </div>
                                 <section class="tlp-pane-section">
