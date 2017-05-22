@@ -109,15 +109,6 @@ Here you can upload ZIP archives, or individual files from your
 
   <?plugin WikiForm action=upload?>
 
-!! Load File
-
-Here you can load ZIP archives, individual files or entire
-directories. The file or directory must be local to the http
-server. You can also use this form to load from an http: or ftp: URL.
-
-  <?plugin WikiForm action=loadfile?>
-  <?plugin WikiForm action=loadfile buttontext="Load & Overwrite" overwrite=1?>
-
 !! Upgrade
 
 Do some verification checks and upgrade changes automatically, after having installed a 

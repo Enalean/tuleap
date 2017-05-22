@@ -152,3 +152,5 @@ wiki_views_wkserviews	doc_delete	Détruire ?
 wiki_attachment_upload	err_not_exist	Ce fichier joint n'existe pas. Veuillez vérifier l'adresse.
 
 wiki_service	search_wiki_type	Wiki pages
+
+wiki_action_denied	import_page	Seul le bac à sable peut être restauré
