@@ -58,7 +58,7 @@ class SVNBrowsingTest extends AbstractTestCase
 
         $this->wd->findElement(WebDriverBy::linkText('sample'))->click();
 
-        $this->waitForId('svn-repository');
+        $this->waitForClass('tuleap-viewvc-body');
 
         $this->assertViewVcLink('branches');
         $this->assertViewVcLink('tags');
