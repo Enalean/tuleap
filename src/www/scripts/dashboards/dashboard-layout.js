@@ -39,7 +39,8 @@ function dragulaInit() {
     cancelDropOnEscape(drake);
 
     drake.on('drop', function(el, target) {
-        reorderWidget(el, target);
+        updateParent(el, target);
+        reorderWidget(el, el.parentNode);
     });
 }
 
@@ -52,34 +53,58 @@ function cancelDropOnEscape(drake) {
     };
 }
 
-function reorderWidget(widget, target) {
-    var csrf_token    = widget.querySelector('input[name=challenge]').value;
-    var dashboard_id  = document.querySelector('.dashboard-widgets-container').dataset.dashboardId;
-    var widget_id     = widget.dataset.widgetId;
-    var new_column_id = target.dataset.columnId;
-    var new_rank      = 0;
+function updateParent(widget, target) {
+    if (target && ! target.classList.contains('dashboard-widgets-column')) {
+        var column = document.createElement('div');
+        column.classList.add('dashboard-widgets-column', 'dragula-container');
 
-    if (! dashboard_id || ! widget_id || ! new_column_id) {
+        target.insertBefore(column, widget);
+        column.appendChild(widget);
+
+        if (column.parentNode && ! column.parentNode.classList.contains('dashboard-widgets-row')) {
+            var line = document.createElement('div');
+            line.classList.add('dashboard-widgets-row', 'dragula-container', 'tlp-framed-horizontally');
+
+            column.parentNode.insertBefore(line, column);
+            line.appendChild(column);
+        }
+    }
+}
+
+function reorderWidget(widget, column) {
+    var line            = column.parentNode;
+    var csrf_token      = widget.querySelector('input[name=challenge]').value;
+    var dashboard_id    = document.querySelector('.dashboard-widgets-container').dataset.dashboardId;
+    var widget_id       = widget.dataset.widgetId;
+    var new_column_id   = column.dataset.columnId;
+    var new_line_id     = line.dataset.lineId;
+    var new_widget_rank = getRankOfElement(widget);
+    var new_column_rank = getRankOfElement(column);
+    var new_line_rank   = getRankOfElement(line);
+
+    if (! dashboard_id || ! widget_id) {
         return;
     }
-
-    var elements = target.querySelectorAll('.dashboard-widget');
-    [].forEach.call(elements, function (widget, index) {
-        if (widget.dataset.widgetId === widget_id) {
-            new_rank = index;
-        }
-    });
 
     $.ajax({
         url : window.location.href,
         type: 'POST',
         data: {
-            'challenge'    : csrf_token,
-            'action'       : 'reorder-widgets',
-            'dashboard-id' : dashboard_id,
-            'new-column-id': new_column_id,
-            'widget-id'    : widget_id,
-            'new-rank'     : new_rank
+            'challenge'      : csrf_token,
+            'action'         : 'reorder-widgets',
+            'dashboard-id'   : dashboard_id,
+            'new-line-id'    : new_line_id,
+            'new-column-id'  : new_column_id,
+            'widget-id'      : widget_id,
+            'new-widget-rank': new_widget_rank,
+            'new-column-rank': new_column_rank,
+            'new-line-rank'  : new_line_rank
         }
     });
+}
+
+function getRankOfElement(element) {
+    var parent   = element.parentElement;
+    var children = parent.children;
+    return [].indexOf.call(children, element);
 }

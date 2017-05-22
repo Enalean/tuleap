@@ -46,7 +46,7 @@ class DashboardWidget
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getId()
     {
@@ -62,7 +62,7 @@ class DashboardWidget
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getContentId()
     {
@@ -70,7 +70,7 @@ class DashboardWidget
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getColumnId()
     {
@@ -78,7 +78,7 @@ class DashboardWidget
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getRank()
     {

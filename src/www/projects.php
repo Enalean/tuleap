@@ -27,9 +27,11 @@ use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\WidgetDeletor;
 use Tuleap\Dashboard\Project\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDeletor;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 require_once('pre.php');
@@ -66,8 +68,9 @@ if ($project && !$project->isError()) {
         Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
         if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
             $csrf_token                   = new CSRFSynchronizerToken('/project/');
-            $project_dashboard_widget_dao = new DashboardWidgetDao();
-            $project_dashboard_dao        = new ProjectDashboardDao($project_dashboard_widget_dao);
+            $dashboard_widget_dao         = new DashboardWidgetDao();
+            $dashboard_widget_retriever   = new DashboardWidgetRetriever($dashboard_widget_dao);
+            $project_dashboard_dao        = new ProjectDashboardDao($dashboard_widget_dao);
             $router                       = new ProjectDashboardRouter(
                 new ProjectDashboardController(
                     $csrf_token,
@@ -78,16 +81,19 @@ if ($project && !$project->isError()) {
                         new DashboardWidgetDao()
                     ),
                     new DashboardWidgetPresenterBuilder(),
-                    new WidgetDeletor($project_dashboard_widget_dao),
-                    new WidgetMinimizor($project_dashboard_widget_dao)
+                    new WidgetDeletor($dashboard_widget_dao),
+                    new WidgetMinimizor($dashboard_widget_dao)
                 ),
                 new WidgetDashboardController(
                     $csrf_token,
-                    new DashboardWidgetRetriever(
-                        $project_dashboard_widget_dao
+                    new WidgetCreator(
+                        $dashboard_widget_dao
                     ),
+                    $dashboard_widget_retriever,
                     new DashboardWidgetReorder(
-                        $project_dashboard_widget_dao
+                        $dashboard_widget_dao,
+                        $dashboard_widget_retriever,
+                        new DashboardWidgetDeletor($dashboard_widget_dao)
                     )
                 )
             );

@@ -241,7 +241,25 @@ class DashboardWidgetDao extends DataAccessObject
         return $row['nb'];
     }
 
-    private function reorderColumns($line_id)
+    public function reorderLines($line_id)
+    {
+        $line_id = $this->da->escapeInt($line_id);
+
+        $this->update("SET @counter = 0");
+
+        $sql = "UPDATE dashboards_lines
+                INNER JOIN (
+                    SELECT @counter := @counter + 1 AS new_rank, dashboards_lines.*
+                    FROM dashboards_lines
+                    WHERE id = $line_id
+                    ORDER BY rank, id
+                ) as R1 USING(id)
+                SET dashboards_lines.rank = R1.new_rank";
+
+        $this->update($sql);
+    }
+
+    public function reorderColumns($line_id)
     {
         $line_id = $this->da->escapeInt($line_id);
 
@@ -277,7 +295,7 @@ class DashboardWidgetDao extends DataAccessObject
         $this->update($sql);
     }
 
-    private function removeLine($line_id)
+    public function removeLine($line_id)
     {
         $line_id = $this->da->escapeInt($line_id);
 
@@ -286,7 +304,7 @@ class DashboardWidgetDao extends DataAccessObject
         $this->update($sql);
     }
 
-    private function removeColumn($column_id)
+    public function removeColumn($column_id)
     {
         $column_id = $this->da->escapeInt($column_id);
 
@@ -416,6 +434,28 @@ class DashboardWidgetDao extends DataAccessObject
         return $this->updateAndGetLastId($sql);
     }
 
+    public function createLine($dashboard_id, $dashboard_type, $new_line_rank)
+    {
+        $dashboard_id   = $this->da->escapeInt($dashboard_id);
+        $dashboard_type = $this->da->quoteSmart($dashboard_type);
+        $new_line_rank  = $this->da->escapeInt($new_line_rank);
+
+        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, rank)
+                VALUES ($dashboard_id, $dashboard_type, 'one-column', $new_line_rank)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function createColumn($line_id, $new_column_rank)
+    {
+        $line_id         = $this->da->escapeInt($line_id);
+        $new_column_rank = $this->da->escapeInt($new_column_rank);
+
+        $sql = "INSERT INTO dashboards_lines_columns (line_id, rank) VALUES ($line_id, $new_column_rank)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
     private function insertWidgetInColumn($name, $content_id, $column_id)
     {
         $column_id  = $this->da->escapeInt($column_id);
@@ -492,6 +532,56 @@ class DashboardWidgetDao extends DataAccessObject
         $sql = "UPDATE dashboards_lines_columns_widgets
                 SET rank=$rank
                 WHERE id=$widget_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function updateWidgetRankByLineId($line_id, $rank)
+    {
+        $line_id = $this->da->escapeInt($line_id);
+        $rank    = $this->da->escapeInt($rank);
+
+        $sql = "UPDATE dashboards_lines
+                SET rank=$rank
+                WHERE id=$line_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function updateWidgetRankByColumnId($column_id, $rank)
+    {
+        $column_id = $this->da->escapeInt($column_id);
+        $rank      = $this->da->escapeInt($rank);
+
+        $sql = "UPDATE dashboards_lines_columns
+                SET rank=$rank
+                WHERE id=$column_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchLineColumnsByColumnId($column_id)
+    {
+        $column_id = $this->da->escapeInt($column_id);
+
+        $sql = "SELECT lines_columns.*
+                FROM dashboards_lines_columns AS lines_columns
+                INNER JOIN dashboards_lines_columns AS lines_columns_bis
+                ON lines_columns_bis.line_id=lines_columns.line_id
+                WHERE lines_columns.id=$column_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchColumnsByColumnId($column_id)
+    {
+        $column_id = $this->da->escapeInt($column_id);
+
+        $sql = "SELECT lines_columns.*
+                FROM dashboards_lines_columns AS lines_columns
+                INNER JOIN dashboards_lines_columns_widgets AS lines_columns_widgets
+                ON lines_columns_widgets.column_id=lines_columns.id
+                WHERE lines_columns.id=$column_id";
 
         return $this->retrieve($sql);
     }

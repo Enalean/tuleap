@@ -58,7 +58,7 @@ class DashboardWidgetLine
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getId()
     {
@@ -66,7 +66,7 @@ class DashboardWidgetLine
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getLayout()
     {

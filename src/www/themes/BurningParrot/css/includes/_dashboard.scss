@@ -27,6 +27,10 @@
     }
 }
 
+.dashboard-tabs {
+    margin: 0;
+}
+
 .dashboard-tabs-dropdown {
     margin: 0 0 0 $tlp-half-spacing;
 }
@@ -40,6 +44,10 @@
         color: $tlp-theme-color;
         opacity: 1;
     }
+}
+
+.dashboard-widgets-container {
+    padding: $tlp-spacing 0;
 }
 
 .dashboard-widgets-row {
@@ -74,6 +82,7 @@
 
 .dashboard-widget {
     flex: 1 1 auto;
+    cursor: move;
 }
 
 .dashboard-widget-minimized {
