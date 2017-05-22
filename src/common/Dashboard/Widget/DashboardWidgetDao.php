@@ -261,6 +261,48 @@ class DashboardWidgetDao extends DataAccessObject
         $this->update($sql);
     }
 
+    public function deleteAllWidgetsInProjectDashboardInsideTransaction($project_id, $dashboard_id)
+    {
+        $this->deleteAllWidgetsInDashboard($project_id, $dashboard_id, 'project');
+    }
+
+    public function deleteAllWidgetsInUserDashboardInsideTransaction($user_id, $dashboard_id)
+    {
+        $this->deleteAllWidgetsInDashboard($user_id, $dashboard_id, 'user');
+    }
+
+    private function deleteAllWidgetsInDashboard($owner_id, $dashboard_id, $dashboard_type)
+    {
+        $this->checkThatDashboardBelongsToTheOwner($owner_id, $dashboard_type, $dashboard_id);
+
+        $dashboard_id   = $this->da->quoteSmart($dashboard_id);
+        $dashboard_type = $this->da->quoteSmart($dashboard_type);
+
+        $sql = "SELECT widget.id, name, content_id
+                FROM dashboards_lines_columns_widgets AS widget
+                    INNER JOIN dashboards_lines_columns AS col ON (
+                        widget.column_id = col.id
+                    )
+                    INNER JOIN dashboards_lines AS line ON (
+                        col.line_id = line.id
+                        AND line.dashboard_id = $dashboard_id
+                        AND line.dashboard_type = $dashboard_type
+                    )
+                ";
+        foreach ($this->retrieve($sql) as $widget) {
+            $this->removeWidget($widget['id'], $widget['name'], $widget['content_id']);
+        }
+
+        $sql = "DELETE col.*, line.*
+                FROM dashboards_lines_columns AS col
+                    INNER JOIN dashboards_lines AS line ON (
+                        col.line_id = line.id
+                        AND line.dashboard_id = $dashboard_id
+                        AND line.dashboard_type = $dashboard_type
+                    )";
+        $this->update($sql);
+    }
+
     private function removeWidget($widget_id, $name, $content_id)
     {
         $widget_id = $this->da->escapeInt($widget_id);

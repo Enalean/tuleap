@@ -53,8 +53,8 @@ $title = $Language->getText(
         )
 );
 $csrf_token                = new CSRFSynchronizerToken('/my/');
-$user_dashboard_dao        = new UserDashboardDao();
 $user_dashboard_widget_dao = new DashboardWidgetDao();
+$user_dashboard_dao        = new UserDashboardDao($user_dashboard_widget_dao);
 $router                    = new UserDashboardRouter(
     new UserDashboardController(
         $csrf_token,

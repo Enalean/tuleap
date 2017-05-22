@@ -65,8 +65,8 @@ if ($project && !$project->isError()) {
         Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
         if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
             $csrf_token                   = new CSRFSynchronizerToken('/project/');
-            $project_dashboard_dao        = new ProjectDashboardDao();
             $project_dashboard_widget_dao = new DashboardWidgetDao();
+            $project_dashboard_dao        = new ProjectDashboardDao($project_dashboard_widget_dao);
             $router                       = new ProjectDashboardRouter(
                 new ProjectDashboardController(
                     $csrf_token,
