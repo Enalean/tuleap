@@ -760,14 +760,6 @@ class UserDao extends DataAccessObject {
         return $row['nb'];
     }
 
-    public function countActiveAndRestrictedUsers() {
-        $sql = "SELECT count(*) AS nb FROM user WHERE status IN ('A', 'R')";
-
-        $row = $this->retrieve($sql)->getRow();
-
-        return $row['nb'];
-    }
-
     public function removeConfirmHash($confirm_hash) {
         $confirm_hash = $this->da->quoteSmart($confirm_hash);
         $sql = "UPDATE user SET confirm_hash = null WHERE confirm_hash=$confirm_hash";
