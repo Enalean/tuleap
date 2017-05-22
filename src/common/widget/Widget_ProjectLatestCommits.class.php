@@ -37,7 +37,7 @@ class Widget_ProjectLatestCommits extends Widget {
     }
     /* protected */ function _getLinkToCommit($data) { }
     /* protected */ function _getLinkToMore() { }
-    
+
     function getLatestRevisions() {
         if (! $this->latest_revisions) {
             $pm = ProjectManager::instance();
@@ -54,8 +54,14 @@ class Widget_ProjectLatestCommits extends Widget {
         $html = '';
         $i = 1;
         $UH = UserHelper::instance();
-        $hp = Codendi_HTMLPurifier::instance(); 
-        while($data = db_fetch_array($this->getLatestRevisions())) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $latest_revisions = $this->getLatestRevisions();
+        if (! $latest_revisions) {
+            return $html;
+        }
+
+        while($data = db_fetch_array($latest_revisions)) {
             $html .= '<div class="'. util_get_alt_row_color($i++) .'" style="border-bottom:1px solid #ddd">';
             $html .= '<div style="font-size:0.98em;">';
             $html .= '<a href="'. $this->_getLinkToCommit($data) .'">#'.$data['revision'].'</a>';
@@ -88,7 +94,7 @@ class Widget_ProjectLatestCommits extends Widget {
     function hasRss() {
         return false;
     }
-    
+
     function getCategory() {
         return 'scm';
     }
