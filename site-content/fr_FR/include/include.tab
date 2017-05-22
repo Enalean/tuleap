@@ -182,6 +182,7 @@ include_menu	browse_projects	Afficher l'ensemble des projets
 include_menu	browse_all	Voir tous les projets
 include_menu	filter_projects	Filtrer ...
 include_menu	add_project	Nouveau projet
+include_menu	join_community	Rejoindre la communauté Tuleap
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php

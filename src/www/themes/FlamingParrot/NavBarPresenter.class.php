@@ -59,6 +59,7 @@ class FlamingParrot_NavBarPresenter {
      * @var CSRFSynchronizerToken
      */
     public $logout_csrf;
+
     /**
      * @var URLRedirect
      */
@@ -73,6 +74,11 @@ class FlamingParrot_NavBarPresenter {
      * @var string
      */
     public $my_account_label;
+
+    /**
+     * @var string
+     */
+    public $join_community_title;
 
     public function __construct(
         $imgroot,
@@ -107,8 +113,9 @@ class FlamingParrot_NavBarPresenter {
         $this->logout_csrf                 = $logout_csrf;
         $this->url_redirect                = $url_redirect;
 
-        $this->logout_label     = $GLOBALS['Language']->getText('include_menu', 'logout');
-        $this->my_account_label = $GLOBALS['Language']->getText('my_index','account_maintenance');
+        $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
+        $this->my_account_label     = $GLOBALS['Language']->getText('my_index','account_maintenance');
+        $this->join_community_title = $GLOBALS['Language']->getText('include_menu', 'join_community');
     }
 
     public function imgroot() {

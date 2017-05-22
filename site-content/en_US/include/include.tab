@@ -188,6 +188,7 @@ include_menu	browse_projects	Browse all projects
 include_menu	browse_all	Browse all
 include_menu	filter_projects	Filter...
 include_menu	add_project	New project
+include_menu	join_community	Join Tuleap Community
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php

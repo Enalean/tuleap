@@ -72,7 +72,8 @@ class PresenterBuilder
             new BurningParrotCompatiblePageDetector(
                 new Admin_Homepage_Dao()
             ),
-            $this->current_user
+            $this->current_user,
+            new JoinCommunityPresenter()
         );
     }
 
