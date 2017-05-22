@@ -383,6 +383,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $capacity,
         $is_burndown_under_calculation
     ) {
+        if (! $start_date) {
+            $start_date = $_SERVER['REQUEST_TIME'];
+        }
+
         $start = new  DateTime();
         $start->setTimestamp($start_date);
         $start->setTime(0, 0, 0);
@@ -403,6 +407,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function isBurndownCompleteBasedOnServerTimezone(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration, $capacity)
     {
+        if (! $start_date) {
+            $start_date = $_SERVER['REQUEST_TIME'];
+        }
+
         $start = new  DateTime();
         $start->setTimestamp($start_date);
         $start->setTime(0, 0, 0);
