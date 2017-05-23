@@ -85,6 +85,9 @@ msgstr "Supprimer"
 msgid "Delete dashboard"
 msgstr "Supprimer le tableau de bord"
 
+msgid "Delete widget"
+msgstr "Supprimer le widget"
+
 msgid "Documents"
 msgstr "Documents"
 
@@ -237,10 +240,18 @@ msgstr "Wiki"
 #, php-format
 msgid ""
 "You are about to delete the dashboard \"%s\".\n"
-"                This action is irreversible. Do you confirm this deletion?"
+"                This action is irreversible. Please confirm this deletion."
 msgstr ""
 "Vous êtes sur le point de supprimer le tableau de bord \"%s\". Cette action "
-"est irréversible. Confirmez-vous cette suppression ?"
+"est irréversible. Merci de confirmez cette suppression."
+
+#, php-format
+msgid ""
+"You are about to delete the widget \"%s\".\n"
+"                This action is irreversible. Please confirm this deletion."
+msgstr ""
+"Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
+"irréversible. Merci de confirmer cette suppression."
 
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."

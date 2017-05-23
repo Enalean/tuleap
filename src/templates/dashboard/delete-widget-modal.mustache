@@ -1,0 +1,35 @@
+<form method="POST"
+      action="{{ url }}?action=delete-widget"
+      id="delete-widget-modal-{{ widget_id }}"
+      class="tlp-modal tlp-modal-danger"
+      aria-labelledby="delete-widget-modal-label-{{ widget_id }}"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="delete-widget-modal-label-{{ widget_id }}">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{ delete_widget_label }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close }}">
+            ×
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <input type="hidden" name="dashboard-id" value="{{ id }}">
+        <input type="hidden" name="widget-id" value="{{ widget_id }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <p>{{ delete_widget_confirm }}</p>
+
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{ cancel }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_widget_label }}
+        </button>
+    </div>
+</form>

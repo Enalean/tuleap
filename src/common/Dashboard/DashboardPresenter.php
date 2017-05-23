@@ -44,7 +44,7 @@ abstract class DashboardPresenter
         $this->delete_confirm = sprintf(
             _(
                 'You are about to delete the dashboard "%s".
-                This action is irreversible. Do you confirm this deletion?'
+                This action is irreversible. Please confirm this deletion.'
             ),
             $this->name
         );

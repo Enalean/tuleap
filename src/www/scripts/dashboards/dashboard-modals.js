@@ -20,14 +20,15 @@
 export default init;
 
 function init() {
-    var buttons = [
-        document.getElementById('add-dashboard-button'),
-        document.getElementById('delete-dashboard-button'),
-        document.getElementById('edit-dashboard-button'),
-        document.getElementById('no-widgets-edit-dashboard-button')
-    ];
+    var buttons = document.querySelectorAll(
+        '#add-dashboard-button, ' +
+        '#delete-dashboard-button, ' +
+        '#edit-dashboard-button, ' +
+        '#no-widgets-edit-dashboard-button, ' +
+        '.delete-widget-button'
+    );
 
-    buttons.forEach(function (button) {
+    [].forEach.call(buttons, function (button) {
         if (! button) {
             return;
         }

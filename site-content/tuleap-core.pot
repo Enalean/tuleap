@@ -68,6 +68,9 @@ msgstr ""
 msgid "Delete dashboard"
 msgstr ""
 
+msgid "Delete widget"
+msgstr ""
+
 msgid "Documents"
 msgstr ""
 
@@ -216,7 +219,13 @@ msgstr ""
 #, php-format
 msgid ""
 "You are about to delete the dashboard \"%s\".\n"
-"                This action is irreversible. Do you confirm this deletion?"
+"                This action is irreversible. Please confirm this deletion."
+msgstr ""
+
+#, php-format
+msgid ""
+"You are about to delete the widget \"%s\".\n"
+"                This action is irreversible. Please confirm this deletion."
 msgstr ""
 
 msgid "You don't have any dashboards."
