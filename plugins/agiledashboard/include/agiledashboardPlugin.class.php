@@ -127,7 +127,11 @@ class AgileDashboardPlugin extends Plugin {
 
     public function collect_errors_without_importing_xml_project($params)
     {
-        if (count($params['xml_content']->agiledashboard->plannings->planning) > 1) {
+        $is_mono_milestone_enabled = $this->getMonoMilestoneChecker()->isMonoMilestoneEnabled(
+            $params['project']->getId()
+        );
+
+        if ($is_mono_milestone_enabled && count($params['xml_content']->agiledashboard->plannings->planning) > 1) {
             $params['errors'] = $GLOBALS['Language']->getText(
                 'plugin_agiledashboard',
                 'cannot_import_planning_in_scrum_v2'
