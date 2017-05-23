@@ -30,6 +30,8 @@ class DashboardWidgetPresenter
     public $is_editable;
     public $has_rss;
     public $rss_url;
+    public $delete_widget_label;
+    public $delete_widget_confirm;
 
     public function __construct(DashboardWidget $dashboard_widget, Widget $widget)
     {
@@ -39,5 +41,14 @@ class DashboardWidgetPresenter
         $this->is_editable = strlen($widget->getPreferences()) !== 0;
         $this->has_rss     = $widget->hasRss();
         $this->rss_url     = $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+
+        $this->delete_widget_label   = _('Delete widget');
+        $this->delete_widget_confirm = sprintf(
+            _(
+                'You are about to delete the widget "%s".
+                This action is irreversible. Please confirm this deletion.'
+            ),
+            $this->title
+        );
     }
 }
