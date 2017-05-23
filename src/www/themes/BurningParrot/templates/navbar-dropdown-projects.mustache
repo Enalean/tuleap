@@ -20,7 +20,9 @@
                     {{/ is_private }}
                     {{ project_name }}
                 </a>
-                <a href="{{ project_config_uri }}" class="nav-dropdown-content-projects-list-project-config"><i class="fa fa-cog"></i></a>
+                {{# user_administers }}
+                    <a href="{{ project_config_uri }}" class="nav-dropdown-content-projects-list-project-config"><i class="fa fa-cog"></i></a>
+                {{/ user_administers }}
             </div>
         {{/ projects }}
     </div>
