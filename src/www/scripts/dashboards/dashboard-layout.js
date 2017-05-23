@@ -31,8 +31,8 @@ function dragulaInit() {
         isContainer: function (el) {
             return el.classList.contains('dragula-container');
         },
-        moves: function (el) {
-            return el.dataset.noDrag !== 'true';
+        moves: function (el, source, handle, sibling) {
+            return handle.dataset.draggable === 'true';
         }
     });
 
