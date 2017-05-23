@@ -63,8 +63,10 @@
 
 .dashboard-widgets-column {
     display: flex;
-    flex: 1;
+    flex-basis: calc(100% / 3);
     flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
     padding: 0 $tlp-spacing / 2;
 
     &:first-of-type {
@@ -82,6 +84,7 @@
 
 .dashboard-widget {
     flex: 1 1 auto;
+    width: 100%;
     cursor: move;
 }
 
@@ -91,21 +94,29 @@
 
 .two-columns-small-big {
     > :first-child {
-        flex: 1 1;
+        flex-basis: calc(100% / 3);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     > :nth-child(2) {
-        flex: 2 1;
+        flex-basis: calc(100% / 3 * 2);
+        flex-grow: 2;
+        flex-shrink: 1;
     }
 }
 
 .two-columns-big-small {
     > :first-child {
-        flex: 2 1;
+        flex-basis: calc(100% / 3 * 2);
+        flex-grow: 2;
+        flex-shrink: 1;
     }
 
     > :nth-child(2) {
-        flex: 1 1;
+        flex-basis: calc(100% / 3);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 }
 
