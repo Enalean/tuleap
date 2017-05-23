@@ -68,6 +68,11 @@ if ($owner) {
 
         $use_new_dashboards = $request->get('dashboard_id') && ForgeConfig::get('sys_use_tlp_in_dashboards');
         if ($use_new_dashboards) {
+            $redirect .= '?'. http_build_query(
+                array(
+                    'dashboard_id' => $request->get('dashboard_id')
+                )
+            );
             switch($request->get('action')) {
                 case 'widget':
                     $csrf_token->check($redirect, $request);
