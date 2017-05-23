@@ -70,7 +70,7 @@ extends WikiPlugin
         if ((!$request->isActionPage($request->getArg('pagename')) 
              and (!isset($user->_prefs->_method) 
                   or !in_array($user->_prefs->_method,array('ADODB','SQL'))))
-            or (in_array($request->getArg('action'),array('zip','ziphtml','dumphtml')))
+            or (in_array($request->getArg('action'),array('zip','ziphtml')))
             or (isa($user,'_ForbiddenUser'))) 
         {
             $no_args = $this->getDefaultArguments();

@@ -28,7 +28,7 @@ format.
 
 The "action=''x''" parameter should almost always be given.  It can be one of
 __browse__, __diff__, __edit__, __viewsource__,
-__zip__, __dumpserial__, __loadserial__,
+__zip__, __loadserial__,
 __remove__, __lock__, __unlock__,
 __login__, __logout__, __setprefs__ or __save__.
 The default action is __browse__.

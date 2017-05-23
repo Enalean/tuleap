@@ -1601,10 +1601,6 @@ $properties["Default local Dump Directory"] =
 new _define_optional('DEFAULT_DUMP_DIR', "/tmp/wikidump", "
 Specify the default directory for local backups.");
 
-$properties["Default local HTML Dump Directory"] =
-new _define_optional('HTML_DUMP_DIR', "/tmp/wikidumphtml", "
-Specify the default directory for local XHTML dumps.");
-
 $properties["Pagename of Recent Changes"] =
 new _define_optional('RECENT_CHANGES', 'RecentChanges', "
 Page name of RecentChanges page.  Used for RSS Auto-discovery.");

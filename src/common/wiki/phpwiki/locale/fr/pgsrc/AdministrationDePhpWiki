@@ -51,24 +51,14 @@ Si le PhpWiki est configuré pour le permettre, n'importe qui peut télécharger
 
 Si votre php supporte la ''zlib'', les fichiers dans l'archive seront compressés, sinon ils seront simplement stockés.
 
-!! Sauvegarde dans un répertoire
-
-Ici vous pouvez enregistrer les pages de votre Wiki dans le répertoire de votre choix.
-
-<?plugin WikiForm action=dumpserial?>
-
-La version la plus récente de chaque page sera écrite dans le répertoire, à raison d'une page par fichier. Votre serveur doit avoir le droit d'écrire dans le répertoire !
-
 
 ----
 
 !!! Sauvegarde des pages au format xhtml
 
-  <?plugin WikiForm action=dumphtml?>
-
 Ceci génèrera un répertoire de pages statiques convenables pour une distribution sur disque où des serveurs web ne sont pas disponible. Les liens variés pour les fonctions d'édition et de navigation sont enlevés de ces pages.
 
-La collection de fichiers XHTML peut aussi être téléchargée comme une __[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]__.
+La collection de fichiers XHTML peut être téléchargée comme une __[XHTML ZIP Snapshot | phpwiki:?action=ziphtml]__.
 
 ----
 

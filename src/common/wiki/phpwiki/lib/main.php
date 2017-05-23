@@ -489,8 +489,6 @@ class WikiRequest extends Request {
             $actionDescriptions
             = array('browse'     => _("view this page"),
                     'diff'       => _("diff this page"),
-                    'dumphtml'   => _("dump html pages"),
-                    'dumpserial' => _("dump serial pages"),
                     'edit'       => _("edit this page"),
                     'revert'     => _("revert to a previous version of this page"),
                     'create'     => _("create this page"),
@@ -530,8 +528,6 @@ class WikiRequest extends Request {
             $disallowedActionDescriptions
             = array('browse'     => _("Browsing pages"),
                     'diff'       => _("Diffing pages"),
-                    'dumphtml'   => _("Dumping html pages"),
-                    'dumpserial' => _("Dumping serial pages"),
                     'edit'       => _("Editing pages"),
                     'revert'     => _("Reverting to a previous version of pages"),
                     'create'     => _("Creating pages"),
@@ -618,8 +614,6 @@ class WikiRequest extends Request {
                     return $this->requiredAuthorityForAction('edit');
                 return $this->requiredAuthorityForAction('browse');
 
-            case 'dumpserial':
-            case 'dumphtml':
             case 'loadfile':
             case 'remove':
             case 'lock':
@@ -1072,16 +1066,6 @@ class WikiRequest extends Request {
         // I don't think it hurts to add cruft at the end of the zip file.
         echo "\n========================================================\n";
         echo "PhpWiki " . PHPWIKI_VERSION . " source:\n$GLOBALS[RCS_IDS]\n";
-    }
-
-    function action_dumpserial () {
-        include_once("lib/loadsave.php");
-        DumpToDir($this);
-    }
-
-    function action_dumphtml () {
-        include_once("lib/loadsave.php");
-        DumpHtmlToDir($this);
     }
 
     function action_upload () {

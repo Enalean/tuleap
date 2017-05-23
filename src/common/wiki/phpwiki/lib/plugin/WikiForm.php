@@ -76,22 +76,6 @@ extends WikiPlugin
                 $buttontext = _("Login");
             $class = 'wikiadmin';
             break;
-        case 'dumpserial':
-            $input['name'] = 'directory';
-            if (!$default)
-                $input['value'] = DEFAULT_DUMP_DIR;
-            if (!$buttontext)
-                $buttontext = _("Dump Pages");
-            $class = 'wikiadmin';
-            break;
-        case 'dumphtml':
-            $input['name'] = 'directory';
-            if (!$default)
-                $input['value'] = HTML_DUMP_DIR;
-            if (!$buttontext)
-                $buttontext = _("Dump Pages as XHTML");
-            $class = 'wikiadmin';
-            break;
         case 'upload':
             $form->setAttr('enctype', 'multipart/form-data');
             $form->pushContent(HTML::input(array('name' => 'MAX_FILE_SIZE',
