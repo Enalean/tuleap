@@ -1,23 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -78,7 +79,7 @@ class PluginFileInfo extends PluginInfo
             foreach ($variables as $variable) {
                 $key = $variable['name'];
                 if (preg_match('`^"(.*)"$`', $variable['value'], $match) ||
-                preg_match('`^\'(.*)\'$`', $variable['value'], $match)) {
+                    preg_match('`^\'(.*)\'$`', $variable['value'], $match)) {
                     $value = $match[1];
                 } else {
                     $value = $variable['value'];
@@ -108,15 +109,15 @@ class PluginFileInfo extends PluginInfo
             if (is_bool($desc->getValue())) {
                 $value = ($desc->getValue() ? 'true' : 'false') .';';
             } else {
-                $value = '"'.addslashes($desc->getValue()).'";';
+                $value = "'".addslashes($desc->getValue())."';";
             }
 
             $replace = '$1'. $value;
-            $content = preg_replace('`((?:^|\n)\$'. preg_quote($desc_name) .'\s*=\s*)(.*)\s*;`',
+            $content = preg_replace('`((?:^|\n)\$'. preg_quote($desc_name, '`') .'\s*=\s*)(.*)\s*;`',
                 $replace,
                 $content);
 
-            if (! preg_match('`(?:^|\n)\$'. preg_quote($desc_name) .'\s*=`', $content)) {
+            if (! preg_match('`(?:^|\n)\$'. preg_quote($desc_name, '`') .'\s*=`', $content)) {
                 $content .= '$' . $desc_name .' = '. $value . PHP_EOL;
             }
             $iter->next();
