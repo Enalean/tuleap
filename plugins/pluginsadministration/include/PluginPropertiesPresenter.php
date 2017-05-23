@@ -42,6 +42,7 @@ class PluginPropertiesPresenter
     public $properties;
     public $are_there_additional_options;
     public $additional_options;
+    public $properties_edit_web_ui_security;
     /**
      * @var \CSRFSynchronizerToken
      */
@@ -98,6 +99,7 @@ class PluginPropertiesPresenter
         $this->properties_pane_empty_hooks        = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_pane_empty_hooks');
         $this->properties_pane_empty_dependencies = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_pane_empty_dependencies');
         $this->properties_pane_readme_title       = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'properties_pane_readme_title');
+        $this->properties_edit_web_ui_security    = $GLOBALS['Language']->getText('plugin_pluginsadministration_properties', 'edit_web_ui_security');
         $this->can_submit                         = ! empty($properties) || ! empty($additional_options) || $this->scope == Plugin::SCOPE_PROJECT;
     }
 }

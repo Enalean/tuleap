@@ -129,3 +129,4 @@ plugin_pluginsadministration_properties	properties_scope:	Portée :
 plugin_pluginsadministration_properties	properties_version:	Version :
 plugin_pluginsadministration_properties	properties_yes	Oui
 plugin_pluginsadministration_properties	return	<< Retourner aux plugins
+plugin_pluginsadministration_properties	edit_web_ui_security	Éditer les propriétés d'un plugin par l'interface web pose des problèmes de sécurité, il est fortement conseillé de désactiver cette fonctionnalité. Veuillez consulter le guide déploiement pour plus d'informations.
