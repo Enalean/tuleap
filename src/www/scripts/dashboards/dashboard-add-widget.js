@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+export default init;
 
-document.addEventListener('DOMContentLoaded', function () {
+function init() {
     var add_widget_button = document.getElementById('add-widget-button');
 
     if (! add_widget_button) {
@@ -29,4 +30,4 @@ document.addEventListener('DOMContentLoaded', function () {
         evt.stopPropagation();
         window.location.href = add_widget_button.dataset.href;
     });
-});
+}

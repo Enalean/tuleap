@@ -35,7 +35,7 @@ class DashboardWidgetRetriever
     /**
      * @param $dashboard_id
      * @param $dashboard_type
-     * @return DashboardWidget[]
+     * @return DashboardWidgetLine[]
      */
     public function getAllWidgets($dashboard_id, $dashboard_type)
     {
@@ -55,6 +55,23 @@ class DashboardWidgetRetriever
         }
 
         return $widgets_by_line;
+    }
+
+    /**
+     * @param $widget_id
+     * @return DashboardWidget
+     */
+    public function getWidgetById($widget_id)
+    {
+        $widget_row = $this->dao->searchWidgetById($widget_id)->getRow();
+
+        return new DashboardWidget(
+            $widget_row['id'],
+            $widget_row['name'],
+            $widget_row['content_id'],
+            $widget_row['column_id'],
+            $widget_row['rank']
+        );
     }
 
     /**
@@ -83,7 +100,9 @@ class DashboardWidgetRetriever
             $widget_column->addWidget(new DashboardWidget(
                 $row['id'],
                 $row['name'],
-                $row['content_id']
+                $row['content_id'],
+                $row['column_id'],
+                $row['rank']
             ));
         }
     }

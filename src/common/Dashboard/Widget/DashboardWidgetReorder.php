@@ -20,24 +20,33 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use Widget;
-
-class DashboardWidgetPresenter
+class DashboardWidgetReorder
 {
-    public $widget_id;
-    public $title;
-    public $content;
-    public $is_editable;
-    public $has_rss;
-    public $rss_url;
+    /**
+     * @var DashboardWidgetDao
+     */
+    private $dao;
 
-    public function __construct(DashboardWidget $dashboard_widget, Widget $widget)
+    public function __construct(DashboardWidgetDao $dao)
     {
-        $this->widget_id   = $dashboard_widget->getId();
-        $this->title       = $widget->getTitle();
-        $this->content     = $widget->getContentForBurningParrot();
-        $this->is_editable = strlen($widget->getPreferences()) !== 0;
-        $this->has_rss     = $widget->hasRss();
-        $this->rss_url     = $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+        $this->dao = $dao;
+    }
+
+    /**
+     * @param $widget_id
+     * @param $column_id
+     */
+    public function updateColumnIdByWidgetId($widget_id, $column_id)
+    {
+        $this->dao->updateColumnIdByWidgetId($widget_id, $column_id);
+    }
+
+    /**
+     * @param $widget_id
+     * @param $rank
+     */
+    public function updateWidgetRankByWidgetId($widget_id, $rank)
+    {
+        $this->dao->updateWidgetRankByWidgetId($widget_id, $rank);
     }
 }

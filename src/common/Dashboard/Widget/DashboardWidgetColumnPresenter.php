@@ -22,10 +22,12 @@ namespace Tuleap\Dashboard\Widget;
 
 class DashboardWidgetColumnPresenter
 {
+    public $column_id;
     public $widgets;
 
-    public function __construct(array $widgets)
+    public function __construct($column_id, array $widgets)
     {
-        $this->widgets = $widgets;
+        $this->column_id = $column_id;
+        $this->widgets   = $widgets;
     }
 }

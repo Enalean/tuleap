@@ -25,15 +25,21 @@ class DashboardWidget
     private $id;
     private $name;
     private $content_id;
+    private $column_id;
+    private $rank;
 
     public function __construct(
         $id,
         $name,
-        $content_id
+        $content_id,
+        $column_id,
+        $rank
     ) {
         $this->id         = $id;
         $this->name       = $name;
         $this->content_id = $content_id;
+        $this->column_id  = $column_id;
+        $this->rank       = $rank;
     }
 
     /**
@@ -58,5 +64,21 @@ class DashboardWidget
     public function getContentId()
     {
         return $this->content_id;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getColumnId()
+    {
+        return $this->column_id;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getRank()
+    {
+        return $this->rank;
     }
 }

@@ -146,9 +146,7 @@ class ProjectDashboardController
             )
         );
 
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/dashboards/dashboard-modals.js');
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/dashboards/dashboard-dropdowns.js');
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/dashboards/dashboard-add-widget.js');
+        $GLOBALS['Response']->includeFooterJavascriptFile('/assets/dashboard.min.js');
         $GLOBALS['Response']->footer(array());
     }
 

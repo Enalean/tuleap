@@ -32,7 +32,11 @@ class DashboardWidgetPresenterBuilder
 
         foreach ($widgets_lines as $line) {
             $columns_presenter = $this->getColumnsPresenterByLine($owner_info, $line);
-            $lines_presenter[] = new DashboardWidgetLinePresenter($line->getLayout(), $columns_presenter);
+            $lines_presenter[] = new DashboardWidgetLinePresenter(
+                $line->getId(),
+                $line->getLayout(),
+                $columns_presenter
+            );
         }
 
         return $lines_presenter;
@@ -47,7 +51,7 @@ class DashboardWidgetPresenterBuilder
         $columns_presenter = array();
         foreach ($line->getWidgetColumns() as $column) {
             $widgets_presenter = $this->getWidgetsPresenterByColumn($owner_info, $column);
-            $columns_presenter[] = new DashboardWidgetColumnPresenter($widgets_presenter);
+            $columns_presenter[] = new DashboardWidgetColumnPresenter($column->getId(), $widgets_presenter);
         }
         return $columns_presenter;
     }
@@ -65,7 +69,7 @@ class DashboardWidgetPresenterBuilder
                 $widget->owner_id   = $owner_info->getId();
                 $widget->owner_type = $owner_info->getType();
                 $widget->loadContent($dashboard_widget->getContentId());
-                $widgets_presenter[] = new DashboardWidgetPresenter($widget);
+                $widgets_presenter[] = new DashboardWidgetPresenter($dashboard_widget, $widget);
             }
         }
         return $widgets_presenter;

@@ -26,7 +26,9 @@ use Tuleap\Dashboard\Project\ProjectDashboardRouter;
 use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
+use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 require_once('pre.php');
 
@@ -45,7 +47,7 @@ if ($project && !$project->isError()) {
     $request = HTTPRequest::instance();
     $request->params['group_id'] = $_REQUEST['group_id'];
 
-    if ($request->isAjax()) {
+    if ($request->isAjax() && ! $request->existAndNonEmpty('action')) {
         header('Content-type: application/json');
         echo json_encode(
             array(
@@ -61,10 +63,12 @@ if ($project && !$project->isError()) {
     if ($project->usesService('summary')) {
         Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
         if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            $project_dashboard_dao = new ProjectDashboardDao();
-            $router                = new ProjectDashboardRouter(
+            $csrf_token                   = new CSRFSynchronizerToken('/project/');
+            $project_dashboard_dao        = new ProjectDashboardDao();
+            $project_dashboard_widget_dao = new DashboardWidgetDao();
+            $router                       = new ProjectDashboardRouter(
                 new ProjectDashboardController(
-                    new CSRFSynchronizerToken('/project/'),
+                    $csrf_token,
                     $project,
                     new ProjectDashboardRetriever($project_dashboard_dao),
                     new ProjectDashboardSaver($project_dashboard_dao),
@@ -72,6 +76,15 @@ if ($project && !$project->isError()) {
                         new DashboardWidgetDao()
                     ),
                     new DashboardWidgetPresenterBuilder()
+                ),
+                new WidgetDashboardController(
+                    $csrf_token,
+                    new DashboardWidgetRetriever(
+                        $project_dashboard_widget_dao
+                    ),
+                    new DashboardWidgetReorder(
+                        $project_dashboard_widget_dao
+                    )
                 )
             );
             $router->route($request);

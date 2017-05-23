@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Widget;
 
 class DashboardWidgetLinePresenter
 {
+    public $line_id;
     public $layout;
     /**
      * @var DashboardWidgetColumnPresenter[]
@@ -29,9 +30,11 @@ class DashboardWidgetLinePresenter
     public $widget_columns;
 
     public function __construct(
+        $line_id,
         $layout,
         array $widget_columns
     ) {
+        $this->line_id        = $line_id;
         $this->layout         = $layout;
         $this->widget_columns = $widget_columns;
     }

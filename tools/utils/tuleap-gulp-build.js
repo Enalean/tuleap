@@ -93,10 +93,11 @@ function declare_component_tasks(component_paths) {
                 }, cb);
             });
 
-            gulp.task('build-' + component.name, ['install-' + component.name], function (cb) {
-                exec(yarn_or_npm_binary + ' run build', {
+            gulp.task('build-' + component.name, ['install-' + component.name], function () {
+                return crossSpawn.sync(yarn_or_npm_binary, ['run', 'build'], {
+                    stdio: 'inherit',
                     cwd: component.path
-                }, cb);
+                });
             });
 
             install_tasks.push('install-' + component.name);
@@ -104,7 +105,7 @@ function declare_component_tasks(component_paths) {
         });
     });
 
-    gulp.task('components', function(cb) {
+    gulp.task('components', ['clean-js-core'], function(cb) {
         promise.then(function() {
             runSequence(install_tasks.concat(build_tasks), cb);
         }).catch(function (error) {

@@ -22,17 +22,27 @@ namespace Tuleap\Dashboard\Project;
 
 use ForgeConfig;
 use HTTPRequest;
+use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 class ProjectDashboardRouter
 {
+    const DASHBOARD_TYPE = 'project';
+
     /**
      * @var ProjectDashboardController
      */
     private $project_dashboard_controller;
+    /**
+     * @var WidgetDashboardController
+     */
+    private $widget_dashboard_controller;
 
-    public function __construct(ProjectDashboardController $project_dashboard_controller)
-    {
+    public function __construct(
+        ProjectDashboardController $project_dashboard_controller,
+        WidgetDashboardController $widget_dashboard_controller
+    ) {
         $this->project_dashboard_controller = $project_dashboard_controller;
+        $this->widget_dashboard_controller  = $widget_dashboard_controller;
     }
 
     /**
@@ -49,6 +59,9 @@ class ProjectDashboardRouter
         $action = $request->get('action');
 
         switch ($action) {
+            case 'reorder-widgets':
+                $this->widget_dashboard_controller->reorderWidgets($request, self::DASHBOARD_TYPE);
+                break;
             case 'add-dashboard':
                 $this->project_dashboard_controller->createDashboard($request);
                 break;
