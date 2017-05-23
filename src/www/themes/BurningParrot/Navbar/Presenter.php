@@ -44,12 +44,18 @@ class Presenter
      */
     private $page_detector;
 
+    /**
+     * @var JoinCommunityPresenter
+     */
+    public $community_presenter;
+
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,
         SearchPresenter $search_presenter,
         UserNavPresenter $user_nav_presenter,
         BurningParrotCompatiblePageDetector $page_detector,
-        PFUser $current_user
+        PFUser $current_user,
+        JoinCommunityPresenter $community_presenter
     ) {
         $this->global_nav_presenter             = $global_nav_presenter;
         $this->search_presenter                 = $search_presenter;
@@ -57,6 +63,7 @@ class Presenter
         $this->current_user                     = $current_user;
         $this->page_detector                    = $page_detector;
         $this->is_search_and_user_nav_displayed = (! $this->hideSearchAndUserNav());
+        $this->community_presenter              = $community_presenter;
     }
 
     private function hideSearchAndUserNav()

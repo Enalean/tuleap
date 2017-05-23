@@ -143,6 +143,10 @@
             display: flex;
             align-items: center;
             height: $navbar-height;
+
+            & .join-tuleap-community {
+                padding: 10px 10px 10px 5px;
+            }
         }
 
         & > li > a {
@@ -392,4 +396,8 @@
             margin-bottom: 0;
         }
     }
+}
+
+.join-tuleap-community-svg {
+    fill: $navbar-color;
 }
