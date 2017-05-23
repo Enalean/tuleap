@@ -49,6 +49,9 @@ msgstr "Annuler"
 msgid "Cannot delete the requested dashboard."
 msgstr "Impossible de supprimer le tableau de bord demandé."
 
+msgid "Cannot delete the widget."
+msgstr "Impossible de supprimer le widget."
+
 msgid "Cannot update the requested dashboard."
 msgstr "Impossible d'éditer le tableau de bord demandé."
 
@@ -224,6 +227,9 @@ msgid ""
 msgstr ""
 "Pourquoi ne pas commencer par éditer votre tableau de bord <br> et ajouter "
 "des widgets?"
+
+msgid "Widget has been successfully deleted."
+msgstr "Le widget a correctement été supprimé."
 
 msgid "Wiki"
 msgstr "Wiki"

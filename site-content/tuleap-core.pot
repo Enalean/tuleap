@@ -32,6 +32,9 @@ msgstr ""
 msgid "Cannot delete the requested dashboard."
 msgstr ""
 
+msgid "Cannot delete the widget."
+msgstr ""
+
 msgid "Cannot update the requested dashboard."
 msgstr ""
 
@@ -202,6 +205,9 @@ msgstr ""
 
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
+msgstr ""
+
+msgid "Widget has been successfully deleted."
 msgstr ""
 
 msgid "Wiki"
