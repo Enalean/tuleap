@@ -1,4 +1,4 @@
-import kanban_module from './app.js';
+import error_modal_module from './error-modal.js';
 import angular from 'angular';
 import 'angular-mocks';
 
@@ -7,7 +7,7 @@ describe("RestErrorService -", function() {
         RestErrorService;
 
     beforeEach(function() {
-        angular.mock.module(kanban_module, function($provide) {
+        angular.mock.module(error_modal_module, function($provide) {
             $provide.decorator('$modal', function($delegate) {
                 spyOn($delegate, "open");
 

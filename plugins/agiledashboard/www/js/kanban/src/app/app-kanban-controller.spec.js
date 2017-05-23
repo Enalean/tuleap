@@ -1,6 +1,7 @@
 import kanban_module from './app.js';
 import angular from 'angular';
 import 'angular-mocks';
+import tlp from 'tlp';
 
 describe('KanbanCtrl - ', function() {
     var $rootScope,
@@ -16,7 +17,6 @@ describe('KanbanCtrl - ', function() {
         SocketService,
         DroppedService,
         ColumnCollectionService,
-        KanbanFilterValue,
         kanban;
 
     function emptyArray(array) {
@@ -37,8 +37,7 @@ describe('KanbanCtrl - ', function() {
             _KanbanColumnService_,
             _SocketService_,
             _DroppedService_,
-            _ColumnCollectionService_,
-            _KanbanFilterValue_
+            _ColumnCollectionService_
         ) {
             $controller                   = _$controller_;
             $q                            = _$q_;
@@ -51,7 +50,6 @@ describe('KanbanCtrl - ', function() {
             SocketService                 = _SocketService_;
             DroppedService                = _DroppedService_;
             ColumnCollectionService       = _ColumnCollectionService_;
-            KanbanFilterValue             = _KanbanFilterValue_;
         });
 
         kanban = {
@@ -83,9 +81,7 @@ describe('KanbanCtrl - ', function() {
         spyOn(DroppedService, "moveToColumn").and.returnValue($q.when());
         spyOn(ColumnCollectionService, "getColumn");
 
-        KanbanFilterValue = {
-            terms: ''
-        };
+        tlp.modal = jasmine.createSpy('modal');
 
         $scope = $rootScope.$new();
 

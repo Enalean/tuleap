@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import './error.tpl.html';
+import ErrorCtrl from './error-controller.js';
 
 export default RestErrorService;
 
@@ -10,16 +11,14 @@ function RestErrorService(
     $modal
 ) {
     var self = this;
-    _.extend(self, {
-        reload: reload
-    });
+    self.reload = reload;
 
     function reload(response) {
         $modal.open({
             keyboard    : false,
             backdrop    : 'static',
-            templateUrl : 'error/error.tpl.html',
-            controller  : 'ErrorCtrl',
+            templateUrl : 'error.tpl.html',
+            controller  : ErrorCtrl,
             controllerAs: 'modal',
             resolve     : {
                 message: function() {

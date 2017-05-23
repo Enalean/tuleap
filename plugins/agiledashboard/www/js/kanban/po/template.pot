@@ -12,7 +12,7 @@ msgstr ""
 msgid "Add a column"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "An error occured while saving one of your last action. We're afraid that you will have to reload the page in order to bring you back to a consistent state."
 msgstr ""
 
@@ -25,7 +25,7 @@ msgid "Backlog"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Based on the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">{{ edit_modal.kanban.tracker.label }}</a> tracker."
+msgid "Based on the {{ trackerLink }} tracker."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -84,7 +84,7 @@ msgstr ""
 msgid "Edit this Kanban"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Error details"
 msgstr ""
 
@@ -142,7 +142,7 @@ msgid "MM/DD"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+msgid "More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 
 #: src/app/kanban-item/kanban-item.tpl.html
@@ -157,11 +157,11 @@ msgstr ""
 msgid "Nb. of cards"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "OK, reload the page"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Oh snap!"
 msgstr ""
 
@@ -173,7 +173,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Show details"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgid "You are disconnected from real time. Please reload your page."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+msgid "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 
 #: src/app/kanban.tpl.html

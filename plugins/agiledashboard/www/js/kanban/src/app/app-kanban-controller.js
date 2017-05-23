@@ -1,8 +1,7 @@
-import './error/error.tpl.html';
-import './edit-kanban/edit-kanban.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
 import _ from 'lodash';
-import { dropdown } from 'tlp';
+import { element } from 'angular';
+import { dropdown, modal } from 'tlp';
 
 export default KanbanCtrl;
 
@@ -67,6 +66,7 @@ function KanbanCtrl(
         loading_items          : true,
         fully_loaded           : false
     });
+    self.edit_kanban_modal = null;
 
     self.user_prefers_collapsed_cards = true;
     self.init                         = init;
@@ -115,7 +115,7 @@ function KanbanCtrl(
             SocketService.listenTokenExpired();
         });
 
-        angular.element(document).ready(function () {
+        element(document).ready(function () {
             var my_dashboard_dropdown      = document.getElementById('my-dashboard-dropdown');
             var project_dashboard_dropdown = document.getElementById('project-dashboard-dropdown');
             if (my_dashboard_dropdown) {
@@ -136,7 +136,6 @@ function KanbanCtrl(
 
     function initDashboards() {
         $scope.dashboard_dropdowns = $sce.trustAsHtml(SharedPropertiesService.getDashboardDropdown());
-
     }
 
     function toggleCollapsedMode() {
@@ -319,30 +318,10 @@ function KanbanCtrl(
     }
 
     function editKanban() {
-        $modal.open({
-            backdrop    : true,
-            templateUrl : 'edit-kanban.tpl.html',
-            controller  : 'EditKanbanCtrl as edit_modal',
-            resolve     : {
-                kanban: function() {
-                    return kanban;
-                },
-                addColumnToKanban: function() {
-                    return addColumn;
-                },
-                removeColumnToKanban: function() {
-                    return removeColumn;
-                },
-                updateKanbanName: function() {
-                    return updateKanbanName;
-                },
-                deleteThisKanban: function() {
-                    return deleteKanban;
-                }
-            }
-        }).result.catch(
-            reloadIfSomethingIsWrong
-        );
+        if (self.edit_kanban_modal === null) {
+            self.edit_kanban_modal = modal(document.getElementById('edit-kanban-modal'));
+        }
+        self.edit_kanban_modal.show();
     }
 
     function openReportModal() {
@@ -657,22 +636,6 @@ function KanbanCtrl(
             item.id,
             compared_to
         );
-    }
-
-    function addColumn(new_column) {
-        ColumnCollectionService.addColumn(new_column);
-    }
-
-    function removeColumn(column_id) {
-        ColumnCollectionService.removeColumn(column_id);
-    }
-
-    function updateKanbanName(label) {
-        KanbanService.updateKanbanName(label);
-    }
-
-    function deleteKanban() {
-        KanbanService.removeKanban();
     }
 
     function addKanbanToMyDashboard() {

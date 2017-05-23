@@ -19,18 +19,19 @@ import shared_properties from './shared-properties/shared-properties.js';
 import uuid_generator    from './uuid-generator/uuid-generator.js';
 import socket            from './socket/socket.js';
 import user_preferences  from './user-preferences/user-preferences.js';
+import error_modal       from './error-modal/error-modal.js';
 
 import KanbanConfig            from './app-config.js';
 import MainCtrl                from './app-main-controller.js';
 import KanbanCtrl              from './app-kanban-controller.js';
 import KanbanService           from './kanban-service.js';
-import RestErrorService        from './rest-error-service.js';
 import ColumnCollectionService from './column-collection-service.js';
 import DroppedService          from './dropped-service.js';
 import KanbanFilterValue       from './filter-value.js';
 import AddInPlaceDirective     from './add-in-place/add-in-place-directive.js';
 import AutoFocusInputDirective from './edit-kanban/edit-kanban-autofocus-directive.js';
 import EscKeyDirective         from './esc-key/esc-key-directive.js';
+import EditKanbanDirective     from './edit-kanban/edit-kanban-directive.js';
 import InPropertiesFilter      from './in-properties-filter/in-properties-filter.js';
 import KanbanColumnDirective   from './kanban-column/kanban-column-directive.js';
 import KanbanColumnService     from './kanban-column/kanban-column-service.js';
@@ -40,8 +41,6 @@ import DiagramRestService      from './reports-modal/diagram-rest-service.js';
 import ReportsModalController  from './reports-modal/reports-modal-controller.js';
 import TuleapStripTagsFilter   from './strip-tags/strip-tags-filter.js';
 import WipPopoverDirective     from './wip-popover/wip-popover-directive.js';
-import EditKanbanCtrl          from './edit-kanban/edit-kanban-controller.js';
-import ErrorCtrl               from './error/error-controller.js';
 import KanbanColumnController  from './kanban-column/kanban-column-controller.js';
 
 angular.module('kanban', [
@@ -53,25 +52,23 @@ angular.module('kanban', [
     'ui.bootstrap',
     angular_artifact_modal,
     dragular,
+    error_modal,
     jwt,
+    kanban_item,
     ngAnimate,
     ngSanitize,
     shared_properties,
     socket,
     ui_router,
     user_preferences,
-    uuid_generator,
-    kanban_item
+    uuid_generator
 ])
 .config(KanbanConfig)
 .controller('MainCtrl', MainCtrl)
 .controller('KanbanCtrl', KanbanCtrl)
 .controller('ReportsModalController', ReportsModalController)
-.controller('EditKanbanCtrl', EditKanbanCtrl)
-.controller('ErrorCtrl', ErrorCtrl)
 .controller('KanbanColumnController', KanbanColumnController)
 .service('KanbanService', KanbanService)
-.service('RestErrorService', RestErrorService)
 .service('ColumnCollectionService', ColumnCollectionService)
 .service('DroppedService', DroppedService)
 .service('KanbanColumnService', KanbanColumnService)
@@ -83,6 +80,7 @@ angular.module('kanban', [
 .directive('kanbanColumn', KanbanColumnDirective)
 .directive('graph', GraphDirective)
 .directive('wipPopover', WipPopoverDirective)
+.directive('editKanban', EditKanbanDirective)
 .value('KanbanFilterValue', KanbanFilterValue)
 .filter('InPropertiesFilter', InPropertiesFilter)
 .filter('tuleapStripTags', TuleapStripTagsFilter);

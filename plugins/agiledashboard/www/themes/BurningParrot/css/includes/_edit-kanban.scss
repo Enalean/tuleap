@@ -1,132 +1,91 @@
 @charset "UTF-8";
-.edit-kanban-modal {
-    > .modal-header {
-        h2 {
-            margin: 0 0 5px;
-        }
 
-        > .base-tracker {
-            margin: 0;
-            font-size: 13px;
+.edit-kanban-title > .edit-kanban-title-tracker {
+    margin: 5px 0 0;
+}
 
-            > i {
-                margin: 0 3px 0 0;
-            }
-        }
-    }
+.edit-kanban-title-tracker {
+    font-size: 13px;
+}
 
-    > .modal-body {
-        max-height: 60vh;
-        font-size: 13px;
-        padding: 15px 15px 25px;
+.edit-kanban-title-tracker-icon {
+    margin: 0 3px 0 0;
+}
 
-        > h3 {
-            margin: 30px 0 10px;
-            line-height: 30px;
+.edit-kanban-title-tracker-link {
+    color: $tlp-ui-white;
+}
 
-            &:first-child {
-                margin: 0 0 10px;
-            }
-        }
+.edit-kanban-label-form,
+.edit-kanban-column-configuration {
+    margin: 0 0 $tlp-double-spacing;
+}
 
-        .input-append {
-            margin-bottom: 0;
-        }
+.edit-kanban-column-list,
+.edit-kanban-reorderable-columns {
+    display: flex;
+    flex-direction: column;
+}
 
-        > .kanban-configuration > label {
-            font-size: 13px;
-        }
+.edit-kanban-backlog-column {
+    color: #888888;
 
-        > .column-configuration {
-
-            .column-configuration-column-list {
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                list-style-type: none;
-                margin: 0;
-
-                li:not(.edit-modal-column) {
-                    display: flex;
-
-                    &:first-child, &:last-child {
-                        color: #888;
-
-                        i {
-                            margin: 0 2px 0 0;
-                        }
-                    }
-
-                    &:first-child > div:before {
-                        content: '↳';
-                        display: inline-block;
-                        -webkit-transform: rotate(90deg);
-                        transform: rotate(90deg);
-                        position: relative;
-                        top: 3px;
-                        left: 1px;
-                        margin: 0 6px 0 0;
-                    }
-
-                    &:last-child > div:before {
-                        content: '↳';
-                        display: inline-block;
-                        position: relative;
-                        top: 0px;
-                        left: 6px;
-                        margin: 0 6px 0 0;
-                    }
-
-                    &.add-column > div {
-                        padding: 3px 4px 8px;
-
-                        .btn > i {
-                            margin: 0 3px 0 0;
-                        }
-                    }
-                }
-            }
-
-            .column-configuration-reorderable-columns {
-                display: flex;
-                flex-direction: column;
-            }
-        }
+    &::before {
+        content: '↳';
+        display: inline-block;
+        position: relative;
+        top: 3px;
+        left: 1px;
+        margin: 0 6px 0 0;
+        transform: rotate(90deg);
     }
 }
 
-.edit-modal-column {
+.edit-kanban-archive-column {
+    color: #888888;
+
+    &::before {
+        content: '↳';
+        display: inline-block;
+        position: relative;
+        top: 0;
+        left: 6px;
+        margin: 0 6px 0 0;
+    }
+}
+
+.edit-kanban-add-column {
     display: flex;
+    padding: 3px 4px 8px;
+}
 
-    .btn-small {
-        margin-left: 10px;
-        white-space: nowrap;
+.edit-kanban-add-column-form {
+    flex: 1 1 auto;
+}
 
-        &.btn-link {
-            padding: 2px;
-        }
-    }
+.edit-kanban-edit-column-container {
+    flex: 1 1 auto;
+    padding: 0 0 0 15px;
+}
 
-    .cancel-deletion {
-        display: flex;
-    }
+.edit-kanban-delete-column-container {
+    display: flex;
+}
 
-    &.editing > div {
-        padding: 4px 0 4px 15px;
-    }
+.edit-kanban-column-button {
+    margin: 0 0 0 5px;
+    white-space: nowrap;
+}
 
-    .input-append > input[type="text"] {
-        width: 150px;
-    }
-
-    > div:first-child {
-        padding: 4px 0 4px 7px;
-    }
+.edit-kanban-column {
+    display: flex;
+    padding: 3px 3px 3px 0;
+    border-radius: 3px;
 
     &.draggable:not(.editing) {
         cursor: move;
 
-        > div:first-child {
+        > .edit-kanban-column-label {
             width: 100%;
             padding: 4px 0 4px 22px;
             background: url('../images/drag.png') no-repeat 5px 8px;
@@ -138,15 +97,16 @@
     }
 
     &.gu-mirror {
+        // scss-lint:disable ImportantRule
+        z-index: 100051 !important;
         border-radius: 3px;
-        background-color: #ffffff;
-        font-size: 13px;
-        white-space: nowrap;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, .3);
-        cursor: move;
         opacity: 1;
+        background-color: #ffffff;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, .3);
+        white-space: nowrap;
+        cursor: move;
 
-        .btn-small {
+        > div > .edit-kanban-column-button {
             display: none;
         }
     }
