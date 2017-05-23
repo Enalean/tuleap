@@ -32,10 +32,13 @@ class DashboardWidgetPresenter
     public $rss_url;
     public $delete_widget_label;
     public $delete_widget_confirm;
+    public $is_minimized;
 
     public function __construct(DashboardWidget $dashboard_widget, Widget $widget)
     {
-        $this->widget_id   = $dashboard_widget->getId();
+        $this->widget_id    = $dashboard_widget->getId();
+        $this->is_minimized = $dashboard_widget->isMinimized();
+
         $this->title       = $widget->getTitle();
         $this->content     = $widget->getContentForBurningParrot();
         $this->is_editable = strlen($widget->getPreferences()) !== 0;

@@ -59,6 +59,12 @@ class UserDashboardRouter
         $action = $request->get('action');
 
         switch ($action) {
+            case 'minimize-widget':
+                $this->user_dashboard_controller->minimizeWidget($request);
+                break;
+            case 'maximize-widget':
+                $this->user_dashboard_controller->maximizeWidget($request);
+                break;
             case 'delete-widget':
                 $this->user_dashboard_controller->deleteWidget($request);
                 break;

@@ -29,6 +29,7 @@ use Tuleap\Dashboard\User\UserDashboardUpdator;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardSaver;
 use Tuleap\Dashboard\User\WidgetDeletor;
+use Tuleap\Dashboard\User\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
@@ -65,7 +66,8 @@ $router                    = new UserDashboardRouter(
         new UserDashboardUpdator($user_dashboard_dao),
         new DashboardWidgetRetriever(new DashboardWidgetDao()),
         new DashboardWidgetPresenterBuilder(),
-        new WidgetDeletor($user_dashboard_widget_dao)
+        new WidgetDeletor($user_dashboard_widget_dao),
+        new WidgetMinimizor($user_dashboard_widget_dao)
     ),
     new WidgetDashboardController(
         $csrf_token,

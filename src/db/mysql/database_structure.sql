@@ -1728,6 +1728,7 @@ CREATE TABLE dashboards_lines_columns_widgets (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     column_id INT(11) UNSIGNED NOT NULL,
     rank INT(11) NOT NULL,
+    is_minimized INT(1) NOT NULL DEFAULT '0',
     name VARCHAR(255) NOT NULL,
     content_id INT DEFAULT '0' NOT NULL,
     INDEX col_idx(column_id)

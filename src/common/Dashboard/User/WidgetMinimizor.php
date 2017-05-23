@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -17,34 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-widget-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: move;
-}
+namespace Tuleap\Dashboard\User;
 
-.dashboard-widget-icons {
-    display: flex;
-}
+use PFUser;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
-.dashboard-widget-icons-minimize {
-    margin: 0 5px 0 0;
-}
+class WidgetMinimizor
+{
+    /**
+     * @var DashboardWidgetDao
+     */
+    private $dao;
 
-.dashboard-widget-icons-minimize,
-.dashboard-widget-actions {
-    transition: color 100ms, opacity 100ms;
-    color: $tlp-ui-dimmed;
-    cursor: pointer;
-    opacity: .2;
-
-    &:hover {
-        color: $tlp-theme-color;
-        opacity: 1;
+    public function __construct(DashboardWidgetDao $dao)
+    {
+        $this->dao = $dao;
     }
-}
 
-.dashboard-widget-imageviewver-img {
-    width: 100%;
+    public function minimize(PFUser $user, $dashboard_id, $dashboard_type, $widget_id)
+    {
+        $this->dao->minimizeWidget($user->getId(), $dashboard_id, $dashboard_type, $widget_id);
+    }
+
+    public function maximize(PFUser $user, $dashboard_id, $dashboard_type, $widget_id)
+    {
+        $this->dao->maximizeWidget($user->getId(), $dashboard_id, $dashboard_type, $widget_id);
+    }
 }
