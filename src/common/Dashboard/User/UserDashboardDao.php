@@ -23,14 +23,21 @@ namespace Tuleap\Dashboard\User;
 use DataAccess;
 use DataAccessObject;
 use PFUser;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class UserDashboardDao extends DataAccessObject
 {
 
-    public function __construct(DataAccess $da = null)
+    /**
+     * @var DashboardWidgetDao
+     */
+    private $widget_dao;
+
+    public function __construct(DashboardWidgetDao $widget_dao)
     {
-        parent::__construct($da);
+        parent::__construct();
         $this->enableExceptionsOnError();
+        $this->widget_dao = $widget_dao;
     }
 
     public function searchAllUserDashboards(PFUser $user)
@@ -74,14 +81,23 @@ class UserDashboardDao extends DataAccessObject
 
     public function delete($user_id, $dashboard_id)
     {
-        $user_id      = $this->da->escapeInt($user_id);
-        $dashboard_id = $this->da->escapeInt($dashboard_id);
+        $this->da->startTransaction();
+        try {
+            $this->widget_dao->deleteAllWidgetsInUserDashboardInsideTransaction($user_id, $dashboard_id);
 
-        $sql = "DELETE FROM user_dashboards WHERE user_id = $user_id AND id = $dashboard_id";
+            $user_id      = $this->da->escapeInt($user_id);
+            $dashboard_id = $this->da->escapeInt($dashboard_id);
 
-        $this->update($sql);
-        if ($this->da->affectedRows() === 0) {
-            throw new \DataAccessException();
+            $sql = "DELETE FROM user_dashboards WHERE user_id = $user_id AND id = $dashboard_id";
+
+            $this->update($sql);
+            if ($this->da->affectedRows() === 0) {
+                throw new \DataAccessException();
+            }
+            $this->da->commit();
+        } catch (\Exception $exception) {
+            $this->rollBack();
+            throw $exception;
         }
     }
 

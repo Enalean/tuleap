@@ -67,12 +67,11 @@ class ProjectDashboardSaver
      * @param PFUser $user
      * @param Project $project
      * @param $dashboard_id
-     * @return bool
      */
     public function delete(PFUser $user, Project $project, $dashboard_id)
     {
         $this->checkUserCanDeleteByDashboardId($user, $project, $dashboard_id);
-        return $this->dao->delete($project->getId(), $dashboard_id);
+        $this->dao->delete($project->getId(), $dashboard_id);
     }
 
     private function checkUserCanSaveByDashboardName(PFUser $user, Project $project, $name)

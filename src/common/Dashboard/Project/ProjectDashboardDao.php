@@ -22,14 +22,22 @@ namespace Tuleap\Dashboard\Project;
 
 use DataAccess;
 use DataAccessObject;
+use Tuleap\Configuration\Common\ExecException;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class ProjectDashboardDao extends DataAccessObject
 {
 
-    public function __construct(DataAccess $da = null)
+    /**
+     * @var DashboardWidgetDao
+     */
+    private $widget_dao;
+
+    public function __construct(DashboardWidgetDao $widget_dao)
     {
-        parent::__construct($da);
+        parent::__construct();
         $this->enableExceptionsOnError();
+        $this->widget_dao = $widget_dao;
     }
 
     public function searchAllProjectDashboards($project_id)
@@ -112,15 +120,23 @@ class ProjectDashboardDao extends DataAccessObject
     /**
      * @param $project_id
      * @param $dashboard_id
-     * @return bool
      */
     public function delete($project_id, $dashboard_id)
     {
-        $project_id   = $this->da->escapeInt($project_id);
-        $dashboard_id = $this->da->escapeInt($dashboard_id);
+        $this->da->startTransaction();
+        try {
+            $this->widget_dao->deleteAllWidgetsInProjectDashboardInsideTransaction($project_id, $dashboard_id);
 
-        $sql = "DELETE FROM project_dashboards WHERE project_id = $project_id AND id = $dashboard_id";
+            $project_id   = $this->da->escapeInt($project_id);
+            $dashboard_id = $this->da->escapeInt($dashboard_id);
 
-        return $this->update($sql);
+            $sql = "DELETE FROM project_dashboards WHERE project_id = $project_id AND id = $dashboard_id";
+
+            $this->update($sql);
+            $this->da->commit();
+        } catch (\Exception $exception) {
+            $this->rollBack();
+            throw $exception;
+        }
     }
 }
