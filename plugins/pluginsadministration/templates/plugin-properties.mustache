@@ -61,6 +61,7 @@
             <input type="hidden" name="action" value="change_plugin_properties">
             {{# are_there_properties }}
                 <section class="tlp-pane-section">
+                    <p class="tlp-alert-warning">{{ properties_edit_web_ui_security }}</p>
                     {{# properties }}
                         <div class="tlp-form-element">
                             {{# is_bool }}

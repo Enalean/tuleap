@@ -129,3 +129,4 @@ plugin_pluginsadministration_properties	properties_scope:	Scope:
 plugin_pluginsadministration_properties	properties_version:	Version:
 plugin_pluginsadministration_properties	properties_yes	Yes
 plugin_pluginsadministration_properties	return	<< Return to plugins
+plugin_pluginsadministration_properties	edit_web_ui_security	Editing plugin properties through the web UI present a security risk, it is strongly advised to disable it. Check the deployment guide for more information.
