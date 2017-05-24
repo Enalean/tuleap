@@ -1666,7 +1666,7 @@ class Docman_Actions extends Actions {
                 $something_happen = true;
             } else if(!$params['monitor'] && $already_monitored) {
                 //unmonitor
-                if (!$this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId())) {
+                if (!$this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId())) {
                     $this->_controler->feedback->log('error', "Unable to remove monitoring on '". $params['item']->getTitle() ."'.");
                 }
                 $something_happen = true;
@@ -1679,7 +1679,7 @@ class Docman_Actions extends Actions {
                 $something_happen = true;
             } else if(!(isset($params['cascade']) && $params['cascade'] && $params['monitor']) && $already_cascaded) {
                 //uncascade
-                if (!$this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                if (!$this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                     $this->_controler->feedback->log('error', "Unable to remove cascade on '". $params['item']->getTitle() ."'.");
                 }
                 $something_happen = true;
