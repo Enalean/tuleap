@@ -237,7 +237,7 @@ class BurningParrotTheme extends Layout
 
     private function getTuleapVersion()
     {
-        return trim(file_get_contents($GLOBALS['tuleap_dir'] . '/VERSION'));
+        return trim(file_get_contents(ForgeConfig::get('tuleap_dir') . '/VERSION'));
     }
 
     private function getSidebarFromParams(array $params)
