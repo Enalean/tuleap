@@ -1081,7 +1081,7 @@ class WikiRequest extends Request {
 
     function action_loadfile () {
         include_once("lib/loadsave.php");
-        LoadFileOrDir($this);
+        RakeSandboxAtUserRequest($this);
     }
 
     function action_pdf () {
