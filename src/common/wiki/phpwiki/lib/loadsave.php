@@ -777,6 +777,32 @@ function LoadFile (&$request, $filename, $text = false, $mtime = false)
     }
 }
 
+function LoadDir (&$request, $dirname, $files = false, $exclude = false) {
+    $fileset = new LimitedFileSet($dirname, $files, $exclude);
+
+    if (!$files and ($skiplist = $fileset->getSkippedFiles())) {
+        PrintXML(HTML::dt(HTML::strong(_("Skipping"))));
+        $list = HTML::ul();
+        foreach ($skiplist as $file)
+            $list->pushContent(HTML::li(WikiLink($file)));
+        PrintXML(HTML::dd($list));
+    }
+
+    // Defer HomePage loading until the end. If anything goes wrong
+    // the pages can still be loaded again.
+    $files = $fileset->getFiles();
+    if (in_array(HOME_PAGE, $files)) {
+        $files = array_diff($files, array(HOME_PAGE));
+        $files[] = HOME_PAGE;
+    }
+    $timeout = (! $request->getArg('start_debug')) ? 20 : 120;
+    foreach ($files as $file) {
+        longer_timeout($timeout); 	// longer timeout per page
+        if (substr($file,-1,1) != '~')  // refuse to load backup files
+            LoadFile($request, "$dirname/$file");
+    }
+}
+
 function LoadZip (&$request, $zipfile, $files = false, $exclude = false) {
     $zip = new ZipReader($zipfile);
     $timeout = (! $request->getArg('start_debug')) ? 20 : 120;
@@ -870,10 +896,15 @@ function LoadAny (&$request, $file_or_dir, $files = false, $exclude = false)
         $type = ($mode >> 12) & 017;
         if ($type == 010)
             $type = 'file';
+        elseif ($type == 004)
+            $type = 'dir';
     }
 
     if (! $type) {
         $request->finish(fmt("Unable to load: %s", $file_or_dir));
+    }
+    else if ($type == 'dir') {
+        LoadDir($request, $file_or_dir, $files, $exclude);
     }
     else if ($type != 'file' && !preg_match('/^(http|ftp):/', $file_or_dir))
     {
@@ -888,7 +919,7 @@ function LoadAny (&$request, $file_or_dir, $files = false, $exclude = false)
     }
 }
 
-function LoadFileOrDir (&$request)
+function RakeSandboxAtUserRequest (&$request)
 {
     $source = $request->getArg('source');
     $finder = new FileFinder;
