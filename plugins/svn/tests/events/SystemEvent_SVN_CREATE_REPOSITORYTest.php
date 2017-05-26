@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 require_once __DIR__ . '/../bootstrap.php';
 
 
-class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
+class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingStandardsIgnoreLine
 {
     public function itRetrievesParameters()
     {
@@ -90,7 +90,8 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
             mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
             mock('UserManager'),
             mock('BackendSVN'),
-            mock('BackendSystem')
+            mock('BackendSystem'),
+            mock('Tuleap\Svn\Migration\RepositoryCopier')
         );
 
         $system_event->expectOnce('done');
@@ -112,7 +113,8 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
             mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
             mock('UserManager'),
             $backend_svn,
-            mock('BackendSystem')
+            mock('BackendSystem'),
+            mock('Tuleap\Svn\Migration\RepositoryCopier')
         );
 
         $system_event->expectOnce('error');
@@ -135,7 +137,8 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
             mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
             mock('UserManager'),
             $backend_svn,
-            mock('BackendSystem')
+            mock('BackendSystem'),
+            mock('Tuleap\Svn\Migration\RepositoryCopier')
         );
 
         $system_event->expectOnce('warning');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All rights reserved
+ * Copyright (c) Enalean, 2016-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ use ForgeConfig;
 use SystemEvent;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\CannotCreateAccessFileHistoryException;
+use Tuleap\Svn\Migration\RepositoryCopier;
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SVNRepositoryCreationException;
 use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
@@ -31,6 +33,11 @@ use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
 {
     const NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
+
+    /**
+     * @var RepositoryCopier
+     */
+    private $repository_copier;
 
     /**
      * @var \BackendSystem
@@ -59,13 +66,15 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
         \BackendSVN $backend_svn,
-        \BackendSystem $backend_system
+        \BackendSystem $backend_system,
+        RepositoryCopier $repository_copier
     ) {
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;
         $this->user_manager                = $user_manager;
         $this->backend_svn                 = $backend_svn;
         $this->backend_system              = $backend_system;
+        $this->repository_copier           = $repository_copier;
     }
 
     public function verbalizeParameters($with_link)
@@ -85,6 +94,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
         $repository_id  = $this->getRequiredParameter(3);
         $initial_layout = $this->getParameter(4) ?: array();
         $user           = $this->user_manager->getUserById($this->getParameter(5));
+        $copy_from_core = $this->getParameter(6);
         if ($user === null) {
             $user = $this->user_manager->getUserAnonymous();
         }
@@ -110,7 +120,15 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
 
         try {
             $repository = $this->repository_manager->getRepositoryById($repository_id);
-            $this->access_file_history_creator->useAVersion($repository, 1);
+
+            if ($repository && $copy_from_core) {
+                $this->repository_copier->copy($repository);
+            } else {
+                $this->access_file_history_creator->useAVersion($repository, 1);
+            }
+
+        } catch (CannotFindRepositoryException $e) {
+            //Do nothing
         } catch (CannotCreateAccessFileHistoryException $e) {
             //Do nothing
         }

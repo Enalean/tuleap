@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,6 +33,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Migration\RepositoryCopier;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
@@ -87,6 +88,10 @@ class XMLRepositoryImporter
      * @var NotificationsEmailsBuilder
      */
     private $notifications_emails_builder;
+    /**
+     * @var RepositoryCopier
+     */
+    private $repository_copier;
 
     public function __construct(
         SimpleXMLElement $xml_repo,
@@ -97,7 +102,8 @@ class XMLRepositoryImporter
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
-        NotificationsEmailsBuilder $notifications_emails_builder
+        NotificationsEmailsBuilder $notifications_emails_builder,
+        RepositoryCopier $repository_copier
     ) {
         $attrs = $xml_repo->attributes();
         $this->name = $attrs['name'];
@@ -124,6 +130,7 @@ class XMLRepositoryImporter
         $this->repository_manager           = $repository_manager;
         $this->user_manager                 = $user_manager;
         $this->notifications_emails_builder = $notifications_emails_builder;
+        $this->repository_copier            = $repository_copier;
     }
 
     public function import(
@@ -142,7 +149,12 @@ class XMLRepositoryImporter
         $repo     = new Repository ("", $this->name, '', '', $project);
 
         try {
-            $sysevent = $this->repository_creator->createWithoutUserAdminCheck($repo, $committer);
+            $copy_from_core = false;
+            $sysevent       = $this->repository_creator->createWithoutUserAdminCheck(
+                $repo,
+                $committer,
+                $copy_from_core
+            );
         } catch (CannotCreateRepositoryException $e) {
             throw new XMLImporterException("Unable to create the repository");
         } catch (RepositoryNameIsInvalidException $e) {
@@ -159,7 +171,8 @@ class XMLRepositoryImporter
             $this->repository_manager,
             $this->user_manager,
             $this->backend_svn,
-            $this->backend_system
+            $this->backend_system,
+            $this->repository_copier
         );
         $sysevent->process();
         if ($sysevent->getStatus() != \SystemEvent::STATUS_DONE) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Migration\RepositoryCopier;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\ProjectHistoryFormatter;
 use Tuleap\Svn\Repository\RepositoryCreator;
@@ -74,6 +75,10 @@ class TestBackendSVN extends BackendSVN {
 
 class XMLImporterTest extends TuleapTestCase
 {
+    /**
+     * @var RepositoryCopier
+     */
+    private $repository_copier;
     /**
      * @var NotificationsEmailsBuilder
      */
@@ -276,6 +281,7 @@ class XMLImporterTest extends TuleapTestCase
         $this->backend_system              = mock('BackendSystem');
         $this->access_file                 = mock('Tuleap\Svn\AccessControl\AccessFileHistory');
         $this->notification_emails_builder = new NotificationsEmailsBuilder();
+        $this->repository_copier           = mock('Tuleap\Svn\Migration\RepositoryCopier');
     }
 
     public function tearDown() {
@@ -341,7 +347,8 @@ class XMLImporterTest extends TuleapTestCase
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
-            $this->notification_emails_builder
+            $this->notification_emails_builder,
+            $this->repository_copier
         );
         $this->callImport($svn, $this->project);
 
@@ -372,7 +379,8 @@ class XMLImporterTest extends TuleapTestCase
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
-            $this->notification_emails_builder
+            $this->notification_emails_builder,
+            $this->repository_copier
 
         );
         $this->callImport($svn, $this->project);
@@ -393,7 +401,8 @@ class XMLImporterTest extends TuleapTestCase
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
-            $this->notification_emails_builder
+            $this->notification_emails_builder,
+            $this->repository_copier
         );
         $this->callImport($svn, $this->project);
     }
@@ -413,7 +422,8 @@ class XMLImporterTest extends TuleapTestCase
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
-            $this->notification_emails_builder
+            $this->notification_emails_builder,
+            $this->repository_copier
         );
         $this->callImport($svn, $this->project);
     }
@@ -438,7 +448,8 @@ class XMLImporterTest extends TuleapTestCase
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
-            $this->notification_emails_builder
+            $this->notification_emails_builder,
+            $this->repository_copier
         );
         $this->callImport($svn, $this->project);
     }
@@ -471,7 +482,8 @@ XML;
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
-            $this->notification_emails_builder
+            $this->notification_emails_builder,
+            $this->repository_copier
         );
         $this->callImport($svn, $this->project);
     }
@@ -505,7 +517,8 @@ XML;
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
-            $this->notification_emails_builder
+            $this->notification_emails_builder,
+            $this->repository_copier
         );
         $this->callImport($svn, $this->project);
 
