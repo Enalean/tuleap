@@ -29,6 +29,8 @@ use Tracker_ArtifactDao;
 use PFUser;
 use Tuleap\Trafficlights\ArtifactDao;
 use Tuleap\Trafficlights\ArtifactFactory;
+use Tuleap\Trafficlights\Config;
+use Tuleap\Trafficlights\ConfigConformanceValidator;
 use Tuleap\Trafficlights\Dao as TrafficlightsDao;
 
 class NodeBuilderFactory {
@@ -43,7 +45,8 @@ class NodeBuilderFactory {
     private $artifact_builder;
 
     public function __construct() {
-        $config = new Config(new Dao());
+        $this->dao = new TrafficlightsDao();
+        $config    = new Config($this->dao);
 
         $this->trafficlights_artifact_factory = new ArtifactFactory(
             $config,
@@ -51,8 +54,7 @@ class NodeBuilderFactory {
             Tracker_ArtifactFactory::instance(),
             new ArtifactDao()
         );
-        $this->dao                            = new TrafficlightsDao();
-        $this->artifact_builder               = new ArtifactNodeBuilder(
+        $this->artifact_builder = new ArtifactNodeBuilder(
             new Tracker_ArtifactDao(),
             new ArtifactNodeDao(),
             $this
