@@ -22,7 +22,6 @@ namespace Tuleap\Mail;
 
 use ForgeAccess;
 use ForgeConfig;
-use PFUser;
 use Project_AccessPrivateException;
 use TuleapTestCase;
 use UserManager;
@@ -240,5 +239,20 @@ class MailFilterTest extends TuleapTestCase
         expect($this->mail_logger)->warn()->never();
         expect($this->mail_logger)->info()->once();
         $this->assertEqual($filtered_mails, $expected_mails);
+    }
+
+    public function itFiltersDuplicateMails()
+    {
+        ForgeConfig::set('sys_mail_secure_mode', false);
+
+        $filtered_emails = $this->mail_filter->filter(
+            $this->project,
+            array(
+                'user1@example.com',
+                'user1@example.com'
+            )
+        );
+
+        $this->assertEqual(array_values($filtered_emails), array('user1@example.com'));
     }
 }
