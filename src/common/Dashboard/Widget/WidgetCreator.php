@@ -44,4 +44,43 @@ class WidgetCreator
 
         $this->dao->create($owner_id, $owner_type, $dashboard_id, $widget->getId(), $content_id);
     }
+
+    /**
+     * @param $dashboard_id
+     * @param $dashboard_type
+     * @param DashboardWidgetLine[] $lines
+     * @param $new_line_rank
+     * @return int
+     */
+    public function createLine($dashboard_id, $dashboard_type, array $lines, $new_line_rank)
+    {
+        array_splice($lines, $new_line_rank, 0, array(true));
+        foreach ($lines as $index => $line) {
+            if ($line === true) {
+                $new_line_rank = $index;
+            } else {
+                $this->dao->updateWidgetRankByLineId($line->getId(), $index);
+            }
+        }
+        return $this->dao->createLine($dashboard_id, $dashboard_type, $new_line_rank);
+    }
+
+    /**
+     * @param $new_line_id
+     * @param DashboardWidgetColumn[] $columns
+     * @param $new_column_rank
+     * @return int
+     */
+    public function createColumn($new_line_id, array $columns, $new_column_rank)
+    {
+        array_splice($columns, $new_column_rank, 0, array(true));
+        foreach ($columns as $index => $column) {
+            if ($column === true) {
+                $new_column_rank = $index;
+            } else {
+                $this->dao->updateWidgetRankByColumnId($column->getId(), $index);
+            }
+        }
+        return $this->dao->createColumn($new_line_id, $new_column_rank);
+    }
 }

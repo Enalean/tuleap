@@ -31,9 +31,11 @@ use Tuleap\Dashboard\User\UserDashboardSaver;
 use Tuleap\Dashboard\User\WidgetDeletor;
 use Tuleap\Dashboard\User\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDeletor;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 
 require_once('pre.php');
@@ -53,10 +55,11 @@ $title = $Language->getText(
             CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'
         )
 );
-$csrf_token                = new CSRFSynchronizerToken('/my/');
-$user_dashboard_widget_dao = new DashboardWidgetDao();
-$user_dashboard_dao        = new UserDashboardDao($user_dashboard_widget_dao);
-$router                    = new UserDashboardRouter(
+$csrf_token                 = new CSRFSynchronizerToken('/my/');
+$dashboard_widget_dao       = new DashboardWidgetDao();
+$user_dashboard_dao         = new UserDashboardDao($dashboard_widget_dao);
+$dashboard_widget_retriever = new DashboardWidgetRetriever($dashboard_widget_dao);
+$router                     = new UserDashboardRouter(
     new UserDashboardController(
         $csrf_token,
         $title,
@@ -64,18 +67,21 @@ $router                    = new UserDashboardRouter(
         new UserDashboardSaver($user_dashboard_dao),
         new UserDashboardDeletor($user_dashboard_dao),
         new UserDashboardUpdator($user_dashboard_dao),
-        new DashboardWidgetRetriever(new DashboardWidgetDao()),
+        $dashboard_widget_retriever,
         new DashboardWidgetPresenterBuilder(),
-        new WidgetDeletor($user_dashboard_widget_dao),
-        new WidgetMinimizor($user_dashboard_widget_dao)
+        new WidgetDeletor($dashboard_widget_dao),
+        new WidgetMinimizor($dashboard_widget_dao)
     ),
     new WidgetDashboardController(
         $csrf_token,
-        new DashboardWidgetRetriever(
-            $user_dashboard_widget_dao
+        new WidgetCreator(
+            $dashboard_widget_dao
         ),
+        $dashboard_widget_retriever,
         new DashboardWidgetReorder(
-            $user_dashboard_widget_dao
+            $dashboard_widget_dao,
+            $dashboard_widget_retriever,
+            new DashboardWidgetDeletor($dashboard_widget_dao)
         )
     )
 );

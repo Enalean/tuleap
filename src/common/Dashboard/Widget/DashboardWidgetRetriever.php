@@ -69,6 +69,65 @@ class DashboardWidgetRetriever
     }
 
     /**
+     * @param $line_id
+     * @return array
+     */
+    public function getColumnsByLineById($line_id)
+    {
+        $columns = array();
+
+        foreach ($this->dao->searchAllColumnsByLineIdOrderedByRank($line_id) as $column) {
+            $columns[] = new DashboardWidgetColumn(
+                $column['id'],
+                $column['line_id'],
+                $column['rank'],
+                array()
+            );
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @param $column_id
+     * @return bool
+     */
+    public function isLineEmptyByColumnId($column_id)
+    {
+        $line_columns = $this->dao->searchLineColumnsByColumnId($column_id);
+
+        return count($line_columns) > 0;
+    }
+
+    /**
+     * @param $column_id
+     * @return bool
+     */
+    public function isColumnEmptyByColumnId($column_id)
+    {
+        $columns = $this->dao->searchColumnsByColumnId($column_id);
+
+        return count($columns) > 0;
+    }
+
+    /**
+     * @param $column_id
+     * @param DashboardWidgetLine[] $widgets_lines
+     * @return null|DashboardWidgetColumn
+     */
+    public function getColumnByIdInWidgetsList($column_id, array $widgets_lines)
+    {
+        foreach ($widgets_lines as $line) {
+            foreach ($line->getWidgetColumns() as $column) {
+                if ($column->getId() === $column_id) {
+                    return $column;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param DashboardWidgetLine $widget_line
      */
     private function addColumnWidgetsByLine(DashboardWidgetLine $widget_line)

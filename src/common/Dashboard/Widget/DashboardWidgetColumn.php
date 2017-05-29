@@ -52,11 +52,19 @@ class DashboardWidgetColumn
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLineId()
+    {
+        return $this->line_id;
     }
 
     /**
