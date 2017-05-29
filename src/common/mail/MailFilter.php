@@ -20,10 +20,8 @@
 
 namespace Tuleap\Mail;
 
-use ForgeAccess;
 use ForgeConfig;
 use Logger;
-use PFUser;
 use Project;
 use Project_AccessDeletedException;
 use Project_AccessPrivateException;
@@ -61,6 +59,8 @@ class MailFilter
 
     public function filter(Project $project, array $mails)
     {
+        $mails = $this->deduplicateEmails($mails);
+
         if ((bool)ForgeConfig::get('sys_mail_secure_mode') === false) {
             $this->logger->info("Platform is in insecure send mail mode. All notifications sent");
             return $mails;
@@ -101,5 +101,13 @@ class MailFilter
             }
         }
         return $filtered_mails;
+    }
+
+    /**
+     * @return array
+     */
+    private function deduplicateEmails(array $mails)
+    {
+        return array_flip(array_flip($mails));
     }
 }
