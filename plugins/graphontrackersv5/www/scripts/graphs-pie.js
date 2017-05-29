@@ -57,7 +57,7 @@ tuleap.graphontrackersv5.draw.pie = function (id, graph) {
         .innerRadius((radius - 50) / 2)
         .outerRadius(radius - 50);
 
-    var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
+    var svg = d3.selectAll('.plugin_graphontrackersv5_chart[data-graph-id="'+id+'"]').append("svg")
         .attr("width", width)
         .attr("height", height);
 

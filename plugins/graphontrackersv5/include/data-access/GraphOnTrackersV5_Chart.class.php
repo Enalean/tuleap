@@ -526,7 +526,11 @@ abstract class GraphOnTrackersV5_Chart {
     }
 
     private function fetchContentD3Graph(array $chart_data) {
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs['. $this->getId() .'] = '.json_encode($chart_data).';');
+        $snippet = 'var tuleap = tuleap || {};
+            tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || {};
+            tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || {};
+            tuleap.graphontrackersv5.graphs['. $this->getId() .'] = '.json_encode($chart_data).';';
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet($snippet);
         $content = $this->fetchGraphAnchor('');
 
         return $content;

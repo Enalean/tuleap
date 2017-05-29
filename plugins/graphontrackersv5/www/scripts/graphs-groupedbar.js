@@ -55,8 +55,7 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         .ticks(5)
         .tickSize(chart_width)
         .orient("right");
-
-    var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
+    var svg = d3.selectAll('.plugin_graphontrackersv5_chart[data-graph-id="'+id+'"]').append("svg")
         .attr("width", graph.width)
         .attr("height", graph.height);
 
