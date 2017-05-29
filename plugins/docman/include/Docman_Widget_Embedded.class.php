@@ -85,7 +85,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         if ($this->plugin_docman_widget_embedded_item_id) {
             if ($item = $this->getItem($this->plugin_docman_widget_embedded_item_id)) {
                 $content .= $item->accept($this);
-                $content .= '<div style="text-align:center"><a href="'. $this->plugin_path .'/?group_id='. (int)$item->getGroupId() .'&amp;action=details&amp;id='.  (int)$item->getId() .'">[Go to document]</div>';
+                $content .= '<div style="text-align:center"><a href="'. $this->plugin_path .'/?group_id='. (int)$item->getGroupId() .'&amp;action=details&amp;id='.  (int)$item->getId() .'">[Go to document]</a></div>';
             } else {
                 $content .= 'Document doesn\'t exist or you don\'t have permissions to see it';
             }
