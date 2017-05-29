@@ -122,43 +122,61 @@
 
 .three-columns-small-big-small {
     > :first-child {
-        flex: 1 1;
+        flex-basis: calc(100% / 4);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     > :nth-child(2) {
-        flex: 2 1;
+        flex-basis: calc(100% / 4 * 2);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     > :last-child {
-        flex: 1 1;
+        flex-basis: calc(100% / 4);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 }
 
 .three-columns-big-small-small {
     > :first-child {
-        flex: 2 1;
+        flex-basis: calc(100% / 4 * 2);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     > :nth-child(2) {
-        flex: 1 1;
+        flex-basis: calc(100% / 4);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     > :last-child {
-        flex: 1 1;
+        flex-basis: calc(100% / 4);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 }
 
 .three-columns-small-small-big {
     > :first-child {
-        flex: 1 1;
+        flex-basis: calc(100% / 4);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     > :nth-child(2) {
-        flex: 1 1;
+        flex-basis: calc(100% / 4);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 
     > :last-child {
-        flex: 2 1;
+        flex-basis: calc(100% / 4 * 2);
+        flex-grow: 1;
+        flex-shrink: 1;
     }
 }
 
