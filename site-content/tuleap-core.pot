@@ -35,6 +35,12 @@ msgstr ""
 msgid "Cannot delete the widget."
 msgstr ""
 
+msgid "Cannot maximize the widget."
+msgstr ""
+
+msgid "Cannot minimize the widget."
+msgstr ""
+
 msgid "Cannot update the requested dashboard."
 msgstr ""
 

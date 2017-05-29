@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -17,34 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-widget-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: move;
-}
-
-.dashboard-widget-icons {
-    display: flex;
-}
-
-.dashboard-widget-icons-minimize {
-    margin: 0 5px 0 0;
-}
-
-.dashboard-widget-icons-minimize,
-.dashboard-widget-actions {
-    transition: color 100ms, opacity 100ms;
-    color: $tlp-ui-dimmed;
-    cursor: pointer;
-    opacity: .2;
-
-    &:hover {
-        color: $tlp-theme-color;
-        opacity: 1;
+class b201705231141_store_widget_is_minimized extends ForgeUpgrade_Bucket
+{
+    public function description()
+    {
+        return 'Update dashboards_lines_columns_widgets to store the minimization state of a widget';
     }
-}
 
-.dashboard-widget-imageviewver-img {
-    width: 100%;
+    public function preUp()
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
+
+    public function up()
+    {
+        $sql = "ALTER TABLE dashboards_lines_columns_widgets
+            ADD is_minimized INT(1) NOT NULL DEFAULT '0'
+        ";
+
+        if ($this->db->dbh->exec($sql) === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                'An error occurred while updating dashboards_lines_columns_widgets'
+            );
+        }
+    }
 }

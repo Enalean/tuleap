@@ -42,23 +42,6 @@
     }
 }
 
-.dashboard-edit-button {
-    display: none;
-    margin: -5px 0 -5px $tlp-spacing;
-}
-
-.dashboard-delete-button {
-    display: none;
-    margin: -5px 0 -5px $tlp-half-spacing;
-}
-
-.dashboard-tabs > .tlp-tab-active:hover {
-    > .dashboard-edit-button,
-    > .dashboard-delete-button {
-        display: block;
-    }
-}
-
 .dashboard-widgets-row {
     display: flex;
     flex: 1;
@@ -91,6 +74,10 @@
 
 .dashboard-widget {
     flex: 1 1 auto;
+}
+
+.dashboard-widget-minimized {
+    flex-grow: 0;
 }
 
 .two-columns-small-big {

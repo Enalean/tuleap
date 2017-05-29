@@ -4,17 +4,30 @@
             {{# widget_columns}}
                 <div class="dashboard-widgets-column dragula-container" data-column-id="{{ column_id }}">
                     {{# widgets }}
-                        <section class="tlp-pane dashboard-widget" data-widget-id="{{ widget_id }}">
+                        <section class="tlp-pane dashboard-widget {{# is_minimized }}dashboard-widget-minimized{{/is_minimized}}"
+                                 data-widget-id="{{ widget_id }}"
+                        >
                             {{# csrf_token }}
                                 {{> csrf_token_input }}
                             {{/ csrf_token }}
                             <div class="tlp-pane-container">
                                 <div class="tlp-pane-header dashboard-widget-header" data-draggable="true">
                                     <h1 class="tlp-pane-title" data-draggable="true">{{ title }}</h1>
-                                    <div class="tlp-dropdown">
+                                    <div class="dashboard-widget-icons">
+                                        {{^ is_page_read_only }}
+                                            <form method="post" action="{{ url }}">
+                                                {{# csrf_token }}
+                                                    {{> csrf_token_input }}
+                                                {{/ csrf_token }}
+                                                <input type="hidden" name="dashboard-id" value="{{ id }}">
+                                                <input type="hidden" name="widget-id" value="{{ widget_id }}">
+                                                <input type="hidden" name="action" value="{{# is_minimized }}maximize-widget{{/ is_minimized }}{{^ is_minimized }}minimize-widget{{/ is_minimized }}">
+                                                <i class="dashboard-widget-icons-minimize fa fa-fw fa-caret-{{# is_minimized }}right{{/ is_minimized }}{{^ is_minimized }}down{{/ is_minimized }}"></i>
+                                            </form>
+                                        {{/ is_page_read_only }}
                                         <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>
                                         <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right"
-                                              role="menu"
+                                             role="menu"
                                         >
                                             {{# has_rss }}
                                                 <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
@@ -27,7 +40,7 @@
                                                 </a>
                                             {{/ is_editable }}
                                             <button type="submit"
-                                                    class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger delete-widget-button"
+                                                    class="tlp-dropdown-menu-item delete-widget-button"
                                                     data-target-modal-id="delete-widget-modal-{{ widget_id }}"
                                             >
                                                 <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
@@ -36,9 +49,11 @@
                                     </div>
                                     {{> delete-widget-modal }}
                                 </div>
-                                <section class="tlp-pane-section">
-                                    {{{ content }}}
-                                </section>
+                                {{^ is_minimized }}
+                                    <section class="tlp-pane-section">
+                                        {{{ content }}}
+                                    </section>
+                                {{/ is_minimized }}
                             </div>
                         </section>
                     {{/ widgets }}

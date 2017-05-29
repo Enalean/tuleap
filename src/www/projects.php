@@ -25,6 +25,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Project\ProjectDashboardRouter;
 use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\WidgetDeletor;
+use Tuleap\Dashboard\Project\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
@@ -77,7 +78,8 @@ if ($project && !$project->isError()) {
                         new DashboardWidgetDao()
                     ),
                     new DashboardWidgetPresenterBuilder(),
-                    new WidgetDeletor($project_dashboard_widget_dao)
+                    new WidgetDeletor($project_dashboard_widget_dao),
+                    new WidgetMinimizor($project_dashboard_widget_dao)
                 ),
                 new WidgetDashboardController(
                     $csrf_token,

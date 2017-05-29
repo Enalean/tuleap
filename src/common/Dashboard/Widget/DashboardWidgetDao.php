@@ -91,6 +91,40 @@ class DashboardWidgetDao extends DataAccessObject
         }
     }
 
+    public function minimizeWidget($owner_id, $dashboard_id, $dashboard_type, $widget_id)
+    {
+        $is_minimized = 1;
+        $this->saveMinimizedState($owner_id, $dashboard_id, $dashboard_type, $widget_id, $is_minimized);
+    }
+
+    public function maximizeWidget($owner_id, $dashboard_id, $dashboard_type, $widget_id)
+    {
+        $is_minimized = 0;
+        $this->saveMinimizedState($owner_id, $dashboard_id, $dashboard_type, $widget_id, $is_minimized);
+    }
+
+    private function saveMinimizedState($owner_id, $dashboard_id, $dashboard_type, $widget_id, $is_minimized)
+    {
+        $this->startTransaction();
+
+        try {
+            $this->checkThatDashboardBelongsToTheOwner($owner_id, $dashboard_type, $dashboard_id);
+
+            $widget_id    = $this->da->escapeInt($widget_id);
+            $is_minimized = $this->da->escapeInt($is_minimized);
+
+            $sql = "UPDATE dashboards_lines_columns_widgets
+                    SET is_minimized = $is_minimized
+                    WHERE id = $widget_id";
+            $this->update($sql);
+
+            $this->commit();
+        } catch (\Exception $exception) {
+            $this->rollBack();
+            throw $exception;
+        }
+    }
+
     public function deleteWidget($owner_id, $dashboard_id, $dashboard_type, $widget_id)
     {
         $this->startTransaction();

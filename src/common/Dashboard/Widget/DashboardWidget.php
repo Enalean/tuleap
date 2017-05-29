@@ -27,19 +27,22 @@ class DashboardWidget
     private $content_id;
     private $column_id;
     private $rank;
+    private $is_minimized;
 
     public function __construct(
         $id,
         $name,
         $content_id,
         $column_id,
-        $rank
+        $rank,
+        $is_minimized
     ) {
-        $this->id         = $id;
-        $this->name       = $name;
-        $this->content_id = $content_id;
-        $this->column_id  = $column_id;
-        $this->rank       = $rank;
+        $this->id           = $id;
+        $this->name         = $name;
+        $this->content_id   = $content_id;
+        $this->column_id    = $column_id;
+        $this->rank         = $rank;
+        $this->is_minimized = $is_minimized;
     }
 
     /**
@@ -80,5 +83,10 @@ class DashboardWidget
     public function getRank()
     {
         return $this->rank;
+    }
+
+    public function isMinimized()
+    {
+        return $this->is_minimized;
     }
 }

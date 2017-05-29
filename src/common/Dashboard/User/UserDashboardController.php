@@ -69,6 +69,10 @@ class UserDashboardController
      * @var WidgetDeletor
      */
     private $widget_deletor;
+    /**
+     * @var WidgetMinimizor
+     */
+    private $widget_minimizor;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -79,7 +83,8 @@ class UserDashboardController
         UserDashboardUpdator $updator,
         DashboardWidgetRetriever $widget_retriever,
         DashboardWidgetPresenterBuilder $widget_presenter_builder,
-        WidgetDeletor $widget_deletor
+        WidgetDeletor $widget_deletor,
+        WidgetMinimizor $widget_minimizor
     ) {
         $this->csrf                     = $csrf;
         $this->title                    = $title;
@@ -90,6 +95,7 @@ class UserDashboardController
         $this->widget_retriever         = $widget_retriever;
         $this->widget_presenter_builder = $widget_presenter_builder;
         $this->widget_deletor           = $widget_deletor;
+        $this->widget_minimizor         = $widget_minimizor;
     }
 
     /**
@@ -348,6 +354,52 @@ class UserDashboardController
                 dgettext(
                     'tuleap-core',
                     'Cannot delete the widget.'
+                )
+            );
+        }
+
+        $this->redirectToDashboard($dashboard_id);
+    }
+
+    public function minimizeWidget(HTTPRequest $request)
+    {
+        $this->csrf->check();
+
+        $current_user = $request->getCurrentUser();
+        $dashboard_id = $request->get('dashboard-id');
+        $widget_id    = $request->get('widget-id');
+
+        try {
+            $this->widget_minimizor->minimize($current_user, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'Cannot minimize the widget.'
+                )
+            );
+        }
+
+        $this->redirectToDashboard($dashboard_id);
+    }
+
+    public function maximizeWidget(HTTPRequest $request)
+    {
+        $this->csrf->check();
+
+        $current_user = $request->getCurrentUser();
+        $dashboard_id = $request->get('dashboard-id');
+        $widget_id    = $request->get('widget-id');
+
+        try {
+            $this->widget_minimizor->maximize($current_user, $dashboard_id, self::DASHBOARD_TYPE, $widget_id);
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext(
+                    'tuleap-core',
+                    'Cannot maximize the widget.'
                 )
             );
         }

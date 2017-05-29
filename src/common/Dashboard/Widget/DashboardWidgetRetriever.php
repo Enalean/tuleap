@@ -63,15 +63,9 @@ class DashboardWidgetRetriever
      */
     public function getWidgetById($widget_id)
     {
-        $widget_row = $this->dao->searchWidgetById($widget_id)->getRow();
+        $row = $this->dao->searchWidgetById($widget_id)->getRow();
 
-        return new DashboardWidget(
-            $widget_row['id'],
-            $widget_row['name'],
-            $widget_row['content_id'],
-            $widget_row['column_id'],
-            $widget_row['rank']
-        );
+        return $this->instanciateFromRow($row);
     }
 
     /**
@@ -97,13 +91,22 @@ class DashboardWidgetRetriever
     private function addWidgetsByColumn(DashboardWidgetColumn $widget_column)
     {
         foreach ($this->dao->searchAllWidgetByColumnId($widget_column->getId()) as $row) {
-            $widget_column->addWidget(new DashboardWidget(
-                $row['id'],
-                $row['name'],
-                $row['content_id'],
-                $row['column_id'],
-                $row['rank']
-            ));
+            $widget_column->addWidget($this->instanciateFromRow($row));
         }
+    }
+
+    /**
+     * @return DashboardWidget
+     */
+    private function instanciateFromRow(array $row)
+    {
+        return new DashboardWidget(
+            $row['id'],
+            $row['name'],
+            $row['content_id'],
+            $row['column_id'],
+            $row['rank'],
+            $row['is_minimized']
+        );
     }
 }

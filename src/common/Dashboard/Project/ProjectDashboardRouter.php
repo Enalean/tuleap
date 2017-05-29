@@ -59,6 +59,12 @@ class ProjectDashboardRouter
         $action = $request->get('action');
 
         switch ($action) {
+            case 'minimize-widget':
+                $this->project_dashboard_controller->minimizeWidget($request);
+                break;
+            case 'maximize-widget':
+                $this->project_dashboard_controller->maximizeWidget($request);
+                break;
             case 'delete-widget':
                 $this->project_dashboard_controller->deleteWidget($request);
                 break;
