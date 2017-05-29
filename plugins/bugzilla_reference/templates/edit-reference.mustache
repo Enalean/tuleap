@@ -67,15 +67,24 @@
                    value="{{ getUsername }}"
             >
         </div>
-        <div class="tlp-form-element">
-            <label class="tlp-label" for="password">{{ change_password }} </label>
-            <input type="password"
-                   class="tlp-input"
-                   id="password"
-                   name="password"
-                   placeholder="{{ password }}"
-            >
-        </div>
+        {{^ isApiKeySet }}
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="api_key">{{ api_key }} <i class="fa fa-asterisk"></i></label>
+                <input type="password" class="tlp-input" id="api_key" name="api_key" placeholder="{{ api_key }}"
+                       required>
+            </div>
+        {{/ isApiKeySet }}
+        {{# isApiKeySet }}
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="api_key">{{ change_api_key }} </label>
+                <input type="password"
+                       class="tlp-input"
+                       id="api_key"
+                       name="api_key"
+                       placeholder="{{ api_key }}"
+                >
+            </div>
+        {{/ isApiKeySet }}
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
                 <input

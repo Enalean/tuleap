@@ -26,16 +26,16 @@ class Reference
     private $keyword;
     private $server;
     private $username;
-    private $password;
+    private $api_key;
     private $id;
 
-    public function __construct($id, $reference, $server, $username, $password, $are_followup_private)
+    public function __construct($id, $reference, $server, $username, $api_key, $are_followup_private)
     {
         $this->id                   = $id;
         $this->keyword              = $reference;
         $this->server               = $server;
         $this->username             = $username;
-        $this->password             = $password;
+        $this->api_key              = $api_key;
         $this->are_followup_private = $are_followup_private;
     }
 
@@ -59,9 +59,9 @@ class Reference
         return $this->username;
     }
 
-    public function getPassword()
+    public function getAPIKey()
     {
-        return $this->password;
+        return $this->api_key;
     }
 
     public function getId()
