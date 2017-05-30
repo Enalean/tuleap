@@ -92,7 +92,7 @@ class Controller
                 $reference->getKeyword(),
                 $reference->getServer(),
                 $reference->getUsername(),
-                $reference->getPassword(),
+                $reference->getAPIKey(),
                 $reference->getAreFollowupPrivate()
             );
         }

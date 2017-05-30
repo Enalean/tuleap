@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "API Key"
+msgstr "Clé API"
+
 msgid "Add reference"
 msgstr "Ajouter une référence"
 
@@ -34,8 +37,8 @@ msgid "Cannot create Bugzilla link. Please check your credentials."
 msgstr ""
 "Impossible de créer le lien vers Bugzilla. Merci de vérifier vos identifiants"
 
-msgid "Change password"
-msgstr "Changer de mot de passe"
+msgid "Change API Key"
+msgstr "Modifier la clé API"
 
 msgid "Comments added in Bugzilla will be flaged as private"
 msgstr "Les commentaires ajoutés sur Bugzilla seront marqués comme privés"
@@ -77,9 +80,6 @@ msgstr "Il manque des champs pour pouvoir créer la référence"
 
 msgid "Missing fields for updating reference"
 msgstr "Il manque des champs pour pouvoir modifier la référence"
-
-msgid "Password"
-msgstr "Mot de passe"
 
 msgid "Please check that you can add private comments in Bugzilla."
 msgstr ""

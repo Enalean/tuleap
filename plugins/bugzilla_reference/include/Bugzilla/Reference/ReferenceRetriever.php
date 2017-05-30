@@ -53,7 +53,7 @@ class ReferenceRetriever
             $references['keyword'],
             $references['server'],
             $references['username'],
-            $references['password'],
+            $references['api_key'],
             $references['are_followup_private']
         );
     }

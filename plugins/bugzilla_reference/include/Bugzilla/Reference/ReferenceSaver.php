@@ -54,7 +54,7 @@ class ReferenceSaver
         $this->dao                 = $dao;
         $this->reference_validator = $reference_validator;
         $this->reference_retriever = $reference_retriever;
-        $this->reference_manager = $reference_manager;
+        $this->reference_manager   = $reference_manager;
     }
 
     public function save(\Codendi_Request $request)
@@ -62,18 +62,18 @@ class ReferenceSaver
         $keyword               = $request->get('keyword');
         $server                = trim($request->get('server'));
         $username              = $request->get('username');
-        $password              = $request->get('password');
+        $api_key               = $request->get('api_key');
         $are_followups_private = $request->get('are_follow_up_private');
         $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
 
-        if (empty($keyword) || empty($server) || empty($username) || empty($password)) {
+        if (empty($keyword) || empty($server) || empty($username) || empty($api_key)) {
             throw new RequiredFieldEmptyException();
         }
 
         $this->checkFieldsValidity($keyword, $server);
         $this->createReferenceForBugzillaServer($keyword, $server);
 
-        $this->dao->save($keyword, $server, $username, $password, $are_followups_private);
+        $this->dao->save($keyword, $server, $username, $api_key, $are_followups_private);
     }
 
     private function checkFieldsValidity($keyword, $server)
@@ -106,27 +106,28 @@ class ReferenceSaver
         $id                    = $request->get('id');
         $server                = trim($request->get('server'));
         $username              = $request->get('username');
-        $password              = $this->getPasswordToStore($id, $request->get('password'));
+        $api_key               = $this->getAPIKeyToStore($id, $request->get('api_key'));
         $are_followups_private = $request->get('are_follow_up_private');
         $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
 
         $this->checkServerValidity($server);
 
-        if (empty($server) || empty($username) || empty($password)) {
+        if (empty($server) || empty($username) || empty($api_key)) {
             throw new RequiredFieldEmptyException();
         }
 
-        $this->dao->edit($id, $server, $username, $password, $are_followups_private);
+        $this->dao->edit($id, $server, $username, $api_key, $are_followups_private);
     }
 
-    private function getPasswordToStore($id, $password)
+    private function getAPIKeyToStore($id, $api_key)
     {
-        if ($password !== "") {
-            return $password;
+        if ($api_key !== "") {
+            return $api_key;
         }
 
         $reference = $this->dao->getReferenceById($id);
-        return $reference['password'];
+
+        return $reference['api_key'];
     }
 
     private function createReferenceForBugzillaServer($keyword, $server)

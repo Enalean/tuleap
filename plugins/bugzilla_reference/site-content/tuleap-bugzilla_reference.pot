@@ -1,3 +1,6 @@
+msgid "API Key"
+msgstr ""
+
 msgid "Add reference"
 msgstr ""
 
@@ -19,7 +22,7 @@ msgstr ""
 msgid "Cannot create Bugzilla link. Please check your credentials."
 msgstr ""
 
-msgid "Change password"
+msgid "Change API Key"
 msgstr ""
 
 msgid "Comments added in Bugzilla will be flaged as private"
@@ -59,9 +62,6 @@ msgid "Missing fields for creating reference"
 msgstr ""
 
 msgid "Missing fields for updating reference"
-msgstr ""
-
-msgid "Password"
 msgstr ""
 
 msgid "Please check that you can add private comments in Bugzilla."

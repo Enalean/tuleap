@@ -3,7 +3,7 @@ CREATE TABLE plugin_bugzilla_reference (
     keyword VARCHAR(255) NOT NULL,
     server VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    api_key VARCHAR(255) NOT NULL,
     are_followup_private TINYINT(1),
     INDEX keyword_idx(keyword(5))
 ) ENGINE=InnoDB;

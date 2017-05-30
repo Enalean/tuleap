@@ -32,13 +32,13 @@ class Presenter
     public $keyword;
     public $server;
     public $username;
-    public $password;
+    public $api_key;
     public $cancel;
     public $are_followup_private;
     public $has_references;
     public $follow_up;
     public $edit;
-    public $change_password;
+    public $change_api_key;
     public $delete;
     public $bugzilla_title_edit;
     public $bugzilla_add;
@@ -57,27 +57,28 @@ class Presenter
 
     public function __construct(array $presenters, \CSRFSynchronizerToken $csrf_token)
     {
-        $this->presenters        = $presenters;
-        $this->has_references    = count($presenters) > 0;
+        $this->presenters                    = $presenters;
+        $this->has_references                = count($presenters) > 0;
         $this->csrf_token        = $csrf_token;
         $this->reference_pattern = ReferenceValidator::REFERENCE_PATTERN;
 
-        $this->bugzilla_title                 = dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration');
-        $this->bugzilla_title_edit            = dgettext('tuleap-bugzilla_reference', 'Edit Bugzilla configuration');
-        $this->bugzilla_title_delete          = dgettext('tuleap-bugzilla_reference', 'Delete Bugzilla configuration');
-        $this->bugzilla_add                   = dgettext('tuleap-bugzilla_reference', 'Add reference');
-        $this->bugzilla_edit                  = dgettext('tuleap-bugzilla_reference', 'Edit reference');
-        $this->bugzilla_delete                = dgettext('tuleap-bugzilla_reference', 'Delete reference');
-        $this->keyword                        = dgettext('tuleap-bugzilla_reference', 'Keyword');
-        $this->server                         = dgettext('tuleap-bugzilla_reference', 'Server');
-        $this->username                       = dgettext('tuleap-bugzilla_reference', 'Username');
-        $this->password                       = dgettext('tuleap-bugzilla_reference', 'Password');
-        $this->change_password                = dgettext('tuleap-bugzilla_reference', 'Change password');
-        $this->follow_up                      = dgettext('tuleap-bugzilla_reference', 'Follow Up');
-        $this->cancel                         = dgettext('tuleap-bugzilla_reference', 'Cancel');
-        $this->delete                         = dgettext('tuleap-bugzilla_reference', 'Delete');
-        $this->edit                           = dgettext('tuleap-bugzilla_reference', 'Edit');
-        $this->allowed_reference_description  = dgettext(
+        $this->bugzilla_title        = dgettext('tuleap-bugzilla_reference', 'Bugzilla configuration');
+        $this->bugzilla_title_edit   = dgettext('tuleap-bugzilla_reference', 'Edit Bugzilla configuration');
+        $this->bugzilla_title_delete = dgettext('tuleap-bugzilla_reference', 'Delete Bugzilla configuration');
+        $this->bugzilla_add          = dgettext('tuleap-bugzilla_reference', 'Add reference');
+        $this->bugzilla_edit         = dgettext('tuleap-bugzilla_reference', 'Edit reference');
+        $this->bugzilla_delete       = dgettext('tuleap-bugzilla_reference', 'Delete reference');
+        $this->keyword               = dgettext('tuleap-bugzilla_reference', 'Keyword');
+        $this->server                = dgettext('tuleap-bugzilla_reference', 'Server');
+        $this->username              = dgettext('tuleap-bugzilla_reference', 'Username');
+        $this->api_key               = dgettext('tuleap-bugzilla_reference', 'API Key');
+        $this->change_api_key        = dgettext('tuleap-bugzilla_reference', 'Change API Key');
+        $this->follow_up             = dgettext('tuleap-bugzilla_reference', 'Follow Up');
+        $this->cancel                = dgettext('tuleap-bugzilla_reference', 'Cancel');
+        $this->delete                = dgettext('tuleap-bugzilla_reference', 'Delete');
+        $this->edit                  = dgettext('tuleap-bugzilla_reference', 'Edit');
+
+        $this->allowed_reference_description = dgettext(
             'tuleap-bugzilla_reference',
             'Keyword must contain only alphanumeric and underscore characters'
         );

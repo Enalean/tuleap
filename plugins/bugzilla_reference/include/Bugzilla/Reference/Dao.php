@@ -30,16 +30,16 @@ class Dao extends \DataAccessObject
         $this->enableExceptionsOnError();
     }
 
-    public function save($keyword, $server, $username, $password, $are_followups_private)
+    public function save($keyword, $server, $username, $api_key, $are_followups_private)
     {
         $keyword               = $this->da->quoteSmart($keyword);
         $server                = $this->da->quoteSmart($server);
         $username              = $this->da->quoteSmart($username);
-        $password              = $this->da->quoteSmart($password);
+        $api_key               = $this->da->quoteSmart($api_key);
         $are_followups_private = $this->da->escapeInt($are_followups_private);
 
-        $sql_save = "INSERT INTO plugin_bugzilla_reference(keyword, server, username, password, are_followup_private)
-                      VALUES ($keyword, $server, $username, $password, $are_followups_private)";
+        $sql_save = "INSERT INTO plugin_bugzilla_reference(keyword, server, username, api_key, are_followup_private)
+                      VALUES ($keyword, $server, $username, $api_key, $are_followups_private)";
 
         return $this->update($sql_save);
     }
@@ -60,13 +60,13 @@ class Dao extends \DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
-    public function edit($id, $server, $username, $password, $are_followups_private)
+    public function edit($id, $server, $username, $api_key, $are_followups_private)
     {
         $id                    = $this->da->escapeInt($id);
         $link                  = $this->da->quoteSmart($server . '/show_bug.cgi?id=$1');
         $server                = $this->da->quoteSmart($server);
         $username              = $this->da->quoteSmart($username);
-        $password              = $this->da->quoteSmart($password);
+        $api_key               = $this->da->quoteSmart($api_key);
         $are_followups_private = $this->da->escapeInt($are_followups_private);
 
         $this->da->startTransaction();
@@ -74,7 +74,7 @@ class Dao extends \DataAccessObject
         $sql = "UPDATE plugin_bugzilla_reference SET
                   server = $server,
                   username = $username,
-                  password = $password,
+                  api_key = $api_key,
                   are_followup_private = $are_followups_private
                 WHERE id = $id";
 

@@ -57,7 +57,7 @@ class RESTReferenceCreator
 
         $url                   = $bugzilla->getServer() . '/rest/bug/' . urlencode($target_id) . '/comment';
         $login                 = $bugzilla->getUsername();
-        $password              = $bugzilla->getPassword();
+        $api_key               = $bugzilla->getAPIKey();
         $are_follow_up_private = $bugzilla->getAreFollowupPrivate();
 
         $options = array(
@@ -69,7 +69,7 @@ class RESTReferenceCreator
             CURLOPT_POSTFIELDS  => json_encode(
                 array(
                     "Bugzilla_login"    => $login,
-                    "Bugzilla_password" => $password,
+                    "Bugzilla_api_key"  => $api_key,
                     "id"                => $target_id,
                     "comment"           => $message,
                     "is_private"        => $are_follow_up_private,
