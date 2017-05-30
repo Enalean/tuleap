@@ -25,14 +25,15 @@ function CampaignService(
         return rest.one('trafficlights_campaigns', campaign_id).get().$object;
     }
 
-    function getCampaigns(project_id, campaign_status, limit, offset) {
+    function getCampaigns(project_id, milestone_id, campaign_status, limit, offset) {
         return rest.one('projects', project_id)
             .all('trafficlights_campaigns')
             .getList({
                 limit: limit,
                 offset: offset,
                 query : {
-                    status: campaign_status
+                    status: campaign_status,
+                    milestone_id: milestone_id
                 }
             })
             .then(function(response) {
