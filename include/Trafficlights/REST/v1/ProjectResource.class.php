@@ -92,7 +92,10 @@ class ProjectResource {
             $this->tracker_form_element_factory,
             $this->trafficlights_artifact_factory
         );
-        $this->query_to_criterion_converter      = new QueryToCriterionConverter();
+        $this->query_to_criterion_converter      = new QueryToCriterionConverter(
+            $conformance_validator,
+            Tracker_ArtifactFactory::instance()
+        );
     }
 
     /**
@@ -119,12 +122,18 @@ class ProjectResource {
      * @throws 403
      * @throws 404
      */
-    protected function getCampaigns($id, $query = '', $limit = 10, $offset = 0)
+    protected function getCampaigns($id, $query = null, $limit = 10, $offset = 0)
     {
         $this->optionsCampaigns($id);
 
         try {
-            $criterion = $this->query_to_criterion_converter->convert($query);
+            $status_criterion = $this->query_to_criterion_converter->convertStatus($query);
+        } catch (MalformedQueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        try {
+            $milestone_criterion = $this->query_to_criterion_converter->convertMilestone($query);
         } catch (MalformedQueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
@@ -146,7 +155,7 @@ class ProjectResource {
         }
 
         $paginated_campaigns_representations = $this->campaign_representation_builder
-            ->getPaginatedCampaignsRepresentations($this->user, $campaign_tracker_id, $criterion, $limit, $offset);
+            ->getPaginatedCampaignsRepresentations($this->user, $campaign_tracker_id, $status_criterion, $milestone_criterion, $limit, $offset);
 
         $this->sendAllowHeaderForProjectCampaigns();
         $this->sendPaginationHeaders($limit, $offset, $paginated_campaigns_representations->getTotalSize());
@@ -189,14 +198,10 @@ class ProjectResource {
             throw new RestException(403, 'Access denied to the test definition tracker');
         }
 
-        $paginated_artifacts = $this->trafficlights_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, false);
+        $paginated_artifacts = $this->trafficlights_artifact_factory->getPaginatedArtifactsByTrackerIdUserCanView($this->user, $tracker_id, null, $limit, $offset, false);
         $result = array();
 
         foreach ($paginated_artifacts->getArtifacts() as $artifact) {
-            if (! $artifact->userCanView($this->user)) {
-                continue;
-            }
-
             $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation($this->user, $artifact);
 
             if ($definition_representation) {

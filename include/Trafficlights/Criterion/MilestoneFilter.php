@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights;
+namespace Tuleap\Trafficlights\Criterion;
 
-use Exception;
+use PFUser;
 
-class MalformedQueryParameterException extends Exception {
+class MilestoneFilter implements ISearchOnMilestone {
 
-    public function __construct($message = null) {
-        if (! isset($message)) {
-            $message = 'Expecting a JSON object.';
-        }
-        parent::__construct('Query is malformed. ' .$message);
+    /** @var int */
+    private $milestone_id;
+
+    public function __construct($milestone_id) {
+        $this->milestone_id = $milestone_id;
+    }
+
+    /** @return int */
+    public function getMilestoneId()
+    {
+        return $this->milestone_id;
     }
 }
+

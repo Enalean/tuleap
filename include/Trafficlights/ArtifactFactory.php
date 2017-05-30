@@ -66,10 +66,19 @@ class ArtifactFactory
         return $this->tracker_artifact_factory->getArtifactByIdUserCanView($user, $id);
     }
 
-    public function getPaginatedOpenArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $limit, $offset)
+    /**
+     * @param PFUser  $user           The user for which we're retrieving the campaign
+     * @param int     $tracker_id     The id of the tracker
+     * @param int     $milestone_id   The id of the milestone that should be linked by the campaigns
+     * @param int     $limit          The maximum number of artifacts returned
+     * @param int     $offset
+     *
+     * @return Tracker_Artifact_PaginatedArtifacts
+     */
+    public function getPaginatedOpenArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset)
     {
         $artifacts = array();
-        foreach ($this->dao->searchPaginatedOpenByTrackerId($tracker_id, $limit, $offset) as $row) {
+        foreach ($this->dao->searchPaginatedOpenByTrackerId($tracker_id, $milestone_id, $limit, $offset) as $row) {
             $artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $artifacts[$row['id']] = $artifact;
@@ -81,10 +90,19 @@ class ArtifactFactory
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
 
-    public function getPaginatedClosedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $limit, $offset)
+    /**
+     * @param PFUser  $user           The user for which we're retrieving the campaign
+     * @param int     $tracker_id     The id of the tracker
+     * @param int     $milestone_id   The id of the milestone that should be linked by the campaigns
+     * @param int     $limit          The maximum number of artifacts returned
+     * @param int     $offset
+     *
+     * @return Tracker_Artifact_PaginatedArtifacts
+     */
+    public function getPaginatedClosedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset)
     {
         $artifacts = array();
-        foreach ($this->dao->searchPaginatedClosedByTrackerId($tracker_id, $limit, $offset) as $row) {
+        foreach ($this->dao->searchPaginatedClosedByTrackerId($tracker_id, $milestone_id, $limit, $offset) as $row) {
             $artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $artifacts[$row['id']] = $artifact;
@@ -96,15 +114,28 @@ class ArtifactFactory
     }
 
     /**
-     * @param int $tracker_id The id of the tracker
-     * @param int $limit      The maximum number of artifacts returned
-     * @param int $offset
+     * @param PFUser  $user           The user for which we're retrieving the campaign
+     * @param int     $tracker_id     The id of the tracker
+     * @param int     $milestone_id   The id of the milestone that should be linked by the campaigns
+     * @param int     $limit          The maximum number of artifacts returned
+     * @param int     $offset
+     * @param bool    $reverse_order  Should the order of the returned campaigns be reversed?
      *
      * @return Tracker_Artifact_PaginatedArtifacts
      */
-    public function getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, $reverse_order)
+    public function getPaginatedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset, $reverse_order)
     {
-        return $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, $reverse_order);
+        $artifacts = array();
+        foreach ($this->dao->searchPaginatedByTrackerId($tracker_id, $milestone_id, $limit, $offset, $reverse_order) as $row) {
+            $artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
+            if ($artifact->userCanView($user)) {
+                $artifacts[$row['id']] = $artifact;
+            }
+        }
+
+        $size = (int) $this->dao->foundRows();
+
+        return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
 
     /**

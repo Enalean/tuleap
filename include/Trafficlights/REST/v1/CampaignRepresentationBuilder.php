@@ -27,6 +27,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Trafficlights\ArtifactFactory;
 use UserManager;
 use Tuleap\Trafficlights\Criterion\ISearchOnStatus;
+use Tuleap\Trafficlights\Criterion\ISearchOnMilestone;
 
 class CampaignRepresentationBuilder {
 
@@ -68,7 +69,8 @@ class CampaignRepresentationBuilder {
     /**
      * @param PFUser $user
      * @param $campaign_tracker_id
-     * @param ISearchOnStatus $criterion
+     * @param ISearchOnStatus $status_criterion
+     * @param ISearchOnMilestoneId $milestone_criterion
      * @param $limit
      * @param $offset
      * @return PaginatedCampaignsRepresentations
@@ -76,26 +78,27 @@ class CampaignRepresentationBuilder {
     public function getPaginatedCampaignsRepresentations(
         PFUser $user,
         $campaign_tracker_id,
-        ISearchOnStatus $criterion,
+        ISearchOnStatus $status_criterion,
+        ISearchOnMilestone $milestone_criterion,
         $limit,
         $offset
     ) {
         $paginated_campaigns = null;
         $campaign_representations = array();
+        $milestone_id = $milestone_criterion->getMilestoneId();
 
-        if ($criterion->shouldRetrieveOnlyClosedCampaigns()) {
-            $paginated_campaigns = $this->trafficlights_artifact_factory->getPaginatedClosedArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $limit, $offset);
-        } else if ($criterion->shouldRetrieveOnlyOpenCampaigns()) {
-            $paginated_campaigns = $this->trafficlights_artifact_factory->getPaginatedOpenArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $limit, $offset);
+        if ($status_criterion->shouldRetrieveOnlyClosedCampaigns()) {
+            $paginated_campaigns = $this->trafficlights_artifact_factory->getPaginatedClosedArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset);
+        } else if ($status_criterion->shouldRetrieveOnlyOpenCampaigns()) {
+            $paginated_campaigns = $this->trafficlights_artifact_factory->getPaginatedOpenArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset);
         } else {
-            $paginated_campaigns = $this->trafficlights_artifact_factory->getPaginatedArtifactsByTrackerId($campaign_tracker_id, $limit, $offset, true);
+            $paginated_campaigns = $this->trafficlights_artifact_factory->getPaginatedArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset, true);
         }
 
         foreach ($paginated_campaigns->getArtifacts() as $campaign) {
             $campaign_representation = new CampaignRepresentation();
             $campaign_representation->build($campaign, $this->tracker_form_element_factory, $user);
             $campaign_representations[] = $campaign_representation;
-
         }
 
         $paginated_campaigns_representations = new PaginatedCampaignsRepresentations(
