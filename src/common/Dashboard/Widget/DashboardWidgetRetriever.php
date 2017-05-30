@@ -64,6 +64,9 @@ class DashboardWidgetRetriever
     public function getWidgetById($widget_id)
     {
         $row = $this->dao->searchWidgetById($widget_id)->getRow();
+        if (! $row) {
+            throw new WidgetNotFoundException();
+        }
 
         return $this->instanciateFromRow($row);
     }
@@ -86,28 +89,6 @@ class DashboardWidgetRetriever
         }
 
         return $columns;
-    }
-
-    /**
-     * @param $column_id
-     * @return bool
-     */
-    public function isLineEmptyByColumnId($column_id)
-    {
-        $line_columns = $this->dao->searchLineColumnsByColumnId($column_id);
-
-        return count($line_columns) > 0;
-    }
-
-    /**
-     * @param $column_id
-     * @return bool
-     */
-    public function isColumnEmptyByColumnId($column_id)
-    {
-        $columns = $this->dao->searchColumnsByColumnId($column_id);
-
-        return count($columns) > 0;
     }
 
     /**
