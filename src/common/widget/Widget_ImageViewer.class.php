@@ -23,9 +23,9 @@ require_once('Widget.class.php');
 
 /**
 * Widget_ImageViewer
-* 
+*
 * Display an image
-* 
+*
 */
 class Widget_ImageViewer extends Widget {
     var $image_title;
@@ -57,9 +57,9 @@ class Widget_ImageViewer extends Widget {
 
         $hp = Codendi_HTMLPurifier::instance();
 
-        return '<img class="dashboard-widget-imageviewver-img"
+        return '<div class="dashboard-widget-imageviewver-content"><img class="dashboard-widget-imageviewver-img"
             src="' . $hp->purify($this->image_url) . '"
-            alt="' . $hp->purify($this->getTitle()) . '" />';
+            alt="' . $hp->purify($this->getTitle()) . '" /></div>';
     }
 
     function getPreferences() {
