@@ -92,6 +92,12 @@ msgstr "Privé"
 msgid "Public"
 msgstr "Public"
 
+msgid "REST API URL"
+msgstr "URL de l'API REST"
+
+msgid "REST URL is invalid"
+msgstr "L'URL REST est incorrecte"
+
 msgid "Reference has been successfully added"
 msgstr "La référence a été ajoutée avec succès"
 
@@ -108,7 +114,15 @@ msgid "Server"
 msgstr "Serveur"
 
 msgid "Server is invalid"
-msgstr "Le serveur est invalide"
+msgstr "Le serveur est incorrect"
+
+msgid ""
+"Server is the URL that will be used to build links to end users. <br>If "
+"defined, REST API URL is the one that will be used to issue REST calls"
+msgstr ""
+"Le serveur est l'URL qui va être utilisée pour construire les liens aux "
+"utilisateurs.<br>L'URL de l'API REST est celle qui sera utilisée pour faire "
+"les appels REST si elle est définie."
 
 #, php-format
 msgid "The reference \"%s\" is already used"

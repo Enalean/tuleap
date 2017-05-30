@@ -45,6 +45,10 @@ class Presenter
     public $bugzilla_edit;
     public $reference_pattern;
     public $allowed_reference_description;
+    public $rest_url;
+    public $bugzilla_title_delete;
+    public $bugzilla_delete;
+    public $purified_rest_url_helper;
 
     /**
      * @var array
@@ -57,8 +61,8 @@ class Presenter
 
     public function __construct(array $presenters, \CSRFSynchronizerToken $csrf_token)
     {
-        $this->presenters                    = $presenters;
-        $this->has_references                = count($presenters) > 0;
+        $this->presenters        = $presenters;
+        $this->has_references    = count($presenters) > 0;
         $this->csrf_token        = $csrf_token;
         $this->reference_pattern = ReferenceValidator::REFERENCE_PATTERN;
 
@@ -77,23 +81,36 @@ class Presenter
         $this->cancel                = dgettext('tuleap-bugzilla_reference', 'Cancel');
         $this->delete                = dgettext('tuleap-bugzilla_reference', 'Delete');
         $this->edit                  = dgettext('tuleap-bugzilla_reference', 'Edit');
+        $this->rest_url              = dgettext('tuleap-bugzilla_reference', 'REST API URL');
+
 
         $this->allowed_reference_description = dgettext(
             'tuleap-bugzilla_reference',
             'Keyword must contain only alphanumeric and underscore characters'
         );
-        $this->are_followup_private           = dgettext(
+        $this->are_followup_private          = dgettext(
             'bugzilla_reference',
             'Comments added in Bugzilla will be flaged as private'
         );
-        $this->bugzilla_delete_confirmation   = dgettext(
+        $this->bugzilla_delete_confirmation  = dgettext(
             'tuleap-bugzilla_reference',
             "Wow, wait a minute. You are about to delete the reference. Please confirm your action."
         );
-        $this->purified_no_bugzilla_reference = Codendi_HTMLPurifier::instance()->purify(
+
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $this->purified_no_bugzilla_reference = $purifier->purify(
             dgettext(
                 'tuleap-bugzilla_reference',
                 'There is nothing here, <br> start by adding a Bugzilla reference'
+            ),
+            CODENDI_PURIFIER_LIGHT
+        );
+
+        $this->purified_rest_url_helper = $purifier->purify(
+            dgettext(
+                'tuleap-bugzilla_reference',
+                'Server is the URL that will be used to build links to end users. <br>If defined, REST API URL is the one that will be used to issue REST calls'
             ),
             CODENDI_PURIFIER_LIGHT
         );

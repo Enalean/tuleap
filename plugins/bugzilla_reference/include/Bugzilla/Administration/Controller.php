@@ -29,6 +29,7 @@ use Tuleap\Bugzilla\Reference\ReferenceDestructor;
 use Tuleap\Bugzilla\Reference\ReferenceRetriever;
 use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RequiredFieldEmptyException;
+use Tuleap\Bugzilla\Reference\RESTURLIsInvalidException;
 use Tuleap\Bugzilla\Reference\ServerIsInvalidException;
 use Tuleap\Bugzilla\Reference\UnableToCreateSystemReferenceException;
 
@@ -93,7 +94,8 @@ class Controller
                 $reference->getServer(),
                 $reference->getUsername(),
                 $reference->getAPIKey(),
-                $reference->getAreFollowupPrivate()
+                $reference->getAreFollowupPrivate(),
+                $reference->getRestUrl()
             );
         }
 
@@ -136,6 +138,11 @@ class Controller
                 Feedback::ERROR,
                 dgettext('tuleap-bugzilla_reference', 'Server is invalid')
             );
+        } catch (RESTURLIsInvalidException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'REST URL is invalid')
+            );
         } catch (UnableToCreateSystemReferenceException $ex) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
@@ -165,6 +172,11 @@ class Controller
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-bugzilla_reference', 'Server is invalid')
+            );
+        } catch (RESTURLIsInvalidException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-bugzilla_reference', 'REST URL is invalid')
             );
         }
 

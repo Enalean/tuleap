@@ -73,6 +73,12 @@ msgstr ""
 msgid "Public"
 msgstr ""
 
+msgid "REST API URL"
+msgstr ""
+
+msgid "REST URL is invalid"
+msgstr ""
+
 msgid "Reference has been successfully added"
 msgstr ""
 
@@ -89,6 +95,11 @@ msgid "Server"
 msgstr ""
 
 msgid "Server is invalid"
+msgstr ""
+
+msgid ""
+"Server is the URL that will be used to build links to end users. <br>If "
+"defined, REST API URL is the one that will be used to issue REST calls"
 msgstr ""
 
 #, php-format
