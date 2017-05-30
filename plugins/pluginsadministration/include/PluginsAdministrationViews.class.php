@@ -349,6 +349,7 @@ class PluginsAdministrationViews extends Views {
                 'dont_restrict'               => $plugin['dont_restrict'],
                 'is_there_unmet_dependencies' => $is_there_unmet_dependencies,
                 'unmet_dependencies'          => $unmet_dependencies,
+                'csrf_token'                  => new CSRFSynchronizerToken('/plugins/pluginsadministration/')
             );
 
             $i++;
@@ -373,8 +374,10 @@ class PluginsAdministrationViews extends Views {
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'change_to_'.$state);
 
         if (! $dont_touch) {
+            $csrf_token = new CSRFSynchronizerToken('/plugins/pluginsadministration/');
             $output = '
             <form id="plugin-switch-form-'.$plugin_id.'" action="?action='. $action .'&plugin_id='. $plugin_id .'&view='.$view.'" method="POST">
+                ' . $csrf_token->fetchHTMLInput() . '
                 <div class="tlp-switch">
                     <input type="checkbox" data-form-id="plugin-switch-form-'.$plugin_id.'" id="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-checkbox" '.$checked.'>
                     <label for="plugin-switch-toggler-'.$plugin_id.'" class="tlp-switch-button">'.$title.'</label>
@@ -407,6 +410,6 @@ class PluginsAdministrationViews extends Views {
             }
         }
 
-        return new AvailablePluginsPresenter($plugins);
+        return new AvailablePluginsPresenter($plugins, new CSRFSynchronizerToken('/plugins/pluginsadministration/'));
     }
 }

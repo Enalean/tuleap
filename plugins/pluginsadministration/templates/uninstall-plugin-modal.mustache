@@ -1,5 +1,8 @@
 <form action="?" method="POST">
     <div id="uninstall-plugin-{{ plugin_id }}" class="tlp-modal tlp-modal-danger install-plugin-modal" role="dialog" aria-labelledby="uninstall-plugin-{{ plugin_id }}-label">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="uninstall-plugin-{{ plugin_id }}-label">
                 <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ uninstall_modal_title }} {{ name }}
