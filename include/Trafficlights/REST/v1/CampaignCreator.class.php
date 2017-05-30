@@ -72,12 +72,16 @@ class CampaignCreator {
     /**
      * @return ArtifactReference
      */
-    public function createCampaign(PFUser $user, $project_id, $label) {
+    public function createCampaign(PFUser $user, $project_id, $label, $milestone_id) {
         try {
             $tracker = $this->getCampaignTrackerReferenceForProject($project_id);
             $values  = $this->getFieldValuesForCampaignArtifactCreation($tracker, $user, $label);
 
-            return $this->artifact_creator->create($user, $tracker, $values);
+            $artifact_ref = $this->artifact_creator->create($user, $tracker, $values);
+            if (! empty($milestone_id)) {
+                $artifact_ref->getArtifact()->linkArtifact($milestone_id, $user);
+            }
+            return $artifact_ref;
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldValueException $exception) {

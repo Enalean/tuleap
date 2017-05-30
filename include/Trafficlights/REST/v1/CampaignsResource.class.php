@@ -272,13 +272,15 @@ class CampaignsResource {
      *
      * @param int    $project_id   Id of the project the campaign will belong to
      * @param string $label        The label of the new campaign
+     * @param int    $milestone_id Id of the milestone with which the campaign will be linked
      */
-    protected function post($project_id, $label) {
+    protected function post($project_id, $label, $milestone_id = null) {
         $this->options();
         return $this->campaign_creator->createCampaign(
             UserManager::instance()->getCurrentUser(),
             $project_id,
-            $label
+            $label,
+            $milestone_id
         );
     }
 
