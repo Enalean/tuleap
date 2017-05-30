@@ -13,10 +13,10 @@
             <div class="nav-dropdown-content-projects-list-project">
                 <a href="{{ project_uri }}" class="nav-dropdown-content-projects-list-project-name">
                     {{# is_private }}
-                        <i class="fa fa-lock nav-dropdown-content-projects-list-project-name-access"></i>
+                        <i class="fa fa-fw fa-lock nav-dropdown-content-projects-list-project-name-access"></i>
                     {{/ is_private }}
                     {{^ is_private }}
-                        <i class="fa fa-unlock nav-dropdown-content-projects-list-project-name-access"></i>
+                        <i class="fa fa-fw fa-unlock nav-dropdown-content-projects-list-project-name-access"></i>
                     {{/ is_private }}
                     {{ project_name }}
                 </a>
