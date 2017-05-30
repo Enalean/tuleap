@@ -191,7 +191,7 @@ class AuthorizedKeysFileCreator
     {
         try {
             $this->system_command->exec(
-                '/usr/share/tuleap/src/utils/ssh-keys-validity-checker.sh ' . escapeshellarg($file_path)
+                '/usr/share/tuleap/src/utils/authorized-keys-validity-checker.sh ' . escapeshellarg($file_path)
             );
         } catch (System_Command_CommandException $ex) {
             return false;

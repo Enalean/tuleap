@@ -65,6 +65,17 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
         $this->assertCount($this->validator->validateAllKeys($keys), 0);
     }
 
+    public function itRaisesAWarningWhenTheKeyIsNotValidOutsideAnAuthorizedKeysFile()
+    {
+        $keys = array(
+            'tuleap.example.com,192.0.2.1 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNpemQvp5G/ldgg5diu/OZdNVV3mHqsHmTBcJKiFnfwxNxzZDdTb7hXQKEd6akU6qbmlGPr8AYMBEfII/C47o/B93y2trghS1dVYKyEq7Md/uZx+NFnGysNiMeWr1jPWHWEiNfKgbZPW6OMY200fNGXROmxvp4BQLID7bPLXVLctvCRO4uD2KlK66uWaql7QuGWxzY2C09d15Q/84oVwcIVook/luP1ieHg6syS9FutO+j0//Hfg2Cze/JrrxIZT2XUUAVeyM9uSwW2bBprmDI8rq3UXUotcJws9Pc4PgK7U5P4w1qBQFRonJSjYbK2+1EXLPvV5S60E2mwu6Ta513'
+        );
+
+        stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
+
+        $this->assertCount($this->validator->validateAllKeys($keys), 0);
+    }
+
     public function itRaisesAWarningWhenTheKeyIsInvalidAmongValidKeys() {
         $keys = array(
             $this->key1,
