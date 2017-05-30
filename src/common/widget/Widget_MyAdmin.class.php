@@ -42,7 +42,7 @@ class Widget_MyAdmin extends Widget {
     }
 
     public function getContent() {
-        $html_my_admin = '<table width="100%">';
+        $html_my_admin = '<table width="100%" class="tlp-table">';
 
         if ($this->user_is_super_admin) {
             $html_my_admin .= $this->getHTMLForSuperAdmin();
