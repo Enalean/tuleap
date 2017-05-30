@@ -35,6 +35,7 @@ class PluginsAdministrationActions extends Actions {
     }
 
     function available() {
+        $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
@@ -63,6 +64,7 @@ class PluginsAdministrationActions extends Actions {
     }
 
     function install() {
+        $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
         $name = $request->get('name');
         if ($name) {
@@ -84,6 +86,7 @@ class PluginsAdministrationActions extends Actions {
     }
 
     function unavailable() {
+        $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $request = HTTPRequest::instance();
         $plugin_data = $this->_getPluginFromRequest();
         if ($plugin_data) {
@@ -112,6 +115,7 @@ class PluginsAdministrationActions extends Actions {
     }
 
     function uninstall() {
+        $this->checkSynchronizerToken('/plugins/pluginsadministration/');
         $plugin = $this->_getPluginFromRequest();
         if ($plugin) {
             $plugin_manager = $this->plugin_manager;

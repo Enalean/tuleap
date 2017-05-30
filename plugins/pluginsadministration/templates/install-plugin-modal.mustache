@@ -1,4 +1,7 @@
 <form action="?" method="POST">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <div id="install-plugin-{{ name }}" class="
         tlp-modal
         {{# is_there_unmet_dependencies }}tlp-modal-danger{{/ is_there_unmet_dependencies }}
@@ -48,7 +51,7 @@
                 {{ install_modal_cancel }}
             </button>
             {{^ is_there_unmet_dependencies }}
-                <button type="sumit" class="tlp-button-primary tlp-modal-action">
+                <button type="submit" class="tlp-button-primary tlp-modal-action">
                     <i class="fa fa-download tlp-button-icon"></i> {{ install_modal_submit }}
                 </button>
             {{/ is_there_unmet_dependencies }}

@@ -35,8 +35,12 @@ class AvailablePluginsPresenter
     public $filter_label;
     public $no_local_plugins;
     public $filter_empty_state;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
-    public function __construct(array $plugins)
+    public function __construct(array $plugins, \CSRFSynchronizerToken $csrf_token)
     {
         $this->plugins                  = $plugins;
         $this->title                    = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'title');
@@ -57,6 +61,7 @@ class AvailablePluginsPresenter
         $this->filter_empty_state       = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'filter_empty_state');
 
         $this->sortPlugins();
+        $this->csrf_token = $csrf_token;
     }
 
     private function sortPlugins()
