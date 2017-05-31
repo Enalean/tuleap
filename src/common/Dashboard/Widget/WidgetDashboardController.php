@@ -73,6 +73,8 @@ class WidgetDashboardController
         $new_line_rank   = $request->get('new-line-rank');
         $new_column_rank = $request->get('new-column-rank');
 
+        $new_ids = array();
+
         if ($dashboard_id === false || $widget_id === false || $new_widget_rank === false) {
             return;
         }
@@ -88,12 +90,14 @@ class WidgetDashboardController
         }
 
         if (empty($new_line_id) && empty($new_column_id)) {
-            $new_line_id = strval($this->widget_creator->createLine($dashboard_id, $dashboard_type, $widgets_lines, $new_line_rank));
+            $new_line_id            = strval($this->widget_creator->createLine($dashboard_id, $dashboard_type, $widgets_lines, $new_line_rank));
+            $new_ids['new_line_id'] = $new_line_id;
         }
 
         if ($new_line_id && empty($new_column_id)) {
             $columns       = $this->widget_retriever->getColumnsByLineById($new_line_id);
-            $new_column_id = strval($this->widget_creator->createColumn($new_line_id, $columns, $new_column_rank));
+            $new_column_id            = strval($this->widget_creator->createColumn($new_line_id, $columns, $new_column_rank));
+            $new_ids['new_column_id'] = $new_column_id;
         }
 
         $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard_id, $dashboard_type);
@@ -104,6 +108,8 @@ class WidgetDashboardController
             $new_column_id,
             $new_widget_rank
         );
+
+        $GLOBALS['Response']->sendJSON($new_ids);
     }
 
     /**
