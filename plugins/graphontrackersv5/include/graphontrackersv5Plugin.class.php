@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -70,6 +72,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
             $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
             $this->addHook('javascript_file');
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         }
         $this->allowedForProject = array();
     }
@@ -282,14 +286,25 @@ class GraphOnTrackersV5Plugin extends Plugin {
         return $this->allowedForProject[$group_id];
     }
 
-    function cssFile($params) {
-        // Only show the stylesheet if we're actually in the Docman pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0) {
+    public function cssFile()
+    {
+        if ($this->canIncludeStylsheets()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
+    }
+
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if ($this->canIncludeStylsheets()) {
+            $params['stylesheets'][] = $this->getThemePath().'/css/style.css';
+        }
+    }
+
+    private function canIncludeStylsheets()
+    {
+        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
     function graphontrackersv5_load_chart_factories($params) {
@@ -351,10 +366,29 @@ class GraphOnTrackersV5Plugin extends Plugin {
         );
     }
 
-    public function javascript_file() {
+    /**
+     * @see javascript_file
+     */
+    public function javascript_file()
+    {
         $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
         if ($tracker_plugin->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
             echo $this->getMinifiedAssetHTML()."\n";
+        }
+    }
+
+    /**
+     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
+     */
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if ($this->currentRequestIsForDashboards()) {
+            $include_assets = new IncludeAssets(
+                $this->getFilesystemPath() . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+            $params['javascript_files'][] = '/scripts/d3/d3.min.js';
+            $params['javascript_files'][] = $include_assets->getFileURL($this->getName().'.js');
         }
     }
 }

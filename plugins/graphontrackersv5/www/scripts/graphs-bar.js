@@ -40,7 +40,7 @@ tuleap.graphontrackersv5.draw.bar = function (id, graph) {
         .tickSize(width)
         .orient("right");
 
-    var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
+    var svg = d3.selectAll('.plugin_graphontrackersv5_chart[data-graph-id="'+id+'"]').append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
