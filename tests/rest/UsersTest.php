@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -395,5 +395,20 @@ class UsersTest extends RestBase {
         $json = $response->json();
         $this->assertEquals('my_preference', $json['key']);
         $this->assertEquals('my_preference_value', $json['value']);
+    }
+
+    public function testGETPreferencesAnotherUser()
+    {
+        $exception_thrown = false;
+        try {
+            $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_2_ID.'/preferences?key=my_preference')
+            );
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(403, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
     }
 }
