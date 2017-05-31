@@ -261,12 +261,17 @@ class UserResource extends AuthenticatedResource {
      * @param string $key Preference key
      *
      * @throws 401
+     * @throws 403
      * @throws 404
      *
      * @return UserPreferenceRepresentation
      */
     public function getPreferences($id, $key) {
         $this->checkAccess();
+
+        if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
+            throw new RestException(403, 'You can only access to your own preferences');
+        }
 
         $value = $this->getUserPreference($id, $key);
 
