@@ -28,8 +28,9 @@ class ReferencePresenter
     private $username;
     private $api_key;
     private $id;
+    private $rest_url;
 
-    public function __construct($id, $reference, $server, $username, $api_key, $are_followup_private)
+    public function __construct($id, $reference, $server, $username, $api_key, $are_followup_private, $rest_url)
     {
         $this->id                   = $id;
         $this->keyword              = $reference;
@@ -37,6 +38,7 @@ class ReferencePresenter
         $this->username             = $username;
         $this->api_key              = $api_key;
         $this->are_followup_private = $are_followup_private;
+        $this->rest_url             = $rest_url;
     }
 
     public function getKeyword()
@@ -76,5 +78,10 @@ class ReferencePresenter
     public function isApiKeySet()
     {
         return $this->api_key !== "";
+    }
+
+    public function getRestUrl()
+    {
+        return $this->rest_url;
     }
 }

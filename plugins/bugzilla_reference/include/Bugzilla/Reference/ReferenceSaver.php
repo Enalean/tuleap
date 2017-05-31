@@ -64,19 +64,20 @@ class ReferenceSaver
         $username              = $request->get('username');
         $api_key               = $request->get('api_key');
         $are_followups_private = $request->get('are_follow_up_private');
+        $rest_api_url          = $request->get('rest_url');
         $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
 
         if (empty($keyword) || empty($server) || empty($username) || empty($api_key)) {
             throw new RequiredFieldEmptyException();
         }
 
-        $this->checkFieldsValidity($keyword, $server);
+        $this->checkFieldsValidity($keyword, $server, $rest_api_url);
         $this->createReferenceForBugzillaServer($keyword, $server);
 
-        $this->dao->save($keyword, $server, $username, $api_key, $are_followups_private);
+        $this->dao->save($keyword, $server, $username, $api_key, $are_followups_private, $rest_api_url);
     }
 
-    private function checkFieldsValidity($keyword, $server)
+    private function checkFieldsValidity($keyword, $server, $rest_api_url)
     {
         if (! $this->reference_validator->isValidKeyword($keyword)) {
             throw new KeywordIsInvalidException();
@@ -89,15 +90,18 @@ class ReferenceSaver
             throw new KeywordIsAlreadyUsedException();
         }
 
-        $this->checkServerValidity($server);
+        $this->validateURLs($server, $rest_api_url);
     }
 
-    private function checkServerValidity($server)
+    private function validateURLs($server, $rest_api_url)
     {
         $http_uri_validator = new Valid_HTTPURI();
-
         if (! $http_uri_validator->validate($server)) {
             throw new ServerIsInvalidException();
+        }
+
+        if ($rest_api_url && ! $http_uri_validator->validate($rest_api_url)) {
+            throw new RESTURLIsInvalidException();
         }
     }
 
@@ -105,18 +109,19 @@ class ReferenceSaver
     {
         $id                    = $request->get('id');
         $server                = trim($request->get('server'));
+        $rest_api_url          = trim($request->get('rest_url'));
         $username              = $request->get('username');
         $api_key               = $this->getAPIKeyToStore($id, $request->get('api_key'));
         $are_followups_private = $request->get('are_follow_up_private');
         $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
 
-        $this->checkServerValidity($server);
+        $this->validateURLs($server, $rest_api_url);
 
         if (empty($server) || empty($username) || empty($api_key)) {
             throw new RequiredFieldEmptyException();
         }
 
-        $this->dao->edit($id, $server, $username, $api_key, $are_followups_private);
+        $this->dao->edit($id, $server, $username, $api_key, $are_followups_private, $rest_api_url);
     }
 
     private function getAPIKeyToStore($id, $api_key)

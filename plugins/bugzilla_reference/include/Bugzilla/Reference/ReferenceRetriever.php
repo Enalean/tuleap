@@ -54,7 +54,8 @@ class ReferenceRetriever
             $references['server'],
             $references['username'],
             $references['api_key'],
-            $references['are_followup_private']
+            $references['are_followup_private'],
+            $references['rest_url']
         );
     }
 

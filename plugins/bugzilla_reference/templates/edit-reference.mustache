@@ -44,6 +44,7 @@
                    disabled
             >
         </div>
+        <p class="tlp-text-info">{{{ purified_rest_url_helper }}}</p>
         <div class="tlp-form-element">
             <label class="tlp-label" for="server">{{ server }} <i class="fa fa-asterisk"></i></label>
             <input type="text"
@@ -51,9 +52,20 @@
                    id="server"
                    name="server"
                    placeholder="https://example.com"
-                   pattern="https?://.+"
                    required
+                   pattern="https?://.+"
                    value="{{ getServer }}"
+            >
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="rest_url">{{ rest_url }}</label>
+            <input type="text"
+                   class="tlp-input"
+                   id="rest_url"
+                   name="rest_url"
+                   placeholder="https://example.com"
+                   pattern="https?://.+"
+                   value="{{ getRestUrl }}"
             >
         </div>
         <div class="tlp-form-element">

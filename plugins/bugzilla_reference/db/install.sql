@@ -5,5 +5,6 @@ CREATE TABLE plugin_bugzilla_reference (
     username VARCHAR(255) NOT NULL,
     api_key VARCHAR(255) NOT NULL,
     are_followup_private TINYINT(1),
+    rest_url VARCHAR(255),
     INDEX keyword_idx(keyword(5))
 ) ENGINE=InnoDB;

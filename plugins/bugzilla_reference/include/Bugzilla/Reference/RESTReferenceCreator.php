@@ -55,7 +55,8 @@ class RESTReferenceCreator
         $message = "A tuleap item [$source_keyword #$source_id] references this bugzilla item. \n";
         $message .= "[$source_keyword #$source_id]: " . $this->getLinkToSource($cross_reference);
 
-        $url                   = $bugzilla->getServer() . '/rest/bug/' . urlencode($target_id) . '/comment';
+        $base_url              = $this->getBaseUrl($bugzilla);
+        $url                   = $base_url . '/rest/bug/' . urlencode($target_id) . '/comment';
         $login                 = $bugzilla->getUsername();
         $api_key               = $bugzilla->getAPIKey();
         $are_follow_up_private = $bugzilla->getAreFollowupPrivate();
@@ -112,5 +113,14 @@ class RESTReferenceCreator
         );
 
         return $reverse_reference_instance->getFullGotoLink();
+    }
+
+    private function getBaseUrl(Reference $bugzilla)
+    {
+        if ($bugzilla->getRestUrl()) {
+            return $bugzilla->getRestUrl();
+        }
+
+        return $bugzilla->getServer();
     }
 }
