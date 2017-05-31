@@ -1,10 +1,15 @@
 /* eslint-disable */
-var path = require('path');
+var path                  = require('path');
+var WebpackAssetsManifest = require('webpack-assets-manifest');
+
+var assets_dir_path = path.resolve(__dirname, '../../assets');
 module.exports = {
-    entry: path.resolve(__dirname, 'dashboard.js'),
+    entry: {
+        dashboard: path.resolve(__dirname, 'dashboard.js'),
+    },
     output: {
-        path: path.resolve(__dirname, '../../assets'),
-        filename: 'dashboard.min.js'
+        path: assets_dir_path,
+        filename: '[name]-[chunkhash].js'
     },
     resolve: {
         modules: [ 'node_modules' ]
@@ -12,5 +17,12 @@ module.exports = {
     externals: {
         jquery: 'jQuery',
         tlp   : 'tlp'
-    }
+    },
+    plugins: [
+        new WebpackAssetsManifest({
+            output: 'manifest.json',
+            merge: true,
+            writeToDisk: true
+        })
+    ]
 };

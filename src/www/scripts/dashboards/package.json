@@ -10,7 +10,8 @@
     "dragula": "^3.7.2"
   },
   "devDependencies": {
-    "webpack": "^2.5.1"
+    "webpack": "^2.5.1",
+    "webpack-assets-manifest": "^0.6.2"
   },
   "scripts": {
     "build": "webpack --optimize-minimize",

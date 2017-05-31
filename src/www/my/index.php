@@ -37,6 +37,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
+use Tuleap\Layout\IncludeAssets;
 
 require_once('pre.php');
 require_once('my_utils.php');
@@ -70,7 +71,8 @@ $router                     = new UserDashboardRouter(
         $dashboard_widget_retriever,
         new DashboardWidgetPresenterBuilder(),
         new WidgetDeletor($dashboard_widget_dao),
-        new WidgetMinimizor($dashboard_widget_dao)
+        new WidgetMinimizor($dashboard_widget_dao),
+        new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
     ),
     new WidgetDashboardController(
         $csrf_token,
