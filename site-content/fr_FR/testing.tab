@@ -3,6 +3,7 @@ plugin_trafficlights	descriptor_name	Trafficlights
 
 plugin_trafficlights	title	Trafficlights
 plugin_trafficlights	service_lbl_key	Trafficlights
+plugin_trafficlights	plugin_tab_title	Campagnes de test
 
 plugin_trafficlights	_covered_by_forward	Couvert par
 plugin_trafficlights	_covered_by_reverse	Couvre

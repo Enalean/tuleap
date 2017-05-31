@@ -54,6 +54,7 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
+        $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
     }
 
     public function getServiceShortname() {
@@ -227,6 +228,16 @@ class TrafficlightsPlugin extends Plugin {
             new BackendLogger()
         );
         $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $params['tracker_mapping']);
+    }
+
+    /**
+     * Add tab in Agile Dashboard Planning view to redirect to Trafficlights
+     * @param mixed array $params
+     */
+    public function agiledashboard_event_additional_panes_on_milestone($params)
+    {
+        $milestone = $params['milestone'];
+        $params['panes'][] = new Tuleap\Trafficlights\AgileDashboardPaneInfo($milestone);
     }
 
     /**
