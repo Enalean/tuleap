@@ -74,7 +74,7 @@ class Widget_MyProjects extends Widget {
                     } else {
                         $privacy = 'icon-unlock fa fa-unlock';
                     }
-                    $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><i class="'.$privacy.'"></i></td>';
+                    $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><i class="'.$privacy.' dashboard-widget-my-projects-icons"></i></td>';
                 }
 
                 // Project name
@@ -112,9 +112,9 @@ class Widget_MyProjects extends Widget {
                 // Legend
                 $html .= '<tr>';
                 $html .= '<td colspan="5" class="widget_my_projects_legend">';
-                $html .= '<span class="widget_my_projects_legend_title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
-                $html .= '<span class=""><i class="icon-lock fa fa-lock"></i> '.$GLOBALS['Language']->getText('project_privacy', 'private').'</span> ';
-                $html .= '<span class=""><i class="icon-unlock fa fa-unlock"></i> '.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
+                $html .= '<span class="widget_my_projects_legend_title dashboard-widget-my-projects-legend-title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
+                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="icon-lock fa fa-lock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'private').'</span> ';
+                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="icon-unlock fa fa-unlock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
                 $html .= '</td>';
                 $html .= '</tr>';
             }

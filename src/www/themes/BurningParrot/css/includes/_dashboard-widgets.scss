@@ -56,3 +56,16 @@
 .dashboard-widget-imageviewver-img {
     max-width: 100%;
 }
+
+.dashboard-widget-my-projects-legend-title {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.dashboard-widget-my-projects-legend-content {
+    margin: 0 $tlp-spacing / 2 0 0;
+}
+
+.dashboard-widget-my-projects-icons {
+    margin: 0 5px 0 0;
+    color: $tlp-ui-dimmed;
+}
