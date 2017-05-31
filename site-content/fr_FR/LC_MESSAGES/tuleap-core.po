@@ -108,6 +108,9 @@ msgstr "Éditer"
 msgid "Edit dashboard"
 msgstr "Éditer le tableau de bord"
 
+msgid "Edit widget"
+msgstr "Éditer le widget"
+
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
 

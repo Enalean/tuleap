@@ -1,0 +1,37 @@
+<form method="POST"
+      action="{{ url }}?action=edit-widget"
+      id="edit-widget-modal-{{ widget_id }}"
+      data-widget-id="{{ widget_id }}"
+      class="tlp-modal"
+      aria-labelledby="edit-widget-label-{{ widget_id }}"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="edit-widget-label-{{ widget_id }}">
+            <i class="fa fa-pencil tlp-modal-title-icon"></i>
+            {{ edit_widget_label }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <input type="hidden" name="dashboard-id" value="{{ id }}">
+        <input type="hidden" name="widget-id" value="{{ widget_id }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
+
+        <div class="edit-widget-modal-content edit-widget-modal-content-loading">
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel }}</button>
+        <button type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                disabled>
+            <i class="fa fa-pencil tlp-button-icon"></i>
+            {{ edit_widget_label }}
+        </button>
+    </div>
+</form>

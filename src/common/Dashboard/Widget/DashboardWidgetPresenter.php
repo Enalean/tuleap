@@ -30,6 +30,7 @@ class DashboardWidgetPresenter
     public $is_editable;
     public $has_rss;
     public $rss_url;
+    public $edit_widget_label;
     public $delete_widget_label;
     public $delete_widget_confirm;
     public $is_minimized;
@@ -45,6 +46,7 @@ class DashboardWidgetPresenter
         $this->has_rss     = $widget->hasRss();
         $this->rss_url     = $widget->getRssUrl($widget->owner_id, $widget->owner_type);
 
+        $this->edit_widget_label     = _('Edit widget');
         $this->delete_widget_label   = _('Delete widget');
         $this->delete_widget_confirm = sprintf(
             _(
