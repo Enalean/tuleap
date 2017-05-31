@@ -51,7 +51,7 @@ class RecentlyVisitedDao extends DataAccessObject
 
         $sql_clean_history     = "DELETE FROM plugin_tracker_recently_visited WHERE user_id = $user_id AND created_on <= (
                                     SELECT created_on FROM (
-                                      SELECT created_on FROM plugin_tracker_recently_visited WHERE user_id = $user_id ORDER BY created_on DESC LIMIT 1 OFFSET 6
+                                      SELECT created_on FROM plugin_tracker_recently_visited WHERE user_id = $user_id ORDER BY created_on DESC LIMIT 1 OFFSET 30
                                     ) oldest_entry_to_keep
                                   )";
         $has_history_been_cleaned = $this->update($sql_clean_history);
@@ -68,11 +68,16 @@ class RecentlyVisitedDao extends DataAccessObject
     /**
      * @return \DataAccessResult|false
      */
-    public function searchVisitByUserId($user_id)
+    public function searchVisitByUserId($user_id, $maximum_visits)
     {
-        $user_id = $this->da->escapeInt($user_id);
+        $user_id        = $this->da->escapeInt($user_id);
+        $maximum_visits = $this->da->escapeInt($maximum_visits);
 
-        $sql = "SELECT artifact_id FROM plugin_tracker_recently_visited WHERE user_id = $user_id";
+        $sql = "SELECT artifact_id
+                FROM plugin_tracker_recently_visited
+                WHERE user_id = $user_id
+                ORDER BY created_on DESC
+                LIMIT $maximum_visits";
 
         return $this->retrieve($sql);
     }
