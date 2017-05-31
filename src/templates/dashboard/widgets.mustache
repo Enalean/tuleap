@@ -25,26 +25,28 @@
                                                 <i class="dashboard-widget-icons-minimize fa fa-fw fa-caret-{{# is_minimized }}right{{/ is_minimized }}{{^ is_minimized }}down{{/ is_minimized }}"></i>
                                             </form>
                                         {{/ is_page_read_only }}
-                                        <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>
-                                        <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right"
-                                             role="menu"
-                                        >
-                                            {{# has_rss }}
-                                                <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
-                                                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-rss"></i> {{ rss_label }}
-                                                </a>
-                                            {{/ has_rss }}
-                                            {{# is_editable }}
-                                                <a href="javascript:;" class="tlp-dropdown-menu-item">
-                                                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
-                                                </a>
-                                            {{/ is_editable }}
-                                            <button type="submit"
-                                                    class="tlp-dropdown-menu-item delete-widget-button"
-                                                    data-target-modal-id="delete-widget-modal-{{ widget_id }}"
+                                        <div class="tlp-dropdown">
+                                            <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>
+                                            <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right"
+                                                 role="menu"
                                             >
-                                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
-                                            </button>
+                                                {{# has_rss }}
+                                                    <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
+                                                        <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-rss"></i> {{ rss_label }}
+                                                    </a>
+                                                {{/ has_rss }}
+                                                {{# is_editable }}
+                                                    <a href="javascript:;" class="tlp-dropdown-menu-item">
+                                                        <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
+                                                    </a>
+                                                {{/ is_editable }}
+                                                <button type="submit"
+                                                        class="tlp-dropdown-menu-item delete-widget-button"
+                                                        data-target-modal-id="delete-widget-modal-{{ widget_id }}"
+                                                >
+                                                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     {{> delete-widget-modal }}
