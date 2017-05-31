@@ -87,7 +87,7 @@ class Widget_MyMonitoredForums extends Widget {
                     $hide_forum = null;
                 }
 
-                list($hide_now,$count_diff,$hide_url) = my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum);
+                list($hide_now,$count_diff,$hide_url) = my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum, $request->get('dashboard_id'));
         
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
                     $hide_url.'<A HREF="/forum/?group_id='.$group_id.'">'.

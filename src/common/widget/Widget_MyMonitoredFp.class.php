@@ -86,7 +86,7 @@ class Widget_MyMonitoredFp extends Widget {
                     $hide_frs = null;
                 }
 
-                list($hide_now,$count_diff,$hide_url) = my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs);
+                list($hide_now,$count_diff,$hide_url) = my_hide_url('frs',$group_id,$hide_item_id,$rows2,$hide_frs, $request->get('dashboard_id'));
         
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
                     $hide_url.'<A HREF="/project/?group_id='.$group_id.'">'.

@@ -67,7 +67,7 @@ class Widget_MyLatestSvnCommits extends Widget {
         foreach ($project_ids as $project_id) {
             $project = $pm->getProject($project_id);
             if ($project->usesSVN()) {
-                list($hide_now,$count_diff,$hide_url) = my_hide_url('my_svn_group', $project_id, $request->get('hide_item_id'), count($project_ids), $request->get('hide_my_svn_group'));
+                list($hide_now,$count_diff,$hide_url) = my_hide_url('my_svn_group', $project_id, $request->get('hide_item_id'), count($project_ids), $request->get('hide_my_svn_group'), $request->get('dashboard_id'));
                 $html .= $hide_url;
 
                 $html .= '<strong>' . $project->getPublicName() . '</strong>';

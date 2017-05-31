@@ -105,7 +105,7 @@ class Docman_Widget_MyDocman extends Widget {
             foreach($reviewsArray as $review) {
                 if($review['group_id'] != $prevGroupId) {
                     list($hideNow,$count_diff,$hideUrl) = 
-                        my_hide_url('plugin_docman_approval',$review['group_id'], $hideItemId, 1, $hideApproval);
+                        my_hide_url('plugin_docman_approval',$review['group_id'], $hideItemId, 1, $hideApproval, $request->get('dashboard_id'));
                     $docmanUrl = $this->pluginPath.'/?group_id='.$review['group_id'];
                     $docmanHref = '<a href="'.$docmanUrl.'">'.$review['group'].'</a>';
                     if($prevGroupId != -1) {

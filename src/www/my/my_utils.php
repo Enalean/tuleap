@@ -29,7 +29,7 @@ Output:
   $hide_flag: true if the section must be hidden, false otherwise
 
 */
-function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
+function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id) {
 
     global $Language;
 
@@ -68,10 +68,10 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide) {
     }
 
     if ($hide) {
-		$hide_url= '<a href="?hide_'.$svc.'=0&hide_item_id='.$db_item_id.'"><i class="icon-caret-right fa fa-caret-right" title="'.$Language->getText('my_utils', 'expand').'"></i></a>&nbsp;';
+		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=0&hide_item_id='.urlencode($db_item_id).'"><i class="icon-caret-right fa fa-caret-right" title="'.$Language->getText('my_utils', 'expand').'"></i></a>&nbsp;';
 		$hide_now = true;
     } else {		
-		$hide_url= '<a href="?hide_'.$svc.'=1&hide_item_id='.$db_item_id.'"><i class="icon-caret-down fa fa-caret-down" title="'.$Language->getText('my_utils', 'collapse').'"></i></a>&nbsp;';
+		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=1&hide_item_id='.urlencode($db_item_id).'"><i class="icon-caret-down fa fa-caret-down" title="'.$Language->getText('my_utils', 'collapse').'"></i></a>&nbsp;';
 		$hide_now = false;
     }
 
