@@ -89,6 +89,7 @@ function reorderWidget(widget, column) {
     $.ajax({
         url : window.location.href,
         type: 'POST',
+        dataType: 'json',
         data: {
             'challenge'      : csrf_token,
             'action'         : 'reorder-widgets',
@@ -99,6 +100,14 @@ function reorderWidget(widget, column) {
             'new-widget-rank': new_widget_rank,
             'new-column-rank': new_column_rank,
             'new-line-rank'  : new_line_rank
+        }
+    }).done(function (response) {
+        if (response.new_line_id) {
+            line.setAttribute('data-line-id', response.new_line_id);
+        }
+
+        if (response.new_column_id) {
+            column.setAttribute('data-column-id', response.new_column_id);
         }
     });
 }
