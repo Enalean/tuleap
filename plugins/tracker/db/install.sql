@@ -809,7 +809,8 @@ CREATE TABLE plugin_tracker_recently_visited (
     user_id INT(11) NOT NULL,
     artifact_id INT(11) NOT NULL,
     created_on INT(11) UNSIGNED NOT NULL,
-    PRIMARY KEY(user_id, artifact_id)
+    PRIMARY KEY(user_id, artifact_id),
+    INDEX idx_user_visit_time(user_id, created_on)
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100

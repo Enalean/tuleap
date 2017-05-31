@@ -41,9 +41,9 @@ class VisitRetriever
      * @return \Tracker_Artifact[]
      * @throws \DataAccessException
      */
-    public function getMostRecentlySeenArtifacts(\PFUser $user)
+    public function getMostRecentlySeenArtifacts(\PFUser $user, $nb_maximum_artifacts)
     {
-        $recently_visited_rows = $this->dao->searchVisitByUserId($user->getId());
+        $recently_visited_rows = $this->dao->searchVisitByUserId($user->getId(), $nb_maximum_artifacts);
         $artifacts_id = array();
         foreach ($recently_visited_rows as $recently_visited_row) {
             $artifacts_id[] = $recently_visited_row['artifact_id'];

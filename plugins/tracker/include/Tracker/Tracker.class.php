@@ -66,6 +66,8 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     const XML_ID_PREFIX = 'T';
 
+    const MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY = 6;
+
     public $id;
     public $group_id;
     public $name;
@@ -988,7 +990,10 @@ class Tracker implements Tracker_Dispatchable_Interface
                 new RecentlyVisitedDao(),
                 $this->getTrackerArtifactFactory()
             );
-            $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts($current_user);
+            $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts(
+                $current_user,
+                self::MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY
+            );
             if (! empty($recently_visited_artifacts)) {
                 echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_desc');
                 echo '<ul>';
