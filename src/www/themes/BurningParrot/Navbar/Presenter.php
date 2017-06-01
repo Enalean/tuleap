@@ -25,6 +25,11 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 
 class Presenter
 {
+    /** @var PFUser */
+    private $current_user;
+    /** @var BurningParrotCompatiblePageDetector */
+    private $page_detector;
+
     /** @var GlobalNavPresenter */
     public $global_nav_presenter;
 
@@ -33,21 +38,11 @@ class Presenter
 
     /** @var UserNavPresenter */
     public $user_nav_presenter;
-    public $is_search_and_user_nav_displayed;
 
-    /**
-     * @var PFUser
-     */
-    private $current_user;
-    /**
-     * @var BurningParrotCompatiblePageDetector
-     */
-    private $page_detector;
-
-    /**
-     * @var JoinCommunityPresenter
-     */
+    /** @var JoinCommunityPresenter */
     public $community_presenter;
+
+    public $is_search_and_user_nav_displayed;
 
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,

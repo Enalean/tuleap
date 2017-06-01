@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\Dropdown;
+namespace Tuleap\Theme\BurningParrot\Navbar\MenuItem;
 
-use Tuleap\Theme\BurningParrot\Navbar\GlobalMenuItemPresenter;
+use CSRFSynchronizerToken;
 
-class DropdownItemsPresenter extends DropdownPresenter
+class LogoutPresenter
 {
-    /** @var GlobalMenuItemPresenter[] */
-    public $items;
+    /** @var string */
+    public $label;
+
+    /** @var CSRFSynchronizerToken */
+    public $csrf_token;
 
     public function __construct(
-        $id,
-        array $items
+        $label,
+        CSRFSynchronizerToken $csrf_token
     ) {
-        parent::__construct($id);
-
-        $this->items = $items;
+        $this->label      = $label;
+        $this->csrf_token = $csrf_token;
     }
 }

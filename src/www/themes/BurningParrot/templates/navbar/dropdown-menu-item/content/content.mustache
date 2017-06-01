@@ -1,0 +1,13 @@
+<div id="nav-dropdown-content-{{ id }}" class="nav-dropdown-content nav-dropdown-content-hidden">
+    <div class="arrow-up nav-dropdown-content-arrow-up"></div>
+    <div class="nav-dropdown-content-title">
+        {{ label }}
+    </div>
+
+    {{# is_projects }}
+        {{> navbar/dropdown-menu-item/content/content-projects }}
+    {{/ is_projects }}
+    {{^ is_projects }}
+        {{> navbar/dropdown-menu-item/content/content-links }}
+    {{/ is_projects }}
+</div>

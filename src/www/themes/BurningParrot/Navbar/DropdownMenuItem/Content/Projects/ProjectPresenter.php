@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,29 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\Project;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
 use PFUser;
 use Project;
 
 class ProjectPresenter
 {
-    /** @var  string */
+    /** @var string */
     public $project_name;
 
-    /** @var  string */
+    /** @var string */
     public $project_uri;
 
     /** @var string */
     public $project_config_uri;
 
-    /** @var  string */
+    /** @var string */
     public $is_private;
 
-    /** @var  string */
+    /** @var string */
     public $user_administers;
 
-    /** @var  string */
+    /** @var string */
     public $user_belongs;
 
     public function __construct(

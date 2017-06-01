@@ -1,16 +1,11 @@
-{{# navbar_dropdown }}
+{{# content }}
     <div id="nav-dropdown-{{ id }}" class="nav-dropdown {{# is_projects }}nav-dropdown-left{{/ is_projects }}">
         <span class="nav-dropdown-link" data-nav-dropdown-content-id="nav-dropdown-content-{{ id }}">
             <i class="{{ icon }} nav-link-icon"></i>
             <span class="nav-link-text">{{ label }}</span>
             <i class="fa fa-caret-down nav-link-icon-dropdown"></i>
         </span>
-        <div id="nav-dropdown-content-{{ id }}" class="nav-dropdown-content nav-dropdown-content-hidden">
-            <div class="arrow-up nav-dropdown-content-arrow-up"></div>
-            <div class="nav-dropdown-content-title">
-                {{ label }}
-            </div>
-            {{> navbar-dropdown }}
-        </div>
+
+        {{> navbar/dropdown-menu-item/content/content }}
     </div>
-{{/ navbar_dropdown }}
+{{/ content }}

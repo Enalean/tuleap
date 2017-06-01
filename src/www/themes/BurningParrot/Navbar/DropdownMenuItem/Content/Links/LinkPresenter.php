@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links;
 
-class GlobalMenuItemPresenter
+class LinkPresenter
 {
     /** @var string */
     public $label;
@@ -28,17 +28,9 @@ class GlobalMenuItemPresenter
     /** @var string */
     public $link;
 
-    /** @var icon */
-    public $icon;
-
-    /** @var string */
-    public $additional_classes;
-
-    public function __construct($label, $link, $icon, $additional_classes)
+    public function __construct($label, $link)
     {
-        $this->label              = $label;
-        $this->link               = $link;
-        $this->icon               = $icon;
-        $this->additional_classes = $additional_classes;
+        $this->label = $label;
+        $this->link  = $link;
     }
 }

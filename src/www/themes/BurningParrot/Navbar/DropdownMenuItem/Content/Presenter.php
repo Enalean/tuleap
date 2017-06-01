@@ -18,22 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content;
 
-use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
-
-class GlobalNavPresenter
+abstract class Presenter
 {
-    /** @var MenuItemPresenter[] */
-    public $menu_item_presenters;
+    public $is_projects = false;
 
-    /** @var DropdownMenuItemPresenter[] */
-    public $dropdown_menu_item_presenters;
+    /** @var string */
+    public $id;
 
-    public function __construct(array $menu_item_presenters, $dropdown_menu_item_presenters)
+    public function __construct($id)
     {
-        $this->menu_item_presenters          = $menu_item_presenters;
-        $this->dropdown_menu_item_presenters = $dropdown_menu_item_presenters;
+        $this->id = $id;
     }
 }

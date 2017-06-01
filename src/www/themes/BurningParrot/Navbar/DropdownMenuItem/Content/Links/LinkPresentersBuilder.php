@@ -18,22 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links;
 
-use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
-
-class GlobalNavPresenter
+class LinkPresentersBuilder
 {
-    /** @var MenuItemPresenter[] */
-    public $menu_item_presenters;
+    /** @var array */
+    private $links;
 
-    /** @var DropdownMenuItemPresenter[] */
-    public $dropdown_menu_item_presenters;
+    public function build(
+        array $links
+    ) {
+        $this->links = $links;
 
-    public function __construct(array $menu_item_presenters, $dropdown_menu_item_presenters)
+        return $this->getLinkPresenters();
+    }
+
+    private function getLinkPresenters()
     {
-        $this->menu_item_presenters          = $menu_item_presenters;
-        $this->dropdown_menu_item_presenters = $dropdown_menu_item_presenters;
+        $link_presenters = array();
+
+        foreach ($this->links as $link) {
+            $link_presenters[] = $this->getLinkPresenter($link);
+        }
+
+        return $link_presenters;
+    }
+
+    private function getLinkPresenter(array $link)
+    {
+        return new LinkPresenter($link['title'], $link['link']);
     }
 }
