@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
@@ -150,7 +152,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $board         = $board_builder->getBoard($artifact_ids, $columns, $mapping_collection);
         }
 
-        return new Cardwall_RendererPresenter($board, $redirect_parameter, $field, $form);
+        $additional_button_presenter = new WidgetAdditionalButtonPresenter(
+            $this->report->getTracker(),
+            HTTPRequest::instance(),
+            false
+        );
+
+        return new Cardwall_RendererPresenter($board, $redirect_parameter, $field, $form, $additional_button_presenter);
     }
     
     /*----- Implements below some abstract methods ----*/

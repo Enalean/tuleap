@@ -1,3 +1,7 @@
+#, php-format
+msgid "Add a new %s"
+msgstr ""
+
 msgid "Add notification"
 msgstr ""
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,9 +20,11 @@
  */
 
 require_once('common/include/Codendi_HTTPPurifier.class.php');
+
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable {
 
@@ -783,6 +785,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $current_user = UserManager::instance()->getCurrentUser();
 
         $html  = '';
+        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            $html .= $this->fetchAdditionnalButton($this->report->getTracker());
+        }
         $html .= '<table';
         if (!$only_one_column) {
             $html .= ' id="tracker_report_table'. $id_suffix .'"  width="100%"';
@@ -942,6 +947,26 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html .= '</tr>';
         $html .= '</thead>';
         return $html;
+    }
+
+    private function fetchAdditionnalButton()
+    {
+        $is_a_table_renderer = true;
+
+        $html = $this->getTemplateRenderer()->renderToString(
+            'widget-additionnal-button',
+            new WidgetAdditionalButtonPresenter(
+                $this->report->getTracker(),
+                HTTPRequest::instance(),
+                $is_a_table_renderer
+            )
+        );
+
+        return $html;
+    }
+
+    private function getTemplateRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
     }
 
     public function getTableColumns($only_one_column, $use_data_from_db, $store_in_session = true) {
