@@ -1749,6 +1749,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         if (trim($new_values) != '') {
             $art_id_array = explode(',', $new_values);
             foreach ($art_id_array as $artifact_id) {
+                $artifact_id = trim($artifact_id);
                 if (! isset($fields_data[$this->getId()]['natures'][$artifact_id])) {
                     $fields_data[$this->getId()]['natures'][$artifact_id] = $fields_data[$this->getId()]['nature'];
                 }
