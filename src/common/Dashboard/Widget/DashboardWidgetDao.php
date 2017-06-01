@@ -628,4 +628,50 @@ class DashboardWidgetDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function duplicateLine($template_dashboard_id, $new_dashboard_id, $template_line_id, $dashboard_type)
+    {
+        $template_dashboard_id = $this->da->escapeInt($template_dashboard_id);
+        $new_dashboard_id      = $this->da->escapeInt($new_dashboard_id);
+        $template_line_id      = $this->da->escapeInt($template_line_id);
+        $dashboard_type        = $this->da->quoteSmart($dashboard_type);
+
+        $sql = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, layout, rank)
+                SELECT $new_dashboard_id, dashboard_type, layout, rank
+                FROM dashboards_lines
+                WHERE dashboard_type = $dashboard_type
+                  AND dashboard_id = $template_dashboard_id
+                  AND id = $template_line_id";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function duplicateColumn($template_line_id, $new_line_id, $template_colmun_id)
+    {
+        $template_line_id   = $this->da->escapeInt($template_line_id);
+        $new_line_id        = $this->da->escapeInt($new_line_id);
+        $template_colmun_id = $this->da->escapeInt($template_colmun_id);
+
+        $sql = "INSERT INTO dashboards_lines_columns (line_id, rank)
+                SELECT $new_line_id, rank
+                FROM dashboards_lines_columns
+                WHERE line_id = $template_line_id
+                  AND id = $template_colmun_id";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function duplicateWidget($new_column_id, $template_widget_id, $new_content_id)
+    {
+        $new_column_id      = $this->da->escapeInt($new_column_id);
+        $new_content_id     = $this->da->escapeInt($new_content_id);
+        $template_widget_id = $this->da->escapeInt($template_widget_id);
+
+        $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, rank, name, content_id, is_minimized)
+                SELECT $new_column_id, rank, name, $new_content_id, is_minimized
+                FROM dashboards_lines_columns_widgets
+                WHERE id = $template_widget_id";
+
+        return $this->update($sql);
+    }
 }

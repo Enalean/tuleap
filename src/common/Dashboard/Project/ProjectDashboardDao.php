@@ -20,9 +20,7 @@
 
 namespace Tuleap\Dashboard\Project;
 
-use DataAccess;
 use DataAccessObject;
-use Tuleap\Configuration\Common\ExecException;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class ProjectDashboardDao extends DataAccessObject
@@ -140,16 +138,18 @@ class ProjectDashboardDao extends DataAccessObject
         }
     }
 
-    public function duplicate($template_id, $new_project_id)
+    public function duplicateDashboard($template_id, $new_project_id, $template_dashboard_id)
     {
-        $template_id    = $this->da->escapeInt($template_id);
-        $new_project_id = $this->da->escapeInt($new_project_id);
+        $template_id           = $this->da->escapeInt($template_id);
+        $new_project_id        = $this->da->escapeInt($new_project_id);
+        $template_dashboard_id = $this->da->escapeInt($template_dashboard_id);
 
         $sql = "INSERT INTO project_dashboards (project_id, name)
                 SELECT $new_project_id, name
                 FROM project_dashboards
-                WHERE project_id = $template_id";
+                WHERE project_id = $template_id
+                  AND id = $template_dashboard_id";
 
-        return $this->update($sql);
+        return $this->updateAndGetLastId($sql);
     }
 }

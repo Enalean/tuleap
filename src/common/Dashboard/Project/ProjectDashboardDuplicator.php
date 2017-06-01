@@ -21,6 +21,13 @@
 namespace Tuleap\Dashboard\Project;
 
 use Project;
+use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\WidgetDashboardController;
+use Tuleap\Dashboard\Widget\DashboardWidgetLine;
+use Widget;
+use WidgetLayoutManager;
 
 class ProjectDashboardDuplicator
 {
@@ -29,13 +36,109 @@ class ProjectDashboardDuplicator
      */
     private $dao;
 
-    public function __construct(ProjectDashboardDao $dao)
-    {
-        $this->dao = $dao;
+    /**
+     * @var ProjectDashboardRetriever
+     */
+    private $retriever;
+
+    /**
+     * @var DashboardWidgetDao
+     */
+    private $widget_dao;
+
+    /**
+     * @var DashboardWidgetRetriever
+     */
+    private $widget_retriever;
+
+    public function __construct(
+        ProjectDashboardDao $dao,
+        ProjectDashboardRetriever $retriever,
+        DashboardWidgetDao $widget_dao,
+        DashboardWidgetRetriever $widget_retriever
+    ) {
+        $this->dao              = $dao;
+        $this->retriever        = $retriever;
+        $this->widget_dao       = $widget_dao;
+        $this->widget_retriever = $widget_retriever;
     }
 
-    public function duplicate(Project $template, Project $new_project)
+    public function duplicate(Project $template_project, Project $new_project)
     {
-        return $this->dao->duplicate($template->getID(), $new_project->getID());
+        $this->dao->startTransaction();
+
+        $template_dashboards = $this->retriever->getAllProjectDashboards($template_project);
+        foreach ($template_dashboards as $template_dashboard) {
+            $new_dashboard_id = $this->dao->duplicateDashboard(
+                $template_project->getID(),
+                $new_project->getID(),
+                $template_dashboard->getId()
+            );
+
+            $this->duplicateDashboardContent($template_project, $new_project, $template_dashboard, $new_dashboard_id);
+        }
+
+        return $this->dao->commit();
+    }
+
+    private function duplicateDashboardContent(
+        Project $template_project,
+        Project $new_project,
+        ProjectDashboard $template_dashboard,
+        $new_dashboard_id
+    ) {
+        $template_dashboard_id = $template_dashboard->getId();
+
+        $template_lines = $this->widget_retriever->getAllWidgets(
+            $template_dashboard_id,
+            WidgetDashboardController::PROJECT_DASHBOARD_TYPE
+        );
+
+        foreach ($template_lines as $template_line) {
+            $new_line_id = $this->widget_dao->duplicateLine(
+                $template_dashboard_id,
+                $new_dashboard_id,
+                $template_line->getId(),
+                WidgetDashboardController::PROJECT_DASHBOARD_TYPE
+            );
+
+            $this->duplicateColumns($template_project, $new_project, $template_line, $new_line_id);
+        }
+    }
+
+    private function duplicateColumns(
+        Project $template_project,
+        Project $new_project,
+        DashboardWidgetLine $template_line,
+        $new_line_id
+    ) {
+        foreach ($template_line->getWidgetColumns() as $template_column) {
+            $new_column_id = $this->widget_dao->duplicateColumn($template_line->getId(), $new_line_id, $template_column->getId());
+
+            $this->duplicateWidgets($template_project, $new_project, $template_column, $new_column_id);
+        }
+    }
+
+    private function duplicateWidgets(
+        Project $template_project,
+        Project $new_project,
+        DashboardWidgetColumn $template_column,
+        $new_column_id
+    ) {
+        foreach ($template_column->getWidgets() as $template_widget) {
+            $widget = Widget::getInstance($template_widget->getName());
+            $widget->setOwner($template_project->getID(), WidgetLayoutManager::OWNER_TYPE_GROUP);
+            $new_content_id = $widget->cloneContent(
+                $template_widget->getContentId(),
+                $new_project->getID(),
+                WidgetLayoutManager::OWNER_TYPE_GROUP
+            );
+
+            $this->widget_dao->duplicateWidget(
+                $new_column_id,
+                $template_widget->getId(),
+                $new_content_id
+            );
+        }
     }
 }

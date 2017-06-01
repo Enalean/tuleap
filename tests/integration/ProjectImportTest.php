@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -148,9 +150,11 @@ class ProjectImportTest extends TuleapDbTestCase
             new UGroupDao()
         );
 
-        $widget_dao  = new DashboardWidgetDao();
-        $project_dao = new ProjectDashboardDao($widget_dao);
-        $duplicator  = new ProjectDashboardDuplicator($project_dao);
+        $widget_dao        = new DashboardWidgetDao();
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $project_retriever = new ProjectDashboardRetriever($project_dao);
+        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator($project_dao, $project_retriever, $widget_dao, $widget_retriever);
 
         $project_creator = new ProjectCreator(
             $project_manager,
@@ -235,9 +239,11 @@ class ProjectImportTest extends TuleapDbTestCase
             new UGroupDao()
         );
 
-        $widget_dao  = new DashboardWidgetDao();
-        $project_dao = new ProjectDashboardDao($widget_dao);
-        $duplicator  = new ProjectDashboardDuplicator($project_dao);
+        $widget_dao        = new DashboardWidgetDao();
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $project_retriever = new ProjectDashboardRetriever($project_dao);
+        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator($project_dao, $project_retriever, $widget_dao, $widget_retriever);
 
         $project_creator = new ProjectCreator(
             $project_manager,
