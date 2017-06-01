@@ -1,0 +1,19 @@
+{{# is_admin }}
+    <div class="btn-group">
+        <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+            <i class="icon-dashboard"></i>
+            {{ dashboard }}
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ my_dashboard_url }}">{{ my_dashboard }}</a></li>
+            <li><a href="{{ project_dashboard_url }}"> {{ project_dashboard }}</a></li>
+        </ul>
+    </div>
+{{/ is_admin }}
+
+{{^ is_admin }}
+    <a href="{{ my_dashboard_url }}" class="btn btn-mini">
+        <i class="icon-dashboard"></i> {{ my_dashboard }}
+    </a>
+{{/ is_admin }}

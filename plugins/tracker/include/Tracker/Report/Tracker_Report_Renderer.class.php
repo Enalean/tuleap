@@ -1,25 +1,28 @@
 <?php
 /**
+ * Copyright (c) Enalean 2017. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
 
-abstract class Tracker_Report_Renderer {
+abstract class Tracker_Report_Renderer
+{
     
     public $id;
     public $report;
@@ -156,102 +159,34 @@ abstract class Tracker_Report_Renderer {
         return $items;
     }
 
-    private function addDashboardButtons(array &$items) {
+    private function addDashboardButtons(array &$items)
+    {
         $user = UserManager::instance()->getCurrentUser();
         if (! $this->canAddToDashboard($user)) {
             return;
         }
 
         $project = $this->report->getTracker()->getProject();
-        if ($project->userIsAdmin($user)) {
-            $dashboard_items = $this->getDropdownMenuForDashboardActions($user, $project);
-        } else {
-            $dashboard_items = $this->getSinglePurposeButtonForMyDashboardActions($user);
-        }
+        $presenter_builder = new WidgetAddToDashboardDropdownBuilder();
+        $html    = $this->getTemplateRenderer()->renderToString(
+            'add-to-dashboard-dropdown',
+            $presenter_builder->build($user, $project, $this)
+        );
 
-        $items = array('add_to_dashboard' => $dashboard_items) + $items;
+
+        $items = array('add_to_dashboard' => $html) + $items;
     }
 
-    private function getDropdownMenuForDashboardActions(PFUser $user, Project $project) {
-        $html  = '';
-        $html .= '<div class="btn-group">';
-        $html .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
-        $html .= '<i class="icon-dashboard"></i> ';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'dashboard');
-        $html .= ' <span class="caret"></span>';
-        $html .= '</a>';
-        $html .= '<ul class="dropdown-menu">';
-
-        $addto_my_dashboard_url = $this->getAddToMyDashboardURL($user);
-        $html .= '<li>';
-        $html .= '<a href="'. $addto_my_dashboard_url .'">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $addto_project_dashboard_url = $this->getAddToProjectDashboardURL($project);
-        $html .= '<li>';
-        $html .= '<a href="'. $addto_project_dashboard_url .'">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'project_dashboard');
-        $html .= '</a>';
-        $html .= '</li>';
-
-        $html .= '</ul>';
-        $html .= '</div>';
-
-        return $html;
+    private function getTemplateRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
     }
 
-    private function getSinglePurposeButtonForMyDashboardActions(PFUser $user) {
-        $html  = '';
-        $addto_my_dashboard_url = $this->getAddToMyDashboardURL($user);
-        $html .= '<a href="'. $addto_my_dashboard_url .'" class="btn btn-mini">';
-        $html .= '<i class="icon-dashboard"></i> ';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
-        $html .= '</a>';
-
-        return $html;
-    }
     private function canAddToDashboard($user) {
         return $this->id > 0
             && (!isset($this->report_session) || !$this->report_session->hasChanged())
             && $user->isLoggedIn();
     }
 
-    private function getAddToMyDashboardURL(PFUser $user) {
-        return $this->getAddToDashboardURL(
-            'u'. $user->getId(),
-            Tracker_Widget_MyRenderer::ID
-        );
-    }
-
-    private function getAddToProjectDashboardURL(Project $project) {
-        return $this->getAddToDashboardURL(
-            'g'. $project->getGroupId(),
-            Tracker_Widget_ProjectRenderer::ID
-        );
-    }
-
-    private function getAddToDashboardURL($owner_id, $widget_id) {
-        $csrf = new CSRFSynchronizerToken('widget_management');
-
-        return '/widgets/updatelayout.php?'. http_build_query(
-            array(
-                'owner'    => $owner_id,
-                'action'   => 'widget',
-                'renderer' => array(
-                    'title'       => $this->name .' for '. $this->report->name,
-                    'renderer_id' => $this->id
-                ),
-                'name' => array(
-                    $widget_id => array (
-                        'add' => 1
-                    )
-                ),
-                $csrf->getTokenName() => $csrf->getToken()
-            )
-        );
-    }
     /**
      * Create a renderer - add in db
      *     
