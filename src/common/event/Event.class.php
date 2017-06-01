@@ -1398,4 +1398,13 @@ class Event {
      *  - can_be_created => bool (OUT)
      */
     const CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE = 'can_user_create_reference_with_this_nature';
+
+    /**
+     * Retrieve the user's history
+     *
+     * Parameters
+     *  - user    => PFUser (IN)
+     *  - history => \Tuleap\User\History\HistoryEntry[] (OUT)
+     */
+    const USER_HISTORY = 'user_history';
 }

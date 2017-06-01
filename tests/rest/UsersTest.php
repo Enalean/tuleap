@@ -411,4 +411,19 @@ class UsersTest extends RestBase {
         }
         $this->assertTrue($exception_thrown);
     }
+
+    public function testGETHistoryAnotherUser()
+    {
+        $exception_thrown = false;
+        try {
+            $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_2_ID.'/history')
+            );
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(403, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
+    }
 }

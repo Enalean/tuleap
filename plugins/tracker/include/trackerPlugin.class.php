@@ -39,6 +39,7 @@ use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\User\History\HistoryRetriever;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -126,6 +127,8 @@ class trackerPlugin extends Plugin {
         $this->addHook('project_admin_remove_user');
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
+
+        $this->addHook(Event::USER_HISTORY, 'getRecentlyVisitedArtifacts');
     }
 
     public function getHooksAndCallbacks() {
@@ -1371,5 +1374,18 @@ class trackerPlugin extends Plugin {
             UserManager::instance(),
             new UGroupManager()
         );
+    }
+
+    public function getRecentlyVisitedArtifacts(array $params)
+    {
+        /** @var PFUser $user */
+        $user = $params['user'];
+
+        $visit_retriever = new \Tuleap\Tracker\RecentlyVisited\VisitRetriever(
+            new \Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao(),
+            $this->getArtifactFactory()
+        );
+        $history_artifacts = $visit_retriever->getVisitHistory($user, HistoryRetriever::MAX_LENGTH_HISTORY);
+        $params['history'] = array_merge($params['history'], $history_artifacts);
     }
 }

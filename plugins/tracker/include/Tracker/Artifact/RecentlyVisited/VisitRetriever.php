@@ -20,6 +20,8 @@
 
 namespace Tuleap\Tracker\RecentlyVisited;
 
+use Tuleap\User\History\HistoryEntry;
+
 class VisitRetriever
 {
     /**
@@ -50,5 +52,28 @@ class VisitRetriever
         }
 
         return $this->artifact_factory->getArtifactsByArtifactIdList($artifacts_id);
+    }
+
+    /**
+     * @return HistoryEntry[]
+     * @throws \DataAccessException
+     */
+    public function getVisitHistory(\PFUser $user, $max_length_history)
+    {
+        $history               = array();
+        $recently_visited_rows = $this->dao->searchVisitByUserId($user->getId(), $max_length_history);
+        foreach ($recently_visited_rows as $recently_visited_row) {
+            $artifact = $this->artifact_factory->getArtifactById($recently_visited_row['artifact_id']);
+            if ($artifact !== null) {
+                $history[] = new HistoryEntry(
+                    $recently_visited_row['created_on'],
+                    $artifact->getXRef(),
+                    $artifact->getUri(),
+                    $artifact->getTitle()
+                );
+            }
+        }
+
+        return $history;
     }
 }

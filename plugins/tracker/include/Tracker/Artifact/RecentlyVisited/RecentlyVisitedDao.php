@@ -73,7 +73,7 @@ class RecentlyVisitedDao extends DataAccessObject
         $user_id        = $this->da->escapeInt($user_id);
         $maximum_visits = $this->da->escapeInt($maximum_visits);
 
-        $sql = "SELECT artifact_id
+        $sql = "SELECT artifact_id, created_on
                 FROM plugin_tracker_recently_visited
                 WHERE user_id = $user_id
                 ORDER BY created_on DESC
