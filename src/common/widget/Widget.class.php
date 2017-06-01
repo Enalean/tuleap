@@ -165,9 +165,6 @@
             case 'myrss':
                 $o = new Widget_MyRss();
                 break;
-            //case 'mywikipage':                   //not yet
-            //    $o = new Widget_MyWikiPage();
-            //    break;
             case 'myimageviewer':
                 $o = new Widget_MyImageViewer();
                 break;
@@ -217,9 +214,6 @@
             case 'projectsvnstats':
                 $o = new Widget_ProjectSvnStats();
                 break;
-            //case 'projectwikipage':                    //not yet
-            //    $o = new Widget_ProjectWikiPage();
-            //    break;
             case 'projectlatestsvncommits':
                 $o = new Widget_ProjectLatestSvnCommits();
                 break;
