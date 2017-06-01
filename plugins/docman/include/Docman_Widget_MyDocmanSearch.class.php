@@ -54,8 +54,13 @@ class Docman_Widget_MyDocmanSearch extends Widget {
         } else {
             $docman_id = '';
         }
-        
-        $html .= '<form method="post" action="?">';
+
+        $url = '';
+        if ($request->get('dashboard_id')) {
+            $url = '?dashboard_id=' . urlencode($request->get('dashboard_id'));
+        }
+
+        $html .= '<form method="post" action="' . $url . '">';
         $html .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_label').'</label>';
         $html .= '<input type="hidden" name="docman_func" value="show_docman" />';
         $html .= '<input type="text" name="docman_id" value="'.$docman_id.'" id="docman_id" />';
