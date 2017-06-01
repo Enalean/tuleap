@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,9 @@ require_once 'common/project/CustomDescription/CustomDescriptionValueDao.class.p
 require_once 'common/project/CustomDescription/CustomDescriptionValueFactory.class.php';
 require_once 'common/project/Service/ServiceUsageFactory.class.php';
 require_once 'common/project/Service/ServiceUsageManager.class.php';
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 // Check if we the server is in secure mode or not.
 $request = HTTPRequest::instance();
@@ -65,6 +68,12 @@ if ($request->exist('wsdl')) {
         EventManager::instance()
     );
 
+    $widget_dao        = new DashboardWidgetDao();
+    $project_dao       = new ProjectDashboardDao($widget_dao);
+    $duplicator        = new ProjectDashboardDuplicator($project_dao);
+
+    $force_activation = false;
+
     $projectCreator = new ProjectCreator(
         $projectManager,
         ReferenceManager::instance(),
@@ -73,7 +82,9 @@ if ($request->exist('wsdl')) {
         new Tuleap\FRS\FRSPermissionCreator(
             new Tuleap\FRS\FRSPermissionDao(),
             $ugroup_dao
-        )
+        ),
+        $duplicator,
+        $force_activation
     );
 
     $generic_user_dao     = new GenericUserDao();

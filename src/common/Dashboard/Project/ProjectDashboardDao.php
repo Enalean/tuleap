@@ -139,4 +139,17 @@ class ProjectDashboardDao extends DataAccessObject
             throw $exception;
         }
     }
+
+    public function duplicate($template_id, $new_project_id)
+    {
+        $template_id    = $this->da->escapeInt($template_id);
+        $new_project_id = $this->da->escapeInt($new_project_id);
+
+        $sql = "INSERT INTO project_dashboards (project_id, name)
+                SELECT $new_project_id, name
+                FROM project_dashboards
+                WHERE project_id = $template_id";
+
+        return $this->update($sql);
+    }
 }

@@ -22,6 +22,9 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class REST_TestDataBuilder extends TestDataBuilder {
 
@@ -535,8 +538,10 @@ class REST_TestDataBuilder extends TestDataBuilder {
                 UserManager::instance(),
                 new ProjectHistoryDao(),
                 new UGroupManager()
-            )
+            ),
+            $this->project_creator
         );
+
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
         $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);
     }
