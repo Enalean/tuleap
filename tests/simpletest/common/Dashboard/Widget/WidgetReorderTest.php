@@ -92,27 +92,22 @@ class WidgetReorderTest extends \TuleapTestCase
     {
         $dao              = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
         $retriever        = new DashboardWidgetRetriever($dao);
-        $deletor          = partial_mock(
-            'Tuleap\Dashboard\Widget\DashboardWidgetDeletor',
-            array('deleteEmptyColumn'),
-            array($dao)
-        );
-        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $deletor);
+        $remover          = new DashboardWidgetRemoverInList();
+        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $remover);
         $widget_to_update = new DashboardWidget(1, 'image', 10, 1, 0, 0);
 
         expect($dao)->updateColumnIdByWidgetId()->never();
         expect($dao)->updateWidgetRankByWidgetId()->atLeastOnce();
-        expect($deletor)->deleteEmptyColumn()->never();
 
-        $widget_reorder->reorderWidgets($this->lines, $widget_to_update, 1, 1);
+        $widget_reorder->reorderWidgets($this->line_one_columns[0], $this->line_one_columns[0], $widget_to_update, 1);
     }
 
     public function itReordersWidgetsInNewColumn()
     {
         $dao              = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
         $retriever        = new DashboardWidgetRetriever($dao);
-        $deletor          = new DashboardWidgetDeletor($dao);
-        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $deletor);
+        $remover          = new DashboardWidgetRemoverInList();
+        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $remover);
 
         stub($dao)->searchAllWidgetByColumnId()->returnsDar(array(
             'id'         => 3,
@@ -129,85 +124,7 @@ class WidgetReorderTest extends \TuleapTestCase
 
         expect($dao)->updateColumnIdByWidgetId()->once();
         expect($dao)->updateWidgetRankByWidgetId()->atLeastOnce();
-        expect($dao)->removeColumn()->never();
-        expect($dao)->reorderColumns()->never();
-        expect($dao)->removeLine()->never();
-        expect($dao)->reorderLines()->never();
 
-        $widget_reorder->reorderWidgets($this->lines, $this->widget_one, 2, 1);
-    }
-
-    public function itReordersWidgetsInNewColumnDeletingEmptyColumn()
-    {
-        $dao              = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
-        $retriever        = new DashboardWidgetRetriever($dao);
-        $deletor          = new DashboardWidgetDeletor($dao);
-        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $deletor);
-
-        stub($dao)->searchAllWidgetByColumnId()->returnsEmptyDar();
-        stub($dao)->searchAllColumnsByLineIdOrderedByRank()->returnsDar(array(
-            'id'      => 1,
-            'line_id' => 1,
-            'rank'    => 0
-        ));
-
-        expect($dao)->updateColumnIdByWidgetId()->once();
-        expect($dao)->updateWidgetRankByWidgetId()->atLeastOnce();
-        expect($dao)->removeColumn()->once();
-        expect($dao)->reorderColumns()->once();
-        expect($dao)->removeLine()->never();
-        expect($dao)->reorderLines()->never();
-
-        $widget_reorder->reorderWidgets($this->lines, $this->widget_one, 2, 1);
-    }
-
-    public function itReordersWidgetsInNewColumnDeletingEmptyColumnAndEmptyLine()
-    {
-        $dao              = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
-        $retriever        = new DashboardWidgetRetriever($dao);
-        $deletor          = new DashboardWidgetDeletor($dao);
-        $widget_reorder   = new DashboardWidgetReorder($dao, $retriever, $deletor);
-
-        stub($dao)->searchAllWidgetByColumnId()->returnsEmptyDar();
-        stub($dao)->searchAllColumnsByLineIdOrderedByRank()->returnsEmptyDar();
-
-        expect($dao)->updateColumnIdByWidgetId()->once();
-        expect($dao)->updateWidgetRankByWidgetId()->atLeastOnce();
-        expect($dao)->removeColumn()->once();
-        expect($dao)->reorderColumns()->once();
-        expect($dao)->removeLine()->once();
-        expect($dao)->reorderLines()->once();
-
-        $widget_reorder->reorderWidgets($this->lines, $this->widget_five, 2, 1);
-    }
-
-    public function itDoesNothingIfNewColumnDoesNotExist()
-    {
-        $dao            = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
-        $retriever      = mock('Tuleap\Dashboard\Widget\DashboardWidgetRetriever');
-        $deletor        = mock('Tuleap\Dashboard\Widget\DashboardWidgetDeletor');
-        $widget_reorder = new DashboardWidgetReorder($dao, $retriever, $deletor);
-
-        expect($dao)->updateColumnIdByWidgetId()->never();
-        expect($deletor)->deleteEmptyColumn()->never();
-        expect($deletor)->removeWidgetInWidgetsListColumn()->never();
-        expect($dao)->updateWidgetRankByWidgetId()->never();
-
-        $widget_reorder->reorderWidgets($this->lines, $this->widget_one, 43, 0);
-    }
-
-    public function itDoesNothingIfOldColumnDoesNotExist()
-    {
-        $dao            = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
-        $retriever      = mock('Tuleap\Dashboard\Widget\DashboardWidgetRetriever');
-        $deletor        = mock('Tuleap\Dashboard\Widget\DashboardWidgetDeletor');
-        $widget_reorder = new DashboardWidgetReorder($dao, $retriever, $deletor);
-
-        expect($dao)->updateColumnIdByWidgetId()->never();
-        expect($deletor)->deleteEmptyColumn()->never();
-        expect($deletor)->removeWidgetInWidgetsListColumn()->never();
-        expect($dao)->updateWidgetRankByWidgetId()->never();
-
-        $widget_reorder->reorderWidgets($this->lines, $this->widget_one, 1, 0);
+        $widget_reorder->reorderWidgets($this->line_one_columns[1], $this->line_one_columns[0], $this->widget_one, 2);
     }
 }

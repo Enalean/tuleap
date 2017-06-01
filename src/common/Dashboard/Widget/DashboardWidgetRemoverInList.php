@@ -20,33 +20,21 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-class DashboardWidgetDeletor
+class DashboardWidgetRemoverInList
 {
     /**
-     * @var DashboardWidgetDao
-     */
-    private $dao;
-
-    public function __construct(DashboardWidgetDao $dao)
-    {
-        $this->dao = $dao;
-    }
-
-    /**
+     * @param DashboardWidget $widget_to_update
      * @param DashboardWidgetColumn $column
+     * @return array
      */
-    public function deleteLineByColumn(DashboardWidgetColumn $column)
+    public function removeWidgetInWidgetsListColumn(DashboardWidget $widget_to_update, DashboardWidgetColumn $column)
     {
-        $this->dao->removeLine($column->getLineId());
-        $this->dao->reorderLines($column->getLineId());
-    }
-
-    /**
-     * @param DashboardWidgetColumn $column
-     */
-    public function deleteColumn(DashboardWidgetColumn $column)
-    {
-        $this->dao->removeColumn($column->getId());
-        $this->dao->reorderColumns($column->getLineId());
+        $widgets = array();
+        foreach ($column->getWidgets() as $widget) {
+            if ($widget->getId() !== $widget_to_update->getId()) {
+                $widgets[] = $widget;
+            }
+        }
+        return $widgets;
     }
 }

@@ -44,17 +44,29 @@ class WidgetDashboardController
      * @var WidgetCreator
      */
     private $widget_creator;
+    /**
+     * @var DashboardWidgetChecker
+     */
+    private $widget_checker;
+    /**
+     * @var DashboardWidgetDeletor
+     */
+    private $widget_deletor;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         WidgetCreator $widget_creator,
         DashboardWidgetRetriever $widget_retriever,
-        DashboardWidgetReorder $widget_reorder
+        DashboardWidgetReorder $widget_reorder,
+        DashboardWidgetChecker $widget_checker,
+        DashboardWidgetDeletor $widget_deletor
     ) {
         $this->csrf             = $csrf;
         $this->widget_retriever = $widget_retriever;
         $this->widget_reorder   = $widget_reorder;
         $this->widget_creator   = $widget_creator;
+        $this->widget_checker   = $widget_checker;
+        $this->widget_deletor   = $widget_deletor;
     }
 
     public function reorderWidgets(HTTPRequest $request, $dashboard_type)
@@ -73,7 +85,8 @@ class WidgetDashboardController
         $new_line_rank   = $request->get('new-line-rank');
         $new_column_rank = $request->get('new-column-rank');
 
-        $new_ids = array();
+        $new_ids     = array();
+        $deleted_ids = array();
 
         if ($dashboard_id === false || $widget_id === false || $new_widget_rank === false) {
             return;
@@ -89,27 +102,42 @@ class WidgetDashboardController
             return;
         }
 
-        if (empty($new_line_id) && empty($new_column_id)) {
-            $new_line_id            = strval($this->widget_creator->createLine($dashboard_id, $dashboard_type, $widgets_lines, $new_line_rank));
-            $new_ids['new_line_id'] = $new_line_id;
-        }
+        list($new_line_id, $new_ids) = $this->createLineIfDoesNotExist(
+            $dashboard_type,
+            $new_line_id,
+            $new_column_id,
+            $dashboard_id,
+            $widgets_lines,
+            $new_line_rank,
+            $new_ids
+        );
 
-        if ($new_line_id && empty($new_column_id)) {
-            $columns       = $this->widget_retriever->getColumnsByLineById($new_line_id);
-            $new_column_id            = strval($this->widget_creator->createColumn($new_line_id, $columns, $new_column_rank));
-            $new_ids['new_column_id'] = $new_column_id;
-        }
+        list($new_column_id, $new_ids) = $this->createColumnIfDoesNotExist(
+            $new_line_id,
+            $new_column_id,
+            $new_column_rank,
+            $new_ids
+        );
 
         $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard_id, $dashboard_type);
+        $new_column    = $this->widget_retriever->getColumnByIdInWidgetsList($new_column_id, $widgets_lines);
+        $old_column    = $this->widget_retriever->getColumnByIdInWidgetsList($widget_to_update->getColumnId(), $widgets_lines);
+
+        if ($new_column === null || $old_column === null) {
+            return;
+        }
 
         $this->widget_reorder->reorderWidgets(
-            $widgets_lines,
+            $new_column,
+            $old_column,
             $widget_to_update,
-            $new_column_id,
             $new_widget_rank
         );
 
-        $GLOBALS['Response']->sendJSON($new_ids);
+        $deleted_ids = $this->deleteColumnIfEmpty($old_column, $deleted_ids);
+        $deleted_ids = $this->deleteLineIfEmpty($old_column, $deleted_ids);
+
+        $GLOBALS['Response']->sendJSON(array('new_ids' => $new_ids, 'deleted_ids' => $deleted_ids));
     }
 
     /**
@@ -128,5 +156,89 @@ class WidgetDashboardController
         }
 
         return false;
+    }
+
+    /**
+     * @param $dashboard_type
+     * @param $new_line_id
+     * @param $new_column_id
+     * @param $dashboard_id
+     * @param DashboardWidgetLine[] $widgets_lines
+     * @param $new_line_rank
+     * @param array $new_ids
+     * @return array
+     */
+    private function createLineIfDoesNotExist(
+        $dashboard_type,
+        $new_line_id,
+        $new_column_id,
+        $dashboard_id,
+        array $widgets_lines,
+        $new_line_rank,
+        array $new_ids
+    ) {
+        if (empty($new_line_id) && empty($new_column_id)) {
+            $new_line_id = strval(
+                $this->widget_creator->createLine(
+                    $dashboard_id,
+                    $dashboard_type,
+                    $widgets_lines,
+                    $new_line_rank
+                )
+            );
+            $new_ids['new_line_id'] = $new_line_id;
+        }
+        return array($new_line_id, $new_ids);
+    }
+
+    /**
+     * @param $new_line_id
+     * @param $new_column_id
+     * @param $new_column_rank
+     * @param array $new_ids
+     * @return array
+     */
+    private function createColumnIfDoesNotExist($new_line_id, $new_column_id, $new_column_rank, array $new_ids)
+    {
+        if ($new_line_id && empty($new_column_id)) {
+            $columns       = $this->widget_retriever->getColumnsByLineById($new_line_id);
+            $new_column_id = strval(
+                $this->widget_creator->createColumn(
+                    $new_line_id,
+                    $columns,
+                    $new_column_rank
+                )
+            );
+            $new_ids['new_column_id'] = $new_column_id;
+        }
+        return array($new_column_id, $new_ids);
+    }
+
+    /**
+     * @param DashboardWidgetColumn $old_column
+     * @param array $deleted_ids
+     * @return array
+     */
+    private function deleteColumnIfEmpty(DashboardWidgetColumn $old_column, array $deleted_ids)
+    {
+        if ($this->widget_checker->isEmptyColumn($old_column)) {
+            $deleted_ids['deleted_column_id'] = $old_column->getId();
+            $this->widget_deletor->deleteColumn($old_column);
+        }
+        return $deleted_ids;
+    }
+
+    /**
+     * @param DashboardWidgetColumn $old_column
+     * @param array $deleted_ids
+     * @return array
+     */
+    private function deleteLineIfEmpty(DashboardWidgetColumn $old_column, array $deleted_ids)
+    {
+        if ($this->widget_checker->isEmptyLine($old_column)) {
+            $deleted_ids['deleted_line_id'] = $old_column->getLineId();
+            $this->widget_deletor->deleteLineByColumn($old_column);
+        }
+        return $deleted_ids;
     }
 }

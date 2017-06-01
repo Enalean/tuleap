@@ -20,7 +20,7 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-class DashboardWidgetDeletor
+class DashboardWidgetChecker
 {
     /**
      * @var DashboardWidgetDao
@@ -34,19 +34,19 @@ class DashboardWidgetDeletor
 
     /**
      * @param DashboardWidgetColumn $column
+     * @return bool
      */
-    public function deleteLineByColumn(DashboardWidgetColumn $column)
+    public function isEmptyColumn(DashboardWidgetColumn $column)
     {
-        $this->dao->removeLine($column->getLineId());
-        $this->dao->reorderLines($column->getLineId());
+        return $this->dao->searchAllWidgetByColumnId($column->getId())->count() <= 0;
     }
 
     /**
      * @param DashboardWidgetColumn $column
+     * @return bool
      */
-    public function deleteColumn(DashboardWidgetColumn $column)
+    public function isEmptyLine(DashboardWidgetColumn $column)
     {
-        $this->dao->removeColumn($column->getId());
-        $this->dao->reorderColumns($column->getLineId());
+        return $this->dao->searchAllColumnsByLineIdOrderedByRank($column->getLineId())->count() <= 0;
     }
 }
