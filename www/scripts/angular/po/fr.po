@@ -62,10 +62,6 @@ msgstr "Bloqué"
 msgid "by"
 msgstr "par"
 
-#: src/app/campaign/campaign-new-controller.js
-msgid "Campaign creation"
-msgstr "Création de la campagne"
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
 msgstr "Label de la campagne"
@@ -77,6 +73,10 @@ msgstr "Campagnes"
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaigns list"
 msgstr "Liste de campagnes"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Cancel"
+msgstr "Annuler"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Category"

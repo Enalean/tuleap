@@ -4,6 +4,7 @@ angular
 
 CampaignNewCtrl.$inject = [
     '$scope',
+    '$modalInstance',
     '$state',
     '$filter',
     'gettextCatalog',
@@ -14,6 +15,7 @@ CampaignNewCtrl.$inject = [
 
 function CampaignNewCtrl(
     $scope,
+    $modalInstance,
     $state,
     $filter,
     gettextCatalog,
@@ -31,9 +33,9 @@ function CampaignNewCtrl(
         definitions:            [],
         submitting_campaign:    false,
         select_all:             false,
-        breadcrumb_label:       gettextCatalog.getString('Campaign creation'),
         getFilteredDefinitions: getFilteredDefinitions,
         createCampaign:         createCampaign,
+        cancel:                 cancel,
         campaign: {
             label:        ''
         }
@@ -55,8 +57,16 @@ function CampaignNewCtrl(
               milestone_id: SharedPropertiesService.getCurrentMilestone().id,
             })
             .then(function () {
+                $modalInstance.close();
                 $state.go('campaigns.list', {}, {reload: true});
-        });
+            })
+            .finally(function () {
+                $scope.submitting_campaign = false;
+            });
+    }
+
+    function cancel() {
+        $modalInstance.dismiss();
     }
 
     function getDefinitions(project_id, limit, offset) {

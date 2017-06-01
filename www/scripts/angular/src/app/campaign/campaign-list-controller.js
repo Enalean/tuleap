@@ -4,6 +4,7 @@ angular
 
 CampaignListCtrl.$inject = [
     '$scope',
+    '$modal',
     '$filter',
     'CampaignService',
     'SharedPropertiesService',
@@ -12,6 +13,7 @@ CampaignListCtrl.$inject = [
 
 function CampaignListCtrl(
     $scope,
+    $modal,
     $filter,
     CampaignService,
     SharedPropertiesService,
@@ -30,7 +32,8 @@ function CampaignListCtrl(
         shouldShowNoCampaigns         : shouldShowNoCampaigns,
         shouldShowNoOpenCampaigns     : shouldShowNoOpenCampaigns,
         showClosedCampaigns           : showClosedCampaigns,
-        hideClosedCampaigns           : hideClosedCampaigns
+        hideClosedCampaigns           : hideClosedCampaigns,
+        openNewCampaignModal          : openNewCampaignModal
     });
 
     init(project_id);
@@ -96,4 +99,12 @@ function CampaignListCtrl(
 
         return $filter('filter')(list, { 'status': status });
     }
+
+    function openNewCampaignModal() {
+        return $modal.open({
+            templateUrl: 'campaign/campaign-new.tpl.html',
+            controller : 'CampaignNewCtrl',
+        });
+    }
+
 }

@@ -33,14 +33,5 @@ function CampaignConfig($stateProvider) {
             data: {
                 ncyBreadcrumbLabel: '{{ campaign_breadcrumb_label }}'
             }
-        })
-        .state('campaigns.new', {
-            url:         '/new',
-            controller:  'CampaignNewCtrl',
-            templateUrl: 'campaign/campaign-new.tpl.html',
-            data: {
-                ncyBreadcrumbLabel: '{{ breadcrumb_label }}',
-                ncyBreadcrumbParent: 'campaigns.list'
-            }
         });
 }

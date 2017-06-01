@@ -29,21 +29,8 @@
     text-align: center;
 }
 
-#new-campaign-btn {
-    float: right;
-}
-
 #campaign-new-button-bar {
-    background: none repeat scroll 0 0 rgba(255, 255, 255, 0.95);
     border-top: 1px solid #e0e0e0;
-    bottom: 0;
-    box-sizing: border-box;
-    left: 0;
-    padding: 20px 0;
-    position: fixed;
-    text-align: center;
-    width: 100%;
-    z-index: 999;
 
     > button > .icon-spinner {
         margin-right: 4px;
@@ -51,7 +38,6 @@
 }
 
 #campaign-new-container {
-    margin-bottom: 90px;
 
     > .tabbable {
         margin-top: 14px;
@@ -91,16 +77,6 @@
         > li:not(.active) > a {
             cursor: pointer
         }
-    }
-}
-
-.error-no-environment-defined {
-    height: 216px;
-    box-sizing: border-box;
-
-    > img {
-        float: right;
-        margin-bottom: 10px;
     }
 }
 

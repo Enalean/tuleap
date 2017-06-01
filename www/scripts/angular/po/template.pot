@@ -21,10 +21,6 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: src/app/campaign/campaign-new-controller.js
-msgid "Campaign creation"
-msgstr ""
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
 msgstr ""
@@ -35,6 +31,10 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaigns list"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Cancel"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
