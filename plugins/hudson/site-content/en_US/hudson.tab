@@ -85,9 +85,9 @@ plugin_hudson	global_status_yellow	One or more unstable job
 plugin_hudson	global_status_red	One or more failure or pending job
 
 plugin_hudson	my_jobs	My Jenkins Jobs
-plugin_hudson	monitored_jobs	Monitored jobs:
-plugin_hudson	monitored_job	Monitored job:
-plugin_hudson	use_global_status	Use global status:
+plugin_hudson	monitored_jobs	Monitored jobs
+plugin_hudson	monitored_job	Monitored job
+plugin_hudson	use_global_status	Use global status
 plugin_hudson	project_jobs	Jenkins Jobs
 plugin_hudson	project_job_details	$1 Jenkins Job
 plugin_hudson	project_job_lastbuilds	$1 Last Builds

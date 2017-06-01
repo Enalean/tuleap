@@ -126,6 +126,9 @@ msgstr "Git"
 msgid "Homepage"
 msgstr "Page d'accueil"
 
+msgid "Image"
+msgstr "Image"
+
 msgid "Instant messaging"
 msgstr "Messagerie Instantanée"
 
@@ -222,6 +225,9 @@ msgstr "Ce projet n'est pas encore catégorisé."
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"
 
+msgid "Title"
+msgstr "Titre"
+
 msgid "Tracker"
 msgstr "Suivi"
 
@@ -233,6 +239,9 @@ msgstr "Mettre à jour"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
+
+msgid "We cannot find any edition information for the requested widget."
+msgstr "Impossible de trouver comment éditer le widget requis."
 
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
@@ -262,6 +271,9 @@ msgstr ""
 "Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
 "irréversible. Merci de confirmer cette suppression."
 
+msgid "You can only edit your own widgets."
+msgstr "Vous ne pouvez éditer que vos propres widgets."
+
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
 
@@ -270,3 +282,7 @@ msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
 "Vous n’avez pas les droits pour mettre à jour des tableaux de bord du projet "
 "\"%s\"."
+
+msgid "You must be a project admin to edit this widget."
+msgstr ""
+"Vous devez être administrateur du projet pour pouvoir éditer ce widget."

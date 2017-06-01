@@ -68,6 +68,9 @@ msgstr "Personnes notifiées"
 msgid "On all updates?"
 msgstr "À chaque modification ?"
 
+msgid "Renderer id"
+msgstr "Id du rendu"
+
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -292,6 +295,9 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
+
+msgid "Tracker renderer"
+msgstr "Rendu d'un tracker"
 
 #, php-format
 msgid "User '%s' couldn't be added."

@@ -23,7 +23,7 @@ require_once(dirname(__FILE__).'/../include/HudsonJobWidget.class.php');
 Mock::generatePartial(
     'HudsonJobWidget',
     'HudsonJobWidgetTestVersion',
-    array('getAvailableJobs')
+    array('getAvailableJobs', 'initContent')
 );
 
 require_once(dirname(__FILE__).'/../include/HudsonJob.class.php');
@@ -46,10 +46,10 @@ class HudsonJobWidgetTest extends TuleapTestCase {
         $job1 = new MockHudsonJob();
         $job2 = new MockHudsonJob();
         $job3 = new MockHudsonJob();
-        
+
         $hjw->setReturnValue('getAvailableJobs', array($job1, $job2, $job3));
         $this->assertTrue($hjw->isInstallAllowed());
         $this->assertEqual($hjw->getInstallNotAllowedMessage(), '');
     }
-	
+
 }

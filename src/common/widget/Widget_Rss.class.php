@@ -1,21 +1,22 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi 2001-2009.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('Widget.class.php');
@@ -23,7 +24,7 @@ require_once('common/date/DateHelper.class.php');
 
 /**
 * Widget_Rss
-* 
+*
 * Rss reader
 */
 /* abstract */ class Widget_Rss extends Widget {
@@ -70,6 +71,38 @@ require_once('common/date/DateHelper.class.php');
     function hasPreferences() {
         return true;
     }
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="title-'. (int)$widget_id .'">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="title-'. (int)$widget_id .'"
+                       name="rss[title]"
+                       value="'. $this->getTitle() .'"
+                       placeholder="RSS">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="url-'. (int)$widget_id .'">
+                    URL <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="text"
+                       class="tlp-input"
+                       id="url-'. (int)$widget_id .'"
+                       name="rss[url]"
+                       value="'. $purifier->purify($this->rss_url) .'"
+                       pattern="https?://.*"
+                       title="'. $purifier->purify(_('Please, enter a http:// or https:// link')) .'"
+                       required
+                       placeholder="https://example.com/rss.xml">
+            </div>
+            ';
+    }
+
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';

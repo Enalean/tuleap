@@ -1,24 +1,22 @@
 <?php
-/*
- * Copyright (c) Xerox, 2009. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2009. All rights reserved
  *
- * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('Docman_ItemDao.class.php');
@@ -30,26 +28,26 @@ require_once('Docman_PermissionsManager.class.php');
  * - Display the content of embedded documents
  * - Display the image of "image" file documents
  * - else display a link to the item
- * 
+ *
  * The display of a folder (its children) would be great
  */
 class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
-    
+
     /**
      * The title given by the user to the widget
      */
     protected $plugin_docman_widget_embedded_title;
-    
+
     /**
      * The item id to display
      */
     protected $plugin_docman_widget_embedded_item_id;
-    
+
     /**
      * The path to this plugin
      */
     protected $plugin_path;
-    
+
     /**
      * Constructor
      * @param string $id the internal identifier of the widget (plugin_docman_my_embedded | plugin_docman_project_embedded)
@@ -62,7 +60,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         $this->setOwner($owner_id, $owner_type);
         $this->plugin_path = $plugin_path;
     }
-    
+
     /**
      * Get the title of the widget. Default is 'Embedded Document'
      * Else it is the title given by the user
@@ -70,11 +68,11 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      */
     public function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return $this->plugin_docman_widget_embedded_title ?  
-               $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML)  : 
+        return $this->plugin_docman_widget_embedded_title ?
+               $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML)  :
                $GLOBALS['Language']->getText('plugin_docman', 'widget_title_embedded');
     }
-    
+
     /**
      * Compute the content of the widget
      * @return string html
@@ -92,7 +90,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         }
         return $content;
     }
-    
+
     /**
      * Says if the content of the widget can be displayed through an ajax call
      * If true, then the dashboard will be rendered faster but the page will be a little bit crappy until full load.
@@ -101,16 +99,45 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     public function isAjax() {
         return true;
     }
-    
+
     /**
      * Says if the widget has preferences
      */
     public function hasPreferences() {
         return true;
     }
-    
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="title-'. (int)$widget_id .'">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="title-'. (int)$widget_id .'"
+                       name="plugin_docman_widget_embedded[title]"
+                       value="'. $this->getTitle() .'">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="item-id-'. (int)$widget_id .'">
+                    Item_id <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="number"
+                       size="5"
+                       class="tlp-input"
+                       id="item-id-'. (int)$widget_id .'"
+                       name="plugin_docman_widget_embedded[item_id]"
+                       value="'. $purifier->purify($this->plugin_docman_widget_embedded_item_id) .'"
+                       required
+                       placeholder="123">
+            </div>
+            ';
+    }
+
     /**
-     * Compute the preferences form for the widget. This form will be displayed 
+     * Compute the preferences form for the widget. This form will be displayed
      * between the content and the title.
      * @return string html
      */
@@ -122,7 +149,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         $prefs .= '</table>';
         return $prefs;
     }
-    
+
     /**
      * Compute the preferences form for the widget to display before install.
      * @return string html
@@ -134,7 +161,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         $prefs .= '</table>';
         return $prefs;
     }
-    
+
     /**
      * Clone the content of the widget (for templates)
      * @return int the id of the new content
@@ -148,7 +175,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         $res = db_query($sql);
         return db_insertid($res);
     }
-    
+
     /**
      * Lazy load the content
      * @param int $id the id of the content
@@ -163,7 +190,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
             $this->content_id = $id;
         }
     }
-    
+
     /**
      * Create a new content for this widget
      * @param Codendi_Request $request
@@ -189,7 +216,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         }
         return $content_id;
     }
-    
+
     /**
      * Update the preferences
      * @param Codendi_Request $request
@@ -224,9 +251,9 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         }
         return $done;
     }
-    
+
     /**
-     * The widget has just been removed from the dashboard. 
+     * The widget has just been removed from the dashboard.
      * We must delete its content.
      * @param int $id the id of the content
      */
@@ -234,7 +261,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         $sql = 'DELETE FROM plugin_docman_widget_embedded WHERE id = '. $id .' AND owner_id = '. $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
         db_query($sql);
     }
-    
+
     /**
      * Says if the widget allows (or not) more than one instance on the same dashboard
      * It's up to the widget to decide if it is relevant.
@@ -243,7 +270,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     function isUnique() {
         return false;
     }
-    
+
     /**
      * The category of the widget. Override this method if your widget is not in the "general" category.
      * Here are some exemple of categories used by Codendi: forum, frs, scm, trackers + plugin's ones
@@ -252,7 +279,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     function getCategory() {
         return 'plugin_docman';
     }
-    
+
     /**
      * Return an item (we don't know the group_id)
      * @param int $item_id the id of the item to retrieve
@@ -271,8 +298,8 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         }
         return $item;
     }
-    
-    
+
+
     function visitFolder($item, $params = array()) {
         // do nothing
         return '';

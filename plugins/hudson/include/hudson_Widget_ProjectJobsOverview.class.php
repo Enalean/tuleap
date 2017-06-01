@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -26,39 +26,39 @@ require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
 class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
-    
+
     var $plugin;
     var $group_id;
-    
+
     var $_not_monitored_jobs;
     var $_use_global_status;
     var $_all_status;
     var $_global_status;
     var $_global_status_icon;
-    
+
     /**
      * Constructor
      *
      * @param Int              $group_id   The owner id
      * @param hudsonPlugin     $plugin     The plugin
      * @param HudsonJobFactory $factory    The HudsonJob factory
-     * 
+     *
      * @return void
      */
     function __construct($group_id, hudsonPlugin $plugin, HudsonJobFactory $factory) {
         parent::__construct('plugin_hudson_project_jobsoverview', $factory);
         $this->setOwner($group_id, WidgetLayoutManager::OWNER_TYPE_GROUP);
         $this->plugin = $plugin;
-        
+
         $request =& HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
-        
+
         $this->_use_global_status = user_get_preference('plugin_hudson_use_global_status' . $this->group_id);
         if ($this->_use_global_status === false) {
             $this->_use_global_status = "false";
             user_set_preference('plugin_hudson_use_global_status' . $this->group_id, $this->_use_global_status);
         }
-        
+
         if ($this->_use_global_status == "true") {
             $this->_all_status = array(
                 'grey' => 0,
@@ -67,7 +67,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
                 'red' => 0,
             );
         }
-        
+
     }
 
     function computeGlobalStatus() {
@@ -90,10 +90,24 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
             $this->_global_status_icon = $this->plugin->getThemePath() . "/images/ic/" . "status_blue.png";
         }
     }
-    
+
     function hasPreferences() {
         return true;
     }
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="use_global_status" value="use_global" '.(($this->_use_global_status == "true")?'checked="checked"':'').'>
+                '.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'use_global_status')).'
+                </label>
+            </div>';
+    }
+
     function getPreferences() {
         $prefs  = '';
         // Use global status
@@ -110,15 +124,15 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
         }
         return true;
     }
-    
+
     function getTitle() {
         return parent::getTitle($GLOBALS['Language']->getText('plugin_hudson', 'project_jobs'));
     }
-    
+
     function getDescription() {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_jobsoverview');
     }
-    
+
     function getContent() {
         $purifier = Codendi_HTMLPurifier::instance();
         $jobs     = $this->getJobsByGroup($this->group_id);
@@ -126,10 +140,10 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
         if (sizeof($jobs) > 0) {
             $html .= '<table style="width:100%">';
             $cpt = 1;
-            
+
             foreach ($jobs as $job_id => $job) {
                 try {
-                    
+
                     $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
                     $html .= ' <td>';
                     $html .= ' <img src="'.$purifier->purify($job->getStatusIcon()).'" title="'.$purifier->purify($job->getStatus()).'" >';
@@ -138,9 +152,9 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
                     $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.urlencode($this->group_id).'&job_id='.urlencode($job_id).'">'.$purifier->purify($job->getName()).'</a><br />';
                     $html .= ' </td>';
                     $html .= '</tr>';
-                        
+
                     $cpt++;
-                    
+
                 } catch (Exception $e) {
                     // Do not display wrong jobs
                 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -60,6 +60,37 @@ class Widget_ImageViewer extends Widget {
         return '<div class="dashboard-widget-imageviewver-content"><img class="dashboard-widget-imageviewver-img"
             src="' . $hp->purify($this->image_url) . '"
             alt="' . $hp->purify($this->getTitle()) . '" /></div>';
+    }
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="title-'. (int)$widget_id .'">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="title-'. (int)$widget_id .'"
+                       name="image[title]"
+                       value="'. $this->getTitle() .'"
+                       placeholder="'. $purifier->purify(_('Image')) .'">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="url-'. (int)$widget_id .'">
+                    URL <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="text"
+                       class="tlp-input"
+                       id="url-'. (int)$widget_id .'"
+                       name="image[url]"
+                       value="'. $purifier->purify($this->image_url) .'"
+                       pattern="https?://.*"
+                       title="'. $purifier->purify(_('Please, enter a http:// or https:// link')) .'"
+                       required
+                       placeholder="https://example.com/image.png">
+            </div>
+            ';
     }
 
     function getPreferences() {

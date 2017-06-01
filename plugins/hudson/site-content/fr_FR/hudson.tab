@@ -85,9 +85,9 @@ plugin_hudson	global_status_yellow	Un job ou plus instable
 plugin_hudson	global_status_red	Un job ou plus en échec ou en attente
 
 plugin_hudson	my_jobs	Mes jobs Jenkins
-plugin_hudson	monitored_jobs	Jobs suivis :
-plugin_hudson	monitored_job	Job suivi :
-plugin_hudson	use_global_status	Utiliser le status global :
+plugin_hudson	monitored_jobs	Jobs suivis
+plugin_hudson	monitored_job	Job suivi
+plugin_hudson	use_global_status	Utiliser le status global
 plugin_hudson	project_jobs	Jobs Jenkins
 plugin_hudson	project_job_details	Job Jenkins : $1
 plugin_hudson	project_job_lastbuilds	Derniers builds $1

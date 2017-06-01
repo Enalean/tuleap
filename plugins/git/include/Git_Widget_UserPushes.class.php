@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -181,6 +182,38 @@ class Git_Widget_UserPushes extends Widget {
         return true;
     }
 
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="offset-'. (int)$widget_id .'">
+                    '. $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_offset')) .'
+                </label>
+                <input type="number"
+                       size="2"
+                       class="tlp-input"
+                       id="offset-'. (int)$widget_id .'"
+                       name="plugin_git_user_pushes_offset"
+                       value="'. $purifier->purify($this->offset) .'"
+                       placeholder="5">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="days-'. (int)$widget_id .'">
+                    '. $purifier->purify($GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_past_days')) .'
+                </label>
+                <input type="number"
+                       size="2"
+                       class="tlp-input"
+                       id="days-'. (int)$widget_id .'"
+                       name="plugin_git_user_pushes_past_days"
+                       value="'. $purifier->purify($this->pastDays) .'"
+                       placeholder="30">
+            </div>
+            ';
+    }
+
     /**
      * Display preferences form
      *
@@ -197,7 +230,7 @@ class Git_Widget_UserPushes extends Widget {
                         <td><input name='plugin_git_user_pushes_past_days' value='".$this->pastDays."'/></td>
                     </tr>
                 </table>";
-        
+
     }
 
 }

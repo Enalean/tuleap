@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011, 2012, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi 2001-2009.
  *
  * This file is a part of Tuleap.
@@ -23,21 +23,21 @@ require_once 'www/svn/svn_utils.php';
 
 /**
 * Widget_MyLatestSvnCommits
-* 
+*
 * @author  marc.nazarian@xrce.xerox.com
 */
 class Widget_MyLatestSvnCommits extends Widget {
-    
+
     /**
-     * Default number of SVN commits to display (if user did not change/set preferences) 
+     * Default number of SVN commits to display (if user did not change/set preferences)
      */
     const NB_COMMITS_TO_DISPLAY = 5;
-    
+
     /**
-     * Number of SVN commits to display (user preferences) 
+     * Number of SVN commits to display (user preferences)
      */
     private $_nb_svn_commits;
-    
+
     public function __construct() {
         $this->Widget('mylatestsvncommits');
         $this->_nb_svn_commits = user_get_preference('my_latests_svn_commits_nb_display');
@@ -55,7 +55,7 @@ class Widget_MyLatestSvnCommits extends Widget {
     public function _getLinkToMore($group_id, $commiter) {
         return '/svn/?func=browse&group_id='.$group_id.'&_commiter='.$commiter;
     }
-    
+
     public function getContent() {
         $html        = '';
         $uh          = UserHelper::instance();
@@ -111,10 +111,32 @@ class Widget_MyLatestSvnCommits extends Widget {
         }
         return $html;
     }
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="title-'. (int)$widget_id .'">
+                    '. $purifier->purify($GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit_nb_prefs')) .'
+                </label>
+                <input type="text"
+                       size="2"
+                       maxlength="3"
+                       class="tlp-input"
+                       id="title-'. (int)$widget_id .'"
+                       name="nb_svn_commits"
+                       value="'. $purifier->purify(user_get_preference('my_latests_svn_commits_nb_display')) .'"
+                       placeholder="'. $purifier->purify(self::NB_COMMITS_TO_DISPLAY) .'">
+            </div>
+            ';
+    }
+
     function getPreferences() {
         $prefs  = '';
         $prefs .= $GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit_nb_prefs');
-        $prefs .= ' <input name="nb_svn_commits" type="text" size="2" maxlenght="3" value="'.user_get_preference('my_latests_svn_commits_nb_display').'">';
+        $prefs .= ' <input name="nb_svn_commits" type="text" size="2" maxlength="3" value="'.user_get_preference('my_latests_svn_commits_nb_display').'">';
         return $prefs;
     }
     function updatePreferences(&$request) {
@@ -131,7 +153,7 @@ class Widget_MyLatestSvnCommits extends Widget {
         }
         return true;
     }
-    
+
     function getCategory() {
         return 'scm';
     }

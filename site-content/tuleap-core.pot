@@ -107,6 +107,9 @@ msgstr ""
 msgid "Homepage"
 msgstr ""
 
+msgid "Image"
+msgstr ""
+
 msgid "Instant messaging"
 msgstr ""
 
@@ -203,6 +206,9 @@ msgstr ""
 msgid "This reference does not exist"
 msgstr ""
 
+msgid "Title"
+msgstr ""
+
 msgid "Tracker"
 msgstr ""
 
@@ -213,6 +219,9 @@ msgid "Update"
 msgstr ""
 
 msgid "Update successful"
+msgstr ""
+
+msgid "We cannot find any edition information for the requested widget."
 msgstr ""
 
 msgid ""
@@ -237,9 +246,15 @@ msgid ""
 "                This action is irreversible. Please confirm this deletion."
 msgstr ""
 
+msgid "You can only edit your own widgets."
+msgstr ""
+
 msgid "You don't have any dashboards."
 msgstr ""
 
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."
+msgstr ""
+
+msgid "You must be a project admin to edit this widget."
 msgstr ""
