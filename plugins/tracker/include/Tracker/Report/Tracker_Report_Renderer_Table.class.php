@@ -792,7 +792,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if ($with_sort_links && ! $current_user->isAnonymous()) {
             $classnames .= ' reorderable resizable';
         }
-        $html .= ' class="tracker_report_table table '. $classnames .'"';
+        $html .= ' class="tracker_report_table table tlp-table '. $classnames .'"';
 
         $html .= '>';
         $html .= '<thead>';
