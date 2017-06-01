@@ -51,6 +51,9 @@ msgstr ""
 msgid "On all updates?"
 msgstr ""
 
+msgid "Renderer id"
+msgstr ""
+
 msgid "Save"
 msgstr ""
 
@@ -233,6 +236,9 @@ msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
 msgid "This template does not use trackers"
+msgstr ""
+
+msgid "Tracker renderer"
 msgstr ""
 
 #, php-format

@@ -585,4 +585,34 @@ class DashboardWidgetDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function searchWidgetInDashboardById($widget_id)
+    {
+        $widget_id = $this->da->escapeInt($widget_id);
+
+        $sql = "SELECT widget.id,
+                       widget.name,
+                       widget.content_id,
+                       line.dashboard_type,
+                       project_dashboards.project_id,
+                       user_dashboards.user_id
+                FROM dashboards_lines_columns_widgets AS widget
+                    INNER JOIN dashboards_lines_columns AS col ON(
+                        widget.id = $widget_id
+                        AND col.id = widget.column_id
+                    )
+                    INNER JOIN dashboards_lines AS line ON(
+                        line.id = col.line_id
+                    )
+                    LEFT JOIN project_dashboards ON(
+                        line.dashboard_type = 'project'
+                        AND project_dashboards.id = line.dashboard_id
+                    )
+                    LEFT JOIN user_dashboards ON(
+                        line.dashboard_type = 'user'
+                        AND user_dashboards.id = line.dashboard_id
+                    )";
+
+        return $this->retrieve($sql);
+    }
 }

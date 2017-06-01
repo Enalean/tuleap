@@ -37,7 +37,9 @@ abstract class Tracker_Widget_Renderer extends Widget {
 
     function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return $this->renderer_title ?  $hp->purify($this->renderer_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Tracker Renderer';
+        return $this->renderer_title ?
+            $hp->purify($this->renderer_title, CODENDI_PURIFIER_CONVERT_HTML) :
+            dgettext('tuleap-tracker', 'Tracker renderer');
     }
 
     function getContent() {
@@ -74,6 +76,37 @@ abstract class Tracker_Widget_Renderer extends Widget {
 
     function getInstallPreferences() {
         return $this->getPreferences();
+    }
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="title-'. (int)$widget_id .'">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="title-'. (int)$widget_id .'"
+                       name="renderer[title]"
+                       value="'. $this->getTitle() .'"
+                       placeholder="'. $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) .'">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="renderer-id-'. (int)$widget_id .'">
+                    '. $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) .'
+                    <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="number"
+                       size="5"
+                       class="tlp-input"
+                       id="renderer-id-'. (int)$widget_id .'"
+                       name="renderer[renderer_id]"
+                       value="'. $purifier->purify($this->renderer_id) .'"
+                       required
+                       placeholder="123">
+            </div>
+            ';
     }
 
     function getPreferences() {

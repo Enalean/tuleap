@@ -66,6 +66,11 @@ function init() {
                 .done(function (html) {
                     button.disabled     = false;
                     container.innerHTML = html;
+                })
+                .fail(function (data) {
+                    container.innerHTML = `<div class="tlp-alert-danger">${data.responseJSON}</div>`;
+                })
+                .always(function () {
                     container.classList.remove('edit-widget-modal-content-loading');
                     modal.removeEventListener('tlp-modal-shown', loadDynamicallyEditModalContent);
                 });

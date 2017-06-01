@@ -329,4 +329,9 @@
     {
         return $this->getContent();
     }
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        return '';
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -23,7 +23,7 @@ require_once('www/my/my_utils.php');
 
 /**
 * Widget_MyArtifacts
-* 
+*
 * Artifact assigned to or submitted by this person
 */
 class Widget_MyArtifacts extends Widget {
@@ -67,6 +67,39 @@ class Widget_MyArtifacts extends Widget {
     function hasPreferences() {
         return true;
     }
+
+    public function getPreferencesForBurningParrot($widget_id)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $selected_a  = $this->_artifact_show === 'A'  ? 'selected="selected"' : '';
+        $selected_s  = $this->_artifact_show === 'S'  ? 'selected="selected"' : '';
+        $selected_as = $this->_artifact_show === 'AS' ? 'selected="selected"' : '';
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="show-'. (int)$widget_id .'">
+                    '. $purifier->purify($GLOBALS['Language']->getText('my_index', 'display_arts')) .'
+                </label>
+                <select type="text"
+                    class="tlp-select"
+                    id="show-'. (int)$widget_id .'"
+                    name="show"
+                >
+                    <option value="A" '. $selected_a .'>
+                        '. $purifier->purify($GLOBALS['Language']->getText('my_index', 'a_info')) .'
+                    </option>
+                    <option value="S" '. $selected_s .'>
+                        '. $purifier->purify($GLOBALS['Language']->getText('my_index', 's_info')) .'
+                    </option>
+                    <option value="AS" '. $selected_as .'>
+                        '. $purifier->purify($GLOBALS['Language']->getText('my_index', 'as_info')) .'
+                    </option>
+                </select>
+            </div>
+            ';
+    }
+
     function getPreferences() {
         $prefs  = '';
         $prefs .= $GLOBALS['Language']->getText('my_index', 'display_arts').' <select name="show">';
@@ -75,7 +108,7 @@ class Widget_MyArtifacts extends Widget {
         $prefs .= '<option value="AS" '.($this->_artifact_show === 'AS'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 'as_info');
         $prefs .= '</select>';
         return $prefs;
-        
+
     }
     function isAjax() {
         return true;
@@ -126,26 +159,26 @@ class Widget_MyArtifacts extends Widget {
         } else {
             $hide_artifact = null;
         }
-        
+
         $j = $print_box_begin;
         $html_my_artifacts = "";
         $html = "";
         $html_hdr = "";
-        
+
         $aid_old  = 0;
         $atid_old = 0;
         $group_id_old = 0;
         $count_aids = 0;
         $group_name = "";
         $tracker_name = "";
-        
+
         $artifact_types = array();
-        
+
         $pm = ProjectManager::instance();
         while ($trackers_array = db_fetch_array($list_trackers)) {
             $atid = $trackers_array['group_artifact_id'];
             $group_id = $trackers_array['group_id'];
-            
+
             // {{{ check permissions
             //create group
             $group = $pm->getProject($group_id);
@@ -186,7 +219,7 @@ class Widget_MyArtifacts extends Widget {
                     $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = $user_can_view_aid || $user_can_view_summary;
                 }
                 if ($artifact_types[$group_id][$atid]['user_can_view_summary_or_aid']) {
-                    
+
                     //work on the tracker of the last round if there was one
                     if ($atid != $atid_old && $count_aids != 0) {
                         list($hide_now,$count_diff,$hide_url) =
@@ -195,43 +228,43 @@ class Widget_MyArtifacts extends Widget {
                         $hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'">'.
                         $group_name." - ".$tracker_name.'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
                         $count_new = max(0, $count_diff);
-                          
+
                         $html_hdr .= my_item_count($count_aids,$count_new).'</td></tr>';
                         $html_my_artifacts .= $html_hdr.$html;
-                        
+
                         $count_aids = 0;
                         $html = '';
                         $j++;
-                      
-                    } 
-                    
+
+                    }
+
                     if ($count_aids == 0) {
                       //have to call it to get at least the hide_now even if count_aids is false at this point
                       $hide_now = my_hide('artifact',$atid,$hide_item_id,$hide_artifact);
                     }
-                    
+
                     $group_name   = $trackers_array['group_name'];
                     $tracker_name = $trackers_array['name'];
                     $aid          = $trackers_array['artifact_id'];
                     $summary      = $trackers_array['summary'];
                     $atid_old     = $atid;
                     $group_id_old = $group_id;
-            
+
                     // If user is assignee and submitter of an artifact, it will
                     // appears 2 times in the result set.
                     if($aid != $aid_old) {
                         $count_aids++;
                     }
-            
+
                     if (!$hide_now && $aid != $aid_old) {
-                      
+
                         // Form the 'Submitted by/Assigned to flag' for marking
                         $AS_flag = my_format_as_flag2($trackers_array['assignee'],$trackers_array['submitter']);
-                        
+
                         //get percent_complete if this field is used in the tracker
                         $percent_complete = '';
                         if ($user_can_view_percent_complete) {
-                            $sql = 
+                            $sql =
                                 "SELECT afvl.value ".
                                 "FROM artifact_field_value afv,artifact_field af, artifact_field_value_list afvl, artifact_field_usage afu ".
                                 "WHERE af.field_id = afv.field_id AND af.field_name = 'percent_complete' ".
@@ -254,13 +287,13 @@ class Widget_MyArtifacts extends Widget {
                             $html .= stripslashes($summary);
                         }
                         $html .= '&nbsp;'.$AS_flag.'</TD>'.$percent_complete.'</TR>';
-                      
+
                     }
                     $aid_old = $aid;
                 }
             }
         }
-        
+
         //work on the tracker of the last round if there was one
         if ($atid_old != 0 && $count_aids != 0) {
             list($hide_now,$count_diff,$hide_url) = my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact, $request->get('dashboard_id'));
@@ -268,15 +301,15 @@ class Widget_MyArtifacts extends Widget {
               $hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'">'.
               $group_name." - ".$tracker_name.'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
             $count_new = max(0, $count_diff);
-            
+
             $html_hdr .= my_item_count($count_aids,$count_new).'</td></tr>';
             $html_my_artifacts .= $html_hdr.$html;
         }
-        
+
         return $html_my_artifacts;
-        
+
     }
-    
+
     function getAjaxUrl($owner_id, $owner_type) {
         $request = HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type);

@@ -1,8 +1,7 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
- * @copyright Copyright (c) Xerox Corporation, Codendi 2007-2008.
- * @author Marc Nazarian <marc.nazarian@xrce.xerox.com>
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +17,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * HudsonPlugin
  */
 
 require_once 'autoload.php';
@@ -33,12 +30,12 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
-        
+
         $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
-        
+
         $this->_addHook('widget_instance', 'widget_instance', false);
         $this->_addHook('widgets', 'widgets', false);
-        
+
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
         $this->_addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
@@ -60,19 +57,19 @@ class hudsonPlugin extends Plugin {
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e811';
     }
-    
+
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
-    
+
     function jsFile($params) {
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
@@ -82,7 +79,7 @@ class hudsonPlugin extends Plugin {
             echo '<script type="text/javascript" src="js/form.js"></script>'."\n";
         }
     }
-    
+
     /**
      * When a project is deleted,
      * we delete all the hudson jobs of this project
@@ -95,19 +92,21 @@ class hudsonPlugin extends Plugin {
         $dar = $job_dao->deleteHudsonJobsByGroupID($group_id);
     }
 
-    
+
     protected $hudsonJobFactory = null;
-    
+
     protected function getHudsonJobFactory() {
         if (!$this->hudsonJobFactory) {
             $this->hudsonJobFactory = new HudsonJobFactory();
         }
         return $this->hudsonJobFactory;
     }
-    
+
     function widget_instance($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
-        
+
+        $request = HTTPRequest::instance();
+
         $user = UserManager::instance()->getCurrentUser();
         $hf   = $this->getHudsonJobFactory();
         // MY
@@ -135,31 +134,31 @@ class hudsonPlugin extends Plugin {
             require_once('hudson_Widget_JobLastArtifacts.class.php');
             $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId(), $hf);
         }
-        
+
         // PROJECT
         if ($params['widget'] == 'plugin_hudson_project_jobsoverview') {
             require_once('hudson_Widget_ProjectJobsOverview.class.php');
-            $params['instance'] = new hudson_Widget_ProjectJobsOverview($GLOBALS['group_id'], $this, $hf);
+            $params['instance'] = new hudson_Widget_ProjectJobsOverview($request->get('group_id'), $this, $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_joblastbuilds') {
             require_once('hudson_Widget_JobLastBuilds.class.php');
-            $params['instance'] = new hudson_Widget_JobLastBuilds(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
+            $params['instance'] = new hudson_Widget_JobLastBuilds(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobtestresults') {
             require_once('hudson_Widget_JobTestResults.class.php');
-            $params['instance'] = new hudson_Widget_JobTestResults(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
+            $params['instance'] = new hudson_Widget_JobTestResults(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobtesttrend') {
             require_once('hudson_Widget_JobTestTrend.class.php');
-            $params['instance'] = new hudson_Widget_JobTestTrend(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
+            $params['instance'] = new hudson_Widget_JobTestTrend(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobbuildhistory') {
             require_once('hudson_Widget_JobBuildHistory.class.php');
-            $params['instance'] = new hudson_Widget_JobBuildHistory(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
+            $params['instance'] = new hudson_Widget_JobBuildHistory(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_joblastartifacts') {
             require_once('hudson_Widget_JobLastArtifacts.class.php');
-            $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
+            $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
         }
     }
     function widgets($params) {
@@ -181,19 +180,19 @@ class hudsonPlugin extends Plugin {
             $params['codendi_widgets'][] = 'plugin_hudson_project_joblastartifacts';
         }
     }
-    
+
     function getAvailableReferenceNatures($params) {
         $hudson_plugin_reference_natures = array(
             'hudson_build'  => array('keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')),
             'hudson_job' => array('keyword' => 'job', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_job_nature_key')));
         $params['natures'] = array_merge($params['natures'], $hudson_plugin_reference_natures);
     }
-    
+
     function ajax_reference_tooltip($params) {
         require_once('HudsonJob.class.php');
         require_once('HudsonBuild.class.php');
         require_once('hudson_Widget_JobLastBuilds.class.php');
-        
+
         $ref = $params['reference'];
         switch ($ref->getNature()) {
             case 'hudson_build':
@@ -206,7 +205,7 @@ class hudsonPlugin extends Plugin {
                     $build_id = $arr[1];
                     $dar = $job_dao->searchByJobName($job_name, $group_id);
                 } else {
-                    $build_id = $val; 
+                    $build_id = $val;
                     $dar = $job_dao->searchByGroupID($group_id);
                     if ($dar->rowCount() != 1) {
                         $dar = null;
@@ -216,7 +215,7 @@ class hudsonPlugin extends Plugin {
                     $row         = $dar->current();
                     $http_client = new Http_Client();
                     $build       = new HudsonBuild($row['job_url'] . '/' . $build_id . '/', $http_client);
-                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $build->getBuildTime() . '<br />'; 
+                    echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'build_time') . '</strong> ' . $build->getBuildTime() . '<br />';
                     echo '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $build->getResult();
                 } else {
                     echo '<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>';
@@ -257,8 +256,8 @@ class hudsonPlugin extends Plugin {
                         $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" align="middle" />';
                         $html .= '  </td>';
                         $html .= ' </tr>';
-                        $html .= '</table>';  
-                        echo $html;    
+                        $html .= '</table>';
+                        echo $html;
                     } catch (Exception $e) {
                     }
                 } else {
@@ -267,12 +266,12 @@ class hudsonPlugin extends Plugin {
                 break;
         }
     }
-    
+
     function ajax_reference_sparkline($params) {
         require_once('HudsonJob.class.php');
         require_once('HudsonBuild.class.php');
         require_once('hudson_Widget_JobLastBuilds.class.php');
-        
+
         $ref = $params['reference'];
         switch ($ref->getNature()) {
             case 'hudson_build':
@@ -285,7 +284,7 @@ class hudsonPlugin extends Plugin {
                     $build_id = $arr[1];
                     $dar = $job_dao->searchByJobName($job_name, $group_id);
                 } else {
-                    $build_id = $val; 
+                    $build_id = $val;
                     $dar = $job_dao->searchByGroupID($group_id);
                     if ($dar->rowCount() != 1) {
                         $dar = null;
@@ -318,7 +317,7 @@ class hudsonPlugin extends Plugin {
                 break;
         }
     }
-    
+
     function process() {
         require_once('hudson.class.php');
         $controler = new hudson();

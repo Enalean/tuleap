@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,17 +20,17 @@
  */
 
 class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
-    
+
     var $build;
     var $last_build_url;
-    
+
     /**
      * Constructor
      *
      * @param String           $owner_type The owner type
      * @param Int              $owner_id   The owner id
      * @param HudsonJobFactory $factory    The HudsonJob factory
-     * 
+     *
      * @return void
      */
     function __construct($owner_type, $owner_id, HudsonJobFactory $factory) {
@@ -43,10 +43,10 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             $this->group_id = $request->get('group_id');
         }
         parent::__construct($this->widget_id, $factory);
-        
+
         $this->setOwner($owner_id, $owner_type);
     }
-    
+
     function getTitle() {
         $title = '';
         if ($this->job) {
@@ -57,44 +57,41 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         $purifier = Codendi_HTMLPurifier::instance();
         return $purifier->purify($title);
     }
-    
+
     function getDescription() {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_lastartifacts');
     }
-    
+
     function loadContent($id)
     {
         $this->content_id = $id;
     }
 
-    private function initContent()
+    protected function initContent()
     {
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $this->content_id;
-        $res = db_query($sql);
-        if ($res && db_numrows($res)) {
-            $data = db_fetch_array($res);
-            $this->job_id    = $data['job_id'];
+        $job_id = $this->getJobIdFromWidgetConfiguration();
+        if ($job_id) {
+            $this->job_id = $job_id;
 
             $jobs = $this->getAvailableJobs();
 
             if (array_key_exists($this->job_id, $jobs)) {
                 try {
-                    $used_job = $jobs[$this->job_id];
+                    $used_job      = $jobs[$this->job_id];
                     $this->job_url = $used_job->getUrl();
-                    $this->job = $used_job;
+                    $this->job     = $used_job;
 
                     $http_client          = new Http_Client();
                     $this->last_build_url = $this->job_url . '/lastBuild/';
                     $this->build          = new HudsonBuild($this->last_build_url, $http_client);
                 } catch (Exception $e) {
-                    $this->job = null;
+                    $this->job   = null;
                     $this->build = null;
                 }
             } else {
-                $this->job = null;
+                $this->job   = null;
                 $this->build = null;
             }
-
         }
     }
 
@@ -105,9 +102,9 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         if ($this->job != null && $this->build != null) {
-                        
+
             $build = $this->build;
-            
+
             $html .= '<ul>';
             $dom = $build->getDom();
             foreach ($dom->artifact as $artifact) {
@@ -120,7 +117,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             } else {
                 $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found'));
             }
-        }            
+        }
         return $html;
     }
 }
