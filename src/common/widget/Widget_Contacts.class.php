@@ -45,19 +45,53 @@ class Widget_Contacts extends Widget {
         $token     = new CSRFSynchronizerToken('');
         $presenter = new MassmailFormPresenter(
             $token,
-            $GLOBALS['Language']->getText('contact_admins','title', array($project->getPublicName())),
+            $GLOBALS['Language']->getText('contact_admins', 'title', array($project->getPublicName())),
             '/include/massmail_to_project_admins.php'
         );
         $template_factory = TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
-        $html = '<a
-            href="#massmail-project-members"
-            data-project-id="'. $group_id .'"
-            class="massmail-project-member-link project_home_contact_admins"
-            data-toggle="modal">
-                <i class="icon-envelope-alt fa fa-envelope-o"></i> '. $GLOBALS['Language']->getText('include_project_home', 'contact_admins') .'</a>';
-        $html .= $renderer->renderToString('massmail', $presenter);
+        $html  = '<a href="#massmail-project-members" ';
+        $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
+        $html .= 'data-project-id="'. $group_id .'" ';
+        $html .= 'data-toggle="modal"> ';
+        $html .= '<i class="icon-envelope-alt"></i> ';
+        $html .= $GLOBALS['Language']->getText('include_project_home', 'contact_admins');
+        $html .= '</a>';
+
+        $html .= $renderer->renderToString('contact-modal-for-legacy-dashboard', $presenter);
+
+        return $html;
+    }
+
+    public function getContentForBurningParrot()
+    {
+        $request  = HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $pm       = ProjectManager::instance();
+        $project  = $pm->getProject($group_id);
+
+        $token     = new CSRFSynchronizerToken('');
+        $presenter = new MassmailFormPresenter(
+            $token,
+            $GLOBALS['Language']->getText('contact_admins', 'title', array($project->getPublicName())),
+            '/include/massmail_to_project_admins.php'
+        );
+        $template_factory = TemplateRendererFactory::build();
+        $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');
+
+        $html  = '<a href="javascript:;" ';
+        $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
+        $html .= 'data-project-id="'. $group_id .'">';
+        $html .= '<i class="fa fa-envelope-o"></i>';
+        $html .= $GLOBALS['Language']->getText('include_project_home', 'contact_admins');
+        $html .= '</a>';
+
+        $html .= $renderer->renderToString('contact-modal', $presenter);
 
         return $html;
     }
