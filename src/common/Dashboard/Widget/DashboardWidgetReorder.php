@@ -31,43 +31,35 @@ class DashboardWidgetReorder
      */
     private $retriever;
     /**
-     * @var DashboardWidgetDeletor
+     * @var DashboardWidgetRemoverInList
      */
-    private $deletor;
+    private $remover_in_list;
 
     public function __construct(
         DashboardWidgetDao $dao,
         DashboardWidgetRetriever $retriever,
-        DashboardWidgetDeletor $deletor
+        DashboardWidgetRemoverInList $remover_in_list
     ) {
-        $this->dao       = $dao;
-        $this->retriever = $retriever;
-        $this->deletor   = $deletor;
+        $this->dao             = $dao;
+        $this->retriever       = $retriever;
+        $this->remover_in_list = $remover_in_list;
     }
 
     /**
-     * @param DashboardWidgetLine[] $widgets_lines
+     * @param DashboardWidgetColumn $new_column
+     * @param DashboardWidgetColumn $old_column
      * @param DashboardWidget $widget_to_update
-     * @param $new_column_id
      * @param $new_widget_rank
      */
     public function reorderWidgets(
-        array $widgets_lines,
+        DashboardWidgetColumn $new_column,
+        DashboardWidgetColumn $old_column,
         DashboardWidget $widget_to_update,
-        $new_column_id,
         $new_widget_rank
     ) {
-        $new_column = $this->retriever->getColumnByIdInWidgetsList($new_column_id, $widgets_lines);
-        $old_column = $this->retriever->getColumnByIdInWidgetsList($widget_to_update->getColumnId(), $widgets_lines);
-
-        if ($new_column === null || $old_column === null) {
-            return;
-        }
-
-        if ($old_column->getId() !== $new_column_id) {
-            $this->dao->updateColumnIdByWidgetId($widget_to_update->getId(), $new_column_id);
+        if ($old_column->getId() !== $new_column->getId()) {
+            $this->dao->updateColumnIdByWidgetId($widget_to_update->getId(), $new_column->getId());
             $this->updateWidgetRankToLeaveColumn($widget_to_update, $old_column);
-            $this->deletor->deleteEmptyColumn($old_column);
         }
 
         $this->updateRankToEnterInColumn($widget_to_update, $new_widget_rank, $new_column);
@@ -81,7 +73,7 @@ class DashboardWidgetReorder
         DashboardWidget $widget_to_update,
         DashboardWidgetColumn $column
     ) {
-        $widgets = $this->deletor->removeWidgetInWidgetsListColumn($widget_to_update, $column);
+        $widgets = $this->remover_in_list->removeWidgetInWidgetsListColumn($widget_to_update, $column);
         $this->updateWidgetsRank($widgets);
     }
 
@@ -95,7 +87,7 @@ class DashboardWidgetReorder
         $new_widget_rank,
         DashboardWidgetColumn $column
     ) {
-        $widgets = $this->deletor->removeWidgetInWidgetsListColumn($widget_to_update, $column);
+        $widgets = $this->remover_in_list->removeWidgetInWidgetsListColumn($widget_to_update, $column);
         array_splice($widgets, $new_widget_rank, 0, array($widget_to_update));
         $this->updateWidgetsRank($widgets);
     }

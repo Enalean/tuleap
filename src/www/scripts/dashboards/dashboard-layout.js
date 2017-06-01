@@ -102,12 +102,26 @@ function reorderWidget(widget, column) {
             'new-line-rank'  : new_line_rank
         }
     }).done(function (response) {
-        if (response.new_line_id) {
-            line.setAttribute('data-line-id', response.new_line_id);
+        if (response.new_ids && response.new_ids.new_line_id) {
+            line.setAttribute('data-line-id', response.new_ids.new_line_id);
         }
 
-        if (response.new_column_id) {
-            column.setAttribute('data-column-id', response.new_column_id);
+        if (response.new_ids && response.new_ids.new_column_id) {
+            column.setAttribute('data-column-id', response.new_ids.new_column_id);
+        }
+
+        if (response.deleted_ids && response.deleted_ids.deleted_line_id) {
+            var line_to_delete = document.querySelector("[data-line-id='" + response.deleted_ids.deleted_line_id + "']");
+            if (line_to_delete) {
+                line_to_delete.parentNode.removeChild(line_to_delete);
+            }
+        }
+
+        if (response.deleted_ids && response.deleted_ids.deleted_column_id) {
+            var column_to_delete = document.querySelector("[data-column-id='" + response.deleted_ids.deleted_column_id + "']");
+            if (column_to_delete) {
+                column_to_delete.parentNode.removeChild(column_to_delete);
+            }
         }
     });
 }
