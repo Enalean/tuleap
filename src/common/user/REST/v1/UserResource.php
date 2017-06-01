@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 namespace Tuleap\User\REST\v1;
 
 use PFUser;
+use Tuleap\User\History\HistoryRetriever;
 use UserManager;
 use UGroupLiteralizer;
 use PaginatedUserCollection;
@@ -56,6 +57,11 @@ class UserResource extends AuthenticatedResource {
     /** @var \Tuleap\REST\UserManager */
     private $rest_user_manager;
 
+    /**
+     * @var HistoryRetriever
+     */
+    private $history_retriever;
+
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
 
@@ -65,6 +71,7 @@ class UserResource extends AuthenticatedResource {
         $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
         $this->rest_user_manager  = RestUserManager::build();
+        $this->history_retriever  = new HistoryRetriever(\EventManager::instance());
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
@@ -418,5 +425,45 @@ class UserResource extends AuthenticatedResource {
 
     private function sendAllowHeaders() {
         Header::allowOptionsGetPatch();
+    }
+
+    /**
+     * @url OPTIONS {id}/history
+     *
+     * @param int $id Id of the user
+     *
+     * @access public
+     */
+    public function optionHistory($id)
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get the history of a user
+     *
+     * @url GET {id}/history
+     *
+     * @access hybrid
+     *
+     * @param int    $id  Id of the desired user
+     *
+     * @throws 403
+     *
+     * @return UserHistoryRepresentation
+     */
+    public function getHistory($id)
+    {
+        $this->checkAccess();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+        if ($id != $current_user->getId()) {
+            throw new RestException(403, 'You can only access to your own history');
+        }
+
+        $history_representation = new UserHistoryRepresentation();
+        $history_representation->build($this->history_retriever->getHistory($current_user));
+
+        return $history_representation;
     }
 }
