@@ -108,7 +108,7 @@
     }
 
     function findClosest(element, classname) {
-        if (element.classList.contains(classname)) {
+        if (hasClassNamed(element, classname)) {
             return element;
         }
 
@@ -116,8 +116,16 @@
     }
 
     function findAncestor(element, classname) {
-        while ((element = element.parentElement) && ! element.classList.contains(classname)) {}
+        while ((element = element.parentElement) && ! hasClassNamed(element, classname)) {}
         return element;
     }
 
+    function hasClassNamed(element, classname) {
+        if (element.classList) {
+            return element.classList.contains(classname);
+        // IE11 SVG elements don't have classList
+        } else if (element.getAttribute('class')) {
+            return (element.getAttribute('class').indexOf(classname) !== -1);
+        }
+    }
 })();
