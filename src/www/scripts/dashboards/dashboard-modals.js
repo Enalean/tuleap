@@ -62,13 +62,13 @@ function init() {
                 container = modal_content.querySelector('.edit-widget-modal-content'),
                 button    = modal_content.querySelector('button[type=submit]');
 
-            get('/widgets/get_edit_modal_content.php?widget_id=' + encodeURIComponent(widget_id))
+            get('/widgets/?widget-id=' + encodeURIComponent(widget_id) +'&action=get-edit-modal-content')
                 .done(function (html) {
                     button.disabled     = false;
                     container.innerHTML = html;
                 })
                 .fail(function (data) {
-                    container.innerHTML = `<div class="tlp-alert-danger">${data.responseJSON}</div>`;
+                    container.innerHTML = '<div class="tlp-alert-danger">' + data.responseJSON + '</div>';
                 })
                 .always(function () {
                     container.classList.remove('edit-widget-modal-content-loading');
