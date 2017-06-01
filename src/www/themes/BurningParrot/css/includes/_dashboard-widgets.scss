@@ -21,6 +21,11 @@
     width: 100%;
 }
 
+.edit-widget-modal-content-loading {
+    height: 200px;
+    background: $tlp-ui-white url('../images/spinner.gif') center center no-repeat;
+}
+
 .dashboard-widget-header {
     display: flex;
     align-items: center;

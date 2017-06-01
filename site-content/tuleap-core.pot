@@ -89,6 +89,9 @@ msgstr ""
 msgid "Edit dashboard"
 msgstr ""
 
+msgid "Edit widget"
+msgstr ""
+
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr ""
 

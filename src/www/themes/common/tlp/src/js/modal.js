@@ -134,7 +134,7 @@ var tlp = tlp || { };
         removeEventListener(type, eventHandler) {
             for (let [index, listener] of this.event_listeners.entries()) {
                 if (listener.type === type && listener.eventHandler === eventHandler) {
-                    this.event_listeners.slice(index, 1);
+                    this.event_listeners.splice(index, 1);
                 }
             }
         }

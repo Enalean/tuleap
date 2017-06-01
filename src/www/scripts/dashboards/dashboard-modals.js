@@ -17,15 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { get } from 'jquery';
+
 export default init;
 
 function init() {
     var buttons = document.querySelectorAll(
-        '#add-dashboard-button, ' +
-        '#delete-dashboard-button, ' +
-        '#edit-dashboard-button, ' +
-        '#no-widgets-edit-dashboard-button, ' +
-        '.delete-widget-button'
+        [
+            '#add-dashboard-button',
+            '#delete-dashboard-button',
+            '#edit-dashboard-button',
+            '#no-widgets-edit-dashboard-button',
+            '.delete-widget-button',
+            '.edit-widget-button'
+        ].join(', ')
     );
 
     [].forEach.call(buttons, function (button) {
@@ -48,5 +53,22 @@ function init() {
             event.preventDefault();
             modal.toggle();
         });
+
+        if (button.classList.contains('edit-widget-button')) {
+            modal.addEventListener('tlp-modal-shown', loadDynamicallyEditModalContent);
+        }
+        function loadDynamicallyEditModalContent() {
+            var widget_id = modal_content.dataset.widgetId,
+                container = modal_content.querySelector('.edit-widget-modal-content'),
+                button    = modal_content.querySelector('button[type=submit]');
+
+            get('/widgets/get_edit_modal_content.php?widget_id=' + encodeURIComponent(widget_id))
+                .done(function (html) {
+                    button.disabled     = false;
+                    container.innerHTML = html;
+                    container.classList.remove('edit-widget-modal-content-loading');
+                    modal.removeEventListener('tlp-modal-shown', loadDynamicallyEditModalContent);
+                });
+        }
     });
 }

@@ -36,11 +36,14 @@
                                                     </a>
                                                 {{/ has_rss }}
                                                 {{# is_editable }}
-                                                    <a href="javascript:;" class="tlp-dropdown-menu-item">
+                                                    <button type="button"
+                                                            class="tlp-dropdown-menu-item edit-widget-button"
+                                                            data-target-modal-id="edit-widget-modal-{{ widget_id }}"
+                                                    >
                                                         <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
-                                                    </a>
+                                                    </button>
                                                 {{/ is_editable }}
-                                                <button type="submit"
+                                                <button type="button"
                                                         class="tlp-dropdown-menu-item delete-widget-button"
                                                         data-target-modal-id="delete-widget-modal-{{ widget_id }}"
                                                 >
@@ -50,6 +53,9 @@
                                         </div>
                                     </div>
                                     {{> delete-widget-modal }}
+                                    {{# is_editable }}
+                                        {{> edit-widget-modal }}
+                                    {{/ is_editable }}
                                 </div>
                                 {{^ is_minimized }}
                                     <section class="tlp-pane-section">
