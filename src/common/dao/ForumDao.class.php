@@ -32,10 +32,10 @@ class ForumDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getMessageProjectId($message_id) {
+    public function getMessageProjectIdAndForumId($message_id) {
         $message_id = $this->da->escapeInt($message_id);
 
-        $sql = "SELECT forum_group_list.group_id
+        $sql = "SELECT forum_group_list.group_id, forum.group_forum_id
                 FROM forum
                   JOIN forum_group_list ON (forum.group_forum_id = forum_group_list.group_forum_id)
                 WHERE forum.msg_id = $message_id";
