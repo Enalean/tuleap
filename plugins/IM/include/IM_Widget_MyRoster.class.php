@@ -35,7 +35,7 @@ class IM_Widget_MyRoster extends Widget {
             $project_public_name=$project->getPublicName();
             $members_id_array=$project->getMembersUserNames();
             if(sizeof($members_id_array)>1){
-                list($hide_now,$count_diff,$hide_url) = my_hide_url('im_group',$project_id,$request->get('hide_item_id'),count($members_id_array),$request->get('hide_im_group'));
+                list($hide_now,$count_diff,$hide_url) = my_hide_url('im_group',$project_id,$request->get('hide_item_id'),count($members_id_array),$request->get('hide_im_group'), $request->get('dashboard_id'));
                 $html .= $hide_url;
                 $html .= '<b>'. $project_public_name .'</b><br>';
                 if (!$hide_now) {

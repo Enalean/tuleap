@@ -189,8 +189,8 @@ class Widget_MyArtifacts extends Widget {
                     
                     //work on the tracker of the last round if there was one
                     if ($atid != $atid_old && $count_aids != 0) {
-                        list($hide_now,$count_diff,$hide_url) = 
-                            my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact);
+                        list($hide_now,$count_diff,$hide_url) =
+                            my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact, $request->get('dashboard_id'));
                         $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
                         $hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'">'.
                         $group_name." - ".$tracker_name.'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -263,7 +263,7 @@ class Widget_MyArtifacts extends Widget {
         
         //work on the tracker of the last round if there was one
         if ($atid_old != 0 && $count_aids != 0) {
-            list($hide_now,$count_diff,$hide_url) = my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact);
+            list($hide_now,$count_diff,$hide_url) = my_hide_url('artifact',$atid_old,$hide_item_id,$count_aids,$hide_artifact, $request->get('dashboard_id'));
             $html_hdr = ($j ? '<tr class="boxitem"><td colspan="3">' : '').
               $hide_url.'<A HREF="/tracker/?group_id='.$group_id_old.'&atid='.$atid_old.'">'.
               $group_name." - ".$tracker_name.'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
