@@ -49,6 +49,9 @@ class Router
             case 'get-edit-modal-content':
                 $this->preferences_controller->display($request);
                 break;
+            case 'edit-widget':
+                $this->preferences_controller->update($request);
+                break;
         }
     }
 }
