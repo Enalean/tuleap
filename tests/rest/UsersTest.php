@@ -426,4 +426,44 @@ class UsersTest extends RestBase {
         }
         $this->assertTrue($exception_thrown);
     }
+
+    public function testPUTHistoryAnotherUser()
+    {
+        $exception_thrown = false;
+        try {
+            $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->put('users/'.REST_TestDataBuilder::TEST_USER_2_ID.'/history', null, json_encode(array()))
+            );
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(403, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testPUTHistoryManipulation()
+    {
+        $exception_thrown = false;
+        $history_entries  = json_encode(
+            array (
+                array (
+                    'visit_time' => 1496386853,
+                    'xref' => 'bugs #845',
+                    'link' => '/plugins/tracker/?aid=845',
+                    'title' => '',
+                )
+            )
+        );
+        try {
+            $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->put('users/'.REST_TestDataBuilder::TEST_USER_2_ID.'/history', null, $history_entries)
+            );
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(403, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
+    }
 }

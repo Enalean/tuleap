@@ -20,6 +20,7 @@
 namespace Tuleap\User\REST\v1;
 
 use PFUser;
+use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryRetriever;
 use UserManager;
 use UGroupLiteralizer;
@@ -436,7 +437,12 @@ class UserResource extends AuthenticatedResource {
      */
     public function optionHistory($id)
     {
-        Header::allowOptionsGet();
+        $this->sendAllowHeadersForHistory();
+    }
+
+    private function sendAllowHeadersForHistory()
+    {
+        Header::allowOptionsGetPut();
     }
 
     /**
@@ -450,20 +456,61 @@ class UserResource extends AuthenticatedResource {
      *
      * @throws 403
      *
-     * @return UserHistoryRepresentation
+     * @return UserHistoryRepresentation {@type UserHistoryRepresentation}
      */
     public function getHistory($id)
     {
+        $this->sendAllowHeadersForHistory();
+
         $this->checkAccess();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
-        if ($id != $current_user->getId()) {
-            throw new RestException(403, 'You can only access to your own history');
-        }
+        $this->checkUserCanAccessToTheHistory($current_user, $id);
 
         $history_representation = new UserHistoryRepresentation();
         $history_representation->build($this->history_retriever->getHistory($current_user));
 
         return $history_representation;
+    }
+
+    /**
+     * Clear the history of a user
+     *
+     * Arbitrary manipulations of the history other than clear are not accepted.
+     *
+     * @url PUT {id}/history
+     *
+     * @access hybrid
+     *
+     * @param int    $id  Id of the desired user
+     * @param UserHistoryEntryRepresentation[] $history_entries History entries representation {@from body}
+     *
+     * @throws 403
+     */
+    public function putHistory($id, array $history_entries)
+    {
+        $this->sendAllowHeadersForHistory();
+
+        $this->checkAccess();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+        $this->checkUserCanAccessToTheHistory($current_user, $id);
+
+        if (! empty($history_entries)) {
+            throw new RestException(403, 'You can only clear your history');
+        }
+
+        $history_cleaner = new HistoryCleaner(\EventManager::instance());
+        $history_cleaner->clearHistory($current_user);
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function checkUserCanAccessToTheHistory(\PFUser $current_user, $requested_user_id)
+    {
+        if ($requested_user_id != $current_user->getId()) {
+            throw new RestException(403, 'You can only access to your own history');
+        }
     }
 }

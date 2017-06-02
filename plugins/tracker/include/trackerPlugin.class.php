@@ -129,6 +129,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
         $this->addHook(Event::USER_HISTORY, 'getRecentlyVisitedArtifacts');
+        $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
     }
 
     public function getHooksAndCallbacks() {
@@ -1376,6 +1377,9 @@ class trackerPlugin extends Plugin {
         );
     }
 
+    /**
+     * @see Event::USER_HISTORY
+     */
     public function getRecentlyVisitedArtifacts(array $params)
     {
         /** @var PFUser $user */
@@ -1387,5 +1391,19 @@ class trackerPlugin extends Plugin {
         );
         $history_artifacts = $visit_retriever->getVisitHistory($user, HistoryRetriever::MAX_LENGTH_HISTORY);
         $params['history'] = array_merge($params['history'], $history_artifacts);
+    }
+
+    /**
+     * @see Event::USER_HISTORY_CLEAR
+     */
+    public function clearRecentlyVisitedArtifacts(array $params)
+    {
+        /** @var PFUser $user */
+        $user = $params['user'];
+
+        $visit_cleaner = new \Tuleap\Tracker\RecentlyVisited\VisitCleaner(
+            new \Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao()
+        );
+        $visit_cleaner->clearVisitedArtifacts($user);
     }
 }
