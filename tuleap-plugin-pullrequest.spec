@@ -79,7 +79,7 @@ fi
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/pullrequest
 %config(noreplace) /etc/logrotate.d/tuleap_pullrequest
-%attr(00600,root,root) /etc/sudoers.d/gitolite-access-command
+%attr(00440,root,root) /etc/sudoers.d/gitolite-access-command
 
 %changelog
 * Tue Feb 9 2016 Manuel VACELET <manuel.vacelet@enalean.com> -
