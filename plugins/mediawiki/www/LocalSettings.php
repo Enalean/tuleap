@@ -228,7 +228,6 @@ function TuleapMediawikiAuthentication($user, &$result) {
             $user->loadFromId() ;
             $user = manageMediawikiGroupsForUser($user, $tuleap_user, $group);
 
-            $user->setCookies();
             $user->saveSettings();
             wfSetupSession();
     } else {
