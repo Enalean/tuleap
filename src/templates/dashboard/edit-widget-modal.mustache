@@ -1,5 +1,5 @@
 <form method="POST"
-      action="{{ url }}?action=edit-widget"
+      action="/widgets/?action=edit-widget"
       id="edit-widget-modal-{{ widget_id }}"
       data-widget-id="{{ widget_id }}"
       class="tlp-modal"
@@ -16,7 +16,6 @@
         </div>
     </div>
     <div class="tlp-modal-body">
-        <input type="hidden" name="dashboard-id" value="{{ id }}">
         <input type="hidden" name="widget-id" value="{{ widget_id }}">
         {{# csrf_token }}
             {{> csrf_token_input }}

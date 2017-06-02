@@ -593,6 +593,7 @@ class DashboardWidgetDao extends DataAccessObject
         $sql = "SELECT widget.id,
                        widget.name,
                        widget.content_id,
+                       line.dashboard_id,
                        line.dashboard_type,
                        project_dashboards.project_id,
                        user_dashboards.user_id

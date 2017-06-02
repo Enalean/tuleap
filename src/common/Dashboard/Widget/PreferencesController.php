@@ -20,6 +20,7 @@
 
 namespace Tuleap\Dashboard\Widget;
 
+use CSRFSynchronizerToken;
 use HTTPRequest;
 use PFUser;
 
@@ -48,6 +49,24 @@ class PreferencesController
         echo $this->getWidget($row)->getPreferencesForBurningParrot($row['id']);
     }
 
+    public function update(HTTPRequest $request)
+    {
+        $user      = $request->getCurrentUser();
+        $widget_id = $request->get('widget-id');
+
+        $row = $this->dao->searchWidgetInDashboardById($widget_id)->getRow();
+
+        $this->checkCSRF($row);
+
+        $this->checkWidgetCanBeEdited($row, $user);
+        $this->forceGroupIdToBePresentInRequest($request, $row);
+        $this->forceContentIdToBePresentInRequest($request, $row);
+
+        $this->getWidget($row)->updatePreferences($request);
+
+        $this->redirectToDashboard($row);
+    }
+
     protected function checkWidgetCanBeEdited($row, PFUser $user)
     {
         if (! $row) {
@@ -70,6 +89,11 @@ class PreferencesController
         }
     }
 
+    protected function forceContentIdToBePresentInRequest(HTTPRequest $request, array $row)
+    {
+        $request->set('content_id', $row['content_id']);
+    }
+
     protected function getWidget(array $row)
     {
         $widget             = \Widget::getInstance($row['name']);
@@ -78,5 +102,33 @@ class PreferencesController
         $widget->loadContent($row['content_id']);
 
         return $widget;
+    }
+
+    private function checkCSRF(array $row)
+    {
+        if ($row['dashboard_type'] === 'project') {
+            $csrf = new CSRFSynchronizerToken('/project/');
+        } else {
+            $csrf = new CSRFSynchronizerToken('/my/');
+        }
+
+        $csrf->check();
+    }
+
+    private function redirectToDashboard(array $row)
+    {
+        if ($row['dashboard_type'] === 'project') {
+            $url = '/projects/';
+        } else {
+            $url = '/my/';
+        }
+
+        $GLOBALS['Response']->redirect(
+            $url . '?' . http_build_query(
+                array(
+                    'dashboard_id' => $row['dashboard_id']
+                )
+            )
+        );
     }
 }
