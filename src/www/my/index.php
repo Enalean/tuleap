@@ -33,6 +33,7 @@ use Tuleap\Dashboard\User\WidgetMinimizor;
 use Tuleap\Dashboard\Widget\DashboardWidgetChecker;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDeletor;
+use Tuleap\Dashboard\Widget\DashboardWidgetLineUpdater;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRemoverInList;
 use Tuleap\Dashboard\Widget\DashboardWidgetReorder;
@@ -88,7 +89,10 @@ $router                     = new UserDashboardRouter(
             new DashboardWidgetRemoverInList()
         ),
         new DashboardWidgetChecker($dashboard_widget_dao),
-        new DashboardWidgetDeletor($dashboard_widget_dao)
+        new DashboardWidgetDeletor($dashboard_widget_dao),
+        new DashboardWidgetLineUpdater(
+            $dashboard_widget_dao
+        )
     )
 );
 $router->route($request);

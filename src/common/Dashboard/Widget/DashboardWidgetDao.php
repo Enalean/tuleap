@@ -615,4 +615,16 @@ class DashboardWidgetDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function updateLayout($line_id, $layout)
+    {
+        $line_id = $this->da->escapeInt($line_id);
+        $layout  = $this->da->quoteSmart($layout);
+
+        $sql = "UPDATE dashboards_lines
+                  SET layout = $layout
+                WHERE id = $line_id";
+
+        return $this->update($sql);
+    }
 }

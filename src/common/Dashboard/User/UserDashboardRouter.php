@@ -80,6 +80,9 @@ class UserDashboardRouter
             case 'edit-dashboard':
                 $this->user_dashboard_controller->editDashboard($request);
                 break;
+            case 'edit-widget-line':
+                $this->widget_dashboard_controller->editWidgetLine($request, self::DASHBOARD_TYPE);
+                break;
             default:
                 $this->user_dashboard_controller->display($request);
                 break;

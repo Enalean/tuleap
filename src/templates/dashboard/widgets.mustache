@@ -1,6 +1,13 @@
 <div class="dashboard-widgets-container dragula-container" data-dashboard-id="{{ id }}">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     {{# widget_lines }}
-        <div class="tlp-framed-horizontally dashboard-widgets-row {{ layout }} dragula-container" data-line-id="{{ line_id }}">
+        <div
+            class="dashboard-widgets-row {{ layout }} dragula-container"
+            data-line-id="{{ line_id }}"
+            data-current-layout="{{ layout }}"
+        >
             {{# widget_columns}}
                 <div class="dashboard-widgets-column dragula-container" data-column-id="{{ column_id }}">
                     {{# widgets }}
@@ -67,6 +74,9 @@
                     {{/ widgets }}
                 </div>
             {{/ widget_columns }}
+            {{^ is_page_read_only }}
+                {{> edit-layout-dropdown }}
+            {{/ is_page_read_only }}
         </div>
     {{/ widget_lines }}
 </div>
