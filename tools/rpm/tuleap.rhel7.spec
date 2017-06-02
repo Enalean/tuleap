@@ -1014,9 +1014,9 @@ fi
 # %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 # %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 # %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
-# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite2_http
-# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
-# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
+# %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite2_http
+# %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
+# %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 
 # %files plugin-git-gitolite3
 # %defattr(-,root,root,-)
@@ -1032,10 +1032,10 @@ fi
 # %attr(00755,root,root) %{APP_LIBBIN_DIR}/gitolite3-suexec-wrapper.sh
 # %attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 # %attr(00644,root,root) %{_sysconfdir}/logrotate.d/%{APP_NAME}_git
-# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
-# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
-# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
-# %attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
+# %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
+# %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
+# %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
+# %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 
 %files plugin-ldap
 %defattr(-,root,root,-)
@@ -1072,7 +1072,7 @@ fi
 %{APP_DIR}/plugins/tracker
 #%dir %{APP_DATA_DIR}/tracker
 #%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
-#%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker
+#%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_tracker
 
 %files plugin-graphontrackers
 %defattr(-,root,root,-)
