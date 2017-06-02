@@ -59,21 +59,48 @@ function cancelDropOnEscape(drake) {
 }
 
 function updateParent(widget, target) {
-    if (target && ! target.classList.contains('dashboard-widgets-column')) {
-        var column = document.createElement('div');
-        column.classList.add('dashboard-widgets-column', 'dragula-container');
+    var column, line;
+
+    if (target && target.classList.contains('dashboard-widgets-empty-column')) {
+        column = createColumnForWidget();
+
+        target.parentNode.insertBefore(column, target);
+        column.appendChild(widget);
+        target.parentNode.removeChild(target);
+
+        column.parentNode.insertBefore(createEmptyColumn(), column);
+        column.parentNode.insertBefore(createEmptyColumn(), column.nextElementSibling);
+    } else if (target && ! target.classList.contains('dashboard-widgets-column')) {
+        column = createColumnForWidget();
 
         target.insertBefore(column, widget);
         column.appendChild(widget);
 
-        if (column.parentElement && ! column.parentElement.classList.contains('dashboard-widgets-row')) {
-            var line = document.createElement('div');
-            line.classList.add('dashboard-widgets-row', 'dragula-container');
+        if (column.parentNode && ! column.parentNode.classList.contains('dashboard-widgets-row')) {
+            line = createLineForWidget();
 
-            column.parentElement.insertBefore(line, column);
+            column.parentNode.insertBefore(line, column);
             line.appendChild(column);
         }
     }
+}
+
+function createLineForWidget() {
+    var line = document.createElement('div');
+    line.classList.add('dashboard-widgets-row', 'dragula-container');
+    return line;
+}
+
+function createColumnForWidget() {
+    var column = document.createElement('div');
+    column.classList.add('dashboard-widgets-column', 'dragula-container');
+    return column;
+}
+
+function createEmptyColumn() {
+    var empty_column = document.createElement('span');
+    empty_column.classList.add('dashboard-widgets-empty-column', 'dragula-container');
+    return empty_column;
 }
 
 function moveDropdownElementToTheEnd(dragula_container) {
@@ -140,6 +167,7 @@ function reorderWidget(widget, column) {
         if (response.deleted_ids && response.deleted_ids.deleted_column_id) {
             var column_to_delete = document.querySelector("[data-column-id='" + response.deleted_ids.deleted_column_id + "']");
             if (column_to_delete) {
+                column_to_delete.parentNode.removeChild(column_to_delete.nextElementSibling);
                 column_to_delete.parentNode.removeChild(column_to_delete);
             }
         }
@@ -148,6 +176,9 @@ function reorderWidget(widget, column) {
 
 function getRankOfElement(element) {
     var parent   = element.parentElement;
-    var children = parent.children;
-    return [].indexOf.call(children, element);
+    var children = [].filter.call(parent.children, function(child) {
+        return ! child.classList.contains('dashboard-widgets-empty-column');
+    });
+
+    return children.indexOf(element);
 }
