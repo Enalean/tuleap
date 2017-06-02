@@ -28,6 +28,9 @@ require_once 'common/project/OneStepRegistration/OneStepRegistrationPresenterFac
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 /**
  * Base controller for one step creation project
@@ -125,6 +128,12 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             EventManager::instance()
         );
 
+        $widget_dao        = new DashboardWidgetDao();
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator($project_dao);
+
+        $force_activation = false;
+
         $projectCreator = new ProjectCreator(
             $this->project_manager,
             ReferenceManager::instance(),
@@ -133,7 +142,9 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             new FRSPermissionCreator(
                 new FRSPermissionDao(),
                 new UGroupDao()
-            )
+            ),
+            $duplicator,
+            $force_activation
         );
 
         $data         = $this->creation_request->getProjectValues();

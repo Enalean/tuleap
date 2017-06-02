@@ -45,6 +45,7 @@ use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 
 /**
  * Manage creation of a new project in the forge.
@@ -107,12 +108,18 @@ class ProjectCreator {
      */
     private $frs_permissions_creator;
 
+    /**
+     * @var ProjectDashboardDuplicator
+     */
+    private $dashboard_duplicator;
+
     public function __construct(
         ProjectManager $projectManager,
         ReferenceManager $reference_manager,
         UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
         FRSPermissionCreator $frs_permissions_creator,
+        ProjectDashboardDuplicator $dashboard_duplicator,
         $force_activation = false
     ) {
         $this->send_notifications      = $send_notifications;
@@ -123,6 +130,7 @@ class ProjectCreator {
         $this->projectManager          = $projectManager;
         $this->frs_permissions_creator = $frs_permissions_creator;
         $this->ugroup_duplicator       = $ugroup_duplicator;
+        $this->dashboard_duplicator    = $dashboard_duplicator;
     }
 
     /**
@@ -271,7 +279,7 @@ class ProjectCreator {
             $report_mapping  = array();
         }
         $this->initWikiModuleFromTemplate($group_id, $template_id);
-        $this->initLayoutFromTemplate($group_id, $template_id);
+        $this->initLayoutFromTemplate($group, $template_group);
 
         //Create project specific references if template is not default site template
         if (!$template_group->isSystem()) {
@@ -630,9 +638,17 @@ class ProjectCreator {
     }
 
     //Create the summary page
-    private function initLayoutFromTemplate($group_id, $template_id){
+    private function initLayoutFromTemplate(Project $new_project, Project $template)
+    {
+        $new_project_id = $new_project->getID();
+        $template_id    = $template->getID();
+
         $lm = new WidgetLayoutManager();
-        $lm->createDefaultLayoutForProject($group_id, $template_id);
+        $lm->createDefaultLayoutForProject($new_project_id, $template_id);
+
+        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            $this->dashboard_duplicator->duplicate($template, $new_project);
+        }
     }
 
     // Copy Truncated email option

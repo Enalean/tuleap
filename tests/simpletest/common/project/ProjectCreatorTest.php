@@ -50,7 +50,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 mock('ReferenceManager'),
                 mock('Tuleap\Project\UgroupDuplicator'),
                 false,
-                mock('Tuleap\FRS\FRSPermissionCreator')
+                mock('Tuleap\FRS\FRSPermissionCreator'),
+                mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator')
             ));
     }
 

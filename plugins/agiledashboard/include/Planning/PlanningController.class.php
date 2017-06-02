@@ -26,6 +26,9 @@ use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 require_once 'common/mvc2/PluginController.class.php';
 
@@ -391,6 +394,28 @@ class Planning_Controller extends MVC2_PluginController {
             EventManager::instance()
         );
 
+        $send_notifications = false;
+        $force_activation   = true;
+
+        $frs_permissions_creator = new FRSPermissionCreator(
+            new FRSPermissionDao(),
+            new UGroupDao()
+        );
+
+        $widget_dao  = new DashboardWidgetDao();
+        $project_dao = new ProjectDashboardDao($widget_dao);
+        $duplicator  = new ProjectDashboardDuplicator($project_dao);
+
+        $project_creator = new ProjectCreator(
+            ProjectManager::instance(),
+            ReferenceManager::instance(),
+            $ugroup_duplicator,
+            $send_notifications,
+            $frs_permissions_creator,
+            $duplicator,
+            $force_activation
+        );
+
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
             ProjectManager::instance(),
@@ -401,10 +426,7 @@ class Planning_Controller extends MVC2_PluginController {
             ServiceManager::instance(),
             new ProjectXMLImporterLogger(),
             $ugroup_duplicator,
-            new FRSPermissionCreator(
-                new FRSPermissionDao(),
-                new UGroupDao()
-            ),
+            $frs_permissions_creator,
             new UserRemover(
                 ProjectManager::instance(),
                 EventManager::instance(),
@@ -413,7 +435,8 @@ class Planning_Controller extends MVC2_PluginController {
                 UserManager::instance(),
                 new ProjectHistoryDao(),
                 new UGroupManager()
-            )
+            ),
+            $project_creator
         );
 
         try {

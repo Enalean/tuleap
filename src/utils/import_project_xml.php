@@ -29,6 +29,9 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -219,6 +222,28 @@ try {
         EventManager::instance()
     );
 
+    $send_notifications = false;
+    $force_activation   = true;
+
+    $frs_permissions_creator = new FRSPermissionCreator(
+        new FRSPermissionDao(),
+        new UGroupDao()
+    );
+
+    $widget_dao  = new DashboardWidgetDao();
+    $project_dao = new ProjectDashboardDao($widget_dao);
+    $duplicator  = new ProjectDashboardDuplicator($project_dao);
+
+    $project_creator = new ProjectCreator(
+        ProjectManager::instance(),
+        ReferenceManager::instance(),
+        $ugroup_duplicator,
+        $send_notifications,
+        $frs_permissions_creator,
+        $duplicator,
+        $force_activation
+    );
+
     $xml_importer  = new ProjectXMLImporter(
         EventManager::instance(),
         ProjectManager::instance(),
@@ -229,7 +254,7 @@ try {
         ServiceManager::instance(),
         $broker_log,
         $ugroup_duplicator,
-        new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
+        $frs_permissions_creator,
         new UserRemover(
             ProjectManager::instance(),
             EventManager::instance(),
@@ -238,7 +263,8 @@ try {
             UserManager::instance(),
             new ProjectHistoryDao(),
             new UGroupManager()
-        )
+        ),
+        $project_creator
     );
 
     try {

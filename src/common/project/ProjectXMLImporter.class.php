@@ -84,7 +84,8 @@ class ProjectXMLImporter {
         Logger $logger,
         UgroupDuplicator $ugroup_duplicator,
         FRSPermissionCreator $frs_permissions_creator,
-        UserRemover $user_remover
+        UserRemover $user_remover,
+        ProjectCreator $project_creator
     ) {
         $this->event_manager           = $event_manager;
         $this->project_manager         = $project_manager;
@@ -97,18 +98,7 @@ class ProjectXMLImporter {
         $this->ugroup_duplicator       = $ugroup_duplicator;
         $this->frs_permissions_creator = $frs_permissions_creator;
         $this->user_remover            = $user_remover;
-
-        $send_notifications = false;
-        $force_activation   = true;
-
-        $this->project_creator = new ProjectCreator(
-            $this->project_manager,
-            ReferenceManager::instance(),
-            $this->ugroup_duplicator,
-            $send_notifications,
-            $frs_permissions_creator,
-            $force_activation
-        );
+        $this->project_creator         = $project_creator;
     }
 
     public function importNewFromArchive(

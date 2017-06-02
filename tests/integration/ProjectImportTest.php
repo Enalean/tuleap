@@ -21,8 +21,10 @@
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Project\UserRemover;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 require_once 'exit.php';
 require_once 'html.php';
@@ -136,7 +138,30 @@ class ProjectImportTest extends TuleapDbTestCase
         );
 
         $project_manager = ProjectManager::instance();
-        $user_manager = UserManager::instance();
+        $user_manager    = UserManager::instance();
+
+        $send_notifications = false;
+        $force_activation   = true;
+
+        $frs_permissions_creator = new FRSPermissionCreator(
+            new FRSPermissionDao(),
+            new UGroupDao()
+        );
+
+        $widget_dao  = new DashboardWidgetDao();
+        $project_dao = new ProjectDashboardDao($widget_dao);
+        $duplicator  = new ProjectDashboardDuplicator($project_dao);
+
+        $project_creator = new ProjectCreator(
+            $project_manager,
+            ReferenceManager::instance(),
+            $ugroup_duplicator,
+            $send_notifications,
+            $frs_permissions_creator,
+            $duplicator,
+            $force_activation
+        );
+
         $importer = new ProjectXMLImporter(
             EventManager::instance(),
             $project_manager,
@@ -147,7 +172,7 @@ class ProjectImportTest extends TuleapDbTestCase
             ServiceManager::instance(),
             new Log_ConsoleLogger(),
             $ugroup_duplicator,
-            new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
+            $frs_permissions_creator,
             new UserRemover(
                 mock('ProjectManager'),
                 mock('EventManager'),
@@ -156,7 +181,8 @@ class ProjectImportTest extends TuleapDbTestCase
                 mock('UserManager'),
                 mock('ProjectHistoryDao'),
                 mock('UGroupManager')
-            )
+            ),
+            $project_creator
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
@@ -199,7 +225,30 @@ class ProjectImportTest extends TuleapDbTestCase
         );
 
         $project_manager = ProjectManager::instance();
-        $user_manager = UserManager::instance();
+        $user_manager    = UserManager::instance();
+
+        $send_notifications = false;
+        $force_activation   = true;
+
+        $frs_permissions_creator = new FRSPermissionCreator(
+            new FRSPermissionDao(),
+            new UGroupDao()
+        );
+
+        $widget_dao  = new DashboardWidgetDao();
+        $project_dao = new ProjectDashboardDao($widget_dao);
+        $duplicator  = new ProjectDashboardDuplicator($project_dao);
+
+        $project_creator = new ProjectCreator(
+            $project_manager,
+            ReferenceManager::instance(),
+            $ugroup_duplicator,
+            $send_notifications,
+            $frs_permissions_creator,
+            $duplicator,
+            $force_activation
+        );
+
         $importer = new ProjectXMLImporter(
             EventManager::instance(),
             $project_manager,
@@ -210,7 +259,7 @@ class ProjectImportTest extends TuleapDbTestCase
             ServiceManager::instance(),
             new Log_ConsoleLogger(),
             $ugroup_duplicator,
-            new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
+            $frs_permissions_creator,
             new UserRemover(
                 mock('ProjectManager'),
                 mock('EventManager'),
@@ -219,7 +268,8 @@ class ProjectImportTest extends TuleapDbTestCase
                 mock('UserManager'),
                 mock('ProjectHistoryDao'),
                 mock('UGroupManager')
-            )
+            ),
+            $project_creator
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');

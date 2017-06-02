@@ -27,6 +27,9 @@ require_once 'user.php';
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class ProjectCreationTest extends TuleapDbTestCase {
 
@@ -76,6 +79,12 @@ class ProjectCreationTest extends TuleapDbTestCase {
             EventManager::instance()
         );
 
+        $widget_dao        = new DashboardWidgetDao();
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator($project_dao);
+
+        $force_activation = false;
+
         $projectCreator = new ProjectCreator(
             ProjectManager::instance(),
             ReferenceManager::instance(),
@@ -84,7 +93,9 @@ class ProjectCreationTest extends TuleapDbTestCase {
             new FRSPermissionCreator(
                 new FRSPermissionDao(),
                 new UGroupDao()
-            )
+            ),
+            $duplicator,
+            $force_activation
         );
 
         $projectCreator->create('short-name', 'Long name', array(

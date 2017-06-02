@@ -24,6 +24,9 @@ require_once 'www/project/admin/UserPermissionsDao.class.php';
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class TestDataBuilder {
 
@@ -153,6 +156,12 @@ class TestDataBuilder {
             EventManager::instance()
         );
 
+        $widget_dao        = new DashboardWidgetDao();
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator($project_dao);
+
+        $force_activation = true;
+
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
             ReferenceManager::instance(),
@@ -161,8 +170,11 @@ class TestDataBuilder {
             new FRSPermissionCreator(
                 new FRSPermissionDao(),
                 new UGroupDao()
-            )
+            ),
+            $duplicator,
+            $force_activation
         );
+
         $this->config_dao = new ConfigDao();
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
