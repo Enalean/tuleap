@@ -99,7 +99,6 @@ ${POT_FILE}: ../lib/ExternalReferrer.php
 ${POT_FILE}: ../lib/FileFinder.php
 ${POT_FILE}: ../lib/fortune.php
 ${POT_FILE}: ../lib/gif.php
-${POT_FILE}: ../lib/Google.php
 ${POT_FILE}: ../lib/HtmlElement.php
 ${POT_FILE}: ../lib/HtmlParser.php
 ${POT_FILE}: ../lib/HttpClient.php
@@ -139,7 +138,6 @@ ${POT_FILE}: ../lib/plugin/FileInfo.php
 ${POT_FILE}: ../lib/plugin/FrameInclude.php
 ${POT_FILE}: ../lib/plugin/FullTextSearch.php
 ${POT_FILE}: ../lib/plugin/FuzzyPages.php
-${POT_FILE}: ../lib/plugin/GooglePlugin.php
 ${POT_FILE}: ../lib/plugin/GoTo.php
 ${POT_FILE}: ../lib/plugin/_GroupInfo.php
 ${POT_FILE}: ../lib/plugin/HelloWorld.php

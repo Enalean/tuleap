@@ -53,7 +53,6 @@
 
 <node name="PluginManager"><label>PluginManager</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PluginManager"/></dataref></node>
 <edge source="PluginManager" target="PhpWikiDocumentation"/>
-<edge source="PluginManager" target="GooglePlugin"/>
 <edge source="PluginManager" target="RateIt"/>
 <edge source="PluginManager" target="RecentReleases"/>
 <edge source="PluginManager" target="ProjectSummary"/>
@@ -733,7 +732,6 @@
 <edge source="ReleaseNotes" target="ExternalSearchPlugin"/>
 <edge source="ReleaseNotes" target="PhpWiki"/>
 <edge source="ReleaseNotes" target="AddCommentPlugin"/>
-<edge source="ReleaseNotes" target="GooglePlugin"/>
 <edge source="ReleaseNotes" target="UserPreferences"/>
 <edge source="ReleaseNotes" target="CreateTocPlugin"/>
 <edge source="ReleaseNotes" target="UpLoadPlugin"/>
@@ -998,8 +996,6 @@
 <node name="Blogx2f.Blogx2f.2004-02-27x2f.02:15:17x2b.00:00"><label>Blog/Blog/2004-02-27/02:15:17+00:00</label><dataref><ref xlink:href="http://reini/wiki/sidebar/Blog/Blog/2004-02-27/02%3A15%3A17%2B00%3A00"/></dataref></node>
 
 <node name="PageTrailx2e.php"><label>PageTrail.php</label><dataref><ref xlink:href="http://reini/wiki/sidebar/PageTrail.php"/></dataref></node>
-
-<node name="GooglePlugin"><label>GooglePlugin</label><dataref><ref xlink:href="http://reini/wiki/sidebar/GooglePlugin"/></dataref></node>
 
 <node name="AuthorHistory"><label>AuthorHistory</label><dataref><ref xlink:href="http://reini/wiki/sidebar/AuthorHistory"/></dataref></node>
 

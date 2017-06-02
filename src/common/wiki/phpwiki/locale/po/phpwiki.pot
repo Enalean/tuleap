@@ -1909,18 +1909,6 @@ msgstr ""
 msgid "%s parameter missing"
 msgstr ""
 
-#: ../lib/plugin/GooglePlugin.php:43
-msgid "GooglePlugin"
-msgstr ""
-
-#: ../lib/plugin/GooglePlugin.php:47
-msgid "Make use of the Google API"
-msgstr ""
-
-#: ../lib/plugin/GooglePlugin.php:98
-msgid "Nothing found"
-msgstr ""
-
 #: ../lib/plugin/GoTo.php:18
 msgid "GoTo"
 msgstr ""
