@@ -1407,4 +1407,12 @@ class Event {
      *  - history => \Tuleap\User\History\HistoryEntry[] (OUT)
      */
     const USER_HISTORY = 'user_history';
+
+    /**
+     * Clear the user's history
+     *
+     * Parameters
+     *  - user    => PFUser (IN)
+     */
+    const USER_HISTORY_CLEAR = 'user_history_clear';
 }

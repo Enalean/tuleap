@@ -81,4 +81,13 @@ class RecentlyVisitedDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function deleteVisitByUserId($user_id)
+    {
+        $user_id = $this->da->escapeInt($user_id);
+
+        $sql = "DELETE FROM plugin_tracker_recently_visited WHERE user_id = $user_id";
+
+        $this->update($sql);
+    }
 }
