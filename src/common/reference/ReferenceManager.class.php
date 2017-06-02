@@ -182,9 +182,9 @@ class ReferenceManager {
             if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) return false;
             // Check that there is no system reference with the same keyword
             if ($this->getReferenceValidator()->isSystemKeyword($ref->getKeyword())) return false;
-            // Check list of reserved keywords 
+            // Check list of reserved keywords
             if ($this->getReferenceValidator()->isReservedKeyword($ref->getKeyword())) return false;
-            // Check list of existing keywords 
+            // Check list of existing keywords
             $num_args=Reference::computeNumParam($ref->getLink());
             if ($this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupId())) return false;
         }
@@ -237,7 +237,7 @@ class ReferenceManager {
         // Check if keyword is valid [a-z0-9_]
         if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) return false;
 
-        // Check list of existing keywords 
+        // Check list of existing keywords
         $num_args=Reference::computeNumParam($ref->getLink());
         $refid=$this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupId());
         if (!$force) {
@@ -252,7 +252,7 @@ class ReferenceManager {
                 if ($this->getReferenceValidator()->isSystemKeyword($ref->getKeyword())) {
                     if ($ref->getGroupId()!= 100) return false;
                 } else {
-                    // Check list of reserved keywords 
+                    // Check list of reserved keywords
                     if ($this->getReferenceValidator()->isReservedKeyword($ref->getKeyword())) return false;
                 }
             }
@@ -545,7 +545,7 @@ class ReferenceManager {
      */
     function insertReferences(&$html, $group_id) {
         $this->tmpGroupIdForCallbackFunction = $group_id;
-        $locale = setlocale(LC_CTYPE, null);
+        $locale = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
 
         if (!preg_match('/[^\s]{5000,}/', $html)) {
@@ -1074,7 +1074,7 @@ class ReferenceManager {
                     $p[$ref->getKeyword()] = array();
                 }
                 if (isset($p[$ref->getKeyword()][$num_args])) {
-                    // Project reference overload system reference 
+                    // Project reference overload system reference
                     // (but you can't normally create such references, except in CX 2.6 to 2.8 migration)
                     if ($ref->isSystemReference()) continue;
                 }
