@@ -146,16 +146,25 @@ var tlp = tlp || { };
         }
     }
 
-    function findAncestor(element, ancestor) {
-        while ((element = element.parentElement) && element != ancestor) {}
-        return element;
-    }
-
-    function findClosest(element, ancestor) {
-        if (element == ancestor) {
+    function findClosest(element, classname) {
+        if (hasClassNamed(element, classname)) {
             return element;
         }
 
-        return findAncestor(element, ancestor);
+        return findAncestor(element, classname);
+    }
+
+    function findAncestor(element, classname) {
+        while ((element = element.parentElement) && ! hasClassNamed(element, classname)) {}
+        return element;
+    }
+
+    function hasClassNamed(element, classname) {
+        if (element.classList) {
+            return element.classList.contains(classname);
+        // IE11 SVG elements don't have classList
+        } else if (element.getAttribute('class')) {
+            return (element.getAttribute('class').indexOf(classname) !== -1);
+        }
     }
 })();
