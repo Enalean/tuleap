@@ -50,8 +50,8 @@ plugin_graphontrackersv5_include_report	pie	Pie
 plugin_graphontrackersv5_include_report	bar	Bar
 plugin_graphontrackersv5_include_report	gantt	Gantt
 plugin_graphontrackersv5_include_report	cumulative_flow	Cumulative flow chart
-plugin_graphontrackersv5_include_report	add_chart_dashboard	Add chart to my dashboard
-plugin_graphontrackersv5_include_report	add_chart_project_dashboard	Add chart to project dashboard
+plugin_graphontrackersv5_include_report	add_chart_dashboard	Add to my dashboard
+plugin_graphontrackersv5_include_report	add_chart_project_dashboard	Add to project dashboard
 plugin_graphontrackersv5_graphreportcopy	ins_err	Error while inserting plugin_graphontrackersv5_report_graphic ($1-$2): $3
 plugin_graphontrackersv5_graphreportcopy	ins_err_chart	Error while inserting plugin_graphontrackersv5_chart ($1-$2): $3
 plugin_graphontrackersv5_graphreportcopy	ins_err_chart_pie	Error while inserting plugin_graphontrackersv5_pie_chart ($1-$2): $3

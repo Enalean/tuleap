@@ -19,7 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+use Tuleap\Widget\WidgetFactory;
 
 require_once('common/html/HTML_Element_Input_Hidden.class.php');
 require_once('common/html/HTML_Element_Input_Text.class.php');
@@ -254,6 +258,8 @@ abstract class GraphOnTrackersV5_Chart {
         $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
         $edit_chart_url   = $url .'&renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId();
 
+        $my_dashboards_presenters = $this->getAvailableDashboardsForUser($current_user);
+
         return $this->mustache_renderer->renderToString(
             'graph-actions',
             new GraphOnTrackersV5_GraphActionsPresenter(
@@ -262,7 +268,8 @@ abstract class GraphOnTrackersV5_Chart {
                 $my_dashboard_url,
                 $project_dashboard_url,
                 $delete_chart_url,
-                $edit_chart_url
+                $edit_chart_url,
+                $my_dashboards_presenters
             )
         );
     }
@@ -568,5 +575,22 @@ abstract class GraphOnTrackersV5_Chart {
         return array(
             $this->id => $this->fetchAsArray()
         );
+    }
+
+    private function getAvailableDashboardsForUser(PFUser $user)
+    {
+        $user_dashboard_retriever = new UserDashboardRetriever(
+            new UserDashboardDao(
+                new DashboardWidgetDao(
+                    new WidgetFactory(
+                        UserManager::instance(),
+                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                        EventManager::instance()
+                    )
+                )
+            )
+        );
+
+        return $user_dashboard_retriever->getAllUserDashboards($user);
     }
 }

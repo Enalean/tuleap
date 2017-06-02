@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,12 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-class GraphOnTrackersV5_GraphActionsPresenter {
+class GraphOnTrackersV5_GraphActionsPresenter
+{
+    public $use_tlp_in_dashboards;
+    public $has_user_dashboard;
+    public $has_one_user_dashboard;
+    public $can_add_to_dashboard;
 
     /** @var GraphOnTrackersV5_Chart */
     private $chart;
@@ -29,13 +34,19 @@ class GraphOnTrackersV5_GraphActionsPresenter {
     public $delete_url;
     public $edit_url;
 
+    /**
+     * @var WidgetMyDashboardPresenter[]
+     */
+    public $user_dashboards;
+
     public function __construct(
         GraphOnTrackersV5_Chart $chart,
         $can_be_updated,
         $my_dashboard_url,
         $project_dashboard_url,
         $delete_url,
-        $edit_url
+        $edit_url,
+        array $user_dashboards
     ) {
         $this->chart                 = $chart;
         $this->can_be_updated        = $can_be_updated;
@@ -43,6 +54,11 @@ class GraphOnTrackersV5_GraphActionsPresenter {
         $this->project_dashboard_url = $project_dashboard_url;
         $this->delete_url            = $delete_url;
         $this->edit_url              = $edit_url;
+
+        $this->use_tlp_in_dashboards  = ForgeConfig::get('sys_use_tlp_in_dashboards');
+        $this->user_dashboards        = $user_dashboards;
+        $this->has_user_dashboard     = count($user_dashboards) > 0;
+        $this->has_one_user_dashboard = count($user_dashboards) == 1;
     }
 
     public function confirm_label() {
