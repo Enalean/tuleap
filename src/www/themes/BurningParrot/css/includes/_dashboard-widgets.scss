@@ -21,6 +21,7 @@
     width: 100%;
 }
 
+.dashboard-widget-asynchronous-loading,
 .edit-widget-modal-content-loading {
     height: 200px;
     background: $tlp-ui-white url('../images/spinner.gif') center center no-repeat;

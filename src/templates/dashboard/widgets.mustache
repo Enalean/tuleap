@@ -65,8 +65,19 @@
                                     {{/ is_editable }}
                                 </div>
                                 {{^ is_minimized }}
-                                    <section class="tlp-pane-section">
-                                        {{{ content }}}
+                                    <section class="
+                                        tlp-pane-section
+                                        {{# is_content_loaded_asynchronously }}
+                                            dashboard-widget-asynchronous dashboard-widget-asynchronous-loading
+                                        {{/ is_content_loaded_asynchronously }}
+                                        "
+                                        {{# is_content_loaded_asynchronously }}
+                                            data-ajax-url="{{ ajax_url }}"
+                                        {{/ is_content_loaded_asynchronously }}
+                                    >
+                                        {{^ is_content_loaded_asynchronously }}
+                                            {{{ content }}}
+                                        {{/ is_content_loaded_asynchronously }}
                                     </section>
                                 {{/ is_minimized }}
                             </div>
