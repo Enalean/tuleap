@@ -24,16 +24,18 @@ use Widget;
 
 class DashboardWidgetPresenter
 {
-    public $widget_id;
     public $title;
     public $content;
-    public $is_editable;
     public $has_rss;
     public $rss_url;
+    public $ajax_url;
+    public $widget_id;
+    public $is_editable;
+    public $is_minimized;
     public $edit_widget_label;
     public $delete_widget_label;
     public $delete_widget_confirm;
-    public $is_minimized;
+    public $is_content_loaded_asynchronously;
 
     public function __construct(DashboardWidget $dashboard_widget, Widget $widget)
     {
@@ -41,10 +43,18 @@ class DashboardWidgetPresenter
         $this->is_minimized = $dashboard_widget->isMinimized();
 
         $this->title       = $widget->getTitle();
-        $this->content     = $widget->getContentForBurningParrot();
         $this->is_editable = strlen($widget->getPreferences()) !== 0;
         $this->has_rss     = $widget->hasRss();
         $this->rss_url     = $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+
+        $this->is_content_loaded_asynchronously = $widget->isAjax();
+        if ($this->is_content_loaded_asynchronously) {
+            $this->content  = '';
+            $this->ajax_url = $widget->getAjaxUrl($widget->owner_id, $widget->owner_type);
+        } else {
+            $this->content  = $widget->getContentForBurningParrot();
+            $this->ajax_url = '';
+        }
 
         $this->edit_widget_label     = _('Edit widget');
         $this->delete_widget_label   = _('Delete widget');
