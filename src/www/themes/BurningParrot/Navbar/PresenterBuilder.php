@@ -25,10 +25,12 @@ use HTTPRequest;
 use PFUser;
 use EventManager;
 use Tuleap\BurningParrotCompatiblePageDetector;
-use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownItemsPresenterBuilder;
-use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenter;
-use Tuleap\Theme\BurningParrot\Navbar\Dropdown\DropdownProjectsPresenterBuilder;
-use Tuleap\Theme\BurningParrot\Navbar\Project\ProjectPresenterBuilder;
+use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectPresentersBuilder;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
 use URLRedirect;
 
 class PresenterBuilder
@@ -60,7 +62,7 @@ class PresenterBuilder
         return new Presenter(
             new GlobalNavPresenter(
                 $this->getGlobalMenuItems($current_user),
-                $this->getGlobalNavbarDropdownMenuItems()
+                $this->getGlobalDropdownMenuItems()
             ),
             new SearchPresenter(),
             new UserNavPresenter(
@@ -77,43 +79,55 @@ class PresenterBuilder
         );
     }
 
-    private function getGlobalNavbarDropdownMenuItems()
+    private function getGlobalDropdownMenuItems()
     {
-        $navbar_dropdown_items_builder     = new DropdownItemsPresenterBuilder();
-        $global_navbar_dropdown_menu_items = array();
+        $global_dropdown_menu_items = array();
 
-        $projects_builder = new ProjectPresenterBuilder();
-        $projects         = new DropdownProjectsPresenter(
-            'projects',
-            $projects_builder->build($this->current_user)
+        $dropdown_menu_item_content_project_presenters_builder = new ProjectPresentersBuilder();
+        $dropdown_menu_item_content_project_presenters         = $dropdown_menu_item_content_project_presenters_builder->build(
+            $this->current_user
         );
-        if ($projects) {
-            $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
+        if ($dropdown_menu_item_content_project_presenters) {
+            $global_dropdown_menu_items[] = new DropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
                 'fa fa-archive',
-                $projects
+                new ProjectsPresenter(
+                    'projects',
+                    $dropdown_menu_item_content_project_presenters
+                )
             );
         }
 
-        $help_dropdowns = $navbar_dropdown_items_builder->build('help-dropdown', $this->help_menu_items);
-        if ($help_dropdowns) {
-            $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
+        $dropdown_menu_item_content_link_presenters_builder = new LinkPresentersBuilder();
+        $dropdown_menu_item_content_help_links_presenter    = $dropdown_menu_item_content_link_presenters_builder->build(
+            $this->help_menu_items
+        );
+        if ($dropdown_menu_item_content_help_links_presenter) {
+            $global_dropdown_menu_items[] = new DropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'help'),
                 'fa fa-question-circle',
-                $help_dropdowns
+                new LinksPresenter(
+                    'help-dropdown',
+                    $dropdown_menu_item_content_help_links_presenter
+                )
             );
         }
 
-        $dropdowns = $navbar_dropdown_items_builder->build('extra-tabs-dropdown', $this->extra_tabs);
-        if ($dropdowns) {
-            $global_navbar_dropdown_menu_items[] = new GlobalNavbarDropdownMenuItemPresenter(
+        $dropdown_menu_item_content_extra_links_presenter    = $dropdown_menu_item_content_link_presenters_builder->build(
+            $this->extra_tabs
+        );
+        if ($dropdown_menu_item_content_extra_links_presenter) {
+            $global_dropdown_menu_items[] = new DropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'extras'),
                 'fa fa-ellipsis-h',
-                $dropdowns
+                new LinksPresenter(
+                    'extra-tabs-dropdown',
+                    $dropdown_menu_item_content_extra_links_presenter
+                )
             );
         }
 
-        return $global_navbar_dropdown_menu_items;
+        return $global_dropdown_menu_items;
     }
 
     private function getGlobalMenuItems(PFUser $current_user)
@@ -121,7 +135,7 @@ class PresenterBuilder
         $global_menu_items = array();
 
         if ($current_user->isSuperUser()) {
-            $global_menu_items[] = new GlobalMenuItemPresenter(
+            $global_menu_items[] = new MenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'site_admin'),
                 '/admin/',
                 'fa fa-cog',

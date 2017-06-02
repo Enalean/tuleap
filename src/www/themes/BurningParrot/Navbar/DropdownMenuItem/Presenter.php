@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\Dropdown;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem;
 
-abstract class DropdownPresenter
+use HTTPRequest;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter as ContentPresenter;
+
+class Presenter
 {
-    public $is_projects = false;
-
     /** @var string */
-    public $id;
+    public $label;
 
-    public function __construct($id)
+    /** @var icon */
+    public $icon;
+
+    /** @var ContentPresenter */
+    public $content;
+
+    public function __construct($label, $icon, $content)
     {
-        $this->id = $id;
+        $this->label   = $label;
+        $this->icon    = $icon;
+        $this->content = $content;
     }
 }

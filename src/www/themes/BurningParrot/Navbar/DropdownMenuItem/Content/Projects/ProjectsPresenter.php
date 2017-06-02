@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\Dropdown;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
-use Tuleap\Theme\BurningParrot\Navbar\Project\ProjectPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 
-class DropdownProjectsPresenter extends DropdownPresenter
+class ProjectsPresenter extends Presenter
 {
     public $is_projects = true;
 

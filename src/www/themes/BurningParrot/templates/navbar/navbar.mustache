@@ -3,18 +3,18 @@
     <div class="header-container">
         <a href="/" id="logo"></a>
 
-        {{> current-project-nav }}
+        {{> navbar/current-project-nav }}
 
-        {{> navbar-global-nav }}
+        {{> navbar/global-nav }}
     </div>
 
     {{# is_search_and_user_nav_displayed }}
         <div class="header-container">
-            {{> navbar-search }}
+            {{> navbar/search }}
 
-            {{> join-tuleap-community }}
+            {{> navbar/join-community }}
 
-            {{> navbar-user-nav }}
+            {{> navbar/user-nav }}
         </div>
     {{/ is_search_and_user_nav_displayed }}
 </header>

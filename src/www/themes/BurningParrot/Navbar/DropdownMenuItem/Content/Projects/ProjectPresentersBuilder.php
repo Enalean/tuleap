@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\Project;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects;
 
 use HTTPRequest;
 use PFUser;
 use Project;
 use ProjectManager;
 
-class ProjectPresenterBuilder
+class ProjectPresentersBuilder
 {
     /** @var PFUser */
     private $current_user;
@@ -43,18 +43,18 @@ class ProjectPresenterBuilder
         $this->project_manager = ProjectManager::instance();
         $this->projects        = $this->project_manager->getActiveProjectsForUser($this->current_user);
 
-        return $this->getProjectsPresenter();
+        return $this->getProjectPresenters();
     }
 
-    private function getProjectsPresenter()
+    private function getProjectPresenters()
     {
-        $projects_presenter = array();
+        $project_presenters = array();
 
         foreach ($this->projects as $project) {
-            $projects_presenter[] = $this->getProjectPresenter($project);
+            $project_presenters[] = $this->getProjectPresenter($project);
         }
 
-        return $projects_presenter;
+        return $project_presenters;
     }
 
     private function getProjectPresenter(Project $project)

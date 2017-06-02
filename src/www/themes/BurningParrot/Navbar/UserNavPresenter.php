@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ use HTTPRequest;
 use PFUser;
 use CSRFSynchronizerToken;
 use URLRedirect;
+use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 
 class UserNavPresenter
 {
@@ -84,7 +86,7 @@ class UserNavPresenter
 
     public function login_menu_item()
     {
-        return new GlobalMenuItemPresenter(
+        return new MenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'login'),
             $this->url_redirect->buildReturnToLogin($_SERVER),
             '',
@@ -94,7 +96,7 @@ class UserNavPresenter
 
     public function new_user_menu_item()
     {
-        return new GlobalMenuItemPresenter(
+        return new MenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'new_user'),
             '/account/register.php',
             '',
@@ -105,7 +107,7 @@ class UserNavPresenter
     public function user_nav_items()
     {
         return array(
-            new GlobalMenuItemPresenter(
+            new MenuItemPresenter(
                 $GLOBALS['Language']->getText('my_index', 'account_maintenance'),
                 '/account/',
                 'fa fa-cog',
@@ -117,7 +119,7 @@ class UserNavPresenter
     public function logout_menu_item()
     {
         $logout_csrf = new CSRFSynchronizerToken('logout_action');
-        return new GlobalLogoutMenuItemPresenter(
+        return new LogoutPresenter(
             $GLOBALS['Language']->getText('include_menu', 'logout'),
             $logout_csrf
         );
