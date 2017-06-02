@@ -69,7 +69,7 @@
     position: relative;
     flex: 1;
     flex-direction: row;
-    padding: 0 $tlp-half-spacing $tlp-spacing;
+    padding: 0 0 $tlp-spacing;
     transition: box-shadow 100ms;
 
     &.highlight {
@@ -92,6 +92,11 @@
             opacity: 1;
         }
     }
+
+    > span:first-of-type,
+    > span:last-of-type {
+        padding: 0 $tlp-half-spacing;
+    }
 }
 
 .dashboard-widgets-column {
@@ -100,11 +105,17 @@
     flex-direction: column;
     flex-grow: 1;
     flex-shrink: 1;
-    padding: 0 $tlp-half-spacing;
+    padding: 0 $tlp-half-spacing / 2;
 
     > :last-child {
         margin-bottom: 0;
     }
+}
+
+.dashboard-widgets-empty-column {
+    display: flex;
+    flex-direction: column;
+    padding: 0 $tlp-half-spacing / 2;
 }
 
 .dashboard-row-dropdown.shown {
@@ -178,13 +189,13 @@
 }
 
 .two-columns-small-big {
-    > :first-child {
+    > div:first-of-type {
         flex-basis: calc(100% / 3);
         flex-grow: 1;
         flex-shrink: 1;
     }
 
-    > :nth-child(2) {
+    > div:nth-of-type(2) {
         flex-basis: calc(100% / 3 * 2);
         flex-grow: 2;
         flex-shrink: 1;
@@ -192,13 +203,13 @@
 }
 
 .two-columns-big-small {
-    > :first-child {
+    > div:first-of-type {
         flex-basis: calc(100% / 3 * 2);
         flex-grow: 2;
         flex-shrink: 1;
     }
 
-    > :nth-child(2) {
+    > div:nth-of-type(2) {
         flex-basis: calc(100% / 3);
         flex-grow: 1;
         flex-shrink: 1;
@@ -206,19 +217,19 @@
 }
 
 .three-columns-small-big-small {
-    > :first-child {
+    > div:first-of-type {
         flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
     }
 
-    > :nth-child(2) {
+    > div:nth-of-type(2) {
         flex-basis: calc(100% / 4 * 2);
         flex-grow: 1;
         flex-shrink: 1;
     }
 
-    > :nth-child(3) {
+    > div:nth-of-type(3) {
         flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
@@ -226,19 +237,19 @@
 }
 
 .three-columns-big-small-small {
-    > :first-child {
+    > div:first-of-type {
         flex-basis: calc(100% / 4 * 2);
         flex-grow: 1;
         flex-shrink: 1;
     }
 
-    > :nth-child(2) {
+    > div:nth-of-type(2) {
         flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
     }
 
-    > :nth-child(3) {
+    > div:nth-of-type(3) {
         flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
@@ -246,19 +257,19 @@
 }
 
 .three-columns-small-small-big {
-    > :first-child {
+    > div:first-of-type {
         flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
     }
 
-    > :nth-child(2) {
+    > div:nth-of-type(2) {
         flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
     }
 
-    > :nth-child(3) {
+    > div:nth-of-type(3) {
         flex-basis: calc(100% / 4 * 2);
         flex-grow: 1;
         flex-shrink: 1;
