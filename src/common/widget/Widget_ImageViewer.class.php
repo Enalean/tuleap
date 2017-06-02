@@ -110,14 +110,25 @@ class Widget_ImageViewer extends Widget {
         $prefs .= '</table>';
         return $prefs;
     }
-    function cloneContent($id, $owner_id, $owner_type) {
+
+    public function cloneContent($id, $owner_id, $owner_type)
+    {
+        $da                = CodendiDataAccess::instance();
+        $id                = $da->escapeInt($id);
+        $template_owner_id = $da->escapeInt($this->owner_id);
+        $template_type     = $da->quoteSmart($this->owner_type);
+        $owner_id          = $da->escapeInt($owner_id);
+        $owner_type        = $da->quoteSmart($owner_type);
+
         $sql = "INSERT INTO widget_image (owner_id, owner_type, title, url) 
-        SELECT  ". db_ei($owner_id) .", '". db_es($owner_type) ."', title, url
-        FROM widget_image
-        WHERE owner_id = ". db_ei($this->owner_id) ." AND owner_type = '". db_es($this->owner_type) ."' ";
+                SELECT  $owner_id, $owner_type, title, url
+                FROM widget_image
+                WHERE id = $id AND owner_id = $template_owner_id AND owner_type = $template_type
+        ";
         $res = db_query($sql);
         return db_insertid($res);
     }
+
     function loadContent($id) {
         $sql = "SELECT * FROM widget_image WHERE owner_id = ". db_ei($this->owner_id) ." AND owner_type = '". db_es($this->owner_type) ."' AND id = ". db_ei($id);
         $res = db_query($sql);

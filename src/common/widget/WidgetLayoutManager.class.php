@@ -209,7 +209,7 @@ class WidgetLayoutManager {
                     if ($w) {
                         $w->setOwner($template_id, self::OWNER_TYPE_GROUP);
                         if ($w->canBeUsedByProject($project)) {
-                            $content_id = $w->cloneContent($w->content_id, $group_id, self::OWNER_TYPE_GROUP);
+                            $content_id = $w->cloneContent($data['content_id'], $group_id, self::OWNER_TYPE_GROUP);
                             $sql = "INSERT INTO layouts_contents(owner_id, owner_type, content_id, layout_id, column_id, name, rank, is_minimized, is_removed, display_preferences)
                             VALUES (". $group_id .", '". db_es(self::OWNER_TYPE_GROUP) ."', ". db_ei($content_id) .", ". db_ei($data['layout_id']) .", ". db_ei($data['column_id']) .", '". db_es($data['name']) ."', ". db_ei($data['rank']) .", ". db_ei($data['is_minimized']) .", ". db_ei($data['is_removed']) .", ". db_ei($data['display_preferences']) .")
                             ";
