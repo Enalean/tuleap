@@ -143,10 +143,11 @@ class CampaignsResource {
         );
 
         $this->campaign_creator = new CampaignCreator(
-            $this->formelement_factory,
             $this->config,
             $this->project_manager,
+            $this->formelement_factory,
             $this->tracker_factory,
+            $this->trafficlights_artifact_factory,
             $artifact_creator,
             $execution_creator
         );

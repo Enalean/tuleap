@@ -21,25 +21,19 @@
 namespace Tuleap\Trafficlights\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tracker_FormElementFactory;
 use ProjectManager;
 use PFUser;
-use Tuleap\Trafficlights\Config;
 use TrackerFactory;
+use Tracker_FormElementFactory;
+use Tracker_REST_Artifact_ArtifactCreator;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tracker_REST_Artifact_ArtifactCreator;
+use Tuleap\Trafficlights\Config;
+use Tuleap\Trafficlights\ArtifactFactory;
 
-class CampaignCreator {
-
-    /**
-     * @var ExecutionCreator
-     */
-    private $execution_creator;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
+class CampaignCreator
+{
 
     /** @var Config */
     private $config;
@@ -47,24 +41,35 @@ class CampaignCreator {
     /** @var ProjectManager */
     private $project_manager;
 
+    /** @var Tracker_FormElementFactory */
+    private $formelement_factory;
+
     /** @var TrackerFactory */
     private $tracker_factory;
+
+    /** @var ArtifactFactory */
+    private $artifact_factory;
 
     /** @var Tracker_REST_Artifact_ArtifactCreator */
     private $artifact_creator;
 
+    /** @var ExecutionCreator */
+    private $execution_creator;
+
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
         Config $config,
         ProjectManager $project_manager,
+        Tracker_FormElementFactory $formelement_factory,
         TrackerFactory $tracker_factory,
+        ArtifactFactory $artifact_factory,
         Tracker_REST_Artifact_ArtifactCreator $artifact_creator,
         ExecutionCreator $execution_creator
     ) {
-        $this->formelement_factory = $formelement_factory;
         $this->config              = $config;
         $this->project_manager     = $project_manager;
+        $this->formelement_factory = $formelement_factory;
         $this->tracker_factory     = $tracker_factory;
+        $this->artifact_factory    = $artifact_factory;
         $this->artifact_creator    = $artifact_creator;
         $this->execution_creator   = $execution_creator;
     }
@@ -72,15 +77,18 @@ class CampaignCreator {
     /**
      * @return ArtifactReference
      */
-    public function createCampaign(PFUser $user, $project_id, $label, $milestone_id) {
+    public function createCampaign(PFUser $user, $project_id, $label, $milestone_id)
+    {
         try {
-            $tracker = $this->getCampaignTrackerReferenceForProject($project_id);
-            $values  = $this->getFieldValuesForCampaignArtifactCreation($tracker, $user, $label);
+            $execution_ids = $this->createTestExecutionsForDefinitions($project_id, $user, $milestone_id);
+            $tracker       = $this->getCampaignTrackerReferenceForProject($project_id);
+            $values        = $this->getFieldValuesForCampaignArtifactCreation($tracker, $user, $label, $execution_ids);
+            $artifact_ref  = $this->artifact_creator->create($user, $tracker, $values);
 
-            $artifact_ref = $this->artifact_creator->create($user, $tracker, $values);
             if (! empty($milestone_id)) {
                 $artifact_ref->getArtifact()->linkArtifact($milestone_id, $user);
             }
+
             return $artifact_ref;
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -93,7 +101,33 @@ class CampaignCreator {
         }
     }
 
-    private function getCampaignTrackerReferenceForProject($project_id) {
+    private function createTestExecutionsForDefinitions(
+        $project_id,
+        PFUser $user,
+        $milestone_id
+    ) {
+        $execution_ids     = array();
+        $project           = $this->project_manager->getProject($project_id);
+        $cover_definitions = $this->artifact_factory->getCoverTestDefinitionsUserCanViewForMilestone(
+            $user,
+            $project,
+            $milestone_id
+        );
+
+        foreach ($cover_definitions as $definition) {
+            $execution = $this->execution_creator->createTestExecution(
+                $project_id,
+                $user,
+                $definition->getId()
+            );
+            $execution_ids[] = array('id' => $execution->id);
+        }
+
+        return $execution_ids;
+    }
+
+    private function getCampaignTrackerReferenceForProject($project_id)
+    {
         $project = $this->project_manager->getProject($project_id);
         if ($project->isError()) {
             throw new RestException(404, 'Project not found');
@@ -110,13 +144,16 @@ class CampaignCreator {
 
         return $tracker_reference;
     }
+
     private function getFieldValuesForCampaignArtifactCreation(
         TrackerReference $tracker_reference,
         PFUser $user,
-        $label
+        $label,
+        $execution_ids
     ) {
         $label_field  = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_NAME);
         $status_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_STATUS);
+        $link_field   = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_ARTIFACT_LINKS);
 
         $label_value           = new ArtifactValuesRepresentation();
         $label_value->field_id = (int)$label_field->getId();
@@ -126,7 +163,11 @@ class CampaignCreator {
         $status_value->field_id       = (int)$status_field->getId();
         $status_value->bind_value_ids = array((int)$status_field->getDefaultValue());
 
-        return array($label_value, $status_value);
+        $link_value           = new ArtifactValuesRepresentation();
+        $link_value->field_id = (int)$link_field->getId();
+        $link_value->links    = $execution_ids;
+
+        return array($label_value, $status_value, $link_value);
     }
 
     private function getField(

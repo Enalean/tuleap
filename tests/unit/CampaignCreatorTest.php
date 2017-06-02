@@ -27,6 +27,7 @@ use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Trafficlights\ArtifactFactory;
 
 require_once dirname(__FILE__) .'/bootstrap.php';
 
@@ -41,6 +42,9 @@ class CampaignCreatorTest extends TuleapTestCase
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var ArtifactFactory */
+    private $artifact_factory;
+
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
@@ -50,6 +54,9 @@ class CampaignCreatorTest extends TuleapTestCase
     /** @var Tracker_REST_Artifact_ArtifactCreator */
     private $artifact_creator;
 
+    /** @var ExecutionCreator */
+    private $execution_creator;
+
     /** @var Tracker */
     private $campaign_tracker;
 
@@ -58,6 +65,12 @@ class CampaignCreatorTest extends TuleapTestCase
 
     private $project_id          = 101;
     private $campaign_tracker_id = 444;
+
+
+    /**
+     * Setup and general stubs
+     *
+     */
 
     public function setUp()
     {
@@ -69,55 +82,80 @@ class CampaignCreatorTest extends TuleapTestCase
 
         $this->project_manager     = mock('ProjectManager');
         $this->tracker_factory     = mock('TrackerFactory');
+        $this->artifact_factory    = mock('Tuleap\\Trafficlights\\ArtifactFactory');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->artifact_creator    = mock('Tracker_REST_Artifact_ArtifactCreator');
         $this->config              = mock('Tuleap\\Trafficlights\\Config');
-        $execution_creator         = mock('Tuleap\\Trafficlights\\REST\\v1\\ExecutionCreator');
+        $this->execution_creator   = mock('Tuleap\\Trafficlights\\REST\\v1\\ExecutionCreator');
 
         $this->campaign_creator = new CampaignCreator(
-            $this->formelement_factory,
             $this->config,
             $this->project_manager,
+            $this->formelement_factory,
             $this->tracker_factory,
+            $this->artifact_factory,
             $this->artifact_creator,
-            $execution_creator
+            $this->execution_creator
         );
+    }
+
+    private function stubCampaignTracker()
+    {
+        stub($this->config)->getCampaignTrackerId()->returns($this->campaign_tracker_id);
+        stub($this->project_manager)->getProject()->returns($this->project);
+        stub($this->tracker_factory)->getTrackerById()->returns($this->campaign_tracker);
+    }
+
+    private function stubCampaignArtifact()
+    {
+        $campaign_artifact = aMockArtifact()->build();
+        $artifact_ref      = mock('Tuleap\\Tracker\\REST\\Artifact\\ArtifactReference');
+        stub($this->artifact_creator)->create()->returns($artifact_ref);
+        stub($artifact_ref)->getArtifact()->returns($campaign_artifact);
+        return $campaign_artifact;
+    }
+
+    private function aMockValue($field_id)
+    {
+        $field_value           = new ArtifactValuesRepresentation();
+        $field_value->field_id = $field_id;
+        return $field_value;
     }
 
     /**
      * Tests for createCampaign
      *
      */
+
     public function itCreatesACampaignWithTheGivenName()
     {
-        stub($this->config)->getCampaignTrackerId()->returns($this->campaign_tracker_id);
-        stub($this->project_manager)->getProject()->returns($this->project);
-        stub($this->tracker_factory)->getTrackerById()->returns($this->campaign_tracker);
+        $this->stubCampaignTracker();
+        stub($this->artifact_factory)->getCoverTestDefinitionsUserCanViewForMilestone()->returns(array());
 
-        $expected_label  = 'Campaign Name';
-        $no_milestone_id = 0;
+        $campaign_artifact = $this->stubCampaignArtifact();
+        $expected_label    = 'Campaign Name';
+        $no_milestone_id   = 0;
 
-        $label_field_id        = 123;
-        $label_value           = new ArtifactValuesRepresentation();
-        $label_value->field_id = $label_field_id;
-        $label_value->value    = $expected_label;
-        $label_field           = aMockField()->withId($label_field_id)->build();
+        $label_field_id     = 123;
+        $label_field        = aMockField()->withId($label_field_id)->build();
+        $label_value        = $this->aMockValue($label_field_id);
+        $label_value->value = $expected_label;
         stub($this->formelement_factory)->getUsedFieldByNameForUser()->returnsAt(0, $label_field);
 
         $status_field_id              = 456;
-        $status_value                 = new ArtifactValuesRepresentation();
-        $status_value->field_id       = $status_field_id;
-        $status_value->bind_value_ids = array(0);
         $status_field                 = aMockField()->withId($status_field_id)->build();
+        $status_value                 = $this->aMockValue($status_field_id);
+        $status_value->bind_value_ids = array(0);
         stub($this->formelement_factory)->getUsedFieldByNameForUser()->returnsAt(1, $status_field);
 
-        $expected_values = array($label_value, $status_value);
-        expect($this->artifact_creator)->create('*', '*', $expected_values)->once();
+        $link_field_id     = 789;
+        $link_field        = aMockField()->withId($link_field_id)->build();
+        $link_value        = $this->aMockValue($link_field_id, array());
+        $link_value->links = array();
+        stub($this->formelement_factory)->getUsedFieldByNameForUser()->returnsAt(2, $link_field);
 
-        $artifact_ref      = mock('Tuleap\\Tracker\\REST\\Artifact\\ArtifactReference');
-        $campaign_artifact = mock('Tracker_Artifact');
-        stub($this->artifact_creator)->create()->returns($artifact_ref);
-        stub($artifact_ref)->getArtifact()->returns($campaign_artifact);
+        $expected_values = array($label_value, $status_value, $link_value);
+        expect($this->artifact_creator)->create('*', '*', $expected_values)->once();
 
         expect($campaign_artifact)->linkArtifact()->never();
 
@@ -126,23 +164,38 @@ class CampaignCreatorTest extends TuleapTestCase
 
     public function itCreatesAnArtifactLinkToMilestoneWhenGivenAMilestoneId()
     {
-        stub($this->config)->getCampaignTrackerId()->returns($this->campaign_tracker_id);
-        stub($this->project_manager)->getProject()->returns($this->project);
-        stub($this->tracker_factory)->getTrackerById()->returns($this->campaign_tracker);
+        $this->stubCampaignTracker();
+        stub($this->artifact_factory)->getCoverTestDefinitionsUserCanViewForMilestone()->returns(array());
         stub($this->formelement_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
-        $expected_label = 'Campaign Name';
-        $milestone_id   = 10;
-
-        $artifact_ref      = mock('Tuleap\\Tracker\\REST\\Artifact\\ArtifactReference');
-        $campaign_artifact = mock('Tracker_Artifact');
-        stub($this->artifact_creator)->create()->returns($artifact_ref);
-        stub($artifact_ref)->getArtifact()->returns($campaign_artifact);
+        $campaign_artifact = $this->stubCampaignArtifact();
+        $expected_label    = 'Campaign Name';
+        $milestone_id      = 10;
 
         expect($campaign_artifact)->linkArtifact($milestone_id, '*')->once();
 
         $this->campaign_creator->createCampaign($this->user, $this->project_id, $expected_label, $milestone_id);
     }
+
+    public function itCreatesTestExecutionsForDefinitionsCoveringTheMilestone()
+    {
+        $test_definitions = array(
+            aMockArtifact()->build(),
+            aMockArtifact()->build(),
+            aMockArtifact()->build()
+        );
+
+        $this->stubCampaignTracker();
+        $this->stubCampaignArtifact();
+        stub($this->artifact_factory)->getCoverTestDefinitionsUserCanViewForMilestone()->returns($test_definitions);
+        stub($this->formelement_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
+        stub($this->execution_creator)->createTestExecution()->returns(aMockArtifact()->build());
+
+        $expected_label = 'Campaign Name';
+        $milestone_id   = 10;
+
+        expect($this->execution_creator)->createTestExecution()->count(count($test_definitions));
+
+        $this->campaign_creator->createCampaign($this->user, $this->project_id, $expected_label, $milestone_id);
+    }
 }
-
-
