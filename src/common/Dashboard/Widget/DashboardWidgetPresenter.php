@@ -44,7 +44,7 @@ class DashboardWidgetPresenter
         $this->content     = $widget->getContentForBurningParrot();
         $this->is_editable = strlen($widget->getPreferences()) !== 0;
         $this->has_rss     = $widget->hasRss();
-        $this->rss_url     = $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+        $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
 
         $this->edit_widget_label     = _('Edit widget');
         $this->delete_widget_label   = _('Delete widget');
