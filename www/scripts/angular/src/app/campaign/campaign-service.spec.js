@@ -37,10 +37,10 @@ describe ('CampaignService - ', function () {
         ];
 
         mockBackend
-            .expectGET('/api/v1/projects/101/trafficlights_campaigns?limit=10&offset=0&query=%7B%22status%22:%22open%22%7D')
+            .expectGET('/api/v1/projects/101/trafficlights_campaigns?limit=10&offset=0&query=%7B%22status%22:%22open%22,%22milestone_id%22:0%7D')
             .respond(JSON.stringify(campaigns));
 
-        var promise = CampaignService.getCampaigns(101, "open", 10, 0);
+        var promise = CampaignService.getCampaigns(101, 0, "open", 10, 0);
 
         mockBackend.flush();
 

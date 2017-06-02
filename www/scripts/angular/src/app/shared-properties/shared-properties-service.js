@@ -10,7 +10,8 @@ function SharedPropertiesService() {
         user                 : undefined,
         nodejs_server        : undefined,
         nodejs_server_version: undefined,
-        uuid                 : undefined
+        uuid                 : undefined,
+        milestone_id         : undefined
     };
 
     return {
@@ -31,7 +32,9 @@ function SharedPropertiesService() {
         setDefinitionTrackerId: setDefinitionTrackerId,
         getDefinitionTrackerId: getDefinitionTrackerId,
         setExecutionTrackerId : setExecutionTrackerId,
-        getExecutionTrackerId : getExecutionTrackerId
+        getExecutionTrackerId : getExecutionTrackerId,
+        getMilestoneId        : getMilestoneId,
+        setMilestoneId        : setMilestoneId
     };
 
     function getProjectId() {
@@ -104,5 +107,13 @@ function SharedPropertiesService() {
 
     function getExecutionTrackerId() {
         return property.execution_tracker_id;
+    }
+
+    function getMilestoneId() {
+        return property.milestone_id;
+    }
+
+    function setMilestoneId(milestone_id) {
+        property.milestone_id = milestone_id;
     }
 }

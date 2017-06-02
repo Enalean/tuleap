@@ -17,7 +17,7 @@ function TrafficlightsCtrl(
     SharedPropertiesService,
     UUIDGeneratorService
 ) {
-    $scope.init = function(nodejs_server, project_id, tracker_ids, lang, current_user) {
+    $scope.init = function(nodejs_server, project_id, tracker_ids, lang, current_user, milestone_id) {
         var uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);
         SharedPropertiesService.setNodeServerVersion("1.1.0");
@@ -28,6 +28,7 @@ function TrafficlightsCtrl(
         SharedPropertiesService.setCampaignTrackerId(tracker_ids.campaign_tracker_id);
         SharedPropertiesService.setDefinitionTrackerId(tracker_ids.definition_tracker_id);
         SharedPropertiesService.setExecutionTrackerId(tracker_ids.execution_tracker_id);
+        SharedPropertiesService.setMilestoneId(milestone_id);
 
         amMoment.changeLocale(lang);
         gettextCatalog.setCurrentLanguage(lang);

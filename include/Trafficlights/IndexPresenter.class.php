@@ -65,7 +65,8 @@ class IndexPresenter {
         $campaign_tracker_id,
         $test_definition_tracker_id,
         $test_execution_tracker_id,
-        PFUser $current_user
+        PFUser $current_user,
+        $milestone_id
     ) {
         $this->lang                   = $this->getLanguageAbbreviation($current_user);
         $this->project_id             = $project_id;
@@ -86,6 +87,7 @@ class IndexPresenter {
             'execution_tracker_id'  => $this->test_execution_tracker_id,
             'campaign_tracker_id'   => $this->campaign_tracker_id
         ));
+        $this->milestone_id               = $milestone_id;
     }
 
     private function getLanguageAbbreviation($current_user) {

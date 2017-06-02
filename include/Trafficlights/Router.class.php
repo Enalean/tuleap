@@ -67,7 +67,8 @@ class Router {
 
     private function renderIndex(Codendi_Request $request) {
         $controller = new IndexController($request, $this->config);
-        $this->renderAction($controller, 'index', $request);
+        $args = array('milestone_id' => (int)$request->getValidated('milestone_id', 'int', 0));
+        $this->renderAction($controller, 'index', $request, $args);
     }
 
     /**
