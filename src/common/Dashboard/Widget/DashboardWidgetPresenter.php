@@ -45,7 +45,7 @@ class DashboardWidgetPresenter
         $this->title       = $widget->getTitle();
         $this->is_editable = strlen($widget->getPreferences()) !== 0;
         $this->has_rss     = $widget->hasRss();
-        $this->rss_url     = $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+        $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
 
         $this->is_content_loaded_asynchronously = $widget->isAjax();
         if ($this->is_content_loaded_asynchronously) {
