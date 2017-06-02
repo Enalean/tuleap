@@ -26,6 +26,7 @@ use Project;
 use Tracker_Report_Renderer;
 use Tracker_Widget_MyRenderer;
 use Tracker_Widget_ProjectRenderer;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 
 class WidgetAddToDashboardDropdownBuilder
@@ -34,22 +35,31 @@ class WidgetAddToDashboardDropdownBuilder
      * @var UserDashboardRetriever
      */
     private $user_dashboard_retriever;
+    /**
+     * @var ProjectDashboardRetriever
+     */
+    private $project_dashboard_retriever;
 
-    public function __construct(UserDashboardRetriever $user_dashboard_retriever)
-    {
-        $this->user_dashboard_retriever = $user_dashboard_retriever;
+    public function __construct(
+        UserDashboardRetriever $user_dashboard_retriever,
+        ProjectDashboardRetriever $project_dashboard_retriever
+    ) {
+        $this->user_dashboard_retriever    = $user_dashboard_retriever;
+        $this->project_dashboard_retriever = $project_dashboard_retriever;
     }
 
     public function build(PFUser $user, Project $project, Tracker_Report_Renderer $renderer)
     {
-        $my_dashboards_presenters = $this->getAvailableDashboardsForUser($user);
+        $my_dashboards_presenters      = $this->getAvailableDashboardsForUser($user);
+        $project_dashboards_presenters = $this->getAvailableDashboardsForProject($project);
 
         return new WidgetAddToDashboardDropdownPresenter(
             $user,
             $project,
             $this->getAddToMyDashboardURL($renderer, $user),
             $this->getAddToProjectDashboardURL($renderer, $project),
-            $my_dashboards_presenters
+            $my_dashboards_presenters,
+            $project_dashboards_presenters
         );
     }
 
@@ -96,5 +106,10 @@ class WidgetAddToDashboardDropdownBuilder
     private function getAvailableDashboardsForUser(PFUser $user)
     {
         return $this->user_dashboard_retriever->getAllUserDashboards($user);
+    }
+
+    private function getAvailableDashboardsForProject(Project $project)
+    {
+        return $this->project_dashboard_retriever->getAllProjectDashboards($project);
     }
 }
