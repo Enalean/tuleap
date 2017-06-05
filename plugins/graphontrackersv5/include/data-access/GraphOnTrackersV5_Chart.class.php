@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
@@ -258,7 +260,8 @@ abstract class GraphOnTrackersV5_Chart {
         $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
         $edit_chart_url   = $url .'&renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId();
 
-        $my_dashboards_presenters = $this->getAvailableDashboardsForUser($current_user);
+        $my_dashboards_presenters    = $this->getAvailableDashboardsForUser($current_user);
+        $project_dashboard_presenter = $this->getAvailableDashboardsForProject($project);
 
         return $this->mustache_renderer->renderToString(
             'graph-actions',
@@ -269,7 +272,8 @@ abstract class GraphOnTrackersV5_Chart {
                 $project_dashboard_url,
                 $delete_chart_url,
                 $edit_chart_url,
-                $my_dashboards_presenters
+                $my_dashboards_presenters,
+                $project_dashboard_presenter
             )
         );
     }
@@ -592,5 +596,22 @@ abstract class GraphOnTrackersV5_Chart {
         );
 
         return $user_dashboard_retriever->getAllUserDashboards($user);
+    }
+
+    private function getAvailableDashboardsForProject($project)
+    {
+        $project_dashboard_retriever = new ProjectDashboardRetriever(
+            new ProjectDashboardDao(
+                new DashboardWidgetDao(
+                    new WidgetFactory(
+                        UserManager::instance(),
+                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                        EventManager::instance()
+                    )
+                )
+            )
+        );
+
+        return $project_dashboard_retriever->getAllProjectDashboards($project);
     }
 }
