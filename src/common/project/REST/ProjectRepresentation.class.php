@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,50 +20,25 @@
 namespace Tuleap\Project\REST;
 
 use Project;
-use Tuleap\REST\JsonCast;
 
 /**
  * Basic representation of a project
  */
-class ProjectRepresentation {
-
-    const ROUTE = 'projects';
-
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $uri;
-
-    /**
-     * @var string
-     */
-    public $label;
-
-    /**
-     * @var string
-     */
-     public $shortname;
-
+class ProjectRepresentation extends MinimalProjectRepresentation
+{
     /**
      * @var Array {@type Tuleap\Project\REST\ProjectResourceReference}
      */
-    public $resources;
+    public $resources = array();
 
     /**
      * @var Array {@type Tuleap\Project\REST\ProjectAdditionalInformationsRepresentation}
      */
-    public $additional_informations;
+    public $additional_informations = array();
 
-    public function build(Project $project, array $resources, array $informations) {
-        $this->id                      = JsonCast::toInt($project->getId());
-        $this->uri                     = self::ROUTE . '/' . $this->id;
-        $this->label                   = $project->getPublicName();
-        $this->shortname               = $project->getUnixName();
+    public function build(Project $project, array $resources, array $informations)
+    {
+        $this->buildMinimal($project);
         $this->resources               = $resources;
         $this->additional_informations = $informations;
     }

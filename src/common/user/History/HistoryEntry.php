@@ -38,13 +38,18 @@ class HistoryEntry
      * @var string
      */
     private $title;
+    /**
+     * @var \Project
+     */
+    private $project;
 
-    public function __construct($visit_time, $xref, $link, $title)
+    public function __construct($visit_time, $xref, $link, $title, \Project $project)
     {
         $this->visit_time = (int) $visit_time;
         $this->xref       = $xref;
         $this->link       = $link;
         $this->title      = $title;
+        $this->project    = $project;
     }
 
     /**
@@ -77,5 +82,13 @@ class HistoryEntry
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @return \Project
+     */
+    public function getProject()
+    {
+        return $this->project;
     }
 }

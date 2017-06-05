@@ -34,7 +34,11 @@ class VisitRetrieverTest extends \TuleapTestCase
             )
         );
         $artifact_factory = mock('Tracker_ArtifactFactory');
-        stub($artifact_factory)->getArtifactById()->returns(mock('Tracker_Artifact'));
+        $artifact         = mock('Tracker_Artifact');
+        stub($artifact_factory)->getArtifactById()->returns($artifact);
+        $tracker = mock('Tracker');
+        stub($artifact)->getTracker()->returns($tracker);
+        stub($tracker)->getProject()->returns(mock('Project'));
 
         $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory);
         $user               = mock('PFUser');

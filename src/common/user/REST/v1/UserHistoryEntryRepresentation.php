@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\REST\v1;
 
+use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\User\History\HistoryEntry;
 
 class UserHistoryEntryRepresentation
@@ -40,6 +41,10 @@ class UserHistoryEntryRepresentation
      * @var string Title of the entry {@type string} {@required true}
      */
     public $title;
+    /**
+     * @var MinimalProjectRepresentation Project to which this user's history entry belongs {@required true}
+     */
+    public $project;
 
     public function build(HistoryEntry $entry)
     {
@@ -47,5 +52,9 @@ class UserHistoryEntryRepresentation
         $this->xref       = $entry->getXref();
         $this->link       = $entry->getLink();
         $this->title      = $entry->getTitle();
+
+        $project_representation = new MinimalProjectRepresentation();
+        $project_representation->buildMinimal($entry->getProject());
+        $this->project = $project_representation;
     }
 }
