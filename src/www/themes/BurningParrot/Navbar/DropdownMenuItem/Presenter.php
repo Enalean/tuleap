@@ -34,10 +34,14 @@ class Presenter
     /** @var ContentPresenter */
     public $content;
 
-    public function __construct($label, $icon, $content)
+    /** @var string */
+    public $additional_classes;
+
+    public function __construct($label, $icon, $content, $additional_classes)
     {
-        $this->label   = $label;
-        $this->icon    = $icon;
-        $this->content = $content;
+        $this->label              = $label;
+        $this->icon               = $icon;
+        $this->content            = $content;
+        $this->additional_classes = $additional_classes;
     }
 }

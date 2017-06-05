@@ -7,7 +7,10 @@
     {{# is_projects }}
         {{> navbar/dropdown-menu-item/content/content-projects }}
     {{/ is_projects }}
-    {{^ is_projects }}
+    {{# is_links }}
         {{> navbar/dropdown-menu-item/content/content-links }}
-    {{/ is_projects }}
+    {{/ is_links }}
+    {{# is_history }}
+        {{> navbar/dropdown-menu-item/content/content-history }}
+    {{/ is_history }}
 </div>

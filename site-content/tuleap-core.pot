@@ -107,6 +107,9 @@ msgstr ""
 msgid "Git"
 msgstr ""
 
+msgid "History"
+msgstr ""
+
 msgid "Homepage"
 msgstr ""
 
@@ -260,4 +263,7 @@ msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
 
 msgid "You must be a project admin to edit this widget."
+msgstr ""
+
+msgid "Your history is empty"
 msgstr ""

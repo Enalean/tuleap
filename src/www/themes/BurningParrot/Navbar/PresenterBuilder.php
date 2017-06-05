@@ -94,7 +94,8 @@ class PresenterBuilder
                 new ProjectsPresenter(
                     'projects',
                     $dropdown_menu_item_content_project_presenters
-                )
+                ),
+                'nav-dropdown-left'
             );
         }
 
@@ -109,7 +110,8 @@ class PresenterBuilder
                 new LinksPresenter(
                     'help-dropdown',
                     $dropdown_menu_item_content_help_links_presenter
-                )
+                ),
+                ''
             );
         }
 
@@ -123,7 +125,8 @@ class PresenterBuilder
                 new LinksPresenter(
                     'extra-tabs-dropdown',
                     $dropdown_menu_item_content_extra_links_presenter
-                )
+                ),
+                ''
             );
         }
 

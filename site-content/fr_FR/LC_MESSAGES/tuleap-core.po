@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.12\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.2\n"
 
 #, php-format
 msgid "%d member"
@@ -125,6 +125,9 @@ msgstr "Forums"
 
 msgid "Git"
 msgstr "Git"
+
+msgid "History"
+msgstr "Historique"
 
 msgid "Homepage"
 msgstr "Page d'accueil"
@@ -289,3 +292,6 @@ msgstr ""
 msgid "You must be a project admin to edit this widget."
 msgstr ""
 "Vous devez être administrateur du projet pour pouvoir éditer ce widget."
+
+msgid "Your history is empty"
+msgstr "Votre historique est vide"

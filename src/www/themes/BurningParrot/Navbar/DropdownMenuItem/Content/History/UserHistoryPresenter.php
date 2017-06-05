@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content;
+namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History;
 
-abstract class Presenter
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
+
+class UserHistoryPresenter extends Presenter
 {
-    public $is_projects = false;
-    public $is_links    = false;
-    public $is_history  = false;
-
-    /** @var string */
-    public $id;
+    public $is_history = true;
 
     public function __construct($id)
     {
-        $this->id = $id;
+        parent::__construct($id);
+    }
+
+    public function empty_history()
+    {
+        return _('Your history is empty');
     }
 }

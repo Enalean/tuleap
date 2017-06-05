@@ -12,6 +12,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
 
+#, php-format
 msgid "Add a new %s"
 msgstr "Ajouter un nouveau %s"
 

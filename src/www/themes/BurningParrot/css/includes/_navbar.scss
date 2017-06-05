@@ -47,16 +47,6 @@
             display: none;
         }
     }
-
-    &.only-icon {
-        > .nav-link-icon {
-            display: inline;
-        }
-
-        > .nav-link-text {
-            display: none;
-        }
-    }
 }
 
 header {
@@ -108,6 +98,20 @@ header {
         transition: color 100ms linear;
         color: $tlp-theme-color;
     }
+}
+
+.only-icon {
+    .nav-link-icon {
+        display: inline;
+    }
+
+    .nav-link-text {
+        display: none;
+    }
+}
+
+.without-carret > .nav-dropdown-link > .nav-link-icon-dropdown {
+    display: none;
 }
 
 .nav-form {
