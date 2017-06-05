@@ -59,33 +59,35 @@ function cancelDropOnEscape(drake) {
 }
 
 function updateParent(widget, target) {
-    var column, line;
+    var line   = createLineForWidget();
+    var column = createColumnForWidget();
 
-    if (target && target.classList.contains('dashboard-widgets-empty-column')) {
-        column = createColumnForWidget();
+    if (target && target.classList.contains('dashboard-widgets-empty-line')) {
+        target.parentNode.insertBefore(column, target);
+        column.appendChild(widget);
+        column.parentNode.insertBefore(line, column);
+        line.appendChild(column);
+        target.parentNode.removeChild(target);
 
+        initializeColumnOutline(column);
+        initializeLineOutline(line);
+    } else if (target && target.classList.contains('dashboard-widgets-empty-column')) {
         target.parentNode.insertBefore(column, target);
         column.appendChild(widget);
         target.parentNode.removeChild(target);
 
-        column.parentNode.insertBefore(createEmptyColumn(), column);
-        column.parentNode.insertBefore(createEmptyColumn(), column.nextElementSibling);
-    } else if (target && ! target.classList.contains('dashboard-widgets-column')) {
-        column = createColumnForWidget();
-
-        target.insertBefore(column, widget);
-        column.appendChild(widget);
-
-        if (column.parentNode && ! column.parentNode.classList.contains('dashboard-widgets-row')) {
-            line = createLineForWidget();
-
-            column.parentNode.insertBefore(line, column);
-            line.appendChild(column);
-
-            column.parentNode.insertBefore(createEmptyColumn(), column);
-        }
-        column.parentNode.insertBefore(createEmptyColumn(), column.nextElementSibling);
+        initializeColumnOutline(column);
     }
+}
+
+function initializeLineOutline(line) {
+    line.parentNode.insertBefore(createEmptyLine(), line);
+    line.parentNode.insertBefore(createEmptyLine(), line.nextElementSibling);
+}
+
+function initializeColumnOutline(column) {
+    column.parentNode.insertBefore(createEmptyColumn(), column);
+    column.parentNode.insertBefore(createEmptyColumn(), column.nextElementSibling);
 }
 
 function createLineForWidget() {
@@ -98,6 +100,12 @@ function createColumnForWidget() {
     var column = document.createElement('div');
     column.classList.add('dashboard-widgets-column', 'dragula-container');
     return column;
+}
+
+function createEmptyLine() {
+    var empty_line = document.createElement('span');
+    empty_line.classList.add('dashboard-widgets-empty-line', 'dragula-container');
+    return empty_line;
 }
 
 function createEmptyColumn() {
@@ -159,6 +167,7 @@ function reorderWidget(widget, column) {
         if (response.deleted_ids && response.deleted_ids.deleted_line_id) {
             var line_to_delete = document.querySelector("[data-line-id='" + response.deleted_ids.deleted_line_id + "']");
             if (line_to_delete) {
+                line_to_delete.parentNode.removeChild(line_to_delete.nextElementSibling);
                 line_to_delete.parentNode.removeChild(line_to_delete);
             }
         }
@@ -176,7 +185,9 @@ function reorderWidget(widget, column) {
 function getRankOfElement(element) {
     var parent   = element.parentElement;
     var children = [].filter.call(parent.children, function(child) {
-        return ! child.classList.contains('dashboard-widgets-empty-column');
+        return child.classList.contains('dashboard-widgets-row')
+            || child.classList.contains('dashboard-widgets-column')
+            || child.classList.contains('dashboard-widget');
     });
 
     return children.indexOf(element);

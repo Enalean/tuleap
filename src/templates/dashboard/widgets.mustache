@@ -1,7 +1,8 @@
-<div class="dashboard-widgets-container dragula-container" data-dashboard-id="{{ id }}">
+<div class="dashboard-widgets-container" data-dashboard-id="{{ id }}">
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
+    <span class="dashboard-widgets-empty-line dragula-container"></span>
     {{# widget_lines }}
         <div
             class="dashboard-widgets-row {{ layout }} dragula-container"
@@ -91,5 +92,6 @@
                 {{> edit-layout-dropdown }}
             {{/ is_page_read_only }}
         </div>
+        <span class="dashboard-widgets-empty-line dragula-container"></span>
     {{/ widget_lines }}
 </div>
