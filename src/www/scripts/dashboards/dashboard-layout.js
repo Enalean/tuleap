@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post }         from 'jquery';
-import { findAncestor } from './dom-tree-walker.js';
+import { post } from 'jquery';
 
 export {
     applyAutomaticLayout,
@@ -41,8 +40,6 @@ var number_of_columns_for_layout = {
     ]
 };
 
-var column_css_classes = ['dashboard-widgets-row', 'dragula-container'];
-
 function applyAutomaticLayout(row) {
     var current_layout = row.dataset.currentLayout;
     var nb_columns     = row.querySelectorAll('.dashboard-widgets-column').length;
@@ -51,7 +48,7 @@ function applyAutomaticLayout(row) {
         return;
     }
 
-    var top_container = findAncestor(row, 'dashboard-widgets-container');
+    var top_container = row.closest('.dashboard-widgets-container');
     var csrf_token    = top_container.querySelector('input[name=challenge]').value;
     var line_id       = row.dataset.lineId;
     var layout_name   = getDefaultLayoutForNbColumns(nb_columns);
@@ -61,7 +58,7 @@ function applyAutomaticLayout(row) {
 }
 
 function applyLayout(row, layout_name) {
-    var top_container = findAncestor(row, 'dashboard-widgets-container');
+    var top_container = row.closest('.dashboard-widgets-container');
     var csrf_token    = top_container.querySelector('input[name=challenge]').value;
     var line_id       = row.dataset.lineId;
 
@@ -100,14 +97,10 @@ function getDefaultLayoutForNbColumns(nb_columns) {
 }
 
 function applyLayoutToRow(row, layout_classname) {
+    var current_layout = row.dataset.currentLayout;
+    row.classList.remove(current_layout);
+    row.classList.add(layout_classname);
     row.dataset.currentLayout = layout_classname;
-    var classes = column_css_classes.concat([layout_classname]);
-
-    row.classList.value = '';
-
-    classes.forEach(function(classname) {
-        row.classList.add(classname);
-    });
 }
 
 function saveLayoutChoiceInBackend(csrf_token, line_id, layout_name) {

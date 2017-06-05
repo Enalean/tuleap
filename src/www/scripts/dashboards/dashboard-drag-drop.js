@@ -19,8 +19,9 @@
 
 import dragula                  from 'dragula';
 import { ajax }                 from 'jquery';
+import getDataSet               from 'get-dataset';
 import { applyAutomaticLayout } from './dashboard-layout.js';
-import { findAncestor }         from './dom-tree-walker.js';
+import { addLayoutDropdown }    from './dashboard-dropdowns.js';
 
 export default init;
 
@@ -30,7 +31,7 @@ function init() {
             return el.classList.contains('dragula-container');
         },
         moves: function (el, source, handle, sibling) {
-            return handle.dataset.draggable === 'true';
+            return getDataSet(handle).draggable === 'true';
         }
     });
 
@@ -39,8 +40,8 @@ function init() {
     drake.on('drop', function(el, target, source) {
         updateParent(el, target);
         moveDropdownElementToTheEnd(el.parentElement);
-        var source_row = findAncestor(source, 'dashboard-widgets-row');
-        var target_row = findAncestor(el.parentElement, 'dashboard-widgets-row');
+        var source_row = source.closest('.dashboard-widgets-row');
+        var target_row = el.parentElement.closest('.dashboard-widgets-row');
 
         reorderWidget(el, el.parentElement).then(function() {
             applyAutomaticLayoutToRow(source_row);
@@ -62,19 +63,20 @@ function updateParent(widget, target) {
     var line   = createLineForWidget();
     var column = createColumnForWidget();
 
+
     if (target && target.classList.contains('dashboard-widgets-empty-line')) {
         target.parentNode.insertBefore(column, target);
         column.appendChild(widget);
         column.parentNode.insertBefore(line, column);
         line.appendChild(column);
-        target.parentNode.removeChild(target);
+        target.remove();
 
         initializeColumnOutline(column);
         initializeLineOutline(line);
     } else if (target && target.classList.contains('dashboard-widgets-empty-column')) {
         target.parentNode.insertBefore(column, target);
         column.appendChild(widget);
-        target.parentNode.removeChild(target);
+        target.remove();
 
         initializeColumnOutline(column);
     }
@@ -93,6 +95,7 @@ function initializeColumnOutline(column) {
 function createLineForWidget() {
     var line = document.createElement('div');
     line.classList.add('dashboard-widgets-row', 'dragula-container');
+    addLayoutDropdown(line);
     return line;
 }
 
@@ -115,12 +118,11 @@ function createEmptyColumn() {
 }
 
 function moveDropdownElementToTheEnd(dragula_container) {
-    var row      = findAncestor(dragula_container, 'dashboard-widgets-row');
+    var row      = dragula_container.closest('.dashboard-widgets-row');
     var dropdown = row.querySelector('.dashboard-row-dropdown');
     if (! dropdown) { return; }
 
-    dropdown.parentNode.removeChild(dropdown);
-    row.appendChild(dropdown);
+    row.append(dropdown);
 }
 
 function applyAutomaticLayoutToRow(row) {

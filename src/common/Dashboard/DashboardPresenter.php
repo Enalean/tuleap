@@ -20,6 +20,8 @@
 
 namespace Tuleap\Dashboard;
 
+use Codendi_HTMLPurifier;
+
 abstract class DashboardPresenter
 {
     public $name;
@@ -31,6 +33,7 @@ abstract class DashboardPresenter
     public $widget_lines;
 
     public $url_add_widget;
+    public $purified_too_many_columns_label;
 
     public function __construct(Dashboard $dashboard, $is_active, array $widget_lines)
     {
@@ -47,6 +50,11 @@ abstract class DashboardPresenter
                 This action is irreversible. Please confirm this deletion.'
             ),
             $this->name
+        );
+
+        $this->purified_too_many_columns_label = Codendi_HTMLPurifier::instance()->purify(
+            _('Beyond 3 columns, each column<br>will have the same size.'),
+            CODENDI_PURIFIER_LIGHT
         );
     }
 }

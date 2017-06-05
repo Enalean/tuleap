@@ -19,9 +19,11 @@
 
 import { dropdown as createDropdown } from 'tlp';
 import { applyLayout }                from './dashboard-layout.js';
-import { findAncestor }               from './dom-tree-walker.js';
 
-export default init;
+export {
+    init as default,
+    addLayoutDropdown
+};
 
 function init() {
     var cogs = document.querySelectorAll('.dashboard-widget-actions, #dashboard-tabs-dropdown-trigger');
@@ -34,47 +36,65 @@ function init() {
 }
 
 function initLayoutDropdowns() {
-    var dropdowns = document.querySelectorAll('.dashboard-row-dropdown-button');
+    var all_rows = document.querySelectorAll('.dashboard-widgets-row');
 
-    [].forEach.call(dropdowns, function(dropdown) {
-        var tlp_dropdown = createDropdown(dropdown);
-        initLayoutChangeButtons(tlp_dropdown.dropdown_menu);
-
-        tlp_dropdown.addEventListener('tlp-dropdown-shown', function(event) {
-            var current_dropdown = event.detail.target;
-            var parent_container = current_dropdown.parentElement;
-            var parent_row       = findAncestor(current_dropdown, 'dashboard-widgets-row');
-            var nb_columns       = parent_row.querySelectorAll('.dashboard-widgets-column').length;
-            var current_layout   = parent_row.dataset.currentLayout;
-
-            parent_container.classList.add('shown');
-            parent_row.classList.add('highlight');
-            hideUnapplicableLayoutsAndCheckCurrentLayout(current_dropdown, nb_columns, current_layout);
-        });
-        tlp_dropdown.addEventListener('tlp-dropdown-hidden', function(event) {
-            var current_dropdown = event.detail.target;
-            var parent_container = current_dropdown.parentElement;
-            var parent_row       = findAncestor(current_dropdown, 'dashboard-widgets-row');
-
-            parent_container.classList.remove('shown');
-            parent_row.classList.remove('highlight');
-        });
+    [].forEach.call(all_rows, function(row) {
+        addLayoutDropdown(row);
     });
 }
 
-function initLayoutChangeButtons(dropdown) {
+function addLayoutDropdown(row) {
+    var dropdown_container = cloneLayoutDropdown(row);
+    var dropdown_button    = dropdown_container.querySelector('.dashboard-row-dropdown-button');
+    initLayoutDropdown(dropdown_button, row);
+}
+
+function initLayoutDropdown(dropdown_button, row) {
+    var tlp_dropdown = createDropdown(dropdown_button);
+    initLayoutChangeButtons(tlp_dropdown.dropdown_menu, row);
+
+    tlp_dropdown.addEventListener('tlp-dropdown-shown', function(event) {
+        var current_dropdown = event.detail.target;
+        var parent_container = current_dropdown.parentElement;
+        var nb_columns       = row.querySelectorAll('.dashboard-widgets-column').length;
+        var current_layout   = row.dataset.currentLayout;
+
+        parent_container.classList.add('shown');
+        row.classList.add('highlight');
+        hideUnapplicableLayoutsAndCheckCurrentLayout(current_dropdown, nb_columns, current_layout);
+    });
+    tlp_dropdown.addEventListener('tlp-dropdown-hidden', function(event) {
+        var current_dropdown = event.detail.target;
+        var parent_container = current_dropdown.parentElement;
+
+        parent_container.classList.remove('shown');
+        row.classList.remove('highlight');
+    });
+}
+
+function cloneLayoutDropdown(row) {
+    var template_dropdown = document.getElementById('dashboard-layout-dropdown-template');
+
+    var cloned_dropdown = template_dropdown.cloneNode(true);
+    cloned_dropdown.removeAttribute('id');
+
+    row.appendChild(cloned_dropdown);
+
+    return cloned_dropdown;
+}
+
+function initLayoutChangeButtons(dropdown, row) {
     var radio_buttons = dropdown.querySelectorAll('.dashboard-dropdown-layout-field');
 
     [].forEach.call(radio_buttons, function(radio_button) {
         radio_button.addEventListener('click', function() {
             var layout_name    = this.value;
-            var current_row    = findAncestor(this, 'dashboard-widgets-row');
-            var current_layout = current_row.dataset.currentLayout;
+            var current_layout = row.dataset.currentLayout;
 
             if (layout_name === current_layout) { return; }
 
-            applyLayout(current_row, layout_name);
-            current_row.classList.add('highlight');
+            applyLayout(row, layout_name);
+            row.classList.add('highlight');
             var sibling_svg = radio_button.nextElementSibling;
             if (sibling_svg) {
                 markPathAsSelected(dropdown, sibling_svg.querySelector('.dashboard-dropdown-layout-field-path'));
