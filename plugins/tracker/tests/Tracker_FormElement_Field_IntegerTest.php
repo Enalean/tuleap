@@ -103,6 +103,8 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
         $this->assertFalse($f->isValid($a, 'toto'));
         $this->assertFalse($f->isValid($a, '12toto'));
         $this->assertFalse($f->isValid($a, 1.23));
+        $this->assertFalse($f->isValid($a, array()));
+        $this->assertFalse($f->isValid($a, array(1)));
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }

@@ -329,7 +329,7 @@ class ArtifactsResource extends AuthenticatedResource {
      *      <li>To update a file field, the value must be an array of the ids of the attachment you want to keep attached together with the new ones you want to attach.
      *          Each new file must correspond to valid /artifact_temporary_files/:id resource.
      *          A user can only add their own temporary files</li>
-     *      <li>To empty a file field of its content, the value should be empty (value: []).</li>
+     *      <li>To empty a file field of its content, the value should be empty (e.g. value: [] or value: "").</li>
      *    </ol>
      * </ol>
      *

@@ -513,7 +513,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
 
     private function formatValueWithTheByFieldOutput(array $value) {
         return array(
-            'content' => (string) $value['value'],
+            'content' => $value['value'],
             'format'  => $value['format']
         );
     }
@@ -530,7 +530,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         }
 
         $data            = $this->getDefaultValue();
-        $data['content'] = (string) $value;
+        $data['content'] = $value;
 
         return $data;
     }
