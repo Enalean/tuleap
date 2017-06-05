@@ -75,6 +75,39 @@
     display: none;
 }
 
+.system-event-status-new,
+.system-event-status-running,
+.system-event-status-done,
+.system-event-status-warning,
+.system-event-status-error {
+    color: $tlp-ui-white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tlp-table > tbody > tr > td,
+.tlp-table > tbody > tr:nth-child(odd) > td {
+    &.system-event-status-new {
+        background-color: #808080;
+    }
+
+    &.system-event-status-running {
+        background-color: #0000ff;
+    }
+
+    &.system-event-status-done {
+        background-color: #008000;
+    }
+
+    &.system-event-status-warning {
+        background-color: #ffa500;
+    }
+
+    &.system-event-status-error {
+        background-color: #ff0000;
+    }
+}
+
 @media screen and (max-width: 1400px) {
     #systemevents {
         display: flex;

@@ -504,7 +504,7 @@ class SystemEventManager {
         $purifier = Codendi_HTMLPurifier::instance();
 
         $html  = '';
-        $html .= '<table class="table">';
+        $html .= '<table class="table tlp-table">';
         $html .= '<tbody>';
 
         $filter_status = array(
@@ -534,7 +534,7 @@ class SystemEventManager {
                 $html .= '<td>'. $sysevent->getOwner() .'</td>';
 
                 //status
-                $html .= '<td class="system_event_status_'. $row['status'] .'"';
+                $html .= '<td class="system_event_status_'. $row['status'] .' system-event-status-'. strtolower($row['status']) .'"';
                 if ($sysevent->getLog()) {
                     $html .= ' title="'. $purifier->purify($sysevent->getLog(), CODENDI_PURIFIER_CONVERT_HTML) .'" ';
                 }
