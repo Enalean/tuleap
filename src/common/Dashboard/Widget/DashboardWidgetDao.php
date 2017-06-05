@@ -596,6 +596,7 @@ class DashboardWidgetDao extends DataAccessObject
                        line.dashboard_id,
                        line.dashboard_type,
                        project_dashboards.project_id,
+                       project.unix_group_name,
                        user_dashboards.user_id
                 FROM dashboards_lines_columns_widgets AS widget
                     INNER JOIN dashboards_lines_columns AS col ON(
@@ -608,6 +609,9 @@ class DashboardWidgetDao extends DataAccessObject
                     LEFT JOIN project_dashboards ON(
                         line.dashboard_type = 'project'
                         AND project_dashboards.id = line.dashboard_id
+                    )
+                    LEFT JOIN groups AS project ON(
+                        project.group_id = project_dashboards.project_id
                     )
                     LEFT JOIN user_dashboards ON(
                         line.dashboard_type = 'user'
