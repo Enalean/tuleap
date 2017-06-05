@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,8 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
 class ProjectCreationTest extends TuleapDbTestCase {
 
@@ -81,7 +83,9 @@ class ProjectCreationTest extends TuleapDbTestCase {
 
         $widget_dao        = new DashboardWidgetDao();
         $project_dao       = new ProjectDashboardDao($widget_dao);
-        $duplicator        = new ProjectDashboardDuplicator($project_dao);
+        $project_retriever = new ProjectDashboardRetriever($project_dao);
+        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator($project_dao, $project_retriever, $widget_dao, $widget_retriever);
 
         $force_activation = false;
 

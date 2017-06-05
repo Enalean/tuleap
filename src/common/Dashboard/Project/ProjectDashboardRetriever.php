@@ -35,7 +35,7 @@ class ProjectDashboardRetriever
     }
 
     /**
-     * @return ProjectDashboardPresenter[]
+     * @return ProjectDashboard[]
      */
     public function getAllProjectDashboards(Project $project)
     {
@@ -48,6 +48,9 @@ class ProjectDashboardRetriever
         return $project_dashboards;
     }
 
+    /**
+     * @return ProjectDashboard
+     */
     private function instantiateFromRow(array $project_dashboards)
     {
         return new ProjectDashboard(

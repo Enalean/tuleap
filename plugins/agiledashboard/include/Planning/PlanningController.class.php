@@ -20,6 +20,8 @@
 
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\UgroupDuplicator;
@@ -402,9 +404,11 @@ class Planning_Controller extends MVC2_PluginController {
             new UGroupDao()
         );
 
-        $widget_dao  = new DashboardWidgetDao();
-        $project_dao = new ProjectDashboardDao($widget_dao);
-        $duplicator  = new ProjectDashboardDuplicator($project_dao);
+        $widget_dao        = new DashboardWidgetDao();
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $project_retriever = new ProjectDashboardRetriever($project_dao);
+        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator($project_dao, $project_retriever, $widget_dao, $widget_retriever);
 
         $project_creator = new ProjectCreator(
             ProjectManager::instance(),
