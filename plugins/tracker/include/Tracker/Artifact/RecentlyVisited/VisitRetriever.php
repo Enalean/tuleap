@@ -69,7 +69,8 @@ class VisitRetriever
                     $recently_visited_row['created_on'],
                     $artifact->getXRef(),
                     $artifact->getUri(),
-                    $artifact->getTitle()
+                    $artifact->getTitle(),
+                    $artifact->getTracker()->getProject()
                 );
             }
         }
