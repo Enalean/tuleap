@@ -352,13 +352,15 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return bool true if the value is considered ok
      */
     public function validateValue($value) {
-        $is_valid = true;
-        if ($value) {
-            if (!($is_valid = preg_match('/^'. $this->pattern .'$/', $value))) {
-                $GLOBALS['Response']->addFeedback('error', $this->getValidatorErrorMessage());
-            }
+        if ($value !== null && ! is_string($value) &&  ! is_int($value) && ! is_float($value)) {
+            $GLOBALS['Response']->addFeedback('error', $this->getValidatorErrorMessage());
+            return false;
         }
-        return $is_valid;
+        if ($value && ! preg_match('/^'. $this->pattern .'$/', $value)) {
+            $GLOBALS['Response']->addFeedback('error', $this->getValidatorErrorMessage());
+            return false;
+        }
+        return true;
     }
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid

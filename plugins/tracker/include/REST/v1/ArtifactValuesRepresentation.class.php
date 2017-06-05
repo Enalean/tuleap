@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -61,7 +61,7 @@ class ArtifactValuesRepresentation {
 
         $array_representation['field_id'] = $this->field_id;
 
-        if ($this->value || $this->value === '' || $this->value === '0') {
+        if ($this->value !== null) {
             $array_representation['value'] = $this->value;
         }
 

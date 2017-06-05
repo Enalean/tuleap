@@ -332,7 +332,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     }
 
     public function getRestFieldData($value) {
-        return $this->getFieldData((string) $value);
+        return $this->getFieldData($value);
     }
 
     public function isEmpty($value, Tracker_Artifact $artifact) {

@@ -87,6 +87,8 @@ class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, '56.789'));
         $this->assertFalse($f->isValid($a, 'toto'));
         $this->assertFalse($f->isValid($a, '12toto'));
+        $this->assertFalse($f->isValid($a, array()));
+        $this->assertFalse($f->isValid($a, array(1)));
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }
