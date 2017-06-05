@@ -111,7 +111,7 @@ function moveDropdownElementToTheEnd(dragula_container) {
     var dropdown = row.querySelector('.dashboard-row-dropdown');
     if (! dropdown) { return; }
 
-    dropdown.remove();
+    dropdown.parentNode.removeChild(dropdown);
     row.appendChild(dropdown);
 }
 
@@ -131,10 +131,6 @@ function reorderWidget(widget, column) {
     var new_widget_rank = getRankOfElement(widget);
     var new_column_rank = getRankOfElement(column);
     var new_line_rank   = getRankOfElement(line);
-
-    if (! dashboard_id || ! widget_id) {
-        return;
-    }
 
     return ajax({
         url     : window.location.href,
