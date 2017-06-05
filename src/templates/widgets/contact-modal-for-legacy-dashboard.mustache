@@ -1,11 +1,18 @@
-<div id="massmail-project-members" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="massmail-project-members"
+    class="modal hide fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+    style="display: none;"
+>
     <form id="massmail_form" name="massmail_form" action="{{ action }}" method="POST">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h3 id="myModalLabel">{{ title }}</h3>
         </div>
         <div class="modal-body">
-            <input id="massmail-project-members-project-id" type="hidden" name="group_id" value="" />
+            <input id="massmail-project-members-project-id" type="hidden" name="group_id" value="">
             {{{ csrf_token }}}
             <p>
                 <label class="mass-mail-form-label" type="text" name="subject_label" >{{ subject_label }}</label><br />

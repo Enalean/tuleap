@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -33,10 +33,27 @@ class Widget_MyProjects extends Widget {
     function Widget_MyProjects() {
         $this->Widget('myprojects');
     }
+
     function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_projects');
     }
-    function getContent() {
+
+    public function getContent()
+    {
+        return $this->getWidgetContent(true);
+    }
+
+    public function getContentForBurningParrot()
+    {
+        $GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');
+
+        return $this->getWidgetContent(false);
+    }
+
+    private function getWidgetContent($use_legacy_template)
+    {
         $html = '';
         $display_privacy = ForgeConfig::get('sys_display_project_privacy_in_service_bar');
         $user = UserManager::instance()->getCurrentUser();
@@ -120,11 +137,13 @@ class Widget_MyProjects extends Widget {
             }
 
             $html .= '</table>';
-            $html .= $this->fetchMassMailForm($token);
+
+            $html .= $this->fetchMassMailForm($token, $use_legacy_template);
 
         }
         return $html;
     }
+
     function hasRss() {
         return true;
     }
@@ -179,16 +198,20 @@ class Widget_MyProjects extends Widget {
         return $GLOBALS['Language']->getText('widget_description_my_projects','description');
     }
 
-    private function fetchMassMailForm(CSRFSynchronizerToken $token) {
+    private function fetchMassMailForm(CSRFSynchronizerToken $token, $use_legacy_template) {
         $presenter = new MassmailFormPresenter(
             $token,
-            $GLOBALS['Language']->getText('my_index','massmail_form_title'),
+            $GLOBALS['Language']->getText('my_index', 'massmail_form_title'),
             'massmail_to_project_members.php'
         );
 
         $template_factory = TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
-        return $renderer->renderToString('massmail',$presenter);
+        if ($use_legacy_template) {
+            return $renderer->renderToString('contact-modal-for-legacy-dashboard', $presenter);
+        }
+
+        return $renderer->renderToString('contact-modal', $presenter);
     }
 }

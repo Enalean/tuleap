@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class MassmailFormPresenter {
     }
 
     public function getTemplateDir() {
-        return ForgeConfig::get('codendi_dir') .'/src/templates/project';
+        return ForgeConfig::get('codendi_dir') .'/src/templates/widgets';
     }
 
 }

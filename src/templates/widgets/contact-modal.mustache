@@ -1,0 +1,32 @@
+<form id="massmail-project-members"
+    name="massmail_form"
+    class="tlp-modal"
+    role="dialog"
+    action="{{ action }}"
+    aria-labelledby="massmail-modal-label"
+    method="POST"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="massmail-modal-label">
+            <i class="fa fa-envelope-o tlp-modal-title-icon"></i > {{ title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close_button }}">&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        <input type="hidden" id="massmail-project-members-project-id" name="group_id" value="">
+        {{{ csrf_token }}}
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="subject">{{ subject_label }}</label>
+            <input type="text" class="tlp-input" id="subject" name="subject" required>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="massmail-project-members-body">{{ body_label }}</label>
+            <textarea type="text" class="tlp-textarea" id="massmail-project-members-body" name="body" rows="10" required></textarea>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ close_button }}</button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action">{{ submit_button }}</button>
+    </div>
+</form>
