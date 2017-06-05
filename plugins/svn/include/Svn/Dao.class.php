@@ -36,7 +36,8 @@ class Dao extends DataAccessObject
         $sql = 'SELECT *
                 FROM plugin_svn_repositories
                 WHERE project_id=' . $project_id .'
-                AND repository_deletion_date IS NULL';
+                AND repository_deletion_date IS NULL
+                ORDER BY name ASC';
 
         return $this->retrieve($sql);
     }
