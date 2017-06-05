@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
 
 abstract class Tracker_Report_Renderer
@@ -166,9 +169,13 @@ abstract class Tracker_Report_Renderer
             return;
         }
 
-        $project = $this->report->getTracker()->getProject();
-        $presenter_builder = new WidgetAddToDashboardDropdownBuilder();
-        $html    = $this->getTemplateRenderer()->renderToString(
+        $project           = $this->report->getTracker()->getProject();
+        $presenter_builder = new WidgetAddToDashboardDropdownBuilder(
+            new UserDashboardRetriever(
+                new UserDashboardDao(new DashboardWidgetDao())
+            )
+        );
+        $html              = $this->getTemplateRenderer()->renderToString(
             'add-to-dashboard-dropdown',
             $presenter_builder->build($user, $project, $this)
         );

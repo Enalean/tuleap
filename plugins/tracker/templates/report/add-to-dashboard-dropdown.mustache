@@ -1,19 +1,52 @@
-{{# is_admin }}
-    <div class="btn-group">
-        <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="icon-dashboard"></i>
-            {{ dashboard }}
-            <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            <li><a href="{{ my_dashboard_url }}">{{ my_dashboard }}</a></li>
-            <li><a href="{{ project_dashboard_url }}"> {{ project_dashboard }}</a></li>
-        </ul>
-    </div>
-{{/ is_admin }}
+{{# uses_new_dashboards }}
+    {{# has_dashboard }}
+        {{# has_only_one_dashboard }}
+            <div class="btn-group">
+                {{# dashboards_presenter }}
+                    <a class="btn btn-mini" href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
+                        <i class="icon-dashboard"></i> {{ my_dashboard }}
+                    </a>
+                {{/ dashboards_presenter }}
+            </div>
+        {{/ has_only_one_dashboard }}
+        {{^ has_only_one_dashboard }}
+            <div class="btn-group">
+                <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="icon-dashboard"></i>
+                    {{ my_dashboard }}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    {{> my-dashboards }}
+                </ul>
+            </div>
+        {{/ has_only_one_dashboard }}
+    {{/ has_dashboard }}
+    {{# is_admin }}
+        <div class="btn-group">
+            <a class="btn btn-mini" href="{{ project_dashboard_url }}"><i class="icon-dashboard"></i> {{ project_dashboard }}</a>
+        </div>
+    {{/ is_admin }}
+{{/ uses_new_dashboards }}
 
-{{^ is_admin }}
-    <a href="{{ my_dashboard_url }}" class="btn btn-mini">
-        <i class="icon-dashboard"></i> {{ my_dashboard }}
-    </a>
-{{/ is_admin }}
+{{^ uses_new_dashboards }}
+    {{# is_admin }}
+        <div class="btn-group">
+            <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="icon-dashboard"></i>
+                {{ dashboard }}
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="{{ my_dashboard_url }}">{{ my_dashboard }}</a></li>
+                <li><a href="{{ project_dashboard_url }}"> {{ project_dashboard }}</a></li>
+            </ul>
+        </div>
+    {{/ is_admin }}
+
+    {{^ is_admin }}
+        <a href="{{ my_dashboard_url }}" class="btn btn-mini">
+            <i class="icon-dashboard"></i> {{ my_dashboard }}
+        </a>
+    {{/ is_admin }}
+{{/ uses_new_dashboards }}

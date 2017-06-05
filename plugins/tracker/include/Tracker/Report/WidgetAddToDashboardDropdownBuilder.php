@@ -26,16 +26,30 @@ use Project;
 use Tracker_Report_Renderer;
 use Tracker_Widget_MyRenderer;
 use Tracker_Widget_ProjectRenderer;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
 
 class WidgetAddToDashboardDropdownBuilder
 {
+    /**
+     * @var UserDashboardRetriever
+     */
+    private $user_dashboard_retriever;
+
+    public function __construct(UserDashboardRetriever $user_dashboard_retriever)
+    {
+        $this->user_dashboard_retriever = $user_dashboard_retriever;
+    }
+
     public function build(PFUser $user, Project $project, Tracker_Report_Renderer $renderer)
     {
+        $my_dashboards_presenters = $this->getAvailableDashboardsForUser($user);
+
         return new WidgetAddToDashboardDropdownPresenter(
             $user,
             $project,
             $this->getAddToMyDashboardURL($renderer, $user),
-            $this->getAddToProjectDashboardURL($renderer, $project)
+            $this->getAddToProjectDashboardURL($renderer, $project),
+            $my_dashboards_presenters
         );
     }
 
@@ -54,13 +68,13 @@ class WidgetAddToDashboardDropdownBuilder
 
         return '/widgets/updatelayout.php?' . http_build_query(
             array(
-                'owner'               => $owner_id,
-                'action'              => 'widget',
-                'renderer'            => array(
+                'owner'                     => $owner_id,
+                'action'                    => 'widget',
+                'renderer'                  => array(
                     'title'       => $renderer->name . ' for ' . $renderer->report->name,
                     'renderer_id' => $renderer->id
                 ),
-                'name'                => array(
+                'name'                      => array(
                     $widget_id => array(
                         'add' => 1
                     )
@@ -77,5 +91,10 @@ class WidgetAddToDashboardDropdownBuilder
             'g' . $project->getGroupId(),
             Tracker_Widget_ProjectRenderer::ID
         );
+    }
+
+    private function getAvailableDashboardsForUser(PFUser $user)
+    {
+        return $this->user_dashboard_retriever->getAllUserDashboards($user);
     }
 }

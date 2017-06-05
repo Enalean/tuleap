@@ -31,15 +31,40 @@ class WidgetAddToDashboardDropdownPresenter
     public $project_dashboard;
     public $my_dashboard;
     public $dashboard;
+    public $uses_new_dashboards;
+    public $cancel_label;
+    public $has_dashboard;
+    public $error_no_dashboard;
+    public $my_dashboard_label;
+    public $has_only_one_dashboard;
 
-    public function __construct(PFUser $user, Project $project, $my_dashboard_url, $project_dashboard_url)
-    {
-        $this->is_admin              = $user->isAdmin($project->getID());
-        $this->my_dashboard_url      = $my_dashboard_url;
-        $this->project_dashboard_url = $project_dashboard_url;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
-        $this->dashboard         = $GLOBALS['Language']->getText('plugin_tracker_report', 'dashboard');
-        $this->my_dashboard      = $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
-        $this->project_dashboard = $GLOBALS['Language']->getText('plugin_tracker_report', 'project_dashboard');
+    /**
+     * @var WidgetMyDashboardPresenter[]
+     */
+    public $dashboards_presenter;
+
+    public function __construct(
+        PFUser $user,
+        Project $project,
+        $my_dashboard_url,
+        $project_dashboard_url,
+        array $dashboards_presenter
+    ) {
+        $this->is_admin               = $user->isAdmin($project->getID());
+        $this->my_dashboard_url       = $my_dashboard_url;
+        $this->project_dashboard_url  = $project_dashboard_url;
+        $this->uses_new_dashboards    = \ForgeConfig::get('sys_use_tlp_in_dashboards');
+        $this->dashboards_presenter   = $dashboards_presenter;
+        $this->has_dashboard          = count($dashboards_presenter) > 0;
+        $this->has_only_one_dashboard = count($dashboards_presenter) == 1;
+
+        $this->dashboard          = $GLOBALS['Language']->getText('plugin_tracker_report', 'dashboard');
+        $this->my_dashboard       = $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
+        $this->project_dashboard  = $GLOBALS['Language']->getText('plugin_tracker_report', 'project_dashboard');
     }
 }

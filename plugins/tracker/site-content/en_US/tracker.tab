@@ -413,7 +413,7 @@ plugin_tracker_include_report	or_use	or use
 plugin_tracker_include_report	simple_search	Simple Search
 plugin_tracker_include_report	adv_search	Advanced Search
 plugin_tracker_include_report	sorted_by	sorted by
-plugin_tracker_include_report	matching	Matching artifacts: <strong>$1</strong>
+plugin_tracker_include_report	matching	Matching artifacts: <strong>$1</strong>
 plugin_tracker_include_report	sort_results	Click a column heading to sort results (up or down),
 plugin_tracker_include_report	sort_sev	sort by $1
 plugin_tracker_include_report	reset_sort	reset sort
