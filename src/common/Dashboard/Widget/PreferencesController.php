@@ -118,7 +118,7 @@ class PreferencesController
     private function redirectToDashboard(array $row)
     {
         if ($row['dashboard_type'] === 'project') {
-            $url = '/projects/';
+            $url = '/projects/' . $row['unix_group_name'] .'/';
         } else {
             $url = '/my/';
         }
