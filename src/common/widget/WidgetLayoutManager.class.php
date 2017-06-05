@@ -19,15 +19,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Widget\WidgetFactory;
+
 /**
 * WidgetLayoutManager
 *
 * Manage layouts for users, groups and homepage
 */
-class WidgetLayoutManager {
+
+class WidgetLayoutManager
+{
     const OWNER_TYPE_USER  = 'u';
     const OWNER_TYPE_GROUP = 'g';
     const OWNER_TYPE_HOME  = 'h';
+
+    /**
+     * @var WidgetFactory
+     */
+    private $widget_factory;
+
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+
+    public function __construct()
+    {
+        $this->event_manager  = EventManager::instance();
+        $this->widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            $this->event_manager
+        );
+    }
 
     /**
      * @return int
@@ -88,7 +113,7 @@ class WidgetLayoutManager {
                     $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) .' AND column_id = '. db_ei($col->id) .' ORDER BY rank';
                     $req_content = db_query($sql);
                     while ($data = db_fetch_array($req_content)) {
-                        $c = Widget::getInstance($data['name']);
+                        $c = $this->widget_factory->getInstanceByWidgetName($data['name']);
                         if ($c && $c->isAvailable()) {
                             $c->loadContent($data['content_id']);
                             $col->add($c, $data['is_minimized'], $data['display_preferences']);
@@ -165,9 +190,8 @@ class WidgetLayoutManager {
                 $sql .= ",($owner_id, '$owner_type', 1, 2, 'mymonitoredfp', 20)";
             }
 
-            $em = EventManager::instance();
             $widgets = array();
-            $em->processEvent('default_widgets_for_new_owner', array('widgets' => &$widgets, 'owner_type' => $owner_type));
+            $this->event_manager->processEvent('default_widgets_for_new_owner', array('widgets' => &$widgets, 'owner_type' => $owner_type));
             foreach($widgets as $widget) {
                 $sql .= ",($owner_id, '$owner_type', 1, ". db_ei($widget['column']) .", '". db_es($widget['name']) ."', ". db_ei($widget['rank']) .")";
             }
@@ -205,7 +229,7 @@ class WidgetLayoutManager {
             ";
             if ($req = db_query($sql)) {
                 while($data = db_fetch_array($req)) {
-                    $w = Widget::getInstance($data['name']);
+                    $w = $this->widget_factory->getInstanceByWidgetName($data['name']);
                     if ($w) {
                         $w->setOwner($template_id, self::OWNER_TYPE_GROUP);
                         if ($w->canBeUsedByProject($project)) {
@@ -441,7 +465,7 @@ class WidgetLayoutManager {
             } else {
                 echo '</td></tr>';
                 foreach($widgets as $widget_name) {
-                    if ($widget = Widget::getInstance($widget_name)) {
+                    if ($widget = $this->widget_factory->getInstanceByWidgetName($widget_name)) {
                         if ($widget->isAvailable()) {
                             $row = '';
                             $row .= '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
@@ -499,7 +523,7 @@ class WidgetLayoutManager {
     function getCategories($widgets) {
         $categ = array();
         foreach($widgets as $widget_name) {
-            if ($widget = Widget::getInstance($widget_name)) {
+            if ($widget = $this->widget_factory->getInstanceByWidgetName($widget_name)) {
                 if ($widget->isAvailable()) {
                     $cs = explode(',', $widget->getCategory());
                     foreach($cs as $c) {

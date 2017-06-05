@@ -7,12 +7,20 @@ require_once('common/widget/Widget.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Valid_Widget.class.php');
 
+use Tuleap\Widget\WidgetFactory;
+
 $layout_manager = new WidgetLayoutManager();
 $csrk_token     = new CSRFSynchronizerToken('widget_management');
 $request        = HTTPRequest::instance();
 $good           = false;
 $redirect       = '/';
-$vOwner         = new Valid_Widget_Owner('owner');
+$widget_factory = new WidgetFactory(
+    UserManager::instance(),
+    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+    EventManager::instance()
+);
+
+$vOwner = new Valid_Widget_Owner('owner');
 $vOwner->required();
 if ($request->valid($vOwner)) {
     $owner = $request->get('owner');
@@ -42,7 +50,7 @@ if ($request->valid($vOwner)) {
             $param = $request->get('name');
             $name = array_pop(array_keys($param));
             $instance_id = (int)$param[$name];
-            if ($widget =& Widget::getInstance($name)) {
+            if ($widget = $widget_factory->getInstanceByWidgetName($name)) {
                 if ($widget->isAvailable()) {
                     switch ($request->get('action')) {
                         case 'rss':

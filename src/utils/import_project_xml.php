@@ -34,6 +34,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Widget\WidgetFactory;
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user   = $posix_user['name'];
@@ -232,11 +233,23 @@ try {
         new UGroupDao()
     );
 
-    $widget_dao        = new DashboardWidgetDao();
+    $widget_factory = new WidgetFactory(
+        UserManager::instance(),
+        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+        EventManager::instance()
+    );
+
+    $widget_dao        = new DashboardWidgetDao($widget_factory);
     $project_dao       = new ProjectDashboardDao($widget_dao);
     $project_retriever = new ProjectDashboardRetriever($project_dao);
     $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-    $duplicator        = new ProjectDashboardDuplicator($project_dao, $project_retriever, $widget_dao, $widget_retriever);
+    $duplicator        = new ProjectDashboardDuplicator(
+        $project_dao,
+        $project_retriever,
+        $widget_dao,
+        $widget_retriever,
+        $widget_factory
+    );
 
     $project_creator = new ProjectCreator(
         ProjectManager::instance(),

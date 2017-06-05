@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Widget;
 
 use DataAccess;
 use DataAccessObject;
+use Tuleap\Widget\WidgetFactory;
 
 class DashboardWidgetDao extends DataAccessObject
 {
@@ -30,10 +31,19 @@ class DashboardWidgetDao extends DataAccessObject
         \WidgetLayoutManager::OWNER_TYPE_USER  => 'user'
     );
 
-    public function __construct(DataAccess $da = null)
-    {
+    /**
+     * @var WidgetFactory
+     */
+    private $widget_factory;
+
+    public function __construct(
+        WidgetFactory $widget_factory,
+        DataAccess $da = null
+    ) {
         parent::__construct($da);
         $this->enableExceptionsOnError();
+
+        $this->widget_factory = $widget_factory;
     }
 
     public function searchAllLinesByDashboardIdOrderedByRank($dashboard_id, $dashboard_type)
@@ -163,7 +173,7 @@ class DashboardWidgetDao extends DataAccessObject
             return;
         }
 
-        $widget = \Widget::getInstance($name);
+        $widget = $this->widget_factory->getInstanceByWidgetName($name);
         if (! $widget) {
             return;
         }

@@ -37,6 +37,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Widget\WidgetFactory;
 
 require_once('pre.php');
 
@@ -71,8 +72,14 @@ if ($project && !$project->isError()) {
     if ($project->usesService('summary')) {
         Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
         if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            $widget_factory = new WidgetFactory(
+                UserManager::instance(),
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance()
+            );
+
             $csrf_token                   = new CSRFSynchronizerToken('/project/');
-            $dashboard_widget_dao         = new DashboardWidgetDao();
+            $dashboard_widget_dao         = new DashboardWidgetDao($widget_factory);
             $dashboard_widget_retriever   = new DashboardWidgetRetriever($dashboard_widget_dao);
             $project_dashboard_dao        = new ProjectDashboardDao($dashboard_widget_dao);
             $router                       = new ProjectDashboardRouter(
@@ -82,9 +89,9 @@ if ($project && !$project->isError()) {
                     new ProjectDashboardRetriever($project_dashboard_dao),
                     new ProjectDashboardSaver($project_dashboard_dao),
                     new DashboardWidgetRetriever(
-                        new DashboardWidgetDao()
+                        $dashboard_widget_dao
                     ),
-                    new DashboardWidgetPresenterBuilder(),
+                    new DashboardWidgetPresenterBuilder($widget_factory),
                     new WidgetDeletor($dashboard_widget_dao),
                     new WidgetMinimizor($dashboard_widget_dao),
                     new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
@@ -133,8 +140,12 @@ if ($project && !$project->isError()) {
                 'group'  => $request->get('group_id'),
                 'toptab' => $service->getId()
             ));
-            $GLOBALS['HTML']->iframe($service->getUrl(),
-                array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
+
+            $GLOBALS['HTML']->iframe(
+                $service->getUrl(),
+                array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px')
+            );
+
             site_project_footer(array());
         } else {
             $GLOBALS['Response']->redirect($service->getUrl());

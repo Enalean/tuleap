@@ -25,6 +25,7 @@ use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
+use Tuleap\Widget\WidgetFactory;
 
 abstract class Tracker_Report_Renderer
 {
@@ -171,15 +172,22 @@ abstract class Tracker_Report_Renderer
             return;
         }
 
+        $widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+
         $project           = $this->report->getTracker()->getProject();
-        $widget_dao        = new DashboardWidgetDao();
+        $widget_dao        = new DashboardWidgetDao($widget_factory);
         $presenter_builder = new WidgetAddToDashboardDropdownBuilder(
             new UserDashboardRetriever(
                 new UserDashboardDao($widget_dao)
             ),
             new ProjectDashboardRetriever(new ProjectDashboardDao($widget_dao))
         );
-        $html              = $this->getTemplateRenderer()->renderToString(
+
+        $html = $this->getTemplateRenderer()->renderToString(
             'add-to-dashboard-dropdown',
             $presenter_builder->build($user, $project, $this)
         );

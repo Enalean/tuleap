@@ -22,9 +22,16 @@ require_once 'pre.php';
 
 $request = HTTPRequest::instance();
 
+$widget_factory = new \Tuleap\Widget\WidgetFactory(
+    UserManager::instance(),
+    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+    EventManager::instance()
+);
+
 $router = new \Tuleap\Dashboard\Widget\Router(
     new \Tuleap\Dashboard\Widget\PreferencesController(
-        new \Tuleap\Dashboard\Widget\DashboardWidgetDao()
+        new \Tuleap\Dashboard\Widget\DashboardWidgetDao($widget_factory),
+        $widget_factory
     )
 );
 

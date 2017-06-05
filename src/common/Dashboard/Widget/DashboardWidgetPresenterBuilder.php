@@ -20,8 +20,21 @@
 
 namespace Tuleap\Dashboard\Widget;
 
+use Tuleap\Widget\WidgetFactory;
+
 class DashboardWidgetPresenterBuilder
 {
+
+    /**
+     * @var WidgetFactory
+     */
+    private $widget_factory;
+
+    public function __construct(WidgetFactory $widget_factory)
+    {
+        $this->widget_factory = $widget_factory;
+    }
+
     /**
      * @param DashboardWidgetLine[] $widgets_lines
      * @return array
@@ -64,7 +77,7 @@ class DashboardWidgetPresenterBuilder
     {
         $widgets_presenter = array();
         foreach ($column->getWidgets() as $dashboard_widget) {
-            $widget = \Widget::getInstance($dashboard_widget->getName());
+            $widget = $this->widget_factory->getInstanceByWidgetName($dashboard_widget->getName());
             if ($widget) {
                 $widget->owner_id   = $owner_info->getId();
                 $widget->owner_type = $owner_info->getType();
