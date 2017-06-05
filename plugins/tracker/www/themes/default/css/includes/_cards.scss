@@ -1,0 +1,158 @@
+/**
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.cards {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    .cards {
+        margin: 0 0 0 2em;
+    }
+}
+
+.card {
+    position: relative;
+    min-width: 200px;
+    margin-bottom: 1em;
+    padding: 0 0 0 5px;
+    border: 1px solid #b2b39d;
+    background: #ffffee;
+    color: #333333;
+
+    &.placeholder {
+        border: 1px dashed #3a87ad;
+        background: url('/themes/common/images/backstripes.gif');
+    }
+}
+
+.card-container {
+    min-height: 50px;
+    padding: .25em .5em;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background: #ffffbb;
+}
+
+.card-actions {
+    // scss-lint:disable QualifyingElement
+    a.dropdown-toggle {
+        color: #7d7d7d;
+        font-size: .9em;
+    }
+
+    a.dropdown-toggle:hover {
+        color: #333333;
+        text-decoration: none;
+    }
+
+    ul {
+        padding: .25em .5em;
+        list-style: none;
+    }
+
+    .caret {
+        margin-top: 6px;
+        margin-left: 0;
+    }
+
+    &:hover .caret {
+        opacity: .7;
+        filter: alpha(opacity = 70);
+    }
+
+    .dropdown.open .dropdown-toggle {
+        background: none;
+        color: #005580;
+    }
+}
+
+.card-title {
+    margin: 5px 0;
+    text-align: center;
+}
+
+.card-details {
+    color: #444444;
+
+    > .toggler,
+    > .toggler-hide,
+    > .toggler-hide-noajax,
+    > .toggler-noajax {
+        padding-left: 0;
+        background-image: none;
+        color: #808080;
+        font-size: .9em;
+    }
+
+    > .toggler:hover,
+    > .toggler-hide:hover,
+    > .toggler-hide-noajax:hover,
+    > .toggler-noajax:hover {
+        color: #333333;
+    }
+
+    > .toggler-hide > .icon-caret-down,
+    > .toggler-hide-noajax > .icon-caret-down {
+        display: none;
+    }
+
+    > .toggler > .icon-caret-right,
+    > .toggler-noajax > .icon-caret-right {
+        display: none;
+    }
+
+    tr td {
+        font-size: .8em;
+
+        &:first-child {
+            text-align: right;
+            vertical-align: top;
+        }
+
+        ul,
+        ol {
+            margin: 0 20px;
+
+            li {
+                list-style: disc outside none;
+            }
+        }
+    }
+
+    .avatar {
+        display: inline-block;
+        position: relative;
+        top: -2px;
+        left: 1px;
+        width: 25px;
+        height: 25px;
+        border: 0;
+
+        > img {
+            width: 25px;
+            height: 25px;
+        }
+    }
+
+    // scss-lint:disable SelectorFormat
+    .autocomputed_override {
+        display: none;
+    }
+}
