@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+
 require_once('common/html/HTML_Element_Input_Hidden.class.php');
 require_once('common/html/HTML_Element_Input_Text.class.php');
 require_once('common/html/HTML_Element_Textarea.class.php');
@@ -162,6 +164,22 @@ abstract class GraphOnTrackersV5_Chart {
         return '<div class="tracker_report_renderer_graphontrackers_graph plugin_graphontrackersv5_chart"
                      data-graph-id="'.$this->getId().'">'. $content .'
                 </div>';
+    }
+
+    private function fetchAdditionnalButton()
+    {
+        $is_a_table_renderer = false;
+
+        $html = $this->getTemplateRenderer()->renderToString(
+            'widget-additionnal-button',
+            new WidgetAdditionalButtonPresenter($this->getTracker(), HTTPRequest::instance(), $is_a_table_renderer)
+        );
+
+        return $html;
+    }
+
+    private function getTemplateRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
     }
 
     public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
@@ -531,7 +549,12 @@ abstract class GraphOnTrackersV5_Chart {
             tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || {};
             tuleap.graphontrackersv5.graphs['. $this->getId() .'] = '.json_encode($chart_data).';';
         $GLOBALS['HTML']->includeFooterJavascriptSnippet($snippet);
-        $content = $this->fetchGraphAnchor('');
+
+        $content = "";
+        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            $content .= $this->fetchAdditionnalButton();
+        }
+        $content .= $this->fetchGraphAnchor('');
 
         return $content;
     }

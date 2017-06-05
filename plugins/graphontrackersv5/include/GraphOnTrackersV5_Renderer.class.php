@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+
 require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
 require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php');
 
@@ -129,6 +131,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     protected function fetchCharts($matching_ids, PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
+        if (ForgeConfig::get('sys_use_tlp_in_dashboards') && $in_dashboard) {
+            $html .= $this->fetchAdditionalButton($this->report->getTracker());
+        }
         if (!$readonly) {
             $html .= '<div id="tracker_report_renderer_view_controls">';
             $html .= '<div class="btn-group">';
@@ -179,6 +184,27 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         }
 
         return $html;
+    }
+
+    private function fetchAdditionalButton()
+    {
+        $is_a_table_renderer = false;
+
+        $html = $this->getTemplateRenderer()->renderToString(
+            'widget-additionnal-button',
+            new WidgetAdditionalButtonPresenter(
+                $this->report->getTracker(),
+                HTTPRequest::instance(),
+                $is_a_table_renderer
+            )
+        );
+
+        return $html;
+    }
+
+    private function getTemplateRenderer()
+    {
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
     }
 
     /**

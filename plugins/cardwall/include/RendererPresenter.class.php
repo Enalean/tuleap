@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 
 /**
@@ -47,12 +49,29 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
     public $is_display_avatar_selected = "";
 
     /**
-     * @param Cardwall_Board $board The board
-     * @param string $redirect_parameter the redirect paramter to add to various url
+     * @var mixed
+     */
+    public $use_tlp_in_dashboard;
+
+    /**
+     * @var WidgetAdditionalButtonPresenter
+     */
+    public $additional_button_presenter;
+
+    /**
+     * @param Cardwall_Board                      $board The board
+     * @param string                              $redirect_parameter the redirect paramter to add to various url
      * @param Tracker_FormElement_Field_Selectbox $field form to choose the column. false if no form (in widget) (thus no typehinting)
      * @param $form
+     * @param WidgetAdditionalButtonPresenter     $additional_button_presenter
      */
-    public function __construct(Cardwall_Board $board, $redirect_parameter, $field, $form) {
+    public function __construct(
+        Cardwall_Board $board,
+        $redirect_parameter,
+        $field,
+        $form,
+        WidgetAdditionalButtonPresenter $additional_button_presenter
+    ) {
         parent::__construct($board, $redirect_parameter);
         $hp                        = Codendi_HTMLPurifier::instance();
         $this->nifty               = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
@@ -64,5 +83,8 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
         $this->warn_please_choose  = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
         $field_label               = $field ? $hp->purify($this->field->getLabel()) : '###';
         $this->warn_no_values      = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $field_label);
+
+        $this->use_tlp_in_dashboard        = ForgeConfig::get('sys_use_tlp_in_dashboards');
+        $this->additional_button_presenter = $additional_button_presenter;
     }
 }

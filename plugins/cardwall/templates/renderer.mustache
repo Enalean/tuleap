@@ -1,4 +1,15 @@
 <input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0" />
+
+{{# use_tlp_in_dashboard }}
+    {{# additional_button_presenter }}
+        <p>
+            <a href="{{ url_artifact_submit }}" class="tlp-button-primary tlp-table-actions-element">
+                <i class="tlp-button-icon fa fa-plus"></i> {{ new_artifact }}
+            </a>
+        </p>
+    {{/ additional_button_presenter }}
+{{/ use_tlp_in_dashboard }}
+
 {{#form}}
 <form id="tracker_report_cardwall_settings" action="" method="POST">
     <input type="hidden" value="{{report_id}}" name="report" />
