@@ -81,7 +81,10 @@ function updateParent(widget, target) {
 
             column.parentNode.insertBefore(line, column);
             line.appendChild(column);
+
+            column.parentNode.insertBefore(createEmptyColumn(), column);
         }
+        column.parentNode.insertBefore(createEmptyColumn(), column.nextElementSibling);
     }
 }
 
