@@ -111,7 +111,7 @@ msgid "Tests Progression"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
-msgid "There are no closed campaigns"
+msgid "There are no campaigns"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

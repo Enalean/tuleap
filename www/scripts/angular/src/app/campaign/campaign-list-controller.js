@@ -2,81 +2,98 @@ angular
     .module('campaign')
     .controller('CampaignListCtrl', CampaignListCtrl);
 
-CampaignListCtrl.$inject = ['$scope', 'CampaignService', 'SharedPropertiesService', 'milestone'];
+CampaignListCtrl.$inject = [
+    '$scope',
+    '$filter',
+    'CampaignService',
+    'SharedPropertiesService',
+    'milestone'
+];
 
-function CampaignListCtrl($scope, CampaignService, SharedPropertiesService, milestone) {
-    var project_id      = SharedPropertiesService.getProjectId();
-    var total_campaigns = 0;
+function CampaignListCtrl(
+    $scope,
+    $filter,
+    CampaignService,
+    SharedPropertiesService,
+    milestone
+) {
+    var project_id = SharedPropertiesService.getProjectId();
 
     _.extend($scope, {
         loading                       : true,
         campaigns                     : [],
-        campaigns_closed              : [],
-        open_campaigns_loaded         : false,
-        closed_campaigns_loaded       : false,
-        closed_campaigns_hidden       : false,
-        getClosedCampaigns            : getClosedCampaigns,
+        filtered_campaigns            : [],
+        has_open_campaigns            : false,
+        has_closed_campaigns          : false,
+        campaigns_loaded              : false,
+        closed_campaigns_hidden       : true,
+        shouldShowNoCampaigns         : shouldShowNoCampaigns,
+        shouldShowNoOpenCampaigns     : shouldShowNoOpenCampaigns,
+        showClosedCampaigns           : showClosedCampaigns,
         hideClosedCampaigns           : hideClosedCampaigns
     });
 
-    getCampaigns(project_id, milestone.id, 'open', 10, 0);
+    init(project_id);
+
+    function init(project_id) {
+        loadCampaigns(project_id, 10, 0);
+    }
 
     function getCampaigns(project_id, milestone_id, campaign_status, limit, offset) {
-        CampaignService.getCampaigns(project_id, milestone_id, campaign_status, limit, offset).then(function(data) {
-            total_campaigns  = data.total;
-            $scope.campaigns = $scope.campaigns.concat(data.results);
-            if (campaign_status === 'closed') {
-                $scope.campaigns_closed        = $scope.campaigns_closed.concat(data.results);
-                $scope.closed_campaigns_loaded = loadCampaigns(
-                    campaign_status,
-                    $scope.closed_campaigns_loaded,
-                    $scope.campaigns_closed,
-                    total_campaigns,
-                    limit,
-                    offset
-                );
-            } else if (campaign_status === 'open') {
-                $scope.open_campaigns_loaded = loadCampaigns(
-                    campaign_status,
-                    $scope.open_campaigns_loaded,
-                    $scope.campaigns,
-                    total_campaigns,
-                    limit,
-                    offset
-                );
-            }
+        return CampaignService
+            .getCampaigns(project_id, milestone_id, campaign_status, limit, offset)
+            .then(function(data) {
+                $scope.campaigns = $scope.campaigns.concat(data.results);
+
+                if (data.results.length < data.total) {
+                    return getCampaigns(project_id, milestone_id, campaign_status, limit, offset + limit);
+                }
+            });
+    }
+
+    function loadCampaigns(project_id, limit, offset) {
+        $scope.loading = true;
+
+        getCampaigns(project_id, milestone.id, 'open', limit, offset)
+        .then(function() {
+            $scope.filtered_campaigns = filterCampaigns($scope.campaigns, 'open');
+            $scope.has_open_campaigns = $scope.filtered_campaigns.length > 0;
+
+            return getCampaigns(project_id, milestone.id, 'closed', limit, offset);
+        })
+        .then(function() {
+            $scope.has_closed_campaigns = filterCampaigns($scope.campaigns, 'closed').length > 0;
+            $scope.campaigns_loaded = true;
+            $scope.loading = false;
         });
     }
 
-    function loadCampaigns(
-        campaign_status,
-        are_campaigns_loaded,
-        campaigns,
-        total_campaigns,
-        limit,
-        offset
-    ) {
-        if (campaigns.length < total_campaigns) {
-            getCampaigns(project_id, milestone.id, campaign_status, limit, offset + limit);
-        } else {
-            $scope.loading       = false;
-            are_campaigns_loaded = true;
-        }
-        return are_campaigns_loaded;
+    function shouldShowNoCampaigns() {
+        return $scope.campaigns_loaded && $scope.campaigns.length === 0;
     }
 
-    function getClosedCampaigns() {
-        if (! $scope.closed_campaigns_loaded) {
-            $scope.loading = true;
-            getCampaigns(project_id, milestone.id, 'closed', 10, 0);
-        } else {
-            $scope.campaigns               = $scope.campaigns.concat($scope.campaigns_closed);
-            $scope.closed_campaigns_hidden = false;
-        }
+    function shouldShowNoOpenCampaigns() {
+        return $scope.closed_campaigns_hidden &&
+               $scope.campaigns_loaded &&
+               ! $scope.has_open_campaigns &&
+               $scope.has_closed_campaigns;
+    }
+
+    function showClosedCampaigns() {
+        $scope.filtered_campaigns      = $scope.campaigns;
+        $scope.closed_campaigns_hidden = false;
     }
 
     function hideClosedCampaigns() {
-        $scope.campaigns               = _.xor($scope.campaigns, $scope.campaigns_closed);
+        $scope.filtered_campaigns      = filterCampaigns($scope.campaigns, 'open');
         $scope.closed_campaigns_hidden = true;
+    }
+
+    function filterCampaigns(list, status) {
+        if (status === null) {
+          return list;
+        }
+
+        return $filter('filter')(list, { 'status': status });
     }
 }

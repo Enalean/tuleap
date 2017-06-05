@@ -202,12 +202,12 @@ msgid "Tests Progression"
 msgstr "Progression des tests"
 
 #: src/app/campaign/campaign-list.tpl.html
-msgid "There are no closed campaigns"
-msgstr "Il n’existe pas de campagnes fermées"
+msgid "There are no campaigns"
+msgstr "Il n'existe pas de campagne"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "There are no open campaigns"
-msgstr "Il n’existe pas de campagnes ouvertes"
+msgstr "Il n’existe pas de campagne ouverte"
 
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."

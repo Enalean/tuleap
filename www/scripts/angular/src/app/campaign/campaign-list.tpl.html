@@ -10,7 +10,7 @@
     </div>
 
     <div id="campaign-list-content">
-        <div ng-repeat="campaign in campaigns
+        <div ng-repeat="campaign in filtered_campaigns
                 | InPropertiesFilter:search:['label', 'status']
                 | orderBy:'id':true
                 track by $index"
@@ -47,17 +47,14 @@
         </div>
     </div>
 
-    <div id="no-open-campaigns" class="no-campaigns" ng-if="! campaigns.length > 0 && open_campaigns_loaded">
-        <span translate>There are no open campaigns</span>
-    </div>
-
-    <div id="no-closed-campaigns" class="no-campaigns" ng-if="! campaigns_closed.length > 0 && closed_campaigns_loaded">
-        <span translate>There are no closed campaigns</span>
+    <div class="no-campaigns" ng-if="shouldShowNoCampaigns() || shouldShowNoOpenCampaigns()">
+        <span translate ng-if="shouldShowNoCampaigns()">There are no campaigns</span>
+        <span translate ng-if="shouldShowNoOpenCampaigns()">There are no open campaigns</span>
     </div>
 
     <div id="campaign-list-content-load">
-        <a ng-if="! closed_campaigns_loaded || closed_campaigns_hidden" ng-click="getClosedCampaigns()" translate>Load closed campaigns </a>
-        <a ng-if="closed_campaigns_loaded && ! closed_campaigns_hidden" ng-click="hideClosedCampaigns()" translate>Hide closed campaigns </a>
+        <a ng-if="has_closed_campaigns && closed_campaigns_hidden" ng-click="showClosedCampaigns()" translate>Load closed campaigns </a>
+        <a ng-if="! closed_campaigns_hidden" ng-click="hideClosedCampaigns()" translate>Hide closed campaigns </a>
     </div>
 
     <img src="scripts/angular/bin/assets/loader.gif" ng-if="loading" class="loader">

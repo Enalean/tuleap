@@ -8,6 +8,8 @@
     background: #f0f1f8;
 
     > .no-campaigns {
+        background: url('closed-campaigns.png') no-repeat center top;
+
         margin: 50px 0 100px;
         padding: 110px 0 0;
         text-align: center;
@@ -168,12 +170,4 @@
     > a {
         cursor: pointer;
     }
-}
-
-#no-closed-campaigns {
-    background: url('closed-campaigns.png') no-repeat center top;
-}
-
-#no-open-campaigns {
-    background: url('open-campaigns.png') no-repeat center top;
 }
