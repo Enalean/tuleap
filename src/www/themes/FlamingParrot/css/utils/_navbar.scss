@@ -328,6 +328,35 @@
                 border: 0;
                 background-color: #f3f3f3;
             }
+
+            &.user-navbar-history {
+                min-width: 0;
+                right: 120px;
+                width: auto;
+                font-size: 14px;
+                font-weight: normal;
+                letter-spacing: normal;
+                text-transform: none;
+            }
+        }
+
+        .empty-history {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: transparentize($main, .7);
+            width: 250px;
+            height: 200px;
+
+            .empty-history-description {
+                font-size: 22px;
+            }
+        }
+
+        .empty-history-icon {
+            margin: 0 0 15px;
+            font-size: 40px;
         }
 
         .projects-nav ul.dropdown-menu {
