@@ -111,7 +111,10 @@ class UserNavPresenter
         return new DropdownMenuItemPresenter(
             _('History'),
             'fa fa-history',
-            new UserHistoryPresenter('user-history'),
+            new UserHistoryPresenter(
+                'user-history',
+                $this->current_user
+            ),
             'only-icon without-carret nav-dropdown-right'
         );
     }

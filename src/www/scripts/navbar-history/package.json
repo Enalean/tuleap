@@ -1,0 +1,21 @@
+{
+  "name": "navbar-history",
+  "version": "0.1.0",
+  "description": "Handle navbar user history dropdown",
+  "main": "navbar-history.js",
+  "author": "Enalean Team",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "dompurify": "^0.9.0",
+    "mustache": "^2.3.0"
+  },
+  "devDependencies": {
+    "webpack": "^2.5.1",
+    "webpack-assets-manifest": "^0.6.2"
+  },
+  "scripts": {
+    "build": "webpack --optimize-minimize",
+    "watch": "webpack --watch"
+  }
+}

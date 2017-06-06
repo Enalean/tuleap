@@ -168,7 +168,8 @@ var fat_combined_files = [
         'plugins/tracker/',
         'plugins/tracker/grammar/',
         'src/www/themes/common/tlp/',
-        'src/www/scripts/dashboards/'
+        'src/www/scripts/dashboards/',
+        'src/www/scripts/navbar-history/'
     ],
     asset_dir = 'www/assets';
 

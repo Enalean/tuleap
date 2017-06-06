@@ -52,6 +52,7 @@
 header {
     display: flex;
     position: fixed;
+    z-index: 100000;
     top: 0;
     left: 0;
     justify-content: space-between;
@@ -59,7 +60,6 @@ header {
     height: $navbar-height;
     background: $navbar-background;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
-    z-index: 100000;
 }
 
 .nav-link {
@@ -85,7 +85,7 @@ header {
     -webkit-user-select: none;
     user-select: none;
 
-    &:hover {
+    &:hover > .nav-dropdown-link {
         transition: color 100ms linear;
         color: $tlp-theme-color;
     }
@@ -93,11 +93,6 @@ header {
 
 .nav-dropdown-link {
     @include nav-link(900px);
-
-    &:hover {
-        transition: color 100ms linear;
-        color: $tlp-theme-color;
-    }
 }
 
 .only-icon {
