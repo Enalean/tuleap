@@ -35,6 +35,8 @@ class Dao extends DataAccessObject
         $project_id = $this->da->escapeInt($project->getId());
         $sql = 'SELECT *
                 FROM plugin_svn_repositories
+                LEFT JOIN plugin_svn_last_access
+                  ON plugin_svn_repositories.id = plugin_svn_last_access.repository_id
                 WHERE project_id=' . $project_id .'
                 AND repository_deletion_date IS NULL
                 ORDER BY name ASC';

@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2015-2016. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,47 +21,50 @@
 namespace Tuleap\Svn\Explorer;
 
 use CSRFSynchronizerToken;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RuleName;
-use Tuleap\Svn\SvnPermissionManager;
 use Project;
-use PFUser;
+use Tuleap\Svn\Repository\RuleName;
 
-class ExplorerPresenter {
-
+class ExplorerPresenter
+{
     public $group_id;
-    public $csrf_input;
+    public $csrf_token;
     public $repository_name;
     public $title_list_repositories;
-    public $list_repositories;
     public $label_repository_name;
     public $no_repositories;
-    public $create_repository;
-    public $has_respositories;
     public $help_repository_name;
     public $table_head_list_repository;
+    public $create_repository;
+    public $last_commit;
+    public $validate_name;
+    public $is_admin;
+
+    /**
+     * @var array
+     */
+    public $repository_list;
 
     public function __construct(
-        PFUser $user,
         Project $project,
         CSRFSynchronizerToken $csrf,
         $repository_name,
-        RepositoryManager $repository_manager,
-        SvnPermissionManager $permissions_manager
+        array $repository_list,
+        $is_admin
     ) {
-        $this->group_id                                   = $project->getID();
-        $this->csrf_input                                 = $csrf->fetchHTMLInput();
-        $this->repository_name                            = $repository_name;
-        $this->list_repositories                          = $repository_manager->getRepositoriesInProject($project);
-        $this->title_list_repositories                    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
-        $this->label_repository_name                      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
-        $this->no_repositories                            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
-        $this->help_repository_name                       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
-        $this->table_head_list_repository                 = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
-        $this->has_respositories                          = count($this->list_repositories) > 0;
-        $this->validate_name                              = RuleName::PATTERN_REPOSITORY_NAME;
-        $this->create_repository                          = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'create_repository');
+        $this->group_id                   = $project->getID();
+        $this->csrf_token                 = $csrf;
+        $this->repository_name            = $repository_name;
+        $this->title_list_repositories    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
+        $this->label_repository_name      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
+        $this->no_repositories            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
+        $this->help_repository_name       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
+        $this->table_head_list_repository = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
+        $this->create_repository          = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'create_repository');
+        $this->last_commit                = dgettext('tuleap-svn', 'Last commit');
 
-        $this->is_user_allowed_to_create_repository       = $permissions_manager->isAdmin($project, $user);
+        $this->validate_name = RuleName::PATTERN_REPOSITORY_NAME;
+
+        $this->is_admin        = $is_admin;
+        $this->repository_list = $repository_list;
     }
 }

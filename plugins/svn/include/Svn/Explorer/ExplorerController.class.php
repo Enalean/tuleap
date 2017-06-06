@@ -20,17 +20,17 @@
 
 namespace Tuleap\Svn\Explorer;
 
+use CSRFSynchronizerToken;
+use HTTPRequest;
 use Project;
+use SystemEventManager;
+use Tuleap\Svn\Dao;
+use Tuleap\Svn\Repository\CannotCreateRepositoryException;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\SvnPermissionManager;
-use Tuleap\Svn\Dao;
-use CSRFSynchronizerToken;
-use \Tuleap\Svn\Repository\RuleName;
-use \Tuleap\Svn\Repository\Repository;
-use \Tuleap\Svn\Repository\RepositoryManager;
-use HTTPRequest;
-use \Tuleap\Svn\Repository\CannotCreateRepositoryException;
-use SystemEventManager;
 
 class ExplorerController {
     const NAME = 'explorer';
@@ -38,35 +38,51 @@ class ExplorerController {
     /** @var SvnPermissionManager */
     private $permissions_manager;
 
+    /** @var RepositoryManager */
     private $repository_manager;
-    private $system_event_manager;
 
-    public function __construct(RepositoryManager $repository_manager, SvnPermissionManager $permissions_manager) {
+    /** @var SystemEventManager */
+    private $system_event_manager;
+    /**
+     * @var RepositoryBuilder
+     */
+    private $repository_builder;
+
+    public function __construct(
+        RepositoryManager $repository_manager,
+        SvnPermissionManager $permissions_manager,
+        RepositoryBuilder $repository_builder
+    ) {
         $this->repository_manager   = $repository_manager;
         $this->permissions_manager  = $permissions_manager;
         $this->system_event_manager = SystemEventManager::instance();
+        $this->repository_builder   = $repository_builder;
     }
 
     public function index(ServiceSvn $service, HTTPRequest $request) {
         $this->renderIndex($service, $request);
     }
 
-    private function renderIndex(ServiceSvn $service, HTTPRequest $request) {
+    private function renderIndex(ServiceSvn $service, HTTPRequest $request)
+    {
         $project = $request->getProject();
-        $token = $this->generateTokenForCeateRepository($request->getProject());
+        $token   = $this->generateTokenForCeateRepository($request->getProject());
+
+        $repository_list = $this->repository_manager->getRepositoriesInProjectWithLastCommitInfo($request->getProject());
+        $repositories    = $this->repository_builder->build($repository_list);
+        $is_admin        = $this->permissions_manager->isAdmin($project, $request->getCurrentUser());
 
         $service->renderInPage(
             $request,
             'Welcome',
             'explorer/index',
             new ExplorerPresenter(
-                    $request->getCurrentUser(),
-                    $project,
-                    $token,
-                    $request->get('name'),
-                    $this->repository_manager,
-                    $this->permissions_manager
-                )
+                $project,
+                $token,
+                $request->get('name'),
+                $repositories,
+                $is_admin
+            )
         );
     }
 

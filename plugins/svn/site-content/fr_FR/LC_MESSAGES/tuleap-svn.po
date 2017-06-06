@@ -42,6 +42,9 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] "Le groupe '%s' n’a pas pu être ajouté."
 msgstr[1] "Les groupes '%s' n’ont pas pu être ajouté."
 
+msgid "Last commit"
+msgstr "Dernier commit"
+
 msgid "Notification deleted successfully."
 msgstr "La notification a été correctement supprimée."
 
