@@ -534,6 +534,7 @@ find "$RPM_BUILD_ROOT/%{APP_DIR}/" -name 'yarn.lock' -type f -delete
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/generate-po.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/sass.sh
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/tuleap-gulp-build.js
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/tlp/webpack.config.js
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}

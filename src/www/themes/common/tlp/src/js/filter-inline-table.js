@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-"use strict";
 
-var tlp = tlp || {};
+export default filterInlineTable;
 
-tlp.filterInlineTable = function filterInlineTable(filter) {
+function filterInlineTable(filter) {
     var target_table = getTargetTable(filter);
 
     filter.addEventListener("keyup", handleEscape);

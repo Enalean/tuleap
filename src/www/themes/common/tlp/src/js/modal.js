@@ -17,149 +17,142 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+const TRANSITION_DURATION            = 300;
+const ESCAPE_CODE                    = 27;
 
-var tlp = tlp || { };
+const EVENT_TLP_MODAL_SHOWN          = 'tlp-modal-shown';
+const EVENT_TLP_MODAL_HIDDEN         = 'tlp-modal-hidden';
 
-(() => {
+const CLASS_TLP_MODAL_SHOWN          = 'tlp-modal-shown';
+const CLASS_TLP_MODAL_BACKDROP_SHOWN = 'tlp-modal-backdrop-shown';
+const CLASS_TLP_MODAL_DISPLAY        = 'tlp-modal-display';
 
-    const TRANSITION_DURATION            = 300;
-    const ESCAPE_CODE                    = 27;
+const ID_TLP_MODAL_BACKDROP          = 'tlp-modal-backdrop';
 
-    const EVENT_TLP_MODAL_SHOWN          = 'tlp-modal-shown';
-    const EVENT_TLP_MODAL_HIDDEN         = 'tlp-modal-hidden';
+export default (element, options) => new Modal(element, options);
 
-    const CLASS_TLP_MODAL_SHOWN          = 'tlp-modal-shown';
-    const CLASS_TLP_MODAL_BACKDROP_SHOWN = 'tlp-modal-backdrop-shown';
-    const CLASS_TLP_MODAL_DISPLAY        = 'tlp-modal-display';
+class Modal {
+    constructor(element, options = { keyboard: true }) {
+        let { keyboard = true } = options;
+        this.body_element       = document.body;
+        this.element            = element;
+        this.is_shown           = false;
+        this.keyboard           = keyboard;
+        this.shown_event        = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {detail: { target: this.element}});
+        this.hidden_event       = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {detail: { target: this.element}});
+        this.event_listeners    = [];
+        this.listenCloseEvents();
+    }
 
-    const ID_TLP_MODAL_BACKDROP          = 'tlp-modal-backdrop';
+    toggle() {
+        this.is_shown ? this.hide() : this.show();
+    }
 
-    tlp.modal = (element, options) => new Modal(element, options);
+    show() {
+        this.element.classList.add(CLASS_TLP_MODAL_DISPLAY);
 
-    class Modal {
-        constructor(element, options = { keyboard: true }) {
-            let { keyboard = true } = options;
-            this.body_element       = document.body;
-            this.element            = element;
-            this.is_shown           = false;
-            this.keyboard           = keyboard;
-            this.shown_event        = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {detail: { target: this.element}});
-            this.hidden_event       = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {detail: { target: this.element}});
-            this.event_listeners    = [];
-            this.listenCloseEvents();
-        }
+        reflowElement(this.element);
 
-        toggle() {
-            this.is_shown ? this.hide() : this.show();
-        }
+        this.element.classList.add(CLASS_TLP_MODAL_SHOWN);
+        this.is_shown = true;
+        this.addBackdrop();
 
-        show() {
-            this.element.classList.add(CLASS_TLP_MODAL_DISPLAY);
+        this.dispatchEvent(this.shown_event);
+    }
 
-            reflowElement(this.element);
+    hide() {
+        this.element.classList.remove(CLASS_TLP_MODAL_SHOWN);
 
-            this.element.classList.add(CLASS_TLP_MODAL_SHOWN);
-            this.is_shown = true;
-            this.addBackdrop();
+        reflowElement(this.element);
 
-            this.dispatchEvent(this.shown_event);
-        }
+        this.removeBackdrop();
+        setTimeout(() => {
+            this.element.classList.remove(CLASS_TLP_MODAL_DISPLAY);
+            this.is_shown = false;
 
-        hide() {
-            this.element.classList.remove(CLASS_TLP_MODAL_SHOWN);
+            this.dispatchEvent(this.hidden_event);
+        }, TRANSITION_DURATION);
+    }
 
-            reflowElement(this.element);
+    addBackdrop() {
+        this.backdrop_element    = document.createElement('div');
+        this.backdrop_element.id = ID_TLP_MODAL_BACKDROP;
+        this.body_element.appendChild(this.backdrop_element);
 
-            this.removeBackdrop();
-            setTimeout(() => {
-                this.element.classList.remove(CLASS_TLP_MODAL_DISPLAY);
-                this.is_shown = false;
+        reflowElement(this.backdrop_element);
 
-                this.dispatchEvent(this.hidden_event);
-            }, TRANSITION_DURATION);
-        }
+        this.backdrop_element.classList.add(CLASS_TLP_MODAL_BACKDROP_SHOWN);
+        this.backdrop_element.addEventListener('click', () => {
+            this.hide();
+        });
+    }
 
-        addBackdrop() {
-            this.backdrop_element    = document.createElement('div');
-            this.backdrop_element.id = ID_TLP_MODAL_BACKDROP;
-            this.body_element.appendChild(this.backdrop_element);
+    removeBackdrop() {
+        this.backdrop_element.classList.remove(CLASS_TLP_MODAL_BACKDROP_SHOWN);
 
-            reflowElement(this.backdrop_element);
+        setTimeout(() => {
+            this.body_element.removeChild(this.backdrop_element);
+        }, TRANSITION_DURATION);
+    }
 
-            this.backdrop_element.classList.add(CLASS_TLP_MODAL_BACKDROP_SHOWN);
-            this.backdrop_element.addEventListener('click', () => {
+    listenCloseEvents() {
+        this.close_elements.forEach((close_element) => {
+            close_element.addEventListener('click', () => {
                 this.hide();
             });
-        }
+        });
 
-        removeBackdrop() {
-            this.backdrop_element.classList.remove(CLASS_TLP_MODAL_BACKDROP_SHOWN);
+        if (this.keyboard) {
+            document.addEventListener('keyup', (event) => {
+                if (event.keyCode !== ESCAPE_CODE) {
+                    return;
+                }
 
-            setTimeout(() => {
-                this.body_element.removeChild(this.backdrop_element);
-            }, TRANSITION_DURATION);
-        }
+                let tag_name = event.target.tagName.toUpperCase();
+                if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
+                    return;
+                }
 
-        listenCloseEvents() {
-            this.close_elements.forEach((close_element) => {
-                close_element.addEventListener('click', () => {
+                if (this.is_shown) {
                     this.hide();
-                });
-            });
-
-            if (this.keyboard) {
-                document.addEventListener('keyup', (event) => {
-                    if (event.keyCode !== ESCAPE_CODE) {
-                        return;
-                    }
-
-                    let tag_name = event.target.tagName.toUpperCase();
-                    if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
-                        return;
-                    }
-
-                    if (this.is_shown) {
-                        this.hide();
-                    }
-                });
-            }
-        }
-
-        addEventListener(type, eventHandler) {
-            let listener = { type, eventHandler };
-            this.event_listeners.push(listener);
-        }
-
-        removeEventListener(type, eventHandler) {
-            for (let [index, listener] of this.event_listeners.entries()) {
-                if (listener.type === type && listener.eventHandler === eventHandler) {
-                    this.event_listeners.splice(index, 1);
                 }
-            }
-        }
-
-        dispatchEvent(event) {
-            for (const listener of this.event_listeners) {
-                if (event.type === listener.type) {
-                    listener.eventHandler(event);
-                }
-            }
-        }
-
-        get close_elements() {
-            let children       = this.element.querySelectorAll('[data-dismiss="modal"]');
-            let close_elements = [];
-
-            [].forEach.call(children, (child) => {
-                close_elements.push(child);
             });
-
-            return close_elements;
         }
     }
 
-    function reflowElement(element) {
-        element.offsetHeight;
+    addEventListener(type, eventHandler) {
+        let listener = { type, eventHandler };
+        this.event_listeners.push(listener);
     }
-})();
+
+    removeEventListener(type, eventHandler) {
+        for (let [index, listener] of this.event_listeners.entries()) {
+            if (listener.type === type && listener.eventHandler === eventHandler) {
+                this.event_listeners.splice(index, 1);
+            }
+        }
+    }
+
+    dispatchEvent(event) {
+        for (const listener of this.event_listeners) {
+            if (event.type === listener.type) {
+                listener.eventHandler(event);
+            }
+        }
+    }
+
+    get close_elements() {
+        let children       = this.element.querySelectorAll('[data-dismiss="modal"]');
+        let close_elements = [];
+
+        [].forEach.call(children, (child) => {
+            close_elements.push(child);
+        });
+
+        return close_elements;
+    }
+}
+
+function reflowElement(element) {
+    element.offsetHeight;
+}

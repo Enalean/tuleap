@@ -17,145 +17,127 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-'use strict';
+import { findClosestElement } from './dom-walker.js';
 
-var tlp = tlp || { };
+const TRANSITION_DURATION        = 75;
+const ESCAPE_CODE                = 27;
 
-(() => {
+const EVENT_TLP_DROPDOWN_SHOWN   = 'tlp-dropdown-shown';
+const EVENT_TLP_DROPDOWN_HIDDEN  = 'tlp-dropdown-hidden';
 
-    const TRANSITION_DURATION        = 75;
-    const ESCAPE_CODE                = 27;
+const CLASS_TLP_DROPDOWN_MENU    = 'tlp-dropdown-menu';
+const CLASS_TLP_DROPDOWN_SHOWN   = 'tlp-dropdown-shown';
 
-    const EVENT_TLP_DROPDOWN_SHOWN   = 'tlp-dropdown-shown';
-    const EVENT_TLP_DROPDOWN_HIDDEN  = 'tlp-dropdown-hidden';
+export default (trigger, options) => new Dropdown(trigger, options);
 
-    const CLASS_TLP_DROPDOWN_MENU    = 'tlp-dropdown-menu';
-    const CLASS_TLP_DROPDOWN_SHOWN   = 'tlp-dropdown-shown';
+class Dropdown {
+    constructor(trigger, options = { keyboard: true }) {
+        this.trigger = trigger;
 
-    tlp.dropdown = (trigger, options) => new Dropdown(trigger, options);
+        let { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
 
-    class Dropdown {
-        constructor(trigger, options = { keyboard: true }) {
-            this.trigger = trigger;
+        this.body_element       = document.body;
+        this.dropdown_menu      = dropdown_menu;
+        this.is_shown           = false;
+        this.keyboard           = keyboard;
+        this.shown_event        = new CustomEvent(EVENT_TLP_DROPDOWN_SHOWN, { detail: { target: this.dropdown_menu }});
+        this.hidden_event       = new CustomEvent(EVENT_TLP_DROPDOWN_HIDDEN, { detail: { target: this.dropdown_menu }});
+        this.event_listeners    = [];
 
-            let { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
+        this.listenOpenEvents();
+        this.listenCloseEvents();
+    }
 
-            this.body_element       = document.body;
-            this.dropdown_menu      = dropdown_menu;
-            this.is_shown           = false;
-            this.keyboard           = keyboard;
-            this.shown_event        = new CustomEvent(EVENT_TLP_DROPDOWN_SHOWN, { detail: { target: this.dropdown_menu }});
-            this.hidden_event       = new CustomEvent(EVENT_TLP_DROPDOWN_HIDDEN, { detail: { target: this.dropdown_menu }});
-            this.event_listeners    = [];
+    getDropdownMenu() {
+        let dropdown_menu = this.trigger.nextSibling;
 
-            this.listenOpenEvents();
-            this.listenCloseEvents();
+        while (dropdown_menu && (dropdown_menu.nodeType !== Node.ELEMENT_NODE || ! dropdown_menu.classList.contains(CLASS_TLP_DROPDOWN_MENU))) {
+            dropdown_menu = dropdown_menu.nextSibling;
         }
 
-        getDropdownMenu() {
-            let dropdown_menu = this.trigger.nextSibling;
+        return dropdown_menu;
+    }
 
-            while (dropdown_menu && (dropdown_menu.nodeType !== Node.ELEMENT_NODE || ! dropdown_menu.classList.contains(CLASS_TLP_DROPDOWN_MENU))) {
-                dropdown_menu = dropdown_menu.nextSibling;
+    toggle() {
+        this.is_shown ? this.hide() : this.show();
+    }
+
+    show() {
+        this.dropdown_menu.classList.add(CLASS_TLP_DROPDOWN_SHOWN);
+        this.is_shown = true;
+        this.reflow();
+
+        this.dispatchEvent(this.shown_event);
+    }
+
+    hide() {
+        this.dropdown_menu.classList.remove(CLASS_TLP_DROPDOWN_SHOWN);
+        this.is_shown = false;
+        this.reflow();
+
+        setTimeout(() => {
+            this.dispatchEvent(this.hidden_event);
+        }, TRANSITION_DURATION);
+    }
+
+    reflow() {
+        this.dropdown_menu.offsetHeight;
+    }
+
+    listenOpenEvents() {
+        this.trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.toggle();
+        });
+    }
+
+    listenCloseEvents() {
+        document.addEventListener('click', (event) => {
+            if (this.is_shown
+                && ! findClosestElement(event.target, this.dropdown_menu)
+                && ! findClosestElement(event.target, this.trigger)
+            ) {
+                this.hide();
             }
+        });
 
-            return dropdown_menu;
-        }
+        if (this.keyboard) {
+            document.addEventListener('keyup', (event) => {
+                if (event.keyCode !== ESCAPE_CODE) {
+                    return;
+                }
 
-        toggle() {
-            this.is_shown ? this.hide() : this.show();
-        }
+                let tag_name = event.target.tagName.toUpperCase();
+                if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
+                    return;
+                }
 
-        show() {
-            this.dropdown_menu.classList.add(CLASS_TLP_DROPDOWN_SHOWN);
-            this.is_shown = true;
-            this.reflow();
-
-            this.dispatchEvent(this.shown_event);
-        }
-
-        hide() {
-            this.dropdown_menu.classList.remove(CLASS_TLP_DROPDOWN_SHOWN);
-            this.is_shown = false;
-            this.reflow();
-
-            setTimeout(() => {
-                this.dispatchEvent(this.hidden_event);
-            }, TRANSITION_DURATION);
-        }
-
-        reflow() {
-            this.dropdown_menu.offsetHeight;
-        }
-
-        listenOpenEvents() {
-            this.trigger.addEventListener('click', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                this.toggle();
-            });
-        }
-
-        listenCloseEvents() {
-            document.addEventListener('click', (event) => {
-                if (this.is_shown
-                    && ! findClosestElement(event.target, this.dropdown_menu)
-                    && ! findClosestElement(event.target, this.trigger)
-                ) {
+                if (this.is_shown) {
                     this.hide();
                 }
             });
-
-            if (this.keyboard) {
-                document.addEventListener('keyup', (event) => {
-                    if (event.keyCode !== ESCAPE_CODE) {
-                        return;
-                    }
-
-                    let tag_name = event.target.tagName.toUpperCase();
-                    if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
-                        return;
-                    }
-
-                    if (this.is_shown) {
-                        this.hide();
-                    }
-                });
-            }
         }
+    }
 
-        addEventListener(type, eventHandler) {
-            let listener = { type, eventHandler };
-            this.event_listeners.push(listener);
-        }
+    addEventListener(type, eventHandler) {
+        let listener = { type, eventHandler };
+        this.event_listeners.push(listener);
+    }
 
-        removeEventListener(type, eventHandler) {
-            for (let [index, listener] of this.event_listeners.entries()) {
-                if (listener.type === type && listener.eventHandler === eventHandler) {
-                    this.event_listeners.slice(index, 1);
-                }
-            }
-        }
-
-        dispatchEvent(event) {
-            for (const listener of this.event_listeners) {
-                if (event.type === listener.type) {
-                    listener.eventHandler(event);
-                }
+    removeEventListener(type, eventHandler) {
+        for (let [index, listener] of this.event_listeners.entries()) {
+            if (listener.type === type && listener.eventHandler === eventHandler) {
+                this.event_listeners.slice(index, 1);
             }
         }
     }
 
-    function findAncestorElement(element, ancestor) {
-        while ((element = element.parentElement) && element != ancestor) {}
-        return element;
-    }
-
-    function findClosestElement(element, ancestor) {
-        if (element == ancestor) {
-            return element;
+    dispatchEvent(event) {
+        for (const listener of this.event_listeners) {
+            if (event.type === listener.type) {
+                listener.eventHandler(event);
+            }
         }
-
-        return findAncestorElement(element, ancestor);
     }
-})();
+}
