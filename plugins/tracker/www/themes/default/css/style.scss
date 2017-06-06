@@ -1,5 +1,6 @@
 @import '../../../../node_modules/codemirror/lib/codemirror';
 @import '../../../../node_modules/codemirror/addon/hint/show-hint';
+@import 'includes/cards';
 
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
@@ -2048,155 +2049,6 @@ td.first-column {
 
 }
 
-/* {{{ cards */
-.cards {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.cards .cards {
-    margin-left: 2em;
-}
-
-.card {
-    margin-bottom: 1em;
-    border: 1px solid #B2B39D;
-    background: #ffe;
-    min-width: 200px;
-    padding: 0px;
-    padding-left: 5px;
-    color: #333;
-    position: relative;
-}
-
-.card-container {
-    background: #FFFFBB;
-    padding: 0.25em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    min-height: 50px;
-    -webkit-border-top-right-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    -moz-border-radius-topright: 3px;
-    -moz-border-radius-bottomright: 3px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-}
-
-.card.placeholder {
-    border: 1px dashed #3A87AD;
-    background: url(/themes/common/images/backstripes.gif);
-}
-
-.card-actions a.dropdown-toggle {
-    font-size: 0.9em;
-    color: #7D7D7D;
-}
-
-.card-actions a.dropdown-toggle:hover {
-    text-decoration: none;
-    color: #333333;
-}
-
-.card-actions ul {
-    list-style: none;
-    padding: 0.25em 0.5em;
-}
-
-.card-actions .caret {
-    margin-top: 6px;
-    margin-left: 0;
-}
-
-.card-actions:hover .caret {
-    opacity: 0.7;
-    filter: alpha(opacity=70);
-}
-
-.card-actions .dropdown.open .dropdown-toggle {
-    color: #005580;
-    background: none;
-}
-
-.card-title {
-    text-align: center;
-    margin: 5px 0;
-}
-
-.card-details {
-    color: #444;
-}
-
-.card-details > .toggler,
-.card-details > .toggler-hide,
-.card-details > .toggler-hide-noajax,
-.card-details > .toggler-noajax {
-    color: gray;
-    background-image: none;
-    font-size: 0.9em;
-    padding-left: 0px;
-}
-
-.card-details > .toggler:hover,
-.card-details > .toggler-hide:hover,
-.card-details > .toggler-hide-noajax:hover,
-.card-details > .toggler-noajax:hover {
-    color: #333;
-}
-
-.card-details > .toggler i,
-.card-details > .toggler-hide i,
-.card-details > .toggler-hide-noajax i,
-.card-details > .toggler-noajax i {
-    margin-right: 4px;
-}
-
-.card-details > .toggler-hide > .icon-caret-down,
-.card-details > .toggler-hide-noajax > .icon-caret-down {
-    display: none;
-}
-
-.card-details > .toggler > .icon-caret-right,
-.card-details > .toggler-noajax > .icon-caret-right {
-    display: none;
-}
-
-.card-details tr td {
-    font-size: 0.8em;
-}
-
-.card-details tr td {
-    &:first-child {
-        text-align: right;
-        vertical-align: top;
-    }
-
-    ul, ol {
-        margin: 0 20px;
-
-        li {
-            list-style: disc outside none;
-        }
-    }
-}
-
-.card-details .avatar {
-    width: 25px;
-    height: 25px;
-    display: inline-block;
-    border: none;
-    position: relative;
-    top: -2px;
-    left: 1px;
-}
-
-.card-details .avatar > img {
-    width: 25px;
-    height: 25px;
-}
-
-/* }}} */
 .tracker_artifact_attachment_delete {
     background: #777777 url(/themes/common/images/ic/cross_white.png) center center no-repeat;
     position: absolute;
@@ -3330,10 +3182,6 @@ select[name='add_notempty_condition[]'] {
 
 .tracker-deprecated-fields {
     max-width: 960px;
-}
-
-.card-details .autocomputed_override {
-    display: none;
 }
 
 .valueOf_remaining_effort > .autocomputed_override {

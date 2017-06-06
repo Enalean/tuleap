@@ -94,6 +94,7 @@
     border-bottom-right-radius: 3px;
 }
 
+.dashboard-widget .cardwall_board .card,
 .widget .cardwall_board .card {
     cursor: auto;
 }
@@ -368,8 +369,20 @@ input[type="text"].search-in-cardwall {
     margin: 0;
 }
 
+.dashboard-widget,
 .widget {
     .cardwall-column-header-controls, .cardwall-cell-controls {
+        display: none;
+    }
+}
+
+.dashboard-widget {
+    .cardwall_board {
+        font-size: 14px;
+    }
+
+    #cardwall_board-nifty,
+    .dropdown-menu {
         display: none;
     }
 }
