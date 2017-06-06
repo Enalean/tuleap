@@ -47,6 +47,17 @@ form[name=edit_chart_form] label {
     }
 }
 
+.dashboard-widget {
+    .widget_titlebar {
+        color: #747474;
+        text-align: left;
+    }
+
+    .plugin_graphontrackersv5_widget_actions {
+        display: none;
+    }
+}
+
 .plugin_graphontrackersv5_widget_actions {
     float: right;
 }

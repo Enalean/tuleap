@@ -180,7 +180,11 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         }
 
         foreach ($chart_array as $graph_id => $data) {
-            $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs['.$graph_id.'] = '.json_encode($data).';');
+            $snippet = 'var tuleap = tuleap || {};
+                tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || {};
+                tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || {};
+                tuleap.graphontrackersv5.graphs['. $graph_id .'] = '.json_encode($data).';';
+            $GLOBALS['HTML']->includeFooterJavascriptSnippet($snippet);
         }
 
         return $html;
