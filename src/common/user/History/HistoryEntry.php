@@ -50,16 +50,21 @@ class HistoryEntry
      * @var \Project
      */
     private $project;
+    /**
+     * @var HistoryQuickLink[]
+     */
+    private $quick_links;
 
-    public function __construct($visit_time, $xref, $link, $title, $color, $icon, \Project $project)
+    public function __construct($visit_time, $xref, $link, $title, $color, $icon, \Project $project, array $quick_links)
     {
-        $this->visit_time = (int) $visit_time;
-        $this->xref       = $xref;
-        $this->link       = $link;
-        $this->title      = $title;
-        $this->color      = $color;
-        $this->icon       = $icon;
-        $this->project    = $project;
+        $this->visit_time  = (int) $visit_time;
+        $this->xref        = $xref;
+        $this->link        = $link;
+        $this->title       = $title;
+        $this->color       = $color;
+        $this->icon        = $icon;
+        $this->project     = $project;
+        $this->quick_links = $quick_links;
     }
 
     /**
@@ -116,5 +121,13 @@ class HistoryEntry
     public function getProject()
     {
         return $this->project;
+    }
+
+    /**
+     * @return HistoryQuickLink[]
+     */
+    public function getQuickLinks()
+    {
+        return $this->quick_links;
     }
 }

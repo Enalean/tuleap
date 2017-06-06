@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\RecentlyVisited;
 
 use Tuleap\User\History\HistoryEntry;
+use Tuleap\User\History\HistoryQuickLink;
 
 class VisitRetriever
 {
@@ -64,17 +65,27 @@ class VisitRetriever
         $recently_visited_rows = $this->dao->searchVisitByUserId($user->getId(), $max_length_history);
         foreach ($recently_visited_rows as $recently_visited_row) {
             $artifact = $this->artifact_factory->getArtifactById($recently_visited_row['artifact_id']);
-            if ($artifact !== null) {
-                $history[] = new HistoryEntry(
-                    $recently_visited_row['created_on'],
-                    $artifact->getXRef(),
-                    $artifact->getUri(),
-                    $artifact->getTitle(),
-                    $artifact->getTracker()->getColor(),
-                    TRACKER_SERVICE_ICON,
-                    $artifact->getTracker()->getProject()
-                );
+            if ($artifact === null) {
+                continue;
             }
+
+            $tracker     = $artifact->getTracker();
+            $quick_links = array(
+                new HistoryQuickLink(
+                    sprintf(dgettext('tuleap-tracker', 'See all %s'), $tracker->getItemName()),
+                    $tracker->getUri()
+                )
+            );
+            $history[]   = new HistoryEntry(
+                $recently_visited_row['created_on'],
+                $artifact->getXRef(),
+                $artifact->getUri(),
+                $artifact->getTitle(),
+                $tracker->getColor(),
+                TRACKER_SERVICE_ICON,
+                $artifact->getTracker()->getProject(),
+                $quick_links
+            );
         }
 
         return $history;
