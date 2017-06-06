@@ -74,5 +74,6 @@ class WidgetAddToDashboardDropdownPresenter
 
         $this->my_dashboard      = $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
         $this->project_dashboard = $GLOBALS['Language']->getText('plugin_tracker_report', 'project_dashboard');
+        $this->dashboard         = $GLOBALS['Language']->getText('plugin_tracker_report', 'dashboard');
     }
 }
