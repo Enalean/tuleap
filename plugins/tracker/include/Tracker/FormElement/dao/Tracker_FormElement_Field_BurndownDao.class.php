@@ -59,6 +59,13 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
         return $this->update($sql);
     }
 
+    /**
+     * SUM(): Magic trick
+     * The request returns values for 2 fields, start_date and duration
+     * SUM of null + value give us the value for field in one single line
+     *
+     * @return DataAccessResult|false
+     */
     public function getArtifactsWithBurndown()
     {
         $sql = "SELECT
@@ -98,7 +105,8 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
               AND tracker_field_for_duration.id = tracker_changeset_value.field_id
             WHERE
               burndown_field.formElement_type = 'burndown'
-              GROUP BY tracker_artifact.id
+              AND burndown_field.use_it = 1
+              GROUP BY tracker_artifact.id, burndown_field.id
               HAVING start_date IS NOT NULL
               AND duration IS NOT NULL
              ORDER BY tracker_artifact.id, start_date DESC";
@@ -106,6 +114,13 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
         return $this->retrieve($sql);
     }
 
+    /**
+     * SUM(): Magic trick
+     * The request returns values for 2 fields, start_date and duration
+     * SUM of null + value give us the value for field in one single line
+     *
+     * @return DataAccessResult|false
+     */
     public function getBurndownInformation($artifact_id)
     {
         $artifact_id = $this->da->escapeInt($artifact_id);
@@ -152,9 +167,10 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
             WHERE
               burndown_field.formElement_type = 'burndown'
               AND tracker_artifact.id = $artifact_id
-              GROUP BY tracker_artifact.id
-              HAVING start_date IS NOT NULL
-              AND duration IS NOT NULL";
+              AND burndown_field.use_it = 1
+            GROUP BY tracker_artifact.id, burndown_field.id
+            HAVING start_date IS NOT NULL
+            AND duration IS NOT NULL";
 
         return $this->retrieveFirstRow($sql);
     }
