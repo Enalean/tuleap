@@ -988,7 +988,8 @@ class Tracker implements Tracker_Dispatchable_Interface
             echo '<div class="tracker-link-artifact-recentitems-way-content">';
             $visit_retriever            = new VisitRetriever(
                 new RecentlyVisitedDao(),
-                $this->getTrackerArtifactFactory()
+                $this->getTrackerArtifactFactory(),
+                new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
             );
             $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts(
                 $current_user,

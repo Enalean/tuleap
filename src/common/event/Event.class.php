@@ -1415,4 +1415,13 @@ class Event {
      *  - user    => PFUser (IN)
      */
     const USER_HISTORY_CLEAR = 'user_history_clear';
+
+    /**
+     * Retrieve a glyph corresponding to a name
+     *
+     * Parameters
+     *  - name  => string (IN)
+     *  - Glyph => Tuleap\Glyph\Glyph (OUT)
+     */
+    const GET_GLYPH = 'get_glyph';
 }

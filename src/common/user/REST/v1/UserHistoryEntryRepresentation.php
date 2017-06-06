@@ -47,7 +47,7 @@ class UserHistoryEntryRepresentation
      */
     public $color_name;
     /**
-     * @var string String representing the icon associated with the entry {@type string} {@required true}
+     * @var string SVG icon associated with the entry {@type string} {@required true}
      */
     public $icon;
     /**

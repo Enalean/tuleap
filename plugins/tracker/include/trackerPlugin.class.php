@@ -130,6 +130,8 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(Event::USER_HISTORY, 'getRecentlyVisitedArtifacts');
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
+
+        $this->addHook(Event::GET_GLYPH, 'getGlyph');
     }
 
     public function getHooksAndCallbacks() {
@@ -1387,7 +1389,8 @@ class trackerPlugin extends Plugin {
 
         $visit_retriever = new \Tuleap\Tracker\RecentlyVisited\VisitRetriever(
             new \Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao(),
-            $this->getArtifactFactory()
+            $this->getArtifactFactory(),
+            new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
         );
         $history_artifacts = $visit_retriever->getVisitHistory($user, HistoryRetriever::MAX_LENGTH_HISTORY);
         $params['history'] = array_merge($params['history'], $history_artifacts);
@@ -1405,5 +1408,18 @@ class trackerPlugin extends Plugin {
             new \Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao()
         );
         $visit_cleaner->clearVisitedArtifacts($user);
+    }
+
+    /**
+     * @see Event::GET_GLYPH
+     */
+    public function getGlyph(array $params)
+    {
+        if ($params['name'] === 'tuleap-tracker') {
+            $svg_content = file_get_contents(TRACKER_BASE_DIR . '/../glyphs/tuleap-tracker.svg');
+            if ($svg_content !== false) {
+                $params['glyph'] = new \Tuleap\Glyph\Glyph($svg_content);
+            }
+        }
     }
 }

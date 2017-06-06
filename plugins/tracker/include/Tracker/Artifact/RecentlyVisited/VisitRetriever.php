@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\RecentlyVisited;
 
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryQuickLink;
 
@@ -33,11 +34,19 @@ class VisitRetriever
      * @var \Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var GlyphFinder
+     */
+    private $glyph_finder;
 
-    public function __construct(RecentlyVisitedDao $dao, \Tracker_ArtifactFactory $artifact_factory)
-    {
+    public function __construct(
+        RecentlyVisitedDao $dao,
+        \Tracker_ArtifactFactory $artifact_factory,
+        GlyphFinder $glyph_finder
+    ) {
         $this->dao              = $dao;
         $this->artifact_factory = $artifact_factory;
+        $this->glyph_finder     = $glyph_finder;
     }
 
     /**
@@ -82,7 +91,7 @@ class VisitRetriever
                 $artifact->getUri(),
                 $artifact->getTitle(),
                 $tracker->getColor(),
-                TRACKER_SERVICE_ICON,
+                $this->glyph_finder->get('tuleap-tracker')->getInlineString(),
                 $artifact->getTracker()->getProject(),
                 $quick_links
             );
