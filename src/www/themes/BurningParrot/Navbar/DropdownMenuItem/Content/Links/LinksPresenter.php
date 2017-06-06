@@ -24,6 +24,8 @@ use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 
 class LinksPresenter extends Presenter
 {
+    public $is_links = true;
+
     /** @var LinkPresenter[] */
     public $links;
 

@@ -24,6 +24,8 @@ use HTTPRequest;
 use PFUser;
 use CSRFSynchronizerToken;
 use URLRedirect;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
+use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History\UserHistoryPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 
@@ -101,6 +103,16 @@ class UserNavPresenter
             '/account/register.php',
             '',
             ''
+        );
+    }
+
+    public function user_history_dropdown()
+    {
+        return new DropdownMenuItemPresenter(
+            _('History'),
+            'fa fa-history',
+            new UserHistoryPresenter('user-history'),
+            'only-icon without-carret nav-dropdown-right'
         );
     }
 
