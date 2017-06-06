@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
@@ -24,7 +23,8 @@ class GraphOnTrackersV5_GraphActionsPresenter
     public $use_tlp_in_dashboards;
     public $has_user_dashboard;
     public $has_one_user_dashboard;
-    public $can_add_to_dashboard;
+    public $has_project_dashboard;
+    public $has_one_project_dashboard;
 
     /** @var GraphOnTrackersV5_Chart */
     private $chart;
@@ -39,6 +39,11 @@ class GraphOnTrackersV5_GraphActionsPresenter
      */
     public $user_dashboards;
 
+    /**
+     * @var ProjectDashboard[]
+     */
+    public $project_dashboards;
+
     public function __construct(
         GraphOnTrackersV5_Chart $chart,
         $can_be_updated,
@@ -46,7 +51,8 @@ class GraphOnTrackersV5_GraphActionsPresenter
         $project_dashboard_url,
         $delete_url,
         $edit_url,
-        array $user_dashboards
+        array $user_dashboards,
+        array $project_dashboards
     ) {
         $this->chart                 = $chart;
         $this->can_be_updated        = $can_be_updated;
@@ -55,10 +61,13 @@ class GraphOnTrackersV5_GraphActionsPresenter
         $this->delete_url            = $delete_url;
         $this->edit_url              = $edit_url;
 
-        $this->use_tlp_in_dashboards  = ForgeConfig::get('sys_use_tlp_in_dashboards');
-        $this->user_dashboards        = $user_dashboards;
-        $this->has_user_dashboard     = count($user_dashboards) > 0;
-        $this->has_one_user_dashboard = count($user_dashboards) == 1;
+        $this->use_tlp_in_dashboards     = ForgeConfig::get('sys_use_tlp_in_dashboards');
+        $this->user_dashboards           = $user_dashboards;
+        $this->has_user_dashboard        = count($user_dashboards) > 0;
+        $this->has_one_user_dashboard    = count($user_dashboards) === 1;
+        $this->project_dashboards        = $project_dashboards;
+        $this->has_project_dashboard     = count($project_dashboards) > 0;
+        $this->has_one_project_dashboard = count($project_dashboards) === 1;
     }
 
     public function confirm_label() {

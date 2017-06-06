@@ -48,14 +48,32 @@
                         {{/ user_dashboards }}
                     {{/ has_one_user_dashboard }}
                 {{/ has_user_dashboard }}
-                {{# project_dashboard_url }}
+                {{# has_project_dashboard }}
                     <li class="divider"></li>
-                    <li>
-                        <a title="{{ add_to_project_dashboard_label }}" href="{{ project_dashboard_url }}">
+                    {{# has_one_project_dashboard }}
+                        {{# project_dashboards }}
+                            <li>
+                                <a title="{{ add_to_project_dashboard_label }}"
+                                   href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
+                                    {{ add_to_project_dashboard_label }}
+                                </a>
+                            </li>
+                        {{/ project_dashboards }}
+                    {{/ has_one_project_dashboard }}
+                    {{^ has_one_project_dashboard }}
+                        <li class="dropdown-header add-widget-to-dashboard"
+                            title="{{ add_to_project_dashboard_label }}">
                             {{ add_to_project_dashboard_label }}
-                        </a>
-                    </li>
-                {{/ project_dashboard_url }}
+                        </li>
+                        {{# project_dashboards }}
+                            <li>
+                                <a title="{{ getName }}" href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
+                                    {{ getName }}
+                                </a>
+                            </li>
+                        {{/ project_dashboards }}
+                    {{/ has_one_project_dashboard }}
+                {{/ has_project_dashboard }}
             {{/ report_is_created }}
         </ul>
     </div>
