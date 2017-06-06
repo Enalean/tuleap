@@ -43,6 +43,14 @@ class UserHistoryEntryRepresentation
      */
     public $title;
     /**
+     * @var string Name of the color associated with the entry {@type string} {@required true}
+     */
+    public $color_name;
+    /**
+     * @var string String representing the icon associated with the entry {@type string} {@required true}
+     */
+    public $icon;
+    /**
      * @var MinimalProjectRepresentation Project to which this user's history entry belongs {@required true}
      */
     public $project;
@@ -53,6 +61,8 @@ class UserHistoryEntryRepresentation
         $this->xref       = $entry->getXref();
         $this->html_url   = $entry->getLink();
         $this->title      = $entry->getTitle();
+        $this->color_name = $entry->getColor();
+        $this->icon       = $entry->getIcon();
 
         $project_representation = new MinimalProjectRepresentation();
         $project_representation->buildMinimal($entry->getProject());

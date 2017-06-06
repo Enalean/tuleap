@@ -70,6 +70,8 @@ class VisitRetriever
                     $artifact->getXRef(),
                     $artifact->getUri(),
                     $artifact->getTitle(),
+                    $artifact->getTracker()->getColor(),
+                    TRACKER_SERVICE_ICON,
                     $artifact->getTracker()->getProject()
                 );
             }

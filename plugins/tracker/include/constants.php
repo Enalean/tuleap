@@ -23,6 +23,8 @@ define('TRACKER_TEMPLATE_DIR', realpath(dirname(__FILE__).'/../templates'));
 
 define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
 
+define('TRACKER_SERVICE_ICON', '\e80d');
+
 /**
  * The trackers from a project have been duplicated in another project
  *
