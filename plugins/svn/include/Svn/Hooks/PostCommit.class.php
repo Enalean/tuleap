@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,6 +25,7 @@
 namespace Tuleap\Svn\Hooks;
 
 use PFUser;
+use Tuleap\Svn\Logs\LastAccessUpdater;
 use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\Repository;
@@ -36,7 +37,6 @@ use Tuleap\Svn\Commit\CommitInfo;
 use ReferenceManager;
 use MailBuilder;
 use MailEnhancer;
-use PluginManager;
 use ForgeConfig;
 use Notification;
 use UserManager;
@@ -60,9 +60,12 @@ class PostCommit
     private $reference_manager;
     private $repository_manager;
     private $mail_header_manager;
-    private $plugin_manager;
     private $commit_info_enhancer;
     private $mail_builder;
+    /**
+     * @var LastAccessUpdater
+     */
+    private $last_access_updater;
     private $user_manager;
 
     public function __construct(
@@ -70,9 +73,9 @@ class PostCommit
         RepositoryManager $repository_manager,
         MailHeaderManager $mail_header_manager,
         EmailsToBeNotifiedRetriever $emails_retriever,
-        PluginManager $plugin_manager,
         MailBuilder $mail_builder,
         CommitInfoEnhancer $commit_info_enhancer,
+        LastAccessUpdater $last_access_updater,
         UserManager $user_manager,
         EventManager $event_manager
     ) {
@@ -80,9 +83,9 @@ class PostCommit
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
         $this->emails_retriever          = $emails_retriever;
-        $this->plugin_manager            = $plugin_manager;
         $this->commit_info_enhancer      = $commit_info_enhancer;
         $this->mail_builder              = $mail_builder;
+        $this->last_access_updater       = $last_access_updater;
         $this->user_manager              = $user_manager;
         $this->event_manager             = $event_manager;
     }
@@ -100,6 +103,8 @@ class PostCommit
             $new_revision,
             $old_revision
         );
+
+        $this->last_access_updater->updateLastCommitDate($repository, $commit_info_enhanced);
 
         $this->extractReference($repository, $commit_info_enhanced, $committer, $new_revision);
 

@@ -81,3 +81,8 @@ CREATE TABLE plugin_svn_full_history (
   svn_browse_operations int(11) NOT NULL default 0,
   PRIMARY KEY (repository_id, user_id, day)
 );
+
+CREATE TABLE plugin_svn_last_access (
+  repository_id INT(11) UNSIGNED PRIMARY KEY,
+  commit_date INT(11) UNSIGNED NOT NULL
+);

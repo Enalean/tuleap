@@ -9,3 +9,4 @@ DROP TABLE IF EXISTS plugin_svn_accessfile_history;
 DROP TABLE IF EXISTS plugin_svn_immutable_tag;
 DROP TABLE IF EXISTS plugin_svn_hook_config;
 DROP TABLE IF EXISTS plugin_svn_full_history;
+DROP TABLE IF EXISTS plugin_svn_last_access;
