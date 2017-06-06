@@ -1979,18 +1979,6 @@ msgstr "Score de son"
 msgid "%s parameter missing"
 msgstr "%s paramètre manquant"
 
-#: ../lib/plugin/GooglePlugin.php:43
-msgid "GooglePlugin"
-msgstr "PluginGoogle"
-
-#: ../lib/plugin/GooglePlugin.php:47
-msgid "Make use of the Google API"
-msgstr "Faire usage de l'API Google"
-
-#: ../lib/plugin/GooglePlugin.php:98
-msgid "Nothing found"
-msgstr "Aucun résultat"
-
 # lib/pageinfo.php:10 lib/stdlib.php:239
 #: ../lib/plugin/GoTo.php:18
 msgid "GoTo"

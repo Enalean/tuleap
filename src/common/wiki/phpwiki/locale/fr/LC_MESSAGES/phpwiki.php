@@ -790,8 +790,6 @@ $locale["GoodStyle"] =
    "StyleCorrect";
 $locale["Google:%s"] =
    "Google: %s";
-$locale["GooglePlugin"] =
-   "PluginGoogle";
 $locale["Grant"] =
    "Accorder";
 $locale["Group %s does not exist"] =
@@ -1038,8 +1036,6 @@ $locale["MISSING"] =
    "MANQUANT";
 $locale["MagicPhpWikiURLs"] =
    "URLMagiquesPhpWiki";
-$locale["Make use of the Google API"] =
-   "Faire usage de l'API Google";
 $locale["Markup"] =
    "Marquage";
 $locale["Markup cache purged!"] =
