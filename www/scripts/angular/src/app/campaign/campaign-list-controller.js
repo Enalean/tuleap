@@ -2,11 +2,10 @@ angular
     .module('campaign')
     .controller('CampaignListCtrl', CampaignListCtrl);
 
-CampaignListCtrl.$inject = ['$scope', 'CampaignService', 'SharedPropertiesService'];
+CampaignListCtrl.$inject = ['$scope', 'CampaignService', 'SharedPropertiesService', 'milestone'];
 
-function CampaignListCtrl($scope, CampaignService, SharedPropertiesService) {
+function CampaignListCtrl($scope, CampaignService, SharedPropertiesService, milestone) {
     var project_id      = SharedPropertiesService.getProjectId();
-    var milestone_id    = SharedPropertiesService.getMilestoneId();
     var total_campaigns = 0;
 
     _.extend($scope, {
@@ -20,7 +19,7 @@ function CampaignListCtrl($scope, CampaignService, SharedPropertiesService) {
         hideClosedCampaigns           : hideClosedCampaigns
     });
 
-    getCampaigns(project_id, milestone_id, 'open', 10, 0);
+    getCampaigns(project_id, milestone.id, 'open', 10, 0);
 
     function getCampaigns(project_id, milestone_id, campaign_status, limit, offset) {
         CampaignService.getCampaigns(project_id, milestone_id, campaign_status, limit, offset).then(function(data) {
@@ -58,7 +57,7 @@ function CampaignListCtrl($scope, CampaignService, SharedPropertiesService) {
         offset
     ) {
         if (campaigns.length < total_campaigns) {
-            getCampaigns(project_id, milestone_id, campaign_status, limit, offset + limit);
+            getCampaigns(project_id, milestone.id, campaign_status, limit, offset + limit);
         } else {
             $scope.loading       = false;
             are_campaigns_loaded = true;
@@ -69,7 +68,7 @@ function CampaignListCtrl($scope, CampaignService, SharedPropertiesService) {
     function getClosedCampaigns() {
         if (! $scope.closed_campaigns_loaded) {
             $scope.loading = true;
-            getCampaigns(project_id, milestone_id, 'closed', 10, 0);
+            getCampaigns(project_id, milestone.id, 'closed', 10, 0);
         } else {
             $scope.campaigns               = $scope.campaigns.concat($scope.campaigns_closed);
             $scope.closed_campaigns_hidden = false;

@@ -52,7 +52,7 @@ function CampaignNewCtrl(
             .createCampaign({
               project_id:   project_id,
               label:        campaign.label,
-              milestone_id: SharedPropertiesService.getMilestoneId(),
+              milestone_id: SharedPropertiesService.getCurrentMilestone().id,
             })
             .then(function () {
                 $state.go('campaigns.list', {}, {reload: true});

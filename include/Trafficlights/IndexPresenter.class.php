@@ -23,6 +23,9 @@ namespace Tuleap\Trafficlights;
 use PFUser;
 use Codendi_HTMLPurifier;
 use Tuleap\User\REST\UserRepresentation;
+use Tuleap\Trafficlights\REST\v1\MilestoneRepresentation;
+use Planning_Milestone;
+use stdClass;
 use ForgeConfig as TuleapConfig;
 
 class IndexPresenter {
@@ -60,13 +63,16 @@ class IndexPresenter {
     /** @var  array */
     public $tracker_ids;
 
+    /** @var string */
+    public $current_milestone;
+
     public function __construct(
         $project_id,
         $campaign_tracker_id,
         $test_definition_tracker_id,
         $test_execution_tracker_id,
         PFUser $current_user,
-        $milestone_id
+        $current_milestone
     ) {
         $this->lang                   = $this->getLanguageAbbreviation($current_user);
         $this->project_id             = $project_id;
@@ -87,7 +93,13 @@ class IndexPresenter {
             'execution_tracker_id'  => $this->test_execution_tracker_id,
             'campaign_tracker_id'   => $this->campaign_tracker_id
         ));
-        $this->milestone_id               = $milestone_id;
+
+        if (isset($current_milestone)) {
+            $milestone_representation = new MilestoneRepresentation($current_milestone);
+        } else {
+            $milestone_representation = new stdclass();
+        }
+        $this->current_milestone          = json_encode($milestone_representation);
     }
 
     private function getLanguageAbbreviation($current_user) {

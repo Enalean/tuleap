@@ -22,6 +22,8 @@ namespace Tuleap\Trafficlights;
 
 use MVC2_PluginController;
 use Codendi_Request;
+use Planning_Milestone;
+use PFUser;
 
 abstract class TrafficlightsController extends MVC2_PluginController {
 
@@ -37,11 +39,21 @@ abstract class TrafficlightsController extends MVC2_PluginController {
      */
     protected $project;
 
+    /**
+     * @var Planning_Milestone
+     */
+    protected $current_milestone;
+
     public function __construct(Codendi_Request $request, Config $config) {
         parent::__construct(self::NAME, $request);
 
-        $this->project = $request->getProject();
-        $this->config  = $config;
+        $this->project           = $request->getProject();
+        $this->config            = $config;
+
+        $this->current_milestone = $this->getMilestone(
+            $request->getCurrentUser(),
+            (int)$request->getValidated('milestone_id', 'int', 0)
+        );
     }
 
     public function getBreadcrumbs() {
@@ -50,5 +62,41 @@ abstract class TrafficlightsController extends MVC2_PluginController {
 
     protected function getTemplatesDir() {
         return TRAFFICLIGHTS_BASE_DIR.'/templates';
+    }
+
+    /**
+     * @param PFuser  $current_user The user that can view the milestone
+     * @param int     $milestone_id The id of the milestone to retrieve
+     *
+     * @return Planning_Milestone|null
+     */
+    private function getMilestone(PFUser $current_user, $milestone_id)
+    {
+        $artifact_factory = \Tracker_ArtifactFactory::instance();
+        $status_counter   = new \AgileDashboard_Milestone_MilestoneStatusCounter(
+            new \AgileDashboard_BacklogItemDao(),
+            new \Tracker_ArtifactDao(),
+            $artifact_factory
+        );
+        $planning_factory = \PlanningFactory::build();
+
+        $milestone_factory = new \Planning_MilestoneFactory(
+            $planning_factory,
+            $artifact_factory,
+            \Tracker_FormElementFactory::instance(),
+            \TrackerFactory::instance(),
+            $status_counter,
+            new \PlanningPermissionsManager(),
+            new \AgileDashboard_Milestone_MilestoneDao(),
+            new \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker(
+                new \Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao(),
+                $planning_factory
+            )
+        );
+
+        return $milestone_factory->getBareMilestoneByArtifactId(
+            $current_user,
+            $milestone_id
+        );
     }
 }

@@ -3,7 +3,7 @@
     <img src="yuno.jpg" />
 {{/ is_properly_configured }}
 {{# is_properly_configured }}
-    <div id="trafficlights-app" ng-app="trafficlights" ng-controller="TrafficlightsCtrl" ng-init="init('{{ nodejs_server }}', {{ project_id }}, {{ tracker_ids }}, '{{ lang }}', {{ current_user }}, {{ milestone_id }})">
+    <div id="trafficlights-app" ng-app="trafficlights" ng-controller="TrafficlightsCtrl" ng-init="init('{{ nodejs_server }}', {{ project_id }}, {{ tracker_ids }}, '{{ lang }}', {{ current_user }}, {{ current_milestone }})">
         <div ncy-breadcrumb></div>
         <ui-view></ui-view>
     </div>

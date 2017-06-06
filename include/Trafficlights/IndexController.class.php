@@ -22,7 +22,7 @@ namespace Tuleap\Trafficlights;
 
 class IndexController extends TrafficlightsController {
 
-    public function index($milestone_id) {
+    public function index() {
         return $this->renderToString(
             'index',
             new IndexPresenter(
@@ -31,7 +31,7 @@ class IndexController extends TrafficlightsController {
                 $this->config->getTestDefinitionTrackerId($this->project),
                 $this->config->getTestExecutionTrackerId($this->project),
                 $this->request->getCurrentUser(),
-                $milestone_id
+                $this->current_milestone
             )
         );
     }

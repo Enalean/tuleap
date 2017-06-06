@@ -11,6 +11,11 @@ function CampaignConfig($stateProvider) {
             url:        '/campaigns',
             template:   '<ui-view />',
             controller: 'CampaignCtrl',
+            resolve: {
+                milestone: function(SharedPropertiesService) {
+                    return SharedPropertiesService.getCurrentMilestone();
+                }
+            },
             data: {
                 ncyBreadcrumbLabel: '{{ campaign_breadcrumb_label }}'
             }
