@@ -26,7 +26,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
-use Widget;
 use WidgetLayoutManager;
 use Tuleap\Widget\WidgetFactory;
 
