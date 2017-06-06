@@ -107,10 +107,10 @@
 
 .dashboard-widgets-column {
     display: flex;
-    flex-basis: calc(100% / 3);
     flex-direction: column;
     flex-grow: 1;
     flex-shrink: 1;
+    width: calc(100% / 3);
     padding: 0 $tlp-half-spacing / 2;
 
     > :last-child {
@@ -196,89 +196,89 @@
 
 .two-columns-small-big {
     > div:first-of-type {
-        flex-basis: calc(100% / 3);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 3);
     }
 
     > div:nth-of-type(2) {
-        flex-basis: calc(100% / 3 * 2);
         flex-grow: 2;
         flex-shrink: 1;
+        width: calc(100% / 3 * 2);
     }
 }
 
 .two-columns-big-small {
     > div:first-of-type {
-        flex-basis: calc(100% / 3 * 2);
         flex-grow: 2;
         flex-shrink: 1;
+        width: calc(100% / 3 * 2);
     }
 
     > div:nth-of-type(2) {
-        flex-basis: calc(100% / 3);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 3);
     }
 }
 
 .three-columns-small-big-small {
     > div:first-of-type {
-        flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4);
     }
 
     > div:nth-of-type(2) {
-        flex-basis: calc(100% / 4 * 2);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4 * 2);
     }
 
     > div:nth-of-type(3) {
-        flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4);
     }
 }
 
 .three-columns-big-small-small {
     > div:first-of-type {
-        flex-basis: calc(100% / 4 * 2);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4 * 2);
     }
 
     > div:nth-of-type(2) {
-        flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4);
     }
 
     > div:nth-of-type(3) {
-        flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4);
     }
 }
 
 .three-columns-small-small-big {
     > div:first-of-type {
-        flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4);
     }
 
     > div:nth-of-type(2) {
-        flex-basis: calc(100% / 4);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4);
     }
 
     > div:nth-of-type(3) {
-        flex-basis: calc(100% / 4 * 2);
         flex-grow: 1;
         flex-shrink: 1;
+        width: calc(100% / 4 * 2);
     }
 }
 

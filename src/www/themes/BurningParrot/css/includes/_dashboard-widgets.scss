@@ -56,6 +56,13 @@
     }
 }
 
+.dashboard-widget-content {
+    margin: $tlp-spacing;
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .dashboard-widget-imageviewver-content {
     text-align: center;
 }
