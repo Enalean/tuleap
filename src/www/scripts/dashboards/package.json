@@ -9,7 +9,9 @@
   "dependencies": {
     "dompurify": "^0.9.0",
     "dragula": "^3.7.2",
-    "get-dataset": "^0.0.4"
+    "get-dataset": "^0.0.4",
+    "mustache": "^2.3.0",
+    "dompurify": "^0.9.0"
   },
   "devDependencies": {
     "webpack": "^2.5.1",

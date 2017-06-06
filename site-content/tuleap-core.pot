@@ -13,6 +13,9 @@ msgstr ""
 msgid "Agile Dashboard"
 msgstr ""
 
+msgid "Already used"
+msgstr ""
+
 msgid "An error occured while trying to add the widget to the dashboard"
 msgstr ""
 
@@ -131,6 +134,12 @@ msgstr ""
 msgid "My personnal page"
 msgstr ""
 
+msgid "Name"
+msgstr ""
+
+msgid "Name, type..."
+msgstr ""
+
 msgid "Navebar"
 msgstr ""
 
@@ -182,6 +191,9 @@ msgstr ""
 msgid "Sidebar (project)"
 msgstr ""
 
+msgid "Start by choosing a widget"
+msgstr ""
+
 #, php-format
 msgid "The dashboard \"%s\" already exists."
 msgstr ""
@@ -204,6 +216,9 @@ msgid "The requested dashboard does not exist."
 msgstr ""
 
 msgid "There are no widgets here."
+msgstr ""
+
+msgid "There isn't any matching widgets"
 msgstr ""
 
 msgid "This project is not categorized yet."
@@ -230,11 +245,17 @@ msgstr ""
 msgid "We cannot find any edition information for the requested widget."
 msgstr ""
 
+msgid "We cannot find any widgets."
+msgstr ""
+
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
 msgstr ""
 
 msgid "Widget has been successfully deleted."
+msgstr ""
+
+msgid "Widgets"
 msgstr ""
 
 msgid "Wiki"

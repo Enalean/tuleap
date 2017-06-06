@@ -30,7 +30,9 @@ function user_ismember($group_id,$type=0) {
 	return UserManager::instance()->getCurrentUser()->isMember($group_id,$type);
 }
 
-//Deprecated. Use User->getId() instead
+/**
+ * @deprecated
+ */
 function user_getid() {
     return UserManager::instance()->getCurrentUser()->getId();
 }

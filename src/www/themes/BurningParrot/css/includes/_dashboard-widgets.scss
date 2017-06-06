@@ -21,7 +21,9 @@
     width: 100%;
 }
 
+// scss-lint:disable QualifyingElement
 .dashboard-widget-asynchronous-loading,
+.tlp-table>tbody>tr:nth-child(odd)>td.dashboard-add-widget-content-loading,
 .edit-widget-modal-content-loading {
     height: 200px;
     background: $tlp-ui-white url('../images/spinner.gif') center center no-repeat;
@@ -82,4 +84,76 @@
 .dashboard-widget-my-projects-icons {
     margin: 0 5px 0 0;
     color: $tlp-ui-dimmed;
+}
+
+.dashboard-add-widget-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.dashboard-add-widget-list {
+    flex: 1;
+    max-height: 400px;
+    margin: 0 $tlp-spacing 0 0;
+    overflow-y: scroll;
+}
+
+#dashboard-add-widget-settings {
+    flex: 1;
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.dashboard-add-widget-list-header {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.dashboard-add-widget-separator {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    border-right: 1px solid $tlp-ui-border-light;
+}
+
+.dashboard-add-widget-body {
+    position: relative;
+}
+
+.dashboard-add-widget-list-table-widget {
+    cursor: pointer;
+}
+
+// scss-lint:disable QualifyingElement
+.tlp-table>tbody>tr>td {
+    &.dashboard-add-widget-list-table-widget-selected {
+        background: transparentize($tlp-theme-color, .93);
+    }
+}
+
+.dashboard-add-widget-list-table-widget-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dashboard-add-widget-list-table-widget-content-link {
+    transition: transform 50ms linear;
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+}
+
+#dashboard-add-widget-settings-empty {
+
+    > i {
+        color: transparentize($tlp-theme-color, .7);
+        font-size: 70px;
+    }
+}
+
+.dashboard-add-widget-list-table-widget-used {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+    font-style: italic;
 }

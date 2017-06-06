@@ -913,7 +913,7 @@ class WidgetLayoutManager
         $after = $this->_displayWidgetsSelectionForm(
             $owner_id,
             $GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']),
-            Widget::getCodendiWidgets($owner_type),
+            Widget::getWidgetsForOwnerType($owner_type),
             $used_widgets
         );
         echo '                      </tbody>

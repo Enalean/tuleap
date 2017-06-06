@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -16,18 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-export default init;
 
-function init() {
-    var add_widget_button = document.getElementById('add-widget-button');
+namespace Tuleap\Dashboard\Widget\Add;
 
-    if (! add_widget_button) {
-        return;
+class WidgetsByCategoryPresenter
+{
+    public $name;
+    /**
+     * @var WidgetPresenter[]
+     */
+    public $widgets;
+
+    public function __construct($name, array $widgets)
+    {
+        $this->name    = $GLOBALS['Language']->getText('widget_categ_label', $name);
+        $this->widgets = $widgets;
     }
-
-    add_widget_button.addEventListener('click', function(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        window.location.href = add_widget_button.dataset.href;
-    });
 }

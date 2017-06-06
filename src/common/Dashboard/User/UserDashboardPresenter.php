@@ -31,10 +31,11 @@ class UserDashboardPresenter extends DashboardPresenter
         parent::__construct($dashboard, $is_active, $widgets);
 
         $this->user_id        = $dashboard->getUserId();
-        $this->url_add_widget = '/widgets/widgets.php?'. http_build_query(
+        $this->url_add_widget = '/widgets/?'. http_build_query(
             array(
-                'owner'        => "u{$this->user_id}",
-                'dashboard_id' => $this->id
+                'action'         => 'get-add-modal-content',
+                'dashboard-id'   => $this->id,
+                'dashboard-type' => UserDashboardController::DASHBOARD_TYPE
             )
         );
     }

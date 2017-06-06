@@ -1,0 +1,32 @@
+<script id="dashboard-add-widget-list-table-placeholder" type="x-tmpl-mustache">
+    {{=<% %>=}}
+        <table>
+            {{# widgets_categories }}
+                <tbody>
+                    <tr>
+                        <td class="tlp-table-cell-section">{{ name }}</td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    {{# widgets }}
+                        <tr>
+                            <td class="tlp-table-cell-filterable dashboard-add-widget-list-table-widget">
+                                <div class="dashboard-add-widget-list-table-widget-content">
+                                    <span>{{ name }}</span>
+                                    {{# is_used }}
+                                        <span class="dashboard-add-widget-list-table-widget-used">{{ already_used_label }}</span>
+                                    {{/ is_used }}
+                                    {{^ is_used }}
+                                        <span class="dashboard-add-widget-list-table-widget-content-link">
+                                            <i class="fa fa-chevron-right"></i>
+                                        </span>
+                                    {{/ is_used }}
+                                </div>
+                            </td>
+                        </tr>
+                    {{/ widgets }}
+                </tbody>
+        {{/ widgets_categories }}
+        </table>
+    <%={{ }}=%>
+</script>
