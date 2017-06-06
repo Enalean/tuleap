@@ -29,6 +29,8 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\Logs\LastAccessDao;
+use Tuleap\Svn\Logs\LastAccessUpdater;
 use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
@@ -81,12 +83,12 @@ try {
             new UgroupsToNotifyDao(),
             new UGroupManager()
         ),
-        PluginManager::instance(),
         new MailBuilder(
             TemplateRendererFactory::build(),
             new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
         ),
         new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
+        new LastAccessUpdater(new LastAccessDao()),
         UserManager::instance(),
         EventManager::instance()
     );
