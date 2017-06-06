@@ -47,7 +47,7 @@
 }
 
 .dashboard-widgets-container {
-    padding: $tlp-spacing 0;
+    padding: $tlp-half-spacing / 2 0;
 }
 
 @keyframes shakeWidget {
@@ -69,7 +69,7 @@
     position: relative;
     flex: 1;
     flex-direction: row;
-    padding: 0 0 $tlp-spacing;
+    padding: $tlp-half-spacing / 2 0;
     transition: box-shadow 100ms;
 
     &.highlight {
@@ -81,7 +81,7 @@
 
     > .dashboard-row-dropdown {
         position: absolute;
-        top: -17px;
+        top: -13px;
         right: $tlp-spacing;
         transition: opacity 100ms;
         opacity: 0;
@@ -95,8 +95,14 @@
 
     > span:first-of-type,
     > span:last-of-type {
-        padding: 0 $tlp-half-spacing;
+        padding: 0 7.5px;
     }
+}
+
+.dashboard-widgets-empty-line {
+    display: flex;
+    flex-direction: row;
+    padding: $tlp-half-spacing / 2;
 }
 
 .dashboard-widgets-column {
