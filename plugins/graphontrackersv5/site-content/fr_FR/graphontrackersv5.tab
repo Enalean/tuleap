@@ -49,8 +49,8 @@ plugin_graphontrackersv5_include_report	pie	Camembert
 plugin_graphontrackersv5_include_report	bar	Bâtons
 plugin_graphontrackersv5_include_report	gantt	Gantt
 plugin_graphontrackersv5_include_report	cumulative_flow	Graph de flux cumulatif
-plugin_graphontrackersv5_include_report	add_chart_dashboard	Ajouter le graphique à mon tableau de bord
-plugin_graphontrackersv5_include_report	add_chart_project_dashboard	Ajouter le graphique au tableau de bord du projet
+plugin_graphontrackersv5_include_report	add_chart_dashboard	Ajouter à mon tableau de bord
+plugin_graphontrackersv5_include_report	add_chart_project_dashboard	Ajouter au tableau de bord du projet
 plugin_graphontrackersv5_graphreportcopy	ins_err	Erreur lors de l'insertion de plugin_graphontrackersv5_report_graphic ($1-$2) : $3
 plugin_graphontrackersv5_graphreportcopy	ins_err_chart	Erreur lors de l'insertion de plugin_graphontrackersv5_chart ($1-$2) : $3
 plugin_graphontrackersv5_graphreportcopy	ins_err_chart_pie	Erreur lors de l'insertion de plugin_graphontrackersv5_pie_chart ($1-$2) : $3
