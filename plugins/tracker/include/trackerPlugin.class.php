@@ -673,7 +673,7 @@ class trackerPlugin extends Plugin {
     }
 
     public function service_icon($params) {
-        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80d';
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = TRACKER_SERVICE_ICON;
     }
 
     /**

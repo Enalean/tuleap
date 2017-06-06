@@ -39,16 +39,26 @@ class HistoryEntry
      */
     private $title;
     /**
+     * @var string
+     */
+    private $color;
+    /**
+     * @var string
+     */
+    private $icon;
+    /**
      * @var \Project
      */
     private $project;
 
-    public function __construct($visit_time, $xref, $link, $title, \Project $project)
+    public function __construct($visit_time, $xref, $link, $title, $color, $icon, \Project $project)
     {
         $this->visit_time = (int) $visit_time;
         $this->xref       = $xref;
         $this->link       = $link;
         $this->title      = $title;
+        $this->color      = $color;
+        $this->icon       = $icon;
         $this->project    = $project;
     }
 
@@ -82,6 +92,22 @@ class HistoryEntry
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
     }
 
     /**
