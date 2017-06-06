@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarPresenter {
+class FlamingParrot_NavBarPresenter
+{
+    public $user_history_dropdown;
+    public $history;
+    public $empty_history;
 
     private $imgroot;
 
@@ -116,6 +120,8 @@ class FlamingParrot_NavBarPresenter {
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index','account_maintenance');
         $this->join_community_title = $GLOBALS['Language']->getText('include_menu', 'join_community');
+        $this->history              = _('History');
+        $this->empty_history        = _('Your history is empty');
     }
 
     public function imgroot() {
