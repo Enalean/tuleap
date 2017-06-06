@@ -21,6 +21,7 @@
 
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
+use Tuleap\Widget\WidgetFactory;
 
 require_once('pre.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
@@ -32,6 +33,11 @@ $layout_manager = new WidgetLayoutManager();
 $good           = false;
 $redirect       = '/';
 $owner          = $request->get('owner');
+$widget_factory = new WidgetFactory(
+    UserManager::instance(),
+    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+    EventManager::instance()
+);
 
 if ($owner) {
     $owner_id   = (int)substr($owner, 1);
@@ -77,12 +83,12 @@ if ($owner) {
                 case 'widget':
                     $csrf_token->check($redirect, $request);
                     if ($name) {
-                        $widget = Widget::getInstance($name);
+                        $widget = $widget_factory->getInstanceByWidgetName($name);
                         if ($widget && $widget->isAvailable()) {
                             $action = array_pop(array_keys($param[$name]));
                             switch($action) {
                                 case 'add':
-                                    $widget_creator = new WidgetCreator(new DashboardWidgetDao());
+                                    $widget_creator = new WidgetCreator(new DashboardWidgetDao($widget_factory));
                                     try {
                                         $widget_creator->create(
                                             $owner_id,
@@ -115,7 +121,7 @@ if ($owner) {
                     case 'widget':
                         if ($name && $layout_id) {
                             $csrf_token->check($redirect, $request);
-                            if ($widget = Widget::getInstance($name)) {
+                            if ($widget = $widget_factory->getInstanceByWidgetName($name)) {
                                 if ($widget->isAvailable()) {
                                     $action = array_pop(array_keys($param[$name]));
                                     switch($action) {

@@ -41,6 +41,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Widget\WidgetFactory;
 
 require_once('pre.php');
 require_once('my_utils.php');
@@ -59,8 +60,15 @@ $title = $Language->getText(
             CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'
         )
 );
+
+$widget_factory = new WidgetFactory(
+    UserManager::instance(),
+    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+    EventManager::instance()
+);
+
 $csrf_token                 = new CSRFSynchronizerToken('/my/');
-$dashboard_widget_dao       = new DashboardWidgetDao();
+$dashboard_widget_dao       = new DashboardWidgetDao($widget_factory);
 $user_dashboard_dao         = new UserDashboardDao($dashboard_widget_dao);
 $dashboard_widget_retriever = new DashboardWidgetRetriever($dashboard_widget_dao);
 $router                     = new UserDashboardRouter(
@@ -72,7 +80,7 @@ $router                     = new UserDashboardRouter(
         new UserDashboardDeletor($user_dashboard_dao),
         new UserDashboardUpdator($user_dashboard_dao),
         $dashboard_widget_retriever,
-        new DashboardWidgetPresenterBuilder(),
+        new DashboardWidgetPresenterBuilder($widget_factory),
         new WidgetDeletor($dashboard_widget_dao),
         new WidgetMinimizor($dashboard_widget_dao),
         new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')

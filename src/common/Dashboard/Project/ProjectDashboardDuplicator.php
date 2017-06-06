@@ -28,6 +28,7 @@ use Tuleap\Dashboard\Widget\WidgetDashboardController;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Widget;
 use WidgetLayoutManager;
+use Tuleap\Widget\WidgetFactory;
 
 class ProjectDashboardDuplicator
 {
@@ -51,16 +52,23 @@ class ProjectDashboardDuplicator
      */
     private $widget_retriever;
 
+    /**
+     * @var WidgetFactory
+     */
+    private $widget_factory;
+
     public function __construct(
         ProjectDashboardDao $dao,
         ProjectDashboardRetriever $retriever,
         DashboardWidgetDao $widget_dao,
-        DashboardWidgetRetriever $widget_retriever
+        DashboardWidgetRetriever $widget_retriever,
+        WidgetFactory $widget_factory
     ) {
         $this->dao              = $dao;
         $this->retriever        = $retriever;
         $this->widget_dao       = $widget_dao;
         $this->widget_retriever = $widget_retriever;
+        $this->widget_factory   = $widget_factory;
     }
 
     public function duplicate(Project $template_project, Project $new_project)
@@ -126,7 +134,7 @@ class ProjectDashboardDuplicator
         $new_column_id
     ) {
         foreach ($template_column->getWidgets() as $template_widget) {
-            $widget = Widget::getInstance($template_widget->getName());
+            $widget = $this->widget_factory->getInstanceByWidgetName($template_widget->getName());
             $widget->setOwner($template_project->getID(), WidgetLayoutManager::OWNER_TYPE_GROUP);
             $new_content_id = $widget->cloneContent(
                 $template_widget->getContentId(),

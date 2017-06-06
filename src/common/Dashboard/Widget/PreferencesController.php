@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\Widget;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use PFUser;
+use Tuleap\Widget\WidgetFactory;
 
 class PreferencesController
 {
@@ -31,9 +32,17 @@ class PreferencesController
      */
     private $dao;
 
-    public function __construct(DashboardWidgetDao $dao)
-    {
-        $this->dao = $dao;
+    /**
+     * @var WidgetFactory
+     */
+    private $widget_factory;
+
+    public function __construct(
+        DashboardWidgetDao $dao,
+        WidgetFactory $widget_factory
+    ) {
+        $this->dao            = $dao;
+        $this->widget_factory = $widget_factory;
     }
 
     public function display(HTTPRequest $request)
@@ -96,7 +105,7 @@ class PreferencesController
 
     protected function getWidget(array $row)
     {
-        $widget             = \Widget::getInstance($row['name']);
+        $widget             = $this->widget_factory->getInstanceByWidgetName($row['name']);
         $widget->owner_type = $row['project_id'] ? 'g' : 'u';
         $widget->owner_id   = $row['project_id'] ? $row['project_id'] : $row['user_id'];
         $widget->loadContent($row['content_id']);

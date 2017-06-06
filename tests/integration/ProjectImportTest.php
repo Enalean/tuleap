@@ -27,6 +27,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Widget\WidgetFactory;
 
 require_once 'exit.php';
 require_once 'html.php';
@@ -150,11 +151,23 @@ class ProjectImportTest extends TuleapDbTestCase
             new UGroupDao()
         );
 
-        $widget_dao        = new DashboardWidgetDao();
+        $widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+
+        $widget_dao        = new DashboardWidgetDao($widget_factory);
         $project_dao       = new ProjectDashboardDao($widget_dao);
         $project_retriever = new ProjectDashboardRetriever($project_dao);
         $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-        $duplicator        = new ProjectDashboardDuplicator($project_dao, $project_retriever, $widget_dao, $widget_retriever);
+        $duplicator        = new ProjectDashboardDuplicator(
+            $project_dao,
+            $project_retriever,
+            $widget_dao,
+            $widget_retriever,
+            $widget_factory
+        );
 
         $project_creator = new ProjectCreator(
             $project_manager,
@@ -239,11 +252,23 @@ class ProjectImportTest extends TuleapDbTestCase
             new UGroupDao()
         );
 
-        $widget_dao        = new DashboardWidgetDao();
+        $widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+
+        $widget_dao        = new DashboardWidgetDao($widget_factory);
         $project_dao       = new ProjectDashboardDao($widget_dao);
         $project_retriever = new ProjectDashboardRetriever($project_dao);
         $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-        $duplicator        = new ProjectDashboardDuplicator($project_dao, $project_retriever, $widget_dao, $widget_retriever);
+        $duplicator        = new ProjectDashboardDuplicator(
+            $project_dao,
+            $project_retriever,
+            $widget_dao,
+            $widget_retriever,
+            $widget_factory
+        );
 
         $project_creator = new ProjectCreator(
             $project_manager,
