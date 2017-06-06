@@ -2,8 +2,9 @@ angular
     .module('campaign')
     .controller('CampaignCtrl', CampaignCtrl);
 
-CampaignCtrl.$inject = ['$scope','gettextCatalog'];
+CampaignCtrl.$inject = ['$scope','gettextCatalog', 'SharedPropertiesService'];
 
-function CampaignCtrl($scope, gettextCatalog) {
+function CampaignCtrl($scope, gettextCatalog, SharedPropertiesService) {
+    $scope.milestone = SharedPropertiesService.getCurrentMilestone();
     $scope.campaign_breadcrumb_label = gettextCatalog.getString('Campaigns');
 }

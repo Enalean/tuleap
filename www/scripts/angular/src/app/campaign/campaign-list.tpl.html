@@ -1,7 +1,7 @@
 <div id="campaign-list-container">
     <div id="campaign-list-utils">
         <div id="campaign-list-utils-information">
-            <h1 translate>Campaigns list</h1>
+            <h1><span ng-if="milestone.label">{{ milestone.label }} - </span><span translate>Campaigns list</span></h1>
             <button type="button" class="btn btn-primary" ui-sref="campaigns.new()" translate>
                 <i class="icon-plus"></i> New campaign
             </button>

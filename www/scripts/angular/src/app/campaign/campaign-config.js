@@ -16,14 +16,23 @@ function CampaignConfig($stateProvider) {
                     return SharedPropertiesService.getCurrentMilestone();
                 }
             },
+        })
+        .state('campaigns.milestone', {
+            url: '/milestone',
             data: {
-                ncyBreadcrumbLabel: '{{ campaign_breadcrumb_label }}'
+                ncyBreadcrumbLabel: '{{ milestone.label }}'
+            },
+            onEnter: function($window, milestone) {
+                $window.open(milestone.uri, '_self');
             }
         })
         .state('campaigns.list', {
             url:         '',
             controller:  'CampaignListCtrl',
-            templateUrl: 'campaign/campaign-list.tpl.html'
+            templateUrl: 'campaign/campaign-list.tpl.html',
+            data: {
+                ncyBreadcrumbLabel: '{{ campaign_breadcrumb_label }}'
+            }
         })
         .state('campaigns.new', {
             url:         '/new',

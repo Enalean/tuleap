@@ -7,6 +7,7 @@ TrafficlightsConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$breadcr
 function TrafficlightsConfig($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
     $urlRouterProvider.otherwise('/campaigns');
     $breadcrumbProvider.setOptions({
+        prefixStateName: 'campaigns.milestone',
         templateUrl: 'breadcrumb.tpl.html'
     });
 }
