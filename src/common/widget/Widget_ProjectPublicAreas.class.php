@@ -25,9 +25,12 @@ require_once('Widget.class.php');
 * Widget_ProjectPublicAreas
 */
 class Widget_ProjectPublicAreas extends Widget {
-    function Widget_ProjectPublicAreas() {
-        $this->Widget('projectpublicareas');
+
+    public function __construct()
+    {
+        parent::__construct('projectpublicareas');
     }
+
     function getTitle() {
         return $GLOBALS['Language']->getText('include_project_home','public_areas');
     }

@@ -30,10 +30,13 @@ require_once('common/date/DateHelper.class.php');
 /* abstract */ class Widget_Rss extends Widget {
     var $rss_title;
     var $rss_url;
-    function Widget_Rss($id, $owner_id, $owner_type) {
-        $this->Widget($id);
+
+    public function __construct($id, $owner_id, $owner_type)
+    {
+        parent::__construct($id);
         $this->setOwner($owner_id, $owner_type);
     }
+
     function getTitle() {
         $hp = Codendi_HTMLPurifier::instance();
         return $this->rss_title ?  $hp->purify($this->rss_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'RSS Reader';

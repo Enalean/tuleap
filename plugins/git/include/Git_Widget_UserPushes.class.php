@@ -38,7 +38,7 @@ class Git_Widget_UserPushes extends Widget {
      */
     public function __construct($pluginPath) {
         $this->pluginPath = $pluginPath;
-        $this->Widget('plugin_git_user_pushes');
+        parent::__construct('plugin_git_user_pushes');
         $this->offset = user_get_preference('plugin_git_user_pushes_offset');
         if (empty($this->offset)) {
             $this->offset = 5;

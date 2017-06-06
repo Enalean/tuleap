@@ -38,14 +38,16 @@ class Widget_MyLatestSvnCommits extends Widget {
      */
     private $_nb_svn_commits;
 
-    public function __construct() {
-        $this->Widget('mylatestsvncommits');
+    public function __construct()
+    {
+        parent::__construct('mylatestsvncommits');
         $this->_nb_svn_commits = user_get_preference('my_latests_svn_commits_nb_display');
         if($this->_nb_svn_commits === false) {
             $this->_nb_svn_commits = self::NB_COMMITS_TO_DISPLAY;
             user_set_preference('my_latests_svn_commits_nb_display', $this->_nb_svn_commits);
         }
     }
+
     public function getTitle() {
         return $GLOBALS['Language']->getText('my_index','my_latest_svn_commit');
     }

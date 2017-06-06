@@ -28,8 +28,9 @@ require_once('Widget.class.php');
 */
 class Widget_Contacts extends Widget {
 
-    function __construct() {
-        $this->Widget('projectcontacts');
+    public function __construct()
+    {
+        parent::__construct('projectcontacts');
     }
 
     function getTitle() {
