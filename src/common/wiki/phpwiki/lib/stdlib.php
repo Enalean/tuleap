@@ -342,8 +342,13 @@ function PossiblyGlueIconToText($proto_or_url, $text) {
  * @return boolean True if same, false else.
  */
 function IsSafeURL($url) {
-    $valid_uri = new Valid_LocalURI();
-    return !preg_match('/([<>"])|(%3C)|(%3E)|(%22)/', $url) && $valid_uri->validate($url);
+    $valid_local_uri  = new Valid_LocalURI();
+    $valid_ftp_uri    = new Valid_FTPURI();
+    $valid_mailto_uri = new Valid_MailtoURI();
+
+    return !preg_match('/([<>"])|(%3C)|(%3E)|(%22)/', $url) && (
+            $valid_local_uri->validate($url) || $valid_ftp_uri->validate($url) || $valid_mailto_uri->validate($url)
+        );
 }
 
 /**

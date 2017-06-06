@@ -1,23 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
@@ -100,5 +101,27 @@ class ValidHelperTest extends TuleapTestCase {
         $this->assertFalse($validator->validate('gopher://example.com'));
         $this->assertFalse($validator->validate('javascript:alert(1);'));
         $this->assertFalse($validator->validate('Stringhttp://'));
+    }
+
+    public function itValidatesFTPURI()
+    {
+        $validator = new Valid_FTPURI();
+
+        $this->assertTrue($validator->validate('ftp://example.com'));
+        $this->assertTrue($validator->validate('FTP://example.com'));
+        $this->assertTrue($validator->validate('ftps://example.com'));
+        $this->assertTrue($validator->validate('FTPS://example.com'));
+        $this->assertFalse($validator->validate('https://notaftp.example.com/'));
+        $this->assertFalse($validator->validate('ftp://'));
+    }
+
+    public function itValidatesMailtoURI()
+    {
+        $validator = new Valid_MailtoURI();
+
+        $this->assertTrue($validator->validate('mailto:tuleap@example.com'));
+        $this->assertTrue($validator->validate('mailto:tuleap@example.com?subject=Tuleap%20Unit%20Tests'));
+        $this->assertFalse($validator->validate('mailto: tuleap@example.com'));
+        $this->assertFalse($validator->validate('mailto:'));
     }
 }
