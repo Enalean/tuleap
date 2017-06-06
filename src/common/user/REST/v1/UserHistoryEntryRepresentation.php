@@ -21,6 +21,7 @@
 namespace Tuleap\User\REST\v1;
 
 use Tuleap\Project\REST\MinimalProjectRepresentation;
+use Tuleap\REST\JsonCast;
 use Tuleap\User\History\HistoryEntry;
 
 class UserHistoryEntryRepresentation
@@ -36,7 +37,7 @@ class UserHistoryEntryRepresentation
     /**
      * @var string Link to the entry {@type string} {@required true}
      */
-    public $link;
+    public $html_url;
     /**
      * @var string Title of the entry {@type string} {@required true}
      */
@@ -48,9 +49,9 @@ class UserHistoryEntryRepresentation
 
     public function build(HistoryEntry $entry)
     {
-        $this->visit_time = $entry->getVisitTime();
+        $this->visit_time = JsonCast::toDate($entry->getVisitTime());
         $this->xref       = $entry->getXref();
-        $this->link       = $entry->getLink();
+        $this->html_url   = $entry->getLink();
         $this->title      = $entry->getTitle();
 
         $project_representation = new MinimalProjectRepresentation();
