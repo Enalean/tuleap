@@ -62,6 +62,10 @@ msgid "Save"
 msgstr ""
 
 #, php-format
+msgid "See all %s"
+msgstr ""
+
+#, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
 msgstr ""
 

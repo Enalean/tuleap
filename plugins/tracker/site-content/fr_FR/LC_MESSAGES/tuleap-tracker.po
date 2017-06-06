@@ -77,6 +77,9 @@ msgstr "Id du rendu"
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "See all %s"
+msgstr "Voir tous les %s"
+
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ date '%s' ne peut pas être comparé à MYSELF()."

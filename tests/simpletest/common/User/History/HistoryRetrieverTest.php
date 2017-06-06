@@ -28,9 +28,9 @@ class HistoryRetrieverTest extends \TuleapTestCase
     {
         $event_manager = new MockedEventManager(function ($name, $params) {
             $params['history'] = array(
-                new HistoryEntry(300, '', '', '', '', '', mock('Project')),
-                new HistoryEntry(100, '', '', '', '', '', mock('Project')),
-                new HistoryEntry(200, '', '', '', '', '', mock('Project'))
+                new HistoryEntry(300, '', '', '', '', '', mock('Project'), array()),
+                new HistoryEntry(100, '', '', '', '', '', mock('Project'), array()),
+                new HistoryEntry(200, '', '', '', '', '', mock('Project'), array())
             );
         });
         $history_retriever = new HistoryRetriever($event_manager);
@@ -47,7 +47,7 @@ class HistoryRetrieverTest extends \TuleapTestCase
     {
         $event_manager = new MockedEventManager(function ($name, $params) {
             foreach (range(1, HistoryRetriever::MAX_LENGTH_HISTORY * 2) as $n) {
-                $params['history'][] = new HistoryEntry($n, '', '', '', '', '', mock('Project'));
+                $params['history'][] = new HistoryEntry($n, '', '', '', '', '', mock('Project'), array());
             }
         });
 

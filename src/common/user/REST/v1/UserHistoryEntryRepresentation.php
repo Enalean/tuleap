@@ -54,6 +54,10 @@ class UserHistoryEntryRepresentation
      * @var MinimalProjectRepresentation Project to which this user's history entry belongs {@required true}
      */
     public $project;
+    /**
+     * @var UserHistoryQuickLinkRepresentation[] Quick links to related information {@required true}
+     */
+    public $quick_links;
 
     public function build(HistoryEntry $entry)
     {
@@ -67,5 +71,12 @@ class UserHistoryEntryRepresentation
         $project_representation = new MinimalProjectRepresentation();
         $project_representation->buildMinimal($entry->getProject());
         $this->project = $project_representation;
+
+        $this->quick_links = array();
+        foreach ($entry->getQuickLinks() as $quick_link) {
+            $quick_link_representation = new UserHistoryQuickLinkRepresentation();
+            $quick_link_representation->build($quick_link);
+            $this->quick_links[] = $quick_link_representation;
+        }
     }
 }
