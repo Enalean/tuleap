@@ -133,6 +133,14 @@ $tlp-modal-transition: 100ms ease-out;
     }
 }
 
+.tlp-modal-medium-sized {
+    width: calc(75% - 2 * #{$tlp-spacing});
+
+    @media screen and (max-width: 1000px) {
+        width: calc(100% - 2 * #{$tlp-spacing});
+    }
+}
+
 .tlp-modal-full-screen {
     width: calc(100% - 2 * #{$tlp-spacing});
     height: calc(100% - 2 * #{$tlp-spacing});
