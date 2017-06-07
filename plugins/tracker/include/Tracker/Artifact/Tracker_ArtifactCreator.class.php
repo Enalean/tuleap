@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
+
 /**
  * I create artifact from the request in a Tracker
  */
@@ -34,16 +36,22 @@ class Tracker_ArtifactCreator {
 
     /** @var Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
     private $changeset_creator;
+    /**
+     * @var VisitRecorder
+     */
+    private $visit_recorder;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator
+        Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator,
+        VisitRecorder $visit_recorder
     ) {
         $this->artifact_dao      = $artifact_factory->getDao();
         $this->artifact_factory  = $artifact_factory;
         $this->fields_validator  = $fields_validator;
         $this->changeset_creator = $changeset_creator;
+        $this->visit_recorder    = $visit_recorder;
     }
 
     /**
@@ -144,6 +152,11 @@ class Tracker_ArtifactCreator {
             $this->revertBareArtifactInsertion($artifact);
             return false;
         }
+
+        if ($artifact !== false) {
+            $this->visit_recorder->record($user, $artifact);
+        }
+
 
         return $artifact;
     }

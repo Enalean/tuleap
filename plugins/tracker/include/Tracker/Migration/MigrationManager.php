@@ -26,6 +26,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_Migration_MigrationManager {
 
@@ -161,7 +163,8 @@ class Tracker_Migration_MigrationManager {
                 $changeset_dao,
                 $this->artifact_factory,
                 EventManager::instance()
-            )
+            ),
+            new VisitRecorder(new RecentlyVisitedDao())
         );
     }
 

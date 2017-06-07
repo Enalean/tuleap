@@ -1065,7 +1065,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function displaySubmit(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $link = null)
     {
-        $visit_recorder = new VisitRecorder(new RecentlyVisitedDao());
+        $visit_recorder = $this->getVisitRecorder();
         if ($link) {
             $source_artifact = $this->getTrackerArtifactFactory()->getArtifactByid($link);
             $submit_renderer = new Tracker_Artifact_SubmitOverlayRenderer(
@@ -1083,6 +1083,14 @@ class Tracker implements Tracker_Dispatchable_Interface
             );
         }
         $submit_renderer->display($request, $current_user);
+    }
+
+    /**
+     * @return VisitRecorder
+     */
+    private function getVisitRecorder()
+    {
+        return new VisitRecorder(new RecentlyVisitedDao());
     }
 
     /**
@@ -3479,7 +3487,8 @@ EOS;
                 $changeset_dao,
                 $this->getTrackerArtifactFactory(),
                 EventManager::instance()
-            )
+            ),
+            $this->getVisitRecorder()
         );
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
