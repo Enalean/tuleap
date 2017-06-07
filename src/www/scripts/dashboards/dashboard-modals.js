@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { find, flatMapDeep, map } from 'lodash';
 import { render } from 'mustache';
 import { sanitize } from 'dompurify';
 import { get } from 'jquery';
@@ -93,6 +94,7 @@ function init() {
                 .done(function (data) {
                     filterInlineTable(document.getElementById('dashboard-add-widget-list-header-filter-table'));
                     container.outerHTML = sanitize(render(widgets_categories_template, data));
+                    initializeWidgets(table, data);
                 })
                 .fail(function (data) {
                     var alert = document.getElementById('dashboard-add-widget-error-message');
@@ -108,4 +110,33 @@ function init() {
                 });
         }
     });
+}
+
+function initializeWidgets(table, data) {
+    const data_widgets = flatMapDeep(data, function (category) {
+        return map(category, 'widgets');
+    });
+    const widgets_element = table.querySelectorAll('.dashboard-add-widget-list-table-widget');
+    [].forEach.call(widgets_element, function (widget_element) {
+        widget_element.addEventListener('click', function (event) {
+            displayWidgetSettings(table, widget_element, data_widgets, event);
+        });
+    });
+}
+
+function displayWidgetSettings(table, widget_element, data_widgets, event) {
+    var widget_settings_template = document.getElementById('dashboard-add-widget-settings-placeholder').textContent;
+
+    var widget_data = find(data_widgets, function (widget) {
+        return widget.id === event.target.dataset.widgetId;
+    });
+    if (widget_data) {
+        document.getElementById('dashboard-add-widget-settings').innerHTML = sanitize(render(widget_settings_template, widget_data));
+
+        var already_selected_widget = table.querySelector('.dashboard-add-widget-list-table-widget-selected');
+        if (already_selected_widget) {
+            already_selected_widget.classList.remove('dashboard-add-widget-list-table-widget-selected');
+        }
+        widget_element.classList.add('dashboard-add-widget-list-table-widget-selected');
+    }
 }

@@ -11,8 +11,8 @@
                     {{# widgets }}
                         <tr>
                             <td class="tlp-table-cell-filterable dashboard-add-widget-list-table-widget">
-                                <div class="dashboard-add-widget-list-table-widget-content">
-                                    <span>{{ name }}</span>
+                                <div class="dashboard-add-widget-list-table-widget-content" data-widget-id="{{ id }}">
+                                    <span class=dashboard-add-widget-list-table-widget-content-name>{{ name }}</span>
                                     {{# is_used }}
                                         <span class="dashboard-add-widget-list-table-widget-used">{{ already_used_label }}</span>
                                     {{/ is_used }}

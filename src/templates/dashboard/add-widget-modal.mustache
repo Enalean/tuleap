@@ -8,7 +8,7 @@
 >
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="add-widget-label">
-            <i class="fa fa-pencil tlp-modal-title-icon"></i>
+            <i class="fa fa-plus tlp-modal-title-icon"></i>
             {{ add_widget_title }}
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close }}">
@@ -35,25 +35,27 @@
                         >
                     </div>
                 </div>
-                <table id="dashboard-add-widget-list-table" class="tlp-table">
-                    <thead>
-                    <tr>
-                        <th>{{ add_widget_table_title }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <div class="dashboard-add-widget-list-body">
+                    <table id="dashboard-add-widget-list-table" class="tlp-table">
+                        <thead>
+                        <tr>
+                            <th>{{ add_widget_table_title }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <tr class="tlp-table-empty-filter">
                             <td class="tlp-table-cell-empty">
                                 {{ add_widget_empty_search }}
                             </td>
                         </tr>
-                    </tbody>
-                    <tbody class="dashboard-add-widget-content-container">
+                        </tbody>
+                        <tbody class="dashboard-add-widget-content-container">
                         <tr>
                             <td class="dashboard-add-widget-content-loading"></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
                 <div id="dashboard-add-widget-error-message"></div>
             </div>
             <div class="dashboard-add-widget-separator"></div>
@@ -70,10 +72,11 @@
         <button type="submit"
                 class="tlp-button-primary tlp-modal-action"
                 disabled>
-            <i class="fa fa-pencil tlp-button-icon"></i>
+            <i class="fa fa-plus tlp-button-icon"></i>
             {{ add_widget_title }}
         </button>
     </div>
 </form>
 
 {{> widgets-categories }}
+{{> widget-settings }}
