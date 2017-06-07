@@ -13,6 +13,10 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #, php-format
+msgid "%s tracker"
+msgstr "Tracker %s"
+
+#, php-format
 msgid "Add a new %s"
 msgstr "Ajouter un nouveau %s"
 
@@ -77,9 +81,6 @@ msgstr "Id du rendu"
 
 msgid "Save"
 msgstr "Sauvegarder"
-
-msgid "See all %s"
-msgstr "Voir tous les %s"
 
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
@@ -329,3 +330,6 @@ msgid ""
 msgstr ""
 "modifié. (Mais le texte étant trop gros, il nous est impossible de calculer "
 "les différences dans un temps raisonnable.)"
+
+#~ msgid "See all %s"
+#~ msgstr "Voir tous les %s"

@@ -72,7 +72,7 @@ class VisitRetriever
             $tracker     = $artifact->getTracker();
             $quick_links = array(
                 new HistoryQuickLink(
-                    sprintf(dgettext('tuleap-tracker', 'See all %s'), $tracker->getItemName()),
+                    sprintf(dgettext('tuleap-tracker', '%s tracker'), $tracker->getName()),
                     $tracker->getUri()
                 )
             );
