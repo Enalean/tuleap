@@ -277,7 +277,7 @@ dev-clear-cache: ## Clear caches in Docker Compose environment
 start-dns: ## Start dnsdock to be able to reach Docker Compose environment without having to touch /etc/hosts file
 	@$(DOCKER) stop dnsdock || true
 	@$(DOCKER) rm dnsdock || true
-	@$(DOCKER) run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
+	@$(DOCKER) run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.0.1:53:53/udp tonistiigi/dnsdock
 
 start-rp:
 	@echo "Start reverse proxy"
