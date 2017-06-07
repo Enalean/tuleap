@@ -45,6 +45,9 @@ msgstr[1] "Les groupes '%s' n’ont pas pu être ajouté."
 msgid "Last commit"
 msgstr "Dernier commit"
 
+msgid "Multi SVN"
+msgstr "Multi SVN"
+
 msgid "Notification deleted successfully."
 msgstr "La notification a été correctement supprimée."
 

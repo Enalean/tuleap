@@ -38,6 +38,10 @@ use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
+use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\Svn\DiskUsage\DiskUsageCollector;
+use Tuleap\Svn\DiskUsage\DiskUsageRetriever;
+use Tuleap\SVN\DiskUsage\Retriever;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
@@ -72,8 +76,8 @@ use Tuleap\Svn\XMLSvnExporter;
 /**
  * SVN plugin
  */
-class SvnPlugin extends Plugin {
-
+class SvnPlugin extends Plugin
+{
     const SERVICE_SHORTNAME  = 'plugin_svn';
     const SYSTEM_NATURE_NAME = 'svn_revision';
 
@@ -126,6 +130,9 @@ class SvnPlugin extends Plugin {
         $this->addHook('statistics_collector');
         $this->addHook('plugin_statistics_service_usage');
         $this->addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename');
+        $this->addHook('plugin_statistics_disk_usage_collect_project');
+        $this->addHook('plugin_statistics_disk_usage_service_label');
+        $this->addHook('plugin_statistics_color');
 
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
@@ -193,12 +200,9 @@ class SvnPlugin extends Plugin {
         return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
-
     /** @see Event::UGROUP_MODIFY */
     public function ugroup_modify(array $params) {
         $project         = $params['project'];
-        $new_ugroup_name = $params['new_ugroup_name'];
-        $old_ugroup_name = $params['old_ugroup_name'];
 
         $this->updateAllAccessFileOfProject($project, $params['new_ugroup_name'], $params['old_ugroup_name']);
     }
@@ -701,5 +705,61 @@ class SvnPlugin extends Plugin {
         $ugroups_to_notify_dao = new UgroupsToNotifyDao();
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
         $this->getMailNotificationDao()->deleteEmptyNotificationsInProject($project_id);
+    }
+
+    /**
+     * @param array $params
+     */
+    public function plugin_statistics_disk_usage_collect_project(array $params)
+    {
+        $row     = $params['project_row'];
+        $project = new Project($row);
+
+        $this->getCollector()->collectDiskUsageForProject($project);
+    }
+
+    /**
+     * Hook to list docman in the list of serices managed by disk stats
+     *
+     * @param array $params
+     */
+    public function plugin_statistics_disk_usage_service_label($params)
+    {
+        $params['services'][self::SERVICE_SHORTNAME] = dgettext('tuleap-svn', 'Multi SVN');
+    }
+
+    /**
+     * Hook to choose the color of the plugin in the graph
+     *
+     * @param array $params
+     */
+    public function plugin_statistics_color($params)
+    {
+        if ($params['service'] == self::SERVICE_SHORTNAME) {
+            $params['color'] = 'forestgreen';
+        }
+    }
+
+    /**
+     * @return DiskUsageRetriever
+     */
+    private function getRetriever()
+    {
+        return new DiskUsageRetriever(
+            $this->getRepositoryManager(),
+            new Statistics_DiskUsageManager(
+                new Statistics_DiskUsageDao(),
+                new Collector(new SVN_LogDao(), new Retriever(new Statistics_DiskUsageDao())),
+                EventManager::instance()
+            )
+        );
+    }
+
+    /**
+     * @return DiskUsageCollector
+     */
+    private function getCollector()
+    {
+        return new DiskUsageCollector($this->getRetriever(), new Statistics_DiskUsageDao());
     }
 }

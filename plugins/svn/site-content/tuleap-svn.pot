@@ -27,6 +27,9 @@ msgstr[1] ""
 msgid "Last commit"
 msgstr ""
 
+msgid "Multi SVN"
+msgstr ""
+
 msgid "Notification deleted successfully."
 msgstr ""
 
