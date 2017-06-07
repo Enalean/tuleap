@@ -39,6 +39,17 @@ class Repository {
         $this->backup_path   = $backup_path;
     }
 
+    public function getSettingUrl()
+    {
+        return SVN_BASE_URL . '/?' . http_build_query(
+                array(
+                    'group_id' => $this->project->getID(),
+                    'action'   => 'settings',
+                    'repo_id'  => $this->id
+                )
+            );
+    }
+
     public function setId($id) {
         $this->id = $id;
     }

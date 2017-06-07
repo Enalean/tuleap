@@ -3,6 +3,9 @@ msgid ""
 "change the path or update the existing notification."
 msgstr ""
 
+msgid "Access to settings"
+msgstr ""
+
 msgid "Be careful"
 msgstr ""
 
@@ -35,6 +38,9 @@ msgid "Notification to update doesn't exist."
 msgstr ""
 
 msgid "Save"
+msgstr ""
+
+msgid "Settings"
 msgstr ""
 
 #, php-format

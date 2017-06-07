@@ -38,11 +38,13 @@ class ExplorerPresenter
     public $last_commit;
     public $validate_name;
     public $is_admin;
+    public $settings_label;
 
     /**
      * @var array
      */
     public $repository_list;
+    public $settings_button;
 
     public function __construct(
         Project $project,
@@ -66,5 +68,7 @@ class ExplorerPresenter
 
         $this->is_admin        = $is_admin;
         $this->repository_list = $repository_list;
+        $this->settings_label  = dgettext('tuleap-svn', 'Access to settings');
+        $this->settings_button = dgettext('tuleap-svn', 'Settings');
     }
 }
