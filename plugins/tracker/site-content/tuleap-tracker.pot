@@ -1,4 +1,8 @@
 #, php-format
+msgid "%s tracker"
+msgstr ""
+
+#, php-format
 msgid "Add a new %s"
 msgstr ""
 
@@ -59,10 +63,6 @@ msgid "Renderer id"
 msgstr ""
 
 msgid "Save"
-msgstr ""
-
-#, php-format
-msgid "See all %s"
 msgstr ""
 
 #, php-format
