@@ -397,7 +397,7 @@ extends Rule {
      * @return Boolean
      */
     public function atLeastOneChar($val) {
-        if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
+        if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") == 0) {
             $this->error = $GLOBALS['Language']->getText('include_account','char_err');
             return false;
         }
