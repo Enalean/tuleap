@@ -28,17 +28,21 @@ require_once('www/my/my_utils.php');
 */
 class Widget_MyArtifacts extends Widget {
     var $_artifact_show;
-    function Widget_MyArtifacts() {
-        $this->Widget('myartifacts');
+
+    public function __construct()
+    {
+        parent::__construct('myartifacts');
         $this->_artifact_show = user_get_preference('my_artifacts_show');
         if($this->_artifact_show === false) {
             $this->_artifact_show = 'AS';
             user_set_preference('my_artifacts_show', $this->_artifact_show);
         }
     }
+
     function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_arts');
     }
+
     function updatePreferences($request) {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'N', 'AS'));

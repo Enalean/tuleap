@@ -29,11 +29,12 @@
     var $hasPreferences;
     var $owner_id;
     var $owner_type;
+
     /**
     * Constructor
     */
-    function Widget($id) {
-        $this->id = $id;
+    public function __construct($id) {
+        $this->id         = $id;
         $this->content_id = 0;
     }
 

@@ -30,8 +30,10 @@ require_once 'common/mail/MassmailFormPresenter.class.php';
 * PROJECT LIST
 */
 class Widget_MyProjects extends Widget {
-    function Widget_MyProjects() {
-        $this->Widget('myprojects');
+
+    public function __construct()
+    {
+        parent::__construct('myprojects');
     }
 
     function getTitle() {

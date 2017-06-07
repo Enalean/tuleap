@@ -26,9 +26,12 @@ require_once('common/event/EventManager.class.php');
 * Widget_ProjectMembers
 */
 class Widget_ProjectMembers extends Widget {
-    public function __construct() {
-        $this->Widget('projectmembers');
+
+    public function __construct()
+    {
+        parent::__construct('projectmembers');
     }
+
     public function getTitle() {
         return $GLOBALS['Language']->getText('include_project_home','devel_info');
     }

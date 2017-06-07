@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -27,9 +27,12 @@ require_once('common/frs/FRSPackageFactory.class.php');
 * Filemodules that are actively monitored
 */
 class Widget_MyMonitoredFp extends Widget {
-    function Widget_MyMonitoredFp() {
-        $this->Widget('mymonitoredfp');
+
+    public function __construct()
+    {
+        parent::__construct('mymonitoredfp');
     }
+
     function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }

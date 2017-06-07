@@ -27,9 +27,12 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 *
 */
 class Widget_ProjectDescription extends Widget {
-    public function __construct() {
-        $this->Widget('projectdescription');
+
+    public function __construct()
+    {
+        parent::__construct('projectdescription');
     }
+
     public function getTitle() {
         return $GLOBALS['Language']->getText('include_project_home','project_description');
     }

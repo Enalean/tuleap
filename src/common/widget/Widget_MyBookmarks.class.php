@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -27,12 +27,16 @@ require_once('Widget.class.php');
 * Personal bookmarks
 */
 class Widget_MyBookmarks extends Widget {
-    function Widget_MyBookmarks() {
-        $this->Widget('mybookmarks');
+
+    public function __construct()
+    {
+        parent::__construct('mybookmarks');
     }
+
     function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_bookmarks');
     }
+
     function getContent() {
         $html_my_bookmarks = '';
         $result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ".

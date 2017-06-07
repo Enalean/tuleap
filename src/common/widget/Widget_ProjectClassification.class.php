@@ -25,9 +25,12 @@ require_once('Widget.class.php');
 * Widget_ProjectClassification
 */
 class Widget_ProjectClassification extends Widget {
-    public function __construct() {
-        $this->Widget('projectclassification');
+
+    public function __construct()
+    {
+        parent::__construct('projectclassification');
     }
+
     public function getTitle() {
         return $GLOBALS['Language']->getText('include_project_home','project_classification');
     }
