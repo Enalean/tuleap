@@ -39,8 +39,10 @@ class VisitRetrieverTest extends \TuleapTestCase
         $tracker = mock('Tracker');
         stub($artifact)->getTracker()->returns($tracker);
         stub($tracker)->getProject()->returns(mock('Project'));
+        $glyph_finder = mock('Tuleap\\Glyph\\GlyphFinder');
+        stub($glyph_finder)->get()->returns(mock('Tuleap\\Glyph\\Glyph'));
 
-        $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory);
+        $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory, $glyph_finder);
         $user               = mock('PFUser');
         $max_length_history = 2;
         $history            = $visit_retriever->getVisitHistory($user, $max_length_history);
@@ -61,8 +63,9 @@ class VisitRetrieverTest extends \TuleapTestCase
         );
         $artifact_factory = mock('Tracker_ArtifactFactory');
         stub($artifact_factory)->getArtifactById()->returns(null);
+        $glyph_finder = mock('Tuleap\\Glyph\\GlyphFinder');
 
-        $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory);
+        $visit_retriever    = new VisitRetriever($recently_visited_dao, $artifact_factory, $glyph_finder);
         $user               = mock('PFUser');
         $max_length_history = 30;
         $history            = $visit_retriever->getVisitHistory($user, $max_length_history);
