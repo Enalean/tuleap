@@ -181,6 +181,11 @@ class Docman_Item {
         return $this->isObsolete;
     }
 
+    public function getType()
+    {
+        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_item');
+    }
+
     public function initFromRow(&$row) {
         if (isset($row['item_id']))     $this->setId($row['item_id']);
         if (isset($row['title']))       $this->setTitle($row['title']);

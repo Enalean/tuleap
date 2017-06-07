@@ -135,9 +135,13 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     $params['expanded'] = false;
                     $open   = '';
                 }
+
+                $type     = $item->getType();
+                $purifier = Codendi_HTMLPurifier::instance();
+
                 $icon_src = $this->params['docman_icons']->getIconForItem($item, $params);
-                $icon = '<img src="'. $icon_src .'" id="docman_item_icon_'.$item->getId().'" class="docman_item_icon" />';
-                
+                $icon = '<img src="'. $icon_src .'" id="docman_item_icon_'.$item->getId().'" alt="'.$purifier->purify($type).'" class="docman_item_icon" />';
+
                 $this->html .= '<div>';
                 $action = isset($this->params['item_to_move']) ? false : $item->accept($this->get_action_on_icon, array('view' => &$this->view));
                 if ($action) {

@@ -36,6 +36,15 @@ class Docman_File extends Docman_Document {
     function &getCurrentVersion() {
         return $this->currentVersion;
     }
+
+    public function getType()
+    {
+        $version      = $this->getCurrentVersion();
+        $default_type = $GLOBALS['Language']->getText('plugin_docman', 'doc_type_file');
+        $type         = $version ? $version->getFiletype() : $default_type;
+        return $type;
+    }
+
     function toRow() {
         $row = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;

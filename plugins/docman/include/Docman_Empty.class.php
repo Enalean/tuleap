@@ -38,6 +38,11 @@ class Docman_Empty extends Docman_Document {
         return $row;
     }
 
+    public function getType()
+    {
+        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_empty');
+    }
+
 }
 
 ?>

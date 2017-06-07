@@ -37,7 +37,12 @@ class Docman_Link extends Docman_Document {
     function setUrl($url) { 
         $this->url = $url;
     }
-    
+
+    public function getType()
+    {
+        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_link');
+    }
+
     function initFromRow($row) {
         parent::initFromRow($row);
         $this->setUrl($row['link_url']);
