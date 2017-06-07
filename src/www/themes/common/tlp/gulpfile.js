@@ -74,8 +74,8 @@ gulp.task('watch', ['assets', 'sass:watch']);
  ***********************************************/
 gulp.task('sass:prod', ['sass:compress']);
 
-gulp.task('sass:watch', ['sass:compress'], function() {
-    gulp.watch('./doc/css/**/*.scss', ['sass:doc']);
+gulp.task('sass:watch', ['sass:compress', 'sass:doc'], function() {
+    gulp.watch('./doc/css/**/*.scss', ['sass:dev-doc']);
     gulp.watch('./src/scss/**/*.scss', ['sass:dev']);
 });
 
@@ -96,11 +96,19 @@ gulp.task('sass:dev', ['sass:lint'], function(cb) {
     return runSequence('sass:compress', cb);
 });
 
-gulp.task('sass:doc', function() {
+gulp.task('sass:lint-doc', function() {
     return gulp.src('./doc/css/*.scss')
         .pipe(scsslint({
             config: '.scss-lint.yml'
-        }))
+        })).pipe(scsslint.failReporter('E'));
+});
+
+gulp.task('sass:dev-doc', ['sass:lint-doc'], function(cb) {
+    return runSequence('sass:doc', cb);
+});
+
+gulp.task('sass:doc', function() {
+    return gulp.src('./doc/css/*.scss')
         .pipe(
             sass({
                 outputStyle: 'compressed'
