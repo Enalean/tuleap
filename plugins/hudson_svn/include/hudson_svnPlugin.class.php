@@ -87,17 +87,22 @@ class hudson_svnPlugin extends Plugin {
         }
     }
 
-    public function collect_ci_triggers($params) {
+    public function collect_ci_triggers($params)
+    {
+        $project_id = $params['group_id'];
+        $project    = $this->getProjectManager()->getProject($project_id);
+
+        if (! $project->usesService(SvnPlugin::SERVICE_SHORTNAME)) {
+            return;
+        }
+
         $collector = new ContinuousIntegrationCollector(
             $this->getRenderer(),
             $this->getRepositoryManager(),
             new JobDao(),
             $this->getJobFactory()
         );
-
-        $project_id = $params['group_id'];
-        $project    = $this->getProjectManager()->getProject($project_id);
-        $job_id     = isset($params['job_id']) ? $params['job_id'] : null;
+        $job_id    = isset($params['job_id']) ? $params['job_id'] : null;
 
         $params['services'][] = $collector->collect($project, $job_id);
     }
