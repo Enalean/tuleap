@@ -337,11 +337,12 @@ class hudsonViews extends Views {
                     }
                 } catch (Exception $e) {
                     echo '  <td><img src="'.$purifier->purify($this->getControler()->getIconsPath()).'link_error.png" alt="'.$purifier->purify($e->getMessage()).'" title="'.$purifier->purify($e->getMessage()).'" /></td>';
-                    $nb_columns = 4;
+                    $nb_columns = 2;
                     if ($project->usesSVN()) { $nb_columns++; }
                     if ($project->usesCVS()) { $nb_columns++; }
+
                     foreach ($services as $service) {
-                            $nb_columns++;
+                        $nb_columns++;
                     }
                     echo '  <td colspan="'.$nb_columns.'"><span class="error">'.$purifier->purify($e->getMessage()).'</span></td>';
                 }
