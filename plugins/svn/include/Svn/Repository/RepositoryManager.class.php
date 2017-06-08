@@ -24,20 +24,20 @@ use Backend;
 use EventManager;
 use Exception;
 use ForgeConfig;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Dao;
+use Logger;
 use Project;
 use ProjectManager;
 use Rule_ProjectName;
+use System_Command;
+use SystemEvent;
+use SystemEventManager;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
+use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
-use SystemEvent;
-use SystemEventManager;
 use Tuleap\Svn\SvnAdmin;
-use Logger;
-use System_Command;
 
 class RepositoryManager
 {
@@ -99,6 +99,19 @@ class RepositoryManager
         $repositories = array();
         foreach ($this->dao->searchByProject($project) as $row) {
             $repositories[] = $this->instantiateFromRow($row, $project);
+        }
+
+        return $repositories;
+    }
+
+    public function getRepositoriesInProjectWithLastCommitInfo(Project $project)
+    {
+        $repositories = array();
+        foreach ($this->dao->searchByProject($project) as $row) {
+            $repositories[] = array(
+                'repository'  => $this->instantiateFromRow($row, $project),
+                'commit_date' => $row['commit_date']
+            );
         }
 
         return $repositories;

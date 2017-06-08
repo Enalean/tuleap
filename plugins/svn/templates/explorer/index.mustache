@@ -1,9 +1,11 @@
 <div id="svn-homepage">
     <h2>{{ title_list_repositories }}</h2>
 
-    {{# is_user_allowed_to_create_repository }}
+    {{# is_admin }}
     <form name="svn-repo-creator" class="form-inline" method="post" action="/plugins/svn/?group_id={{group_id}}&action=create-repository">
-        {{{ csrf_input }}}
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
 
         <div class="input-append">
             <input type="text"
@@ -22,27 +24,31 @@
         </div>
         <span class="help">{{ help_repository_name }}</span>
     </form>
-    {{/ is_user_allowed_to_create_repository }}
+    {{/ is_admin }}
 
     <table class="table">
         <thead>
             <tr>
                 <th>{{ table_head_list_repository }}</th>
+                <th>{{ last_commit }}</th>
             </tr>
         </thead>
         <tbody>
-            {{# list_repositories }}
+            {{# repository_list }}
+                {{# repository }}
+                    <tr>
+                        <td><a href="?roottype=svn&amp;root={{ getFullName }}">{{ getName }}</a></td>
+                        <td>{{ getPurifiedHumanReadableCommitDate }}</td>
+                    </tr>
+                {{/ repository }}
+            {{/ repository_list }}
+            {{^ repository_list }}
                 <tr>
-                    <td><a href="?roottype=svn&amp;root={{ getFullName }}">{{ getName }}</a></td>
-                </tr>
-            {{/ list_repositories }}
-            {{^ list_repositories }}
-                <tr>
-                    <td class="table-cell-empty">
+                    <td class="table-cell-empty" colspan="2">
                         {{ no_repositories }}
                     </td>
                 </tr>
-            {{/ list_repositories }}
+            {{/ repository_list }}
         </tbody>
     </table>
 </div>

@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -19,8 +19,8 @@
   */
 namespace Tuleap\Svn\Repository;
 
-use Project;
 use ForgeConfig;
+use Project;
 
 class Repository {
 

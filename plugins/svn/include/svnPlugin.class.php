@@ -20,10 +20,31 @@
 
 require_once 'constants.php';
 
+use Tuleap\Svn\AccessControl\AccessControlController;
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
+use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
+use Tuleap\Svn\Admin\AdminController;
 use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Admin\GlobalAdminController;
+use Tuleap\Svn\Admin\ImmutableTagController;
+use Tuleap\Svn\Admin\ImmutableTagCreator;
+use Tuleap\Svn\Admin\ImmutableTagDao;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\MailHeaderDao;
+use Tuleap\Svn\Admin\MailHeaderManager;
+use Tuleap\Svn\Admin\MailNotificationDao;
+use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Admin\RestoreController;
+use Tuleap\Svn\Commit\Svnlook;
+use Tuleap\Svn\Dao;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
+use Tuleap\Svn\Explorer\ExplorerController;
+use Tuleap\Svn\Explorer\RepositoryBuilder;
+use Tuleap\Svn\Explorer\RepositoryDisplayController;
+use Tuleap\Svn\Logs\QueryBuilder;
 use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
@@ -32,41 +53,22 @@ use Tuleap\Svn\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\SvnRouter;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
-use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
-use Tuleap\Svn\Dao;
-use Tuleap\Svn\SvnPermissionManager;
-use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
-use Tuleap\Svn\Admin\MailHeaderManager;
-use Tuleap\Svn\Admin\MailHeaderDao;
-use Tuleap\Svn\Admin\MailNotificationDao;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Admin\ImmutableTagController;
-use Tuleap\Svn\Explorer\ExplorerController;
-use Tuleap\Svn\Explorer\RepositoryDisplayController;
-use Tuleap\Svn\Admin\AdminController;
-use Tuleap\Svn\Admin\GlobalAdminController;
-use Tuleap\Svn\Admin\ImmutableTagCreator;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\ImmutableTagDao;
-use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\Reference\Extractor;
+use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
+use Tuleap\Svn\Repository\RuleName;
+use Tuleap\Svn\Service\ServiceActivator;
+use Tuleap\Svn\SvnAdmin;
+use Tuleap\Svn\SvnLogger;
+use Tuleap\Svn\SvnPermissionManager;
+use Tuleap\Svn\SvnRouter;
+use Tuleap\Svn\ViewVC\AccessHistoryDao;
+use Tuleap\Svn\ViewVC\AccessHistorySaver;
 use Tuleap\Svn\ViewVC\ViewVCProxy;
 use Tuleap\Svn\XMLImporter;
-use Tuleap\Svn\SvnLogger;
-use Tuleap\Svn\SvnAdmin;
-use Tuleap\Svn\Repository\RuleName;
-use Tuleap\Svn\Commit\Svnlook;
-use Tuleap\Svn\ViewVC\AccessHistorySaver;
-use Tuleap\Svn\ViewVC\AccessHistoryDao;
-use Tuleap\Svn\Logs\QueryBuilder;
 use Tuleap\Svn\XMLSvnExporter;
-use Tuleap\Svn\Service\ServiceActivator;
+
 /**
  * SVN plugin
  */
@@ -78,13 +80,13 @@ class SvnPlugin extends Plugin {
     /** @var Tuleap\Svn\Repository\RepositoryManager */
     private $repository_manager;
 
-    /** @var Tuleap\Svn\Admin\AccessControl\AccessFileHistoryDao */
+    /** @var Tuleap\Svn\AccessControl\AccessFileHistoryDao */
     private $accessfile_dao;
 
-    /** @var Tuleap\Svn\Admin\AccessControl\AccessFileHistoryFactory */
+    /** @var Tuleap\Svn\AccessControl\AccessFileHistoryFactory */
     private $accessfile_factory;
 
-    /** @var Tuleap\Svn\Admin\AccessControl\AccessFileHistoryCreator */
+    /** @var Tuleap\Svn\AccessControl\AccessFileHistoryCreator */
     private $accessfile_history_creator;
 
     /** @var Tuleap\Svn\Admin\MailNotificationManager */
@@ -289,7 +291,7 @@ class SvnPlugin extends Plugin {
         return $this->repository_manager;
     }
 
-    /** @return Tuleap\Svn\Admin\AccessControl\AccessFileHistoryDao */
+    /** @return Tuleap\Svn\AccessControl\AccessFileHistoryDao */
     private function getAccessFileHistoryDao(){
         if(empty($this->accessfile_dao)){
             $this->accessfile_dao = new AccessFileHistoryDao();
@@ -297,7 +299,7 @@ class SvnPlugin extends Plugin {
         return $this->accessfile_dao;
     }
 
-    /** @return Tuleap\Svn\Admin\AccessControl\AccessFileHistoryFactory */
+    /** @return Tuleap\Svn\AccessControl\AccessFileHistoryFactory */
     private function getAccessFileHistoryFactory(){
         if(empty($this->accessfile_factory)){
             $this->accessfile_factory = new AccessFileHistoryFactory($this->getAccessFileHistoryDao());
@@ -305,7 +307,7 @@ class SvnPlugin extends Plugin {
         return $this->accessfile_factory;
     }
 
-    /** @return Tuleap\Svn\Admin\AccessControl\AccessFileHistoryCreator */
+    /** @return Tuleap\Svn\AccessControl\AccessFileHistoryCreator */
     private function getAccessFileHistoryCreator() {
         if(empty($this->accessfile_history_manager)) {
             $this->accessfile_history_creator = new AccessFileHistoryCreator(
@@ -346,7 +348,7 @@ class SvnPlugin extends Plugin {
     }
 
     /**
-     * @return PermissionsManager
+     * @return SvnPermissionManager
      */
     private function getPermissionsManager()
     {
@@ -496,7 +498,8 @@ class SvnPlugin extends Plugin {
             ),
             new ExplorerController(
                 $repository_manager,
-                $permissions_manager
+                $permissions_manager,
+                new RepositoryBuilder()
             ),
             new RepositoryDisplayController(
                 $repository_manager,
