@@ -18,8 +18,7 @@
     "lodash.map": "4.6.0",
     "merge2": "1.0.2",
     "read-pkg": "2.0.0",
-    "run-sequence": "1.2.2",
-    "cross-spawn": "^5.0.1"
+    "run-sequence": "1.2.2"
   },
   "scripts": {
     "build": "gulp build",
