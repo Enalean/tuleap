@@ -435,13 +435,9 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             method: 'GET',
             asynchronous : false,
             onSuccess : function ( data ) {
-
-                $H( data.responseJSON ).each( function( user_details ){
-                    var id        = user_details[0],
-                        user_data = user_details[1];
-
-                    users[ id ] = user_data;
-                })
+                data.responseJSON.forEach(function( user_details ){
+                    users[ user_details['id'] ] = user_details;
+                });
             }
         });
 

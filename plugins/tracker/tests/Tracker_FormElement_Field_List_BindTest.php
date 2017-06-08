@@ -43,20 +43,17 @@ class Tracker_FormElement_Field_List_Bind_JsonFormatTest extends TuleapTestCase 
         $this->bind->fetchFormattedForJson();
     }
 
-    public function itFormatsValuesForJson() {
+    public function itFormatsValuesForJson()
+    {
         stub($this->v1)->fetchFormattedForJson()->returns('whatever 1');
-        stub($this->v1)->getId()->returns(700);
-
         stub($this->v2)->fetchFormattedForJson()->returns('whatever 2');
-        stub($this->v2)->getId()->returns(300);
-
         stub($this->bind)->getAllValues()->returns(array($this->v1, $this->v2));
 
         $this->assertIdentical(
             $this->bind->fetchFormattedForJson(),
             array(
-                700 => 'whatever 1',
-                300 => 'whatever 2',
+                'whatever 1',
+                'whatever 2',
             )
         );
     }
