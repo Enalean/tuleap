@@ -330,6 +330,3 @@ msgid ""
 msgstr ""
 "modifié. (Mais le texte étant trop gros, il nous est impossible de calculer "
 "les différences dans un temps raisonnable.)"
-
-#~ msgid "See all %s"
-#~ msgstr "Voir tous les %s"
