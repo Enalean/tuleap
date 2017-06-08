@@ -60,13 +60,13 @@
                 {{^ has_widget }}
                     <div class="empty-page">
                         <p class="empty-page-text">{{ no_widget_label }}</p>
-                        {{^ is_page_read_only }}
+                        {{# can_update_dashboards }}
                             <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
                             <a href="{{ url_add_widget }}" class="tlp-button-primary tlp-button-large">
                                 <i class="fa fa-plus tlp-button-icon"></i>
                                 {{ add_widget_title }}
                             </a>
-                        {{/ is_page_read_only }}
+                        {{/ can_update_dashboards }}
                     </div>
                 {{/ has_widget }}
             {{/ is_active }}
@@ -77,7 +77,7 @@
 {{^ has_dashboard }}
     <div class="empty-page">
         <p class="empty-page-text">{{ no_dashboard_label }}</p>
-        {{^ is_page_read_only }}
+        {{# can_update_dashboards }}
             <button
                     type="button"
                     id="add-dashboard-button"
@@ -87,11 +87,11 @@
                 <i class="fa fa-plus tlp-button-icon"></i>
                 {{ add_dashboard_label }}
             </button>
-        {{/ is_page_read_only }}
+        {{/ can_update_dashboards }}
     </div>
 {{/ has_dashboard }}
 
-{{^ is_page_read_only }}
+{{# can_update_dashboards }}
     {{> add-dashboard-modal }}
     {{# dashboards }}
         {{# is_active }}
@@ -99,4 +99,4 @@
             {{> edit-dashboard-modal }}
         {{/ is_active }}
     {{/ dashboards }}
-{{/ is_page_read_only }}
+{{/ can_update_dashboards }}

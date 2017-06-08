@@ -36,8 +36,9 @@ class DashboardWidgetPresenter
     public $delete_widget_label;
     public $delete_widget_confirm;
     public $is_content_loaded_asynchronously;
+    public $has_actions;
 
-    public function __construct(DashboardWidget $dashboard_widget, Widget $widget)
+    public function __construct(DashboardWidget $dashboard_widget, Widget $widget, $can_update_dashboards)
     {
         $this->widget_id    = $dashboard_widget->getId();
         $this->is_minimized = $dashboard_widget->isMinimized();
@@ -46,6 +47,8 @@ class DashboardWidgetPresenter
         $this->is_editable = strlen($widget->getPreferences()) !== 0;
         $this->has_rss     = $widget->hasRss();
         $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+
+        $this->has_actions = $this->has_rss || $can_update_dashboards;
 
         $this->is_content_loaded_asynchronously = $widget->isAjax();
         if ($this->is_content_loaded_asynchronously) {

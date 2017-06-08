@@ -224,7 +224,8 @@ class UserDashboardController
                 if ($widgets_lines) {
                     $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter(
                         OwnerInfo::createForUser($user),
-                        $widgets_lines
+                        $widgets_lines,
+                        true
                     );
                 }
             }

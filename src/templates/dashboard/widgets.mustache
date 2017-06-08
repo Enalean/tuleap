@@ -2,31 +2,38 @@
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
-    {{^ is_page_read_only }}
+    {{# can_update_dashboards }}
         {{> edit-layout-dropdown }}
-    {{/ is_page_read_only }}
-    <span class="dashboard-widgets-empty-line dragula-container"></span>
+    {{/ can_update_dashboards }}
+    <span class="dashboard-widgets-empty-line {{# can_update_dashboards }}dragula-container{{/ can_update_dashboards }}"></span>
     {{# widget_lines }}
         <div
             class="dashboard-widgets-row {{ layout }}"
             data-line-id="{{ line_id }}"
             data-current-layout="{{ layout }}"
         >
-            <span class="dashboard-widgets-empty-column dragula-container"></span>
+            <span class="dashboard-widgets-empty-column {{# can_update_dashboards }}dragula-container{{/ can_update_dashboards }}"></span>
             {{# widget_columns}}
-                <div class="dashboard-widgets-column dragula-container" data-column-id="{{ column_id }}">
+                <div class="dashboard-widgets-column {{# can_update_dashboards }}dragula-container{{/ can_update_dashboards }}" data-column-id="{{ column_id }}">
                     {{# widgets }}
-                        <section class="tlp-pane dashboard-widget {{# is_minimized }}dashboard-widget-minimized{{/is_minimized}}"
+                        <section class="tlp-pane dashboard-widget
+                                    {{# is_minimized }}dashboard-widget-minimized{{/is_minimized}}
+                                 "
                                  data-widget-id="{{ widget_id }}"
                         >
                             {{# csrf_token }}
                                 {{> csrf_token_input }}
                             {{/ csrf_token }}
                             <div class="tlp-pane-container dashboard-widget-container">
-                                <div class="tlp-pane-header dashboard-widget-header" data-draggable="true">
+                                <div class="tlp-pane-header
+                                        dashboard-widget-header
+                                        {{# can_update_dashboards }}dashboard-widget-movable{{/ can_update_dashboards }}
+                                    "
+                                    {{# can_update_dashboards }}data-draggable="true"{{/ can_update_dashboards }}
+                                >
                                     <h1 class="tlp-pane-title" data-draggable="true">{{ title }}</h1>
                                     <div class="dashboard-widget-icons">
-                                        {{^ is_page_read_only }}
+                                        {{# can_update_dashboards }}
                                             <form method="post" action="{{ url }}">
                                                 {{# csrf_token }}
                                                     {{> csrf_token_input }}
@@ -36,39 +43,45 @@
                                                 <input type="hidden" name="action" value="{{# is_minimized }}maximize-widget{{/ is_minimized }}{{^ is_minimized }}minimize-widget{{/ is_minimized }}">
                                                 <i class="dashboard-widget-icons-minimize fa fa-fw fa-caret-{{# is_minimized }}right{{/ is_minimized }}{{^ is_minimized }}down{{/ is_minimized }}"></i>
                                             </form>
-                                        {{/ is_page_read_only }}
-                                        <div class="tlp-dropdown">
-                                            <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>
-                                            <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right"
-                                                 role="menu"
-                                            >
-                                                {{# has_rss }}
-                                                    <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
-                                                        <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-rss"></i> {{ rss_label }}
-                                                    </a>
-                                                {{/ has_rss }}
-                                                {{# is_editable }}
-                                                    <button type="button"
-                                                            class="tlp-dropdown-menu-item edit-widget-button"
-                                                            data-target-modal-id="edit-widget-modal-{{ widget_id }}"
-                                                    >
-                                                        <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
-                                                    </button>
-                                                {{/ is_editable }}
-                                                <button type="button"
-                                                        class="tlp-dropdown-menu-item delete-widget-button"
-                                                        data-target-modal-id="delete-widget-modal-{{ widget_id }}"
+                                        {{/ can_update_dashboards }}
+                                        {{# has_actions }}
+                                            <div class="tlp-dropdown">
+                                                <i class="fa fa-cog fa-fw tlp-dropdown-trigger dashboard-widget-actions"></i>
+                                                <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon tlp-dropdown-menu-right"
+                                                     role="menu"
                                                 >
-                                                    <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
-                                                </button>
+                                                    {{# has_rss }}
+                                                        <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
+                                                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-rss"></i> {{ rss_label }}
+                                                        </a>
+                                                    {{/ has_rss }}
+                                                    {{# can_update_dashboards }}
+                                                        {{# is_editable }}
+                                                            <button type="button"
+                                                                    class="tlp-dropdown-menu-item edit-widget-button"
+                                                                    data-target-modal-id="edit-widget-modal-{{ widget_id }}"
+                                                            >
+                                                                <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
+                                                            </button>
+                                                        {{/ is_editable }}
+                                                        <button type="button"
+                                                                class="tlp-dropdown-menu-item delete-widget-button"
+                                                                data-target-modal-id="delete-widget-modal-{{ widget_id }}"
+                                                        >
+                                                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
+                                                        </button>
+                                                    {{/ can_update_dashboards }}
+                                                </div>
                                             </div>
-                                        </div>
+                                        {{/has_actions}}
                                     </div>
                                 </div>
-                                {{> delete-widget-modal }}
-                                {{# is_editable }}
-                                    {{> edit-widget-modal }}
-                                {{/ is_editable }}
+                                {{# can_update_dashboards }}
+                                    {{> delete-widget-modal }}
+                                    {{# is_editable }}
+                                        {{> edit-widget-modal }}
+                                    {{/ is_editable }}
+                                {{/ can_update_dashboards }}
                                 {{^ is_minimized }}
                                     <section class="
                                         tlp-pane-section
@@ -90,9 +103,9 @@
                         </section>
                     {{/ widgets }}
                 </div>
-                <span class="dashboard-widgets-empty-column dragula-container"></span>
+                <span class="dashboard-widgets-empty-column {{# can_update_dashboards }}dragula-container{{/ can_update_dashboards }}"></span>
             {{/ widget_columns }}
         </div>
-        <span class="dashboard-widgets-empty-line dragula-container"></span>
+        <span class="dashboard-widgets-empty-line {{# can_update_dashboards }}dragula-container{{/ can_update_dashboards }}"></span>
     {{/ widget_lines }}
 </div>

@@ -3,7 +3,7 @@
         <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}?dashboard_id={{ id }}">
             {{ name }}
             {{# is_active }}
-                {{^ is_page_read_only }}
+                {{# can_update_dashboards }}
                     <div class="tlp-dropdown dashboard-tabs-dropdown">
                         <i class="fa fa-cog fa-fw" id="dashboard-tabs-dropdown-trigger"></i>
                         <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
@@ -28,11 +28,11 @@
                             </span>
                         </div>
                     </div>
-                {{/ is_page_read_only }}
+                {{/ can_update_dashboards }}
             {{/ is_active }}
         </a>
     {{/ dashboards }}
-    {{^ is_page_read_only }}
+    {{# can_update_dashboards }}
         <a href="javascript:;"
            id="add-dashboard-button"
            class="tlp-button-primary tlp-button-mini tlp-button-outline"
@@ -41,5 +41,5 @@
             <i class="fa fa-plus tlp-button-icon"></i>
             {{ add_dashboard_label }}
         </a>
-    {{/ is_page_read_only }}
+    {{/ can_update_dashboards }}
 </nav>
