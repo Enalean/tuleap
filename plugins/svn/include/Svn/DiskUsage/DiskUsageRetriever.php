@@ -20,10 +20,14 @@
 
 namespace Tuleap\Svn\DiskUsage;
 
+use DateTime;
+use Logger;
 use Project;
 use Statistics_DiskUsageManager;
+use SvnPlugin;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\SvnLogger;
 
 class DiskUsageRetriever
 {
@@ -31,15 +35,37 @@ class DiskUsageRetriever
      * @var RepositoryManager
      */
     private $repository_manager;
+
     /**
      * @var Statistics_DiskUsageManager
      */
-    private $disk_usage_manager;
 
-    public function __construct(RepositoryManager $repository_manager, Statistics_DiskUsageManager $disk_usage_manager)
-    {
+    private $disk_usage_manager;
+    /**
+     * @var DiskUsageDao
+     */
+    private $disk_usage_dao;
+    /**
+     * @var \Statistics_DiskUsageDao
+     */
+    private $dao;
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(
+        RepositoryManager $repository_manager,
+        Statistics_DiskUsageManager $disk_usage_manager,
+        DiskUsageDao $disk_usage_dao,
+        \Statistics_DiskUsageDao $dao,
+        Logger $logger
+    ) {
         $this->repository_manager = $repository_manager;
         $this->disk_usage_manager = $disk_usage_manager;
+        $this->disk_usage_dao     = $disk_usage_dao;
+        $this->dao                = $dao;
+        $this->logger             = $logger;
     }
 
     /**
@@ -49,6 +75,15 @@ class DiskUsageRetriever
      */
     public function getDiskUsageForProject(Project $project)
     {
+        $this->logger->info("Collecting statistics for project " . $project->getUnixName());
+        $yesterday = new DateTime("yesterday midnight");
+        if (! $this->hasRepositoriesUpdatedAfterGivenDate($project, $yesterday->getTimestamp())) {
+            $this->logger->info("No new commit made on this project since yesterday, duplicate value from DB.");
+
+            return $this->getLastSizeForProject($project);
+        }
+
+        $this->logger->info("Project has new commit, collecting disk size data.");
         $repositories  = $this->repository_manager->getRepositoriesInProject($project);
         $svn_disk_size = 0;
 
@@ -72,5 +107,17 @@ class DiskUsageRetriever
         $path = $repository->getSystemPath();
 
         return $this->disk_usage_manager->getDirSize($path);
+    }
+
+    private function hasRepositoriesUpdatedAfterGivenDate(Project $project, $timestamp)
+    {
+        return $this->disk_usage_dao->hasRepositoriesUpdatedAfterGivenDate($project->getID(), $timestamp);
+    }
+
+    public function getLastSizeForProject(Project $project)
+    {
+        $row = $this->dao->getLastSizeForService($project->getID(), SvnPlugin::SERVICE_SHORTNAME);
+
+        return (int) $row['size'];
     }
 }

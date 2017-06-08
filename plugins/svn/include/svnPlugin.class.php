@@ -40,6 +40,7 @@ use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
 use Tuleap\SVN\DiskUsage\Collector;
 use Tuleap\Svn\DiskUsage\DiskUsageCollector;
+use Tuleap\Svn\DiskUsage\DiskUsageDao;
 use Tuleap\Svn\DiskUsage\DiskUsageRetriever;
 use Tuleap\SVN\DiskUsage\Retriever;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
@@ -751,7 +752,10 @@ class SvnPlugin extends Plugin
                 new Statistics_DiskUsageDao(),
                 new Collector(new SVN_LogDao(), new Retriever(new Statistics_DiskUsageDao())),
                 EventManager::instance()
-            )
+            ),
+            new DiskUsageDao(),
+            new Statistics_DiskUsageDao(),
+            new SvnLogger()
         );
     }
 
