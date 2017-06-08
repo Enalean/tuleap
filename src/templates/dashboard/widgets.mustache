@@ -2,10 +2,13 @@
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
+    {{^ is_page_read_only }}
+        {{> edit-layout-dropdown }}
+    {{/ is_page_read_only }}
     <span class="dashboard-widgets-empty-line dragula-container"></span>
     {{# widget_lines }}
         <div
-            class="dashboard-widgets-row {{ layout }} dragula-container"
+            class="dashboard-widgets-row {{ layout }}"
             data-line-id="{{ line_id }}"
             data-current-layout="{{ layout }}"
         >
@@ -89,9 +92,6 @@
                 </div>
                 <span class="dashboard-widgets-empty-column dragula-container"></span>
             {{/ widget_columns }}
-            {{^ is_page_read_only }}
-                {{> edit-layout-dropdown }}
-            {{/ is_page_read_only }}
         </div>
         <span class="dashboard-widgets-empty-line dragula-container"></span>
     {{/ widget_lines }}

@@ -20,8 +20,6 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use Codendi_HTMLPurifier;
-
 class DashboardWidgetLinePresenter
 {
     public $line_id;
@@ -31,7 +29,6 @@ class DashboardWidgetLinePresenter
      */
     public $widget_columns;
     public $id;
-    public $purified_too_many_columns_label;
 
     public function __construct(
         $line_id,
@@ -41,10 +38,5 @@ class DashboardWidgetLinePresenter
         $this->line_id        = $line_id;
         $this->layout         = $layout;
         $this->widget_columns = $widget_columns;
-
-        $this->purified_too_many_columns_label = Codendi_HTMLPurifier::instance()->purify(
-            _('Beyond 3 columns, each column<br>will have the same size.'),
-            CODENDI_PURIFIER_LIGHT
-        );
     }
 }
