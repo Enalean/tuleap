@@ -74,6 +74,11 @@ $tlp-table-row-background-empty: #fcfcfc;
     }
 
     > tbody {
+
+        &.tlp-table-tbody-hidden {
+            display: none;
+        }
+
         > tr:nth-child(even) > td {
             background: $tlp-table-row-background-even;
         }
