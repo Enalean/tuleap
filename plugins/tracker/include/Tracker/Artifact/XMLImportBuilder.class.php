@@ -22,6 +22,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_Artifact_XMLImportBuilder {
 
@@ -34,6 +36,7 @@ class Tracker_Artifact_XMLImportBuilder {
         $artifact_factory      = Tracker_ArtifactFactory::instance();
         $formelement_factory   = Tracker_FormElementFactory::instance();
         $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($formelement_factory);
+        $visit_recorder        = new VisitRecorder(new RecentlyVisitedDao());
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $logger                = new Log_ConsoleLogger();
@@ -48,7 +51,8 @@ class Tracker_Artifact_XMLImportBuilder {
                 $changeset_dao,
                 $artifact_factory,
                 EventManager::instance()
-            )
+            ),
+            $visit_recorder
         );
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(

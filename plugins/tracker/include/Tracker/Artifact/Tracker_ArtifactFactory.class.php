@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016-2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
 
 class Tracker_ArtifactFactory {
     
@@ -366,6 +368,7 @@ class Tracker_ArtifactFactory {
     public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, $send_notification = true) {
         $formelement_factory = Tracker_FormElementFactory::instance();
         $fields_validator    = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory);
+        $visit_recorder      = new VisitRecorder(new RecentlyVisitedDao());
 
         $changeset_creator = new Tracker_Artifact_Changeset_InitialChangesetCreator(
             $fields_validator,
@@ -374,7 +377,7 @@ class Tracker_ArtifactFactory {
             $this,
             EventManager::instance()
         );
-        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator);
+        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder);
 
         if ($user->isAnonymous()) {
             $user->setEmail($email);
