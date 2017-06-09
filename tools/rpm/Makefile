@@ -130,6 +130,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
 				-name '*.less' -o\
 				-name '*.scss' -o\
 				-name '.scss-lint.yml' -o\
+				-name 'package-lock.json' -o\
 				-name ".git" -o\
 				-name ".gitignore" -o\
 				-name ".gitmodules" -o\
