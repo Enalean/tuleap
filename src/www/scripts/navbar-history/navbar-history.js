@@ -27,6 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
         loading_history               = document.getElementById('nav-dropdown-content-user-history-loading'),
         empty_history                 = document.getElementById('nav-dropdown-content-user-history-empty');
 
+    if (! user_history_dropdown_trigger) {
+        return;
+    }
+
     user_history_dropdown_trigger.addEventListener('click', loadHistoryAsynchronously);
 
     function loadHistoryAsynchronously() {

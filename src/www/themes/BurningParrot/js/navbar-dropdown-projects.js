@@ -38,6 +38,10 @@
     const nav_dropdown_content_projects_list_project_selector = '.nav-dropdown-content-projects-list-project';
 
     document.addEventListener('DOMContentLoaded', function() {
+        if (! document.getElementById(nav_dropdown_content_projects_filter_projects_name)) {
+            return;
+        }
+
         initFilter();
         focusOnFilter();
 
