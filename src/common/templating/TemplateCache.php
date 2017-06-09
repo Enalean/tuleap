@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Like MustacheException, but for MustacheDebug.
- * 
- * This class does not inherit from MustacheException so that we don't catch
- * it in MustacheDebug.
- */
-class MustacheDebugException extends Exception {
-}
+namespace Tuleap\Templating;
 
-?>
+class TemplateCache
+{
+    const CACHE_FOLDER_NAME = 'template_engine';
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return \ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . self::CACHE_FOLDER_NAME;
+    }
+
+    public function invalidate()
+    {
+        if (! is_dir($this->getPath())) {
+            return;
+        }
+        foreach (new \DirectoryIterator($this->getPath()) as $file_info) {
+            if ($file_info->isFile()) {
+                unlink($file_info->getPathname());
+            }
+        }
+    }
+}

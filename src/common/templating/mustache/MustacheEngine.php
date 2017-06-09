@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../TemplateRendererTestBase.php';
-require_once 'common/templating/mustache/MustacheRenderer.class.php';
+namespace Tuleap\Templating\Mustache;
 
-class MustacheRendererTest extends TemplateRendererTestBase
+use Tuleap\Templating\TemplateCache;
+
+class MustacheEngine extends \Mustache_Engine
 {
-    protected function getRenderer()
+    public function __construct(\Mustache_Loader $loader, TemplateCache $cache)
     {
-        return new MustacheRenderer(dirname(__FILE__).'/templates');
+        parent::__construct(
+            array(
+                'entity_flags'     => ENT_QUOTES,
+                'strict_callables' => true,
+                'loader'           => $loader,
+                'cache'            => $cache->getPath()
+            )
+        );
     }
 }
