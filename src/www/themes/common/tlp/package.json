@@ -11,11 +11,13 @@
     "dom4": "^1.8.3",
     "flatpickr": "1.9.1",
     "jquery": "2.1.0",
-    "select2": "4.0.3"
+    "select2": "4.0.3",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.5.1",
     "concurrently": "^3.4.0",
     "del": "^2.2.2",

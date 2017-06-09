@@ -51,6 +51,17 @@
     }
 }
 
+#nav-dropdown-content-user-history-clear {
+    display: none;
+    justify-content: center;
+    padding: $tlp-spacing;
+    border-top: 1px solid $tlp-ui-border-light;
+
+    &.shown {
+        display: flex;
+    }
+}
+
 .history-item {
     display: flex;
     flex: 1 0 auto;

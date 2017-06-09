@@ -1,4 +1,4 @@
-<?php
+
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -18,33 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History;
+export const get = (input, init = {}) => {
+    const method = 'GET',
+        { credentials = 'same-origin' } = init;
 
-use PFUser;
-use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
+    return fetch(input, {method, credentials, ...init}).then(checkResponse);
+};
 
-class UserHistoryPresenter extends Presenter
-{
-    public $is_history = true;
+export const put = (input, init = {}) => {
+    const method = 'PUT',
+          { credentials = 'same-origin' } = init;
 
-    /** @var int */
-    public $current_user_id;
+    return fetch(input, {method, credentials, ...init}).then(checkResponse);
+};
 
-    /** @var string */
-    public $clear_history;
-
-    /** @var string */
-    public $empty_history;
-
-
-    public function __construct(
-        $id,
-        PFUser $current_user
-    ) {
-        parent::__construct($id);
-
-        $this->current_user_id = $current_user->getId();
-        $this->empty_history   = _('Your history is empty');
-        $this->clear_history   = _('Clear history');
+function checkResponse(response) {
+    if (response.ok) {
+        return response;
+    } else {
+        const error = new Error(response.statusText);
+        error.response = response;
+        throw error;
     }
 }

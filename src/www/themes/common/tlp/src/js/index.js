@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export { get, put } from './fetch-wrapper.js';
+
 export {
     default as locale
 } from './default_locale.js';
