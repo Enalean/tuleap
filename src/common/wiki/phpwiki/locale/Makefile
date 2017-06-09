@@ -164,7 +164,6 @@ ${POT_FILE}: ../lib/plugin/PhotoAlbum.php
 ${POT_FILE}: ../lib/plugin/PhpHighlight.php
 ${POT_FILE}: ../lib/plugin/PluginManager.php
 ${POT_FILE}: ../lib/plugin/PopularNearby.php
-${POT_FILE}: ../lib/plugin/PopUp.php
 ${POT_FILE}: ../lib/plugin/_PreferencesInfo.php
 ${POT_FILE}: ../lib/plugin/PrevNext.php
 ${POT_FILE}: ../lib/plugin/RandomPage.php

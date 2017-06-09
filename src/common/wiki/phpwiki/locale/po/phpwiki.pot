@@ -2446,14 +2446,6 @@ msgstr ""
 msgid "%d most popular nearby: "
 msgstr ""
 
-#: ../lib/plugin/PopUp.php:49
-msgid "PopUp"
-msgstr ""
-
-#: ../lib/plugin/PopUp.php:52
-msgid "Used to create a clickable popup link."
-msgstr ""
-
 #: ../lib/plugin/_PreferencesInfo.php:30
 #: ../themes/Codendi-lite/templates/userprefs.tmpl:12
 #: ../themes/Codendi/templates/userprefs.tmpl:12
