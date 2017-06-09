@@ -20,19 +20,27 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History;
 
+use PFUser;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 
 class UserHistoryPresenter extends Presenter
 {
     public $is_history = true;
 
-    public function __construct($id)
-    {
-        parent::__construct($id);
-    }
+    /** @var int */
+    public $current_user_id;
 
-    public function empty_history()
-    {
-        return _('Your history is empty');
+    /** @var string */
+    public $empty_history;
+
+
+    public function __construct(
+        $id,
+        PFUser $current_user
+    ) {
+        parent::__construct($id);
+
+        $this->current_user_id = $current_user->getId();
+        $this->empty_history   = _('Your history is empty');
     }
 }

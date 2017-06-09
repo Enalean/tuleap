@@ -41,6 +41,17 @@ $tlp-ui-dimmed: #747474;
 $tlp-ui-white : #ffffff;
 $tlp-ui-black : #000000;
 
+
+$tlp-swatch-color-names: 'inca-silver', 'chrome-silver', 'fiesta-red', 'teddy-brown', 'clockwork-orange',
+'red-wine', 'acid-green', 'army-green', 'sherwood-green', 'ocean-turquoise', 'daphne-blue', 'lake-placid-blue',
+'deep-blue', 'plum-crazy', 'peggy-pink', 'flamingo-pink';
+$tlp-swatch-color-primaries: #767676, #a5a5a5, #dc2f2f, #9b6542, #ff9400,
+#9e1919, #92c71e, #7f9a42, #28c43a, #28c4a0, #0fd8d8, #33c0ea,
+#2b6cdc, #890de1, #e10dcb, #ff87c4;
+$tlp-swatch-color-secondaries: #eeeeee, #fafafa, #ffdfdf, #f9ebe1, #fff0dc,
+#f7e8e8, #ecf4d9, #e5f2c8, #e9ffeb, #d3fcf2, #e3ffff, #dff5ff,
+#deeaff, #f3e2ff, #ffe9fd, #fff2f8;
+
 // Business colors - Primaries
 $tlp-swatch-inca-silver               : #767676;
 $tlp-swatch-chrome-silver             : #a5a5a5;

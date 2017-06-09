@@ -67,6 +67,7 @@ class BurningParrotTheme extends Layout
         $tlp_include_assets    = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist', '/themes/common/tlp/dist');
         $this->includeFooterJavascriptFile($tlp_include_assets->getFileURL('tlp.' . $user->getLocale() . '.min.js'));
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('burningparrot.js'));
+        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('navbar-history.js'));
     }
 
     public function includeCalendarScripts()
