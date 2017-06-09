@@ -1398,6 +1398,9 @@ div.tracker-admin-field-controls {
             visibility: visible;
             height: auto;
 
+            > input {
+                width: auto;
+            }
             > label.checkbox {
                 display: block;
             }
