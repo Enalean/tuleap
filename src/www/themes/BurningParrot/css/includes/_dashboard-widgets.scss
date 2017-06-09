@@ -95,15 +95,15 @@
 }
 
 .dashboard-add-widget-list {
-    flex: 1;
     max-height: 400px;
     margin: 0 $tlp-spacing 0 0;
+    flex: 1;
     overflow-y: scroll;
 }
 
 #dashboard-add-widget-settings {
-    flex: 1;
     margin: 0 0 0 $tlp-spacing;
+    flex: 1;
 }
 
 .dashboard-add-widget-list-header {
@@ -159,4 +159,16 @@
     color: $tlp-ui-dimmed;
     font-size: 14px;
     font-style: italic;
+}
+
+.massmail-project-member-link-icon {
+    padding: 0 $tlp-half-spacing 0 0;
+}
+
+.massmail-project-member-link {
+    text-decoration: none;
+}
+
+.massmail-project-member-link:hover {
+    text-decoration: underline;
 }

@@ -26,19 +26,22 @@ require_once('Widget.class.php');
 * Allows users to send message to all administrators of a project
 *
 */
-class Widget_Contacts extends Widget {
+class Widget_Contacts extends Widget
+{
 
     public function __construct()
     {
         parent::__construct('projectcontacts');
     }
 
-    function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('widget_project_contacts','title');
     }
 
-    function getContent() {
-        $request  =& HTTPRequest::instance();
+    public function getContent()
+    {
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $pm       = ProjectManager::instance();
         $project  = $pm->getProject($group_id);
@@ -88,7 +91,7 @@ class Widget_Contacts extends Widget {
         $html  = '<a href="javascript:;" ';
         $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
         $html .= 'data-project-id="'. $group_id .'">';
-        $html .= '<i class="fa fa-envelope-o"></i>';
+        $html .= '<i class="fa fa-envelope-o massmail-project-member-link-icon"></i>';
         $html .= $GLOBALS['Language']->getText('include_project_home', 'contact_admins');
         $html .= '</a>';
 
@@ -97,12 +100,13 @@ class Widget_Contacts extends Widget {
         return $html;
     }
 
-    function canBeUsedByProject(&$project) {
+    public function canBeUsedByProject(&$project)
+    {
         return true;
     }
 
-    function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_project_contacts','description');
     }
-
 }
