@@ -458,7 +458,7 @@ class Statistics_DiskUsageManager {
      * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
      */
     public function collectProjects() {
-        $dar = $this->dao->searchAllGroups();
+        $dar = $this->dao->searchAllOpenProjects();
         foreach($dar as $row) {
             $this->dao->getDa()->startTransaction();
 
