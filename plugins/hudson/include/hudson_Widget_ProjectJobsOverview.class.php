@@ -161,10 +161,8 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
             }
             $html .= '</table>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', $purifier->purify(array($this->group_id)));
+            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', $purifier->purify($this->group_id));
         }
         return $html;
     }
 }
-
-?>
