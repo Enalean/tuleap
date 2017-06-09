@@ -73,8 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const items = history_content.querySelectorAll('.history-item');
         [].forEach.call(items, function (history_item) {
             history_item.addEventListener('click', function (event) {
-                if (! event.target.closest('.history-item-project')
-                    && ! event.target.closest('.history-item-quick-link')
+                if (! event.target.closest('.history-item-content-project')
+                    && ! event.target.closest('.history-item-content-description-quick-links-link')
                 ) {
                     window.location.href = history_item.dataset.href;
                 }
