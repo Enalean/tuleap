@@ -99,7 +99,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public function fetchFormattedForJson() {
         $values = array();
         foreach($this->getAllValues() as $value) {
-            $values[$value->getId()] = $value->fetchFormattedForJson();
+            $values[] = $value->fetchFormattedForJson();
         }
         return $values;
     }
