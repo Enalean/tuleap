@@ -19,6 +19,7 @@
 
 import { get } from 'jquery';
 import { modal as createModal } from 'tlp';
+import { sanitize } from 'dompurify';
 
 export default init;
 
@@ -66,10 +67,10 @@ function init() {
             get('/widgets/?widget-id=' + encodeURIComponent(widget_id) +'&action=get-edit-modal-content')
                 .done(function (html) {
                     button.disabled     = false;
-                    container.innerHTML = html;
+                    container.innerHTML = sanitize(html);
                 })
                 .fail(function (data) {
-                    container.innerHTML = '<div class="tlp-alert-danger">' + data.responseJSON + '</div>';
+                    container.innerHTML = sanitize('<div class="tlp-alert-danger">' + data.responseJSON + '</div>');
                 })
                 .always(function () {
                     container.classList.remove('edit-widget-modal-content-loading');
