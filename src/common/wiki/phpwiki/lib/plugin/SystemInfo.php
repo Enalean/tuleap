@@ -187,15 +187,6 @@ extends WikiPluginCached
         return $s;
     }
 
-    //only from logging info possible. = hitstats per time.
-    // total hits per day/month/year
-    // view/edit rate
-    // TODO: see WhoIsOnline hit stats, and sql accesslogs
-    function accessstats() {
-        $s  = _("not yet");
-        return $s;
-    }
-
     // numeric array
     function _stats($hits, $treshold = 10.0) {
         sort($hits);

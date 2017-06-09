@@ -3313,36 +3313,6 @@ msgstr ""
 msgid "Wanted Pages in this wiki:"
 msgstr ""
 
-#: ../lib/plugin/WhoIsOnline.php:38 ../lib/plugin/WhoIsOnline.php:84
-msgid "WhoIsOnline"
-msgstr ""
-
-#: ../lib/plugin/WhoIsOnline.php:42
-msgid "Show summary information of the current user sessions."
-msgstr ""
-
-#: ../lib/plugin/WhoIsOnline.php:82
-msgid "Who is online"
-msgstr ""
-
-#: ../lib/plugin/WhoIsOnline.php:85
-#, php-format
-msgid "%d online users"
-msgstr ""
-
-#: ../lib/plugin/WhoIsOnline.php:109
-msgid "Guest"
-msgstr ""
-
-#: ../lib/plugin/WhoIsOnline.php:125
-msgid "<unknown>"
-msgstr ""
-
-#: ../lib/plugin/WhoIsOnline.php:196
-#, php-format
-msgid "%d minutes"
-msgstr ""
-
 #: ../lib/plugin/WikiAdminChmod.php:40
 msgid "WikiAdminChmod"
 msgstr ""

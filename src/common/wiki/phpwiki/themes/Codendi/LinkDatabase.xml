@@ -56,7 +56,6 @@
 <edge source="PluginManager" target="RateIt"/>
 <edge source="PluginManager" target="RecentReleases"/>
 <edge source="PluginManager" target="ProjectSummary"/>
-<edge source="PluginManager" target="WhoIsOnline"/>
 <edge source="PluginManager" target="TranscludePlugin"/>
 <edge source="PluginManager" target="SyntaxHighlighterPlugin"/>
 <edge source="PluginManager" target="PhpWeatherPlugin"/>
@@ -709,7 +708,6 @@
 <edge source="ReleaseNotes" target="CreatePage"/>
 <edge source="ReleaseNotes" target="IncludeSiteMap"/>
 <edge source="ReleaseNotes" target="PagePermissions"/>
-<edge source="ReleaseNotes" target="WhoIsOnline"/>
 <edge source="ReleaseNotes" target="RateIt"/>
 <edge source="ReleaseNotes" target="UpLoad"/>
 <edge source="ReleaseNotes" target="GoogleLink"/>
@@ -978,8 +976,6 @@
 
 <node name="WikiForum"><label>WikiForum</label><dataref><ref xlink:href="http://reini/wiki/sidebar/WikiForum"/></dataref></node>
 
-<node name="WhoIsOnline"><label>WhoIsOnline</label><dataref><ref xlink:href="http://reini/wiki/sidebar/WhoIsOnline"/></dataref></node>
-
 <node name="Diff"><label>Diff</label><dataref><ref xlink:href="http://reini/wiki/sidebar/Diff"/></dataref></node>
 
 <node name="viewsrcx2e.php"><label>viewsrc.php</label><dataref><ref xlink:href="http://reini/wiki/sidebar/viewsrc.php"/></dataref></node>
@@ -1239,7 +1235,6 @@
 <edge source="SfNetHomePage" target="PhpWiki"/>
 <edge source="SfNetHomePage" target="UserPreferences"/>
 <edge source="SfNetHomePage" target="PgsrcTranslation"/>
-<edge source="SfNetHomePage" target="WhoIsOnline"/>
 <edge source="SfNetHomePage" target="PhpWikiPoll"/>
 <edge source="SfNetHomePage" target="AddCommentPlugin"/>
 <edge source="SfNetHomePage" target="CreateTocPlugin"/>

@@ -193,7 +193,6 @@ ${POT_FILE}: ../lib/plugin/UserPreferences.php
 ${POT_FILE}: ../lib/plugin/UserRatings.php
 ${POT_FILE}: ../lib/plugin/WantedPagesOld.php
 ${POT_FILE}: ../lib/plugin/WantedPages.php
-${POT_FILE}: ../lib/plugin/WhoIsOnline.php
 ${POT_FILE}: ../lib/plugin/WikiAdminChmod.php
 ${POT_FILE}: ../lib/plugin/WikiAdminChown.php
 ${POT_FILE}: ../lib/plugin/WikiAdminMarkup.php

@@ -3438,36 +3438,6 @@ msgstr "Pages recherchées pour %s :"
 msgid "Wanted Pages in this wiki:"
 msgstr "Pages recherchées dans ce wiki :"
 
-#: ../lib/plugin/WhoIsOnline.php:38 ../lib/plugin/WhoIsOnline.php:84
-msgid "WhoIsOnline"
-msgstr "QuiEstEnLigne"
-
-#: ../lib/plugin/WhoIsOnline.php:42
-msgid "Show summary information of the current user sessions."
-msgstr "Montre l'index de la table session. (utilisateurs en ligne)."
-
-#: ../lib/plugin/WhoIsOnline.php:82
-msgid "Who is online"
-msgstr "Qui est en ligne"
-
-#: ../lib/plugin/WhoIsOnline.php:85
-#, php-format
-msgid "%d online users"
-msgstr "%d visiteurs en ligne"
-
-#: ../lib/plugin/WhoIsOnline.php:109
-msgid "Guest"
-msgstr "Invité"
-
-#: ../lib/plugin/WhoIsOnline.php:125
-msgid "<unknown>"
-msgstr "<inconnue>"
-
-#: ../lib/plugin/WhoIsOnline.php:196
-#, php-format
-msgid "%d minutes"
-msgstr "%d minutes"
-
 #: ../lib/plugin/WikiAdminChmod.php:40
 msgid "WikiAdminChmod"
 msgstr "AdministrationDePhpWiki/Droits"
