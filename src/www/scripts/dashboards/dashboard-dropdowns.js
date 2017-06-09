@@ -32,7 +32,11 @@ function init() {
         createDropdown(cog);
     });
 
-    initLayoutDropdowns();
+    var template_dropdown = document.getElementById('dashboard-layout-dropdown-template');
+
+    if (template_dropdown !== null) {
+        initLayoutDropdowns();
+    }
 }
 
 function initLayoutDropdowns() {
@@ -44,7 +48,13 @@ function initLayoutDropdowns() {
 }
 
 function addLayoutDropdown(row) {
-    var dropdown_container = cloneLayoutDropdown(row);
+    var template_dropdown = document.getElementById('dashboard-layout-dropdown-template');
+
+    if (template_dropdown === null) {
+        return;
+    }
+
+    var dropdown_container = cloneLayoutDropdown(row, template_dropdown);
     var dropdown_button    = dropdown_container.querySelector('.dashboard-row-dropdown-button');
     initLayoutDropdown(dropdown_button, row);
 }
@@ -72,9 +82,7 @@ function initLayoutDropdown(dropdown_button, row) {
     });
 }
 
-function cloneLayoutDropdown(row) {
-    var template_dropdown = document.getElementById('dashboard-layout-dropdown-template');
-
+function cloneLayoutDropdown(row, template_dropdown) {
     var cloned_dropdown = template_dropdown.cloneNode(true);
     cloned_dropdown.removeAttribute('id');
 
