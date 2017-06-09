@@ -135,7 +135,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         if ($project->userIsAdmin($user)) {
             $pluginManager = PluginManager::instance();
             $p     = $pluginManager->getPluginByName('statistics');
-            $html .= '<a href="'.$p->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$graph.'<a>';
+            $html .= '<a href="'.$p->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$graph.'</a>';
         } else {
             $html .= $graph;
         }
