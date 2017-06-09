@@ -31,10 +31,12 @@ class ProjectDashboardPresenter extends DashboardPresenter
         parent::__construct($dashboard, $is_active, $widgets);
 
         $this->project_id     = $dashboard->getProjectId();
-        $this->url_add_widget = '/widgets/widgets.php?' . http_build_query(
+        $this->url_add_widget = '/widgets/?'. http_build_query(
             array(
-                'owner'        => "g{$this->project_id}",
-                'dashboard_id' => $this->id
+                'action'         => 'get-add-modal-content',
+                'group_id'       => $this->project_id,
+                'dashboard-id'   => $this->id,
+                'dashboard-type' => ProjectDashboardController::DASHBOARD_TYPE
             )
         );
     }

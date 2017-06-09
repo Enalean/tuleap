@@ -18,19 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Dashboard\Widget\Add\AddWidgetController;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\PreferencesController;
+use Tuleap\Dashboard\Widget\Router;
+use Tuleap\Widget\WidgetFactory;
+
 require_once 'pre.php';
 
 $request = HTTPRequest::instance();
 
-$widget_factory = new \Tuleap\Widget\WidgetFactory(
+$widget_factory = new WidgetFactory(
     UserManager::instance(),
     new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
     EventManager::instance()
 );
 
-$router = new \Tuleap\Dashboard\Widget\Router(
-    new \Tuleap\Dashboard\Widget\PreferencesController(
-        new \Tuleap\Dashboard\Widget\DashboardWidgetDao($widget_factory),
+$dao    = new DashboardWidgetDao($widget_factory);
+$router = new Router(
+    new PreferencesController(
+        $dao,
+        $widget_factory
+    ),
+    new AddWidgetController(
+        $dao,
         $widget_factory
     )
 );

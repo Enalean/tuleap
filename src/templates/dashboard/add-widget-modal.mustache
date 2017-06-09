@@ -1,0 +1,79 @@
+<form method="POST"
+      action="/widgets/?action=add-widget"
+      id="add-widget-modal"
+      data-dashboard-id="{{ id }}"
+      class="tlp-modal tlp-modal-medium-sized"
+      aria-labelledby="add-widget-label"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="add-widget-label">
+            <i class="fa fa-pencil tlp-modal-title-icon"></i>
+            {{ add_widget_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ close }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body dashboard-add-widget-body">
+        <input type="hidden" name="dashboard-id" value="{{ id }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/csrf_token}}
+
+        <div class="dashboard-add-widget-content">
+            <div class="dashboard-add-widget-list">
+                <div class="dashboard-add-widget-list-header">
+                    <h2 class="tlp-modal-subtitle">{{ add_widget_list_title }}</h2>
+                    <div id="dashboard-add-widget-list-header-filter" class="tlp-form-element">
+                        <input type="search"
+                               id="dashboard-add-widget-list-header-filter-table"
+                               data-target-table-id="dashboard-add-widget-list-table"
+                               name="widgets"
+                               class="tlp-search tlp-search-small"
+                               placeholder="{{ add_widget_search_title }}"
+                        >
+                    </div>
+                </div>
+                <table id="dashboard-add-widget-list-table" class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th>{{ add_widget_table_title }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tlp-table-empty-filter">
+                            <td class="tlp-table-cell-empty">
+                                {{ add_widget_empty_search }}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody class="dashboard-add-widget-content-container">
+                        <tr>
+                            <td class="dashboard-add-widget-content-loading"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="dashboard-add-widget-error-message"></div>
+            </div>
+            <div class="dashboard-add-widget-separator"></div>
+            <div id="dashboard-add-widget-settings">
+                <div id="dashboard-add-widget-settings-empty" class="empty-page">
+                    <i class="fa fa-hand-o-left empty-page-icon" aria-hidden="true"></i>
+                    <p class="empty-page-text">{{ add_widget_empty_state }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel }}</button>
+        <button type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                disabled>
+            <i class="fa fa-pencil tlp-button-icon"></i>
+            {{ add_widget_title }}
+        </button>
+    </div>
+</form>
+
+{{> widgets-categories }}

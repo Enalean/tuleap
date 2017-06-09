@@ -49,6 +49,11 @@ class PagePresenter
     public $delete_dashboard_title;
     public $edit_dashboard_title;
     public $add_widget_title;
+    public $add_widget_list_title;
+    public $add_widget_search_title;
+    public $add_widget_table_title;
+    public $add_widget_empty_search;
+    public $add_widget_empty_state;
 
     public function __construct(CSRFSynchronizerToken $csrf, $url)
     {
@@ -62,6 +67,11 @@ class PagePresenter
         $this->delete_dashboard_label          = _('Delete dashboard');
         $this->edit_dashboard_title            = _('Edit dashboard');
         $this->add_widget_title                = _('Add widget');
+        $this->add_widget_list_title           = _('Widgets');
+        $this->add_widget_search_title         = _('Name, type...');
+        $this->add_widget_table_title          = _('Name');
+        $this->add_widget_empty_search         = _("There isn't any matching widgets");
+        $this->add_widget_empty_state          = _('Start by choosing a widget');
         $this->edit_dashboard_label            = _('Edit dashboard');
         $this->dashboard_name_label            = _('Dashboard name');
         $this->no_dashboard_label              = _("You don't have any dashboards.");

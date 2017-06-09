@@ -139,7 +139,7 @@
     function destroy($id) {
     }
 
-    /* static */ function getCodendiWidgets($owner_type) {
+    public static function getWidgetsForOwnerType($owner_type) {
         switch ($owner_type) {
             case WidgetLayoutManager::OWNER_TYPE_USER:
                 $widgets = array('myadmin', 'myprojects', 'mybookmarks',
@@ -169,33 +169,6 @@
         $plugins_widgets = array();
         $em = EventManager::instance();
         $em->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
-
-        if (is_array($plugins_widgets)) {
-            $widgets = array_merge($widgets, $plugins_widgets);
-        }
-        return $widgets;
-    }
-    /* static */ function getExternalWidgets($owner_type) {
-        switch ($owner_type) {
-            case WidgetLayoutManager::OWNER_TYPE_USER:
-                $widgets = array(
-                );
-                break;
-            case WidgetLayoutManager::OWNER_TYPE_GROUP:
-                $widgets = array(
-                );
-                break;
-            case WidgetLayoutManager::OWNER_TYPE_HOME:
-                $widgets = array();
-                break;
-            default:
-                $widgets = array();
-                break;
-        }
-
-        $plugins_widgets = array();
-        $em = EventManager::instance();
-        $em->processEvent('widgets', array('external_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
 
         if (is_array($plugins_widgets)) {
             $widgets = array_merge($widgets, $plugins_widgets);

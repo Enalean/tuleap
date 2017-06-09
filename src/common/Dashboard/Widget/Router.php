@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Widget;
 
 use ForgeConfig;
 use HTTPRequest;
+use Tuleap\Dashboard\Widget\Add\AddWidgetController;
 
 class Router
 {
@@ -29,10 +30,15 @@ class Router
      * @var PreferencesController
      */
     private $preferences_controller;
+    /**
+     * @var AddWidgetController
+     */
+    private $add_widget_controller;
 
-    public function __construct(PreferencesController $preferences_controller)
+    public function __construct(PreferencesController $preferences_controller, AddWidgetController $add_widget_controller)
     {
         $this->preferences_controller = $preferences_controller;
+        $this->add_widget_controller  = $add_widget_controller;
     }
 
     public function route(HTTPRequest $request)
@@ -46,6 +52,9 @@ class Router
         $action = $request->get('action');
 
         switch ($action) {
+            case 'get-add-modal-content':
+                $this->add_widget_controller->display($request);
+                break;
             case 'get-edit-modal-content':
                 $this->preferences_controller->display($request);
                 break;

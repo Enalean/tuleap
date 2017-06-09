@@ -83,6 +83,23 @@ class DashboardWidgetDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function searchUsedWidgetsContentByDashboardId($dashboard_id, $dashboard_type)
+    {
+        $dashboard_id   = $this->da->escapeInt($dashboard_id);
+        $dashboard_type = $this->da->quoteSmart($dashboard_type);
+
+        $sql = "SELECT dashboards_lines_columns_widgets.name
+                FROM dashboards_lines
+                INNER JOIN dashboards_lines_columns
+                  ON (dashboards_lines.id = dashboards_lines_columns.line_id)
+                INNER JOIN dashboards_lines_columns_widgets
+                  ON (dashboards_lines_columns.id = dashboards_lines_columns_widgets.column_id)
+                WHERE dashboards_lines.dashboard_id = $dashboard_id
+                AND dashboard_type = $dashboard_type";
+
+        return $this->retrieve($sql);
+    }
+
     public function create($owner_id, $owner_type, $dashboard_id, $name, $content_id)
     {
         $this->startTransaction();
@@ -489,7 +506,7 @@ class DashboardWidgetDao extends DataAccessObject
         $this->update($sql);
     }
 
-    private function checkThatDashboardBelongsToTheOwner($owner_id, $dashboard_type, $dashboard_id)
+    public function checkThatDashboardBelongsToTheOwner($owner_id, $dashboard_type, $dashboard_id)
     {
         $dashboard_id = $this->da->escapeInt($dashboard_id);
         $owner_id     = $this->da->escapeInt($owner_id);
