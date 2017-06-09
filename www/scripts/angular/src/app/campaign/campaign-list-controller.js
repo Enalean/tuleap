@@ -48,7 +48,7 @@ function CampaignListCtrl(
             .then(function(data) {
                 $scope.campaigns = $scope.campaigns.concat(data.results);
 
-                if (data.results.length < data.total) {
+                if (filterCampaigns($scope.campaigns, campaign_status).length < data.total) {
                     return getCampaigns(project_id, milestone_id, campaign_status, limit, offset + limit);
                 }
             });
