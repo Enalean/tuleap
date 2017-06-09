@@ -52,10 +52,6 @@ class ProjectDashboardRouter
      */
     public function route(HTTPRequest $request)
     {
-        if (! ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            return;
-        }
-
         $action = $request->get('action');
 
         switch ($action) {

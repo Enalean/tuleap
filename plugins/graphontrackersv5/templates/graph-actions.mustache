@@ -8,103 +8,70 @@
 </div>
 {{/ can_be_updated }}
 
+<div class="widget_titlebar_prefs dropdown">
+    <a class="icon-cog dropdown-toggle" data-toggle="dropdown" href="#" title="#"></a>
 
-{{# use_tlp_in_dashboards }}
-    <div class="widget_titlebar_prefs dropdown">
-        <a class="icon-cog dropdown-toggle" data-toggle="dropdown" href="#" title="#"></a>
+    <ul class="dropdown-menu pull-right">
+        {{# can_be_updated }}
+            <li>
+                <a title="{{ edit_title }}" href="{{ edit_url }}">
+                    {{ edit_title }}
+                </a>
+            </li>
+        {{/ can_be_updated }}
 
-        <ul class="dropdown-menu pull-right">
-            {{# can_be_updated }}
-                <li>
-                    <a title="{{ edit_title }}" href="{{ edit_url }}">
-                        {{ edit_title }}
-                    </a>
-                </li>
-            {{/ can_be_updated }}
-
-            {{# report_is_created }}
-                {{# has_user_dashboard }}
-                    <li class="divider"></li>
-                    {{# has_one_user_dashboard }}
-                        {{# user_dashboards }}
-                            <li>
-                                <a title="{{ add_to_my_dashboard_label }}"
-                                   href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
-                                    {{ add_to_my_dashboard_label }}
-                                </a>
-                            </li>
-                        {{/ user_dashboards }}
-                    {{/ has_one_user_dashboard }}
-                    {{^ has_one_user_dashboard }}
-                        <li class="dropdown-header add-widget-to-dashboard">
-                            {{ add_to_my_dashboard_label }}
-                        </li>
-                        {{# user_dashboards }}
+        {{# report_is_created }}
+            {{# has_user_dashboard }}
+                <li class="divider"></li>
+                {{# has_one_user_dashboard }}
+                    {{# user_dashboards }}
                         <li>
-                            <a title="{{ getName }}" href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
+                            <a title="{{ add_to_my_dashboard_label }}"
+                               href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
+                                {{ add_to_my_dashboard_label }}
+                            </a>
+                        </li>
+                    {{/ user_dashboards }}
+                {{/ has_one_user_dashboard }}
+                {{^ has_one_user_dashboard }}
+                    <li class="dropdown-header add-widget-to-dashboard">
+                        {{ add_to_my_dashboard_label }}
+                    </li>
+                    {{# user_dashboards }}
+                    <li>
+                        <a title="{{ getName }}" href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
+                            {{ getName }}
+                        </a>
+                    </li>
+                    {{/ user_dashboards }}
+                {{/ has_one_user_dashboard }}
+            {{/ has_user_dashboard }}
+            {{# has_project_dashboard }}
+                <li class="divider"></li>
+                {{# has_one_project_dashboard }}
+                    {{# project_dashboards }}
+                        <li>
+                            <a title="{{ add_to_project_dashboard_label }}"
+                               href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
+                                {{ add_to_project_dashboard_label }}
+                            </a>
+                        </li>
+                    {{/ project_dashboards }}
+                {{/ has_one_project_dashboard }}
+                {{^ has_one_project_dashboard }}
+                    <li class="dropdown-header add-widget-to-dashboard"
+                        title="{{ add_to_project_dashboard_label }}">
+                        {{ add_to_project_dashboard_label }}
+                    </li>
+                    {{# project_dashboards }}
+                        <li>
+                            <a title="{{ getName }}" href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
                                 {{ getName }}
                             </a>
                         </li>
-                        {{/ user_dashboards }}
-                    {{/ has_one_user_dashboard }}
-                {{/ has_user_dashboard }}
-                {{# has_project_dashboard }}
-                    <li class="divider"></li>
-                    {{# has_one_project_dashboard }}
-                        {{# project_dashboards }}
-                            <li>
-                                <a title="{{ add_to_project_dashboard_label }}"
-                                   href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
-                                    {{ add_to_project_dashboard_label }}
-                                </a>
-                            </li>
-                        {{/ project_dashboards }}
-                    {{/ has_one_project_dashboard }}
-                    {{^ has_one_project_dashboard }}
-                        <li class="dropdown-header add-widget-to-dashboard"
-                            title="{{ add_to_project_dashboard_label }}">
-                            {{ add_to_project_dashboard_label }}
-                        </li>
-                        {{# project_dashboards }}
-                            <li>
-                                <a title="{{ getName }}" href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
-                                    {{ getName }}
-                                </a>
-                            </li>
-                        {{/ project_dashboards }}
-                    {{/ has_one_project_dashboard }}
-                {{/ has_project_dashboard }}
-            {{/ report_is_created }}
-        </ul>
-    </div>
-{{/ use_tlp_in_dashboards }}
-
-{{^ use_tlp_in_dashboards }}
-    <div class="widget_titlebar_prefs dropdown">
-        <a class="icon-cog dropdown-toggle" data-toggle="dropdown" href="#" title="#"></a>
-
-        <ul class="dropdown-menu pull-right">
-            {{# report_is_created }}
-                <li>
-                    <a title="{{ add_to_my_dashboard_label }}" href="{{ my_dashboard_url }}">
-                        {{ add_to_my_dashboard_label }}
-                    </a>
-                </li>
-                {{# project_dashboard_url }}
-                    <li>
-                        <a title="{{ add_to_project_dashboard_label }}" href="{{ project_dashboard_url }}">
-                            {{ add_to_project_dashboard_label }}
-                        </a>
-                    </li>
-                {{/ project_dashboard_url }}
-            {{/ report_is_created }}
-            {{# can_be_updated }}
-                <li>
-                    <a title="{{ edit_title }}" href="{{ edit_url }}">
-                        {{ edit_title }}
-                    </a>
-                </li>
-            {{/ can_be_updated }}
-        </ul>
-    </div>
-{{/ use_tlp_in_dashboards }}
+                    {{/ project_dashboards }}
+                {{/ has_one_project_dashboard }}
+            {{/ has_project_dashboard }}
+        {{/ report_is_created }}
+    </ul>
+</div>

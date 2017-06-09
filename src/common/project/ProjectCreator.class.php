@@ -646,9 +646,7 @@ class ProjectCreator {
         $lm = new WidgetLayoutManager();
         $lm->createDefaultLayoutForProject($new_project_id, $template_id);
 
-        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            $this->dashboard_duplicator->duplicate($template, $new_project);
-        }
+        $this->dashboard_duplicator->duplicate($template, $new_project);
     }
 
     // Copy Truncated email option

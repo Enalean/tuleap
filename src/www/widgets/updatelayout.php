@@ -72,100 +72,40 @@ if ($owner) {
             $instance_id = (int)$param[$name];
         }
 
-        $use_new_dashboards = $request->get('dashboard_id') && ForgeConfig::get('sys_use_tlp_in_dashboards');
-        if ($use_new_dashboards) {
-            $redirect .= '?'. http_build_query(
-                array(
-                    'dashboard_id' => $request->get('dashboard_id')
-                )
-            );
-            switch($request->get('action')) {
-                case 'widget':
-                    $csrf_token->check($redirect, $request);
-                    if ($name) {
-                        $widget = $widget_factory->getInstanceByWidgetName($name);
-                        if ($widget && $widget->isAvailable()) {
-                            $action = array_pop(array_keys($param[$name]));
-                            switch($action) {
-                                case 'add':
-                                    $widget_creator = new WidgetCreator(new DashboardWidgetDao($widget_factory));
-                                    try {
-                                        $widget_creator->create(
-                                            $owner_id,
-                                            $owner_type,
-                                            $request->get('dashboard_id'),
-                                            $widget,
-                                            $request
-                                        );
-                                    } catch (Exception $exception) {
-                                        $GLOBALS['HTML']->addFeedback(
-                                            Feedback::ERROR,
-                                            _('An error occured while trying to add the widget to the dashboard')
-                                        );
-                                    }
-                                    break;
-                            }
+        $redirect .= '?'. http_build_query(
+            array(
+                'dashboard_id' => $request->get('dashboard_id')
+            )
+        );
+        switch($request->get('action')) {
+            case 'widget':
+                $csrf_token->check($redirect, $request);
+                if ($name) {
+                    $widget = $widget_factory->getInstanceByWidgetName($name);
+                    if ($widget && $widget->isAvailable()) {
+                        $action = array_pop(array_keys($param[$name]));
+                        switch($action) {
+                            case 'add':
+                                $widget_creator = new WidgetCreator(new DashboardWidgetDao($widget_factory));
+                                try {
+                                    $widget_creator->create(
+                                        $owner_id,
+                                        $owner_type,
+                                        $request->get('dashboard_id'),
+                                        $widget,
+                                        $request
+                                    );
+                                } catch (Exception $exception) {
+                                    $GLOBALS['HTML']->addFeedback(
+                                        Feedback::ERROR,
+                                        _('An error occured while trying to add the widget to the dashboard')
+                                    );
+                                }
+                                break;
                         }
                     }
-                    break;
-            }
-        } else {
-            if (!$request->exist('layout_id')) {
-                //Search the default one
-                $layout_id = $layout_manager->getDefaultLayoutId($owner_id, $owner_type);
-            } else {
-                $layout_id = (int)$request->get('layout_id');
-            }
-            if ($layout_id || $request->get('action') == 'preferences') {
-                switch($request->get('action')) {
-                    case 'widget':
-                        if ($name && $layout_id) {
-                            $csrf_token->check($redirect, $request);
-                            if ($widget = $widget_factory->getInstanceByWidgetName($name)) {
-                                if ($widget->isAvailable()) {
-                                    $action = array_pop(array_keys($param[$name]));
-                                    switch($action) {
-                                        case 'remove':
-                                            $instance_id = (int)$param[$name][$action];
-                                            $layout_manager->removeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id, $widget);
-                                            break;
-                                        case 'add':
-                                        default:
-                                            $layout_manager->addWidget($owner_id, $owner_type, $layout_id, $name, $widget, $request);
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case 'minimize':
-                        if ($name) {
-                            $csrf_token->check($redirect, $request);
-                            $layout_manager->mimizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id);
-                        }
-                        break;
-                    case 'maximize':
-                        if ($name) {
-                            $csrf_token->check($redirect, $request);
-                            $layout_manager->maximizeWidget($owner_id, $owner_type, $layout_id, $name, $instance_id);
-                        }
-                        break;
-                    case 'preferences':
-                        if ($name) {
-                            $csrf_token->check($redirect, $request);
-                            $layout_manager->displayWidgetPreferences($owner_id, $owner_type, $layout_id, $name, $instance_id);
-                        }
-                        break;
-                    case 'layout':
-                        $csrf_token->check($redirect, $request);
-                        $layout_manager->updateLayout($owner_id, $owner_type, $request->get('layout_id'), $request->get('new_layout'));
-                        break;
-                    default:
-                        $csrf_token->check($redirect, $request);
-                        $layout_manager->reorderLayout($owner_id, $owner_type, $layout_id, $request);
-                        break;
                 }
-            }
+                break;
         }
     }
 }

@@ -71,54 +71,49 @@ if ($project && !$project->isError()) {
 
     if ($project->usesService('summary')) {
         Tuleap\Instrument\Collect::increment('service.project.summary.accessed');
-        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            $widget_factory = new WidgetFactory(
-                UserManager::instance(),
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance()
-            );
+        $widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
 
-            $csrf_token                   = new CSRFSynchronizerToken('/project/');
-            $dashboard_widget_dao         = new DashboardWidgetDao($widget_factory);
-            $dashboard_widget_retriever   = new DashboardWidgetRetriever($dashboard_widget_dao);
-            $project_dashboard_dao        = new ProjectDashboardDao($dashboard_widget_dao);
-            $router                       = new ProjectDashboardRouter(
-                new ProjectDashboardController(
-                    $csrf_token,
-                    $project,
-                    new ProjectDashboardRetriever($project_dashboard_dao),
-                    new ProjectDashboardSaver($project_dashboard_dao),
-                    new DashboardWidgetRetriever(
-                        $dashboard_widget_dao
-                    ),
-                    new DashboardWidgetPresenterBuilder($widget_factory),
-                    new WidgetDeletor($dashboard_widget_dao),
-                    new WidgetMinimizor($dashboard_widget_dao),
-                    new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
+        $csrf_token                   = new CSRFSynchronizerToken('/project/');
+        $dashboard_widget_dao         = new DashboardWidgetDao($widget_factory);
+        $dashboard_widget_retriever   = new DashboardWidgetRetriever($dashboard_widget_dao);
+        $project_dashboard_dao        = new ProjectDashboardDao($dashboard_widget_dao);
+        $router                       = new ProjectDashboardRouter(
+            new ProjectDashboardController(
+                $csrf_token,
+                $project,
+                new ProjectDashboardRetriever($project_dashboard_dao),
+                new ProjectDashboardSaver($project_dashboard_dao),
+                new DashboardWidgetRetriever(
+                    $dashboard_widget_dao
                 ),
-                new WidgetDashboardController(
-                    $csrf_token,
-                    new WidgetCreator(
-                        $dashboard_widget_dao
-                    ),
+                new DashboardWidgetPresenterBuilder($widget_factory),
+                new WidgetDeletor($dashboard_widget_dao),
+                new WidgetMinimizor($dashboard_widget_dao),
+                new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
+            ),
+            new WidgetDashboardController(
+                $csrf_token,
+                new WidgetCreator(
+                    $dashboard_widget_dao
+                ),
+                $dashboard_widget_retriever,
+                new DashboardWidgetReorder(
+                    $dashboard_widget_dao,
                     $dashboard_widget_retriever,
-                    new DashboardWidgetReorder(
-                        $dashboard_widget_dao,
-                        $dashboard_widget_retriever,
-                        new DashboardWidgetRemoverInList()
-                    ),
-                    new DashboardWidgetChecker($dashboard_widget_dao),
-                    new DashboardWidgetDeletor($dashboard_widget_dao),
-                    new DashboardWidgetLineUpdater(
-                        $dashboard_widget_dao
-                    )
+                    new DashboardWidgetRemoverInList()
+                ),
+                new DashboardWidgetChecker($dashboard_widget_dao),
+                new DashboardWidgetDeletor($dashboard_widget_dao),
+                new DashboardWidgetLineUpdater(
+                    $dashboard_widget_dao
                 )
-            );
-            $router->route($request);
-            exit;
-        }
-        //now show the project page
-        include_once 'project_home.php';
+            )
+        );
+        $router->route($request);
     } else {
         $val = array_values($project->getServices());
         foreach ($val as $containedSrv) {

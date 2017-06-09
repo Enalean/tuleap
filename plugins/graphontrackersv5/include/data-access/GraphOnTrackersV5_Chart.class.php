@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -554,17 +554,15 @@ abstract class GraphOnTrackersV5_Chart {
         return $content;
     }
 
-    private function fetchContentD3Graph(array $chart_data) {
+    private function fetchContentD3Graph(array $chart_data)
+    {
         $snippet = 'var tuleap = tuleap || {};
             tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || {};
             tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || {};
-            tuleap.graphontrackersv5.graphs['. $this->getId() .'] = '.json_encode($chart_data).';';
+            tuleap.graphontrackersv5.graphs[' . $this->getId() . '] = ' . json_encode($chart_data) . ';';
         $GLOBALS['HTML']->includeFooterJavascriptSnippet($snippet);
 
-        $content = "";
-        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            $content .= $this->fetchAdditionnalButton();
-        }
+        $content = $this->fetchAdditionnalButton();
         $content .= $this->fetchGraphAnchor('');
 
         return $content;

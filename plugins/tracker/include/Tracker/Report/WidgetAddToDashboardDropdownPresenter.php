@@ -31,7 +31,6 @@ class WidgetAddToDashboardDropdownPresenter
     public $project_dashboard;
     public $my_dashboard;
     public $dashboard;
-    public $uses_new_dashboards;
     public $cancel_label;
     public $has_user_dashboard;
     public $error_no_dashboard;
@@ -64,7 +63,6 @@ class WidgetAddToDashboardDropdownPresenter
         $this->is_admin                       = $user->isAdmin($project->getID());
         $this->my_dashboard_url               = $my_dashboard_url;
         $this->project_dashboard_url          = $project_dashboard_url;
-        $this->uses_new_dashboards            = \ForgeConfig::get('sys_use_tlp_in_dashboards');
         $this->user_dashboards_presenter      = $user_dashboards_presenter;
         $this->has_user_dashboard             = count($user_dashboards_presenter) > 0;
         $this->has_only_one_user_dashboard    = count($user_dashboards_presenter) === 1;

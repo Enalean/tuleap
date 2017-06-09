@@ -123,7 +123,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         $html = '';
         $in_dashboard = $readonly = true;
         $store_in_session = false;
-        if (ForgeConfig::get('sys_use_tlp_in_dashboards') && $in_dashboard) {
+        if ($in_dashboard) {
             $html .= $this->fetchAdditionalButton($this->report->getTracker());
         }
         $html .= $this->fetchCharts($this->report->getMatchingIds(), $user, $in_dashboard, $readonly, $store_in_session);
