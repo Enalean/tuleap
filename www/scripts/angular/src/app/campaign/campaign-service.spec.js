@@ -99,4 +99,41 @@ describe ('CampaignService - ', function () {
             expect(executions.length).toEqual(1);
         });
     });
+
+    it("patchExecutions() - ", function() {
+        var definition_ids = [1, 2],
+            execution_ids = [4],
+            executions = [
+                {
+                    id: 1,
+                    previous_result: {
+                        status: 'notrun'
+                    }
+                },
+                {
+                    id: 2,
+                    previous_result: {
+                        status: 'notrun'
+                    }
+                }
+            ];
+
+        mockBackend
+            .expectPATCH(
+                '/api/v1/trafficlights_campaigns/17/trafficlights_executions',
+                {
+                    definition_ids_to_add: definition_ids,
+                    execution_ids_to_remove: execution_ids
+                }
+            )
+            .respond(executions);
+
+        var promise = CampaignService.patchExecutions(17, definition_ids, execution_ids);
+
+        mockBackend.flush();
+
+        promise.then(function(response) {
+            expect(response.results.length).toEqual(2);
+        });
+    });
 });

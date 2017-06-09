@@ -1,0 +1,78 @@
+<form name="editCampaignForm" ng-submit="editCampaign(campaign)">
+    <div id="campaign-edit-header" class="modal-header">
+      <h3 translate><i class="icon-pencil"></i> Edit {{ campaign.label }} campaign</h3>
+      <button class="close" ng-click="cancel()">&times;</button>
+    </div>
+
+    <div id="campaign-edit-container" class="modal-body">
+        <h3 translate>Tests</h3>
+        <div id="campaign-edit-action-bar">
+            <button
+                type="button"
+                class="btn"
+                ng-click="showAddTestModal()">
+                <span translate><i class="icon-plus"></i> Add a test</span>
+            </button>
+            <input type="text" class="filter" placeholder="{{ 'Id, summary, category' | translate }}" ng-model="search">
+        </div>
+        <table id="campaign-edit-executions-list" class="table">
+            <thead>
+                <th></th>
+                <th translate>Id</th>
+                <th translate>Summary</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat-start="category in tests_list"
+                    ng-hide="category.tests
+                        | toArray:false
+                        | filter:matchProperties(search)
+                        | isEmpty"
+                >
+                    <td colspan="3" class="table-cell-section">
+                        <i class="checklist-check" ng-class="categoryCheckmark(category)" ng-click="toggleCategory(category)"></i>
+                        {{ category.label }}
+                    </td>
+                </tr>
+                <tr ng-repeat-end=""
+                    ng-repeat="test in category.tests
+                        | toArray:false
+                        | filter:matchProperties(search)
+                        | unique:'definition.id'
+                        track by test.definition.id"
+                    ng-class="diffState(test)"
+                >
+                    <td><i class="checklist-check" ng-class="testCheckmark(test)" ng-click="toggleTest(test)"></i></td>
+                    <td>{{ test.definition.id }}</td>
+                    <td>{{ test.definition.summary }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="campaign-edit-footer" class="modal-footer">
+        <div id="campaign-edit-executions-diff">
+            <div id="campaign-edit-executions-add" ng-if="addedTests().length > 0" translate>
+                {{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} will be added
+            </div>
+            <div id="campaign-edit-executions-remove" ng-if="removedTests().length > 0" translate>
+                {{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} will be removed
+            </div>
+        </div>
+        <div id="campaign-edit-button-bar">
+            <button
+                type="button"
+                class="btn btn-large"
+                ng-click="cancel()">
+                <span translate>Cancel</span>
+            </button>
+            <button
+                type="submit"
+                class="btn btn-large btn-primary"
+                ng-disabled="submitting_changes || ! editCampaignForm.$valid">
+                <i class="icon-spinner icon-spin" ng-if="submitting_changes"></i>
+                <span translate>Save changes</span>
+            </button>
+        </div>
+    </div>
+</form>
+

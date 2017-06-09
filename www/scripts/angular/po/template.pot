@@ -8,12 +8,20 @@ msgstr ""
 msgid "<i class=\"icon-list\"></i> Tests list"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "<i class=\"icon-plus\"></i> New campaign"
+#: src/app/execution/execution-list.tpl.html
+msgid "<i class=\"icon-pencil\"></i> Edit"
 msgstr ""
 
-#: src/app/execution/execution-list.tpl.html
-msgid "Add a test"
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "<i class=\"icon-pencil\"></i> Edit {{ campaign.label }} campaign"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "<i class=\"icon-plus\"></i> Add a test"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "<i class=\"icon-plus\"></i> New campaign"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
@@ -33,6 +41,7 @@ msgstr ""
 msgid "Campaigns list"
 msgstr ""
 
+#: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Cancel"
 msgstr ""
@@ -80,6 +89,14 @@ msgstr ""
 msgid "Hide closed campaigns"
 msgstr ""
 
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Id"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Id, summary, category"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"
 msgstr ""
@@ -98,12 +115,24 @@ msgstr ""
 msgid "Please select a test"
 msgstr ""
 
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Save changes"
+msgstr ""
+
 #: src/app/execution/execution-presences.tpl.html
 msgid "Score users"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Show dependencies graph for this test"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Summary"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Tests"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -134,4 +163,12 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "by"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} will be added"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} will be removed"
 msgstr ""

@@ -8,7 +8,7 @@
     function ExecutionConfig($stateProvider) {
         $stateProvider
             .state('campaigns.executions', {
-                url:         '/{id:[0-9]+}',
+                url:         '/{id:int}',
                 controller:  'ExecutionListCtrl',
                 templateUrl: 'execution/execution-list.tpl.html',
                 data: {
@@ -17,7 +17,7 @@
                 }
             })
             .state('campaigns.executions.detail', {
-                url:         '/{execid:[0-9]+}/{defid:[0-9]+}',
+                url:         '/{execid:int}/{defid:int}',
                 controller:  'ExecutionDetailCtrl',
                 templateUrl: 'execution/execution-detail.tpl.html',
                 data: {

@@ -24,6 +24,7 @@ function ExecutionService(
 
     _.extend(self, {
         initialization                    : initialization,
+        resetExecutions                   : resetExecutions,
         loadExecutions                    : loadExecutions,
         getExecutions                     : getExecutions,
         getExecutionsByDefinitionId       : getExecutionsByDefinitionId,
@@ -59,6 +60,15 @@ function ExecutionService(
             presences_by_execution               : {},
             presences_on_campaign                : []
         });
+    }
+
+    function resetExecutions(campaign_id) {
+        _.forEach(self.executions_by_categories_by_campaigns[campaign_id], function(category) {
+            _.forEach(category.executions, function(execution) {
+                delete self.executions[execution.id];
+            });
+        });
+        delete self.executions_by_categories_by_campaigns[campaign_id];
     }
 
     function loadExecutions(campaign_id) {

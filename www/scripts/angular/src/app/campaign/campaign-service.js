@@ -15,10 +15,11 @@ function CampaignService(
     });
 
     return {
-        getCampaign    : getCampaign,
-        getCampaigns   : getCampaigns,
-        createCampaign : createCampaign,
-        patchCampaign  : patchCampaign
+        getCampaign     : getCampaign,
+        getCampaigns    : getCampaigns,
+        createCampaign  : createCampaign,
+        patchCampaign   : patchCampaign,
+        patchExecutions : patchExecutions,
     };
 
     function getCampaign(campaign_id) {
@@ -37,7 +38,7 @@ function CampaignService(
                 }
             })
             .then(function(response) {
-                result = {
+                var result = {
                     results: response.data,
                     total: response.headers('X-PAGINATION-SIZE')
                 };
@@ -58,6 +59,23 @@ function CampaignService(
             })
             .then(function(response) {
                 return response.data;
+            });
+    }
+
+    function patchExecutions(campaign_id, definition_ids, execution_ids) {
+        return rest.one('trafficlights_campaigns', campaign_id)
+            .one('trafficlights_executions')
+            .patch({
+                definition_ids_to_add: definition_ids,
+                execution_ids_to_remove: execution_ids
+            })
+            .then(function(response) {
+                var result = {
+                    results: response.data,
+                    total: response.headers('X-PAGINATION-SIZE')
+                };
+
+                return result;
             });
     }
 }

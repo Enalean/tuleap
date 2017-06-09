@@ -1,24 +1,29 @@
 (function () {
     angular
         .module('definition')
-        .service('DefinitionService', DefinitionService);
+        .service('DefinitionService', DefinitionService)
+        .constant('DefinitionConstants', {
+            'UNCATEGORIZED': 'Uncategorized'
+        });
 
     DefinitionService.$inject = [
         'Restangular',
-        '$q'
+        '$q',
+        'DefinitionConstants'
     ];
 
-    function DefinitionService(Restangular, $q) {
+    function DefinitionService(Restangular, $q, DefinitionConstants) {
         var rest = Restangular.withConfig(function(RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
             RestangularConfigurer.setBaseUrl('/api/v1');
         });
 
         return {
-            getDefinitions   : getDefinitions,
-            getArtifactById  : getArtifactById,
-            getDefinitionById: getDefinitionById,
-            getTracker       : getTracker
+            UNCATEGORIZED     : DefinitionConstants.UNCATEGORIZED,
+            getDefinitions    : getDefinitions,
+            getArtifactById   : getArtifactById,
+            getDefinitionById : getDefinitionById,
+            getTracker        : getTracker
         };
 
         function getDefinitions(project_id, limit, offset) {
@@ -32,14 +37,22 @@
                 })
                 .then(function(response) {
                     result = {
-                        results: response.data,
-                        total: response.headers('X-PAGINATION-SIZE')
+                        results: categorize(response.data),
+                        total: parseInt(response.headers('X-PAGINATION-SIZE'), 10)
                     };
 
                     data.resolve(result);
                 });
 
             return data.promise;
+        }
+
+        function categorize(definitions) {
+            return _.map(definitions, function(definition) {
+                return _.merge(definition, {
+                    category: definition.category || DefinitionConstants.UNCATEGORIZED
+                });
+            });
         }
 
         function getArtifactById(artifact_id) {
