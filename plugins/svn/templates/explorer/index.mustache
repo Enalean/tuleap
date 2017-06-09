@@ -28,27 +28,46 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>{{ table_head_list_repository }}</th>
-                <th>{{ last_commit }}</th>
-            </tr>
+        <tr>
+            <th>{{ table_head_list_repository }}</th>
+            <th>{{ last_commit }}</th>
+            {{# is_admin }}
+                <th>
+                    {{ settings_label }}
+                </th>
+            {{/ is_admin }}
+        </tr>
         </thead>
         <tbody>
-            {{# repository_list }}
-                {{# repository }}
-                    <tr>
-                        <td><a href="?roottype=svn&amp;root={{ getFullName }}">{{ getName }}</a></td>
-                        <td>{{ getPurifiedHumanReadableCommitDate }}</td>
-                    </tr>
-                {{/ repository }}
-            {{/ repository_list }}
-            {{^ repository_list }}
+        {{# repository_list }}
+            {{# repository }}
                 <tr>
-                    <td class="table-cell-empty" colspan="2">
-                        {{ no_repositories }}
-                    </td>
+                    <td><a href="?roottype=svn&amp;root={{ getFullName }}">{{ getName }}</a></td>
+                    <td>{{ getPurifiedHumanReadableCommitDate }}</td>
+                    {{# is_admin }}
+                        <td>
+                            <a href="{{ getSettingUrl }}" class="btn">
+                                <i class="icon-cog"></i> {{ settings_button }}
+                            </a>
+                        </td>
+                    {{/ is_admin }}
                 </tr>
-            {{/ repository_list }}
+            {{/ repository }}
+        {{/ repository_list }}
+        {{^ repository_list }}
+            <tr>
+                <td class="table-cell-empty"
+                    {{# is_admin }}
+                    colspan="3"
+                    {{/ is_admin }}
+                    {{^ is_admin }}
+                    colspan="3"
+                    {{/ is_admin }}
+                >
+                    {{ no_repositories }}
+                </td>
+            </tr>
+        {{/ repository_list }}
         </tbody>
     </table>
 </div>

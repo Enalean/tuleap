@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,15 @@
 
 namespace Tuleap\Svn\Explorer;
 
-use Tuleap\Svn\SvnPermissionManager;
-use Tuleap\Svn\Repository\Repository;
 use HTTPRequest;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryDisplayPresenter
 {
     private $repository;
+    public $settings_button;
+    public $is_user_admin;
     public $viewvc_html;
     public $repository_not_created;
     public $is_repository_created;
@@ -43,16 +45,12 @@ class RepositoryDisplayPresenter
         $this->repository            = $repository;
         $this->help_command          = "svn checkout --username " . $username . " " . $this->repository->getSvnUrl();
         $this->viewvc_html           = $viewvc_html;
-        $this->settings_url          = SVN_BASE_URL . '/?' . http_build_query(array(
-                'group_id' => $repository->getProject()->getID(),
-                'action' => 'settings',
-                'repo_id' => $repository->getId()
-            ));
         $this->is_user_admin         = $permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser());
         $this->is_repository_created = $repository->isRepositoryCreated();
 
         $this->help_message           = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
         $this->repository_not_created = $GLOBALS['Language']->getText('plugin_svn', 'repository_not_created');
+        $this->settings_button        = dgettext('tuleap-svn', 'Settings');
     }
 
     public function repository_name()
@@ -63,5 +61,10 @@ class RepositoryDisplayPresenter
     public function svn_url()
     {
         return $this->repository->getSvnUrl();
+    }
+
+    public function settings_url()
+    {
+        return $this->repository->getSettingUrl();
     }
 }

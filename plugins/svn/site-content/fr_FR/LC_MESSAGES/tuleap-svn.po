@@ -21,6 +21,9 @@ msgstr ""
 "l’enregistrer. Veuillez modifier le chemin d’accès ou mettre à jour la "
 "notification existante."
 
+msgid "Access to settings"
+msgstr "Accès aux paramètres"
+
 msgid "Be careful"
 msgstr "Attention"
 
@@ -57,6 +60,9 @@ msgstr "La notification à mettre à jour n’existe pas."
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Settings"
+msgstr "Paramètres"
 
 #, php-format
 msgid "The path '%s' already exists."
