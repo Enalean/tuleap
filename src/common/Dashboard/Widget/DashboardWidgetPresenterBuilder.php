@@ -36,15 +36,18 @@ class DashboardWidgetPresenterBuilder
     }
 
     /**
+     * @param OwnerInfo $owner_info
      * @param DashboardWidgetLine[] $widgets_lines
+     * @param bool $can_update_dashboards
+     *
      * @return array
      */
-    public function getWidgetsPresenter(OwnerInfo $owner_info, array $widgets_lines)
+    public function getWidgetsPresenter(OwnerInfo $owner_info, array $widgets_lines, $can_update_dashboards)
     {
         $lines_presenter = array();
 
         foreach ($widgets_lines as $line) {
-            $columns_presenter = $this->getColumnsPresenterByLine($owner_info, $line);
+            $columns_presenter = $this->getColumnsPresenterByLine($owner_info, $line, $can_update_dashboards);
             $lines_presenter[] = new DashboardWidgetLinePresenter(
                 $line->getId(),
                 $line->getLayout(),
@@ -56,24 +59,22 @@ class DashboardWidgetPresenterBuilder
     }
 
     /**
-     * @param DashboardWidgetLine $line
      * @return array
      */
-    private function getColumnsPresenterByLine(OwnerInfo $owner_info, DashboardWidgetLine $line)
+    private function getColumnsPresenterByLine(OwnerInfo $owner_info, DashboardWidgetLine $line, $can_update_dashboards)
     {
         $columns_presenter = array();
         foreach ($line->getWidgetColumns() as $column) {
-            $widgets_presenter = $this->getWidgetsPresenterByColumn($owner_info, $column);
+            $widgets_presenter = $this->getWidgetsPresenterByColumn($owner_info, $column, $can_update_dashboards);
             $columns_presenter[] = new DashboardWidgetColumnPresenter($column->getId(), $widgets_presenter);
         }
         return $columns_presenter;
     }
 
     /**
-     * @param DashboardWidgetColumn $column
      * @return array
      */
-    private function getWidgetsPresenterByColumn(OwnerInfo $owner_info, DashboardWidgetColumn $column)
+    private function getWidgetsPresenterByColumn(OwnerInfo $owner_info, DashboardWidgetColumn $column, $can_update_dashboards)
     {
         $widgets_presenter = array();
         foreach ($column->getWidgets() as $dashboard_widget) {
@@ -82,7 +83,7 @@ class DashboardWidgetPresenterBuilder
                 $widget->owner_id   = $owner_info->getId();
                 $widget->owner_type = $owner_info->getType();
                 $widget->loadContent($dashboard_widget->getContentId());
-                $widgets_presenter[] = new DashboardWidgetPresenter($dashboard_widget, $widget);
+                $widgets_presenter[] = new DashboardWidgetPresenter($dashboard_widget, $widget, $can_update_dashboards);
             }
         }
         return $widgets_presenter;

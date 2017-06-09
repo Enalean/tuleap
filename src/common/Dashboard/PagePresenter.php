@@ -25,7 +25,7 @@ use CSRFSynchronizerToken;
 
 class PagePresenter
 {
-    public $is_page_read_only;
+    public $can_update_dashboards;
 
     public $add_dashboard_label;
     public $dashboard_name_label;
@@ -55,7 +55,7 @@ class PagePresenter
         $this->csrf_token = $csrf;
         $this->url        = $url;
 
-        $this->is_page_read_only = false;
+        $this->can_update_dashboards = true;
 
         $this->add_dashboard_label             = _('Add dashboard');
         $this->delete_dashboard_title          = _('Delete dashboard');

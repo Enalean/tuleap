@@ -117,7 +117,12 @@ class ProjectDashboardController
             );
         }
 
-        $project_dashboards_presenter = $this->getProjectDashboardsPresenter($project, $dashboard_id, $project_dashboards);
+        $project_dashboards_presenter = $this->getProjectDashboardsPresenter(
+            $user,
+            $project,
+            $dashboard_id,
+            $project_dashboards
+        );
         $trove_cats                   = array();
         if (ForgeConfig::get('sys_use_trove')) {
             $trove_dao = new TroveCatLinkDao();
@@ -161,7 +166,7 @@ class ProjectDashboardController
                     $trove_cats
                 ),
                 $project_dashboards_presenter,
-                $this->isPageReadOnly($user, $project)
+                $this->canUpdateDashboards($user, $project)
             )
         );
 
@@ -333,7 +338,7 @@ class ProjectDashboardController
      * @param array $project_dashboards
      * @return ProjectDashboardPresenter[]
      */
-    private function getProjectDashboardsPresenter(Project $project, $dashboard_id, array $project_dashboards)
+    private function getProjectDashboardsPresenter(PFUser $user, Project $project, $dashboard_id, array $project_dashboards)
     {
         $project_dashboards_presenter = array();
 
@@ -350,7 +355,8 @@ class ProjectDashboardController
                 if ($widgets_lines) {
                     $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter(
                         OwnerInfo::createForProject($project),
-                        $widgets_lines
+                        $widgets_lines,
+                        $this->canUpdateDashboards($user, $project)
                     );
                 }
             }
@@ -394,9 +400,9 @@ class ProjectDashboardController
      * @param Project $project
      * @return bool
      */
-    private function isPageReadOnly(PFUser $user, Project $project)
+    private function canUpdateDashboards(PFUser $user, Project $project)
     {
-        return ! $user->isAdmin($project->getID());
+        return $user->isAdmin($project->getID());
     }
 
     public function deleteWidget(HTTPRequest $request)

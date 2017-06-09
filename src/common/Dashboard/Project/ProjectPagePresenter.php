@@ -40,13 +40,13 @@ class ProjectPagePresenter extends PagePresenter
         $url,
         ProjectPresenter $project_presenter,
         array $dashboards,
-        $is_page_read_only
+        $can_update_dashboards
     ) {
         parent::__construct($csrf, $url);
 
-        $this->project_presenter = $project_presenter;
-        $this->dashboards        = $dashboards;
-        $this->has_dashboard     = count($dashboards) > 0;
-        $this->is_page_read_only = $is_page_read_only;
+        $this->project_presenter     = $project_presenter;
+        $this->dashboards            = $dashboards;
+        $this->has_dashboard         = count($dashboards) > 0;
+        $this->can_update_dashboards = $can_update_dashboards;
     }
 }
