@@ -67,9 +67,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @return string
      */
     public function getTitle() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $this->plugin_docman_widget_embedded_title ?
-               $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML)  :
+        return $this->plugin_docman_widget_embedded_title ?:
                $GLOBALS['Language']->getText('plugin_docman', 'widget_title_embedded');
     }
 
@@ -118,7 +116,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
                        class="tlp-input"
                        id="title-'. (int)$widget_id .'"
                        name="plugin_docman_widget_embedded[title]"
-                       value="'. $this->getTitle() .'">
+                       value="'. $purifier->purify($this->getTitle()) .'">
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="item-id-'. (int)$widget_id .'">

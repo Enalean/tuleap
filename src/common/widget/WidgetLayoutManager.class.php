@@ -468,7 +468,7 @@ class WidgetLayoutManager
                     if ($widget = $this->widget_factory->getInstanceByWidgetName($widget_name)) {
                         if ($widget->isAvailable()) {
                             $row = '';
-                            $row .= '<td>'. $widget->getTitle() . $widget->getInstallPreferences() .'</td>';
+                            $row .= '<td>'. $hp->purify($widget->getTitle()) . $widget->getInstallPreferences() .'</td>';
                             $row .= '<td align="right">';
                             if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
                                 $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
@@ -492,7 +492,7 @@ class WidgetLayoutManager
                     foreach($ws as $widget_name => $widget) {
                         $row = '';
                         $row .= '<div class="widget-preview '. $widget->getPreviewCssClass() .'">';
-                        $row .= '<strong>'. $widget->getTitle()  .'</strong>';
+                        $row .= '<strong>'. $hp->purify($widget->getTitle())  .'</strong>';
                         $row .= '<p>'. $widget->getDescription() .'</p>';
                         if ($widget->isInstallAllowed()) {
                             $row .= $widget->getInstallPreferences();

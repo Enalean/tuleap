@@ -36,9 +36,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
     }
 
     function getTitle() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $this->renderer_title ?
-            $hp->purify($this->renderer_title, CODENDI_PURIFIER_CONVERT_HTML) :
+        return $this->renderer_title ?:
             dgettext('tuleap-tracker', 'Tracker renderer');
     }
 
@@ -89,7 +87,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
                        class="tlp-input"
                        id="title-'. (int)$widget_id .'"
                        name="renderer[title]"
-                       value="'. $this->getTitle() .'"
+                       value="'. $purifier->purify($this->getTitle()) .'"
                        placeholder="'. $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) .'">
             </div>
             <div class="tlp-form-element">

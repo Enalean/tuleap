@@ -37,8 +37,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
     }
 
     function getTitle() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $this->chart_title ?  $hp->purify($this->chart_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Tracker Chart';
+        return $this->chart_title ?: 'Tracker Chart';
     }
 
     public function getContent() {
@@ -76,7 +75,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
                        class="tlp-input"
                        id="title-'. (int)$widget_id .'"
                        name="chart[title]"
-                       value="'. $this->getTitle() .'">
+                       value="'. $purifier->purify($this->getTitle()) .'">
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="chart-id-'. (int)$widget_id .'">

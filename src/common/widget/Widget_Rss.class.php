@@ -38,8 +38,7 @@ require_once('common/date/DateHelper.class.php');
     }
 
     function getTitle() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $this->rss_title ?  $hp->purify($this->rss_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'RSS Reader';
+        return $this->rss_title ?: 'RSS Reader';
     }
     function getContent() {
         $hp = Codendi_HTMLPurifier::instance();
@@ -86,7 +85,7 @@ require_once('common/date/DateHelper.class.php');
                        class="tlp-input"
                        id="title-'. (int)$widget_id .'"
                        name="rss[title]"
-                       value="'. $this->getTitle() .'"
+                       value="'. $purifier->purify($this->getTitle()) .'"
                        placeholder="RSS">
             </div>
             <div class="tlp-form-element">
