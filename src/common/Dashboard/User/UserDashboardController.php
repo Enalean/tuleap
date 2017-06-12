@@ -223,6 +223,7 @@ class UserDashboardController
                 $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
                 if ($widgets_lines) {
                     $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter(
+                        $dashboard,
                         OwnerInfo::createForUser($user),
                         $widgets_lines,
                         true

@@ -23,7 +23,7 @@ require_once('Widget.class.php');
 
 /**
 * Widget_MyMonitoredForums
-* 
+*
 * Forums that are actively monitored
 */
 class Widget_MyMonitoredForums extends Widget {
@@ -52,7 +52,7 @@ class Widget_MyMonitoredForums extends Widget {
             $sql .= "AND groups.group_id IN (". db_ei_implode($projects) .") ";
         }
         $sql .= "GROUP BY group_id ORDER BY group_id ASC LIMIT 100";
-    
+
         $result=db_query($sql);
         $rows=db_numrows($result);
         if (!$result || $rows < 1) {
@@ -62,7 +62,7 @@ class Widget_MyMonitoredForums extends Widget {
             $html_my_monitored_forums .= '<table class="tlp-table" style="width:100%">';
             for ($j=0; $j<$rows; $j++) {
                 $group_id = db_result($result,$j,'group_id');
-        
+
                 $sql2="SELECT forum_group_list.group_forum_id,forum_group_list.forum_name ".
                     "FROM groups,forum_group_list,forum_monitored_forums ".
                     "WHERE groups.group_id=forum_group_list.group_id ".
@@ -70,7 +70,7 @@ class Widget_MyMonitoredForums extends Widget {
                     "AND forum_group_list.is_public <> 9 ".
                     "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
                     "AND forum_monitored_forums.user_id='". db_ei(user_getid()) ."' LIMIT 100";
-        
+
                 $result2 = db_query($sql2);
                 $rows2 = db_numrows($result2);
 
@@ -91,17 +91,17 @@ class Widget_MyMonitoredForums extends Widget {
                 }
 
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum, $request->get('dashboard_id'));
-        
+
                 $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
                     $hide_url.'<A HREF="/forum/?group_id='.$group_id.'">'.
                     db_result($result,$j,'group_name').'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
-        
+
                 $html = '';
                 $count_new = max(0, $count_diff);
                 for ($i=0; $i<$rows2; $i++) {
-        
+
                     if (!$hide_now) {
-        
+
                     $group_forum_id = db_result($result2,$i,'group_forum_id');
                     $html .= '
                     <TR class="'. util_get_alt_row_color($i) .'"><TD WIDTH="99%">'.
@@ -112,7 +112,7 @@ class Widget_MyMonitoredForums extends Widget {
                         '<i class="icon-trash fa fa-trash-o" title="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></i></A></TD></TR>';
                     }
                 }
-        
+
                 $html_hdr .= my_item_count($rows2,$count_new).'</td></tr>';
                 $html_my_monitored_forums .= $html_hdr.$html;
             }
@@ -120,7 +120,7 @@ class Widget_MyMonitoredForums extends Widget {
         }
         return $html_my_monitored_forums;
     }
-    
+
     function getCategory() {
         return 'forums';
     }
@@ -130,13 +130,14 @@ class Widget_MyMonitoredForums extends Widget {
     function isAjax() {
         return true;
     }
-    function getAjaxUrl($owner_id, $owner_type) {
+
+    public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
+    {
         $request =& HTTPRequest::instance();
-        $ajax_url = parent::getAjaxUrl($owner_id, $owner_type);
+        $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_forum')) {
             $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_forum=' . $request->get('hide_forum');
         }
         return $ajax_url;
     }
 }
-?>

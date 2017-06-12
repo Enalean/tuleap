@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'jquery';
+import { get } from 'tlp';
+import { sanitize } from 'dompurify';
 
 export default init;
 
@@ -26,8 +27,9 @@ function init() {
 
     [].forEach.call(widgets, function (widget) {
         get(widget.dataset.ajaxUrl)
-            .done(function (html) {
-                widget.innerHTML = html;
+            .then(response => response.text())
+            .then(function (html) {
+                widget.innerHTML = sanitize(html);
                 widget.classList.remove('dashboard-widget-asynchronous-loading');
             });
     });
