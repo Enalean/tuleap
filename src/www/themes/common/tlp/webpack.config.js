@@ -7,11 +7,13 @@ module.exports = {
         'en_US.min': [
             'babel-polyfill',
             'dom4',
+            'whatwg-fetch',
             './src/index.en_US.js'
         ],
         'fr_FR.min': [
             'babel-polyfill',
             'dom4',
+            'whatwg-fetch',
             './src/index.fr_FR.js'
         ]
     },
@@ -42,6 +44,9 @@ module.exports = {
                                     },
                                     modules: false
                                 }]
+                            ],
+                            plugins: [
+                                "transform-object-rest-spread"
                             ]
                         }
                     }

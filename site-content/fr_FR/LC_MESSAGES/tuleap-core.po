@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #, php-format
 msgid "%d member"
@@ -66,6 +66,9 @@ msgstr "Impossible de réduire le widget."
 
 msgid "Cannot update the requested dashboard."
 msgstr "Impossible d'éditer le tableau de bord demandé."
+
+msgid "Clear history"
+msgstr "Effacer l'historique"
 
 msgid "Close"
 msgstr "Fermer"
@@ -237,9 +240,8 @@ msgstr "Le tableau de bord demandé n’existe pas."
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
 
-#, fuzzy
 msgid "There isn't any matching widgets"
-msgstr "Il n’y aucun widget qui correspond."
+msgstr "Il n’y aucun widget qui correspond"
 
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."

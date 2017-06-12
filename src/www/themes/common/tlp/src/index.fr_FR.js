@@ -4,7 +4,9 @@ export {
     modal,
     dropdown,
     filterInlineTable,
-    datePicker
+    datePicker,
+    get,
+    put
 } from './js/index.js';
 
 import '../node_modules/select2/dist/js/i18n/fr.js';

@@ -50,6 +50,9 @@ msgstr ""
 msgid "Cannot update the requested dashboard."
 msgstr ""
 
+msgid "Clear history"
+msgstr ""
+
 msgid "Close"
 msgstr ""
 

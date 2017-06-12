@@ -19,11 +19,13 @@
 
 import { render } from 'mustache';
 import { sanitize } from 'dompurify';
-import { get } from 'jquery';
+import { get, put } from 'tlp';
 
 document.addEventListener('DOMContentLoaded', function() {
     var user_history_dropdown_trigger = document.querySelector('#nav-dropdown-user-history > .nav-dropdown-link'),
         history_content               = document.getElementById('nav-dropdown-content-user-history-content'),
+        clear                         = document.getElementById('nav-dropdown-content-user-history-clear'),
+        clear_button                  = document.getElementById('nav-dropdown-content-user-history-clear-button'),
         loading_history               = document.getElementById('nav-dropdown-content-user-history-loading'),
         empty_history                 = document.getElementById('nav-dropdown-content-user-history-empty');
 
@@ -31,20 +33,34 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    function getUserHistoryUrl() {
+        return '/api/v1/users/' + history_content.dataset.userId + '/history';
+    }
+
     user_history_dropdown_trigger.addEventListener('click', loadHistoryAsynchronously);
+    clear_button.addEventListener('click', clearHistory);
+
+    function clearHistory() {
+        put(getUserHistoryUrl(), {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({history_entries: []}),
+        }).then(switchToEmptyState);
+    }
 
     function loadHistoryAsynchronously() {
-        const user_history_url = '/api/v1/users/' + history_content.dataset.userId + '/history';
-        get(user_history_url)
-            .done(function (data) {
+        get(getUserHistoryUrl())
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
                 if (data.entries.length > 0) {
                     buildHistoryItems(data.entries);
                     switchToLoadedState();
                 } else {
                     switchToEmptyState();
                 }
-            })
-            .always(function () {
                 user_history_dropdown_trigger.removeEventListener('click', loadHistoryAsynchronously);
             });
     }
@@ -89,12 +105,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function switchToLoadedState() {
         loading_history.classList.remove('shown');
         history_content.classList.add('shown');
+        clear.classList.add('shown');
         empty_history.classList.remove('shown');
     }
 
     function switchToEmptyState() {
         loading_history.classList.remove('shown');
         history_content.classList.remove('shown');
+        clear.classList.remove('shown');
         empty_history.classList.add('shown');
     }
 });
