@@ -186,3 +186,17 @@
     display: inline-block;
     margin: $tlp-half-spacing 0 0;
 }
+
+.project-last-commit-text {
+    margin: $tlp-half-spacing 0 0;
+    text-align: justify;
+}
+
+.project-last-commit-project-title {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+.project-last-commit-text-more {
+    margin: $tlp-half-spacing 0 0;
+    text-align: center;
+}

@@ -57,6 +57,7 @@ my_index	my_latest_svn_commit	My Latest SVN Commits
 my_index	my_latest_svn_commit_desc	Lists SVN commits you have done, by project.
 my_index	my_latest_svn_commit_on	on
 my_index	my_latest_svn_commit_by	by
+my_index	my_latest_commit_empty	No commit found
 my_index	my_latest_svn_commit_nb_prefs	Maximum number of SVN commits to display per project
 my_index	send_mail	Contact members of project $1
 my_index	mail_sent	Mail sent to all members of project $1
