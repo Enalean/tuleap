@@ -96,7 +96,9 @@ class LDAP_SyncReminderNotificationManager {
      * @return String
      */
     private function getBody($projectName, $user) {
-        return $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_reminder_mail_notification_body', array($user->getRealName(),$user->getEmail(),$projectName));
+        $server_url       = HTTPRequest::instance()->getServerUrl();
+        $project_url      = $server_url.'/projects/'.urlencode($projectName);
+        return $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_reminder_mail_notification_body', array($user->getRealName(),$user->getEmail(), $project_url,$projectName));
     }
 
     /**
