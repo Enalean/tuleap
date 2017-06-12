@@ -1,8 +1,14 @@
 <script id="dashboard-add-widget-settings-placeholder" type="x-tmpl-mustache">
     {{=<% %>=}}
+        <input type="hidden" name="widget-name" value="{{ id }}">
         <div>
             <h2 class="tlp-modal-subtitle">{{ name }}</h2>
             <p>{{{ description }}}</p>
+            {{# need_configuration }}
+                <div id="dashboard-add-widget-settings-form">
+                    {{{ configurations }}}
+                </div>
+            {{/ need_configuration }}
         </div>
     <%={{ }}=%>
 </script>

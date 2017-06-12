@@ -22,6 +22,7 @@ use Tuleap\Dashboard\Widget\Add\AddWidgetController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\PreferencesController;
 use Tuleap\Dashboard\Widget\Router;
+use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Widget\WidgetFactory;
 
 require_once 'pre.php';
@@ -34,7 +35,7 @@ $widget_factory = new WidgetFactory(
     EventManager::instance()
 );
 
-$dao    = new DashboardWidgetDao($widget_factory);
+$dao = new DashboardWidgetDao($widget_factory);
 $router = new Router(
     new PreferencesController(
         $dao,
@@ -42,7 +43,8 @@ $router = new Router(
     ),
     new AddWidgetController(
         $dao,
-        $widget_factory
+        $widget_factory,
+        new WidgetCreator(new DashboardWidgetDao($widget_factory))
     ),
     $widget_factory
 );

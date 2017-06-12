@@ -29,6 +29,8 @@ class WidgetPresenter
     public $description;
     public $is_used;
     public $already_used_label;
+    public $need_configuration;
+    public $configurations;
 
     public function __construct(Widget $widget, $is_used)
     {
@@ -36,6 +38,8 @@ class WidgetPresenter
         $this->name               = $widget->getTitle();
         $this->description        = $widget->getDescription();
         $this->is_used            = $is_used;
+        $this->configurations     = $widget->getInstallPreferences();
+        $this->need_configuration = ! empty($this->configurations);
         $this->already_used_label = _('Already used');
     }
 }
