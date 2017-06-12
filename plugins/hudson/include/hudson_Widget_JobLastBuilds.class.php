@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
+class hudson_Widget_JobLastBuilds extends HudsonJobWidget
+{
 
     /**
      * Constructor
@@ -30,8 +31,9 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
      *
      * @return void
      */
-    function __construct($owner_type, $owner_id, HudsonJobFactory $factory) {
-        $request =& HTTPRequest::instance();
+    public function __construct($owner_type, $owner_id, HudsonJobFactory $factory)
+    {
+        $request = HTTPRequest::instance();
         if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
             $this->widget_id = 'plugin_hudson_my_joblastbuilds';
             $this->group_id = $owner_id;
@@ -44,7 +46,8 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle() {
+    public function getTitle()
+    {
         $title = '';
         if ($this->job) {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastbuilds', array($this->job->getName()));
@@ -54,11 +57,12 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
         return $title;
     }
 
-    function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_lastbuilds');
     }
 
-    function loadContent($id)
+    public function loadContent($id)
     {
         $this->content_id = $id;
     }
@@ -86,7 +90,8 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
         }
     }
 
-    function getContent() {
+    public function getContent()
+    {
         $this->initContent();
 
         $html = '';
@@ -107,7 +112,7 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
             $html .= '   </ul>';
             $html .= '  </td>';
             $html .= '  <td class="widget_lastbuilds_weather">';
-            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" class="widget_lastbuilds_weather_img" />';
+            $html .= $GLOBALS['Language']->getText('plugin_hudson', 'weather_report').'<img src="'.$job->getWeatherReportIcon().'" class="widget-lastbuilds-weather-img" />';
             $html .= '  </td>';
             $html .= ' </tr>';
             $html .= '</table>';
@@ -118,5 +123,3 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
         return $html;
     }
 }
-
-?>
