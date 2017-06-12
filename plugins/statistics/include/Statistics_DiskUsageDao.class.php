@@ -97,6 +97,15 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchAllOpenProjects()
+    {
+        $sql = "SELECT group_id, unix_group_name
+                FROM groups
+                WHERE status != 'D'";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchAllLists() {
         $sql = 'SELECT group_list_id, group_id, list_name FROM mail_group_list ORDER BY group_id';
         return $this->retrieve($sql);
