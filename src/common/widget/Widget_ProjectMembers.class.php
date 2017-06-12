@@ -35,10 +35,10 @@ class Widget_ProjectMembers extends Widget {
     public function getTitle() {
         return $GLOBALS['Language']->getText('include_project_home','devel_info');
     }
-    public function getContent() {
-        $request =& HTTPRequest::instance();
+    public function getContent()
+    {
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $pm = ProjectManager::instance();
 
         $html = '';
 
@@ -48,8 +48,8 @@ class Widget_ProjectMembers extends Widget {
                             . "user_group.admin_flags = 'A'");
         if (db_numrows($res_admin) > 0) {
             $user_helper = UserHelper::instance();
-            $hp = Codendi_HTMLPurifier::instance();
-            $em = EventManager::instance();
+            $hp          = Codendi_HTMLPurifier::instance();
+            $em          = EventManager::instance();
             $html .= '<span class="develtitle">' . $GLOBALS['Language']->getText('include_project_home','proj_admins').':</span><br />';
             while ($row_admin = db_fetch_array($res_admin)) {
                 $display_name = '';
@@ -65,7 +65,7 @@ class Widget_ProjectMembers extends Widget {
                 $html .= '<a href="/users/'.$row_admin['user_name'].'/">'. $display_name .'</a><br />';
             }
         }
-        $html .= '<span class="develtitle">' . $GLOBALS['Language']->getText('include_project_home','proj_members') . ':</span><br />';
+        $html .= '<span class="develtitle widget-project-team-project-members-title">' . $GLOBALS['Language']->getText('include_project_home','proj_members') . ':</span><br />';
         // count of developers on this project
         $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=".db_ei($group_id));
         $html .= db_numrows($res_count);
