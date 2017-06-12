@@ -212,35 +212,6 @@ extends DbSession
         $this->_disconnect();
         return true;
     }
-
-    // WhoIsOnline support. 
-    // TODO: ip-accesstime dynamic blocking API
-    function currentSessions() {
-        $sessions = array();
-        $table = $this->_table;
-        $dbh = $this->_connect();
-        $sth = $dbh->prepare("SELECT sess_data,sess_date,sess_ip FROM $table ORDER BY sess_date DESC");
-        if (!$sth->execute()) {
-            return $sessions;
-        }
-        while ($row = $sth->fetch(PDO_FETCH_NUM)) {
-            $data = $row[0];
-            $date = $row[1];
-            $ip   = $row[2];
-            if (preg_match('|^[a-zA-Z0-9/+=]+$|', $data))
-                $data = base64_decode($data);
-            if ($date < 908437560 or $date > 1588437560)
-                $date = 0;
-            // session_data contains the <variable name> + "|" + <packed string>
-            // we need just the wiki_user object (might be array as well)
-            $user = strstr($data, "wiki_user|");
-            $sessions[] = array('wiki_user' => substr($user,10), // from "O:" onwards
-                                'date' => $date,
-                                'ip' => $ip);
-        }
-        $this->_disconnect();
-        return $sessions;
-    }
 }
 
 // $Log: PDO.php,v $

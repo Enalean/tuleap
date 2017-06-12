@@ -52,10 +52,6 @@ class DbSession
                              $db_type), E_USER_WARNING);
         return false;
     }
-    
-    function currentSessions() {
-        return $this->_backend->currentSessions();
-    }
     function query($sql) {
         return $this->_backend->query($sql);
     }

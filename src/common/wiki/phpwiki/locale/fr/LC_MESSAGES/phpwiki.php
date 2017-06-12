@@ -1976,12 +1976,6 @@ $locale["Welcome to %s!\nYour email account is verified and\nwill be used to sen
    "Bienvenue sur %s!\nVotre compte email a été vérifié et\nsera utilisé pour les notifications de changements de pages.\nVoir %s";
 $locale["White space converted to single space"] =
    "Espace blanc converti en espace simple";
-$locale["Who Is Online"] =
-   "Qui est en ligne";
-$locale["Who is online"] =
-   "Qui est en ligne";
-$locale["WhoIsOnline"] =
-   "QuiEstEnLigne";
 $locale["Width"] =
    "Largeur";
 $locale["Wiki Name"] =

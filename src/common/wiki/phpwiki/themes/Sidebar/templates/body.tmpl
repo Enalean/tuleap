@@ -42,8 +42,6 @@ if ($body->asString() != "")
 $box = new PluginSidebarBox("RecentChanges",array('limit'=>10)); 
 printXml($box->format());
 
-$box = new PluginSidebarBox("WhoIsOnline"); 
-printXml($box->format());
 /*
 $box = new PluginSidebarBox("RssFeed",
                             array('url' => 'http://phpwiki.sourceforge.net/phpwiki/RecentChanges?format=rss',

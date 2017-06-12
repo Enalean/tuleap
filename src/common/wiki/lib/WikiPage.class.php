@@ -536,7 +536,7 @@ class WikiPage {
              // Old projects initialised their wiki with the old set of internal pages (pgsrc folder)
              // In the current version of PHPWiki, we initialise wiki with a different folder. 
              // The following pages are added in order not to consider them as user pages.
-             ,"AddingPages", "AllUsers","TranslateText","WhoIsOnline"
+             ,"AddingPages", "AllUsers","TranslateText"
              ,"_AuthInfo","CategoryHomePages","EditText","ExternalSearchPlugin"
              ,"GoodStyle","GoogleLink","HowToUseWiki","LinkIcons"
              ,"MagicPhpWikiURLs","MoreAboutMechanics","NewMarkupTestPage"

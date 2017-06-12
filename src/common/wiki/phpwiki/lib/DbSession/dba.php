@@ -107,28 +107,6 @@ extends DbSession
         //$this->_disconnect();
         return true;
     }
-
-    // WhoIsOnline support. 
-    // TODO: ip-accesstime dynamic blocking API
-    function currentSessions() {
-        $sessions = array();
-        $dbh = $this->_connect();
-        for ($id = $dbh->firstkey(); $id !== false; $id = $dbh->nextkey()) {
-            $result = $dbh->get($id);
-            list($date,$ip,$packed) = explode(':', $result, 3);
-            if (!$packed) continue;
-            // session_data contains the <variable name> + "|" + <packed string>
-            // we need just the wiki_user object (might be array as well)
-            if ($date < 908437560 or $date > 1588437560)
-                $date = 0;
-            $user = strstr($packed, "wiki_user|");
-            $sessions[] = array('wiki_user' => substr($user,10), // from "O:" onwards
-                                'date' => $date,
-                                'ip' => $ip);
-        }
-        $this->_disconnect();
-        return $sessions;
-    }
 }
 
 // $Log: dba.php,v $
