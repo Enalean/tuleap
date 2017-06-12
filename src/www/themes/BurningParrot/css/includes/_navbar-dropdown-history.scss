@@ -51,17 +51,9 @@
     }
 }
 
-.history-item,
-.history-item-content-quick-link {
-    &.placeholder {
-        display: none;
-    }
-}
-
 .history-item {
     display: flex;
     flex: 1 0 auto;
-    align-items: center;
     padding: $tlp-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
 
@@ -73,70 +65,85 @@
         background-color: transparentize($tlp-theme-color, .9);
         cursor: pointer;
 
-        .history-item-content-quick-links {
+        .history-item-content-description-quick-links {
             display: block;
         }
     }
 }
 
+.history-item-icon {
+    margin: 3px $tlp-half-spacing 0 0;
+}
+
 .history-item-content {
+    display: flex;
     flex-grow: 1;
-    flex-shrink: 1;
+    align-items: center;
+}
+
+.history-item-content-description {
+    flex-grow: 1;
     margin: 0 $tlp-spacing 0 0;
 }
 
-.history-item-info {
+.history-item-content-description-info {
     display: flex;
     align-items: center;
 }
 
-.history-item-info-badge {
+.history-item-content-description-info-badge {
     margin: 0 5px 0 0;
 }
 
-.history-item-info-title {
+.history-item-content-description-info-title {
     font-size: 14px;
     line-height: 18px;
     white-space: normal;
 }
 
-.history-item-content-quick-links {
+.history-item-content-description-quick-links {
     display: none;
     margin: $tlp-half-spacing 0 0;
     color: $tlp-theme-color;
 }
 
-.history-item-content-quick-link {
+.history-item-content-description-quick-links-link {
     margin: 0 $tlp-half-spacing 0 0;
     color: $tlp-theme-color;
     text-decoration: none;
 
-    &:hover > .history-item-content-quick-link-name {
+    &:hover > .history-item-content-description-quick-links-link-name {
         text-decoration: underline;
     }
 }
 
-.history-item-content-quick-link-icon {
+.history-item-content-description-quick-links-link-icon {
     margin: 0 3px 0 0;
 }
 
-.history-item-project {
+.history-item-content-project {
     color: $tlp-ui-dimmed;
     text-align: right;
     text-decoration: none;
 
-    &:hover > .history-item-project-name {
+    &:hover > .history-itemd-content-project-name {
         text-decoration: underline;
     }
 }
 
-.history-item-project-icon {
+.history-item-content-project-icon {
     flex: 0 0 auto;
     margin: 0 5px 0 0;
     fill: $tlp-ui-dimmed;
 }
 
-.history-item-project-name {
+.history-item-content-project-name {
     line-height: 16px;
     white-space: normal;
+}
+
+@for $i from 1 through length($tlp-swatch-color-names) {
+    .history-item-icon-#{nth($tlp-swatch-color-names, $i)} > svg {
+        fill: transparentize(nth($tlp-swatch-color-primaries, $i), .7);
+    }
 }
