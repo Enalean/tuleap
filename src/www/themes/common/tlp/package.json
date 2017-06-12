@@ -22,7 +22,7 @@
     "gulp": "^3.9.1",
     "gulp-header": "1.8.2",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.3.1",
+    "gulp-sass": "^3.1.0",
     "gulp-scss-lint": "^0.3.9",
     "run-sequence": "^1.2.2",
     "webpack": "^2.5.1",
