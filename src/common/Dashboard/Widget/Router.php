@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\Widget;
 use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Dashboard\Widget\Add\AddWidgetController;
+use Tuleap\Widget\WidgetFactory;
 
 class Router
 {
@@ -34,11 +35,19 @@ class Router
      * @var AddWidgetController
      */
     private $add_widget_controller;
+    /**
+     * @var WidgetFactory
+     */
+    private $widget_factory;
 
-    public function __construct(PreferencesController $preferences_controller, AddWidgetController $add_widget_controller)
-    {
+    public function __construct(
+        PreferencesController $preferences_controller,
+        AddWidgetController $add_widget_controller,
+        WidgetFactory $widget_factory
+    ) {
         $this->preferences_controller = $preferences_controller;
         $this->add_widget_controller  = $add_widget_controller;
+        $this->widget_factory         = $widget_factory;
     }
 
     public function route(HTTPRequest $request)
@@ -60,6 +69,16 @@ class Router
                 break;
             case 'edit-widget':
                 $this->preferences_controller->update($request);
+                break;
+            case 'process-widget':
+                $param  = $request->get('name');
+                $name   = array_pop(array_keys($param));
+                $widget = $this->widget_factory->getInstanceByWidgetName($name);
+
+                $owner      = $request->get('owner');
+                $owner_id   = (int) substr($owner, 1);
+                $owner_type = substr($owner, 0, 1);
+                $widget->process($owner_type, $owner_id);
                 break;
         }
     }
