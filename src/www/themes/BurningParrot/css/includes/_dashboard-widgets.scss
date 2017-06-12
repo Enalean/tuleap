@@ -95,8 +95,8 @@
 }
 
 .dashboard-add-widget-list {
-    flex: 1;
     margin: 0 $tlp-spacing 0 0;
+    flex: 1;
 }
 
 .dashboard-add-widget-list-body {
@@ -105,8 +105,8 @@
 }
 
 #dashboard-add-widget-settings {
-    flex: 1;
     margin: 0 0 0 $tlp-spacing;
+    flex: 1;
 }
 
 .dashboard-add-widget-list-header {
@@ -180,4 +180,9 @@
 
 .massmail-project-member-link-icon {
     padding: 0 5px 0 0;
+}
+
+.widget-project-team-project-members-title {
+    display: inline-block;
+    margin: $tlp-half-spacing 0 0;
 }
