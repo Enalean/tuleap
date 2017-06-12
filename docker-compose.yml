@@ -18,6 +18,9 @@ web:
    - .env
   volumes_from:
    - tuleap_data
+  ports:
+   - "80:80"
+   - "443:443"
 
 ldap:
   image: enalean/ldap
