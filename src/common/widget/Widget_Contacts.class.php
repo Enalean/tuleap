@@ -59,7 +59,7 @@ class Widget_Contacts extends Widget
         $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
         $html .= 'data-project-id="'. $group_id .'" ';
         $html .= 'data-toggle="modal"> ';
-        $html .= '<i class="icon-envelope-alt"></i> ';
+        $html .= '<i class="icon-envelope-alt massmail-project-member-link-icon"></i> ';
         $html .= $GLOBALS['Language']->getText('include_project_home', 'contact_admins');
         $html .= '</a>';
 

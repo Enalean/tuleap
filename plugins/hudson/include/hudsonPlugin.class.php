@@ -22,9 +22,10 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
-class hudsonPlugin extends Plugin {
-
-    function __construct($id) {
+class hudsonPlugin extends Plugin
+{
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
@@ -40,9 +41,26 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
         $this->_addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
         $this->_addHook('statistics_collector',          'statistics_collector',       false);
+
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
 
-    function getPluginInfo() {
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if ($this->canIncludeStylsheets()) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    private function canIncludeStylsheets()
+    {
+        return strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL . '/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+    }
+
+    public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'hudsonPluginInfo')) {
             require_once('hudsonPluginInfo.class.php');
             $this->pluginInfo = new hudsonPluginInfo($this);
@@ -61,9 +79,7 @@ class hudsonPlugin extends Plugin {
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
+        if ($this->canIncludeStylsheets() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';

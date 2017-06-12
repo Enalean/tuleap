@@ -25,7 +25,8 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
+class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
+{
 
     var $plugin;
     var $group_id;
@@ -39,12 +40,12 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
      *
      * @return void
      */
-    function __construct($group_id, hudsonPlugin $plugin, HudsonJobFactory $factory) {
+    public function __construct($group_id, hudsonPlugin $plugin, HudsonJobFactory $factory) {
         parent::__construct('plugin_hudson_project_jobsoverview', $factory);
         $this->setOwner($group_id, WidgetLayoutManager::OWNER_TYPE_GROUP);
         $this->plugin = $plugin;
 
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
 
     }
@@ -71,10 +72,10 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
 
                     $html .= '<tr class="'. util_get_alt_row_color($cpt) .'">';
                     $html .= ' <td>';
-                    $html .= ' <img src="'.$purifier->purify($job->getStatusIcon()).'" title="'.$purifier->purify($job->getStatus()).'" >';
+                    $html .= ' <img class="widget-jenkins-job-icon" src="'.$purifier->purify($job->getStatusIcon()).'" title="'.$purifier->purify($job->getStatus()).'" >';
                     $html .= ' </td>';
                     $html .= ' <td style="width:99%">';
-                    $html .= '  <a href="/plugins/hudson/?action=view_job&group_id='.urlencode($this->group_id).'&job_id='.urlencode($job_id).'">'.$purifier->purify($job->getName()).'</a><br />';
+                    $html .= '  <a class="widget-jenkins-job" href="/plugins/hudson/?action=view_job&group_id='.urlencode($this->group_id).'&job_id='.urlencode($job_id).'">'.$purifier->purify($job->getName()).'</a><br />';
                     $html .= ' </td>';
                     $html .= '</tr>';
 
