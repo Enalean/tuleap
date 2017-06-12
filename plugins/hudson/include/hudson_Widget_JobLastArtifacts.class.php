@@ -54,8 +54,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         } else {
              $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts');
         }
-        $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($title);
+        return $title;
     }
 
     function getDescription() {

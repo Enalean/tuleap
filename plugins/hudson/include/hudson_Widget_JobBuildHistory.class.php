@@ -58,8 +58,7 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
         } else {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_buildhistory');
         }
-        $purifier = Codendi_HTMLPurifier::instance();
-        return $purifier->purify($title);
+        return $title;
     }
 
     function getDescription() {

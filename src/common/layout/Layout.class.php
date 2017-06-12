@@ -895,7 +895,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         );
     }
 
-    function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type) {
+    function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type)
+    {
+        $purifier   = Codendi_HTMLPurifier::instance();
         $csrf_token = new CSRFSynchronizerToken('widget_management');
         $element_id = 'widget_'. $widget->id .'-'. $widget->getInstanceId();
 
@@ -906,7 +908,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
 
         echo '<div class="widget_titlebar '. ($readonly?'':'widget_titlebar_handle') .'">';
-        echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
+        echo '<div class="widget_titlebar_title">'. $purifier->purify($widget->getTitle()) .'</div>';
 
         if (!$readonly) {
             $remove_parameters = array(

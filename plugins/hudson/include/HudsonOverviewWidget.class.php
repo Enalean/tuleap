@@ -24,23 +24,6 @@ abstract class HudsonOverviewWidget extends HudsonWidget {
     function isUnique() {
         return true;
     }
-    
-    /**
-     * Return widget title
-     * 
-     * Desactivate global state computation because it might takes very long to load the page.
-     * 
-     * @see src/common/widget/Widget::getTitle()
-     */
-    function getTitle($string) {
-        $title = '';
-        if ($this->_use_global_status == "true") {
-            //$this->computeGlobalStatus();
-            $title = '<img src="'.$this->_global_status_icon.'" title="'.$this->_global_status.'" alt="'.$this->_global_status.'" /> ';
-        }
-        $title .= $string; 
-        return  $title;
-    }
 }
 
 ?>

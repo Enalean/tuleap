@@ -35,15 +35,14 @@ class Widget_ImageViewer extends Widget {
         $this->setOwner($owner_id, $owner_type);
     }
     function getTitle() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $this->image_title ?  $hp->purify($this->image_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Image';
+        return $this->image_title ?: 'Image';
     }
     function getContent() {
         $hp = Codendi_HTMLPurifier::instance();
         $content = '';
         if ($this->image_url) {
             $content .= '<div style="text-align:center">';
-            $content .= '<img src="'.  $hp->purify($this->image_url, CODENDI_PURIFIER_CONVERT_HTML)  .'" alt="'. $this->getTitle() .'" />';
+            $content .= '<img src="'.  $hp->purify($this->image_url, CODENDI_PURIFIER_CONVERT_HTML)  .'" alt="' . $hp->purify($this->getTitle()) .  '" />';
             $content .= '</div>';
         }
         return $content;
@@ -73,7 +72,7 @@ class Widget_ImageViewer extends Widget {
                        class="tlp-input"
                        id="title-'. (int)$widget_id .'"
                        name="image[title]"
-                       value="'. $this->getTitle() .'"
+                       value="'. $purifier->purify($this->getTitle()) .'"
                        placeholder="'. $purifier->purify(_('Image')) .'">
             </div>
             <div class="tlp-form-element">
@@ -97,17 +96,19 @@ class Widget_ImageViewer extends Widget {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';
         $prefs .= '<table>';
-        $prefs .= '<tr><td>Title:</td><td><input type="text" class="textfield_medium" name="image[title]" value="'. $this->getTitle() .'" /></td></tr>';
+        $prefs .= '<tr><td>Title:</td><td><input type="text" class="textfield_medium" name="image[title]" value="'. $hp->purify($this->getTitle()) .'" /></td></tr>';
         $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="image[url]" value="'. $hp->purify($this->image_url, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }
-    function getInstallPreferences() {
-        $prefs  = '';
-        $prefs .= '<table>';
-        $prefs .= '<tr><td>Title:</td><td><input type="text" class="textfield_medium" name="image[title]" value="'. $this->getTitle() .'" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="image[url]" placeholder="https://example.com/image.jpeg" /></td></tr>';
-        $prefs .= '</table>';
+    function getInstallPreferences()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $prefs    = '';
+        $prefs   .= '<table>';
+        $prefs   .= '<tr><td>Title:</td><td><input type="text" class="textfield_medium" name="image[title]" value="'. $purifier->purify($this->getTitle()) .'" /></td></tr>';
+        $prefs   .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="image[url]" placeholder="https://example.com/image.jpeg" /></td></tr>';
+        $prefs   .= '</table>';
         return $prefs;
     }
 
