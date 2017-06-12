@@ -79,7 +79,7 @@ class AddWidgetController
             foreach ($widgets as $widget) {
                 $widget = $this->factory->getInstanceByWidgetName($widget->id);
                 if ($widget && $widget->isAvailable()) {
-                    $widgets_presenter[] = new WidgetPresenter($widget->getTitle(), $widget->isUnique() && in_array($widget->getId(), $used_widgets));
+                    $widgets_presenter[] = new WidgetPresenter($widget, $widget->isUnique() && in_array($widget->getId(), $used_widgets));
                 }
             }
             $widgets_category_presenter[] = new WidgetsByCategoryPresenter($category, $widgets_presenter);

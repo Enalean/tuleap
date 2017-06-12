@@ -20,15 +20,21 @@
 
 namespace Tuleap\Dashboard\Widget\Add;
 
+use Widget;
+
 class WidgetPresenter
 {
+    public $id;
     public $name;
+    public $description;
     public $is_used;
     public $already_used_label;
 
-    public function __construct($name, $is_used)
+    public function __construct(Widget $widget, $is_used)
     {
-        $this->name               = $name;
+        $this->id                 = $widget->getId();
+        $this->name               = $widget->getTitle();
+        $this->description        = $widget->getDescription();
         $this->is_used            = $is_used;
         $this->already_used_label = _('Already used');
     }
