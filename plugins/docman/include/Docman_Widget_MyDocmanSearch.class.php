@@ -1,28 +1,30 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
+ * Copyright (c) Enalean, 2017. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
 * Docman_Widget_MyDocmanSearch
 */
-class Docman_Widget_MyDocmanSearch extends Widget {
-    
+class Docman_Widget_MyDocmanSearch extends Widget
+{
+
     var $pluginPath;
 
     function __construct($pluginPath) {
@@ -33,8 +35,9 @@ class Docman_Widget_MyDocmanSearch extends Widget {
     function getTitle() {
         return $GLOBALS['Language']->getText('plugin_docman', 'my_docman_search');
     }
-    
-    function getContent() {
+
+    public function getContent()
+    {
         $html = '';
         $request = HTTPRequest::instance();
         $um = UserManager::instance();
@@ -61,13 +64,16 @@ class Docman_Widget_MyDocmanSearch extends Widget {
         }
 
         $html .= '<form method="post" action="' . $url . '">';
-        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_label').'</label>';
         $html .= '<input type="hidden" name="docman_func" value="show_docman" />';
-        $html .= '<input type="text" name="docman_id" value="'.$docman_id.'" id="docman_id" />';
-        $html .= '&nbsp;';
-        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_btn').'"/>';
+        $html .= '<div class="tlp-form-element">
+                    <label class="tlp-label" for="docman_id">' .
+            $GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_label') .
+            '</label>
+                    <input type="text" name="docman_id" value="' . $docman_id . '" id="docman_id" class="tlp-input" placeholder="123"/>
+                  </div>';
+        $html .= '<input type="submit" class="tlp-button-primary" value="'.$GLOBALS['Language']->getText('plugin_docman', 'widget_my_docman_search_btn').'"/>';
         $html .= '</form>';
-        
+
         if (($func == 'show_docman') && $docman_id){
             $res = $this->returnAllowedGroupId($docman_id, $user);
 
@@ -131,10 +137,8 @@ class Docman_Widget_MyDocmanSearch extends Widget {
     function getCategory() {
         return 'plugin_docman';
     }
-    
+
     function getDescription() {
         return $GLOBALS['Language']->getText('plugin_docman','widget_description_my_docman_search');
     }
 }
-
-?>

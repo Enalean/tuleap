@@ -871,7 +871,7 @@ plugin_docman	format_type_desc	Nature de l'item (fichier, lien, wiki, ...)
 plugin_docman	format_user_group	List des groupes d'utilisateurs...
 plugin_docman	format_user_group_desc	Un group par colonne. Chaque groupe peut avoir soit la permission "READ", "WRITE" ou "MANAGE". Une cellule vide signifie que le group correspondant n'as pas accès à la ressource.
 plugin_docman	widget_description_my_docman_search	Redirige au document correspondant à l'ID donné
-plugin_docman	widget_my_docman_search_label	Cherche un document par id :
+plugin_docman	widget_my_docman_search_label	Recherche de document par id
 plugin_docman	widget_my_docman_search_btn	Rechercher
 
 plugin_docman	name_validity	Un répertoire Docman existe déjà avec ce nom.
