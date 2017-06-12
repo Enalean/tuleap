@@ -354,6 +354,7 @@ class ProjectDashboardController
                 $widgets_lines = $this->widget_retriever->getAllWidgets($dashboard->getId(), self::DASHBOARD_TYPE);
                 if ($widgets_lines) {
                     $widgets_presenter = $this->widget_presenter_builder->getWidgetsPresenter(
+                        $dashboard,
                         OwnerInfo::createForProject($project),
                         $widgets_lines,
                         $this->canUpdateDashboards($user, $project)

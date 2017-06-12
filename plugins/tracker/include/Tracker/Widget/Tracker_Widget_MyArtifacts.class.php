@@ -190,9 +190,10 @@ class Tracker_Widget_MyArtifacts extends Widget {
         return $html_my_artifacts;
     }
 
-    function getAjaxUrl($owner_id, $owner_type) {
+    public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
+    {
         $request = HTTPRequest::instance();
-        $ajax_url = parent::getAjaxUrl($owner_id, $owner_type);
+        $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_artifact')) {
             $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_artifact=' . $request->get('hide_artifact');
         }
@@ -207,4 +208,3 @@ class Tracker_Widget_MyArtifacts extends Widget {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts','description');
     }
 }
-?>

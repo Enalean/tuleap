@@ -194,9 +194,20 @@
         return UserManager::instance()->getCurrentUser();
     }
 
-    function getAjaxUrl($owner_id, $owner_type) {
-        return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=ajax&name['. $this->id .']='. $this->getInstanceId();
+    public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
+    {
+        return '/widgets/widget.php?'. http_build_query(
+            array(
+                'dashboard_id' => $dashboard_id,
+                'owner'        => $owner_type.$owner_id,
+                'action'       => 'ajax',
+                'name'         => array(
+                    $this->id => $this->getInstanceId()
+                )
+            )
+        );
     }
+
     function getIframeUrl($owner_id, $owner_type) {
         return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=iframe&name['. $this->id .']='. $this->getInstanceId();
     }

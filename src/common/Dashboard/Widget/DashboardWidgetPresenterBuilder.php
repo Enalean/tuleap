@@ -20,11 +20,11 @@
 
 namespace Tuleap\Dashboard\Widget;
 
+use Tuleap\Dashboard\Dashboard;
 use Tuleap\Widget\WidgetFactory;
 
 class DashboardWidgetPresenterBuilder
 {
-
     /**
      * @var WidgetFactory
      */
@@ -42,12 +42,16 @@ class DashboardWidgetPresenterBuilder
      *
      * @return array
      */
-    public function getWidgetsPresenter(OwnerInfo $owner_info, array $widgets_lines, $can_update_dashboards)
-    {
+    public function getWidgetsPresenter(
+        Dashboard $dashboard,
+        OwnerInfo $owner_info,
+        array $widgets_lines,
+        $can_update_dashboards
+    ) {
         $lines_presenter = array();
 
         foreach ($widgets_lines as $line) {
-            $columns_presenter = $this->getColumnsPresenterByLine($owner_info, $line, $can_update_dashboards);
+            $columns_presenter = $this->getColumnsPresenterByLine($dashboard, $owner_info, $line, $can_update_dashboards);
             $lines_presenter[] = new DashboardWidgetLinePresenter(
                 $line->getId(),
                 $line->getLayout(),
@@ -61,11 +65,15 @@ class DashboardWidgetPresenterBuilder
     /**
      * @return array
      */
-    private function getColumnsPresenterByLine(OwnerInfo $owner_info, DashboardWidgetLine $line, $can_update_dashboards)
-    {
+    private function getColumnsPresenterByLine(
+        Dashboard $dashboard,
+        OwnerInfo $owner_info,
+        DashboardWidgetLine $line,
+        $can_update_dashboards
+    ) {
         $columns_presenter = array();
         foreach ($line->getWidgetColumns() as $column) {
-            $widgets_presenter = $this->getWidgetsPresenterByColumn($owner_info, $column, $can_update_dashboards);
+            $widgets_presenter = $this->getWidgetsPresenterByColumn($dashboard, $owner_info, $column, $can_update_dashboards);
             $columns_presenter[] = new DashboardWidgetColumnPresenter($column->getId(), $widgets_presenter);
         }
         return $columns_presenter;
@@ -74,8 +82,12 @@ class DashboardWidgetPresenterBuilder
     /**
      * @return array
      */
-    private function getWidgetsPresenterByColumn(OwnerInfo $owner_info, DashboardWidgetColumn $column, $can_update_dashboards)
-    {
+    private function getWidgetsPresenterByColumn(
+        Dashboard $dashboard,
+        OwnerInfo $owner_info,
+        DashboardWidgetColumn $column,
+        $can_update_dashboards
+    ) {
         $widgets_presenter = array();
         foreach ($column->getWidgets() as $dashboard_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($dashboard_widget->getName());
@@ -83,7 +95,12 @@ class DashboardWidgetPresenterBuilder
                 $widget->owner_id   = $owner_info->getId();
                 $widget->owner_type = $owner_info->getType();
                 $widget->loadContent($dashboard_widget->getContentId());
-                $widgets_presenter[] = new DashboardWidgetPresenter($dashboard_widget, $widget, $can_update_dashboards);
+                $widgets_presenter[] = new DashboardWidgetPresenter(
+                    $dashboard,
+                    $dashboard_widget,
+                    $widget,
+                    $can_update_dashboards
+                );
             }
         }
         return $widgets_presenter;

@@ -998,7 +998,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             document.observe('dom:loaded', function () {
                 $('$element_id-ajax').update('<div style=\"text-align:center\">". $this->getImage('ic/spinner.gif') ."</div>');
                 new Ajax.Updater('$element_id-ajax',
-                                 '". $widget->getAjaxUrl($owner_id, $owner_type) ."',
+                                 '". $widget->getAjaxUrl($owner_id, $owner_type, null) ."',
                                  {
                                      onComplete: function() {
                                         codendi.Tooltip.load('$element_id-ajax');
