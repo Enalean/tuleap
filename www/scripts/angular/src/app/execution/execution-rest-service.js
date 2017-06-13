@@ -50,9 +50,8 @@ function ExecutionRestService(
     }
 
     function postTestExecution(tracker_id, definition_id, status) {
-        return rest
-            .one('trafficlights_executions')
-            .post('execution', {
+        return rest.all('trafficlights_executions')
+            .post({
                 tracker      : {id: tracker_id},
                 definition_id: definition_id,
                 status       : status

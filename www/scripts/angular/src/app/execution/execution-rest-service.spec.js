@@ -51,7 +51,7 @@ describe ('ExecutionRestService - ', function () {
         };
 
         mockBackend
-            .expectPOST('/api/v1/trafficlights_executions/execution')
+            .expectPOST('/api/v1/trafficlights_executions')
             .respond(execution);
 
         var promise = ExecutionRestService.postTestExecution("notrun", "CentOS 5 - PHP 5.1");

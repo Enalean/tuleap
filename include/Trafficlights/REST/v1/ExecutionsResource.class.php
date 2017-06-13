@@ -132,7 +132,7 @@ class ExecutionsResource {
     /**
      * Create a test execution
      *
-     * @url POST execution
+     * @url POST
      *
      * @param TrackerReference $tracker       Execution tracker of the execution {@from body}
      * @param int              $definition_id Definition of the execution {@from body}
