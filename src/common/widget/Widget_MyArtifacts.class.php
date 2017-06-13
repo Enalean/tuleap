@@ -314,11 +314,13 @@ class Widget_MyArtifacts extends Widget {
 
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request = HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_artifact')) {
-            $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_artifact=' . $request->get('hide_artifact');
+            $ajax_url .= '&hide_item_id=' . urlencode($request->get('hide_item_id')) .
+                '&hide_artifact=' . urlencode($request->get('hide_artifact'));
         }
+
         return $ajax_url;
     }
     function getCategory() {
