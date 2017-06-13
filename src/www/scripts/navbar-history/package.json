@@ -11,6 +11,10 @@
     "mustache": "^2.3.0"
   },
   "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.5.2",
     "webpack": "^2.5.1",
     "webpack-assets-manifest": "^0.6.2"
   },

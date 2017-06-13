@@ -67,6 +67,8 @@
     flex: 1 0 auto;
     padding: $tlp-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
+    color: $tlp-typo-default-text-color;
+    text-decoration: none;
 
     &:last-child {
         border-bottom: 0;
@@ -118,26 +120,25 @@
     color: $tlp-theme-color;
 }
 
-.history-item-content-description-quick-links-link {
+.history-item-content-quick-links-link {
     margin: 0 $tlp-half-spacing 0 0;
     color: $tlp-theme-color;
-    text-decoration: none;
 
-    &:hover > .history-item-content-description-quick-links-link-name {
+    &:hover > .history-item-content-quick-links-link-name {
         text-decoration: underline;
     }
 }
 
-.history-item-content-description-quick-links-link-icon {
+
+.history-item-content-quick-links-link-icon {
     margin: 0 3px 0 0;
 }
 
 .history-item-content-project {
     color: $tlp-ui-dimmed;
     text-align: right;
-    text-decoration: none;
 
-    &:hover > .history-itemd-content-project-name {
+    &:hover > .history-item-content-project-name {
         text-decoration: underline;
     }
 }

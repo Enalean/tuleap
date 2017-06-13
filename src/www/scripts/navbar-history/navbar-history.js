@@ -90,14 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addHistoryItemListeners() {
-        const items = history_content.querySelectorAll('.history-item');
-        [].forEach.call(items, function (history_item) {
-            history_item.addEventListener('click', function (event) {
-                if (! event.target.closest('.history-item-content-project')
-                    && ! event.target.closest('.history-item-content-description-quick-links-link')
-                ) {
-                    window.location.href = history_item.dataset.href;
-                }
+        const extra_links = history_content.querySelectorAll('.history-item-content-quick-links-link, .history-item-content-project');
+        [].forEach.call(extra_links, (extra_link) => {
+            extra_link.addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                window.location.href = extra_link.dataset.href;
             });
         });
     }
