@@ -1,23 +1,24 @@
 <?php
-/*
+/**
  * Copyright (c) Xerox, 2009. All Rights Reserved.
+ * Copyright (c) Enalean 2017. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/dao/SvnCommitsDao.class.php');
@@ -25,7 +26,8 @@ require_once('common/chart/Chart.class.php');
 require_once('common/chart/ErrorChart.class.php');
 require_once('common/widget/Widget_ProjectSvnStats_Layout.class.php');
 
-class Widget_ProjectSvnStats extends Widget {
+class Widget_ProjectSvnStats extends Widget
+{
     function __construct() {
         parent::__construct('projectsvnstats');
     }
@@ -38,15 +40,20 @@ class Widget_ProjectSvnStats extends Widget {
     function getCategory() {
         return 'scm';
     }
-    function getContent() {
+
+    function getContent()
+    {
         $request = HTTPRequest::instance();
+
         return '<div style="text-align:center">
-                <img src="/widgets/widget.php?owner='. WidgetLayoutManager::OWNER_TYPE_GROUP.($request->get('group_id')) .'&action=process&name['. $this->id .']='. $this->getInstanceId() .'" />
+                <img src="/widgets/?action=process-widget&widget_id=' . $this->id .
+            '&owner=' . WidgetLayoutManager::OWNER_TYPE_GROUP . ($request->get('group_id')) .
+            '&name[' . $this->id . ']=' . $this->getInstanceId() . '" />
                 </div>';
     }
     
     protected $tmp_nb_of_commit;
-    function process($owner_type, $owner_id) {
+    public function process($owner_type, $owner_id) {
         $dao = new SvnCommitsDao(CodendiDataAccess::instance());
         //The default duration is 3 months back
         $nb_weeks = 4 * 3;

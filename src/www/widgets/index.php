@@ -43,7 +43,8 @@ $router = new Router(
     new AddWidgetController(
         $dao,
         $widget_factory
-    )
+    ),
+    $widget_factory
 );
 
 $router->route($request);
