@@ -22,28 +22,28 @@ $nav-dropdown-content-border-radius: 3px;
 @keyframes showNavDropdown {
     0% {
         transform: translate(-50%, -10px);
-        opacity: 0;
         box-shadow: 0 0 0;
+        opacity: 0;
     }
 
     100% {
         transform: translate(-50%, 0);
-        opacity: 1;
         box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+        opacity: 1;
     }
 }
 
 @keyframes disappearNavDropdown {
     0% {
         transform: translate(-50%, 0);
-        opacity: 1;
         box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+        opacity: 1;
     }
 
     100% {
         transform: translate(-50%, -10px);
-        opacity: 0;
         box-shadow: 0 0 0;
+        opacity: 0;
     }
 }
 
@@ -55,10 +55,10 @@ $nav-dropdown-content-border-radius: 3px;
     transform: translateX(-50%);
     border-radius: $nav-dropdown-content-border-radius;
     background-color: #ffffff;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
     font-size: 12px;
     text-transform: initial;
-    cursor: initial;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    cursor: default;
 }
 
 .nav-dropdown-content-arrow-up {
@@ -106,28 +106,28 @@ $nav-dropdown-content-border-radius: 3px;
     @keyframes showNavDropdownLeft {
         0% {
             transform: translateY(-10px);
-            opacity: 0;
             box-shadow: 0 0 0;
+            opacity: 0;
         }
 
         100% {
             transform: translateY(0);
-            opacity: 1;
             box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+            opacity: 1;
         }
     }
 
     @keyframes disappearNavDropdownLeft {
         0% {
             transform: translateY(0);
-            opacity: 1;
             box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+            opacity: 1;
         }
 
         100% {
             transform: translateY(-10px);
-            opacity: 0;
             box-shadow: 0 0 0;
+            opacity: 0;
         }
     }
 }
@@ -156,28 +156,28 @@ $nav-dropdown-content-border-radius: 3px;
     @keyframes showNavDropdownRight {
         0% {
             transform: translate(-100%, -10px);
-            opacity: 0;
             box-shadow: 0 0 0;
+            opacity: 0;
         }
 
         100% {
             transform: translate(-100%, 0);
-            opacity: 1;
             box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+            opacity: 1;
         }
     }
 
     @keyframes disappearNavDropdownRight {
         0% {
             transform: translate(-100%, 0);
-            opacity: 1;
             box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+            opacity: 1;
         }
 
         100% {
             transform: translate(-100%, -10px);
-            opacity: 0;
             box-shadow: 0 0 0;
+            opacity: 0;
         }
     }
 }
