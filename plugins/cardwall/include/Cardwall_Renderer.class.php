@@ -152,13 +152,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $board         = $board_builder->getBoard($artifact_ids, $columns, $mapping_collection);
         }
 
-        $additional_button_presenter = new WidgetAdditionalButtonPresenter(
-            $this->report->getTracker(),
-            HTTPRequest::instance(),
-            false
-        );
-
-        return new Cardwall_RendererPresenter($board, $redirect_parameter, $field, $form, $additional_button_presenter);
+        return new Cardwall_RendererPresenter($board, $redirect_parameter, $field, $form);
     }
     
     /*----- Implements below some abstract methods ----*/
@@ -189,12 +183,28 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     
     /**
      * Fetch content to be displayed in widget
+     *
+     * @return string
      */
     public function fetchWidget(PFUser $user) {
         $this->enable_qr_code = false;
         $html  = '';
+
+        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
+            $additional_button_presenter = new WidgetAdditionalButtonPresenter(
+                $this->report->getTracker(),
+                HTTPRequest::instance(),
+                false
+            );
+
+            $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+
+            $html .= $renderer->renderToString('additional-button', $additional_button_presenter);
+        }
+
         $html .= $this->fetchCards($this->report->getMatchingIds(), $user);
         $html .= $this->fetchWidgetGoToReport();
+
         return $html;
     }
     

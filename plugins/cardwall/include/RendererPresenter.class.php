@@ -63,14 +63,12 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
      * @param string                              $redirect_parameter the redirect paramter to add to various url
      * @param Tracker_FormElement_Field_Selectbox $field form to choose the column. false if no form (in widget) (thus no typehinting)
      * @param $form
-     * @param WidgetAdditionalButtonPresenter     $additional_button_presenter
      */
     public function __construct(
         Cardwall_Board $board,
         $redirect_parameter,
         $field,
-        $form,
-        WidgetAdditionalButtonPresenter $additional_button_presenter
+        $form
     ) {
         parent::__construct($board, $redirect_parameter);
         $hp                        = Codendi_HTMLPurifier::instance();
@@ -83,8 +81,5 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
         $this->warn_please_choose  = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
         $field_label               = $field ? $hp->purify($this->field->getLabel()) : '###';
         $this->warn_no_values      = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $field_label);
-
-        $this->use_tlp_in_dashboard        = ForgeConfig::get('sys_use_tlp_in_dashboards');
-        $this->additional_button_presenter = $additional_button_presenter;
     }
 }
