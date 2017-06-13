@@ -49,7 +49,7 @@ try {
         new RepositoryManager(
             new Dao(),
             ProjectManager::instance(),
-            new SvnAdmin(new System_Command(), new SvnLogger()),
+            new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
             new SvnLogger(),
             new System_Command(),
             new Destructor(

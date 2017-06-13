@@ -149,7 +149,7 @@ class referencealias_svnPlugin extends Plugin
 
     private function getSvnAdmin()
     {
-        return new SvnAdmin($this->getSystemCommand(), $this->getLogger());
+        return new SvnAdmin($this->getSystemCommand(), $this->getLogger(), Backend::instance(Backend::SVN));
     }
 
     private function getSVNDao()
