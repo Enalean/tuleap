@@ -162,7 +162,7 @@ class SvnPlugin extends Plugin
         return new XMLSvnExporter(
             $this->getRepositoryManager(),
             $project,
-            new SvnAdmin(new System_Command(), new SvnLogger()),
+            new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
             new System_Command(),
@@ -278,7 +278,7 @@ class SvnPlugin extends Plugin
             $this->repository_manager = new RepositoryManager(
                 new Dao(),
                 ProjectManager::instance(),
-                new SvnAdmin(new System_Command(), new SvnLogger()),
+                new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
                 new SvnLogger(),
                 new System_Command(),
                 new Destructor(

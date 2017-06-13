@@ -29,18 +29,29 @@ use Tuleap\Svn\Repository\Repository;
 use Logger;
 use ForgeConfig;
 use System_Command_CommandException;
+use BackendSVN;
 
 class SvnAdmin
 {
     /** @var System_Command */
     private $system_command;
+
     /** @var Logger */
     private $logger;
 
-    public function __construct(System_Command $system_command, Logger $logger)
-    {
+    /**
+     * @var BackendSVN
+     */
+    private $backend_svn;
+
+    public function __construct(
+        System_Command $system_command,
+        Logger $logger,
+        BackendSVN $backend_svn
+    ) {
         $this->system_command = $system_command;
         $this->logger         = $logger;
+        $this->backend_svn    = $backend_svn;
     }
 
     public function dumpRepository(Repository $repository, $dump_path)
@@ -117,6 +128,16 @@ class SvnAdmin
             foreach ($command_output as $line) {
                 $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin load: ' . $line);
             }
+
+            $this->backend_svn->updateHooks(
+                $repository->getProject(),
+                $repository->getSystemPath(),
+                true,
+                ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
+                'svn_post_commit.php',
+                ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
+                'svn_pre_commit.php'
+            );
 
             $this->logger->debug('[svn ' . $repository->getName() . '] svnadmin restore: done');
         } catch (System_Command_CommandException $e) {
