@@ -872,7 +872,7 @@ plugin_docman	format_type_desc	Kind of item (file, link, wiki,...)
 plugin_docman	format_user_group	User Groups...
 plugin_docman	format_user_group_desc	One user group per column. Each one can have either READ, WRITE or MANAGE permission. An empty row means no access.
 plugin_docman	widget_description_my_docman_search	Redirect to document with given id.
-plugin_docman	widget_my_docman_search_label	Search document id:
+plugin_docman	widget_my_docman_search_label	Search document id
 plugin_docman	widget_my_docman_search_btn	Search
 
 plugin_docman	name_validity	A directory already exists with this name under docman
