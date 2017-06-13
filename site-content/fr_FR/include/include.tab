@@ -371,7 +371,8 @@ include_utils	time_ago	il y a $1
 include_utils	time_in_future	dans $1
 include_utils	1_minute	1 minute
 include_utils	less_1_minute	moins d'une minute
-include_utils	less_than_X_seconds	moins de $1 seconds
+include_utils	less_than_one_second	moins d'une seconde
+include_utils	less_than_X_seconds	moins de $1 secondes
 include_utils	half_a_minute	30 secondes
 include_utils	X_minutes	$1 minutes
 include_utils	about_1_hour	1 heure

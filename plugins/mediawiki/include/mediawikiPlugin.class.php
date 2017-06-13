@@ -644,14 +644,17 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    public function plugin_statistics_disk_usage_collect_project($params) {
+    public function plugin_statistics_disk_usage_collect_project($params)
+    {
+        $start   = microtime(true);
         $row     = $params['project_row'];
-        $project = ProjectManager::instance()->getProject($row['group_id']);
+        $project = $params['project'];
 
         $project_for_parth = $this->getMediawikiManager()->instanceUsesProjectID($project) ?
             $row['group_id'] : $row['unix_group_name'];
 
         $path = $GLOBALS['sys_data_dir']. '/mediawiki/projects/'. $project_for_parth;
+
         $size = $params['DiskUsageManager']->getDirSize($path);
 
         $params['DiskUsageManager']->_getDao()->addGroup(
@@ -660,6 +663,15 @@ class MediaWikiPlugin extends Plugin {
             $size,
             $_SERVER['REQUEST_TIME']
         );
+
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        if (! isset($params['time_to_collect'][self::SERVICE_SHORTNAME])) {
+            $params['time_to_collect'][self::SERVICE_SHORTNAME] = 0;
+        }
+
+        $params['time_to_collect'][self::SERVICE_SHORTNAME] += $time;
     }
 
     public function plugin_statistics_disk_usage_service_label($params) {

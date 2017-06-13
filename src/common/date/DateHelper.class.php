@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
+ * Copyright (c) Enalean, 2017. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
 class DateHelper {
@@ -56,11 +57,18 @@ class DateHelper {
         $distance_in_minutes = round((abs($to_time - $from_time))/60);
         $distance_in_seconds = round(abs($to_time - $from_time));
         
+        return self::getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds);
+    }
+
+    public static function getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds)
+    {
         if ($distance_in_minutes <= 1) {
             if (!$include_seconds) {
                 return $GLOBALS['Language']->getText('include_utils', ($distance_in_minutes == 0) ? 'less_1_minute' : '1_minute');
             } else {
-                if ($distance_in_seconds < 4) {
+                if ($distance_in_seconds < 1) {
+                    return $GLOBALS['Language']->getText('include_utils', 'less_than_one_second', 1);
+                } elseif ($distance_in_seconds < 4) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 5);
                 } else if ($distance_in_seconds < 9) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_than_X_seconds', 10);

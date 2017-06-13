@@ -713,10 +713,19 @@ class SvnPlugin extends Plugin
      */
     public function plugin_statistics_disk_usage_collect_project(array $params)
     {
-        $row     = $params['project_row'];
-        $project = new Project($row);
+        $start   = microtime(true);
+        $project = $params['project'];
 
         $this->getCollector()->collectDiskUsageForProject($project);
+
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        if (! isset($params['time_to_collect'][self::SERVICE_SHORTNAME])) {
+            $params['time_to_collect'][self::SERVICE_SHORTNAME] = 0;
+        }
+
+        $params['time_to_collect'][self::SERVICE_SHORTNAME] += $time;
     }
 
     /**

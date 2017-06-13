@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/plugin/Plugin.class.php');
@@ -151,10 +152,12 @@ class ForumMLPlugin extends Plugin {
      * 
      * @param array $params
      */
-    function plugin_statistics_disk_usage_collect_project($params) {
-        $project_row  = $params['project_row'];
-        $root = $this->getPluginInfo()->getPropertyValueForName('forumml_dir');
-        $path = $root.'/'.strtolower($project_row['unix_group_name']);
+    public function plugin_statistics_disk_usage_collect_project($params)
+    {
+        $start       = microtime(true);
+        $project_row = $params['project_row'];
+        $root        = $this->getPluginInfo()->getPropertyValueForName('forumml_dir');
+        $path        = $root . '/' . strtolower($project_row['unix_group_name']);
 
         $sql = 'SELECT group_list_id, list_name FROM mail_group_list WHERE group_id = '.$project_row['group_id'];
         $res = db_query($sql);
@@ -166,6 +169,15 @@ class ForumMLPlugin extends Plugin {
 
         $dao = $params['DiskUsageManager']->_getDao();
         $dao->addGroup($project_row['group_id'], 'plugin_forumml', $sum, $_SERVER['REQUEST_TIME']);
+
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        if (! isset($params['time_to_collect']['plugin_forumml'])) {
+            $params['time_to_collect']['plugin_forumml'] = 0;
+        }
+
+        $params['time_to_collect']['plugin_forumml'] += $time;
     }
     
     /**
@@ -189,5 +201,3 @@ class ForumMLPlugin extends Plugin {
     }
 
 }
-
-?>

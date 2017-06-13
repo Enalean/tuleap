@@ -61,10 +61,26 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
         }
 
         $this->archiveSessions();
-        $this->diskUsage();
+        $time_to_collect = $this->diskUsage();
         $this->purge();
 
-        $this->done();
+        $this->done($this->formatMessage($time_to_collect));
+    }
+
+    private function formatMessage(array $time_to_collect)
+    {
+        $message = "";
+        foreach ($time_to_collect as $service => $time) {
+            $seconds = $time;
+            $minutes = ($time / 60);
+
+            $formatted_time = DateHelper::getFormattedDistance($minutes, $seconds, true);
+
+            $message .= "Time needed for service $service: $formatted_time";
+            $message .= PHP_EOL;
+        }
+
+        return $message;
     }
 
     private function todayIsSunday() {
@@ -78,9 +94,12 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
         }
     }
 
+    /**
+     * @return array
+     */
     private function diskUsage() {
         $this->logger->debug(__METHOD__);
-        $this->disk_usage_manager->collectAll();
+        return $this->disk_usage_manager->collectAll();
     }
 
     /**

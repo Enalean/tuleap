@@ -740,11 +740,12 @@ class GitPlugin extends Plugin {
      */
     public function plugin_statistics_disk_usage_collect_project($params)
     {
+        $start          = microtime(true);
         $row            = $params['project_row'];
         $disk_usage_dao = $params['DiskUsageManager']->_getDao();
         $retriever      = new Retriever($disk_usage_dao);
         $collector      = new Collector($params['DiskUsageManager'], new Git_LogDao(), $retriever);
-        $project        = new Project($row);
+        $project        = $params['project'];
 
         $disk_usage_dao->addGroup(
             $row['group_id'],
@@ -752,6 +753,15 @@ class GitPlugin extends Plugin {
             $collector->collectForGitoliteRepositories($project),
             $_SERVER['REQUEST_TIME']
         );
+
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        if (! isset($params['time_to_collect'][self::SERVICE_SHORTNAME])) {
+            $params['time_to_collect'][self::SERVICE_SHORTNAME] = 0;
+        }
+
+        $params['time_to_collect'][self::SERVICE_SHORTNAME] += $time;
     }
 
     /**

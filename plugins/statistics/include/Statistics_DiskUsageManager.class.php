@@ -425,11 +425,22 @@ class Statistics_DiskUsageManager {
         return false;
     }
 
-    public function storeForGroup($groupId, $service, $path) {
-        $size = $this->getDirSize($path.'/');
+    public function storeForGroup(
+        $project_id,
+        $service,
+        $path,
+        array &$time_to_collect
+    ) {
+        $start = microtime(true);
+        $size  = $this->getDirSize($path.'/');
         if ($size) {
-            $this->dao->addGroup($groupId, $service, $size, $_SERVER['REQUEST_TIME']);
+            $this->dao->addGroup($project_id, $service, $size, $_SERVER['REQUEST_TIME']);
         }
+
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        $time_to_collect[$service] += $time;
     }
 
     public function storeForUser($userId, $service, $path) {
@@ -448,43 +459,71 @@ class Statistics_DiskUsageManager {
         }
     }
 
+    /**
+     * @return array
+     */
     public function collectAll() {
-        $this->collectProjects();
+        $time_to_collect = $this->collectProjects();
         $this->collectUsers();
         $this->collectSite();
+
+        return $time_to_collect;
     }
 
     /**
      * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
      */
     public function collectProjects() {
+        $time_to_collect = array(
+            Service::SVN => 0,
+            Service::CVS => 0,
+            self::FRS => 0,
+            self::FTP => 0,
+            self::GRP_HOME => 0,
+            Service::WIKI => 0,
+            self::PLUGIN_WEBDAV => 0,
+            self::MAILMAN => 0,
+        );
+
         $dar = $this->dao->searchAllOpenProjects();
         foreach($dar as $row) {
             $this->dao->getDa()->startTransaction();
 
             $project = new Project($row);
-            $this->collectSVNDiskUsage($project);
+            $this->collectSVNDiskUsage($project, $time_to_collect);
 
-            $this->storeForGroup($row['group_id'], 'cvs', $GLOBALS['cvs_prefix']."/".$row['unix_group_name']);
-            $this->storeForGroup($row['group_id'], 'frs', $GLOBALS['ftp_frs_dir_prefix']."/".$row['unix_group_name']);
-            $this->storeForGroup($row['group_id'], 'ftp', $GLOBALS['ftp_anon_dir_prefix']."/".$row['unix_group_name']);
-            $this->storeForGroup($row['group_id'], self::GRP_HOME, $GLOBALS['grpdir_prefix']."/".$row['unix_group_name']);
-            $this->storeForGroup($row['group_id'], 'wiki', $GLOBALS['sys_wiki_attachment_data_dir']."/".$row['group_id']);
+            $this->storeForGroup($row['group_id'], Service::CVS, $GLOBALS['cvs_prefix']."/".$row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($row['group_id'], self::FRS, $GLOBALS['ftp_frs_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($row['group_id'], self::FTP, $GLOBALS['ftp_anon_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($row['group_id'], self::GRP_HOME, $GLOBALS['grpdir_prefix']."/".$row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($row['group_id'], Service::WIKI, $GLOBALS['sys_wiki_attachment_data_dir']."/".$row['group_id'], $time_to_collect);
             // Fake plugin for webdav/subversion
-            $this->storeForGroup($row['group_id'], 'plugin_webdav', '/var/lib/codendi/webdav'."/".$row['unix_group_name']);
+            $this->storeForGroup($row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav'."/".$row['unix_group_name'], $time_to_collect);
 
-            $params = array('DiskUsageManager' => $this, 'project_row' => $row);
-            $this->event_manager->processEvent('plugin_statistics_disk_usage_collect_project', $params);
+            $params = array(
+                'DiskUsageManager' => $this,
+                'project_row'      => $row,
+                'project'          => $project,
+                'time_to_collect'  => &$time_to_collect
+            );
+
+            $this->event_manager->processEvent(
+                'plugin_statistics_disk_usage_collect_project',
+                $params
+            );
 
             $this->dao->getDa()->commit();
         }
 
-        $this->collectMailingLists();
+        $this->collectMailingLists($time_to_collect);
+
+        return $time_to_collect;
     }
 
-    private function collectSVNDiskUsage(Project $project)
+    private function collectSVNDiskUsage(Project $project, array &$time_to_collect)
     {
-        $size = $this->collector->collectForSubversionRepositories($project);
+        $start = microtime(true);
+        $size  = $this->collector->collectForSubversionRepositories($project);
         if (! $size) {
             $path = ForgeConfig::get('svn_prefix').'/'.$project->getUnixName();
             $size = $this->getDirSize($path.'/');
@@ -496,16 +535,23 @@ class Statistics_DiskUsageManager {
             $size,
             $_SERVER['REQUEST_TIME']
         );
+
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        $time_to_collect[Service::SVN] += $time;
     }
 
-    private function collectMailingLists()
+    private function collectMailingLists(array &$time_to_collect)
     {
+        $start          = microtime(true);
         $mmArchivesPath = '/var/lib/mailman/archives/private';
-        $sql = db_query('START TRANSACTION');
-        $dao = $this->_getDao();
-        $dar = $dao->searchAllLists();
-        $previous = -1;
-        $sMailman = 0;
+        $sql            = db_query('START TRANSACTION');
+        $dao            = $this->_getDao();
+        $dar            = $dao->searchAllLists();
+        $previous       = -1;
+        $sMailman       = 0;
+
         foreach($dar as $row) {
             if ($row['group_id'] != $previous) {
                 if ($previous != -1) {
@@ -525,6 +571,10 @@ class Statistics_DiskUsageManager {
         //We commit all the DB modification
         $sql = db_query('COMMIT');
 
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        $time_to_collect[self::MAILMAN] += $time;
     }
 
     public function collectUsers() {

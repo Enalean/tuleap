@@ -540,11 +540,22 @@ class DocmanPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_disk_usage_collect_project($params) {
-        $row  = $params['project_row'];
-        $root = $this->getPluginInfo()->getPropertyValueForName('docman_root');
-        $path = $root.'/'.strtolower($row['unix_group_name']);
-        $params['DiskUsageManager']->storeForGroup($row['group_id'], 'plugin_docman', $path);
+    public function plugin_statistics_disk_usage_collect_project($params)
+    {
+        $row             = $params['project_row'];
+        $root            = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+        $path            = $root . '/' . strtolower($row['unix_group_name']);
+
+        if (! isset($params['time_to_collect']['plugin_docman'])) {
+            $params['time_to_collect']['plugin_docman'] = 0;
+        }
+
+        $params['DiskUsageManager']->storeForGroup(
+            $row['group_id'],
+            'plugin_docman',
+            $path,
+            $params['time_to_collect']
+        );
     }
 
     /**
