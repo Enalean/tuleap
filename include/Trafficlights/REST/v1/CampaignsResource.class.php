@@ -46,9 +46,13 @@ use Tuleap\Trafficlights\ConfigConformanceValidator;
 use Tuleap\Trafficlights\Config;
 use Tuleap\Trafficlights\Dao;
 use Tracker_Artifact;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_Artifact_PriorityHistoryDao;
 use TrackerFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactValidator;
+use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
 
 class CampaignsResource {
 
@@ -70,6 +74,9 @@ class CampaignsResource {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
+    /** @var ExecutionCreator */
+    private $execution_creator;
+
     /** @var ConfigConformanceValidator */
     private $conformance_validator;
 
@@ -87,6 +94,9 @@ class CampaignsResource {
 
     /** @var TrackerFactory */
     private $tracker_factory;
+
+    /** @var ArtifactLinkUpdater */
+    private $artifactlink_updater;
 
     /** @var NodeJSClient */
     private $node_js_client;
@@ -134,7 +144,7 @@ class CampaignsResource {
             $this->tracker_factory
         );
 
-        $execution_creator = new ExecutionCreator(
+        $this->execution_creator = new ExecutionCreator(
             $this->formelement_factory,
             $this->config,
             $this->project_manager,
@@ -149,8 +159,16 @@ class CampaignsResource {
             $this->tracker_factory,
             $this->trafficlights_artifact_factory,
             $artifact_creator,
-            $execution_creator
+            $this->execution_creator
         );
+
+        $priority_manager           = new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            $this->user_manager,
+            $this->artifact_factory
+        );
+        $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
 
         $this->node_js_client         = new NodeJSClient();
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
@@ -211,6 +229,59 @@ class CampaignsResource {
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignFromId($id, $user);
 
+        $execution_representations = $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
+            $user,
+            $campaign,
+            $limit,
+            $offset
+        );
+
+        $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
+
+        return $execution_representations->getRepresentations();
+    }
+
+    /**
+     * PATCH test executions
+     *
+     * Create new test executions and unlink some test executions for a campaign
+     *
+     * @url PATCH {id}/trafficlights_executions_list
+     *
+     * @param int   $id                      Id of the campaign
+     * @param array $definition_ids_to_add   Test definition ids for which test executions should be created
+     * @param array $execution_ids_to_remove Test execution ids which should be unlinked from the campaign
+     *
+     * @return array {@type Tuleap\Trafficlights\REST\v1\ExecutionRepresentation}
+     */
+    protected function patchExecutions($id, $definition_ids_to_add, $execution_ids_to_remove)
+    {
+        $user               = $this->user_manager->getCurrentUser();
+        $campaign           = $this->getCampaignFromId($id, $user);
+        $project_id         = $campaign->getTracker()->getProject()->getId();
+        $new_executions_ids = array();
+
+        foreach ($definition_ids_to_add as $definition_id) {
+            $new_execution_ref    = $this->execution_creator->createTestExecution(
+                $project_id,
+                $user,
+                $definition_id
+            );
+            $new_executions_ids[] = $new_execution_ref->id;
+        }
+
+        $this->artifactlink_updater->updateArtifactLinks(
+            $user,
+            $campaign,
+            $new_executions_ids,
+            $execution_ids_to_remove,
+            \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+        );
+
+        $this->sendAllowHeadersForExecutionsList($campaign);
+
+        $limit                     = 10;
+        $offset                    = 0;
         $execution_representations = $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
             $user,
             $campaign,
@@ -402,6 +473,14 @@ class CampaignsResource {
     private function sendPaginationHeaders($limit, $offset, $size) {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
+
+    private function sendAllowHeadersForExecutionsList(Tracker_Artifact $artifact)
+    {
+        $date = $artifact->getLastUpdateDate();
+        Header::allowOptionsPatch();
+        Header::lastModified($date);
+    }
+
 
     /**
      * @param int $id
