@@ -136,7 +136,7 @@ body.agiledashboard_homepage .main .content {
                     border: none;
 
                     &.name {
-                        white-space: nowrap;
+                        word-break: break-all;
 
                         a:hover {
                             text-decoration: none;
