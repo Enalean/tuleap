@@ -18,6 +18,32 @@ module.exports = {
         jquery: 'jQuery',
         tlp   : 'tlp'
     },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
+                                ['env', {
+                                    targets: {
+                                        ie: 11
+                                    },
+                                    modules: false
+                                }]
+                            ],
+                            plugins: [
+                                "transform-object-rest-spread"
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
