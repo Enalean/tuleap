@@ -92,7 +92,11 @@ function init() {
 
             get(button.dataset.href)
                 .done(function (data) {
-                    filterInlineTable(document.getElementById('dashboard-add-widget-list-header-filter-table'));
+                    const filter = filterInlineTable(document.getElementById('dashboard-add-widget-list-header-filter-table'));
+                    modal.addEventListener('tlp-modal-hidden', function () {
+                        filter.filterTable()
+                    });
+
                     container.outerHTML = sanitize(render(widgets_categories_template, data));
                     initializeWidgets(table, data);
                 })

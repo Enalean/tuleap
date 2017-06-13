@@ -27,6 +27,10 @@ function filterInlineTable(filter) {
     filter.addEventListener("keyup", handleEscape);
     filter.addEventListener("input", filterTable);
 
+    return {
+        filterTable: filterTable
+    };
+
     function handleEscape(event) {
         const ESC_KEYCODE = 27;
 
