@@ -11,22 +11,20 @@
                     </svg>
                 {{/is_custom_logo_used}}
             </div>
-            {{# display_homepage_login_form }}
-                {{> homepage-signin }}
-            {{/display_homepage_login_form}}
+            {{> homepage-signin }}
         </div>
     </section>
     <section class="homepage-create-account-section">
         <div class="homepage-welcome-wrapper">
             <h2 class="homepage-welcome-title">{{{ purified_welcome_message }}}</h2>
             <p class="homepage-headline">{{ headline }}</p>
-            {{# user_is_anonymous }}
+            {{# display_new_account_button }}
                 <a href="{{ most_secure_url }}/account/register.php"
                    class="tlp-button-secondary tlp-button-large homepage-create-account-button"
                    role="button"
                 >{{ create_account_label }}<i class="fa fa-heart tlp-button-icon-right homepage-create-account-button-icon"></i>
                 </a>
-            {{/ user_is_anonymous }}
+            {{/ display_new_account_button }}
         </div>
         <img
             class="homepage-screenshots"

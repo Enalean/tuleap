@@ -29,8 +29,11 @@ $login_form_url .= '/account/login.php';
 
 $display_homepage_boxes      = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
 $display_homepage_news       = !isset($GLOBALS['sys_display_homepage_news'])  || (isset($GLOBALS['sys_display_homepage_news'])  && $GLOBALS['sys_display_homepage_news']  == 1);
-$display_homepage_login_form = true;
-$event_manager->processEvent(Event::DISPLAY_HOMEPAGE_LOGIN_FORM, array('is_displayed' => &$display_homepage_login_form));
+$display_new_account_button  = true;
+$event_manager->processEvent('display_newaccount', array('allow' => &$display_new_account_button));
+$login_url = '';
+$event_manager->processEvent(Event::GET_LOGIN_URL, array('return_to' => '', 'login_url' => &$login_url));
+
 $header_params = array(
     'title' => $Language->getText('homepage', 'title'),
 );
@@ -43,7 +46,11 @@ if ($homepage_dao->isStandardHomepageUsed()) {
 
     $HTML->header($header_params);
     $request = HTTPRequest::instance();
-    $HTML->displayStandardHomepage($display_homepage_news, $display_homepage_login_form, $request->isSecure());
+    $HTML->displayStandardHomepage(
+        $display_new_account_button,
+        $login_url,
+        $request->isSecure()
+    );
 } else {
     $HTML->header($header_params);
 

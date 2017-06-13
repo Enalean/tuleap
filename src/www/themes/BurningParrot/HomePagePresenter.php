@@ -42,8 +42,9 @@ class HomePagePresenter
     public $sign_in_submit;
     public $forgot_password;
     public $not_a_member;
-    public $display_homepage_login_form;
     public $is_custom_logo_used;
+    public $display_new_account_button;
+    public $login_url;
 
     /**
      * HomePagePresenter constructor.
@@ -53,7 +54,8 @@ class HomePagePresenter
         PFUser $user,
         $most_secure_url,
         User_LoginPresenter $login,
-        $display_homepage_login_form
+        $display_new_account_button,
+        $login_url
     ) {
         $this->headline                    = $headline;
         $this->is_custom_logo_used         = Admin_Homepage_LogoFinder::isCustomLogoUsed();
@@ -62,7 +64,8 @@ class HomePagePresenter
         $this->user_is_anonymous           = $user->isAnonymous();
         $this->most_secure_url             = $most_secure_url;
         $this->login                       = $login;
-        $this->display_homepage_login_form = $display_homepage_login_form;
+        $this->display_new_account_button  = $display_new_account_button;
+        $this->login_url                   = $login_url;
 
         $purifier        = Codendi_HTMLPurifier::instance();
         $welcome_message = $GLOBALS['Language']->getText('homepage', 'welcome_title');

@@ -70,7 +70,6 @@ class openidconnectclientPlugin extends Plugin {
         $this->addHook(Event::IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE);
         $this->addHook(Event::GET_LOGIN_URL);
         $this->addHook('display_newaccount');
-        $this->addHook(Event::DISPLAY_HOMEPAGE_LOGIN_FORM);
     }
 
     /**
@@ -195,14 +194,6 @@ class openidconnectclientPlugin extends Plugin {
         $provider_manager = $this->getProviderManager();
         if ($this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint($provider_manager)) {
             $params['allow'] = false;
-        }
-    }
-
-    public function display_homepage_login_form($params)
-    {
-        $provider_manager = $this->getProviderManager();
-        if ($this->isLoginConfiguredToUseAProviderAsUniqueAuthenticationEndpoint($provider_manager)) {
-            $params['is_displayed'] = false;
         }
     }
 
