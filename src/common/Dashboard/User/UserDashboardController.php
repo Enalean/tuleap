@@ -24,7 +24,7 @@ use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
 use ForgeConfig;
-use HttpRequest;
+use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
@@ -127,6 +127,8 @@ class UserDashboardController
             );
         }
 
+        \Tuleap\Instrument\Collect::increment('service.my.accessed');
+
         $user_dashboards_presenter = $this->getUserDashboardsPresenter($current_user, $dashboard_id, $user_dashboards);
 
         $GLOBALS['Response']->header(array('title' => $this->title));
@@ -143,13 +145,12 @@ class UserDashboardController
             )
         );
 
-
         $GLOBALS['Response']->includeFooterJavascriptFile($this->include_assets->getFileUrl('dashboard.js'));
         $GLOBALS['Response']->footer(array('without_content' => true));
     }
 
     /**
-     * @param HttpRequest $request
+     * @param HTTPRequest $request
      * @return integer|null
      */
     public function createDashboard(HTTPRequest $request)
