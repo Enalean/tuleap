@@ -40,6 +40,12 @@ msgstr ""
 "Une erreur est survenue lors de votre téléversement. Merci d'essayer à "
 "nouveau ou de choisir une autre image."
 
+msgid "An error occurred while clearing the content of your history"
+msgstr "Une erreur est survenue lors de la suppression de votre historique"
+
+msgid "An error occurred while fetching the content of your history"
+msgstr "Une erreur est survenue lors de la récupération de votre historique"
+
 msgid "An error occurred while trying to add the widget to the dashboard"
 msgstr ""
 "Une erreur est survenue lors de l'ajout du widget sur le tableau de bord"

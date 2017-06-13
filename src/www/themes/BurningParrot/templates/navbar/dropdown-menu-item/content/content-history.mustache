@@ -3,6 +3,12 @@
     <i class="fa fa-history empty-history-icon"></i>
     <p class="empty-history-description">{{ empty_history }}</p>
 </div>
+<div id="nav-dropdown-content-user-history-error-message-fetch">
+    <div class="tlp-alert-danger">{{ error_fetch }}</div>
+</div>
+<div id="nav-dropdown-content-user-history-error-message-clear">
+    <div class="tlp-alert-danger">{{ error_clear }}</div>
+</div>
 <div id="nav-dropdown-content-user-history-content" data-user-id="{{ current_user_id }}">
     <script id="history-item-placeholder" type="x-tmpl-mustache">
         {{=<% %>=}}

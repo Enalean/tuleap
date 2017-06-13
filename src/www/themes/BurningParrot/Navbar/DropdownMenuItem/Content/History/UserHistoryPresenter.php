@@ -26,16 +26,11 @@ use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 class UserHistoryPresenter extends Presenter
 {
     public $is_history = true;
-
-    /** @var int */
     public $current_user_id;
-
-    /** @var string */
     public $clear_history;
-
-    /** @var string */
     public $empty_history;
-
+    public $error_fetch;
+    public $error_clear;
 
     public function __construct(
         $id,
@@ -46,5 +41,7 @@ class UserHistoryPresenter extends Presenter
         $this->current_user_id = $current_user->getId();
         $this->empty_history   = _('Your history is empty');
         $this->clear_history   = _('Clear history');
+        $this->error_fetch     = _('An error occurred while fetching the content of your history');
+        $this->error_clear     = _('An error occurred while clearing the content of your history');
     }
 }
