@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+/*!
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../default/css/includes/cards';
-@import 'includes/widgets';
+.toggler-noajax,
+.toggler-hide-noajax,
+.toggler,
+.toggler-hide {
+    position: relative;
+    padding: 0 0 0 16px;
+    cursor: pointer;
 
-.header-column-deleted-tracker {
-    width: 50%;
+    &::before {
+        position: absolute;
+        top: 2px;
+        left: 0;
+        font-family: 'fontawesome';
+        font-size: 14px;
+    }
 }
 
-.header-column-deleted-tracker-date {
-    white-space: nowrap;
+.toggler,
+.toggler-noajax {
+    &::before {
+        content: '\f147';
+    }
+}
+
+.toggler-hide,
+.toggler-hide-noajax {
+    &::before {
+        content: '\f196';
+    }
+
+    ~ * {
+        display: none;
+    }
 }

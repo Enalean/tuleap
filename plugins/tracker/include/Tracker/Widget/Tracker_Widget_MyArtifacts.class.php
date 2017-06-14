@@ -149,20 +149,14 @@ class Tracker_Widget_MyArtifacts extends Widget {
     }
 
     function _display_artifacts($artifacts) {
-        $request = HTTPRequest::instance();
         $hp = Codendi_HTMLPurifier::instance();
 
         $html_my_artifacts = '';
-        $html_current_tracker_header = '';
-        $html_current_tracker_arts = '';
-        $tracker_artifacts_counter = 0;
 
-        $tracker = false;
         foreach ($artifacts as $tracker_id => $tracker_and_its_artifacts) {
             if (count($tracker_and_its_artifacts['artifacts'])) {
                 $tracker = $tracker_and_its_artifacts['tracker'];
 
-                //header (project name - tracker name)
                 $div_id              = 'plugin_tracker_my_artifacts_tracker_' . $tracker->getId();
                 $classname           = Toggler::getClassname($div_id);
                 $group_id            = $tracker->getGroupId();
@@ -170,15 +164,14 @@ class Tracker_Widget_MyArtifacts extends Widget {
                 $project_and_tracker = $project->getPublicName() . ' - ' . $tracker->getName();
 
                 $html_my_artifacts .= '<div>';
-                $html_my_artifacts .= '<div class="' . $classname . '" id="' . $div_id . '">';
-                $html_my_artifacts .= '<a href="/plugins/tracker/?tracker=' . $tracker->getId() . '">';
+                $html_my_artifacts .= '<div class="' . $classname . ' tracker-widget-artifacts-toggler" id="' . $div_id . '">';
+                $html_my_artifacts .= '<a href="/plugins/tracker/?tracker=' . $tracker->getId() . '" class="tracker-widget-artifacts">';
                 $html_my_artifacts .= '<strong>' . $hp->purify($project_and_tracker, CODENDI_PURIFIER_CONVERT_HTML) . '</strong>';
                 $html_my_artifacts .= '</a>';
                 $html_my_artifacts .= ' [' . count($tracker_and_its_artifacts['artifacts']) . ']';
                 $html_my_artifacts .= ' </div>';
-                $html_my_artifacts .= '<ul class="plugin_tracker_my_artifacts_list">';
+                $html_my_artifacts .= '<ul class="plugin_tracker_my_artifacts_list tracker-widget-artifacts-list">';
                 foreach ($tracker_and_its_artifacts['artifacts'] as $artifact_and_its_title) {
-                    // Display artifact
                     $html_my_artifacts .=  '<li>';
                     $html_my_artifacts .=  $artifact_and_its_title['artifact']->fetchWidget($tracker->getItemName(), $artifact_and_its_title['title']);
                     $html_my_artifacts .=  '</li>';

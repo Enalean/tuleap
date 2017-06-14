@@ -19,6 +19,7 @@
 
 import { get } from 'tlp';
 import { sanitize } from 'dompurify';
+import { init as togglerInit } from '../tuleap/toggler.js';
 
 export default init;
 
@@ -31,6 +32,7 @@ function init() {
             .then(function (html) {
                 widget.innerHTML = sanitize(html);
                 widget.classList.remove('dashboard-widget-asynchronous-loading');
+                togglerInit(widget);
             });
     });
 }
