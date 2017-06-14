@@ -78,6 +78,7 @@
 .history-item {
     display: flex;
     flex: 1 0 auto;
+    align-items: center;
     padding: $tlp-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
     color: $tlp-typo-default-text-color;
@@ -90,15 +91,11 @@
     &:hover {
         background-color: transparentize($tlp-theme-color, .9);
         cursor: pointer;
-
-        .history-item-content-description-quick-links {
-            display: block;
-        }
     }
 }
 
 .history-item-icon {
-    margin: 3px $tlp-half-spacing 0 0;
+    margin: 0 $tlp-half-spacing 0 0;
 }
 
 .history-item-content {
@@ -128,28 +125,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-}
-
-.history-item-content-description-quick-links {
-    display: none;
-    max-width: 250px;
-    margin: $tlp-half-spacing 0 0;
-    color: $tlp-theme-color;
-    white-space: normal;
-}
-
-.history-item-content-quick-links-link {
-    margin: 0 $tlp-half-spacing 0 0;
-    color: $tlp-theme-color;
-
-    &:hover > .history-item-content-quick-links-link-name {
-        text-decoration: underline;
-    }
-}
-
-
-.history-item-content-quick-links-link-icon {
-    margin: 0 3px 0 0;
 }
 
 .history-item-content-project {
