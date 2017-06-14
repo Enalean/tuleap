@@ -8,10 +8,15 @@
     </a>
 </li>
 <li>
-    <button title="{{ history }}" id="nav-dropdown-user-history" class="nav-form-button dropdown-toggle" data-toggle="dropdown"">
+    <button
+        title="{{ history }}"
+        id="nav-dropdown-user-history"
+        class="nav-form-button dropdown-toggle"
+        data-toggle="dropdown"
+    >
         <i class="icon icon-time"></i>
     </button>
-    {{> navbar-content-history }}
+    {{> navbar-history }}
 </li>
 <li>
     <a href="/account/" title="{{ my_account_label }}">

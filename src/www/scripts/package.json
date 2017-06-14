@@ -10,7 +10,9 @@
     "dragula": "^3.7.2",
     "get-dataset": "^0.0.4",
     "lodash": "^4.17.4",
-    "mustache": "^2.3.0"
+    "mustache": "^2.3.0",
+    "promise-polyfill": "^6.0.2",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

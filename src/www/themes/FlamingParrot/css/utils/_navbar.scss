@@ -335,24 +335,7 @@
             }
         }
 
-        .empty-history {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: transparentize($main, .7);
-            width: 250px;
-            height: 200px;
-
-            .empty-history-description {
-                font-size: 22px;
-            }
-        }
-
-        .empty-history-icon {
-            margin: 0 0 15px;
-            font-size: 40px;
-        }
+        @import 'navbar-dropdown-history';
 
         .projects-nav ul.dropdown-menu {
             width: 300px;

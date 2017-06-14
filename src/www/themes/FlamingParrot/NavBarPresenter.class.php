@@ -122,10 +122,13 @@ class FlamingParrot_NavBarPresenter
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index','account_maintenance');
         $this->join_community_title = $GLOBALS['Language']->getText('include_menu', 'join_community');
-        $this->history              = _('History');
-        $this->empty_history        = _('Your history is empty');
-        $this->error_fetch          = _('An error occurred while fetching the content of your history');
-        $this->error_clear          = _('An error occurred while clearing the content of your history');
+
+        $this->current_user_id = $user->getId();
+        $this->history         = _('History');
+        $this->clear_history   = _('Clear history');
+        $this->empty_history   = _('Your history is empty');
+        $this->error_fetch     = _('An error occured while fetching the content of your history');
+        $this->error_clear     = _('An error occured while clearing the content of your history');
     }
 
     public function imgroot() {

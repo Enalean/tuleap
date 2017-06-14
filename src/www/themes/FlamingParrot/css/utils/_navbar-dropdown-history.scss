@@ -1,0 +1,365 @@
+$nav-dropdown-content-border-radius: 3px;
+$history-dropdown-spacing: 20px;
+$history-dropdown-half-spacing: $history-dropdown-spacing / 2;
+$history-dropdown-ui-border-light: #f3f3f3;
+$history-dropdown-ui-dimmed: #747474;
+$history-dropdown-item-text-color: #333333;
+
+@import '../../../common/css/utils/colors';
+
+.nav-dropdown-content-title {
+    padding: 10px;
+    border-top-left-radius: $nav-dropdown-content-border-radius;
+    border-top-right-radius: $nav-dropdown-content-border-radius;
+    background-color: $main;
+    color: #ffffff;
+    font-size: 14px;
+    letter-spacing: normal;
+    text-align: center;
+    cursor: initial;
+}
+
+#nav-dropdown-content-user-history {
+    max-width: none;
+}
+
+#nav-dropdown-content-user-history-empty {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 200px;
+    color: transparentize($main, .8);
+
+    &.shown {
+        display: flex;
+    }
+
+    > .empty-history-icon {
+        margin: 0 0 15px;
+        font-size: 40px;
+    }
+
+    > .empty-history-description {
+        font-size: 22px;
+    }
+}
+
+#nav-dropdown-content-user-history-error-message-fetch,
+#nav-dropdown-content-user-history-error-message-clear {
+    display: none;
+    width: 510px;
+    margin: $history-dropdown-spacing;
+    font-size: 16px;
+    white-space: normal;
+
+    &.shown {
+        display: block;
+    }
+}
+
+#nav-dropdown-content-user-history-loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 200px;
+    background: url('../images/tuleap-spinner.gif') no-repeat center center;
+
+    &.shown {
+        display: block;
+    }
+}
+
+#nav-dropdown-content-user-history-content {
+    display: none;
+    flex-direction: column;
+    width: 550px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    &.shown {
+        display: flex;
+    }
+}
+
+#nav-dropdown-content-user-history-clear {
+    display: none;
+    justify-content: center;
+    padding: $history-dropdown-spacing;
+    border-top: 1px solid $history-dropdown-ui-border-light;
+
+    &.shown {
+        display: flex;
+    }
+}
+
+.history-item {
+    display: flex;
+    flex: 1 0 auto;
+    padding: $history-dropdown-spacing;
+    border-bottom: 1px solid $history-dropdown-ui-border-light;
+    color: $history-dropdown-item-text-color;
+    text-decoration: none;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    &:hover {
+        background-color: transparentize($main, .9);
+        cursor: pointer;
+
+        .history-item-content-description-quick-links {
+            display: block;
+        }
+    }
+}
+
+.history-item-icon {
+    margin: 3px $history-dropdown-half-spacing 0 0;
+}
+
+.history-item-content {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.history-item-content-description {
+    flex-grow: 1;
+    margin: 0 $history-dropdown-spacing 0 0;
+}
+
+.history-item-content-description-info {
+    display: flex;
+    align-items: center;
+}
+
+.history-item-content-description-info-badge {
+    @extend %badge-colors;
+
+    margin: 0 5px 0 0;
+    text-shadow: none;
+}
+
+.history-item-content-description-info-title {
+    max-width: 200px;
+    font-size: 14px;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.history-item-content-description-quick-links {
+    display: none;
+    max-width: 250px;
+    margin: $history-dropdown-half-spacing 0 0;
+    color: $main;
+    white-space: normal;
+}
+
+.history-item-content-quick-links-link {
+    margin: 0 $history-dropdown-half-spacing 0 0;
+    color: $main;
+
+    &:hover > .history-item-content-quick-links-link-name {
+        text-decoration: underline;
+    }
+}
+
+
+.history-item-content-quick-links-link-icon {
+    margin: 0 3px 0 0;
+}
+
+.history-item-content-project {
+    max-width: 150px;
+    color: $history-dropdown-ui-dimmed;
+    text-align: right;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &:hover > .history-item-content-project-name {
+        text-decoration: underline;
+    }
+}
+
+.history-item-content-project-icon {
+    flex: 0 0 auto;
+    margin: 0 5px 0 0;
+    fill: $history-dropdown-ui-dimmed;
+}
+
+.history-item-content-project-name {
+    line-height: 16px;
+    white-space: normal;
+}
+
+// scss-lint:disable NameFormat
+.history-item-icon-inca-silver > svg {
+    fill: transparentize($inca_silver, .7);
+}
+
+.history-item-icon-chrome-silver > svg {
+    fill: transparentize($chrome_silver, .7);
+}
+
+.history-item-icon-fiesta-red > svg {
+    fill: transparentize($fiesta_red, .7);
+}
+
+.history-item-icon-teddy-brown > svg {
+    fill: transparentize($teddy_brown, .7);
+}
+
+.history-item-icon-clockwork-orange > svg {
+    fill: transparentize($clockwork_orange, .7);
+}
+
+.history-item-icon-red-wine > svg {
+    fill: transparentize($red_wine, .7);
+}
+
+.history-item-icon-acid-green > svg {
+    fill: transparentize($acid_green, .7);
+}
+
+.history-item-icon-army-green > svg {
+    fill: transparentize($army_green, .7);
+}
+
+.history-item-icon-sherwood-green > svg {
+    fill: transparentize($sherwood_green, .7);
+}
+
+.history-item-icon-ocean-turquoise > svg {
+    fill: transparentize($ocean_turquoise, .7);
+}
+
+.history-item-icon-daphne-blue > svg {
+    fill: transparentize($daphne_blue, .7);
+}
+
+.history-item-icon-lake-placid-blue > svg {
+    fill: transparentize($lake_placid_blue, .7);
+}
+
+.history-item-icon-deep-blue > svg {
+    fill: transparentize($deep_blue, .7);
+}
+
+.history-item-icon-plum-crazy > svg {
+    fill: transparentize($plum_crazy, .7);
+}
+
+.history-item-icon-peggy-pink > svg {
+    fill: transparentize($peggy_pink, .7);
+}
+
+.history-item-icon-flamingo-pink > svg {
+    fill: transparentize($flamingo_pink, .7);
+}
+
+%badge-colors {
+    &.tlp-badge-inca-silver {
+        border: 1px solid $inca_silver;
+        background: transparent;
+        color: $inca_silver;
+    }
+
+    &.tlp-badge-chrome-silver {
+        border: 1px solid $chrome_silver;
+        background: transparent;
+        color: $chrome_silver;
+    }
+
+    &.tlp-badge-fiesta-red {
+        border: 1px solid $fiesta_red;
+        background: transparent;
+        color: $fiesta_red;
+    }
+
+    &.tlp-badge-teddy-brown {
+        border: 1px solid $teddy_brown;
+        background: transparent;
+        color: $teddy_brown;
+    }
+
+    &.tlp-badge-clockwork-orange {
+        border: 1px solid $clockwork_orange;
+        background: transparent;
+        color: $clockwork_orange;
+    }
+
+    &.tlp-badge-red-wine {
+        border: 1px solid $red_wine;
+        background: transparent;
+        color: $red_wine;
+    }
+
+    &.tlp-badge-acid-green {
+        border: 1px solid $acid_green;
+        background: transparent;
+        color: $acid_green;
+    }
+
+    &.tlp-badge-army-green {
+        border: 1px solid $army_green;
+        background: transparent;
+        color: $army_green;
+    }
+
+    &.tlp-badge-sherwood-green {
+        border: 1px solid $sherwood_green;
+        background: transparent;
+        color: $sherwood_green;
+    }
+
+    &.tlp-badge-ocean-turquoise {
+        border: 1px solid $ocean_turquoise;
+        background: transparent;
+        color: $ocean_turquoise;
+    }
+
+    &.tlp-badge-daphne-blue {
+        border: 1px solid $daphne_blue;
+        background: transparent;
+        color: $daphne_blue;
+    }
+
+    &.tlp-badge-lake-placid-blue {
+        border: 1px solid $lake_placid_blue;
+        background: transparent;
+        color: $lake_placid_blue;
+    }
+
+    &.tlp-badge-deep-blue {
+        border: 1px solid $deep_blue;
+        background: transparent;
+        color: $deep_blue;
+    }
+
+    &.tlp-badge-plum-crazy {
+        border: 1px solid $plum_crazy;
+        background: transparent;
+        color: $plum_crazy;
+    }
+
+    &.tlp-badge-peggy-pink {
+        border: 1px solid $peggy_pink;
+        background: transparent;
+        color: $peggy_pink;
+    }
+
+    &.tlp-badge-flamingo-pink {
+        border: 1px solid $flamingo_pink;
+        background: transparent;
+        color: $flamingo_pink;
+    }
+}
