@@ -25,10 +25,13 @@
                     <div class="empty-page">
                         <p class="empty-page-text">{{ no_widget_label }}</p>
                         <p class="empty-page-text">{{{ purified_no_widget_action_label }}}</p>
-                        <a href="{{ url_add_widget }}" class="tlp-button-primary tlp-button-large">
+                        <button class="tlp-button-primary tlp-button-large add-widget-button"
+                                data-target-modal-id="add-widget-modal"
+                                data-href="{{ url_add_widget_content }}"
+                        >
                             <i class="fa fa-plus tlp-button-icon"></i>
                             {{ add_widget_title }}
-                        </a>
+                        </button>
                     </div>
                 {{/ has_widget }}
             {{/ is_active }}
