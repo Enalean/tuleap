@@ -43,6 +43,11 @@ class Widget_MyAdmin extends Widget {
         }
     }
 
+    public function getDescription()
+    {
+        return $GLOBALS['Language']->getText('my_index', 'my_admin_description');
+    }
+
     public function getContent() {
         $html_my_admin = '<table width="100%" class="tlp-table">';
 
