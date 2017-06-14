@@ -38,7 +38,6 @@ class UserCounterPayload implements Payload
             'user_id'   => $user_id
         );
 
-        $dao = new UserCounterDao();
         foreach ($dao->getNbOfUsersByStatus() as $row) {
             $this->payload['users'][$row['status']] = $row['nb'];
         }
