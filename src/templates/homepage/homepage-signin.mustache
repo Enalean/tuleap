@@ -1,53 +1,66 @@
 {{# user_is_anonymous }}
-    <form class="homepage-sign-in" action="{{ most_secure_url }}/account/login.php" method="POST">
-        {{# login }}
-            <div class="sign-in-avatar">
-                <div class="tlp-avatar-extra-large"></div>
-            </div>
-
-            <div class="tlp-form-element">
-                <label for="form_loginname" class="tlp-label">{{ username_placeholder }}</label>
-                <input
-                    type="text"
-                    class="tlp-input"
-                    id="form_loginname"
-                    name="form_loginname"
-                    placeholder="{{ username_placeholder }}"
-                    tabindex="1"
-                >
-
-                {{# allow_password_recovery }}
-                    <p class="tlp-text-info sign-in-forgot-password">
-                        <a href="{{ most_secure_url }}/account/lostpw.php">{{ forgot_password }}</a>
-                    </p>
-                {{/ allow_password_recovery }}
-            </div>
-
-            <div class="tlp-form-element">
-                <label for="form_pw" class="tlp-label">{{ password_placeholder }}</label>
-                <input
-                    type="password"
-                    class="tlp-input"
-                    id="form_pw"
-                    name="form_pw"
-                    placeholder="{{ password_placeholder }}"
-                    tabindex="2"
-                >
-            </div>
-
-            <input type="hidden" name="{{ csrf_token_name }}" value="{{ csrf_token_value }}">
-            <button
-                type="submit"
-                name="login"
+    <div class="homepage-sign-in">
+        <div class="sign-in-avatar">
+            <div class="tlp-avatar-extra-large"></div>
+        </div>
+        {{# login_url }}
+            <a
+                href="{{ login_url }}"
                 class="tlp-button-primary tlp-button-large tlp-button-wide sign-in-button"
-                tabindex="3"
-            >{{ sign_in_submit }}</button>
+            >{{ sign_in_submit }}</a>
+        {{/login_url}}
 
-            {{{ additional_connectors }}}
+        {{^ login_url }}
+            <form action="{{ most_secure_url }}/account/login.php" method="POST">
+                {{# login }}
 
-            <span class="sign-in-register">{{ not_a_member }} <a href="{{ most_secure_url }}/account/register.php">{{ create_account_label }}</a></span>
-        {{/ login }}
-    </form>
+                    <div class="tlp-form-element">
+                        <label for="form_loginname" class="tlp-label">{{ username_placeholder }}</label>
+                        <input
+                            type="text"
+                            class="tlp-input"
+                            id="form_loginname"
+                            name="form_loginname"
+                            placeholder="{{ username_placeholder }}"
+                            tabindex="1"
+                        >
+
+                        {{# allow_password_recovery }}
+                            <p class="tlp-text-info sign-in-forgot-password">
+                                <a href="{{ most_secure_url }}/account/lostpw.php">{{ forgot_password }}</a>
+                            </p>
+                        {{/ allow_password_recovery }}
+                    </div>
+
+                    <div class="tlp-form-element">
+                        <label for="form_pw" class="tlp-label">{{ password_placeholder }}</label>
+                        <input
+                            type="password"
+                            class="tlp-input"
+                            id="form_pw"
+                            name="form_pw"
+                            placeholder="{{ password_placeholder }}"
+                            tabindex="2"
+                        >
+                    </div>
+
+                    <input type="hidden" name="{{ csrf_token_name }}" value="{{ csrf_token_value }}">
+                    <button
+                        type="submit"
+                        name="login"
+                        class="tlp-button-primary tlp-button-large tlp-button-wide sign-in-button"
+                        tabindex="3"
+                    >{{ sign_in_submit }}</button>
+
+                    {{{ additional_connectors }}}
+
+                    {{# display_new_account_button }}
+                        <span class="sign-in-register">{{ not_a_member }} <a href="{{ most_secure_url }}/account/register.php">{{ create_account_label }}</a></span>
+                    {{/display_new_account_button}}
+                {{/ login }}
+            </form>
+        {{/ login_url }}
+    </div>
 {{/ user_is_anonymous }}
 
 {{^ user_is_anonymous }}

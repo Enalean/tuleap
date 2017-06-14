@@ -201,8 +201,8 @@ class BurningParrotTheme extends Layout
     }
 
     public function displayStandardHomepage(
-        $display_homepage_news,
-        $display_homepage_login_form,
+        $display_new_account_button,
+        $login_url,
         $is_secure
     ) {
         $homepage_dao = $this->getAdminHomepageDao();
@@ -219,6 +219,8 @@ class BurningParrotTheme extends Layout
         $login_csrf              = new CSRFSynchronizerToken('/account/login.php');
         $login_presenter         = $login_presenter_builder->buildForHomepage($is_secure, $login_csrf);
 
+        $display_new_account_button = ($current_user->isAnonymous() && $display_new_account_button);
+
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
         $presenter     = new HomePagePresenter(
@@ -226,7 +228,8 @@ class BurningParrotTheme extends Layout
             $current_user,
             $most_secure_url,
             $login_presenter,
-            $display_homepage_login_form
+            $display_new_account_button,
+            $login_url
         );
         $renderer->renderToPage('homepage', $presenter);
     }
