@@ -33,10 +33,13 @@ class Widget_MyMonitoredForums extends Widget {
         parent::__construct('mymonitoredforums');
     }
 
-    function getTitle() {
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('my_index', 'my_forums');
     }
-    function getContent() {
+
+    public function getContent()
+    {
         $html_my_monitored_forums = '';
         $sql="SELECT groups.group_id, groups.group_name ".
              "FROM groups,forum_group_list,forum_monitored_forums ".
@@ -45,8 +48,8 @@ class Widget_MyMonitoredForums extends Widget {
             "AND forum_group_list.is_public <> 9 ".
              "AND forum_group_list.group_forum_id=forum_monitored_forums.forum_id ".
              "AND forum_monitored_forums.user_id='". db_ei(user_getid()) ."' ";
-        $um =& UserManager::instance();
-        $current_user =& $um->getCurrentUser();
+        $um = UserManager::instance();
+        $current_user = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
             $sql .= "AND groups.group_id IN (". db_ei_implode($projects) .") ";
@@ -58,7 +61,7 @@ class Widget_MyMonitoredForums extends Widget {
         if (!$result || $rows < 1) {
             $html_my_monitored_forums .= $GLOBALS['Language']->getText('my_index', 'my_forums_msg');
         } else {
-            $request =& HTTPRequest::instance();
+            $request = HTTPRequest::instance();
             $html_my_monitored_forums .= '<table class="tlp-table" style="width:100%">';
             for ($j=0; $j<$rows; $j++) {
                 $group_id = db_result($result,$j,'group_id');
@@ -92,9 +95,9 @@ class Widget_MyMonitoredForums extends Widget {
 
                 list($hide_now,$count_diff,$hide_url) = my_hide_url('forum',$group_id,$hide_item_id,$rows2,$hide_forum, $request->get('dashboard_id'));
 
-                $html_hdr = ($j ? '<tr class="boxitem"><td colspan="2">' : '').
-                    $hide_url.'<A HREF="/forum/?group_id='.$group_id.'">'.
-                    db_result($result,$j,'group_name').'</A>&nbsp;&nbsp;&nbsp;&nbsp;';
+                $html_hdr = '<tr class="boxitem"><td colspan="2">' .
+                    $hide_url.'<a href="/forum/?group_id='.$group_id.'">'.
+                    db_result($result,$j,'group_name').'</a>&nbsp;&nbsp;&nbsp;&nbsp;';
 
                 $html = '';
                 $count_new = max(0, $count_diff);
@@ -121,19 +124,24 @@ class Widget_MyMonitoredForums extends Widget {
         return $html_my_monitored_forums;
     }
 
-    function getCategory() {
+    public function getCategory()
+    {
         return 'forums';
     }
-    function getDescription() {
+
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_my_monitored_forums','description');;
     }
-    function isAjax() {
+
+    public function isAjax()
+    {
         return true;
     }
 
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_forum')) {
             $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_forum=' . $request->get('hide_forum');
