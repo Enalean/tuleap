@@ -144,7 +144,7 @@ function displayWidgetSettings(table, widget_element, data_widgets, event) {
         widget_element.classList.add('dashboard-add-widget-list-table-widget-selected');
 
         var add_widget_button = document.getElementById('dashboard-add-widget-button');
-        if (! widget_data.is_used && widget_data.configurations === '') {
+        if (! widget_data.is_used) {
             add_widget_button.disabled = false;
         } else {
             add_widget_button.disabled = true;
