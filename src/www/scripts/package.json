@@ -1,13 +1,15 @@
 {
-  "name": "navbar-history",
+  "name": "tuleap-core",
   "version": "0.1.0",
-  "description": "Handle navbar user history dropdown",
-  "main": "navbar-history.js",
+  "description": "Javascript code used in Tuleap core",
   "author": "Enalean Team",
   "license": "MIT",
   "private": true,
   "dependencies": {
     "dompurify": "^0.9.0",
+    "dragula": "^3.7.2",
+    "get-dataset": "^0.0.4",
+    "lodash": "^4.17.4",
     "mustache": "^2.3.0"
   },
   "devDependencies": {
