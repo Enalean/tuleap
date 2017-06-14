@@ -67,6 +67,9 @@ class Router
             case 'get-edit-modal-content':
                 $this->preferences_controller->display($request);
                 break;
+            case 'add-widget':
+                $this->add_widget_controller->create($request);
+                break;
             case 'edit-widget':
                 $this->preferences_controller->update($request);
                 break;

@@ -40,6 +40,10 @@ msgstr ""
 "Une erreur est survenue lors de votre téléversement. Merci d'essayer à "
 "nouveau ou de choisir une autre image."
 
+msgid "An error occurred while trying to add the widget to the dashboard"
+msgstr ""
+"Une erreur est survenue lors de l'ajout du widget sur le tableau de bord"
+
 msgid "And more..."
 msgstr "Et plus ..."
 
@@ -236,6 +240,9 @@ msgstr "Il manque le nom pour éditer le tableau de bord."
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
+
+msgid "The widget has been added successfully"
+msgstr "Le widget a correctement été ajouté"
 
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."

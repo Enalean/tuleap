@@ -23,6 +23,9 @@ msgid ""
 "An error occured with your upload. Please try again or choose another image."
 msgstr ""
 
+msgid "An error occurred while trying to add the widget to the dashboard"
+msgstr ""
+
 msgid "And more..."
 msgstr ""
 
@@ -216,6 +219,9 @@ msgid "The name is missing for editing the dashboard."
 msgstr ""
 
 msgid "The requested dashboard does not exist."
+msgstr ""
+
+msgid "The widget has been added successfully"
 msgstr ""
 
 msgid "There are no widgets here."

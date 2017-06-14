@@ -1,5 +1,5 @@
 <form method="POST"
-      action="/widgets/?action=add-widget"
+      action="{{ url_add_widget }}"
       id="add-widget-modal"
       data-dashboard-id="{{ id }}"
       class="tlp-modal tlp-modal-medium-sized"
@@ -16,7 +16,6 @@
         </div>
     </div>
     <div class="tlp-modal-body dashboard-add-widget-body">
-        <input type="hidden" name="dashboard-id" value="{{ id }}">
         {{# csrf_token }}
             {{> csrf_token_input }}
         {{/csrf_token}}
@@ -70,8 +69,10 @@
     <div class="tlp-modal-footer">
         <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{ cancel }}</button>
         <button type="submit"
+                id="dashboard-add-widget-button"
                 class="tlp-button-primary tlp-modal-action"
-                disabled>
+                disabled
+        >
             <i class="fa fa-plus tlp-button-icon"></i>
             {{ add_widget_title }}
         </button>

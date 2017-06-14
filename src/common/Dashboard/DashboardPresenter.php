@@ -32,6 +32,7 @@ abstract class DashboardPresenter
     public $has_widget;
     public $widget_lines;
 
+    public $url_add_widget_content;
     public $url_add_widget;
     public $purified_too_many_columns_label;
 
