@@ -105,6 +105,36 @@ require_once('common/date/DateHelper.class.php');
             ';
     }
 
+    public function getInstallPreferencesForBurningParrot()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-rss-title">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="widget-rss-title"
+                       name="rss[title]"
+                       value="'. $purifier->purify($this->getTitle()) .'"
+                       placeholder="RSS">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-rss-url">
+                    URL <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="text"
+                       class="tlp-input"
+                       id="widget-rss-url"
+                       name="rss[url]"
+                       pattern="https?://.*"
+                       title="'. $purifier->purify(_('Please, enter a http:// or https:// link')) .'"
+                       required
+                       placeholder="https://example.com/rss.xml">
+            </div>
+            ';
+    }
+
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
         $prefs  = '';

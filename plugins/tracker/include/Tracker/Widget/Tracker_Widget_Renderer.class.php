@@ -107,6 +107,36 @@ abstract class Tracker_Widget_Renderer extends Widget {
             ';
     }
 
+    public function getInstallPreferencesForBurningParrot()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-renderer-title">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="widget-renderer-title"
+                       name="renderer[title]"
+                       value="'. $purifier->purify($this->getTitle()) .'"
+                       placeholder="'. $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) .'">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-renderer-id">
+                    '. $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) .'
+                    <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="number"
+                       size="5"
+                       class="tlp-input"
+                       id="widget-renderer-id"
+                       name="renderer[renderer_id]"
+                       required
+                       placeholder="123">
+            </div>
+            ';
+    }
+
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
 

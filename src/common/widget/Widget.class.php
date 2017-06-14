@@ -221,4 +221,9 @@
     {
         return '';
     }
+
+    public function getInstallPreferencesForBurningParrot()
+    {
+        return '';
+    }
 }

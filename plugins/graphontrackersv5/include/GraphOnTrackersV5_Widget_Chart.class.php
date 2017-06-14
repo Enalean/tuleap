@@ -93,6 +93,34 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
             ';
     }
 
+    public function getInstallPreferencesForBurningParrot()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-chart-title">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="widget-chart-title"
+                       name="chart[title]"
+                       value="'. $purifier->purify($this->getTitle()) .'">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-chart-id">
+                    Chart Id <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="number"
+                       size="5"
+                       class="tlp-input"
+                       id="widget-chart-id"
+                       name="chart[chart_id]"
+                       required
+                       placeholder="123">
+            </div>
+            ';
+    }
+
     public function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
 

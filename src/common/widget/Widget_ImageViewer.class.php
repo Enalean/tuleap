@@ -91,6 +91,35 @@ class Widget_ImageViewer extends Widget {
             </div>
             ';
     }
+    function getInstallPreferencesForBurningParrot()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-imageviewer-install-title">'. $purifier->purify(_('Title')) .'</label>
+                <input type="text"
+                       class="tlp-input"
+                       id="widget-imageviewer-install-title"
+                       name="image[title]"
+                       value="'. $purifier->purify($this->getTitle()) .'"
+                       placeholder="'. $purifier->purify(_('Image')) .'">
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-imageviewer-install-url">
+                    URL <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="text"
+                       class="tlp-input"
+                       id="widget-imageviewer-install-url"
+                       name="image[url]"
+                       pattern="https?://.*"
+                       title="'. $purifier->purify(_('Please, enter a http:// or https:// link')) .'"
+                       required
+                       placeholder="https://example.com/image.png">
+            </div>
+            ';
+    }
 
     function getPreferences() {
         $hp = Codendi_HTMLPurifier::instance();
