@@ -109,15 +109,20 @@
 }
 
 .history-item-content-description-info-title {
+    max-width: 200px;
     font-size: 14px;
     line-height: 18px;
-    white-space: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .history-item-content-description-quick-links {
     display: none;
+    max-width: 250px;
     margin: $tlp-half-spacing 0 0;
     color: $tlp-theme-color;
+    white-space: normal;
 }
 
 .history-item-content-quick-links-link {
@@ -135,8 +140,13 @@
 }
 
 .history-item-content-project {
+    max-width: 150px;
     color: $tlp-ui-dimmed;
     text-align: right;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
     &:hover > .history-item-content-project-name {
         text-decoration: underline;
