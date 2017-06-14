@@ -54,7 +54,9 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         } else {
              $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts');
         }
-        return $title;
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return $purifier->purify($title);
     }
 
     function getDescription() {
@@ -100,12 +102,16 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
 
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
-        if ($this->job != null && $this->build != null) {
 
+        if ($this->job != null && $this->build != null) {
             $build = $this->build;
 
-            $html .= '<ul>';
             $dom = $build->getDom();
+            if (count($dom->artifact) === 0) {
+                return $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'no_artifact_found'));
+            }
+
+            $html .= '<ul>';
             foreach ($dom->artifact as $artifact) {
                 $html .= ' <li><a href="'.$purifier->purify($build->getUrl().'/artifact/'.$artifact->relativePath).'">'.$purifier->purify($artifact->fileName).'</a></li>';
             }
