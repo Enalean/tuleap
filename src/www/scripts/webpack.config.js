@@ -2,10 +2,11 @@
 var path                  = require('path');
 var WebpackAssetsManifest = require('webpack-assets-manifest');
 
-var assets_dir_path = path.resolve(__dirname, '../../assets');
+var assets_dir_path = path.resolve(__dirname, '../assets');
 module.exports = {
     entry: {
-        dashboard: path.resolve(__dirname, 'dashboard.js'),
+        dashboard       : path.resolve(__dirname, 'dashboards/dashboard.js'),
+        'navbar-history': path.resolve(__dirname, 'navbar-history/navbar-history.js')
     },
     output: {
         path: assets_dir_path,
