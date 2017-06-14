@@ -50,6 +50,7 @@ my_index	s_info	submitted by me [S]
 my_index	as_info	assigned to or submitted by me [AS]
 my_index	my_admin	Pending users, projects and news
 my_index	my_admin_non_super	Pending projects
+my_index	my_admin_description	List and give a quick access to pending users, projects and news.
 my_index	no_bug	No bug yet
 my_index	no_task	No task yet
 my_index	no_support	No support request yet

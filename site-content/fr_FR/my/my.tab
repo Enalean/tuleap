@@ -42,6 +42,7 @@ my_index	s_info	soumis par moi [S]
 my_index	as_info	assignés à moi ou soumis par moi [AS]
 my_index	my_admin	Utilisateurs, projets et annonces en attente
 my_index	my_admin_non_super	Projets en attente
+my_index	my_admin_description	Liste et donne un accès rapide aux utilisateurs, projets et annonces en attente.
 my_index	no_bug	Pas encore de bug
 my_index	no_task	Pas encore de tâche
 my_index	no_support	Pas encore de demande de support

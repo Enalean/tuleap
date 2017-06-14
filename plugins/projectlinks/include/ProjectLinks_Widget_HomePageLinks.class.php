@@ -38,7 +38,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * 
      * @param Plugin $plugin The plugin
      */
-    function __construct(Plugin $plugin) {
+    public function __construct(Plugin $plugin) {
         parent::__construct('projectlinkshomepage');
         $this->pluginPath = $plugin->getPluginPath();
         $this->themePath  = $plugin->getThemePath();
@@ -50,8 +50,13 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * @see src/common/widget/Widget#getTitle()
      * @return String
      */
-    function getTitle() {
+    public function getTitle() {
         return $GLOBALS['Language']->getText('plugin_plinks', 'project_links');
+    }
+
+    public function getDescription()
+    {
+        return $GLOBALS['Language']->getText('plugin_plinks','descriptor_description');
     }
 
     /**
