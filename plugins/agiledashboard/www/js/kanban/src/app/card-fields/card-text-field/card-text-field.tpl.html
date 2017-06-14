@@ -1,6 +1,6 @@
 <div
     class="card-field"
-    ng-if="card_field.value !== null"
+    ng-if="card_field.value !== null && card_field.value !== ''"
 >
     <span class="extra-card-field-title">{{ card_field.label }}: </span>
     <span ng-bind-html="getDisplayableValue(card_field) | tuleapStripTags | tuleapHighlight:filter_terms"></span>

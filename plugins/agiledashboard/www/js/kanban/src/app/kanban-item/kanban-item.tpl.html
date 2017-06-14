@@ -61,7 +61,7 @@
             </div>
             <div
                 class="card-field"
-                ng-if="$ctrl.cardFieldIsList(card_field.type) && card_field.values.length > 0"
+                ng-if="$ctrl.cardFieldIsList(card_field.type) && card_field.values.length > 0 && $ctrl.isListBoundToAValueDifferentFromNone(card_field.values)"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span ng-bind-html="$ctrl.getCardFieldListValues(card_field.values, $ctrl.kanban_filter.terms)"></span>
