@@ -20,7 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('DocmanConstants.class.php');
 require_once('Docman_MetadataListOfValuesElement.class.php');
 require_once('Docman_MetadataListOfValuesElementDao.class.php');
 

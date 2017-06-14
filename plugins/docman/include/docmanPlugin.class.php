@@ -24,15 +24,15 @@
  *
  */
 
-use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
-use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UgroupsToNotifyUpdater;
-use Tuleap\Docman\Notifications\UsersUpdater;
+use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
+use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -119,6 +119,7 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(Event::SERVICE_CLASSNAMES);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
 
     public function getHooksAndCallbacks() {
@@ -1132,5 +1133,20 @@ class DocmanPlugin extends Plugin
     private function getUsersUpdater()
     {
         return new UsersUpdater($this->getUsersToNotifyDao());
+    }
+
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if ($this->canIncludeStylsheets()) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() . '/css/style-' . $variant->getName() . '.css';
+        }
+    }
+
+    private function canIncludeStylsheets()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/plugins/docman/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 }
