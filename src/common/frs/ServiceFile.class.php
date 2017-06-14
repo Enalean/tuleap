@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -20,9 +20,9 @@
  */
 
 
-use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
 
 /**
  * ServiceFile
@@ -50,55 +50,77 @@ class ServiceFile extends Service
     * Return the text to display on the summary page
     * @return arr[title], arr[content]
     */
-    function getSummaryPageContent() {
+    public function getSummaryPageContent()
+    {
         $hp   = Codendi_HTMLPurifier::instance();
         $user = UserManager::instance()->getCurrentUser();
         $ret  = array(
             'title' => $GLOBALS['Language']->getText('include_project_home','latest_file_releases'),
             'content' => ''
         );
-        
+
         $packages = $this->_getPackagesForUser($user->getId());
         if (count($packages)) {
             $ret['content'] .= '
-                <table cellspacing="1" cellpadding="5" width="100%" border="0">
-                    <tr class="boxitem">
-                        <td>
-                            '.$GLOBALS['Language']->getText('include_project_home','package').'
-                        </td>
-                        <td>
-                            '.$GLOBALS['Language']->getText('include_project_home','version').'
-                        </td>
-                        <td>
-                            '.$GLOBALS['Language']->getText('include_project_home','download').'
-                        </td>
-                    </tr>
+                <table cellspacing="1" cellpadding="5" width="100%" border="0" class="tlp-table">
+                    <thead>
+                        <tr class="boxitem">
+                            <th>
+                                '.$GLOBALS['Language']->getText('include_project_home','package').'
+                            </th>
+                            <th>
+                                '.$GLOBALS['Language']->getText('include_project_home','version').'
+                            </th>
+                            <th>
+                                '.$GLOBALS['Language']->getText('include_project_home','download').'
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
             ';
             require_once('FileModuleMonitorFactory.class.php');
             $fmmf = new FileModuleMonitorFactory();
             foreach($packages as $package) {
                 // the icon is different whether the package is monitored or not
                 if ($fmmf->isMonitoring($package['package_id'], $user, false)) {
-                    $monitor_img = $GLOBALS['HTML']->getImage("ic/notification_stop.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home', 'stop_monitoring'), 'title'=>$GLOBALS['Language']->getText('include_project_home', 'stop_monitoring')));
+                    $monitor_img = $GLOBALS['HTML']->getImage(
+                        "ic/notification_stop.png",
+                        array(
+                            'alt'   => $GLOBALS['Language']->getText('include_project_home', 'stop_monitoring'),
+                            'title' => $GLOBALS['Language']->getText('include_project_home', 'stop_monitoring'),
+                        )
+                    );
                 } else {
-                    $monitor_img = $GLOBALS['HTML']->getImage("ic/notification_start.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring'), 'title'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring')));
+                    $monitor_img = $GLOBALS['HTML']->getImage(
+                        "ic/notification_start.png",
+                        array(
+                            'alt'   => $GLOBALS['Language']->getText('include_project_home', 'start_monitoring'),
+                            'title' => $GLOBALS['Language']->getText('include_project_home', 'start_monitoring'),
+                        )
+                    );
                 }
             
                 $ret['content'] .= '
-                  <TR class="boxitem">
-                  <TD>
-                    <B>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODENDI_PURIFIER_CONVERT_HTML)  . '</B>&nbsp;
+                  <tr class="boxitem">
+                  <td>
+                    <b>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODENDI_PURIFIER_CONVERT_HTML)  . '</b>&nbsp;
                     <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '&group_id='.$this->getGroupId().'">'.
                         $monitor_img . '     
                     </a>
-                  </TD>';
+                  </td>';
                 // Releases to display
-                $ret['content'] .= '<TD>'.  $hp->purify($package['release_name'], CODENDI_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
-                    $GLOBALS['HTML']->getImage("ic/text.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home','release_notes'), 'title'=>$GLOBALS['Language']->getText('include_project_home','release_notes'))) . ' 
-                  </TD>
-                  <TD><A HREF="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</A></TD></TR>';
+                $ret['content'] .= '<td>'.  $hp->purify($package['release_name'], CODENDI_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
+                    $GLOBALS['HTML']->getImage(
+                        "ic/text.png",
+                        array(
+                            'alt' => $GLOBALS['Language']->getText('include_project_home', 'release_notes'),
+                            'title' => $GLOBALS['Language']->getText('include_project_home', 'release_notes'),
+                        )
+                    ) . '
+                  </td>
+                  <td><a href="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</a></td></tr>';
             }
-            $ret['content'] .= '</table>';
+            $ret['content'] .= '</tbody></table>';
         } else {
             $ret['content'] .= '<b>'. $GLOBALS['Language']->getText('include_project_home','no_files_released') .'</b>';
         }
