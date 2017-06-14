@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
         clear                         = document.getElementById('nav-dropdown-content-user-history-clear'),
         clear_button                  = document.getElementById('nav-dropdown-content-user-history-clear-button'),
         loading_history               = document.getElementById('nav-dropdown-content-user-history-loading'),
+        error_message_fetch           = document.getElementById('nav-dropdown-content-user-history-error-message-fetch'),
+        error_message_clear           = document.getElementById('nav-dropdown-content-user-history-error-message-clear'),
         empty_history                 = document.getElementById('nav-dropdown-content-user-history-empty');
 
     if (! user_history_dropdown_trigger) {
@@ -41,12 +43,15 @@ document.addEventListener('DOMContentLoaded', function() {
     clear_button.addEventListener('click', clearHistory);
 
     function clearHistory() {
-        put(getUserHistoryUrl(), {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({history_entries: []}),
-        }).then(switchToEmptyState);
+        put(getUserHistoryUrl(),
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({history_entries: []}),
+            })
+            .then(switchToEmptyState)
+            .catch(switchToErrorStateForClear);
     }
 
     function loadHistoryAsynchronously() {
@@ -62,7 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     switchToEmptyState();
                 }
                 user_history_dropdown_trigger.removeEventListener('click', loadHistoryAsynchronously);
-            });
+            })
+            .catch(switchToErrorStateForFetch);
     }
 
     function buildHistoryItems(entries) {
@@ -100,17 +106,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function switchToLoadedState() {
-        loading_history.classList.remove('shown');
-        history_content.classList.add('shown');
-        clear.classList.add('shown');
-        empty_history.classList.remove('shown');
-    }
-
-    function switchToEmptyState() {
+    function hideAll() {
+        error_message_clear.classList.remove('shown');
+        error_message_fetch.classList.remove('shown');
         loading_history.classList.remove('shown');
         history_content.classList.remove('shown');
         clear.classList.remove('shown');
+        empty_history.classList.remove('shown');
+    }
+
+    function switchToLoadedState() {
+        hideAll();
+        history_content.classList.add('shown');
+        clear.classList.add('shown');
+    }
+
+    function switchToEmptyState() {
+        hideAll();
         empty_history.classList.add('shown');
+    }
+
+    function switchToErrorStateForClear() {
+        hideAll();
+        error_message_clear.classList.add('shown');
+    }
+
+    function switchToErrorStateForFetch() {
+        hideAll();
+        error_message_fetch.classList.add('shown');
     }
 });

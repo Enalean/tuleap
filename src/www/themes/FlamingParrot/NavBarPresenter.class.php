@@ -23,6 +23,8 @@ class FlamingParrot_NavBarPresenter
     public $user_history_dropdown;
     public $history;
     public $empty_history;
+    public $error_fetch;
+    public $error_clear;
 
     private $imgroot;
 
@@ -122,6 +124,8 @@ class FlamingParrot_NavBarPresenter
         $this->join_community_title = $GLOBALS['Language']->getText('include_menu', 'join_community');
         $this->history              = _('History');
         $this->empty_history        = _('Your history is empty');
+        $this->error_fetch          = _('An error occurred while fetching the content of your history');
+        $this->error_clear          = _('An error occurred while clearing the content of your history');
     }
 
     public function imgroot() {

@@ -25,6 +25,19 @@
     }
 }
 
+#nav-dropdown-content-user-history-error-message-fetch,
+#nav-dropdown-content-user-history-error-message-clear {
+    display: none;
+    width: 510px;
+    margin: $tlp-spacing;
+    font-size: 16px;
+    white-space: normal;
+
+    &.shown {
+        display: block;
+    }
+}
+
 #nav-dropdown-content-user-history-loading {
     display: none;
     flex-direction: column;
