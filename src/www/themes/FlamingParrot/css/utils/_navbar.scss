@@ -87,7 +87,7 @@
 }
 
 .navbar .navbar-inner {
-    height: $navbar-height;
+    min-height: $navbar-height;
     padding: 0;
     border: 0;
     background: $white;
@@ -151,7 +151,7 @@
 
         & > li > a {
             height: $navbar-height - 12px - 5px;
-            padding: 12px 20px 5px;
+            padding: 12px 10px 5px;
             text-align: center;
 
             @media screen and (max-width: 1024px) {
@@ -227,13 +227,8 @@
         }
 
         @media screen and (max-width: 1250px) {
-            li.user-menu {
-                width: 50px;
-
-                & > a.username {
-                    width: 50px;
-                    padding-left: 8px;
-                }
+            .user-infos {
+                display: none;
             }
         }
 
