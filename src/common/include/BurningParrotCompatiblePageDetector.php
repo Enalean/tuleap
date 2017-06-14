@@ -77,10 +77,6 @@ class BurningParrotCompatiblePageDetector
 
     private function isInDashboard()
     {
-        if (! ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            return false;
-        }
-
         return $this->isInPersonalDasboard() || $this->isInProjectDashboard();
     }
 

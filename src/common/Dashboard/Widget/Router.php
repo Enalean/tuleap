@@ -52,9 +52,7 @@ class Router
 
     public function route(HTTPRequest $request)
     {
-        if (! $request->getCurrentUser()->isLoggedIn()
-            || ! ForgeConfig::get('sys_use_tlp_in_dashboards')
-        ) {
+        if (! $request->getCurrentUser()->isLoggedIn()) {
             return;
         }
 

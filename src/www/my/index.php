@@ -108,36 +108,3 @@ $router->route($request);
 if (! user_isloggedin()) {
     exit_not_logged_in();
 }
-
-if (! ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-    Tuleap\Instrument\Collect::increment('service.my.accessed');
-
-    // Make sure this page is not cached because
-    // it uses the exact same URL for all user's
-    // personal page
-    header("Cache-Control: no-cache, no-store, must-revalidate"); // for HTTP 1.1
-    header("Pragma: no-cache");  // for HTTP 1.0
-
-    my_header(array('title' => $title, 'body_class' => array('widgetable')));
-
-    if (user_is_super_user()) {
-        $builder = new NbUsersByStatusBuilder(new UserCounterDao());
-        $nb_users_by_status = $builder->getNbUsersByStatusBuilder();
-        echo site_admin_warnings($nb_users_by_status);
-    }
-
-    echo '<p>' . $Language->getText('my_index', 'message') . '</p>';
-
-    $lm = new WidgetLayoutManager();
-    $lm->displayLayout(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
-
-    if (!$current_user->getPreference(Tuleap_Tour_WelcomeTour::TOUR_NAME)) {
-        $GLOBALS['Response']->addTour(new Tuleap_Tour_WelcomeTour($current_user));
-    }
-
-    if ($request->get('pv') == 2) {
-        $GLOBALS['Response']->pv_footer(array());
-    } else {
-        site_footer(array());
-    }
-}

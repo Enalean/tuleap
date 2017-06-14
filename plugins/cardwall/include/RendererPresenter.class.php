@@ -49,11 +49,6 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
     public $is_display_avatar_selected = "";
 
     /**
-     * @var mixed
-     */
-    public $use_tlp_in_dashboard;
-
-    /**
      * @var WidgetAdditionalButtonPresenter
      */
     public $additional_button_presenter;

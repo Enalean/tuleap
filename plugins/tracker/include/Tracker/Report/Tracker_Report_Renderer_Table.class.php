@@ -566,9 +566,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $read_only              = true;
         $id_suffix              = '';
         //Display the head of the table
-        if (ForgeConfig::get('sys_use_tlp_in_dashboards')) {
-            $html .= $this->fetchAdditionnalButton($this->report->getTracker());
-        }
+        $html .= $this->fetchAdditionnalButton($this->report->getTracker());
         $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $id_suffix, $store_in_session);
 
         //Display the body of the table
