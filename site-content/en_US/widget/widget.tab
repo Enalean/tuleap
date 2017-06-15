@@ -21,7 +21,6 @@ widget_add	codendi_widgets	$1 Widgets
 widget_add	external_widgets	External Widgets
 widget_add	add	Add
 widget_add	already_used	Already used
-widget_add	link_add	Customize widgets
 
 widget_imageviewer	invalid_url	Only http:// and https:// URLs are accepted.
 

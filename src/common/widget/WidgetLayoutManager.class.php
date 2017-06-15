@@ -75,63 +75,6 @@ class WidgetLayoutManager
     }
 
     /**
-    * displayLayout
-    *
-    * Display the default layout for the "owner". It my be the home page, the project summary page or /my/ page.
-    *
-    * @param  owner_id
-    * @param  owner_type
-    */
-    public function displayLayout($owner_id, $owner_type)
-    {
-        $owner_type = db_es($owner_type);
-        $owner_id   = db_ei($owner_id);
-
-        $sql = "SELECT l.*
-            FROM layouts AS l INNER JOIN owner_layouts AS o ON(l.id = o.layout_id)
-            WHERE o.owner_type = '". $owner_type ."'
-              AND o.owner_id = ". $owner_id ."
-              AND o.is_default = 1
-        ";
-        $req = db_query($sql);
-        if ($data = db_fetch_array($req)) {
-            $readonly = !$this->_currentUserCanUpdateLayout($owner_id, $owner_type);
-            if (!$readonly) {
-                echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'" class="layout_manager_customize btn btn-small"><i class="icon-cog"></i> '. $GLOBALS['Language']->getText('widget_add', 'link_add') .'</a>';
-            } else if ($owner_type === self::OWNER_TYPE_GROUP) {
-                echo '<br />';
-            }
-            $layout = new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
-            $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. db_ei($layout->id) .' ORDER BY rank';
-            $req_rows = db_query($sql);
-            while ($data = db_fetch_array($req_rows)) {
-                $row = new WidgetLayout_Row($data['id'], $data['rank']);
-                $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. db_ei($row->id);
-                $req_cols = db_query($sql);
-                while ($data = db_fetch_array($req_cols)) {
-                    $col = new WidgetLayout_Row_Column($data['id'], $data['width']);
-                    $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". db_es($owner_type) ."' AND owner_id = ". db_ei($owner_id) .' AND column_id = '. db_ei($col->id) .' ORDER BY rank';
-                    $req_content = db_query($sql);
-                    while ($data = db_fetch_array($req_content)) {
-                        $c = $this->widget_factory->getInstanceByWidgetName($data['name']);
-                        if ($c && $c->isAvailable()) {
-                            $c->loadContent($data['content_id']);
-                            $col->add($c, $data['is_minimized'], $data['display_preferences']);
-                        }
-                        unset($c);
-                    }
-                    $row->add($col);
-                    unset($col);
-                }
-                $layout->add($row);
-                unset($row);
-            }
-            $csrk_token = new CSRFSynchronizerToken('widget_management');
-            $layout->display($readonly, $owner_id, $owner_type, $csrk_token);
-        }
-    }
-
-    /**
     * _currentUserCanUpdateLayout
     *
     * @return boolean true if the user dan uppdate the layout (add/remove widget, collapse, set preferences, ...)

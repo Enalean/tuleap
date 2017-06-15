@@ -113,22 +113,6 @@ function my_item_count($total, $new) {
     return '['.$total.($new ? ", <b>".$Language->getText('my_utils', 'new_items', array($new))."</b>]" : ']');
 }
 
-
-function my_header($params) {
-    $request =& HTTPRequest::instance();
-    $pv = '';
-    if ($request->get('pv') == 2) {
-        $pv = '?pv=2';
-        $GLOBALS['Response']->pv_header($params);
-    } else {
-        site_header($params);
-    }
-    $hp = Codendi_HTMLPurifier::instance();
-    echo '<h2>'. $GLOBALS['Language']->getText('my_index', 'title', array( $hp->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'));
-    echo ' ' . help_button('citizen.html#login-and-personal-page');
-    echo '</h2>';
-}
-
 function my_check_bookmark_URL($bookmark_url, $redirect_url) {
     if (my_has_URL_invalid_content($bookmark_url)) {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('bookmark_add', 'invalid_uri'));
