@@ -97,13 +97,21 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
      * @param  Integer $groupId Group id 
      * @return String
      */
-    function getAllLinks($groupId) {
-        $dao = $this->getProjectLinksDao();
-        $html = '';
-        $html .= "<ul class=\"project_links_widget_linkslist\">\n";
-        $html .= $this->getLinksByLinkType('links', $dao->searchForwardLinks($groupId));
-        $html .= $this->getLinksByLinkType('back_links', $dao->searchBackLinks($groupId));
-        $html .= "</ul>\n";
+    function getAllLinks($groupId)
+    {
+        $dao      = $this->getProjectLinksDao();
+        $html     = '';
+        $forward  = $this->getLinksByLinkType('links', $dao->searchForwardLinks($groupId));
+        $backward = $this->getLinksByLinkType('back_links', $dao->searchBackLinks($groupId));
+        if ($forward === '' && $backward === '') {
+            $html .= "<div>" . $GLOBALS['Language']->getText('plugin_plinks', 'no_links_found') . "</div>";
+        } else {
+            $html .= "<ul class=\"project_links_widget_linkslist project-link-list project-link-list-content\">\n";
+            $html .= $forward;
+            $html .= $backward;
+            $html .= "</ul>\n";
+        }
+
         return $html;
     }
 
@@ -161,12 +169,12 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
                 $cssClass = Toggler::getClassName($spanId);
                 
                 // Link name title
-                $html .= "  <li><span id=\"".$spanId."\" class=\"".$cssClass."\">".$row['link_name']."</span>\n";
-                $html .= "    <ul>\n";
+                $html     .= "  <li class='project-link-list'><span id=\"" . $spanId . "\" class=\"" . $cssClass . "\">" . $row['link_name'] . "</span>\n";
+                $html     .= "    <ul class='project-link-list'>\n";
                 $ulClosed = false;
             }
-            
-            $html .= "      <li>";
+
+            $html .= "      <li class='project-link-list'>";
             $html .= $this->getOneLink($row);
             $html .= "  </li>\n";
 

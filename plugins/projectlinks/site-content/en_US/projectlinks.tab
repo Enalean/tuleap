@@ -31,6 +31,7 @@ plugin_plinks	project_link_change_makes_duplicate	Update cancelled (it would cre
 plugin_plinks	update_details	update details
 plugin_plinks	add_project	Add new project: 
 plugin_plinks	add_project_autocompleter	Project name (search as you type)
+plugin_plinks	no_links_found	No project link found.
 #
 plugin_plinks	synchronise_with_template	Re-Synchronise Project Links with Template
 plugin_plinks	synchronise_clickit	Click $1 to add the links from the template

@@ -52,6 +52,7 @@ class ProjectLinksPlugin extends Plugin {
         $this->_addHook('cssfile',         'cssfile',         false);
         $this->_addHook('widget_instance', 'widget_instance', false);
         $this->_addHook('widgets',         'widgets',         false);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
 
     //========================================================================
@@ -1050,5 +1051,19 @@ class ProjectLinksPlugin extends Plugin {
     function getProjectLinksDao() {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
+    }
+
+    public function burning_parrot_get_stylesheets($params)
+    {
+        if ($this->canIncludeStylsheets()) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    private function canIncludeStylsheets()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 }
