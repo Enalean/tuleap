@@ -516,7 +516,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         if (!$this->file_values_by_changeset) {
             $this->file_values_by_changeset = array();
             $field_id     = $da->escapeInt($this->id);
-            $sql = "SELECT c.changeset_id, c.has_changed, f.*
+            $sql = "SELECT c.changeset_id, c.has_changed, f.id
                     FROM tracker_fileinfo as f
                          INNER JOIN tracker_changeset_value_file AS vf on (f.id = vf.fileinfo_id)
                          INNER JOIN tracker_changeset_value AS c
@@ -524,17 +524,17 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                           AND c.field_id = $field_id
                          )
                     ORDER BY f.id";
-            $dao = new DataAccessObject();
-            $values = array();
+            $dao               = new DataAccessObject();
+            $file_info_factory = $this->getTrackerFileInfoFactory();
             foreach ($dao->retrieve($sql) as $row) {
-                $this->file_values_by_changeset[$row['changeset_id']][] = $this->getFileInfo($row['id'], $row);
+                $this->file_values_by_changeset[$row['changeset_id']][] = $file_info_factory->getById($row['id']);
             }
         }
         return isset($this->file_values_by_changeset[$changeset_id]) ? $this->file_values_by_changeset[$changeset_id] : array();
     }
 
     public function previewAttachment($attachment_id) {
-        if ($fileinfo = Tracker_FileInfo::instance($this, $attachment_id)) {
+        if ($fileinfo = $this->getTrackerFileInfoFactory()->getById($attachment_id)) {
             if ($fileinfo->isImage() && file_exists($fileinfo->getThumbnailPath())) {
                 header('Content-type: '. $fileinfo->getFiletype());
                 readfile($fileinfo->getThumbnailPath());
@@ -544,7 +544,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
 
     public function showAttachment($attachment_id) {
-        if ($fileinfo = Tracker_FileInfo::instance($this, $attachment_id)) {
+        if ($fileinfo = $this->getTrackerFileInfoFactory()->getById($attachment_id)) {
             if ($fileinfo->fileExists()) {
                 $http = Codendi_HTTPPurifier::instance();
                 header('X-Content-Type-Options: nosniff');
@@ -993,25 +993,19 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
-        $changeset_value = null;
+    public function getChangesetValue($changeset, $value_id, $has_changed)
+    {
+        $file_info_factory = $this->getTrackerFileInfoFactory();
 
         $files = array();
-        $file_value = $this->getValueDao()->searchById($value_id, $this->id);
+        $file_value = $this->getValueDao()->searchById($value_id);
         foreach ($file_value as $row) {
-            if ($fileinfo_row = $this->getFileInfoDao()->searchById($row['fileinfo_id'])->getRow()) {
-                $files[] = $this->getFileInfo($fileinfo_row['id'], $fileinfo_row);
+            $file = $file_info_factory->getById($row['fileinfo_id']);
+            if ($file !== null) {
+                $files[] = $file;
             }
         }
-        $changeset_value = new Tracker_Artifact_ChangesetValue_File($value_id, $changeset, $this, $has_changed, $files);
-        return $changeset_value;
-    }
-
-    /**
-     * @return Tracker_FileInfo
-     */
-    protected function getFileInfo($id, $row) {
-        return Tracker_FileInfo::instance($this, $id, $row);
+        return  new Tracker_Artifact_ChangesetValue_File($value_id, $changeset, $this, $has_changed, $files);
     }
 
     /**
@@ -1099,7 +1093,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return UserManager::instance();
     }
 
-    private function getTrackerFileInfoFactory() {
+    protected function getTrackerFileInfoFactory()
+    {
         return new Tracker_FileInfoFactory(
             new Tracker_FileInfoDao(),
             Tracker_FormElementFactory::instance(),
