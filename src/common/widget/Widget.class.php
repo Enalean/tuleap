@@ -76,7 +76,7 @@
     }
     function getRssUrl($owner_id, $owner_type) {
         if ($this->hasRss()) {
-            return '/widgets/widget.php?'. http_build_query(
+            return '/widgets/?'. http_build_query(
                 array(
                     'owner'  => $owner_type . $owner_id,
                     'action' => 'rss',
@@ -209,6 +209,11 @@
     }
 
     public function getInstallPreferencesForBurningParrot()
+    {
+        return '';
+    }
+
+    public function displayRss()
     {
         return '';
     }
