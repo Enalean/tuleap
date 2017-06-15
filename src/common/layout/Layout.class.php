@@ -875,13 +875,12 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 
     public function displayStaticWidget(Widget_Static $widget)
     {
-        $layout_id           = null;
-        $readonly            = true;
-        $column_id           = null;
-        $is_minimized        = false;
-        $display_preferences = false;
-        $owner_id            = null;
-        $owner_type          = null;
+        $layout_id    = null;
+        $readonly     = true;
+        $column_id    = null;
+        $is_minimized = false;
+        $owner_id     = null;
+        $owner_type   = null;
 
         $this->widget(
             $widget,
@@ -889,13 +888,12 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             $readonly,
             $column_id,
             $is_minimized,
-            $display_preferences,
             $owner_id,
             $owner_type
         );
     }
 
-    function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type)
+    function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $owner_id, $owner_type)
     {
         $purifier   = Codendi_HTMLPurifier::instance();
         $csrf_token = new CSRFSynchronizerToken('widget_management');
@@ -982,9 +980,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             $style = 'display:none;';
         }
         echo '<div class="widget_content" style="'. $style .'">';
-        if (!$readonly && $display_preferences) {
-            echo '<div class="widget_preferences">'. $widget->getPreferencesForm($layout_id, $owner_id, $owner_type, $csrf_token) .'</div>';
-        }
         if ($widget->isAjax()) {
             echo '<div id="'. $element_id .'-ajax">';
             echo '<noscript><iframe width="99%" frameborder="0" src="'. $widget->getIframeUrl($owner_id, $owner_type) .'"></iframe></noscript>';

@@ -43,8 +43,8 @@
         return $this->id;
     }
 
-    function display($layout_id, $column_id, $readonly, $is_minimized, $display_preferences, $owner_id, $owner_type) {
-        $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type);
+    function display($layout_id, $column_id, $readonly, $is_minimized, $owner_id, $owner_type) {
+        $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $owner_id, $owner_type);
     }
     function getTitle() {
         return '';
@@ -52,19 +52,7 @@
     function getContent() {
         return '';
     }
-    function getPreferencesForm($layout_id, $owner_id, $owner_type, CSRFSynchronizerToken $csrf_token) {
-        $prefs  = '';
-        $prefs .= '<form method="POST" action="/widgets/widget.php?owner='. $owner_type.$owner_id .'&amp;action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
-        $prefs .= '<fieldset><legend>'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'</legend>';
-        $prefs .= $this->getPreferences();
-        $prefs .= '<br />';
-        $prefs .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />&nbsp;';
-        $prefs .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $prefs .= '</fieldset>';
-        $prefs .= $csrf_token->fetchHTMLInput();
-        $prefs .= '</form>';
-        return $prefs;
-    }
+
     function isInstallAllowed() {
         return true;
     }
