@@ -1268,25 +1268,12 @@ if has_package vsftpd; then
     setup_vsftpd
 fi
 
-##############################################
-# Create the custom default page for the project Web sites
-#
-echo "Creating the custom default page for the project Web sites..."
-def_page=/etc/$PROJECT_NAME/site-content/en_US/others/default_page.php
-yn="y"
-[ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
-if [ "$yn" = "y" ]; then
-    $MKDIR -p /etc/$PROJECT_NAME/site-content/en_US/others
-    $CHOWN $PROJECT_ADMIN.$PROJECT_ADMIN /etc/$PROJECT_NAME/site-content/en_US/others
-    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/$PROJECT_NAME/site-content/en_US/others/default_page.php
-fi
 
 if [ "$disable_subdomains" = "y" ]; then
   echo "Use same-host project web sites"
   $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, '/www/$PROJECT_NAME', '/www/\$projectname/') WHERE short_name = 'homepage' "
 fi
 
-#todo "Customize /etc/$PROJECT_NAME/site-content/en_US/others/default_page.php (project web site default home page)"
 todo "Customize /etc/$PROJECT_NAME/site-content information for your site."
 todo "  For instance: contact/contact.txt "
 todo ""
