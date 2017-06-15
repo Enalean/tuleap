@@ -406,7 +406,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchWidget($item_name, $title) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        $html .= ' <a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'">';
+        $html .= ' <a class="direct-link-to-artifact tracker-widget-artifacts" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'">';
         $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= ' #';
         $html .= $this->id;

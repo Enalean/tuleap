@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../default/css/includes/cards';
-@import 'includes/widgets';
+import { init as togglerInit } from '../tuleap/toggler.js';
 
-.header-column-deleted-tracker {
-    width: 50%;
-}
+export default init;
 
-.header-column-deleted-tracker-date {
-    white-space: nowrap;
+function init() {
+    togglerInit(document.querySelector('.dashboard-widgets-container'));
 }
