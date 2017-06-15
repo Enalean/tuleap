@@ -155,16 +155,16 @@ function initializeWidgets(table, data) {
     const widgets_element = table.querySelectorAll('.dashboard-add-widget-list-table-widget');
     [].forEach.call(widgets_element, function (widget_element) {
         widget_element.addEventListener('click', function (event) {
-            displayWidgetSettings(table, widget_element, data_widgets, event);
+            displayWidgetSettings(table, widget_element, data_widgets);
         });
     });
 }
 
-function displayWidgetSettings(table, widget_element, data_widgets, event) {
+function displayWidgetSettings(table, widget_element, data_widgets) {
     var widget_settings_template = document.getElementById('dashboard-add-widget-settings-placeholder').textContent;
 
     var widget_data = find(data_widgets, function (widget) {
-        return widget.id === event.target.dataset.widgetId;
+        return widget.id === widget_element.dataset.widgetId;
     });
     if (widget_data) {
         document.getElementById('dashboard-add-widget-settings').innerHTML = sanitize(render(widget_settings_template, widget_data));
