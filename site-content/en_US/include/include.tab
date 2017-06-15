@@ -203,7 +203,6 @@ include_project	services_not_found	Services not found for this group
 #-----------------------------------------------
 # Script: SF/www/include/project_home.php
 #  
-include_project_home	proj_info	Project Info
 include_project_home	not_official_site	<P>NOTE: This project entry is maintained by the $1 staff. We are not \nthe official site for this product. Additional copyright information may be found on this project's homepage.\n
 include_project_home	more_info	More information
 include_project_home	no_short_desc	This project has not yet submitted a short description.You can <a href="$1"> submit it</a> now.
