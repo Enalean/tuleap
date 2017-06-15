@@ -1,25 +1,30 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
+ * Copyright (c) Tuleap, 2017. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet & Dave Kibble, 2007
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Dashboard\Widget\Add\AddWidgetController;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\WidgetCreator;
+use Tuleap\Widget\WidgetFactory;
 
 require_once('common/plugin/Plugin.class.php');
 
@@ -1009,34 +1014,32 @@ class ProjectLinksPlugin extends Plugin {
         }
     }
 
+    private function getAddWidgetController()
+    {
+        $widget_factory = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+
+        $dao = new DashboardWidgetDao($widget_factory);
+
+        return new AddWidgetController(
+            $dao,
+            $widget_factory,
+            new WidgetCreator(new DashboardWidgetDao($widget_factory))
+        );
+    }
+
     /**
-     * Add a projectlink widget on project summary page if not already here
-     * 
      * @param Integer $groupId Project id on which the widget is to add
      * 
      * @return void
      */
-    function addWidgetOnSummaryPage($groupId) {
-        include_once 'common/widget/WidgetLayoutManager.class.php';
-        $widgetLayoutManager = new WidgetLayoutManager();
-
-        $layoutId = 1;
-        // 4.0 only
-        // $layoutId = $widgetLayoutManager->getDefaultLayoutId($groupId, $widgetLayoutManager->OWNER_TYPE_GROUP);
-
-        $sql = "SELECT NULL".
-               " FROM layouts_contents".
-               " WHERE owner_type = '". WidgetLayoutManager::OWNER_TYPE_GROUP ."'".
-               " AND owner_id = ". $groupId.
-               " AND layout_id = ". $layoutId.
-               " AND name = 'projectlinkshomepage'";
-        $res = db_query($sql);
-        if ($res && db_numrows($res) == 0) {
-            include_once 'ProjectLinks_Widget_HomePageLinks.class.php';
-            $request = HTTPRequest::instance();
-            $widget  = new ProjectLinks_Widget_HomePageLinks($this);
-            $widgetLayoutManager->addWidget($groupId, WidgetLayoutManager::OWNER_TYPE_GROUP, $layoutId, 'projectlinkshomepage', $widget, $request);
-        }
+    public function addWidgetOnSummaryPage($groupId)
+    {
+        $request = HTTPRequest::instance();
+        $this->getAddWidgetController()->create($request);
     }
 
     /**
@@ -1048,6 +1051,4 @@ class ProjectLinksPlugin extends Plugin {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
     }
-
 }
-?>
