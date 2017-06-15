@@ -38,7 +38,7 @@ class WidgetPresenter
         $this->name               = $widget->getTitle();
         $this->description        = $widget->getDescription();
         $this->is_used            = $is_used;
-        $this->configurations     = $widget->getInstallPreferences();
+        $this->configurations     = $widget->getInstallPreferencesForBurningParrot();
         $this->need_configuration = ! empty($this->configurations);
         $this->already_used_label = _('Already used');
     }

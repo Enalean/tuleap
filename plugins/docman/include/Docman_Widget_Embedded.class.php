@@ -134,6 +134,27 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
             ';
     }
 
+    public function getInstallPreferencesForBurningParrot()
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="widget-docman-embedded-item-id">
+                    Item_id <i class="fa fa-asterisk"></i>
+                </label>
+                <input type="number"
+                       size="5"
+                       class="tlp-input"
+                       id="widget-docman-embedded-item-id"
+                       name="plugin_docman_widget_embedded[item_id]"
+                       value="'. $purifier->purify($this->plugin_docman_widget_embedded_item_id) .'"
+                       required
+                       placeholder="123">
+            </div>
+            ';
+    }
+
     /**
      * Compute the preferences form for the widget. This form will be displayed
      * between the content and the title.

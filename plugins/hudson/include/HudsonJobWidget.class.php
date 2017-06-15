@@ -79,22 +79,36 @@ abstract class HudsonJobWidget extends HudsonWidget {
 
     public function getPreferencesForBurningParrot($widget_id)
     {
+        $select_id = 'job-'. (int)$widget_id;
+
+        return $this->buildPreferencesForm($select_id);
+    }
+
+    public function getInstallPreferencesForBurningParrot()
+    {
+        $select_id = 'widget-job-id';
+
+        return $this->buildPreferencesForm($select_id);
+    }
+
+    private function buildPreferencesForm($select_id)
+    {
         $this->initContent();
         $purifier = Codendi_HTMLPurifier::instance();
 
         $html = '<div class="tlp-form-element">
-            <label class="tlp-label">
-                '.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')).'
+            <label class="tlp-label" for="' . $select_id . '">
+                ' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')) . '
             </label>
             <select class="tlp-select"
-                id="job-'. (int)$widget_id .'"
+                id="' . $select_id . '"
                 name="' . $purifier->purify($this->widget_id) . '_job_id">';
 
         foreach ($this->getAvailableJobs() as $job_id => $job) {
             $selected = ($job_id == $this->job_id) ? 'selected="seleceted"' : '';
 
-            $html .= '<option value="'.$purifier->purify($job_id).'" ' . $selected . '>
-                '.$purifier->purify($job->getName()).'
+            $html .= '<option value="' . $purifier->purify($job_id) . '" ' . $selected . '>
+                ' . $purifier->purify($job->getName()) . '
                 </option>';
         }
         $html .= '</select>
