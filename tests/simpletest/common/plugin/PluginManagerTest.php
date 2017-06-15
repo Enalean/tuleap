@@ -1,5 +1,23 @@
 <?php
-
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 Mock::generate('PluginFactory');
 Mock::generate('Plugin');
 Mock::generate('Collection');
@@ -10,23 +28,22 @@ Mock::generate('DataAccessResult');
 Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestPluginManager', array('run'));
 
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
- *
  * Tests the class PluginManager
  */
+
 class PluginManagerTest extends TuleapTestCase {
 
-    function setUp() {
-        $this->globals = $GLOBALS;
+    public function setUp()
+    {
+        parent::setUp();
         $this->service_manager = mock('ServiceManager');
         ServiceManager::setInstance($this->service_manager);
     }
 
-    function tearDown() {
-        $GLOBALS = $this->globals;
+    public function tearDown()
+    {
         ServiceManager::clearInstance();
+        parent::tearDown();
     }
 
     function testGetAllPlugins() {
@@ -250,9 +267,9 @@ class PluginManager_LoadPluginTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        parent::tearDown();
         unlink('/tmp/hooks.json');
         ForgeConfig::restore();
+        parent::tearDown();
     }
 
     public function itGenerateCacheOfHookDefinitions() {
