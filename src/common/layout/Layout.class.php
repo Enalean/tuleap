@@ -987,7 +987,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         }
         if ($widget->isAjax()) {
             echo '<div id="'. $element_id .'-ajax">';
-            echo '<noscript><iframe width="99%" frameborder="0" src="'. $widget->getIframeUrl($owner_id, $owner_type) .'"></iframe></noscript>';
             echo '</div>';
         } else {
             echo $widget->getContent();
