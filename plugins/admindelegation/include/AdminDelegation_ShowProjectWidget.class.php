@@ -138,21 +138,31 @@ class AdminDelegation_ShowProjectWidget extends Widget {
         $limit  = 10;
 
         $html = '';
-        $html .= '<form method="post" action="?">';
-        
-        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_label').'</label>';
-        $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_projects" />';
-        $html .= '<input type="text" name="plugin_admindelegation_pattern" value="'.$pattern.'" size ="40" id="plugin_admindelegation_pattern" />';
-        $html .= '<br />';
+        $html .= '<form method="post" action="">';
 
-        $html .= '<input type="checkbox" name="criteria[]" value="group_name" id="plugin_admindelegation_group_name" '.$selectedCriteria['group_name'].' />';
-        $html .= '<label for="plugin_admindelegation_group_name">'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_group_name').'</label>&nbsp;';
-        $html .= '<input type="checkbox" name="criteria[]" value="unix_group_name" id="plugin_admindelegation_unix_group_name" '.$selectedCriteria['unix_group_name'].' />';
-        $html .= '<label for="plugin_admindelegation_unix_group_name">'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_unix_group_name').'</label>&nbsp;';
-        $html .= '<input type="checkbox" name="criteria[]" value="short_description" id="plugin_admindelegation_short_description" '.$selectedCriteria['short_description'].' />';
-        $html .= '<label for="plugin_admindelegation_short_description">'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_short_description').'</label>&nbsp;';
-        
-        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_btn_search').'"/>';
+        $html .= '<div class="tlp-form-element">';
+        $html .= '<label class="tlp-label" for="plugin_admindelegation_pattern">'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_label').'</label>';
+        $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_projects" />';
+        $html .= '<input type="text" name="plugin_admindelegation_pattern" class="tlp-input" placeholder="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'search').'" value="'.$pattern.'" size ="40" id="plugin_admindelegation_pattern" />';
+        $html .= '</div>';
+
+        $html .= '<div class="tlp-form-element">';
+        $html .= '<label for="plugin_admindelegation_group_name" class="tlp-label tlp-checkbox">' .
+            '<input type="checkbox" name="criteria[]" value="group_name" id="plugin_admindelegation_group_name" ' . $selectedCriteria['group_name'] . ' />' .
+            $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_group_name') .
+            '</label>';
+
+        $html .= '<label for="plugin_admindelegation_unix_group_name" class="tlp-label tlp-checkbox">' .
+            '<input type="checkbox" name="criteria[]" value="unix_group_name" id="plugin_admindelegation_unix_group_name" ' . $selectedCriteria['unix_group_name'] . ' />' .
+            $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_unix_group_name') .
+            '</label>';
+
+        $html .= '<label for="plugin_admindelegation_short_description" class="tlp-label tlp-checkbox">' .
+            '<input type="checkbox" name="criteria[]" value="short_description" id="plugin_admindelegation_short_description" ' . $selectedCriteria['short_description'] . ' />' .
+            $GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_crit_short_description') .
+            '</label>';
+        $html .= '</div>';
+        $html .= '<input type="submit" class="tlp-button-primary" value="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_btn_search').'"/>';
         
         $html .= '</form>';
 
@@ -160,13 +170,13 @@ class AdminDelegation_ShowProjectWidget extends Widget {
            $res = $this->getAllProject($offset, $limit, $condition, $pattern);
 
             if ($res['numrows'] > 0) {
-                $html .= '<table width="100%">';
-                $html .= '<theader>';
+                $html .= '<table width="100%" class="tlp-table">';
+                $html .= '<thead>';
                 $html .= '<tr>';
                 $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_col_project_name').'</th>';
                 $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_projects_col_project_id').'</th>';
                 $html .= '</tr>';
-                $html .= '</theader>';
+                $html .= '</thead>';
 
                 $html .= '<tbody>';
                 $i = 1;

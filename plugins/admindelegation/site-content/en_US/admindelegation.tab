@@ -27,6 +27,7 @@ plugin_admindelegation	label_grant_permission	Grant permissions
 plugin_admindelegation	label_username	To user
 plugin_admindelegation	revoke_permissions	Revoke permissions
 plugin_admindelegation	modal_revoke_warning	Wow, wait a minute. Your about to revoke permission. Please confirm your action.
+plugin_admindelegation	search	Search
 
 # All widgets
 plugin_admindelegation	widget_btn_search	Search

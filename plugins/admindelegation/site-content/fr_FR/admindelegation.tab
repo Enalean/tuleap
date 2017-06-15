@@ -26,6 +26,7 @@ plugin_admindelegation	label_grant_permission	Déléguer les permissions
 plugin_admindelegation	label_username	A l'utilisateur
 plugin_admindelegation	revoke_permissions	Supprimer les permissions
 plugin_admindelegation	modal_revoke_warning	Hé, une petite minute. Vous allez supprimer des permissions. Merci de confirmer votre action.
+plugin_admindelegation	search	Rechercher
 
 # All widgets
 plugin_admindelegation	widget_btn_search	Rechercher
