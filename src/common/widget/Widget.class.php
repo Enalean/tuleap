@@ -196,7 +196,9 @@
 
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        return '/widgets/widget.php?'. http_build_query(
+        $request = HTTPRequest::instance();
+
+        return $request->getServerUrl(). '/widgets/?'.http_build_query(
             array(
                 'dashboard_id' => $dashboard_id,
                 'owner'        => $owner_type.$owner_id,
