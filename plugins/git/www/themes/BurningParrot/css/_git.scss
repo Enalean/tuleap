@@ -121,6 +121,21 @@
     margin: 0 ($tlp-spacing / 2) 0 0;
 }
 
+/* -------------------- WIDGETS ---------------------- */
+
+.widget-last-git-pushes-details {
+    margin: $tlp-half-spacing $tlp-spacing;
+    font-size: 14px;
+}
+
+.widget-last-git-pushes-repository {
+    margin: 0 0 5px $tlp-spacing;
+}
+
+.widget-last-git-pushes-project {
+    margin: 0 0 $tlp-spacing;
+}
+
 /* -------------------- MEDIA QUERIES ---------------------- */
 
 @media screen and (max-width: 1300px) {
