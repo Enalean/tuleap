@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,14 @@ class Tracker_FileInfoFactory {
      *
      * @return Tracker_FileInfo
      */
-    public function getById($id) {
+    public function getById($id)
+    {
+        static $cache = array();
+
+        if (isset($cache[$id])) {
+            return $cache[$id];
+        }
+
         $row = $this->dao->searchById($id)->getRow();
         if (! $row) {
             return;
@@ -67,7 +74,7 @@ class Tracker_FileInfoFactory {
             return;
         }
 
-        return new Tracker_FileInfo(
+        $file_info = new Tracker_FileInfo(
             $row['id'],
             $field,
             $row['submitted_by'],
@@ -76,6 +83,10 @@ class Tracker_FileInfoFactory {
             $row['filesize'],
             $row['filetype']
         );
+
+        $cache[$file_info->getId()] = $file_info;
+
+        return $file_info;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_File',
     'Tracker_FormElement_Field_FileTestVersion', 
-    array('getValueDao', 'getFileInfoDao', 'getSubmittedInfoFromFILES', 'getId', 'isRequired', 'getFileInfo', 'isPreviousChangesetEmpty', 'checkThatAtLeastOneFileIsUploaded'));
+    array('getValueDao', 'getFileInfoDao', 'getSubmittedInfoFromFILES', 'getId', 'isRequired', 'getTrackerFileInfoFactory', 'isPreviousChangesetEmpty', 'checkThatAtLeastOneFileIsUploaded'));
 
 Mock::generate('Tracker_Artifact_ChangesetValue_File');
 
@@ -97,41 +97,8 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
 }
 
 class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest {
-    function testGetChangesetValue() {
-        $fileinfo_dao = new MockTracker_FileInfoDao();
-        $fi_dar = new MockDataAccessResult();
-        $row1 = array(
-            'id'           => 101, 
-            'submitted_by' => 666, 
-            'description'  =>  'Short desc', 
-            'filename'     =>  'Screenshot.png', 
-            'filesize'     => 123456, 
-            'filetype'     => 'image/png');
-        $row2 = array(
-            'id'           => 102, 
-            'submitted_by' => 666, 
-            'description'  =>  'Short desc', 
-            'filename'     =>  'Screenshot1.png', 
-            'filesize'     => 123456, 
-            'filetype'     => 'image/png');
-        $row3 = array(
-            'id'           => 103, 
-            'submitted_by' => 666, 
-            'description'  =>  'Short desc', 
-            'filename'     =>  'Screenshot2.png', 
-            'filesize'     => 123456, 
-            'filetype'     => 'image/png');
-        $fi_dar->setReturnValueAt(0, 'getRow', $row1);
-        $fi_dar->setReturnValueAt(1, 'getRow', $row2);
-        $fi_dar->setReturnValueAt(2, 'getRow', $row3);
-        $fi_dar->setReturnValue('getRow', false);
-        
-        $f1 = new MockTracker_FileInfo();
-        $f2 = new MockTracker_FileInfo();
-        $f3 = new MockTracker_FileInfo();
-        
-        $fileinfo_dao->setReturnReference('searchById', $fi_dar);
-        
+    function testGetChangesetValue()
+    {
         $value_dao = new MockTracker_FormElement_Field_Value_FileDao();
         $dar = new MockDataAccessResult();
         $dar->setReturnValueAt(0, 'current', array('changesetvalue_id' => 123, 'fileinfo_id' => 101));
@@ -141,13 +108,13 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $dar->setReturnValueAt(3, 'valid', false);
         
         $value_dao->setReturnReference('searchById', $dar);
+
+        $tracker_file_info_factory = mock('Tracker_FileInfoFactory');
+        stub($tracker_file_info_factory)->getById()->returns(mock('Tracker_FileInfo'));
         
         $file_field = new Tracker_FormElement_Field_FileTestVersion();
         $file_field->setReturnReference('getValueDao', $value_dao);
-        $file_field->setReturnReference('getFileInfoDao', $fileinfo_dao);
-        $file_field->setReturnReference('getFileInfo', $f1, array(101, $row1));
-        $file_field->setReturnReference('getFileInfo', $f2, array(102, $row2));
-        $file_field->setReturnReference('getFileInfo', $f3, array(103, $row3));
+        $file_field->setReturnReference('getTrackerFileInfoFactory', $tracker_file_info_factory);
         
         $changeset_value = $file_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, 'Tracker_Artifact_ChangesetValue_File');

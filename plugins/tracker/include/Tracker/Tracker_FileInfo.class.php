@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -310,35 +311,4 @@ class Tracker_FileInfo {
         $dao = new Tracker_FileInfoDao();
         return $dao->delete($this->getId());
     }
-
-    protected static $instances_by_id;
-    /**
-     * get an instance of fileinfo, identified by its $id
-     *
-     * @param Tracker_FormElement_Field_File $field The field the fileinfo belongs to
-     * @param int                            $id    The id of the fileinfo
-     * @param array                          $row   The raw data of the fileinfo (optionnal)
-     *
-     * @return Tracker_FileInfo or null if not found
-     */
-    public static function instance(Tracker_FormElement_Field_File $field, $id, $row = null) {
-        if (!isset(self::$instances_by_id[$id])) {
-            self::$instances_by_id[$id] = null;
-            $dao = new Tracker_FileInfoDao();
-            //TODO: check that the attachment belongs to the field
-            if ($row || ($row = $dao->searchById($id)->getRow())) {
-                self::$instances_by_id[$id] = new Tracker_FileInfo(
-                    $row['id'],
-                    $field,
-                    $row['submitted_by'],
-                    $row['description'],
-                    $row['filename'],
-                    $row['filesize'],
-                    $row['filetype']
-                );
-            }
-        }
-        return self::$instances_by_id[$id];
-    }
 }
-?>
