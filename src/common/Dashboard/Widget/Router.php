@@ -90,6 +90,12 @@ class Router
                     echo $widget->getContent();
                 }
                 break;
+            case 'rss':
+                $widget = $this->getWidgetFromUrl($request);
+                if ($widget) {
+                    $widget->displayRss();
+                }
+                break;
         }
     }
 

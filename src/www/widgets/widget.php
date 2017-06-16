@@ -53,10 +53,6 @@ if ($request->valid($vOwner)) {
             if ($widget = $widget_factory->getInstanceByWidgetName($name)) {
                 if ($widget->isAvailable()) {
                     switch ($request->get('action')) {
-                        case 'rss':
-                            $widget->displayRss();
-                            exit();
-                            break;
                         case 'update':
                             if ($layout_id = (int)$request->get('layout_id')) {
                                 $csrk_token->check($redirect, $request);
