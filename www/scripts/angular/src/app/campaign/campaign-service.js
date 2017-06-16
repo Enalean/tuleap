@@ -47,9 +47,14 @@ function CampaignService(
             });
     }
 
-    function createCampaign(campaign) {
+    function createCampaign(campaign, test_selector, milestone_id, report_id) {
+        var queryParams = {
+            test_selector: test_selector,
+            milestone_id:  milestone_id,
+            report_id:     report_id
+        };
         return rest.all('trafficlights_campaigns')
-            .post(campaign);
+            .post(campaign, queryParams);
     }
 
     function patchCampaign(campaign_id, execution_ids) {

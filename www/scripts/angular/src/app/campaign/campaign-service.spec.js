@@ -54,7 +54,10 @@ describe ('CampaignService - ', function () {
             label: 'Release',
             project_id: 101
         };
-        var campaign_created = {
+        var milestone_id       = '133';
+        var report_id          = '24';
+        var test_selector      = 'report';
+        var campaign_created   = {
             id: 17,
             tracker: {
                 id: 11,
@@ -63,12 +66,17 @@ describe ('CampaignService - ', function () {
             },
             uri: "artifacts/17"
         };
+        var expected_request =
+            '/api/v1/trafficlights_campaigns' +
+                '?milestone_id=' + milestone_id +
+                '&report_id=' + report_id +
+                '&test_selector=' + test_selector;
 
         mockBackend
-            .expectPOST('/api/v1/trafficlights_campaigns')
+            .expectPOST(expected_request, campaign_to_create)
             .respond(JSON.stringify(campaign_created));
 
-        var promise = CampaignService.createCampaign(campaign_to_create);
+        var promise = CampaignService.createCampaign(campaign_to_create, test_selector, milestone_id, report_id);
 
         mockBackend.flush();
 

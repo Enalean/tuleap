@@ -52,6 +52,7 @@ use Tracker_Artifact_PriorityHistoryDao;
 use TrackerFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactValidator;
+use Tracker_ReportFactory;
 use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
 
 class CampaignsResource {
@@ -152,12 +153,20 @@ class CampaignsResource {
             $artifact_creator
         );
 
+        $definition_selector = new DefinitionSelector(
+            $this->config,
+            $this->trafficlights_artifact_factory,
+            new ProjectAuthorization(),
+            $this->artifact_factory,
+            Tracker_ReportFactory::instance()
+        );
+
         $this->campaign_creator = new CampaignCreator(
             $this->config,
             $this->project_manager,
             $this->formelement_factory,
             $this->tracker_factory,
-            $this->trafficlights_artifact_factory,
+            $definition_selector,
             $artifact_creator,
             $this->execution_creator
         );
@@ -385,17 +394,22 @@ class CampaignsResource {
      *
      * @url POST
      *
-     * @param int    $project_id   Id of the project the campaign will belong to
-     * @param string $label        The label of the new campaign
-     * @param int    $milestone_id Id of the milestone with which the campaign will be linked
+     * @param int    $project_id    Id of the project the campaign will belong to
+     * @param string $label         The label of the new campaign
+     * @param string $test_selector The method used to set initial test definitions for campaign {@from query} {@choice none,all,milestone,report}
+     * @param int    $milestone_id  Id of the milestone with which the campaign will be linked {@from query}
+     * @param int    $report_id     Id of the report to retrieve test definitions for campaign {@from query}
      */
-    protected function post($project_id, $label, $milestone_id = null) {
+    protected function post($project_id, $label, $test_selector = 'all', $milestone_id = 0, $report_id = 0)
+    {
         $this->options();
         return $this->campaign_creator->createCampaign(
             UserManager::instance()->getCurrentUser(),
             $project_id,
             $label,
-            $milestone_id
+            $test_selector,
+            $milestone_id,
+            $report_id
         );
     }
 

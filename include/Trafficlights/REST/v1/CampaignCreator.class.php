@@ -30,7 +30,6 @@ use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\ArtifactFactory;
 
 class CampaignCreator
 {
@@ -47,8 +46,8 @@ class CampaignCreator
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var ArtifactFactory */
-    private $artifact_factory;
+    /** @var DefinitionSelector */
+    private $definition_selector;
 
     /** @var Tracker_REST_Artifact_ArtifactCreator */
     private $artifact_creator;
@@ -61,7 +60,7 @@ class CampaignCreator
         ProjectManager $project_manager,
         Tracker_FormElementFactory $formelement_factory,
         TrackerFactory $tracker_factory,
-        ArtifactFactory $artifact_factory,
+        DefinitionSelector $definition_selector,
         Tracker_REST_Artifact_ArtifactCreator $artifact_creator,
         ExecutionCreator $execution_creator
     ) {
@@ -69,7 +68,7 @@ class CampaignCreator
         $this->project_manager     = $project_manager;
         $this->formelement_factory = $formelement_factory;
         $this->tracker_factory     = $tracker_factory;
-        $this->artifact_factory    = $artifact_factory;
+        $this->definition_selector = $definition_selector;
         $this->artifact_creator    = $artifact_creator;
         $this->execution_creator   = $execution_creator;
     }
@@ -77,10 +76,16 @@ class CampaignCreator
     /**
      * @return ArtifactReference
      */
-    public function createCampaign(PFUser $user, $project_id, $label, $milestone_id)
+    public function createCampaign(PFUser $user, $project_id, $label, $test_selector, $milestone_id, $report_id)
     {
         try {
-            $execution_ids = $this->createTestExecutionsForDefinitions($project_id, $user, $milestone_id);
+            $execution_ids = $this->createTestExecutionsForDefinitions(
+                $project_id,
+                $user,
+                $test_selector,
+                $milestone_id,
+                $report_id
+            );
             $tracker       = $this->getCampaignTrackerReferenceForProject($project_id);
             $values        = $this->getFieldValuesForCampaignArtifactCreation($tracker, $user, $label, $execution_ids);
             $artifact_ref  = $this->artifact_creator->create($user, $tracker, $values);
@@ -104,21 +109,25 @@ class CampaignCreator
     private function createTestExecutionsForDefinitions(
         $project_id,
         PFUser $user,
-        $milestone_id
+        $test_selector,
+        $milestone_id,
+        $report_id
     ) {
-        $execution_ids     = array();
-        $project           = $this->project_manager->getProject($project_id);
-        $cover_definitions = $this->artifact_factory->getCoverTestDefinitionsUserCanViewForMilestone(
+        $execution_ids  = array();
+        $project        = $this->project_manager->getProject($project_id);
+        $definition_ids = $this->definition_selector->selectDefinitionIds(
             $user,
             $project,
-            $milestone_id
+            $test_selector,
+            $milestone_id,
+            $report_id
         );
 
-        foreach ($cover_definitions as $definition) {
+        foreach ($definition_ids as $definition_id) {
             $execution = $this->execution_creator->createTestExecution(
                 $project_id,
                 $user,
-                $definition->getId()
+                $definition_id
             );
             $execution_ids[] = array('id' => $execution->id);
         }

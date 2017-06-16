@@ -9,21 +9,23 @@
     DefinitionService.$inject = [
         'Restangular',
         '$q',
-        'DefinitionConstants'
+        'DefinitionConstants',
+        'SharedPropertiesService'
     ];
 
-    function DefinitionService(Restangular, $q, DefinitionConstants) {
+    function DefinitionService(Restangular, $q, DefinitionConstants, SharedPropertiesService) {
         var rest = Restangular.withConfig(function(RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
             RestangularConfigurer.setBaseUrl('/api/v1');
         });
 
         return {
-            UNCATEGORIZED     : DefinitionConstants.UNCATEGORIZED,
-            getDefinitions    : getDefinitions,
-            getArtifactById   : getArtifactById,
-            getDefinitionById : getDefinitionById,
-            getTracker        : getTracker
+            UNCATEGORIZED        : DefinitionConstants.UNCATEGORIZED,
+            getDefinitions       : getDefinitions,
+            getDefinitionReports : getDefinitionReports,
+            getArtifactById      : getArtifactById,
+            getDefinitionById    : getDefinitionById,
+            getTracker           : getTracker
         };
 
         function getDefinitions(project_id, limit, offset) {
@@ -53,6 +55,20 @@
                     category: definition.category || DefinitionConstants.UNCATEGORIZED
                 });
             });
+        }
+
+        function getDefinitionReports() {
+            var data           = $q.defer();
+            var def_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
+
+            rest.one('trackers', def_tracker_id)
+                .all('tracker_reports')
+                .getList()
+                .then(function(response) {
+                    data.resolve(response.data);
+                });
+
+            return data.promise;
         }
 
         function getArtifactById(artifact_id) {

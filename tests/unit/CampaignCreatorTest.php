@@ -27,7 +27,6 @@ use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Trafficlights\ArtifactFactory;
 
 require_once dirname(__FILE__) .'/bootstrap.php';
 
@@ -42,8 +41,8 @@ class CampaignCreatorTest extends TuleapTestCase
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var ArtifactFactory */
-    private $artifact_factory;
+    /** @var DefinitionSelector */
+    private $definition_selector;
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -82,7 +81,7 @@ class CampaignCreatorTest extends TuleapTestCase
 
         $this->project_manager     = mock('ProjectManager');
         $this->tracker_factory     = mock('TrackerFactory');
-        $this->artifact_factory    = mock('Tuleap\\Trafficlights\\ArtifactFactory');
+        $this->definition_selector = mock('Tuleap\\Trafficlights\\REST\\v1\\DefinitionSelector');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->artifact_creator    = mock('Tracker_REST_Artifact_ArtifactCreator');
         $this->config              = mock('Tuleap\\Trafficlights\\Config');
@@ -93,7 +92,7 @@ class CampaignCreatorTest extends TuleapTestCase
             $this->project_manager,
             $this->formelement_factory,
             $this->tracker_factory,
-            $this->artifact_factory,
+            $this->definition_selector,
             $this->artifact_creator,
             $this->execution_creator
         );
@@ -130,11 +129,13 @@ class CampaignCreatorTest extends TuleapTestCase
     public function itCreatesACampaignWithTheGivenName()
     {
         $this->stubCampaignTracker();
-        stub($this->artifact_factory)->getCoverTestDefinitionsUserCanViewForMilestone()->returns(array());
+        stub($this->definition_selector)->selectDefinitionIds()->returns(array());
 
         $campaign_artifact = $this->stubCampaignArtifact();
         $expected_label    = 'Campaign Name';
+        $test_selector     = 'all';
         $no_milestone_id   = 0;
+        $no_report_id      = 0;
 
         $label_field_id     = 123;
         $label_field        = aMockField()->withId($label_field_id)->build();
@@ -159,43 +160,65 @@ class CampaignCreatorTest extends TuleapTestCase
 
         expect($campaign_artifact)->linkArtifact()->never();
 
-        $this->campaign_creator->createCampaign($this->user, $this->project_id, $expected_label, $no_milestone_id);
+        $this->campaign_creator->createCampaign(
+            $this->user,
+            $this->project_id,
+            $expected_label,
+            $test_selector,
+            $no_milestone_id,
+            $no_report_id
+        );
     }
 
     public function itCreatesAnArtifactLinkToMilestoneWhenGivenAMilestoneId()
     {
         $this->stubCampaignTracker();
-        stub($this->artifact_factory)->getCoverTestDefinitionsUserCanViewForMilestone()->returns(array());
+        stub($this->definition_selector)->selectDefinitionIds()->returns(array());
         stub($this->formelement_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
 
         $campaign_artifact = $this->stubCampaignArtifact();
         $expected_label    = 'Campaign Name';
+        $test_selector     = 'all';
         $milestone_id      = 10;
+        $no_report_id      = 0;
+
 
         expect($campaign_artifact)->linkArtifact($milestone_id, '*')->once();
 
-        $this->campaign_creator->createCampaign($this->user, $this->project_id, $expected_label, $milestone_id);
+        $this->campaign_creator->createCampaign(
+            $this->user,
+            $this->project_id,
+            $expected_label,
+            $test_selector,
+            $milestone_id,
+            $no_report_id
+        );
     }
 
-    public function itCreatesTestExecutionsForDefinitionsCoveringTheMilestone()
+    public function itCreatesTestExecutionsForSelectedDefinitions()
     {
-        $test_definitions = array(
-            aMockArtifact()->build(),
-            aMockArtifact()->build(),
-            aMockArtifact()->build()
-        );
+        $test_definitions = array("1", "2", "3");
 
         $this->stubCampaignTracker();
         $this->stubCampaignArtifact();
-        stub($this->artifact_factory)->getCoverTestDefinitionsUserCanViewForMilestone()->returns($test_definitions);
+        stub($this->definition_selector)->selectDefinitionIds()->returns($test_definitions);
         stub($this->formelement_factory)->getUsedFieldByNameForUser()->returns(aMockField()->build());
         stub($this->execution_creator)->createTestExecution()->returns(aMockArtifact()->build());
 
         $expected_label = 'Campaign Name';
+        $test_selector  = 'report';
         $milestone_id   = 10;
+        $report_id      = 5;
 
         expect($this->execution_creator)->createTestExecution()->count(count($test_definitions));
 
-        $this->campaign_creator->createCampaign($this->user, $this->project_id, $expected_label, $milestone_id);
+        $this->campaign_creator->createCampaign(
+            $this->user,
+            $this->project_id,
+            $expected_label,
+            $test_selector,
+            $milestone_id,
+            $report_id
+        );
     }
 }

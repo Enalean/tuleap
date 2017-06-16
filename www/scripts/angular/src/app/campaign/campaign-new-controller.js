@@ -6,7 +6,6 @@ CampaignNewCtrl.$inject = [
     '$scope',
     '$modalInstance',
     '$state',
-    '$filter',
     'gettextCatalog',
     'CampaignService',
     'DefinitionService',
@@ -17,45 +16,61 @@ function CampaignNewCtrl(
     $scope,
     $modalInstance,
     $state,
-    $filter,
     gettextCatalog,
     CampaignService,
     DefinitionService,
     SharedPropertiesService
 ) {
     var project_id              = SharedPropertiesService.getProjectId(),
+        milestone_id            = SharedPropertiesService.getCurrentMilestone().id,
         controller_is_destroyed = false;
 
     _.extend($scope, {
-        ITEMS_PER_PAGE:         15,
-        nb_total_definitions:   0,
-        loading_definitions:    true,
-        definitions:            [],
-        submitting_campaign:    false,
-        select_all:             false,
-        getFilteredDefinitions: getFilteredDefinitions,
-        createCampaign:         createCampaign,
-        cancel:                 cancel,
+        nb_total_definitions: 0,
+        loading_definitions:  true,
+        submitting_campaign:  false,
+        definitions:          [],
+        createCampaign:       createCampaign,
+        cancel:               cancel,
+        has_milestone:        !! milestone_id,
         campaign: {
-            label:        ''
-        }
+            label:    ''
+        },
+        test_params: {
+            selector: 'all'
+        },
+        test_reports:  []
     });
 
-    getDefinitions(project_id, 750, 0);
+    init();
 
     $scope.$on('$destroy', function iVeBeenDismissed() {
         controller_is_destroyed = true;
     });
 
-    function createCampaign(campaign) {
+    function init() {
+        getDefinitions(project_id, 750, 0);
+        getDefinitionReports();
+    }
+
+    function createCampaign(campaign, test_params) {
         $scope.submitting_campaign = true;
 
+        var campaign_data = {
+            project_id: project_id,
+            label:      campaign.label,
+        };
+
+        var test_selector = test_params.selector;
+        var report_id     = null;
+
+        if (! isNaN(test_params.selector)) {
+            test_selector = 'report';
+            report_id     = test_params.selector;
+        }
+
         CampaignService
-            .createCampaign({
-              project_id:   project_id,
-              label:        campaign.label,
-              milestone_id: SharedPropertiesService.getCurrentMilestone().id,
-            })
+            .createCampaign(campaign_data, test_selector, milestone_id, report_id)
             .then(function () {
                 $modalInstance.close();
                 $state.go('campaigns.list', {}, {reload: true});
@@ -82,11 +97,10 @@ function CampaignNewCtrl(
         });
     }
 
-    function getFilteredDefinitions(filter) {
-        return $filter('InPropertiesFilter')(
-            $scope.definitions,
-            filter,
-            ['id','summary','category']
-        );
+    function getDefinitionReports() {
+        DefinitionService.getDefinitionReports().then(function(data) {
+            // data: [{id: <int>, label: <string>}]
+            $scope.test_reports = data;
+        });
     }
 }

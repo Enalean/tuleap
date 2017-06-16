@@ -24,6 +24,10 @@ msgstr ""
 msgid "<i class=\"icon-plus\"></i> New campaign"
 msgstr ""
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "All tests"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
@@ -44,6 +48,10 @@ msgstr ""
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Cancel"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Choose tests"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
@@ -99,6 +107,14 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Milestone tests"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "No tests"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
