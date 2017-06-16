@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('www/my/my_utils.php');
-
 /**
 * Widget_MyArtifacts
 *

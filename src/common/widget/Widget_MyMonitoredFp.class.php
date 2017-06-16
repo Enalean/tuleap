@@ -21,6 +21,7 @@
 
 require_once('Widget.class.php');
 require_once('common/frs/FRSPackageFactory.class.php');
+
 /**
 * Widget_MyMonitoredFp
 *
