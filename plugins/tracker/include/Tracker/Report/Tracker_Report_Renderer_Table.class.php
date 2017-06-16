@@ -1300,12 +1300,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if ($row = $result->getRow()) {
                         if (isset($row[$result_key])) {
                             //this case is for multiple selectbox/count
-                            $html .= '<label>';
+                            $html .= '<label  class="tracker-aggregate-single-line">';
                             $html .= $this->formatAggregateResult($row[$result_key]);
                             $html .= '<label>';
                         } else {
                             foreach ($result as $row) {
-                                $html .= '<label>';
+                                $html .= '<label  class="tracker-aggregate-single-line">';
                                 if ($row['label'] === null) {
                                     $html .= '<em>'. $GLOBALS['Language']->getText('global', 'null') .'</em>';
                                 } else {
