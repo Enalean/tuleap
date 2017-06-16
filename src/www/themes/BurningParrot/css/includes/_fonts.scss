@@ -42,6 +42,14 @@
     speak: none;
 }
 
+.tuleap-services-widget {
+    margin-right: $tlp-half-spacing / 2;
+}
+
+.tuleap-services-ftp::before {
+    content: '\e801';
+}
+
 .tuleap-services-angle-double-right::before {
     content: '\e80f';
 }

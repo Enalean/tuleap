@@ -253,7 +253,6 @@ include_project_home	browse_cvs	Browse CVS
 include_project_home	svn_repo	Subversion Repository
 include_project_home	browse_svn	Browse Subversion
 include_project_home	accesses	<B>$1</B> accesses
-include_project_home	files	Files
 include_project_home	file_releases	File Releases
 include_project_home	packages	<B>$1</B> packages
 include_project_home	trackers	Trackers

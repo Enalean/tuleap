@@ -38,8 +38,8 @@ class ServiceFile extends Service
     function getPublicArea() {
         $html  = '';
         $html .= '<p><a href="/file/showfiles.php?group_id='.$this->getGroupId().'">';
-        $html .= $GLOBALS['Response']->getImage("ic/file.png", array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','files')));
-        $html .= ' '.$GLOBALS['Language']->getText('include_project_home','file_releases').'</a>';
+        $html .= '<i class="tuleap-services-file tuleap-services-widget"></i>';
+        $html .= $GLOBALS['Language']->getText('include_project_home','file_releases').'</a>';
         $html .= ' ( '.$GLOBALS['Language']->getText('include_project_home','packages',count($this->_getPackagesForUser(user_getid()))).' )';
         $html .= '</p>';
         return $html;
