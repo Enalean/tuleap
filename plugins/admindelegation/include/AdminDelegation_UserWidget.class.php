@@ -109,12 +109,13 @@ class AdminDelegation_UserWidget extends Widget {
             $groupValue = '';
         }
 
-        $html .= '<form method="post" action="?">';
-        $html .= '<label>'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_label').'</label>';
+        $html .= '<form method="post" action="">';
+        $html .= '<div class="tlp-form-element">';
+        $html .= '<label class="tlp-label" for="plugin_admindelegation_func">'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_label').'</label>';
         $html .= '<input type="hidden" name="plugin_admindelegation_func" value="show_admins" />';
-        $html .= '<input type="text" name="plugin_admindelegation_group" value="'.$groupValue.'" size ="40" id="plugin_admindelegation_group" />';
-        $html .= '&nbsp;';
-        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_btn_search').'"/>';
+        $html .= '<input type="text" class="tlp-input" name="plugin_admindelegation_group" value="'.$groupValue.'" size ="40" id="plugin_admindelegation_group" />';
+        $html .= '</div>';
+        $html .= '<input type="submit" class="tlp-button-primary" value="'.$GLOBALS['Language']->getText('plugin_admindelegation', 'widget_btn_search').'"/>';
         $html .= '</form>';
 
         $js = "new ProjectAutoCompleter('plugin_admindelegation_group', '".util_get_dir_image_theme()."', false);";
@@ -125,13 +126,13 @@ class AdminDelegation_UserWidget extends Widget {
             $users = $this->getProjectAdmins($project->getId());
             if (count($users) > 0) {
                 $uh = UserHelper::instance();
-                $html .= '<table width="100%">';
-                $html .= '<theader>';
+                $html .= '<table width="100%" class="tlp-table">';
+                $html .= '<thead>';
                 $html .= '<tr>';
                 $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_name').'</th>';
                 $html .= '<th>'.$GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_email').'</th>';
                 $html .= '</tr>';
-                $html .= '</theader>';
+                $html .= '</thead>';
                 $html .= '<tbody>';
                 $i = 1;
                 foreach ($users as $u) {
