@@ -20,7 +20,6 @@
 
 namespace Tuleap\Dashboard\Widget;
 
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Dashboard\Widget\Add\AddWidgetController;
 use Tuleap\Widget\WidgetFactory;
@@ -72,15 +71,33 @@ class Router
                 $this->preferences_controller->update($request);
                 break;
             case 'process-widget':
-                $param  = $request->get('name');
-                $name   = array_pop(array_keys($param));
-                $widget = $this->widget_factory->getInstanceByWidgetName($name);
+                $widget = $this->getWidgetFromUrl($request);
 
                 $owner      = $request->get('owner');
                 $owner_id   = (int) substr($owner, 1);
                 $owner_type = substr($owner, 0, 1);
                 $widget->process($owner_type, $owner_id);
                 break;
+            case 'ajax':
+                $widget = $this->getWidgetFromUrl($request);
+
+                $param       = $request->get('name');
+                $name        = array_pop(array_keys($param));
+                $instance_id = (int) $param[$name];
+
+                if ($widget->isAjax()) {
+                    $widget->loadContent($instance_id);
+                    echo $widget->getContent();
+                }
+                break;
         }
+    }
+
+    private function getWidgetFromUrl(HTTPRequest $request)
+    {
+        $param = $request->get('name');
+        $name  = array_pop(array_keys($param));
+
+        return $this->widget_factory->getInstanceByWidgetName($name);
     }
 }
