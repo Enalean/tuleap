@@ -101,18 +101,8 @@ extends WikiPlugin
             }
 
             // find out which users we should show ratings for
-            $allowed_users = array();
-            foreach ($userids as $userid) {
-                $user = new RatingsUser($userid);
-                if ($user->allow_view_ratings($active_user)) {
-                    array_push($allowed_users, $user);
-                }
-                // PHP's silly references... (the behavior with this line commented
-                // out is... odd)
-                unset($user);
-            }
-            $options = array('dimension' => $dimension, 
-                             'users' => $allowed_users);
+            $options = array('dimension' => $dimension,
+                             'users' => array());
             $args = array_merge($options, $args);
         }
         if (empty($pages) and $pages != '0')

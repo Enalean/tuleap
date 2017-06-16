@@ -189,7 +189,6 @@ ${POT_FILE}: ../lib/plugin/TranslateText.php
 ${POT_FILE}: ../lib/plugin/UnfoldSubpages.php
 ${POT_FILE}: ../lib/plugin/UpLoad.php
 ${POT_FILE}: ../lib/plugin/UserPreferences.php
-${POT_FILE}: ../lib/plugin/UserRatings.php
 ${POT_FILE}: ../lib/plugin/WantedPagesOld.php
 ${POT_FILE}: ../lib/plugin/WantedPages.php
 ${POT_FILE}: ../lib/plugin/WikiAdminChmod.php
@@ -259,8 +258,6 @@ ${POT_FILE}: ../lib/WikiGroup.php
 ${POT_FILE}: ../lib/wikilens/Buddy.php
 ${POT_FILE}: ../lib/wikilens/CustomPrefs.php
 ${POT_FILE}: ../lib/wikilens/PageListColumns.php
-${POT_FILE}: ../lib/wikilens/RatingsDb.php
-${POT_FILE}: ../lib/wikilens/RatingsUser.php
 ${POT_FILE}: ../lib/wikilens/Utils.php
 ${POT_FILE}: ../lib/WikiPluginCached.php
 ${POT_FILE}: ../lib/WikiPlugin.php

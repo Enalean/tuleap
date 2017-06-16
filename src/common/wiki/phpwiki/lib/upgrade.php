@@ -390,15 +390,6 @@ function CheckDatabaseUpdate(&$request) {
     	    echo _("OK")," <br />\n";
         }
     }
-    if ((class_exists("RatingsUserFactory") or $dbh->isWikiPage(_("RateIt")))) {
-        $table = "rating";
-        echo sprintf(_("check for table %s"), $table)," ...";
-    	if (!in_array($prefix.$table, $tables)) {
-            installTable($dbh, $table, $backend_type);
-    	} else {
-    	    echo _("OK")," <br />\n";
-        }
-    }
     $backend = &$dbh->_backend->_dbh;
     extract($dbh->_backend->_table_names);
 

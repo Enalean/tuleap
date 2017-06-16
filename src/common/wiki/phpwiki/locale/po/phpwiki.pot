@@ -2080,10 +2080,6 @@ msgstr ""
 msgid "List pages that are explicitly given as the pages argument."
 msgstr ""
 
-#: ../lib/plugin/ListPages.php:99
-msgid "You must be logged in to view ratings."
-msgstr ""
-
 #: ../lib/plugin/ListSubpages.php:34
 msgid "ListSubpages"
 msgstr ""
@@ -3218,42 +3214,6 @@ msgstr ""
 #: ../lib/plugin/UserPreferences.php:153
 #, php-format
 msgid "%d UserPreferences fields successfully updated."
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:47
-msgid "UserRatings"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:51
-msgid "List the user's ratings."
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:89
-#, php-format
-msgid "Displaying %d ratings:"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:108
-#, php-format
-msgid "Showing all %ss (%%d):"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:125
-#, php-format
-msgid "'s %d page ratings:"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:128
-#, php-format
-msgid "Here are your %d page ratings:"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:220
-msgid "Pred"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:224 ../lib/wikilens/PageListColumns.php:366
-msgid "Rate"
 msgstr ""
 
 #: ../lib/plugin/WantedPagesOld.php:33 ../lib/plugin/WantedPagesOld.php:66

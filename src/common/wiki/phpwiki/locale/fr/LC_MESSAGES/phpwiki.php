@@ -1908,8 +1908,6 @@ $locale["UserId:"] =
    "Nom d'utilisateur :";
 $locale["UserPreferences"] =
    "PréférencesUtilisateurs";
-$locale["UserRatings"] =
-   "Statistiques d'utilisateur";
 $locale["Users will not be able to sign in."] =
    "Les utilisateurs ne pourront pas s'inscrire.";
 $locale["Using directory '%s'"] =
