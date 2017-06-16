@@ -20,6 +20,7 @@
 
 namespace Tuleap\Dashboard\User;
 
+use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
@@ -49,7 +50,6 @@ class UserDashboardController
      * @var UserDashboardSaver
      */
     private $saver;
-    private $title;
     /**
      * @var UserDashboardDeletor
      */
@@ -81,7 +81,6 @@ class UserDashboardController
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
-        $title,
         UserDashboardRetriever $retriever,
         UserDashboardSaver $saver,
         UserDashboardDeletor $deletor,
@@ -93,7 +92,6 @@ class UserDashboardController
         IncludeAssets $include_assets
     ) {
         $this->csrf                     = $csrf;
-        $this->title                    = $title;
         $this->retriever                = $retriever;
         $this->saver                    = $saver;
         $this->deletor                  = $deletor;
@@ -131,7 +129,9 @@ class UserDashboardController
 
         $user_dashboards_presenter = $this->getUserDashboardsPresenter($current_user, $dashboard_id, $user_dashboards);
 
-        $GLOBALS['Response']->header(array('title' => $this->title));
+        $title   = $this->getPageTitle($user_dashboards_presenter, $current_user);
+        $purifier = Codendi_HTMLPurifier::instance();
+        $GLOBALS['Response']->header(array('title' => $purifier->purify($title)));
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
         );
@@ -416,5 +416,25 @@ class UserDashboardController
         }
 
         $this->redirectToDashboard($dashboard_id);
+    }
+
+    /**
+     * @return string
+     */
+    private function getPageTitle(array $user_dashboards_presenter, PFUser $current_user)
+    {
+        $title = '';
+        foreach ($user_dashboards_presenter as $presenter) {
+            if ($presenter->is_active) {
+                $title = $presenter->name . ' - ';
+            }
+        }
+        $title .= $GLOBALS['Language']->getText(
+            'my_index',
+            'title',
+            $current_user->getRealName() . ' (' . $current_user->getUnixName() . ')'
+        );
+
+        return $title;
     }
 }
