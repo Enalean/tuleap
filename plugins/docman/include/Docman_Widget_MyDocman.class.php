@@ -62,7 +62,6 @@ class Docman_Widget_MyDocman extends Widget {
     }
     function _getReviews($reviewer = true) {
         $hp = Codendi_HTMLPurifier::instance();
-        require_once('www/my/my_utils.php');
         $html = '';
         
         $content_html_id = 'plugin_docman_approval_'. ($reviewer ? 'reviewer' : 'requester');
