@@ -17,15 +17,6 @@
     padding: 0.5em;
 }
 
-.widget_preferences {
-    background: #E0DDD2;
-    border-bottom: 1px solid #bcbcad;
-}
-
-.widget_preferences form {
-    margin: 0;
-}
-
 .widget_titlebar {
     background: #E0DDD2 url(../images/widget-header.png) left top repeat-x;
     font-weight: bold;
@@ -35,10 +26,6 @@
     height: 18px;
     padding-left: 40px;
     padding-right: 4px;
-}
-
-.widget_titlebar_handle {
-    cursor: move;
 }
 
 .widget_titlebar_title {

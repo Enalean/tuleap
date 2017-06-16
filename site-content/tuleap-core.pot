@@ -16,9 +16,6 @@ msgstr ""
 msgid "Already used"
 msgstr ""
 
-msgid "An error occured while trying to add the widget to the dashboard"
-msgstr ""
-
 msgid ""
 "An error occured with your upload. Please try again or choose another image."
 msgstr ""

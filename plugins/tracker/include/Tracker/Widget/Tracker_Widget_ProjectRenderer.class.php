@@ -34,14 +34,6 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer {
     function canBeUsedByProject($project) {
         return true;
     }
-    
-    function display($layout_id, $column_id, $readonly, $is_minimized, $owner_id, $owner_type) {
-        $arrf = Tracker_Report_RendererFactory::instance();
-        $store_in_session = false;
-        if ($renderer = $arrf->getReportRendererById($this->renderer_id, null, $store_in_session)) {
-            parent::display($layout_id, $column_id, $readonly, $is_minimized, $owner_id, $owner_type);
-        }
-    }
 
     public function isAjax() {
         return false;
