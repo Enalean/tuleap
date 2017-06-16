@@ -26,7 +26,9 @@ use Project;
 use Tracker_Report_Renderer;
 use Tracker_Widget_MyRenderer;
 use Tracker_Widget_ProjectRenderer;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 
 class WidgetAddToDashboardDropdownBuilder
@@ -56,39 +58,39 @@ class WidgetAddToDashboardDropdownBuilder
         return new WidgetAddToDashboardDropdownPresenter(
             $user,
             $project,
-            $this->getAddToMyDashboardURL($renderer, $user),
+            $this->getAddToMyDashboardURL($renderer),
             $this->getAddToProjectDashboardURL($renderer, $project),
             $my_dashboards_presenters,
             $project_dashboards_presenters
         );
     }
 
-    private function getAddToMyDashboardURL(Tracker_Report_Renderer $renderer, PFUser $user)
+    private function getAddToMyDashboardURL(Tracker_Report_Renderer $renderer)
     {
+        $csrf = new CSRFSynchronizerToken('/my/');
         return $this->getAddToDashboardURL(
             $renderer,
-            'u' . $user->getId(),
-            Tracker_Widget_MyRenderer::ID
+            $csrf,
+            Tracker_Widget_MyRenderer::ID,
+            UserDashboardController::DASHBOARD_TYPE
         );
     }
 
-    private function getAddToDashboardURL(\Tracker_Report_Renderer $renderer, $owner_id, $widget_id)
-    {
-        $csrf = new CSRFSynchronizerToken('widget_management');
-
-        return '/widgets/updatelayout.php?' . http_build_query(
+    private function getAddToDashboardURL(
+        \Tracker_Report_Renderer $renderer,
+        CSRFSynchronizerToken $csrf,
+        $widget_id,
+        $type
+    ) {
+        return '/widgets/?' . http_build_query(
             array(
-                'owner'                     => $owner_id,
-                'action'                    => 'widget',
-                'renderer'                  => array(
+                'dashboard-type'      => $type,
+                'action'              => 'add-widget',
+                'renderer'            => array(
                     'title'       => $renderer->name . ' for ' . $renderer->report->name,
                     'renderer_id' => $renderer->id
                 ),
-                'name'                      => array(
-                    $widget_id => array(
-                        'add' => 1
-                    )
-                ),
+                'widget-name'         => $widget_id,
                 $csrf->getTokenName() => $csrf->getToken()
             )
         );
@@ -96,11 +98,14 @@ class WidgetAddToDashboardDropdownBuilder
 
     private function getAddToProjectDashboardURL(Tracker_Report_Renderer $renderer, Project $project)
     {
+        $csrf = new CSRFSynchronizerToken('/project/');
         return $this->getAddToDashboardURL(
             $renderer,
-            'g' . $project->getGroupId(),
-            Tracker_Widget_ProjectRenderer::ID
-        );
+            $csrf,
+            Tracker_Widget_ProjectRenderer::ID,
+            ProjectDashboardController::DASHBOARD_TYPE
+        ) .
+        '&group_id=' . urlencode($project->getID());
     }
 
     private function getAvailableDashboardsForUser(PFUser $user)
