@@ -51,16 +51,6 @@ require_once('../admin/admin_utils.php');
 
 $request = HTTPRequest::instance();
 
-$hp    = Codendi_HTMLPurifier::instance();
-$title = $Language->getText(
-    'my_index',
-        'title',
-        array(
-            $hp->purify(user_getrealname(user_getid()),
-            CODENDI_PURIFIER_CONVERT_HTML) .' ('.user_getname().')'
-        )
-);
-
 $widget_factory = new WidgetFactory(
     UserManager::instance(),
     new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
@@ -74,7 +64,6 @@ $dashboard_widget_retriever = new DashboardWidgetRetriever($dashboard_widget_dao
 $router                     = new UserDashboardRouter(
     new UserDashboardController(
         $csrf_token,
-        $title,
         new UserDashboardRetriever($user_dashboard_dao),
         new UserDashboardSaver($user_dashboard_dao),
         new UserDashboardDeletor($user_dashboard_dao),

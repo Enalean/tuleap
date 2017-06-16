@@ -20,6 +20,7 @@
 
 namespace Tuleap\Dashboard\Project;
 
+use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
@@ -143,10 +144,11 @@ class ProjectDashboardController
             }
         }
 
-
+        $purifier = Codendi_HTMLPurifier::instance();
+        $title    = $purifier->purify($this->getPageTitle($project_dashboards_presenter, $project));
         site_project_header(
             array(
-                'title'  => $project->getUnconvertedPublicName(),
+                'title'  => $title,
                 'group'  => $project->getID(),
                 'toptab' => 'summary'
             )
@@ -483,5 +485,21 @@ class ProjectDashboardController
         }
 
         $this->redirectToDashboard($dashboard_id);
+    }
+
+    /**
+     * @return string
+     */
+    private function getPageTitle($project_dashboards_presenter, Project $project)
+    {
+        $title = '';
+        foreach ($project_dashboards_presenter as $presenter) {
+            if ($presenter->is_active) {
+                $title = $presenter->name . ' - ';
+            }
+        }
+        $title .= $project->getUnconvertedPublicName();
+
+        return $title;
     }
 }
