@@ -2,7 +2,7 @@
     {{# has_only_one_user_dashboard }}
         <div class="btn-group">
             {{# user_dashboards_presenter }}
-                <a class="btn btn-mini" href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
+                <a class="btn btn-mini" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
                     <i class="icon-dashboard"></i> {{ my_dashboard }}
                 </a>
             {{/ user_dashboards_presenter }}
@@ -17,7 +17,7 @@
             </a>
             <ul class="dropdown-menu">
                 {{# user_dashboards_presenter }}
-                    <li><a href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">{{ getName }}</a></li>
+                    <li><a href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">{{ getName }}</a></li>
                 {{/ user_dashboards_presenter }}
             </ul>
         </div>
@@ -28,7 +28,7 @@
         {{# has_only_one_project_dashboard }}
             <div class="btn-group">
                 {{# project_dashboards_presenter }}
-                    <a class="btn btn-mini" href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
+                    <a class="btn btn-mini" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
                         <i class="icon-dashboard"></i> {{ project_dashboard }}
                     </a>
                 {{/ project_dashboards_presenter }}
@@ -43,7 +43,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     {{# project_dashboards_presenter }}
-                        <li><a href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">{{ getName }}</a></li>
+                        <li><a href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">{{ getName }}</a></li>
                     {{/ project_dashboards_presenter }}
                 </ul>
             </div>
