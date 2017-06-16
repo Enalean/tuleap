@@ -64,41 +64,6 @@
     }
 }
 
-.widget_toolbar {
-    list-style-type: none;
-    margin-left: 0;
-    padding-bottom: 6px;
-    padding-left: 1em;
-    border-bottom: 1px solid gray;
-}
-
-.widget_toolbar li a:link,
-.widget_toolbar li a:visited,
-.widget_toolbar li a:active {
-    text-decoration: none;
-}
-
-.widget_toolbar li {
-    display: inline;
-    padding-left: 1em;
-}
-
-.widget_toolbar li a:hover {
-    padding-bottom: 2px;
-    border-bottom: 4px solid gray;
-    color: gray;
-}
-
-.widget_toolbar li.current a {
-    padding-bottom: 2px;
-    border-bottom: 4px solid #333;
-    color: #333;
-}
-
-#widget-content-categ {
-    padding: 10px;
-}
-
 .add-widget-to-dashboard {
     margin: 5px 20px 0;
     color: #747474;

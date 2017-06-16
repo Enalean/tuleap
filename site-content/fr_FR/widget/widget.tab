@@ -9,8 +9,6 @@ widget	minimize_title	Minimiser
 widget	rss_title	RSS
 widget	preferences_title	Préférences
 
-widget_add	title	Ajouter des widgets
-widget_add	codendi_widgets	Widgets $1
 widget_add	external_widgets	Widgets Externes
 widget_add	add	Ajouter
 widget_add	already_used	Déjà utilisé
@@ -23,8 +21,6 @@ widget_categ_label	general	Général
 widget_categ_label	trackers	Outils de suivi
 widget_categ_label	scm	Gestion de code source
 widget_categ_label	wiki	Wiki
-
-widget_layout	title	Personnaliser la mise en page
 
 widget_dashboard	updated	Votre <a href="$1">tableau de bord</a> a été modifié.
 
