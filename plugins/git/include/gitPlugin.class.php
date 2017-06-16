@@ -301,7 +301,7 @@ class GitPlugin extends Plugin {
 
     public function burning_parrot_get_stylesheets(array $params)
     {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0) {
+        if ($this->canIncludeStylesheets()) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
         }
@@ -2263,5 +2263,12 @@ class GitPlugin extends Plugin {
             UserManager::instance(),
             new GitoliteFileLogsDao()
         );
+    }
+
+    private function canIncludeStylesheets()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/my/') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 }

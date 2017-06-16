@@ -63,7 +63,8 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return String
      */
-    public function getContent() {
+    public function getContent()
+    {
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
@@ -72,37 +73,51 @@ class Git_Widget_UserPushes extends Widget {
         $content = '';
         $project = '';
         $dh      = new DateHelper();
-        if ($result && !$result->isError()) {
+        if ($result && ! $result->isError() && $result->count() > 0) {
             foreach ($result as $entry) {
-                if (!empty($entry['repository_namespace'])) {
+                if (! empty($entry['repository_namespace'])) {
                     $namespace = $entry['repository_namespace']."/";
                 } else {
                     $namespace = '';
                 }
                 $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
-                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                     if ($project != $entry['group_name']) {
-                        if (!empty($project)) {
+                        if (! empty($project)) {
                             $content .= '</fieldset>';
                         }
                         $project = $entry['group_name'];
-                        $content .= '<fieldset>
-                                     <legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
-                                     <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_project').'">
-                                     <b>'.$project.'</b>
-                                     </span>
-                                     </legend>
-                                     <a href="'.$this->pluginPath.'/index.php?group_id='.$entry['group_id'].'">[ '.$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_details').' ]</a>';
+                        $content .= '<fieldset class="widget-last-git-pushes-project">
+                            <legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
+                            <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_project').'">
+                            <b>'.$project.'</b>
+                            </span>
+                            </legend>
+                            <div class="widget-last-git-pushes-details">
+                            <a href="'.$this->pluginPath.'/index.php?group_id='.$entry['group_id'].'">
+                                [ '.$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_details').' ]
+                            </a>
+                            </div>';
                     }
-                    $content .= '<fieldset>
-                                 <legend id="plugin_git_user_pushes_widget_repo_'.$project.$namespace.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_repo_'.$project.$namespace.$entry['repository_name']).'">
-                                 <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_repository').'">
-                                 '.$namespace.$entry['repository_name'].'
-                                 </span>
-                                 </legend>
-                                 '.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
-                    $i       = 0;
-                    $hp      = Codendi_HTMLPurifier::instance();
+                    $content .= '<fieldset class="widget-last-git-pushes-repository">
+                        <legend
+                            id="plugin_git_user_pushes_widget_repo_'.$project.$namespace.$entry['repository_name'].'"
+                            class="'.Toggler::getClassname('plugin_git_user_pushes_widget_repo_'.$project.$namespace.$entry['repository_name']).'"
+                        >
+                        <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_repository').'">
+                        '.$namespace.$entry['repository_name'].'
+                        </span>
+                        </legend>
+                        <table class="tlp-table">
+                        <thead>
+                        <tr>
+                        <th>'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_date').'</th>
+                        <th>'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_commits').'</th>
+                        </tr>
+                        </thead>
+                        <tbody>';
+                    $i   = 0;
+                    $hp  = Codendi_HTMLPurifier::instance();
                     foreach ($dar as $row) {
                         $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
                                          <td><span title="'.$dh->timeAgoInWords($row['push_date'], true).'">'.$hp->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['push_date'])).'</span></td>
@@ -113,14 +128,14 @@ class Git_Widget_UserPushes extends Widget {
                                          </td>
                                      </tr>';
                     }
-                    $content .= "</table>
+                    $content .= "</tbody></table>
                                  </fieldset>";
                 } else {
-                    $content .= $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content');
+                    $content .= '<p>'.$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content').'</p>';
                 }
             }
         } else {
-            $content = $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content');
+            $content = '<p>'.$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content').'</p>';
         }
         return $content;
     }
