@@ -22,14 +22,6 @@ $border-radius: 3px;
         font-weight: 400;
     }
 
-    &.minimized {
-        .widget_titlebar {
-            border-bottom: $border;
-            border-bottom-left-radius: $border-radius;
-            border-bottom-right-radius: $border-radius;
-        }
-    }
-
     .widget_content {
         font-size: 0.9em;
         padding: 12px;

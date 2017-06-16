@@ -875,111 +875,22 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
 
     public function displayStaticWidget(Widget_Static $widget)
     {
-        $layout_id    = null;
-        $readonly     = true;
-        $column_id    = null;
-        $is_minimized = false;
-        $owner_id     = null;
-        $owner_type   = null;
+        $owner_id            = null;
+        $owner_type          = null;
 
-        $this->widget(
-            $widget,
-            $layout_id,
-            $readonly,
-            $column_id,
-            $is_minimized,
-            $owner_id,
-            $owner_type
-        );
-    }
-
-    function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $owner_id, $owner_type)
-    {
         $purifier   = Codendi_HTMLPurifier::instance();
-        $csrf_token = new CSRFSynchronizerToken('widget_management');
         $element_id = 'widget_'. $widget->id .'-'. $widget->getInstanceId();
 
-        if ($is_minimized) {
-            echo '<div class="widget minimized" id="'. $element_id .'">';
-        } else {
-            echo '<div class="widget" id="'. $element_id .'">';
-        }
-
-        echo '<div class="widget_titlebar '. ($readonly?'':'widget_titlebar_handle') .'">';
+        echo '<div class="widget" id="'. $element_id .'">';
+        echo '<div class="widget_titlebar">';
         echo '<div class="widget_titlebar_title">'. $purifier->purify($widget->getTitle()) .'</div>';
 
-        if (!$readonly) {
-            $remove_parameters = array(
-                'owner' => $owner_type.$owner_id,
-                'action' => 'widget',
-                'name['. $widget->id .'][remove]' => $widget->getInstanceId(),
-                'column_id' => $column_id,
-                'layout_id' => $layout_id
-            );
-            echo $this->getWidgetActionButton(
-                'widget_titlebar_close',
-                'icon-remove',
-                $GLOBALS['Language']->getText('widget', 'close_title'),
-                $remove_parameters,
-                $csrf_token
-            );
-            if ($is_minimized) {
-                $maximize_parameters = array(
-                    'owner' => $owner_type.$owner_id,
-                    'action' => 'maximize',
-                    'name['. $widget->id .']' => $widget->getInstanceId(),
-                    'column_id' => $column_id,
-                    'layout_id' => $layout_id
-                );
-                echo $this->getWidgetActionButton(
-                    'widget_titlebar_maximize',
-                    'icon-caret-up',
-                    $GLOBALS['Language']->getText('widget', 'maximize_title'),
-                    $maximize_parameters,
-                    $csrf_token
-                );
-            } else {
-                $minimize_parameters = array(
-                    'owner' => $owner_type.$owner_id,
-                    'action' => 'minimize',
-                    'name['. $widget->id .']' => $widget->getInstanceId(),
-                    'column_id' => $column_id,
-                    'layout_id' => $layout_id
-                );
-                echo $this->getWidgetActionButton(
-                    'widget_titlebar_minimize',
-                    'icon-caret-down',
-                    $GLOBALS['Language']->getText('widget', 'minimize_title'),
-                    $minimize_parameters,
-                    $csrf_token
-                );
-            }
-            if (strlen($widget->getPreferences())) {
-                $preference_parameters = array(
-                    'owner' => $owner_type.$owner_id,
-                    'action' => 'preferences',
-                    'name['. $widget->id .']' => $widget->getInstanceId(),
-                    'column_id' => $column_id,
-                    'layout_id' => $layout_id
-                );
-                echo $this->getWidgetActionButton(
-                    'widget_titlebar_prefs',
-                    'icon-cog',
-                    $GLOBALS['Language']->getText('widget', 'minimize_title'),
-                    $preference_parameters,
-                    $csrf_token
-                );
-            }
-        }
         if ($widget->hasRss()) {
             echo '<div class="widget_titlebar_rss" title="'. $GLOBALS['Language']->getText('widget', 'rss_title') .'"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'" class="icon-rss"></a></div>';
         }
         echo '</div>';
-        $style = '';
-        if ($is_minimized) {
-            $style = 'display:none;';
-        }
-        echo '<div class="widget_content" style="'. $style .'">';
+        echo '<div class="widget_content">';
+
         if ($widget->isAjax()) {
             echo '<div id="'. $element_id .'-ajax">';
             echo '</div>';
@@ -1004,21 +915,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
             </script>";
         }
         echo '</div>';
-    }
-
-    /**
-     * @return string
-     */
-    private function getWidgetActionButton($class, $icon, $title, array $action_parameters, CSRFSynchronizerToken $csrf_token) {
-        $purifier       = Codendi_HTMLPurifier::instance();
-        $action_button  = '<div class="' . $purifier->purify($class) . '">';
-        $action         = '/widgets/updatelayout.php?' . http_build_query($action_parameters);
-        $action_button .= '<form method="post" action="' . $purifier->purify($action) . '">';
-        $action_button .= '<button type="submit" class="btn-link ' . $purifier->purify($icon) . '" title="'. $purifier->purify($title) .'"></button>';
-        $action_button .= $csrf_token->fetchHTMLInput();
-        $action_button .= '</form>';
-        $action_button .= '</div>';
-        return $action_button;
     }
 
     public function getDropdownPanel($id, $content) {

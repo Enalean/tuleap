@@ -30,10 +30,6 @@ msgstr "Agile Dashboard"
 msgid "Already used"
 msgstr "Déjà utilisé"
 
-msgid "An error occured while trying to add the widget to the dashboard"
-msgstr ""
-"Une erreur est survenue lors de l'ajout du widget sur le tableau de bord"
-
 msgid ""
 "An error occured with your upload. Please try again or choose another image."
 msgstr ""

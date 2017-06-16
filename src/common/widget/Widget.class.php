@@ -43,9 +43,6 @@
         return $this->id;
     }
 
-    function display($layout_id, $column_id, $readonly, $is_minimized, $owner_id, $owner_type) {
-        $GLOBALS['HTML']->widget($this, $layout_id, $readonly, $column_id, $is_minimized, $owner_id, $owner_type);
-    }
     function getTitle() {
         return '';
     }
