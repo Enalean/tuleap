@@ -37,29 +37,28 @@
                 <div class="dashboard-add-widget-list-body">
                     <table id="dashboard-add-widget-list-table" class="tlp-table">
                         <thead>
-                        <tr>
-                            <th>{{ add_widget_table_title }}</th>
-                        </tr>
+                            <tr>
+                                <th colspan="2">{{ add_widget_table_title }}</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr class="tlp-table-empty-filter">
-                            <td class="tlp-table-cell-empty">
-                                {{ add_widget_empty_search }}
-                            </td>
-                        </tr>
+                            <tr class="tlp-table-empty-filter">
+                                <td class="tlp-table-cell-empty" colspan="2">
+                                    {{ add_widget_empty_search }}
+                                </td>
+                            </tr>
                         </tbody>
                         <tbody class="dashboard-add-widget-content-container">
-                        <tr>
-                            <td class="dashboard-add-widget-content-loading"></td>
-                        </tr>
+                            <tr>
+                                <td class="dashboard-add-widget-content-loading" colspan="2"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <div id="dashboard-add-widget-error-message"></div>
             </div>
-            <div class="dashboard-add-widget-separator"></div>
             <div id="dashboard-add-widget-settings">
-                <div id="dashboard-add-widget-settings-empty" class="empty-page">
+                <div id="dashboard-add-widget-settings-empty">
                     <i class="fa fa-hand-o-left empty-page-icon" aria-hidden="true"></i>
                     <p class="empty-page-text">{{ add_widget_empty_state }}</p>
                 </div>
