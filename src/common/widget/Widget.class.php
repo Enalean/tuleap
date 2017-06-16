@@ -208,10 +208,6 @@
         );
     }
 
-    function getIframeUrl($owner_id, $owner_type) {
-        return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=iframe&name['. $this->id .']='. $this->getInstanceId();
-    }
-
     public function getContentForBurningParrot()
     {
         return $this->getContent();
