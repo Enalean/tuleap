@@ -27,7 +27,7 @@
                     {{# user_dashboards }}
                         <li>
                             <a title="{{ add_to_my_dashboard_label }}"
-                               href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
+                               href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
                                 {{ add_to_my_dashboard_label }}
                             </a>
                         </li>
@@ -39,7 +39,7 @@
                     </li>
                     {{# user_dashboards }}
                     <li>
-                        <a title="{{ getName }}" href="{{ my_dashboard_url }}&dashboard_id={{ getId }}">
+                        <a title="{{ getName }}" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
                             {{ getName }}
                         </a>
                     </li>
@@ -52,7 +52,7 @@
                     {{# project_dashboards }}
                         <li>
                             <a title="{{ add_to_project_dashboard_label }}"
-                               href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
+                               href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
                                 {{ add_to_project_dashboard_label }}
                             </a>
                         </li>
@@ -65,7 +65,7 @@
                     </li>
                     {{# project_dashboards }}
                         <li>
-                            <a title="{{ getName }}" href="{{ project_dashboard_url }}&dashboard_id={{ getId }}">
+                            <a title="{{ getName }}" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
                                 {{ getName }}
                             </a>
                         </li>

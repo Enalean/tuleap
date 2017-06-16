@@ -19,8 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
@@ -215,14 +217,13 @@ abstract class GraphOnTrackersV5_Chart {
     }
 
     protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly) {
-        $csrf_token_widget_management = new CSRFSynchronizerToken('widget_management');
         $add_to_dashboard_params      = array(
-            'action'                                      => 'widget',
-            'chart'                                       => array(
+            'action' => 'add-widget',
+            'chart'  => array(
                 'title'    => $this->getTitle(),
                 'chart_id' => $this->getId(),
-            ),
-            $csrf_token_widget_management->getTokenName() => $csrf_token_widget_management->getToken()
+            )
+
         );
 
         $url = '?'. http_build_query(array(
@@ -231,30 +232,36 @@ abstract class GraphOnTrackersV5_Chart {
             'func'     => 'renderer',
         ));
 
-        $my_dashboard_url = '/widgets/updatelayout.php?'.
-            http_build_query(array_merge(array(
-                'owner' => 'u'. $current_user->getId(),
-                'name' => array(
-                    'my_plugin_graphontrackersv5_chart' => array (
-                        'add' => 1
-                    )
+        $csrf             = new CSRFSynchronizerToken('/my/');
+        $my_dashboard_url = '/widgets/?' .
+            http_build_query(
+                array_merge(
+                    array(
+                        'dashboard-type'      => UserDashboardController::DASHBOARD_TYPE,
+                        'widget-name'         => 'my_plugin_graphontrackersv5_chart',
+                        $csrf->getTokenName() => $csrf->getToken()
+                    ),
+                    $add_to_dashboard_params
                 )
-            ), $add_to_dashboard_params)
-        );
+            );
 
         $project_dashboard_url = '';
         $project = $renderer->report->getTracker()->getProject();
         if ($project->userIsAdmin($current_user)) {
-            $project_dashboard_url = '/widgets/updatelayout.php?'.
-                http_build_query(array_merge(array(
-                    'owner' => 'g' . $project->getGroupId(),
-                    'name' => array(
-                        'project_plugin_graphontrackersv5_chart' => array (
-                            'add' => 1
-                        )
+            $csrf                  = new CSRFSynchronizerToken('/project/');
+            $project_dashboard_url = '/widgets/?' .
+                http_build_query(
+                    array_merge(
+                        array(
+                            'widget-name'         => 'project_plugin_graphontrackersv5_chart',
+                            'dashboard-type'      => ProjectDashboardController::DASHBOARD_TYPE,
+                            $csrf->getTokenName() => $csrf->getToken(),
+                            'group_id'            => $project->getID()
+
+                        ),
+                        $add_to_dashboard_params
                     )
-                ), $add_to_dashboard_params)
-            );
+                );
         }
 
         $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
