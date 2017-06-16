@@ -27,7 +27,6 @@ use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 
-require_once('DocmanConstants.class.php');
 require_once('Docman_Item.class.php');
 require_once('Docman_ItemDao.class.php');
 require_once('Docman_Folder.class.php');

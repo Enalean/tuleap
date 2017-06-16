@@ -20,9 +20,10 @@
  */
 
 /**
-* Docman_Widget_MyDocman
-*/
-class Docman_Widget_MyDocman extends Widget {
+ * Docman_Widget_MyDocman
+ */
+class Docman_Widget_MyDocman extends Widget
+{
     var $pluginPath;
 
     public function __construct($pluginPath)
@@ -34,7 +35,7 @@ class Docman_Widget_MyDocman extends Widget {
     function getTitle() {
         return $GLOBALS['Language']->getText('plugin_docman', 'my_reviews');
     }
-    
+
     function getContent() {
         $html = '';
         $html .= '<script type="text/javascript">';
@@ -57,34 +58,29 @@ class Docman_Widget_MyDocman extends Widget {
         </script>";
         $html .= $this->_getReviews(true);
         $html .= $this->_getReviews(false);
-        
+
         return $html;
     }
-    function _getReviews($reviewer = true) {
+
+    private function _getReviews($reviewer = true) {
         $hp = Codendi_HTMLPurifier::instance();
         require_once('www/my/my_utils.php');
         $html = '';
-        
+
         $content_html_id = 'plugin_docman_approval_'. ($reviewer ? 'reviewer' : 'requester');
-        $html .= '<div style="font-weight:bold;">';
-        $html .= $GLOBALS['HTML']->getImage(
-            'pointer_down.png', 
-            array(
-                'id' => $content_html_id .'_icon',
-                'onclick' => "plugin_docman_approval_toggle('$content_html_id', true)"
-            )
-        ).' ';
+        $html           .= '<div style="font-weight:bold;" class="my-document-under-review">';
+
         if ($reviewer) {
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_reviews_reviewer');
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'my_reviews_requester');
         }
         $html .= '</div>';
-        $html .= '<div id="'. $content_html_id .'" style="padding-left:20px;">';
-        
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
-        
+        $html .= '<div id="'. $content_html_id .'">';
+
+        $um   = UserManager::instance();
+        $user = $um->getCurrentUser();
+
         if($reviewer) {
             $reviewsArray = Docman_ApprovalTableReviewerFactory::getAllPendingReviewsForUser($user->getId());
         } else {
@@ -92,7 +88,7 @@ class Docman_Widget_MyDocman extends Widget {
         }
 
         if(count($reviewsArray) > 0) {
-            $request =& HTTPRequest::instance();
+            $request = HTTPRequest::instance();
             // Get hide arguments
             $hideItemId = (int) $request->get('hide_item_id');
             $hideApproval = null;
@@ -104,24 +100,29 @@ class Docman_Widget_MyDocman extends Widget {
             $hideNow = false;
             $i = 0;
 
-            $html .= '<table style="width:100%">';
-            //$html .= '<TR><TD colspan="2">Reviewer - Requester</TD></TR>';
+            $html .= '<table class="tlp-table">';
             foreach($reviewsArray as $review) {
-                if($review['group_id'] != $prevGroupId) {
-                    list($hideNow,$count_diff,$hideUrl) = 
-                        my_hide_url('plugin_docman_approval',$review['group_id'], $hideItemId, 1, $hideApproval, $request->get('dashboard_id'));
-                    $docmanUrl = $this->pluginPath.'/?group_id='.$review['group_id'];
-                    $docmanHref = '<a href="'.$docmanUrl.'">'.$review['group'].'</a>';
-                    if($prevGroupId != -1) {
-                        if($reviewer) {
-                            $colspan = 2;
-                        } else {
-                            $colspan = 3;
-                        }
-                        $html .= '<tr class="boxitem"><td colspan="'.$colspan.'">';
+                if ($review['group_id'] != $prevGroupId) {
+                    list($hideNow, $count_diff, $hideUrl) =
+                        my_hide_url(
+                            'plugin_docman_approval',
+                            $review['group_id'],
+                            $hideItemId,
+                            1,
+                            $hideApproval,
+                            $request->get('dashboard_id')
+                        );
+                    $docmanUrl = $this->pluginPath . '/?group_id=' . $review['group_id'];
+                    $docmanHref = '<a href="' . $docmanUrl . '">' . $review['group'] . '</a>';
+
+                    if ($reviewer) {
+                        $colspan = 2;
+                    } else {
+                        $colspan = 3;
                     }
-                    $html .= '<strong>'.$hideUrl.$docmanHref.'</strong></td></tr>';
-                    $i = 0;
+                    $html .= '<tr class="boxitem"><td colspan="' . $colspan . '">';
+                    $html .= '<strong>' . $hideUrl . $docmanHref . '</strong></td></tr>';
+                    $i    = 0;
                 }
 
                 if(!$hideNow) {
@@ -142,9 +143,9 @@ class Docman_Widget_MyDocman extends Widget {
                     $html .= '<td align="right">';
                     $html .= util_timestamp_to_userdateformat($review['date'], true);
                     $html .= '</td>';
-                
-                    $html .= '</tr>';
                 }
+
+                $html .= '</tr>';
 
                 $prevGroupId = $review['group_id'];
             }
@@ -174,9 +175,20 @@ class Docman_Widget_MyDocman extends Widget {
     function getCategory() {
         return 'plugin_docman';
     }
-    
+
     function getDescription() {
         return $GLOBALS['Language']->getText('plugin_docman','widget_description_my_docman');
+    }
+
+    public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
+    {
+        $request  = HTTPRequest::instance();
+        $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
+        if ($request->exist('hide_plugin_docman_approval') || $request->exist('hide_item_id')) {
+            $ajax_url .= '&hide_plugin_docman_approval=' . $request->get('hide_plugin_docman_approval') . '&hide_item_id=' . $request->get('hide_item_id');
+        }
+
+        return $ajax_url;
     }
 }
 
