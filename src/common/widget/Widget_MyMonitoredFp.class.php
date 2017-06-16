@@ -131,11 +131,13 @@ class Widget_MyMonitoredFp extends Widget {
 
     public function getAjaxUrl($owner_id, $owner_type, $dashboard_id)
     {
-        $request =& HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type, $dashboard_id);
         if ($request->exist('hide_item_id') || $request->exist('hide_frs')) {
-            $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_frs=' . $request->get('hide_frs');
+            $ajax_url .= '&hide_item_id=' . urlencode($request->get('hide_item_id')) .
+                '&hide_frs=' . urlencode($request->get('hide_frs'));
         }
+
         return $ajax_url;
     }
 }
