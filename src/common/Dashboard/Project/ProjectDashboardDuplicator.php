@@ -134,11 +134,11 @@ class ProjectDashboardDuplicator
     ) {
         foreach ($template_column->getWidgets() as $template_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($template_widget->getName());
-            $widget->setOwner($template_project->getID(), WidgetLayoutManager::OWNER_TYPE_GROUP);
+            $widget->setOwner($template_project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
             $new_content_id = $widget->cloneContent(
                 $template_widget->getContentId(),
                 $new_project->getID(),
-                WidgetLayoutManager::OWNER_TYPE_GROUP
+                ProjectDashboardController::LEGACY_DASHBOARD_TYPE
             );
 
             $this->widget_dao->duplicateWidget(

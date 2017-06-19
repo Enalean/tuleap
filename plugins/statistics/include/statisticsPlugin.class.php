@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 use Tuleap\SVN\DiskUsage\Retriever;
 use Tuleap\SVN\DiskUsage\Collector;
@@ -220,8 +221,7 @@ class StatisticsPlugin extends Plugin {
      * @return void
      */
     function widgets($params) {
-        include_once 'common/widget/WidgetLayoutManager.class.php';
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_statistics_projectstatistics';
         }
     }

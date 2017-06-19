@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
@@ -1363,7 +1364,7 @@ class GitPlugin extends Plugin {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($groupId);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
-            if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+            if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
                 $params['codendi_widgets'][] = 'plugin_git_project_pushes';
             }
         }

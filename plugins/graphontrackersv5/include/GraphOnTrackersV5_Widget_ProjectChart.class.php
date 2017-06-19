@@ -19,21 +19,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+
 require_once('GraphOnTrackersV5_Widget_Chart.class.php');
 
 /**
-* GraphOnTrackersV5_Widget_Chart
-* 
-* My Tracker Chart
-*/
-class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Chart {
-
+ * GraphOnTrackersV5_Widget_Chart
+ *
+ * My Tracker Chart
+ */
+class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Chart
+{
     public function __construct()
     {
         parent::__construct(
             'project_plugin_graphontrackersv5_chart',
             HTTPRequest::instance()->get('group_id'),
-            WidgetLayoutManager::OWNER_TYPE_GROUP);
+            ProjectDashboardController::LEGACY_DASHBOARD_TYPE
+        );
     }
 
     public function canBeUsedByProject(&$project)

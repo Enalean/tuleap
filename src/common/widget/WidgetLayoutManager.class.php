@@ -29,7 +29,6 @@ use Tuleap\Widget\WidgetFactory;
 
 class WidgetLayoutManager
 {
-    const OWNER_TYPE_GROUP = 'g';
     const OWNER_TYPE_HOME  = 'h';
 
     /**

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 
 require_once('common/widget/Widget.class.php');
@@ -52,13 +53,21 @@ abstract class HudsonWidget extends Widget {
 
         return $this->getHudsonJobFactory()->getAvailableJobs($this->owner_type, $owner_id);
     }
-    
-    protected function getJobsByGroup($group_id) {
-        return $this->getHudsonJobFactory()->getAvailableJobs(WidgetLayoutManager::OWNER_TYPE_GROUP, $group_id);
+
+    protected function getJobsByGroup($group_id)
+    {
+        return $this->getHudsonJobFactory()->getAvailableJobs(
+            ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
+            $group_id
+        );
     }
-    
-    protected function getJobsByUser($user_id) {
-        return $this->getHudsonJobFactory()->getAvailableJobs(WidgetLayoutManager::OWNER_TYPE_GROUP, $user_id);
+
+    protected function getJobsByUser($user_id)
+    {
+        return $this->getHudsonJobFactory()->getAvailableJobs(
+            ProjectDashboardController::LEGACY_DASHBOARD_TYPE,
+            $user_id
+        );
     }
 
     protected function getHudsonJobFactory() {
@@ -85,7 +94,7 @@ abstract class HudsonWidget extends Widget {
         $jobs = $this->getAvailableJobs();
         if (count($jobs) <= 0) {
             // no hudson jobs available
-            if ($this->owner_type == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+            if ($this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
                 return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) . '</span>';
             } else {
                 return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>';

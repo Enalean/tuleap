@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+
 require_once('HudsonOverviewWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
@@ -32,34 +34,33 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
     var $group_id;
 
     /**
-     * Constructor
-     *
-     * @param Int              $group_id   The owner id
-     * @param hudsonPlugin     $plugin     The plugin
-     * @param HudsonJobFactory $factory    The HudsonJob factory
+     * @param Int              $group_id The owner id
+     * @param hudsonPlugin     $plugin The plugin
+     * @param HudsonJobFactory $factory The HudsonJob factory
      *
      * @return void
      */
-    public function __construct($group_id, hudsonPlugin $plugin, HudsonJobFactory $factory) {
+    public function __construct($group_id, hudsonPlugin $plugin, HudsonJobFactory $factory)
+    {
         parent::__construct('plugin_hudson_project_jobsoverview', $factory);
-        $this->setOwner($group_id, WidgetLayoutManager::OWNER_TYPE_GROUP);
+        $this->setOwner($group_id, ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         $this->plugin = $plugin;
 
-        $request = HTTPRequest::instance();
+        $request        = HTTPRequest::instance();
         $this->group_id = $request->get('group_id');
 
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_hudson', 'project_jobs');
     }
 
-    function getDescription() {
+    public function getDescription() {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_jobsoverview');
     }
 
-    function getContent() {
+    public function getContent() {
         $purifier = Codendi_HTMLPurifier::instance();
         $jobs     = $this->getJobsByGroup($this->group_id);
         $html     = '';

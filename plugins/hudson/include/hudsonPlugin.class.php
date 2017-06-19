@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 
 require_once 'autoload.php';
@@ -160,23 +161,23 @@ class hudsonPlugin extends Plugin
         }
         if ($params['widget'] == 'plugin_hudson_project_joblastbuilds') {
             require_once('hudson_Widget_JobLastBuilds.class.php');
-            $params['instance'] = new hudson_Widget_JobLastBuilds(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
+            $params['instance'] = new hudson_Widget_JobLastBuilds(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobtestresults') {
             require_once('hudson_Widget_JobTestResults.class.php');
-            $params['instance'] = new hudson_Widget_JobTestResults(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
+            $params['instance'] = new hudson_Widget_JobTestResults(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobtesttrend') {
             require_once('hudson_Widget_JobTestTrend.class.php');
-            $params['instance'] = new hudson_Widget_JobTestTrend(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
+            $params['instance'] = new hudson_Widget_JobTestTrend(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobbuildhistory') {
             require_once('hudson_Widget_JobBuildHistory.class.php');
-            $params['instance'] = new hudson_Widget_JobBuildHistory(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
+            $params['instance'] = new hudson_Widget_JobBuildHistory(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_joblastartifacts') {
             require_once('hudson_Widget_JobLastArtifacts.class.php');
-            $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_GROUP, $request->get('group_id'), $hf);
+            $params['instance'] = new hudson_Widget_JobLastArtifacts(ProjectDashboardController::LEGACY_DASHBOARD_TYPE, $request->get('group_id'), $hf);
         }
     }
 
@@ -191,7 +192,7 @@ class hudsonPlugin extends Plugin
             $params['codendi_widgets'][] = 'plugin_hudson_my_jobbuildhistory';
             $params['codendi_widgets'][] = 'plugin_hudson_my_joblastartifacts';
         }
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_hudson_project_jobsoverview';
             $params['codendi_widgets'][] = 'plugin_hudson_project_joblastbuilds';
             $params['codendi_widgets'][] = 'plugin_hudson_project_jobtestresults';

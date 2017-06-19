@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+
 require_once('common/dao/SvnCommitsDao.class.php');
 require_once('common/chart/Chart.class.php');
 require_once('common/chart/ErrorChart.class.php');
@@ -28,12 +30,16 @@ require_once('common/widget/Widget_ProjectSvnStats_Layout.class.php');
 
 class Widget_ProjectSvnStats extends Widget
 {
-    function __construct() {
+    public function __construct()
+    {
         parent::__construct('projectsvnstats');
     }
-    function getTitle() {
+
+    public function getTitle()
+    {
         return $GLOBALS['Language']->getText('svn_widget', 'svnstats');
     }
+
     function canBeUsedByProject($project) {
         return $project->usesSvn();
     }
@@ -41,13 +47,13 @@ class Widget_ProjectSvnStats extends Widget
         return 'scm';
     }
 
-    function getContent()
+    public function getContent()
     {
         $request = HTTPRequest::instance();
 
         return '<div style="text-align:center">
                 <img src="/widgets/?action=process-widget&widget_id=' . $this->id .
-            '&owner=' . WidgetLayoutManager::OWNER_TYPE_GROUP . ($request->get('group_id')) .
+            '&owner=' . ProjectDashboardController::LEGACY_DASHBOARD_TYPE . ($request->get('group_id')) .
             '&name[' . $this->id . ']=' . $this->getInstanceId() . '" />
                 </div>';
     }
@@ -146,9 +152,9 @@ class Widget_ProjectSvnStats extends Widget
     protected function sortByTop($a, $b) {
         return strnatcasecmp($this->tmp_nb_of_commit[$a], $this->tmp_nb_of_commit[$b]);
     }
-    
-    function getDescription() {
+
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('widget_description_project_svn_stats','description');
     }
 }
-?>

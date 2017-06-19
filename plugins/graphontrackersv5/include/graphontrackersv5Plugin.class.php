@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
 
@@ -240,7 +241,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
             case UserDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = 'my_plugin_graphontrackersv5_chart';
                 break;
-            case WidgetLayoutManager::OWNER_TYPE_GROUP:
+            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = 'project_plugin_graphontrackersv5_chart';
                 break;
             default:
