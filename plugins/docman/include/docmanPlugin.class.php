@@ -296,7 +296,7 @@ class DocmanPlugin extends Plugin
     function service_public_areas($params) {
         if ($params['project']->usesService($this->getServiceShortname())) {
             $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['project']->getId() .'">' .
-                '<img src="'. $this->getThemePath() .'/images/ic/text.png" />&nbsp;' .
+                '<i class="tuleap-services-angle-double-right tuleap-services-docman tuleap-services-widget"></i>' .
                 $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
                 $GLOBALS['Language']->getText('plugin_docman', 'title') .
                 '</a>';

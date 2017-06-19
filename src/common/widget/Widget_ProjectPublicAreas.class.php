@@ -48,19 +48,16 @@ class Widget_ProjectPublicAreas extends Widget {
                 $html .= 'target="_blank" rel="noreferrer" ';
             }
             $html .= 'href="' . $project->getHomePage() . '">';
-            $html .= $GLOBALS['HTML']->getImage(
-                "ic/home16b.png",
-                array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','homepage'))
-            );
-            $html .= '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','proj_home').'</a></p>';
+            $html .= '<i class="tuleap-services-homepage tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home','proj_home').'</a></p>';
         }
 
         // ################## forums
 
         if ($project->usesForum()) {
             $html .= '<p><a href="'.$project->getForumPage().'">';
-            $html .= $GLOBALS['HTML']->getImage("ic/notes16.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','public_forums')));
-            $html .= '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
+            $html .= '<i class="tuleap-services-forum tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home','public_forums').'</A>';
 
             $res_count = db_query("SELECT count(forum.msg_id) AS count FROM forum,forum_group_list WHERE "
                 . "forum_group_list.group_id=" . db_ei($group_id) . " AND forum.group_forum_id=forum_group_list.group_forum_id "
@@ -81,16 +78,16 @@ class Widget_ProjectPublicAreas extends Widget {
 
         if ($project->usesDocman()) {
             $html .= '<p><a href="/docman/?group_id='.$group_id.'">';
-            $html .= $GLOBALS['HTML']->getImage("ic/docman16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','doc')));
-            $html .= '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','doc_man').'</a></p>';
+            $html .= '<i class="tuleap-services-angle-double-right tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home','doc_man').'</a></p>';
         }
 
         // ##################### Mailing lists (only for Active)
 
         if ($project->usesMail()) {
             $html .= '<p><a href="'.$project->getMailPage().'">';
-            $html .= $GLOBALS['HTML']->getImage("ic/mail16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','mail_lists')));
-            $html .= '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
+            $html .= '<i class="tuleap-services-mail tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home','mail_lists').'</A>';
             $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=" . db_ei($group_id) . " AND is_public=1");
             $row_count = db_fetch_array($res_count);
             $html .= ' ( '.$GLOBALS['Language']->getText('include_project_home','public_mail_lists',$row_count['count']).' )</p>';
@@ -100,8 +97,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         if ($project->usesWiki()) {
             $html .= '<p><a href="'.$project->getWikiPage().'">';
-            $html .= $GLOBALS['HTML']->getImage("ic/wiki.png",array('width'=>'18', 'height'=>'12', 'alt'=>$GLOBALS['Language']->getText('include_project_home','wiki')));
-            $html .= ' '.$GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
+            $html .= '<i class="tuleap-services-wiki tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home','wiki').'</A>';
                 $wiki=new Wiki($group_id);
             $pos = strpos($project->getWikiPage(), '/wiki/');
             if ($pos === 0) {
@@ -114,8 +111,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         if ($project->usesCVS()) {
             $html .= '<p><a href="' . $project->getCvsPage() . '">';
-            $html .= $GLOBALS['HTML']->getImage("ic/cvs16b.png", array('width' => '20', 'height' => '20', 'alt' => 'CVS'));
-            $html .= ' ' . $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
+            $html .= '<i class="tuleap-services-cvs tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'cvs_repo') . '</a>';
             // LJ Cvs checkouts added
             $sql = "SELECT SUM(cvs_commits) AS commits, SUM(cvs_adds) AS adds, SUM(cvs_checkouts) AS checkouts from stats_project where group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
@@ -142,8 +139,8 @@ class Widget_ProjectPublicAreas extends Widget {
 
         if ($project->usesService('svn')) {
             $html .= '<p><a href="' . $project->getSvnPage() . '">';
-            $html .= $GLOBALS['HTML']->getImage("ic/svn16b.png", array('width' => '20', 'height' => '20', 'alt' => 'Subversion'));
-            $html .= ' ' . $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
+            $html .= '<i class="tuleap-services-svn tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home', 'svn_repo') . '</a>';
             $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
             $svn_accesses = db_result($result, 0, 0);
@@ -167,8 +164,8 @@ class Widget_ProjectPublicAreas extends Widget {
         // ######################### Trackers (only for Active)
         if ( $project->usesTracker() ) {
             $html .= '<p><a href="'.$project->getTrackerPage().'">';
-            $html .= $GLOBALS['HTML']->getImage("ic/tracker20w.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','trackers')));
-            $html .= ' '.$GLOBALS['Language']->getText('include_project_home','trackers').'</a>';
+            $html .= '<i class="tuleap-services-tracker tuleap-services-widget"></i>';
+            $html .= $GLOBALS['Language']->getText('include_project_home','trackers').'</a>';
             //
             //  get the Group object
             //
@@ -214,7 +211,7 @@ class Widget_ProjectPublicAreas extends Widget {
             	$ftp_subdomain = $project->getUnixName() . ".";
             }
             $html .= "<a href=\"ftp://" . $ftp_subdomain . $host ."/pub/". $project->getUnixName(false) ."/\">";    // keep the first occurence in lower case
-            $html .= $GLOBALS['HTML']->getImage("ic/ftp16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','anon_ftp_space')));
+            $html .= '<i class="tuleap-services-ftp tuleap-services-widget"></i>';
             $html .= $GLOBALS['Language']->getText('include_project_home','anon_ftp_space').'</a>';
             $html .= '</p>';
         }

@@ -735,8 +735,8 @@ class trackerPlugin extends Plugin {
                 if ($entries) {
                     $area = '';
                     $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. $params['project']->getGroupId() .'">';
-                    $area .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png');
-                    $area .= ' '. $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
+                    $area .= '<i class="tuleap-services-angle-double-right tuleap-services-plugin_tracker tuleap-services-widget"></i>';
+                    $area .= $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
                     $area .= '</a>';
 
                     $area .= '<ul><li>'. implode('</li><li>', $entries) .'</li></ul>';

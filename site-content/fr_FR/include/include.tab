@@ -246,7 +246,6 @@ include_project_home	browse_cvs	Parcourir l'arbre CVS
 include_project_home	svn_repo	Dépôt Subversion
 include_project_home	browse_svn	Parcourir l'arbre Subversion
 include_project_home	accesses	<B>$1</B> accès
-include_project_home	files	Fichiers
 include_project_home	file_releases	Fichiers publiés
 include_project_home	packages	<B>$1</B> paquet(s)
 include_project_home	trackers	Outils de suivi
