@@ -77,14 +77,15 @@ class AddWidgetController
         $dashboard_id   = $request->get('dashboard-id');
         $dashboard_type = $request->get('dashboard-type');
         $name           = $request->get('widget-name');
-        $used_widgets   = $this->getUsedWidgets($dashboard_id, $dashboard_type);
 
         $this->checkCSRF($dashboard_type);
 
         try {
             $this->checkThatDashboardBelongsToTheOwner($request, $dashboard_type, $dashboard_id);
             $widget = $this->factory->getInstanceByWidgetName($name);
-            if (! $widget->isUnique() || $widget->isUnique() && ! in_array($widget, $used_widgets)) {
+
+
+            if (! $widget->isUnique() || ! $this->isUniqueWidgetAlreadyAddedInDashboard($widget, $dashboard_id, $dashboard_type)) {
                 $this->creator->create(
                     $this->getOwnerIdByDashboardType($request, $dashboard_type),
                     $this->getOwnerTypeByDashboardType($dashboard_type),
@@ -105,6 +106,13 @@ class AddWidgetController
             );
         }
         $this->redirectToDashboard($request, $dashboard_id, $dashboard_type);
+    }
+
+    private function isUniqueWidgetAlreadyAddedInDashboard(Widget $widget, $dashboard_id, $dashboard_type)
+    {
+        $used_widgets = $this->getUsedWidgets($dashboard_id, $dashboard_type);
+
+        return in_array($widget->getId(), $used_widgets);
     }
 
     private function displayWidgetEntries(
