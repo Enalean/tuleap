@@ -244,7 +244,6 @@ class ProjectLinksPlugin extends Plugin {
                 ), (is_null($link_type_id)?
                 NULL:"link_type_id=$link_type_id"))
                 ) {
-                    $this->addWidgetOnSummaryPage($group_id);
                     $feedback .= ' '.$Language->getText('plugin_plinks',
                     'update_ok').' ';
                 } else {
@@ -859,7 +858,6 @@ class ProjectLinksPlugin extends Plugin {
             }
 
             if (update_database("plugin_projectlinks_relationship", $updates, is_null($link_id)?"":"link_id=$link_id")) {
-                $this->addWidgetOnSummaryPage($target_group_id);
                 $feedback = $Language->getText('plugin_plinks', 'update_ok_named', $targetProject->getPublicName()).' ';
             } else {
                 $feedback = $Language->getText('plugin_plinks', 'update_failed_named', array(db_error(), $targetProject->getPublicName()));
@@ -1017,34 +1015,6 @@ class ProjectLinksPlugin extends Plugin {
     public function uninstall()
     {
         $this->removeOrphanWidgets(array('projectlinkshomepage'));
-    }
-
-    private function getAddWidgetController()
-    {
-        $widget_factory = new WidgetFactory(
-            UserManager::instance(),
-            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            EventManager::instance()
-        );
-
-        $dao = new DashboardWidgetDao($widget_factory);
-
-        return new AddWidgetController(
-            $dao,
-            $widget_factory,
-            new WidgetCreator(new DashboardWidgetDao($widget_factory))
-        );
-    }
-
-    /**
-     * @param Integer $groupId Project id on which the widget is to add
-     *
-     * @return void
-     */
-    public function addWidgetOnSummaryPage($groupId)
-    {
-        $request = HTTPRequest::instance();
-        $this->getAddWidgetController()->create($request);
     }
 
     /**
