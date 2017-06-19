@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS plugin_git_post_receive_mail;
-DROP TABLE IF EXISTS plugin_git_post_receive_notification_user;
+DROP TABLE IF EXISTS plugin_git_post_receive_notification_user;
 DROP TABLE IF EXISTS plugin_git_post_receive_notification_ugroup;
 DROP TABLE IF EXISTS plugin_git_log;
 DROP TABLE IF EXISTS plugin_git_ci;
@@ -25,10 +25,10 @@ DROP TABLE IF EXISTS plugin_git_repository_fine_grained_regexp_enabled;
 DROP TABLE IF EXISTS plugin_git_default_fine_grained_regexp_enabled;
 DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers;
 DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers_allowed_projects;
+DROP TABLE IF EXISTS plugin_git_global_parameters;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;
 DELETE FROM reference WHERE id=30;
 
 DELETE FROM permissions_values WHERE permission_type IN ('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS', 'PLUGIN_GIT_ADMIN');
-
