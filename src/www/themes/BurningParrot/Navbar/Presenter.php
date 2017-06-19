@@ -43,6 +43,7 @@ class Presenter
     public $community_presenter;
 
     public $is_search_and_user_nav_displayed;
+    public $homepage_label;
 
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,
@@ -59,6 +60,7 @@ class Presenter
         $this->page_detector                    = $page_detector;
         $this->is_search_and_user_nav_displayed = (! $this->hideSearchAndUserNav());
         $this->community_presenter              = $community_presenter;
+        $this->homepage_label                   = _('Homepage');
     }
 
     private function hideSearchAndUserNav()
