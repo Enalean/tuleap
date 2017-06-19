@@ -50,6 +50,7 @@ class AdminScrumPresenter {
     private $planning_hierarchy = array();
     private $can_create_planning;
     private $additional_panes;
+    private $additional_content;
 
     public function __construct(
         array $plannings,
@@ -63,7 +64,8 @@ class AdminScrumPresenter {
         array $additional_panes,
         $can_scrum_mono_milestone_be_enabled,
         $use_mono_milestone,
-        $does_configuration_allows_planning_creation
+        $does_configuration_allows_planning_creation,
+        $additional_content
     ) {
         $this->plannings                                   = $plannings;
         $this->group_id                                    = $group_id;
@@ -76,6 +78,7 @@ class AdminScrumPresenter {
         $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
         $this->use_mono_milestone                          = $use_mono_milestone;
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
+        $this->additional_content                          = $additional_content;
 
         $this->cannot_create_planning_in_scrum_v2          = $GLOBALS['Language']->getText(
             'plugin_agiledashboard',
@@ -219,5 +222,10 @@ class AdminScrumPresenter {
     public function scrum_monomilestone_title()
     {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','scrum_monomilestone_title');
+    }
+
+    public function additional_content()
+    {
+        return $this->additional_content;
     }
 }

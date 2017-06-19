@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\AdminAdditionalPanePresenter;
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -64,6 +65,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
      * @var ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
+    /** @var EventManager */
+    private $event_manager;
 
     public function __construct(
         Codendi_Request                     $request,
@@ -74,7 +77,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         TrackerFactory                      $tracker_factory,
         AgileDashboard_PermissionsManager   $permissions_manager,
         AgileDashboard_HierarchyChecker     $hierarchy_checker,
-        ScrumForMonoMilestoneChecker        $scrum_mono_milestone_checker
+        ScrumForMonoMilestoneChecker        $scrum_mono_milestone_checker,
+        EventManager                        $event_manager
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -87,6 +91,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $this->permissions_manager          = $permissions_manager;
         $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
+        $this->event_manager                = $event_manager;
     }
 
     /**
@@ -155,7 +160,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $this->getAdditionalPanesAdmin(),
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
             $this->isScrumMonoMilestoneEnable($group_id),
-            $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning)
+            $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
+            $this->getAdditionalContent()
         );
     }
 
@@ -213,6 +219,14 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         }
 
         return $panes;
+    }
+
+    public function getAdditionalContent()
+    {
+        $event = new GetAdditionalScrumAdminPaneContent();
+        $this->event_manager->processEvent($event);
+
+        return $event->getAdditionalContent();
     }
 
     private function getPlanningAdminPresenterList(PFUser $user, $group_id, $root_planning_name) {
