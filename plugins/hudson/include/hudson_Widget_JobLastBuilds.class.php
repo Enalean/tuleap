@@ -19,12 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+use Tuleap\Dashboard\User\UserDashboardController;
+
 class hudson_Widget_JobLastBuilds extends HudsonJobWidget
 {
 
     /**
-     * Constructor
-     *
      * @param String           $owner_type The owner type
      * @param Int              $owner_id   The owner id
      * @param HudsonJobFactory $factory    The HudsonJob factory
@@ -34,12 +35,12 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget
     public function __construct($owner_type, $owner_id, HudsonJobFactory $factory)
     {
         $request = HTTPRequest::instance();
-        if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
+        if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_joblastbuilds';
-            $this->group_id = $owner_id;
+            $this->group_id  = $owner_id;
         } else {
             $this->widget_id = 'plugin_hudson_project_joblastbuilds';
-            $this->group_id = $request->get('group_id');
+            $this->group_id  = $request->get('group_id');
         }
         parent::__construct($this->widget_id, $factory);
 

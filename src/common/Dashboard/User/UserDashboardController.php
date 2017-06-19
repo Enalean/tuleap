@@ -37,7 +37,9 @@ use Tuleap\Layout\IncludeAssets;
 
 class UserDashboardController
 {
-    const DASHBOARD_TYPE = 'user';
+    const DASHBOARD_TYPE        = 'user';
+    const LEGACY_DASHBOARD_TYPE = 'u';
+
     /**
      * @var CSRFSynchronizerToken
      */

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Tuleap, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet & Dave Kibble, 2007
  *
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Dashboard\User\UserDashboardController;
 
 /**
  * AdminDelegationPlugin
@@ -151,7 +153,7 @@ class AdminDelegationPlugin extends Plugin {
      */
     public function widgets($params) {
         include_once 'common/widget/WidgetLayoutManager.class.php';
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             if ($this->_userCanViewWidget('admindelegation')) {
                 include_once 'AdminDelegation_UserWidget.class.php';
                 $params['codendi_widgets'][] = 'admindelegation';

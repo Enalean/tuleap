@@ -17,11 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Project\Admin\TemplatePresenter;
+use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
-use Tuleap\Tracker\FormElement\BurndownCalculator;
+use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
+use Tuleap\Tracker\FormElement\BurndownCalculator;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
@@ -29,8 +32,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
-use Tuleap\Project\XML\Export\NoArchive;
-use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -683,9 +684,10 @@ class trackerPlugin extends Plugin {
      *
      * @param Array $params
      */
-    public function widgets($params) {
+    public function widgets($params)
+    {
         switch ($params['owner_type']) {
-            case WidgetLayoutManager::OWNER_TYPE_USER:
+            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = Tracker_Widget_MyArtifacts::ID;
                 $params['codendi_widgets'][] = Tracker_Widget_MyRenderer::ID;
                 break;
@@ -705,9 +707,10 @@ class trackerPlugin extends Plugin {
         ));
     }
 
-    public function default_widgets_for_new_owner($params) {
+    public function default_widgets_for_new_owner($params)
+    {
         switch ($params['owner_type']) {
-            case WidgetLayoutManager::OWNER_TYPE_USER:
+            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['widgets'][] = array(
                     'name'   => Tracker_Widget_MyArtifacts::ID,
                     'column' => '2',

@@ -22,13 +22,14 @@ namespace Tuleap\Dashboard\Widget;
 
 use DataAccess;
 use DataAccessObject;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Widget\WidgetFactory;
 
 class DashboardWidgetDao extends DataAccessObject
 {
     private $legacy_types_to_new_types = array(
         \WidgetLayoutManager::OWNER_TYPE_GROUP => 'project',
-        \WidgetLayoutManager::OWNER_TYPE_USER  => 'user'
+        UserDashboardController::LEGACY_DASHBOARD_TYPE  => 'user'
     );
 
     /**

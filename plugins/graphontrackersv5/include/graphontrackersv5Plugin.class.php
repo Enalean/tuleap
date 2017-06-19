@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
 
 require_once('common/plugin/Plugin.class.php');
@@ -232,10 +233,11 @@ class GraphOnTrackersV5Plugin extends Plugin {
      * @param (in/out) array 'codendi_widgets' => a collection of 'internal' widget names
      * @param (in/out) array 'external_widgets' => the same but external
      */
-    public function widgets($params) {
+    public function widgets($params)
+    {
         require_once('common/widget/WidgetLayoutManager.class.php');
         switch ($params['owner_type']) {
-            case WidgetLayoutManager::OWNER_TYPE_USER:
+            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = 'my_plugin_graphontrackersv5_chart';
                 break;
             case WidgetLayoutManager::OWNER_TYPE_GROUP:

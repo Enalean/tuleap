@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Tuleap, 2017. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -29,7 +30,9 @@ require_once('WidgetLayoutManager.class.php');
 */
 class Widget_MyImageViewer extends Widget_ImageViewer {
     function __construct() {
-        parent::__construct('myimageviewer', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
+        parent::__construct(
+            'myimageviewer', user_getid(),
+            \Tuleap\Dashboard\User\UserDashboardController::LEGACY_DASHBOARD_TYPE
+        );
     }
 }
-?>

@@ -20,30 +20,32 @@
  */
 
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
 require_once('HudsonOverviewWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
+class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
+{
 
     var $plugin;
 
     var $_not_monitored_jobs;
 
     /**
-     * Constructor
-     *
      * @param Int              $user_id    The owner id
      * @param hudsonPlugin     $plugin     The plugin
      * @param HudsonJobFactory $factory    The HudsonJob factory
      *
      * @return void
      */
-    function __construct($user_id, hudsonPlugin $plugin, HudsonJobFactory $factory) {
+    public function __construct($user_id, hudsonPlugin $plugin, HudsonJobFactory $factory)
+    {
         parent::__construct('plugin_hudson_my_jobs', $factory);
-        $this->setOwner($user_id, WidgetLayoutManager::OWNER_TYPE_USER);
+        $this->setOwner($user_id, UserDashboardController::LEGACY_DASHBOARD_TYPE);
         $this->plugin = $plugin;
 
         $this->_not_monitored_jobs = user_get_preference('plugin_hudson_my_not_monitored_jobs');
@@ -73,12 +75,13 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         }
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_hudson', 'my_jobs');
     }
 
-    function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_myjobs');
     }
 
@@ -163,7 +166,8 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         return $prefs;
     }
 
-    function getContent() {
+    public function getContent()
+    {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
 
@@ -229,5 +233,3 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         return $monitored_jobs;
     }
 }
-
-?>

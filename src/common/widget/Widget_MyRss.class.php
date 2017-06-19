@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
 require_once('Widget_Rss.class.php');
 require_once('WidgetLayoutManager.class.php');
 
@@ -34,7 +36,7 @@ class Widget_MyRss extends Widget_Rss
         parent::__construct(
             'myrss',
             user_getid(),
-            WidgetLayoutManager::OWNER_TYPE_USER
+            UserDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }
     

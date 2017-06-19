@@ -180,7 +180,7 @@ class AddWidgetController
     private function getOwnerTypeByDashboardType($dashboard_type)
     {
         $owner_type = $dashboard_type === UserDashboardController::DASHBOARD_TYPE ?
-            WidgetLayoutManager::OWNER_TYPE_USER :
+            UserDashboardController::LEGACY_DASHBOARD_TYPE :
             WidgetLayoutManager::OWNER_TYPE_GROUP;
         return $owner_type;
     }

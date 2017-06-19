@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
 /**
 * Widget
 */
@@ -126,7 +128,7 @@
 
     public static function getWidgetsForOwnerType($owner_type) {
         switch ($owner_type) {
-            case WidgetLayoutManager::OWNER_TYPE_USER:
+            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
                 $widgets = array('myadmin', 'myprojects', 'mybookmarks',
                     'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
                     'mytasks', 'mysrs', 'myimageviewer',

@@ -24,6 +24,8 @@
  *
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -347,9 +349,11 @@ class DocmanPlugin extends Plugin
                 break;
         }
     }
-    function widgets($params) {
+
+    public function widgets($params)
+    {
         require_once('common/widget/WidgetLayoutManager.class.php');
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_docman_mydocman';
             $params['codendi_widgets'][] = 'plugin_docman_mydocman_search';
             $params['codendi_widgets'][] = 'plugin_docman_my_embedded';
@@ -369,16 +373,18 @@ class DocmanPlugin extends Plugin
         ));
     }
 
-    function default_widgets_for_new_owner($params) {
+    function default_widgets_for_new_owner($params)
+    {
         require_once('common/widget/WidgetLayoutManager.class.php');
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['widgets'][] = array(
-                'name' => 'plugin_docman_mydocman',
+                'name'   => 'plugin_docman_mydocman',
                 'column' => 1,
-                'rank' => 2,
+                'rank'   => 2,
             );
         }
     }
+
     /**
      * Hook: called by daily codendi script.
      */
