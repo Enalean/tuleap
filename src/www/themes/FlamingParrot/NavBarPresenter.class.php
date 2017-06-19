@@ -25,6 +25,7 @@ class FlamingParrot_NavBarPresenter
     public $empty_history;
     public $error_fetch;
     public $error_clear;
+    public $homepage_label;
 
     private $imgroot;
 
@@ -127,8 +128,9 @@ class FlamingParrot_NavBarPresenter
         $this->history         = _('History');
         $this->clear_history   = _('Clear history');
         $this->empty_history   = _('Your history is empty');
-        $this->error_fetch     = _('An error occured while fetching the content of your history');
-        $this->error_clear     = _('An error occured while clearing the content of your history');
+        $this->error_fetch     = _('An error occurred while fetching the content of your history');
+        $this->error_clear     = _('An error occurred while clearing the content of your history');
+        $this->homepage_label  = _('Homepage');
     }
 
     public function imgroot() {
