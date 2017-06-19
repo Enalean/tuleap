@@ -16,8 +16,6 @@ widget	minimize_title	Minimize
 widget	rss_title	RSS
 widget	preferences_title	Preferences
 
-widget_add	external_widgets	External Widgets
-widget_add	add	Add
 widget_add	already_used	Already used
 
 widget_imageviewer	invalid_url	Only http:// and https:// URLs are accepted.

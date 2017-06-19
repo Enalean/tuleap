@@ -454,30 +454,6 @@ a img {
     width: 50em;
 }
 
-/* Widgets Preview */
-.widget-preview-plugin_docman_mydocman-fr_FR {
-    background-image: url('../images/widget-preview-my_documents_under_review-fr_FR.png');
-}
-
-.widget-preview-plugin_docman_mydocman-en_US {
-    background-image: url('../images/widget-preview-my_documents_under_review-en_US.png');
-}
-
-.widget-preview-plugin_docman_my_embedded-fr_FR,
-.widget-preview-plugin_docman_my_embedded-en_US,
-.widget-preview-plugin_docman_project_embedded-fr_FR,
-.widget-preview-plugin_docman_project_embedded-en_US {
-    background-image: url('../images/widget-preview-viewer.png');
-}
-
-.widget-preview-plugin_docman_mydocman_search-fr_FR {
-    background-image: url('../images/widget-preview-my_docman_search-fr_FR.png');
-}
-
-.widget-preview-plugin_docman_mydocman_search-en_US {
-    background-image: url('../images/widget-preview-my_docman_search-en_US.png');
-}
-
 .docman_embedded_file_content {
     clear: both; /* be careful with this */
 }
