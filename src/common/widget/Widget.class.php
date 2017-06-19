@@ -183,14 +183,21 @@
     {
         $request = HTTPRequest::instance();
 
+        $additional_parameters = array();
+        if ($owner_type === WidgetLayoutManager::OWNER_TYPE_GROUP) {
+            $additional_parameters = array('group_id' => $owner_id);
+        }
+
         return $request->getServerUrl(). '/widgets/?'.http_build_query(
-            array(
-                'dashboard_id' => $dashboard_id,
-                'owner'        => $owner_type.$owner_id,
-                'action'       => 'ajax',
-                'name'         => array(
-                    $this->id => $this->getInstanceId()
-                )
+            array_merge(
+                array(
+                    'dashboard_id' => $dashboard_id,
+                    'action'       => 'ajax',
+                    'name'         => array(
+                        $this->id => $this->getInstanceId()
+                    )
+                ),
+                $additional_parameters
             )
         );
     }
