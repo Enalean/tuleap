@@ -696,6 +696,15 @@ class trackerPlugin extends Plugin {
         }
     }
 
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array(
+            Tracker_Widget_MyArtifacts::ID,
+            Tracker_Widget_MyRenderer::ID,
+            Tracker_Widget_ProjectRenderer::ID
+        ));
+    }
+
     public function default_widgets_for_new_owner($params) {
         switch ($params['owner_type']) {
             case WidgetLayoutManager::OWNER_TYPE_USER:

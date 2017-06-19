@@ -1,7 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
  define("IM_DEBUG_ON",true,true);
  define("IM_DEBUG_OFF",false,true);
 require_once('common/plugin/Plugin.class.php');
@@ -622,18 +639,24 @@ class IMPlugin extends Plugin {
         return $presence . $hp->purify($user_helper->getDisplayName($user_name, $realname));
     }
 
-        function myPageBox($params) {
-            if ($params['widget'] == 'plugin_im_myroster') {
-                require_once('IM_Widget_MyRoster.class.php');
-                $params['instance'] = new IM_Widget_MyRoster($this);
-            }
+    function myPageBox($params) {
+        if ($params['widget'] == 'plugin_im_myroster') {
+            require_once('IM_Widget_MyRoster.class.php');
+            $params['instance'] = new IM_Widget_MyRoster($this);
         }
-        function widgets($params) {
-            require_once('common/widget/WidgetLayoutManager.class.php');
-            if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
-                $params['codendi_widgets'][] = 'plugin_im_myroster';
-            }
+    }
+
+    function widgets($params) {
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+            $params['codendi_widgets'][] = 'plugin_im_myroster';
         }
+    }
+
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array('plugin_im_myroster'));
+    }
 
         function user_preferences_appearance($params) {
             $input = '<label class="checkbox" for="plugin_im_display_users_presence">';

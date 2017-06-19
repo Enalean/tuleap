@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -244,6 +244,11 @@ class GraphOnTrackersV5Plugin extends Plugin {
             default:
                 break;
         }
+    }
+
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array('my_plugin_graphontrackersv5_chart', 'project_plugin_graphontrackersv5_chart'));
     }
 
     /**

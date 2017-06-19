@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Tuleap, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet & Dave Kibble, 2007
  *
@@ -99,7 +99,7 @@ class ProjectLinksPlugin extends Plugin {
         // get current information
         $project = ProjectManager::instance()->getProject($group_id);
         $user    = UserManager::instance()->getCurrentUser();
-        
+
         if (! $project) {
             exit_error($Language->getText('project_admin_index','invalid_p'),
             $Language->getText('project_admin_index','p_not_found'));
@@ -573,7 +573,7 @@ class ProjectLinksPlugin extends Plugin {
          **/
         $HTML->box1_bottom();
         print "</td></tr></table>\n";
-        
+
         if (isset($link_type_id)) {
             // Display list of linked projects
             $HTML->box1_top('Projects linked');
@@ -833,7 +833,7 @@ class ProjectLinksPlugin extends Plugin {
         global $Language;
 
         $targetProject = ProjectManager::instance()->getProject($target_group_id);
-        
+
         $feedback = "";
         $pfcheck = db_query("SELECT link_type_id FROM
             plugin_projectlinks_relationship
@@ -857,7 +857,7 @@ class ProjectLinksPlugin extends Plugin {
                 // new item - set date, otherwise leave it alone
                 $updates["creation_date"] = time();
             }
-            
+
             if (update_database("plugin_projectlinks_relationship", $updates, is_null($link_id)?"":"link_id=$link_id")) {
                 $this->addWidgetOnSummaryPage($target_group_id);
                 $feedback = $Language->getText('plugin_plinks', 'update_ok_named', $targetProject->getPublicName()).' ';
@@ -879,7 +879,7 @@ class ProjectLinksPlugin extends Plugin {
 
         $dao = $this->getProjectLinksDao();
         $links = $dao->searchLinksByType($link_type_id);
-        
+
         if($links->rowCount() > 0) {
             $html .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_plinks', 'dbfn_name'), ''), false, false, false);
 
@@ -1014,6 +1014,11 @@ class ProjectLinksPlugin extends Plugin {
         }
     }
 
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array('projectlinkshomepage'));
+    }
+
     private function getAddWidgetController()
     {
         $widget_factory = new WidgetFactory(
@@ -1033,7 +1038,7 @@ class ProjectLinksPlugin extends Plugin {
 
     /**
      * @param Integer $groupId Project id on which the widget is to add
-     * 
+     *
      * @return void
      */
     public function addWidgetOnSummaryPage($groupId)
