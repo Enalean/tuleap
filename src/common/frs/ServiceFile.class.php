@@ -83,21 +83,9 @@ class ServiceFile extends Service
             foreach($packages as $package) {
                 // the icon is different whether the package is monitored or not
                 if ($fmmf->isMonitoring($package['package_id'], $user, false)) {
-                    $monitor_img = $GLOBALS['HTML']->getImage(
-                        "ic/notification_stop.png",
-                        array(
-                            'alt'   => $GLOBALS['Language']->getText('include_project_home', 'stop_monitoring'),
-                            'title' => $GLOBALS['Language']->getText('include_project_home', 'stop_monitoring'),
-                        )
-                    );
+                    $monitor_img = '<i class="fa fa-bell-slash"></i>';
                 } else {
-                    $monitor_img = $GLOBALS['HTML']->getImage(
-                        "ic/notification_start.png",
-                        array(
-                            'alt'   => $GLOBALS['Language']->getText('include_project_home', 'start_monitoring'),
-                            'title' => $GLOBALS['Language']->getText('include_project_home', 'start_monitoring'),
-                        )
-                    );
+                    $monitor_img = '<i class="fa fa-bell"></i>';
                 }
             
                 $ret['content'] .= '
@@ -109,14 +97,8 @@ class ServiceFile extends Service
                     </a>
                   </td>';
                 // Releases to display
-                $ret['content'] .= '<td>'.  $hp->purify($package['release_name'], CODENDI_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">' .
-                    $GLOBALS['HTML']->getImage(
-                        "ic/text.png",
-                        array(
-                            'alt' => $GLOBALS['Language']->getText('include_project_home', 'release_notes'),
-                            'title' => $GLOBALS['Language']->getText('include_project_home', 'release_notes'),
-                        )
-                    ) . '
+                $ret['content'] .= '<td>'.  $hp->purify($package['release_name'], CODENDI_PURIFIER_CONVERT_HTML)  .'&nbsp;<A href="/file/shownotes.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">
+                    <i class="tuleap-services-file tuleap-services-widget"></i>
                   </td>
                   <td><a href="/file/showfiles.php?group_id=' . $this->getGroupId() . '&release_id=' . $package['release_id'] . '">'.$GLOBALS['Language']->getText('include_project_home','download').'</a></td></tr>';
             }
