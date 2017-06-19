@@ -25,7 +25,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
 require_once('common/widget/Widget.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJobFactory.class.php');
-require_once('common/widget/WidgetLayoutManager.class.php');
 
 abstract class HudsonWidget extends Widget {
     

@@ -117,7 +117,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
     *
     * @param $id the id of the content to clone
     * @param $owner_id the owner of the widget of the new widget
-    * @param $owner_type the type of the owner of the new widget (see WidgetLayoutManager)
+    * @param $owner_type the type of the owner of the new widget
     */
     function cloneContent($id, $owner_id, $owner_type) {
         return $this->getInstanceId();
@@ -145,9 +145,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
                 if ($GLOBALS['sys_use_trove'] != 0) {
                     $widgets[] = 'projectclassification';
                 }
-                break;
-            case WidgetLayoutManager::OWNER_TYPE_HOME:
-                $widgets = array();
                 break;
             default:
                 $widgets = array();

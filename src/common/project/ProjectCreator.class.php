@@ -36,7 +36,6 @@ require_once 'common/reference/ReferenceManager.class.php';
 require_once 'trove.php';
 require_once 'common/event/EventManager.class.php';
 require_once 'common/wiki/lib/WikiCloner.class.php';
-require_once 'common/widget/WidgetLayoutManager.class.php';
 
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');

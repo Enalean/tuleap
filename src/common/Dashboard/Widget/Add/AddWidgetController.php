@@ -31,7 +31,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Widget\WidgetFactory;
 use Widget;
-use WidgetLayoutManager;
 
 class AddWidgetController
 {

@@ -236,7 +236,6 @@ class GraphOnTrackersV5Plugin extends Plugin {
      */
     public function widgets($params)
     {
-        require_once('common/widget/WidgetLayoutManager.class.php');
         switch ($params['owner_type']) {
             case UserDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = 'my_plugin_graphontrackersv5_chart';

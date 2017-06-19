@@ -830,7 +830,7 @@ class UserManager_createAccountTest extends TuleapTestCase {
 
         $this->manager = partial_mock(
             'UserManager',
-            array('_getWidgetLayoutManager'),
+            array(),
             array($this->pending_user_notifier)
         );
         $this->manager->setDao($this->dao);
