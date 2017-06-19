@@ -23,6 +23,10 @@ import { get } from 'tlp';
 let before_listeners = [];
 
 export const init = (element, force_display, force_ajax) => {
+    if (! element) {
+        return;
+    }
+
     const togglers = element.querySelectorAll('.toggler, .toggler-hide, .toggler-noajax, .toggler-hide-noajax');
     [].forEach.call(togglers, (toggler) => {
         load(toggler, force_display, force_ajax);
