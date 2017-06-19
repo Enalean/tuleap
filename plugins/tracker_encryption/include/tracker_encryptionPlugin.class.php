@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -31,13 +32,23 @@ class tracker_encryptionPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        $this->addHook(TRACKER_EVENT_DELETE_TRACKER);
-        $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
+
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_ENCRYPTION_TEMPLATE_DIR);
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        if (defined('TRACKER_BASE_URL')) {
+            $this->addHook(TRACKER_EVENT_DELETE_TRACKER);
+            $this->addHook(Tracker_FormElementFactory::GET_CLASSNAMES);
+            $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
+        }
+
         $this->addHook('fill_project_history_sub_events');
-        $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
         $this->addHook('javascript_file');
         $this->addHook('cssfile');
-        $this->renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_ENCRYPTION_TEMPLATE_DIR);
+
+        return parent::getHooksAndCallbacks();
     }
 
     /**
