@@ -3344,42 +3344,6 @@ msgstr "Aucun changement."
 msgid "%d UserPreferences fields successfully updated."
 msgstr "%d PréférencesUtilisateurs mises à jour avec succès."
 
-#: ../lib/plugin/UserRatings.php:47
-msgid "UserRatings"
-msgstr "Statistiques d'utilisateur"
-
-#: ../lib/plugin/UserRatings.php:51
-msgid "List the user's ratings."
-msgstr "Affiche la listes des pages les plus populaires."
-
-#: ../lib/plugin/UserRatings.php:89
-#, php-format
-msgid "Displaying %d ratings:"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:108
-#, php-format
-msgid "Showing all %ss (%%d):"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:125
-#, php-format
-msgid "'s %d page ratings:"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:128
-#, php-format
-msgid "Here are your %d page ratings:"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:220
-msgid "Pred"
-msgstr ""
-
-#: ../lib/plugin/UserRatings.php:224 ../lib/wikilens/PageListColumns.php:366
-msgid "Rate"
-msgstr "Note"
-
 # lib/display.php:14
 #: ../lib/plugin/WantedPagesOld.php:33 ../lib/plugin/WantedPagesOld.php:66
 #: ../lib/plugin/WantedPages.php:39 ../lib/plugin/WantedPages.php:69
