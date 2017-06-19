@@ -51,7 +51,7 @@
                                                      role="menu"
                                                 >
                                                     {{# has_rss }}
-                                                        <a href="{{ rss_url }}" class="tlp-dropdown-menu-item">
+                                                        <a href="{{ rss_url }}" class="tlp-dropdown-menu-item" role="menuitem">
                                                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-rss"></i> {{ rss_label }}
                                                         </a>
                                                     {{/ has_rss }}
@@ -60,6 +60,7 @@
                                                             <button type="button"
                                                                     class="tlp-dropdown-menu-item edit-widget-button"
                                                                     data-target-modal-id="edit-widget-modal-{{ widget_id }}"
+                                                                    role="menuitem"
                                                             >
                                                                 <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-pencil"></i> {{ edit_label }}
                                                             </button>
@@ -67,6 +68,7 @@
                                                         <button type="button"
                                                                 class="tlp-dropdown-menu-item tlp-dropdown-menu-item-danger delete-widget-button"
                                                                 data-target-modal-id="delete-widget-modal-{{ widget_id }}"
+                                                                role="menuitem"
                                                         >
                                                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-trash-o"></i> {{ delete_label }}
                                                         </button>
