@@ -623,6 +623,15 @@ function html_trash_link($link, $warn, $alt) {
 }
 
 /**
+ * @deprecated
+ */
+function html_trash_link_fontawesome($link, $warn)
+{
+    $purifier = Codendi_HTMLPurifier::instance();
+    return '<a href="'.$link.'" onClick="return confirm(\''.$purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE).'\')"><i class="fa fa-trash-o"></i></a>';
+}
+
+/**
  *
  *  Returns a date operator field
  *
