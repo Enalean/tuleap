@@ -24,9 +24,11 @@ class SearchPresenter
 {
     /** @var string */
     public $placeholder;
+    public $search_label;
 
     public function __construct()
     {
-        $this->placeholder = $GLOBALS['Language']->getText('include_menu', 'search');
+        $this->placeholder  = $GLOBALS['Language']->getText('include_menu', 'search');
+        $this->search_label = $GLOBALS['Language']->getText('include_menu', 'search');
     }
 }

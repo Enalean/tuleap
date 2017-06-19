@@ -20,6 +20,7 @@
 
 class FlamingParrot_NavBarPresenter
 {
+    public $search_label;
     public $user_history_dropdown;
     public $history;
     public $empty_history;
@@ -122,6 +123,7 @@ class FlamingParrot_NavBarPresenter
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
         $this->my_account_label     = $GLOBALS['Language']->getText('my_index','account_maintenance');
         $this->join_community_title = $GLOBALS['Language']->getText('include_menu', 'join_community');
+        $this->search_label         = $GLOBALS['Language']->getText('include_menu','search');
 
         $this->current_user_id = $user->getId();
         $this->history         = _('History');
