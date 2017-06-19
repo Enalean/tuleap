@@ -1113,7 +1113,9 @@ class GitPlugin extends Plugin {
     public function collect_ci_triggers($params) {
         $ci = new Git_Ci();
         $triggers = $ci->retrieveTriggers($params);
-        $params['services'][] = $triggers;
+        if ($triggers) {
+            $params['services'][] = $triggers;
+        }
     }
 
     /**
