@@ -146,7 +146,7 @@ class Controller
                 array(
                     'group_id' => $this->request->getProject()->getID(),
                     'action'   => 'admin',
-                    'pane'     => 'notification'
+                    'pane'     => 'scrum'
                 )
             )
         );

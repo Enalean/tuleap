@@ -1,19 +1,15 @@
 #agiledashboard-notification-mattermost-section {
 
-    img.avatar {
-        margin: 0 10px 0 0;
-        width: 20px;
-        height: 20px;
+    .bot-assigned-label {
+        color: #444444;
+        font-weight: bold;
+        margin: auto auto 0 auto;
     }
 
-    .bot-assigned-label {
-        display: block;
-        position: relative;
-        margin: 0 0 8px;
-        color: #666;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
+    .bot-avatar {
+        margin: 0 10px 0 0;
+        width: 35px;
+        height: 35px;
     }
 
     .panel {

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\BotMattermost\BotMattermostDeleted;
@@ -57,7 +58,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook('cssfile');
             $this->addHook('javascript_file');
-            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ADMIN);
+            $this->addHook(GetAdditionalScrumAdminPaneContent::NAME);
         }
         $this->addHook(EventCronJobEveryMinute::NAME);
         $this->addHook(BotMattermostDeleted::NAME);
@@ -98,13 +99,10 @@ class botmattermost_agiledashboardPlugin extends Plugin
         }
     }
 
-    public function agiledashboard_event_additional_panes_admin(array $params)
+    public function additional_scrum_admin_pane_content(GetAdditionalScrumAdminPaneContent $event)
     {
         $render = $this->getRenderToString();
-        $params['additional_panes']['notification'] = array (
-            'title'  => 'Notification',
-            'output' => $render,
-        );
+        $event->addContent($render);
     }
 
     public function cron_job_every_minute(EventCronJobEveryMinute $event)
