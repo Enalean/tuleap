@@ -358,6 +358,17 @@ class DocmanPlugin extends Plugin
             $params['codendi_widgets'][] = 'plugin_docman_project_embedded';
         }
     }
+
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array(
+            'plugin_docman_mydocman',
+            'plugin_docman_mydocman_search',
+            'plugin_docman_my_embedded',
+            'plugin_docman_project_embedded'
+        ));
+    }
+
     function default_widgets_for_new_owner($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {

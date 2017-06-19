@@ -169,18 +169,23 @@ class DashboardWidgetDao extends DataAccessObject
             $name       = $row['name'];
 
             $this->removeWidget($widget_id, $name, $content_id);
-            if ($this->areThereAnyWidgetsLeftIfTheColumn($column_id)) {
-                $this->reorderWidgets($column_id);
-            } else {
-                $position = $this->getCurrentPositionOfColumn($line_id, $column_id);
-                $this->removeColumn($column_id);
-                $this->adaptLayoutAfterColumnRemoval($line_id, $position);
-                $this->reorderColumns($line_id);
-            }
+            $this->adaptLayoutAfterWidgetRemoval($column_id, $line_id);
             $this->commit();
         } catch (\Exception $exception) {
             $this->rollBack();
             throw $exception;
+        }
+    }
+
+    private function adaptLayoutAfterWidgetRemoval($column_id, $line_id)
+    {
+        if ($this->areThereAnyWidgetsLeftIfTheColumn($column_id)) {
+            $this->reorderWidgets($column_id);
+        } else {
+            $position = $this->getCurrentPositionOfColumn($line_id, $column_id);
+            $this->removeColumn($column_id);
+            $this->adaptLayoutAfterColumnRemoval($line_id, $position);
+            $this->reorderColumns($line_id);
         }
     }
 
@@ -704,5 +709,39 @@ class DashboardWidgetDao extends DataAccessObject
                 WHERE id = $template_widget_id";
 
         return $this->update($sql);
+    }
+
+    public function removeOrphanWidgetsByNames(array $names)
+    {
+        $names = $this->da->quoteSmartImplode(',', $names);
+
+        $sql = "DELETE FROM dashboards_lines_columns_widgets WHERE name IN ($names)";
+
+        $this->update($sql);
+
+        $this->adaptLayoutAfterOrphanWidgetRemoval();
+    }
+
+    private function adaptLayoutAfterOrphanWidgetRemoval()
+    {
+        $this->startTransaction();
+        try {
+            foreach ($this->getEmptyColumns() as $column_row) {
+                $this->adaptLayoutAfterWidgetRemoval($column_row['id'], $column_row['line_id']);
+            }
+            $this->commit();
+        } catch (\Exception $exception) {
+            $this->rollBack();
+            throw $exception;
+        }
+    }
+
+    private function getEmptyColumns()
+    {
+        $sql = "SELECT col.*
+                FROM dashboards_lines_columns AS col
+                  LEFT JOIN dashboards_lines_columns_widgets AS widget ON (col.id = widget.column_id)
+                WHERE widget.id IS NULL";
+        return $this->retrieve($sql);
     }
 }

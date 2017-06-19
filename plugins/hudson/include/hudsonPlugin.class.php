@@ -197,6 +197,24 @@ class hudsonPlugin extends Plugin
         }
     }
 
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array(
+            'plugin_hudson_my_jobs',
+            'plugin_hudson_my_joblastbuilds',
+            'plugin_hudson_my_jobtestresults',
+            'plugin_hudson_my_jobtesttrend',
+            'plugin_hudson_my_jobbuildhistory',
+            'plugin_hudson_my_joblastartifacts',
+            'plugin_hudson_project_jobsoverview',
+            'plugin_hudson_project_joblastbuilds',
+            'plugin_hudson_project_jobtestresults',
+            'plugin_hudson_project_jobtesttrend',
+            'plugin_hudson_project_jobbuildhistory',
+            'plugin_hudson_project_joblastartifacts'
+        ));
+    }
+
     function getAvailableReferenceNatures($params) {
         $hudson_plugin_reference_natures = array(
             'hudson_build'  => array('keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')),

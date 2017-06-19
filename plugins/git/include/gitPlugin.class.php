@@ -1365,6 +1365,11 @@ class GitPlugin extends Plugin {
         }
     }
 
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array('plugin_git_user_pushes', 'plugin_git_project_pushes'));
+    }
+
     private function getProjectCreator() {
         $tmp_dir = ForgeConfig::get('tmp_dir') .'/gerrit_'. uniqid();
         return new Git_Driver_Gerrit_ProjectCreator(

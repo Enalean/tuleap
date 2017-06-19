@@ -41,23 +41,23 @@ class Plugin implements PFO_Plugin {
     const SCOPE_SYSTEM  = 0;
     const SCOPE_PROJECT = 1;
     const SCOPE_USER    = 2;
-    
+
     /**
      * @var bool True if the plugin should be disabled for all projects on installation
      *
      * Usefull only for plugins with scope == SCOPE_PROJECT
      */
     public $isRestrictedByDefault = false;
-    
+
     /**
      * @var array List of allowed projects
      */
     protected $allowedForProject = array();
-    
+
     public function Plugin($id = -1) {
         $this->id            = $id;
         $this->hooks         = new Map();
-        
+
         $this->_scope = Plugin::SCOPE_SYSTEM;
     }
 
@@ -100,22 +100,29 @@ class Plugin implements PFO_Plugin {
     public function getId() {
         return $this->id;
     }
-    
+
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'PluginInfo')) {
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
     }
-    
+
     public function getHooks() {
         return $this->hooks->getKeys();
     }
-    
+
     public function getHooksAndCallbacks() {
         return $this->hooks->getValues();
     }
-    
+
+    /**
+     * Call when the plugin is uninstalled
+     */
+    public function uninstall()
+    {
+    }
+
     public function addHook($hook, $callback = null, $recallHook = false) {
         if ($this->hooks->containsKey($hook)) {
             throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check '.$hook);
@@ -126,7 +133,7 @@ class Plugin implements PFO_Plugin {
         $value['recallHook'] = $recallHook;
         $this->hooks->put($hook, $value);
     }
-    
+
     /**
      * @deprecated
      * @see addHook()
@@ -138,10 +145,10 @@ class Plugin implements PFO_Plugin {
     public function removeHook($hook) {
         $this->hooks->removeKey($hook);
     }
-    
+
     public function CallHook($hook, $param) {
     }
-    
+
     public function getScope() {
         return $this->_scope;
     }
@@ -157,7 +164,7 @@ class Plugin implements PFO_Plugin {
     public function getEtcTemplatesPath() {
         return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() . '/templates';
     }
-    
+
     public function _getPluginPath() {
         $trace = debug_backtrace();
         trigger_error("Plugin->_getPluginPath() is deprecated. Please use Plugin->getPluginPath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
@@ -175,7 +182,7 @@ class Plugin implements PFO_Plugin {
         $pm = $this->_getPluginManager();
         if (isset($GLOBALS['sys_pluginspath']))
             $path = $GLOBALS['sys_pluginspath'];
-        else $path=""; 
+        else $path="";
         if ($pm->pluginIsCustom($this)) {
             $path = $GLOBALS['sys_custompluginspath'];
         }
@@ -187,14 +194,14 @@ class Plugin implements PFO_Plugin {
         trigger_error("Plugin->_getThemePath() is deprecated. Please use Plugin->getThemePath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
         return $this->getThemePath();
     }
-    
+
     public function getThemePath() {
         if (!isset($GLOBALS['sys_user_theme'])) {
             return null;
         }
-        
+
         $pluginName = $this->getName();
-        
+
         $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
         $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
         $dir    = '/'. $pluginName .'/www/themes/';
@@ -252,7 +259,7 @@ class Plugin implements PFO_Plugin {
         $pm = PluginManager::instance();
         return $pm;
     }
-    
+
     /**
      * Function called before turning a plugin to available status
      * Allow you to check required things (DB connection, etc...)
@@ -271,7 +278,7 @@ class Plugin implements PFO_Plugin {
      */
     public function setAvailable($available) {
     }
-    
+
     /**
      * Function executed after plugin installation
      */
@@ -340,5 +347,17 @@ class Plugin implements PFO_Plugin {
     protected function currentRequestIsForDashboards() {
         return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
                strpos($_SERVER['REQUEST_URI'], '/my') === 0;
+    }
+
+    protected function removeOrphanWidgets(array $names)
+    {
+        $dao = new \Tuleap\Dashboard\Widget\DashboardWidgetDao(
+            new \Tuleap\Widget\WidgetFactory(
+                UserManager::instance(),
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance()
+            )
+        );
+        $dao->removeOrphanWidgetsByNames($names);
     }
 }

@@ -223,9 +223,10 @@ class PluginManager {
         return $plugin;
     }
 
-    function uninstallPlugin($plugin) {
+    function uninstallPlugin(Plugin $plugin) {
         $name = $this->plugin_factory->getNameForPlugin($plugin);
         if (!$this->_executeSqlStatements('uninstall', $name)) {
+            $plugin->uninstall();
             $this->uninstallForgeUpgrade($name);
             return $this->plugin_factory->removePlugin($plugin);
         } else {

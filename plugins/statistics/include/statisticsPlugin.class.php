@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2008
@@ -224,6 +224,11 @@ class StatisticsPlugin extends Plugin {
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
             $params['codendi_widgets'][] = 'plugin_statistics_projectstatistics';
         }
+    }
+
+    public function uninstall()
+    {
+        $this->removeOrphanWidgets(array('plugin_statistics_projectstatistics'));
     }
 
     function cssFile($params) {
