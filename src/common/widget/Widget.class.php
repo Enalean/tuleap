@@ -167,10 +167,6 @@
     function getDescription() {
         return '';
     }
-    function getPreviewCssClass() {
-        $locale = $this->getCurrentUser()->getLocale();
-        return 'widget-preview-'.($this->id).'-'.$locale;
-    }
 
     /**
      * @return PFUser
