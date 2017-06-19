@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -254,6 +254,20 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
             ),
             $artifact
         ));
+    }
+
+    public function itIsEmptyWhenValueIsAnEmptyString()
+    {
+        $artifact = new MockTracker_Artifact();
+        $field    = aTextField()->build();
+        $this->assertTrue($field->isEmpty('', $artifact));
+    }
+
+    public function itIsNotEmptyWhenValueIsAStringWithContent()
+    {
+        $artifact = new MockTracker_Artifact();
+        $field    = aTextField()->build();
+        $this->assertFalse($field->isEmpty('aaa', $artifact));
     }
 }
 
