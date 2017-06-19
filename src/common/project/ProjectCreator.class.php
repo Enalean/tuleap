@@ -640,12 +640,6 @@ class ProjectCreator {
     //Create the summary page
     private function initLayoutFromTemplate(Project $new_project, Project $template)
     {
-        $new_project_id = $new_project->getID();
-        $template_id    = $template->getID();
-
-        $lm = new WidgetLayoutManager();
-        $lm->createDefaultLayoutForProject($new_project_id, $template_id);
-
         $this->dashboard_duplicator->duplicate($template, $new_project);
     }
 
