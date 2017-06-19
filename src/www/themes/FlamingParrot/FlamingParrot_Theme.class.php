@@ -47,8 +47,10 @@ class FlamingParrot_Theme extends Layout {
 
     private $show_sidebar = false;
 
-    function __construct($root) {
+    public function __construct($root)
+    {
         parent::__construct($root);
+
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
     }
 
@@ -103,6 +105,7 @@ class FlamingParrot_Theme extends Layout {
         }
 
         $this->includeJavascriptFile($this->include_asset->getFileURL('flamingparrot.js'));
+        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('navbar-history-flamingparrot.js'));
 
         $this->render('header', new FlamingParrot_HeaderPresenter(
             $title,

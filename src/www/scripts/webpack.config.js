@@ -5,15 +5,24 @@ var WebpackAssetsManifest = require('webpack-assets-manifest');
 var assets_dir_path = path.resolve(__dirname, '../assets');
 module.exports = {
     entry: {
-        dashboard       : path.resolve(__dirname, 'dashboards/dashboard.js'),
-        'navbar-history': path.resolve(__dirname, 'navbar-history/navbar-history.js')
+        dashboard                     : './dashboards/dashboard.js',
+        'navbar-history'              : './navbar-history/index-burningparrot.js',
+        'navbar-history-flamingparrot': [
+            'whatwg-fetch',
+            './navbar-history/index-flamingparrot.js'
+        ]
     },
     output: {
         path: assets_dir_path,
         filename: '[name]-[chunkhash].js'
     },
     resolve: {
-        modules: [ 'node_modules' ]
+        modules: [ 'node_modules' ],
+        alias: {
+            // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
+            // We use tlp.get() and tlp.put(). This means we need polyfills for fetch() and Promise
+            'tlp-fetch': path.resolve(__dirname, '../themes/common/tlp/src/js/fetch-wrapper.js')
+        }
     },
     externals: {
         jquery: 'jQuery',

@@ -1,6 +1,6 @@
 <div id="nav-dropdown-content-user-history-loading" class="shown"></div>
 <div id="nav-dropdown-content-user-history-empty">
-    <i class="fa fa-history empty-history-icon"></i>
+    <i class="icon icon-time fa fa-history empty-history-icon"></i>
     <p class="empty-history-description">{{ empty_history }}</p>
 </div>
 <div id="nav-dropdown-content-user-history-error-message-fetch">
@@ -18,7 +18,7 @@
                 <div class="history-item-content">
                     <div class="history-item-content-description">
                         <div class="history-item-content-description-info">
-                            <span class="history-item-content-description-info-badge tlp-badge-outline tlp-badge-{{ color_name }}">
+                            <span class="history-item-content-description-info-badge badge tlp-badge-outline tlp-badge-{{ color_name }}">
                                 {{ xref }}
                             </span>
                             <span class="history-item-content-description-info-title">{{ title }}</span>
@@ -26,7 +26,7 @@
                         <div class="history-item-content-description-quick-links">
                             {{# quick_links }}
                                 <span data-href="{{ html_url }}" class="history-item-content-quick-links-link">
-                                    <i class="history-item-content-quick-links-link-icon fa fa-link"></i>
+                                    <i class="history-item-content-quick-links-link-icon icon icon-link fa fa-link"></i>
                                     <span class="history-item-content-quick-links-link-name">{{ name }}</span>
                                 </span>
                             {{/ quick_links }}
@@ -45,8 +45,8 @@
     </script>
 </div>
 <div id="nav-dropdown-content-user-history-clear">
-    <button type="button" class="tlp-button-primary" id="nav-dropdown-content-user-history-clear-button">
-        <i class="fa fa-trash-o tlp-button-icon"></i>
+    <button type="button" class="btn btn-large btn-primary tlp-button-primary" id="nav-dropdown-content-user-history-clear-button">
+        <i class="icon icon-trash fa fa-trash-o tlp-button-icon"></i>
         {{ clear_history }}
     </button>
 </div>
