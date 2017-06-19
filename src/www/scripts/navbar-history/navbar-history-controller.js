@@ -32,7 +32,9 @@ export default function init(get, put, user_history_dropdown_trigger) {
     const clear_button = document.getElementById('nav-dropdown-content-user-history-clear-button');
     clear_button.addEventListener('click', (event) => {
         event.stopPropagation();
-        controller.clearHistory();
+        clear_button.disabled = true;
+        controller.clearHistory()
+            .then(() => { clear_button.disabled = false; });
     });
 }
 
