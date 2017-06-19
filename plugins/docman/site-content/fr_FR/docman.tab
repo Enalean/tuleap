@@ -901,3 +901,11 @@ plugin_docman	permission_requests	Demandes de permission pour le gestionnaire de
 plugin_docman	permission_requests_information	Le groupe séléctionné n'affectera pas les personnes notifiées pour les demandes de permission sur le service de documents.<br> Seuls les <b>gestionnaires du document</b> seront notifiés dans ce cas.
 
 plugin_docman	search_type	Documents
+
+plugin_docman	doc_type_folder	Dossier
+plugin_docman	doc_type_embedded	Fichier embarqué
+plugin_docman	doc_type_empty	Vide
+plugin_docman	doc_type_file	Fichier
+plugin_docman	doc_type_link	Lien
+plugin_docman	doc_type_wiki	Wiki
+plugin_docman	doc_type_item	Elément du docman

@@ -39,6 +39,11 @@ class Docman_EmbeddedFile extends Docman_File {
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE;
         return $row;
     }
+
+    public function getType()
+    {
+        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_embedded');
+    }
 }
 
 ?>

@@ -37,7 +37,12 @@ class Docman_Wiki extends Docman_Document {
     function setPagename($pagename) { 
         $this->pagename = $pagename;
     }
-    
+
+    public function getType()
+    {
+        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_wiki');
+    }
+
     function initFromRow($row) {
         parent::initFromRow($row);
         $this->setPagename($row['wiki_page']);

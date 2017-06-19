@@ -34,7 +34,12 @@ class Docman_Folder extends Docman_Item {
         parent::__construct($data);
         $this->_resetItems();
     }
-    
+
+    public function getType()
+    {
+        return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_folder');
+    }
+
     function toRow() {
         $row = parent::toRow();
         $row['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
