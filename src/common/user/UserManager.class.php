@@ -868,10 +868,6 @@ class UserManager {
 
             $em->processEvent(Event::USER_MANAGER_CREATE_ACCOUNT, array('user' => $user));
 
-            // Create the first layout for the user and add some initial widgets
-            $lm = $this->_getWidgetLayoutManager();
-            $lm->createDefaultLayoutForUser($user_id);
-
             switch ($user->getStatus()) {
                 case PFUser::STATUS_PENDING:
                     if (ForgeConfig::get('sys_user_approval')) {

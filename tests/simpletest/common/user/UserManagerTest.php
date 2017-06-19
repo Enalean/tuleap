@@ -821,16 +821,12 @@ class UserManager_createAccountTest extends TuleapTestCase {
     /** @var User_PendingUserNotifier */
     private $pending_user_notifier;
 
-    /** @var WidgetLayoutManager */
-    private $layout_manager;
-
     public function setUp() {
         parent::setUp();
         ForgeConfig::store();
         $this->user                  = aUser()->build();
         $this->dao                   = mock('UserDao');
         $this->pending_user_notifier = mock('User_PendingUserNotifier');
-        $this->layout_manager        = mock('WidgetLayoutManager');
 
         $this->manager = partial_mock(
             'UserManager',
@@ -838,8 +834,6 @@ class UserManager_createAccountTest extends TuleapTestCase {
             array($this->pending_user_notifier)
         );
         $this->manager->setDao($this->dao);
-
-        stub($this->manager)->_getWidgetLayoutManager()->returns($this->layout_manager);
     }
 
     public function tearDown() {
@@ -849,14 +843,6 @@ class UserManager_createAccountTest extends TuleapTestCase {
 
     public function itAsksToDaoToCreateTheAccount() {
         expect($this->dao)->create()->once();
-
-        $this->manager->createAccount($this->user);
-    }
-
-    public function itCreateDefaultLayout() {
-        stub($this->dao)->create()->returns(101);
-
-        expect($this->layout_manager)->createDefaultLayoutForUser(101)->once();
 
         $this->manager->createAccount($this->user);
     }
