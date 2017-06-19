@@ -21,65 +21,66 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\CIToken\Dao as CITokenDao;
+use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\DiskUsage\Collector;
+use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Events\ParseGitolite3Logs;
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\GerritServerResourceRestrictor;
+use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator;
 use Tuleap\Git\Gitolite\SSHKey\DumperFactory;
 use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
-use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
-use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer;
+use Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin;
 use Tuleap\Git\Gitolite\SSHKey\Provider\User;
+use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Git\Gitolite\Gitolite3LogParser;
+use Tuleap\Git\GlobalParameterDao;
+use Tuleap\Git\History\Dao as HistoryDao;
+use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
+use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
-use Tuleap\Git\GlobalParameterDao;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedPatternValidator;
+use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;
+use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PatternValidator;
-use Tuleap\Git\Permissions\RegexpTemplateDao;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDao;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
-use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\Permissions\RegexpRepositoryDao;
-use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
-use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
-use Tuleap\Git\Webhook\WebhookDao;
-use Tuleap\Git\Permissions\FineGrainedUpdater;
-use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\Git\Permissions\FineGrainedDao;
-use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\RegexpTemplateDao;
 use Tuleap\Git\Permissions\TemplateFineGrainedPermissionSaver;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
-use Tuleap\Git\CIToken\Manager as CITokenManager;
-use Tuleap\Git\CIToken\Dao as CITokenDao;
-use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
-use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
-use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
-use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
-use Tuleap\Git\Permissions\FineGrainedPatternValidator;
-use Tuleap\Git\Permissions\FineGrainedPermissionSorter;
-use Tuleap\Git\Permissions\HistoryValueFormatter;
-use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
+use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
+use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
-use Tuleap\Git\History\GitPhpAccessLogger;
-use Tuleap\Git\History\Dao as HistoryDao;
+use Tuleap\Git\RestrictedGerritServerDao;
+use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
-use Tuleap\Git\RestrictedGerritServerDao;
-use Tuleap\Git\GerritServerResourceRestrictor;
-use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
-use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
-use Tuleap\Git\DiskUsage\Collector;
-use Tuleap\Git\DiskUsage\Retriever;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -1351,9 +1352,10 @@ class GitPlugin extends Plugin {
      *
      * @return Void
      */
-    function widgets($params) {
+    public function widgets($params)
+    {
         require_once('common/widget/WidgetLayoutManager.class.php');
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_git_user_pushes';
         }
         $request = HTTPRequest::instance();

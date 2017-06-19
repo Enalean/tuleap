@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
 
 require_once('HudsonJobWidget.class.php');
 require_once('common/user/UserManager.class.php');
@@ -27,34 +28,34 @@ require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 require_once('HudsonTestResult.class.php');
 
-class hudson_Widget_JobTestResults extends HudsonJobWidget {
-
+class hudson_Widget_JobTestResults extends HudsonJobWidget
+{
     var $test_result;
 
     /**
-     * Constructor
-     *
      * @param String           $owner_type The owner type
      * @param Int              $owner_id   The owner id
      * @param HudsonJobFactory $factory    The HudsonJob factory
      *
      * @return void
      */
-    function __construct($owner_type, $owner_id, HudsonJobFactory $factory) {
-        $request =& HTTPRequest::instance();
-        if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
+    public function __construct($owner_type, $owner_id, HudsonJobFactory $factory)
+    {
+        $request = HTTPRequest::instance();
+        if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_jobtestresults';
-            $this->group_id = $owner_id;
+            $this->group_id  = $owner_id;
         } else {
             $this->widget_id = 'plugin_hudson_project_jobtestresults';
-            $this->group_id = $request->get('group_id');
+            $this->group_id  = $request->get('group_id');
         }
         parent::__construct($this->widget_id, $factory);
 
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle() {
+    public function getTitle()
+    {
         $title = '';
         if ($this->job && $this->test_result) {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults_widget_title', array($this->job->getName(), $this->test_result->getPassCount(), $this->test_result->getTotalCount()));
@@ -66,11 +67,12 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
         return $title;
     }
 
-    function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_testresults');
     }
 
-    function loadContent($id)
+    public function loadContent($id)
     {
         $this->content_id = $id;
     }
@@ -102,7 +104,8 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
         }
     }
 
-    function getContent() {
+    public function getContent()
+    {
         $this->initContent();
 
         $html = '';
@@ -126,5 +129,3 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
         return $html;
     }
 }
-
-?>

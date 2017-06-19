@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,21 +19,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
 require_once 'common/widget/WidgetLayoutManager.class.php';
 
 /**
  * Widget_MyTrackerRenderer
- * 
+ *
  * Personal tracker renderer
  */
-class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer {
+class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer
+{
     const ID = 'plugin_tracker_myrenderer';
 
-    function __construct() {
-        parent::__construct(self::ID, UserManager::instance()->getCurrentUser()->getId(), WidgetLayoutManager::OWNER_TYPE_USER);
+    function __construct()
+    {
+        parent::__construct(
+            self::ID, UserManager::instance()->getCurrentUser()->getId(),
+            UserDashboardController::LEGACY_DASHBOARD_TYPE
+        );
     }
 
-    public function isAjax() {
+    public function isAjax()
+    {
         return false;
     }
 }

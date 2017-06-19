@@ -20,14 +20,16 @@
  */
 
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
 require_once('HudsonJobWidget.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJob.class.php');
 
-class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
-
+class hudson_Widget_JobBuildHistory extends HudsonJobWidget
+{
     /**
      * Constructor
      *
@@ -37,14 +39,15 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
      *
      * @return void
      */
-    function __construct($owner_type, $owner_id, HudsonJobFactory $factory) {
-        $request =& HTTPRequest::instance();
-        if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
+    public function __construct($owner_type, $owner_id, HudsonJobFactory $factory)
+    {
+        $request = HTTPRequest::instance();
+        if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_jobbuildhistory';
-            $this->group_id = $owner_id;
+            $this->group_id  = $owner_id;
         } else {
             $this->widget_id = 'plugin_hudson_project_jobbuildhistory';
-            $this->group_id = $request->get('group_id');
+            $this->group_id  = $request->get('group_id');
         }
         parent::__construct($this->widget_id, $factory);
 

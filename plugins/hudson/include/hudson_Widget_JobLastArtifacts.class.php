@@ -19,8 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
+use Tuleap\Dashboard\User\UserDashboardController;
 
+class hudson_Widget_JobLastArtifacts extends HudsonJobWidget
+{
     var $build;
     var $last_build_url;
 
@@ -33,21 +35,22 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
      *
      * @return void
      */
-    function __construct($owner_type, $owner_id, HudsonJobFactory $factory) {
-        $request =& HTTPRequest::instance();
-        if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
+    public function __construct($owner_type, $owner_id, HudsonJobFactory $factory)
+    {
+        $request = HTTPRequest::instance();
+        if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->widget_id = 'plugin_hudson_my_joblastartifacts';
-            $this->group_id = $owner_id;
+            $this->group_id  = $owner_id;
         } else {
             $this->widget_id = 'plugin_hudson_project_joblastartifacts';
-            $this->group_id = $request->get('group_id');
+            $this->group_id  = $request->get('group_id');
         }
         parent::__construct($this->widget_id, $factory);
 
         $this->setOwner($owner_id, $owner_type);
     }
 
-    function getTitle() {
+    public function getTitle() {
         $title = '';
         if ($this->job) {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_lastartifacts', array($this->job->getName()));
@@ -59,11 +62,11 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         return $purifier->purify($title);
     }
 
-    function getDescription() {
+    public function getDescription() {
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_lastartifacts');
     }
 
-    function loadContent($id)
+    public function loadContent($id)
     {
         $this->content_id = $id;
     }
@@ -96,7 +99,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         }
     }
 
-    function getContent()
+    public function getContent()
     {
         $this->initContent();
 

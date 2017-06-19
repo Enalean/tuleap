@@ -19,11 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
 
 /**
  * Fetch and distribute HudsonJob (and keep them in cache).
  */
-class HudsonJobFactory {
+class HudsonJobFactory
+{
     private $jobs = array();
 
     /**
@@ -36,7 +39,7 @@ class HudsonJobFactory {
      */
     public function getAvailableJobs($owner_type, $owner_id) {
         if (!isset($this->jobs[$owner_type][$owner_id])) {
-            if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
+            if ($owner_type == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
                 $this->jobs[$owner_type][$owner_id] = $this->getJobsByUser($owner_id);
             } else {
                 $this->jobs[$owner_type][$owner_id] = $this->getJobsByGroup($owner_id);

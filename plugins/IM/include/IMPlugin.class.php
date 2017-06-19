@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
  define("IM_DEBUG_ON",true,true);
  define("IM_DEBUG_OFF",false,true);
 require_once('common/plugin/Plugin.class.php');
@@ -27,7 +29,8 @@ require_once('common/user/UserHelper.class.php');
 
 require_once('JabbexFactory.class.php');
 
-class IMPlugin extends Plugin {
+class IMPlugin extends Plugin
+{
 
     var $debug;
     /**
@@ -646,16 +649,16 @@ class IMPlugin extends Plugin {
         }
     }
 
-    function widgets($params) {
-        require_once('common/widget/WidgetLayoutManager.class.php');
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
-            $params['codendi_widgets'][] = 'plugin_im_myroster';
-        }
-    }
-
     public function uninstall()
     {
         $this->removeOrphanWidgets(array('plugin_im_myroster'));
+    }
+
+    public function widgets($params)
+    {
+        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
+            $params['codendi_widgets'][] = 'plugin_im_myroster';
+        }
     }
 
         function user_preferences_appearance($params) {
@@ -736,4 +739,3 @@ class IMPlugin extends Plugin {
     }
 
 }
-?>

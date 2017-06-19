@@ -19,21 +19,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
+
 require_once('GraphOnTrackersV5_Widget_Chart.class.php');
 
 /**
-* GraphOnTrackersV5_Widget_Chart
-* 
-* My Tracker Chart
-*/
-class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart {
+ * GraphOnTrackersV5_Widget_Chart
+ *
+ * My Tracker Chart
+ */
+class GraphOnTrackersV5_Widget_MyChart extends GraphOnTrackersV5_Widget_Chart
+{
 
     public function __construct()
     {
         parent::__construct(
             'my_plugin_graphontrackersv5_chart',
             user_getid(),
-            WidgetLayoutManager::OWNER_TYPE_USER
+            UserDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }
 }
