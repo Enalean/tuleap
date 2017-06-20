@@ -1,30 +1,73 @@
-#bot-assigned {
+#agiledashboard-notification-mattermost-section {
 
-    & > div {
-        margin: 20px 0;
-
-        & > p > img.avatar {
-            margin: 0 10px 0 0;
-            width: 35px;
-            height: 35px;
-        }
-
-        & > .bot-assigned-label {
-            color: #444444;
-            font-weight: bold;
-            margin: auto auto 0 auto;
-        }
+    img.avatar {
+        margin: 0 10px 0 0;
+        width: 20px;
+        height: 20px;
     }
+
+    .bot-assigned-label {
+        display: block;
+        position: relative;
+        margin: 0 0 8px;
+        color: #666;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .panel {
+        margin: 0 0 20px;
+        border: 1px solid #dddddd;
+        border-radius: 3px;
+        background: #fff;
+        max-width: 960px;
+        min-width: 400px;
+        width: 100%;
+    }
+
+    .panel-header {
+        background: #eeeeee;
+        border-bottom: 2px solid #333333;
+        padding: 10px;
+    }
+
+    .panel-container {
+        display: flex;
+        justify-content: space-between;
+        flex-flow: wrap;
+    }
+
+    .panel-section {
+        align-self: flex-start;
+        padding: 20px;
+        border-left: 1px solid #f3f3f3;
+    }
+
+    .panel-section-actions {
+        align-self: center;
+    }
+
+    .panel-section:first-child {
+        border-left: 0;
+    }
+
+    .panel-name {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+.agiledashboard-notification-mattermost-configuration-empty-state {
+    color: #888;
+    font-style: italic;
+}
+
+.agiledashboard-notification-mattermost-configuration-description {
+    margin: 0 0 20px;
 }
 
 .form-group {
     margin-bottom: 15px;
-}
-
-#field-bot-mattermost-agiledashboard-send-time {
-    margin : 0 0 30px;
-}
-
-#bot-configuration-section .modal-configuration-bot-title {
-    color: #fff;
 }

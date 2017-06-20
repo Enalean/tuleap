@@ -27,7 +27,7 @@
             loadBotSelectList(select_bot);
         }
 
-        if ( inputs_channels.length == 0 ) {
+        if ( inputs_channels.length === 0 ) {
             return;
         } else {
             [].forEach.call(inputs_channels, function (input) {
@@ -42,6 +42,7 @@
             tokenSeparators: [",", " "],
             placeholder: input.dataset.placeholder,
             tags: [],
+            minimumResultsForSearch: Infinity,
             initSelection : function (element, callback) {
                 var data = [];
                 $(element.val().split(", ")).each(function () {

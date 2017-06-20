@@ -33,7 +33,9 @@ class AdminNotificationPresenter
     public $bots;
     public $project_id;
     public $bot_assigned;
+    public $has_bots;
     public $title;
+    public $description;
     public $table_col_name;
     public $table_col_channels;
     public $button_config;
@@ -51,8 +53,10 @@ class AdminNotificationPresenter
     public $purified_info_channels_handles;
     public $alert_time_warning;
     public $bot_list_is_empty;
-    public $empty_bot_list;
     public $any_configured_notification;
+    public $any_configured_notification_tips;
+    public $empty_bot_list;
+    public $empty_channel_list;
 
     public function __construct(
         CSRFSynchronizerToken $csrf_token,
@@ -64,11 +68,13 @@ class AdminNotificationPresenter
         $this->bots         = $bots;
         $this->project_id   = $project_id;
         $this->bot_assigned = $bot_assigned;
+        $this->has_bots     = !empty($bots);
 
-        $this->title           = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
+        $this->title       = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
+        $this->description = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
 
-        $this->table_col_name        = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
-        $this->table_col_channels    = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_table_col_channels');
+        $this->table_col_name     = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
+        $this->table_col_channels = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_table_col_channels');
 
         $this->button_config  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_configure_notification');
         $this->button_close   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_close');
@@ -98,6 +104,9 @@ class AdminNotificationPresenter
         $this->bot_list_is_empty = count($this->bots) === 0;
         $this->empty_bot_list    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
 
-        $this->any_configured_notification = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification');
+        $this->any_configured_notification      = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification');
+        $this->any_configured_notification_tips = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification_tips');
+        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
+        $this->empty_channel_list               = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'empty_channel_list');
     }
 }
