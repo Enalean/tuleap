@@ -1,6 +1,8 @@
 /* eslint-disable */
-var path                  = require('path');
-var WebpackAssetsManifest = require('webpack-assets-manifest');
+var path                        = require('path');
+var WebpackAssetsManifest       = require('webpack-assets-manifest');
+var BabelPresetEnv              = require('babel-preset-env');
+var BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
 
 module.exports = {
     entry : {
@@ -38,7 +40,7 @@ module.exports = {
                         loader: 'babel-loader',
                         options: {
                             presets: [
-                                ['env', {
+                                [BabelPresetEnv, {
                                     targets: {
                                         ie: 11
                                     },
@@ -46,7 +48,7 @@ module.exports = {
                                 }]
                             ],
                             plugins: [
-                                "transform-object-rest-spread"
+                                BabelPluginObjectRestSpread
                             ]
                         }
                     }
