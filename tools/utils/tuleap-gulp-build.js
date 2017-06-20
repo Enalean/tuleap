@@ -92,11 +92,16 @@ function declare_component_tasks(component_paths) {
                 }, cb);
             });
 
-            gulp.task('build-' + component.name, ['install-' + component.name], function () {
-                return spawnSync('npm', ['run', 'build'], {
+            gulp.task('build-' + component.name, ['install-' + component.name], function (cb) {
+                const build = spawnSync('npm', ['run', 'build'], {
                     stdio: 'inherit',
-                    cwd: component.path
+                    cwd  : component.path
                 });
+
+                if (build.status !== 0) {
+                    return cb(new Error('Error during npm run build'));
+                }
+                cb();
             });
 
             install_tasks.push('install-' + component.name);
