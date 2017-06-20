@@ -1,7 +1,7 @@
 plugin_ldap	descriptor_description	Plugin LDAP. Permet l'affichage des information LDAP des utilisateurs, ainsi que l'authentification LDAP.
 plugin_ldap	people_ldap	Annuaire d'entreprise
 plugin_ldap	err_account_creation	Impossible de créer le compte. Merci de contacter un administrateur.
-plugin_ldap	more_from_directory	Plus d'info de l'annuaire $1
+plugin_ldap	more_from_directory	Plus d'informations de l'annuaire $1
 plugin_ldap	directory	Annuaire
 plugin_ldap	total_entries	Nombre total d'entrées
 plugin_ldap	entry_#	No. entrée
@@ -13,9 +13,9 @@ plugin_ldap	no_ldap_login_found	Identifiant sur l'annuaire d'entreprise introuva
 plugin_ldap	login_pls_use_ldap	Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de $1).
 plugin_ldap	ugroup_list_ldap_title	Import depuis l'annuaire
 plugin_ldap	ugroup_list_add_users	Ajouter des utilisateurs depuis l'annuaire
-plugin_ldap	ugroup_list_add_set_binding	Lier avec un group de l'annuaire
+plugin_ldap	ugroup_list_add_set_binding	Lier avec un groupe de l'annuaire
 plugin_ldap	ugroup_list_add_upd_binding	Mettre à jour le lien avec l'annuaire ($1)
-plugin_ldap	project_admin_add_ugroup	Lier avec un groupe de l'annuaire:
+plugin_ldap	project_admin_add_ugroup	Lier avec un groupe de l'annuaire :
 #
 #-----------------------------------------------
 # Script: SF/common/include/LDAP.class.php
@@ -57,17 +57,17 @@ plugin_ldap	welcome_mandatory	Les champs marqués $1 sont obligatoires.
 #
 plugin_ldap	ugroup_edit_ugroup_linked	<strong>$1</strong> est déjà connecté au groupe <strong>$2</strong> de l'annuaire.
 plugin_ldap	ugroup_edit_group_add_users_help	Ajoutez des utilisateurs au groupe (la virgule est le séparateur).
-plugin_ldap	ugroup_edit_group_you_can	Vous pouvez:
-plugin_ldap	ugroup_edit_group_resync	Re-synchroniser ce group avec l'annuaire (cliquez sur "Mettre à jour").
-plugin_ldap	ugroup_edit_group_link	Lier (et synchroniser) ce grouep avec un groupe de l'annuaire.
-plugin_ldap	ugroup_edit_group_remove	Supprimer le lien entre ce groupe est l'annuaire.
+plugin_ldap	ugroup_edit_group_you_can	Vous pouvez :
+plugin_ldap	ugroup_edit_group_resync	Re-synchroniser ce groupe avec l'annuaire (cliquez sur "Mettre à jour").
+plugin_ldap	ugroup_edit_group_link	Lier (et synchroniser) ce groupe avec un groupe de l'annuaire.
+plugin_ldap	ugroup_edit_group_remove	Supprimer le lien entre ce groupe et l'annuaire.
 plugin_ldap	ugroup_edit_group_synchro	Lors de la synchronisation avec l'annuaire :  
-plugin_ldap	ugroup_edit_group_synchro_add	les utilisateurs de l'annuaire non membre de ce groupe y sont ajouté ;
+plugin_ldap	ugroup_edit_group_synchro_add	les utilisateurs de l'annuaire non membres de ce groupe y sont ajoutés ;
 plugin_ldap	ugroup_edit_group_synchro_del	les utilisateurs membres de ce groupe mais pas dans l'annuaire sont supprimés si vous ne choisissez pas l'option 'Préserver les membres'.
 plugin_ldap	ugroup_edit_group_preserve_members_info	Choisissez cette option si vous ne voulez pas supprimer les membres de ce groupe qui n'appartiennent pas au groupe de l'annuaire.
 plugin_ldap	ugroup_edit_group_preserve_members_option	Préserver les membres
-plugin_ldap	ugroup_edit_group_synchronize_info	Choisissez cette option si vous voulez synchroniser ce groupe avec le groupe de l'annuaire.
-plugin_ldap	ugroup_edit_group_synchronize_option	Synchroniser
+plugin_ldap	ugroup_edit_group_synchronize_info	Choisissez cette option si vous voulez synchroniser journalièrement ce groupe avec le groupe de l'annuaire.
+plugin_ldap	ugroup_edit_group_synchronize_option	Synchroniser journalièrement
 plugin_ldap	ugroup_edit_group_add_users	Utilisateurs à ajouter :
 plugin_ldap	ugroup_edit_group_bind_with_group	Lier avec un groupe de l'annuaire :
 plugin_ldap	ugroup_edit_btn_update	Mettre à jour
@@ -105,8 +105,8 @@ plugin_ldap	invalid_ldap_group_name	Group LDAP invalide (ce groupe n'existe pas 
 #
 # LDAP_SyncNotificationManager
 #
-plugin_ldap	ldap_sync_mail_notification_subject	[Synchronisation LDAP quotidienne] $1 est suspendu, veuillez nettoyez le projet $2.
-plugin_ldap	ldap_sync_mail_notification_body	Chers administrateurs de projet,<br/> l'utilisateur $1 <$2> a été suspendu aprés la synchronisation LDAP quotidienne.<br/>Veuillez nettoyer les données de votre projet ($3) qui font référence à cet utilisateur (telque les assignements d'artefacts, les groupes d'utilisateurs,etc.).<br> Ce nettoyage sera fait automatiquement arpès $4 jours; l'utilisateur concerné sera supprimé de touts les projets et son statut sera modifié de Suspendu à Détruit.
+plugin_ldap	ldap_sync_mail_notification_subject	[Synchronisation LDAP quotidienne] $1 est suspendu, veuillez nettoyer le projet $2.
+plugin_ldap	ldap_sync_mail_notification_body	Chers administrateurs de projet,<br/> l'utilisateur $1 <$2> a été suspendu aprés la synchronisation LDAP quotidienne.<br/>Veuillez nettoyer les données de votre projet ($3) qui font référence à cet utilisateur (tel que les assignements d'artefacts, les groupes d'utilisateurs,etc.).<br> Ce nettoyage sera fait automatiquement après $4 jours; l'utilisateur concerné sera supprimé de tous les projets et son statut sera modifié de Suspendu à Détruit.
 plugin_ldap	ldap_sync_reminder_mail_notification_subject	[Rappel][Synchronisation LDAP] L'utilisateur $1 sera détruit demain
 plugin_ldap	ldap_sync_reminder_mail_notification_body	Chers administrateurs de projet,<br/>L'utilisateur $1 <$2> sera automatiquement supprimé de votre projet ($3) demain. Son statut sera modifié de Suspendu à Détruit.<br/>Veuillez nettoyer les données de votre projet qui font référence à cet utilisateur.
 
