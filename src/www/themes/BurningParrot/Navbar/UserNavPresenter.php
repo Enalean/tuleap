@@ -81,6 +81,11 @@ class UserNavPresenter
         return $this->current_user->getAvatarUrl();
     }
 
+    public function user_avatar_alt()
+    {
+        return _('User avatar');
+    }
+
     public function my_account_label()
     {
         return $GLOBALS['Language']->getText('menu', 'my_personal_page');

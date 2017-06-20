@@ -35,5 +35,6 @@ class UserPresenter
         $this->login      = $user->getUnixName();
         $this->has_avatar = $user->hasAvatar();
         $this->avatar_url = $user->getAvatarUrl();
+        $this->avatar_alt = _('User avatar');
     }
 }

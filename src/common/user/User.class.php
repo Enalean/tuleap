@@ -1361,7 +1361,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
          $url = $this->getAvatarUrl();
 
          if ($url) {
-             $html .= '<img src="'. $url .'" />';
+             $alternate_text = $purifier->purify(_('User avatar'));
+             $html .= '<img src="'. $url .'" alt="'. $alternate_text .'" />';
          }
 
          $html .= '</div>';
