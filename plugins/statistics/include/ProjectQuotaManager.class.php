@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2012. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVN\DiskUsage\Retriever;
-use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 require_once 'Statistics_ProjectQuotaDao.class.php';
 
@@ -51,12 +54,20 @@ class ProjectQuotaManager {
         $this->dao = $this->getDao();
         $this->pm  = ProjectManager::instance();
 
-        $disk_usage_dao = new Statistics_DiskUsageDao();
-        $svn_log_dao    = new SVN_LogDao();
-        $retriever      = new Retriever($disk_usage_dao);
-        $collector      = new Collector($svn_log_dao, $retriever);
-        $this->diskUsageManager = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+        $disk_usage_dao  = new Statistics_DiskUsageDao();
+        $svn_log_dao     = new SVN_LogDao();
+        $svn_retriever   = new SVNRetriever($disk_usage_dao);
+        $svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
+        $cvs_history_dao = new FullHistoryDao();
+        $cvs_retriever   = new CVSRetriever($disk_usage_dao);
+        $cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
 
+        $this->diskUsageManager = new Statistics_DiskUsageManager(
+            $disk_usage_dao,
+            $svn_collector,
+            $cvs_collector,
+            EventManager::instance()
+        );
     }
 
     /**

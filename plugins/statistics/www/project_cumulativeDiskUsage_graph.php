@@ -1,29 +1,33 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php';
 require_once dirname(__FILE__).'/../include/ProjectQuotaManager.class.php';
 
-use Tuleap\SVN\DiskUsage\Collector;
-use Tuleap\SVN\DiskUsage\Retriever;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
@@ -44,11 +48,20 @@ if ($request->valid($vGroupId)) {
 $func = $request->getValidated('func', new Valid_WhiteList('usage', 'progress'), '');
 
 //Get dates for start and end period to watch statistics
-$disk_usage_dao = new Statistics_DiskUsageDao();
-$svn_log_dao    = new SVN_LogDao();
-$retriever      = new Retriever($disk_usage_dao);
-$collector      = new Collector($svn_log_dao, $retriever);
-$duMgr          = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+$disk_usage_dao  = new Statistics_DiskUsageDao();
+$svn_log_dao     = new SVN_LogDao();
+$svn_retriever   = new SVNRetriever($disk_usage_dao);
+$svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
+$cvs_history_dao = new FullHistoryDao();
+$cvs_retriever   = new CVSRetriever($disk_usage_dao);
+$cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
+$duMgr           = new Statistics_DiskUsageManager(
+    $disk_usage_dao,
+    $svn_collector,
+    $cvs_collector,
+    EventManager::instance()
+);
+
 $statPeriod = $duMgr->getProperty('statistics_period');
 if (!$statPeriod) {
     $statPeriod = 3;

@@ -24,8 +24,11 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
-use Tuleap\SVN\DiskUsage\Retriever;
-use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -277,12 +280,20 @@ class StatisticsPlugin extends Plugin {
      */
     private function getDiskUsageManager()
     {
-        $disk_usage_dao         = new Statistics_DiskUsageDao();
-        $svn_log_dao            = new SVN_LogDao();
-        $retriever              = new Retriever($disk_usage_dao);
-        $collector              = new Collector($svn_log_dao, $retriever);
+        $disk_usage_dao  = new Statistics_DiskUsageDao();
+        $svn_log_dao     = new SVN_LogDao();
+        $svn_retriever   = new SVNRetriever($disk_usage_dao);
+        $svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
+        $cvs_history_dao = new FullHistoryDao();
+        $cvs_retriever   = new CVSRetriever($disk_usage_dao);
+        $cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
 
-        return new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+        return new Statistics_DiskUsageManager(
+            $disk_usage_dao,
+            $svn_collector,
+            $cvs_collector,
+            EventManager::instance()
+        );
     }
 
     private function getSoapUri() {
