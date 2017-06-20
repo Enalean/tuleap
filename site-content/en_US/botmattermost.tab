@@ -37,7 +37,7 @@ plugin_botmattermost	configuration_info_channels_handles	The channel handle is d
 
 plugin_botmattermost	configuration_button_add_bot	Add bot
 plugin_botmattermost	configuration_button_update	Update
-plugin_botmattermost	configuration_button_close	Close
+plugin_botmattermost	configuration_button_close	Cancel
 plugin_botmattermost	configuration_button_delete	Delete
 plugin_botmattermost	configuration_button_edit	Edit
 

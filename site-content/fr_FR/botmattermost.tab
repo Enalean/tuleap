@@ -37,7 +37,7 @@ plugin_botmattermost	configuration_info_channels_handles	L'indentifiant du salon
 
 plugin_botmattermost	configuration_button_add_bot	Ajouter un robot
 plugin_botmattermost	configuration_button_update	Modifier
-plugin_botmattermost	configuration_button_close	Fermer
+plugin_botmattermost	configuration_button_close	Annuler
 plugin_botmattermost	configuration_button_delete	Supprimer
 plugin_botmattermost	configuration_button_edit	Éditer
 
