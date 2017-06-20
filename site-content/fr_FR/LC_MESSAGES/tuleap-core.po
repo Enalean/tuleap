@@ -273,6 +273,9 @@ msgstr "Mettre à jour"
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
 
+msgid "User avatar"
+msgstr "Avatar de l'utilisateur"
+
 msgid "We cannot find any edition information for the requested widget."
 msgstr "Impossible de trouver comment éditer le widget requis."
 

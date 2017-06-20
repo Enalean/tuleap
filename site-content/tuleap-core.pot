@@ -254,6 +254,9 @@ msgstr ""
 msgid "Update successful"
 msgstr ""
 
+msgid "User avatar"
+msgstr ""
+
 msgid "We cannot find any edition information for the requested widget."
 msgstr ""
 
