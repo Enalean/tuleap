@@ -1,0 +1,8 @@
+
+<h2>得到帮助</h2>
+
+<h3>访问Tuleap文档</a></h3>如果您有关于Tuleap使用情况或遇到问题的问题，请先查看 <a href="/doc/en/index.html">文档</a>.
+
+<h3>问问题</h3>疑难解答，发现错误？发布您的问题，获得答案 <a href="/plugins/forumml/message.php?group_id=101&list=1">在tuleap-devel邮件列表</a>要查看当前的讨论并发布新主题，创建一个 <a href="/account/register.php">用户帐户</a> 在Tuleap.
+
+<h3>联系我们</h3>对于所有其他查询， <a href="/contact.php">请联系</a> 与我们。

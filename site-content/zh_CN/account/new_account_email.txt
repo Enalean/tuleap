@@ -1,0 +1,34 @@
+﻿<?php
+// Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+// 
+//
+$title = "欢迎 ".$GLOBALS['sys_name']."!";
+
+$section_one = "您现在已是注册用户，请登录： ";
+
+$section_two = "作为注册用户，您现在可以充分参与活动了 ".$GLOBALS['sys_name']." 站点 "
+               ."您可以使用论坛，订阅邮件列表，浏览托管项目列表，甚至启动自己的项目 "
+               ."项目";
+
+$section_three = "** 重要备注 **\n\n虽然您的Web帐户现在可用，但它还需要一些时间 ".$GLOBALS['sys_name']
+                   ." 创建您的shell帐户。一些功能如CVS、SVN访问取决于它。您的shell帐户将在不到两个被激活"
+                   ." 从现在开始几个小时。 \n\n\nIn 我们也强烈建议您浏览网站，阅读 "
+                   ."站点文档并最终确定用户配置文件的设置 "
+                   ."(定义你自己的喜好等)\n\n\n享受网站，提供给我们的反馈，我们可以提高 "
+                   .$GLOBALS['sys_name']." 和说 ".$GLOBALS['sys_name']." 在你周围";
+
+$section_after_login = "\n密码应该由您的网站管理员传递给您。请在第一次连接到网站后更改它。如果没有向您发送密码，您可以使用丢失的密码程序生成新密码.";
+
+$thanks = "谢谢!";
+
+$signature = "团队在 ".$GLOBALS['sys_name'];
+
+$help = "任何帮助请联系： ".$GLOBALS['sys_email_admin'];
+
+$message = $title . "\n\n" .  $section_one . $login  . '.' . $section_after_login . "\n\n" . $section_two . "\n\n"
+            .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

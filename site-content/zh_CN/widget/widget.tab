@@ -1,0 +1,60 @@
+#/**
+#  *
+#  * Tracker scripts message catalog (English)
+#  * Tuleap
+#  * Copyright (c) Enalean SAS, Tuleap Team, 2011-2012.All rights reserved
+#  * Codendi
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  *
+#  *
+#  *
+#  */
+#
+小部件close_title删除
+widget最大化最大化
+widget最小化最小化
+小部件rss_title RSS
+widget preferences_title首选项
+
+widget_add标题添加小部件
+widget_add codendi_widgets $1小部件
+widget_add external_widgets外部小部件
+widget_add添加
+widget_add already_used已经使用
+widget_add link_add自定义小部件
+
+widget_imageviewer invalid_url只接受http：//和https：//网址。
+
+widget_categ_label论坛
+widget_categ_label frs文件
+widget_categ_label general General
+widget_categ_label跟踪器跟踪器
+widget_categ_label scm源代码管理
+widget_categ_label wiki维基
+
+widget_layout标题自定义布局
+
+widget_dashboard更新您的<a href="$1">信息中心</a>已更新。
+
+widget_description_my_bookmarks描述列出您最喜欢的书签（Tuleap或外部您最喜爱的页面）。<br>请注意，在许多情况下，Tuleap使用足够嵌入信息的URL来将复杂的项目（如软件地图浏览）加载到项目Bug或Task数据库中的典型搜索，等等 <br>可以编辑书签的项目，这意味着可以修改书签的标题及其目标网址。
+widget_description_my_artifacts description根据项目列出您提交或分配给您的工件。
+widget_description_my_latest_svn_commits description列出按项目完成的SVN提交。
+widget_description_my_monitored_forums description根据项目列出您正在监视的论坛。<br>要取消任何受监视项目，只需点击项目标签旁边的垃圾桶图标即可。
+widget_description_my_monitored_fp说明按项目列出您当前正在监视的软件包。<br>要取消任何受监视项目，只需单击项目标签旁边的垃圾桶图标即可。
+widget_description_my_projects说明列出您所属的项目。选择任何这些项目将带您到相应的项目摘要页面。
+widget_description_rss描述允许您将公共rss（或atom）feed添加到您的个人页面中。
+widget_description_my_system_event说明列出系统事件。
+widget_description_my_tasks说明列出分配给您的任务。
+widget_description_twitter_follow description列出您决定遵循的Twitter的信息。
+widget_description_project_latest_file_releases description列出可用于下载的最新软件包及其修订版本。<br>“发行说明”图标可让您查看与此修订相关联的最新更改和开发人员注释。<br>然后进入显示器图标，选择此图标将导致您对该包进行监控。<br>项目开发小组随时发布新版本，您将自动通过电子邮件通知。所有受监控的文件发布都列在您的个人页面中，可以从此页面或文件释放系统的主页中取消。。
+widget_description_project_classification description列出项目的类别。
+widget_description_project_description description允许您查看项目描述。
+widget_description_project_latest_news说明列出项目成员发布的最近10条新闻。
+widget_description_project_members description列出项目成员。
+widget_description_project_public_areas说明列出此项目的所有可用服务及其旁边的一些信息。点击任何一个项目来访问服务。<br>该区域的作用与屏幕顶部的“项目主菜单”非常相似，除了它显示有关每个服务的其他信息（例如，打开的错误，任务的总数...）
+widget_description_project_latest_cvs_commits说明列出项目的最新CVS提交。
+widget_description_project_latest_svn_commits说明列出项目的最新SVN提交。
+widget_description_project_svn_stats说明按周显示项目的svn统计。结果显示在条形图中。
+widget_description_project_contacts描述允许您联系项目管理员
+
+widget_project_contacts标题联系人

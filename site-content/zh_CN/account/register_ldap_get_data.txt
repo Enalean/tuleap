@@ -1,0 +1,28 @@
+<?php
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+// 
+//
+
+// The following script is used to automatically set several variables from the LDAP directory 
+// when creating the account. 
+// It may also display additional instructions.
+// 
+// The following variables can be set:
+// $form_loginname  -> UNIX login name for services like CVS, FTP, shell, scp, SVN...
+// $form_realname   -> User real name
+// $form_email      -> User email address
+// $timezone        -> User timezone
+//
+// If they are not set, the user will still be able to enter them manually
+//
+?>
+
+<?php
+if (!$form_email) $form_email=$info[0]['mail'][0];
+if (!$form_realname) $form_realname=$info[0]['cn'][0];
+if (!$form_loginname) $form_loginname=account_make_login_from_email($info[0]['mail'][0]);
+?>

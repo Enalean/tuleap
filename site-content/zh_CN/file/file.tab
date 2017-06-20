@@ -1,0 +1,366 @@
+#/**
+#  *
+#  * file scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editpackagepermissions.php
+#
+file_admin_editpackagepermissions	p_not_exist	软件包不存在
+file_admin_editpackagepermissions	edit_p_perm	编辑程序包的权限
+file_admin_editpackagepermissions	p	软件包
+file_admin_editpackagepermissions	perm_explain	您可以将特定权限设置为软件包。 T这些权限适用于所有版本和文件属于这个包。但您也可以设置不同的权限，以特定的版本。默认情况下，所有注册用户都可以访问软件包。
+file_admin_editpackagepermissions	select_u_group	选择授予此软件包访问权限的用户组
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editpackages.php
+#
+file_admin_editpackages	p_name_exists	此软件包名称已存在。请选择其他名称。
+file_admin_editpackages	cannot_hide	对不起，您无法隐藏仍包含活动版本的软件包。先隐藏附件
+file_admin_editpackages	p_updated	更新包 "$1"
+file_admin_editpackages	perm_update_err	错误：无法更新权限
+file_admin_editpackages	perm_reset_err	错误：无法将权限重置为默认值
+file_admin_editpackages	perm_reset	权限重置为默认值
+file_admin_editpackages	p_added	添加软件包
+file_admin_editpackages	release_edit_f_rel	发布/编辑文件发布
+file_admin_editpackages	packages	包
+file_admin_editpackages	p_explain	可以使用包将不同的文件发布组合在一起。包是一组一致的源文件，可以放在一起，并提供一个你的更大的项目的工作部分。\n
+file_admin_editpackages	no_p_defined	您没有定义包
+file_admin_editpackages	p_name	包的名字
+file_admin_editpackages	rank_on_screen	屏幕上的秩
+file_admin_editpackages	update	更新
+file_admin_editpackages	releases	版本
+file_admin_editpackages	perms	权限
+file_admin_editpackages	license	License验收
+file_admin_editpackages	edit_releases编辑发布
+file_admin_editpackages	add_releases	添加发布
+file_admin_editpackages	edit	编辑
+file_admin_editpackages	define	定义
+file_admin_editpackages	create_new_p	创建一个新的包
+file_admin_editpackages	create_this_p	创建这个包
+file_admin_editpackages	status_active	活跃
+file_admin_editpackages	status_hidden	隐藏
+file_admin_editpackages	create_canceled	取消创建包
+file_admin_editpackages	edit_package	编辑包
+file_admin_editpackages	update_canceled	包更新取消
+file_admin_editpackages	p_not_exists	包不存在
+file_admin_editpackages	p_not_yours不是您的包或包不存在
+file_admin_editpackages	p_del	包删除
+file_admin_editpackages	p_not_empty	对不起，您无法删除仍包含版本的软件包。
+file_admin_editpackages	warn	** 警告!! ** 删除此包（没有可能的还原操作）？
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editreleasepermissions.php
+#
+file_admin_editreleasepermissions	rel_not_exist	释放不在这个包中的存在
+file_admin_editreleasepermissions	edit_rel_perm	编辑发布权限
+file_admin_editreleasepermissions	释放
+file_admin_editreleasepermissions	from_p	从包装
+file_admin_editreleasepermissions	perm_explain	&nbsp;
+file_admin_editreleasepermissions	select_u_group	选择授予此版本的访问权限的用户组： \n<br><b>Note</b>: 如果没有为发布定义权限，则它与父包具有相同的权限。\n<br>当为释放定义权限时，它将重写为<a href="$1">包属于</a>.
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/editreleases.php
+#
+file_admin_editreleases	create_p_before_rel	必须在创建发布之前创建包。
+file_admin_editreleases	p_not_exists	包不存在或不是你的
+file_admin_editreleases	add_rel_fail	加入释放失败
+file_admin_editreleases	rel_added	增加的释放
+file_admin_editreleases	rel_name_exists	发布名称已存在
+file_admin_editreleases	rel_name_empty	无效的发布名称：不允许空名称
+file_admin_editreleases	updating_rel	更新发布
+file_admin_editreleases	data_uploaded	数据上传
+file_admin_editreleases	length_err	错误上传的数据必须是非空的 < $1长度
+file_admin_editreleases	invalid_flag_err	错误无效的上传标志
+file_admin_editreleases	create_p_before_rel_status	必须在创建发布之前创建包。您还必须包含发布名称和状态。
+file_admin_editreleases	p_not_yours	试图改变不是你的包
+file_admin_editreleases	cannot_del_rel	对不起，您无法删除仍包含文件的版本
+file_admin_editreleases	rel_updated	更新发布"$1"
+file_admin_editreleases	rel_update_failed	更新发布失败
+file_admin_editreleases	f_not_yours	Not你的文件 $1 或文件不存在
+file_admin_editreleases	rel_not_yours	您的发布或发布不存在: $1)
+file_admin_editreleases	data_not_parsed	对不起-文件日期条目无法解析。它必须是日期格式。
+file_admin_editreleases	data_not_parsed_file	对不起-文件$1 :无法解析日期项。它必须是日期格式。
+file_admin_editreleases	file_updated	文件更新： $1
+file_admin_editreleases	add_files	添加文件（s）
+file_admin_editreleases	offline_md5 文件的MD5校验和"$1" 将由后台进程计算。您将通过电子邮件通知在案件的问题。
+file_admin_editreleases	illegal_file_name	非法的文件名
+file_admin_editreleases	p_rel_not_yours 包/释放不存在或不是你的
+file_admin_editreleases	not_add_file	无法添加文件名
+file_admin_editreleases	filename_invalid	无效的文件名或文件不存在
+file_admin_editreleases	filename_exists	此版本中已存在文件名
+file_admin_editreleases	filename_to_be_restored 一个具有相似名称的文件将在几分钟内被还原
+file_admin_editreleases	md5_fail	MD5校验和比较失败的文件"$1", 服务器上计算的MD5值为 "$2"
+file_admin_editreleases	no_files_selected	没有选择文件
+file_admin_editreleases	file_deleted	文件删除 : $1
+file_admin_editreleases	file_rel_notice_subject	[$1] $2: 新发布的包 $3
+file_admin_editreleases	download_explain_modified_file	新版$2 (包 $1)已经发布。
+file_admin_editreleases	download_explain_modified_package	$1 项目发布 '$3' 在包 '$2'.\n你可以下载它:\n<$4>\n
+file_admin_editreleases	download_explain	\n--\n当此包的新版本发布时，您要求通知。\n如果您不希望将来通知，请单击此链接：\n<$1>
+file_admin_editreleases	file_rel_notice_notes	\n\n发行说明：\n$1\n
+file_admin_editreleases	file_rel_notice_changes	\n\n更改日志：\n$1\n
+file_admin_editreleases	email_sent	email sent - $1 用户跟踪
+file_admin_editreleases	rel_id_not_found	数据库中没有找到释放ID
+file_admin_editreleases	release_new_file_version	发布新文件版本
+file_admin_editreleases	step_x	Step $1
+file_admin_editreleases	edit_change_notes	编辑此包发布的更改说明。这些注释将适用于附加到此版本的所有文件。
+file_admin_editreleases	edit_release	更新发布
+file_admin_editreleases	of_p	包装
+file_admin_editreleases	release_date	发布日期
+file_admin_editreleases	of_P	包装
+file_admin_editreleases	upload_or_paste您可以单独上传发布说明和更改日志，或将它们粘贴在一起。
+file_admin_editreleases	paste	粘贴注释
+file_admin_editreleases	upload_change	上传更改日志
+file_admin_editreleases	upload_notes	上传发布说明
+file_admin_editreleases	max_file_size	（最大上传文件大小为 $1 Mb)
+file_admin_editreleases	release_notes	发行说明
+file_admin_editreleases	change_log	更改日志
+file_admin_editreleases	preserve_preformatted	保存我预格式化的文本。
+file_admin_editreleases	submit_refresh	提交/刷新
+file_admin_editreleases	attach_files	附加文件到这个版本
+file_admin_editreleases	no_available_files	没有可用的文件
+file_admin_editreleases	upload_files	请上传上面所解释的文件，然后点击 <B>刷新文件列表</B>.
+file_admin_editreleases	refresh_file_list	刷新文件列表
+file_admin_editreleases	attach_marked_files	附加标记的文件
+file_admin_editreleases	edit_files	在此版本中编辑文件
+file_admin_editreleases	update_each	你 <B>必须</B>使用正确的信息更新这些文件，否则它们不会出现在您的下载摘要页面上。
+file_admin_editreleases	no_files_attached	没有附加到这个版本的文件
+file_admin_editreleases	attach_files_in_step2	您可以附加文件使用步骤2以上
+file_admin_editreleases	filename	文件名
+file_admin_editreleases	processor	处理器
+file_admin_editreleases	file_type	文件类型
+file_admin_editreleases	update_refresh更新/刷新
+file_admin_editreleases	delete_file	删除文件
+file_admin_editreleases	im_sure	我相信
+file_admin_editreleases	mail_file_rel_notice	电子邮件文件发布通知： 
+file_admin_editreleases	send_notice	发送通知
+file_admin_editreleases	users_monitor	$1用户正在监视您的包。您应该发送您的文件发布通知。
+file_admin_editreleases	create_auto_news	创建自动消息
+file_admin_editreleases	rel_news	您可以自动创建一条消息，通知人们关于新版本。
+file_admin_editreleases	create_news创建消息
+file_admin_editreleases	define_new_release	定义包的新版本
+file_admin_editreleases	contain_multiple_files包的发布可以包含多个文件。发布名称可以是版本号(3.22.1, 3.23-beta1…) 或名称。
+file_admin_editreleases	your_release	包装发布： $1 
+file_admin_editreleases	no_releases_defined	你没有发布$1定义
+file_admin_editreleases	release_name	发布名称
+file_admin_editreleases	delete	删除吗？
+file_admin_editreleases	edit_this_release	编辑此稿
+file_admin_editreleases	edit_this_p	编辑本包装
+file_admin_editreleases	warn	** 警告!! ** 删除此版本，其所有文件和相应的访问日志（没有可能恢复操作）？
+file_admin_editreleases	new_release_name	新版本的名字
+file_admin_editreleases	belongs_to_p	属于包
+file_admin_editreleases	create_this_release	创建发布
+file_admin_editreleases	rel_del	发布删除
+file_admin_editreleases	of_this_package	这个包
+file_admin_editreleases	subject	主题
+file_admin_editreleases	file_news_subject	新版本： $1
+file_admin_editreleases	details 细节
+file_admin_editreleases	file_news_details	一个新的版本$1现在可以在这个网址: $2
+file_admin_editreleases	submit_news	提交消息
+file_admin_editreleases	relname	<发布名称>
+file_admin_editreleases	fieldset_properties	性能
+file_admin_editreleases	fieldset_uploaded_files	上传文件
+file_admin_editreleases	fieldset_notes	注释
+file_admin_editreleases	fieldset_permissions	权限
+file_admin_editreleases	fieldset_news	消息
+file_admin_editreleases	fieldset_notification	通知
+file_admin_editreleases	browse	浏览…
+file_admin_editreleases	local_file	本地文件
+file_admin_editreleases	scp_ftp_files	多媒体文件
+file_admin_editreleases	add_file	添加文件
+file_admin_editreleases	upload	上传
+file_admin_editreleases	add_change_log	添加更改日志
+file_admin_editreleases	view_change	[查看/更改]
+file_admin_editreleases	default_permissions	将创建相同的权限比它的父包。
+file_admin_editreleases	delete_col	删除
+file_admin_editreleases	release_perm	发布权限是：
+file_admin_editreleases	upload_file_deleted	您最近删除了文件 $1, 你可以在不到两小时内再次上传。
+file_admin_editreleases	create_new_release	创建一个新版本
+file_admin_editreleases	create_canceled	取消创建发布
+file_admin_editreleases	update_canceled版本更新取消
+file_admin_editreleases	upload_file_msg	（最大上传文件大小为 $1 Mb - 请压缩您的文件）
+file_admin_editreleases	md5sum	MD5校验
+file_admin_editreleases	user	所有者
+file_admin_editreleases	fileforge_error	将文件移动到目标时出错（是否已删除的文件$ 1？）
+file_admin_editreleases	db_error	将文件添加到数据库时出错
+file_admin_editreleases	comment	评论
+file_admin_editreleases	move_event	文件在队列中被移动。请等待几分钟，以便再次可用。
+file_admin_editreleases	notes_in_markdown	发布注释和更改日志将以标记格式进行解释。
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/index.php
+#
+file_admin_index	file_manager_admin	文件管理器管理
+file_admin_index	edit_release_files	编辑/发布文件
+file_admin_index	manage_explain	创建或修改软件包和发布，设置状态和访问权限。
+file_admin_index	quick_add	快速添加文件发布
+file_admin_index	quick_add_explain	一步过程中，您可以指定所有必要的信息在同一时间。对应的是，您只能将一个文件连接到给定的版本，而不是在完整文件发布过程中的几个文件。
+file_admin_index	warning_new_permission	文件权限管理已从用户权限转移到用户组管理<a href="/file/admin/?group_id=$1&action=edit-permissions">文件管理器管理</a>.
+#
+#-----------------------------------------------
+# Script: SF/www/file/admin/qrs.php
+#
+file_admin_qrs	define_rel_name	必须定义发布名称。
+file_admin_qrs	choose_processor_type	请选择处理器类型
+file_admin_qrs	choose_file_type	请选择文件类型
+file_admin_qrs	added_success	$1 添加成功
+file_admin_qrs	no_email_sent	没有电子邮件发送：发布是隐藏的
+file_admin_qrs	email_sent	电子邮件发送到$1 用户监控此包
+file_admin_qrs	no_p_available	没有包装
+file_admin_qrs	create_new_p	创建一个新的包
+file_admin_qrs	file_name	文件名
+file_admin_qrs	select_file 选择一个文件
+file_admin_qrs	upload_file 或者，上传一个新文件
+file_admin_qrs	processor_type	处理器类型
+file_admin_qrs	release_file	发布文件
+file_admin_qrs	adding_file	添加文件
+#
+#-----------------------------------------------
+# Script: src/www/file/admin/manageprocessors.php
+#
+file_admin_manageprocessors	manage_proclist	管理处理器
+file_admin_manageprocessors	edit_proc	单击处理器名以编辑处理器
+file_admin_manageprocessors	add_proc	添加一个新的处理器
+file_admin_manageprocessors	update_proc	更新的处理器
+file_admin_manageprocessors	rank_error	误差。处理器排名应该是整数。
+file_admin_manageprocessors	proc_fill	误差。处理器 $1不应该是空的。
+file_admin_manageprocessors	invalid_procid	误差。无效的处理器ID。
+file_admin_manageprocessors	predef_procid	警告。预先定义的处理器不能被编辑。
+#
+#-----------------------------------------------
+# Script: SF/www/file/confirm_download.php
+#
+file_confirm_download	download_agreement	下载协议
+file_confirm_download	download_explain	<h2>*** 下载协议 ***</h2></center> \n</div> \n<p>您将要从本网站下载软件。软件复用与共享<b>内部</b> $1服从<a href="$3"><b>代码交换公司政策</b></a>.</p> \n\n<p>通过下载这个软件你含蓄地承认你有<a href="$3"><b>阅读策略</b></a> 并同意条款及条件。 \n\n<p>要继续进行文件下载，请单击'<b>我同意</b>'.如果你不想下载文件点击<b>我拒绝</b>'和 <a href="电子邮件:$2"><b>联系我们</b></a> 如果你需要澄清或想解释为什么你拒绝了这份协议。
+file_confirm_download	agree	我同意
+file_confirm_download	decline	我拒绝
+file_confirm_download	back	回到前一页
+#
+#-----------------------------------------------
+# Script: SF/www/file/download.php
+#
+file_download	incorrect_release_id	不正确的文件释放ID或组ID
+file_download	report_error	请将错误报告给$1管理员使用<i>联系我们</i> 主菜单中的链接
+file_download	access_denied	拒绝访问
+file_download	access_not_authorized	您没有权限访问此文件。请联系<A HREF="$1">项目管理员</A>.
+file_download	file_not_available	内部错误：文件不可用。请与系统管理员联系
+#
+#-----------------------------------------------
+# Script: SF/www/file/filemodule_monitor.php
+#
+file_filemodule_monitor	monitor_a_package	监控软件包
+file_filemodule_monitor	monitor_package监控软件包
+file_filemodule_monitor	insert_err	插入文件模块监视器时出错
+file_filemodule_monitor	p_monitored	包现在正在监测
+file_filemodule_monitor	now_emails	当新文件发布时，您将被发送电子邮件。
+file_filemodule_monitor	turn_monitor_off	要关闭监视，只需单击 <B>停止监控</B>图标。
+file_filemodule_monitor	monitor_turned_off	监测已关闭
+file_filemodule_monitor	no_emails	您将不会收到任何更多的电子邮件从这个包。
+file_filemodule_monitor	choose_p	错误-首先选择包
+file_filemodule_monitor	no_permission	您没有足够的权限来执行此操作
+file_filemodule_monitor	monitoring_people_title	人们监测的包
+file_filemodule_monitor	users_monitor	$1 用户（s）正在匿名监视。
+file_filemodule_monitor	no_list	没有用户公开监控此包
+file_filemodule_monitor	user	用户
+file_filemodule_monitor	add_users	将用户添加到监视列表
+file_filemodule_monitor	my_monitoring	我包的监测
+file_filemodule_monitor	anonymous	监控匿名
+file_filemodule_monitor	public	管理员将知道您正在监视此包
+file_filemodule_monitor	no_delete	无法删除
+file_filemodule_monitor	not_monitoring	用户 "$1"没有监控这个包
+file_filemodule_monitor	delete_error	无法为用户删除监视 "$1"
+file_filemodule_monitor	deleted	为用户删除监视 "$1"
+file_filemodule_monitor	no_user	找不到用户 "$1"
+file_filemodule_monitor	user_no_permission	用户 "$1" 没有读取包的权限
+file_filemodule_monitor	already_monitoring	用户 "$1" 已经监控这个包
+file_filemodule_monitor	monitoring_added	包现在正在监视 "$1"
+file_filemodule_monitor	mail_subject	[$1]监测方案"$2"
+file_filemodule_monitor	add_monitor_mail	您被添加到监视包
+file_filemodule_monitor	delete_monitor_mail	您从监视包中移除
+#
+#-----------------------------------------------
+# Script: SF/www/file/file_utils.php
+#
+file_file_utils	admin	管理员
+file_file_utils	must_choose_one	选择...
+file_file_utils	g_id_err	项目标识符（组ID）
+file_file_utils	manage_proc处理器
+file_file_utils	proc_id处理器标识
+file_file_utils	proc_name	名称
+file_file_utils	proc_rank	秩
+file_file_utils	del	删除吗？
+file_file_utils	add_proc	添加
+file_file_utils	update_proc更新
+file_file_utils	required_fields所需的字段
+file_file_utils	add_proc_success	处理器中增加。
+file_file_utils	add_proc_fail	提交失败。
+file_file_utils	update_proc_success	处理器更新。
+file_file_utils	update_proc_fail	更新失败。
+file_file_utils	delete_proc_success	处理器删除。
+file_file_utils	delete_proc_fail	删除失败。
+file_file_utils	del_proc	删除此处理器？
+file_file_utils	permissions访问控制
+file_file_utils	administrators_title	档案管理员
+file_file_utils	readers_title	文件阅读器
+file_file_utils	permission_read_title	阅读
+file_file_utils	title_frs_administration	文件管理
+file_file_utils	access_control_intro	本节允许您定义可以在文件中读取和/或写入内容的用户组。
+file_file_utils	administrator_info	下面的选定用户组可以管理服务。请注意，项目管理者是事实上的档案管理员。
+file_file_utils	readers_info	下面的选定用户组可以访问服务。对特定包的访问可以限制在包级别（尽管这些包的用户组选择不能大于下面的选择）。
+file_file_utils	frs_admins_submit_button	保存访问控制
+file_file_utils	updated_permissions	权限更新
+file_file_utils	write_title	管理员
+file_file_utils	no_data_selected	没有选择数据。
+file_file_utils	toolbar_admin	管理员
+file_file_utils	toolbar_help	帮助
+file_file_utils	error_data_incorrect	数据似乎不正确。
+#
+#-----------------------------------------------
+# Script: SF/www/file/showfiles.php
+#
+file_showfiles	file_p_for	项目文件包 '$1'
+file_showfiles	no_file_p	没有文件包
+file_showfiles	no_p_available	没有可用的文件包
+file_showfiles	p_releases	包发布
+file_showfiles	select_release	选择文本图标（下一个发布名称）来查看发行说明和更改日志.&nbsp;选择文件以请求文件下载。
+file_showfiles	release_notes	发布 &amp; 笔记
+file_showfiles	size	大小 (Kb)
+file_showfiles	d_l	D/L
+file_showfiles	arch	拱。
+file_showfiles	type	型
+file_showfiles	date	日期
+file_showfiles	no_releases没有发布
+file_showfiles	proj_total	项目总计
+file_showfiles	no_files	没有文件
+file_showfiles	read_notes	阅读发行说明和修改
+file_showfiles	start_monitoring	监控这个包
+file_showfiles	stop_monitoring	停止监视此包
+file_showfiles	stat_total_nb_releases	发布
+file_showfiles	stat_total_nb_files	文件夹
+file_showfiles	stat_total_size	Kb
+file_showfiles	stat_total_nb_downloads	下载
+file_showfiles	hidden_package	这个包是隐藏的。
+file_showfiles	hidden_release	此版本是隐藏的。
+file_showfiles	md5sum	文件MD 5和
+file_showfiles	user	所有者
+file_showfiles	release	发布
+file_showfiles	package	软件包
+file_showfiles	warn_chars	这个 $1 '$2' 包含的字符可能与WebDAV使用不兼容的
+#
+#-----------------------------------------------
+# Script: SF/www/file/shownotes.php
+#
+file_shownotes	not_found_err	错误-没有找到
+file_shownotes	release_not_found	没有找到发布
+file_shownotes	release_notes	文件版本注释和修改
+file_shownotes	release_name	发布名称
+file_shownotes	changes变化
+file_shownotes	notes	笔记
+
+file_ref_tooltip	package_release	包装/发布

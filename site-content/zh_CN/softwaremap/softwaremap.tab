@@ -1,0 +1,28 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/softwaremap/trove_list.php
+#
+softwaremap_trove_list	map	软件设计图
+softwaremap_trove_list	invalid_cat	无效的收藏路径
+softwaremap_trove_list	cat_not_exist	这个收藏路径不存在.
+softwaremap_trove_list	limit_view	Now limiting view to projects in the following categories:
+softwaremap_trove_list	remove_view	删除这个过滤器
+softwaremap_trove_list	projs	项目
+softwaremap_trove_list	browse_by	        浏览:
+softwaremap_trove_list	projs_in_res	<B>$1</B> 项目的结果集. 
+softwaremap_trove_list	display_per_page	每页显示一行.<BR>
+softwaremap_trove_list	activity_percentile	  百分比进度: 
+softwaremap_trove_list	activity_ranking	归类行为:
+softwaremap_trove_list	register_date	登记日期:
+softwaremap_trove_list	not_categorized	没有指定（或没有详细说明）
+softwaremap_trove_list	no_project_in_cat	在这个分类中没有项目.

@@ -1,0 +1,17 @@
+<?php
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+//
+//
+
+// Define here the Web sites that will appear in the Network Gallery
+// on the Codendi pages
+
+/*
+$osdn_sites[] = array('Slashdot.org' => 'http://www.slashdot.com/');
+$osdn_sites[] = array('SourceForge' => 'http://www.sourceforge.net/');
+$osdn_sites[] = array('Freshmeat' => 'http://www.freshmeat.net/');
+*/

@@ -1,0 +1,463 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/include/account.php
+#
+include_account	pwd_length_err	Password must be at least 6 characters.密码必须至少6个字符
+include_account	account_notactive	Account '$1' not active. User not added.账户”$1”不活跃,用户已经添加过了
+include_account	user_added	User added:用户已经添加过了
+include_account	user_already_member	User is already a member:用户已经会员了
+include_account	user_not_exist	User does not exist:用户不存在
+include_account	welcome	$1 - Welcome to Project $2:欢迎 $1 - 欢迎参与项目 $2
+include_account	login_err	There cannot be any spaces in the login name.在登录名中不能有任何空格
+include_account	project_spaces	There cannot be any spaces in the short name.在短名称中不能有任何空格
+include_account	char_err	The name must start with a letter.名字必须以字母开头
+include_account	illegal_char	Illegal character in name.非法字符
+include_account	name_too_short	Name is too short. It must be at least 3 characters.名字太短了,他必须有三个字符
+include_account	name_too_long	Name is too long. It must be less than $1 characters.名字太长，最多不超过 $1 个字符
+include_account	reserved	Name is reserved.:名字已经保留了
+include_account	reserved_cvs	Name is reserved for CVS.名字被CVS保留了
+include_account	reserved_dns	Name is reserved for DNS purposes.名字作为DNS的目的保留了
+include_account	dns_error	Short name cannot contain underscore or dot.短的命名不能包含下划线或者圆点
+include_account	used_by_svn	This short name is not available: An SVN directory already exists with this name  这个简短的
+名称是不可用的:一个SVN目录已经存在这个名称
+include_account	used_by_cvs	This short name is not available: An CVS directory already exists with this name这个简短的
+名称是不可用的:一个CVS目录已经存在这个名称
+include_account	used_by_sys	This short name is not available: A home project already exists with this name这个简短的名字
+是不可用的:一个已经存在这个名字的家庭项目
+include_account	change_pwd_err	Please update your password first:请第一时间更新你的密码
+#
+#-----------------------------------------------
+# Script: SF/www/include/account.php
+#
+include_cache	unable_open_cache	Unable to open cache file for writing after obtaining lock.:无法打来缓存文件写在获得锁
+#
+#-----------------------------------------------
+# Script: SF/www/include/exit.php
+#   
+include_exit	error	Error:错误
+include_exit	info	Information:信息
+include_exit	perm_denied	Permission Denied:没有权限
+include_exit	exit_error	Exiting with Error:推出与错误
+include_exit	no_perm	You are not granted sufficient permission to perform this operation.:你没有足够的权限来执行此操作
+include_exit	mail_list_no_perm	You need to be registered to post a new thread. Please login or request an account.:
+你需要注册一个新线程,请登录或请求一个账户
+include_exit	restricted_user_no_perm	You have a restricted user account.<br>You may only access web pages of projects you are member of.<p><a href="/my/">Back to your personal page.</a>:
+你有一个受限制的用户账号<br>你只能访问web页面的项目成员
+include_exit	not_logged_in	Not Logged In:没有登录
+include_exit	need_to_login	Sorry, you have to be <A HREF="/account/login.php">logged in</A> to view this page.:
+你必须登录才能看到这个网页
+include_exit	choose_proj_err	Error - Choose a Project:错误-选择一个项目
+include_exit	no_gid_err	Error - No group_id was chosen.错误-没有选择组名
+include_exit	missing_param_err	Error - Missing Parameters:错误-参数遗失
+include_exit	private_project_no_perm	Private Project. You may only access private projects you are member of.<br><a href="/my/">Back to your personal page</a>
+私人项目,你可能只能访问属于你的私人项目,返回你的个人主页
+include_exit	request_to_admin	<em> or you can request to be added as a member.</em><br /> Write your message below and click on the button to send your request to the project administrators.
+或者你可以请求添加成员。< / em > < br / >下面写你的信息,然后点击按钮来将您的请求发送到项目管理员。
+include_exit	send_mail	Send mail:发送邮件
+include_exit	request_sent	<b>Your request has been sent to project administrators. You will be informed about any news.</b>你的请求已经被派往项目管理员。你将了解任何消息
+include_exit	mail_content_private_project	Dear project administrator,\n\n$1 (login: $2) requests access to the resource $3 from the project "$4":\n$5\n\n$1 wrote a message for you:\n$6\n\nThis project is private, only project members can access it.\nIf you decide to accept the request, please take the appropriate actions to grant access and communicate that information to the requester..\nOtherwise, please inform the requester ($7) that he will not get access to the requested data.\n\nPlease note that adding $1 as project member might not be enough if you set specific permissions on the requested resource.\n--\n$1.
+亲爱的的项目管理员,$1(登录:$2)请求访问资源$3从项目“$4”:$5,$1为你写了一个消息: $6的服装项目是私人的,只有项目成员可以访问它。如果你决定接受该请求,请接受
+include_exit	mail_content_restricted_user	Dear project administrator,\n\n$1 (login: $2) requests access to the resource $3 from the project "$4":\n$5\n\n$1 wrote a message for you:\n$6\n\nHe is a restricted user, he may only access web pages of projects he is member of.\nIf you decide to accept the request, please take the appropriate actions to grant access and communicate that information to the requester.\nOtherwise, please inform the requester ($7) that he will not get access to the requested data.\n\nPlease note that adding $1 as project member might not be enough if you set specific permissions on the requested resource.\n--\n$1.
+亲爱的的项目管理员,$1(登录:$2)请求访问资源$3从项目“$4”:$5$1为你写了一个消息:$6新人道是限制用户,他可能只访问web页面的项目成员。如果你决定接受该请求,请采取适当的行动授权访问并把这些信息传达给请求者。否则,请通知请求者($7),他将不会访问所请求的数据。请注意添加$1作为项目成员可能还不够,如果你定下明确的权限所请求的资源。$1
+include_exit	mail_content_unvalid_ugroup	You receive this Email because the selected project: $1 is not valid, it may be empty or have no admins. You should modify it.:
+你收到这封邮件是因为所选项目$1是无效的,,他可能是无效的,或者没有管理员,你应该修改他
+include_exit	mail_subject_private_project	$2 requests to be member of "$1" private project:
+$2请求私人项目$1的成员
+include_exit	mail_subject_restricted_user	Restricted user $2 requests to be member of "$1" project
+限制用户$2请求$1私人项目
+include_exit	data_type	related to service:相关服务
+include_exit	project_status_D	This project is deleted:这个项目被删除了
+include_exit	project_status_I	This project is incomplete:这个项目是不完整的
+include_exit	project_status_P	This project is pending:这个项目正在等待
+include_exit	project_status_H	This project is holding:这个项目正在运行
+include_exit	project_status_s	This is a system project:这是一个系统工程
+#
+#-----------------------------------------------
+# Script: SF/www/include/features_boxes.php
+#   
+include_features_boxes	stats	Statistics:统计
+include_features_boxes	top_download_yesterday	Top Downloads Yesterday:昨天下载排行榜
+include_features_boxes	newest_releases	Newest Releases:最新版本
+include_features_boxes	rss_format	- RSS Format:RSS格式
+include_features_boxes	xml	XML
+include_features_boxes	newest_projects	Newest Projects:最新的项目
+include_features_boxes	most_active_week	Most Active This Week:本周最活跃
+include_features_boxes	most_active	Most Active:最活跃
+include_features_boxes	top_downloads	Top Downloads:热门下载
+include_features_boxes	featured_projects	Featured Projects:精选工程
+include_features_boxes	more	More:更多的
+include_features_boxes	no_projects	No Projects:没有项目
+include_features_boxes	downloads_yesterday	Downloads Yesterday:昨天下载
+include_features_boxes	hosted_projects	Hosted Projects:主持项目
+include_features_boxes	registered_users	Registered Users:注册用户
+include_features_boxes	files_download	Files Downloaded:文件下载
+include_features_boxes	pages_viewed	Pages Viewed:页面查看
+
+#
+#-----------------------------------------------
+# Script: SF/www/include/group.php
+#
+include_group	g_not_found	Group Not Found
+#
+#-----------------------------------------------
+# Script: SF/www/include/help.php
+#
+include_help	site_help_sys	Site Help System
+#
+#-----------------------------------------------
+# Script: SF/www/include/html.php
+#
+include_html	lowest	Lowest:最低的
+include_html	medium	Medium:中间的
+include_html	highest	Highest:最高的
+include_html	g_not_exist	That group does not exist.:这个组是不存在的
+include_html	invalid_g	Invalid Group:无效群组
+include_html	unknown_value	*** unknown value ***:未知量
+include_html	no_trovcat	This project is not categorized please select <a href="$1">[Trove Categorization]</a>
+这个项目不是分类请选择,宝库分类
+#
+#-----------------------------------------------
+# Script: SF/www/include/layout.php
+#
+include_layout	latest_news_rss	Latest News RSS:RSS最新的消息
+include_layout	newest_releases_rss	Newest Releases RSS:最新版本的RSS
+include_layout	newest_projects_rss	Newest Projects RSS:最新项目RSS
+include_layout	query_count	Query Count:查询计算
+include_layout	banner	Banner:横幅
+include_layout	logo	Logo:商标
+include_layout	counter	Counter:反方向的
+include_layout	Help	Help:帮助
+include_layout	network_gallery	Network Gallery:网络词库
+include_layout	template_warning	Beware this project is a template project当心这个项目是一个模板项目
+#
+#-----------------------------------------------
+# Script: SF/www/include/menu.php
+#
+include_menu	site_admin	Administration:管理
+include_menu	main_page	Main Page:主页
+include_menu	user_admin	User Admin:用户管理
+include_menu	group_admin	Group Admin:小组管理
+include_menu	pending_projects	Pending Projects:等待项目
+include_menu	pending_users	Pending Users:等待用户
+include_menu	site_news_approve	Site News Approval:网站新闻的批准
+include_menu	mass_mail	Mass Mail:群发邮件
+include_menu	trove_cat_list	Trove Cat. List:Trove Cat.列表
+include_menu	trove_cat_add	Trove Cat. Add:Trove Cat.添加
+include_menu	bugs	Bugs:错误
+include_menu	tasks	Tasks:任务
+include_menu	supp_requ	Support Requests:支持请求
+include_menu	this_forum	This Forum:本栏目
+include_menu	this_tracker	This Tracker:这个追踪器
+include_menu	all_trackers	All trackers:全部的追踪器
+include_menu	software_proj	Software Projects:软件开发
+include_menu	people	People:人
+include_menu	this_wiki	This Wiki:这个维基
+include_menu	wiki	Wiki:维基
+include_menu	require_all_words	Require All Words:要求所有单词
+include_menu	search	Search:搜索
+include_menu	software_map	Software Map:软件地图
+include_menu	software	Software:软件
+include_menu	new_releases	New Releases:新谍报
+include_menu	other_site_mirrors	Other Site Mirrors:其他网站的模板
+include_menu	help_index	Help Index:帮助索引
+include_menu	site_doc	Site Documentation:网站文件
+include_menu	dev_channel	Developers Channels:开发人员通道
+include_menu	discussion_forum	Discussion Forums:讨论区
+include_menu	contact_us	Contact Us:联系我们
+include_menu	games	Games:游戏
+include_menu	printing	Printing:印刷
+include_menu	proj	Project:项目
+include_menu	proj_summary	Project Summary:项目概述
+include_menu	proj_admin	Project Admin:项目管理
+include_menu	summary_page	Summary Page:摘要网页
+include_menu	logged_in	Logged In:已登录
+include_menu	logout	Logout:登出
+include_menu	register_new_proj	Register New Project:注册新项目
+include_menu	filter_project	Project...
+include_menu	account_maintenance	Account Maintenance:账户维护
+include_menu	my_perso_page	My Personal Page:我的主页
+include_menu	bookmark_this_page	Bookmark This Page:收藏本站
+include_menu	not_logged_in	NOT LOGGED IN:没有登录
+include_menu	login	Login登录
+include_menu	new_user	New User:新用户
+include_menu	auth_prev_success	Previous successful log-on:成功的登录
+include_menu	auth_last_failure	Last log-on failure:最后一次登录失败
+include_menu	auth_nb_failure	Number of bad attempts:许多坏的企图
+include_menu	help	Help:帮助
+include_menu	api	API:应用程序接口
+include_menu	extras	More:更多的
+include_menu	get_help	Get Help:得到帮助
+include_menu	projects	Projects:项目
+include_menu	projects_user_admin	I administer:我管理
+include_menu	projects_user_belong	I belong to:我地方能
+include_menu	browse_projects	Browse all projects:浏览所有案例
+include_menu	browse_all	Browse all:浏览所有
+include_menu	filter_projects	Filter...过滤..
+include_menu	add_project	New project:新项目
+#
+#-----------------------------------------------
+# Script: SF/www/include/pre.php
+#
+include_pre	zend_path_not_set	The path to the zend library is not defined.For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
+没有定义到zend库的路径。有关更多信息,请联系您的现场管理人员
+#
+#-----------------------------------------------
+# Script: SF/www/include/project.php
+#
+include_project	services_not_found	Services not found for this group:没有找到这组服务
+#
+#-----------------------------------------------
+# Script: SF/www/include/project_home.php
+#  
+include_project_home	proj_info	Project Info:项目信息
+include_project_home	not_official_site	<P>NOTE: This project entry is maintained by the $1 staff. We are not \nthe official site for this product. Additional copyright information may be found on this project's homepage.\n
+项目条目由$1的人员维护。我们不是这个产品的官方网站。在这个项目的主页上可以找到更多的版权信息
+include_project_home	more_info	More information:更多的信息
+include_project_home	no_short_desc	This project has not yet submitted a short description.You can <a href="$1"> submit it</a> now.
+这个项目还没有提交一个简短的描述,你可以现在提交
+include_project_home	other_info	Other information:其他信息
+include_project_home	devel_info	Project Team:项目工作组
+include_project_home	proj_admins	Project Admins:项目管理人员
+include_project_home	proj_members	Project Members:项目成员
+include_project_home	view_members	View Members:查看成员
+include_project_home	latest_file_releases	Latest File Releases:最新的文件版本
+include_project_home	package	Package:包
+include_project_home	version	Version:版本
+include_project_home	download	Download:下载
+include_project_home	no_files_released	This Project Has Not Released Any Files:
+这个项目还没有发布任何文件
+include_project_home	release_notes	Read Release Notes and Changelog:阅读发布说明和更新日志
+include_project_home	monitor_pack	Monitor This Package:监控这个包
+include_project_home	view_all_files	View ALL Project Files:查看所有的项目包
+include_project_home	public_areas	Public Areas公共区域
+include_project_home	project_description	Project Description:项目说明
+include_project_home	project_classification	Project Classification项目分类
+include_project_home	homepage	Homepage主页
+include_project_home	proj_home	Project Homepage:项目主页
+include_project_home	public_forums	Public Forums:公共论坛
+include_project_home	msg	<B>$1</B> messages in消息
+include_project_home	forums	<B>$1</B> forums论坛
+include_project_home	bug_track	Bug Tracking错误追踪
+include_project_home	open_bugs	open bugs:打开错误
+include_project_home	supp_manager	Support Manager客户支持经理
+include_project_home	open_requ	<B>$1</B> open requests:开放请求
+include_project_home	tech_supp_manager	Tech Support Manager:技术支持经理
+include_project_home	doc	Documentation:文档
+include_project_home	doc_man	Document Manager: Project Documentation:项目文档
+include_project_home	patch_manager	Patch Manager:公司的补丁管理器
+include_project_home	open_patches	<B>$1</B> open patches:开放补丁
+include_project_home	mail_lists	Mailing Lists邮件列表
+include_project_home	public_mail_lists	<B>$1</B> public mailing lists:开放的邮件列表
+include_project_home	total	<B>$1</B> total:合计
+include_project_home	task_manager	Task Manager:任务管理器
+include_project_home	proj_task_man	Project/Task Manager项目/任务管理器
+include_project_home	no_public_proj	There are no public projects available:没有可用的公共项目
+include_project_home	wiki	Wiki:维基
+include_project_home	nb_wiki_pages	<B>$1</B> pages:页面
+include_project_home	cvs_repo	CVS Repository CVS存储库
+include_project_home	commits	<B>$1</B> commits:提交
+include_project_home	adds	<B>$1</B> adds:添加
+include_project_home	co	<B>$1</B> checkouts:结账台
+include_project_home	browse_cvs	Browse CVS:浏览简历
+include_project_home	svn_repo	Subversion Repository:Subversion存储库
+include_project_home	browse_svn	Browse Subversion:浏览Subversion
+include_project_home	accesses	<B>$1</B> accesses:进入
+include_project_home	files	Files:文件
+include_project_home	file_releases	File Releases:讨论论坛
+include_project_home	packages	<B>$1</B> packages包
+include_project_home	trackers	Trackers:追踪器
+include_project_home	no_arttypefact	Could Not Get ArtifactTypeFactory:不能得到定制类型参数
+include_project_home	no_trackers_accessible	No Accessible Trackers Found:没有发现追踪器
+include_project_home	anon_ftp_space	Anonymous FTP Space:匿名FTP空间
+include_project_home	latest_news	Latest News:最新消息
+include_project_home	start_monitoring	Monitor this package:监控这个包
+include_project_home	stop_monitoring	Stop monitoring this package:停止监控这个包
+include_project_home	latest_svn_commit	Latest SVN Commits:最新的SVN提交
+include_project_home	latest_cvs_commit	Latest CVS Commit:最新的CVS提交
+include_project_home	contact_admins	Contact project administrators:项目管理联系
+contact_admins	title	Contact administrators of project $1:项目管理员$1
+contact_admins	mail_sent_admin	Mail sent to all administrators of project $1:
+$1组似乎没有任何管理员
+contact_admins	mail_not_sent_admin	Mail not sent to administrators of project $1:
+$1项目的邮件不是发送给管理员的
+contact_admins	body_info	(Mail sent to all the administrators of the project):
+邮件发送给所有的项目管理员
+
+#
+#-----------------------------------------------
+# Script: SF/www/include/proj_email.php
+#
+include_proj_email	g_not_exist	Group [ $1 ] does not exist.组[$1]不存在
+include_proj_email	no_admin	Group [ $1 ] does not seem to have any administrators.
+$1组似乎没有任何管理员
+include_proj_email	proj_type	Project Type:项目类型
+include_proj_email	proj_approve	Project $1 Approved:项目$1被批准
+include_proj_email	account_register	$1 Account Registration $1账户注册
+#
+#-----------------------------------------------
+# Script: SF/www/include/session.php
+#
+include_session	missing_pwd	Missing Password Or User Name:没有密码或者用户名
+include_session	invalid_pwd	Invalid Password Or User Name:无效密码或者用户名
+include_session	invalid_ldap_name	Invalid LDAP User Name:无效的LDAP用户名
+include_session	dir_authent	Directory Authentication:目录认证
+include_session	use_ldap_login	Please use your ldap login:请使用ldaop登录
+include_session	account_suspended	Account Suspended:账户暂停了
+include_session	account_pending	Account Pending:账户等待
+include_session	account_deleted	Account Deleted:用户删除
+include_session	account_not_active	Account Not Active:用户不活跃
+include_session	insufficient_g_access	Insufficient Group Access:不足组访问
+include_session	no_perm_to_view	You do not have permission to view this page:
+你没有权限查看该网页
+include_session	insufficient_u_access	Insufficient User Access用户账户不足
+include_session	required_login	Required Login:需要登陆
+include_session	login	In order to view this page, you must be logged in.
+为了查看这个网页,你必须登录
+include_session	insufficient_access	Insufficient Access
+足够的访问
+include_session	no_access	You have attempted to reach a part of the site for which you do not have access. This can probably be fixed by properly navigating through the site.
+你试图达到的一部分,你没有访问的网站.这可能是固定通过适当的浏览网站
+include_session	hash_err	ERROR - two people had the same hash - backarrow and re-login. It should never happen again
+错误两个人有相同的散列背面箭头并重新登录,他不应该在此发生
+include_session	expired_password	Your password has expired.:你的密码已经过期
+include_session	password_will_expire	Your password will expire in $1 day(s).
+你的密码将过期$1天
+#
+#-----------------------------------------------
+# Script: SF/www/include/squal_exit.php
+#
+include_squal_exit	err	ERROR:错误
+include_squal_exit	perm_denied	PERMISSION DENIED:没有权限
+include_squal_exit	choose_proj	CHOOSE A PROJECT/GROUP:选择一个项目/组
+include_squal_exit	missing_param	MISSING REQUIRED PARAMETERS:缺失必须的参数
+#
+#-----------------------------------------------
+# Script: SF/www/include/squal_pre.php
+#
+include_squal_pre	not_connect_db	Could Not Connect to Database:不能连接到数据库
+#
+#-----------------------------------------------
+# Script: SF/www/include/trove.php
+#
+include_trove	none_selected	None Selected:无可选择
+include_trove	not_categorized_yet	This project has not yet categorized itself in the <A href="$1">Trove Software Map</A>. You can <a href=$2>categorize it</a> now.
+这个项目还没有分类本身在< A href = " $ 1 " >宝藏地图软件< / >。你可以< a href = $ 2 >分类现在< / >。
+
+include_trove	now_filter	Now Filtering:现在过滤
+include_trove	filter	Filter:过滤
+#
+#-----------------------------------------------
+# Script: SF/www/include/user_home.php
+#
+include_user_home	devel_profile	Developer Profile:开发人员配置
+include_user_home	no_such_user	No such User:用户不存在
+include_user_home	perso_info	Personal Information:个人信息
+include_user_home	user_id	User ID:用户名
+include_user_home	login_name	Login Name登录名字
+include_user_home	real_name	Real Name:真实姓名
+include_user_home	email_addr	Email Addr:电子邮箱
+include_user_home	user_prof	User Profile:用户预置文件
+include_user_home	member_since	Site Member Since网络成员自
+include_user_home	user_status	User Status:用户状态
+include_user_home	active	Active:活跃
+include_user_home	restricted	Restricted:受限制的
+include_user_home	pending	Pending  等待的
+include_user_home	deleted	 Deleted  删除
+include_user_home	suspended	Suspended 禁赛
+include_user_home	unkown	Unkown  不知道
+include_user_home	proj_info	Project info项目信息
+include_user_home	is_member	This developer is a member of the following projects
+这个开发人员属于以下项目
+include_user_home	not_member	This developer is not a member of any projects.
+这个开发人员不属于任何项目
+include_user_home	send_message_to	Send a Message to 发消息给
+include_user_home	your_address	Your Email Address:你的电子邮件
+include_user_home	your_name	Your Name:你的名字
+include_user_home	send_message	Send Message:发送消息
+include_user_home	send_message_if_logged	You Could Send a Message if you were logged in
+你登录进去可以发一条消息
+include_user_home	subject	Subject:主题
+include_user_home	message	Message:消息
+include_user_home	cc	CC
+include_user_home	add_cc	Add CC:添加cc
+include_user_home	fill_cc_list_msg	<b><u>Note:</b></u> for $1 users use their login name rather than their email addresses.<br>Fill your list using comma or semi-column as separator.
+以$1的用户使用他们的登录,而不是他们的电子邮件地址
+#
+#-----------------------------------------------
+# Script: SF/www/include/user.php
+#
+include_user	not_found	Error - Not Found  错误-没找到
+include_user	email_not_found	email-not-found:没找到电子邮件
+include_user	invalid_u_id	Invalid User ID:无效用户ID
+#
+#-----------------------------------------------
+# Script: SF/www/include/utils.php
+#
+include_utils	prio_colors	Priority Colors:优先级的颜色
+include_utils	address_problem	There are problems with the following addresses
+下面的地址有问题
+include_utils	email_explain	Email addresses must either be valid user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@somewhere.xerox.com'). Lists of email addresses may be separated by either commas or semicolons.
+电子邮件地址必须是有效的用户名(例如:,“jdoe”)或完全限定的电子邮件地址(如。,“jill.doe@somewhere.xerox.com”)。电子邮件地址列表可以用逗号或分号分隔
+include_utils	invalid_email	Email format invalid
+无效的电子邮件格式
+include_utils	time_ago	$1 ago  $1以前
+include_utils	time_in_future	in $1:在$1
+include_utils	1_minute	1 minute 1分钟
+include_utils	less_1_minute	less than a minute:不到1分钟
+include_utils	less_than_X_seconds	less than $1 seconds:不到$1秒
+include_utils	half_a_minute	half a minute:片刻
+include_utils	X_minutes	$1 minutes:$1分钟
+include_utils	about_1_hour	1 hour  1小时
+include_utils	about_X_hours	$1 hours $1小时
+include_utils	about_1_day	1 day   1天
+include_utils	X_days	$1 days  $1天
+include_utils	about_1_month	1 month  1个月
+include_utils	X_months	$1 months    $个月
+include_utils	about_1_year	1 year   1年
+include_utils	over_X_years	$1 years  年
+
+#
+#-----------------------------------------------
+# Script: SF/www/include/vars.php
+#
+include_vars	other_env	Other Environment  :其他环境
+include_vars	web_env	Web Environment   web环境
+include_vars	other_lang	Other Language   其他语言
+#
+#-----------------------------------------------
+# Script: SF/common/include/Error.class.php
+#
+include_common_error	no_err	No Error   没有错误
+#-----------------------------------------------
+# Script: SF/common/include/GroupFactory.class.php
+#
+include_common_groupfactory	none_found	None Found $1  没有发现$1
+#
+#-----------------------------------------------
+# Script: SF/common/include/Template.class.php
+#
+include_common_template	project	Project  项目
+include_common_template	template	Template :模板
+include_common_template	test_project	Test Project :测试项目
+#
+#-----------------------------------------------
+# Script: SF/common/mvc/View.class.php
+#
+common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1
+
+include_browser	ie_deprecated	Please remove Internet Explorer compatibility mode, upgrade to a newer version (at least IE11) or use an alternative.
+请删除ie兼容模式,升级到新版本(至少IE11)或使用另一个。
+include_browser	ie_deprecated_button	Ok, got it. Remind me later.
+好的,我明白了,提醒我以后
+include_browser	ie_deprecated_warning_disabled	We will bother you later with the deprecation of IE < 11.
+我们弃用IE小于11的版本,我们会麻烦的

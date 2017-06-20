@@ -1,0 +1,158 @@
+#/**
+#  *
+#  * wiki class scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/views/WikiServiceViews.class.php
+#
+wiki_views_wikiserviceviews	wiki_title	Wiki for $1
+wiki_views_wikiserviceviews	wiki_page_title	$1 on $2
+wiki_views_wikiserviceviews	wiki_subtit_docu	<h3>$1 Wiki文件</h3>
+wiki_views_wikiserviceviews	wiki_subtit_pages	<h3>$1 Wiki页面</h3>
+wiki_views_wikiserviceviews	wiki_subtit_empty	<h3>$1空的Wiki页面</h3>
+wiki_views_wikiserviceviews	wiki_subtit_create	<h3>$1Create a new Wiki Page</h3>
+wiki_views_wikiserviceviews	wikientries	<li>$1<p><em>描述:&nbsp;</em>$2</p></li>
+wiki_views_wikiserviceviews	pagename	页面名称：
+wiki_views_wikiserviceviews	menuadmin	管理员	
+wiki_views_wikiserviceviews	menupages	页面	
+wiki_views_wikiserviceviews	menudocuments	文档
+wiki_views_wikiserviceviews	menuattch	附件文件 
+wiki_views_wikiserviceviews	attatch_page	上传
+wiki_views_wikiserviceviews	menuprefs	偏好
+wiki_views_wikiserviceviews	preferences_page	用户的个性信息
+wiki_views_wikiserviceviews	lock_title_spec	这个Wiki 页有具体的权限
+wiki_views_wikiserviceviews	lock_title_set	此wiki上设置权限
+wiki_views_wikiserviceviews	lock_alt	锁
+wiki_views_wikiserviceviews	lighter_display	轻显示,点击phpWiki标志恢复正常显示wiki_views_wikiserviceviews	install_intro	<h2>创建维基</h2><p>这个项目还没有初始化它的Wiki。</p><p>为了创建wiki，选择wiki的语言，并按“1$”按钮。</p><p><b>注意:</b> <ul><li> Wiki创建后，维基语言无法修改，</li><li>维基创建的另一种语言比英语可能包含一些英文页。</li></ul></p>
+wiki_views_wikiserviceviews	wiki_language	Wiki 语言:
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/views/WikiViews.class.php
+#
+wiki_views_wikiviews	title_error	存在的错误
+wiki_views_wikiviews	not_activate	<H2><span class="feedback">未激活维基服务</span></H2><p> $ 1项目的Wiki服务需要由项目管理员或维基管理员激活。</p>
+wiki_views_wikiviews	set_perm_title	<h3>维基页面的权限集</h3>
+wiki_views_wikiviews	empty_page	<h2><span class="feedback">页面不存在
+</span></h2><p>只能在现有页上设置权限。在设置权限之前，您必须在wiki引擎中创建页面。</p><p>创建一个页面，你只需要编辑它。</p><p><strong>注意:</strong>一个只包含“描述网页的页面？这里是空从wiki引擎的角度来看。</p>
+wiki_views_wikiviews	not_empty_page	<p>你可以设置特定权限<strong>$1</strong> Wiki页。这些<strong>权限仅适用于此页</strong>.</p><p>默认情况下，wiki页面没有特定权限：对所有注册用户访问所有wiki页面。</p><p><strong>记得:</strong>访问页面意味着<strong>每一个成员</strong> 属<strong>于</strong>下列的<strong>选定的组</strong> 能 <strong>读</strong> 和 <strong>写</strong>相应页面。</p><p>选择允许访问此wiki的用户组：<p>
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiAttachment.class.php
+#
+wiki_lib_attachment	err_alpha	上传1$错误：文件名只能包含字母数字字符和点、下划线或破折号。
+wiki_lib_attachment	err_insert	无法插入新的进行复习。
+wiki_lib_attachment	err_create_upload_dir	无法创建项目上传区
+wiki_lib_attachment	err_create_file_dir	无法创建文件修订区
+wiki_lib_attachment	err_multi_id	附件有多个标识符。请与管理员联系。
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiAttachmentRevision.class.php
+#
+wiki_lib_attachment_rev	err_multi_id	附件有多个标识符。拜托<a href="mailto:$1?Subject=Wiki Attachment Error (attch:$2,rev:$3)" title="Send a mail to $4 administrators">contact</a> a $4管理员。.
+wiki_lib_attachment_rev	err_upl_mv	上传 1$失败
+wiki_lib_attachment_rev	err_create	附件修订创建时出错。未创建数据库项。wiki_lib_attachment_rev	err_too_big	对不起，这个文件太大。
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiEntry.class.php
+#
+wiki_lib_wikientry	insert_err	无法插入新的wiki条目： $1
+wiki_lib_wikientry	delete_err	无法删除维基条目: $1
+wiki_lib_wikientry	update_err	无法更新维基条目: $1
+wiki_lib_wikientry	no_update	维基条目“$ 1”没有更新#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiPage.class.php
+#
+wiki_lib_wikipage	notunique_err	维基页面不是唯一的。请与管理员联系。
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/lib/WikiPageWrapper.class.php
+#
+wiki_lib_wikipagewrap	new_page_text	$1 存储页面创建与主界面:
+wiki_lib_wikipagewrap	page_added	添加$1
+wiki_lib_wikipagewrap	right_error	此操作需要管理员权限
+wiki_lib_wikipagewrap	dfltentryname	Wiki家
+wiki_lib_wikipagewrap	dfltentrydesc	初始Wiki文档
+wiki_lib_wikipagewrap	dfltentrypage	首页
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/actions/WikiServiceAdminActions.class.php
+#
+wiki_actions_wikiserviceadmin	page_name_empty_err	你尝试创建一个Wiki文档，但是没有选择任何页面。您必须在创建Wiki文档之前创建Wiki页面。
+wiki_actions_wikiserviceadmin	update_perm_err	无法更新权限: <p>$1</p>
+wiki_actions_wikiserviceadmin	update_page_perm_err	无法更新此维基页面上的权限<p>$1</p>
+wiki_actions_wikiserviceadmin	update_attachment_perm_err	无法更新此维基附件的权限：: <p>$1</p>
+wiki_actions_wikiserviceadmin	delete_attachment_success	维基删除附件（S）
+wiki_actions_wikiserviceadmin	delete_attachment_failure	删除附件时出错（S）
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/WikiService.class.php
+#
+wiki_wikiservice	acces_denied_whole	您没有权限访问此wiki。请联系<A HREF="$1">项目管理员</A>.
+wiki_wikiservice	acces_denied_page	你无权访问这个Wiki Page。请联系<A HREF="$1">项目管理员</A>.
+#
+#-----------------------------------------------
+# Script: SF/common/wiki/views/WikiServiceAdminViews.class.php
+#
+wiki_views_wkserviews	title	维基的管理$1
+wiki_views_wkserviews	entry_em	<em>显示在维基服务默认页面（如开发文档）</em>
+wiki_views_wkserviews	entry_name	条目名称:
+wiki_views_wkserviews	wikipage	WikiPage:
+wiki_views_wkserviews	givename	或者给一个页面名：
+wiki_views_wkserviews	wikipage_em	<em>选择一个
+<a href="$1&view=wikiPages"> Wiki Page项目</a>或进入另一个wiki页面的名称（如果网页不存在，它将被创建）。</em>
+wiki_views_wkserviews	description	描述:	
+wiki_views_wkserviews	description_em	<em>wiki描述文档</em>
+wiki_views_wkserviews	rank_screen	在线：屏幕
+wiki_views_wkserviews	rank_screen_em	<em>文档显示此引用</em>
+wiki_views_wkserviews	wikidocs_title	<h2>Wiki '$1' -文档管理Wiki </h2>
+wiki_views_wkserviews	wikidocs_create	<h3>$1创建一个新的wiki文档</h3>
+wiki_views_wkserviews	wikidocs_docs	<h3>$1Wiki 文档</h3>
+wiki_views_wkserviews	back_admin	回到管理面板
+wiki_views_wkserviews	createwikidoc	<p>您可以添加一个新的链接到wiki页面有以下形式。这将增加在Wiki Wiki服务页面文件列表中显示的一个新条目 (<a href="$1">查看</a>链接的工具条).</p>
+wiki_views_wkserviews	act_create	创建
+wiki_views_wkserviews	act_update	更新
+wiki_views_wkserviews	browsedoc	<p>维基服务页面上显示的所有维基文档列表。你可以:</p><ul><li>使用名称上的链接编辑每个wiki文档。</li><li>设置wiki文档的权限。</li><li>删除wiki文档(不删除相应的wiki页面)</li></ul>
+wiki_views_wkserviews	define_perms	定义权限
+wiki_views_wkserviews	edit_perms	编辑权限
+wiki_views_wkserviews	deletedoc	删除 $1 文档
+wiki_views_wkserviews	updatedoc	<h2>Wiki '$1' – 更新维基文档</h2>
+wiki_views_wkserviews	wkpage_title	<h2>Wiki '$1' -管理页面</h2>
+wiki_views_wkserviews	wkpage_project	<h3>$1项目页面</h3>
+wiki_views_wkserviews	wkpage_pj_all	<p>表列出了你写的所有页面.</p>
+wiki_views_wkserviews	wkpage_empty	<h3>$1Empty pages</h3>
+wiki_views_wkserviews	wkpage_emp_all	<p>列出了您创建的所有页面，但仍然空.</p>
+wiki_views_wkserviews	wkpage_admin	<h3>$1管理页面</h3>
+wiki_views_wkserviews	wkpage_adm_all	<p>列出所有管理页面。您可以使用这些页面作为管理目的。 <strong>请小心使用</strong>.在怀疑的情况下，备份您的维基在删除/重命名/更换页面。</p>
+wiki_views_wkserviews	wkpage_intern	<h3>$1无效页面</h3>
+wiki_views_wkserviews	wkpage_int_all	<p>以下页面为wiki引擎<strong>内部保留使用</strong>.请小心使用。你应该<strong>不使用或修改这些页面</strong>如果不了解PhpWiki。如有疑问，请勿触摸本页。</p>
+wiki_views_wkserviews	wikiperm	<h2>Wiki '$1' -维基权限</h2><p>您可以设置2$的特定权限。这些权限适用于<strong>整个wiki服务</strong>.</p><p>默认情况下，wiki没有特定权限：访问（两者都<strong>读</strong> 和<strong>写 </strong>)所有wiki页面被授予任何注册用户。</p><p>选择允许访问此wiki的用户组:<p>
+wiki_views_wkserviews	attachment_name	Name
+wiki_views_wkserviews	attachment_revisions	修改
+wiki_views_wkserviews	attachment_permissions	权限
+wiki_views_wkserviews	attachment_title	<h2>Wiki '$1' -维基的附件</h2>
+wiki_views_wkserviews	perm_attachment_title	<h2>Wiki '$1' -维基附件的权限</h2>
+wiki_views_wkserviews	wiki_attachment_perm	<p>您可以设置1$的特定权限。这些权限适用于<strong>此附件的所有修订</strong>.</p><p>默认情况下，wikiattachment没有特定的权限授予访问权限的任何用户注册。</p> <p>任何授权用户可以:<ul><li>每browse修订本WikiAttachment.</li><li>添加这一wikiattachment新修订。</li></ul></p><p>选择用户组被授予访问该wikiattachment:<p>
+wiki_views_wkserviews	browse_attachment_title	<h2>Wiki '$1' -维基的附件$2</h2>
+wiki_views_wkserviews	attachment_revision	Revision
+wiki_views_wkserviews	attachment_date	数据
+wiki_views_wkserviews	attachment_author	作者
+wiki_views_wkserviews	attachment_size	大小
+wiki_views_wkserviews	attachment_delete	删除
+wiki_views_wkserviews	doc_name	名字
+wiki_views_wkserviews	doc_page	页面
+wiki_views_wkserviews	doc_rank	银幕上的秩
+wiki_views_wkserviews	doc_delete	删除?
+#
+#-----------------------------------------------
+# Script: SF/www/wiki/uploads
+#
+wiki_attachment_upload	err_not_exist	这个附件不存在。请检查网址。
+wiki_service	search_wiki_type	维基页面
+

@@ -1,0 +1,25 @@
+#/**
+#  *
+#  * Tracker scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#-----------------------------------------------
+# Script: SF/src/common/include/CrossReferenceFactory.php
+#
+cross_ref_fact_include	references	参考
+
+cross_ref_fact_include	artifact	生成文件
+cross_ref_fact_include	svn_revision	SVN 版本
+cross_ref_fact_include	cvs_commit	CVS 提交
+cross_ref_fact_include	legend	由该项引用或引用该项目的项目列表。cross_ref_fact_include	legend_referenced_by	引用此项目的项目列表。
+cross_ref_fact_include	cross_referenced	双向参考:
+cross_ref_fact_include	referenced_in	这个项目被引用:
+cross_ref_fact_include	reference_to	这个项目参考 :
+cross_ref_fact_include	confirm_delete	删除参考?
+cross_ref_fact_include	delete	删除
+

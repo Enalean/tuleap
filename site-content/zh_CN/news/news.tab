@@ -1,0 +1,135 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/news/admin/index.php
+#
+news_admin_index	group_update_err	修改消息字节错误
+news_admin_index	project_newsbyte_updated	计划修改消息字节.
+news_admin_index	title	消息
+news_admin_index	not_found_err	错误 - 没找到
+news_admin_index	approve_for	赞成项目$1的一个消息字节
+news_admin_index	submitted_by	提供通过
+news_admin_index	submitted_on	提供给
+news_admin_index	subject	主题
+news_admin_index	details	详述
+news_admin_index	if_edit_delete	如果这个项目在$1的本地页面上你可以编辑它，它将会被移出这个本地页面.
+news_admin_index	no_queued_item_found_for	没有找到项目$1的排队项目
+news_admin_index	new_items	这些消息项目被提交给项目$1
+news_admin_index	update_err	错误更新
+news_admin_index	news_list_updated	消息更新
+news_admin_index	news_updated	消息更新
+news_admin_index	news_rejected	消息驳回
+news_admin_index	approve	Approve 一个消息字节
+news_admin_index	submitted_for_group	为团队提供
+news_admin_index	approve_for_front	赞成前面的页面
+news_admin_index	do_nothing	不做任何(将保持提供)
+news_admin_index	displayed	展示
+news_admin_index	delete	被删除
+news_admin_index	reject	驳回(今后将不再发表提供)
+news_admin_index	no_queued_item_found	没有找到排队项目
+news_admin_index	need_approve	这些项目需要被审核
+news_admin_index	approved	[审核]
+news_admin_index	approve_legend	消息通过图标被索引, a被允许返回$1的上一个页面.
+news_admin_index	approve_alt	这个消息已经被允许返回$1的上一个页面.
+news_admin_index	no_deleted_items_this_week	这周没有找到被删除的项目
+news_admin_index	items_deleted_last_week	    在过去的星期里这些项目被删除
+news_admin_index	no_approved_items_this_week	这周没有找到被审核的项目
+news_admin_index	items_approved_last_week	在过去的星期里这些项目被审核
+news_admin_index	permission_denied	允许拒绝。
+news_admin_index	need_to_be_admin	允许拒绝，在这个项目中，你必须是这个消息服务器的管理员
+news_admin_index	news_admin	消息管理
+news_admin_index	news_row_label	消息
+news_admin_index	choose_display	选择哪个消息被陈列在小窗口
+news_admin_index	promoted_row_label	陈列
+news_admin_index	update_news_list	在小窗口陈列选择项目
+news_admin_index	info_text	只有前十个消息项目会被陈列
+news_admin_index	no_news_items	请添加消息项目去选择即将被陈列在小窗口的消息
+news_admin_index	waiting_publication_tab_name	消息等待出版
+news_admin_index	rejected_news_tab_name	驳回消息
+news_admin_index	published_news_tab_name	出版消息
+news_admin_index	waiting_publication_pane_name	消息等待被发表在首页
+news_admin_index	rejected_news_pane_name	    消息上周被首页驳回
+news_admin_index	published_news_pane_name	上周首页发表的消息
+news_admin_index	requested_name	    被请求?
+news_admin_index	requested_tooltip	被请求在首页发表
+news_admin_index	table_title_name	标题
+news_admin_index	table_content_name	内容
+news_admin_index	table_details_name	详述
+news_admin_index	table_review_name	评论
+news_admin_index	no_news	            这里没有消息
+news_admin_index	waiting_publication_no_news	这里没有信息等待允许
+news_admin_index	published_news_no_news	上周没有消息被认可
+news_admin_index	rejected_news_no_news	上周没有消息被驳回
+news_admin_index	title_label	            标题
+news_admin_index	content_label	        内容
+news_admin_index	submitted_for_group_label	项目提交
+news_admin_index	submitted_by_label	        通过提交
+news_admin_index	submitted_on_label	        根据提交
+news_admin_index	pane_news_title	            消息
+news_admin_index	pane_information_title	    信息
+news_admin_index	publish_button	            在首页发表
+news_admin_index	reject_button	            等待列队驳回
+news_admin_index	reject_button_from_published	首页驳回
+news_admin_index	missing_title	            标题是必须的
+news_admin_index	news_already_published	    消息已经被发表
+news_admin_index	news_already_rejected	    消息已经被驳回
+#
+#-----------------------------------------------
+# Script: SF/www/news/index.php
+#
+news_index	news	        消息
+news_index	news_for	    关于$1的消息
+news_index	choose_news	    选择一个新项目，并且你可以浏览、查找和发送信息.
+news_index	no_news_found	没有发现消息
+news_index	for	            关于$1
+news_index	no_items_found	没有发现项目
+#
+#-----------------------------------------------
+# Script: SF/www/news/news_utils.php
+#
+news_utils	admin	            管理
+news_utils	no_news_item_found	没有找到新项目
+news_utils	comment	            说明
+news_utils	comments	        说明
+news_utils	read_more_comments	显示更多/评论
+news_utils	news_archive	    消息存档
+news_utils	submit_news	        提交消息
+news_utils	news_request	    请求升级$1的消息
+news_utils	news_request_mail_intro	        $1前的页面被要求升级
+news_utils	news_request_mail_project	    项目名称: $1 ($2)
+news_utils	news_request_mail_submitted_by	消息被$1提交
+news_utils	news_request_mail_summary	    总结: $1
+news_utils	news_request_mail_details	    消息详述: $1
+news_utils	news_request_mail_approve_link	请点击下列连接升级（驳回）消息:
+news_utils	news_request_sent	已经被管理员设置为发送更新请求
+news_utils	news_request_not_sent  已经被管理员设置为不能发送更新请求
+news_utils	news_sent 消息已经被发送到选择器组成员中
+news_utils	news_not_sent	消息不能被发送到选择器组成员中
+#
+#-----------------------------------------------
+# Script: SF/www/news/submit.php
+#
+news_submit	insert_err	        插入错误
+news_submit	news_added	        添加消息.
+news_submit	only_writer_submits	 允许拒绝，你不能提交一个项目的消息，除非你在修改过或者在消息服务器上获得管理权限
+news_submit	submit_news_for  为$1提交消息
+news_submit	post_explain  你能发布关于你项目的消息，如果你在你的项目中是管理员身份<P>全部发布的信息<B>关于你的项目</B>将立即简要的显示在你项目的主页上。在论坛中这些所发布特别的兴趣爱好的消息在$1出现在主页前，将被大多数新闻团队所认可。<P>你可能包含链接，但是超文本标记语言不会在你的意见书中，链接格式的开头总是以 “ http:// ” 来实现点击的 </P>
+news_submit	for_project	对于项目:$1
+news_submit	news_privacy	私有的
+news_submit	public_news	<b>公有的</b> (每一处都可以看到)
+news_submit	private_news	<b>私有的</b> (只有方法成员)
+news_submit	news_perm_update_success	允许更新成功
+news_submit	news_perm_create_success	允许创建成功
+news_submit	news_promote	 请求迁移到之前页面
+news_submit	promote_warn	<b>警告:</b> 私有的数据不能迁移到之前的页面
+news_submit	send_news_by_email	通过邮件发送消息
+news_submit	news_not_sent_max_users	你已经超过($1)允许发送消息的最大字数限制，这个邮件将不会被发送

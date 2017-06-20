@@ -1,0 +1,16 @@
+<div class="footer container">
+    <div class="row-fluid">
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_about', null, null, '.php')); ?>
+        </div>
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_links', null, null, '.php')); ?>
+        </div>
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_cli', null, null, '.php')); ?>
+        </div>
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_help', null, null, '.php')); ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+<！ - 
+//
+//版权所有（c）施乐公司，Codendi团队，2001-2009。版权所有
+//
+// 
+//
+- >
+<？PHP
+$ exchange_policy_url = ForgeConfig :: get（'sys_exchange_policy_url'）;
+if（！$ exchange_policy_url）{
+    $ exchange_policy_url =“javascript :;”;
+}
+？>
+<h2> <？= $ GLOBALS ['sys_name']？>服务条款协议</ h2>
+<P>
+<B> 1。接受条款</ B>
+</ p>
+<P>
+一个人使用<？php print $ GLOBALS ['sys_name']; ？>及其任何服务（如下所定义）
+任何时候都要遵守<？php print $ GLOBALS ['sys_name']; ？>当时的服务条款（“TOS”），
+其可以随时更新，如下所述。每个用户都可以
+随时查看当前的TOS：
+<a href="/tos/tos.php"> <？php print get_server_url（）; ？> / TOS / tos.php </A>。另外，每个用户的使用
+特定服务可能需要遵守具体的准则或规则
+（“服务特定规则”）不时发布并纳入其中
+参考TOS。用户使用<？php print $ GLOBALS ['sys_name']; 和/或其服务
+完全接受和同意TOS; 如果用户没有
+接受我们的TOS，他或她没有被授权使用<？php print $ GLOBALS ['sys_name']; ？>或任何
+其服务，如本文所定义，并应避免访问
+<？php print $ GLOBALS ['sys_name']; ？>及其服务。
+</ p>
+<P>
+随着任何改变
+核心TOS，我们将至少提前15天向已知用户发送更改通知。如果我们更改任何特定于服务的规则，我们
+将在这些服务特定的位置发布更改的版本
+规则通常出现，引用主页上的更改
+服务并包括与以前版本的规则的链接。
+</ p>
+<P>
+<？php print $ GLOBALS ['sys_name']; ？>保留在任何时间和不时修改的权利
+或暂停或永久停止<？php print $ GLOBALS ['sys_name']; ？>或任何服务
+（或其任何部分），通知用户和公众
+如上所述，或立即在技术困难的情况下。
+<？php print $ GLOBALS ['sys_name']; ？>不对任何用户或其他第三方负责
+除特别规定外，此类修改，暂停或中断
+于此。
+</ p>
+<P>
+<？php print $ GLOBALS ['sys_name']; ？？是由<？php print $ GLOBALS ['sys_org_name']拥有并经营的网站。？>为
+促进跨组织软件开发的目的以及内容和源代码共享
+ <b> <u> <a href="<?php echo $exchange_policy_url;?“target =”_ blank“rel =”noreferrer“> <？php print $ GLOBALS ['sys_org_name']的条款; ？>代码交换策略</a> </ b> </ u>。在<？php print $ GLOBALS ['sys_name']上注册您的项目; 意味着你完全理解这个企业政策，并承诺遵守这一政策。
+<P>
+<B> 2。服务说明</ B>
+</ p>
+<P>
+<P>
+<？php print $ GLOBALS ['sys_name']; ？>目前为用户提供访问权限
+丰富的<？php print $ GLOBALS ['sys_org_name']的在线资源集合; ？>内部软件开发
+和内容创作，包括各种通信工具的源代码
+控制和项目管理工具，在线论坛（统称为“服务”）。
+</ p>
+<P>
+<B> 3。注册义务</ B>
+</ p>
+<P>
+如果有关网站要求，每个用户必须：（a）提供真实，
+准确，当前和完整的服务注册信息
+表格（统称为“注册数据”）和（b）维护和及时
+根据需要更新注册数据。如果经过调查，我们有
+合理的理由怀疑任何用户的信息是不真实的，
+不准确，不当然或不完整，我们可能会暂停或终止
+用户账号并禁止任何和所有当前或将来使用的
+该用户的服务（或其任何部分）除明确之外
+本文提供。
+</ p>
+<P>
+完成后，每个用户将收到一个密码和帐户名称
+该服务的注册过程完全负责维护
+对其进行的所有活动负全部责任
+据此。<？php print $ GLOBALS ['sys_name']; ？>不能也不会对任何损失负责
+由于用户不遵守本条而导致的损害，包括
+任何用户无法（a）立即通知的任何损失或损害
+<？php print $ GLOBALS ['sys_name']; 任何未经授权的使用他或她的密码或帐户或任何
+其他违反安全事项，（b）确保他或她离开
+帐户在每个会话结束时。
+</ p>
+<P>
+<B> 4。CONTENT </ B>
+</ p>
+<P>
+所有信息，数据，文本，软件，音乐，声音，照片，图形，
+视频，消息或任何其他材料（统称为“内容”），
+无论是公开发布还是私下传输，都是唯一的
+这些内容来源的人的责任。意即
+那个用户，而不是<？php print $ GLOBALS ['sys_name']; ？>团队，对所有内容负全责
+他或她通过<？php print $ GLOBALS ['sys_name']上传，发布，发送电子邮件或以其他方式发送; ？>
+ 或任何服务。用户不得传送内容或以其他方式进行或传播
+参与<？php print $ GLOBALS ['sys_name']的任何活动; 和/或任何服务，
+<？php print $ GLOBALS ['sys_name']的意见; ？律师，与<？php print $ GLOBALS ['sys_org_name']矛盾？？>内部政策。
+</ p>
+<P>
+<？php print $ GLOBALS ['sys_name']; ？>不会预先筛选或查看内容，但<？php print $ GLOBALS ['sys_name']; ？>储备
+拒绝或删除其知道哪一个内容的权利
+合理地认为不符合目的。另外，<？php print $ GLOBALS ['sys_name']; ？>
+有权（但不是义务）自行决定拒绝或
+删除任何合理认为违反TOS或内容的内容
+否则为非法。<？php print $ GLOBALS ['sys_name']; ？>不控制通过的内容
+该服务，因此，不保证准确性，完整性或
+此类内容的质量。在任何情况下都不会<？php print $ GLOBALS ['sys_name']; ？责任
+以任何方式为任何内容，包括但不限于任何责任
+任何内容中的错误或遗漏或任何类型的任何损失或损害
+由于使用发布的任何内容，以电子邮件或其他方式发生
+通过<？php print $ GLOBALS ['sys_name']传送; ？>或其上的任何服务。
+</ p>
+<P>
+<B> 5。关于使用和存储的一般做法</ B>
+</ p>
+<P>
+<？php print $ GLOBALS ['sys_name']; ？>可以制定关于使用的一般做法和限制
+服务，由发布的服务特定规则定义。而<？php print $ GLOBALS ['sys_name']; ？>
+ 将合理努力备份站点数据并进行此类数据
+如果丢失或删除，可以使用<？php print $ GLOBALS ['sys_name']; ？>没有
+删除或不存储任何的责任或责任
+消息和其他通信或其他内容维护或传输
+通过任何服务。<？php print $ GLOBALS ['sys_name']; ？>保留标记为“无效”的权利
+归档帐户和/或在长时间内处于非活动状态的项目
+时间。<？php print $ GLOBALS ['sys_name']; ？>保留更改这些一般做法的权利
+随时通知服务特定规则，自行决定
+用户和公众，如上文第1节所述。
+</ p>
+<P>
+<B> 6。终止</ B>
+</ p>
+<P>
+用户的帐户可能由于包括但不是的原因而被终止
+限于以下内容：1.）违反这些TOS; 2.滥用网站
+资源或尝试未经授权进入网站或网站
+资源; 3.）以不符合目的的方式使用服务; 4）
+用户对此类终止的请求; 和5.）适用的要求
+ <？php print $ GLOBALS ['sys_org_name']; ？政策（例如离职公司的员工）。
+</ p>
+<P>
+终止任何用户访问<？php print $ GLOBALS ['sys_name']; ？>或任何服务
+本协议可能在没有通知的情况下进行，
+<？php print $ GLOBALS ['sys_name']; ？>可能会立即停用或删除用户的帐户和/或栏
+任何进一步访问这些文件，该服务或<？php print $ GLOBALS ['sys_name']; ？>。<？php print $ GLOBALS ['sys_name']; ？>
+ 不对任何用户或其他第三方的任何终止责任
+该用户的访问或帐户。
+</ p>
+<P>
+<B> 7。VIOLATIONS </ B>
+</ p>
+<P>
+请报告任何违反TOS的行为，涉嫌侵犯版权
+或<a href="/contact.php"> <？php print $ GLOBALS ['sys_name']的任何其他事项; ？>团队</a>。
+</ p>
+<P>
+由<？php print $ GLOBALS ['sys_long_org_name']拥有的内容; ？>。版权所有2000  -  <？php print date（'Y'，time（））; ？>，<？php print $ GLOBALS ['sys_org_name']; ？>团队。版权所有。
+</ p>

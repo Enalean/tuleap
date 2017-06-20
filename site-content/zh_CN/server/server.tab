@@ -1,0 +1,10 @@
+#
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+#
+server	error_alreadyid	一个id为1的服务器已经存在
+server	error_emptyid	     id不能为空
+server	error_emptyname	name不能为空
+server	error_integerid	id必须是一个整数
+server	error_missinghttp	你必须提供一个协议或一个协议路径
+server	error_missingparams	Missing     参数

@@ -1,0 +1,56 @@
+#/**
+#  *
+#  * export scripts message catalog (English)
+#  *
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/export/index.php
+#
+export_index	exports_available	出口可用
+export_index	format_explain	$1 data以多种标准格式导出。许多导出URL也可以接受表单/获取数据以自定义输出。这些页面生成的所有数据都是实时的。
+export_index	news_data	消息数据
+export_index	front_p_news	首页/项目新闻
+export_index	new_releases	新版本发布
+export_index	newest_projects新的项目
+export_index	rss_format	RSS格式
+export_index	csv_format	CSV格式
+export_index	listings	列表
+export_index	full_proj_listing	完整的项目清单
+export_index	proj_info	项目信息
+export_index	proj_forum	项目论坛
+export_index	g_id_required	?group_id URL中需要的参数
+#
+#-----------------------------------------------
+# Script: SF/www/export/nitf_sfforums.php
+#
+export_nitf_sfforums	g_id_err	错误：此URL必须与一个有效的group_id参数
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_sfnewreleases.php
+#
+export_rss_sfnewreleases	copyright	版权（c）$1，$2的团队，$2001 -$3。保留所有权利
+export_rss_sfnewreleases	new_releases	$1 新版本
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_sfnews.php
+#
+export_rss_sfnews	highlights	$1 项目新闻亮点
+export_rss_sfnews	news	$1 新闻
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_sfprojects.php
+#
+export_rss_sfprojects	new_proj	新项目
+export_rss_sfprojects	params	项目ID、短名称，名称、描述、语言、操作系统的运行时支持，发展状态，释放的位置，附加信息，联系点，本土化的库存
+export_rss_sfprojects	prog_lang 编程语言
+export_rss_sfprojects	OS操作系统
+export_rss_sfprojects	devel_status	发展现状
+#
+#-----------------------------------------------
+# Script: SF/www/export/rss_utils.php
+#
+export_rss_utils	no_desc_available	没有可用的描述。

@@ -1,0 +1,218 @@
+#/**
+#  *
+#  * Include scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: src/common/project//category.php
+#
+register_category	upd_query_fail	This is an invalid state. 更新查询失败. <B>请</B> 报告给 $1
+register_category	var_missing	这是无效状态。 缺少一些表单变量。 如果你确定你输入了一切， <B>请</B> 报告给$1并在您的浏览器和平台配置中添加信息
+register_category	project_category	项目分类
+register_category	select_3_classifs	请在每个收藏类别中为此项目选择三个分类。 这将帮助潜在的开发人员和用户找到您的项目并进行互动。 如果项目不需要任何或所有这些分类，只需选择“无选择”。<P>IMPORTANT REMARKS: <ul><li>项目应分列在地图上最具体的位置。</li><li>在特定类别和父类别中的同时分类将导致仅更具体的分类被接受。</li><li><em><b>专题专栏</b></em>: 如果您的项目似乎不符合任何类别或子类别，只需选择“其他/非列出主题”。 随着新项目的提交，$ 1团队将通过定义第二和第三级子类别来完善。 我们欢迎任何有关这方面的建议。 您可以随时更改此项目的收藏类别。</li></ul>
+#
+#-----------------------------------------------
+# Script: src/common/project//confirmation.php
+#
+register_confirmation	registration_complete	注册完成
+register_confirmation	upd_fail	更新失败. 请向$1 $2报告
+register_confirmation	ins_file_fail	插入文件失败。 请向管理 @ $ 1 $ 2报告register_confirmation	set_owner_fail	将您设置为所有者失败. 请报告给 $1 $2
+register_confirmation	open_discussion	公开讨论
+register_confirmation	general_discussion	一般交流
+register_confirmation	get_help	获得帮助
+register_confirmation	developers	开发商
+register_confirmation	proj_dev_discussion	 项目开发者讨论
+register_confirmation	cant_create_service	 错误- 不能创建服务
+register_confirmation	cant_create_docgroup	错误- 不能创建默认的文档组
+register_confirmation	cant_copy_cvs_infos 	错误- 无法复制默认的CVS信息
+register_confirmation	cant_copy_svn_infos  	错误- 无法复制默认的SVN信息
+register_confirmation	cant_copy_truncated_emails	错误- 无法从父项目复制截短的电子文件
+register_confirmation	registration_deleted	注册已删除
+register_confirmation	project_deleted	项目注册已删除
+register_confirmation	try_again	请稍后再试
+register_confirmation	ins_desc_fail	插入描述域失败.请报告给管理@$1 $2
+register_confirmation	cant_copy_msg_to_requester	错误- 无法将默认消息复制到请求者以访问您的项目。
+register_confirmation	registration_approved	您的项目已被自动批准，您可以立即开始使用！#
+#-----------------------------------------------
+# Script: src/common/project//form.php
+#
+register_form	new_project_registration	新项目注册
+register_form	register_form	New Project注册表单
+register_form	fill_form只需填写此表单即可申请1美元的帐户。 需要带有星号（*）的字段。
+register_form	first_name	名字
+register_form	last_name		姓
+register_form	email	邮箱
+register_form	project_name	项目名
+register_form	proj_description	项目简介：
+register_form	desired_subdomain	所需子域名br>(e.g. 
+register_form	passwd	所需密码<br>(enter twice)
+register_form	comments	评论/问题:
+register_form	clear_form	清除表单
+register_form	cancel	取消注册
+register_form	cancelled	Project 注册已取消
+register_form	next	下一步 >>
+register_form	must_agree	您必须同意$ 1服务条款协议。
+#
+#-----------------------------------------------
+# Script: src/common/project//index.php
+#
+register_index	project_registration	Project Registration
+#
+#-----------------------------------------------
+# Script: src/common/project//license.php
+#
+register_license	invalid_g_name	无效组名
+register_license	invalid_short_name	无效简称
+register_license	invalid_full_name	无效全名
+register_license	nospace_in_short_name	T这里的短名称中不能有任何空格_（下划线）register_license	g_name_taken	团体名称
+register_license	g_name_exist	组名已存在
+register_license	license	执照
+#
+#-----------------------------------------------
+# Script: src/common/project//projectname.php
+#
+register_projectname	ins_query_fail	插入查询失败. 请通知 $1
+register_projectname	info_missed	信息丢失，请填写所有必须的信息
+register_projectname	tos_not_approved	您必须批准服务条款。
+#
+#-----------------------------------------------
+# Script: src/common/project//tos.php
+#
+register_tos	tos	服务条款
+register_tos	tos_agreement	步骤2：服务条款协议
+register_tos	tos_agree	点击下面，您确认您已阅读并理解服务条款协议。 点击“我同意”将构成您对本文档的法定签名。<P><H3 align=center><A href="$1">[I AGREE]</A>&nbsp;&nbsp;<A href="/">[I DISAGREE]</A></H3>
+#
+#-----------------------------------------------
+# Script: src/common/project//why.php
+#
+register_why	why_register	Why Register?
+#
+#-----------------------------------------------
+# Script: src/common/project//template.php
+#
+register_template	choose	选择项目模板
+register_template	choose_admin	或选择一个您管理的项目
+register_template	next_step	Step 4: 基本项目信息
+register_title	intro	项目注册
+register_title	registration	$1 服务 & 要求
+register_title	tos	$1 服务条款协议
+register_title	template	项目模板
+register_title	basic	项目概要
+register_title	name	项目名
+register_title	license	软件条款
+register_title	category	项目分类
+register_title	confirm	最终确认
+register_title	services	项目服务
+register_title	settings	项目设置
+
+register_services	desc	请选择你的服务
+register_services	server	服务器
+
+register_confirmation	built_from_template	模板
+register_confirmation	form_short_description	项目简介
+register_confirmation	form_purpose	完整的项目描述
+register_confirmation	form_required_sw	所需软件
+register_confirmation	form_patents	知识产权
+register_confirmation	form_comments	其他评论
+register_confirmation	form_full_name	全名
+register_confirmation	form_unix_name	简称
+register_confirmation	trove	分类
+#
+#-----------------------------------------------
+# Script: src/common/project/RegisterProjectDescription.php
+#
+register_desc	short_description	Short Project Description
+register_desc	short_description_desc	What's the purpose of your project (3-4 lines description). HTML tags allowed.
+
+register_project_one_step	title	项目创建请求
+register_project_one_step	page_description_beg	在...创建新项目
+register_project_one_step	page_description_end	只需要几步。
+register_project_one_step	custom_description_missing	字段“$ 1”是必需的
+register_project_one_step	mandatory_trovecat_missing	类别“$ 1”是必需的register_project_one_step	warning	警告
+register_project_one_step	warning_message	在能够对项目做任何事情之前，系统管理员必须批准该项目。
+register_project_one_step	description_container_title	描述你的项目
+register_project_one_step	description_container_full_name	全名
+register_project_one_step	description_container_full_name_help	3-40个字符register_project_one_step	description_container_short_name	简称
+register_project_one_step	description_container_short_name_help	长度在3到30个字符之间，只有字符，数字和破折号。 必须从一封信开始。 没有空间允许。
+register_project_one_step	description_container_short_name_label	短名称是用于各种URL（项目URL和源代码存储库）等技术名称。
+register_project_one_step	description_container_short_description	简介register_project_one_step	description_container_short_description_help	此项目的目的是什么？
+register_project_one_step	description_container_project_description	项目描述
+register_project_one_step	description_container_project_privacy	项目隐私
+register_project_one_step	description_container_project_private_label	私人（限制访问项目成员）
+register_project_one_step	description_container_project_public_label	共有
+register_project_one_step	submit_button	创建项目t
+register_project_one_step	agree_TOS_label	同意
+register_project_one_step	TOS_label	policy 同意
+register_project_one_step	about_to_create	您即将要求实际的项目创建。register_project_one_step	about_to_create_optional	当系统管理员验证它时，您将收到通知。 然后，您将可以访问新的项目工作区。 enjoy！
+Register_project_one_step	choose_template_title	为您的项目选择适当的模板register_project_one_step	choose_template_description_part_one	项目模板是预先配置的工作区：激活的工具（跟踪器，版本控制系统，通信工具...），工具定制和配置（工作流程，文档结构...），用户组，权限等。、
+register_project_one_step	choose_template_description_part_two	您将选择的项目模板提供一些服务。 在项目获得批准后，您可以随时修改项目工作区。
+register_project_one_step	choose_default_templates	默认模板
+register_project_one_step	choose_admin_projects	您管理的项目register_project_one_step	services_used	使用服务：
+register_project_one_step	complete_title	注册完成
+register_project_one_step	complete_wait	Y我们的项目已经提交给管理员。 24小时内，您将收到决定通知和进一步说明。
+register_project_one_step	complete_thanks	谢谢使用 $1
+register_project_one_step	complete_mail_subject	新项目注册: $1
+register_project_one_step	complete_mail_body_auto	一个新项目刚刚在$1 \ n \ n项目名称上注册：$2 \ n \ n每个站点管理员配置都被自动接受。\ n您想要访问项目的详细信息，您可以点击以下URL访问站点管理员 面板：\ n $3 \ 
+register_project_one_step	complete_mail_body_approve	一个新项目刚刚在$1 \ n \ n上注册了项目名称：$2 \ n \ n请点击以下网址批准注册：$ 3
+register_project_one_step	trove_cat_legend	收藏类别#
+#-----------------------------------------------
+# Script: src/common/project/OneStepRegistration/OneStepRegistrationPresenter.class.php
+#
+register_confirmation_project_one_step	title	你的项目已被创建
+register_confirmation_project_one_step	section_one	你现在可以开始使用.
+register_confirmation_project_one_step	section_two	你会收到一封更多信息的邮件
+register_confirmation_project_one_step	thanks	感谢使用 $1
+register_confirmation_project_one_step	redirect_content	跳转到项目主页面
+#
+#-----------------------------------------------
+# Script: src/common/project/OneStepRegistration/OneStepRegistrationApprovalPresenter.php
+#
+register_confirmation_approval_project_one_step	title	你的项目已创建
+register_confirmation_approval_project_one_step	section_one	您的项目已提交给管理员进行验证。
+register_confirmation_approval_project_one_step	section_two	您将通过电子邮件收到决定通知和进一步说明。
+register_confirmation_approval_project_one_step	thanks	感谢使用 $1
+register_confirmation_approval_project_one_step	redirect_content	返回主页面
+#
+# Script: src/common/mail/MailProjectOneStepRegisterPresenter.php
+#
+mail_register_project_one_step	title	$1 项目批准
+mail_register_project_one_step	section_one	请花一些时间阅读<a href="$1">网站文档</a>，了解项目管理员提供的工具和服务$ 2（包括详细的用户指南）。
+mail_register_project_one_step	section_two	我们现在邀请您访问项目的<a href="$1">摘要页面</a>，为项目创建一个简短的公共描述，如果尚未完成则将其分类到软件地图中。
+mail_register_project_one_step	section_three作为项目管理员，您可以<a href="$1">完全管理您的项目</a>环境。 您可以创建任务或缺陷跟踪器，邮件列表，论坛，git存储库等。
+mail_register_project_one_step	section_four	备注：如果您已经拥有自己的CVS或Subversion版本库，并希望以$1的价格转让，请联系
+$1团队。mail_register_project_one_step	full_name	Full name
+mail_register_project_one_step	short_name	简称
+mail_register_project_one_step	summary_page	摘要页
+#
+#-----------------------------------------------
+# Script: src/common/mail/MailProjectNotificationPresenter.php
+#
+mail_register_project_one_step_notification	title	注册项目
+mail_register_project_one_step_notification	section_one	一个新项目刚刚登记在$1。
+mail_register_project_one_step_notification	section_two	项目名字: $1.
+mail_register_project_one_step_notification	section_three	根据网站配置，项目自动批准。
+mail_register_project_one_step_notification	redirect_button	转到管理面板
+#
+#-----------------------------------------------
+# Script: src/common/mail/MailProjectNotificationMustBeApprovedPresenter.php
+#
+mail_register_project_one_step_notification_approved	title	已注册项目
+mail_register_project_one_step_notification_approved	section_one	一个新项目刚刚登记在$1。
+mail_register_project_one_step_notification_approved	section_two	项目名: $1.
+mail_register_project_one_step_notification_approved	section_three	请点击按钮批准该项目的注册：
+mail_register_project_one_step_notification_approved	redirect_button	批准项目#
+#-----------------------------------------------
+# Script:
+#   src/common/mail/MailProjectNotificationMustBeApprovedPresenter.php
+#   src/common/mail/MailProjectNotificationPresenter.php
+#   src/common/mail/MailProjectOneStepRegisterPresenter.php
+#
+mail_outline	help	有任何帮助联系人： $1
+mail_outline	thanks	谢谢!
+mail_outline	signature	--  $1 团队

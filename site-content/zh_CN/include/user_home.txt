@@ -1,0 +1,29 @@
+<?php
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+// 
+//
+
+
+// LDAP filter is normally set up in the Codendi config file but if you need to
+// some special processing to build the filter you can override the
+// LDAP filter here
+// $GLOBALS['sys_ldap_filter'] = "...."
+
+// HTML format to use for the output of the LDAP entry
+// (use %attribute_name% to insert the value of the corresponding
+// LDAP attribute. 
+// Comment out the definition of $my_html_ldap_format if you want to see
+// the full LDAP entry with all attributes (useful for debugging)
+
+$my_html_ldap_format = '<td colspan="2" align="center"><hr><td>'.
+	   '<tr valign="top"><td>Title: </td><td><b>%title%</b></td></tr>'.
+	   '<tr valign="top"><td>Organization: </td><td><b>%department%</b></td></tr>'.
+	   '<tr valign="top"><td>Address: </td><td><b>%postaladdress%</b></td></tr>'.
+	   '<tr valign="top"><td> </td><td><b>%postalcode% - %co%</b></td></tr>'.
+	   '<tr valign="top"><td>Phone #1:</td><td><b>%telephonenumber%</b></td></tr>'.
+	   '<tr valign="top"><td>Phone #2:</td><td><b>%telephone-office2%</b></td></tr>'.
+	   '<tr valign="top"><td>Fax:</td><td><b>%facsimiletelephonenumber%</b></td></tr>';

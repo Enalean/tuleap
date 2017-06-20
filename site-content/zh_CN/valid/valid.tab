@@ -1,0 +1,10 @@
+rule_file error_upload文件上传错误。
+rule_file error_upload_nofile文件上传错误（$1）。没有上传文件。
+rule_file error_upload_partial文件上传错误（$1）。上传的文件仅部分上传。
+rule_file error_upload_size文件上传错误（$1）。上传的文件超过允许的最大文件大小。
+rule_file error_upload_unknown文件上传错误（$1）。未知错误代码。
+
+rule_user_name error_exists登录名已经存在。
+rule_user_name error_event_reserved $1已被保留用于另一个重命名操作。请检查系统事件监视器。
+
+rule_group_name error_exists短名称已经存在

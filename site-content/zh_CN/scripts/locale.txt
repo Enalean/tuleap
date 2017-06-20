@@ -1,0 +1,24 @@
+var codendi = codendi || {};
+codendi.locales = codendi.locales || {};
+codendi.locale ='en';
+codendi.locales ['cross_ref_fact_include'] = {
+    legend：'引用或引用该项目的项目列表'，
+    legend_referenced_by：“引用此项目的项目列表”，
+    show_references_to：'显示此项目引用的项目'，
+    hide_references_to：'隐藏此项目引用的项目'
+};
+codendi.locales ['files'] = {
+    error_max_file_size：'你超过最大文件大小'
+};
+codendi.locales ['svn_accessfile_history'] = {
+    空：“此版本为空”
+};
+codendi.locales ['search'] = {
+    错误：'发生错误'
+};
+codendi.locales ['account'] = {
+    theme_variant_preview：“这是一个预览。您必须保存您的偏好才能应用此修改。
+};
+codendi.locales ['register'] = {
+    did_you_mean：“你的意思是<a class="suggested-email">＃{full} </a>？
+};
