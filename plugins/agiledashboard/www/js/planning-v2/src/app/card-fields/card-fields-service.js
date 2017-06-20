@@ -16,22 +16,23 @@ function CardFieldsService(
     var highlight = $filter('tuleapHighlight');
 
     return {
-        cardFieldIsSimpleValue      : cardFieldIsSimpleValue,
-        cardFieldIsList             : cardFieldIsList,
-        cardFieldIsText             : cardFieldIsText,
-        cardFieldIsDate             : cardFieldIsDate,
-        cardFieldIsFile             : cardFieldIsFile,
-        cardFieldIsCross            : cardFieldIsCross,
-        cardFieldIsPermissions      : cardFieldIsPermissions,
-        cardFieldIsUser             : cardFieldIsUser,
-        cardFieldIsComputed         : cardFieldIsComputed,
-        getCardFieldDateValue       : getCardFieldDateValue,
-        getCardFieldListValues      : getCardFieldListValues,
-        getCardFieldTextValue       : getCardFieldTextValue,
-        getCardFieldFileValue       : getCardFieldFileValue,
-        getCardFieldCrossValue      : getCardFieldCrossValue,
-        getCardFieldPermissionsValue: getCardFieldPermissionsValue,
-        getCardFieldUserValue       : getCardFieldUserValue
+        cardFieldIsSimpleValue               : cardFieldIsSimpleValue,
+        cardFieldIsList                      : cardFieldIsList,
+        cardFieldIsText                      : cardFieldIsText,
+        cardFieldIsDate                      : cardFieldIsDate,
+        cardFieldIsFile                      : cardFieldIsFile,
+        cardFieldIsCross                     : cardFieldIsCross,
+        cardFieldIsPermissions               : cardFieldIsPermissions,
+        cardFieldIsUser                      : cardFieldIsUser,
+        cardFieldIsComputed                  : cardFieldIsComputed,
+        getCardFieldDateValue                : getCardFieldDateValue,
+        getCardFieldListValues               : getCardFieldListValues,
+        getCardFieldTextValue                : getCardFieldTextValue,
+        getCardFieldFileValue                : getCardFieldFileValue,
+        getCardFieldCrossValue               : getCardFieldCrossValue,
+        getCardFieldPermissionsValue         : getCardFieldPermissionsValue,
+        getCardFieldUserValue                : getCardFieldUserValue,
+        isListBoundToAValueDifferentFromNone : isListBoundToAValueDifferentFromNone
     };
 
     function cardFieldIsSimpleValue(type) {
@@ -162,5 +163,11 @@ function CardFieldsService(
         }
 
         return $sce.trustAsHtml('<div class="user">' + link + '</div>');
+    }
+
+    function isListBoundToAValueDifferentFromNone(values) {
+        return _.find(values, function(value) {
+            return value.id !== null;
+        });
     }
 }

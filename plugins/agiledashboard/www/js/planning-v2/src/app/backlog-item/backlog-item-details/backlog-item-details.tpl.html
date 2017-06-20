@@ -92,7 +92,7 @@
         </div>
         <div
             class="card-field"
-            ng-if="details.cardFieldIsList(card_field.type) && card_field.values.length > 0"
+            ng-if="details.cardFieldIsList(card_field.type) && card_field.values.length > 0 && details.isListBoundToAValueDifferentFromNone(card_field.values)"
         >
             <span class="extra-card-field-title">{{ card_field.label }}: </span>
             <span ng-bind-html="details.getCardFieldListValues(card_field.values, details.backlog_filter.terms)"></span>
