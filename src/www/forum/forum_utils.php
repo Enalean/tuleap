@@ -69,9 +69,9 @@ function forum_header($params) {
                 $hp->purify($uh->getDisplayNameFromUserId(db_result($result,0,'submitted_by')), CODENDI_PURIFIER_CONVERT_HTML) .
 				'<BR>
 				<B>'.$Language->getText('forum_forum','date').':</B> '. format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0,'date')).'<BR>
-				<B>'.$Language->getText('forum_forum_utils','summary').':</B><A HREF="/forum/forum.php?forum_id='.db_result($result,0,'forum_id').'">'. db_result($result,0,'summary').'</A>
+				<B>'.$Language->getText('forum_forum_utils','summary').':</B><A HREF="'. $hp->purify('/forum/forum.php?forum_id='.urlencode(db_result($result,0,'forum_id'))) .'">'. $hp->purify(db_result($result,0,'summary')).'</A>
 				<P>
-				'. util_make_links( nl2br( db_result($result,0,'details')), $group_id);
+				'. $hp->purify(db_result($result,0,'details', $group_id), CODENDI_PURIFIER_BASIC);
 
 				echo '<P>';
 				
