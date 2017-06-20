@@ -31,6 +31,7 @@ plugin_plinks	project_link_change_makes_duplicate	Abandon de la mise à jour (il
 plugin_plinks	update_details	Mettre à jour les détails
 plugin_plinks	add_project	Ajouter un nouveau projet: 
 plugin_plinks	add_project_autocompleter	Nom d'un projet (autocomplèté)
+plugin_plinks	no_links_found	Aucun lien inter-projet trouvé.
 #
 plugin_plinks	synchronise_with_template	Re-synchroniser les liens avec le patron
 plugin_plinks	synchronise_clickit	Cliquer sur $1 pour ajouter les liens définis dans le patron
