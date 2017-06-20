@@ -17,7 +17,12 @@ module.exports = {
         filename: '[name]-[chunkhash].js'
     },
     resolve: {
-        modules: [ 'node_modules' ],
+        modules: [
+            'node_modules',
+            // Since we reach higher in the directory tree to get 'tlp-fetch', we use this
+            // to force webpack to resolve 'transform-object-rest-spread' in this directory
+            path.resolve(__dirname, 'node_modules')
+        ],
         alias: {
             // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
             // We use tlp.get() and tlp.put(). This means we need polyfills for fetch() and Promise
@@ -46,7 +51,7 @@ module.exports = {
                                 }]
                             ],
                             plugins: [
-                                "transform-object-rest-spread"
+                                'transform-object-rest-spread'
                             ]
                         }
                     }
