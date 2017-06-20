@@ -6,23 +6,27 @@ plugin_botmattermost_git	alert_error_create_bot_notification	L'ajout du robot de
 plugin_botmattermost_git	alert_error_delete_bot_notification	La suppression du robot de notification a échoué
 plugin_botmattermost_git	alert_error_update_bot_notification	La mise à jour du robot de notification a échoué
 
-plugin_botmattermost_git	title	Notification dans Mattermost
+plugin_botmattermost_git	title	Notifications dans Mattermost
+plugin_botmattermost_git	description	Choisis un robot afin d'envoyer des notifications dans Mattermost lorsqu'un push à lieu dans ce dépot.
+
 
 plugin_botmattermost_git	push_notification_text	a publié un nouveau commit sur
 
-plugin_botmattermost_git	any_configured_notification	Il n'y a rien ici, commencez par configurer les notifications.
+plugin_botmattermost_git	any_configured_notification	Aucune configuration des notifications Mattermost n'est encore en place.
+plugin_botmattermost_git	any_configured_notification_tips	Pour commencez, cliquez sur ajouter un notification ci-dessous.
 
-plugin_botmattermost_git	button_configure_notification	Configuration des notifications
-plugin_botmattermost_git	button_confirm	Confirmer
+plugin_botmattermost_git	button_configure_notification	Ajouter une notification
+plugin_botmattermost_git	button_confirm	Ajouter
 
-plugin_botmattermost_git	modal_header_configure_notification	Configuration des notifications
-plugin_botmattermost_git	modal_header_edit_configure_notification	Edition de la configuration des notifications
-plugin_botmattermost_git	modal_header_delete_configure_notification	Suppression de la configuration des notifications
-plugin_botmattermost_git	modal_delete_content	Cette suppression est irréversible. Veuillez confirmer la suppression de la configuration des notifications.
+plugin_botmattermost_git	modal_header_configure_notification	Ajout d'une notification
+plugin_botmattermost_git	modal_header_edit_configure_notification	Edition de la notification
+plugin_botmattermost_git	modal_header_delete_configure_notification	Suppression de la notification
+plugin_botmattermost_git	modal_delete_content	Cette suppression est irréversible. Veuillez confirmer la suppression de la notification.
 
 plugin_botmattermost_git	configuration_info_channels_handles	L'identifiant du canal est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/canal<br>identifiant : canal
 plugin_botmattermost_git	configuration_label_channels_handles	Liste des canaux
 plugin_botmattermost_git	configuration_input_channels_handles	canal1, canal2, canal3
+plugin_botmattermost_git	empty_channel_list	Aucun canal n'a été renseigné, celui défini lors de la création du webhook sera utilisé par défaut
 
 plugin_botmattermost_git	attachment_pre_text_message	Pull request proposée par $1 sur le dépôt
 plugin_botmattermost_git	attachment_pre_text_project	Projet :

@@ -1,20 +1,48 @@
 #git-notification-mattermost-section {
 
-    & > div {
-        margin: 0 0 20px 0;
-
-        & > p > img.avatar {
-            margin: 0 10px 0 0;
-            width: 35px;
-            height: 35px;
-        }
-
-        & > .bot-assigned-label {
-            color: #444444;
-            font-weight: bold;
-            margin: auto auto 0 auto;
-        }
+    img.avatar {
+        margin: 0 10px 0 0;
+        width: 35px;
+        height: 35px;
     }
+
+    .panel-header {
+        padding: 20px;
+        margin: 0;
+        color: #747474;
+        line-height: 22px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+    }
+
+    .panel-content {
+        padding: 20px;
+    }
+
+    .bot-assigned-label {
+        display: block;
+        position: relative;
+        margin: 0 0 8px;
+        color: #666;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .button-group {
+        margin: 20px 0 0 0;
+    }
+}
+
+.git-notification-mattermost-configuration-empty-state {
+    color: #888;
+    font-style: italic;
+}
+
+.git-notification-mattermost-configuration-description {
+    margin: 0 0 20px;
 }
 
 .form-group {

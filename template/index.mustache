@@ -1,29 +1,39 @@
 <div id="git-notification-mattermost-section">
-<h3>{{title}}</h3>
+    <h3>{{title}}</h3>
     {{^ bot_assigned }}
-        <p>{{ any_configured_notification }}</p>
-        <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
-            {{ button_config }}
-        </button>
+        <div class="git-notification-mattermost-configuration-empty-state">
+            <p>{{ any_configured_notification }}</p>
+            <p class="git-notification-mattermost-configuration-description">{{ any_configured_notification_tips }}</p>
+            <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
+                <i class="icon-plus"></i> {{ button_config }}
+            </button>
+        </div>
         {{> modal-add-bot }}
     {{/ bot_assigned }}
     {{# bot_assigned }}
-        <div>
-            <p class="bot-assigned-label">{{ label_bot_name }}</p>
-            <p>{{# avatar }}<img class="avatar img-circle" src="{{ avatar }}">{{/ avatar }}{{ name }}</p>
-        </div>
-        <div>
+        <h4 class="panel-header">{{# avatar }}<img class="avatar img-circle" src="{{ avatar }}">{{/ avatar }}{{ name }}
+        </h4>
+        <section class="panel-content">
             <p class="bot-assigned-label">{{ label_channels_handles }}</p>
-            <p>{{ channels }}</p>
-        </div>
+            {{# channels }}
+                <p>{{ channels }}</p>
+            {{/ channels }}
+            {{^ channels }}
+                <div class="git-notification-mattermost-configuration-empty-state">
+                    <p class="git-notification-mattermost-configuration-description">{{ empty_channel_list }}</p>
+                </div>
+            {{/ channels }}
 
-        <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-edit-{{ id }}">
-            <i class="icon-edit"></i> {{ button_edit }}
-        </button>
-        {{> modal-edit-bot }}
-        <button class="btn btn-danger" data-toggle="modal" href="#admin-config-bot-delete-{{ id }}">
-            <i class="icon-trash"></i> {{ button_delete }}
-        </button>
-        {{> modal-delete-bot }}
+            <div class="button-group">
+                <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-edit-{{ id }}">
+                    <i class="icon-edit"></i> {{ button_edit }}
+                </button>
+                {{> modal-edit-bot }}
+                <button class="btn btn-danger" data-toggle="modal" href="#admin-config-bot-delete-{{ id }}">
+                    <i class="icon-trash"></i> {{ button_delete }}
+                </button>
+            </div>
+            {{> modal-delete-bot }}
+        </section>
     {{/ bot_assigned }}
 </div>

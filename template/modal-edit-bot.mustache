@@ -7,8 +7,9 @@
 >
 
     <div class="modal-header">
-        <a role="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
-        <h3 id="configuration-edit-bot-title">{{ modal_edit_title}}</h3>
+        <a role="button" class="close" data-dismiss="modal">×</a>
+        <h3 id="configuration-edit-bot-title">
+            <i class="icon-edit"></i> {{ modal_edit_title }}</h3>
     </div>
 
     <form method="POST" action="/plugins/botmattermost_git/?action=edit_bot" >
@@ -32,7 +33,7 @@
 
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">{{ button_close }}</button>
-            <button type="submit" class="btn btn-primary">{{ button_edit }}</button>
+            <button type="submit" class="btn btn-primary"><i class="icon-edit"></i> {{ button_edit }}</button>
         </div>
     </form>
 

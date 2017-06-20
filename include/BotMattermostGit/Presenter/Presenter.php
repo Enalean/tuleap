@@ -51,6 +51,7 @@ class Presenter
         $this->repository_id = $this->repository->getId();
         $this->has_bots      = ! empty($bots);
         $this->title         = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'title');
+        $this->description   = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'description');
 
         $this->modal_add_title          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_configure_notification');
         $this->modal_edit_title         = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_edit_configure_notification');
@@ -66,8 +67,11 @@ class Presenter
             CODENDI_PURIFIER_LIGHT
         );
 
-        $this->any_configured_notification = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification');
-        $this->empty_bot_list = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
+        $this->any_configured_notification      = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification');
+        $this->any_configured_notification_tips = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification_tips');
+        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
+        $this->empty_channel_list               = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'empty_channel_list');
+
 
         $this->button_config  = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'button_configure_notification');
         $this->button_confirm = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'button_confirm');

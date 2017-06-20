@@ -6,23 +6,29 @@ plugin_botmattermost_git	alert_error_create_bot_notification	Failed to create th
 plugin_botmattermost_git	alert_error_delete_bot_notification	Failed to delete the bot notification for git notification
 plugin_botmattermost_git	alert_error_update_bot_notification	Failed to update the bot notification for git notification
 
-plugin_botmattermost_git	title	Notification in Mattermost
+plugin_botmattermost_git	title	Notifications in Mattermost
+plugin_botmattermost_git	description	Choose a bot to send message in Mattermost when push occurs in this repository.
+
 
 plugin_botmattermost_git	push_notification_text	pushed a new commit to
 
-plugin_botmattermost_git	any_configured_notification	There is nothing here, start by configure a notification.
+plugin_botmattermost_git	any_configured_notification	The Mattermost notification has not yet been configured.
+plugin_botmattermost_git	any_configured_notification_tips	To begin, clic on add notification button below.
 
-plugin_botmattermost_git	button_configure_notification	Notification configuration
-plugin_botmattermost_git	button_confirm	Confirm
 
-plugin_botmattermost_git	modal_header_configure_notification	Notifications configuration
-plugin_botmattermost_git	modal_header_edit_configure_notification	Edit notifications configuration
-plugin_botmattermost_git	modal_header_delete_configure_notification	Delete notifications configuration
-plugin_botmattermost_git	modal_delete_content	You are about to remove the notifications configuration. Please confirm your action.
+plugin_botmattermost_git	button_configure_notification	Add notification
+plugin_botmattermost_git	button_confirm	Add
+
+plugin_botmattermost_git	modal_header_configure_notification	Add notification
+plugin_botmattermost_git	modal_header_edit_configure_notification	Edit notification
+plugin_botmattermost_git	modal_header_delete_configure_notification	Delete notification
+plugin_botmattermost_git	modal_delete_content	You are about to remove the notification. Please confirm your action.
 
 plugin_botmattermost_git	configuration_info_channels_handles	The channel handle is display in its URL<br>example: https://example.com/myGroup/channels/mychannel<br>handle: mychannel
 plugin_botmattermost_git	configuration_label_channels_handles	Channel handles list
 plugin_botmattermost_git	configuration_input_channels_handles	channel1, channel2, channel3
+plugin_botmattermost_git	empty_channel_list	No channel selected, the channel defined at the webhook creation will be used as default
+
 
 plugin_botmattermost_git	attachment_pre_text_message	Pull request submitted by $1 on the repository
 plugin_botmattermost_git	attachment_pre_text_project	Project:
