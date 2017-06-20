@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,21 +21,28 @@
 
 /**
  * Widget_MyTrackerRenderer
- * 
+ *
  * Personal tracker renderer
  */
-class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer {
+class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
+{
     const ID = 'plugin_tracker_projectrenderer';
 
-    function __construct() {
-        parent::__construct(self::ID, HTTPRequest::instance()->get('group_id'), WidgetLayoutManager::OWNER_TYPE_GROUP);
+    public function __construct()
+    {
+        parent::__construct(
+            self::ID, HTTPRequest::instance()->get('group_id'),
+            \Tuleap\Dashboard\Project\ProjectDashboardController::LEGACY_DASHBOARD_TYPE
+        );
     }
-    
-    function canBeUsedByProject($project) {
+
+    function canBeUsedByProject($project)
+    {
         return true;
     }
 
-    public function isAjax() {
+    public function isAjax()
+    {
         return false;
     }
 }

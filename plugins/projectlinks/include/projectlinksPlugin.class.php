@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Widget\Add\AddWidgetController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
@@ -1006,8 +1007,7 @@ class ProjectLinksPlugin extends Plugin {
     }
 
     function widgets($params) {
-        include_once 'common/widget/WidgetLayoutManager.class.php';
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'projectlinkshomepage';
         }
     }

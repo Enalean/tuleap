@@ -21,28 +21,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+
 require_once('Widget_Rss.class.php');
 require_once('Widget.class.php');
 
 /**
-* Widget_TwitterFollow
-* 
-* Allow to follow a twitter user
-* 
-*/
-class Widget_ProjectRss extends Widget_Rss {
+ * Widget_TwitterFollow
+ *
+ * Allow to follow a twitter user
+ *
+ */
+class Widget_ProjectRss extends Widget_Rss
+{
 
     public function __construct()
     {
         $request = HTTPRequest::instance();
-        parent::__construct('projectrss', $request->get('group_id'), WidgetLayoutManager::OWNER_TYPE_GROUP);
+        parent::__construct('projectrss', $request->get('group_id'), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
     }
 
-    function canBeUsedByProject(&$project) {
+    function canBeUsedByProject(&$project)
+    {
         return true;
     }
 
-    function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_rss','description');
+    public function getDescription()
+    {
+        return $GLOBALS['Language']->getText('widget_description_rss', 'description');
     }
 }

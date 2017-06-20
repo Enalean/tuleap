@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 
 /**
@@ -135,7 +136,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
                     'mylatestsvncommits', 'mysystemevent', 'myrss',
                 );
                 break;
-            case WidgetLayoutManager::OWNER_TYPE_GROUP:
+            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
                 $widgets = array('projectdescription', 'projectmembers',
                     'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
                     'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
@@ -182,7 +183,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
         $request = HTTPRequest::instance();
 
         $additional_parameters = array();
-        if ($owner_type === WidgetLayoutManager::OWNER_TYPE_GROUP) {
+        if ($owner_type === ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
             $additional_parameters = array('group_id' => $owner_id);
         }
 

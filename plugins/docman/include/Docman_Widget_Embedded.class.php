@@ -52,7 +52,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * Constructor
      * @param string $id the internal identifier of the widget (plugin_docman_my_embedded | plugin_docman_project_embedded)
      * @param int $owner_id the id of the owner (user id, group id, ...)
-     * @param string $owner_type the type of the owner WidgetLayoutManager::OWNER_TYPE_USER, WidgetLayoutManager::OWNER_TYPE_GROUP, ...
+     * @param string $owner_type the type of the owner
      * @param string $plugin_path the path of the plugin to build urls
      */
     public function __construct($id, $owner_id, $owner_type, $plugin_path) {

@@ -358,7 +358,7 @@ class DocmanPlugin extends Plugin
             $params['codendi_widgets'][] = 'plugin_docman_mydocman_search';
             $params['codendi_widgets'][] = 'plugin_docman_my_embedded';
         }
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_docman_project_embedded';
         }
     }

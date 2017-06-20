@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -692,7 +693,7 @@ class trackerPlugin extends Plugin {
                 $params['codendi_widgets'][] = Tracker_Widget_MyRenderer::ID;
                 break;
 
-            case WidgetLayoutManager::OWNER_TYPE_GROUP:
+            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
                 break;
         }
