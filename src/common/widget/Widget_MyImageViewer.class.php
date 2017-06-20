@@ -20,16 +20,17 @@
  */
 
 require_once('Widget_ImageViewer.class.php');
-require_once('WidgetLayoutManager.class.php');
 
 /**
-* Widget_MyImageViewer
-* 
-* Personal image viewer
-* 
-*/
-class Widget_MyImageViewer extends Widget_ImageViewer {
-    function __construct() {
+ * Widget_MyImageViewer
+ *
+ * Personal image viewer
+ *
+ */
+class Widget_MyImageViewer extends Widget_ImageViewer
+{
+    public function __construct()
+    {
         parent::__construct(
             'myimageviewer', user_getid(),
             \Tuleap\Dashboard\User\UserDashboardController::LEGACY_DASHBOARD_TYPE

@@ -46,7 +46,6 @@ use Tuleap\Widget\WidgetFactory;
 require_once('pre.php');
 require_once('my_utils.php');
 require_once('common/event/EventManager.class.php');
-require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('../admin/admin_utils.php');
 
 $request = HTTPRequest::instance();

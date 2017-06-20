@@ -122,8 +122,6 @@ class hudsonPlugin extends Plugin
     }
 
     function widget_instance($params) {
-        require_once('common/widget/WidgetLayoutManager.class.php');
-
         $request = HTTPRequest::instance();
 
         $user = UserManager::instance()->getCurrentUser();
@@ -183,7 +181,6 @@ class hudsonPlugin extends Plugin
 
     public function widgets($params)
     {
-        require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_hudson_my_jobs';
             $params['codendi_widgets'][] = 'plugin_hudson_my_joblastbuilds';

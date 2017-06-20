@@ -152,7 +152,6 @@ class AdminDelegationPlugin extends Plugin {
      * @param Array $params
      */
     public function widgets($params) {
-        include_once 'common/widget/WidgetLayoutManager.class.php';
         if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             if ($this->_userCanViewWidget('admindelegation')) {
                 include_once 'AdminDelegation_UserWidget.class.php';

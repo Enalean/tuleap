@@ -22,7 +22,6 @@
 use Tuleap\Dashboard\User\UserDashboardController;
 
 require_once('Widget_Rss.class.php');
-require_once('WidgetLayoutManager.class.php');
 
 /**
 * Widget_MyRss

@@ -1355,7 +1355,6 @@ class GitPlugin extends Plugin {
      */
     public function widgets($params)
     {
-        require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_git_user_pushes';
         }

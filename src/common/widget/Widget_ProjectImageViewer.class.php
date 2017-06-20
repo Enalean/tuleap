@@ -22,7 +22,6 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 require_once('Widget_ImageViewer.class.php');
-require_once('WidgetLayoutManager.class.php');
 
 /**
 * Widget_ProjectImageViewer

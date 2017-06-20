@@ -23,10 +23,9 @@ namespace Tuleap\Dashboard\Project;
 use Project;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
-use Tuleap\Dashboard\Widget\DashboardWidgetLine;
-use WidgetLayoutManager;
 use Tuleap\Widget\WidgetFactory;
 
 class ProjectDashboardDuplicator

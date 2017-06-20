@@ -352,7 +352,6 @@ class DocmanPlugin extends Plugin
 
     public function widgets($params)
     {
-        require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['codendi_widgets'][] = 'plugin_docman_mydocman';
             $params['codendi_widgets'][] = 'plugin_docman_mydocman_search';
@@ -375,7 +374,6 @@ class DocmanPlugin extends Plugin
 
     function default_widgets_for_new_owner($params)
     {
-        require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $params['widgets'][] = array(
                 'name'   => 'plugin_docman_mydocman',

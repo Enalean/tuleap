@@ -21,8 +21,6 @@
 
 use Tuleap\Dashboard\User\UserDashboardController;
 
-require_once 'common/widget/WidgetLayoutManager.class.php';
-
 /**
  * Widget_MyTrackerRenderer
  *
