@@ -99,6 +99,7 @@ $history-dropdown-item-text-color: #333333;
 .history-item {
     display: flex;
     flex: 1 0 auto;
+    align-items: center;
     padding: $history-dropdown-spacing;
     border-bottom: 1px solid $history-dropdown-ui-border-light;
     color: $history-dropdown-item-text-color;
@@ -111,15 +112,12 @@ $history-dropdown-item-text-color: #333333;
     &:hover {
         background-color: transparentize($main, .9);
         cursor: pointer;
-
-        .history-item-content-description-quick-links {
-            display: block;
-        }
     }
 }
 
 .history-item-icon {
-    margin: 3px $history-dropdown-half-spacing 0 0;
+    margin: 0 $history-dropdown-half-spacing 0 0;
+    line-height: 12px;
 }
 
 .history-item-content {
@@ -154,28 +152,6 @@ $history-dropdown-item-text-color: #333333;
     overflow: hidden;
 }
 
-.history-item-content-description-quick-links {
-    display: none;
-    max-width: 250px;
-    margin: $history-dropdown-half-spacing 0 0;
-    color: $main;
-    white-space: normal;
-}
-
-.history-item-content-quick-links-link {
-    margin: 0 $history-dropdown-half-spacing 0 0;
-    color: $main;
-
-    &:hover > .history-item-content-quick-links-link-name {
-        text-decoration: underline;
-    }
-}
-
-
-.history-item-content-quick-links-link-icon {
-    margin: 0 3px 0 0;
-}
-
 .history-item-content-project {
     max-width: 150px;
     color: $history-dropdown-ui-dimmed;
@@ -197,6 +173,7 @@ $history-dropdown-item-text-color: #333333;
 }
 
 .history-item-content-project-name {
+    font-size: 12px;
     line-height: 16px;
     white-space: normal;
 }

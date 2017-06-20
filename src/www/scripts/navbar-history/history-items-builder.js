@@ -45,7 +45,7 @@ function insertRenderedHistoryInDOM(rendered_history, history_content) {
 }
 
 function addHistoryItemListeners(history_content) {
-    const extra_links = history_content.querySelectorAll('.history-item-content-quick-links-link, .history-item-content-project');
+    const extra_links = history_content.querySelectorAll('.history-item-content-project');
     [].forEach.call(extra_links, (extra_link) => {
         extra_link.addEventListener('click', (event) => {
             event.stopPropagation();
