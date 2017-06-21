@@ -462,6 +462,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 }
                 break;
             case 'new-artifact-link':
+                header('X-Frame-Options: SAMEORIGIN');
                 $link = $request->get('id');
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $this->displaySubmit($layout, $request, $current_user, $link);
