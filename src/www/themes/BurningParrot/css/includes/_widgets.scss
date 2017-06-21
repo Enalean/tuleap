@@ -28,3 +28,28 @@
 .massmail-project-member-link:hover {
     text-decoration: underline;
 }
+
+// Widget MyProjects
+.empty-project-box-inside {
+    fill: desaturate(lighten($tlp-theme-color, 20%), 10%);
+}
+
+.empty-project-box-icons {
+    fill: $tlp-theme-color;
+}
+
+.empty-project-box-shadow {
+    fill: $tlp-theme-color;
+}
+
+.empty-project-box {
+    fill: desaturate(lighten($tlp-theme-color, 40%), 15%);
+}
+
+.empty-project-box-top-shadow {
+    fill: $tlp-theme-color;
+}
+
+.empty-project-box-top {
+    fill: desaturate(lighten($tlp-theme-color, 40%), 15%);
+}
