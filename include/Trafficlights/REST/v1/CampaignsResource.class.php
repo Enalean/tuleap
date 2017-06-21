@@ -246,7 +246,7 @@ class CampaignsResource {
      *
      * Create new test executions and unlink some test executions for a campaign
      *
-     * @url PATCH {id}/trafficlights_executions_list
+     * @url PATCH {id}/trafficlights_executions
      *
      * @param int   $id                      Id of the campaign
      * @param array $definition_ids_to_add   Test definition ids for which test executions should be created
@@ -256,19 +256,24 @@ class CampaignsResource {
      */
     protected function patchExecutions($id, $definition_ids_to_add, $execution_ids_to_remove)
     {
-        $user               = $this->user_manager->getCurrentUser();
-        $campaign           = $this->getCampaignFromId($id, $user);
-        $project_id         = $campaign->getTracker()->getProject()->getId();
-        $new_executions_ids = array();
+        $user                 = $this->user_manager->getCurrentUser();
+        $campaign             = $this->getCampaignFromId($id, $user);
+        $project_id           = $campaign->getTracker()->getProject()->getId();
+        $new_execution_ids    = array();
+        $executions_to_add    = array();
+        $executions_to_remove = array();
 
         foreach ($definition_ids_to_add as $definition_id) {
-            $new_execution_ref    = $this->execution_creator->createTestExecution(
+            $new_execution_ref   = $this->execution_creator->createTestExecution(
                 $project_id,
                 $user,
                 $definition_id
             );
-            $new_executions_ids[] = $new_execution_ref->id;
+            $new_execution_ids[] = $new_execution_ref->id;
+            $executions_to_add[] = $new_execution_ref->getArtifact();
         }
+
+        $executions_to_remove = $this->artifact_factory->getArtifactsByArtifactIdList($execution_ids_to_remove);
 
         $this->artifactlink_updater->updateArtifactLinks(
             $user,
@@ -277,6 +282,44 @@ class CampaignsResource {
             $execution_ids_to_remove,
             \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
         );
+
+        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            foreach($executions_to_remove as $execution) {
+                $data = array(
+                    'artifact' => $this->execution_representation_builder->getExecutionRepresentation($user, $execution),
+                );
+
+                $rights  = new TrafficlightsArtifactRightsPresenter($execution, $this->permissions_serializer);
+                $message = new MessageDataPresenter(
+                    $user->getId(),
+                    $_SERVER[self::HTTP_CLIENT_UUID],
+                    'trafficlights_' . $campaign->getId(),
+                    $rights,
+                    'trafficlights_execution:delete',
+                    $data
+                );
+
+                $this->node_js_client->sendMessage($message);
+            }
+
+            foreach ($executions_to_add as $execution) {
+                $data = array(
+                    'artifact' => $this->execution_representation_builder->getExecutionRepresentation($user, $execution),
+                );
+
+                $rights  = new TrafficlightsArtifactRightsPresenter($execution, $this->permissions_serializer);
+                $message = new MessageDataPresenter(
+                    $user->getId(),
+                    $_SERVER[self::HTTP_CLIENT_UUID],
+                    'trafficlights_' . $campaign->getId(),
+                    $rights,
+                    'trafficlights_execution:create',
+                    $data
+                );
+
+                $this->node_js_client->sendMessage($message);
+            }
+        }
 
         $this->sendAllowHeadersForExecutionsList($campaign);
 
