@@ -28,7 +28,7 @@ my_index	edit_link	Editer
 my_index	del_bookmark	Confirmez vous que vous voulez détruire ce favori ?
 my_index	add_bookmark	Ajouter un favori
 my_index	my_projects	Mes projets
-my_index	not_member	Vous n'êtes membre d'aucun projet.
+my_index	not_member	Vous n'êtes membre <br> d'aucun projet.
 my_index	admin_link	Admin
 my_index	quit_proj	Quitter ce projet ?
 my_index	priv_proj	<em>Projet privé</em>
