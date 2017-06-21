@@ -263,16 +263,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     </table>';
                     $output .= $content;
                 }
-                $output .=
+                // Commented as of 9.10, shall be removed in 3 releases if no complains.
+                /*$output .=
                 '<table style="width:100%">'.
                         $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
-                '</table>';
+                '</table>';*/
                 break;
             default:
                 $output .= PHP_EOL;
-                //fields formelements
                 $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
-                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
+                // Commented as of 9.10, shall be removed in 3 releases if no complains.
+                //$output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 break;
         }
         return $output;
