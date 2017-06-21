@@ -1550,7 +1550,7 @@ plugin_tracker_widget_myartifacts	a_info	assigned to me [A]
 plugin_tracker_widget_myartifacts	s_info	submitted by me [S]
 plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	Affiche la liste des artefacts par projet que vous avez soumis ou qui vous ont été assignés.
-plugin_tracker_widget_myartifacts	no_artifacts	Pas d'artefact.
+plugin_tracker_widget_myartifacts	no_artifacts	Vous n'avez pas </br> encore d'artefacts
 
 plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact ou alors vous n'avez pas la permission de le modifier, merci de reconfigurer l'outil de suivi
 plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date ou bien vous n'avez pas la permission d'y acceder.

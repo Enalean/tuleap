@@ -1552,7 +1552,7 @@ plugin_tracker_widget_myartifacts	a_info	assigned to me [A]
 plugin_tracker_widget_myartifacts	s_info	submitted by me [S]
 plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	List artifacts you have submitted or assigned to you, by project.
-plugin_tracker_widget_myartifacts	no_artifacts	No artifacts founds.
+plugin_tracker_widget_myartifacts	no_artifacts	You don't have any </br> artifacts yet
 
 plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field or you have not the permission to modify it, please reconfigure your tracker
 plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field or you don't have the permission to access it.
