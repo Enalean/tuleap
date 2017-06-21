@@ -1543,7 +1543,7 @@ plugin_tracker_permissions	plugin_tracker_field_read	Can read tracker field
 plugin_tracker_permissions	plugin_tracker_field_update	Can update tracker field
 plugin_tracker_permissions	plugin_tracker_admin	Admin of the tracker
 
-plugin_tracker_widget_myartifacts	my_arts	My Artifacts (Tracker V5)
+plugin_tracker_widget_myartifacts	my_arts	My Artifacts
 plugin_tracker_widget_myartifacts	a	A
 plugin_tracker_widget_myartifacts	s	S
 plugin_tracker_widget_myartifacts	as	AS
