@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
 	News System
@@ -167,13 +180,14 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
 
 function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments) {
     global $Language;
-    $uh   = new UserHelper();
-    $html = '';
-    $arr  = explode("\n", $data['details']);
+    $purifier  = Codendi_HTMLPurifier::instance();
+    $uh        = new UserHelper();
+    $html      = '';
+    $arr       = explode("\n", $data['details']);
     if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
-        $details = util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
+        $details = $purifier->purify($arr[0] . "\n" . $arr[1] . "\n" . $arr[2], CODENDI_PURIFIER_BASIC, $group_id);
     } else {
-        $details = util_make_links( $arr[0], $group_id );
+        $details = $purifier->purify($arr[0], CODENDI_PURIFIER_BASIC, $group_id);
     }
     
     $proj_name = '';
@@ -181,15 +195,16 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
         //show the project name 
         $proj_name = ' &middot; <a href="/projects/'. strtolower($data['unix_group_name']) .'/">'. $data['group_name'] .'</a>';
     }
-    
+
+    $forum_url = '/forum/forum.php?forum_id=' . urlencode($data['forum_id']);
     if (!$limit) {
-        $html .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span> ';
+        $html .= '<li><span class="news_summary"><a href="'. $purifier->purify($forum_url) .'">'. $purifier->purify($data['summary']) . '</a></span> ';
         $html .= '<small><span class="news_date">'. html_time_ago($data['date']) .'</span></small></li>';
     } else {
         $comments_txt = '';
         if (! $hide_nb_comments) {
             $num_comments = (int)$data['num_comments'];
-            $comments_txt .= ' <a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">('. $num_comments .' ';
+            $comments_txt .= ' <a href="'. $purifier->purify($forum_url) .'">('. $purifier->purify($num_comments) .' ';
             if ($num_comments == 1) {
                 $comments_txt .= $Language->getText('news_utils', 'comment');
             } else {
@@ -199,7 +214,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
         }
         
         $html .= '<div class="news">';
-        $html .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'"><h4>'. $data['summary'] . '</h4></a></span>';
+        $html .= '<span class="news_summary"><a href="'. $purifier->purify($forum_url) .'"><h4>'. $purifier->purify($data['summary']) . '</h4></a></span>';
         
         $html .= '<blockquote>';
         $html .= '<div>' . $details . '</div>';
