@@ -128,7 +128,7 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
 
     private function migrateColumnsForLine(array $dashboard, array $line, $new_dashboard_id, $new_line_id)
     {
-        $sql        = "SELECT * FROM layouts_rows_columns WHERE layout_row_id = :old_line_id ORDER BY id";
+        $sql        = "SELECT * FROM layouts_rows_columns WHERE layout_row_id = :old_line_id";
         $select_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $select_stm->execute(
             array(':old_line_id' => $line['id'])
