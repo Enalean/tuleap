@@ -423,7 +423,21 @@ class AgileDashboardPlugin extends Plugin {
         return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }
 
-    public function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request)
+    {
+        $project = $request->getProject();
+
+        if ($project->isDeleted()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText(
+                    'include_exit', 'project_status_' . $project->getStatus()
+                )
+            );
+
+            $GLOBALS['Response']->redirect('/');
+        }
+
         $builder = new AgileDashboardRouterBuilder();
         $router  = $builder->build($request);
 
