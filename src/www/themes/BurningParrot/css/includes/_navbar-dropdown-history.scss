@@ -77,6 +77,7 @@
 
 .history-item {
     display: flex;
+    position: relative;
     flex: 1 0 auto;
     align-items: center;
     padding: $tlp-spacing;
@@ -92,6 +93,18 @@
         background-color: transparentize($tlp-theme-color, .9);
         text-decoration: none;
         cursor: pointer;
+
+        .history-item-content-description-info {
+            transform: translateY(-10px);
+            transition: transform 50ms 500ms;
+        }
+
+        .history-item-content-description-links {
+            transform: translateY(-2px);
+            transition: transform 50ms 500ms, opacity 50ms 500ms;
+            opacity: 1;
+            pointer-events: auto;
+        }
     }
 }
 
@@ -113,6 +126,7 @@
 .history-item-content-description-info {
     display: flex;
     align-items: center;
+    transition: transform 50ms;
 }
 
 .history-item-content-description-info-badge {
@@ -126,6 +140,27 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.history-item-content-description-links {
+    position: absolute;
+    transition: transform 50ms, opacity 50ms;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.history-item-content-description-link {
+    margin: 0 10px 0 0;
+    color: $tlp-theme-color;
+    font-size: 12px;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.history-item-content-description-link-icon {
+    margin: 0 3px 0 0;
 }
 
 .history-item-content-project {
