@@ -146,7 +146,7 @@ if (!IS_SCRIPT) {
 
     // Protection against clickjacking
     header('X-Frame-Options: DENY');
-    $csp_rules = "frame-ancestors 'none'; ";
+    $csp_rules = "frame-ancestors 'self'; ";
 
     // XSS prevention
     header('X-Content-Type-Options: nosniff');
