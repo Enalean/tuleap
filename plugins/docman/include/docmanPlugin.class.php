@@ -83,7 +83,6 @@ class DocmanPlugin extends Plugin
         $this->_addHook('widget_instance',                   'myPageBox',                         false);
         $this->_addHook('widgets',                           'widgets',                           false);
         $this->_addHook('codendi_daily_start',               'codendiDaily',                      false);
-        $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
         $this->_addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
         $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
         $this->_addHook(Event::WIKI_DISPLAY_REMOVE_BUTTON,   'wiki_display_remove_button',        false);
@@ -370,17 +369,6 @@ class DocmanPlugin extends Plugin
             'plugin_docman_my_embedded',
             'plugin_docman_project_embedded'
         ));
-    }
-
-    function default_widgets_for_new_owner($params)
-    {
-        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['widgets'][] = array(
-                'name'   => 'plugin_docman_mydocman',
-                'column' => 1,
-                'rank'   => 2,
-            );
-        }
     }
 
     /**

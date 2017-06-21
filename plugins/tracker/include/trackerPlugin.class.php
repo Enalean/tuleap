@@ -18,6 +18,7 @@
  */
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -94,7 +95,7 @@ class trackerPlugin extends Plugin {
 
         $this->addHook('widget_instance');
         $this->addHook('widgets');
-        $this->addHook('default_widgets_for_new_owner');
+        $this->addHook(AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER);
 
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
@@ -708,17 +709,10 @@ class trackerPlugin extends Plugin {
         ));
     }
 
-    public function default_widgets_for_new_owner($params)
+    /** @see AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER */
+    public function default_widgets_for_new_user(array $params)
     {
-        switch ($params['owner_type']) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $params['widgets'][] = array(
-                    'name'   => Tracker_Widget_MyArtifacts::ID,
-                    'column' => '2',
-                    'rank'   => '5',
-                );
-                break;
-        }
+        $params['widgets'][] = Tracker_Widget_MyArtifacts::ID;
     }
 
     /**
