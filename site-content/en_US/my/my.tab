@@ -28,7 +28,7 @@ my_index	my_files_msg	<b>You are not monitoring any files</b><P>If you monitor f
 my_index	stop_file	Stop Monitoring this Package?
 my_index	stop_monitor	STOP MONITORING
 my_index	my_tasks	My Tasks
-my_index	my_arts	My Artifacts
+my_index	my_arts	My Artifacts (legacy trackers)
 my_index	display_arts	Display artifacts:
 my_index	my_bookmarks	My Bookmarks
 my_index	no_bookmark	You currently do not have any bookmarks saved

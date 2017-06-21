@@ -20,7 +20,7 @@ my_index	my_files_msg	<b>Vous ne surveillez aucun fichier.</b><P>En surveillant 
 my_index	stop_file	Arrêter la surveillance du paquet ?
 my_index	stop_monitor	Arrêter la surveillance
 my_index	my_tasks	Mes Tâches
-my_index	my_arts	Mes artefacts
+my_index	my_arts	Mes artefacts (anciens trackers)
 my_index	display_arts	Afficher les artefacts :
 my_index	my_bookmarks	Mes favoris
 my_index	no_bookmark	Vous n'avez pas encore de favori enregistré

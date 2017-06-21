@@ -1541,7 +1541,7 @@ plugin_tracker_permissions	plugin_tracker_field_read	Peut lire ce champ dans l'o
 plugin_tracker_permissions	plugin_tracker_field_update	Peut éditer ce champ dans l'outil de suivi
 plugin_tracker_permissions	plugin_tracker_admin	Administre l'outil de suivi
 
-plugin_tracker_widget_myartifacts	my_arts	Mes Artefacts (Tracker V5)
+plugin_tracker_widget_myartifacts	my_arts	Mes Artefacts
 plugin_tracker_widget_myartifacts	a	A
 plugin_tracker_widget_myartifacts	s	S
 plugin_tracker_widget_myartifacts	as	AS
