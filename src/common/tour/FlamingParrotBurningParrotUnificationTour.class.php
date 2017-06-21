@@ -42,7 +42,7 @@ class Tuleap_Tour_FlamingParrotBurningParrotUnificationTour extends Tuleap_Tour
                 $GLOBALS['Language']->getText('fp_bp_unification_tour', 'account_title'),
                 $GLOBALS['Language']->getText('fp_bp_unification_tour', 'account'),
                 'bottom',
-                '.user-menu + li'
+                '#navbar-user-settings'
             ),
             new Tuleap_Tour_Step(
                 $GLOBALS['Language']->getText('fp_bp_unification_tour', 'be_prepared_title'),
