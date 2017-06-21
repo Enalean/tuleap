@@ -26,6 +26,7 @@ use Tuleap\Dashboard\Widget\WidgetCreator;
 use Tuleap\Widget\WidgetFactory;
 
 require_once 'pre.php';
+session_write_close();
 require_once('www/my/my_utils.php');
 
 $request = HTTPRequest::instance();
