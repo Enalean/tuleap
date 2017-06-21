@@ -830,10 +830,13 @@ class UserManager_createAccountTest extends TuleapTestCase {
 
         $this->manager = partial_mock(
             'UserManager',
-            array(),
+            array('getDefaultWidgetCreator'),
             array($this->pending_user_notifier)
         );
         $this->manager->setDao($this->dao);
+
+        $default_widget_creator = mock('Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator');
+        stub($this->manager)->getDefaultWidgetCreator()->returns($default_widget_creator);
     }
 
     public function tearDown() {

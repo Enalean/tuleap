@@ -746,4 +746,67 @@ class DashboardWidgetDao extends DataAccessObject
                 WHERE widget.id IS NULL";
         return $this->retrieve($sql);
     }
+
+    /**
+     * @param int $user_id
+     * @param \Widget[] $widgets
+     * @throws \Exception
+     */
+    public function createDefaultDashboardForUser($user_id, array $widgets)
+    {
+        $this->startTransaction();
+        try {
+            $dashboard_id = $this->createUserDashboard($user_id);
+
+            $nb_widgets = count($widgets);
+            $line_id = $this->createDefaultLine($dashboard_id, $nb_widgets);
+
+            $rank = 0;
+            foreach ($widgets as $widget_name) {
+                $column_id = $this->createColumn($line_id, $rank++);
+                $this->insertWidgetInColumn($widget_name, 0, $column_id);
+            }
+            $this->commit();
+        } catch (\Exception $exception) {
+            $this->rollBack();
+            throw $exception;
+        }
+    }
+
+    private function createUserDashboard($user_id)
+    {
+        $user_id = $this->da->escapeInt($user_id);
+        $name    = $this->da->quoteSmart('Dashboard');
+
+        $sql = "INSERT INTO user_dashboards (user_id, name) VALUES ($user_id, $name)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    private function createDefaultLine($dashboard_id, $nb_widgets)
+    {
+        $line_id = $this->createLine($dashboard_id, UserDashboardController::DASHBOARD_TYPE, 0);
+        $this->adjustLayoutAccordinglyToNumberOfWidgets($nb_widgets, $line_id);
+
+        return $line_id;
+    }
+
+    private function adjustLayoutAccordinglyToNumberOfWidgets($nb_widgets, $line_id)
+    {
+        if ($nb_widgets < 2) {
+            return;
+        } elseif ($nb_widgets === 2) {
+            $layout = 'two-columns';
+        } elseif ($nb_widgets === 3) {
+            $layout = 'three-columns';
+        } else {
+            $layout = 'too-many-columns';
+        }
+        $layout  = $this->da->quoteSmart($layout);
+        $line_id = $this->da->escapeInt($line_id);
+
+        $sql = "UPDATE dashboards_lines SET layout = $layout WHERE id = $line_id";
+
+        $this->update($sql);
+    }
 }

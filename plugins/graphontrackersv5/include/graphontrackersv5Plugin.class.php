@@ -67,9 +67,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
             $this->_addHook('trackers_get_renderers' ,    'trackers_get_renderers',     false);
 
             //Widgets
-            $this->_addHook('widget_instance',                   'widget_instance',                   false);
-            $this->_addHook('widgets',                           'widgets',                           false);
-            $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
+            $this->_addHook('widget_instance');
+            $this->_addHook('widgets');
 
             $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
@@ -251,20 +250,6 @@ class GraphOnTrackersV5Plugin extends Plugin {
     public function uninstall()
     {
         $this->removeOrphanWidgets(array('my_plugin_graphontrackersv5_chart', 'project_plugin_graphontrackersv5_chart'));
-    }
-
-    /**
-     * Ask for default widgets instanciated for new users or new projects or new... etc.
-     * @param (in) string 'owner_type' => the type of the "owner" (user, project, ...)
-     * @param (in/out) array 'widgets' => a collection of widget descriptions provided
-     *                                    by the listeners. The description of a widget
-     *                                    is : {name: 'mydocman', column: 1, rank: 2}
-     *                                    Where name is the name of the widget,
-     *                                    And column is the default column position
-     *                                    And rank is the default rank of the widget.
-     */
-    public function default_widgets_for_new_owner($params) {
-        //no default widget
     }
 
 

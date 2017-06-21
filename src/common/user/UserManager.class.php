@@ -19,9 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\User\InvalidSessionException;
 use Tuleap\User\SessionManager;
 use Tuleap\User\SessionNotCreatedException;
+use Tuleap\Widget\WidgetFactory;
 
 class UserManager {
 
@@ -868,6 +871,8 @@ class UserManager {
 
             $em->processEvent(Event::USER_MANAGER_CREATE_ACCOUNT, array('user' => $user));
 
+            $this->getDefaultWidgetCreator()->createDefaultDashboard($user);
+
             switch ($user->getStatus()) {
                 case PFUser::STATUS_PENDING:
                     if (ForgeConfig::get('sys_user_approval')) {
@@ -882,6 +887,27 @@ class UserManager {
 
             return $user;
         }
+    }
+
+    /**
+     * For testing purpose
+     * @return AtUserCreationDefaultWidgetsCreator
+     */
+    protected function getDefaultWidgetCreator()
+    {
+        $factory = new WidgetFactory(
+            $this,
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+
+        return new AtUserCreationDefaultWidgetsCreator(
+            new DashboardWidgetDao(
+                $factory
+            ),
+            $factory,
+            EventManager::instance()
+        );
     }
 
     /**
