@@ -42,14 +42,23 @@ main[role=main]:not(.tlp-framed) > #feedback {
     margin: $tlp-spacing $tlp-spacing 0;
 }
 
-.empty-page {
+%empty-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.empty-page {
+    @extend %empty-container;
     margin: 100px auto 0;
 }
 
-.empty-page-text {
+.empty-pane {
+    @extend %empty-container;
+}
+
+.empty-page-text,
+.empty-pane-text {
     margin: 0 0 60px;
     color: transparentize($tlp-theme-color, .7);
     font-size: 30px;
@@ -57,7 +66,8 @@ main[role=main]:not(.tlp-framed) > #feedback {
     text-align: center;
 }
 
-.empty-page-icon {
+.empty-page-icon,
+.empty-pane-icon {
     margin: 0 0 30px;
 }
 

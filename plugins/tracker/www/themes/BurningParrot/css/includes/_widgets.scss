@@ -35,3 +35,15 @@ ul.tracker-widget-artifacts-list {
     margin: 0 0 $tlp-half-spacing;
     list-style: none;
 }
+
+.empty-artifacts-cover {
+    fill: desaturate(lighten($tlp-theme-color, 40%), 15%);
+}
+
+.empty-artifacts-icon {
+    fill: $tlp-theme-color;
+}
+
+.empty-artifacts-sheet-border {
+    stroke: desaturate(lighten($tlp-theme-color, 20%), 10%);
+}
