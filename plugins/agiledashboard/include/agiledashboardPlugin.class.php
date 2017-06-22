@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\Layout\IncludeAssets;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -384,22 +385,32 @@ class AgileDashboardPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    public function cssfile($params) {
+    public function cssfile($params)
+    {
         if ($this->isAnAgiledashboardRequest()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
 
             if ($this->isPlanningV2URL()) {
                 echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/planning-v2/bin/assets/planning-v2.css" />';
+            } elseif ($this->isKanbanURL()) {
+                echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/kanban/dist/kanban.css">'."\n";
             }
         }
     }
 
-    public function javascript_file() {
+    public function javascript_file()
+    {
         if ($this->isAnAgiledashboardRequest()) {
             if ($this->isPlanningV2URL()) {
                 echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
             } elseif ($this->isKanbanURL()) {
+                $kanban_include_assets = new IncludeAssets(
+                    ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
+                    $this->getPluginPath() . '/js/kanban/dist'
+                );
+
                 echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
+                echo $kanban_include_assets->getHTMLSnippet('kanban.js') ."\n";
             } else {
                 echo $this->getMinifiedAssetHTML()."\n";
             }
