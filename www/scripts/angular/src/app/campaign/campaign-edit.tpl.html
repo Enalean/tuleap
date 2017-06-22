@@ -5,6 +5,8 @@
     </div>
 
     <div id="campaign-edit-container" class="modal-body">
+        <label for="campaign-label" translate>Campaign label</label>
+        <input id="campaign-label" type="text" ng-model="campaign.label" placeholder="A campaign name is required" required="required" ng-trim />
         <h3 translate>Tests</h3>
         <div id="campaign-edit-action-bar">
             <button

@@ -251,15 +251,21 @@ function CampaignEditCtrl(
         var definition_ids = addedTests().map(function(test) { return test.definition.id; });
         var execution_ids = removedTests().map(function(test) { return test.execution.id; });
 
-        CampaignService
-            .patchExecutions(campaign.id, definition_ids, execution_ids)
-            .then(function() {
-                $scope.submitting_changes = false;
-                if (editCampaignCallback) {
-                    editCampaignCallback();
-                }
-                $modalInstance.close();
-            });
+        var campaign_update   = CampaignService
+            .patchCampaign(campaign.id, campaign.label);
+        var executions_update = CampaignService
+            .patchExecutions(campaign.id, definition_ids, execution_ids);
+
+        $q.all([campaign_update, executions_update]).then(function(responses) {
+            $scope.submitting_changes = false;
+
+            if (editCampaignCallback) {
+                var campaign = responses[0];
+                editCampaignCallback(campaign);
+            }
+
+            $modalInstance.close();
+        });
     }
 }
 

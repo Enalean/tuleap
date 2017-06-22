@@ -26,6 +26,11 @@ use Tracker_Exception;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
+use Tracker_ChangesetNotCreatedException;
+use Tracker_CommentNotStoredException;
+use Tracker_AfterSaveException;
+use Tracker_ChangesetCommitException;
+use Tuleap\Trafficlights\LabelFieldNotFoundException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_URLVerification;
@@ -51,6 +56,7 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_PriorityHistoryDao;
 use TrackerFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
+use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_ReportFactory;
 use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
@@ -137,10 +143,12 @@ class CampaignsResource {
             $this->trafficlights_artifact_factory
         );
 
+        $artifact_validator = new Tracker_REST_Artifact_ArtifactValidator(
+            $this->formelement_factory
+        );
+
         $artifact_creator = new Tracker_REST_Artifact_ArtifactCreator(
-            new Tracker_REST_Artifact_ArtifactValidator(
-                $this->formelement_factory
-            ),
+            $artifact_validator,
             $this->artifact_factory,
             $this->tracker_factory
         );
@@ -169,6 +177,15 @@ class CampaignsResource {
             $definition_selector,
             $artifact_creator,
             $this->execution_creator
+        );
+
+        $artifact_updater = new Tracker_REST_Artifact_ArtifactUpdater (
+            $artifact_validator
+        );
+
+        $this->campaign_updater = new CampaignUpdater(
+            $this->formelement_factory,
+            $artifact_updater
         );
 
         $priority_manager           = new Tracker_Artifact_PriorityManager(
@@ -258,8 +275,8 @@ class CampaignsResource {
      * @url PATCH {id}/trafficlights_executions
      *
      * @param int   $id                      Id of the campaign
-     * @param array $definition_ids_to_add   Test definition ids for which test executions should be created
-     * @param array $execution_ids_to_remove Test execution ids which should be unlinked from the campaign
+     * @param array $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
+     * @param array $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
      *
      * @return array {@type Tuleap\Trafficlights\REST\v1\ExecutionRepresentation}
      */
@@ -418,60 +435,69 @@ class CampaignsResource {
      *
      * @url PATCH {id}
      *
-     * @param int    $id            Id of the campaign
-     * @param array  $execution_ids Test executions
-     * @return array
+     * @param int     $id     Id of the campaign
+     * @param string  $label  New label of the campaign {@from body}
+     *
+     * @return Tuleap\Trafficlights\REST\v1\CampaignRepresentation
      *
      * @throws 400
+     * @throws 403
      * @throws 500
      */
-    protected function patch($id, $execution_ids)
+    protected function patch($id, $label = null)
     {
-        $user                       = UserManager::instance()->getCurrentUser();
-        $campaign_artifact          = $this->getArtifactById($user, $id);
-        $executions                 = array();
-        $executions_representations = array();
+        $user                     = UserManager::instance()->getCurrentUser();
+        $campaign                 = $this->getArtifactById($user, $id);
+        $campaign_representation  = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
+
+        if (! $campaign->userCanUpdate($user)) {
+            throw new RestException(403, "You don't have the permission to update this campaign");
+        }
 
         try {
-            foreach ($execution_ids as $execution_id) {
-                $campaign_artifact->linkArtifact($execution_id, $user);
-                $execution                    = $this->trafficlights_artifact_factory->getArtifactById($execution_id);
-                $executions[]                 = $execution;
-                $executions_representations[] = $this->execution_representation_builder->getExecutionRepresentation($user, $execution);
-            }
+            $this->campaign_updater->updateCampaign($user, $campaign, $label);
+
+            $campaign_representation = $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
+        } catch (Tracker_ChangesetNotCreatedException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_CommentNotStoredException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_AfterSaveException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_ChangesetCommitException $exception) {
+            throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             // Do nothing
+        } catch (LabelFieldNotFoundException $exception) {
+            throw new RestException(500, $exception->getMessage());
         } catch (Tracker_Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
 
         if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            foreach ($executions as $execution) {
-                $execution_representation = $this->execution_representation_builder->getExecutionRepresentation($user, $execution);
-                $data = array(
-                    'artifact' => $execution_representation
-                );
-                $rights  = new TrafficlightsArtifactRightsPresenter($execution, $this->permissions_serializer);
-                $message = new MessageDataPresenter(
-                    $user->getId(),
-                    $_SERVER[self::HTTP_CLIENT_UUID],
-                    'trafficlights_' . $campaign_artifact->getId(),
-                    $rights,
-                    'trafficlights_execution:create',
-                    $data
-                );
+            $data = array(
+                'artifact' => $campaign_representation
+            );
+            $rights  = new TrafficlightsArtifactRightsPresenter($campaign, $this->permissions_serializer);
+            $message = new MessageDataPresenter(
+                $user->getId(),
+                $_SERVER[self::HTTP_CLIENT_UUID],
+                'trafficlights_' . $campaign->getId(),
+                $rights,
+                'trafficlights_campaign:update',
+                $data
+            );
 
-                $this->node_js_client->sendMessage($message);
-            }
+            $this->node_js_client->sendMessage($message);
         }
 
-        $this->sendAllowHeadersForCampaign($campaign_artifact);
+        $this->sendAllowHeadersForCampaign($campaign);
 
-        return $executions_representations;
+        return $campaign_representation;
     }
 
     private function getAssigneesForCampaign(PFUser $user, Tracker_Artifact $campaign) {

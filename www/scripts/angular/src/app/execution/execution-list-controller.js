@@ -70,7 +70,8 @@ function ExecutionListCtrl(
             controller : 'CampaignEditCtrl',
             resolve: {
                 editCampaignCallback: function() {
-                    return function() {
+                    return function(campaign) {
+                        $scope.campaign = campaign;
                         ExecutionService.resetExecutions($scope.campaign_id);
                         loadExecutions();
                     };

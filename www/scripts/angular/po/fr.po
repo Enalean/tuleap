@@ -74,6 +74,7 @@ msgstr "Bloqué"
 msgid "by"
 msgstr "par"
 
+#: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
 msgstr "Label de la campagne"

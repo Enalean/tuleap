@@ -57,10 +57,10 @@ function CampaignService(
             .post(campaign, queryParams);
     }
 
-    function patchCampaign(campaign_id, execution_ids) {
+    function patchCampaign(campaign_id, label) {
         return rest.one('trafficlights_campaigns', campaign_id)
             .patch({
-                execution_ids: execution_ids
+                label: label
             })
             .then(function(response) {
                 return response.data;
