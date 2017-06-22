@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 
 class User_ForgeUserGroupPermissionsFactory {
@@ -109,7 +110,9 @@ class User_ForgeUserGroupPermissionsFactory {
             User_ForgeUserGroupPermission_UserManagement::ID
                 => new User_ForgeUserGroupPermission_UserManagement(),
             RetrieveSystemEventsInformationApi::ID
-                => new RetrieveSystemEventsInformationApi()
+                => new RetrieveSystemEventsInformationApi(),
+            SiteAdministratorPermission::ID
+                => new SiteAdministratorPermission()
         );
 
         return $all_permissions;

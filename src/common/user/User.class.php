@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -455,8 +457,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
 
-    function isSuperUser() {
-        return $this->isMember(1, 'A');
+    function isSuperUser()
+    {
+        return $this->isMember(1, 'A') || $this->doesUserHaveSuperUserPermissionDelegation();
     }
 
     public function getAllUgroups() {
@@ -1444,6 +1447,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     public function __toString() {
         return "User #". $this->getId();
     }
-}
 
-?>
+    private function getPermissionManager()
+    {
+        return new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao());
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function doesUserHaveSuperUserPermissionDelegation()
+    {
+        return $this->getPermissionManager()->doesUserHavePermission($this, new SiteAdministratorPermission());
+    }
+}

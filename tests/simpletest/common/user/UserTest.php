@@ -384,6 +384,33 @@ class UserTest extends TuleapTestCase {
     public function itStringifiesTheUser() {
         $this->assertEqual("User #123", aUser()->withId(123)->build()->__toString());
     }
+
+    public function itReturnsTrueWhenUserIsAdminOfProjectAdministration()
+    {
+        $user = partial_mock('PFUser', array('isMember', 'doesUserHaveSuperUserPermissionDelegation'));
+        stub($user)->isMember(1, 'A')->returns(true);
+        stub($user)->doesUserHaveSuperUserPermissionDelegation()->returns(false);
+
+        $this->assertTrue($user->isSuperUser());
+    }
+
+    public function itReturnsTrueWhenUserHasSiteAdministrationPermissionDelegation()
+    {
+        $user = partial_mock('PFUser', array('isMember', 'doesUserHaveSuperUserPermissionDelegation'));
+        stub($user)->isMember(1, 'A')->returns(false);
+        stub($user)->doesUserHaveSuperUserPermissionDelegation()->returns(true);
+
+        $this->assertTrue($user->isSuperUser());
+    }
+
+    public function itReturnsFalseWhenUserIsNotSiteAdministrator()
+    {
+        $user = partial_mock('PFUser', array('isMember', 'doesUserHaveSuperUserPermissionDelegation'));
+        stub($user)->isMember(1, 'A')->returns(false);
+        stub($user)->doesUserHaveSuperUserPermissionDelegation()->returns(false);
+
+        $this->assertFalse($user->isSuperUser());
+    }
 }
 
 class UserTogglePreference_Test extends TuleapTestCase {
