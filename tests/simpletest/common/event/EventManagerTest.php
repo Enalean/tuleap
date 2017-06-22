@@ -32,6 +32,11 @@ class EventManagerTest extends TuleapTestCase {
     }
 }
 
+class EventManager_ProcessEvent_EventForTestingPurpose
+{
+    const NAME = 'whatever';
+}
+
 class EventManager_ProcessEventTest extends TuleapTestCase {
 
     function testProcessEvent1() {
@@ -97,5 +102,17 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         $em->addListener($event, $listener, 'doSomething', false);
 
         $em->processEvent($event, $params);
+    }
+
+    public function itCanSendAnEventObjectInsteadOfStringPlusParams()
+    {
+        $event         = new EventManager_ProcessEvent_EventForTestingPurpose();
+        $listener      = new Event1MockEventListener($this);
+        $event_manager = new EventManager();
+        $event_manager->addListener($event::NAME, $listener, 'doSomething', false);
+
+        expect($listener)->doSomething($event)->once();
+
+        $event_manager->processEvent($event);
     }
 }

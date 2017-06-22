@@ -38,6 +38,7 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -74,7 +75,7 @@ class DocmanPlugin extends Plugin
         $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
-        $this->_addHook('service_public_areas',              'service_public_areas',              false);
+        $this->_addHook(GetPublicAreas::NAME);
         $this->_addHook('service_admin_pages',               'service_admin_pages',               false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         $this->_addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
@@ -294,13 +295,16 @@ class DocmanPlugin extends Plugin
         $controler->logsDaily($params);
     }
 
-    function service_public_areas($params) {
-        if ($params['project']->usesService($this->getServiceShortname())) {
-            $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['project']->getId() .'">' .
+    public function service_public_areas(GetPublicAreas $event) {
+        $project = $event->getProject();
+        if ($project->usesService($this->getServiceShortname())) {
+            $event->addArea(
+                '<a href="/plugins/docman/?group_id='. $project->getId() .'">' .
                 '<i class="tuleap-services-angle-double-right tuleap-services-docman tuleap-services-widget"></i>' .
                 $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
                 $GLOBALS['Language']->getText('plugin_docman', 'title') .
-                '</a>';
+                '</a>'
+            );
         }
     }
     function service_admin_pages($params) {
