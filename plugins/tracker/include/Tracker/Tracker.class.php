@@ -721,6 +721,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 }
                 break;
             case 'submit-artifact':
+                header('X-Frame-Options: SAMEORIGIN');
                 $action = new Tracker_Action_CreateArtifact(
                     $this,
                     $this->getTrackerArtifactFactory(),
