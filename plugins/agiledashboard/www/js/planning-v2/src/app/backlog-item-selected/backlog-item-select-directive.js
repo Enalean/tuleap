@@ -1,6 +1,4 @@
-angular
-    .module('backlog-item-selected')
-    .directive('backlogItemSelect', BacklogItemSelect);
+export default BacklogItemSelect;
 
 BacklogItemSelect.$inject = [
     '$timeout',

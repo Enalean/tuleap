@@ -1,6 +1,4 @@
-angular
-    .module('project')
-    .service('ProjectService', ProjectService);
+export default ProjectService;
 
 ProjectService.$inject = [
     'Restangular'

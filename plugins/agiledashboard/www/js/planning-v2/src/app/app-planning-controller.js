@@ -1,6 +1,6 @@
-angular
-    .module('planning')
-    .controller('PlanningController', PlanningController);
+import _ from 'lodash';
+
+export default PlanningController;
 
 PlanningController.$inject = [
     '$filter',

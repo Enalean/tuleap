@@ -1,6 +1,10 @@
-angular
-    .module('highlight.filter', [])
-    .filter('tuleapHighlight', TuleapHighlightFilter);
+import angular from 'angular';
+import _       from 'lodash';
+
+export default angular.module('highlight.filter', [
+])
+.filter('tuleapHighlight', TuleapHighlightFilter)
+.name;
 
 TuleapHighlightFilter.$inject = [];
 

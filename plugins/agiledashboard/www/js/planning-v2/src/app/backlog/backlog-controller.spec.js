@@ -1,7 +1,26 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import backlog_module        from './backlog.js';
+import BaseBacklogController from './backlog-controller.js';
+import BacklogFilterValue    from '../backlog-filter-terms.js';
+
 describe("BacklogController - ", function() {
-    var $q, $scope, $document, dragularService, BacklogController, BacklogService, MilestoneService, BacklogItemService, DroppedService,
-        MilestoneCollectionService, BacklogItemSelectedService, BacklogItemCollectionService, ProjectService,
-        SharedPropertiesService, NewTuleapArtifactModalService, BacklogFilterValue;
+    var $q,
+        $scope,
+        $document,
+        dragularService,
+        BacklogController,
+        BacklogService,
+        MilestoneService,
+        BacklogItemService,
+        DroppedService,
+        MilestoneCollectionService,
+        BacklogItemSelectedService,
+        BacklogItemCollectionService,
+        ProjectService,
+        SharedPropertiesService,
+        NewTuleapArtifactModalService;
 
     var milestone = {
             id: 592,
@@ -31,9 +50,9 @@ describe("BacklogController - ", function() {
         };
 
     beforeEach(function() {
-        module('backlog');
+        angular.mock.module(backlog_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             _$document_,
             $rootScope,
@@ -48,8 +67,7 @@ describe("BacklogController - ", function() {
             _MilestoneCollectionService_,
             _BacklogItemSelectedService_,
             _SharedPropertiesService_,
-            _NewTuleapArtifactModalService_,
-            _BacklogFilterValue_
+            _NewTuleapArtifactModalService_
         ) {
             $q              = _$q_;
             $document       = _$document_;
@@ -131,10 +149,9 @@ describe("BacklogController - ", function() {
             spyOn(NewTuleapArtifactModalService, "showCreation");
             spyOn(NewTuleapArtifactModalService, "showEdition");
 
-            BacklogFilterValue       = _BacklogFilterValue_;
             BacklogFilterValue.terms = '';
 
-            BacklogController = $controller('BacklogController', {
+            BacklogController = $controller(BaseBacklogController, {
                 $q                           : $q,
                 $scope                       : $scope,
                 $document                    : $document,
@@ -148,8 +165,7 @@ describe("BacklogController - ", function() {
                 MilestoneCollectionService   : MilestoneCollectionService,
                 BacklogItemSelectedService   : BacklogItemSelectedService,
                 SharedPropertiesService      : SharedPropertiesService,
-                NewTuleapArtifactModalService: NewTuleapArtifactModalService,
-                BacklogFilterValue           : BacklogFilterValue
+                NewTuleapArtifactModalService: NewTuleapArtifactModalService
             });
 
             installPromiseMatchers();

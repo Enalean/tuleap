@@ -1,8 +1,7 @@
-angular
-    .module('backlog-item-details')
-    .directive('backlogItemDetails', BacklogItemDetails);
+import './backlog-item-details.tpl.html';
+import BacklogItemDetailsController from './backlog-item-details-controller.js';
 
-function BacklogItemDetails() {
+export default function BacklogItemDetails() {
     return {
         restrict: 'EA',
         scope   : {
@@ -11,8 +10,9 @@ function BacklogItemDetails() {
             moveToBottom     : '&',
             current_milestone: '=currentMilestone'
         },
-        controller      : 'BacklogItemDetailsController as details',
-        templateUrl     : 'backlog-item/backlog-item-details/backlog-item-details.tpl.html',
-        bindToController: true
+        controller      : BacklogItemDetailsController,
+        controllerAs    : 'details',
+        bindToController: true,
+        templateUrl     : 'backlog-item-details.tpl.html',
     };
 }

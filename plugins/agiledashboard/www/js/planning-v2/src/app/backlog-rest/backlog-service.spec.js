@@ -1,8 +1,18 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import backlog_module from './backlog-rest.js';
+
 describe("BacklogService -", function() {
-    var $q, $scope, $filter, BacklogService, BacklogItemFactory, ProjectService;
+    var $q,
+        $scope,
+        $filter,
+        BacklogService,
+        BacklogItemFactory,
+        ProjectService;
 
     beforeEach(function() {
-        module('backlog', function($provide) {
+        angular.mock.module(backlog_module, function($provide) {
             $provide.decorator('BacklogItemFactory', function($delegate) {
                 spyOn($delegate, "augment");
 
@@ -23,7 +33,7 @@ describe("BacklogService -", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             _$rootScope_,
             _$filter_,

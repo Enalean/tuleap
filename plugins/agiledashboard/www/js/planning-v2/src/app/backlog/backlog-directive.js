@@ -1,13 +1,13 @@
-angular
-    .module('backlog')
-    .directive('backlog', Backlog);
+import './backlog.tpl.html';
+import BacklogController from './backlog-controller.js';
 
-function Backlog() {
+export default function Backlog() {
     return {
         restrict        : 'A',
         scope           : false,
-        templateUrl     : 'backlog/backlog.tpl.html',
-        controller      : 'BacklogController as backlog',
-        bindToController: true
+        controller      : BacklogController,
+        controllerAs    : 'backlog',
+        bindToController: true,
+        templateUrl     : 'backlog.tpl.html',
     };
 }

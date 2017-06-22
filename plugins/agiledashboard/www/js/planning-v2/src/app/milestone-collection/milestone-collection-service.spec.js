@@ -1,17 +1,18 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import milestone_collection_module from './milestone-collection.js';
+
 describe("MilestoneCollectionService -", function() {
-    var MilestoneCollectionService, MilestoneService, BacklogItemCollectionService;
+    var MilestoneCollectionService;
 
     beforeEach(function() {
-        module('planning');
+        angular.mock.module(milestone_collection_module);
 
-        inject(function(
-            _MilestoneCollectionService_,
-            _MilestoneService_,
-            _BacklogItemCollectionService_
+        angular.mock.inject(function(
+            _MilestoneCollectionService_
         ) {
             MilestoneCollectionService   = _MilestoneCollectionService_;
-            MilestoneService             = _MilestoneService_;
-            BacklogItemCollectionService = _BacklogItemCollectionService_;
         });
     });
 

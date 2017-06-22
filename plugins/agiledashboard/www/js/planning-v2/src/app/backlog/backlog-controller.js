@@ -1,6 +1,8 @@
-angular
-    .module('backlog')
-    .controller('BacklogController', BacklogController);
+import _ from 'lodash';
+
+import BacklogFilterValue from '../backlog-filter-terms.js';
+
+export default BacklogController;
 
 BacklogController.$inject = [
     '$q',
@@ -16,8 +18,7 @@ BacklogController.$inject = [
     'MilestoneCollectionService',
     'BacklogItemSelectedService',
     'SharedPropertiesService',
-    'NewTuleapArtifactModalService',
-    'BacklogFilterValue'
+    'NewTuleapArtifactModalService'
 ];
 
 function BacklogController(
@@ -34,8 +35,7 @@ function BacklogController(
     MilestoneCollectionService,
     BacklogItemSelectedService,
     SharedPropertiesService,
-    NewTuleapArtifactModalService,
-    BacklogFilterValue
+    NewTuleapArtifactModalService
 ) {
     var self = this;
     _.extend(self, {

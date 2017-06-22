@@ -1,14 +1,14 @@
-angular
-    .module('milestone')
-    .directive('milestone', Milestone);
+import './milestone.tpl.html';
+import MilestoneController from './milestone-controller.js';
 
-function Milestone() {
+export default function Milestone() {
     return {
         restrict        : 'E',
         scope           : false,
         replace         : false,
-        templateUrl     : 'milestone/milestone.tpl.html',
-        controller      : 'MilestoneController as milestoneController',
-        bindToController: true
+        controller      : MilestoneController,
+        controllerAs    : 'milestoneController',
+        bindToController: true,
+        templateUrl     : 'milestone.tpl.html',
     };
 }

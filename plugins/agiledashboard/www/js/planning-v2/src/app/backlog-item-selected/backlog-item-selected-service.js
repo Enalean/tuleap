@@ -1,6 +1,6 @@
-angular
-    .module('backlog-item-selected')
-    .service('BacklogItemSelectedService', BacklogItemSelectedService);
+import _ from 'lodash';
+
+export default BacklogItemSelectedService;
 
 BacklogItemSelectedService.$inject = [];
 

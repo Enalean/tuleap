@@ -1,7 +1,6 @@
-angular
-    .module('milestone')
-    .controller('MilestoneController', MilestoneController);
+import _ from 'lodash';
 
+export default MilestoneController;
 
 MilestoneController.$inject = [
     '$scope',

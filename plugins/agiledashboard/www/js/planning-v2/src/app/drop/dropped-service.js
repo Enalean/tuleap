@@ -1,6 +1,6 @@
-angular
-    .module('planning')
-    .service('DroppedService', DroppedService);
+import _ from 'lodash';
+
+export default DroppedService;
 
 DroppedService.$inject = [
     '$q',

@@ -1,7 +1,6 @@
+import _ from 'lodash';
 
-angular
-    .module('milestone')
-    .service('MilestoneService', MilestoneService);
+export default MilestoneService;
 
 MilestoneService.$inject = [
     'Restangular',

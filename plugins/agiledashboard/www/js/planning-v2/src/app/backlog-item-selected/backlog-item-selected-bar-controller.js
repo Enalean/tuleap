@@ -1,6 +1,6 @@
-angular
-    .module('backlog-item-selected')
-    .controller('BacklogItemSelectedBarController', BacklogItemSelectedBarController);
+import _ from 'lodash';
+
+export default BacklogItemSelectedBarController;
 
 BacklogItemSelectedBarController.$inject = [
     '$scope',

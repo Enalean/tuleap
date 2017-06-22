@@ -1,14 +1,10 @@
-angular
-    .module('planning')
-    .service('RestErrorService', RestErrorService);
+import _ from 'lodash';
 
-RestErrorService.$inject = [
+export default RestErrorService;
 
-];
+RestErrorService.$inject = [];
 
-function RestErrorService(
-
-) {
+function RestErrorService() {
     var self = this;
     _.extend(self, {
         getError: getError,

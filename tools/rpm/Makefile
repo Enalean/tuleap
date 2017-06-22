@@ -42,7 +42,7 @@ PLUGIN_BUGZILLA_REFERENCE_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/bugzill
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 THEME_BURNINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BurningParrot/VERSION)
 
-ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/frs/www/js/angular plugins/pullrequest/www/js/angular
+ANGULAR_APPS_TO_BUILD=plugins/frs/www/js/angular plugins/pullrequest/www/js/angular
 
 ifdef GIT_BRANCH
 TAG_RELEASE = $(subst -, ,$(GIT_BRANCH))
@@ -156,7 +156,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 			&& \
 			find $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/frs/www/js/angular/bin; \
-			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/bin; \
+			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/dist; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/dist; \
 		} | \
 		cpio -o -H ustar --quiet |\

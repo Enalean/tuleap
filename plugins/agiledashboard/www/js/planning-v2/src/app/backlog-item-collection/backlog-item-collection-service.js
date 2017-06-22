@@ -1,6 +1,6 @@
-angular
-    .module('backlog-item-collection')
-    .service('BacklogItemCollectionService', BacklogItemCollectionService);
+import _ from 'lodash';
+
+export default BacklogItemCollectionService;
 
 BacklogItemCollectionService.$inject = [
     'BacklogItemService'

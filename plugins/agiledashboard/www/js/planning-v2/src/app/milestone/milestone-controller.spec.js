@@ -1,10 +1,25 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import milestone_module        from './milestone.js';
+import BaseMilestoneController from './milestone-controller.js';
+
 describe("MilestoneController -", function() {
-    var $q, $scope, $document, $timeout, dragularService, MilestoneController, BacklogService, DroppedService, MilestoneCollectionService, BacklogItemSelectedService;
+    var $q,
+        $scope,
+        $document,
+        $timeout,
+        dragularService,
+        MilestoneController,
+        BacklogService,
+        DroppedService,
+        MilestoneCollectionService,
+        BacklogItemSelectedService;
 
     beforeEach(function() {
-        module('milestone');
+        angular.mock.module(milestone_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             _$document_,
             _$timeout_,
@@ -46,7 +61,7 @@ describe("MilestoneController -", function() {
             spyOn(BacklogItemSelectedService, 'areThereMultipleSelectedBaklogItems');
             spyOn(BacklogItemSelectedService, 'getCompactedSelectedBacklogItem');
 
-            MilestoneController = $controller('MilestoneController', {
+            MilestoneController = $controller(BaseMilestoneController, {
                 $scope                    : $scope,
                 $timeout                  : $timeout,
                 $document                 : $document,

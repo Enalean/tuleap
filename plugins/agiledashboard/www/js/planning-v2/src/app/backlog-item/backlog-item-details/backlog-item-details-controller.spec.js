@@ -1,11 +1,21 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import details_module                   from './backlog-item-details.js';
+import BaseBacklogItemDetailsController from './backlog-item-details-controller.js';
+
 describe("BacklogItemDetailsController -", function() {
-    var $q, $scope, BacklogItemDetailsController, BacklogItemCollectionService,
-        NewTuleapArtifactModalService, BacklogItemService;
+    var $q,
+        $scope,
+        BacklogItemDetailsController,
+        BacklogItemCollectionService,
+        NewTuleapArtifactModalService,
+        BacklogItemService;
 
     beforeEach(function() {
-        module('backlog-item-details');
+        angular.mock.module(details_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             $rootScope,
             $controller,
@@ -27,7 +37,7 @@ describe("BacklogItemDetailsController -", function() {
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             spyOn(NewTuleapArtifactModalService, 'showCreation');
 
-            BacklogItemDetailsController = $controller('BacklogItemDetailsController', {
+            BacklogItemDetailsController = $controller(BaseBacklogItemDetailsController, {
                 BacklogItemCollectionService : BacklogItemCollectionService,
                 BacklogItemService           : BacklogItemService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService

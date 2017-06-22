@@ -1,8 +1,21 @@
-describe("PlanningController", function() {
-    var $scope, $filter, $q, PlanningController, BacklogItemService, BacklogService,
-        MilestoneService, SharedPropertiesService,
-        NewTuleapArtifactModalService, UserPreferencesService,
-        BacklogItemCollectionService, MilestoneCollectionService, BacklogItemSelectedService;
+import angular from 'angular';
+import 'angular-mocks';
+
+import planning_module from './app.js';
+
+describe("PlanningController - ", function() {
+    var $scope,
+        $filter,
+        $q,
+        PlanningController,
+        BacklogItemService,
+        BacklogService,
+        MilestoneService,
+        SharedPropertiesService,
+        NewTuleapArtifactModalService,
+        UserPreferencesService,
+        BacklogItemCollectionService,
+        BacklogItemSelectedService;
 
     var milestone = {
             id: 592,
@@ -44,11 +57,10 @@ describe("PlanningController", function() {
         }];
 
     beforeEach(function() {
-        module('planning');
-        module('shared-properties');
+        angular.mock.module(planning_module);
 
         // eslint-disable-next-line angular/di
-        inject(function(
+        angular.mock.inject(function(
             $controller,
             $rootScope,
             _$q_,
@@ -59,7 +71,6 @@ describe("PlanningController", function() {
             _SharedPropertiesService_,
             _UserPreferencesService_,
             _BacklogItemCollectionService_,
-            _MilestoneCollectionService_,
             _BacklogItemSelectedService_
         ) {
             $scope = $rootScope.$new();
@@ -116,8 +127,6 @@ describe("PlanningController", function() {
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             spyOn(BacklogItemCollectionService, 'refreshBacklogItem');
-
-            MilestoneCollectionService = _MilestoneCollectionService_;
 
             $filter = jasmine.createSpy("$filter").and.callFake(function() {
                 return function() {};
