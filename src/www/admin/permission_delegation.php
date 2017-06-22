@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
+use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
+
 require_once 'pre.php';
 
 $request = HTTPRequest::instance();
@@ -24,7 +28,9 @@ $request->checkUserIsSuperUser();
 
 $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
 $user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory($permissions_dao, EventManager::instance());
+$user_group_permissions_dao     = new User_ForgeUserGroupPermissionsDao();
 $user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
+$site_admin_permission_checker  = new SiteAdministratorPermissionChecker($user_group_permissions_dao);
 
 $user_group_dao     = new UserGroupDao();
 $user_group_factory = new User_ForgeUserGroupFactory($user_group_dao);
@@ -42,7 +48,9 @@ $controller = new Admin_PermissionDelegationController(
     $user_group_manager,
     $user_group_users_factory,
     $user_group_users_manager,
-    UserManager::instance()
+    UserManager::instance(),
+    new SiteAdministratorPermissionChecker($user_group_permissions_dao),
+    new PermissionPresenterBuilder()
 );
 
 $controller->process();

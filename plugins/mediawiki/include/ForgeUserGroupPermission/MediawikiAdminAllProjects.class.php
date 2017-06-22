@@ -22,7 +22,7 @@ namespace Tuleap\Mediawiki\ForgeUserGroupPermission;
 
 use User_ForgeUserGroupPermission;
 
-class MediawikiAdminAllProjects implements User_ForgeUserGroupPermission
+class MediawikiAdminAllProjects extends User_ForgeUserGroupPermission
 {
     const ID = 3;
 

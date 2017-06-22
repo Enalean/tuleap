@@ -22,7 +22,7 @@ namespace Tuleap\User\ForgeUserGroupPermission;
 
 use User_ForgeUserGroupPermission;
 
-class RetrieveSystemEventsInformationApi implements User_ForgeUserGroupPermission
+class RetrieveSystemEventsInformationApi extends User_ForgeUserGroupPermission
 {
     const ID = 6;
 

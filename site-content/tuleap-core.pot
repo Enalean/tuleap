@@ -323,6 +323,9 @@ msgstr ""
 msgid "You can only edit your own widgets."
 msgstr ""
 
+msgid "You can't remove the last platform administration permission."
+msgstr ""
+
 msgid "You don't have any dashboards."
 msgstr ""
 

@@ -19,6 +19,10 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
+use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
+use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
+use Tuleap\user\UserCannotRemoveLastAdministrationPermission;
 
 class Admin_PermissionDelegationController {
 
@@ -69,6 +73,16 @@ class Admin_PermissionDelegationController {
      */
     private $user_manager;
 
+    /**
+     * @var SiteAdministratorPermissionChecker
+     */
+    private $site_admin_permission_checker;
+
+    /**
+     * @var PermissionPresenterBuilder
+     */
+    private $permission_builder;
+
 
     public function __construct(
         Codendi_Request $request,
@@ -78,7 +92,9 @@ class Admin_PermissionDelegationController {
         User_ForgeUserGroupManager $user_group_manager,
         User_ForgeUserGroupUsersFactory $user_group_users_factory,
         User_ForgeUserGroupUsersManager $user_group_users_manager,
-        UserManager $user_manager
+        UserManager $user_manager,
+        SiteAdministratorPermissionChecker $site_admin_permission_checker,
+        PermissionPresenterBuilder $permission_builder
     ) {
         $this->request  = $request;
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
@@ -90,6 +106,8 @@ class Admin_PermissionDelegationController {
         $this->user_group_users_factory       = $user_group_users_factory;
         $this->user_group_users_manager       = $user_group_users_manager;
         $this->user_manager                   = $user_manager;
+        $this->permission_builder             = $permission_builder;
+        $this->site_admin_permission_checker = $site_admin_permission_checker;
     }
 
     private function redirect($id = null) {
@@ -213,13 +231,17 @@ class Admin_PermissionDelegationController {
         );
     }
 
-    private function getCurrentGroupPresenter(array $formatted_groups) {
+    private function getCurrentGroupPresenter(array $formatted_groups)
+    {
         foreach ($formatted_groups as $formatted_group) {
             try {
                 if ($formatted_group['is_current']) {
                     $user_group  = $this->user_group_factory->getForgeUserGroupById($formatted_group['id']);
-                    $permissions = $this->user_group_permissions_factory->getPermissionsForForgeUserGroup($user_group);
+                    $permissions = $this->permission_builder->build(
+                        $this->user_group_permissions_factory->getPermissionsForForgeUserGroup($user_group)
+                    );
                     $users       = $this->user_group_users_factory->getAllUsersFromForgeUserGroup($user_group);
+
                     return new Admin_PermissionDelegationGroupPresenter($user_group, $permissions, $users);
                 }
             } catch (User_ForgeUserGroupPermission_NotFoundException $e) {
@@ -290,6 +312,8 @@ class Admin_PermissionDelegationController {
 
                 foreach ($permission_ids as $permission_id) {
                     $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);
+
+                    $this->checkPermissionCanBeRemoved($permission);
                     $this->user_group_permissions_manager->deletePermission($user_group, $permission);
                 }
 
@@ -297,6 +321,10 @@ class Admin_PermissionDelegationController {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
             } catch(User_ForgeUserGroupPermission_NotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'permission_not_found'));
+            } catch (UserCannotRemoveLastAdministrationPermission $e) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR, _("You can't remove the last platform administration permission.")
+                );
             }
         }
 
@@ -360,6 +388,20 @@ class Admin_PermissionDelegationController {
 
             if ($user) {
                 $this->user_group_users_manager->removeUserFromForgeUserGroup($user, $user_group);
+            }
+        }
+    }
+
+    /**
+     * @param $permission
+     *
+     * @throws UserCannotRemoveLastAdministrationPermission
+     */
+    private function checkPermissionCanBeRemoved(User_ForgeUserGroupPermission $permission)
+    {
+        if ($permission->getId() === SiteAdministratorPermission::ID) {
+            if (! $this->site_admin_permission_checker->checkPlatformHasMoreThanOneSiteAdministrationPermission()) {
+                throw new UserCannotRemoveLastAdministrationPermission();
             }
         }
     }

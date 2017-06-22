@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\ForgeUserGroupPermission;
 
 use User_ForgeUserGroupPermission;
 
-class TrackerAdminAllProjects implements User_ForgeUserGroupPermission
+class TrackerAdminAllProjects extends User_ForgeUserGroupPermission
 {
     const ID = 2;
 
