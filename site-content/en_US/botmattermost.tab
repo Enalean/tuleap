@@ -16,6 +16,7 @@ plugin_botmattermost	alert_error_channels_not_found	No channels found
 plugin_botmattermost	alert_error_add_bot	Failed to add the bot and its associated channels
 plugin_botmattermost	alert_error_delete_bot	Failed to delete the bot and its associated channels
 plugin_botmattermost	alert_error_update_bot	Failed to update the bot and its associated channels
+plugin_botmattermost	alert_error_has_no_message_content	No message content to send
 
 
 plugin_botmattermost	configuration_title	Bot Mattermost configuration

@@ -16,6 +16,7 @@ plugin_botmattermost	alert_error_channels_not_found	Aucun salon de discussion n'
 plugin_botmattermost	alert_error_add_bot	L'ajout du robot et de ses salons de discussion associés a échoué
 plugin_botmattermost	alert_error_delete_bot	La suppression du robot et de ses salons de discussion associés a échoué
 plugin_botmattermost	alert_error_update_bot	La mise à jour du robot et de ses salons de discussion associés a échoué
+plugin_botmattermost	alert_error_has_no_message_content	Aucun contenu de message à envoyer
 
 
 plugin_botmattermost	configuration_title	Configuration des robots Mattermost

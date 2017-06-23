@@ -18,49 +18,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermost\SenderServices;
+namespace Tuleap\BotMattermostGit\SenderServices;
 
 
-use Tuleap\BotMattermostGit\SenderServices\Attachment;
-
-class Message
+class Attachment
 {
+    const COLOR_BLUE = '#36a64f';
 
-    private $text = '';
-    private $attachments = array();
+    private $pre_text;
+    private $title;
+    private $title_link;
+    private $text;
+    private $color;
+
+    public function __construct($pre_text, $title, $title_link, $text)
+    {
+        $this->pre_text   = $pre_text;
+        $this->title      = $title;
+        $this->title_link = $title_link;
+        $this->text       = $text;
+        $this->color      = self::COLOR_BLUE;
+    }
+
+    public function getPreText()
+    {
+        return $this->pre_text;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getTitleLink()
+    {
+        return $this->title_link;
+    }
 
     public function getText()
     {
         return $this->text;
     }
 
-    public function setText($text)
+    public function getColor()
     {
-        $this->text = $text;
-    }
-
-    public function hasText()
-    {
-        return $this->text !== '';
-    }
-
-    public function getAttachments()
-    {
-        return $this->attachments;
-    }
-
-    public function addAttachment(Attachment $attachment)
-    {
-        $this->attachments[] = $attachment;
-    }
-
-    public function hasAttachments()
-    {
-        return !empty($this->attachments);
-    }
-
-    public function hasContent()
-    {
-        return $this->hasText() || $this->hasAttachments();
+        return $this->color;
     }
 }

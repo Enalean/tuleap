@@ -22,6 +22,7 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 
+use Tuleap\BotMattermostGit\SenderServices\Attachment;
 use TuleapTestCase;
 
 class EncoderMessageTest extends TuleapTestCase
@@ -37,7 +38,7 @@ class EncoderMessageTest extends TuleapTestCase
         $this->encoder_message = new EncoderMessage();
     }
 
-    public function itVerifiesThatGeneratedMessageReturnsPostFormatForMattermost()
+    public function itVerifiesThatGeneratedMessageWithTextReturnsPostFormatForMattermost()
     {
         $message = new Message();
         $channel = "channel";
@@ -45,10 +46,26 @@ class EncoderMessageTest extends TuleapTestCase
         stub($this->bot)->getAvatarUrl()->returns("https://avatar_url.com");
         $message->setText("text");
 
-        $result = $this->encoder_message->generateMessage($this->bot, $message, $channel);
+        $result = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
         $this->assertEqual(
             $result,
             '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}'
+        );
+    }
+
+    public function itVerifiesThatGeneratedMessageWithAttachmentReturnsPostFormatForMattermost()
+    {
+        $message    = new Message();
+        $attachment = new Attachment('pre-text', 'title', 'https://www.example.com', 'description');
+        $channel    = "channel";
+        stub($this->bot)->getName()->returns("toto");
+        stub($this->bot)->getAvatarUrl()->returns("https://avatar_url.com");
+        $message->addAttachment($attachment);
+
+        $result = $this->encoder_message->generateJsonMessage($this->bot, $message, $channel);
+        $this->assertEqual(
+            $result,
+            '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","attachments":[{"color":"#36a64f","pretext":"pre-text","title":"title","title_link":"https:\/\/www.example.com","text":"description"}]}'
         );
     }
 }

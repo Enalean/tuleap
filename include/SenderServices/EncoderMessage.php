@@ -21,24 +21,52 @@
 namespace Tuleap\BotMattermost\SenderServices;
 
 use Tuleap\BotMattermost\Bot\Bot;
+use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentException;
+use Tuleap\BotMattermostGit\SenderServices\Attachment;
 
 class EncoderMessage
 {
     /**
      * @param Bot $bot
      * @param Message $message
-     * @param string $channel_name
+     * @param string $channel
      * @return String [POST format]
+     * @throws HasNoMessageContentException
      */
-    public function generateMessage(Bot $bot, Message $message, $channel_name = null)
+    public function generateJsonMessage(Bot $bot, Message $message, $channel)
     {
+        if (! $message->hasContent()) {
+            throw new HasNoMessageContentException();
+        }
         $tab = array(
             "username" => $bot->getName(),
-            "channel"  => strtolower($channel_name),
+            "channel"  => strtolower($channel),
             "icon_url" => $bot->getAvatarUrl(),
-            "text"     => $message->getText()
         );
+        if ($message->hasText()) {
+            $tab["text"] = $message->getText();
+        }
+        if ($message->hasAttachments()) {
+            $tab["attachments"] = $this->generateArrayAttachments($message->getAttachments());
+        }
 
         return json_encode($tab);
+    }
+
+    private function generateArrayAttachments(array $attachments)
+    {
+        $array_attachments = array();
+
+        foreach ($attachments as $attachment) {
+            $array_attachments[] =  array(
+                'color'      => $attachment->getColor(),
+                'pretext'    => $attachment->getPreText(),
+                'title'      => $attachment->getTitle(),
+                'title_link' => $attachment->getTitleLink(),
+                'text'       => $attachment->getText()
+            );
+        }
+
+        return $array_attachments;
     }
 }

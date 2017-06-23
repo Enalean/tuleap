@@ -23,9 +23,13 @@ namespace Tuleap\BotMattermost\SenderServices;
 use Exception;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\BotMattermostLogger;
+use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentException;
+use Tuleap\BotMattermostGit\SenderServices\Attachment;
 
 class Sender
 {
+
+    const DEFAULT_CHANNEL = '';
 
     private $encoder_message;
     private $client;
@@ -43,28 +47,35 @@ class Sender
 
     public function pushNotification(Bot $bot, Message $message, array $channels)
     {
-        $this->logger->debug('text: '.$message->getText());
-        if (! $bot) {
-            $this->logger->warn('no bots found');
-        }
         $this->logger->debug('bot: #'.$bot->getId().' '.$bot->getName());
         $this->logger->debug('channels: '.implode(', ', $channels));
 
-        $this->pushNotificationsForEachChannels($bot, $message, $channels);
-    }
-
-    private function pushNotificationsForEachChannels(Bot $bot, Message $message, array $channels)
-    {
         if (! empty($channels)) {
             foreach ($channels as $channel) {
-                $json_message = $this->encoder_message->generateMessage($bot, $message, $channel);
-                $this->logger->debug('channel: '.$channel);
-                $this->send($json_message, $bot->getWebhookUrl());
+                $this->pushNotificationByChannel($bot, $message, $channel);
             }
         } else {
-            $json_message = $this->encoder_message->generateMessage($bot, $message);
-            $this->logger->debug('No channel specified');
+            $this->pushNotificationWithoutChannel($bot, $message);
+        }
+    }
+
+    private function pushNotificationByChannel(Bot $bot, Message $message, $channel) {
+        $this->logger->debug('channel: '.$channel);
+        $this->generateAndSendNotification($bot, $message, $channel);
+    }
+
+    private function pushNotificationWithoutChannel(Bot $bot, Message $message) {
+        $this->logger->debug('No channel specified, default channel will be used');
+        $this->generateAndSendNotification($bot, $message, self::DEFAULT_CHANNEL);
+    }
+
+    private function generateAndSendNotification(Bot $bot, Message $message, $channel)
+    {
+        try {
+            $json_message = $this->encoder_message->generateJsonMessage($bot, $message, $channel);
             $this->send($json_message, $bot->getWebhookUrl());
+        } catch (HasNoMessageContentException $exception) {
+            $this->logger->error($exception->getMessage());
         }
     }
 
