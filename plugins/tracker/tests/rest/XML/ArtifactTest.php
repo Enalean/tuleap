@@ -48,7 +48,7 @@ class ArtifactTest extends RestBase {
     public function setUp() {
         parent::setUp();
 
-        $this->project_id = $this->getProjectId();
+        $this->project_id = $this->getProjectId(TrackerDataBuilder::XML_PROJECT_ID_SHORT_NAME);
         $tracker          = $this->getTracker();
         $this->tracker_id = $tracker['id'];
 
@@ -60,15 +60,6 @@ class ArtifactTest extends RestBase {
             } elseif ($field['name'] === 'status') {
                 $this->status_field_id = $field['field_id'];
                 $this->status_value_id = $field['values'][0]['id'];
-            }
-        }
-    }
-
-    private function getProjectId() {
-        $response = $this->getResponse($this->client->get('projects/'))->json();
-        foreach($response as $project_json) {
-            if ($project_json['shortname'] === TrackerDataBuilder::XML_PROJECT_ID_SHORT_NAME) {
-                return $project_json['id'];
             }
         }
     }

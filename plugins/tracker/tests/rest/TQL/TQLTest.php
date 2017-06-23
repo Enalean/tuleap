@@ -166,26 +166,9 @@ class TQLTest extends RestBase
         );
     }
 
-    private function getProjectId()
-    {
-        $query = http_build_query(
-            array(
-                'limit' => 1,
-                'query' => json_encode(
-                    array(
-                        'shortname' => self::PROJECT_NAME
-                    )
-                )
-            )
-        );
-        $response = $this->getResponse($this->client->get("projects/?$query"))->json();
-
-        return $response[0]['id'];
-    }
-
     private function getTrackerId()
     {
-        $project_id = $this->getProjectId();
+        $project_id = $this->getProjectId(self::PROJECT_NAME);
 
         $response = $this->getResponse($this->client->get("projects/$project_id/trackers"))->json();
 
