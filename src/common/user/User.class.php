@@ -334,7 +334,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
         $is_member = false;
 
-        if (isset($group_data[1]['admin_flags']) && $group_data[1]['admin_flags'] == 'A') {
+        if ((isset($group_data[1]['admin_flags']) && $group_data[1]['admin_flags'] == 'A') || $this->doesUserHaveSuperUserPermissionDelegation()) {
             //Codendi admins always return true
             $is_member = true;
         } else if (isset($group_data[$group_id])) {
@@ -457,7 +457,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
 
-    function isSuperUser()
+    public function isSuperUser()
     {
         return $this->isMember(1, 'A') || $this->doesUserHaveSuperUserPermissionDelegation();
     }
@@ -1448,7 +1448,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return "User #". $this->getId();
     }
 
-    private function getPermissionManager()
+    /**
+     * protected for testing purpose
+     */
+    protected function getPermissionManager()
     {
         return new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao());
     }
