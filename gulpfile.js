@@ -153,11 +153,17 @@ var fat_combined_files = [
     theme_burningparrot_scss = {
         files: [
             'src/www/themes/BurningParrot/css/burning-parrot-blue.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-blue-condensed.scss',
             'src/www/themes/BurningParrot/css/burning-parrot-green.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-green-condensed.scss',
             'src/www/themes/BurningParrot/css/burning-parrot-grey.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-grey-condensed.scss',
             'src/www/themes/BurningParrot/css/burning-parrot-orange.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-orange-condensed.scss',
             'src/www/themes/BurningParrot/css/burning-parrot-purple.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-red.scss'
+            'src/www/themes/BurningParrot/css/burning-parrot-purple-condensed.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-red.scss',
+            'src/www/themes/BurningParrot/css/burning-parrot-red-condensed.scss'
         ],
         watched_includes: [
             'src/www/themes/BurningParrot/css/**/_*.scss'

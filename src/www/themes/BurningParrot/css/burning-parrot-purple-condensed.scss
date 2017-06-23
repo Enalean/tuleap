@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'variables';
+@import '../../common/tlp/src/scss/variables/colors';
+@import '../../common/tlp/src/scss/variables/margins';
+@import '../../common/tlp/src/scss/variables/variables-purple';
 
-// UI colors
-$tlp-ui-info         : #4db3d0;
-$tlp-ui-success      : #58b359;
-$tlp-ui-warning      : #f3b13a;
-$tlp-ui-danger       : #da5353;
+$navbar-background: #ffffff;
 
-$tlp-ui-border-light : #f3f3f3;
-$tlp-ui-border-normal: #e3e5ed;
-$tlp-ui-border-dark  : #d4d7e1;
-
-$tlp-theme-color                   : $tlp-theme-purple;
-$tlp-theme-background-color        : $tlp-theme-background-purple;
-$tlp-theme-sidebar-background-color: $tlp-theme-sidebar-background-purple;
+@import 'includes';
