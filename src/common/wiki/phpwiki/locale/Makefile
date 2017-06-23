@@ -78,7 +78,6 @@ mo: fr/LC_MESSAGES/phpwiki.mo fr/LC_MESSAGES/phpwiki.php
 ${POT_FILE}: ../lib/ArchiveCleaner.php
 ${POT_FILE}: ../lib/BlockParser.php
 ${POT_FILE}: ../lib/CachedMarkup.php
-${POT_FILE}: ../lib/Captcha.php
 ${POT_FILE}: ../lib/config.php
 ${POT_FILE}: ../lib/DbaDatabase.php
 ${POT_FILE}: ../lib/DbaListSet.php

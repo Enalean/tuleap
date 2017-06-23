@@ -18,14 +18,6 @@ msgstr ""
 "Date: 2001-09-22 00:00-0000\n"
 "From: Pierrick Meignen <meignen.pierrick@wanadoo.fr>\n"
 
-#: ../lib/Captcha.php:32
-msgid "Typed in verification word mismatch ... are you a bot?"
-msgstr ""
-
-#: ../lib/Captcha.php:68
-msgid "Type word above:"
-msgstr ""
-
 #: ../lib/DbaDatabase.php:18
 #, php-format
 msgid "The DBA handler %s is unsupported!"

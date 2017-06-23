@@ -408,12 +408,6 @@ new boolean_define_commented_optional
  array('true'  => "Enabled",
        'false' => "Disabled"));
 
-$properties["ENABLE_CAPTCHA"] =
-new boolean_define_commented_optional
-('ENABLE_CAPTCHA', 
- array('true'  => "Enabled",
-       'false' => "Disabled"));
-
 $properties["USE_SAFE_DBSESSION"] =
 new boolean_define_commented_optional
 ('USE_SAFE_DBSESSION', 
