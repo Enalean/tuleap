@@ -43,6 +43,7 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\User\History\HistoryRetriever;
+use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -75,7 +76,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
         $this->_addHook(Event::JAVASCRIPT,                     'javascript',                        false);
         $this->_addHook(Event::TOGGLE,                         'toggle',                            false);
-        $this->_addHook(Event::SERVICE_PUBLIC_AREAS,           'service_public_areas',              false);
+        $this->_addHook(GetPublicAreas::NAME);
         $this->_addHook('permission_get_name',                 'permission_get_name',               false);
         $this->_addHook('permission_get_object_type',          'permission_get_object_type',        false);
         $this->_addHook('permission_get_object_name',          'permission_get_object_name',        false);
@@ -723,12 +724,14 @@ class trackerPlugin extends Plugin {
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
 
-    function service_public_areas($params) {
-        if ($params['project']->usesService($this->getServiceShortname())) {
+    function service_public_areas(GetPublicAreas $event)
+    {
+        $project = $event->getProject();
+        if ($project->usesService($this->getServiceShortname())) {
             $tf = TrackerFactory::instance();
 
             // Get the artfact type list
-            $trackers = $tf->getTrackersByGroupId($params['project']->getGroupId());
+            $trackers = $tf->getTrackersByGroupId($project->getGroupId());
 
             if ($trackers) {
                 $entries  = array();
@@ -741,13 +744,14 @@ class trackerPlugin extends Plugin {
                 }
                 if ($entries) {
                     $area = '';
-                    $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. $params['project']->getGroupId() .'">';
+                    $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. $project->getGroupId() .'">';
                     $area .= '<i class="tuleap-services-angle-double-right tuleap-services-plugin_tracker tuleap-services-widget"></i>';
                     $area .= $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
                     $area .= '</a>';
 
                     $area .= '<ul><li>'. implode('</li><li>', $entries) .'</li></ul>';
-                    $params['areas'][] = $area;
+
+                    $event->addArea($area);
                 }
             }
         }

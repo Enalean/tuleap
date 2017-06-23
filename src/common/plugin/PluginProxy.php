@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,11 +47,18 @@ class PluginProxy {
     }
 
     public function processEvent($event, $params) {
-        if (isset($this->listener[$event])) {
-            $plugin   = $this->getPlugin();
-            $callback = $this->listener[$event];
+        if (is_object($event)) {
+            $event_name = $event::NAME;
+            $params     = $event;
+        } else {
+            $event_name = $event;
+        }
 
-            if ($this->recall_event[$event]) {
+        if (isset($this->listener[$event_name])) {
+            $plugin   = $this->getPlugin();
+            $callback = $this->listener[$event_name];
+
+            if ($this->recall_event[$event_name]) {
                 $plugin->$callback($event, $params);
             } else {
                 $plugin->$callback($params);

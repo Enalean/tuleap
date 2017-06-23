@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Widget\Event\GetPublicAreas;
+
 require_once('Widget.class.php');
 
 /**
@@ -216,15 +218,9 @@ class Widget_ProjectPublicAreas extends Widget {
             $html .= '</p>';
         }
 
-        // ######################## Plugins
-
-        $areas = array();
-        $params = array('project' => &$project, 'areas' => &$areas);
-
-        $em =& EventManager::instance();
-        $em->processEvent(Event::SERVICE_PUBLIC_AREAS, $params);
-
-        foreach($areas as $area) {
+        $event = new GetPublicAreas($project);
+        EventManager::instance()->processEvent($event);
+        foreach($event->getAreas() as $area) {
             $html .= '<p>'.$area.'</p>';
         }
 

@@ -363,17 +363,6 @@ class Event {
     const TOGGLE = 'toggle';
 
     /**
-     * Display stuff in the widget public_areas (displays entries for the project services)
-     *
-     * Parameters:
-     *   'project' => The project
-     *
-     * Expected result:
-     *   'areas'   => array of string(html)
-     */
-    const SERVICE_PUBLIC_AREAS = 'service_public_areas';
-
-    /**
      * Let display a sparkline next to a cross reference
      *
      * Parameters:
