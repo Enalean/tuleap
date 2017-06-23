@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 use \Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 
 class User_ForgeUserGroupPermssionsFactory_BaseTest extends TuleapTestCase {
@@ -74,12 +75,14 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
         $expected_id4    = User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID;
         $expected_id5    = User_ForgeUserGroupPermission_UserManagement::ID;
         $expected_id6    = RetrieveSystemEventsInformationApi::ID;
+        $expected_id7    = SiteAdministratorPermission::ID;
 
         $permission_ids = array (
             array('permission_id' => $expected_id1),
             array('permission_id' => $expected_id4),
             array('permission_id' => $expected_id5),
             array('permission_id' => $expected_id6),
+            array('permission_id' => $expected_id7),
         );
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns($permission_ids);

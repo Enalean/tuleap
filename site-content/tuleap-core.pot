@@ -173,6 +173,9 @@ msgstr ""
 msgid "Open/Collapse the sidebar"
 msgstr ""
 
+msgid "Platform administration"
+msgstr ""
+
 msgid "Please accept term of service"
 msgstr ""
 
@@ -231,6 +234,11 @@ msgid "There are no widgets here."
 msgstr ""
 
 msgid "There isn't any matching widgets"
+msgstr ""
+
+msgid ""
+"This permission grants the right to manage platform administration users. "
+"Every single user added here will be a platform administrator."
 msgstr ""
 
 msgid "This project is not categorized yet."
