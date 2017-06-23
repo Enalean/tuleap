@@ -31,6 +31,9 @@ use Tuleap\BotMattermostGit\Plugin\PluginInfo;
 use Tuleap\BotMattermostGit\Controller;
 use Tuleap\BotMattermostGit\SenderServices\GitNotificationBuilder;
 use Tuleap\BotMattermostGit\SenderServices\GitNotificationSender;
+use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationBuilder;
+use Tuleap\BotMattermostGit\SenderServices\PullRequestNotificationSender;
+use Tuleap\PullRequest\GetCreatePullRequest;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -43,20 +46,30 @@ class botmattermost_gitPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        $this->addHook('cssfile');
-        $this->addHook('javascript_file');
         if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
             require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
-        }
-        if (defined('GIT_BASE_URL')) {
-            $this->addHook(GIT_ADDITIONAL_NOTIFICATIONS);
-            $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
         }
     }
 
     public function getDependencies()
     {
         return array('git', 'botmattermost');
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook('cssfile');
+        $this->addHook('javascript_file');
+
+        if (defined('GIT_BASE_URL')) {
+            $this->addHook(GIT_ADDITIONAL_NOTIFICATIONS);
+            $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE);
+        }
+        if (defined('PULLREQUEST_BASE_DIR')) {
+            $this->addHook(GetCreatePullRequest::NAME);
+        }
+
+        return parent::getHooksAndCallbacks();
     }
 
     /**
@@ -86,26 +99,45 @@ class botmattermost_gitPlugin extends Plugin
     public function git_hook_post_receive_ref_update(array $params)
     {
         $repository = $params['repository'];
-        $logger = new BotMattermostLogger();
+        $logger = $this->getLogger();
         if ($this->isAllowed($repository->getProjectId())) {
             $git_notification_sender = new GitNotificationSender(
-                new Sender(
-                    new EncoderMessage(),
-                    new ClientBotMattermost(),
-                    $logger
-                ),
-                new Factory(
-                    new Dao(),
-                    new BotFactory(new BotDao())
-                ),
+                $this->getSender($logger),
+                $this->getFactory(),
                 $repository,
                 new GitNotificationBuilder(
-                    new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git')),
+                    $this->getGitRepositoryUrlManager(),
                     $logger
                 )
             );
 
             $git_notification_sender->process($params);
+        }
+    }
+
+    public function pullrequest_hook_create_pull_request(GetCreatePullRequest $event)
+    {
+        $pull_request           = $event->getPullRequest();
+        $creator                = $event->getCreator();
+        $project                = $event->getProject();
+        $logger                 = new BotMattermostLogger();
+        $repository_destination = $this->getGitRepositoryFactory()->getRepositoryById($pull_request->getRepoDestId());
+
+        if ($this->isAllowed($project->getID())) {
+            $pull_request_notification_sender = new PullRequestNotificationSender(
+                $this->getSender($logger),
+                $this->getFactory(),
+                new PullRequestNotificationBuilder($logger,  $this->getGitRepositoryUrlManager()),
+                $this->getLogger()
+            );
+
+            $pull_request_notification_sender->send(
+                $pull_request,
+                $creator,
+                HTTPRequest::instance(),
+                $project,
+                $repository_destination
+            );
         }
     }
 
@@ -140,13 +172,42 @@ class botmattermost_gitPlugin extends Plugin
         return new Controller(
             $request,
             new CSRFSynchronizerToken('/plugins/botmattermost_git/?group_id='.$request->getProject()->getID()),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            ),
+            $this->getGitRepositoryFactory(),
             new Factory(new Dao(), $botFactory),
             $botFactory,
             new Validator($botFactory)
         );
+    }
+
+    private function getGitRepositoryUrlManager()
+    {
+        return new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'));
+    }
+
+    private function getGitRepositoryFactory()
+    {
+        return new GitRepositoryFactory(
+            new GitDao(),
+            ProjectManager::instance()
+        );
+    }
+
+    private function getSender(BotMattermostLogger $logger)
+    {
+        return new Sender(
+            new EncoderMessage(),
+            new ClientBotMattermost(),
+            $logger
+        );
+    }
+
+    private function getFactory()
+    {
+        return new Factory(new Dao(), new BotFactory(new BotDao()));
+    }
+
+    private function getLogger()
+    {
+        return new BotMattermostLogger();
     }
 }

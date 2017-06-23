@@ -29,3 +29,6 @@ plugin_botmattermost_git	modal_delete_content	Cette suppression est irréversibl
 plugin_botmattermost_git	configuration_info_channels_handles	L'indentifiant du salon de discussion est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/monsalondediscussion<br>identifiant : monsalondediscussion
 plugin_botmattermost_git	configuration_label_channels_handles	Liste des identifiants des salons de discussion
 plugin_botmattermost_git	configuration_input_channels_handles	salon1, salon2, salon3
+
+plugin_botmattermost_git	attachment_pre_text_message	Pull request proposée par $1 sur le dépôt
+plugin_botmattermost_git	attachment_pre_text_project	Projet :

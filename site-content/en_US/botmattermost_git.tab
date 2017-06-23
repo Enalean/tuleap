@@ -29,3 +29,6 @@ plugin_botmattermost_git	modal_delete_content	You are about to remove the notifi
 plugin_botmattermost_git	configuration_info_channels_handles	The channel handle is display in its URL<br>example: https://example.com/myGroup/channels/mychannel<br>handle: mychannel
 plugin_botmattermost_git	configuration_label_channels_handles	Channel handles list
 plugin_botmattermost_git	configuration_input_channels_handles	channel1, channel2, channel3
+
+plugin_botmattermost_git	attachment_pre_text_message	Pull request submitted by $1 on the repository
+plugin_botmattermost_git	attachment_pre_text_project	Project:
