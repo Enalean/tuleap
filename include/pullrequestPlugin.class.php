@@ -118,6 +118,7 @@ class pullrequestPlugin extends Plugin
     public function process(Codendi_Request $request)
     {
         $user_manager           = UserManager::instance();
+        $event_manager          = EventManager::instance();
         $git_repository_factory = $this->getRepositoryFactory();
 
         $pull_request_merger = new PullRequestMerger(
@@ -126,7 +127,8 @@ class pullrequestPlugin extends Plugin
         $pull_request_creator = new PullRequestCreator(
             $this->getPullRequestFactory(),
             new Dao(),
-            $pull_request_merger
+            $pull_request_merger,
+            $event_manager
         );
 
         $router = new Router($pull_request_creator, $git_repository_factory, $user_manager);

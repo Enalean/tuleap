@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest;
 
+use EventManager;
 use GitRepositoryFactory;
 use GitRepository;
 use UserManager;
@@ -45,11 +46,13 @@ class PullRequestCreator
     public function __construct(
         Factory $pull_request_factory,
         Dao $pull_request_dao,
-        PullRequestMerger $pull_request_merger
+        PullRequestMerger $pull_request_merger,
+        EventManager $event_manager
     ) {
         $this->pull_request_factory = $pull_request_factory;
         $this->pull_request_dao     = $pull_request_dao;
         $this->pull_request_merger  = $pull_request_merger;
+        $this->event_manager        = $event_manager;
     }
 
     public function generatePullRequest(
@@ -114,7 +117,12 @@ class PullRequestCreator
         $merge_status = $this->pull_request_merger->detectMergeabilityStatus($executor, $pull_request, $pull_request->getSha1Src(), $repository_src);
         $pull_request->setMergeStatus($merge_status);
 
-        return $this->pull_request_factory->create($creator, $pull_request, $repository_src->getProjectId());
+        $result = $this->pull_request_factory->create($creator, $pull_request, $repository_src->getProjectId());
+
+        $event = new GetCreatePullRequest($pull_request, $creator, $repository_dest->getProject());
+        $this->event_manager->processEvent($event);
+
+        return $result;
     }
 
     private function checkIfPullRequestAlreadyExists($repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest)

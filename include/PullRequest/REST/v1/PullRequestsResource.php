@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -141,11 +142,13 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $this->user_manager         = UserManager::instance();
+        $this->event_manager        = EventManager::instance();
         $this->pull_request_merger  = new PullRequestMerger($this->git_repository_factory);
         $this->pull_request_creator = new PullRequestCreator(
             $this->pull_request_factory,
             $pull_request_dao,
-            $this->pull_request_merger
+            $this->pull_request_merger,
+            $this->event_manager
         );
         $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory, $this->pull_request_merger);
         $this->logger               = new BackendLogger();
