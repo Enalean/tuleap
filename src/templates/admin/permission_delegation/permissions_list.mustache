@@ -28,7 +28,11 @@
                     {{# permissions }}
                         <tr>
                             <td><input type="checkbox" name="permissions[]" value="{{ getId }}"></td>
-                            <td class="siteadmin-permission-delegation-group-details-perms-perm-name">{{ getName }}</td>
+                            <td class="siteadmin-permission-delegation-group-details-perms-perm-name"
+                                title="{{ getDescription }}"
+                            >
+                                {{ getName }}
+                            </td>
                         </tr>
                     {{/ permissions }}
                     </tbody>
