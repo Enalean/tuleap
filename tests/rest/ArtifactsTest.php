@@ -23,7 +23,15 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 /**
  * @group ArtifactsTest
  */
-class ArtifactsTest extends RestBase {
+class ArtifactsTest extends RestBase
+{
+
+    public function setUp()
+    {
+        $this->load_computed_fields_data = true;
+
+        parent::setUp();
+    }
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -73,56 +81,56 @@ class ArtifactsTest extends RestBase {
     public function testComputedFieldsCalculation()
     {
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_ONE_ARTIFACT_A_ID,
+            $this->level_one_artifact_ids[1],
             10,
             25,
             20,
             33
         );
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_B_ID,
+            $this->level_two_artifact_ids[1],
             null,
             25,
             15,
             33
         );
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_TWO_ARTIFACT_C_ID,
+            $this->level_two_artifact_ids[2],
             null,
             null,
             5,
             null
         );
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_D_ID,
+            $this->level_three_artifact_ids[1],
             null,
             null,
             5,
             11
         );
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_E_ID,
+            $this->level_three_artifact_ids[2],
             10,
             10,
             5,
             22
         );
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_F_ID,
+            $this->level_three_artifact_ids[3],
             null,
             null,
             5,
             null
         );
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_G_ID,
+            $this->level_four_artifact_ids[1],
             null,
             15,
             5,
             null
         );
         $this->testComputedFieldValueForArtifactId(
-            REST_TestDataBuilder::LEVEL_FOUR_ARTIFACT_H_ID,
+            $this->level_four_artifact_ids[2],
             null,
             10,
             5,
@@ -173,7 +181,7 @@ class ArtifactsTest extends RestBase {
     public function testGETBurndownForParentArtifact()
     {
         $response     = $this->getResponse(
-            $this->client->get("artifacts/" . REST_TestDataBuilder::BURNDOWN_FATHER_ARTIFACT_ID)
+            $this->client->get("artifacts/" . $this->pokemon_artifact_ids[1])
         );
 
         $burndown     = $response->json();
@@ -198,7 +206,7 @@ class ArtifactsTest extends RestBase {
     public function testGETBurndownForAChildrenArtifact()
     {
         $response     = $this->getResponse(
-            $this->client->get("artifacts/" . REST_TestDataBuilder::BURNDOWN_CHILD_ARTIFACT_ID)
+            $this->client->get("artifacts/" . $this->niveau_1_artifact_ids[1])
         );
 
         $burndown     = $response->json();
@@ -223,7 +231,7 @@ class ArtifactsTest extends RestBase {
     public function testGETBurndownForAnotherChildrenArtifact()
     {
         $response     = $this->getResponse(
-            $this->client->get("artifacts/" . REST_TestDataBuilder::BURNDOWN_CHILD_2_ARTIFACT_ID)
+            $this->client->get("artifacts/" . $this->niveau_2_artifact_ids[2])
         );
 
         $burndown     = $response->json();
@@ -549,7 +557,7 @@ class ArtifactsTest extends RestBase {
     {
         $nature_is_child = '_is_child';
         $nature_empty    = '';
-        $artifact_id     = REST_TestDataBuilder::LEVEL_ONE_ARTIFACT_A_ID;
+        $artifact_id     = $this->level_one_artifact_ids[1];
         $field_label     = 'artlink';
         $field_id        = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource    = json_encode(
@@ -558,8 +566,8 @@ class ArtifactsTest extends RestBase {
                     array(
                         'field_id' => $field_id,
                         "links"    => array(
-                            array("id" => REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_D_ID, "type" => $nature_is_child),
-                            array("id" => REST_TestDataBuilder::LEVEL_THREE_ARTIFACT_F_ID, "type" => $nature_empty),
+                            array("id" => $this->level_three_artifact_ids[1], "type" => $nature_is_child),
+                            array("id" => $this->level_three_artifact_ids[3], "type" => $nature_empty),
                         )
                     ),
                 ),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,15 @@
 
 namespace Git;
 
-use GitDataBuilder;
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\Git\REST\TestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
  * @group GitTests
  */
-class ProjectTest extends RestBase {
+class ProjectTest extends TestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -40,7 +39,7 @@ class ProjectTest extends RestBase {
 
     public function testGetGitRepositories() {
         $response  = $this->getResponse($this->client->get(
-            'projects/'.GitDataBuilder::PROJECT_TEST_GIT_ID.'/git'
+            'projects/'.$this->git_project_id.'/git'
         ));
 
         $repositories_response = $response->json();

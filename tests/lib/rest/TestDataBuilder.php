@@ -46,27 +46,15 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const LEVEL_THREE_TRACKER_SHORTNAME  = 'LevelThree';
     const LEVEL_FOUR_TRACKER_SHORTNAME   = 'LevelFour';
 
+    const NIVEAU_1_TRACKER_SHORTNAME = 'niveau1';
+    const NIVEAU_2_TRACKER_SHORTNAME = 'niveau2';
+    const POKEMON_TRACKER_SHORTNAME  = 'pokemon';
+
     const RELEASE_FIELD_NAME_ID     = 171;
     const RELEASE_FIELD_STATUS_ID   = 173;
     const RELEASE_STATUS_CURRENT_ID = 126;
 
     const KANBAN_ID = 1;
-
-    const BURNDOWN_FATHER_ARTIFACT_ID  = 12;
-    const BURNDOWN_CHILD_ARTIFACT_ID   = 1;
-    const BURNDOWN_CHILD_2_ARTIFACT_ID = 8;
-
-    const LEVEL_ONE_ARTIFACT_A_ID   = 40;
-
-    const LEVEL_TWO_ARTIFACT_B_ID   = 41;
-    const LEVEL_TWO_ARTIFACT_C_ID   = 42;
-
-    const LEVEL_THREE_ARTIFACT_D_ID = 43;
-    const LEVEL_THREE_ARTIFACT_E_ID = 44;
-    const LEVEL_THREE_ARTIFACT_F_ID = 45;
-
-    const LEVEL_FOUR_ARTIFACT_G_ID  = 46;
-    const LEVEL_FOUR_ARTIFACT_H_ID  = 47;
 
     const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
     const KANBAN_ONGOING_COLUMN_ID    = 231;
