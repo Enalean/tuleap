@@ -54,6 +54,8 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $project_public_id;
     protected $project_public_member_id;
     protected $project_pbi_id;
+    protected $project_computed_fields_id;
+    protected $project_burndown_id;
 
     protected $epic_tracker_id;
     protected $releases_tracker_id;
@@ -62,14 +64,30 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $user_stories_tracker_id;
     protected $deleted_tracker_id;
     protected $kanban_tracker_id;
+    protected $level_one_tracker_id;
+    protected $level_two_tracker_id;
+    protected $level_three_tracker_id;
+    protected $level_four_tracker_id;
+    protected $niveau_1_tracker_id;
+    protected $niveau_2_tracker_id;
+    protected $pokemon_tracker_id;
 
     protected $project_ids = array();
     protected $tracker_ids = array();
 
-    protected $release_artifact_ids = array();
-    protected $epic_artifact_ids    = array();
-    protected $story_artifact_ids   = array();
-    protected $sprint_artifact_ids  = array();
+    protected $release_artifact_ids     = array();
+    protected $epic_artifact_ids        = array();
+    protected $story_artifact_ids       = array();
+    protected $sprint_artifact_ids      = array();
+    protected $level_one_artifact_ids   = array();
+    protected $level_two_artifact_ids   = array();
+    protected $level_three_artifact_ids = array();
+    protected $level_four_artifact_ids  = array();
+    protected $niveau_1_artifact_ids    = array();
+    protected $niveau_2_artifact_ids    = array();
+    protected $pokemon_artifact_ids     = array();
+
+    protected $load_computed_fields_data = false;
 
     public function __construct() {
         parent::__construct();
@@ -105,18 +123,32 @@ class RestBase extends PHPUnit_Framework_TestCase {
             $this->initTrackerIds();
         }
 
-        $this->project_private_member_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
-        $this->project_private_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
-        $this->project_public_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
-        $this->project_public_member_id  = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
-        $this->project_pbi_id            = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
+        $this->project_private_member_id  = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        $this->project_private_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
+        $this->project_public_id          = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
+        $this->project_public_member_id   = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
+        $this->project_pbi_id             = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
+        $this->project_computed_fields_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_COMPUTED_FIELDS);
+        $this->project_burndown_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_BURNDOWN);
 
         $this->getTrackerIdsForProjectPrivateMember();
-
         $this->getReleaseArtifactIds();
         $this->getEpicArtifactIds();
         $this->getStoryArtifactIds();
         $this->getSprintArtifactIds();
+
+        if ($this->load_computed_fields_data) {
+            $this->getTrackerIdsForComputedFieldsProject();
+            $this->getLevelOneArtifactIds();
+            $this->getLevelTwoArtifactIds();
+            $this->getLevelThreeArtifactIds();
+            $this->getLevelFourArtifactIds();
+
+            $this->getTrackerIdsForBurndownProject();
+            $this->getNiveau1ArtifactIds();
+            $this->getNiveau2ArtifactIds();
+            $this->getPokemonArtifactIds();
+        }
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -265,6 +297,77 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->getArtifactIds(
             $this->sprints_tracker_id,
             $this->sprint_artifact_ids
+        );
+    }
+
+    private function getTrackerIdsForComputedFieldsProject()
+    {
+        $this->level_one_tracker_id   = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_ONE_TRACKER_SHORTNAME];
+        $this->level_two_tracker_id   = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_TWO_TRACKER_SHORTNAME];
+        $this->level_three_tracker_id = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_THREE_TRACKER_SHORTNAME];
+        $this->level_four_tracker_id  = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_FOUR_TRACKER_SHORTNAME];
+    }
+
+    private function getLevelOneArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->level_one_tracker_id,
+            $this->level_one_artifact_ids
+        );
+    }
+
+    private function getLevelTwoArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->level_two_tracker_id,
+            $this->level_two_artifact_ids
+        );
+    }
+
+    private function getLevelThreeArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->level_three_tracker_id,
+            $this->level_three_artifact_ids
+        );
+    }
+
+    private function getLevelFourArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->level_four_tracker_id,
+            $this->level_four_artifact_ids
+        );
+    }
+
+    private function getTrackerIdsForBurndownProject()
+    {
+        $this->niveau_1_tracker_id = $this->tracker_ids[$this->project_burndown_id][REST_TestDataBuilder::NIVEAU_1_TRACKER_SHORTNAME];
+        $this->niveau_2_tracker_id = $this->tracker_ids[$this->project_burndown_id][REST_TestDataBuilder::NIVEAU_2_TRACKER_SHORTNAME];
+        $this->pokemon_tracker_id  = $this->tracker_ids[$this->project_burndown_id][REST_TestDataBuilder::POKEMON_TRACKER_SHORTNAME];
+    }
+
+    private function getNiveau1ArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->niveau_1_tracker_id,
+            $this->niveau_1_artifact_ids
+        );
+    }
+
+    private function getNiveau2ArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->niveau_2_tracker_id,
+            $this->niveau_2_artifact_ids
+        );
+    }
+
+    private function getPokemonArtifactIds()
+    {
+        $this->getArtifactIds(
+            $this->pokemon_tracker_id,
+            $this->pokemon_artifact_ids
         );
     }
 

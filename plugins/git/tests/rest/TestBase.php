@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/GitDataBuilder.php';
-require_once dirname(__FILE__).'/TestBase.php';
+namespace Tuleap\Git\REST;
+
+use GitDataBuilder;
+use RestBase;
+
+class TestBase extends RestBase
+{
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->git_project_id = $this->getProjectId(GitDataBuilder::PROJECT_TEST_GIT_SHORTNAME);
+    }
+}

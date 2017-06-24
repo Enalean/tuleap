@@ -20,16 +20,15 @@
 
 namespace Git;
 
-use GitDataBuilder;
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\Git\REST\TestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
  * @group GitTests
  */
-class GerritTest extends RestBase {
+class GerritTest extends TestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -65,7 +64,7 @@ class GerritTest extends RestBase {
     }
 
     public function testGetServersForProject() {
-        $url = 'gerrit?for_project=' . GitDataBuilder::PROJECT_TEST_GIT_ID;
+        $url = 'gerrit?for_project=' . $this->git_project_id;
         $response  = $this->getResponse($this->client->get($url));
 
         $response_servers = $response->json();

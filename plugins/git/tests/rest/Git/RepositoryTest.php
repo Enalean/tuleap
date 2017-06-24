@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,14 @@ namespace Git;
 
 use GitDataBuilder;
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\Git\REST\TestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
  * @group GitTests
  */
-class RepositoryTest extends RestBase {
+class RepositoryTest extends TestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
