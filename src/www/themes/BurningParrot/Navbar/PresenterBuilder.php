@@ -64,7 +64,7 @@ class PresenterBuilder
                 $this->getGlobalMenuItems($current_user),
                 $this->getGlobalDropdownMenuItems()
             ),
-            new SearchPresenter(),
+            new SearchPresenter($current_user),
             new UserNavPresenter(
                 $this->request,
                 $this->current_user,

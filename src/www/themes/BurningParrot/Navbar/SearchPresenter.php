@@ -20,14 +20,21 @@
 
 namespace Tuleap\Theme\BurningParrot\Navbar;
 
+use PFUser;
+
 class SearchPresenter
 {
     /** @var string */
     public $placeholder;
     public $search_label;
 
-    public function __construct()
+    /** @var boolean */
+    public $is_user_allowed_to_search;
+
+    public function __construct(PFUser $current_user)
     {
+        $this->is_user_allowed_to_search = $current_user->isActive();
+
         $this->placeholder  = $GLOBALS['Language']->getText('include_menu', 'search');
         $this->search_label = $GLOBALS['Language']->getText('include_menu', 'search');
     }
