@@ -172,7 +172,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         }
     }
 
-    private function getProjectId($project_short_name)
+    protected function getProjectId($project_short_name)
     {
         return $this->project_ids[$project_short_name];
     }
