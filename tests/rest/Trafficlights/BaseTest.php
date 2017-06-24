@@ -44,7 +44,7 @@ abstract class BaseTest extends RestBase {
         parent::setUp();
 
         if ($this->project_id === null) {
-            $this->project_id = $this->getProjectId();
+            $this->project_id = $this->getProjectId(TrafficlightsDataBuilder::PROJECT_TEST_MGMT_SHORTNAME);
         }
 
         $campaign_builder = new TrafficlightsCampaignBuilder(
@@ -66,24 +66,5 @@ abstract class BaseTest extends RestBase {
         $this->assertEquals($campaign['label'], 'Tuleap 7.3');
 
         return $campaign;
-    }
-
-    private function getProjectId()
-    {
-        $query = http_build_query(
-            array(
-                'limit' => 1,
-                'query' => json_encode(
-                    array(
-                        'shortname' => TrafficlightsDataBuilder::PROJECT_TEST_MGMT_SHORTNAME
-                    )
-                )
-            )
-        );
-
-        $response = $this->getResponse($this->client->get("projects/?$query"));
-        $project  = $response->json();
-
-        return $project[0]['id'];
     }
 }
