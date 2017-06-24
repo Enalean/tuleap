@@ -131,8 +131,47 @@ class AddWidgetController
             }
             $widgets_category_presenter[] = new WidgetsByCategoryPresenter($category, $widgets_presenter);
         }
+        $this->sortAlphabetically($widgets_category_presenter);
 
         $GLOBALS['Response']->sendJSON(array('widgets_categories' => $widgets_category_presenter));
+    }
+
+    private function sortAlphabetically(array &$widgets_category_presenter)
+    {
+        $this->sortCategoriesAlphabetically($widgets_category_presenter);
+        $this->sortWidgetsAlphabetically($widgets_category_presenter);
+    }
+
+    private function sortCategoriesAlphabetically(array &$widgets_category_presenter)
+    {
+        $general = $GLOBALS['Language']->getText('widget_categ_label', 'general');
+
+        usort(
+            $widgets_category_presenter,
+            function (WidgetsByCategoryPresenter $a, WidgetsByCategoryPresenter $b) use ($general) {
+                if ($a->name === $general) {
+                    return -1;
+                }
+
+                if ($b->name === $general) {
+                    return 1;
+                }
+
+                return strnatcasecmp($a->name, $b->name);
+            }
+        );
+    }
+
+    private function sortWidgetsAlphabetically(array &$widgets_category_presenter)
+    {
+        foreach ($widgets_category_presenter as $category) {
+            usort(
+                $category->widgets,
+                function (WidgetPresenter $a, WidgetPresenter $b) {
+                    return strnatcasecmp($a->name, $b->name);
+                }
+            );
+        }
     }
 
     private function getWidgetsGroupedByCategories($dashboard_type)
