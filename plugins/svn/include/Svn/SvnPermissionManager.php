@@ -80,5 +80,4 @@ class SvnPermissionManager
 
         return false;
     }
-
 }

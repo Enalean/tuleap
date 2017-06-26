@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="tuleap-dev" full-name="Tuleap-dev" description="tuleap-dev" access="public">
+    <long-description></long-description>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="Project administrators">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <services>
+        <service shortname="plugin_svn" enabled="1"/>
+    </services>
+    <svn>
+        <repository name="repo01"/>
+    </svn>
+</project>

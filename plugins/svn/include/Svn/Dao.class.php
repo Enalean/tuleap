@@ -222,4 +222,14 @@ class Dao extends DataAccessObject
 
         return $this->da->commit();
     }
+
+    public function searchByRepositoryId($id)
+    {
+        $id  = $this->da->escapeInt($id);
+        $sql = "SELECT *
+                FROM plugin_svn_repositories
+                WHERE id=$id";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }

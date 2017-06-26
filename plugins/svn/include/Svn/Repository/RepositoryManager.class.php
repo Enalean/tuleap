@@ -135,6 +135,16 @@ class RepositoryManager
         return $this->instantiateFromRow($row, $project);
     }
 
+    public function getRepositoryById($id)
+    {
+        $row = $this->dao->searchByRepositoryId($id);
+        if (!$row) {
+            throw new CannotFindRepositoryException();
+        }
+
+        return $this->instantiateFromRowWithoutProject($row);
+    }
+
     /**
      * @return SystemEvent or null
      */
@@ -255,7 +265,7 @@ class RepositoryManager
     /**
      * @return Repository
      */
-    public function instantiateFromRow(array $row, Project $project)
+    private function instantiateFromRow(array $row, Project $project)
     {
         return new Repository(
             $row['id'],
@@ -269,17 +279,11 @@ class RepositoryManager
     /**
      * @return Repository
      */
-    public function instantiateFromRowWithoutProject(array $row)
+    private function instantiateFromRowWithoutProject(array $row)
     {
-        $project = ProjectManager::instance()->getProject($row['project_id']);
+        $project = $this->project_manager->getProject($row['project_id']);
 
-        return new Repository(
-            $row['id'],
-            $row['name'],
-            $row['backup_path'],
-            $row['repository_deletion_date'],
-            $project
-        );
+        return $this->instantiateFromRow($row, $project);
     }
 
     public function getHookConfig(Repository $repository) {
