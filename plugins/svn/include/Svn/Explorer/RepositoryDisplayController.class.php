@@ -63,7 +63,7 @@ class RepositoryDisplayController
     public function displayRepository(ServiceSvn $service, HTTPRequest $request)
     {
         try {
-            $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+            $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
             $has_plugin_intro  = false;
             $plugin_intro_info = '';

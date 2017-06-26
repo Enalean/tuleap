@@ -89,7 +89,7 @@ class AdminController
     }
 
     public function displayMailNotification(ServiceSvn $service, HTTPRequest $request) {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $token = $this->generateToken($request->getProject(), $repository);
 
@@ -114,7 +114,7 @@ class AdminController
     }
 
     public function saveMailHeader(HTTPRequest $request) {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $token = $this->generateToken($request->getProject(), $repository);
         $token->check();
@@ -142,7 +142,7 @@ class AdminController
 
     public function saveMailingList(HTTPRequest $request)
     {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $token = $this->generateToken($request->getProject(), $repository);
         $token->check();
@@ -305,7 +305,7 @@ class AdminController
     }
 
     public function deleteMailingList(HTTPRequest $request) {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $token = $this->generateToken($request->getProject(), $repository);
         $token->check();
@@ -343,7 +343,7 @@ class AdminController
     }
 
     public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request) {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $hook_config = $this->repository_manager->getHookConfig($repository);
 
 
@@ -367,7 +367,7 @@ class AdminController
 
     public function displayRepositoryDelete(ServiceSvn $service, HTTPRequest $request)
     {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $title      = $GLOBALS['Language']->getText('global', 'Administration');
 
         $token = $this->generateTokenDeletion($request->getProject(), $repository);
@@ -396,7 +396,7 @@ class AdminController
             return false;
         }
 
-        $repository = $this->repository_manager->getById($repository_id, $project);
+        $repository = $this->repository_manager->getByIdAndProject($repository_id, $project);
         if ($repository !== null) {
             $token = $this->generateTokenDeletion($project, $repository);
             $token->check();

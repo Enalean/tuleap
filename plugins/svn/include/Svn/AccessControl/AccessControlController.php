@@ -61,7 +61,7 @@ class AccessControlController {
     }
 
     public function displayAuthFile(ServiceSvn $service, HTTPRequest $request) {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $versions = array();
         foreach ($this->access_file_factory->getByRepository($repository) as $historised_accessfile) {
@@ -103,7 +103,7 @@ class AccessControlController {
 
     public function displayArchivedVersion(HTTPRequest $request) {
         $id         = $request->get('accessfile_history_id');
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $access_file = $this->access_file_factory->getById($id, $repository);
 
@@ -111,7 +111,7 @@ class AccessControlController {
     }
 
     public function saveAuthFile(ServiceSvn $service, HTTPRequest $request){
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $this->getToken($repository)->check();
 
         try {

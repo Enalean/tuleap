@@ -126,7 +126,7 @@ class RepositoryManager
         }
     }
 
-    public function getById($id_repository, Project $project) {
+    public function getByIdAndProject($id_repository, Project $project) {
         $row = $this->dao->searchByRepositoryIdAndProjectId($id_repository, $project);
         if (! $row) {
             throw new CannotFindRepositoryException();

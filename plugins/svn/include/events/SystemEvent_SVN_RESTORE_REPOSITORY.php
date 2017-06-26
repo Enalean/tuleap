@@ -87,7 +87,7 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent
     protected function getRepository(Project $project, $repository_id)
     {
         $repository_manager = $this->getRepositoryManager();
-        return $repository_manager->getById($repository_id, $project);
+        return $repository_manager->getByIdAndProject($repository_id, $project);
     }
 
     protected function getProject($project_id)

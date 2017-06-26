@@ -52,7 +52,7 @@ class ImmutableTagController {
     }
 
     public function displayImmutableTag(ServiceSvn $service, HTTPRequest $request) {
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
@@ -76,7 +76,7 @@ class ImmutableTagController {
     }
 
     public function saveImmutableTag(ServiceSvn $service,HTTPRequest $request) {
-       $repository = $this->repository_manager->getById($request->get('repo_id'), $request->getProject());
+       $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $request->valid(new Valid_String('post_changes'));
         $request->valid(new Valid_String('SUBMIT'));

@@ -162,7 +162,7 @@ class ViewVCProxy
         }
 
         $project    = $this->project_manager->getProject($request->get('group_id'));
-        $repository = $this->repository_manager->getById($request->get('repo_id'), $project);
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $project);
 
         $this->access_history_saver->saveAccess($user, $repository);
 
