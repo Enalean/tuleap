@@ -1189,4 +1189,25 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $this->update($sql);
     }
 
+    public function searchLatestUpdatedArtifactsInProject($project_id, $nb_max)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $nb_max     = $this->da->escapeInt($nb_max);
+
+        $sql = "SELECT artifact.*, changeset.submitted_on AS last_update_date
+                FROM tracker_artifact AS artifact
+                    INNER JOIN tracker ON(
+                        artifact.tracker_id = tracker.id
+                        AND tracker.group_id = $project_id
+                        AND tracker.deletion_date IS NULL
+                    )
+                    INNER JOIN tracker_changeset AS changeset ON(
+                        artifact.last_changeset_id = changeset.id
+                    )
+                ORDER BY last_update_date DESC
+                LIMIT $nb_max";
+
+        return $this->retrieve($sql);
+    }
+
 }

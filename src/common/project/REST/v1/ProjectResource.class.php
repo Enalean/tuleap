@@ -19,7 +19,10 @@
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Project\HeartbeatsEntry;
+use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
+use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
@@ -237,8 +240,7 @@ class ProjectResource extends AuthenticatedResource {
         );
 
         $resources_injector = new ResourcesInjector();
-        $resources_injector->declareProjectUserGroupResource($resources, $project);
-        $resources_injector->declarePhpWikiResource($resources, $project);
+        $resources_injector->declareProjectResources($resources, $project);
 
         $informations = array();
         EventManager::instance()->processEvent(
@@ -287,6 +289,43 @@ class ProjectResource extends AuthenticatedResource {
      */
     public function optionsPlannings($id) {
         $this->checkAgileEndpointsAvailable();
+        $this->sendAllowHeadersForProject();
+    }
+
+    /**
+     * Get heartbeats
+     *
+     * Get the latest activities of a given project
+     *
+     * @url GET {id}/heartbeats
+     * @access hybrid
+     *
+     * @param int $id     Id of the project
+     *
+     * @return HeartbeatsRepresentation {@type HeartbeatsRepresentation}
+     */
+    public function getHeartbeats($id) {
+        $this->checkAccess();
+
+        $project = $this->getProjectForUser($id);
+        $user    = $this->user_manager->getCurrentUser();
+        $event   = new HeartbeatsEntryCollection($project, $user);
+        EventManager::instance()->processEvent($event);
+
+        $heartbeats = new HeartbeatsRepresentation();
+        $heartbeats->build($event->getEntries());
+
+        $this->sendAllowHeadersForProject();
+
+        return $heartbeats;
+    }
+
+    /**
+     * @url OPTIONS {id}/heartbeats
+     *
+     * @param int $id Id of the project
+     */
+    public function optionsHeartbeats($id) {
         $this->sendAllowHeadersForProject();
     }
 

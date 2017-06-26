@@ -21,6 +21,7 @@ namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
 use Tuleap\JWT\REST\JWTRepresentation;
+use Tuleap\Project\REST\HeartbeatsRepresentation;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
@@ -47,14 +48,28 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\SystemEvent\\REST\\v1\\SystemEventResource',  SystemEventRepresentation::ROUTE);
     }
 
-    public function declareProjectUserGroupResource(array &$resources, Project $project) {
+    public function declareProjectResources(array &$resources, Project $project)
+    {
+        $this->declareProjectUserGroupResource($resources, $project);
+        $this->declarePhpWikiResource($resources, $project);
+        $this->declareHeartbeatResource($resources, $project);
+    }
+
+    private function declareHeartbeatResource(array &$resources, Project $project) {
+        $resource_reference = new ProjectResourceReference();
+        $resource_reference->build($project, 'heartbeats');
+
+        $resources[] = $resource_reference;
+    }
+
+    private function declareProjectUserGroupResource(array &$resources, Project $project) {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, UserGroupRepresentation::ROUTE);
 
         $resources[] = $resource_reference;
     }
 
-    public function declarePhpWikiResource(array &$resources, Project $project) {
+    private function declarePhpWikiResource(array &$resources, Project $project) {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, PhpWikiPageRepresentation::ROUTE);
 
