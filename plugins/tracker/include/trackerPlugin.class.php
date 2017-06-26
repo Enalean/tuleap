@@ -21,7 +21,9 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Project\Admin\TemplatePresenter;
+use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
@@ -160,6 +162,8 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
+
+        $this->addHook(HeartbeatsEntryCollection::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1432,5 +1436,15 @@ class trackerPlugin extends Plugin {
                 $params['glyph'] = new \Tuleap\Glyph\Glyph($svg_content);
             }
         }
+    }
+
+    public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)
+    {
+        $collector = new LatestHeartbeatsCollector(
+            new Tracker_ArtifactDao(),
+            $this->getArtifactFactory(),
+            new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
+        );
+        $collector->collect($collection);
     }
 }
