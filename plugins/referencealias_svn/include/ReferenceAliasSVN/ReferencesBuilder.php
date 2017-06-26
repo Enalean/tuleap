@@ -126,7 +126,7 @@ class ReferencesBuilder
 
         try {
             $project    = $this->project_manager->getValidProject($row["project_id"]);
-            $repository = $this->repository_manager->getById($row["repository_id"], $project);
+            $repository = $this->repository_manager->getByIdAndProject($row["repository_id"], $project);
 
             return new Reference($project, $repository, $keyword, $row["revision_id"]);
         } catch (Project_NotFoundException $exception) {

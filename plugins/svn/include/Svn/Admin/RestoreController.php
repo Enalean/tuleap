@@ -46,7 +46,7 @@ class RestoreController
             return false;
         }
 
-        $repository = $this->repository_manager->getById($repository_id, $project);
+        $repository = $this->repository_manager->getByIdAndProject($repository_id, $project);
         if ($repository !== null) {
             $this->repository_manager->queueRepositoryRestore($repository, SystemEventManager::instance());
         }
