@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="frs-test" full-name="Test FRS" description="Test FRS" access="public">
+  <long-description></long-description>
+  <services>
+    <service shortname="file" enabled="true"/>
+  </services>
+  <ugroups>
+    <ugroup name="FRS_Admin" description="">
+      <members>
+          <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <frs>
+      <admin-access>
+          <ugroup>FRS_Admin</ugroup>
+      </admin-access>
+      <package id="12" name="package1" rank="1" hidden="false">
+          <read-access>
+            <ugroup>project_members</ugroup>
+          </read-access>
+          <release id="30" name="release1" time="2015-12-03T14:55:00" preformatted="false">
+              <notes>Some notes</notes>
+              <changes>Some changes</changes>
+              <user format="username">rest_api_tester_1</user>
+              <read-access>
+                <ugroup>project_members</ugroup>
+              </read-access>
+          </release>
+      </package>
+  </frs>
+</project>

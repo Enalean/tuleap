@@ -52,6 +52,66 @@ class PackageResource extends AuthenticatedResource
     }
 
     /**
+     * Create a package
+     *
+     * Create a package in a given project. User must be file administrator to be able to create the package.
+     *
+     * The package will be active, and will be placed at the beginning of existing ones.
+     *
+     * @url POST
+     * @access hybrid
+     * @status 201
+     *
+     * @param int    $project_id The id of the project where we should create the package {@from body}
+     * @param string $label      Label of the package {@from body}
+     *
+     * @return \Tuleap\FRS\REST\v1\PackageRepresentation
+     * @throws 400 BadRequest Given project does not exist
+     * @throws 403 Forbidden User doesn't have permission to create a package
+     * @throws 409 Conflict Package with the same label already exists in this project
+     * @throws 500 Error Unable to create the package
+     */
+    public function post($project_id, $label)
+    {
+        $project = $this->getProject($project_id);
+
+        if (! $this->package_factory->userCanCreate($project->getID())) {
+            throw new RestException(403, "User doesn't have permission to create a package");
+        }
+
+        if ($this->package_factory->isPackageNameExist($label, $project->getID())) {
+            throw new RestException(409, "Package with the same label already exists in this project");
+        }
+
+        $package_array = array(
+            'group_id'        => $project->getID(),
+            'name'            => $label,
+            'status_id'       => \FRSPackage::STATUS_ACTIVE,
+            'rank'            => 'beginning',
+            'approve_license' => 1
+        );
+        $new_package_id = $this->package_factory->create($package_array);
+        if (! $new_package_id) {
+            throw new RestException(500, "Unable to create the package");
+        }
+
+        $this->sendOptionsHeaders();
+
+        return $this->getPackageRepresentation(
+            $this->getPackage($new_package_id),
+            $project
+        );
+    }
+
+    /**
+     * @url OPTION
+     */
+    public function options()
+    {
+        $this->sendOptionsHeaders();
+    }
+
+    /**
      * Get FRS package
      *
      * @url GET {id}
@@ -64,14 +124,11 @@ class PackageResource extends AuthenticatedResource
     public function getId($id)
     {
         $package = $this->getPackage($id);
-
-        $representation = new PackageRepresentation();
-        $representation->build($package, $this->project_manager);
-        $representation->setProject($this->project_manager->getProject($package->getGroupID()));
+        $project = $this->project_manager->getProject($package->getGroupID());
 
         $this->sendOptionsHeadersForGetId();
 
-        return $representation;
+        return $this->getPackageRepresentation($package, $project);
     }
 
     /**
@@ -171,5 +228,40 @@ class PackageResource extends AuthenticatedResource
     private function sendPaginationHeaders($limit, $offset, $size)
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
+    }
+
+    /**
+     * @param $project_id
+     *
+     * @return \Project
+     * @throws RestException
+     */
+    private function getProject($project_id)
+    {
+        $project = $this->project_manager->getProject($project_id);
+        if ($project->isError() || ! $project->isActive()) {
+            throw new RestException(400, "Given project does not exist");
+        }
+
+        return $project;
+    }
+
+    /**
+     * @param $package
+     * @param $project
+     * @return PackageRepresentation
+     */
+    private function getPackageRepresentation($package, $project)
+    {
+        $representation = new PackageRepresentation();
+        $representation->build($package);
+        $representation->setProject($project);
+
+        return $representation;
+    }
+
+    private function sendOptionsHeaders()
+    {
+        Header::allowOptionsPost();
     }
 }
