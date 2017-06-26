@@ -227,7 +227,6 @@ include_project_home	supp_manager	Suivi de demandes de support
 include_project_home	open_requ	<B>$1</B> demandes ouvertes
 include_project_home	tech_supp_manager	Suivi de demandes de support
 include_project_home	doc	Documentation
-include_project_home	doc_man	Gestion de documents&nbsp;: documents du projet
 include_project_home	patch_manager	Gestionnaire de correction
 include_project_home	open_patches	<B>$1</B> corrections ouvertes
 include_project_home	mail_lists	Listes de distribution

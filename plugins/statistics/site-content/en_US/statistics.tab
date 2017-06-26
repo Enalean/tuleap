@@ -139,7 +139,6 @@ plugin_statistics	forum_type	Messages in forums
 plugin_statistics	filedl_type	Files downloaded
 plugin_statistics	file_type	Files released
 plugin_statistics	groups_type	Project created
-plugin_statistics	docdl_type	Legacy document viewed
 plugin_statistics	wikidl_type	Wiki pages viewed
 plugin_statistics	oartifact_type	Opened Artifacts (V3)
 plugin_statistics	cartifact_type	Closed (or wished end date) Artifacts (V3)

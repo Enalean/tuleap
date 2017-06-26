@@ -200,7 +200,6 @@ class SearchFieldsPresenterBuilder
             'filedl'    => $GLOBALS['Language']->getText('plugin_statistics', 'filedl_type'),
             'file'      => $GLOBALS['Language']->getText('plugin_statistics', 'file_type'),
             'groups'    => $GLOBALS['Language']->getText('plugin_statistics', 'groups_type'),
-            'docdl'     => $GLOBALS['Language']->getText('plugin_statistics', 'docdl_type'),
             'wikidl'    => $GLOBALS['Language']->getText('plugin_statistics', 'wikidl_type'),
             'oartifact' => $GLOBALS['Language']->getText('plugin_statistics', 'oartifact_type'),
             'cartifact' => $GLOBALS['Language']->getText('plugin_statistics', 'cartifact_type'),

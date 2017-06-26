@@ -385,38 +385,6 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 
 }
 
-function doc_logs_extract($project, $span, $who) {
-
-    $sql  = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, doc_data.title AS title "
-	    ."FROM doc_log AS log, user, doc_data, doc_groups "
-	    ."WHERE ".logs_cond($project, $span, $who)
-	    ."AND doc_groups.group_id=".$project->getGroupId()." "
-	    ."AND doc_groups.doc_group = doc_data.doc_group "
-	    ."AND doc_data.docid = log.docid "
-	    ."ORDER BY time DESC";
-	    
-    return $sql;
-
-}
-
-/**
- * Display Document pages access log
- */
-function doc_logs_daily($project, $span = 7, $who="allusers") {
-  
-	// check first if service is used by this project
-        // if service not used return immediately
-  if(!$project->usesDocman()) {
-    print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','service_disabled',$GLOBALS['Language']->getText('project_stats_source_code_access_utils','docs')).'</U></B>';
-		return;
-	}
-
-  $sql = doc_logs_extract($project,$span,$who);
-  	
-  logs_display($sql, $span, $GLOBALS['Language']->getText('project_stats_source_code_access_utils','docs'),
-	       $GLOBALS['Language']->getText('project_stats_source_code_access_utils','doc_download'));
-}
-
 function wiki_logs_extract($project, $span, $who) {
 
   $sql = "SELECT log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, log.pagename AS title"

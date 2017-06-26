@@ -14,8 +14,6 @@
 //type='NEWS_READ'                 id='forum_id'                   table='news_bytes'
 // type='PACKAGE_READ'             id='package_id'                 table='frs_package'
 // type='RELEASE_READ'             id='release_id'                 table='frs_release'
-// type='DOCUMENT_READ'            id='docid"                      table='doc_data'
-// type='DOCGROUP_READ'            id='doc_group'                  table='doc_groups'
 // type='WIKI_READ'                id='group_id'                   table='wiki_page'
 // type='WIKIPAGE_READ'            id='id'                         table='wiki_page'
 // type='WIKIATTACHMENT_READ'      id='id'                         table='wiki_attachment'
@@ -47,10 +45,6 @@ function permission_get_name($permission_type) {
         return $Language->getText('project_admin_permissions','pack_download');
     } else if ($permission_type=='RELEASE_READ') {
         return $Language->getText('project_admin_permissions','rel_download');
-    } else if ($permission_type=='DOCGROUP_READ') {
-        return $Language->getText('project_admin_permissions','docgroup_access');
-    } else if ($permission_type=='DOCUMENT_READ') {
-        return $Language->getText('project_admin_permissions','doc_access');
     } else if ($permission_type=='WIKI_READ') {
         return $Language->getText('project_admin_permissions','wiki_access');
     } else if ($permission_type=='WIKIPAGE_READ') {
@@ -89,10 +83,6 @@ function permission_get_object_type($permission_type,$object_id) {
         return 'package';
     } else if ($permission_type=='RELEASE_READ') {
         return 'release';
-    } else if ($permission_type=='DOCUMENT_READ') {
-        return 'document';
-    } else if ($permission_type=='DOCGROUP_READ') {
-        return 'docgroup';
     } else if ($permission_type=='WIKI_READ') {
         return 'wiki';
     } else if ($permission_type=='WIKIPAGE_READ') {
@@ -148,10 +138,6 @@ function permission_get_object_name($permission_type,$object_id) {
         if ($release) {
             return $release->getName();
         }
-    } else if ($permission_type=='DOCUMENT_READ') {
-        return util_unconvert_htmlspecialchars(doc_get_title_from_id($object_id));
-    } else if ($permission_type=='DOCGROUP_READ') {
-        return doc_get_docgroupname_from_id($object_id);
     } else if ($permission_type=='WIKI_READ') {
         return $Language->getText('project_admin_permissions','wiki');    
     } else if ($permission_type=='WIKIPAGE_READ') {
@@ -247,10 +233,6 @@ function permission_user_allowed_to_change($project_id, $permission_type, $objec
     if ($permission_type=='NEWS_READ') {
         //special case : if user has write (or admin) perms on News, he can submit news ==> he can submit private news ==> he can define news perms
         return (user_ismember($project_id,'N1') || user_ismember($project_id,'N2'));
-    } else if ($permission_type=='DOCGROUP_READ') {
-        return (user_ismember($project_id,'D2'));
-    } else if ($permission_type=='DOCUMENT_READ') {
-        return (user_ismember($project_id,'D2'));
     } else if ($permission_type=='WIKI_READ') {
         return (user_ismember($project_id,'W2'));
     } else if ($permission_type=='WIKIPAGE_READ') {

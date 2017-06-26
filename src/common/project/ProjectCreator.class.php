@@ -395,7 +395,7 @@ class ProjectCreator {
     // make the current user a project admin as well as admin
     // on all Tuleap services
     private function setProjectAdmin($group_id, PFUser $user) {
-        $result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
+        $result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
             . $user->getId() . ","
             . $group_id . ","
             . "'A'," // admin flags
@@ -404,7 +404,6 @@ class ProjectCreator {
             . "2," // project flags
             . "2," // patch flags
             . "2," // support flags
-            . "2," // doc flags
             . "2," // file_flags
             . "2," // wiki_flags
             . "2," // svn_flags

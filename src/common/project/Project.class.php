@@ -236,10 +236,6 @@ class Project extends Group implements PFO_Project {
         return $this->usesService(Service::SVN);
     }
 
-    function usesDocman() {
-        return $this->usesService(Service::LEGACYDOC);
-    }
-
     function usesFile() {
         return $this->usesService(Service::FILE);
     }

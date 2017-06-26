@@ -122,14 +122,6 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
                         . $GLOBALS['Language']->getText('project_admin_editugroup', 'from_package')
                         . ' <a href="/file/admin/editreleases.php?package_id=' . urlencode($package_id) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
                         . $package_name . '</a> )';
-                } else if ($row['permission_type'] == 'DOCUMENT_READ') {
-                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'document')
-                        . ' <a href="/docman/admin/editdocpermissions.php?docid=' . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
-                        . $objname . '</a>';
-                } else if ($row['permission_type'] == 'DOCGROUP_READ') {
-                    $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'document_group')
-                        . ' <a href="/docman/admin/editdocgrouppermissions.php?doc_group=' . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
-                        . $objname . '</a>';
                 } else if ($row['permission_type'] == 'WIKI_READ') {
                     $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'wiki')
                         . ' <a href="/wiki/admin/index.php?view=wikiPerms&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'

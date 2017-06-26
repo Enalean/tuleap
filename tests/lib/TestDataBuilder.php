@@ -116,10 +116,6 @@ class TestDataBuilder {
     const DYNAMIC_UGROUP_AUTHENTICATED_USERS_LABEL = 'authenticated_users';
     const DYNAMIC_UGROUP_FILE_MANAGER_ID           = 11;
     const DYNAMIC_UGROUP_FILE_MANAGER_LABEL        = 'file_manager_admins';
-    const DYNAMIC_UGROUP_DOCUMENT_TECH_ID          = 12;
-    const DYNAMIC_UGROUP_DOCUMENT_TECH_LABEL       = 'document_techs';
-    const DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID         = 13;
-    const DYNAMIC_UGROUP_DOCUMENT_ADMIN_LABEL      = 'document_admins';
     const DYNAMIC_UGROUP_WIKI_ADMIN_ID             = 14;
     const DYNAMIC_UGROUP_WIKI_ADMIN_LABEL          = 'wiki_admins';
 

@@ -561,22 +561,6 @@ class ProjectTest extends ProjectBase
                 'short_name' => 'file_manager_admins'
             ),
             4 => array(
-                'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_ID,
-                'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_ID,
-                'label' => REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_LABEL,
-                'users_uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_TECH_ID.'/users',
-                'key' => 'ugroup_document_tech_name_key',
-                'short_name' => 'document_techs'
-            ),
-            5 => array(
-                'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID,
-                'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID,
-                'label' => REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_LABEL,
-                'users_uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_DOCUMENT_ADMIN_ID.'/users',
-                'key' => 'ugroup_document_admin_name_key',
-                'short_name' => 'document_admins'
-            ),
-            6 => array(
                 'id' => $this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
                 'uri' => 'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_ID,
                 'label' => REST_TestDataBuilder::DYNAMIC_UGROUP_WIKI_ADMIN_LABEL,
@@ -584,7 +568,7 @@ class ProjectTest extends ProjectBase
                 'key' => 'ugroup_wiki_admin_name_key',
                 'short_name' => 'wiki_admins'
             ),
-            7 => array(
+            5 => array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
@@ -592,7 +576,7 @@ class ProjectTest extends ProjectBase
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
                 'short_name' => 'static_ugroup_1'
             ),
-            8 => array(
+            6 => array(
                 'id' => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID,
                 'label' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
@@ -600,7 +584,7 @@ class ProjectTest extends ProjectBase
                 'key' => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
                 'short_name' => 'static_ugroup_2'
             ),
-            9 => array(
+            7 => array(
                 'id' => (string) REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
                 'uri' => 'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID,
                 'label' => REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_LABEL,

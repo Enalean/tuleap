@@ -90,13 +90,6 @@ if ($atn == 'commit') {
     exit;
 }
 
-// Document link
-if ($atn == 'doc') {
-    $location .= "/docman/display_doc.php?docid=". (int)$aid ."&group_id=". (int)$group_id;
-    header($location);
-    exit;
-}
-
 
 // Should we remove this one?
 if (!$group_id) {

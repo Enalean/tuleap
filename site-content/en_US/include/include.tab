@@ -233,7 +233,6 @@ include_project_home	supp_manager	Support Manager
 include_project_home	open_requ	<B>$1</B> open requests
 include_project_home	tech_supp_manager	Tech Support Manager
 include_project_home	doc	Documentation
-include_project_home	doc_man	Document Manager: Project Documentation
 include_project_home	patch_manager	Patch Manager
 include_project_home	open_patches	<B>$1</B> open patches
 include_project_home	mail_lists	Mailing Lists

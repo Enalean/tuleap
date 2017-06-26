@@ -139,7 +139,6 @@ plugin_statistics	forum_type	Messages de forums
 plugin_statistics	filedl_type	Fichiers téléchargés
 plugin_statistics	file_type	Fichiers publiés
 plugin_statistics	groups_type	Projets créés
-plugin_statistics	docdl_type	Anciens documents vus
 plugin_statistics	wikidl_type	Pages wiki vues
 plugin_statistics	oartifact_type	Artéfacts ouverts (V3)
 plugin_statistics	cartifact_type	Artéfacts fermés (ou date de fin souhaitée) (V3)
