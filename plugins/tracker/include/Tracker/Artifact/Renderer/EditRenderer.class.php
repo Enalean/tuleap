@@ -222,7 +222,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             foreach($parent as $father) {
                 $html .= '<li>';
                 $html .= $this->displayANumberOfBlankTab($tab_level);
-                $html .= '<div class="tree-last">&nbsp;</div> ';
+                $html .= '<div class="tree-last">&nbsp;</div>';
                 $html .= $father->fetchDirectLinkToArtifactWithTitle();
                 $html .= '</li>';
             }
@@ -233,7 +233,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $html .= '<ul class="tracker-hierarchy">';
         $html .= '<li>';
         $html .= $this->displayANumberOfBlankTab($tab_level);
-        $html .= '<div class="tree-last">&nbsp;</div> ';
+        $html .= '<div class="tree-last">&nbsp;</div>';
         $html .= $artifact->getXRefAndTitle();
         $html .= $artifact->fetchActionButtons();
         $html .= '</li>';
@@ -257,7 +257,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             $html .= '<ul class="tracker-hierarchy">';
             $html .= '<li>';
             $html .= $padding_prefix;
-            $html .= '<div class="tree-last">&nbsp;</div> ';
+            $html .= '<div class="tree-last">&nbsp;</div>';
             if ($parents) {
                 $html .= $parent->fetchDirectLinkToArtifactWithTitle();
             } else {
@@ -286,5 +286,3 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $this->tracker->displayFooter($this->layout);
     }
 }
-
-?>
