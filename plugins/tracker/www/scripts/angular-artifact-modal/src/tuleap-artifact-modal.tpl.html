@@ -1,0 +1,601 @@
+<script type="text/ng-template" id="field-fieldset.tpl.html">
+<fieldset ng-class="{ collapsed: field.collapsed }">
+    <legend ng-click="modal.toggleFieldset(field)">{{ field.label }}</legend>
+    <div class="fieldset-content">
+        <ng-include
+            src="field.template_url"
+            ng-repeat="field in field.content"
+        ></ng-include>
+    </div>
+</fieldset>
+</script>
+
+<script type="text/ng-template" id="field-column.tpl.html">
+<ng-include
+    src="field.template_url"
+    ng-repeat="field in field.content"
+></ng-include>
+</script>
+
+<script type="text/ng-template" id="field-linebreak.tpl.html">
+<br/>
+</script>
+
+<script type="text/ng-template" id="field-separator.tpl.html">
+<hr/>
+</script>
+
+<script type="text/ng-template" id="field-staticrichtext.tpl.html">
+<div class="field" ng-bind-html="modal.values[field.field_id].default_value"></div>
+</script>
+
+<script type="text/ng-template" id="field-sb.tpl.html">
+<div class="field">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <select
+        ng-model="modal.values[field.field_id].bind_value_ids[0]"
+        ng-options="field_value.id as field_value.label for field_value in field.filtered_values"
+        ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}"
+        ng-disabled="modal.isDisabled(field)"
+        tuleap-highlight-directive="field.filtered_values"
+    >
+    </select>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-msb.tpl.html">
+<div class="field">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <select
+        multiple
+        ng-model="modal.values[field.field_id].bind_value_ids"
+        ng-options="field_value.id as field_value.label for field_value in field.filtered_values"
+        ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}"
+        ng-disabled="modal.isDisabled(field)"
+        tuleap-highlight-directive="field.filtered_values"
+    >
+    </select>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-rb.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+    <div>
+        <label
+            for="{{ 'rb_' + field.field_id + '_100' }}"
+            class="radio"
+        >
+            <span translate>None</span>
+            <input
+                type="radio"
+                ng-model="modal.values[field.field_id].bind_value_ids[0]"
+                name="{{ field.name }}"
+                value="100"
+                ng-required="{{ field.required }}"
+                ng-disabled="modal.isDisabled(field)"
+                id="{{ 'rb_' + field.field_id + '_100' }}"
+            >
+        </label>
+    </div>
+    <div ng-repeat="field_value in field.values">
+        <label
+            for="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
+            class="radio"
+        >
+            {{ field_value.label }}
+            <input
+                type="radio"
+                ng-model="modal.values[field.field_id].bind_value_ids[0]"
+                name="{{ field.name }}"
+                value="{{ field_value.id }}"
+                ng-required="{{ field.required }}"
+                ng-disabled="modal.isDisabled(field)"
+                id="{{ 'rb_' + field.field_id + '_' + field_value.id }}"
+            >
+        </label>
+    </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-cb.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+    <label
+        ng-repeat="field_value in field.values"
+        for="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
+        class="checkbox"
+    >
+        {{ field_value.label }}
+        <input
+            type="checkbox"
+            ng-model="modal.values[field.field_id].bind_value_ids[$index]"
+            ng-true-value="{{ field_value.id | json }}"
+            ng-false-value="null"
+            ng-disabled="modal.isDisabled(field)"
+            id="{{ 'cb_' + field.field_id + '_' + field_value.id }}"
+        >
+    </label>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-int.tpl.html">
+<div class="field">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <input
+        type="number"
+        size="5"
+        ng-model="modal.values[field.field_id].value"
+        ng-required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
+</div>
+</script>
+
+<script type="text/ng-template" id="field-string.tpl.html">
+<div class="field">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <input
+        type="text"
+        size="50"
+        ng-model="modal.values[field.field_id].value"
+        ng-required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
+</div>
+</script>
+
+<script type="text/ng-template" id="field-float.tpl.html">
+<div class="field">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <input
+        type="number"
+        step="any"
+        size="5"
+        ng-model="modal.values[field.field_id].value"
+        ng-required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
+</div>
+</script>
+
+<script type="text/ng-template" id="field-text.tpl.html">
+<div class="field">
+    <label for="{{ 'tracker_field_format_'+field.field_id }}" class="format-chooser">
+        {{ 'Format:' | translate }}
+        <select
+            ng-model="modal.values[field.field_id].value.format"
+            ng-options="format.id as format.label for format in modal.text_formats"
+            ng-disabled="modal.isDisabled(field)"
+            class="input-small"
+            id="{{ 'tracker_field_format_'+field.field_id }}"
+        ></select>
+    </label>
+    <label
+        for="{{ 'tracker_field_'+field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <div class="clearfix"></div>
+    <textarea
+        ng-if="modal.values[field.field_id].value.format === 'text'"
+        rows="5"
+        cols="70"
+        ng-model="modal.values[field.field_id].value.content"
+        ng-required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        class="modal-textarea"
+        id="{{ 'tracker_field_'+field.field_id }}"
+    ></textarea>
+    <textarea
+        ng-if="modal.values[field.field_id].value.format === 'html'"
+        ng-model="modal.values[field.field_id].value.content"
+        ckeditor="modal.ckeditor_options"
+        required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        id="{{ 'tracker_field_'+field.field_id }}"
+    ></textarea>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-date.tpl.html">
+<div class="field">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <div class="dropdown">
+        <div
+            class="input-append"
+            ng-class="{'dropdown-toggle': ! modal.isDisabled(field)}"
+            data-toggle="{{ modal.getDropdownAttribute(field) }}"
+        >
+            <input
+                ng-if="! field.is_time_displayed"
+                tuleap-artifact-modal-format-date
+                type="text"
+                id="{{ 'tracker_field_' + field.field_id }}"
+                class="form-control"
+                data-ng-model="modal.values[field.field_id].value"
+                placeholder="yyyy-mm-dd"
+                ng-required="{{ field.required }}"
+                ng-disabled="modal.isDisabled(field)"
+            >
+            <input
+                ng-if="field.is_time_displayed"
+                tuleap-artifact-modal-format-datetime
+                type="text"
+                id="{{ 'tracker_field_' + field.field_id }}"
+                class="form-control"
+                data-ng-model="modal.values[field.field_id].value"
+                placeholder="yyyy-mm-dd hh:mm"
+                ng-required="{{ field.required }}"
+                ng-disabled="modal.isDisabled(field)"
+            >
+            <span class="add-on"><i class="icon-calendar"></i></span>
+        </div>
+
+        <ul class="dropdown-menu">
+            <datetimepicker
+                ng-if="! field.is_time_displayed"
+                data-ng-model="modal.values[field.field_id].value"
+                data-datetimepicker-config="{ dropdownSelector: 'tracker_field_{{ field.field_id }}', minView: 'day' }"
+            ></datetimepicker>
+            <datetimepicker
+                ng-if="field.is_time_displayed"
+                data-ng-model="modal.values[field.field_id].value"
+                data-datetimepicker-config="{ dropdownSelector: 'tracker_field_{{ field.field_id }}', minView: 'minute' }"
+            ></datetimepicker>
+        </ul>
+    </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-art_link.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+    <div class="artifact-link-value">
+        <h5 class="artifact_link_subtitle" translate>Artifact links</h5>
+        <input
+            type="text"
+            ng-model="modal.values[field.field_id].unformatted_links"
+            title="{{ 'Enter artifact ids separated by a comma' | translate }}"
+            id="{{ 'tracker_field_' + field.field_id }}"
+            ng-disabled="modal.isDisabled(field)"
+        >
+        <p ng-if="modal.showParentArtifactChoice()">
+            <label for="{{ 'tracker_field_' + field.field_id + '_parent' }}" translate>Select parent:</label>
+            <select
+                ng-model="modal.values[field.field_id].links[0].id"
+                id="{{ 'tracker_field_' + field.field_id + '_parent' }}"
+                ng-required="{{ field.required }}"
+                ng-disabled="modal.isDisabled(field)"
+            >
+                <option selected="selected" value="" translate>-- Please choose</option>
+                <option ng-repeat="artifact in modal.parent_artifacts" value="{{ artifact.id }}">{{ modal.formatParentArtifactTitle(artifact) }}</option>
+            </select>
+        </p>
+    </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-burndown.tpl.html">
+<div class="field burndown">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <img
+        ng-src="{{ '/plugins/tracker/?formElement='+ field.field_id +'&func=show_burndown&src_aid='+ modal.artifact_id }}"
+        alt="{{ field.label }}"
+    >
+</div>
+</script>
+
+<script type="text/ng-template" id="field-cross.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <span ng-if="field.value.length === 0" class="empty_value" translate>References list is empty.</span>
+    <span ng-repeat="value in field.value">
+        <a class="cross-reference" ng-href="{{ value.url }}">{{ value.ref }}</a><br>
+    </span>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-aid.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <a ng-href="/plugins/tracker/?aid={{ field.value }}">#{{ field.value }}</a>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-atid.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <a ng-href="/plugins/tracker/?aid={{ modal.artifact_id }}">{{ field.value }}</a>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-priority.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <span ng-if="! field.value" class="empty_value" translate>Empty</span>
+    <span>{{ field.value }}</span>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-computed.tpl.html">
+<div
+    class="field computed"
+    tuleap-artifact-modal-computed-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></div>
+</script>
+
+<script type="text/ng-template" id="field-subby.tpl.html">
+<div class="field subby">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <div class="avatar">
+        <img ng-src="{{ field.value.avatar_url }}" alt="avatar">
+    </div>
+    <span ng-bind-html="field.value.link" class="username"></span>
+    <div class="clearfix"></div>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-luby.tpl.html">
+<div class="field subby">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <div class="avatar">
+        <img ng-if="field.value.avatar_url" ng-src="{{ field.value.avatar_url }}" alt="">
+    </div>
+    <span ng-if="field.value.link"   ng-bind-html="field.value.link" class="username"></span>
+    <span ng-if="! field.value.link" ng-bind-html="field.value.label" class="username"></span>
+    <div class="clearfix"></div>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-subon.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <span>{{ field.value | amDateFormat:'YYYY-MM-DD HH:mm' }}</span>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-lud.tpl.html">
+<div class="field">
+    <label class="tracker_formelement_label">{{ field.label }}</label>
+    <span>{{ field.value | amDateFormat:'YYYY-MM-DD HH:mm' }}</span>
+</div>
+</script>
+
+<script type="text/ng-template" id="field-file.tpl.html">
+<div
+    class="field"
+    tuleap-artifact-modal-file-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></div>
+</script>
+
+<script type="text/ng-template" id="field-perm.tpl.html">
+<div
+    class="field"
+    tuleap-artifact-modal-permission-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></div>
+</script>
+
+<script type="text/ng-template" id="field-tbl.tpl.html">
+<div class="field tbl">
+    <label
+        for="{{ 'tracker_field_'+ field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required, loading: field.loading}"
+    >{{ field.label }}</label>
+    <ui-select
+        multiple
+        ng-if="field.bindings.type === 'static'"
+        tagging="modal.newOpenListStaticValue"
+        ng-model="modal.values[field.field_id].value.bind_value_objects"
+        ng-required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        title="{{ field.hint }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
+        <ui-select-match placeholder="{{ field.hint }}">
+            {{ $item.label }}
+        </ui-select-match>
+        <ui-select-choices repeat="value in field.values | filter: {label: $select.search}">
+            <div ng-bind-html="'' + value.label | highlight: $select.search">
+            </div>
+        </ui-select-choices>
+    </ui-select>
+    <ui-select
+        multiple
+        ng-if="field.bindings.type === 'ugroups'"
+        ng-model="modal.values[field.field_id].value.bind_value_objects"
+        ng-required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        title="{{ field.hint }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
+        <ui-select-match placeholder="{{ field.hint }}">
+            {{ $item.label }}
+        </ui-select-match>
+        <ui-select-choices repeat="value in field.values | filter: {label: $select.search}">
+            <div ng-bind-html="'' + value.label | highlight: $select.search">
+            </div>
+        </ui-select-choices>
+    </ui-select>
+    <ui-select
+        multiple
+        ng-if="field.bindings.type === 'users'"
+        tagging="modal.newOpenListUserBindValue"
+        ng-model="modal.values[field.field_id].value.bind_value_objects"
+        ng-required="{{ field.required }}"
+        ng-disabled="modal.isDisabled(field)"
+        title="{{ field.hint }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
+        <ui-select-match placeholder="{{ field.hint }}">
+            <div class="avatar">
+                <img ng-src="{{ $item.avatar_url }}">
+            </div>
+            <span ng-bind-html="$item.display_name" class="username"></span>
+            <div class="clearfix"></div>
+        </ui-select-match>
+        <ui-select-choices
+            repeat="value in field.values"
+            refresh="modal.searchUsers(field, $select.search)"
+            refresh-delay="300"
+        >
+            <div class="avatar">
+                <img ng-src="{{ value.avatar_url }}">
+            </div>
+            <span ng-bind-html="value.display_name | highlight: $select.search" class="username"></span>
+            <div class="clearfix"></div>
+        </ui-select-choices>
+
+    </ui-select>
+</div>
+</script>
+
+<form ng-submit="modal.submit()">
+    <div class="modal-header">
+        <div class="column artifact-column">
+            <h3 ng-if="modal.creation_mode" translate>Create a new {{ modal.title }}</h3>
+            <h3 ng-if="! modal.creation_mode">
+                <span class="artifact-type" ng-class="modal.color">{{ modal.tracker.item_name }} #{{ modal.artifact_id }}</span>
+                <span class="title">{{ modal.title }}</span>
+            </h3>
+        </div>
+        <div class="column followups-column" ng-if="! modal.creation_mode">
+            <h4 class="followups-title">
+                <span translate>Follow-ups</span>
+                <i class="icon-info-sign"
+                    tooltip="{{ 'Only comments are displayed' | translate }}"
+                    tooltip-trigger
+                    tooltip-animation="true"
+                    tooltip-placement="bottom"></i>
+            </h4>
+        </div>
+        <button
+            type="button"
+            class="close"
+            ng-click="modal.cancel()"
+            aria-hidden="true"
+        >
+          ×
+        </button>
+    </div>
+    <div class="modal-body">
+        <div
+            class="column artifact-column"
+        >
+            <div class="alert alert-danger" ng-if="modal.getError().is_error">
+                {{ 'Error:' | translate }} {{ modal.getError().error_message }}
+            </div>
+            <div class="alert alert-info" ng-if="modal.parent" translate>
+                The artifact will be linked to {{ modal.parent.label }}.
+            </div>
+            <ng-include src="field.template_url" ng-repeat="field in modal.ordered_fields"></ng-include>
+        </div>
+        <div
+            class="column followups-column"
+            ng-if="! modal.creation_mode"
+            ng-class="{'invert-order': modal.followups_comments.invert_order === 'desc' }"
+        >
+            <div id="add-followup" ng-if="modal.isFollowupCommentFormDisplayed()">
+                <label for="followup-comment-format" class="format-chooser">
+                    {{ 'Format:' | translate }}
+                    <select
+                        id="followup-comment-format"
+                        ng-model="modal.followup_comment.format"
+                        ng-options="format.id as format.label for format in modal.text_formats"
+                        class="input-small"
+                    ></select>
+                </label>
+                <label
+                    for="followup_comment"
+                    id="followup_comment_label"
+                >{{ 'Comment' | translate }}</label>
+                <div class="clearfix"></div>
+                <textarea
+                    id="followup_comment"
+                    ng-if="modal.followup_comment.format === 'text'"
+                    ng-model="modal.followup_comment.body"
+                    class="modal-textarea"
+                    placeholder="{{ 'Add a new comment' | translate }}"
+                    rows="5"
+                    cols="71"
+                ></textarea>
+                <textarea
+                    id="followup_comment"
+                    ng-if="modal.followup_comment.format === 'html'"
+                    ng-model="modal.followup_comment.body"
+                    ckeditor="modal.ckeditor_options"
+                    placeholder="{{ 'Add a new comment' | translate }}"
+                    rows="5"
+                    cols="71"
+                ></textarea>
+            </div>
+            <ul class="followups-comments">
+                <li ng-repeat="comment in modal.followups_comments.content track by $index">
+                    <div class="followup-comment-header">
+                        <div class="followup-comment-submitted-avatar avatar">
+                            <img ng-src="{{ comment.submitted_by_details.avatar_url }}">
+                        </div>
+
+                        <a ng-if="comment.email" href="mailto:{{comment.email}}" class="followup-comment-submitted-by">{{ comment.email }}</a>
+                        <a ng-if="! comment.email" href="{{ comment.submitted_by_details.user_url }}" class="followup-comment-submitted-by">{{ comment.submitted_by_details.display_name }}</a>
+                        <span class="followup-comment-submitted-on" am-time-ago="comment.submitted_on"></span>
+
+                        <div ng-if="comment.submitted_on !== comment.last_modified_date" class="followup-comment-edited-by">
+                            <span translate>Edited by</span>
+                            <a href="#" class="followup-comment-last-modified-by">{{ comment.last_modified_by.display_name }}</a>
+                            <span class="followup-comment-last-modified-on" am-time-ago="comment.last_modified_date"></span>
+                        </div>
+                    </div>
+                    <div class="followup-comment-content" ng-bind-html="comment.last_comment.post_processed_body"></div>
+                </li>
+                <li ng-if="modal.followups_comments.loading_comments" class="loading-followups"></li>
+                <li ng-if="! modal.followups_comments.loading_comments && modal.followups_comments.content.length === 0" class="empty-followups" translate>No follow-ups</li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div
+            class="disk-usage"
+            ng-class="{ 'empty-disk-usage': modal.is_disk_usage_empty }"
+            tuleap-artifact-modal-quota-display
+            disk-usage-empty="modal.is_disk_usage_empty"
+            ng-if="modal.isThereAtLeastOneFileField()"
+        ></div>
+        <a class="btn btn-large modal-cancel" ng-click="modal.cancel()" translate>Cancel</a>
+        <input type="submit" class="btn btn-large btn-primary modal-submit" value="{{ 'Save changes' | translate }}">
+    </div>
+</form>

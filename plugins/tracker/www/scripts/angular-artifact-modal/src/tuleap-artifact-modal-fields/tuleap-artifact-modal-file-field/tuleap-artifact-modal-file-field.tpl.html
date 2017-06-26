@@ -1,0 +1,73 @@
+<label
+    class="tracker_formelement_label"
+    ng-class="{ required: file_field.field.required }"
+>{{ file_field.field.label }}</label>
+<span ng-if="! file_field.field.file_descriptions" class="empty_value" translate>Empty</span>
+<div
+    ng-repeat="file in file_field.field.file_descriptions track by file.id"
+    class="row-fluid file"
+    ng-class="{ 'marked-for-removal': file.marked_for_removal }"
+>
+    <div class="span3 preview">
+        <div ng-if="! file.display_as_image" class="file-preview">
+            <a href="{{ file.html_url }}" target="_blank"><i class="icon-external-link"></i></a>
+        </div>
+        <div
+            ng-if="file.display_as_image"
+            class="file-preview image"
+            style="background-image: url('{{ file.html_preview_url }}')"
+        >
+            <a href="{{ file.html_url }}" target="_blank"><i class="icon-external-link"></i></a>
+        </div>
+        <div
+            class="toggle-marked-for-removal"
+            ng-click="file_field.toggleMarkedForRemoval(file, $index)"
+        >
+            <i class="icon-remove-sign"></i>
+        </div>
+    </div>
+    <div class="span9 details">
+        <p class="filename">
+            <a href="{{ file.html_url }}" target="_blank">{{ file.name }} <i class="icon-external-link"></i></a>
+        </p>
+        <p class="description">{{ file.description }}</p>
+        <p class="author" translate>By: {{ file.submitted_by }}</p>
+        <p class="size" translate>Size: {{ file.size | byteFmt: 2 }}</p>
+    </div>
+</div>
+<div
+    ng-repeat="file_upload in file_field.value_model.temporary_files"
+    class="file-upload-input"
+>
+    <button
+        type="button"
+        class="reset-upload-input btn btn-small pull-right"
+        ng-click="file_field.resetTemporaryFileInput($index)"
+    >
+        <i class="icon-trash"></i>
+        {{ 'Reset' | translate }}
+    </button>
+    <input
+        type="file"
+        ng-model="file_upload.file"
+        ng-disabled="file_field.isDisabled()"
+        ng-required="{{ file_field.field.required }}"
+        onload="file_field.onFileLoaded"
+        base-sixty-four-input
+    >
+    <input
+        type="text"
+        ng-model="file_upload.description"
+        ng-disabled="file_field.isDisabled()"
+        placeholder="{{ 'File description' | translate }}"
+    >
+</div>
+<button
+    type="button"
+    class="add-upload-input btn btn-small"
+    ng-click="file_field.addTemporaryFileInput()"
+    ng-disabled="file_field.isDisabled()"
+>
+    <i class="icon-plus"></i>
+    {{ 'Add another file' | translate }}
+</button>
