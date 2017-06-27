@@ -1443,7 +1443,8 @@ class trackerPlugin extends Plugin {
         $collector = new LatestHeartbeatsCollector(
             new Tracker_ArtifactDao(),
             $this->getArtifactFactory(),
-            new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
+            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+            $this->getUserManager()
         );
         $collector->collect($collection);
     }

@@ -22,6 +22,7 @@ namespace Tuleap\Project\REST;
 
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 class HeartbeatsEntryRepresentation
 {
@@ -50,6 +51,11 @@ class HeartbeatsEntryRepresentation
      */
     public $icon;
 
+    /**
+     * @var \Tuleap\User\REST\MinimalUserRepresentation The last user who updated or created the item {@type Tuleap\User\REST\MinimalUserRepresentation} {@required false)
+     */
+    public $updated_by = null;
+
     public function build(HeartbeatsEntry $entry)
     {
         $this->updated_at = JsonCast::toDate($entry->getUpdatedAt());
@@ -58,5 +64,11 @@ class HeartbeatsEntryRepresentation
         $this->title      = $entry->getTitle();
         $this->color_name = $entry->getColor();
         $this->icon       = $entry->getIcon();
+
+        $updated_by = $entry->getUpdatedBy();
+        if ($updated_by) {
+            $this->updated_by = new MinimalUserRepresentation();
+            $this->updated_by->build($updated_by);
+        }
     }
 }

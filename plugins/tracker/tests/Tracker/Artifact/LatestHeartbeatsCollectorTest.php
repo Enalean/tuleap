@@ -72,7 +72,12 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
         stub($this->factory)->getInstanceFromRow(array('id' => 2))->returns($artifact2);
         stub($this->factory)->getInstanceFromRow(array('id' => 3))->returns($artifact3);
 
-        $this->collector = new LatestHeartbeatsCollector($this->dao, $this->factory, $glyph_finder);
+        $this->collector = new LatestHeartbeatsCollector(
+            $this->dao,
+            $this->factory,
+            $glyph_finder,
+            mock('UserManager')
+        );
     }
 
     public function itConvertsArtifactsIntoHeartbeats()
