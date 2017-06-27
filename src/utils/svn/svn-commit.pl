@@ -1,21 +1,19 @@
 #!/usr/bin/perl
-#
+# Copyright (c) Enalean, 2017. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
 #
-# This file is a part of Codendi.
-#
-# Codendi is free software; you can redistribute it and/or modify
+# Tuleap is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# Codendi is distributed in the hope that it will be useful,
+# Tuleap is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+# along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 #
 
 #use strict;
@@ -60,8 +58,9 @@ if ( !$from_rev ) {
     $gname =~ s|.*/||; # Remove everything until the last slash
     my $group_id = &set_group_info_from_name($gname);
 
-    my $q_max_rev = "SELECT MAX(revision) AS r FROM svn_commits c WHERE group_id=$group_id";
+    my $q_max_rev = "SELECT MAX(revision) AS r FROM svn_commits c WHERE group_id=?";
     my $c_max_rev = $dbh->prepare($q_max_rev);
+    $c_max_rev->bind_param(1, $group_id, SQL_INTEGER);
     my $r_max_rev = $c_max_rev->execute();
     if ($r_max_rev && ($c_max_rev->rows eq 1)) {
 	my $row = $c_max_rev->fetchrow_hashref;

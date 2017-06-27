@@ -1,28 +1,31 @@
 #
-# Codendi
+# Copyright (c) Enalean, 2017. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# http://www.codendi.com
 #
-# 
+# Tuleap is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Tuleap is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# Purpose:
-#    This Perl include file stores Subversion commit information into the 
-#   Codendi Database
+# You should have received a copy of the GNU General Public License
+# along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 #
 
+use DBI qw(:sql_types);
 
 require $utils_path."/session.pl";
 
 sub db_get_field {
   my ($table, $fieldname, $value, $retfieldname) = @_;
   my ($query, $res);
-  $query = "SELECT $retfieldname  FROM $table WHERE $fieldname='$value'";
+  $query = "SELECT $retfieldname  FROM $table WHERE $fieldname=?";
   $sth = $dbh->prepare($query);
+  $sth->bind_param(1, $value, SQL_VARCHAR);
   $res = $sth->execute();
   if ($sth->rows >= 1) {
     $hash_ref = $sth->fetchrow_hashref;
@@ -38,20 +41,21 @@ sub db_get_index {
   my ($table, $fieldname, $value) = @_;
   my ($query, $res);
   $debug = 0;
-  $query = "SELECT id  FROM $table WHERE $fieldname=\"$value\"";
+  $query = "SELECT id  FROM $table WHERE $fieldname=?";
   if ($debug) {
     print STDERR $query, "\n";
   }
   $sth = $dbh->prepare($query);
+  $sth->bind_param(1, $value, SQL_VARCHAR);
   $res = $sth->execute();
   if ($sth->rows >= 1) {
     $hash_ref = $sth->fetchrow_hashref;
     $res = $hash_ref->{'id'};
   } else {
     ## new repository to create
-    $query = sprintf "INSERT INTO $table (id, $fieldname) VALUES ('', %s)",
-                $dbh->quote($value);
+    $query = "INSERT INTO $table (id, $fieldname) VALUES ('', ?)";
     $sth = $dbh->prepare($query);
+    $sth->bind_param(1, $value, SQL_VARCHAR);
     $res = $sth->execute();
     if (!$res) {
       $res = 0;
@@ -80,11 +84,17 @@ sub db_add_record {
   }
 
   $query = "INSERT INTO svn_checkins (type, commitid, dirid, fileid, addedlines, removedlines)".
-    "VALUES ('$type', '$commit_id','$dir_id','$file_id', '$added', '$removed')";
+    "VALUES (?, ?, ?, ?, ?, ?)";
   if ($debug) {
     print STDERR $query, "\n";
   }
   $sth = $dbh->prepare($query);
+  $sth->bind_param(1, $type, SQL_VARCHAR);
+  $sth->bind_param(2, $commit_id, SQL_INTEGER);
+  $sth->bind_param(3, $dir_id, SQL_INTEGER);
+  $sth->bind_param(4, $file_id, SQL_INTEGER);
+  $sth->bind_param(5, $added, SQL_INTEGER);
+  $sth->bind_param(6, $removed, SQL_INTEGER);
   $res = $sth->execute();
 
   return $res;
@@ -113,11 +123,17 @@ sub db_get_commit {
   $repo_id = db_get_index('svn_repositories','repository', $repo);
 
   $query = "INSERT INTO svn_commits (group_id,repositoryid,revision,date,whoid,description) ".
-    "VALUES ('$group_id','$repo_id','$revision','$date','$uid','$fulldesc')";
+    "VALUES (?, ?, ?, ?, ?, ?)";
   if ($debug) {
     print STDERR $query, "\n";
   }
   $sth = $dbh->prepare($query);
+  $sth->bind_param(1, $group_id, SQL_INTEGER);
+  $sth->bind_param(2, $repo_id, SQL_INTEGER);
+  $sth->bind_param(3, $revision, SQL_INTEGER);
+  $sth->bind_param(4, $date, SQL_INTEGER);
+  $sth->bind_param(5, $uid, SQL_INTEGER);
+  $sth->bind_param(6, $fulldesc, SQL_VARCHAR);
   $res = $sth->execute();
   if (!$res) {
     if ($debug) {

@@ -8,6 +8,9 @@
 #############################
 #
 #############################
+
+use DBI qw(:sql_types);
+
 sub ldap_connect {
     &load_local_config($db_config_file);
 
@@ -139,8 +142,9 @@ sub ldap_connect {
             "SELECT NULL"
           . " FROM groups g JOIN plugin_ldap_svn_repository svnrep USING (group_id)"
           . " WHERE svnrep.ldap_auth = 1"
-          . " AND g.group_id = $group_id";
+          . " AND g.group_id = ?";
         my $c = $dbh->prepare($query);
+        $c->bind_param(1, $group_id, SQL_INTEGER);
         $c->execute();
         return ( $c->rows == 1 );
     }
