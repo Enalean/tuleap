@@ -20,21 +20,28 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
-use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\HookConfig;
 
-class RepositoryRepresentation extends SvnRepositoryRepresentationBase
+class CommitRulesRepresentation
 {
-    public function build(Repository $repository)
-    {
-        $project_representation = new MinimalProjectRepresentation();
-        $project_representation->buildMinimal($repository->getProject());
+    /**
+     * @var Boolean
+     */
+    public $mandatory_reference;
 
-        $this->id      = JsonCast::toInt($repository->getId());
-        $this->project = $project_representation;
-        $this->uri     = self::ROUTE . '/' . $this->id;
-        $this->name    = $repository->getName();
+    /**
+     * @var Boolean
+     */
+    public $allow_commit_message_change;
+
+    public function build(HookConfig $hook_config)
+    {
+        $this->mandatory_reference         = JsonCast::toBoolean(
+            $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)
+        );
+        $this->allow_commit_message_change = JsonCast::toBoolean(
+            $hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
+        );
     }
 }
