@@ -48,8 +48,12 @@ class HeartbeatsEntry
      * @var string
      */
     private $icon;
+    /**
+     * @var PFUser|null
+     */
+    private $updated_by;
 
-    public function __construct($updated_at, $xref, $link, $title, $color, $icon)
+    public function __construct($updated_at, $xref, $link, $title, $color, $icon, PFUser $updated_by = null)
     {
         $this->updated_at = (int)$updated_at;
         $this->xref       = $xref;
@@ -57,6 +61,7 @@ class HeartbeatsEntry
         $this->title      = $title;
         $this->color      = $color;
         $this->icon       = $icon;
+        $this->updated_by = $updated_by;
     }
 
     /**
@@ -105,5 +110,13 @@ class HeartbeatsEntry
     public function getIcon()
     {
         return $this->icon;
+    }
+
+    /**
+     * @return null|PFUser
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updated_by;
     }
 }

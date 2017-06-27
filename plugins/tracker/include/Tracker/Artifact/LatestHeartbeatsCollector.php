@@ -21,11 +21,13 @@
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
+use Tracker_Artifact;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use UserManager;
 
 class LatestHeartbeatsCollector
 {
@@ -41,12 +43,21 @@ class LatestHeartbeatsCollector
      * @var GlyphFinder
      */
     private $glyph_finder;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
-    public function __construct(Tracker_ArtifactDao $dao, Tracker_ArtifactFactory $factory, GlyphFinder $glyph_finder)
-    {
+    public function __construct(
+        Tracker_ArtifactDao $dao,
+        Tracker_ArtifactFactory $factory,
+        GlyphFinder $glyph_finder,
+        UserManager $user_manager
+    ) {
         $this->dao          = $dao;
         $this->factory      = $factory;
         $this->glyph_finder = $glyph_finder;
+        $this->user_manager = $user_manager;
     }
 
     public function collect(HeartbeatsEntryCollection $collection)
@@ -68,9 +79,25 @@ class LatestHeartbeatsCollector
                     $artifact->getUri(),
                     $artifact->getTitle(),
                     $artifact->getTracker()->getColor(),
-                    $this->glyph_finder->get('tuleap-tracker')->getInlineString()
+                    $this->glyph_finder->get('tuleap-tracker')->getInlineString(),
+                    $this->getLastModifiedBy($artifact)
                 )
             );
         }
+    }
+
+    /**
+     * @return null|PFUser
+     */
+    private function getLastModifiedBy(Tracker_Artifact $artifact)
+    {
+        $user = null;
+
+        $last_modified_by_id = $artifact->getLastModifiedBy();
+        if (is_numeric($last_modified_by_id)) {
+            $user = $this->user_manager->getUserById($last_modified_by_id);
+        }
+
+        return $user;
     }
 }
