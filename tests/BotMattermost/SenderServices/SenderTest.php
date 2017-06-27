@@ -47,12 +47,13 @@ class SenderTest extends TuleapTestCase
 
     public function itVerifiedThatPushNotificationForEachChannels()
     {
-        $text = '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}';
-        $bot = mock('Tuleap\\BotMattermost\\Bot\\Bot');
+        $message  = new Message();
+        $bot      = mock('Tuleap\\BotMattermost\\Bot\\Bot');
         $channels = array('channel1', 'channel2');
         stub($bot)->getWebhookUrl()->returns('https:\/\/webhook_url.com');
+        $message->setText('{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}');
 
-        $this->sender->pushNotification($bot, $channels, $text);
+        $this->sender->pushNotification($bot, $message, $channels);
         $this->botMattermost_client->expectCallCount('sendMessage', 2);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,24 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
-use Tuleap\BotMattermost\Bot\Bot;
 
-class EncoderMessage
+class Message
 {
-    /**
-     * @param Bot $bot
-     * @param Message $message
-     * @param string $channel_name
-     * @return String [POST format]
-     */
-    public function generateMessage(Bot $bot, Message $message, $channel_name = null)
-    {
-        $tab = array(
-            "username" => $bot->getName(),
-            "channel"  => strtolower($channel_name),
-            "icon_url" => $bot->getAvatarUrl(),
-            "text"     => $message->getText()
-        );
 
-        return json_encode($tab);
+    private $text = '';
+
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    public function hasText()
+    {
+        return $this->text !== '';
     }
 }

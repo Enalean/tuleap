@@ -39,11 +39,13 @@ class EncoderMessageTest extends TuleapTestCase
 
     public function itVerifiesThatGeneratedMessageReturnsPostFormatForMattermost()
     {
-        $text    = "text";
+        $message = new Message();
         $channel = "channel";
         stub($this->bot)->getName()->returns("toto");
         stub($this->bot)->getAvatarUrl()->returns("https://avatar_url.com");
-        $result = $this->encoder_message->generateMessage($this->bot, $text, $channel);
+        $message->setText("text");
+
+        $result = $this->encoder_message->generateMessage($this->bot, $message, $channel);
         $this->assertEqual(
             $result,
             '{"username":"toto","channel":"channel","icon_url":"https:\/\/avatar_url.com","text":"text"}'

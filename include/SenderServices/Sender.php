@@ -41,33 +41,34 @@ class Sender
         $this->logger          = $logger;
     }
 
-    public function pushNotifications(array $bots, $text)
+    public function pushNotification(Bot $bot, Message $message, array $channels)
     {
-        $channels = array(); // empty channels, send message to the webhook linked channel
-
-        $this->logger->debug('text: '.$text);
-        if (empty($bots)) {
-            $this->logger->warn('no bots found');
-        }
-        foreach ($bots as $bot) {
-            $this->logger->debug('bot: #'.$bot->getId().' '.$bot->getName());
-            $this->pushNotificationsForEachChannels($bot, $channels, $text);
-        }
-    }
-
-    public function pushNotification(Bot $bot, array $channels, $text)
-    {
-        $this->logger->debug('text: '.$text);
+        $this->logger->debug('text: '.$message->getText());
         if (! $bot) {
             $this->logger->warn('no bots found');
         }
         $this->logger->debug('bot: #'.$bot->getId().' '.$bot->getName());
         $this->logger->debug('channels: '.implode(', ', $channels));
 
-        $this->pushNotificationsForEachChannels($bot, $channels, $text);
+        $this->pushNotificationsForEachChannels($bot, $message, $channels);
     }
 
-    public function send($post_string, $url)
+    private function pushNotificationsForEachChannels(Bot $bot, Message $message, array $channels)
+    {
+        if (! empty($channels)) {
+            foreach ($channels as $channel) {
+                $json_message = $this->encoder_message->generateMessage($bot, $message, $channel);
+                $this->logger->debug('channel: '.$channel);
+                $this->send($json_message, $bot->getWebhookUrl());
+            }
+        } else {
+            $json_message = $this->encoder_message->generateMessage($bot, $message);
+            $this->logger->debug('No channel specified');
+            $this->send($json_message, $bot->getWebhookUrl());
+        }
+    }
+
+    private function send($post_string, $url)
     {
         $this->logger->debug('post string: '.$post_string);
         $this->logger->debug('url: '.$url);
@@ -76,21 +77,6 @@ class Sender
             $this->logger->info('message send');
         } catch (Exception $ex) {
             $this->logger->error('send Failed', $ex);
-        }
-    }
-
-    private function pushNotificationsForEachChannels(Bot $bot, array $channels, $text)
-    {
-        if (! empty($channels)) {
-            foreach ($channels as $channel) {
-                $message = $this->encoder_message->generateMessage($bot, $text, $channel);
-                $this->logger->debug('channel: '.$channel);
-                $this->send($message, $bot->getWebhookUrl());
-            }
-        } else {
-            $message = $this->encoder_message->generateMessage($bot, $text);
-            $this->logger->debug('No channel specified');
-            $this->send($message, $bot->getWebhookUrl());
         }
     }
 }
