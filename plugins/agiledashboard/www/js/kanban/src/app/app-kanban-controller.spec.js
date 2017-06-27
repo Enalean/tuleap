@@ -216,13 +216,9 @@ describe('KanbanCtrl - ', function() {
                 expect(column.loading_items).toBeTruthy();
                 expect(column.nb_items_at_kanban_init).toEqual(0);
                 expect(column.fully_loaded).toBeFalsy();
-                expect(column.resize_left).toEqual('');
-                expect(column.resize_top).toEqual('');
-                expect(column.resize_width).toEqual('');
                 expect(column.wip_in_edit).toBeFalsy();
                 expect(column.limit_input).toEqual(7);
                 expect(column.saving_wip).toBeFalsy();
-                expect(column.is_small_width).toBeFalsy();
                 expect(column.is_defered).toBeFalsy();
                 expect(column.original_label).toEqual('palate');
 
@@ -264,13 +260,9 @@ describe('KanbanCtrl - ', function() {
                 expect(column.loading_items).toBeTruthy();
                 expect(column.nb_items_at_kanban_init).toEqual(0);
                 expect(column.fully_loaded).toBeFalsy();
-                expect(column.resize_left).toEqual('');
-                expect(column.resize_top).toEqual('');
-                expect(column.resize_width).toEqual('');
                 expect(column.wip_in_edit).toBeFalsy();
                 expect(column.limit_input).toEqual(21);
                 expect(column.saving_wip).toBeFalsy();
-                expect(column.is_small_width).toBeFalsy();
                 expect(column.is_defered).toBeTruthy();
                 expect(column.original_label).toEqual('undisfranchised');
 

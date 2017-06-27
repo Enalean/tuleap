@@ -1,58 +1,58 @@
-$transition_duration: 50ms;
-$transition_delay: 350ms;
+$transition-duration: 50ms;
+$transition-delay: 350ms;
 
 .kanban-item {
     list-style-type: none;
-    margin: 0 10px 12px;
-    transition: margin-bottom $transition_duration ease-in-out;
+    margin: 10px 10px 12px;
+    transition: margin-bottom $transition-duration ease-in-out;
 
     &.inca_silver .type-border {
-        background-color: $inca_silver;
+        background-color: $tlp-swatch-inca-silver;
     }
     &.chrome_silver .type-border {
-        background-color: $chrome_silver;
+        background-color: $tlp-swatch-chrome-silver;
     }
     &.fiesta_red .type-border {
-        background-color: $fiesta_red;
+        background-color: $tlp-swatch-fiesta-red;
     }
     &.teddy_brown .type-border {
-        background-color: $teddy_brown;
+        background-color: $tlp-swatch-teddy-brown;
     }
     &.clockwork_orange .type-border {
-        background-color: $clockwork_orange;
+        background-color: $tlp-swatch-clockwork-orange;
     }
     &.red_wine .type-border {
-        background-color: $red_wine;
+        background-color: $tlp-swatch-red-wine;
     }
     &.acid_green .type-border {
-        background-color: $acid_green;
+        background-color: $tlp-swatch-acid-green;
     }
     &.army_green .type-border {
-        background-color: $army_green;
+        background-color: $tlp-swatch-army-green;
     }
     &.sherwood_green .type-border {
-        background-color: $sherwood_green;
+        background-color: $tlp-swatch-sherwood-green;
     }
     &.ocean_turquoise .type-border {
-        background-color: $ocean_turquoise;
+        background-color: $tlp-swatch-ocean-turquoise;
     }
     &.daphne_blue .type-border {
-        background-color: $daphne_blue;
+        background-color: $tlp-swatch-daphne-blue;
     }
     &.lake_placid_blue .type-border {
-        background-color: $lake_placid_blue;
+        background-color: $tlp-swatch-lake-placid-blue;
     }
     &.deep_blue .type-border {
-        background-color: $deep_blue;
+        background-color: $tlp-swatch-deep-blue;
     }
     &.plum_crazy .type-border {
-        background-color: $plum_crazy;
+        background-color: $tlp-swatch-plum-crazy;
     }
     &.peggy_pink .type-border {
-        background-color: $peggy_pink;
+        background-color: $tlp-swatch-peggy-pink;
     }
     &.flamingo_pink .type-border {
-        background-color: $flamingo_pink;
+        background-color: $tlp-swatch-flamingo-pink;
     }
 
     $border-radius-size: 3px;
@@ -104,7 +104,7 @@ $transition_delay: 350ms;
 
     .kanban-item-content {
         padding: 5px 5px 5px 12px;
-        transition: padding-bottom $transition_duration ease-in-out;
+        transition: padding-bottom $transition-duration ease-in-out;
 
         > .icon-time {
             position: absolute;
@@ -122,7 +122,7 @@ $transition_delay: 350ms;
 
         > .moves {
             opacity: 0;
-            transition: opacity $transition_duration ease-in-out;
+            transition: opacity $transition-duration ease-in-out;
             position: absolute;
             right: -8px;
             top: 50%;
@@ -136,12 +136,12 @@ $transition_delay: 350ms;
 
                 > .icon-stack-base {
                     color: #999;
-                    transition: color $transition_duration ease-in-out;
+                    transition: color $transition-duration ease-in-out;
                 }
 
                 &:hover > .icon-stack-base {
                     color: rgba(#999, 0.8);
-                    transition: color $transition_duration ease-in-out;
+                    transition: color $transition-duration ease-in-out;
                 }
 
                 &:first-child {
@@ -179,7 +179,7 @@ $transition_delay: 350ms;
             text-align: center;
         }
 
-        @import '../card-fields/card-fields';
+        @import 'card-fields';
     }
 
     .kanban-item-expand-collapse {
@@ -187,7 +187,7 @@ $transition_delay: 350ms;
         background-color: #F5F5F5;
         cursor: pointer;
         box-sizing: border-box;
-        transition: height $transition_duration ease-in-out;
+        transition: height $transition-duration ease-in-out;
         overflow: hidden;
         text-align: center;
         line-height: 0;
@@ -228,7 +228,7 @@ $transition_delay: 350ms;
         &:hover {
             .icon-time {
                 right: 15px;
-                transition: right $transition_duration ease-in-out $transition_delay;
+                transition: right $transition-duration ease-in-out $transition-delay;
             }
         }
 
@@ -238,16 +238,12 @@ $transition_delay: 350ms;
     }
 
     &:first-child {
-        margin-top: $kanban-column-header-height + 10px;
-
         .moves > .icon-stack:first-child {
             visibility: hidden;
         }
     }
 
     &:last-child {
-        margin-bottom: $kanban-column-footer-height + 10px;
-
         .moves > .icon-stack:last-child {
             visibility: hidden;
         }
@@ -265,25 +261,25 @@ $transition_delay: 350ms;
 
     &:hover {
         margin-bottom: 8px;
-        transition: margin-bottom $transition_duration ease-in-out $transition_delay;
+        transition: margin-bottom $transition-duration ease-in-out $transition-delay;
 
         .kanban-item-content {
             padding-bottom: 0;
-            transition: padding-bottom $transition_duration ease-in-out $transition_delay;
+            transition: padding-bottom $transition-duration ease-in-out $transition-delay;
         }
 
         .moves {
             opacity: 1;
-            transition: opacity $transition_duration ease-in-out $transition_delay;
+            transition: opacity $transition-duration ease-in-out $transition-delay;
         }
 
         .kanban-item-expand-collapse {
             height: 9px;
-            transition: height $transition_duration ease-in-out $transition_delay,
-            background-color $transition_duration linear;
+            transition: height $transition-duration ease-in-out $transition-delay,
+            background-color $transition-duration linear;
 
             &:hover {
-                transition: background-color $transition_duration linear;
+                transition: background-color $transition-duration linear;
             }
         }
     }

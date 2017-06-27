@@ -196,7 +196,7 @@ $tlp-form-element-select-small-background-size: 6px;
     height: $tlp-form-element-height;
     padding: 0 15px 0 33px;
     border-radius: $tlp-form-element-height / 2;
-    background: url('images/tlp-search-background.png') no-repeat;
+    background: $tlp-form-element-background url('images/tlp-search-background.png') no-repeat;
     background-position: 13px center;
 
     // scss-lint:disable VendorPrefix
@@ -212,7 +212,7 @@ $tlp-form-element-select-small-background-size: 6px;
         height: $tlp-form-element-small-height;
         padding: 0 10px 0 26px;
         border-radius: $tlp-form-element-small-height / 2;
-        background: url('images/tlp-search-small-background.png') no-repeat;
+        background: $tlp-form-element-background url('images/tlp-search-small-background.png') no-repeat;
         background-position: 10px center;
         font-size: $tlp-form-element-small-font-size;
     }
@@ -252,7 +252,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     height: $tlp-form-element-height;
     padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
-    background: url('images/tlp-select-background.png') no-repeat;
+    background: $tlp-form-element-background url('images/tlp-select-background.png') no-repeat;
     background-position: right $tlp-form-element-padding-horizontal center;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -261,7 +261,7 @@ $tlp-form-element-select-small-background-size: 6px;
     &.tlp-select-small {
         height: $tlp-form-element-small-height;
         padding: 0 ($tlp-form-element-small-padding-horizontal * 2 $tlp-form-element-select-small-background-size) 0 $tlp-form-element-small-padding-horizontal;
-        background: url('images/tlp-select-small-background.png') no-repeat;
+        background: $tlp-form-element-background url('images/tlp-select-small-background.png') no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;
     }
@@ -334,7 +334,7 @@ $tlp-form-element-select-small-background-size: 6px;
         align-items: center;
         height: $tlp-form-element-height;
         padding: 0 ($tlp-form-element-padding-horizontal * 2 + $tlp-form-element-select-background-size) 0 $tlp-form-element-padding-horizontal;
-        background: url('images/tlp-select-background.png') no-repeat;
+        background: $tlp-form-element-background url('images/tlp-select-background.png') no-repeat;
         background-position: right $tlp-form-element-padding-horizontal center;
         cursor: default;
 
@@ -529,7 +529,7 @@ span.select2-container--tlp-select2-small {
     .select2-selection--single {
         height: $tlp-form-element-small-height;
         padding: 0 ($tlp-form-element-small-padding-horizontal * 2 + $tlp-form-element-select-small-background-size) 0 $tlp-form-element-small-padding-horizontal;
-        background: url('images/tlp-select-small-background.png') no-repeat;
+        background: $tlp-form-element-background url('images/tlp-select-small-background.png') no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;
     }

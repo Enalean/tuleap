@@ -1,11 +1,22 @@
-<div data-column-id="{{ column.id }}" class="popover bottom wip-limit-form" ng-class="{'in': column.wip_in_edit}" ng-if="userIsAdmin()">
-    <div class="arrow"></div>
-    <form novalidate ng-submit="setWipLimit(column)" class="popover-content">
-        <span translate>Define max:</span>
-        <div class="input-append">
-            <input id="wip-limit-input-{{ column.id }}" ng-model="column.limit_input" type="number" min="0" ng-value="column.limit" placeholder="∞">
-            <button class="btn btn-primary" type="submit">
-                <i ng-class="{'icon-ok': ! column.saving_wip, 'icon-spinner icon-spin': column.saving_wip}"></i>
+<div id="wip-limit-form-{{ column.id }}"
+     data-column-id="{{ column.id }}"
+     class="bottom wip-limit-form"
+     ng-class="{'in': column.wip_in_edit}"
+     ng-if="userIsAdmin()"
+>
+    <form novalidate ng-submit="setWipLimit(column)" class="wip-limit-form-content">
+        <div class="tlp-form-element tlp-form-element-append">
+            <label class="tlp-label" for="wip-limit-input-{{ column.id }}" translate>Define max:</label>
+            <input type="number"
+                   class="tlp-input tlp-input-small wip-limit-input"
+                   id="wip-limit-input-{{ column.id }}"
+                   ng-model="column.limit_input"
+                   min="0"
+                   ng-value="column.limit"
+                   placeholder="∞"
+            >
+            <button class="tlp-append tlp-append-small tlp-button-primary tlp-button-small" type="submit">
+                <i ng-class="{'fa fa-check': ! column.saving_wip, 'fa fa-spinner': column.saving_wip}"></i>
             </button>
         </div>
     </form>

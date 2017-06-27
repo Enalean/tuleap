@@ -24,6 +24,7 @@ use Admin_Homepage_Dao;
 use Event;
 use EventManager;
 use ForgeConfig;
+use HTTPRequest;
 use PFUser;
 
 class BurningParrotCompatiblePageDetector
@@ -48,7 +49,8 @@ class BurningParrotCompatiblePageDetector
             || $this->isInDashboard()
             || $this->isInHomepage()
             || $this->isInContact()
-            || $this->isInHelp();
+            || $this->isInHelp()
+            || $this->isInKanban();
     }
 
     public function isInSiteAdmin(PFUser $current_user)
@@ -106,5 +108,12 @@ class BurningParrotCompatiblePageDetector
     private function isInProjectDashboard()
     {
         return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+    }
+
+    private function isInKanban()
+    {
+        $request = HTTPRequest::instance();
+
+        return $request->get('action') === 'showKanban';
     }
 }

@@ -31,6 +31,7 @@ module.exports = function(config) {
             'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
             'node_modules/jquery/dist/jquery.js',
             'node_modules/jasmine-fixture/dist/jasmine-fixture.js',
+            'src/app/tlp-mock.spec.js',
             'src/app/app.spec.js'
         ],
 

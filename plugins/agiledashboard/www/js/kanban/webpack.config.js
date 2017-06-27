@@ -32,6 +32,9 @@ module.exports = {
             'cumulative-chart-factory': path.resolve(__dirname, '../cumulative-chart-factory.js'),
         }
     },
+    externals: {
+        tlp: 'tlp'
+    },
     module: {
         rules: [
             {

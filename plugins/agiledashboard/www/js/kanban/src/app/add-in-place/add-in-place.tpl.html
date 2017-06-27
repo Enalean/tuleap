@@ -1,15 +1,16 @@
-<div class="column-content-addinplace"
-    ng-style="{width: column.resize_width}"
+<div class="column-content-addinplace tlp-button-primary"
     ng-class="{open: addInPlace.isOpen()}"
     esc-key="addInPlace.close()"
 >
-    <i class="icon-plus" ng-click="addInPlace.open()"></i>
+    <i class="fa fa-plus" ng-click="addInPlace.open()"></i>
     <form ng-submit="addInPlace.submit()" ng-if="addInPlace.isOpen()">
-        <div class="input-append">
-            <input type="text" ng-model="addInPlace.summary" placeholder="{{ 'Card summary' | translate }}" />
-            <button class="btn" type="submit"><i class="icon-ok"></i></button>
-            <button class="btn" type="button"  ng-click="addInPlace.close()">
-                <i class="icon-remove"></i>
+        <div class="tlp-form-element tlp-form-element-append">
+            <input type="text" class="tlp-input" ng-model="addInPlace.summary" placeholder="{{ 'Card summary' | translate }}">
+            <button type="submit" class="tlp-append tlp-button-secondary">
+                <i class="fa fa-check tlp-button-icon"></i>
+            </button>
+            <button type="button" class="tlp-append tlp-button-secondary" ng-click="addInPlace.close()">
+                <i class="fa fa-times tlp-button-icon"></i>
             </button>
         </div>
     </form>

@@ -33,7 +33,6 @@ import MainCtrl                from './app-main-controller.js';
 import KanbanCtrl              from './app-kanban-controller.js';
 import KanbanService           from './kanban-service.js';
 import RestErrorService        from './rest-error-service.js';
-import ResizeDirective         from './app-resize-directive.js';
 import ColumnCollectionService from './column-collection-service.js';
 import DroppedService          from './dropped-service.js';
 import KanbanFilterValue       from './filter-value.js';
@@ -86,7 +85,6 @@ angular.module('kanban', [
 .service('KanbanColumnService', KanbanColumnService)
 .service('KanbanItemRestService', KanbanItemRestService)
 .service('DiagramRestService', DiagramRestService)
-.directive('resize', ResizeDirective)
 .directive('addInPlace', AddInPlaceDirective)
 .directive('autoFocusInput', AutoFocusInputDirective)
 .directive('escKey', EscKeyDirective)

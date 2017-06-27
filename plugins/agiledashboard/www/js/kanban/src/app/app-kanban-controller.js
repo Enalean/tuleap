@@ -56,11 +56,7 @@ function KanbanCtrl(
         nb_items_at_kanban_init: 0,
         filtered_content       : [],
         loading_items          : true,
-        fully_loaded           : false,
-        resize_left            : '',
-        resize_top             : '',
-        resize_width           : '',
-        is_small_width         : false
+        fully_loaded           : false
     });
     self.archive = _.extend(kanban.archive, {
         id                     : 'archive',
@@ -68,11 +64,7 @@ function KanbanCtrl(
         nb_items_at_kanban_init: 0,
         filtered_content       : [],
         loading_items          : true,
-        fully_loaded           : false,
-        resize_left            : '',
-        resize_top             : '',
-        resize_width           : '',
-        is_small_width         : false
+        fully_loaded           : false
     });
 
     self.user_prefers_collapsed_cards = true;

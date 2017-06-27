@@ -3,11 +3,8 @@ var path        = require('path');
 var gulp        = require('gulp');
 var del         = require('del');
 var gettext     = require('gulp-angular-gettext');
-var sass        = require('gulp-sass');
 var runSequence = require('run-sequence');
 
-var all_scss_glob                           = 'src/app/**/*.scss';
-var main_scss_file                          = 'src/app/kanban.scss';
 var templates_with_translated_strings_glob  = 'src/app/**/*.tpl.html';
 var javascript_with_translated_strings_glob = 'src/app/**/*.js';
 var assets_glob                             = 'src/assets/*';
@@ -28,7 +25,6 @@ gulp.task('clean-assets', function () {
 });
 
 gulp.task('watch', function() {
-    gulp.watch(all_scss_glob, ['sass-dev']);
     gulp.watch([
         templates_with_translated_strings_glob,
         javascript_with_translated_strings_glob
@@ -39,8 +35,7 @@ gulp.task('watch', function() {
 gulp.task('build', ['clean-assets'], function(cb) {
     return runSequence([
         'gettext-extract',
-        'copy-assets',
-        'sass-prod'
+        'copy-assets'
     ], cb);
 });
 
@@ -53,25 +48,6 @@ gulp.task('gettext-extract', function() {
         lineNumbers: false
     }))
     .pipe(gulp.dest('po/'));
-});
-
-gulp.task('sass-dev', function() {
-    return gulp.src(main_scss_file)
-        .pipe(sass({
-            sourceMap     : true,
-            sourceMapEmbed: true,
-            outputStyle   : 'expanded'
-        }))
-        .pipe(gulp.dest(build_dir));
-});
-
-gulp.task('sass-prod', function() {
-    return gulp.src(main_scss_file)
-        .pipe(sass({
-            sourceMap  : false,
-            outputStyle: 'compressed'
-        }))
-        .pipe(gulp.dest(build_dir));
 });
 
 gulp.task('copy-assets', ['clean-assets'], function() {

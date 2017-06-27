@@ -4,30 +4,13 @@
     <div data-nodrag="true" class="moves">
         <span class="icon-stack" title="{{ 'Move to top' | translate }}" aria-label="{{ 'Move to top' | translate }}" role="button" ng-click="kanban.moveKanbanItemToTop(item)">
             <i class="icon-circle icon-stack-base"></i>
-            <i class="icon-chevron-up icon-light"></i>
+            <i class="fa fa-chevron-circle-up icon-light"></i>
         </span>
         <span class="icon-stack" title="{{ 'Move to bottom' | translate }}" aria-label="{{ 'Move to bottom' | translate }}" role="button" ng-click="kanban.moveKanbanItemToBottom(item)">
             <i class="icon-circle icon-stack-base"></i>
-            <i class="icon-chevron-down icon-light"></i>
+            <i class="fa fa-chevron-circle-down icon-light"></i>
         </span>
     </div>
-
-    <i ng-if="column" class="icon-time"
-        tooltip-html-unsafe="{{ kanban.getTimeInfo(column, item) }}"
-        tooltip-trigger
-        tooltip-animation="true"
-        tooltip-popup-delay="750"
-        tooltip-append-to-body="true"
-        tooltip-class="timeinfo"
-        tooltip-placement="top"></i>
-    <i ng-if="item.timeinfo.archive" class="icon-time"
-        tooltip-html-unsafe="{{ kanban.getTimeInfoInArchive(item) }}"
-        tooltip-trigger
-        tooltip-animation="true"
-        tooltip-popup-delay="750"
-        tooltip-append-to-body="true"
-        tooltip-class="timeinfo"
-        tooltip-placement="left"></i>
 
     <a data-nodrag="true"
         href="/plugins/tracker/?aid={{ item.id }}"
@@ -43,6 +26,13 @@
         value="item.label"
         filter-terms="$ctrl.kanban_filter.terms"
     ></div>
+
+    <span class="tlp-tooltip tlp-tooltip-bottom" ng-if="column" data-tlp-tooltip="{{ kanban.getTimeInfo(column, item) }}">
+        <i class="fa fa-clock-o"></i>
+    </span>
+    <span class="tlp-tooltip tlp-tooltip-left" ng-if="item.timeinfo.archive" data-tlp-tooltip="{{ kanban.getTimeInfoInArchive(item) }}">
+        <i class="fa fa-clock-o"></i>
+    </span>
 
     <ul class="extra-card-fields" ng-if="item.card_fields.length > 0">
         <li

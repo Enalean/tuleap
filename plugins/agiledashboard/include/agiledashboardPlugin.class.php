@@ -93,6 +93,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(ITEM_PRIORITY_CHANGE);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -387,13 +389,11 @@ class AgileDashboardPlugin extends Plugin {
 
     public function cssfile($params)
     {
-        if ($this->isAnAgiledashboardRequest()) {
+        if ($this->isAnAgiledashboardRequest() && ! $this->isKanbanURL()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
 
             if ($this->isPlanningV2URL()) {
                 echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/planning-v2/bin/assets/planning-v2.css" />';
-            } elseif ($this->isKanbanURL()) {
-                echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/kanban/dist/kanban.css">'."\n";
             }
         }
     }
@@ -403,17 +403,29 @@ class AgileDashboardPlugin extends Plugin {
         if ($this->isAnAgiledashboardRequest()) {
             if ($this->isPlanningV2URL()) {
                 echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
-            } elseif ($this->isKanbanURL()) {
-                $kanban_include_assets = new IncludeAssets(
-                    ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
-                    $this->getPluginPath() . '/js/kanban/dist'
-                );
-
-                echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
-                echo $kanban_include_assets->getHTMLSnippet('kanban.js') ."\n";
             } else {
                 echo $this->getMinifiedAssetHTML()."\n";
             }
+        }
+    }
+
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if ($this->isKanbanURL()) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if ($this->isKanbanURL()) {
+            $kanban_include_assets = new IncludeAssets(
+                ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
+                $this->getPluginPath() . '/js/kanban/dist'
+            );
+
+            $params['javascript_files'][] = $kanban_include_assets->getFileURL('kanban.js');
         }
     }
 
