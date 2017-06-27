@@ -29,7 +29,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    CKEDITOR.replace('massmail-project-members-body', {
+    var textarea = document.getElementById('massmail-project-members-body');
+    if (! textarea) {
+        return;
+    }
+
+    CKEDITOR.replace(textarea, {
         toolbar: tuleap.ckeditor.toolbar
     });
 });
