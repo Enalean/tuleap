@@ -313,7 +313,7 @@ class ProjectResource extends AuthenticatedResource {
         EventManager::instance()->processEvent($event);
 
         $heartbeats = new HeartbeatsRepresentation();
-        $heartbeats->build($event->getEntries());
+        $heartbeats->build($event);
 
         $this->sendAllowHeadersForProject();
 

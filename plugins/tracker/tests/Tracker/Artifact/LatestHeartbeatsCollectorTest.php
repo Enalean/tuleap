@@ -95,4 +95,12 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
 
         $this->assertCount($collection->getEntries(), 2);
     }
+
+    public function itInformsThatThereIsAtLeastOneActivityThatUserCannotRead()
+    {
+        $collection = new HeartbeatsEntryCollection($this->project, $this->user);
+        $this->collector->collect($collection);
+
+        $this->assertTrue($collection->areThereActivitiesUserCannotSee());
+    }
 }

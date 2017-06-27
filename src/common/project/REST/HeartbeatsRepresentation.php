@@ -21,6 +21,7 @@
 namespace Tuleap\Project\REST;
 
 use Tuleap\Project\HeartbeatsEntry;
+use Tuleap\Project\HeartbeatsEntryCollection;
 
 class HeartbeatsRepresentation
 {
@@ -30,16 +31,23 @@ class HeartbeatsRepresentation
     public $entries;
 
     /**
+     * @var bool
+     */
+    public $are_there_activities_user_cannot_see;
+
+    /**
      * @param HeartbeatsEntry[] $heartbeats
      */
-    public function build(array $heartbeats)
+    public function build(HeartbeatsEntryCollection $heartbeats)
     {
         $this->entries = array();
-        foreach ($heartbeats as $entry) {
+        foreach ($heartbeats->getEntries() as $entry) {
             $representation = new HeartbeatsEntryRepresentation();
             $representation->build($entry);
 
             $this->entries[] = $representation;
         }
+
+        $this->are_there_activities_user_cannot_see = $heartbeats->areThereActivitiesUserCannotSee();
     }
 }
