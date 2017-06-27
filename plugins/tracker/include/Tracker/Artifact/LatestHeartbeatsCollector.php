@@ -75,6 +75,7 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $artifact->getLastUpdateDate(),
+                    $artifact->hasMoreThanOneChangeset(),
                     $artifact->getXRef(),
                     $artifact->getUri(),
                     $artifact->getTitle(),

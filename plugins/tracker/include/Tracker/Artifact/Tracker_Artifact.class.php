@@ -1248,6 +1248,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $c;
     }
 
+    public function hasMoreThanOneChangeset()
+    {
+        return count($this->getChangesets()) > 1;
+    }
+
     /**
      * say if the changeset is the first one for this artifact
      *

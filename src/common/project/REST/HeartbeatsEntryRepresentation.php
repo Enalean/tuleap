@@ -50,20 +50,24 @@ class HeartbeatsEntryRepresentation
      * @var string SVG icon associated with the entry {@type string} {@required true}
      */
     public $icon;
-
     /**
      * @var \Tuleap\User\REST\MinimalUserRepresentation The last user who updated or created the item {@type Tuleap\User\REST\MinimalUserRepresentation} {@required false)
      */
     public $updated_by = null;
+    /**
+     * @var boolean True if the item is updated, false if it is created {@type boolean} {@required false}
+     */
+    public $is_an_update;
 
     public function build(HeartbeatsEntry $entry)
     {
-        $this->updated_at = JsonCast::toDate($entry->getUpdatedAt());
-        $this->xref       = $entry->getXref();
-        $this->html_url   = $entry->getLink();
-        $this->title      = $entry->getTitle();
-        $this->color_name = $entry->getColor();
-        $this->icon       = $entry->getIcon();
+        $this->updated_at   = JsonCast::toDate($entry->getUpdatedAt());
+        $this->xref         = $entry->getXref();
+        $this->html_url     = $entry->getLink();
+        $this->title        = $entry->getTitle();
+        $this->color_name   = $entry->getColor();
+        $this->icon         = $entry->getIcon();
+        $this->is_an_update = JsonCast::toBoolean($entry->isAnUpdate());
 
         $updated_by = $entry->getUpdatedBy();
         if ($updated_by) {
