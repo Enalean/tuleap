@@ -20,6 +20,7 @@
 
 require_once 'constants.php';
 
+use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
@@ -147,6 +148,7 @@ class SvnPlugin extends Plugin
 
         $this->addHook(EVENT::REST_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_RESOURCES);
+        $this->addHook(ProjectGetSvn::NAME);
     }
 
     public function export_xml_project($params)
@@ -807,5 +809,22 @@ class SvnPlugin extends Plugin
     {
         $injector = new \Tuleap\SVN\REST\ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
+    }
+
+    public function rest_project_get_svn(ProjectGetSvn $event) {
+        $event->setPluginActivated();
+
+        $class            = "Tuleap\\SVN\\REST\\".$event->getVersion()."\\ProjectResource";
+        $project_resource = new $class($this->getRepositoryManager());
+        $project          = $event->getProject();
+
+        $representations = $project_resource->getSvn(
+            $project,
+            $event->getLimit(),
+            $event->getOffset()
+        );
+
+        $event->addRepositoriesRepresentations($representations);
+        $event->addTotalRepositories(count($this->getRepositoryManager()->getRepositoriesInProject($project)));
     }
 }

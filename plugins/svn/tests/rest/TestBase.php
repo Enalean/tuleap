@@ -18,5 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/TestBase.php';
+namespace Tuleap\SVN\REST;
+
+use RestBase;
+
+/**
+ * @group SVNTests
+ */
+class TestBase extends RestBase
+{
+    const PROJECT_NAME = 'svn-plugin-test';
+
+    /**
+     * @var int
+     */
+    protected $svn_project_id;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        if (! $this->svn_project_id) {
+            $this->svn_project_id = $this->getProjectId(self::PROJECT_NAME);
+        }
+    }
+}

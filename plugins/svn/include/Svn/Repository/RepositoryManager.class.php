@@ -104,6 +104,19 @@ class RepositoryManager
         return $repositories;
     }
 
+    /**
+     * @return Repository[]
+     */
+    public function getPagninatedRepositories(Project $project, $limit, $offset)
+    {
+        $repositories = array();
+        foreach ($this->dao->searchPaginatedByProject($project, $limit, $offset) as $row) {
+            $repositories[] = $this->instantiateFromRow($row, $project);
+        }
+
+        return $repositories;
+    }
+
     public function getRepositoriesInProjectWithLastCommitInfo(Project $project)
     {
         $repositories = array();

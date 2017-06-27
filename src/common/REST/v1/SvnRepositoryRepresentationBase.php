@@ -21,8 +21,6 @@
 namespace Tuleap\REST\v1;
 
 use Tuleap\Project\REST\MinimalProjectRepresentation;
-use Tuleap\REST\JsonCast;
-use Tuleap\Svn\Repository\Repository;
 
 class SvnRepositoryRepresentationBase
 {
