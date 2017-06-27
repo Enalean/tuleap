@@ -29,6 +29,10 @@ class HeartbeatsEntry
      */
     private $updated_at;
     /**
+     * @var bool
+     */
+    private $is_an_update;
+    /**
      * @var string
      */
     private $xref;
@@ -53,15 +57,16 @@ class HeartbeatsEntry
      */
     private $updated_by;
 
-    public function __construct($updated_at, $xref, $link, $title, $color, $icon, PFUser $updated_by = null)
+    public function __construct($updated_at, $is_an_update, $xref, $link, $title, $color, $icon, PFUser $updated_by = null)
     {
-        $this->updated_at = (int)$updated_at;
-        $this->xref       = $xref;
-        $this->link       = $link;
-        $this->title      = $title;
-        $this->color      = $color;
-        $this->icon       = $icon;
-        $this->updated_by = $updated_by;
+        $this->updated_at   = (int)$updated_at;
+        $this->is_an_update = $is_an_update;
+        $this->xref         = $xref;
+        $this->link         = $link;
+        $this->title        = $title;
+        $this->color        = $color;
+        $this->icon         = $icon;
+        $this->updated_by   = $updated_by;
     }
 
     /**
@@ -118,5 +123,13 @@ class HeartbeatsEntry
     public function getUpdatedBy()
     {
         return $this->updated_by;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnUpdate()
+    {
+        return $this->is_an_update;
     }
 }
