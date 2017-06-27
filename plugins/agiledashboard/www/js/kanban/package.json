@@ -28,6 +28,7 @@
   "devDependencies": {
     "angular-gettext-loader": "^1.0.1",
     "angular-mocks": "1.3.20",
+    "bower": "^1.8.0",
     "concurrently": "^3.4.0",
     "del": "2.2.2",
     "gulp": "3.9.1",
@@ -52,6 +53,7 @@
     "webpack-assets-manifest": "^0.7.0"
   },
   "scripts": {
+    "bower": "bower",
     "build": "gulp build && webpack --optimize-minimize",
     "coverage": "gulp coverage && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "gulp test",

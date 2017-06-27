@@ -31,7 +31,7 @@ docker volume create --name=${BUILD_TAG}tuleap_runtests_rabbitmq-data
 docker volume create --name=${BUILD_TAG}tuleap_runtests_ldap-data
 docker volume create --name=${BUILD_TAG}tuleap_runtests_db-data
 docker volume create --name=${BUILD_TAG}tuleap_runtests_tuleap-data
-$DOCKERCOMPOSE up -d
+$DOCKERCOMPOSE up -d --build
 
 # The whole stack will take more than 15s to be up, no need to waste resources looking at it
 sleep 15;

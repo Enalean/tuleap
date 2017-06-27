@@ -13,6 +13,8 @@ RUN dnf install -y \
     curl \
     npm rubygem-sass \
     git \
+    python \
+    bzip2 \
     && \
     dnf clean all \
     && \
