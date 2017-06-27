@@ -22,6 +22,7 @@ namespace Tuleap\BotMattermostGit\SenderServices;
 
 use GitRepository;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
+use Tuleap\BotMattermost\SenderServices\Message;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\BotMattermostGit\BotMattermostGitNotification\Factory;
 
@@ -48,10 +49,11 @@ class GitNotificationSender
     public function process(array $params)
     {
         try {
+            $message = new Message();
 
-            $text = $this->notification_builder->buildNotificationText($params);
+            $message->setText($this->notification_builder->buildNotificationText($params));
             if ($bot_assignment = $this->bot_git_factory->getBotNotification($this->repository->getId())) {
-                $this->sender->pushNotification($bot_assignment->getBot(), $bot_assignment->getChannels(), $text);
+                $this->sender->pushNotification($bot_assignment->getBot(), $message, $bot_assignment->getChannels());
             }
         } catch (BotNotFoundException $e) {
             // Nothing to do
