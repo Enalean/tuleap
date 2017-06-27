@@ -1,0 +1,160 @@
+#
+# Translators:
+# Benjamin Dauton <benjamin.dauton@enalean.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: AgileDashboard Planning\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2017-02-24 15:56+0100\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
+"fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "(auto-computed)"
+msgstr "(calculé automatiquement)"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "-- Please choose"
+msgstr "-- Sélectionner"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Add a new comment"
+msgstr "Ajouter un nouveau commentaire"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "Add another file"
+msgstr "Ajouter un autre fichier"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Artifact links"
+msgstr "Artefacts référencés par cet artefact"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Auto-compute"
+msgstr "Calcul automatique"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "By: {{ file.submitted_by }}"
+msgstr "Par: {{ file.submitted_by }}"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Cancel"
+msgstr "Annuler"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Comment"
+msgstr "Commentaire"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Computed value: Empty"
+msgstr "Valeur calculée : Aucune"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Computed value: {{ ::computed_field.field.value }}"
+msgstr "Valeur calculée : {{ ::computed_field.field.value }}"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Create a new {{ modal.title }}"
+msgstr "Créer un nouveau {{ modal.title }}"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Edit the field"
+msgstr "Éditer le champ"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Edited by"
+msgstr "Modifié par"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Empty"
+msgstr "Aucun(e)"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Enter artifact ids separated by a comma"
+msgstr "Entrer des ids d'artefacts séparés par une virgule"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Error:"
+msgstr "Erreur :"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "File description"
+msgstr "Description du fichier"
+
+#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+msgid "File upload quota allowed:"
+msgstr "Quota d'envoi de fichiers autorisé :"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Follow-ups"
+msgstr "Commentaires"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Format:"
+msgstr "Format :"
+
+#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+msgid ""
+"Max allowed upload size: {{ quota_display.file_upload_rules.disk_quota | "
+"byteFmt: 2 }}"
+msgstr ""
+"Taille max d'envoi de fichiers : {{ quota_display.file_upload_rules."
+"disk_quota | byteFmt: 2 }}"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "No follow-ups"
+msgstr "Aucun commentaire"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "None"
+msgstr "Aucun"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Only comments are displayed"
+msgstr "Seuls les commentaires sont affichés"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "References list is empty."
+msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "Reset"
+msgstr "Annuler"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-permission-field/tuleap-artifact-modal-permission-field.tpl.html
+msgid "Restrict access to this artifact for the following user groups:"
+msgstr ""
+"Restreindre l'accès à cet artefact pour les groupes d'utilisateurs suivants :"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Save changes"
+msgstr "Enregistrer les changements"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Select parent:"
+msgstr "Sélectionner un parent :"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "Size: {{ file.size | byteFmt: 2 }}"
+msgstr "Taille : {{ file.size | byteFmt: 2 }}"
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "The artifact will be linked to {{ modal.parent.label }}."
+msgstr "L'artifact sera lié à  {{ modal.parent.label }}."
+
+#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+msgid ""
+"{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} of "
+"{{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
+msgstr ""
+"{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} sur "
+"{{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"

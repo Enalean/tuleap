@@ -1,0 +1,139 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "(auto-computed)"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "-- Please choose"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Add a new comment"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "Add another file"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Artifact links"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Auto-compute"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "By: {{ file.submitted_by }}"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Cancel"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Comment"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Computed value: Empty"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Computed value: {{ ::computed_field.field.value }}"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Create a new {{ modal.title }}"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+msgid "Edit the field"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Edited by"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Empty"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Enter artifact ids separated by a comma"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Error:"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "File description"
+msgstr ""
+
+#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+msgid "File upload quota allowed:"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Follow-ups"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Format:"
+msgstr ""
+
+#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+msgid "Max allowed upload size: {{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "No follow-ups"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "None"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Only comments are displayed"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "References list is empty."
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "Reset"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-permission-field/tuleap-artifact-modal-permission-field.tpl.html
+msgid "Restrict access to this artifact for the following user groups:"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Save changes"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "Select parent:"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+msgid "Size: {{ file.size | byteFmt: 2 }}"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
+msgid "The artifact will be linked to {{ modal.parent.label }}."
+msgstr ""
+
+#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+msgid "{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} of {{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
+msgstr ""

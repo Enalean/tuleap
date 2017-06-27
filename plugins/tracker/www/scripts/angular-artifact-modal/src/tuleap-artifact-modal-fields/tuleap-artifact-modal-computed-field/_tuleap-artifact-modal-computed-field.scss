@@ -1,0 +1,61 @@
+&.computed {
+    $field-label-color: #4d4d4d;
+    $field-edit-switch-hover-background-color: #d9edf7;
+    $field-edit-switch-hover-border-color: #8fcedb;
+
+    $readonly-autocompute-color: #aaa;
+    $manual-autocompute-hint-color: #4db3d0;
+
+    > .switch-manual {
+        background: url('/themes/common/images/ic/artifact_editable_field.png') no-repeat 4px center;
+        border: 1px solid transparent;
+        color: $field-label-color;
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 20px;
+        margin-bottom: 3px;
+        padding: 1px 5px 1px 19px;
+        white-space: nowrap;
+    }
+
+    > .switch-manual:hover {
+        background: $field-edit-switch-hover-background-color url('/themes/common/images/ic/artifact_editable_field_active.png') no-repeat 4px center;
+        border: 1px solid $field-edit-switch-hover-border-color;
+        border-radius: 3px;
+    }
+
+    > .tracker_formelement_label.computed-field-manual-label {
+        background: url('/themes/common/images/ic/artifact_editable_field_active.png') no-repeat 4px center;
+        padding: 1px 5px 1px 19px;
+        border: 1px solid transparent;
+    }
+
+    > .computed-field-autocomputed {
+        &:not(.readonly) {
+            margin-left: 19px;
+        }
+
+        > .autocomputed-value {
+            color: $readonly-autocompute-color;
+            font-size: 11px;
+        }
+
+        > .autocomputed-label {
+            color: $readonly-autocompute-color;
+            font-size: 11px;
+            margin: 3px 0 0;
+        }
+    }
+
+    > .computed-field-manual {
+        margin-left: 19px;
+
+        > .autocomputed-value {
+            color: $manual-autocompute-hint-color;
+            display: block;
+            font-size: 12px;
+            margin: 3px 0 0;
+        }
+    }
+}

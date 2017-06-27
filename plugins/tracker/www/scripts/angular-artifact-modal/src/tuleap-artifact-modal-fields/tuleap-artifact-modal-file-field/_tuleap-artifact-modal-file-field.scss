@@ -1,0 +1,123 @@
+> .file {
+    margin: 10px 0 15px 0;
+
+    > .preview {
+        height: 100px;
+        position: relative;
+
+        > .file-preview {
+            height: 100%;
+            width: 100%;
+            background: #FCFCFC no-repeat center center;
+            box-shadow: inset 0 1px 0 #E5E5E5, inset 1px 0 0 #E5E5E5, inset -1px 0 0 #E5E5E5, inset 0 -1px 0 #E5E5E5;
+
+            &:not(.image) {
+                background-image:url('artifact_attachment_default.png');
+            }
+
+            &.image {
+                background-image: none;
+                text-align: center;
+
+                > img {
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+
+            > a {
+                display: block;
+                width: 100%;
+                height: 100%;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                padding: 35px 0 0;
+                text-align: center;
+                font-size: 0;
+
+                &:hover {
+                    transition: all 0.1s linear;
+                    font-size: 2em;
+                    text-decoration: none;
+                    background-color: rgba(217, 237, 247, 0.9);
+                    box-shadow: inset 0 1px 0 #8FCEDB, inset 1px 0 0 #8FCEDB, inset -1px 0 0 #8FCEDB, inset 0 -1px 0 #8FCEDB;
+                }
+            }
+        }
+
+        > .toggle-marked-for-removal {
+            position: absolute;
+            top: -10px;
+            right: -9px;
+            background: #FFFFFF;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+
+            > .icon-remove-sign {
+                color: #777777;
+
+                &:hover {
+                    color: #999999;
+                }
+            }
+        }
+    }
+
+    > .details {
+        padding: 0 0 0 10px;
+
+        p {
+            word-wrap: break-word;
+            font-size: 0.9em;
+
+            &.description {
+                font-style: italic;
+            }
+
+            &.author, &.size {
+                margin: 0;
+                color: #999999;
+                font-size: 0.8em;
+            }
+        }
+    }
+
+    &.marked-for-removal {
+        > .preview {
+            > .file-preview {
+                opacity: 0.3;
+            }
+
+            > .toggle-marked-for-removal > .icon-remove-sign {
+                color: #DA5353;
+
+                &:hover {
+                    color: lighten(#DA5353, 10%);
+                }
+            }
+        }
+
+        > .details {
+            text-decoration: line-through;
+        }
+    }
+}
+
+> .file-upload-input {
+    margin-top: 10px;
+
+    > input[type="file"] {
+        display: block;
+        margin: 0;
+        line-height: normal;
+    }
+
+    > .reset-upload-input {
+        margin-top: 3px;
+    }
+}
+
+> .add-upload-input {
+    margin-top: 10px;
+}
