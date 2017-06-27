@@ -37,6 +37,8 @@ function SocketService(
         listenToExecutionLeft   : listenToExecutionLeft,
         listenToExecutionCreated: listenToExecutionCreated,
         listenToExecutionUpdated: listenToExecutionUpdated,
+        listenToExecutionDeleted: listenToExecutionDeleted,
+        listenToCampaignUpdated : listenToCampaignUpdated,
         refreshToken            : refreshToken
     });
 
@@ -148,7 +150,7 @@ function SocketService(
 
     function listenToExecutionCreated() {
         SocketFactory.on('trafficlights_execution:create', function(data) {
-            ExecutionService.addTestExecutions(data.artifact);
+            ExecutionService.addTestExecution(data.artifact);
         });
     }
 
@@ -160,6 +162,19 @@ function SocketService(
             if (_.has(data, 'previous_user')) {
                 ExecutionService.updatePresenceOnCampaign(data.previous_user);
             }
+        });
+    }
+
+    function listenToExecutionDeleted(callback) {
+        SocketFactory.on('trafficlights_execution:delete', function(data) {
+            ExecutionService.removeTestExecution(data.artifact);
+            callback(data.artifact);
+        });
+    }
+
+    function listenToCampaignUpdated(callback) {
+        SocketFactory.on('trafficlights_campaign:update', function(data) {
+            callback(data.artifact);
         });
     }
 

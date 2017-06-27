@@ -38,6 +38,7 @@ function CampaignEditCtrl(
 
     _.extend($scope, {
         tests_list            : {},
+        search                : '',
         showAddTestModal      : showAddTestModal,
         matchProperties       : matchProperties,
         toggleCategory        : toggleCategory,
@@ -60,7 +61,6 @@ function CampaignEditCtrl(
         SharedPropertiesService.setCampaignId(campaign_id);
 
         $scope.campaign = CampaignService.getCampaign(campaign_id);
-        $scope.search   = '';
 
         $q.all([
             loadDefinitions(project_id),
@@ -90,15 +90,7 @@ function CampaignEditCtrl(
 
     function loadExecutions(campaign_id) {
         return ExecutionService.loadExecutions(campaign_id).then(function() {
-            return _.reduce(
-                _.map(ExecutionService.executions_by_categories_by_campaigns[campaign_id], function(category) {
-                    return category.executions;
-                }),
-                function(result, execution) {
-                    return result.concat(execution);
-                },
-                []
-            );
+            return ExecutionService.executionsForCampaign(campaign_id);
         });
     }
 
@@ -197,19 +189,24 @@ function CampaignEditCtrl(
     }
 
     function addedTests() {
-        return _.flatten(_.map($scope.tests_list, function(category) {
-            return _.filter(category.tests, function(test) {
-                return test.execution === null && test.selected;
-            });
-        }));
+        return _($scope.tests_list)
+            .map(function(category) {
+                return _.select(category.tests, { execution: null, selected: true });
+            })
+            .flatten()
+            .value();
     }
 
     function removedTests() {
-        return _.flatten(_.map($scope.tests_list, function(category) {
-            return _.filter(category.tests, function(test) {
-                return test.execution !== null && !test.selected;
-            });
-        }));
+        return _($scope.tests_list)
+            .map(function(category) {
+                return _(category.tests)
+                    .reject({ execution: null })
+                    .reject({ selected: true })
+                    .value();
+            })
+            .flatten()
+            .value();
     }
 
     function showAddTestModal() {
@@ -237,8 +234,8 @@ function CampaignEditCtrl(
     function editCampaign(campaign) {
         $scope.submitting_changes = true;
 
-        var definition_ids = addedTests().map(function(test) { return test.definition.id; });
-        var execution_ids = removedTests().map(function(test) { return test.execution.id; });
+        var definition_ids = _.map(addedTests(), function(test) { return test.definition.id; });
+        var execution_ids = _.map(removedTests(), function(test) { return test.execution.id; });
 
         var campaign_update   = CampaignService
             .patchCampaign(campaign.id, campaign.label);

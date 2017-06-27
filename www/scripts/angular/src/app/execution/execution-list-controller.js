@@ -74,8 +74,10 @@ function ExecutionListCtrl(
                 editCampaignCallback: function() {
                     return function(campaign) {
                         $scope.campaign = campaign;
-                        ExecutionService.resetExecutions($scope.campaign_id);
-                        loadExecutions();
+                        ExecutionService.updateCampaign(campaign);
+                        ExecutionService
+                            .synchronizeExecutions($scope.campaign_id)
+                            .then(hideDetailsForRemovedTestExecution);
                     };
                 }
             },
@@ -111,7 +113,14 @@ function ExecutionListCtrl(
         SocketService.listenToExecutionViewed();
         SocketService.listenToExecutionCreated();
         SocketService.listenToExecutionUpdated();
+        SocketService.listenToExecutionDeleted(function(execution) {
+            hideDetailsForRemovedTestExecution();
+        });
         SocketService.listenToExecutionLeft();
+        SocketService.listenToCampaignUpdated(function(campaign) {
+            $scope.campaign = campaign;
+            ExecutionService.updateCampaign(campaign);
+        });
     });
 
     initialization();
@@ -145,7 +154,7 @@ function ExecutionListCtrl(
     }
 
     function loadExecutions() {
-        ExecutionService.loadExecutions($scope.campaign_id).then(function() {
+        return ExecutionService.loadExecutions($scope.campaign_id).then(function() {
             ExecutionService.removeAllViewTestExecution();
             if ($scope.execution_id) {
                 updateViewTestExecution($scope.execution_id, '');
@@ -153,9 +162,9 @@ function ExecutionListCtrl(
 
             ExecutionService.executions_loaded = true;
             ExecutionService.displayPresencesForAllExecutions();
-        });
 
-        $scope.categories = ExecutionService.executions_by_categories_by_campaigns[$scope.campaign_id];
+            $scope.categories = ExecutionService.executions_by_categories_by_campaigns[$scope.campaign_id];
+        });
     }
 
     function updateViewTestExecution(current_execution_id, old_execution_id) {
@@ -166,6 +175,17 @@ function ExecutionListCtrl(
             ExecutionService.viewTestExecution(current_execution_id, SharedPropertiesService.getCurrentUser());
             execution_id = current_execution_id;
         });
+    }
+
+    function hideDetailsForRemovedTestExecution() {
+        if ($state.includes('campaigns.executions.detail')) {
+            var campaign_executions = ExecutionService.executionsForCampaign($scope.campaign_id),
+                current_execution_exists = _.any(campaign_executions, checkActiveClassOnExecution);
+
+            if (! current_execution_exists) {
+                $state.go('^');
+            }
+        }
     }
 
     function loading() {

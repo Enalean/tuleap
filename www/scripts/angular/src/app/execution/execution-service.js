@@ -23,13 +23,14 @@ function ExecutionService(
 
     _.extend(self, {
         initialization                    : initialization,
-        resetExecutions                   : resetExecutions,
+        synchronizeExecutions             : synchronizeExecutions,
         loadExecutions                    : loadExecutions,
-        getExecutions                     : getExecutions,
+        getAllRemoteExecutions            : getAllRemoteExecutions,
         getExecutionsByDefinitionId       : getExecutionsByDefinitionId,
         addPresenceCampaign               : addPresenceCampaign,
         updateCampaign                    : updateCampaign,
-        addTestExecutions                 : addTestExecutions,
+        addTestExecution                  : addTestExecution,
+        removeTestExecution               : removeTestExecution,
         updateTestExecution               : updateTestExecution,
         updatePresenceOnCampaign          : updatePresenceOnCampaign,
         removeAllPresencesOnCampaign      : removeAllPresencesOnCampaign,
@@ -37,11 +38,11 @@ function ExecutionService(
         removeAllViewTestExecution        : removeAllViewTestExecution,
         removeViewTestExecution           : removeViewTestExecution,
         removeViewTestExecutionByUUID     : removeViewTestExecutionByUUID,
-        removePresenceCampaign            : removePresenceCampaign,
         displayPresencesForAllExecutions  : displayPresencesForAllExecutions,
         displayPresencesByExecution       : displayPresencesByExecution,
         displayError                      : displayError,
-        showPresencesModal                : showPresencesModal
+        showPresencesModal                : showPresencesModal,
+        executionsForCampaign             : executionsForCampaign
     });
 
     initialization();
@@ -61,13 +62,23 @@ function ExecutionService(
         });
     }
 
-    function resetExecutions(campaign_id) {
-        _.forEach(self.executions_by_categories_by_campaigns[campaign_id], function(category) {
-            _.forEach(category.executions, function(execution) {
-                delete self.executions[execution.id];
+    function synchronizeExecutions(campaign_id) {
+        var remote_executions = [],
+            limit = 50,
+            offset = 0;
+
+        return getAllRemoteExecutions(campaign_id, limit, offset)
+            .then(function(remote_executions) {
+                var executions_to_remove = _.select(self.executions, function(execution) {
+                    return ! _.some(remote_executions, { id: execution.id });
+                });
+                var executions_to_add = _.select(remote_executions, function(execution) {
+                    return ! _.some(self.executions, { id: execution.id });
+                });
+
+                _.forEach(executions_to_remove, removeTestExecution);
+                _.forEach(executions_to_add, addTestExecution);
             });
-        });
-        delete self.executions_by_categories_by_campaigns[campaign_id];
     }
 
     function loadExecutions(campaign_id) {
@@ -79,81 +90,87 @@ function ExecutionService(
             return deferred.promise;
         }
 
-        var limit      = 50,
-            offset     = 0,
-            nb_fetched = 0;
+        var remote_executions = [],
+            limit             = 50,
+            offset            = 0;
 
         self.loading[campaign_id] = true;
         self.executions_by_categories_by_campaigns[campaign_id] = {};
 
-        return getExecutions(campaign_id, limit, offset, nb_fetched);
+        return getAllRemoteExecutions(campaign_id, limit, offset).then(function(executions) {
+            groupExecutionsByCategory(campaign_id, executions);
+            self.loading[campaign_id] = false;
+            return;
+        });
     }
 
-    function getExecutions(campaign_id, limit, offset, nb_fetched) {
+    function getAllRemoteExecutions(campaign_id, limit, offset, remote_executions) {
+        remote_executions = remote_executions || [];
+
         return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
-            var total_executions = data.total;
+          var total_executions = data.total;
 
-            nb_fetched += data.results.length;
-            groupExecutionsByCategory(campaign_id, data.results);
+          $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
+          remote_executions = remote_executions.concat(data.results);
 
-            $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
-
-            offset = offset + limit;
-            if (offset < total_executions) {
-                return getExecutions(campaign_id, limit, offset, nb_fetched);
-            } else {
-                self.loading[campaign_id] = false;
-                return;
-            }
+          offset = offset + limit;
+          if (offset < total_executions) {
+              return getAllRemoteExecutions(campaign_id, limit, offset, remote_executions);
+          } else {
+              return remote_executions;
+          }
         });
     }
 
     function groupExecutionsByCategory(campaign_id, executions) {
-        executions.forEach(function(execution) {
+        var categories = self.executions_by_categories_by_campaigns[campaign_id];
+
+        _.forEach(executions, function(execution) {
             var category = execution.definition.category;
             if (! category) {
                 category = ExecutionConstants.UNCATEGORIZED;
                 execution.definition._uncategorized = category;
             }
 
-            self.executions[execution.id] = execution;
+            if (! _.has(executions, execution.id)) {
+                self.executions[execution.id] = execution;
+            }
 
-            if (typeof self.executions_by_categories_by_campaigns[campaign_id][category] === "undefined") {
-                self.executions_by_categories_by_campaigns[campaign_id][category] = {
+            if (typeof categories[category] === "undefined") {
+                categories[category] = {
                     label     : category,
                     executions: []
                 };
             }
 
-            self.executions_by_categories_by_campaigns[campaign_id][category].executions.push(execution);
+            if (! _.some(categories[category].executions, { id: execution.id })) {
+                categories[category].executions.push(execution);
+            }
         });
 
-        self.categories = self.executions_by_categories_by_campaigns[campaign_id];
+        self.categories = categories;
     }
 
     function getExecutionsByDefinitionId(artifact_id) {
-        var executions = [];
-        _(self.categories).forEach(function(category) {
-            _(category.executions).forEach(function(execution) {
-                if (execution.definition.id === artifact_id) {
-                    executions.push(execution);
-                }
-            });
-        });
+        var executions = _.flatten(_.map(self.categories, 'executions'));
 
-        return executions;
+        return _.filter(executions, { definition: { id: artifact_id } });
     }
 
-    function addTestExecutions(executions) {
-        if (! _.isArray(executions)) {
-            executions = [executions];
-        }
-        groupExecutionsByCategory(self.campaign_id, executions);
+    function addTestExecution(execution) {
+        var executions = [execution];
+        var status = execution.status;
 
-        _.forEach(executions, function(execution) {
-            var status = execution.status;
-            self.campaign['nb_of_' + status]++;
+        groupExecutionsByCategory(self.campaign_id, executions);
+        self.campaign['nb_of_' + status]++;
+    }
+
+    function removeTestExecution(execution_to_remove) {
+        _.forEach(self.executions_by_categories_by_campaigns[self.campaign_id], function(category) {
+            _.remove(category.executions, { id: execution_to_remove.id });
         });
+        delete self.executions[execution_to_remove.id];
+        self.campaign['nb_of_' + execution_to_remove.status]--;
     }
 
     function updateTestExecution(execution_updated) {
@@ -236,35 +253,14 @@ function ExecutionService(
 
     function removeAllViewTestExecution() {
         _.forEach(self.executions, function(execution) {
-            _.remove(self.executions[execution.id].viewed_by);
+            _.remove(execution.viewed_by);
         });
     }
 
     function removeViewTestExecutionByUUID(uuid) {
-        var user = {};
-
         _.forEach(self.executions, function(execution) {
-            _.remove(execution.viewed_by, function(presence) {
-                if (presence.uuid === uuid) {
-                    user = presence;
-                }
-                return presence.uuid === uuid;
-            });
+            _.remove(execution.viewed_by, { uuid: uuid });
         });
-    }
-
-    function removePresenceCampaign(user) {
-        var user_found = _.some(self.executions, function(execution) {
-            return _.some(execution.viewed_by, function(presence) {
-                return presence.id === user.id;
-            });
-        });
-
-        if (! user_found) {
-            _.remove(self.presences_on_campaign, function(presence) {
-                return presence.id === user.id;
-            });
-        }
     }
 
     function removeAllPresencesOnCampaign() {
@@ -308,6 +304,13 @@ function ExecutionService(
                 }
             }
         });
+    }
+
+    function executionsForCampaign(campaign_id) {
+        var executions = _.map(
+            self.executions_by_categories_by_campaigns[campaign_id], 'executions'
+        );
+        return _.flatten(executions);
     }
 }
 

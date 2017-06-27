@@ -1,11 +1,13 @@
 export default CampaignService;
 
 CampaignService.$inject = [
-    'Restangular'
+    'Restangular',
+    'SharedPropertiesService'
 ];
 
 function CampaignService(
-    Restangular
+    Restangular,
+    SharedPropertiesService
 ) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
@@ -69,6 +71,7 @@ function CampaignService(
         return rest.one('trafficlights_campaigns', campaign_id)
             .one('trafficlights_executions')
             .patch({
+                uuid: SharedPropertiesService.getUUID(),
                 definition_ids_to_add: definition_ids,
                 execution_ids_to_remove: execution_ids
             })

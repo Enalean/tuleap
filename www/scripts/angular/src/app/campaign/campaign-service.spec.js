@@ -5,7 +5,8 @@ import 'angular-mocks';
 describe ('CampaignService - ', function () {
     var mockBackend,
         CampaignService,
-        SharedPropertiesService;
+        SharedPropertiesService,
+        userUUID = '123';
 
     beforeEach(function() {
         angular.mock.module(trafficlights_module);
@@ -19,7 +20,7 @@ describe ('CampaignService - ', function () {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        spyOn(SharedPropertiesService, "getUUID").and.returnValue('123');
+        spyOn(SharedPropertiesService, "getUUID").and.returnValue(userUUID);
     });
 
     afterEach (function () {
@@ -134,6 +135,7 @@ describe ('CampaignService - ', function () {
             .expectPATCH(
                 '/api/v1/trafficlights_campaigns/17/trafficlights_executions',
                 {
+                    uuid: userUUID,
                     definition_ids_to_add: definition_ids,
                     execution_ids_to_remove: execution_ids
                 }

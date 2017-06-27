@@ -22,24 +22,6 @@ describe ('ExecutionService - ', function () {
             ExecutionRestService = _ExecutionRestService_;
             ExecutionService     = _ExecutionService_;
         });
-
-        var executions = {
-            results: [
-                {
-                    id: 4,
-                    definition: {
-                        category: "Svn",
-                        description: "test",
-                        id: 3,
-                        summary: "My first test",
-                        uri: "trafficlights_definitions/3"
-                    }
-                }
-            ],
-            total: "1"
-        };
-
-        spyOn(ExecutionService, "getExecutions").and.returnValue(executions);
     });
 
     describe("loadExecutions() -", function() {
@@ -82,7 +64,7 @@ describe ('ExecutionService - ', function () {
                 }
             };
 
-            var executions_by_categories_by_campaings_results = {
+            var executions_by_categories_by_campaigns_results = {
                 6: categories_results
             };
 
@@ -102,17 +84,156 @@ describe ('ExecutionService - ', function () {
                 total: 1
             };
 
+            var get_remote_executions_request = $q.defer();
             var get_executions_request = $q.defer();
+            spyOn(ExecutionService, "getAllRemoteExecutions").and.returnValue(get_remote_executions_request.promise);
             spyOn(ExecutionRestService, 'getRemoteExecutions').and.returnValue(get_executions_request.promise);
 
             var promise = ExecutionService.loadExecutions(campaign.id);
             get_executions_request.resolve(response);
+            get_remote_executions_request.resolve(response.results);
 
             promise.then(function() {
                 expect(ExecutionService.categories).toEqual(categories_results);
                 expect(ExecutionService.executions).toEqual(execution_results);
-                expect(ExecutionService.executions_by_categories_by_campaigns).toEqual(executions_by_categories_by_campaings_results);
+                expect(ExecutionService.executions_by_categories_by_campaigns).toEqual(executions_by_categories_by_campaigns_results);
             });
+
+            $rootScope.$apply();
+        });
+    });
+
+    describe('getAllRemoteExecutions() -', function() {
+        it('Given that I have more remote executions than the given fetching limit, when I get all remote executions, then all the remote executions are fetched', function() {
+            var campaign = {
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                uri: "trafficlights_campaigns/6"
+            };
+
+            var remote_executions_count = 2;
+
+            var response = {
+                results: [
+                    {
+                        id: 4,
+                        definition: {
+                            category: "Svn",
+                            description: "test",
+                            id: 3,
+                            summary: "My first test",
+                            uri: "trafficlights_definitions/3"
+                        }
+                    }
+                ],
+                total: remote_executions_count
+            };
+
+            var get_remote_executions_request = $q.defer();
+            spyOn(ExecutionRestService, 'getRemoteExecutions').and.returnValue(get_remote_executions_request.promise);
+
+            var promise = ExecutionService.getAllRemoteExecutions(campaign.id, 1, 0);
+            get_remote_executions_request.resolve(response);
+
+            promise.then(function() {
+                expect(ExecutionService.executions.count).toEqual(remote_executions_count);
+            });
+        });
+    });
+
+    describe('synchronizeExecutions() -', function() {
+        var campaign_id = 6,
+            execution_1 = { id: 1, definition: { category: 'Security' } },
+            execution_2 = { id: 2, definition: { category: 'NonRegression' } },
+            service_executions = null,
+            service_categories = null,
+            get_remote_executions = null,
+            get_all_remote_executions = null;
+
+        var resolveExecutions = function(executions) {
+            var data = executions || [];
+
+            get_remote_executions.resolve({
+                total: data.length,
+                results: data
+            });
+            get_all_remote_executions.resolve(data);
+        };
+
+        beforeEach(function() {
+            ExecutionService.campaign_id = campaign_id;
+            ExecutionService.executions = {
+                1: execution_1,
+                2: execution_2
+            };
+            ExecutionService.executions_by_categories_by_campaigns[campaign_id] = {
+                Security: {
+                    label: 'Security',
+                    executions: [execution_1]
+                },
+                NonRegression: {
+                    label: 'NonRegression',
+                    executions: [execution_2]
+                }
+            };
+
+            service_executions = function() {
+                return ExecutionService.executions;
+            };
+
+            service_categories = function() {
+                return ExecutionService.executions_by_categories_by_campaigns[campaign_id];
+            };
+
+            get_remote_executions = $q.defer();
+            spyOn(ExecutionRestService, 'getRemoteExecutions').and.returnValue(get_remote_executions.promise);
+
+            get_all_remote_executions = $q.defer();
+            spyOn(ExecutionService, 'getAllRemoteExecutions').and.returnValue(get_all_remote_executions.promise);
+        });
+
+        it('Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present remotely are unloaded', function() {
+            var remote_executions = [execution_1];
+
+            ExecutionService.synchronizeExecutions(campaign_id).then(function() {
+                expect(service_executions()[2]).toBeUndefined();
+                expect(service_categories().NonRegression.executions.length).toEqual(0);
+            });
+
+            resolveExecutions(remote_executions);
+
+            $rootScope.$apply();
+        });
+
+        it('Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present locally are loaded', function() {
+            var remote_executions = [execution_1, execution_2];
+
+            ExecutionService.executions = { 1: execution_1 };
+            ExecutionService.executions_by_categories_by_campaigns[campaign_id] = {
+                Security: { label: 'Security', executions: [execution_1] }
+            };
+
+            ExecutionService.synchronizeExecutions(campaign_id).then(function() {
+                expect(service_executions()[2]).toEqual(execution_2);
+                expect(service_categories().NonRegression.executions.length).toEqual(1);
+            });
+
+            resolveExecutions(remote_executions);
+
+            $rootScope.$apply();
+        });
+
+        it('Given that I have the same sets of loaded and remote executions, when I synchronize them, then the local executions are not duplicated', function() {
+            var remote_executions = [execution_1, execution_2];
+
+            ExecutionService.synchronizeExecutions(campaign_id).then(function() {
+                expect(_.size(service_executions())).toEqual(2);
+                expect(_.size(service_categories().Security.executions)).toEqual(1);
+                expect(_.size(service_categories().NonRegression.executions)).toEqual(1);
+            });
+
+            resolveExecutions(remote_executions);
 
             $rootScope.$apply();
         });
@@ -171,15 +292,13 @@ describe ('ExecutionService - ', function () {
 
             var categories = {};
 
-            var executions = [
-                {
-                    id: 4,
-                    status: "notrun",
-                    definition: {
-                        category: "Svn"
-                    }
+            var execution = {
+                id: 4,
+                status: "notrun",
+                definition: {
+                    category: "Svn"
                 }
-            ];
+            };
 
             var executions_by_categories_by_campaigns = {
                 6: categories
@@ -189,7 +308,7 @@ describe ('ExecutionService - ', function () {
             ExecutionService.campaign                              = campaign;
             ExecutionService.categories                            = categories;
             ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
-            ExecutionService.addTestExecutions(executions);
+            ExecutionService.addTestExecution(execution);
             expect(ExecutionService.executions[4]).toEqual({
                 id: 4,
                 status: "notrun",
@@ -286,6 +405,51 @@ describe ('ExecutionService - ', function () {
 
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
             expect(Object.keys(ExecutionService.campaign).length).toEqual(Object.keys(campaign_copy).length);
+        });
+    });
+
+    describe("removeTestExecution() -", function() {
+        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function () {
+            var campaign = {
+                id: "6",
+                label: "Release 1",
+                status: "Open",
+                nb_of_passed: 0,
+                nb_of_failed: 0,
+                nb_of_notrun: 1,
+                nb_of_blocked: 0
+            };
+
+            var execution = {
+                id: 4,
+                status: "notrun",
+                definition: {
+                    category: "Svn"
+                }
+            };
+
+            var categories = {
+                Svn: {
+                    label: "Svn",
+                    executions: [execution]
+                }
+            };
+
+            var executions_by_categories_by_campaigns = {
+                6: categories
+            };
+
+            ExecutionService.campaign_id                           = 6;
+            ExecutionService.campaign                              = campaign;
+            ExecutionService.categories                            = categories;
+            ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
+            ExecutionService.executions = { 4: execution };
+
+            ExecutionService.removeTestExecution(execution);
+
+            expect(ExecutionService.executions[4]).toEqual(undefined);
+            expect(ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]).toEqual(undefined);
+            expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
         });
     });
 
@@ -612,80 +776,6 @@ describe ('ExecutionService - ', function () {
 
             ExecutionService.presences_on_campaign = presences_on_campaign;
             ExecutionService.addPresenceCampaign(user_two);
-
-            expect(ExecutionService.presences_on_campaign).toEqual(results);
-        });
-    });
-
-    describe("removePresenceCampaign() -", function() {
-        it("Given that executions with user_two on, when I remove user_one from campaign, then there is only user_two on campaign", function () {
-            var user_one = {
-                id: 101,
-                real_name: 'Test',
-                avatar_url: 'url'
-            };
-
-            var user_two = {
-                id: 102,
-                real_name: 'Test',
-                avatar_url: 'url'
-            };
-
-            var executions = {
-                5: {
-                    id: 5,
-                    definition: {
-                        category: "Svn",
-                        description: "test",
-                        id: 3,
-                        summary: "My first test",
-                        uri: "trafficlights_definitions/3"
-                    },
-                    viewed_by: [user_two]
-                }
-            };
-
-            var results = [user_two];
-
-            ExecutionService.executions            = executions;
-            ExecutionService.presences_on_campaign = [user_one, user_two];
-            ExecutionService.removePresenceCampaign(user_one);
-
-            expect(ExecutionService.presences_on_campaign).toEqual(results);
-        });
-
-        it("Given that executions with user_one and user_two on, when I remove user_one from campaign, then they stay on campaign", function () {
-            var user_one = {
-                id: 101,
-                real_name: 'Test',
-                avatar_url: 'url'
-            };
-
-            var user_two = {
-                id: 102,
-                real_name: 'Test',
-                avatar_url: 'url'
-            };
-
-            var executions = {
-                5: {
-                    id: 5,
-                    definition: {
-                        category: "Svn",
-                        description: "test",
-                        id: 3,
-                        summary: "My first test",
-                        uri: "trafficlights_definitions/3"
-                    },
-                    viewed_by: [user_one, user_two]
-                }
-            };
-
-            var results = [user_one, user_two];
-
-            ExecutionService.executions            = executions;
-            ExecutionService.presences_on_campaign = [user_one, user_two];
-            ExecutionService.removePresenceCampaign(user_one);
 
             expect(ExecutionService.presences_on_campaign).toEqual(results);
         });

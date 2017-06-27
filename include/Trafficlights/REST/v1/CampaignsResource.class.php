@@ -41,6 +41,7 @@ use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use ProjectManager;
+use Tuleap\User\REST\UserRepresentation;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Trafficlights\ArtifactDao;
 use Tuleap\Trafficlights\ArtifactFactory;
@@ -274,13 +275,14 @@ class CampaignsResource {
      *
      * @url PATCH {id}/trafficlights_executions
      *
-     * @param int   $id                      Id of the campaign
-     * @param array $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
-     * @param array $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
+     * @param int     $id                      Id of the campaign
+     * @param string  $uuid                    UUID of current user {@from body}
+     * @param array   $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
+     * @param array   $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
      *
      * @return array {@type Tuleap\Trafficlights\REST\v1\ExecutionRepresentation}
      */
-    protected function patchExecutions($id, $definition_ids_to_add, $execution_ids_to_remove)
+    protected function patchExecutions($id, $uuid, $definition_ids_to_add, $execution_ids_to_remove)
     {
         $user                 = $this->user_manager->getCurrentUser();
         $campaign             = $this->getCampaignFromId($id, $user);
@@ -311,8 +313,11 @@ class CampaignsResource {
 
         if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             foreach($executions_to_remove as $execution) {
+                $user_representation = new UserRepresentation();
+                $user_representation->build($user);
                 $data = array(
                     'artifact' => $this->execution_representation_builder->getExecutionRepresentation($user, $execution),
+                    'user'     => $user_representation,
                 );
 
                 $rights  = new TrafficlightsArtifactRightsPresenter($execution, $this->permissions_serializer);
@@ -329,8 +334,11 @@ class CampaignsResource {
             }
 
             foreach ($executions_to_add as $execution) {
+                $user_representation = new UserRepresentation();
+                $user_representation->build($user);
                 $data = array(
                     'artifact' => $this->execution_representation_builder->getExecutionRepresentation($user, $execution),
+                    'user'     => $user_representation,
                 );
 
                 $rights  = new TrafficlightsArtifactRightsPresenter($execution, $this->permissions_serializer);
@@ -382,7 +390,7 @@ class CampaignsResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\User\REST\UserRepresentation}
+     * @return array {@type UserRepresentation}
      */
     protected function getAssignees($id, $limit = 10, $offset = 0) {
         $this->optionsAssignees($id);
@@ -479,8 +487,11 @@ class CampaignsResource {
         }
 
         if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            $user_representation = new UserRepresentation();
+            $user_representation->build($user);
             $data = array(
-                'artifact' => $campaign_representation
+                'artifact' => $campaign_representation,
+                'user'     => $user_representation,
             );
             $rights  = new TrafficlightsArtifactRightsPresenter($campaign, $this->permissions_serializer);
             $message = new MessageDataPresenter(
