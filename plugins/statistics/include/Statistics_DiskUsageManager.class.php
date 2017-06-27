@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVN\DiskUsage\Collector;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 
 class Statistics_DiskUsageManager {
 
@@ -44,22 +45,31 @@ class Statistics_DiskUsageManager {
      * @var Statistics_DiskUsageDao
      */
     private $dao;
+
     /**
-     * @var Collector
+     * @var SVNCollector
      */
-    private $collector;
+    private $svn_collector;
+
     /**
      * @var EventManager
      */
     private $event_manager;
 
+    /**
+     * @var CVSCollector
+     */
+    private $cvs_collector;
+
     public function __construct(
         Statistics_DiskUsageDao $dao,
-        Collector $collector,
+        SVNCollector $svn_collector,
+        CVSCollector $cvs_collector,
         EventManager $event_manager
     ) {
         $this->dao           = $dao;
-        $this->collector     = $collector;
+        $this->svn_collector = $svn_collector;
+        $this->cvs_collector = $cvs_collector;
         $this->event_manager = $event_manager;
     }
 
@@ -491,8 +501,8 @@ class Statistics_DiskUsageManager {
 
             $project = new Project($row);
             $this->collectSVNDiskUsage($project, $time_to_collect);
+            $this->collectCVSDiskUsage($project, $time_to_collect);
 
-            $this->storeForGroup($row['group_id'], Service::CVS, $GLOBALS['cvs_prefix']."/".$row['unix_group_name'], $time_to_collect);
             $this->storeForGroup($row['group_id'], self::FRS, $GLOBALS['ftp_frs_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
             $this->storeForGroup($row['group_id'], self::FTP, $GLOBALS['ftp_anon_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
             $this->storeForGroup($row['group_id'], self::GRP_HOME, $GLOBALS['grpdir_prefix']."/".$row['unix_group_name'], $time_to_collect);
@@ -520,10 +530,32 @@ class Statistics_DiskUsageManager {
         return $time_to_collect;
     }
 
+    private function collectCVSDiskUsage(Project $project, array &$time_to_collect)
+    {
+        $start = microtime(true);
+        $size  = $this->cvs_collector->collectForCVSRepositories($project);
+        if (! $size) {
+            $path = ForgeConfig::get('cvs_prefix').'/'.$project->getUnixName();
+            $size = $this->getDirSize($path.'/');
+        }
+
+        $this->dao->addGroup(
+            $project->getID(),
+            self::CVS,
+            $size,
+            $_SERVER['REQUEST_TIME']
+        );
+
+        $end  = microtime(true);
+        $time = $end - $start;
+
+        $time_to_collect[Service::CVS] += $time;
+    }
+
     private function collectSVNDiskUsage(Project $project, array &$time_to_collect)
     {
         $start = microtime(true);
-        $size  = $this->collector->collectForSubversionRepositories($project);
+        $size  = $this->svn_collector->collectForSubversionRepositories($project);
         if (! $size) {
             $path = ForgeConfig::get('svn_prefix').'/'.$project->getUnixName();
             $size = $this->getDirSize($path.'/');

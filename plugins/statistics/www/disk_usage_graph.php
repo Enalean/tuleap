@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2009
  *
@@ -25,8 +25,11 @@
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php';
 
-use Tuleap\SVN\DiskUsage\Collector;
-use Tuleap\SVN\DiskUsage\Retriever;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
@@ -43,11 +46,19 @@ if (! UserManager::instance()->getCurrentUser()->isSuperUser()) {
 $error = false;
 $feedback = array();
 
-$disk_usage_dao = new Statistics_DiskUsageDao();
-$svn_log_dao    = new SVN_LogDao();
-$retriever      = new Retriever($disk_usage_dao);
-$collector      = new Collector($svn_log_dao, $retriever);
-$duMgr          = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+$disk_usage_dao  = new Statistics_DiskUsageDao();
+$svn_log_dao     = new SVN_LogDao();
+$svn_retriever   = new SVNRetriever($disk_usage_dao);
+$svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
+$cvs_history_dao = new FullHistoryDao();
+$cvs_retriever   = new CVSRetriever($disk_usage_dao);
+$cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
+$duMgr           = new Statistics_DiskUsageManager(
+    $disk_usage_dao,
+    $svn_collector,
+    $cvs_collector,
+    EventManager::instance()
+);
 
 $graphType = $request->get('graph_type');
 

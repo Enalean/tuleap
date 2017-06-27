@@ -26,8 +26,11 @@ require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
 require_once('www/project/export/project_export_utils.php');
 
-use Tuleap\SVN\DiskUsage\Collector;
-use Tuleap\SVN\DiskUsage\Retriever;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -186,13 +189,18 @@ if ($request->exist('export') && $startDate && $endDate) {
 
 function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter, $date, $column_name)
 {
-    $disk_usage_dao     = new Statistics_DiskUsageDao();
-    $svn_log_dao        = new SVN_LogDao();
-    $retriever          = new Retriever($disk_usage_dao);
-    $collector          = new Collector($svn_log_dao, $retriever);
-    $disk_usage_manager = new Statistics_DiskUsageManager($disk_usage_dao, $collector, EventManager::instance());
+    $disk_usage_dao  = new Statistics_DiskUsageDao();
+    $svn_log_dao     = new SVN_LogDao();
+    $svn_retriever   = new SVNRetriever($disk_usage_dao);
+    $svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
+    $cvs_history_dao = new FullHistoryDao();
+    $cvs_retriever   = new CVSRetriever($disk_usage_dao);
+    $cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
 
-    $disk_usage = $disk_usage_manager->returnTotalSizeOfProjects($date);
-    $disk_usage = $csv_exporter->formatSizeInMegaBytes($disk_usage);
-    $csv_exporter->buildDatas($disk_usage, $column_name);
+    return new Statistics_DiskUsageManager(
+        $disk_usage_dao,
+        $svn_collector,
+        $cvs_collector,
+        EventManager::instance()
+    );
 }

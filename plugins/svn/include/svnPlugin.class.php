@@ -38,11 +38,6 @@ use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
-use Tuleap\SVN\DiskUsage\Collector;
-use Tuleap\Svn\DiskUsage\DiskUsageCollector;
-use Tuleap\Svn\DiskUsage\DiskUsageDao;
-use Tuleap\Svn\DiskUsage\DiskUsageRetriever;
-use Tuleap\SVN\DiskUsage\Retriever;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
@@ -73,6 +68,14 @@ use Tuleap\Svn\ViewVC\AccessHistorySaver;
 use Tuleap\Svn\ViewVC\ViewVCProxy;
 use Tuleap\Svn\XMLImporter;
 use Tuleap\Svn\XMLSvnExporter;
+use Tuleap\Svn\DiskUsage\DiskUsageCollector;
+use Tuleap\Svn\DiskUsage\DiskUsageDao;
+use Tuleap\Svn\DiskUsage\DiskUsageRetriever;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 /**
  * SVN plugin
@@ -755,13 +758,25 @@ class SvnPlugin extends Plugin
      */
     private function getRetriever()
     {
+
+        $disk_usage_dao  = new Statistics_DiskUsageDao();
+        $svn_log_dao     = new SVN_LogDao();
+        $svn_retriever   = new SVNRetriever($disk_usage_dao);
+        $svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
+        $cvs_history_dao = new FullHistoryDao();
+        $cvs_retriever   = new CVSRetriever($disk_usage_dao);
+        $cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
+
+        $disk_usage_manager = new Statistics_DiskUsageManager(
+            $disk_usage_dao,
+            $svn_collector,
+            $cvs_collector,
+            EventManager::instance()
+        );
+
         return new DiskUsageRetriever(
             $this->getRepositoryManager(),
-            new Statistics_DiskUsageManager(
-                new Statistics_DiskUsageDao(),
-                new Collector(new SVN_LogDao(), new Retriever(new Statistics_DiskUsageDao())),
-                EventManager::instance()
-            ),
+            $disk_usage_manager,
             new DiskUsageDao(),
             new Statistics_DiskUsageDao(),
             new SvnLogger()
