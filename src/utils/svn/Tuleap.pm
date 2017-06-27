@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 ##
-## Copyright (c) Enalean, 2015. All Rights Reserved.
+## Copyright (c) Enalean, 2015-2017. All Rights Reserved.
 ## Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
 ##
 ## Tuleap is free software; you can redistribute it and/or modify
@@ -228,7 +228,8 @@ sub is_user_allowed {
         add_user_to_cache($cfg, $username, $user_secret);
 
         if ($token_id) {
-            update_user_token_usage($dbh, $token_id, $r->connection->remote_ip());
+            my $ip_address = $r->can('useragent_ip') ? $r->useragent_ip : $r->connection->remote_ip;
+            update_user_token_usage($dbh, $token_id, $ip_address);
         }
     }
 
