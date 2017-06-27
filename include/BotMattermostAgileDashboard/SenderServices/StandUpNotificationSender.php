@@ -24,6 +24,7 @@ use HTTPRequest;
 use ProjectManager;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
+use Tuleap\BotMattermost\SenderServices\Message;
 use Tuleap\BotMattermost\SenderServices\Sender;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
 
@@ -54,20 +55,23 @@ class StandUpNotificationSender
         try {
             $agile_dashboard_bots = $this->bot_agiledashboard_factory->getAgileDashboardBotsForSummary();
             $projects_ids         = $this->getProjectsIdsFromAgileDashboardBots($agile_dashboard_bots);
+            $message              = new Message();
 
             foreach ($projects_ids as $project_id) {
                 $bot_assigned = $this->bot_agiledashboard_factory->getBotNotification($project_id);
                 $project      = $this->project_manager->getProject($project_id);
                 $admins       = $project->getAdmins();
-                $text         = $this->notification_builder->buildNotificationText($http_request, $admins[0], $project);
+                $message->setText(
+                    $this->notification_builder->buildNotificationText($http_request, $admins[0], $project)
+                );
 
                 $this->logger->info('start stand up notification in project '.$project->getPublicName());
                 $this->logger->debug('project: #'.$project_id.' '.$project->getPublicName());
-                if (! $text) {
+                if (! $message->hasText()) {
                     $this->logger->warn('No text');
                 }
 
-                $this->sender->pushNotification($bot_assigned->getBot(), $bot_assigned->getChannels(), $text);
+                $this->sender->pushNotification($bot_assigned->getBot(), $message, $bot_assigned->getChannels());
             }
         } catch (BotNotFoundException $e) {
             $this->logger->error('', $e);
