@@ -137,7 +137,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
                 );
                 break;
             case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $widgets = array('projectdescription', 'projectmembers',
+                $widgets = array('projectdescription', 'projectmembers', 'projectheartbeat',
                     'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
                     'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
                     'projectrss', 'projectimageviewer', 'projectcontacts'
@@ -216,5 +216,13 @@ use Tuleap\Dashboard\User\UserDashboardController;
     public function displayRss()
     {
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return "";
     }
 }

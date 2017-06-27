@@ -31,7 +31,14 @@
                                     "
                                     {{# can_update_dashboards }}data-draggable="true"{{/ can_update_dashboards }}
                                 >
-                                    <h1 class="tlp-pane-title" data-draggable="true">{{ title }}</h1>
+                                    <h1 class="tlp-pane-title"
+                                        {{# can_update_dashboards }}data-draggable="true"{{/ can_update_dashboards }}
+                                    >
+                                        {{# has_icon }}
+                                            <i class="tlp-pane-title-icon fa {{ icon }}"></i>
+                                        {{/ has_icon }}
+                                        {{ title }}
+                                    </h1>
                                     <div class="dashboard-widget-icons">
                                         {{# can_update_dashboards }}
                                             <form method="post" action="{{ url }}">

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Widget;
 
+use Tuleap\Widget\ProjectHeartbeat;
 use UserManager;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermission_ProjectApproval;
@@ -128,6 +129,9 @@ class WidgetFactory
                 break;
             case 'projectdescription':
                 $widget = new Widget_ProjectDescription();
+                break;
+            case ProjectHeartbeat::NAME:
+                $widget = new ProjectHeartbeat();
                 break;
             case 'projectclassification':
                 $widget = new Widget_ProjectClassification();
