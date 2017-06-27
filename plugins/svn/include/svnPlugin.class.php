@@ -144,6 +144,8 @@ class SvnPlugin extends Plugin
         $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
+
+        $this->addHook(EVENT::REST_RESOURCES);
     }
 
     public function export_xml_project($params)
@@ -789,5 +791,11 @@ class SvnPlugin extends Plugin
     private function getCollector()
     {
         return new DiskUsageCollector($this->getRetriever(), new Statistics_DiskUsageDao());
+    }
+
+    public function rest_resources($params)
+    {
+        $injector = new \Tuleap\SVN\REST\ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }
