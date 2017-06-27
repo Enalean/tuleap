@@ -178,7 +178,7 @@ class Group {
 	  return $this->data_array['short_description'];
 	}
 
-	
+
 	//date the group was registered
 	function getStartDate() {
 		return $this->data_array['register_time'];
@@ -232,7 +232,7 @@ class Group {
 	    }
 	    return $this->members_data_array;
 	}
-    
+
     protected $members_usernames_data_array;
     /**
      * getMembersUserNames - Return an array of user names of group members
@@ -246,8 +246,8 @@ class Group {
         }
         return $this->members_usernames_data_array;
     }
-    
-    
+
+
 	/*
 
 		Basic user permissions that apply to all Groups
@@ -261,7 +261,7 @@ class Group {
 	function userIsMember($field='user_id',$value=0) {
 	    if ($this->userIsAdmin()) {
 		//admins are tested first so that super-users can return true
-		//and admins of a project should always have full privileges 
+		//and admins of a project should always have full privileges
 		//on their project
 		return true;
 	    } else {
@@ -280,30 +280,40 @@ class Group {
          * @deprecated use PFuser::isAdmin() instead
          * @return boolean
          */
-	function userIsAdmin() {
-	    if (isset($this->is_admin)) {
-		//have already been through here and set the var
-	    } else {
-		if (user_isloggedin()) {
-		    //check to see if site super-user
-		    $res=db_query("SELECT * FROM user_group WHERE user_id='". user_getid() ."' AND group_id='1' AND admin_flags='A'");
-		    if ($res && db_numrows($res) > 0) {
-			$this->is_admin = true;
-		    } else {
-			$arr=$this->getPermData();
-			if (array_key_exists('admin_flags', $arr) && $arr['admin_flags']=='A') {
-			    $this->is_admin = true;
-			} else {
-			    $this->is_admin = false;
-			}
-		    }
-		    db_free_result($res);
-		} else {
-		    $this->is_admin = false;
-		}
-	    }
-	    return $this->is_admin;
-	}
+    public function userIsAdmin()
+    {
+        if (isset($this->is_admin)) {
+            //have already been through here and set the var
+        } else {
+            if (HTTPRequest::instance()->getCurrentUser()->isSuperUser()) {
+                $this->is_admin = true;
+            } else {
+
+                if (user_isloggedin()) {
+                    //check to see if site super-user
+                    $res = db_query(
+                        "SELECT * FROM user_group WHERE user_id='" . user_getid(
+                        ) . "' AND group_id='1' AND admin_flags='A'"
+                    );
+                    if ($res && db_numrows($res) > 0) {
+                        $this->is_admin = true;
+                    } else {
+                        $arr = $this->getPermData();
+                        if (array_key_exists('admin_flags', $arr) && $arr['admin_flags'] == 'A') {
+                            $this->is_admin = true;
+                        } else {
+                            $this->is_admin = false;
+                        }
+                    }
+                    db_free_result($res);
+                } else {
+                    $this->is_admin = false;
+                }
+            }
+        }
+
+        return $this->is_admin;
+    }
 
 	/*
 		Return an associative array of permissions for this group/user
