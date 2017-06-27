@@ -12,7 +12,6 @@ require_once('common/reference/ReferenceManager.class.php');
 //       when HtmlParser is finished.
 if (!defined('USE_HTMLAREA')) define('USE_HTMLAREA', false);
 if (USE_HTMLAREA) require_once('lib/htmlarea.php');
-if (ENABLE_CAPTCHA)  require_once('lib/Captcha.php'); 
 
 class PageEditor
 {
@@ -35,10 +34,6 @@ class PageEditor
                             'mtime' => time());
         
         $this->tokens = array();
-        if (ENABLE_CAPTCHA) {
-            require_once('lib/Captcha.php');
-            $this->Captcha = new Captcha($this->meta);
-        }
         
         $version = $request->getArg('version');
         if ($version !== false) {
@@ -97,11 +92,7 @@ class PageEditor
             $tokens['PAGE_LOCKED_MESSAGE'] = $this->getLockedMessage();
         }
         elseif ($r->getArg('save_and_redirect_to') != "") {
-            if (ENABLE_CAPTCHA && $this->Captcha->Failed()) {
-		$this->tokens['PAGE_LOCKED_MESSAGE'] = 
-                    HTML::p(HTML::h1($this->Captcha->failed_msg));
-	    }
-            elseif ( $this->savePage()) {
+            if ( $this->savePage()) {
                 // noreturn
                 $r->redirect(WikiURL($r->getArg('save_and_redirect_to')));
                 return true;    // Page saved.
@@ -109,11 +100,7 @@ class PageEditor
             $saveFailed = true;
         }
         elseif ($this->editaction == 'save') {
-            if (ENABLE_CAPTCHA && $this->Captcha->Failed()) {
-		$this->tokens['PAGE_LOCKED_MESSAGE'] = 
-                    HTML::p(HTML::h1($this->Captcha->failed_msg));
-	    }
-            elseif ($this->savePage()) {
+            if ($this->savePage()) {
                 return true;    // Page saved.
             }
             else {
@@ -547,9 +534,6 @@ class PageEditor
 
         $el['HIDDEN_INPUTS'] = HiddenInputs($h);
         $el['EDIT_TEXTAREA'] = $this->getTextArea();
-        if ( ENABLE_CAPTCHA ) {
-            $el = array_merge($el, $this->Captcha->getFormElements());
-        }
         $el['SUMMARY_INPUT']
             = HTML::input(array('type'  => 'text',
                                 'class' => 'wikitext',
@@ -650,9 +634,6 @@ class PageEditor
         $meta['summary'] = trim(substr($posted['summary'], 0, 256));
         $meta['is_minor_edit'] = !empty($posted['minor_edit']);
         $meta['pagetype'] = !empty($posted['pagetype']) ? $posted['pagetype'] : false;
-        if ( ENABLE_CAPTCHA )
-	    $meta['captcha_input'] = !empty($posted['captcha_input']) ?
-		$posted['captcha_input'] : '';
 
         $this->meta = array_merge($this->meta, $meta);
         $this->locked = !empty($posted['locked']);

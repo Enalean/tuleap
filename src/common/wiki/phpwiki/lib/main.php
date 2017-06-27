@@ -589,7 +589,6 @@ class WikiRequest extends Request {
             case 'xmlrpc':
             case 'search':
             case 'pdf':
-            case 'captcha':
                 return WIKIAUTH_ANON;
 
             case 'zip':
@@ -1087,12 +1086,6 @@ class WikiRequest extends Request {
     function action_pdf () {
     	include_once("lib/pdf.php");
     	ConvertAndDisplayPdf($this);
-    }
-
-    function action_captcha () {
-        include_once "lib/Captcha.php";
-        $captcha = new Captcha();
-        $captcha->image ( $captcha->captchaword() ); 
     }
     
 }

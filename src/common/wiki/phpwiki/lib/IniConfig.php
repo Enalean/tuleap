@@ -132,8 +132,7 @@ function IniConfig($file) {
          'WARN_NONPUBLIC_INTERWIKIMAP', 'USE_PATH_INFO',
          'DISABLE_HTTP_REDIRECT',
          'BLOG_EMPTY_DEFAULT_PREFIX', 'DATABASE_PERSISTENT',
-         'ENABLE_DISCUSSION_LINK', 'ENABLE_CAPTCHA',
-         'USE_CAPTCHA_RANDOM_WORD'
+         'ENABLE_DISCUSSION_LINK'
          );
 
     $rs = @parse_ini_file($file);

@@ -14,14 +14,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/Captcha.php:32
-msgid "Typed in verification word mismatch ... are you a bot?"
-msgstr ""
-
-#: ../lib/Captcha.php:68
-msgid "Type word above:"
-msgstr ""
-
 #: ../lib/DbaDatabase.php:18
 #, php-format
 msgid "The DBA handler %s is unsupported!"

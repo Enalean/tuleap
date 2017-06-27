@@ -169,7 +169,6 @@ function action2access ($action) {
     case 'xmlrpc':
     case 'search':
     case 'pdf':
-    case 'captcha':
         return 'view';
     case 'zip':
     case 'ziphtml':
