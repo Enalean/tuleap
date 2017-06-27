@@ -884,6 +884,29 @@ class ProjectResource extends AuthenticatedResource {
     }
 
     /**
+     * Get svn
+     *
+     * Get info about project SVN repositories
+     * <br>
+     *
+     * <pre>This route is under construction. It does not return anything from now</pre>
+     *
+     * @url GET {id}/svn
+     * @access hybrid
+     *
+     * @param int $id        Id of the project
+     * @param int $limit     Number of elements displayed per page {@from path}
+     * @param int $offset    Position of the first element to display {@from path}
+     *
+     * @return array {@type Tuleap\REST\v1\SvnRepositoryRepresentationBase}
+     *
+     * @throws 404
+     */
+    public function getSvn($id, $limit = 10, $offset = 0) {
+        $this->checkAccess();
+    }
+
+    /**
      * @url OPTIONS {id}/phpwiki
      *
      * @param int $id Id of the project

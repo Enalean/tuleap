@@ -18,23 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\SVN\REST\v1;
+namespace Tuleap\REST\v1;
 
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
-use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
 use Tuleap\Svn\Repository\Repository;
 
-class RepositoryRepresentation extends SvnRepositoryRepresentationBase
+class SvnRepositoryRepresentationBase
 {
-    public function build(Repository $repository)
-    {
-        $project_representation = new MinimalProjectRepresentation();
-        $project_representation->buildMinimal($repository->getProject());
+    const ROUTE = 'svn';
 
-        $this->id         = JsonCast::toInt($repository->getId());
-        $this->project    = $project_representation;
-        $this->uri        = self::ROUTE . '/' . $this->id;
-        $this->name       = $repository->getName();
-    }
+    /**
+     * @var int {@type int}
+     */
+    public $id;
+
+    /**
+     * @var MinimalProjectRepresentation {@type \Tuleap\Project\REST\MinimalProjectRepresentation}
+     */
+    public $project;
+
+    /**
+     * @var string {@type string}
+     */
+    public $uri;
+
+    /**
+     * @var string {@type string}
+     */
+    public $name;
 }
