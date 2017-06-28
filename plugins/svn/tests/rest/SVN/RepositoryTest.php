@@ -23,7 +23,7 @@ namespace Tuleap\SVN\REST;
 use REST_TestDataBuilder;
 use RestBase;
 
-class RepositoryTest extends RestBase
+class RepositoryTest extends TestBase
 {
     protected function getResponse($request)
     {

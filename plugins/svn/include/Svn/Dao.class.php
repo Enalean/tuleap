@@ -44,6 +44,23 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function searchPaginatedByProject(Project $project, $limit, $offset)
+    {
+        $project_id = $this->da->escapeInt($project->getId());
+        $limit      = $this->da->escapeInt($limit);
+        $offset     = $this->da->escapeInt($offset);
+
+        $sql = "SELECT *
+                FROM plugin_svn_repositories
+                WHERE project_id = $project_id
+                AND repository_deletion_date IS NULL
+                ORDER BY name ASC
+                LIMIT $limit
+                OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchByRepositoryIdAndProjectId($id, Project $project) {
         $id         = $this->da->escapeInt($id);
         $project_id = $this->da->escapeInt($project->getId());

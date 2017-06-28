@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project unix-name="tuleap-dev" full-name="Tuleap-dev" description="tuleap-dev" access="public">
+<project unix-name="svn-plugin-test" full-name="SVN Plugin Test" description="SVN Plugin Test" access="public">
     <long-description></long-description>
     <ugroups>
         <ugroup name="project_members" description="">

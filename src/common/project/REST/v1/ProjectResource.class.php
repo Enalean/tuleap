@@ -25,6 +25,7 @@ use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\REST\v1\OrderRepresentationBase;
@@ -65,11 +66,17 @@ class ProjectResource extends AuthenticatedResource {
     /** @var UGroupManager */
     private $ugroup_manager;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct() {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
         $this->ugroup_manager  = new UGroupManager();
         $this->json_decoder    = new JsonDecoder();
+        $this->event_manager   = EventManager::instance();
 
         parent::__construct();
     }
@@ -230,7 +237,7 @@ class ProjectResource extends AuthenticatedResource {
      */
     private function getProjectRepresentation(Project $project) {
         $resources = array();
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PROJECT_RESOURCES,
             array(
                 'version'   => 'v1',
@@ -243,7 +250,7 @@ class ProjectResource extends AuthenticatedResource {
         $resources_injector->declareProjectResources($resources, $project);
 
         $informations = array();
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PROJECT_ADDITIONAL_INFORMATIONS,
             array(
                 'project' => $project,
@@ -310,7 +317,7 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $user    = $this->user_manager->getCurrentUser();
         $event   = new HeartbeatsEntryCollection($project, $user);
-        EventManager::instance()->processEvent($event);
+        $this->event_manager->processEvent($event);
 
         $heartbeats = new HeartbeatsRepresentation();
         $heartbeats->build($event->getEntries());
@@ -333,7 +340,7 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             $event,
             array(
                 'version' => 'v1',
@@ -407,7 +414,7 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             $event,
             array(
                 'version'             => 'v1',
@@ -460,7 +467,7 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectWithoutAuthorisation($id);
         $result  = array();
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             $event,
             array(
                 'version' => 'v1',
@@ -499,7 +506,7 @@ class ProjectResource extends AuthenticatedResource {
         $result     = array();
         $total_size = 0;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_GET_PROJECT_FRS_PACKAGES,
             array(
                 'project'      => $project,
@@ -589,7 +596,7 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PUT_PROJECT_BACKLOG,
             array(
                 'version' => 'v1',
@@ -653,7 +660,7 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PATCH_PROJECT_BACKLOG,
             array(
                 'version' => 'v1',
@@ -671,7 +678,7 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             $event,
             array(
                 'version' => 'v1',
@@ -758,7 +765,7 @@ class ProjectResource extends AuthenticatedResource {
     public function optionsGit($id) {
         $activated = false;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PROJECT_OPTIONS_GIT,
             array(
                 'activated' => &$activated
@@ -860,7 +867,7 @@ class ProjectResource extends AuthenticatedResource {
         $result                 = array();
         $total_git_repositories = 0;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PROJECT_GET_GIT,
             array(
                 'version'        => 'v1',
@@ -887,9 +894,18 @@ class ProjectResource extends AuthenticatedResource {
      * Get svn
      *
      * Get info about project SVN repositories
-     * <br>
      *
-     * <pre>This route is under construction. It does not return anything from now</pre>
+     * <br>
+     * <pre>
+     * "repositories": [{<br>
+     *   &nbsp;"id" : 90,<br>
+     *   &nbsp;"project": {...},<br>
+     *   &nbsp;"uri": "svn/90",<br>
+     *   &nbsp;"name": "repo",<br>
+     *  }<br>
+     * ...<br>
+     * ]
+     * </pre>
      *
      * @url GET {id}/svn
      * @access hybrid
@@ -904,6 +920,20 @@ class ProjectResource extends AuthenticatedResource {
      */
     public function getSvn($id, $limit = 10, $offset = 0) {
         $this->checkAccess();
+
+        $project = $this->getProjectForUser($id);
+        $event   = new ProjectGetSvn($project, 'v1', $limit, $offset);
+
+        $this->event_manager->processEvent($event);
+
+        if (! $event->isPluginActivated()) {
+            throw new RestException(404, 'SVN plugin not activated');
+        }
+
+        $this->sendAllowHeadersForProject();
+        $this->sendPaginationHeaders($limit, $offset, $event->getTotalRepositories());
+
+        return $event->getRepositoriesRepresentations();
     }
 
     /**
@@ -976,7 +1006,7 @@ class ProjectResource extends AuthenticatedResource {
     private function checkAgileEndpointsAvailable() {
         $available = false;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PROJECT_AGILE_ENDPOINTS,
             array(
                 'available' => &$available
@@ -991,7 +1021,7 @@ class ProjectResource extends AuthenticatedResource {
     private function checkFRSEndpointsAvailable() {
         $available = false;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             Event::REST_PROJECT_FRS_ENDPOINTS,
             array(
                 'available' => &$available
