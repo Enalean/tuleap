@@ -21,7 +21,9 @@
 namespace Tuleap\SVN\REST;
 
 use \Luracast\Restler\Restler;
+use Project;
 use Tuleap\SVN\REST\v1\RepositoryRepresentation;
+use Tuleap\Project\REST\ProjectResourceReference;
 
 /**
  * Inject resource into restler
@@ -31,5 +33,19 @@ class ResourcesInjector
     public function populate(Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\SVN\\REST\\v1\\RepositoryResource', RepositoryRepresentation::ROUTE);
+    }
+
+    public function declareProjectResource(array &$resources, Project $project)
+    {
+        $routes = array(
+            RepositoryRepresentation::ROUTE,
+        );
+
+        foreach ($routes as $route) {
+            $resource_reference = new ProjectResourceReference();
+            $resource_reference->build($project, $route);
+
+            $resources[] = $resource_reference;
+        }
     }
 }

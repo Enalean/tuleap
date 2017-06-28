@@ -146,6 +146,7 @@ class SvnPlugin extends Plugin
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
         $this->addHook(EVENT::REST_RESOURCES);
+        $this->addHook(EVENT::REST_PROJECT_RESOURCES);
     }
 
     public function export_xml_project($params)
@@ -797,5 +798,14 @@ class SvnPlugin extends Plugin
     {
         $injector = new \Tuleap\SVN\REST\ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see Event::REST_PROJECT_RESOURCES
+     */
+    public function rest_project_resources(array $params)
+    {
+        $injector = new \Tuleap\SVN\REST\ResourcesInjector();
+        $injector->declareProjectResource($params['resources'], $params['project']);
     }
 }
