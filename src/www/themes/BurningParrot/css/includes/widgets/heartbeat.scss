@@ -17,7 +17,107 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.dashboard-widget-content.dashboard-widget-content-projectheartbeat {
+    margin: 0 $tlp-spacing $tlp-spacing;
+}
+
+.dashboard-widget-content-projectheartbeat-error,
+.dashboard-widget-content-projectheartbeat-activities,
+.dashboard-widget-content-projectheartbeat-loading {
+    display: none;
+
+    &.shown {
+        display: block;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-empty {
+    display: none;
+
+    &.shown {
+        display: flex;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-loading {
+    height: 200px;
+    background: url('../images/spinner.gif') no-repeat center center;
+}
+
 .widget-project-heartbeat-empty-icon {
-    color: transparentize($tlp-theme-color, .7);
-    font-size: 100px;
+    fill: transparentize($tlp-theme-color, .7);
+}
+
+.dashboard-widget-content-projectheartbeat-activities {
+    position: relative;
+    padding: $tlp-spacing 0;
+
+    &::before {
+        position: absolute;
+        top: 0;
+        left: 11px;
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(to top, $tlp-ui-white 0, $tlp-theme-color $tlp-spacing, transparent $tlp-spacing + 1px),
+            linear-gradient(to bottom, $tlp-ui-white 0, $tlp-theme-color $tlp-spacing);
+        content: '';
+        z-index: 1;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    margin: 0 0 $tlp-spacing;
+    z-index: 2;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item-icon {
+    display: flex;
+    position: relative;
+    top: 1px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin: 0 $tlp-half-spacing 0 0;
+    border-radius: 50%;
+    background: $tlp-theme-color;
+
+    > .tuleap-svg {
+        width: 12px;
+        fill: $tlp-ui-white;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item-message {
+    margin: 0 0 5px;
+    line-height: 22px;
+
+    > .direct-link-to-artifact > span {
+        margin: 0 5px 0 0;
+    }
+
+    > a {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-item-time {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.dashboard-widget-content-projectheartbeat-item-time-icon {
+    margin: 0 3px 0 0;
 }

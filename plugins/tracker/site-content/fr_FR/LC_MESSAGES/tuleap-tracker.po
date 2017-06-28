@@ -13,6 +13,22 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #, php-format
+msgid "%s has been created"
+msgstr "%s a été créé"
+
+#, php-format
+msgid "%s has been created by %s"
+msgstr "%s a été créé par %s"
+
+#, php-format
+msgid "%s has been updated"
+msgstr "%s a été mis à jour"
+
+#, php-format
+msgid "%s has been updated by %s"
+msgstr "%s a été mis à jour par %s"
+
+#, php-format
 msgid "%s tracker"
 msgstr "Tracker %s"
 

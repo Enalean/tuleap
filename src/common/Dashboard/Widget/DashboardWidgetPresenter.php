@@ -31,6 +31,7 @@ class DashboardWidgetPresenter
     public $rss_url;
     public $ajax_url;
     public $widget_id;
+    public $widget_name;
     public $is_editable;
     public $is_minimized;
     public $edit_widget_label;
@@ -48,6 +49,7 @@ class DashboardWidgetPresenter
         $can_update_dashboards
     ) {
         $this->widget_id    = $dashboard_widget->getId();
+        $this->widget_name  = $dashboard_widget->getName();
         $this->is_minimized = $dashboard_widget->isMinimized();
 
         $this->title       = $widget->getTitle();

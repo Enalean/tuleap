@@ -256,7 +256,7 @@ msgid "The widget has been added successfully"
 msgstr "Le widget a correctement été ajouté"
 
 msgid "There are no items <br> you can see"
-msgstr "Il n'y a pas d'éléments <br> que vous pouvez voir"
+msgstr "Il n'y a aucun élément <br> visible"
 
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
@@ -282,6 +282,9 @@ msgstr "Titre"
 
 msgid "Tracker"
 msgstr "Suivi"
+
+msgid "Unable to fetch the latest activities of the project"
+msgstr "Impossible de récupérer les dernières activités du projet"
 
 msgid "Unix name"
 msgstr "Now unix"

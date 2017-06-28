@@ -21,6 +21,7 @@
 namespace Tuleap\Widget;
 
 use ForgeConfig;
+use HTTPRequest;
 use TemplateRendererFactory;
 use Widget;
 
@@ -54,12 +55,15 @@ class ProjectHeartbeat extends Widget
             ForgeConfig::get('tuleap_dir') . '/src/templates/widgets'
         );
 
-        return $renderer->renderToString('project-heartbeat', array(
-            'purified_empty_state' => \Codendi_HTMLPurifier::instance()->purify(
-                _('There are no items <br> you can see'),
-                CODENDI_PURIFIER_LIGHT
+        $request = HTTPRequest::instance();
+
+        return $renderer->renderToString(
+            'project-heartbeat',
+            new ProjectHeartbeatPresenter(
+                $request->getProject(),
+                $request->getCurrentUser()
             )
-        ));
+        );
     }
 
     public function canBeUsedByProject(&$project)

@@ -27,6 +27,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use UserHelper;
 use UserManager;
 
 class LatestHeartbeatsCollector
@@ -47,17 +48,23 @@ class LatestHeartbeatsCollector
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
 
     public function __construct(
         Tracker_ArtifactDao $dao,
         Tracker_ArtifactFactory $factory,
         GlyphFinder $glyph_finder,
-        UserManager $user_manager
+        UserManager $user_manager,
+        UserHelper $user_helper
     ) {
         $this->dao          = $dao;
         $this->factory      = $factory;
         $this->glyph_finder = $glyph_finder;
         $this->user_manager = $user_manager;
+        $this->user_helper  = $user_helper;
     }
 
     public function collect(HeartbeatsEntryCollection $collection)
@@ -75,13 +82,8 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $artifact->getLastUpdateDate(),
-                    $artifact->hasMoreThanOneChangeset(),
-                    $artifact->getXRef(),
-                    $artifact->getUri(),
-                    $artifact->getTitle(),
-                    $artifact->getTracker()->getColor(),
                     $this->glyph_finder->get('tuleap-tracker')->getInlineString(),
-                    $this->getLastModifiedBy($artifact)
+                    $this->getHTMLMessage($artifact)
                 )
             );
         }
@@ -100,5 +102,59 @@ class LatestHeartbeatsCollector
         }
 
         return $user;
+    }
+
+    private function getHTMLMessage(Tracker_Artifact $artifact)
+    {
+        $last_modified_by = $this->getLastModifiedBy($artifact);
+        $is_an_update     = $artifact->hasMoreThanOneChangeset();
+
+        $title = $this->getTitle($artifact);
+        if ($last_modified_by) {
+            $user_link = $this->user_helper->getLinkOnUser($last_modified_by);
+            if ($is_an_update) {
+                $message = sprintf(
+                    dgettext('tuleap-tracker', '%s has been updated by %s'),
+                    $title,
+                    $user_link
+                );
+            } else {
+                $message = sprintf(
+                    dgettext('tuleap-tracker', '%s has been created by %s'),
+                    $title,
+                    $user_link
+                );
+            }
+        } else {
+            if ($is_an_update) {
+                $message = sprintf(
+                    dgettext('tuleap-tracker', '%s has been updated'),
+                    $title
+                );
+            } else {
+                $message = sprintf(
+                    dgettext('tuleap-tracker', '%s has been created'),
+                    $title
+                );
+            }
+        }
+
+        return $message;
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @return string
+     */
+    private function getTitle(Tracker_Artifact $artifact)
+    {
+        $title = '
+            <a class="direct-link-to-artifact" href="'. $artifact->getUri() .'">
+                <span class="tlp-badge-outline tlp-badge-'. $artifact->getTracker()->getNormalizedColor() .'">
+                '. $artifact->getXRef() .'
+                </span>
+                '. $artifact->getTitle() .'</a>';
+
+        return $title;
     }
 }

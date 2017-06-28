@@ -20,8 +20,6 @@
 
 namespace Tuleap\Project;
 
-use PFUser;
-
 class HeartbeatsEntry
 {
     /**
@@ -29,44 +27,19 @@ class HeartbeatsEntry
      */
     private $updated_at;
     /**
-     * @var bool
-     */
-    private $is_an_update;
-    /**
      * @var string
      */
-    private $xref;
-    /**
-     * @var string
-     */
-    private $link;
-    /**
-     * @var string
-     */
-    private $title;
-    /**
-     * @var string
-     */
-    private $color;
+    private $html_message;
     /**
      * @var string
      */
     private $icon;
-    /**
-     * @var PFUser|null
-     */
-    private $updated_by;
 
-    public function __construct($updated_at, $is_an_update, $xref, $link, $title, $color, $icon, PFUser $updated_by = null)
+    public function __construct($updated_at, $icon, $html_message)
     {
         $this->updated_at   = (int)$updated_at;
-        $this->is_an_update = $is_an_update;
-        $this->xref         = $xref;
-        $this->link         = $link;
-        $this->title        = $title;
-        $this->color        = $color;
         $this->icon         = $icon;
-        $this->updated_by   = $updated_by;
+        $this->html_message = $html_message;
     }
 
     /**
@@ -80,33 +53,9 @@ class HeartbeatsEntry
     /**
      * @return string
      */
-    public function getXref()
+    public function getHTMLMessage()
     {
-        return $this->xref;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLink()
-    {
-        return $this->link;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getColor()
-    {
-        return $this->color;
+        return $this->html_message;
     }
 
     /**
@@ -115,21 +64,5 @@ class HeartbeatsEntry
     public function getIcon()
     {
         return $this->icon;
-    }
-
-    /**
-     * @return null|PFUser
-     */
-    public function getUpdatedBy()
-    {
-        return $this->updated_by;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAnUpdate()
-    {
-        return $this->is_an_update;
     }
 }

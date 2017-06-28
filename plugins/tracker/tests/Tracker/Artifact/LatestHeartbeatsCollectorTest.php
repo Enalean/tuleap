@@ -76,7 +76,8 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
             $this->dao,
             $this->factory,
             $glyph_finder,
-            mock('UserManager')
+            mock('UserManager'),
+            mock('UserHelper')
         );
     }
 
