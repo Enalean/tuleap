@@ -1,18 +1,22 @@
 #
-# Codendi
+# Copyright (c) Enalean, 2017. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# http://www.codendi.com
 #
-# 
+# Tuleap is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Tuleap is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# Purpose:
-#    This Perl include file mimics some of the fucntion in common/project/Group.class.php
-#    to allow Perl scripts to handle group information
+# You should have received a copy of the GNU General Public License
+# along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+#
+
+use DBI qw(:sql_types);
 
 my ($GROUP_INFO);
 
@@ -21,8 +25,9 @@ sub set_group_info_from_name {
   my ($gname) = @_;
   my ($query, $c, $res);
 
-  $query = "SELECT * FROM groups WHERE unix_group_name='$gname'";
+  $query = "SELECT * FROM groups WHERE unix_group_name=?";
   $c = $dbh->prepare($query);
+  $c->bind_param(1, $gname, SQL_VARCHAR);
   $res = $c->execute();
 
   if (!$res || ($c->rows < 1)) {
@@ -116,9 +121,10 @@ sub get_email_from_login {
     my ($query, $c, $res);
 
     if ($username ne '') {
-        $query = "SELECT email FROM user WHERE user_name='$username' AND (status='A' OR status='R') ";
+        $query = "SELECT email FROM user WHERE user_name=? AND (status='A' OR status='R') ";
         
         $c = $dbh->prepare($query);
+        $c->bind_param(1, $username, SQL_VARCHAR);
         $res = $c->execute();
     
         if (!$res || ($c->rows < 1)) {
@@ -218,9 +224,10 @@ sub is_valid_email {
     my ($query, $c, $res);
 
     if ($email ne '') {
-        $query = "SELECT * FROM user WHERE email='$email' ";
+        $query = "SELECT * FROM user WHERE email=? ";
         
         $c = $dbh->prepare($query);
+        $c->bind_param(1, $email, SQL_VARCHAR);
         $res = $c->execute();
         
         if (!$res || ($c->rows < 1)) {
