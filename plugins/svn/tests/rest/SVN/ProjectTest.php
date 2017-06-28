@@ -53,4 +53,13 @@ class ProjectTest extends TestBase
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
     }
+
+    public function testOPTIONS()
+    {
+        $response  = $this->getResponse($this->client->options(
+            'projects/'.$this->svn_project_id.'/svn'
+        ));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
 }
