@@ -105,16 +105,35 @@ class RepositoryManager
     }
 
     /**
-     * @return Repository[]
+     * @return RepositoryPaginatedCollection
      */
-    public function getPagninatedRepositories(Project $project, $limit, $offset)
+    public function getRepositoryPaginatedCollection(Project $project, $limit, $offset)
     {
         $repositories = array();
         foreach ($this->dao->searchPaginatedByProject($project, $limit, $offset) as $row) {
             $repositories[] = $this->instantiateFromRow($row, $project);
         }
 
-        return $repositories;
+        return new RepositoryPaginatedCollection(
+            $repositories,
+            $this->dao->foundRows()
+        );
+    }
+
+    /**
+     * @return RepositoryPaginatedCollection
+     */
+    public function getRepositoryPaginatedCollectionByName(Project $project, $repository_name, $limit, $offset)
+    {
+        $repositories = array();
+        foreach ($this->dao->searchPaginatedByProjectAndByName($project, $repository_name, $limit, $offset) as $row) {
+            $repositories[] = $this->instantiateFromRow($row, $project);
+        }
+
+        return new RepositoryPaginatedCollection(
+            $repositories,
+            $this->dao->foundRows()
+        );
     }
 
     public function getRepositoriesInProjectWithLastCommitInfo(Project $project)

@@ -47,7 +47,35 @@ class ProjectTest extends TestBase
         $repositories_response = $response->json();
         $repositories          = $repositories_response['repositories'];
 
+        $this->assertCount(2, $repositories);
+        $this->assertEquals(2, (int) (string) $response->getHeader('X-Pagination-Size'));
+
+        $repository_01 = $repositories[0];
+        $this->assertArrayHasKey('id', $repository_01);
+        $this->assertEquals($repository_01['name'], 'repo01');
+
+        $repository_02 = $repositories[1];
+        $this->assertArrayHasKey('id', $repository_02);
+        $this->assertEquals($repository_02['name'], 'repo02');
+    }
+
+    public function testGETRepositoriesWithQuery()
+    {
+        $query = http_build_query(
+            array(
+                'query' => json_encode(array('name' => 'repo01'))
+            )
+        );
+
+        $response  = $this->getResponse($this->client->get(
+            "projects/$this->svn_project_id/svn?$query"
+        ));
+
+        $repositories_response = $response->json();
+        $repositories          = $repositories_response['repositories'];
+
         $this->assertCount(1, $repositories);
+        $this->assertEquals(1, (int) (string) $response->getHeader('X-Pagination-Size'));
 
         $repository = $repositories[0];
         $this->assertArrayHasKey('id', $repository);

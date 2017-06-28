@@ -820,14 +820,15 @@ class SvnPlugin extends Plugin
         $project_resource = new $class($this->getRepositoryManager());
         $project          = $event->getProject();
 
-        $representations = $project_resource->getSvn(
+        $collection = $project_resource->getRepositoryCollection(
             $project,
+            $event->getFilter(),
             $event->getLimit(),
             $event->getOffset()
         );
 
-        $event->addRepositoriesRepresentations($representations);
-        $event->addTotalRepositories(count($this->getRepositoryManager()->getRepositoriesInProject($project)));
+        $event->addRepositoriesRepresentations($collection->getRepositoriesRepresentations());
+        $event->addTotalRepositories($collection->getTotalSize());
     }
 
     public function rest_project_options_svn(ProjectOptionsSvn $event)
