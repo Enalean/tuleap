@@ -26,6 +26,7 @@ use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\Event\ProjectGetSvn;
+use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\REST\v1\OrderRepresentationBase;
@@ -888,6 +889,25 @@ class ProjectResource extends AuthenticatedResource {
             throw new RestException(404, 'Git plugin not activated');
         }
 
+    }
+
+    /**
+     * @url OPTIONS {id}/svn
+     *
+     * @param int $id Id of the project
+     *
+     * @throws 404
+     */
+    public function optionsSvn($id) {
+        $event = new ProjectOptionsSvn();
+
+        $this->event_manager->processEvent($event);
+
+        if ($event->isPluginActivated()) {
+            $this->sendAllowHeadersForProject();
+        } else {
+            throw new RestException(404, 'SVN plugin not activated');
+        }
     }
 
     /**
