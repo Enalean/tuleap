@@ -568,6 +568,7 @@ class AgileDashboardPlugin extends Plugin {
         $request->set('xml_content', $params['xml_content']);
         $request->set('mapping', $params['mapping']);
         $request->set('project_id', $params['project_id']);
+        $request->set('group_id', $params['project_id']);
 
         $this->process($request);
     }
