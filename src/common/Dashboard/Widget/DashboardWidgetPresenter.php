@@ -38,6 +38,8 @@ class DashboardWidgetPresenter
     public $delete_widget_confirm;
     public $is_content_loaded_asynchronously;
     public $has_actions;
+    public $has_icon;
+    public $icon;
 
     public function __construct(
         Dashboard $dashboard,
@@ -52,6 +54,8 @@ class DashboardWidgetPresenter
         $this->is_editable = strlen($widget->getPreferences()) !== 0;
         $this->has_rss     = $widget->hasRss();
         $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+        $this->icon        = $widget->getIcon();
+        $this->has_icon    = (bool) $this->icon;
 
         $this->has_actions = $this->has_rss || $can_update_dashboards;
 

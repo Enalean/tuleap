@@ -92,6 +92,9 @@ msgstr ""
 msgid "Delete widget"
 msgstr ""
 
+msgid "Displays the 30 last updated or created items in the project."
+msgstr ""
+
 msgid "Documents"
 msgstr ""
 
@@ -117,6 +120,9 @@ msgid "Forums"
 msgstr ""
 
 msgid "Git"
+msgstr ""
+
+msgid "Heartbeat"
 msgstr ""
 
 msgid "History"
@@ -228,6 +234,9 @@ msgid "The requested dashboard does not exist."
 msgstr ""
 
 msgid "The widget has been added successfully"
+msgstr ""
+
+msgid "There are no items <br> you can see"
 msgstr ""
 
 msgid "There are no widgets here."

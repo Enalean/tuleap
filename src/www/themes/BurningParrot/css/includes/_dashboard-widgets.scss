@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import 'widgets/heartbeat';
+
 .dashboard-widget-container {
     width: 100%;
 }
@@ -51,13 +53,13 @@
 .dashboard-widget-icons-minimize,
 .dashboard-widget-actions {
     transition: color 100ms, opacity 100ms;
-    opacity: .2;
     color: $tlp-ui-dimmed;
     cursor: pointer;
+    opacity: .2;
 
     &:hover {
-        opacity: 1;
         color: $tlp-theme-color;
+        opacity: 1;
     }
 }
 

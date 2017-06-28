@@ -109,6 +109,9 @@ msgstr "Supprimer le tableau de bord"
 msgid "Delete widget"
 msgstr "Supprimer le widget"
 
+msgid "Displays the 30 last updated or created items in the project."
+msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
+
 msgid "Documents"
 msgstr "Documents"
 
@@ -137,6 +140,9 @@ msgstr "Forums"
 
 msgid "Git"
 msgstr "Git"
+
+msgid "Heartbeat"
+msgstr "Activité"
 
 msgid "History"
 msgstr "Historique"
@@ -248,6 +254,9 @@ msgstr "Le tableau de bord demandé n’existe pas."
 
 msgid "The widget has been added successfully"
 msgstr "Le widget a correctement été ajouté"
+
+msgid "There are no items <br> you can see"
+msgstr "Il n'y a pas d'éléments <br> que vous pouvez voir"
 
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
