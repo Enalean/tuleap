@@ -129,4 +129,9 @@ class Repository {
     {
         $this->deletion_date = $deletion_date;
     }
+
+    public function isDeleted()
+    {
+        return ! empty($this->deletion_date);
+    }
 }

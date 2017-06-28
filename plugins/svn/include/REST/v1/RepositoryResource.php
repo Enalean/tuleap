@@ -21,6 +21,8 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Luracast\Restler\RestException;
+use SystemEvent;
+use SystemEventManager;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -30,8 +32,10 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
@@ -131,8 +135,63 @@ class RepositoryResource extends AuthenticatedResource
         }
     }
 
+    /**
+     * Delete SVN repository
+     *
+     * Delete a SVN repository
+     *
+     * @url DELETE {id}
+     * @status 202
+     *
+     * @param int $repository_id Id of the repository
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     */
+    protected function delete($id)
+    {
+        $this->sendAllowHeaders();
+
+        try {
+            $current_user = $this->user_manager->getCurrentUser();
+            $repository   = $this->repository_manager->getRepositoryById($id);
+            ProjectAuthorization::userCanAccessProject(
+                $this->user_manager->getCurrentUser(),
+                $repository->getProject(),
+                new \URLVerification()
+            );
+
+            if (! $this->permission_manager->isAdmin($repository->getProject(), $current_user)) {
+                throw new RestException('403', 'You are not allowed to delete repository');
+            }
+
+            if ($repository->isDeleted()) {
+                throw new RestException('404', 'Repository not found');
+                return;
+            }
+
+            if ($this->isDeletionAlreadyQueued($repository)) {
+                throw new RestException('400', 'Repository already in queue for deletion');
+                return;
+            }
+
+            $this->repository_manager->queueRepositoryDeletion($repository, \SystemEventManager::instance());
+        } catch (CannotFindRepositoryException $e) {
+            throw new RestException('404', 'Repository not found');
+        }
+    }
+
+    private function isDeletionAlreadyQueued(Repository $repository)
+    {
+        return SystemEventManager::instance()->areThereMultipleEventsQueuedMatchingFirstParameter(
+            'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
+            $repository->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repository->getId()
+        );
+    }
+
     private function sendAllowHeaders()
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetDelete();
     }
 }
