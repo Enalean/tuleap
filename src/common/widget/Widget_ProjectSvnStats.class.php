@@ -40,9 +40,6 @@ class Widget_ProjectSvnStats extends Widget
         return $GLOBALS['Language']->getText('svn_widget', 'svnstats');
     }
 
-    function canBeUsedByProject($project) {
-        return $project->usesSvn();
-    }
     function getCategory() {
         return 'scm';
     }

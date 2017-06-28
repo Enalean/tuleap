@@ -25,7 +25,7 @@ require_once('common/rss/RSS.class.php');
 /**
 * Widget_ProjectLatestCommits
 */
-class Widget_ProjectLatestCommits extends Widget
+abstract class Widget_ProjectLatestCommits extends Widget
 {
     var $latest_revisions = null;
     var $group_id;
@@ -42,6 +42,8 @@ class Widget_ProjectLatestCommits extends Widget
 
     /* protected */ function _getLinkToCommit($data) { }
     /* protected */ function _getLinkToMore() { }
+
+    protected abstract function canBeUsedByProject(Project $project);
 
     public function getLatestRevisions()
     {

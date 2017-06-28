@@ -65,9 +65,4 @@ class ProjectHeartbeat extends Widget
             )
         );
     }
-
-    public function canBeUsedByProject(&$project)
-    {
-        return true;
-    }
 }

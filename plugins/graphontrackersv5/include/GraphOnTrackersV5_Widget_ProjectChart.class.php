@@ -38,9 +38,4 @@ class GraphOnTrackersV5_Widget_ProjectChart extends GraphOnTrackersV5_Widget_Cha
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }
-
-    public function canBeUsedByProject(&$project)
-    {
-        return true;
-    }
 }

@@ -226,9 +226,7 @@ class Widget_ProjectPublicAreas extends Widget {
 
         return $html;
     }
-    function canBeUsedByProject(&$project) {
-        return true;
-    }
+
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_project_public_areas','description');
     }

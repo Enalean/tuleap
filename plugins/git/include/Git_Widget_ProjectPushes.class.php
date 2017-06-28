@@ -83,20 +83,4 @@ class Git_Widget_ProjectPushes extends Widget {
     function getDescription() {
         return $GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_description');
     }
-
-    /**
-     * Widget is used in project
-     *
-     * @param $project current project
-     *
-     * @return Boolean
-     *
-     * @see Widget::canBeUsedByProject()
-     */
-    public function canBeUsedByProject($project) {
-        return $project->usesService(GitPlugin::SERVICE_SHORTNAME);
-    }
-
 }
-
-?>
