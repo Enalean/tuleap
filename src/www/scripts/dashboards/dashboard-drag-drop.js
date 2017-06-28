@@ -63,7 +63,6 @@ function updateParent(widget, target) {
     var line   = createLineForWidget();
     var column = createColumnForWidget();
 
-
     if (target && target.classList.contains('dashboard-widgets-empty-line')) {
         target.parentNode.insertBefore(column, target);
         column.appendChild(widget);
@@ -94,7 +93,7 @@ function initializeColumnOutline(column) {
 
 function createLineForWidget() {
     var line = document.createElement('div');
-    line.classList.add('dashboard-widgets-row', 'dragula-container');
+    line.classList.add('dashboard-widgets-row');
     addLayoutDropdown(line);
     return line;
 }
