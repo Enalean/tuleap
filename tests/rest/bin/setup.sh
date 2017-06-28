@@ -62,6 +62,7 @@ setup_apache() {
 	httpd24-httpd)
 	    CONF_DIR=/opt/rh/httpd24/root/etc/httpd
 	    TAG=httpd24
+	    setup_apache_service_for_httpd24
 	    ;;
 	rh-nginx18-nginx)
 	    type=nginx
@@ -81,6 +82,12 @@ setup_apache() {
 	cp /usr/share/tuleap/tests/rest/etc/rest-tests.$TAG.conf $CONF_DIR/conf.d/rest-tests.conf
     fi
     service $HTTPD_DAEMON restart
+}
+
+setup_apache_service_for_httpd24() {
+    echo "Bind httpd24-httpd service to httpd service"
+    rm -f /etc/init.d/httpd
+    ln -s /etc/init.d/httpd24-httpd /etc/init.d/httpd
 }
 
 setup_tuleap() {
@@ -108,6 +115,8 @@ setup_tuleap() {
 	-e 's#\$sys_https_host =.*#\$sys_https_host = "";#' \
 	-e 's#\$sys_rest_api_over_http =.*#\$sys_rest_api_over_http = 1;#' \
 	> /etc/tuleap/conf/local.inc
+
+	cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
 }
 
 setup_fpm() {
