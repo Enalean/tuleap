@@ -66,6 +66,9 @@ if ($request->exist('update')) {
     if ($group->getGroupId() != Project::ADMIN_PROJECT_ID) {
         $form_status  = $request->getValidated('form_status', 'string', $group->getStatus());
     }
+    if (! $form_status) {
+        $form_status = $group->getStatus();
+    }
     $group_type = $request->getValidated('group_type', 'string', $group->getType());
 
     if ($group->getStatus() != $form_status || $group->getType() != $group_type) {
