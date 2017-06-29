@@ -191,3 +191,6 @@ plugin_agiledashboard_first_kanban	created	We created <a href="$1">a first kanba
 plugin_agiledashboard_first_scrum	error_existing_tracker	We tried to create an initial scrum configuration for you but an existing tracker ($1) prevented it.
 plugin_agiledashboard_first_scrum	internal_error	We tried to create an initial scrum configuration for you but an internal error prevented it.
 plugin_agiledashboard_first_scrum	created	We created an initial scrum configuration for you. Enjoy!
+
+# Widget category
+widget_categ_label	plugin_agiledashboard	Agile Dashboard

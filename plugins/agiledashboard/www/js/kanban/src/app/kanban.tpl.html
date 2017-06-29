@@ -28,6 +28,7 @@
             title="{{ 'Detailed view' | translate }}">
         <i class="fa fa-th-list"></i> <span translate>Detailed view</span>
     </button>
+    <div ng-bind-html="dashboard_dropdowns" class="add-kanban-dashboard"></div>
     <input type="search"
             class="tlp-search tlp-search-small kanban-header-search"
             placeholder="{{ 'Filter...' | translate }}"

@@ -2,6 +2,7 @@ import './error/error.tpl.html';
 import './edit-kanban/edit-kanban.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
 import _ from 'lodash';
+import { dropdown } from 'tlp';
 
 export default KanbanCtrl;
 
@@ -94,9 +95,11 @@ function KanbanCtrl(
     self.moveKanbanItemToTop          = moveKanbanItemToTop;
     self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
     self.openReportModal              = openReportModal;
+    self.addKanbanToMyDashboard       = addKanbanToMyDashboard;
 
     function init() {
         initViewMode();
+        initDashboards();
         loadColumns();
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
@@ -111,12 +114,29 @@ function KanbanCtrl(
             SocketService.listenKanban();
             SocketService.listenTokenExpired();
         });
+
+        angular.element(document).ready(function () {
+            var my_dashboard_dropdown      = document.getElementById('my-dashboard-dropdown');
+            var project_dashboard_dropdown = document.getElementById('project-dashboard-dropdown');
+            if (my_dashboard_dropdown) {
+                dropdown(my_dashboard_dropdown);
+            }
+
+            if (project_dashboard_dropdown) {
+                dropdown(project_dashboard_dropdown);
+            }
+        });
     }
 
     self.init();
 
     function initViewMode() {
         self.user_prefers_collapsed_cards = SharedPropertiesService.doesUserPrefersCompactCards();
+    }
+
+    function initDashboards() {
+        $scope.dashboard_dropdowns = $sce.trustAsHtml(SharedPropertiesService.getDashboardDropdown());
+
     }
 
     function toggleCollapsedMode() {
@@ -651,5 +671,9 @@ function KanbanCtrl(
 
     function deleteKanban() {
         KanbanService.removeKanban();
+    }
+
+    function addKanbanToMyDashboard() {
+        KanbanService.addKanbanToMyDashboard();
     }
 }

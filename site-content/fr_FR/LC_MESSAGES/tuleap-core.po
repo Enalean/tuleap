@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.3\n"
 
 #, php-format
 msgid "%d member"
@@ -257,6 +257,9 @@ msgstr "Le tableau de bord demandé n’existe pas."
 
 msgid "The widget has been added successfully"
 msgstr "Le widget a correctement été ajouté"
+
+msgid "The widget is already used"
+msgstr "Le widget est déjà utilisé"
 
 msgid "There are no items <br> you can see"
 msgstr "Il n'y a aucun élément <br> visible"

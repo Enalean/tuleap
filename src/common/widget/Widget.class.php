@@ -171,4 +171,9 @@ use Tuleap\Dashboard\User\UserDashboardController;
     {
         return "";
     }
+
+    public function canBeAddedFromWidgetList()
+    {
+        return true;
+    }
 }

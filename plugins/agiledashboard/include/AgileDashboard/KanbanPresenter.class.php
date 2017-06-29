@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownBuilder;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Widget\WidgetFactory;
 
 class KanbanPresenter {
 
@@ -62,7 +69,25 @@ class KanbanPresenter {
             )
         );
 
+        $widget_factory    = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+        $widget_dao              = new DashboardWidgetDao($widget_factory);
+        $widget_dropdown_builder = new WidgetAddToDashboardDropdownBuilder(
+            new UserDashboardRetriever(
+                new UserDashboardDao($widget_dao)
+            ),
+            new ProjectDashboardRetriever(new ProjectDashboardDao($widget_dao))
+        );
+        $project_manager = ProjectManager::instance();
+
         $this->kanban_representation = json_encode($kanban_representation_builder->build($kanban, $user));
+        $this->dashboard_dropdown    = json_encode(TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/widgets')->renderToString(
+            'add-to-dashboard-dropdown',
+            $widget_dropdown_builder->build($user, $project_manager->getProject($project_id))
+        ));
         $this->user_is_kanban_admin  = (int) $user_is_kanban_admin;
         $this->language              = $language;
         $this->project_id            = $project_id;

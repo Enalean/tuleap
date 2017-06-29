@@ -28,18 +28,20 @@ class WidgetPresenter
     public $name;
     public $description;
     public $is_used;
+    public $can_be_added_from_widget_list;
     public $already_used_label;
     public $need_configuration;
     public $configurations;
 
     public function __construct(Widget $widget, $is_used)
     {
-        $this->id                 = $widget->getId();
-        $this->name               = $widget->getTitle();
-        $this->description        = $widget->getDescription();
-        $this->is_used            = $is_used;
-        $this->configurations     = $widget->getInstallPreferences();
-        $this->need_configuration = ! empty($this->configurations);
-        $this->already_used_label = _('Already used');
+        $this->id                            = $widget->getId();
+        $this->name                          = $widget->getTitle();
+        $this->description                   = $widget->getDescription();
+        $this->is_used                       = $is_used;
+        $this->configurations                = $widget->getInstallPreferences();
+        $this->can_be_added_from_widget_list = $widget->canBeAddedFromWidgetList();
+        $this->need_configuration            = ! empty($this->configurations);
+        $this->already_used_label            = _('Already used');
     }
 }

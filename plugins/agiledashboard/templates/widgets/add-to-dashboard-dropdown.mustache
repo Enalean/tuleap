@@ -1,0 +1,48 @@
+{{# has_user_dashboard }}
+    {{# has_only_one_user_dashboard }}
+        {{# user_dashboards_presenter }}
+            <a class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
+                <i class="fa fa-tachometer"></i> {{ my_dashboard }}
+            </a>
+        {{/ user_dashboards_presenter }}
+    {{/ has_only_one_user_dashboard }}
+    {{^ has_only_one_user_dashboard }}
+        <div class="tlp-dropdown kanban-header-view-button">
+            <a type="button" id="my-dashboard-dropdown" class="my-dashboard-dropdown tlp-button-primary tlp-button-outline tlp-button-small">
+                <i class="fa fa-tachometer tlp-button-icon"></i>
+                {{ my_dashboard }}
+                <i class="fa fa-caret-down tlp-button-icon-right"></i>
+            </a>
+            <div class="tlp-dropdown-menu" role="menu">
+                {{# user_dashboards_presenter }}
+                    <a class="tlp-dropdown-menu-item" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">{{ getName }}</a>
+                {{/ user_dashboards_presenter }}
+            </div>
+        </div>
+    {{/ has_only_one_user_dashboard }}
+{{/ has_user_dashboard }}
+{{# is_admin }}
+    {{# has_project_dashboard }}
+        {{# has_only_one_project_dashboard }}
+            {{# project_dashboards_presenter }}
+                <a class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
+                    <i class="fa fa-tachometer"></i> {{ project_dashboard }}
+                </a>
+            {{/ project_dashboards_presenter }}
+        {{/ has_only_one_project_dashboard }}
+        {{^ has_only_one_project_dashboard }}
+            <div class="tlp-dropdown kanban-header-view-button">
+                <a type="button" id="project-dashboard-dropdown" class="project-dashboard-dropdown tlp-button-primary tlp-button-outline tlp-button-small">
+                    <i class="fa fa-tachometer tlp-button-icon"></i>
+                    {{ project_dashboard }}
+                    <i class="fa fa-caret-down tlp-button-icon-right"></i>
+                </a>
+                <div class="tlp-dropdown-menu" role="menu">
+                    {{# project_dashboards_presenter }}
+                        <a class="tlp-dropdown-menu-item" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">{{ getName }}</a>
+                    {{/ project_dashboards_presenter }}
+                </div>
+            </div>
+        {{/ has_only_one_project_dashboard }}
+    {{/ has_project_dashboard }}
+{{/ is_admin }}

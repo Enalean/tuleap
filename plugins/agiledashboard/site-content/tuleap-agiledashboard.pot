@@ -1,0 +1,19 @@
+msgid "Add to dashboard"
+msgstr ""
+
+msgid "Add to my dashboard"
+msgstr ""
+
+msgid "Add to project dashboard"
+msgstr ""
+
+msgid ""
+"Displays a board to see the tasks to do, in progress, done etc. Please go on "
+"a kanban to add it."
+msgstr ""
+
+msgid "Kanban"
+msgstr ""
+
+msgid "There is no content <br> you can see"
+msgstr ""

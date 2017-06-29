@@ -2,16 +2,17 @@ export default SharedPropertiesService;
 
 function SharedPropertiesService() {
     var property = {
-        detailed_view_key : 'detailed-view',
-        compact_view_key  : 'compact-view',
-        user_id           : undefined,
-        kanban            : undefined,
-        view_mode         : undefined,
-        user_is_admin     : false,
-        project_id        : undefined,
-        nodejs_server     : undefined,
+        detailed_view_key    : 'detailed-view',
+        compact_view_key     : 'compact-view',
+        user_id              : undefined,
+        kanban               : undefined,
+        view_mode            : undefined,
+        user_is_admin        : false,
+        project_id           : undefined,
+        nodejs_server        : undefined,
         nodejs_server_version: undefined,
-        uuid              : undefined
+        uuid                 : undefined,
+        dashboard_dropdown   : undefined
     };
 
     return {
@@ -31,8 +32,10 @@ function SharedPropertiesService() {
         setNodeServerAddress        : setNodeServerAddress,
         getUUID                     : getUUID,
         setUUID                     : setUUID,
-        setNodeServerVersion : setNodeServerVersion,
-        getNodeServerVersion : getNodeServerVersion
+        setNodeServerVersion        : setNodeServerVersion,
+        getNodeServerVersion        : getNodeServerVersion,
+        setDashboardDropdown        : setDashboardDropdown,
+        getDashboardDropdown        : getDashboardDropdown
     };
 
     function getUserId() {
@@ -105,5 +108,13 @@ function SharedPropertiesService() {
 
     function getNodeServerVersion() {
         return property.nodejs_server_version;
+    }
+
+    function setDashboardDropdown(dashboard_dropdown) {
+        property.dashboard_dropdown = dashboard_dropdown;
+    }
+
+    function getDashboardDropdown() {
+        return property.dashboard_dropdown;
     }
 }

@@ -176,7 +176,7 @@ function displayWidgetSettings(table, widget_element, data_widgets) {
         widget_element.classList.add('dashboard-add-widget-list-table-widget-selected');
 
         var add_widget_button = document.getElementById('dashboard-add-widget-button');
-        if (! widget_data.is_used) {
+        if (! widget_data.is_used && widget_data.can_be_added_from_widget_list) {
             add_widget_button.disabled = false;
         } else {
             add_widget_button.disabled = true;
