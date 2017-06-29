@@ -66,9 +66,7 @@ class Widget_ProjectMembers extends Widget {
             }
         }
         $html .= '<span class="develtitle widget-project-team-project-members-title">' . $GLOBALS['Language']->getText('include_project_home','proj_members') . ':</span><br />';
-        // count of developers on this project
-        $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=".db_ei($group_id));
-        $html .= db_numrows($res_count);
+        $html .= count($request->getProject()->getMembers());
         $html .= ' <a href="/project/memberlist.php?group_id=' . $group_id . '">[' . $GLOBALS['Language']->getText('include_project_home','view_members') . ']</a>';
 
         return $html;
