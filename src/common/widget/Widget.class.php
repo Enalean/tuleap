@@ -127,40 +127,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
     function destroy($id) {
     }
 
-    public static function getWidgetsForOwnerType($owner_type) {
-        switch ($owner_type) {
-            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
-                $widgets = array('myadmin', 'myprojects', 'mybookmarks',
-                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
-                    'mytasks', 'mysrs', 'myimageviewer',
-                    'mylatestsvncommits', 'mysystemevent', 'myrss',
-                );
-                break;
-            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
-                $widgets = array('projectdescription', 'projectmembers', 'projectheartbeat',
-                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
-                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
-                    'projectrss', 'projectimageviewer', 'projectcontacts'
-                );
-                if ($GLOBALS['sys_use_trove'] != 0) {
-                    $widgets[] = 'projectclassification';
-                }
-                break;
-            default:
-                $widgets = array();
-                break;
-        }
-
-        $plugins_widgets = array();
-        $em = EventManager::instance();
-        $em->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
-
-        if (is_array($plugins_widgets)) {
-            $widgets = array_merge($widgets, $plugins_widgets);
-        }
-        return $widgets;
-    }
-
     function getCategory() {
         return 'general';
     }
