@@ -1,4 +1,10 @@
-<div class="dashboard-widget-content-projectheartbeat-content" data-project-id="{{ project_id }}" data-locale="{{ locale }}">
+<div class="dashboard-widget-content-projectheartbeat-content"
+     data-project-id="{{ project_id }}"
+     data-locale="{{ locale }}"
+     data-today="{{ today }}"
+     data-yesterday="{{ yesterday }}"
+     data-recently="{{ recently }}"
+>
     <div class="dashboard-widget-content-projectheartbeat-loading shown"></div>
     <div class="dashboard-widget-content-projectheartbeat-error">
         <div class="tlp-alert-danger">
@@ -20,20 +26,25 @@
     </div>
     <script class="dashboard-widget-content-projectheartbeat-placeholder" type="x-tmpl-mustache">
         {{=<% %>=}}
-            {{# entries }}
-                <div class="dashboard-widget-content-projectheartbeat-item">
-                    <div class="dashboard-widget-content-projectheartbeat-item-icon">{{{ icon }}}</div>
-                    <div class="dashboard-widget-content-projectheartbeat-item-content">
-                        <div class="dashboard-widget-content-projectheartbeat-item-message">
-                            {{{ html_message }}}
+            {{# groups }}
+                {{# entries.length }}
+                    <div class="dashboard-widget-content-projectheartbeat-label">{{ label }}</div>
+                    {{# entries }}
+                        <div class="dashboard-widget-content-projectheartbeat-item">
+                            <div class="dashboard-widget-content-projectheartbeat-item-icon">{{{ icon }}}</div>
+                            <div class="dashboard-widget-content-projectheartbeat-item-content">
+                                <div class="dashboard-widget-content-projectheartbeat-item-message">
+                                    {{{ html_message }}}
+                                </div>
+                                <div class="dashboard-widget-content-projectheartbeat-item-time">
+                                    <i class="fa fa-clock-o dashboard-widget-content-projectheartbeat-item-time-icon"></i>
+                                    {{ updated_at }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="dashboard-widget-content-projectheartbeat-item-time">
-                            <i class="fa fa-clock-o dashboard-widget-content-projectheartbeat-item-time-icon"></i>
-                            {{ updated_at }}
-                        </div>
-                    </div>
-                </div>
-            {{/ entries }}
+                    {{/ entries }}
+                {{/ entries.length }}
+            {{/ groups }}
         <%={{ }}=%>
     </script>
 </div>

@@ -48,6 +48,8 @@
     fill: transparentize($tlp-theme-color, .7);
 }
 
+$timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
+
 .dashboard-widget-content-projectheartbeat-activities {
     position: relative;
     padding: $tlp-spacing 0;
@@ -55,13 +57,33 @@
     &::before {
         position: absolute;
         top: 0;
-        left: 11px;
-        width: 3px;
+        left: 10px;
+        width: 4px;
         height: 100%;
-        background: linear-gradient(to top, $tlp-ui-white 0, $tlp-theme-color $tlp-spacing, transparent $tlp-spacing + 1px),
-            linear-gradient(to bottom, $tlp-ui-white 0, $tlp-theme-color $tlp-spacing);
+        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
+            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-spacing);
         content: '';
         z-index: 1;
+    }
+}
+
+.dashboard-widget-content-projectheartbeat-label {
+    display: inline-block;
+    position: relative;
+    margin: $tlp-spacing 0;
+    padding: 5px;
+    border-radius: 3px;
+    background: $timeline-color;
+    color: $tlp-theme-color;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    line-height: 7px;
+    text-transform: uppercase;
+    z-index: 2;
+
+    &:first-child {
+        margin: 0 0 $tlp-spacing;
     }
 }
 
