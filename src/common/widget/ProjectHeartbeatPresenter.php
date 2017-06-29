@@ -33,11 +33,16 @@ class ProjectHeartbeatPresenter
     public $today;
     public $yesterday;
     public $recently;
+    public $date_format;
+    public $date_time_format;
 
     public function __construct(Project $project, PFUser $user)
     {
         $this->project_id = $project->getID();
         $this->locale     = $user->getShortLocale();
+
+        $this->date_time_format = $GLOBALS['Language']->getText('system', 'datefmt');
+        $this->date_format      = $GLOBALS['Language']->getText('system', 'datefmt_short');
 
         $this->error_message = _('Unable to fetch the latest activities of the project');
         $this->today         = _('Today');

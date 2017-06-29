@@ -21,6 +21,7 @@ import { get } from 'tlp';
 import { render } from 'mustache';
 import { sanitize } from 'dompurify';
 import moment from 'moment';
+import phptomoment from "phptomoment";
 
 export default init;
 
@@ -62,16 +63,20 @@ function getGroupedEntries(widget_content, entries) {
 
     const today = moment(), yesterday = moment().subtract(1, 'day');
 
+    const datetime_format = phptomoment(widget_content.dataset.dateTimeFormat);
+    const date_format = phptomoment(widget_content.dataset.dateFormat);
+
     entries.forEach((entry) => {
         const updated_at = moment(entry.updated_at);
 
-        entry.updated_at = updated_at.fromNow();
-
         if (updated_at.isSame(today, 'day')) {
+            entry.updated_at = updated_at.fromNow();
             today_entries.push(entry);
         } else if (updated_at.isSame(yesterday, 'day')) {
+            entry.updated_at = updated_at.format(datetime_format);
             yesterday_entries.push(entry);
         } else {
+            entry.updated_at = updated_at.format(date_format);
             recently_entries.push(entry);
         }
     });

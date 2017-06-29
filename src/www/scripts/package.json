@@ -12,6 +12,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mustache": "^2.3.0",
+    "phptomoment": "0.0.2",
     "promise-polyfill": "^6.0.2",
     "whatwg-fetch": "^2.0.3"
   },
