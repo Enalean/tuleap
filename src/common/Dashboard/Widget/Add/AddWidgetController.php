@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Widget\Add;
 
 use CSRFSynchronizerToken;
 use DataAccessException;
+use EventManager;
 use Exception;
 use Feedback;
 use HTTPRequest;
@@ -177,8 +178,7 @@ class AddWidgetController
     private function getWidgetsGroupedByCategories($dashboard_type)
     {
         $categories = array();
-        $owner_type = $this->getOwnerTypeByDashboardType($dashboard_type);
-        $widgets    = Widget::getWidgetsForOwnerType($owner_type);
+        $widgets    = $this->getWidgetsForOwnerType($dashboard_type);
         foreach ($widgets as $widget_name) {
             $widget = $this->factory->getInstanceByWidgetName($widget_name);
             if ($widget && $widget->isAvailable()) {
@@ -279,5 +279,41 @@ class AddWidgetController
             $used_widgets[] = $row['name'];
         }
         return $used_widgets;
+    }
+
+    private function getWidgetsForOwnerType($dashboard_type)
+    {
+        $owner_type = $this->getOwnerTypeByDashboardType($dashboard_type);
+        switch ($owner_type) {
+            case UserDashboardController::LEGACY_DASHBOARD_TYPE:
+                $widgets = array('myadmin', 'myprojects', 'mybookmarks',
+                    'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
+                    'mytasks', 'mysrs', 'myimageviewer',
+                    'mylatestsvncommits', 'mysystemevent', 'myrss',
+                );
+                break;
+            case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
+                $widgets = array('projectdescription', 'projectmembers', 'projectheartbeat',
+                    'projectlatestfilereleases', 'projectlatestnews', 'projectpublicareas', //'projectwikipage' //not yet
+                    'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
+                    'projectrss', 'projectimageviewer', 'projectcontacts'
+                );
+                if ($GLOBALS['sys_use_trove'] != 0) {
+                    $widgets[] = 'projectclassification';
+                }
+                break;
+            default:
+                $widgets = array();
+                break;
+        }
+
+        $plugins_widgets = array();
+        $em = EventManager::instance();
+        $em->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
+
+        if (is_array($plugins_widgets)) {
+            $widgets = array_merge($widgets, $plugins_widgets);
+        }
+        return $widgets;
     }
 }
