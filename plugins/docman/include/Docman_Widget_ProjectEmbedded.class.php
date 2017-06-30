@@ -36,14 +36,4 @@ class Docman_Widget_ProjectEmbedded extends Docman_Widget_Embedded
             $plugin_path
         );
     }
-
-    /**
-     * @param Project project
-     *
-     * @return boolean true if the project ban use this widget
-     */
-    public function canBeUsedByProject($project)
-    {
-        return true;
-    }
 }

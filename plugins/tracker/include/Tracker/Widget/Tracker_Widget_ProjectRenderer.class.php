@@ -36,11 +36,6 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
         );
     }
 
-    function canBeUsedByProject($project)
-    {
-        return true;
-    }
-
     public function isAjax()
     {
         return false;

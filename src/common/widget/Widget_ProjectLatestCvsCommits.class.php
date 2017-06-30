@@ -42,11 +42,13 @@ class Widget_ProjectLatestCvsCommits extends Widget_ProjectLatestCommits {
     function _getLinkToMore() {
         return '/cvs/?func=browse&group_id='.$this->group_id;
     }
-    function canBeUsedByProject(&$project) {
+
+    protected function canBeUsedByProject(Project $project)
+    {
         return $project->usesCvs();
     }
+
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_project_latest_cvs_commits','description');
     }
 }
-?>

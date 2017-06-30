@@ -39,9 +39,4 @@ class Widget_ProjectImageViewer extends Widget_ImageViewer
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }
-
-    public function canBeUsedByProject($project)
-    {
-        return true;
-    }
 }

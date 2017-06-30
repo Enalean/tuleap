@@ -47,11 +47,7 @@ class Widget_ProjectClassification extends Widget {
         return $html;
     }
 
-    public function canBeUsedByProject(&$project) {
-        return true;
-    }
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_project_classification','description');
     }
 }
-?>

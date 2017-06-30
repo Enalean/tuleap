@@ -86,19 +86,6 @@ class Statistics_Widget_ProjectStatistics extends Widget {
     }
 
     /**
-     * Widget is used in project summary page
-     *
-     * @param $project current project
-     *
-     * @return Boolean
-     *
-     * @see Widget::canBeUsedByProject()
-     */
-    public function canBeUsedByProject($project) {
-        return true;
-    }
-
-    /**
      * Return the widget description
      *
      * @return String

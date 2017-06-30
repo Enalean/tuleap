@@ -57,15 +57,6 @@ class AdminDelegation_UserWidget extends Widget {
         return $GLOBALS['Language']->getText('plugin_admindelegation','widget_admins_description');
     }
 
-    /**
-     * Tell if a widget can by used by a project
-     * 
-     * @param Project $project
-     */
-    function canBeUsedByProject(Project $project) {
-        return false;
-    }
-
     function getCategory() {
         return 'plugin_admindelegation';
     }
@@ -172,5 +163,3 @@ class AdminDelegation_UserWidget extends Widget {
         return $html;
     }
 }
-
-?>

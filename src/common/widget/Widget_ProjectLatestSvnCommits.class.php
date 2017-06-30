@@ -41,9 +41,12 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits {
     function _getLinkToMore() {
         return '/svn/?func=browse&group_id='.$this->group_id;
     }
-    function canBeUsedByProject(&$project) {
+
+    protected function canBeUsedByProject(Project $project)
+    {
         return $project->usesSvn();
     }
+
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_project_latest_svn_commits','description');
     }
@@ -59,4 +62,3 @@ class Widget_ProjectLatestSvnCommits extends Widget_ProjectLatestCommits {
         return $this->latest_revisions;
     }
 }
-?>

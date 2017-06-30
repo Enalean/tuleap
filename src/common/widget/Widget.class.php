@@ -107,9 +107,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
         $this->owner_id = $owner_id;
         $this->owner_type = $owner_type;
     }
-    function canBeUsedByProject(&$project) {
-        return false;
-    }
+
     /**
     * cloneContent
     *

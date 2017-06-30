@@ -100,7 +100,7 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return Boolean
      */
-    function canBeUsedByProject($project) {
+    private function canBeUsedByProject(Project $project) {
         return $project->usesNews();
     }
 
@@ -132,5 +132,3 @@ class Widget_ProjectLatestNews extends Widget {
     }
 
 }
-
-?>

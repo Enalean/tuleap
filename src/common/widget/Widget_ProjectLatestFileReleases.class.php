@@ -48,7 +48,9 @@ class Widget_ProjectLatestFileReleases extends Widget {
     function isAvailable() {
         return isset($this->content['title']);
     }
-    function canBeUsedByProject(&$project) {
+
+    private function canBeUsedByProject(Project $project)
+    {
         return $project->usesFile();
     }
     

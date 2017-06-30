@@ -41,11 +41,6 @@ class Widget_ProjectRss extends Widget_Rss
         parent::__construct('projectrss', $request->get('group_id'), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
     }
 
-    function canBeUsedByProject(&$project)
-    {
-        return true;
-    }
-
     public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_rss', 'description');
