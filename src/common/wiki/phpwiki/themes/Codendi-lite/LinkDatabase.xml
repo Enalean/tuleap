@@ -4781,10 +4781,6 @@
 <node name="rurbanx2f.Calendarx2f.2004-10-06"><label>rurban/Calendar/2004-10-06</label><dataref><ref xlink:href="http://reini/wiki/sidebar/rurban/Calendar/2004-10-06"/></dataref></node>
 <edge source="rurbanx2f.Calendarx2f.2004-10-06" target="rurbanx2f.Calendarx2f.2004-10-06" />
 
-<node name="RecentReferrer"><label>RecentReferrer</label><dataref><ref xlink:href="http://reini/wiki/sidebar/RecentReferrer"/></dataref></node>
-
-<node name="RecentReferrers"><label>RecentReferrers</label><dataref><ref xlink:href="http://reini/wiki/sidebar/RecentReferrers"/></dataref></node>
-
 <node name="SearchHighlightPlugin"><label>SearchHighlightPlugin</label><dataref><ref xlink:href="http://reini/wiki/sidebar/SearchHighlightPlugin"/></dataref></node>
 <edge source="SearchHighlightPlugin" target="WikiPlugin" />
 

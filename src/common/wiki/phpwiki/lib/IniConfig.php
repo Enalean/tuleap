@@ -83,7 +83,7 @@ function IniConfig($file) {
         ('WIKI_NAME', 'ADMIN_USER', 'ADMIN_PASSWD',
          'DEFAULT_DUMP_DIR', 'HTML_DUMP_DIR',
          'HTML_DUMP_SUFFIX', 'MAX_UPLOAD_SIZE', 'MINOR_EDIT_TIMEOUT',
-         'ACCESS_LOG', 'CACHE_CONTROL', 'CACHE_CONTROL_MAX_AGE',
+         'CACHE_CONTROL', 'CACHE_CONTROL_MAX_AGE',
          'COOKIE_EXPIRATION_DAYS', 'COOKIE_DOMAIN',
          'PASSWORD_LENGTH_MINIMUM', 'USER_AUTH_POLICY', 
          'GROUP_METHOD',
@@ -114,7 +114,7 @@ function IniConfig($file) {
          'FORTUNE_DIR',
          'DISABLE_GETIMAGESIZE','DBADMIN_USER','DBADMIN_PASSWD',
          'SESSION_SAVE_PATH', 'TOOLBAR_PAGELINK_PULLDOWN', 'TOOLBAR_TEMPLATE_PULLDOWN',
-         'EXTERNAL_LINK_TARGET', 'ACCESS_LOG_SQL', 'ENABLE_MARKUP_TEMPLATE'
+         'EXTERNAL_LINK_TARGET', 'ENABLE_MARKUP_TEMPLATE'
          );
 
     // List of all valid config options to be define()d which take booleans.
@@ -331,20 +331,6 @@ function IniConfig($file) {
         unset($rs[$rskey]);
     }
     unset($rskey); unset($apkey);
-
-    // TODO: Currently unsupported on non-SQL
-    // CHECKME: PDO
-    if (array_key_exists('ACCESS_LOG_SQL', $rs)) {
-    	// WikiDB_backend::isSql() not yet loaded
-        if (!in_array(DATABASE_TYPE, array('SQL','ADODB','PDO')))
-            // override false config setting on no SQL WikiDB database.
-            define('ACCESS_LOG_SQL', 0);
-    }
-    // SQL defaults to ACCESS_LOG_SQL = 2
-    else {
-        define('ACCESS_LOG_SQL', 
-               in_array(DATABASE_TYPE, array('SQL','ADODB','PDO')) ? 2 : 0);
-    }
 
     // optional values will be set to '' to simplify the logic.
     foreach ($_IC_OPTIONAL_VALUE as $item) {

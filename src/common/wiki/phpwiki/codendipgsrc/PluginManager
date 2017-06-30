@@ -33,8 +33,6 @@ not provided with PhpWiki or PHP, such as
 * PHP Mail functionality (php.ini: SMTP + sendmail_from on Windows or sendmail_path) for email 
   PageChangeNotifications and ModeratedPage's,
 * optionally an external recommender engine (none yet, php only so far) and the wikilens theme for the RateIt plugin,
-* optionally apache/mod_log_{my}sql for fast, external log analysis if ACCESS_LOG_SQL=1 (Referer, Abuse Prevention).
-  See <tt>lib/Request.php</tt> and http://www.outoforder.cc/projects/apache/mod_log_sql/
 
 -----
 <?plugin PluginManager?>
