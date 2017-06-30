@@ -264,6 +264,9 @@ msgstr "Il n'y a aucun élément <br> visible"
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
 
+msgid "There isn't <br> any activity yet"
+msgstr "Il n'y a pas <br> encore d'activité"
+
 msgid "There isn't any matching widgets"
 msgstr "Il n’y aucun widget qui correspond"
 

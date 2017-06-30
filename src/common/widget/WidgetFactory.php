@@ -20,7 +20,6 @@
 
 namespace Tuleap\Widget;
 
-use Tuleap\Widget\ProjectHeartbeat;
 use UserManager;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermission_ProjectApproval;
