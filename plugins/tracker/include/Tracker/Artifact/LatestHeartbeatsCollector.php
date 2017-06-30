@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Artifact;
 
+use Codendi_HTMLPurifier;
 use PFUser;
 use Tracker_Artifact;
 use Tracker_ArtifactDao;
@@ -149,12 +150,14 @@ class LatestHeartbeatsCollector
      */
     private function getTitle(Tracker_Artifact $artifact)
     {
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $title = '
             <a class="direct-link-to-artifact" href="'. $artifact->getUri() .'">
                 <span class="tlp-badge-outline tlp-badge-'. $artifact->getTracker()->getNormalizedColor() .'">
                 '. $artifact->getXRef() .'
                 </span>
-                '. $artifact->getTitle() .'</a>';
+                '. $purifier->purify($artifact->getTitle()) .'</a>';
 
         return $title;
     }
