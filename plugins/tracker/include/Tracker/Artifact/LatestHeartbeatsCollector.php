@@ -76,6 +76,7 @@ class LatestHeartbeatsCollector
         foreach ($artifacts as $row) {
             $artifact = $this->factory->getInstanceFromRow($row);
             if (! $artifact->userCanView($collection->getUser())) {
+                $collection->thereAreActivitiesUserCannotSee();
                 continue;
             }
 

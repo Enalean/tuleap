@@ -44,10 +44,17 @@ class HeartbeatsEntryCollection
      */
     private $user;
 
+    /**
+     * @var bool
+     */
+    private $are_there_activities_user_cannot_see;
+
     public function __construct(Project $project, PFUser $user)
     {
         $this->project = $project;
         $this->user    = $user;
+
+        $this->are_there_activities_user_cannot_see = false;
     }
 
     /**
@@ -77,5 +84,18 @@ class HeartbeatsEntryCollection
     public function add(HeartbeatsEntry $entry)
     {
         $this->entries[] = $entry;
+    }
+
+    public function thereAreActivitiesUserCannotSee()
+    {
+        $this->are_there_activities_user_cannot_see = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function areThereActivitiesUserCannotSee()
+    {
+        return $this->are_there_activities_user_cannot_see;
     }
 }
