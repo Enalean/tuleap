@@ -6,7 +6,6 @@ CampaignNewCtrl.$inject = [
     '$scope',
     '$modalInstance',
     '$state',
-    'gettextCatalog',
     'CampaignService',
     'DefinitionService',
     'SharedPropertiesService'
@@ -16,20 +15,15 @@ function CampaignNewCtrl(
     $scope,
     $modalInstance,
     $state,
-    gettextCatalog,
     CampaignService,
     DefinitionService,
     SharedPropertiesService
 ) {
-    var project_id              = SharedPropertiesService.getProjectId(),
-        milestone_id            = SharedPropertiesService.getCurrentMilestone().id,
-        controller_is_destroyed = false;
+    var project_id   = SharedPropertiesService.getProjectId(),
+        milestone_id = SharedPropertiesService.getCurrentMilestone().id;
 
     _.extend($scope, {
-        nb_total_definitions: 0,
-        loading_definitions:  true,
         submitting_campaign:  false,
-        definitions:          [],
         createCampaign:       createCampaign,
         cancel:               cancel,
         has_milestone:        !! milestone_id,
@@ -44,12 +38,7 @@ function CampaignNewCtrl(
 
     init();
 
-    $scope.$on('$destroy', function iVeBeenDismissed() {
-        controller_is_destroyed = true;
-    });
-
     function init() {
-        getDefinitions(project_id, 750, 0);
         getDefinitionReports();
     }
 
@@ -82,19 +71,6 @@ function CampaignNewCtrl(
 
     function cancel() {
         $modalInstance.dismiss();
-    }
-
-    function getDefinitions(project_id, limit, offset) {
-        DefinitionService.getDefinitions(project_id, limit, offset).then(function(data) {
-            $scope.definitions = $scope.definitions.concat(data.results);
-            $scope.nb_total_definitions = data.total;
-
-            if (! controller_is_destroyed && $scope.definitions.length < $scope.nb_total_definitions) {
-                getDefinitions(project_id, limit, offset + limit);
-            } else {
-                $scope.loading_definitions = false;
-            }
-        });
     }
 
     function getDefinitionReports() {
