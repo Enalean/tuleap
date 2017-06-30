@@ -24,6 +24,8 @@ use Luracast\Restler\RestException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\v1\FullRepositoryRepresentation;
+use Tuleap\REST\v1\RepositoryRepresentationBuilder;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
@@ -98,27 +100,32 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param int $id Id of the repository
      *
-     * @return \Tuleap\SVN\REST\v1\RepositoryRepresentation
+     * @return FullRepositoryRepresentation
      *
      * @throws 404
+     * @throws 403
      */
     public function get($id)
     {
         $this->checkAccess();
 
         try {
-            $repository     = $this->repository_manager->getRepositoryById($id);
+            $user       = $this->user_manager->getCurrentUser();
+            $repository = $this->repository_manager->getRepositoryById($id);
             ProjectAuthorization::userCanAccessProject(
-                $this->user_manager->getCurrentUser(),
+                $user,
                 $repository->getProject(),
                 new \URLVerification()
             );
-            $representation = new RepositoryRepresentation();
-            $representation->build($repository);
 
             $this->sendAllowHeaders();
 
-            return $representation;
+            $representation_builder = new RepositoryRepresentationBuilder(
+                $this->permission_manager,
+                $this->repository_manager
+            );
+
+            return $representation_builder->build($repository, $user);
         } catch (CannotFindRepositoryException $e) {
             throw new RestException('404', 'Repository not found');
         }

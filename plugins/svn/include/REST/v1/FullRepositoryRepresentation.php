@@ -18,23 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\SVN\REST\v1;
+namespace Tuleap\REST\v1;
 
-use Tuleap\Project\REST\MinimalProjectRepresentation;
-use Tuleap\REST\JsonCast;
-use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
+use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\REST\v1\CommitRulesRepresentation;
+use Tuleap\SVN\REST\v1\RepositoryRepresentation;
 
-class RepositoryRepresentation extends SvnRepositoryRepresentationBase
+class FullRepositoryRepresentation extends RepositoryRepresentation
 {
-    public function build(Repository $repository)
-    {
-        $project_representation = new MinimalProjectRepresentation();
-        $project_representation->buildMinimal($repository->getProject());
+    /**
+     * @var CommitRulesRepresentation {@type Tuleap\SVN\REST\CommitRulesRepresentation}
+     */
+    public $commit_rules;
 
-        $this->id      = JsonCast::toInt($repository->getId());
-        $this->project = $project_representation;
-        $this->uri     = self::ROUTE . '/' . $this->id;
-        $this->name    = $repository->getName();
+    public function fullBuild(Repository $repository, HookConfig $hook_config)
+    {
+        parent::build($repository);
+
+        $commit_rules_representation = new CommitRulesRepresentation();
+        $commit_rules_representation->build($hook_config);
+        $this->commit_rules = $commit_rules_representation;
     }
 }

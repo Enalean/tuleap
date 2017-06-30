@@ -5,6 +5,7 @@
         <ugroup name="project_members" description="">
             <members>
                 <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_3</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="Project administrators">

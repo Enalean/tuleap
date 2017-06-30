@@ -21,7 +21,8 @@
 namespace Tuleap\SVN\REST;
 
 use REST_TestDataBuilder;
-use RestBase;
+
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 class RepositoryTest extends TestBase
 {
@@ -33,21 +34,51 @@ class RepositoryTest extends TestBase
         );
     }
 
-    public function testGETRepository()
+    private function getResponseWithProjectMember($request)
     {
-        $response  = $this->getResponse($this->client->get(
-            'svn/1'
-        ));
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_3_NAME),
+            $request
+        );
+    }
+
+    public function testGETRepositoryForProjectAdmin()
+    {
+        $response = $this->getResponseByToken(
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
+            $this->client->get('svn/1')
+        );
 
         $repository = $response->json();
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
+        $this->assertEquals(
+            $repository['commit_rules'],
+            array(
+                "mandatory_reference"         => false,
+                "allow_commit_message_change" => false
+            )
+        );
+    }
+
+    public function testGETRepositoryForProjectMember()
+    {
+        $response = $this->getResponseWithProjectMember($this->client->get('svn/1'));
+
+        $repository = $response->json();
+
+        $this->assertArrayHasKey('id', $repository);
+        $this->assertEquals($repository['name'], 'repo01');
+        $this->assertArrayNotHasKey('commit_rules', $repository);
     }
 
     public function testOPTIONS()
     {
-        $response = $this->getResponse($this->client->options('svn/1'));
+        $response = $this->getResponseByToken(
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
+            $this->client->get('svn/1')
+        );
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
