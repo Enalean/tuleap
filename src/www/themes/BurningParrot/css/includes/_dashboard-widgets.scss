@@ -17,7 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import 'widgets/contacts';
 @import 'widgets/heartbeat';
+@import 'widgets/imageviewer';
+@import 'widgets/lastcommit';
+@import 'widgets/myprojects';
+@import 'widgets/projectmembers';
+@import 'widgets/trackerv3';
 
 .dashboard-widget-container {
     width: 100%;
@@ -68,27 +74,6 @@
     padding: 0;
     overflow-x: auto;
     overflow-y: hidden;
-}
-
-.dashboard-widget-imageviewver-content {
-    text-align: center;
-}
-
-.dashboard-widget-imageviewver-img {
-    max-width: 100%;
-}
-
-.dashboard-widget-my-projects-legend-title {
-    margin: 0 $tlp-spacing 0 0;
-}
-
-.dashboard-widget-my-projects-legend-content {
-    margin: 0 $tlp-spacing / 2 0 0;
-}
-
-.dashboard-widget-my-projects-icons {
-    margin: 0 5px 0 0;
-    color: $tlp-ui-dimmed;
 }
 
 .dashboard-add-widget-body {
@@ -164,27 +149,4 @@
         color: transparentize($tlp-theme-color, .7);
         font-size: 70px;
     }
-}
-
-.massmail-project-member-link-icon {
-    padding: 0 5px 0 0;
-}
-
-.widget-project-team-project-members-title {
-    display: inline-block;
-    margin: $tlp-half-spacing 0 0;
-}
-
-.project-last-commit-text {
-    margin: $tlp-half-spacing 0 0;
-    text-align: justify;
-}
-
-.project-last-commit-project-title {
-    margin: 0 0 $tlp-half-spacing;
-}
-
-.project-last-commit-text-more {
-    margin: $tlp-half-spacing 0 0;
-    text-align: center;
 }
