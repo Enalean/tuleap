@@ -1,12 +1,25 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
+/**
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
 // Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-require_once('pre.php');    
+require_once('pre.php');
 
 $hp = Codendi_HTMLPurifier::instance();
 $vGroupId = new Valid_GroupId();
@@ -28,13 +41,13 @@ site_project_header(array('title'=>$Language->getText('project_memberlist','proj
 print $Language->getText('project_memberlist','contact_to_become_member');
 
 // list members
-// LJ email column added 
+// LJ email column added
 $query =  "SELECT user.user_name AS user_name,user.user_id AS user_id,"
 	. "user.realname AS realname, user.add_date AS add_date, "
 	. "user.email AS email, "
 	. "user_group.admin_flags AS admin_flags "
 	. "FROM user,user_group "
-	. "WHERE user.user_id=user_group.user_id AND user_group.group_id=".db_ei($group_id)." "
+	. "WHERE user.user_id=user_group.user_id AND user_group.group_id=".db_ei($group_id)." AND user.status IN ('A', 'R') "
 	. "ORDER BY user.user_name";
 
 
