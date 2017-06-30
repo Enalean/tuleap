@@ -1,4 +1,20 @@
 #, php-format
+msgid "%s has been created"
+msgstr ""
+
+#, php-format
+msgid "%s has been created by %s"
+msgstr ""
+
+#, php-format
+msgid "%s has been updated"
+msgstr ""
+
+#, php-format
+msgid "%s has been updated by %s"
+msgstr ""
+
+#, php-format
 msgid "%s tracker"
 msgstr ""
 

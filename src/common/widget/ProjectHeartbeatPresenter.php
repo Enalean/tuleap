@@ -18,30 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\REST;
+namespace Tuleap\Widget;
 
-use Tuleap\Project\HeartbeatsEntry;
-use Tuleap\REST\JsonCast;
+use Codendi_HTMLPurifier;
+use PFUser;
+use Project;
 
-class HeartbeatsEntryRepresentation
+class ProjectHeartbeatPresenter
 {
-    /**
-     * @var int UNIX timestamp of the time of the last update of this entry {@type int} {@required true}
-     */
-    public $updated_at;
-    /**
-     * @var string Title of the entry {@type string} {@required true}
-     */
-    public $html_message;
-    /**
-     * @var string SVG icon associated with the entry {@type string} {@required true}
-     */
-    public $icon;
+    public $project_id;
+    public $purified_empty_state;
+    public $error_message;
+    public $locale;
 
-    public function build(HeartbeatsEntry $entry)
+    public function __construct(Project $project, PFUser $user)
     {
-        $this->updated_at   = JsonCast::toDate($entry->getUpdatedAt());
-        $this->html_message = $entry->getHTMLMessage();
-        $this->icon         = $entry->getIcon();
+        $this->project_id = $project->getID();
+        $this->locale     = $user->getShortLocale();
+
+        $this->error_message = _('Unable to fetch the latest activities of the project');
+
+        $this->purified_empty_state = Codendi_HTMLPurifier::instance()->purify(
+            _('There are no items <br> you can see'),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 }

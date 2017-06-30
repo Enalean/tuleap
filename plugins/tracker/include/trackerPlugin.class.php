@@ -1444,7 +1444,8 @@ class trackerPlugin extends Plugin {
             new Tracker_ArtifactDao(),
             $this->getArtifactFactory(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
-            $this->getUserManager()
+            $this->getUserManager(),
+            UserHelper::instance()
         );
         $collector->collect($collection);
     }

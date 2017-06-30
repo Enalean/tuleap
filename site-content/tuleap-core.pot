@@ -262,6 +262,9 @@ msgstr ""
 msgid "Tracker"
 msgstr ""
 
+msgid "Unable to fetch the latest activities of the project"
+msgstr ""
+
 msgid "Unix name"
 msgstr ""
 

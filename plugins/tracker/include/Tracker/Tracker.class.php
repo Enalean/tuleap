@@ -1522,6 +1522,11 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $this->color;
     }
 
+    public function getNormalizedColor()
+    {
+        return str_replace('_', '-', $this->color);
+    }
+
     public function isEmailgatewayEnabled() {
         return $this->enable_emailgateway;
     }
