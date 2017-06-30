@@ -245,6 +245,9 @@ msgstr ""
 msgid "There are no widgets here."
 msgstr ""
 
+msgid "There isn't <br> any activity yet"
+msgstr ""
+
 msgid "There isn't any matching widgets"
 msgstr ""
 

@@ -35,7 +35,7 @@ function init() {
             if (json.entries.length > 0) {
                 displayActivities(widget_content, json.entries);
             } else {
-                displayEmptyState(widget_content);
+                displayEmptyState(widget_content, json);
             }
         } catch (error) {
             displayError(widget_content);
@@ -110,8 +110,17 @@ function displayError(widget_content) {
     widget_content.querySelector('.dashboard-widget-content-projectheartbeat-error').classList.add('shown');
 }
 
-function displayEmptyState(widget_content) {
+function displayEmptyState(widget_content, json) {
     hideEverything(widget_content);
+
+    const empty_no_activity = widget_content.querySelector('.dashboard-widget-content-projectheartbeat-empty-no-activity');
+    const empty_no_perms    = widget_content.querySelector('.dashboard-widget-content-projectheartbeat-empty-no-perms');
+
+    if (json.are_there_activities_user_cannot_see) {
+        empty_no_perms.classList.add('shown');
+    } else {
+        empty_no_activity.classList.add('shown');
+    }
     widget_content.querySelector('.dashboard-widget-content-projectheartbeat-empty').classList.add('shown');
 }
 
