@@ -47,20 +47,51 @@ function displayActivities(widget_content, entries) {
     const activities = widget_content.querySelector('.dashboard-widget-content-projectheartbeat-activities');
     const template   = widget_content.querySelector('.dashboard-widget-content-projectheartbeat-placeholder').textContent;
 
-    const rendered_activities = render(template, { entries: normalize(entries, widget_content.dataset.locale) });
+    const rendered_activities = render(template, getGroupedEntries(widget_content, entries));
     insertRenderedActivitiesInDOM(rendered_activities, activities);
 
     activities.classList.add('shown');
 }
 
-function normalize(entries, locale) {
-    moment.locale(locale);
+function getGroupedEntries(widget_content, entries) {
+    moment.locale(widget_content.dataset.locale);
+
+    let today_entries     = [],
+        yesterday_entries = [],
+        recently_entries  = [];
+
+    const today = moment(), yesterday = moment().subtract(1, 'day');
 
     entries.forEach((entry) => {
-        entry.updated_at = moment(entry.updated_at).fromNow();
+        const updated_at = moment(entry.updated_at);
+
+        entry.updated_at = updated_at.fromNow();
+
+        if (updated_at.isSame(today, 'day')) {
+            today_entries.push(entry);
+        } else if (updated_at.isSame(yesterday, 'day')) {
+            yesterday_entries.push(entry);
+        } else {
+            recently_entries.push(entry);
+        }
     });
 
-    return entries;
+    return {
+        groups: [
+            {
+                label  : widget_content.dataset.today,
+                entries: today_entries
+            },
+            {
+                label: widget_content.dataset.yesterday,
+                entries: yesterday_entries
+            },
+            {
+                label: widget_content.dataset.recently,
+                entries: recently_entries
+            }
+        ]
+    };
 }
 
 function insertRenderedActivitiesInDOM(rendered_activities, parent_element) {

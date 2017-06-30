@@ -200,6 +200,9 @@ msgstr ""
 msgid "RSS"
 msgstr ""
 
+msgid "Recently"
+msgstr ""
+
 msgid "SVN"
 msgstr ""
 
@@ -259,6 +262,9 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+msgid "Today"
+msgstr ""
+
 msgid "Tracker"
 msgstr ""
 
@@ -294,6 +300,9 @@ msgid "Widgets"
 msgstr ""
 
 msgid "Wiki"
+msgstr ""
+
+msgid "Yesterday"
 msgstr ""
 
 #, php-format

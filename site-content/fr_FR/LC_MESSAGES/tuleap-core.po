@@ -219,6 +219,9 @@ msgstr "Site web du projet"
 msgid "RSS"
 msgstr "RSS"
 
+msgid "Recently"
+msgstr "Récemment"
+
 msgid "SVN"
 msgstr "SVN"
 
@@ -280,6 +283,9 @@ msgstr "La référence demandée n'existe pas"
 msgid "Title"
 msgstr "Titre"
 
+msgid "Today"
+msgstr "Aujourd'hui"
+
 msgid "Tracker"
 msgstr "Suivi"
 
@@ -318,6 +324,9 @@ msgstr "Widgets"
 
 msgid "Wiki"
 msgstr "Wiki"
+
+msgid "Yesterday"
+msgstr "Hier"
 
 #, php-format
 msgid ""
