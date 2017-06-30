@@ -20,10 +20,13 @@
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
+use Tuleap\REST\MilestoneBase;
+
 /**
  * @group MilestonesTest
  */
-class MilestoneBurndownTest extends RestBase {
+class MilestoneBurndownTest extends MilestoneBase
+{
 
     protected function getResponse($request) {
         return $this->getResponseByToken(

@@ -20,10 +20,13 @@
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
+use Tuleap\REST\CardsBase;
+
 /**
  * @group CardsTests
  */
-class CardsTest extends RestBase {
+class CardsTest extends CardsBase
+{
 
     protected function getResponse($request) {
         return $this->getResponseByToken(

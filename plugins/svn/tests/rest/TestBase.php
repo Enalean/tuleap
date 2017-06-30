@@ -38,8 +38,6 @@ class TestBase extends RestBase
     {
         parent::setUp();
 
-        if (! $this->svn_project_id) {
-            $this->svn_project_id = $this->getProjectId(self::PROJECT_NAME);
-        }
+        $this->svn_project_id = $this->getProjectId(self::PROJECT_NAME);
     }
 }

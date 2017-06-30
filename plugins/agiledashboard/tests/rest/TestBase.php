@@ -21,7 +21,6 @@
 namespace Tuleap\AgileDashboard\REST;
 
 use RestBase;
-use REST_TestDataBuilder;
 
 class TestBase extends RestBase
 {

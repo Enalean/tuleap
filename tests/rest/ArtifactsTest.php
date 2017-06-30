@@ -20,19 +20,13 @@
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
+use Tuleap\REST\ArtifactBase;
+
 /**
  * @group ArtifactsTest
  */
-class ArtifactsTest extends RestBase
+class ArtifactsTest extends ArtifactBase
 {
-
-    public function setUp()
-    {
-        $this->load_computed_fields_data = true;
-
-        parent::setUp();
-    }
-
     protected function getResponse($request) {
         return $this->getResponseByToken(
             $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
