@@ -34,10 +34,12 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\Svn\Repository\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnPermissionManager;
@@ -59,6 +61,16 @@ class RepositoryResource extends AuthenticatedResource
      * @var \UserManager
      */
     public $user_manager;
+
+    /**
+     * @var SystemEventManager
+     */
+    public $system_event_manager;
+
+    /**
+     * @var \ProjectManager
+     */
+    public $project_manager;
 
     public function __construct()
     {
@@ -85,6 +97,9 @@ class RepositoryResource extends AuthenticatedResource
             new \User_ForgeUserGroupFactory(new \UserGroupDao()),
             \PermissionsManager::instance()
         );
+
+        $this->system_event_manager = \SystemEventManager::instance();
+        $this->project_manager      = \ProjectManager::instance();
     }
 
     /**
@@ -210,12 +225,13 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
-     * @return \Tuleap\Svn\Repository\Repository
+     * @return Repository
      */
     private function getRepository($id)
     {
         try {
             $repository = $this->repository_manager->getRepositoryById($id);
+            $user       = $this->user_manager->getCurrentUser();
 
             if ($repository->isDeleted()) {
                 throw new RestException('404', 'Repository not found');
@@ -277,13 +293,103 @@ class RepositoryResource extends AuthenticatedResource
     private function isDeletionAlreadyQueued(Repository $repository)
     {
         return SystemEventManager::instance()->areThereMultipleEventsQueuedMatchingFirstParameter(
-            'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
+            'Tuleap\\Svn\\EventRepository\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             $repository->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repository->getId()
         );
+    }
+
+    /**
+     * @param Repository $repository
+     * @param \PFUser    $user
+     *
+     * @return \Tuleap\SVN\REST\v1\RepositoryRepresentation
+     */
+    private function getRepositoryRepresentation(Repository $repository, \PFUser $user)
+    {
+        $representation_builder = new RepositoryRepresentationBuilder(
+            $this->permission_manager,
+            $this->repository_manager
+        );
+
+        return $representation_builder->build($repository, $user);
+    }
+
+    /**
+     * Create a SVN repository
+     *
+     * Create a svn repository in a given project. User must be svn administrator to be able to create the repository.
+     *
+     * @url POST
+     * @access hybrid
+     * @status 201
+     *
+     * @param int    $project_id The id of the project where we should create the repository {@from body}
+     * @param string $name Name of the repository {@from body}
+     *
+     * @return \Tuleap\SVN\REST\v1\RepositoryRepresentation
+     * @throws 400 BadRequest Given project does not exist or project does not use SVN service
+     * @throws 403 Forbidden User doesn't have permission to create a repository
+     * @throws 500 Error Unable to create the repository
+     * @throws 409 Repository name is invalid
+     */
+    public function post($project_id, $name)
+    {
+        $this->options();
+
+        $user    = $this->user_manager->getCurrentUser();
+        $project = $this->project_manager->getProject($project_id);
+        if (! $project) {
+            throw new RestException(400, "Given project does not exist");
+        }
+
+        if (! $project->usesService(\SvnPlugin::SERVICE_SHORTNAME)) {
+            throw new RestException(400, "Project does not use SVN service");
+        }
+
+        ProjectAuthorization::userCanAccessProject(
+            $user,
+            $project,
+            new \URLVerification()
+        );
+
+        if (! $this->permission_manager->isAdmin($project, $user)) {
+            throw new RestException(403, "User doesn't have permission to create a repository");
+        }
+
+        $repository_to_create = new Repository("", $name, "", "", $project);
+        try {
+            $rule = new RuleName($project, new DAO());
+            if (! $rule->isValid($name)) {
+                if ($rule->getErrorMessage()) {
+                    throw new RestException(409, $rule->getErrorMessage());
+                }
+
+                throw new RestException(
+                    409,
+                    "Repository name is invalid.  Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed."
+                );
+            }
+            $this->repository_manager->create($repository_to_create, $this->system_event_manager);
+        } catch (CannotCreateRepositoryException $e) {
+            throw new RestException(500, "Unable to create the repository");
+        }
+
+        $repository = $this->repository_manager->getRepositoryByName($project, $name);
+
+        return $this->getRepositoryRepresentation($repository, $user);
     }
 
     private function sendAllowHeaders()
     {
         Header::allowOptionsGetPutDelete();
+    }
+
+    /**
+     * @url OPTIONS
+     *
+     */
+    public function options()
+    {
+        Header::allowOptionsPost();
     }
 }
