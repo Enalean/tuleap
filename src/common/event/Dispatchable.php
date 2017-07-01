@@ -18,26 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\REST\Event;
+namespace Tuleap\Event;
 
-use Tuleap\Event\Dispatchable;
-
-class ProjectOptionsSvn implements Dispatchable
+interface Dispatchable
 {
-    const NAME = 'rest_project_options_svn';
-
-    private $is_plugin_activated = false;
-
-    public function setPluginActivated()
-    {
-        $this->is_plugin_activated = true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPluginActivated()
-    {
-        return $this->is_plugin_activated;
-    }
 }

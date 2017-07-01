@@ -83,7 +83,7 @@ class EventManager {
      * $event should be an object and $params should be ignored.
      * @see \Tuleap\Widget\Event\GetPublicAreas for usage example.
      *
-     * @param mixed $event
+     * @param \Tuleap\Event\Dispatchable|string $event
      * @param mixed $params
      */
     public function processEvent($event, $params = array()) {

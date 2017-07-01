@@ -21,9 +21,10 @@
 namespace Tuleap\REST\Event;
 
 use Project;
+use Tuleap\Event\Dispatchable;
 use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
 
-class ProjectGetSvn
+class ProjectGetSvn implements Dispatchable
 {
     const NAME = 'rest_project_get_svn';
 
