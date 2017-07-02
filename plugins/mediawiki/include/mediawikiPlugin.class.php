@@ -37,11 +37,6 @@ class MediaWikiPlugin extends Plugin {
             $this->Plugin($id) ;
             $this->name = "mediawiki" ;
             $this->text = "Mediawiki" ; // To show in the tabs, use...
-            $this->_addHook("groupmenu") ;	// To put into the project tabs
-            $this->_addHook("groupisactivecheckbox") ; // The "use ..." checkbox in editgroupinfo
-            $this->_addHook("groupisactivecheckboxpost") ; //
-            $this->_addHook("project_public_area");
-            $this->_addHook('group_delete');
             $this->_addHook('cssfile');
             $this->addHook(Event::SERVICE_ICON);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -291,99 +286,14 @@ class MediaWikiPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-        public function service_replace_template_name_in_link($params) {
-            $params['link'] = preg_replace(
-                '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name']).'(/|$)#',
-                '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
-                $params['link']
-            );
-        }
-
-    function CallHook ($hookname, &$params) {
-        if (isset($params['group_id'])) {
-            $group_id=$params['group_id'];
-        } elseif (isset($params['group'])) {
-            $group_id=$params['group'];
-        } else {
-            $group_id=null;
-        }
-        $project_manager = ProjectManager::instance();
-        if ($hookname == "groupmenu") {
-            $project = $project_manager->getProject($group_id);
-            if (!$project || !is_object($project)) {
-                return;
-            }
-            if ($project->isError()) {
-                return;
-            }
-            if (!$project->isProject()) {
-                return;
-            }
-            if ( $project->usesPlugin ( $this->name ) ) {
-                $params['TITLES'][]=$this->text;
-                $params['DIRS'][]=util_make_url('/plugins/mediawiki/wiki/'.$project->getUnixName().'/index.php');
-                $params['ADMIN'][]='';
-                $params['TOOLTIPS'][] = _('Mediawiki Space');
-            }
-            (($params['toptab'] == $this->name) ? $params['selected']=(count($params['TITLES'])-1) : '' );
-        } elseif ($hookname == "groupisactivecheckbox") {
-            //Check if the group is active
-            // this code creates the checkbox in the project edit public info page to activate/deactivate the plugin
-            $group = $project_manager->getProject($group_id);;
-            echo "<tr>";
-            echo "<td>";
-            echo ' <input type="checkbox" name="use_mediawikiplugin" value="1" ';
-            // checked or unchecked?
-            if ( $group->usesPlugin ( $this->name ) ) {
-                echo "checked";
-            }
-            echo " /><br/>";
-            echo "</td>";
-            echo "<td>";
-            echo "<strong>Use ".$this->text." Plugin</strong>";
-            echo "</td>";
-            echo "</tr>";
-        } elseif ($hookname == "groupisactivecheckboxpost") {
-            // this code actually activates/deactivates the plugin after the form was submitted in the project edit public info page
-            $group = $project_manager->getProject($group_id);;
-            $use_mediawikiplugin = getStringFromRequest('use_mediawikiplugin');
-            if ( $use_mediawikiplugin == 1 ) {
-                $group->setPluginUse ( $this->name );
-            } else {
-                $group->setPluginUse ( $this->name, false );
-            }
-        } elseif ($hookname == "project_public_area") {
-            $project = $project_manager->getProject($group_id);
-            if (!$project || !is_object($project)) {
-                return;
-            }
-            if ($project->isError()) {
-                return;
-            }
-            if (!$project->isProject()) {
-                return;
-            }
-            if ( $project->usesPlugin ( $this->name ) ) {
-                echo '<div class="public-area-box">';
-                print '<a href="'. util_make_url ('/plugins/mediawiki/wiki/'.$project->getUnixName().'/index.php').'">';
-                print html_abs_image(util_make_url ('/plugins/mediawiki/wiki/'.$project->getUnixName().'/skins/fusionforge/wiki.png'),'20','20',array('alt'=>'Mediawiki'));
-                print ' Mediawiki';
-                print '</a>';
-                echo '</div>';
-            }
-        } elseif ($hookname == 'group_delete') {
-            $projectId = $params['group_id'];
-            $projectObject = $project_manager->getProject($projectId);
-            if ($projectObject->usesPlugin($this->name)) {
-                //delete the files and db schema
-                $schema = 'plugin_mediawiki_'.$projectObject->getUnixName();
-                // Sanitize schema name
-                $schema = strtr($schema, "-", "_");
-                db_query_params('drop schema $1 cascade', array($schema));
-                exec('/bin/rm -rf '.forge_get_config('projects_path', 'mediawiki').'/'.$projectObject->getUnixName());
-            }
-        }
+    public function service_replace_template_name_in_link($params) {
+        $params['link'] = preg_replace(
+            '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name']).'(/|$)#',
+            '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
+            $params['link']
+        );
     }
+
 
     public function register_project_creation($params) {
         if ($this->serviceIsUsedInTemplate($params['template_id'])) {
