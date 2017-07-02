@@ -48,10 +48,10 @@ class hudson_svnPlugin extends Plugin {
         $this->addHook('cssfile');
         $this->addHook('javascript_file');
 
-        $this->_addHook('collect_ci_triggers');
-        $this->_addHook('save_ci_triggers');
-        $this->_addHook('update_ci_triggers');
-        $this->_addHook('delete_ci_triggers');
+        $this->addHook('collect_ci_triggers');
+        $this->addHook('save_ci_triggers');
+        $this->addHook('update_ci_triggers');
+        $this->addHook('delete_ci_triggers');
 
         if (defined('SVN_BASE_URL')) {
             $this->addHook(PostCommit::PROCESS_POST_COMMIT);

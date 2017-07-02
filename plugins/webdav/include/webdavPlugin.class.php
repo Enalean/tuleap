@@ -33,7 +33,7 @@ class WebDAVPlugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('url_verification_instance', 'urlVerification', false);
+        $this->addHook('url_verification_instance', 'urlVerification', false);
     }
 
     /**

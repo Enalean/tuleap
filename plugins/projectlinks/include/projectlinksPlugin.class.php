@@ -39,20 +39,20 @@ class ProjectLinksPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
         $this->pluginInfo = NULL;
 
-        $this->_addHook('admin_toolbar_configuration',
+        $this->addHook('admin_toolbar_configuration',
             'adminToolbarConfiguration', false);
 
         // add link - only visible when confirgured by a user from an allowed project
-        $this->_addHook('project_summary_title',
+        $this->addHook('project_summary_title',
             'projectSummaryTitle', false);
 
         // only does anythign if template authorised, or linked to
-        $this->_addHook(Event::REGISTER_PROJECT_CREATION,
+        $this->addHook(Event::REGISTER_PROJECT_CREATION,
             'registerProjectCreation', false);
 
-        $this->_addHook('cssfile',         'cssfile',         false);
-        $this->_addHook('widget_instance', 'widget_instance', false);
-        $this->_addHook('widgets',         'widgets',         false);
+        $this->addHook('cssfile',         'cssfile',         false);
+        $this->addHook('widget_instance', 'widget_instance', false);
+        $this->addHook('widgets',         'widgets',         false);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
 

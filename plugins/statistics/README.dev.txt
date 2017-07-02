@@ -4,8 +4,8 @@ Here is the readme for the developers...
 Your plugin must implement the following 2 hooks:
 
 // Stat plugin
-$this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-$this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+$this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
+$this->addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
 
 The first one to collect the disk space used per project for the service
 The second one is to identify your plugin in the statistics plugin.

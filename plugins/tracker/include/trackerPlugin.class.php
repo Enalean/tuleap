@@ -69,28 +69,28 @@ class trackerPlugin extends Plugin {
         bindtextdomain('tuleap-tracker', __DIR__.'/../site-content');
 
         $this->addHook('javascript_file');
-        $this->_addHook('cssfile',                             'cssFile',                           false);
-        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
-        $this->_addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
-        $this->_addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
-        $this->_addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
-        $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
-        $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
-        $this->_addHook(Event::JAVASCRIPT,                     'javascript',                        false);
-        $this->_addHook(Event::TOGGLE,                         'toggle',                            false);
-        $this->_addHook(GetPublicAreas::NAME);
-        $this->_addHook('permission_get_name',                 'permission_get_name',               false);
-        $this->_addHook('permission_get_object_type',          'permission_get_object_type',        false);
-        $this->_addHook('permission_get_object_name',          'permission_get_object_name',        false);
-        $this->_addHook('permission_get_object_fullname',      'permission_get_object_fullname',    false);
-        $this->_addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
-        $this->_addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
+        $this->addHook('cssfile',                             'cssFile',                           false);
+        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
+        $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
+        $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
+        $this->addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
+        $this->addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
+        $this->addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
+        $this->addHook(Event::JAVASCRIPT,                     'javascript',                        false);
+        $this->addHook(Event::TOGGLE,                         'toggle',                            false);
+        $this->addHook(GetPublicAreas::NAME);
+        $this->addHook('permission_get_name',                 'permission_get_name',               false);
+        $this->addHook('permission_get_object_type',          'permission_get_object_type',        false);
+        $this->addHook('permission_get_object_name',          'permission_get_object_name',        false);
+        $this->addHook('permission_get_object_fullname',      'permission_get_object_fullname',    false);
+        $this->addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
+        $this->addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
 
-        $this->_addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,         'getSystemEventClass',               false);
+        $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS,         'getSystemEventClass',               false);
 
-        $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
+        $this->addHook('url_verification_instance',           'url_verification_instance',         false);
 
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICE_ICON);
@@ -100,16 +100,16 @@ class trackerPlugin extends Plugin {
         $this->addHook('widgets');
         $this->addHook(AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER);
 
-        $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
+        $this->addHook('project_is_deleted',                  'project_is_deleted',                false);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
-        $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
-        $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
-        $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
-        $this->_addHook(Event::IMPORT_XML_PROJECT);
-        $this->_addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
+        $this->addHook('codendi_daily_start',                 'codendi_daily_start',               false);
+        $this->addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
+        $this->addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
+        $this->addHook(Event::IMPORT_XML_PROJECT);
+        $this->addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
-        $this->_addHook('plugin_statistics_service_usage');
+        $this->addHook('plugin_statistics_service_usage');
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_GET_PROJECT_TRACKERS);
         $this->addHook(Event::REST_OPTIONS_PROJECT_TRACKERS);
@@ -155,9 +155,9 @@ class trackerPlugin extends Plugin {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
         if (defined('FULLTEXTSEARCH_BASE_URL')) {
-            $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
-            $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS);
-            $this->_addHook(FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP);
+            $this->addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
+            $this->addHook(FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS);
+            $this->addHook(FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP);
         }
 
         $this->addHook(Event::LIST_DELETED_TRACKERS);

@@ -45,10 +45,10 @@ class AdminDelegationPlugin extends Plugin {
 
     public function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('cssfile',                'cssFile',                false);
-        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('widget_instance',        'widget_instance',        false);
-        $this->_addHook('widgets',                'widgets',                false);
+        $this->addHook('cssfile',                'cssFile',                false);
+        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook('widget_instance',        'widget_instance',        false);
+        $this->addHook('widgets',                'widgets',                false);
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);

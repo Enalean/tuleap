@@ -27,7 +27,7 @@ class maillogPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('mail_sendmail', 'sendmail', false);
+        $this->addHook('mail_sendmail', 'sendmail', false);
         $this->addHook('site_admin_option_hook');
         $this->addHook(Event::IS_IN_SITEADMIN);
     }

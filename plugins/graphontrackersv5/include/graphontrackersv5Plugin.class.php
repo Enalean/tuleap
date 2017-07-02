@@ -56,21 +56,21 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            $this->_addHook('cssfile',                           'cssFile',                           false);
+            $this->addHook('cssfile',                           'cssFile',                           false);
 
             //Tracker report renderer
-            $this->_addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
-            $this->_addHook('tracker_report_renderer_from_xml',  'tracker_report_renderer_from_xml', false);
-            $this->_addHook('tracker_report_add_renderer' ,      'tracker_report_add_renderer',       false);
-            $this->_addHook('tracker_report_create_renderer' ,      'tracker_report_create_renderer',       false);
-            $this->_addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
-            $this->_addHook('trackers_get_renderers' ,    'trackers_get_renderers',     false);
+            $this->addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
+            $this->addHook('tracker_report_renderer_from_xml',  'tracker_report_renderer_from_xml', false);
+            $this->addHook('tracker_report_add_renderer' ,      'tracker_report_add_renderer',       false);
+            $this->addHook('tracker_report_create_renderer' ,      'tracker_report_create_renderer',       false);
+            $this->addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
+            $this->addHook('trackers_get_renderers' ,    'trackers_get_renderers',     false);
 
             //Widgets
-            $this->_addHook('widget_instance');
-            $this->_addHook('widgets');
+            $this->addHook('widget_instance');
+            $this->addHook('widgets');
 
-            $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
+            $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
             $this->addHook('javascript_file');
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
