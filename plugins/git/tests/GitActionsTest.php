@@ -75,7 +75,6 @@ class GitActionsTest extends TuleapTestCase {
                 mock('GitRepositoryMirrorUpdater'),
                 mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
                 mock('Tuleap\Git\GerritCanMigrateChecker'),
-                mock('Tuleap\Git\Webhook\WebhookDao'),
                 mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
                 mock('Tuleap\Git\CIToken\Manager'),
@@ -403,11 +402,11 @@ class GitActionsTest extends TuleapTestCase {
 
         $this->assertTrue($gitAction->confirmPrivate(1, 1, 'private', 'desc'));
     }
-    
+
     function testGetProjectRepositoryListShouldReturnProjectRepositories() {
         $projectId = 42;
         $userId    = 24;
-        
+
         $project_repos = array(
             array(
                 'id'   => '1',
@@ -418,14 +417,14 @@ class GitActionsTest extends TuleapTestCase {
                 'name' => 'b',
             ),
         );
-        
+
         $sandra_repos = array(
             array(
                 'id'   => '3',
                 'name' => 'c',
             )
         );
-        
+
         $repo_owners = TestHelper::arrayToDar(
             array(
                 array(
@@ -436,20 +435,20 @@ class GitActionsTest extends TuleapTestCase {
                 ),
             )
         );
-        
+
         $dao    = new MockGitDao();
         $dao->setReturnValue('getProjectRepositoryList', $project_repos, array($projectId, false, true, null));
         $dao->setReturnValue('getProjectRepositoryList', $sandra_repos, array($projectId, false, true, $userId));
         $dao->setReturnValue('getProjectRepositoriesOwners', $repo_owners, array($projectId));
-        
+
         $controller = new MockGit();
         $controller->expectAt(0, 'addData', array(array('repository_list' => $project_repos, 'repositories_owners' => $repo_owners)));
         $controller->expectAt(1, 'addData', array(array('repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners)));
-        
+
         $action = TestHelper::getPartialMock('GitActions', array('getDao'));
         $action->setController($controller);
         $action->setReturnValue('getDao', $dao);
-        
+
         $action->getProjectRepositoryList($projectId);
         $action->getProjectRepositoryList($projectId, $userId);
     }
@@ -502,7 +501,6 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('GitRepositoryMirrorUpdater'),
             mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
             mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Webhook\WebhookDao'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
             mock('Tuleap\Git\CIToken\Manager'),
@@ -577,7 +575,6 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('GitRepositoryMirrorUpdater'),
             mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
             mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Webhook\WebhookDao'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
             mock('Tuleap\Git\CIToken\Manager'),
@@ -741,7 +738,6 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('GitRepositoryMirrorUpdater'),
             mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
             mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Webhook\WebhookDao'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
             mock('Tuleap\Git\CIToken\Manager'),
