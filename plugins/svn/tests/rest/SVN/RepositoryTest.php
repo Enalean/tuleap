@@ -53,8 +53,9 @@ class RepositoryTest extends TestBase
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
+        $this->assertArrayHasKey('settings', $repository);
         $this->assertEquals(
-            $repository['commit_rules'],
+            $repository['settings']['commit_rules'],
             array(
                 "mandatory_reference"         => false,
                 "allow_commit_message_change" => false
@@ -70,7 +71,7 @@ class RepositoryTest extends TestBase
 
         $this->assertArrayHasKey('id', $repository);
         $this->assertEquals($repository['name'], 'repo01');
-        $this->assertArrayNotHasKey('commit_rules', $repository);
+        $this->assertArrayNotHasKey('settings', $repository);
     }
 
     public function testOPTIONS()

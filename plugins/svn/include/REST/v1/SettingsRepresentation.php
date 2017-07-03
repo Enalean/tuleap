@@ -20,29 +20,15 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\REST\JsonCast;
-use Tuleap\Svn\Repository\HookConfig;
-
-class CommitRulesRepresentation
+class SettingsRepresentation
 {
     /**
-     * @var Boolean {@type boolean}
+     * @var CommitRulesRepresentation {@type Tuleap\SVN\REST\v1\CommitRulesRepresentation}
      */
-    public $mandatory_reference;
+    public $commit_rules;
 
-    /**
-     * @var Boolean {@type boolean}
-     */
-    public $allow_commit_message_change;
-
-    public function build(HookConfig $hook_config)
+    public function build(CommitRulesRepresentation $commit_hook_representation)
     {
-        $this->mandatory_reference = JsonCast::toBoolean(
-            $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)
-        );
-
-        $this->allow_commit_message_change = JsonCast::toBoolean(
-            $hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
-        );
+        $this->commit_rules = $commit_hook_representation;
     }
 }
