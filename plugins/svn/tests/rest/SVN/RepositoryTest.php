@@ -74,6 +74,34 @@ class RepositoryTest extends TestBase
         $this->assertArrayNotHasKey('settings', $repository);
     }
 
+    /**
+     * @depends testGETRepositoryForProjectAdmin
+     * @depends testGETRepositoryForProjectMember
+     */
+    public function testDELETERepositoryForProjectAdmin()
+    {
+        $response  = $this->getResponse($this->client->delete(
+            'svn/1'
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 202);
+    }
+
+    /**
+     * @depends testGETRepositoryForProjectAdmin
+     * @depends testGETRepositoryForProjectMember
+     */
+    public function testDELETERepositoryForProjectMember()
+    {
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponseWithProjectMember(
+            $this->client->delete(
+                'svn/1'
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 401);
+    }
+
     public function testOPTIONS()
     {
         $response = $this->getResponseByToken(
@@ -81,6 +109,6 @@ class RepositoryTest extends TestBase
             $this->client->get('svn/1')
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
     }
 }

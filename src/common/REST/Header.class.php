@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -138,6 +138,12 @@ class Header {
     public static function allowOptionsPatchDelete() {
         self::sendAllowHeaders(array(self::OPTIONS, self::PATCH, self::DELETE));
     }
+
+    public static function allowOptionsGetDelete()
+    {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::DELETE));
+    }
+
 
     public static function allowOptionsPatch() {
         self::sendAllowHeaders(array(self::OPTIONS, self::PATCH));
