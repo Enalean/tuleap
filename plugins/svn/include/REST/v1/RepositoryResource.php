@@ -94,6 +94,26 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
+     * Get SVN
+     *
+     * Get info about project SVN repositories
+     *
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"id" : 90,<br>
+     *   &nbsp;"project": {...},<br>
+     *   &nbsp;"uri": "svn/90",<br>
+     *   &nbsp;"name": "repo",<br>
+     *   &nbsp;"settings": {<br>
+     *   &nbsp;&nbsp;"commit_rules": {<br>
+     *   &nbsp;&nbsp;"mandatory_reference": true|false ,<br>
+     *   &nbsp;&nbsp;"allow_commit_message_change": true|false<br>
+     *   &nbsp;&nbsp;}<br>
+     *   &nbsp;}<br>
+     *  }<br>
+     * </pre>
+     *
      * @access hybrid
      *
      * @url GET {id}

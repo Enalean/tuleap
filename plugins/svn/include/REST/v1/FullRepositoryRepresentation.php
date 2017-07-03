@@ -24,13 +24,14 @@ use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\SVN\REST\v1\CommitRulesRepresentation;
 use Tuleap\SVN\REST\v1\RepositoryRepresentation;
+use Tuleap\SVN\REST\v1\SettingsRepresentation;
 
 class FullRepositoryRepresentation extends RepositoryRepresentation
 {
     /**
-     * @var CommitRulesRepresentation {@type Tuleap\SVN\REST\CommitRulesRepresentation}
+     * @var SettingsRepresentation {@type Tuleap\SVN\REST\v1\SettingsRepresentation}
      */
-    public $commit_rules;
+    public $settings;
 
     public function fullBuild(Repository $repository, HookConfig $hook_config)
     {
@@ -38,6 +39,10 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
 
         $commit_rules_representation = new CommitRulesRepresentation();
         $commit_rules_representation->build($hook_config);
-        $this->commit_rules = $commit_rules_representation;
+
+        $settings_representation = new SettingsRepresentation();
+        $settings_representation->build($commit_rules_representation);
+
+        $this->settings = $settings_representation;
     }
 }
