@@ -37,18 +37,7 @@ class Widget_ImageViewer extends Widget {
     function getTitle() {
         return $this->image_title ?: 'Image';
     }
-    function getContent() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $content = '';
-        if ($this->image_url) {
-            $content .= '<div style="text-align:center">';
-            $content .= '<img src="'.  $hp->purify($this->image_url, CODENDI_PURIFIER_CONVERT_HTML)  .'" alt="' . $hp->purify($this->getTitle()) .  '" />';
-            $content .= '</div>';
-        }
-        return $content;
-    }
-
-    public function getContentForBurningParrot()
+    function getContent()
     {
         if (!$this->image_url) {
             return '';

@@ -42,20 +42,10 @@ class Widget_MyProjects extends Widget {
 
     public function getContent()
     {
-        return $this->getWidgetContent(true);
-    }
-
-    public function getContentForBurningParrot()
-    {
         $GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');
 
-        return $this->getWidgetContent(false);
-    }
-
-    private function getWidgetContent($use_legacy_template)
-    {
         $html = '';
         $display_privacy = ForgeConfig::get('sys_display_project_privacy_in_service_bar');
         $user = UserManager::instance()->getCurrentUser();
@@ -160,9 +150,9 @@ class Widget_MyProjects extends Widget {
 
             $html .= '</table>';
 
-            $html .= $this->fetchMassMailForm($token, $use_legacy_template);
-
+            $html .= $this->fetchMassMailForm($token);
         }
+
         return $html;
     }
 
@@ -220,7 +210,7 @@ class Widget_MyProjects extends Widget {
         return $GLOBALS['Language']->getText('widget_description_my_projects','description');
     }
 
-    private function fetchMassMailForm(CSRFSynchronizerToken $token, $use_legacy_template) {
+    private function fetchMassMailForm(CSRFSynchronizerToken $token) {
         $presenter = new MassmailFormPresenter(
             $token,
             $GLOBALS['Language']->getText('my_index', 'massmail_form_title'),
@@ -229,10 +219,6 @@ class Widget_MyProjects extends Widget {
 
         $template_factory = TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-
-        if ($use_legacy_template) {
-            return $renderer->renderToString('contact-modal-for-legacy-dashboard', $presenter);
-        }
 
         return $renderer->renderToString('contact-modal', $presenter);
     }
