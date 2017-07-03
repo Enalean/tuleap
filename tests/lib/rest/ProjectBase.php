@@ -18,19 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Tuleap\Git\REST;
+namespace Tuleap\REST;
 
-use GitDataBuilder;
 use RestBase;
 
-class TestBase extends RestBase
+class ProjectBase extends RestBase
 {
-    protected $git_project_id;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->git_project_id = $this->getProjectId(GitDataBuilder::PROJECT_TEST_GIT_SHORTNAME);
+        $this->getEpicArtifactIds();
     }
 }

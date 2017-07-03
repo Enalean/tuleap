@@ -20,10 +20,12 @@
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
+use Tuleap\REST\TrackerBase;
+
 /**
  * @group TrackersTests
  */
-class TrackersTest extends RestBase {
+class TrackersTest extends TrackerBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(

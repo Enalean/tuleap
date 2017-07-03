@@ -20,10 +20,13 @@
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
+use Tuleap\REST\ProjectBase;
+
 /**
  * @group ProjectTests
  */
-class ProjectTest extends RestBase {
+class ProjectTest extends ProjectBase
+{
 
     protected function getResponse($request) {
         return $this->getResponseByToken(

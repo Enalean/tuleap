@@ -31,7 +31,8 @@ class ArtifactsChangesetsTest extends RestBase {
     /** @var Test_Rest_TrackerFactory */
     private $tracker_test_helper;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(

@@ -23,6 +23,7 @@ namespace Tracker;
 use REST_TestDataBuilder;
 use TrackerDataBuilder;
 use RestBase;
+use \Guzzle\Http\Client;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
@@ -38,6 +39,11 @@ class ArtifactTest extends RestBase {
     protected $status_field_id;
     protected $status_value_id;
 
+    /**
+     * @var Client
+     */
+    private $xml_client;
+
     protected function getResponse($request) {
         return $this->getResponseByToken(
             $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
@@ -45,8 +51,20 @@ class ArtifactTest extends RestBase {
         );
     }
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->xml_client   = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
+
+        $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
+        $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
+    }
+
     public function setUp() {
         parent::setUp();
+
+        $this->getReleaseArtifactIds();
 
         $this->project_id = $this->getProjectId(TrackerDataBuilder::XML_PROJECT_ID_SHORT_NAME);
         $tracker          = $this->getTracker();
