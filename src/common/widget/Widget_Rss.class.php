@@ -70,11 +70,8 @@ require_once('common/date/DateHelper.class.php');
     function isAjax() {
         return true;
     }
-    function hasPreferences() {
-        return true;
-    }
 
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -105,7 +102,7 @@ require_once('common/date/DateHelper.class.php');
             ';
     }
 
-    public function getInstallPreferencesForBurningParrot()
+    public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -135,21 +132,6 @@ require_once('common/date/DateHelper.class.php');
             ';
     }
 
-    function getPreferences() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="rss[title]" value="'. $hp->purify($this->rss_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" value="'. $hp->purify($this->rss_url, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '</table>';
-        return $prefs;
-    }
-    function getInstallPreferences() {
-        $prefs  = '';
-        $prefs .= '<table>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="rss[url]" placeholder="https://example.com/rss.xml" /></td></tr>';
-        $prefs .= '</table>';
-        return $prefs;
-    }
     function cloneContent($id, $owner_id, $owner_type) {
         $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url) 
         SELECT  ". $owner_id .", '". $owner_type ."', title, url

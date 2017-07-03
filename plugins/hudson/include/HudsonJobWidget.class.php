@@ -54,37 +54,14 @@ abstract class HudsonJobWidget extends HudsonWidget {
         db_query($sql);
     }
 
-    function getInstallPreferences() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $prefs    = '<strong>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')).'</strong><br />';
-
-        $selected_jobs_id = $this->getSelectedJobsId();
-        $jobs = $this->getAvailableJobs();
-
-        $only_one_job = (count($jobs) == 1);
-	    foreach ($jobs as $job_id => $job) {
-                $selected = ($only_one_job)?'checked="checked"':'';
-                $prefs .= '<input type="radio" name="' . $purifier->purify($this->widget_id) . '_job_id" value="'.$purifier->purify($job_id).'" ' . $selected . '> ' . $purifier->purify($job->getName()) ;
-                if (in_array($job_id, $selected_jobs_id)) {
-                        $prefs .= ' <em>('. $purifier->purify($GLOBALS['Language']->getText('widget_add', 'already_used')) .')</em>';
-                }
-                $prefs .= '<br />';
-	    }
-        return $prefs;
-    }
-
-    function hasPreferences() {
-        return true;
-    }
-
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $select_id = 'job-'. (int)$widget_id;
 
         return $this->buildPreferencesForm($select_id);
     }
 
-    public function getInstallPreferencesForBurningParrot()
+    public function getInstallPreferences()
     {
         $select_id = 'widget-job-id';
 
@@ -117,19 +94,6 @@ abstract class HudsonJobWidget extends HudsonWidget {
         return $html;
     }
 
-    function getPreferences() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $prefs    = '<strong>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')).'</strong><br />';
-
-        $jobs = $this->getAvailableJobs();
-
-        foreach ($jobs as $job_id => $job) {
-            $selected = ($job_id == $this->job_id)?'checked="checked"':'';
-            $prefs .= '<input type="radio" name="' . $purifier->purify($this->widget_id) . '_job_id" value="'.$purifier->purify($job_id).'" ' . $selected . '> '.$purifier->purify($job->getName()).'<br />';
-        }
-        return $prefs;
-    }
-
     function updatePreferences(&$request) {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {
@@ -138,20 +102,6 @@ abstract class HudsonJobWidget extends HudsonWidget {
             $res = db_query($sql);
         }
         return true;
-    }
-
-    /**
-     * Returns the jobs selected for this widget
-     */
-    function getSelectedJobsId() {
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
-        $res = db_query($sql);
-
-        $selected_jobs_id = array();
-        while ($data = db_fetch_array($res)) {
-        	$selected_jobs_id[] = $data['job_id'];
-        }
-        return $selected_jobs_id;
     }
 
     protected abstract function initContent();

@@ -126,7 +126,7 @@ class Widget_MyLatestSvnCommits extends Widget {
         return $html;
     }
 
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -147,12 +147,6 @@ class Widget_MyLatestSvnCommits extends Widget {
             ';
     }
 
-    function getPreferences() {
-        $prefs  = '';
-        $prefs .= $GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit_nb_prefs');
-        $prefs .= ' <input name="nb_svn_commits" type="text" size="2" maxlength="3" value="'.user_get_preference('my_latests_svn_commits_nb_display').'">';
-        return $prefs;
-    }
     function updatePreferences(&$request) {
         $request->valid(new Valid_String('cancel'));
         $nbShow = new Valid_UInt('nb_svn_commits');

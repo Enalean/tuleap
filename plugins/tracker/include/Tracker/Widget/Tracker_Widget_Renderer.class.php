@@ -72,33 +72,31 @@ abstract class Tracker_Widget_Renderer extends Widget {
         return true;
     }
 
-    function getInstallPreferences() {
-        return $this->getPreferences();
-    }
-
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-'. (int)$widget_id .'">'. $purifier->purify(_('Title')) .'</label>
+                <label class="tlp-label" for="title-'. $purifier->purify($widget_id) .'">
+                    '. $purifier->purify(_('Title')) .'
+                </label>
                 <input type="text"
                        class="tlp-input"
-                       id="title-'. (int)$widget_id .'"
+                       id="title-'. $purifier->purify($widget_id) .'"
                        name="renderer[title]"
                        value="'. $purifier->purify($this->getTitle()) .'"
                        placeholder="'. $purifier->purify(dgettext('tuleap-tracker', 'Tracker renderer')) .'">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="renderer-id-'. (int)$widget_id .'">
+                <label class="tlp-label" for="renderer-id-'. $purifier->purify($widget_id) .'">
                     '. $purifier->purify(dgettext('tuleap-tracker', 'Renderer id')) .'
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
                        class="tlp-input"
-                       id="renderer-id-'. (int)$widget_id .'"
+                       id="renderer-id-'. $purifier->purify($widget_id) .'"
                        name="renderer[renderer_id]"
                        value="'. $purifier->purify($this->renderer_id) .'"
                        required
@@ -107,7 +105,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
             ';
     }
 
-    public function getInstallPreferencesForBurningParrot()
+    public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -135,20 +133,6 @@ abstract class Tracker_Widget_Renderer extends Widget {
                        placeholder="123">
             </div>
             ';
-    }
-
-    function getPreferences() {
-        $hp = Codendi_HTMLPurifier::instance();
-
-        $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="renderer[title]" value="'. $hp->purify($this->renderer_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Renderer Id:</td><td>';
-
-        $prefs .= '<input type="text" name="renderer[renderer_id]" value="'. ((int)$this->renderer_id ? (int)$this->renderer_id : '') .'" />';
-
-        $prefs .= '</td></tr>';
-        $prefs .= '</table>';
-        return $prefs;
     }
 
     function cloneContent($id, $owner_id, $owner_type) {

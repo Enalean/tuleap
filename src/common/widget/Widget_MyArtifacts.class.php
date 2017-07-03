@@ -66,11 +66,8 @@ class Widget_MyArtifacts extends Widget {
         }
         return true;
     }
-    function hasPreferences() {
-        return true;
-    }
 
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -102,16 +99,6 @@ class Widget_MyArtifacts extends Widget {
             ';
     }
 
-    function getPreferences() {
-        $prefs  = '';
-        $prefs .= $GLOBALS['Language']->getText('my_index', 'display_arts').' <select name="show">';
-        $prefs .= '<option value="A"  '.($this->_artifact_show === 'A'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 'a_info');
-        $prefs .= '<option value="S"  '.($this->_artifact_show === 'S'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 's_info');
-        $prefs .= '<option value="AS" '.($this->_artifact_show === 'AS'?'selected="selected"':'').'>'.$GLOBALS['Language']->getText('my_index', 'as_info');
-        $prefs .= '</select>';
-        return $prefs;
-
-    }
     function isAjax() {
         return true;
     }
