@@ -46,13 +46,23 @@ class ProjectGetSvn implements Dispatchable
     private $offset;
     private $version;
     private $is_plugin_activated = false;
+    private $filter;
 
-    public function __construct(Project $project, $version, $limit, $offset)
+    public function __construct(Project $project, $filter, $version, $limit, $offset)
     {
         $this->project = $project;
         $this->limit   = $limit;
         $this->offset  = $offset;
         $this->version = $version;
+        $this->filter  = $filter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilter()
+    {
+        return $this->filter;
     }
 
     /**

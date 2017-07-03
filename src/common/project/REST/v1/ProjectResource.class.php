@@ -72,6 +72,11 @@ class ProjectResource extends AuthenticatedResource {
      */
     private $event_manager;
 
+    /**
+     * @var JsonDecoder
+     */
+    private $json_decoder;
+
     public function __construct() {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
@@ -927,10 +932,15 @@ class ProjectResource extends AuthenticatedResource {
      * ]
      * </pre>
      *
+     * <br/>
+     * <br/>
+     * ?query must be a json object to search on name with exact match: {"name": "repository01"}
+     *
      * @url GET {id}/svn
      * @access hybrid
      *
      * @param int $id        Id of the project
+     * @param string $query  Optional search string in json format {@from query}
      * @param int $limit     Number of elements displayed per page {@from path}
      * @param int $offset    Position of the first element to display {@from path}
      *
@@ -938,11 +948,13 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @throws 404
      */
-    public function getSvn($id, $limit = 10, $offset = 0) {
+    public function getSvn($id, $query = '', $limit = 10, $offset = 0) {
         $this->checkAccess();
 
-        $project = $this->getProjectForUser($id);
-        $event   = new ProjectGetSvn($project, 'v1', $limit, $offset);
+        $project                = $this->getProjectForUser($id);
+        $repository_name_filter = $this->getRepositoryNameFromQuery($query);
+
+        $event = new ProjectGetSvn($project, $repository_name_filter, 'v1', $limit, $offset);
 
         $this->event_manager->processEvent($event);
 
@@ -953,7 +965,25 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForProject();
         $this->sendPaginationHeaders($limit, $offset, $event->getTotalRepositories());
 
-        return $event->getRepositoriesRepresentations();
+        return array('repositories' => $event->getRepositoriesRepresentations());
+    }
+
+    private function getRepositoryNameFromQuery($query)
+    {
+        if ($query === '') {
+            return '';
+        }
+
+        if ($query && ! $this->json_decoder->looksLikeJson($query)) {
+            throw new RestException(400, 'Query must be in Json');
+        }
+
+        $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
+        if (! isset($json_query['name'])) {
+            throw new RestException(400, 'You can only search on "name"');
+        }
+
+        return $json_query['name'];
     }
 
     /**

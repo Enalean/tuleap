@@ -19,5 +19,6 @@
     </services>
     <svn>
         <repository name="repo01"/>
+        <repository name="repo02"/>
     </svn>
 </project>
