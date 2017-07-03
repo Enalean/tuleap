@@ -2716,10 +2716,6 @@ msgstr "dernier commentaire by "
 msgid "Recent Edits"
 msgstr "Éditions Récentes"
 
-#: ../lib/plugin/RecentReferrers.php:14
-msgid "RecentReferrers"
-msgstr ""
-
 #: ../lib/plugin/RedirectTo.php:47
 msgid "RedirectTo"
 msgstr "RedirigerVers"
@@ -4768,10 +4764,6 @@ msgstr "non affectée"
 #: ../lib/upgrade.php:808
 msgid "FIXED"
 msgstr "CORRIGÉ"
-
-#: ../lib/upgrade.php:594
-msgid "check for ACCESS_LOG_SQL passwords in POST requests"
-msgstr ""
 
 #: ../lib/upgrade.php:660
 msgid ""

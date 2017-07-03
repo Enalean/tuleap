@@ -491,16 +491,6 @@ new boolean_define_commented_optional
  array('false' => "Disabled",
        'true'  => "Enabled"));
 
-$properties["Access Log File"] =
-new _define_commented_optional('ACCESS_LOG', ACCESS_LOG);
-
-$properties["Access Log SQL"] =
-new _define_selection(
-'ACCESS_LOG_SQL', 
-array('0' => 'disabled',
-      '1' => 'read only',
-      '2' => 'read + write'));
-
 $properties["Compress Output"] =
 new boolean_define_commented_optional
 ( 'COMPRESS_OUTPUT', 

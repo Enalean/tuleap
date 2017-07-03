@@ -2609,10 +2609,6 @@ msgstr ""
 msgid "Recent Edits"
 msgstr ""
 
-#: ../lib/plugin/RecentReferrers.php:14
-msgid "RecentReferrers"
-msgstr ""
-
 #: ../lib/plugin/RedirectTo.php:47
 msgid "RedirectTo"
 msgstr ""
@@ -4602,10 +4598,6 @@ msgstr ""
 #: ../lib/upgrade.php:563 ../lib/upgrade.php:584 ../lib/upgrade.php:605
 #: ../lib/upgrade.php:808
 msgid "FIXED"
-msgstr ""
-
-#: ../lib/upgrade.php:594
-msgid "check for ACCESS_LOG_SQL passwords in POST requests"
 msgstr ""
 
 #: ../lib/upgrade.php:660
