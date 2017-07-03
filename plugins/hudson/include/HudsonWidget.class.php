@@ -27,17 +27,17 @@ require_once('PluginHudsonJobDao.class.php');
 require_once('HudsonJobFactory.class.php');
 
 abstract class HudsonWidget extends Widget {
-    
+
     /**
      * @var HudsonJobFactory
      */
     protected $hudsonJobFactory;
-    
+
     public function __construct($widget_id, HudsonJobFactory $factory) {
         parent::__construct($widget_id);
         $this->hudsonJobFactory = $factory;
     }
-    
+
     function getCategory() {
         return 'ci';
     }
@@ -75,31 +75,12 @@ abstract class HudsonWidget extends Widget {
         }
         return $this->hudsonJobFactory;
     }
-    
+
     public function setHudsonJobFactory(HudsonJobFactory $factory) {
         $this->hudsonJobFactory = $factory;
     }
-    
+
     function isAjax() {
         return true;
-    }
-
-    function isInstallAllowed() {
-        $jobs = $this->getAvailableJobs();
-        return count($jobs) > 0;
-    }
-
-    function getInstallNotAllowedMessage() {
-        $jobs = $this->getAvailableJobs();
-        if (count($jobs) <= 0) {
-            // no hudson jobs available
-            if ($this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
-                return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) . '</span>';
-            } else {
-                return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>';
-            }
-        } else {
-            return '';
-        }
     }
 }
