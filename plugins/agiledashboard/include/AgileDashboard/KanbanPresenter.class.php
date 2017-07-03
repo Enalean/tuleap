@@ -86,7 +86,7 @@ class KanbanPresenter {
         $this->kanban_representation = json_encode($kanban_representation_builder->build($kanban, $user));
         $this->dashboard_dropdown    = json_encode(TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/widgets')->renderToString(
             'add-to-dashboard-dropdown',
-            $widget_dropdown_builder->build($user, $project_manager->getProject($project_id))
+            $widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id))
         ));
         $this->user_is_kanban_admin  = (int) $user_is_kanban_admin;
         $this->language              = $language;

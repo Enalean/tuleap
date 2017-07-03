@@ -28,8 +28,5 @@ msgstr ""
 "Affiche un tableau pour voir les tâches à faire, en cours, terminées etc. "
 "Veuillez aller sur un kanban pour l’ajouter."
 
-msgid "Kanban"
-msgstr "Kanban"
-
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"

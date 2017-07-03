@@ -12,8 +12,5 @@ msgid ""
 "a kanban to add it."
 msgstr ""
 
-msgid "Kanban"
-msgstr ""
-
 msgid "There is no content <br> you can see"
 msgstr ""

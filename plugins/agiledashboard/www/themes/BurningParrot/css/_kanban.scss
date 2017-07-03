@@ -408,3 +408,14 @@ add-in-place {
     color: transparentize($tlp-theme-color, .7);
     font-size: 100px;
 }
+
+.widget-context {
+
+    > .kanban-header {
+        padding: 0 0 $tlp-spacing;
+
+        > .kanban-header-title {
+            display: none;
+        }
+    }
+}

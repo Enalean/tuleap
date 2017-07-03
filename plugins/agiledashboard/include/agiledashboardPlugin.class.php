@@ -21,6 +21,10 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -322,12 +326,46 @@ class AgileDashboardPlugin extends Plugin {
 
     public function widgetInstance($params)
     {
+        if ($params['widget'] !== MyKanban::NAME && $params['widget'] !== ProjectKanban::NAME) {
+            return;
+        }
+
+        $widget_kanban_dao       = new WidgetKanbanDao();
+        $widget_kanban_creator   = new WidgetKanbanCreator(
+            $widget_kanban_dao
+        );
+        $widget_kanban_retriever = new WidgetKanbanRetriever(
+            $widget_kanban_dao
+        );
+        $widget_kanban_deletor   = new WidgetKanbanDeletor(
+            $widget_kanban_dao
+        );
+        $permission_manager      = new AgileDashboard_PermissionsManager();
+        $kanban_factory          = new AgileDashboard_KanbanFactory(
+            TrackerFactory::instance(),
+            new AgileDashboard_KanbanDao()
+        );
+
         switch ($params['widget']) {
             case MyKanban::NAME:
-                $params['instance'] = new MyKanban($this->getPluginPath());
+                $params['instance'] = new MyKanban(
+                    $widget_kanban_creator,
+                    $widget_kanban_retriever,
+                    $widget_kanban_deletor,
+                    $kanban_factory,
+                    TrackerFactory::instance(),
+                    $permission_manager
+                );
                 break;
             case ProjectKanban::NAME:
-                $params['instance'] = new ProjectKanban($this->getPluginPath());
+                $params['instance'] = new ProjectKanban(
+                    $widget_kanban_creator,
+                    $widget_kanban_retriever,
+                    $widget_kanban_deletor,
+                    $kanban_factory,
+                    TrackerFactory::instance(),
+                    $permission_manager
+                );
                 break;
             default:
                 break;

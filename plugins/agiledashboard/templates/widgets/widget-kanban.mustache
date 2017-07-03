@@ -1,0 +1,30 @@
+{{# is_empty }}
+    {{# there_is_error }}
+        <div class="tlp-alert-danger">
+            {{ error_message }}
+        </div>
+    {{/ there_is_error }}
+    <div class="empty-pane">
+        <i class="fa fa-columns empty-pane-icon widget-kanban-empty-icon"></i>
+        <p class="empty-pane-text">{{{ purified_empty_state }}}</p>
+    </div>
+{{/ is_empty }}
+{{^ is_empty }}
+    {{# kanban_presenter }}
+        <div ng-app="kanban"
+             ng-controller="MainCtrl"
+             ng-init="init(
+                {{ kanban_representation }},
+                null,
+                {{ user_id }},
+                {{ user_is_kanban_admin }},
+                '{{ language }}',
+                {{ project_id }},
+                '{{ view_mode }}',
+                '{{ nodejs_server }}'
+            )"
+        >
+            <ui-view class="kanban widget-context"></ui-view>
+        </div>
+    {{/ kanban_presenter }}
+{{/ is_empty }}

@@ -20,12 +20,34 @@
 
 namespace Tuleap\AgileDashboard\Widget;
 
+use AgileDashboard_KanbanFactory;
+use AgileDashboard_PermissionsManager;
+use TrackerFactory;
+use Tuleap\Dashboard\User\UserDashboardController;
+use UserManager;
+
 class MyKanban extends Kanban
 {
     const NAME = 'plugin_agiledashboard_my_kanban';
 
-    public function __construct()
-    {
-        parent::__construct(self::NAME);
+    public function __construct(
+        WidgetKanbanCreator $widget_kanban_creator,
+        WidgetKanbanRetriever $widget_kanban_retriever,
+        WidgetKanbanDeletor $widget_kanban_deletor,
+        AgileDashboard_KanbanFactory $kanban_factory,
+        TrackerFactory $tracker_factory,
+        AgileDashboard_PermissionsManager $permissions_manager
+    ) {
+        parent::__construct(
+            self::NAME,
+            UserManager::instance()->getCurrentUser()->getId(),
+            UserDashboardController::LEGACY_DASHBOARD_TYPE,
+            $widget_kanban_creator,
+            $widget_kanban_retriever,
+            $widget_kanban_deletor,
+            $kanban_factory,
+            $tracker_factory,
+            $permissions_manager
+        );
     }
 }
