@@ -1,11 +1,23 @@
 <?php
-// Copyright (c) Enalean, 2015. All Rights Reserved.
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
+/**
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * SourceForge: Breaking Down the Barriers to Open Source Development
+ * Copyright 1999-2001 (c) VA Linux Systems
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 header("Cache-Control: no-cache, no-store, must-revalidate");
 
@@ -17,7 +29,7 @@ require_once('timezones.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/include/HTTPRequest.class.php');
 $GLOBALS['HTML']->includeCalendarScripts();
-$request =& HTTPRequest:: instance();
+$request = HTTPRequest:: instance();
 $page = $request->get('page');
 $confirmation_register = false;
 // ###### function register_valid()
@@ -40,7 +52,7 @@ if (! $request->getCurrentUser()->isSuperUser() && !$is_register_page_accessible
 function register_valid($mail_confirm_code, array &$errors)	{
     global $Language;
 
-    $request =& HTTPRequest::instance();
+    $request = HTTPRequest::instance();
 
     $vLoginName = new Valid_UserNameFormat('form_loginname');
     $vLoginName->required();
@@ -148,14 +160,13 @@ function getFieldError($field_key, array $errors) {
 function display_account_form($register_error, array $errors)	{
     global $Language;
 
-    $request =& HTTPRequest::instance();
-    $purifier =& Codendi_HTMLPurifier::instance();
+    $request  = HTTPRequest::instance();
+    $purifier = Codendi_HTMLPurifier::instance();
 
     $page = $request->get('page');
     if ($register_error) {
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
-    $star = '<span class="highlight"><big>*</big></span>';
     $form_loginname         = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
     $form_loginname_error   = getFieldError('form_loginname', $errors);
 
@@ -167,9 +178,6 @@ function display_account_form($register_error, array $errors)	{
 
     $form_pw                = '';
     $form_pw_error          = getFieldError('form_pw', $errors);
-
-    $form_expiry            = $request->exist('form_expiry')?$purifier->purify($request->get('form_expiry')):'';
-    $form_expiry_error      = getFieldError('form_expiry', $errors);
 
     $form_mail_site         = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
     $form_mail_site_error   = getFieldError('form_mail_site', $errors);
@@ -209,7 +217,8 @@ function display_account_form($register_error, array $errors)	{
             new Account_RegisterField($form_mail_site, $form_mail_site_error),
             new Account_RegisterField($timezone, $timezone_error),
             new Account_RegisterField($form_restricted, $form_restricted_error),
-            new Account_RegisterField($form_send_email, $form_send_email_error)
+            new Account_RegisterField($form_send_email, $form_send_email_error),
+            $form_restricted
         );
         $presenter = new Account_RegisterByAdminPresenter($prefill, $extra_plugin_field);
         $template = 'register-admin';
@@ -231,8 +240,8 @@ function display_account_form($register_error, array $errors)	{
 }
 
 // ###### first check for valid login, if so, congratulate
-$request =& HTTPRequest::instance();
-$hp =& Codendi_HTMLPurifier::instance();
+$request = HTTPRequest::instance();
+$hp = Codendi_HTMLPurifier::instance();
 $errors = array();
 if ($request->isPost() && $request->exist('Register')) {
     $is_registration_valid = true;
@@ -386,4 +395,3 @@ if (!$confirmation_register) {
 }
 
 $HTML->footer(array('without_content' => true));
-?>

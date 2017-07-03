@@ -73,20 +73,22 @@
             {{/has_error }}
         {{/ form_mail_site }}
 
-        {{# form_restricted }}
-            {{# has_error }}
-                <div class="control-group error">
-                    <div class="controls">
-            {{/has_error }}
-                        <label class="checkbox">
-                            <input type="checkbox" name="form_restricted" value="1" {{# form_restricted }}checked{{/ form_restricted }} />
-                            {{ restricted_user }}
-                        </label>
-            {{# has_error }}
+        {{# does_platform_allows_restricted }}
+            {{# form_restricted }}
+                {{# has_error }}
+                    <div class="control-group error">
+                        <div class="controls">
+                {{/has_error }}
+                            <label class="checkbox">
+                                <input type="checkbox" name="form_restricted" value="1" {{# form_restricted }}checked{{/ form_restricted }} />
+                                {{ restricted_user }}
+                            </label>
+                {{# has_error }}
+                        </div>
                     </div>
-                </div>
-            {{/has_error }}
-        {{/ form_restricted }}
+                {{/has_error }}
+            {{/ form_restricted }}
+        {{/ does_platform_allows_restricted }}
 
         {{# form_restricted }}
             {{# has_error }}

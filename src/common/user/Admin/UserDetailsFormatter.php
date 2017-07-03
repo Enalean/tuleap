@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,32 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\user\Admin;
+namespace Tuleap\User\Admin;
 
 use EventManager;
 use PFUser;
 
 class UserDetailsFormatter
 {
+    /**
+     * @var UserStatusBuilder
+     */
+    private $user_status_builder;
+
+    public function __construct(UserStatusBuilder $user_status_builder)
+    {
+
+        $this->user_status_builder = $user_status_builder;
+    }
+
     public function getStatus(PFUser $user)
     {
-        $labels = array(
-            PFUser::STATUS_ACTIVE     => $GLOBALS['Language']->getText('admin_usergroup', 'active'),
-            PFUser::STATUS_RESTRICTED => $GLOBALS['Language']->getText('admin_usergroup', 'restricted'),
-            PFUser::STATUS_SUSPENDED  => $GLOBALS['Language']->getText('admin_usergroup', 'suspended'),
-            PFUser::STATUS_DELETED    => $GLOBALS['Language']->getText('admin_usergroup', 'deleted')
-        );
-
-        $all_status = array();
-        foreach ($labels as $key => $status) {
-            $all_status[] = array(
-                'key'        => $key,
-                'status'     => $status,
-                'is_current' => $user->getStatus() === $key
-            );
-        }
-
-        return $all_status;
+        return $this->user_status_builder->getStatus($user);
     }
 
     public function getUnixStatus(PFUser $user)

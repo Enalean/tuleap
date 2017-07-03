@@ -370,3 +370,6 @@ msgstr ""
 
 msgid "Your history is empty"
 msgstr "Votre historique est vide"
+
+msgid "Your platform does not allow restricted users."
+msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"

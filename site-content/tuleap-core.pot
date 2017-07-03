@@ -338,3 +338,6 @@ msgstr ""
 
 msgid "Your history is empty"
 msgstr ""
+
+msgid "Your platform does not allow restricted users."
+msgstr ""
