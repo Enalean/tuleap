@@ -162,11 +162,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
         );
     }
 
-    public function getContentForBurningParrot()
-    {
-        return $this->getContent();
-    }
-
     public function getPreferencesForBurningParrot($widget_id)
     {
         return '';

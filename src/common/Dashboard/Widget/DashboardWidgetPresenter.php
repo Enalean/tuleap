@@ -66,7 +66,7 @@ class DashboardWidgetPresenter
             $this->content  = '';
             $this->ajax_url = $widget->getAjaxUrl($widget->owner_id, $widget->owner_type, $dashboard->getId());
         } else {
-            $this->content  = $widget->getContentForBurningParrot();
+            $this->content  = $widget->getContent();
             $this->ajax_url = '';
         }
 
