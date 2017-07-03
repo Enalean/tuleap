@@ -77,8 +77,12 @@ class HeartbeatsEntryCollection implements Dispatchable
     /**
      * @return HeartbeatsEntry[]
      */
-    public function getEntries()
+    public function getLatestEntries()
     {
+        usort($this->entries, function (HeartbeatsEntry $a, HeartbeatsEntry $b) {
+            return $b->getUpdatedAt() - $a->getUpdatedAt();
+        });
+
         return $this->entries;
     }
 

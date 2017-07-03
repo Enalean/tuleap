@@ -45,6 +45,7 @@ use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
@@ -82,6 +83,7 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\HeartbeatsEntryCollection;
 
 require_once 'constants.php';
 require_once 'autoload.php';
@@ -222,6 +224,8 @@ class GitPlugin extends Plugin {
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(Event::GET_GLYPH, 'getGlyph');
+        $this->addHook(HeartbeatsEntryCollection::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2279,5 +2283,30 @@ class GitPlugin extends Plugin {
         return strpos($_SERVER['REQUEST_URI'], '/plugins/git') === 0
             || strpos($_SERVER['REQUEST_URI'], '/my/') === 0
             || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+    }
+
+    /**
+     * @see Event::GET_GLYPH
+     */
+    public function getGlyph(array $params)
+    {
+        if ($params['name'] === 'tuleap-git') {
+            $svg_content = file_get_contents(GIT_BASE_DIR . '/../glyphs/tuleap-git.svg');
+            if ($svg_content !== false) {
+                $params['glyph'] = new \Tuleap\Glyph\Glyph($svg_content);
+            }
+        }
+    }
+
+    public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)
+    {
+        $collector = new LatestHeartbeatsCollector(
+            $this->getRepositoryFactory(),
+            new Git_LogDao(),
+            new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
+            UserManager::instance(),
+            UserHelper::instance()
+        );
+        $collector->collect($collection);
     }
 }

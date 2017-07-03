@@ -18,18 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Artifact;
+namespace Tuleap\Git;
+
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 use Tuleap\Project\HeartbeatsEntryCollection;
 use TuleapTestCase;
 
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
-
 class LatestHeartbeatsCollectorTest extends TuleapTestCase
 {
-    /** @var \Tracker_ArtifactDao */
-    public $dao;
-
     /** @var \Tracker_ArtifactFactory */
     public $factory;
 
@@ -52,49 +49,44 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
         $this->project = aMockProject()->withId(101)->build();
         $this->user    = aUser()->withId(200)->build();
 
-        $this->dao = mock('Tracker_ArtifactDao');
-        stub($this->dao)
-            ->searchLatestUpdatedArtifactsInProject(
+        $dao = mock('Git_LogDao');
+        stub($dao)
+            ->searchLatestPushesInProject(
                 101,
                 HeartbeatsEntryCollection::NB_MAX_ENTRIES
             )->returnsDar(
-                array('id' => 1),
-                array('id' => 2),
-                array('id' => 3)
+                array('repository_id' => 1, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1),
+                array('repository_id' => 2, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1),
+                array('repository_id' => 3, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1)
             );
 
-        $artifact1 = aMockArtifact()->withId(1)->allUsersCanView()->build();
-        $artifact2 = aMockArtifact()->withId(2)->build();
-        $artifact3 = aMockArtifact()->withId(3)->allUsersCanView()->build();
-
-        $this->factory = mock('Tracker_ArtifactFactory');
-        stub($this->factory)->getInstanceFromRow(array('id' => 1))->returns($artifact1);
-        stub($this->factory)->getInstanceFromRow(array('id' => 2))->returns($artifact2);
-        stub($this->factory)->getInstanceFromRow(array('id' => 3))->returns($artifact3);
+        $this->factory = mock('GitRepositoryFactory');
+        $this->declareRepository(1, true);
+        $this->declareRepository(2, false);
+        $this->declareRepository(3, true);
 
         $this->collector = new LatestHeartbeatsCollector(
-            $this->dao,
             $this->factory,
+            $dao,
             $glyph_finder,
             mock('UserManager'),
             mock('UserHelper')
         );
     }
 
-    public function itConvertsArtifactsIntoHeartbeats()
+    private function declareRepository($id, $user_can_read)
     {
-        $collection = new HeartbeatsEntryCollection($this->project, $this->user);
-        $this->collector->collect($collection);
+        $repository = stub('GitRepository')->getId()->returns($id);
 
-        $entries = $collection->getLatestEntries();
-        foreach ($entries as $entry) {
-            $this->assertIsA($entry, 'Tuleap\Project\HeartbeatsEntry');
-        }
+        stub($repository)->userCanRead()->returns($user_can_read);
+        stub($repository)->getProject()->returns($this->project);
+
+        stub($this->factory)->getRepositoryById($id)->returns($repository);
     }
 
-    public function itCollectsOnlyArtifactsUserCanView()
+    public function itCollectsOnlyPushesForRepositoriesUserCanView()
     {
-        expect($this->factory)->getInstanceFromRow()->count(3);
+        expect($this->factory)->getRepositoryById()->count(3);
 
         $collection = new HeartbeatsEntryCollection($this->project, $this->user);
         $this->collector->collect($collection);
