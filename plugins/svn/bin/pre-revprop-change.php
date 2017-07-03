@@ -60,7 +60,8 @@ try {
             EventManager::instance(),
             Backend::instance(Backend::SVN),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance()
+            SystemEventManager::instance(),
+            new ProjectHistoryDao()
         )
     );
 

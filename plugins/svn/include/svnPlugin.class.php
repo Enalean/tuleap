@@ -38,6 +38,7 @@ use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Admin\RestoreController;
+use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
@@ -299,7 +300,8 @@ class SvnPlugin extends Plugin
                 EventManager::instance(),
                 Backend::instance(Backend::SVN),
                 new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-                SystemEventManager::instance()
+                SystemEventManager::instance(),
+                new ProjectHistoryDao()
             );
         }
 

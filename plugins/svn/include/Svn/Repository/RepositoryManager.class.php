@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,6 +65,10 @@ class RepositoryManager
     private $access_file_history_factory;
     /** @var SystemEventManager */
     private $system_event_manager;
+    /**
+     * @var \ProjectHistoryDao
+     */
+    private $history_dao;
 
     public function __construct(
         Dao $dao,
@@ -77,7 +81,8 @@ class RepositoryManager
         EventManager $event_manager,
         Backend $backend,
         AccessFileHistoryFactory $access_file_history_factory,
-        SystemEventManager $system_event_manager
+        SystemEventManager $system_event_manager,
+        \ProjectHistoryDao $history_dao
     ) {
         $this->dao                         = $dao;
         $this->project_manager             = $project_manager;
@@ -90,6 +95,7 @@ class RepositoryManager
         $this->backend                     = $backend;
         $this->access_file_history_factory = $access_file_history_factory;
         $this->system_event_manager        = $system_event_manager;
+        $this->history_dao                 = $history_dao;
     }
 
     /**
@@ -216,6 +222,12 @@ class RepositoryManager
      */
     public function queueRepositoryDeletion(Repository $repositorysvn, SystemEventManager $system_event_manager)
     {
+        $this->history_dao->groupAddHistory(
+            'svn_multi_repository_deletion',
+            $repositorysvn->getName(),
+            $repositorysvn->getProject()->getID()
+        );
+
         return $system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             $repositorysvn->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repositorysvn->getId(),

@@ -62,7 +62,8 @@ try {
             EventManager::instance(),
             Backend::instance(Backend::SVN),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance()
+            SystemEventManager::instance(),
+            new ProjectHistoryDao()
         ),
         new CommitInfoEnhancer($svnlook, new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),

@@ -130,3 +130,5 @@ plugin_svn_statistics	top_project_operation	Top projet (nombre d'opérations en 
 plugin_svn_statistics	service_usage_activities	Activités de SVN avec dépôt multiple
 
 plugin_svn	url_can_not_be_processed	L'action demandée ne peut pas être comprise, vous avez été redirigé vers la page d'accueil
+
+project_admin_utils	svn_multi_repository_deletion	Dépôt SVN supprimé
