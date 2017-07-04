@@ -10,7 +10,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#, php-format
+msgid "%s commit was pushed on %s"
+msgid_plural "%s commits were pushed on %s"
+msgstr[0] "%s commit a été poussé sur %s"
+msgstr[1] "%s commits ont été poussés sur %s"
+
+#, php-format
+msgid "%s pushed %s commit on %s"
+msgid_plural "%s pushed %s commits on %s"
+msgstr[0] "%s a poussé %s commit sur %s"
+msgstr[1] "%s a poussé %s commits sur %s"
+
+#, php-format
+msgid "%s pushed on %s"
+msgstr "%s a poussé sur %s"
+
+#, php-format
+msgid "A push occured on %s"
+msgstr "Un push est survenu sur %s"
 
 #, php-format
 msgid "Cannot add user \"%s\""

@@ -41,7 +41,7 @@ class HeartbeatsRepresentation
     public function build(HeartbeatsEntryCollection $heartbeats)
     {
         $this->entries = array();
-        foreach ($heartbeats->getEntries() as $entry) {
+        foreach ($heartbeats->getLatestEntries() as $entry) {
             $representation = new HeartbeatsEntryRepresentation();
             $representation->build($entry);
 
