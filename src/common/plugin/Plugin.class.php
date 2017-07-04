@@ -164,10 +164,6 @@ class Plugin implements PFO_Plugin {
         return $hook;
     }
 
-    public function removeHook($hook) {
-        $this->hooks->removeKey($hook);
-    }
-
     public function getScope() {
         return $this->_scope;
     }

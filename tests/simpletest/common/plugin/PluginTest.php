@@ -83,15 +83,6 @@ class PluginTest extends TuleapTestCase {
         $col = $p->getHooks();
         $this->assertTrue($col->contains($hook1));
         $this->assertTrue($col->contains($hook2));
-
-        $p->removeHook($hook1);
-        $col = $p->getHooks();
-        $this->assertFalse($col->contains($hook1));
-        $this->assertTrue($col->contains($hook2));
-
-        $p->removeHook($hook2);
-        $col = $p->getHooks();
-        $this->assertTrue($col->isEmpty());
     }
 
     public function testDefaultCallbackIsHookNameInCamelCase()

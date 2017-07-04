@@ -131,17 +131,4 @@ class Map {
         }
         return $removed;
     }
-
-    /**
-     * remove a key
-     */
-    function removeKey($key) {
-        $removed = false;
-        if ($this->containsKey($key) && isset($this->elements[$key])) {
-            unset($this->elements[$key]);
-            $removed = true;
-        }
-        return $removed;
-    }
 }
-?>
