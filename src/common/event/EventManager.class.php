@@ -22,13 +22,8 @@
 /**
  * EventManager
  */
-class EventManager {
-
-    /**
-     * @const string The callback to call if everything else fail
-     */
-    const DEFAULT_CALLBACK = 'CallHook';
-
+class EventManager
+{
     private $listeners = array();
 
     /**
@@ -101,15 +96,13 @@ class EventManager {
         }
     }
 
-    private function processEventOnListener($event, $params, array $entry) {
-        $listener = $entry['listener'];
-        $callback = $entry['callback'];
-        $recallEvent = $entry['recallEvent'];
-        if (!method_exists($listener, $callback)) {
-            $callback    = self::DEFAULT_CALLBACK;
-            $recallEvent = true;
-        }
-        if ($recallEvent) {
+    private function processEventOnListener($event, $params, array $entry)
+    {
+        $listener     = $entry['listener'];
+        $callback     = $entry['callback'];
+        $recall_event = $entry['recallEvent'];
+
+        if ($recall_event) {
             $listener->$callback($event, $params);
         } else {
             $listener->$callback($params);

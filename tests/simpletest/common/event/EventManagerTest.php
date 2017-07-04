@@ -20,7 +20,7 @@
  */
 
 Mock::generate('EventListener', 'Event1MockEventListener', array('doSomething'));
-Mock::generate('EventListener', 'Event2MockEventListener', array('CallHook'));
+Mock::generate('EventListener', 'Event2MockEventListener', array('doSomethingElse'));
 
 class EventManagerTest extends TuleapTestCase {
 
@@ -46,7 +46,7 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         $l2 = new Event1MockEventListener($this);
         $l2->expectOnce('doSomething');
         $l3 = new Event2MockEventListener($this);
-        $l3->expectNever('CallHook');
+        $l3->expectNever('doSomethingElse');
 
         //The events
         $e1 = 'event1';
@@ -58,7 +58,7 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         //We register the listeners for the type
         $m->addListener($e1, $l1, 'doSomething', false);
         $m->addListener($e1, $l2, 'doSomething', false);
-        $m->addListener($e2, $l3, 'CallHook', true);
+        $m->addListener($e2, $l3, 'doSomethingElse', true);
 
         //We process event
         $params = array();
@@ -72,7 +72,7 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         $l2 = new Event1MockEventListener($this);
         $l2->expectNever('doSomething');
         $l3 = new Event2MockEventListener($this);
-        $l3->expectOnce('CallHook');
+        $l3->expectOnce('doSomethingElse');
 
         //The events
         $e1 = 'event1';
@@ -84,24 +84,11 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
         //We register the listeners for the type
         $m->addListener($e1, $l1, 'doSomething', false);
         $m->addListener($e1, $l2, 'doSomething', false);
-        $m->addListener($e2, $l3, 'CallHook', true);
+        $m->addListener($e2, $l3, 'doSomethingElse', true);
 
         //We process event
         $params = array();
         $m->processEvent($e2, $params);
-    }
-
-    public function itFallbackToCallHookIfGivenCallbackDoesNotExist() {
-        $event  = 'an_event';
-        $params = array('some_params');
-
-        $listener = new Event2MockEventListener($this);
-        stub($listener)->CallHook($event, $params)->once();
-
-        $em = new EventManager();
-        $em->addListener($event, $listener, 'doSomething', false);
-
-        $em->processEvent($event, $params);
     }
 
     public function itCanSendAnEventObjectInsteadOfStringPlusParams()
