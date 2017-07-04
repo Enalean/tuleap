@@ -21,6 +21,7 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Luracast\Restler\RestException;
+use ProjectHistoryDao;
 use SystemEvent;
 use SystemEventManager;
 use PFUser;
@@ -89,7 +90,8 @@ class RepositoryResource extends AuthenticatedResource
             \EventManager::instance(),
             $backend_svn,
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            \SystemEventManager::instance()
+            \SystemEventManager::instance(),
+            new ProjectHistoryDao()
         );
 
         $this->user_manager       = \UserManager::instance();

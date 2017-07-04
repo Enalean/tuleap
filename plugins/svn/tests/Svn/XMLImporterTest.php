@@ -134,7 +134,8 @@ class XMLImporterTest extends TuleapTestCase {
             $event_manager,
             $backend,
             $access_file_history_factory,
-            $this->sysevmgr
+            $this->sysevmgr,
+            mock('ProjectHistoryDao')
         );
         $this->ugdao                 = safe_mock('UGroupDao');
         $this->ugudao                = safe_mock('UGroupUserDao');

@@ -114,7 +114,8 @@ class referencealias_svnPlugin extends Plugin
                 EventManager::instance(),
                 Backend::instance(Backend::SVN),
                 $this->getAccessFileHistoryFactory(),
-                SystemEventManager::instance()
+                SystemEventManager::instance(),
+                new ProjectHistoryDao()
             )
         );
     }
