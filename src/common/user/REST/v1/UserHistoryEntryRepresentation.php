@@ -51,6 +51,10 @@ class UserHistoryEntryRepresentation
      */
     public $icon;
     /**
+     * @var string SVG icon (small size) associated with the entry {@type string} {@required true}
+     */
+    public $small_icon;
+    /**
      * @var MinimalProjectRepresentation Project to which this user's history entry belongs {@required true}
      */
     public $project;
@@ -61,12 +65,13 @@ class UserHistoryEntryRepresentation
 
     public function build(HistoryEntry $entry)
     {
-        $this->visit_time = JsonCast::toDate($entry->getVisitTime());
-        $this->xref       = $entry->getXref();
-        $this->html_url   = $entry->getLink();
-        $this->title      = $entry->getTitle();
-        $this->color_name = $entry->getColor();
-        $this->icon       = $entry->getIcon();
+        $this->visit_time  = JsonCast::toDate($entry->getVisitTime());
+        $this->xref        = $entry->getXref();
+        $this->html_url    = $entry->getLink();
+        $this->title       = $entry->getTitle();
+        $this->color_name  = $entry->getColor();
+        $this->small_icon  = $entry->getSmallIcon()->getInlineString();
+        $this->icon        = $entry->getNormalIcon()->getInlineString();
 
         $project_representation = new MinimalProjectRepresentation();
         $project_representation->buildMinimal($entry->getProject());

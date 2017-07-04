@@ -1430,8 +1430,8 @@ class trackerPlugin extends Plugin {
      */
     public function getGlyph(array $params)
     {
-        if ($params['name'] === 'tuleap-tracker') {
-            $svg_content = file_get_contents(TRACKER_BASE_DIR . '/../glyphs/tuleap-tracker.svg');
+        if (strpos($params['name'], 'tuleap-tracker') === 0) {
+            $svg_content = file_get_contents(TRACKER_BASE_DIR . '/../glyphs/'. $params['name'] .'.svg');
             if ($svg_content !== false) {
                 $params['glyph'] = new \Tuleap\Glyph\Glyph($svg_content);
             }
