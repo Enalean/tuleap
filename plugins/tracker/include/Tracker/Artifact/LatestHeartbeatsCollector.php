@@ -84,7 +84,8 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $artifact->getLastUpdateDate(),
-                    $this->glyph_finder->get('tuleap-tracker')->getInlineString(),
+                    $this->glyph_finder->get('tuleap-tracker-small'),
+                    $this->glyph_finder->get('tuleap-tracker'),
                     $this->getHTMLMessage($artifact)
                 )
             );

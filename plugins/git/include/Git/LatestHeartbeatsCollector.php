@@ -87,7 +87,8 @@ class LatestHeartbeatsCollector
             $collection->add(
                 new HeartbeatsEntry(
                     $push_row['push_date'],
-                    $this->glyph_finder->get('tuleap-git')->getInlineString(),
+                    $this->glyph_finder->get('tuleap-git-small'),
+                    $this->glyph_finder->get('tuleap-git'),
                     $this->getHTMLMessage($repository, $push_row)
                 )
             );

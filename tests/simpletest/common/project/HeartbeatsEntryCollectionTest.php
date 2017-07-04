@@ -28,9 +28,11 @@ class HeartbeatsEntryCollectionTest extends TuleapTestCase
     {
         $collection = new HeartbeatsEntryCollection(mock('Project'), mock('PFUser'));
 
-        $entry1 = new HeartbeatsEntry(100, 'icon', 'message');
-        $entry2 = new HeartbeatsEntry(50, 'icon', 'message');
-        $entry3 = new HeartbeatsEntry(10, 'icon', 'message');
+        $icon = mock('Tuleap\Glyph\Glyph');
+
+        $entry1 = new HeartbeatsEntry(100, $icon, $icon, 'message');
+        $entry2 = new HeartbeatsEntry(50, $icon, $icon, 'message');
+        $entry3 = new HeartbeatsEntry(10, $icon, $icon, 'message');
 
         $collection->add($entry3);
         $collection->add($entry1);

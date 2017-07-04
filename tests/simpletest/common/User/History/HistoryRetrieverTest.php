@@ -26,12 +26,13 @@ class HistoryRetrieverTest extends \TuleapTestCase
 {
     public function itRetrievesHistorySortedByVisitTime()
     {
-        $event_manager = new MockedEventManager(function ($name, $params) {
-            $params['history'] = array(
-                new HistoryEntry(300, '', '', '', '', '', mock('Project'), array()),
-                new HistoryEntry(100, '', '', '', '', '', mock('Project'), array()),
-                new HistoryEntry(200, '', '', '', '', '', mock('Project'), array())
-            );
+        $history = array(
+            $this->getHistoryEntryAt(300),
+            $this->getHistoryEntryAt(100),
+            $this->getHistoryEntryAt(200),
+        );
+        $event_manager = new MockedEventManager(function ($name, $params) use ($history) {
+            $params['history'] = $history;
         });
         $history_retriever = new HistoryRetriever($event_manager);
 
@@ -45,15 +46,36 @@ class HistoryRetrieverTest extends \TuleapTestCase
 
     public function itTruncatesHistoryToTheMaxLength()
     {
-        $event_manager = new MockedEventManager(function ($name, $params) {
-            foreach (range(1, HistoryRetriever::MAX_LENGTH_HISTORY * 2) as $n) {
-                $params['history'][] = new HistoryEntry($n, '', '', '', '', '', mock('Project'), array());
-            }
+        $history = array();
+        foreach (range(1, HistoryRetriever::MAX_LENGTH_HISTORY * 2) as $n) {
+            $history[] = $this->getHistoryEntryAt($n);
+        }
+
+        $event_manager = new MockedEventManager(function ($name, $params) use ($history) {
+            $params['history'] = $history;
         });
 
         $history_retriever = new HistoryRetriever($event_manager);
 
         $history = $history_retriever->getHistory(mock('PFUser'));
         $this->assertCount($history, HistoryRetriever::MAX_LENGTH_HISTORY);
+    }
+
+    /**
+     * @return HistoryEntry
+     */
+    private function getHistoryEntryAt($visit_time)
+    {
+        return new HistoryEntry(
+            $visit_time,
+            '',
+            '',
+            '',
+            '',
+            mock('Tuleap\Glyph\Glyph'),
+            mock('Tuleap\Glyph\Glyph'),
+            mock('Project'),
+            array()
+        );
     }
 }

@@ -37,11 +37,16 @@ class HeartbeatsEntryRepresentation
      * @var string SVG icon associated with the entry {@type string} {@required true}
      */
     public $icon;
+    /**
+     * @var string SVG icon (small size) associated with the entry {@type string} {@required true}
+     */
+    public $small_icon;
 
     public function build(HeartbeatsEntry $entry)
     {
         $this->updated_at   = JsonCast::toDate($entry->getUpdatedAt());
         $this->html_message = $entry->getHTMLMessage();
-        $this->icon         = $entry->getIcon();
+        $this->icon         = $entry->getNormalIcon()->getInlineString();
+        $this->small_icon   = $entry->getSmallIcon()->getInlineString();
     }
 }
