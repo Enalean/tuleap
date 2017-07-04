@@ -1,17 +1,24 @@
-<div class="column-content-addinplace tlp-button-primary"
-    ng-class="{open: addInPlace.isOpen()}"
+<div class="column-content-addinplace"
+    ng-class="{open: addInPlace.isOpen(), 'tlp-button-primary': ! addInPlace.isOpen()}"
     esc-key="addInPlace.close()"
 >
-    <i class="fa fa-plus" ng-click="addInPlace.open()"></i>
-    <form ng-submit="addInPlace.submit()" ng-if="addInPlace.isOpen()">
-        <div class="tlp-form-element tlp-form-element-append">
-            <input type="text" class="tlp-input" ng-model="addInPlace.summary" placeholder="{{ 'Card summary' | translate }}">
-            <button type="submit" class="tlp-append tlp-button-secondary">
-                <i class="fa fa-check tlp-button-icon"></i>
-            </button>
-            <button type="button" class="tlp-append tlp-button-secondary" ng-click="addInPlace.close()">
-                <i class="fa fa-times tlp-button-icon"></i>
-            </button>
-        </div>
+    <i class="fa fa-plus column-content-addinplace-icon"
+       ng-click="addInPlace.open()"></i>
+    <form ng-submit="addInPlace.submit()"
+          ng-if="addInPlace.isOpen()"
+          class="column-content-addinplace-icon-form tlp-form-element tlp-form-element-append"
+    >
+        <input type="text"
+               class="tlp-input column-content-addinplace-icon-form-input"
+               ng-model="addInPlace.summary"
+               placeholder="{{ 'Card summary' | translate }}">
+        <button type="submit"
+                class="tlp-append tlp-button-primary column-content-addinplace-icon-form-save"
+        >
+            <i class="fa fa-fw fa-check"></i>
+        </button>
+        <button type="button" class="tlp-append tlp-button-primary" ng-click="addInPlace.close()">
+            <i class="fa fa-fw fa-times"></i>
+        </button>
     </form>
 </div>

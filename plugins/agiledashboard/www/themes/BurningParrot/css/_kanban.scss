@@ -357,8 +357,12 @@ kanban-column {
 add-in-place {
     display: flex;
     position: absolute;
+    z-index: 1000;
     bottom: 10px;
+    left: 0;
     align-items: center;
+    justify-content: center;
+    width: 100%;
     transition: opacity 75ms;
     opacity: 0;
     pointer-events: none;
@@ -366,13 +370,44 @@ add-in-place {
 
 .column-content-addinplace {
     display: flex;
-    align-items: center;
     justify-content: center;
     width: 46px;
     height: 46px;
+    padding: 0;
     overflow: visible;
+    transition: border-radius 50ms, width 150ms, height 150ms;
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
+
+    &.open {
+        width: calc(100% - #{$tlp-spacing});
+        height: 38px;
+        transition: border-radius 50ms, width 150ms, height 150ms;
+        border-radius: 4px;
+
+        > .column-content-addinplace-icon {
+            display: none;
+        }
+    }
+}
+
+.column-content-addinplace-icon-form {
+    width: 100%;
+}
+
+.column-content-addinplace-icon-form-input {
+    flex: 1 1 auto;
+}
+
+.column-content-addinplace-icon-form-save.tlp-append {
+    border-radius: 0;
+}
+
+.column-content-addinplace-icon {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
 }
 
 .kanban-column-label {
