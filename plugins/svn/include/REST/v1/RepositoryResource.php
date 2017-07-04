@@ -373,7 +373,7 @@ class RepositoryResource extends AuthenticatedResource
                     "Repository name is invalid.  Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed."
                 );
             }
-            $this->repository_manager->create($repository_to_create, $this->system_event_manager);
+            $this->repository_manager->create($repository_to_create);
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
         }

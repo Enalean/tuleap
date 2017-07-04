@@ -186,17 +186,26 @@ class RepositoryManager
     /**
      * @return SystemEvent or null
      */
-    public function create(Repository $repositorysvn, \SystemEventManager $system_event_manager) {
-        $id = $this->dao->create($repositorysvn);
+    public function create(Repository $svn_repository)
+    {
+        $id = $this->dao->create($svn_repository);
         if (! $id) {
             throw new CannotCreateRepositoryException ($GLOBALS['Language']->getText('plugin_svn','update_error'));
         }
-        $repositorysvn->setId($id);
 
-        $repo_event['system_path'] = $repositorysvn->getSystemPath();
-        $repo_event['project_id']  = $repositorysvn->getProject()->getId();
-        $repo_event['name']        = $repositorysvn->getProject()->getUnixNameMixedCase()."/".$repositorysvn->getName();
-        return $system_event_manager->createEvent(
+        $svn_repository->setId($id);
+
+        $this->history_dao->groupAddHistory(
+            'svn_multi_repository_creation',
+            $svn_repository->getName(),
+            $svn_repository->getProject()->getID()
+        );
+
+        $repo_event['system_path'] = $svn_repository->getSystemPath();
+        $repo_event['project_id']  = $svn_repository->getProject()->getId();
+        $repo_event['name']        = $svn_repository->getProject()->getUnixNameMixedCase()."/".$svn_repository->getName();
+
+        return $this->system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME,
             implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),
             SystemEvent::PRIORITY_HIGH);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,8 +40,6 @@ use ForgeConfig;
 
 class XMLRepositoryImporter
 {
-
-
     const SERVICE_NAME = 'svn';
 
     /** @var string */
@@ -93,7 +91,6 @@ class XMLRepositoryImporter
         Logger $logger,
         Project $project,
         RepositoryManager $repository_manager,
-        SystemEventManager $system_event_manager,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
         RuleName $rule_name
@@ -103,7 +100,7 @@ class XMLRepositoryImporter
         }
 
         $repo = new Repository ("", $this->name, '', '', $project);
-        $sysevent = $repository_manager->create($repo, $system_event_manager);
+        $sysevent = $repository_manager->create($repo);
         if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");
         }
