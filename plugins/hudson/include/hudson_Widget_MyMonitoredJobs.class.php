@@ -56,25 +56,6 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         }
     }
 
-    function isInstallAllowed() {
-        $user    = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao();
-        $dar     = $job_dao->searchByUserID($user->getId());
-        return ($dar->rowCount() > 0);
-    }
-
-    function getInstallNotAllowedMessage() {
-    	$user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
-        if ($dar->rowCount() <= 0) {
-            // no hudson jobs available
-            return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>';
-        } else {
-        	return '';
-        }
-    }
-
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_hudson', 'my_jobs');

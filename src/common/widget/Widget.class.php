@@ -45,17 +45,13 @@ use Tuleap\Dashboard\User\UserDashboardController;
         return $this->id;
     }
 
-    function getTitle() {
-        return '';
-    }
-    function getContent() {
+    public function getTitle()
+    {
         return '';
     }
 
-    function isInstallAllowed() {
-        return true;
-    }
-    function getInstallNotAllowedMessage() {
+    public function getContent()
+    {
         return '';
     }
 
