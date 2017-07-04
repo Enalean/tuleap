@@ -23,6 +23,7 @@ namespace Tuleap\SVN\REST\v1;
 use Luracast\Restler\RestException;
 use SystemEvent;
 use SystemEventManager;
+use PFUser;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -40,6 +41,7 @@ use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnPermissionManager;
+use Project;
 
 class RepositoryResource extends AuthenticatedResource
 {
@@ -133,25 +135,102 @@ class RepositoryResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
+        $user       = $this->user_manager->getCurrentUser();
+        $repository = $this->getRepository($id, $user);
+
+        ProjectAuthorization::userCanAccessProject(
+            $user,
+            $repository->getProject(),
+            new \URLVerification()
+        );
+
+        $this->sendAllowHeaders();
+
+        $representation_builder = new RepositoryRepresentationBuilder(
+            $this->permission_manager,
+            $this->repository_manager
+        );
+
+        return $representation_builder->build($repository, $user);
+    }
+
+    /**
+     * PUT SVN
+     *
+     * Update settings of an SVN repository. Only project admins can do this.
+     *
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"settings": {<br>
+     *   &nbsp;&nbsp;"commit_rules": {<br>
+     *   &nbsp;&nbsp;"mandatory_reference": true|false ,<br>
+     *   &nbsp;&nbsp;"allow_commit_message_change": true|false<br>
+     *   &nbsp;&nbsp;}<br>
+     *   &nbsp;}<br>
+     *  }<br>
+     * </pre>
+     *
+     * @access hybrid
+     *
+     * @url PUT {id}
+     *
+     * @param int $id       Id of the repository
+     * @param int $settings The new settings of the SVN repository {@from body} {@type Tuleap\SVN\REST\v1\SettingsRepresentation}
+     *
+     * @return FullRepositoryRepresentation
+     *
+     * @throws 404
+     * @throws 403
+     */
+    public function put($id, SettingsRepresentation $settings)
+    {
+        $this->sendAllowHeaders();
+        $this->checkAccess();
+
+        $user       = $this->user_manager->getCurrentUser();
+        $repository = $this->getRepository($id);
+
+        ProjectAuthorization::userCanAccessProject(
+            $user,
+            $repository->getProject(),
+            new \URLVerification()
+        );
+
+        $this->checkUserIsAdmin($repository->getProject(), $user);
+
+        $this->repository_manager->updateHookConfig($id, $settings->commit_rules->toArray());
+
+        $representation_builder = new RepositoryRepresentationBuilder(
+            $this->permission_manager,
+            $this->repository_manager
+        );
+
+        return $representation_builder->build($repository, $user);
+    }
+
+    /**
+     * @return \Tuleap\Svn\Repository\Repository
+     */
+    private function getRepository($id)
+    {
         try {
-            $user       = $this->user_manager->getCurrentUser();
             $repository = $this->repository_manager->getRepositoryById($id);
-            ProjectAuthorization::userCanAccessProject(
-                $user,
-                $repository->getProject(),
-                new \URLVerification()
-            );
 
-            $this->sendAllowHeaders();
+            if ($repository->isDeleted()) {
+                throw new RestException('404', 'Repository not found');
+            }
 
-            $representation_builder = new RepositoryRepresentationBuilder(
-                $this->permission_manager,
-                $this->repository_manager
-            );
-
-            return $representation_builder->build($repository, $user);
+            return $repository;
         } catch (CannotFindRepositoryException $e) {
             throw new RestException('404', 'Repository not found');
+        }
+    }
+
+    private function checkUserIsAdmin(Project $project, PFUser $user)
+    {
+        if (! $this->permission_manager->isAdmin($project, $user)) {
+            throw new RestException(403, 'User must be SVN admin to do this action');
         }
     }
 
@@ -175,21 +254,14 @@ class RepositoryResource extends AuthenticatedResource
 
         try {
             $current_user = $this->user_manager->getCurrentUser();
-            $repository   = $this->repository_manager->getRepositoryById($id);
+            $repository   = $this->getRepository($id);
             ProjectAuthorization::userCanAccessProject(
                 $this->user_manager->getCurrentUser(),
                 $repository->getProject(),
                 new \URLVerification()
             );
 
-            if (! $this->permission_manager->isAdmin($repository->getProject(), $current_user)) {
-                throw new RestException('403', 'You are not allowed to delete repository');
-            }
-
-            if ($repository->isDeleted()) {
-                throw new RestException('404', 'Repository not found');
-                return;
-            }
+            $this->checkUserIsAdmin($repository->getProject(), $current_user);
 
             if ($this->isDeletionAlreadyQueued($repository)) {
                 throw new RestException('400', 'Repository already in queue for deletion');
@@ -212,6 +284,6 @@ class RepositoryResource extends AuthenticatedResource
 
     private function sendAllowHeaders()
     {
-        Header::allowOptionsGetDelete();
+        Header::allowOptionsGetPutDelete();
     }
 }

@@ -44,10 +44,7 @@ class RepositoryTest extends TestBase
 
     public function testGETRepositoryForProjectAdmin()
     {
-        $response = $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $this->client->get('svn/1')
-        );
+        $response = $this->getResponse($this->client->get('svn/1'));
 
         $repository = $response->json();
 
@@ -102,13 +99,38 @@ class RepositoryTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 401);
     }
 
-    public function testOPTIONS()
+    public function testPUTRepository()
     {
-        $response = $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $this->client->get('svn/1')
+        $data = json_encode(
+            array(
+                'settings' => array(
+                    'commit_rules' => array(
+                        'mandatory_reference' => true,
+                        'allow_commit_message_change' => false
+                    )
+                )
+            )
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $response = $this->getResponse($this->client->put('svn/1', null, $data));
+
+        $repository = $response->json();
+
+        $this->assertArrayHasKey('id', $repository);
+        $this->assertEquals($repository['name'], 'repo01');
+        $this->assertEquals(
+            $repository['settings']['commit_rules'],
+            array(
+                "mandatory_reference"         => true,
+                "allow_commit_message_change" => false
+            )
+        );
+    }
+
+    public function testOPTIONS()
+    {
+        $response = $this->getResponse($this->client->get('svn/1'));
+
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
     }
 }
