@@ -13,9 +13,9 @@ class <?=$class_name?>Plugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
 <?php if ($use_web_space) { ?>
-        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
 <?php if ($use_css) { ?>
-        $this->_addHook('cssfile', 'cssfile', false);
+        $this->addHook('cssfile', 'cssfile', false);
 <?php } ?>
 <?php } ?>
     }

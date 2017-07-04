@@ -12,8 +12,8 @@ class testsPlugin extends Plugin {
 
 	function testsPlugin($id) {
 		$this->Plugin($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
-        $this->_addHook('cssfile', 'cssFile', false);
+        $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
+        $this->addHook('cssfile', 'cssFile', false);
 	}
 
     function &getPluginInfo() {

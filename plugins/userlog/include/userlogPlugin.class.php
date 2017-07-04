@@ -35,8 +35,8 @@ class userlogPlugin extends Plugin {
     function __construct($id)
     {
         parent::__construct($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
-        $this->_addHook('cssfile', 'cssFile', false);
+        $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
+        $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::HIT, 'logUser', false);
         $this->addHook(Event::IS_IN_SITEADMIN);
 

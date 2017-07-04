@@ -121,92 +121,92 @@ class GitPlugin extends Plugin {
         bindtextdomain('tuleap-git', __DIR__.'/../site-content');
 
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('cssfile',                                         'cssFile',                                      false);
-        $this->_addHook('javascript_file',                                 'jsFile',                                       false);
-        $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',                          false);
-        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',                         false);
-        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE,             'getReferenceNatures',                          false);
+        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook('cssfile',                                         'cssFile',                                      false);
+        $this->addHook('javascript_file',                                 'jsFile',                                       false);
+        $this->addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',                          false);
+        $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',                         false);
+        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE,             'getReferenceNatures',                          false);
         $this->addHook(Event::GET_REFERENCE);
-        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess',              false);
-        $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
-        $this->_addHook('project_is_deleted',                              'project_is_deleted',                           false);
-        $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
+        $this->addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess',              false);
+        $this->addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
+        $this->addHook('project_is_deleted',                              'project_is_deleted',                           false);
+        $this->addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
         // Stats plugin
-        $this->_addHook('plugin_statistics_disk_usage_collect_project',    'plugin_statistics_disk_usage_collect_project', false);
-        $this->_addHook('plugin_statistics_disk_usage_service_label',      'plugin_statistics_disk_usage_service_label',   false);
-        $this->_addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
+        $this->addHook('plugin_statistics_disk_usage_collect_project',    'plugin_statistics_disk_usage_collect_project', false);
+        $this->addHook('plugin_statistics_disk_usage_service_label',      'plugin_statistics_disk_usage_service_label',   false);
+        $this->addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
 
-        $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
-        $this->_addHook(Event::DUMP_SSH_KEYS);
-        $this->_addHook(Event::EDIT_SSH_KEYS);
-        $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
+        $this->addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
+        $this->addHook(Event::DUMP_SSH_KEYS);
+        $this->addHook(Event::EDIT_SSH_KEYS);
+        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+        $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
-        $this->_addHook('permission_get_name',                             'permission_get_name',                          false);
-        $this->_addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
-        $this->_addHook('permission_get_object_name',                      'permission_get_object_name',                   false);
-        $this->_addHook('permission_get_object_fullname',                  'permission_get_object_fullname',               false);
-        $this->_addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
-        $this->_addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
+        $this->addHook('permission_get_name',                             'permission_get_name',                          false);
+        $this->addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
+        $this->addHook('permission_get_object_name',                      'permission_get_object_name',                   false);
+        $this->addHook('permission_get_object_fullname',                  'permission_get_object_fullname',               false);
+        $this->addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
+        $this->addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
 
-        $this->_addHook('statistics_collector',                            'statistics_collector',                         false);
+        $this->addHook('statistics_collector',                            'statistics_collector',                         false);
 
-        $this->_addHook('collect_ci_triggers',                             'collect_ci_triggers',                          false);
-        $this->_addHook('save_ci_triggers',                                'save_ci_triggers',                             false);
-        $this->_addHook('update_ci_triggers',                              'update_ci_triggers',                           false);
-        $this->_addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
+        $this->addHook('collect_ci_triggers',                             'collect_ci_triggers',                          false);
+        $this->addHook('save_ci_triggers',                                'save_ci_triggers',                             false);
+        $this->addHook('update_ci_triggers',                              'update_ci_triggers',                           false);
+        $this->addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
 
-        $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
-        $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
-        $this->_addHook('widgets',                                          'widgets',                                     false);
-        $this->_addHook('show_pending_documents',                           'showArchivedRepositories',                    false);
+        $this->addHook('logs_daily',                                       'logsDaily',                                   false);
+        $this->addHook('widget_instance',                                  'myPageBox',                                   false);
+        $this->addHook('widgets',                                          'widgets',                                     false);
+        $this->addHook('show_pending_documents',                           'showArchivedRepositories',                    false);
 
-        $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
+        $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
 
         // User Group membership modification
-        $this->_addHook('project_admin_add_user');
-        $this->_addHook('project_admin_ugroup_add_user');
-        $this->_addHook('project_admin_remove_user');
-        $this->_addHook('project_admin_ugroup_remove_user');
-        $this->_addHook('project_admin_change_user_permissions');
-        $this->_addHook('project_admin_ugroup_deletion');
-        $this->_addHook('project_admin_remove_user_from_project_ugroups');
-        $this->_addHook('project_admin_ugroup_creation');
-        $this->_addHook('project_admin_parent_project_modification');
-        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD);
-        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE);
+        $this->addHook('project_admin_add_user');
+        $this->addHook('project_admin_ugroup_add_user');
+        $this->addHook('project_admin_remove_user');
+        $this->addHook('project_admin_ugroup_remove_user');
+        $this->addHook('project_admin_change_user_permissions');
+        $this->addHook('project_admin_ugroup_deletion');
+        $this->addHook('project_admin_remove_user_from_project_ugroups');
+        $this->addHook('project_admin_ugroup_creation');
+        $this->addHook('project_admin_parent_project_modification');
+        $this->addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD);
+        $this->addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE);
 
         // Project hierarchy modification
-        $this->_addHook(Event::PROJECT_SET_PARENT_PROJECT, 'project_admin_parent_project_modification');
-        $this->_addHook(Event::PROJECT_UNSET_PARENT_PROJECT, 'project_admin_parent_project_modification');
+        $this->addHook(Event::PROJECT_SET_PARENT_PROJECT, 'project_admin_parent_project_modification');
+        $this->addHook(Event::PROJECT_UNSET_PARENT_PROJECT, 'project_admin_parent_project_modification');
 
         //Gerrit user synch help
-        $this->_addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
+        $this->addHook(Event::MANAGE_THIRD_PARTY_APPS, 'manage_third_party_apps');
 
-        $this->_addHook(Event::REGISTER_PROJECT_CREATION);
-        $this->_addHook(Event::GET_PROJECTID_FROM_URL);
-        $this->_addHook('anonymous_access_to_script_allowed');
-        $this->_addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
-        $this->_addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
-        $this->_addHook(Event::PROJECT_ACCESS_CHANGE);
-        $this->_addHook(Event::SITE_ACCESS_CHANGE);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(Event::GET_PROJECTID_FROM_URL);
+        $this->addHook('anonymous_access_to_script_allowed');
+        $this->addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
+        $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
+        $this->addHook(Event::PROJECT_ACCESS_CHANGE);
+        $this->addHook(Event::SITE_ACCESS_CHANGE);
 
-        $this->_addHook('fill_project_history_sub_events');
-        $this->_addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
+        $this->addHook('fill_project_history_sub_events');
+        $this->addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
 
         $this->addHook(EVENT::REST_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_GET_GIT);
         $this->addHook(EVENT::REST_PROJECT_OPTIONS_GIT);
 
-        $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+        $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
 
         // Gerrit user suspension
         if (defined('LDAP_DAILY_SYNCHRO_UPDATE_USER')) {

@@ -52,80 +52,80 @@ class LdapPlugin extends Plugin {
 
     public function getHooksAndCallbacks() {
         // Layout
-        $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
-        $this->_addHook('before_register', 'before_register', false);
+        $this->addHook('display_newaccount', 'forbidIfLdapAuth', false);
+        $this->addHook('before_register', 'before_register', false);
 
         // Search
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->addHook(Event::SEARCH_TYPE);
 
         // Authentication
-        $this->_addHook(Event::SESSION_BEFORE_LOGIN, 'authenticate', false);
-        $this->_addHook(Event::SESSION_AFTER_LOGIN, 'allowCodendiLogin', false);
+        $this->addHook(Event::SESSION_BEFORE_LOGIN, 'authenticate', false);
+        $this->addHook(Event::SESSION_AFTER_LOGIN, 'allowCodendiLogin', false);
 
         // Login
         $this->addHook('login_presenter');
-        $this->_addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
-        $this->_addHook('account_redirect_after_login', 'account_redirect_after_login', false);
+        $this->addHook('display_lostpw_createaccount', 'forbidIfLdapAuth', false);
+        $this->addHook('account_redirect_after_login', 'account_redirect_after_login', false);
 
         // User finder
-        $this->_addHook('user_manager_find_user', 'user_manager_find_user', false);
-        $this->_addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
+        $this->addHook('user_manager_find_user', 'user_manager_find_user', false);
+        $this->addHook('user_manager_get_user_by_identifier', 'user_manager_get_user_by_identifier', false);
 
         // User Home
-        $this->_addHook('user_home_pi_entry', 'personalInformationEntry', false);
-        $this->_addHook('user_home_pi_tail', 'personalInformationTail', false);
+        $this->addHook('user_home_pi_entry', 'personalInformationEntry', false);
+        $this->addHook('user_home_pi_tail', 'personalInformationTail', false);
 
         // User account
-        $this->_addHook('account_pi_entry', 'accountPiEntry', false);
-        $this->_addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
-        $this->_addHook('before_change_email-confirm', 'cancelChangeAndUserLdap', false);
-        $this->_addHook('before_change_email', 'cancelChangeAndUserLdap', false);
-        $this->_addHook('before_change_pw', 'cancelChangeAndUserLdap', false);
-        $this->_addHook('before_change_realname', 'cancelChangeAndUserLdap', false);
-        $this->_addHook('before_lostpw-confirm', 'cancelChange', false);
-        $this->_addHook('before_lostpw', 'cancelChange', false);
-        $this->_addHook('display_change_password', 'forbidIfLdapAuthAndUserLdap', false);
-        $this->_addHook('display_change_email', 'forbidIfLdapAuthAndUserLdap', false);
+        $this->addHook('account_pi_entry', 'accountPiEntry', false);
+        $this->addHook('before_change_email-complete', 'cancelChangeAndUserLdap', false);
+        $this->addHook('before_change_email-confirm', 'cancelChangeAndUserLdap', false);
+        $this->addHook('before_change_email', 'cancelChangeAndUserLdap', false);
+        $this->addHook('before_change_pw', 'cancelChangeAndUserLdap', false);
+        $this->addHook('before_change_realname', 'cancelChangeAndUserLdap', false);
+        $this->addHook('before_lostpw-confirm', 'cancelChange', false);
+        $this->addHook('before_lostpw', 'cancelChange', false);
+        $this->addHook('display_change_password', 'forbidIfLdapAuthAndUserLdap', false);
+        $this->addHook('display_change_email', 'forbidIfLdapAuthAndUserLdap', false);
         // Comment if want to allow real name change in LDAP mode
-        $this->_addHook('display_change_realname', 'forbidIfLdapAuthAndUserLdap', false);
+        $this->addHook('display_change_realname', 'forbidIfLdapAuthAndUserLdap', false);
 
         // User group
         $this->addHook('project_admin_ugroup_deletion');
 
         // Site Admin
-        $this->_addHook('before_admin_change_pw', 'warnNoPwChange', false);
-        $this->_addHook('usergroup_update_form', 'addLdapInput', false);
-        $this->_addHook('usergroup_update', 'updateLdapID', false);
+        $this->addHook('before_admin_change_pw', 'warnNoPwChange', false);
+        $this->addHook('usergroup_update_form', 'addLdapInput', false);
+        $this->addHook('usergroup_update', 'updateLdapID', false);
 
         // Project admin
-        $this->_addHook('ugroup_table_row',                 'ugroup_table_row',            false);
-        $this->_addHook('project_admin_add_user_form',      'project_admin_add_user_form', false);
-        $this->_addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
+        $this->addHook('ugroup_table_row',                 'ugroup_table_row',            false);
+        $this->addHook('project_admin_add_user_form',      'project_admin_add_user_form', false);
+        $this->addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
 
         // Svn intro
         $this->addHook(Event::SVN_INTRO);
-        $this->_addHook('svn_check_access_username', 'svn_check_access_username', false);
+        $this->addHook('svn_check_access_username', 'svn_check_access_username', false);
 
         // Search as you type user
-        $this->_addHook('ajax_search_user', 'ajax_search_user', false);
+        $this->addHook('ajax_search_user', 'ajax_search_user', false);
 
         // Project creation
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
         // Backend SVN
-        $this->_addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
-        $this->_addHook(Event::SVN_APACHE_AUTH,    'svn_apache_auth',         false);
+        $this->addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
+        $this->addHook(Event::SVN_APACHE_AUTH,    'svn_apache_auth',         false);
 
         // Daily codendi job
-        $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
+        $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
 
         // SystemEvent
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
 
         // Ask for LDAP Username of a User
-        $this->_addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
+        $this->addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
 
         // User profile creation/update
         $this->addHook(Event::USER_MANAGER_UPDATE_DB);

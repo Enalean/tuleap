@@ -27,9 +27,9 @@ class ForumMLPlugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
 
-        $this->_addHook('browse_archives','forumml_browse_archives',false);
-        $this->_addHook('cssfile','cssFile',false);
-        $this->_addHook('javascript_file',                   'jsFile',                            false);
+        $this->addHook('browse_archives','forumml_browse_archives',false);
+        $this->addHook('cssfile','cssFile',false);
+        $this->addHook('javascript_file',                   'jsFile',                            false);
 
         // Search
         $this->addHook(Event::SEARCH_TYPE);
@@ -37,9 +37,9 @@ class ForumMLPlugin extends Plugin {
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
 
         // Stat plugin
-        $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-        $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-        $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
+        $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
+        $this->addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+        $this->addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
 
         // Set ForumML plugin scope to 'Projects' wide 
         $this->setScope(Plugin::SCOPE_PROJECT);

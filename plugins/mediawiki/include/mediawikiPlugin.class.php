@@ -37,7 +37,7 @@ class MediaWikiPlugin extends Plugin {
             $this->Plugin($id) ;
             $this->name = "mediawiki" ;
             $this->text = "Mediawiki" ; // To show in the tabs, use...
-            $this->_addHook('cssfile');
+            $this->addHook('cssfile');
             $this->addHook(Event::SERVICE_ICON);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
@@ -46,19 +46,19 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::SERVICE_IS_USED);
             $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
-            $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
-            $this->_addHook(Event::RENAME_PROJECT, 'rename_project');
-            $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
-            $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+            $this->addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
+            $this->addHook(Event::RENAME_PROJECT, 'rename_project');
+            $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
+            $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
 
             //User permissions
-            $this->_addHook('project_admin_remove_user');
-            $this->_addHook('project_admin_change_user_permissions');
-            $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
-            $this->_addHook('project_admin_ugroup_remove_user');
-            $this->_addHook('project_admin_remove_user_from_project_ugroups');
-            $this->_addHook('project_admin_ugroup_deletion');
-            $this->_addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
+            $this->addHook('project_admin_remove_user');
+            $this->addHook('project_admin_change_user_permissions');
+            $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
+            $this->addHook('project_admin_ugroup_remove_user');
+            $this->addHook('project_admin_remove_user_from_project_ugroups');
+            $this->addHook('project_admin_ugroup_deletion');
+            $this->addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
             $this->addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
             $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
 
@@ -67,7 +67,7 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
             $this->addHook(Event::SEARCH_TYPE);
 
-            $this->_addHook('plugin_statistics_service_usage');
+            $this->addHook('plugin_statistics_service_usage');
 
             $this->addHook(Event::SERVICE_CLASSNAMES);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
@@ -78,13 +78,13 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook('plugin_statistics_color');
 
             // Site admin link
-            $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+            $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
             $this->addHook(Event::IS_IN_SITEADMIN);
 
             $this->addHook(Event::PROJECT_ACCESS_CHANGE);
             $this->addHook(Event::SITE_ACCESS_CHANGE);
 
-            $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+            $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);

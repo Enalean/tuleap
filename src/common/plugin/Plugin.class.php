@@ -164,14 +164,6 @@ class Plugin implements PFO_Plugin {
         return $hook;
     }
 
-    /**
-     * @deprecated
-     * @see addHook()
-     */
-    protected function _addHook($hook, $callback = null, $recallHook = false) {
-        return $this->addHook($hook, $callback, $recallHook);
-    }
-
     public function removeHook($hook) {
         $this->hooks->removeKey($hook);
     }

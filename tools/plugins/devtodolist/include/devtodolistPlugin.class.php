@@ -6,8 +6,8 @@ class DevtodolistPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
-        $this->_addHook('cssstyle', 'cssstyle', false);
+        $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
+        $this->addHook('cssstyle', 'cssstyle', false);
     }
 
     function &getPluginInfo() {

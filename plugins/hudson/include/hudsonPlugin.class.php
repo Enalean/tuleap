@@ -30,20 +30,20 @@ class hudsonPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->_addHook('javascript_file', 'jsFile', false);
-        $this->_addHook('cssfile', 'cssFile', false);
+        $this->addHook('javascript_file', 'jsFile', false);
+        $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
 
-        $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
+        $this->addHook('project_is_deleted', 'projectIsDeleted', false);
 
-        $this->_addHook('widget_instance', 'widget_instance', false);
-        $this->_addHook('widgets', 'widgets', false);
+        $this->addHook('widget_instance', 'widget_instance', false);
+        $this->addHook('widgets', 'widgets', false);
 
-        $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
-        $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
-        $this->_addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
-        $this->_addHook('statistics_collector',          'statistics_collector',       false);
+        $this->addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
+        $this->addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
+        $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
+        $this->addHook('statistics_collector',          'statistics_collector',       false);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
