@@ -637,7 +637,7 @@ INSERT INTO svn_cache_parameter VALUES ('maximum_credentials' , '10'), ('lifetim
 -- Default dashboards
 --
 INSERT INTO project_dashboards (id, project_id, name) VALUES (1, 100, 'Dashboard');
-INSERT INTO dashboards_lines (id, dashboard_id, dashboard_type, layout, rank) VALUES (1, 1, 'project', 'two-columns', 0);
+INSERT INTO dashboards_lines (id, dashboard_id, dashboard_type, layout, rank) VALUES (1, 1, 'project', 'two-columns-small-big', 0);
 INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (1, 1, 0);
 INSERT INTO dashboards_lines_columns_widgets (id, column_id, rank, name, content_id, is_minimized) VALUES (1, 1, 0, 'projectdescription', 0, 0);
 INSERT INTO dashboards_lines_columns (id, line_id, rank) VALUES (2, 1, 1);
