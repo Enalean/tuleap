@@ -22,13 +22,15 @@ namespace Tuleap\SVN\REST\v1;
 
 use Luracast\Restler\RestException;
 use ProjectHistoryDao;
+use PFUser;
+use Project;
 use SystemEvent;
 use SystemEventManager;
-use PFUser;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\v1\FullRepositoryRepresentation;
+use Tuleap\REST\v1\RepositoryPostRepresentation;
 use Tuleap\REST\v1\RepositoryRepresentationBuilder;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
@@ -44,7 +46,6 @@ use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnPermissionManager;
-use Project;
 
 class RepositoryResource extends AuthenticatedResource
 {
@@ -322,12 +323,27 @@ class RepositoryResource extends AuthenticatedResource
      *
      * Create a svn repository in a given project. User must be svn administrator to be able to create the repository.
      *
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"project_id": 122,<br>
+     *   &nbsp;"name" : "repo01",<br>
+     *   &nbsp;"settings": {<br>
+     *   &nbsp;&nbsp;"commit_rules": {<br>
+     *   &nbsp;&nbsp;"mandatory_reference": true|false ,<br>
+     *   &nbsp;&nbsp;"allow_commit_message_change": true|false<br>
+     *   &nbsp;&nbsp;}<br>
+     *   &nbsp;}<br>
+     *  }<br>
+     * </pre>
+     *
      * @url POST
      * @access protected
      * @status 201
      *
-     * @param int    $project_id The id of the project where we should create the repository {@from body}
-     * @param string $name Name of the repository {@from body}
+     * @param $project_id project id {@type int} {@from body}
+     * @param $name Repository name {@type string} {@form body}
+     * @param SettingsRepresentation $settings Repository settings {@type \Tuleap\SVN\REST\v1\SettingsRepresentation} {@required false}
      *
      * @return \Tuleap\SVN\REST\v1\RepositoryRepresentation
      * @throws 400 BadRequest Given project does not exist or project does not use SVN service
@@ -335,14 +351,14 @@ class RepositoryResource extends AuthenticatedResource
      * @throws 500 Error Unable to create the repository
      * @throws 409 Repository name is invalid
      */
-    protected function post($project_id, $name)
+    protected function post($project_id, $name, SettingsRepresentation $settings)
     {
         $this->checkAccess();
         $this->options();
 
         $user    = $this->user_manager->getCurrentUser();
         $project = $this->project_manager->getProject($project_id);
-        if (! $project) {
+        if ($project->isError()) {
             throw new RestException(400, "Given project does not exist");
         }
 
@@ -379,6 +395,7 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);
+        $this->repository_manager->updateHookConfig($repository->getId(), $settings->commit_rules->toArray());
 
         return $this->getRepositoryRepresentation($repository, $user);
     }
