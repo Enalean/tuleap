@@ -18,21 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupPermission_UserManagement implements User_ForgeUserGroupPermission {
+class User_ForgeUserGroupPermission_UserManagement extends User_ForgeUserGroupPermission
+{
 
     const ID = 5;
 
-    public function getId() {
+    public function getId()
+    {
         if (self::ID) {
             return self::ID;
         }
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_management_name');
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_management_description');
     }
 }

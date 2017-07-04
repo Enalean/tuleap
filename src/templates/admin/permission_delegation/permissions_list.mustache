@@ -27,11 +27,22 @@
                     <tbody>
                     {{# permissions }}
                         <tr>
-                            <td><input type="checkbox" name="permissions[]" value="{{ getId }}"></td>
+                            <td>
+                                <input
+                                        type="checkbox"
+                                        name="permissions[]"
+                                        value="{{ id }}"
+                                    {{# can_be_removed }}
+                                        disabled
+                                        class="tlp-form-element-disabled"
+                                        title="{{ cannot_remove_label }}"
+                                    {{/ can_be_removed }}
+                                >
+                            </td>
                             <td class="siteadmin-permission-delegation-group-details-perms-perm-name"
-                                title="{{ getDescription }}"
+                                title="{{ description }}"
                             >
-                                {{ getName }}
+                                {{ name }}
                             </td>
                         </tr>
                     {{/ permissions }}

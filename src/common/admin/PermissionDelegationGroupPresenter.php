@@ -41,7 +41,7 @@ class Admin_PermissionDelegationGroupPresenter {
     private $is_current;
 
     /**
-     * @var array
+     * @var  Tuleap\admin\PermissionDelegationPermissionsForForgeUserGroupPresenter[]
      */
     private $permissions;
 
@@ -55,8 +55,8 @@ class Admin_PermissionDelegationGroupPresenter {
      */
     private $group;
 
-
-    public function __construct(User_ForgeUGroup $group, array $permissions, $users) {
+    public function __construct(User_ForgeUGroup $group, array $permissions, $users)
+    {
         $this->id          = $group->getId();
         $this->title       = $group->getName();
         $this->description = $group->getDescription();
@@ -154,5 +154,4 @@ class Admin_PermissionDelegationGroupPresenter {
     public function users() {
         return $this->users;
     }
-
 }
