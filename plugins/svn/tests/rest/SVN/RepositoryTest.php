@@ -99,6 +99,43 @@ class RepositoryTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 401);
     }
 
+    public function testPOSTRepositoryForProjectAdmin()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository"
+            )
+        );
+
+        $response   = $this->getResponse($this->client->post('svn', null, $params));
+        $repository = $response->json();
+
+        $this->assertArrayHasKey('id', $repository);
+        $this->assertEquals($repository['name'], 'my_repository');
+        $this->assertEquals(
+            $repository['settings']['commit_rules'],
+            array(
+                "mandatory_reference"         => false,
+                "allow_commit_message_change" => false
+            )
+        );
+    }
+
+    public function tesPOSTRepositoryForProjectMember()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository"
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponseWithProjectMember($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 401);
+    }
+
     public function testPUTRepository()
     {
         $data = json_encode(
@@ -132,5 +169,15 @@ class RepositoryTest extends TestBase
         $response = $this->getResponse($this->client->get('svn/1'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testOPTIONSId()
+    {
+        $response = $this->getResponseByToken(
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
+            $this->client->options('svn')
+        );
+
+        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
     }
 }
