@@ -128,7 +128,7 @@ class LDAP_CleanUpManager {
      */
     private function getUserProjects($userId) {
         $pm = $this->_getProjectManager();
-        return $pm->getActiveProjectsForUser($userId);
+        return $pm->getAllProjectsForUser($userId);
     }
 
     /**

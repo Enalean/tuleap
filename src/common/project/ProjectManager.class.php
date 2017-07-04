@@ -742,6 +742,16 @@ class ProjectManager {
     }
 
     /**
+     * @return Project[]
+     */
+    public function getAllProjectsForUser(PFUser $user)
+    {
+        return $this->_getDao()
+            ->searchAllActiveProjectsForUser($user->getId())
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    /**
      * @return Tuleap\Project\PaginatedProjects
      */
     public function getMyAndPublicProjectsForREST(PFUser $user, $offset, $limit)

@@ -173,6 +173,29 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchAllActiveProjectsForUser($user_id)
+    {
+        $user_id = $this->da->escapeInt($user_id);
+
+        $sql = "SELECT groups.*
+        FROM groups
+          JOIN user_group USING (group_id)
+        WHERE user_group.user_id = $user_id
+          AND groups.status='A'
+
+        UNION DISTINCT
+
+        SELECT groups.*
+        FROM groups
+          INNER JOIN ugroup USING (group_id)
+          INNER JOIN ugroup_user USING (ugroup_id)
+        WHERE ugroup_user.user_id = $user_id
+          AND groups.status='A'";
+
+
+        return $this->retrieve($sql);
+    }
+
     public function updateStatus($id, $status) {
         $sql = 'UPDATE groups'.
             ' SET status = '.$this->da->quoteSmart($status).
