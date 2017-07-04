@@ -98,14 +98,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
         return true;
     }
 
-    /**
-     * Says if the widget has preferences
-     */
-    public function hasPreferences() {
-        return true;
-    }
-
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -134,7 +127,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
             ';
     }
 
-    public function getInstallPreferencesForBurningParrot()
+    public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -153,32 +146,6 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
                        placeholder="123">
             </div>
             ';
-    }
-
-    /**
-     * Compute the preferences form for the widget. This form will be displayed
-     * between the content and the title.
-     * @return string html
-     */
-    public function getPreferences() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="plugin_docman_widget_embedded[title]" value="'. $hp->purify($this->plugin_docman_widget_embedded_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Item_id:</td><td><input type="text" class="textfield_small" name="plugin_docman_widget_embedded[item_id]" value="'. $hp->purify($this->plugin_docman_widget_embedded_item_id, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '</table>';
-        return $prefs;
-    }
-
-    /**
-     * Compute the preferences form for the widget to display before install.
-     * @return string html
-     */
-    public function getInstallPreferences() {
-        $prefs  = '';
-        $prefs .= '<table>';
-        $prefs .= '<tr><td>Item id:</td><td><input type="text" class="textfield_small" name="plugin_docman_widget_embedded[item_id]" value="" /></td></tr>';
-        $prefs .= '</table>';
-        return $prefs;
     }
 
     /**

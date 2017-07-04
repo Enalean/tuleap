@@ -55,7 +55,7 @@ class PreferencesController
         $this->checkWidgetCanBeEdited($row, $user);
         $this->forceGroupIdToBePresentInRequest($request, $row);
 
-        echo $this->getWidget($row)->getPreferencesForBurningParrot($row['id']);
+        echo $this->getWidget($row)->getPreferences($row['id']);
     }
 
     public function update(HTTPRequest $request)
