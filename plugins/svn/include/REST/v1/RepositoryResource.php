@@ -186,7 +186,7 @@ class RepositoryResource extends AuthenticatedResource
      *  }<br>
      * </pre>
      *
-     * @access hybrid
+     * @access protected
      *
      * @url PUT {id}
      *
@@ -198,7 +198,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws 404
      * @throws 403
      */
-    public function put($id, SettingsRepresentation $settings)
+    protected function put($id, SettingsRepresentation $settings)
     {
         $this->sendAllowHeaders();
         $this->checkAccess();
@@ -231,7 +231,6 @@ class RepositoryResource extends AuthenticatedResource
     {
         try {
             $repository = $this->repository_manager->getRepositoryById($id);
-            $user       = $this->user_manager->getCurrentUser();
 
             if ($repository->isDeleted()) {
                 throw new RestException('404', 'Repository not found');
@@ -257,6 +256,7 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @url DELETE {id}
      * @status 202
+     * @access protected
      *
      * @param int $repository_id Id of the repository
      *
@@ -266,6 +266,7 @@ class RepositoryResource extends AuthenticatedResource
      */
     protected function delete($id)
     {
+        $this->checkAccess();
         $this->sendAllowHeaders();
 
         try {
@@ -320,7 +321,7 @@ class RepositoryResource extends AuthenticatedResource
      * Create a svn repository in a given project. User must be svn administrator to be able to create the repository.
      *
      * @url POST
-     * @access hybrid
+     * @access protected
      * @status 201
      *
      * @param int    $project_id The id of the project where we should create the repository {@from body}
@@ -332,8 +333,9 @@ class RepositoryResource extends AuthenticatedResource
      * @throws 500 Error Unable to create the repository
      * @throws 409 Repository name is invalid
      */
-    public function post($project_id, $name)
+    protected function post($project_id, $name)
     {
+        $this->checkAccess();
         $this->options();
 
         $user    = $this->user_manager->getCurrentUser();
