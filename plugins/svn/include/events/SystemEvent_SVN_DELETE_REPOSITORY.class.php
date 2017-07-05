@@ -20,27 +20,45 @@
 
 namespace Tuleap\Svn\EventRepository;
 
-use ProjectHistoryDao;
-use SystemEvent;
-use SystemEventManager;
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\ApacheConfGenerator;
-use Tuleap\Svn\Dao;
-use Tuleap\Svn\SvnLogger;
-use Tuleap\Svn\SvnAdmin;
-use ProjectManager;
-use System_Command;
-use Backend;
 use Project;
-use EventManager;
+use ProjectManager;
+use SystemEvent;
+use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\Svn\Repository\RepositoryManager;
 
 class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
 {
     const NAME = 'SystemEvent_SVN_DELETE_REPOSITORY';
+
+    /**
+     * @var RepositoryManager
+     */
+    public $repository_manager;
+
+    /**
+     * @var ProjectManager
+     */
+    public $project_manager;
+
+    /**
+     * @var ApacheConfGenerator
+     */
+    public $generator;
+
+    /**
+     * @param RepositoryManager   $repository_manager
+     * @param ProjectManager      $project_manager
+     * @param ApacheConfGenerator $generator
+     */
+    public function injectDependencies(
+        RepositoryManager $repository_manager,
+        ProjectManager $project_manager,
+        ApacheConfGenerator $generator
+    ) {
+        $this->repository_manager = $repository_manager;
+        $this->project_manager    = $project_manager;
+        $this->generator          = $generator;
+    }
 
     public function process()
     {
@@ -66,13 +84,11 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
             return false;
         }
 
-        $repository_manager = $this->getRepositoryManager();
-        $repository_manager->markAsDeleted($repository);
-        $repository_manager->dumpRepository($repository);
-        $repository_manager->delete($repository);
+        $this->repository_manager->markAsDeleted($repository);
+        $this->repository_manager->dumpRepository($repository);
+        $this->repository_manager->delete($repository);
 
-        $generator =  new ApacheConfGenerator(new System_Command(), Backend::instance(Backend::SVN));
-        $generator->generate();
+        $this->generator->generate();
 
         $this->done();
         return true;
@@ -89,35 +105,11 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
 
     protected function getRepository(Project $project, $repository_id)
     {
-        $repository_manager = $this->getRepositoryManager();
-        return $repository_manager->getByIdAndProject($repository_id, $project);
+        return $this->repository_manager->getByIdAndProject($repository_id, $project);
     }
 
     protected function getProject($project_id)
     {
-        $project_manager = ProjectManager::instance();
-
-        return $project_manager->getProject($project_id);
-    }
-
-    private function getRepositoryManager()
-    {
-        return new RepositoryManager(
-            new Dao(),
-            ProjectManager::instance(),
-            new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
-            new SvnLogger(),
-            new System_Command(),
-            new Destructor(
-                new Dao(),
-                new SvnLogger()
-            ),
-            new HookDao(),
-            EventManager::instance(),
-            Backend::instance(Backend::SVN),
-            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance(),
-            new ProjectHistoryDao()
-        );
+        return $this->project_manager->getProject($project_id);
     }
 }

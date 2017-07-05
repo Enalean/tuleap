@@ -271,15 +271,20 @@ class SvnPlugin extends Plugin
                     $this->getBackendSVN()
                 );
                 break;
-            case 'SVN_DELETE_REPOSITORY':
-                include_once dirname(__FILE__).'/events/SystemEvent_SVN_DELETE_REPOSITORY.class.php';
-                $params['class'] = 'SystemEvent_SVN_DELETE_REPOSITORY';
+            case 'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_DELETE_REPOSITORY':
+                $params['class'] = 'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_DELETE_REPOSITORY';
                 $params['dependencies'] = array(
                     $this->getRepositoryManager(),
-                    ProjectManager::instance()
+                    ProjectManager::instance(),
+                    $this->getApacheConfGenerator()
                 );
                 break;
         }
+    }
+
+    private function getApacheConfGenerator()
+    {
+        return new ApacheConfGenerator(new System_Command(), Backend::instance(Backend::SVN));
     }
 
     /** @return Tuleap\Svn\Repository\RepositoryManager */
