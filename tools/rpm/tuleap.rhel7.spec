@@ -133,7 +133,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-11
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
 #Requires: geshi, php-guzzle-Guzzle, sudo
 %description plugin-git
 Integration of git distributed software configuration management tool together
