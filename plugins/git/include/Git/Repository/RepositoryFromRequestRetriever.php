@@ -50,6 +50,9 @@ class RepositoryFromRequestRetriever
 
     /**
      * @return GitRepository
+     *
+     * @throws GitRepoNotFoundException
+     * @throws UserCannotAdministrateRepositoryException
      */
     public function getRepositoryUserCanAdministrate(HTTPRequest $request)
     {
