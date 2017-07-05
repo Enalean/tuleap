@@ -29,6 +29,7 @@ ldapIncFile = include.sys_custompluginsroot+'/ldap/etc/ldap.inc';
 include.load_local_config(ldapIncFile)
 
 def ldap_connect():
+    ldap.set_option(ldap.OPT_X_TLS_CACERTFILE, '/etc/pki/tls/certs/ca-bundle.crt')
     for server in include.sys_ldap_server.split(','):
         try:
             l = ldap.initialize(server)
