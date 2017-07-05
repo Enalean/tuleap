@@ -104,7 +104,13 @@ class RepositoryTest extends TestBase
         $params = json_encode(
             array(
                 "project_id" => $this->svn_project_id,
-                "name"       => "my_repository"
+                "name"       => "my_repository",
+                "settings"   => array(
+                    "commit_rules" => array(
+                        "mandatory_reference"       => true,
+                        "allow_commit_message_change" => true
+                    )
+                )
             )
         );
 
@@ -116,8 +122,8 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
-                "mandatory_reference"         => false,
-                "allow_commit_message_change" => false
+                "mandatory_reference"         => true,
+                "allow_commit_message_change" => true
             )
         );
     }
@@ -127,7 +133,13 @@ class RepositoryTest extends TestBase
         $params = json_encode(
             array(
                 "project_id" => $this->svn_project_id,
-                "name"       => "my_repository"
+                "name"       => "my_repository",
+                "settings"   => array(
+                    "commit_rules" => array(
+                        "mandatory_reference"       => true,
+                        "allow_commit_message_change" => true
+                    )
+                )
             )
         );
 

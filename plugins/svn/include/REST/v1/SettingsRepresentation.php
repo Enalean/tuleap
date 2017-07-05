@@ -23,7 +23,7 @@ namespace Tuleap\SVN\REST\v1;
 class SettingsRepresentation
 {
     /**
-     * @var CommitRulesRepresentation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation}
+     * @var CommitRulesRepresentation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required true}
      */
     public $commit_rules;
 

@@ -26,12 +26,12 @@ use Tuleap\Svn\Repository\HookConfig;
 class CommitRulesRepresentation extends \Luracast\Restler\Data\ValueObject
 {
     /**
-     * @var Boolean {@type boolean}
+     * @var Boolean {@type boolean} {@required true}
      */
     public $mandatory_reference;
 
     /**
-     * @var Boolean {@type boolean}
+     * @var Boolean {@type boolean} {@required true}
      */
     public $allow_commit_message_change;
 
