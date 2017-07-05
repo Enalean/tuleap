@@ -16,7 +16,7 @@ var vendor_assets_files                     = [
     'vendor/artifact-modal/dist/assets/loader-mini.gif'
 ];
 var old_coverage_glob = './coverage/*';
-var build_dir         = 'bin/assets/';
+var build_dir         = './dist';
 
 // Cleaning tasks
 gulp.task('clean-coverage', function() {

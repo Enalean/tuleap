@@ -31,7 +31,7 @@ class Google_AnalyticsPlugin extends Plugin {
 
     function Google_AnalyticsPlugin($id) {
         $this->Plugin($id);
-        $this->_addHook(Event::JAVASCRIPT_FOOTER, 'getAnalyticsCode', false);
+        $this->addHook(Event::JAVASCRIPT_FOOTER, 'getAnalyticsCode', false);
     }
 
     function getPluginInfo() {

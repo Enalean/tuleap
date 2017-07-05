@@ -1,7 +1,6 @@
 *.sw*
 *~
-build/
-bin/
+dist/
 node_modules/
 vendor/
 src/**/*.css
@@ -9,4 +8,3 @@ src/**/*.css
 test-results.xml
 coverage/
 .sass-cache/
-yarn-error.log

@@ -37,18 +37,8 @@ class Widget_ImageViewer extends Widget {
     function getTitle() {
         return $this->image_title ?: 'Image';
     }
-    function getContent() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $content = '';
-        if ($this->image_url) {
-            $content .= '<div style="text-align:center">';
-            $content .= '<img src="'.  $hp->purify($this->image_url, CODENDI_PURIFIER_CONVERT_HTML)  .'" alt="' . $hp->purify($this->getTitle()) .  '" />';
-            $content .= '</div>';
-        }
-        return $content;
-    }
 
-    public function getContentForBurningParrot()
+    public function getContent()
     {
         if (!$this->image_url) {
             return '';
@@ -61,7 +51,7 @@ class Widget_ImageViewer extends Widget {
             alt="' . $hp->purify($this->getTitle()) . '" /></div>';
     }
 
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -91,7 +81,8 @@ class Widget_ImageViewer extends Widget {
             </div>
             ';
     }
-    function getInstallPreferencesForBurningParrot()
+
+    public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -119,26 +110,6 @@ class Widget_ImageViewer extends Widget {
                        placeholder="https://example.com/image.png">
             </div>
             ';
-    }
-
-    function getPreferences() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $prefs  = '';
-        $prefs .= '<table>';
-        $prefs .= '<tr><td>Title:</td><td><input type="text" class="textfield_medium" name="image[title]" value="'. $hp->purify($this->getTitle()) .'" /></td></tr>';
-        $prefs .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="image[url]" value="'. $hp->purify($this->image_url, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '</table>';
-        return $prefs;
-    }
-    function getInstallPreferences()
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $prefs    = '';
-        $prefs   .= '<table>';
-        $prefs   .= '<tr><td>Title:</td><td><input type="text" class="textfield_medium" name="image[title]" value="'. $purifier->purify($this->getTitle()) .'" /></td></tr>';
-        $prefs   .= '<tr><td>Url:</td><td><input type="text" class="textfield_medium" name="image[url]" placeholder="https://example.com/image.jpeg" /></td></tr>';
-        $prefs   .= '</table>';
-        return $prefs;
     }
 
     public function cloneContent($id, $owner_id, $owner_type)

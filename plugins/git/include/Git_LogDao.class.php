@@ -201,6 +201,23 @@ class Git_LogDao extends DataAccessObject {
                 ORDER BY year, STR_TO_DATE(month,'%M')";
         return $this->retrieve($sql);
     }
-}
 
-?>
+    public function searchLatestPushesInProject($project_id, $nb_max)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $nb_max     = $this->da->escapeInt($nb_max);
+
+        $sql = "SELECT log.*
+                FROM plugin_git_log AS log
+                    INNER JOIN plugin_git AS repo ON (
+                        log.repository_id = repo.repository_id
+                        AND repo.project_id = $project_id
+                        AND repo.repository_scope = 'P'
+                        AND repo.repository_deletion_date IS NULL
+                    )
+                ORDER BY log.push_date DESC
+                LIMIT $nb_max";
+
+        return $this->retrieve($sql);
+    }
+}

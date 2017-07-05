@@ -44,11 +44,12 @@
     "karma-jasmine": "^0.3.6",
     "karma-junit-reporter": "^0.4.1",
     "karma-phantomjs-launcher": "^1.0.0",
-    "karma-webpack": "^2.0.2",
+    "karma-webpack": "^2.0.3",
     "ng-cache-loader": "^0.0.23",
     "phantomjs-prebuilt": "^2.1.7",
     "run-sequence": "^1.2.2",
-    "webpack": "^2.2.1"
+    "webpack": "^3.0.0",
+    "webpack-assets-manifest": "^0.7.0"
   },
   "scripts": {
     "build": "gulp build && webpack --optimize-minimize",

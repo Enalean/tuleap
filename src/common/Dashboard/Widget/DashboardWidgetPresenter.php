@@ -53,7 +53,7 @@ class DashboardWidgetPresenter
         $this->is_minimized = $dashboard_widget->isMinimized();
 
         $this->title       = $widget->getTitle();
-        $this->is_editable = strlen($widget->getPreferences()) !== 0;
+        $this->is_editable = strlen($widget->getPreferences($this->widget_id)) !== 0;
         $this->has_rss     = $widget->hasRss();
         $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
         $this->icon        = $widget->getIcon();
@@ -66,7 +66,7 @@ class DashboardWidgetPresenter
             $this->content  = '';
             $this->ajax_url = $widget->getAjaxUrl($widget->owner_id, $widget->owner_type, $dashboard->getId());
         } else {
-            $this->content  = $widget->getContentForBurningParrot();
+            $this->content  = $widget->getContent();
             $this->ajax_url = '';
         }
 

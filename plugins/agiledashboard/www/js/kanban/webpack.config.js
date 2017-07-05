@@ -1,10 +1,16 @@
 /* eslint-disable */
-var path = require('path');
+var path                  = require('path');
+var webpack               = require('webpack');
+var WebpackAssetsManifest = require('webpack-assets-manifest');
+
+var assets_dir_path = path.resolve(__dirname, './dist');
 module.exports = {
-    entry : path.resolve(__dirname, './src/app/app.js'),
+    entry : {
+        kanban: './src/app/app.js'
+    },
     output: {
-        path    : path.resolve(__dirname, './bin/assets'),
-        filename: 'kanban.js'
+        path    : assets_dir_path,
+        filename: '[name]-[chunkhash].js'
     },
     resolve: {
         modules: [
@@ -44,5 +50,14 @@ module.exports = {
                 ]
             }
         ]
-    }
+    },
+    plugins: [
+        new WebpackAssetsManifest({
+            output: 'manifest.json',
+            merge: false,
+            writeToDisk: true
+        }),
+        // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
+    ]
 };

@@ -27,7 +27,7 @@ class User_ForgeUserGroupUsersDao extends DataAccessObject {
                     JOIN ugroup ON ugroup_user.ugroup_id = ugroup.ugroup_id
                     JOIN user ON ugroup_user.user_id = user.user_id
                 WHERE ugroup.ugroup_id = $ugroup_id
-                    AND user.status IN ('A', 'V')
+                    AND user.status IN ('A', 'R')
                 AND ugroup.group_id IS NULL";
 
         return $this->retrieve($sql);

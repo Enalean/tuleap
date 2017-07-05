@@ -20,8 +20,9 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use TuleapTestCase;
 use ProjectUGroup;
+use Tracker_FormElement_Field_PermissionsOnArtifact;
+use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
@@ -66,5 +67,30 @@ class PermissionsOnArtifactValidatorTest extends TuleapTestCase
         $this->assertTrue(
             $this->validator->isNoneGroupSelected($value)
         );
+    }
+
+    public function itReturnsFalseWhenPermissionsAreNotSent()
+    {
+        $value = array();
+
+        $this->assertFalse($this->validator->isArtifactPermissionChecked($value));
+    }
+
+    public function itReturnsFalseWhenPermissionsAreNotChecked()
+    {
+        $value = array(
+            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 0
+        );
+
+        $this->assertFalse($this->validator->isArtifactPermissionChecked($value));
+    }
+
+    public function itReturnsTrueWhenPermissionsAreSentAndChecked()
+    {
+        $value = array(
+            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 1
+        );
+
+        $this->assertTrue($this->validator->isArtifactPermissionChecked($value));
     }
 }

@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Layout\IncludeAssets;
@@ -123,30 +124,44 @@ class Plugin implements PFO_Plugin {
     {
     }
 
-    public function addHook($hook, $callback = null, $recallHook = false) {
+    public function addHook($hook, $callback = null, $recallHook = false)
+    {
         if ($this->hooks->containsKey($hook)) {
             throw new RuntimeException('A plugin cannot listen to the same hook several time. Please check '.$hook);
         }
         $value = array();
         $value['hook']       = $hook;
-        $value['callback']   = $callback ? $callback : $hook;
+        $value['callback']   = $callback ?: $this->deduceCallbackFromHook($hook);
         $value['recallHook'] = $recallHook;
         $this->hooks->put($hook, $value);
     }
 
-    /**
-     * @deprecated
-     * @see addHook()
-     */
-    protected function _addHook($hook, $callback = null, $recallHook = false) {
-        return $this->addHook($hook, $callback, $recallHook);
-    }
+    private function deduceCallbackFromHook($hook)
+    {
+        $hook_in_camel_case = lcfirst(
+            str_replace(
+                ' ',
+                '',
+                ucwords(
+                    str_replace('_', ' ', $hook)
+                )
+            )
+        );
+        $current_plugin = get_class($this);
 
-    public function removeHook($hook) {
-        $this->hooks->removeKey($hook);
-    }
+        if (method_exists($this, $hook_in_camel_case)) {
+            if ($hook_in_camel_case !== $hook && method_exists($this, $hook)) {
+                throw new RuntimeException("$current_plugin should not implement both $hook() and $hook_in_camel_case()");
+            }
 
-    public function CallHook($hook, $param) {
+            return $hook_in_camel_case;
+        }
+
+        if (! method_exists($this, $hook)) {
+            throw new RuntimeException("$current_plugin must implement $hook_in_camel_case()");
+        }
+
+        return $hook;
     }
 
     public function getScope() {

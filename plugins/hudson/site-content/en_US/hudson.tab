@@ -101,7 +101,7 @@ plugin_hudson	skip_legend	Skip ($1)
 plugin_hudson	project_job_testtrend	$1 Test Result Trend
 plugin_hudson	project_job_buildhistory	$1 Builds History
 
-plugin_hudson	widget_no_job_project	No job found. Please <a href="/plugins/hudson/?group_id=$1">[add a job]</a> before adding any Jenkins widget.
+plugin_hudson	widget_no_job_project	No job found. Please <a href="/plugins/hudson/?group_id=$1">add a job</a> before adding any Jenkins widget.
 plugin_hudson	widget_no_job_my	No job found. Please add a job to any of your project before.
 plugin_hudson	widget_no_monitoredjob_my	You are not monitoring any job. Select preferences link to monitor a job.
 plugin_hudson	no_artifact_found	No artifact found.

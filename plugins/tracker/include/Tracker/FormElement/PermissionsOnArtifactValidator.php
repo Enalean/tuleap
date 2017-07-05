@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\FormElement;
 
 use ProjectUGroup;
+use Tracker_FormElement_Field_PermissionsOnArtifact;
 
 class PermissionsOnArtifactValidator
 {
@@ -42,5 +43,14 @@ class PermissionsOnArtifactValidator
     public function isNoneGroupSelected(array $value)
     {
         return isset($value['u_groups']) && in_array(ProjectUGroup::NONE, $value['u_groups']);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArtifactPermissionChecked(array $value)
+    {
+        return (isset($value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT])
+            && $value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT] == 1);
     }
 }

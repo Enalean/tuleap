@@ -28,7 +28,7 @@ describe('InPropertiesItemFilter', function() {
         }];
 
     beforeEach(function() {
-        angular.mock.module('kanban');
+        angular.mock.module(kanban_module);
 
         var $filter, moment;
         angular.mock.inject(function(

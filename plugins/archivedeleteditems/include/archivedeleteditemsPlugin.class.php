@@ -38,7 +38,7 @@ class ArchivedeleteditemsPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_SYSTEM);
-        $this->_addHook('archive_deleted_item', 'archive_deleted_item', false);
+        $this->addHook('archive_deleted_item', 'archive_deleted_item', false);
     }
 
     private function getLogger()

@@ -350,6 +350,11 @@ msgstr ""
 msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."
 
+msgid "You can't remove the last platform administration permission."
+msgstr ""
+"Vous ne pouvez pas supprimer la dernière permission d'administration de la "
+"plateforme."
+
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
 

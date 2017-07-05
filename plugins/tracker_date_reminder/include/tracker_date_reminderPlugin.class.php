@@ -32,24 +32,24 @@ class tracker_date_reminderPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
 
         //
-        $this->_addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form', false);
+        $this->addHook('artifact_type_html_display_notification_form', 'artifact_type_html_display_notification_form', false);
         // Tracker admin "controller"
-        $this->_addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin', false);
+        $this->addHook('tracker_graphic_report_admin', 'tracker_graphic_report_admin', false);
         // Field deletion
-        $this->_addHook('tracker_admin_field_delete', 'tracker_admin_field_delete', false);
+        $this->addHook('tracker_admin_field_delete', 'tracker_admin_field_delete', false);
         // Codendi daily actions
-        $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
+        $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
         // Tracker deletion
-        $this->_addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type', false);
+        $this->addHook('artifact_type_factory_delete_artifact_type', 'artifact_type_factory_delete_artifact_type', false);
 
         // CSV artifact import 
-        $this->_addHook('artifact_import_insert_artifact', 'tracker_create_artifact', false);
+        $this->addHook('artifact_import_insert_artifact', 'tracker_create_artifact', false);
         // Create new artifact
-        $this->_addHook('tracker_postadd', 'tracker_create_artifact', false);
+        $this->addHook('tracker_postadd', 'tracker_create_artifact', false);
         // Copy an artifact
-        $this->_addHook('tracker_postcopy', 'tracker_create_artifact', false);
+        $this->addHook('tracker_postcopy', 'tracker_create_artifact', false);
         // Modification of an artifact
-        $this->_addHook('tracker_postmod', 'tracker_update_artifact', false);
+        $this->addHook('tracker_postmod', 'tracker_update_artifact', false);
     }
 
     function getPluginInfo() {

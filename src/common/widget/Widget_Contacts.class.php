@@ -55,35 +55,6 @@ class Widget_Contacts extends Widget
         $template_factory = TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
-        $html  = '<a href="#massmail-project-members" ';
-        $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
-        $html .= 'data-project-id="'. $group_id .'" ';
-        $html .= 'data-toggle="modal"> ';
-        $html .= '<i class="icon-envelope-alt massmail-project-member-link-icon"></i> ';
-        $html .= $GLOBALS['Language']->getText('include_project_home', 'contact_admins');
-        $html .= '</a>';
-
-        $html .= $renderer->renderToString('contact-modal-for-legacy-dashboard', $presenter);
-
-        return $html;
-    }
-
-    public function getContentForBurningParrot()
-    {
-        $request  = HTTPRequest::instance();
-        $group_id = $request->get('group_id');
-        $pm       = ProjectManager::instance();
-        $project  = $pm->getProject($group_id);
-
-        $token     = new CSRFSynchronizerToken('');
-        $presenter = new MassmailFormPresenter(
-            $token,
-            $GLOBALS['Language']->getText('contact_admins', 'title', array($project->getPublicName())),
-            '/include/massmail_to_project_admins.php'
-        );
-        $template_factory = TemplateRendererFactory::build();
-        $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-
         $GLOBALS['HTML']->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');

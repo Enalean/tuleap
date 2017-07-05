@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupPermission_ProjectApproval implements User_ForgeUserGroupPermission {
+class User_ForgeUserGroupPermission_ProjectApproval extends User_ForgeUserGroupPermission
+{
 
     const ID = 1;
 
-    public function getId() {
+   public function getId()
+    {
         if (self::ID) {
             return self::ID;
         }
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'project_approval_name');
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $GLOBALS['Language']->getText('usergroup_forge_permission', 'project_approval_description');
     }
+
 }

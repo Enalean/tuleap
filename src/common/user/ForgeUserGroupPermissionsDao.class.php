@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -75,5 +75,14 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
 
          return (bool) $this->retrieveFirstRow($sql);
     }
+
+    public function isMoreThanOneUgroupUsingForgePermission($permission_id)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $sql = "SELECT * FROM ugroup_forge_permission
+                WHERE permission_id = $permission_id";
+
+        return $this->retrieve($sql)->count() > 1;
+    }
 }
-?>

@@ -67,52 +67,52 @@ class DocmanPlugin extends Plugin
         parent::__construct($id);
         bindtextdomain('tuleap-docman', __DIR__.'/../site-content');
 
-        $this->_addHook('cssfile',                           'cssFile',                           false);
-        $this->_addHook('javascript_file');
-        $this->_addHook('logs_daily',                        'logsDaily',                         false);
-        $this->_addHook('permission_get_name',               'permission_get_name',               false);
-        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
-        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
-        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
-        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
-        $this->_addHook(GetPublicAreas::NAME);
-        $this->_addHook('service_admin_pages',               'service_admin_pages',               false);
-        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
-        $this->_addHook(Event::SERVICE_IS_USED);
-        $this->_addHook('soap',                              'soap',                              false);
-        $this->_addHook('widget_instance',                   'myPageBox',                         false);
-        $this->_addHook('widgets',                           'widgets',                           false);
-        $this->_addHook('codendi_daily_start',               'codendiDaily',                      false);
-        $this->_addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
-        $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
-        $this->_addHook(Event::WIKI_DISPLAY_REMOVE_BUTTON,   'wiki_display_remove_button',        false);
-        $this->_addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
-        $this->_addHook('isWikiPageEditable',                'isWikiPageEditable',                false);
-        $this->_addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
-        $this->_addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
-        $this->_addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
-        $this->_addHook('project_export_entry',              'project_export_entry',              false);
-        $this->_addHook('project_export',                    'project_export',                    false);
-        $this->_addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
-        $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
-        $this->_addHook('webdav_root_for_service',           'webdav_root_for_service',           false);
+        $this->addHook('cssfile',                           'cssFile',                           false);
+        $this->addHook('javascript_file');
+        $this->addHook('logs_daily',                        'logsDaily',                         false);
+        $this->addHook('permission_get_name',               'permission_get_name',               false);
+        $this->addHook('permission_get_object_type',        'permission_get_object_type',        false);
+        $this->addHook('permission_get_object_name',        'permission_get_object_name',        false);
+        $this->addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
+        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
+        $this->addHook(GetPublicAreas::NAME);
+        $this->addHook('service_admin_pages',               'service_admin_pages',               false);
+        $this->addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
+        $this->addHook(Event::SERVICE_IS_USED);
+        $this->addHook('soap',                              'soap',                              false);
+        $this->addHook('widget_instance',                   'myPageBox',                         false);
+        $this->addHook('widgets',                           'widgets',                           false);
+        $this->addHook('codendi_daily_start',               'codendiDaily',                      false);
+        $this->addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
+        $this->addHook('wiki_before_content',               'wiki_before_content',               false);
+        $this->addHook(Event::WIKI_DISPLAY_REMOVE_BUTTON,   'wiki_display_remove_button',        false);
+        $this->addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
+        $this->addHook('isWikiPageEditable',                'isWikiPageEditable',                false);
+        $this->addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
+        $this->addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
+        $this->addHook('ajax_reference_tooltip',            'ajax_reference_tooltip',            false);
+        $this->addHook('project_export_entry',              'project_export_entry',              false);
+        $this->addHook('project_export',                    'project_export',                    false);
+        $this->addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
+        $this->addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
+        $this->addHook('webdav_root_for_service',           'webdav_root_for_service',           false);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         // Stats plugin
-        $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-        $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-        $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
+        $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
+        $this->addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
+        $this->addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
 
-        $this->_addHook('show_pending_documents',             'show_pending_documents',             false);
+        $this->addHook('show_pending_documents',             'show_pending_documents',             false);
 
-        $this->_addHook('backend_system_purge_files',  'purgeFiles',  false);
-        $this->_addHook('project_admin_remove_user', 'projectRemoveUser', false);
+        $this->addHook('backend_system_purge_files',  'purgeFiles',  false);
+        $this->addHook('project_admin_remove_user', 'projectRemoveUser', false);
 
-        $this->_addHook('permission_request_information', 'permissionRequestInformation', false);
+        $this->addHook('permission_request_information', 'permissionRequestInformation', false);
 
-        $this->_addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
-        $this->_addHook('project_is_deleted',              'project_is_deleted',          false);
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
+        $this->addHook('project_is_deleted',              'project_is_deleted',          false);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
@@ -130,8 +130,8 @@ class DocmanPlugin extends Plugin
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
         if (defined('FULLTEXTSEARCH_BASE_URL')) {
-            $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
-            $this->_addHook(FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP);
+            $this->addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
+            $this->addHook(FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP);
         }
 
         return parent::getHooksAndCallbacks();

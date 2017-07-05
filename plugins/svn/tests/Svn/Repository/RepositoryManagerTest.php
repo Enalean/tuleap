@@ -67,7 +67,8 @@ class RepositoryManagerTest extends TuleapTestCase
             $event_manager,
             $backend,
             $access_file_history_factory,
-            $system_event_manager
+            $system_event_manager,
+            mock('ProjectHistoryDao')
         );
         $project               = stub("Project")->getId()->returns(101);
 
@@ -138,7 +139,8 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             $event_manager,
             $backend,
             $access_file_history_factory,
-            $system_event_manager
+            $system_event_manager,
+            mock('ProjectHistoryDao')
         );
 
         $this->project = $this->project_manager->getProjectFromDbRow(array(

@@ -22,7 +22,7 @@ namespace Tuleap\user\ForgeUserGroupPermission;
 
 use User_ForgeUserGroupPermission;
 
-class SiteAdministratorPermission implements User_ForgeUserGroupPermission
+class SiteAdministratorPermission extends User_ForgeUserGroupPermission
 {
     const ID = 7;
 
@@ -39,5 +39,20 @@ class SiteAdministratorPermission implements User_ForgeUserGroupPermission
     public function getDescription()
     {
         return _('This permission grants the right to manage platform administration users. Every single user added here will be a platform administrator.');
+    }
+
+    public function canBeRemoved()
+    {
+        return ! $this->getPermissionChecker()->checkPlatformHasMoreThanOneSiteAdministrationPermission();
+    }
+
+    public function getCannotRemoveLabel()
+    {
+        return  _('You can\'t remove the last platform administration permission.');
+    }
+
+    private function getPermissionChecker()
+    {
+        return new SiteAdministratorPermissionChecker(new \User_ForgeUserGroupPermissionsDao());
     }
 }

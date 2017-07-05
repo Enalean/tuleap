@@ -37,12 +37,7 @@ class MediaWikiPlugin extends Plugin {
             $this->Plugin($id) ;
             $this->name = "mediawiki" ;
             $this->text = "Mediawiki" ; // To show in the tabs, use...
-            $this->_addHook("groupmenu") ;	// To put into the project tabs
-            $this->_addHook("groupisactivecheckbox") ; // The "use ..." checkbox in editgroupinfo
-            $this->_addHook("groupisactivecheckboxpost") ; //
-            $this->_addHook("project_public_area");
-            $this->_addHook('group_delete');
-            $this->_addHook('cssfile');
+            $this->addHook('cssfile');
             $this->addHook(Event::SERVICE_ICON);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
@@ -51,19 +46,19 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::SERVICE_IS_USED);
             $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
-            $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
-            $this->_addHook(Event::RENAME_PROJECT, 'rename_project');
-            $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
-            $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+            $this->addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
+            $this->addHook(Event::RENAME_PROJECT, 'rename_project');
+            $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
+            $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
 
             //User permissions
-            $this->_addHook('project_admin_remove_user');
-            $this->_addHook('project_admin_change_user_permissions');
-            $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
-            $this->_addHook('project_admin_ugroup_remove_user');
-            $this->_addHook('project_admin_remove_user_from_project_ugroups');
-            $this->_addHook('project_admin_ugroup_deletion');
-            $this->_addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
+            $this->addHook('project_admin_remove_user');
+            $this->addHook('project_admin_change_user_permissions');
+            $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
+            $this->addHook('project_admin_ugroup_remove_user');
+            $this->addHook('project_admin_remove_user_from_project_ugroups');
+            $this->addHook('project_admin_ugroup_deletion');
+            $this->addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
             $this->addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
             $this->addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
 
@@ -72,7 +67,7 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
             $this->addHook(Event::SEARCH_TYPE);
 
-            $this->_addHook('plugin_statistics_service_usage');
+            $this->addHook('plugin_statistics_service_usage');
 
             $this->addHook(Event::SERVICE_CLASSNAMES);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
@@ -83,13 +78,13 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook('plugin_statistics_color');
 
             // Site admin link
-            $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+            $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
             $this->addHook(Event::IS_IN_SITEADMIN);
 
             $this->addHook(Event::PROJECT_ACCESS_CHANGE);
             $this->addHook(Event::SITE_ACCESS_CHANGE);
 
-            $this->_addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
+            $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
@@ -291,99 +286,14 @@ class MediaWikiPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-        public function service_replace_template_name_in_link($params) {
-            $params['link'] = preg_replace(
-                '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name']).'(/|$)#',
-                '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
-                $params['link']
-            );
-        }
-
-    function CallHook ($hookname, &$params) {
-        if (isset($params['group_id'])) {
-            $group_id=$params['group_id'];
-        } elseif (isset($params['group'])) {
-            $group_id=$params['group'];
-        } else {
-            $group_id=null;
-        }
-        $project_manager = ProjectManager::instance();
-        if ($hookname == "groupmenu") {
-            $project = $project_manager->getProject($group_id);
-            if (!$project || !is_object($project)) {
-                return;
-            }
-            if ($project->isError()) {
-                return;
-            }
-            if (!$project->isProject()) {
-                return;
-            }
-            if ( $project->usesPlugin ( $this->name ) ) {
-                $params['TITLES'][]=$this->text;
-                $params['DIRS'][]=util_make_url('/plugins/mediawiki/wiki/'.$project->getUnixName().'/index.php');
-                $params['ADMIN'][]='';
-                $params['TOOLTIPS'][] = _('Mediawiki Space');
-            }
-            (($params['toptab'] == $this->name) ? $params['selected']=(count($params['TITLES'])-1) : '' );
-        } elseif ($hookname == "groupisactivecheckbox") {
-            //Check if the group is active
-            // this code creates the checkbox in the project edit public info page to activate/deactivate the plugin
-            $group = $project_manager->getProject($group_id);;
-            echo "<tr>";
-            echo "<td>";
-            echo ' <input type="checkbox" name="use_mediawikiplugin" value="1" ';
-            // checked or unchecked?
-            if ( $group->usesPlugin ( $this->name ) ) {
-                echo "checked";
-            }
-            echo " /><br/>";
-            echo "</td>";
-            echo "<td>";
-            echo "<strong>Use ".$this->text." Plugin</strong>";
-            echo "</td>";
-            echo "</tr>";
-        } elseif ($hookname == "groupisactivecheckboxpost") {
-            // this code actually activates/deactivates the plugin after the form was submitted in the project edit public info page
-            $group = $project_manager->getProject($group_id);;
-            $use_mediawikiplugin = getStringFromRequest('use_mediawikiplugin');
-            if ( $use_mediawikiplugin == 1 ) {
-                $group->setPluginUse ( $this->name );
-            } else {
-                $group->setPluginUse ( $this->name, false );
-            }
-        } elseif ($hookname == "project_public_area") {
-            $project = $project_manager->getProject($group_id);
-            if (!$project || !is_object($project)) {
-                return;
-            }
-            if ($project->isError()) {
-                return;
-            }
-            if (!$project->isProject()) {
-                return;
-            }
-            if ( $project->usesPlugin ( $this->name ) ) {
-                echo '<div class="public-area-box">';
-                print '<a href="'. util_make_url ('/plugins/mediawiki/wiki/'.$project->getUnixName().'/index.php').'">';
-                print html_abs_image(util_make_url ('/plugins/mediawiki/wiki/'.$project->getUnixName().'/skins/fusionforge/wiki.png'),'20','20',array('alt'=>'Mediawiki'));
-                print ' Mediawiki';
-                print '</a>';
-                echo '</div>';
-            }
-        } elseif ($hookname == 'group_delete') {
-            $projectId = $params['group_id'];
-            $projectObject = $project_manager->getProject($projectId);
-            if ($projectObject->usesPlugin($this->name)) {
-                //delete the files and db schema
-                $schema = 'plugin_mediawiki_'.$projectObject->getUnixName();
-                // Sanitize schema name
-                $schema = strtr($schema, "-", "_");
-                db_query_params('drop schema $1 cascade', array($schema));
-                exec('/bin/rm -rf '.forge_get_config('projects_path', 'mediawiki').'/'.$projectObject->getUnixName());
-            }
-        }
+    public function service_replace_template_name_in_link($params) {
+        $params['link'] = preg_replace(
+            '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name']).'(/|$)#',
+            '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
+            $params['link']
+        );
     }
+
 
     public function register_project_creation($params) {
         if ($this->serviceIsUsedInTemplate($params['template_id'])) {

@@ -56,25 +56,6 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         }
     }
 
-    function isInstallAllowed() {
-        $user    = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao();
-        $dar     = $job_dao->searchByUserID($user->getId());
-        return ($dar->rowCount() > 0);
-    }
-
-    function getInstallNotAllowedMessage() {
-    	$user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
-        if ($dar->rowCount() <= 0) {
-            // no hudson jobs available
-            return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>';
-        } else {
-        	return '';
-        }
-    }
-
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_hudson', 'my_jobs');
@@ -108,11 +89,8 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         }
         return true;
     }
-    function hasPreferences() {
-        return true;
-    }
 
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -143,27 +121,6 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
             </table>';
 
         return $html;
-    }
-
-    /**
-     * Returns user preferences for given widget
-     *
-     * Do not attempt to load remote jenkins job otherwise, user might be stuck if there are a lot of "not responding jobs".
-     *
-     * @see src/common/widget/Widget::getPreferences()
-     */
-    function getPreferences() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $prefs    = '';
-        // Monitored jobs
-        $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_jobs').'</strong><br />';
-        $user = UserManager::instance()->getCurrentUser();
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user->getId());
-        foreach ($dar as $row) {
-            $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.urlencode($row['job_id']).'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$purifier->purify($row['name']).'<br />';
-        }
-        return $prefs;
     }
 
     public function getContent()

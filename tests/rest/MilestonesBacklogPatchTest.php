@@ -20,10 +20,13 @@
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
+use Tuleap\REST\MilestoneBase;
+
 /**
  * @group MilestonesTest
  */
-class MilestonesBacklogPatchTest extends RestBase {
+class MilestonesBacklogPatchTest extends MilestoneBase
+{
 
     /** @var Test_Rest_TrackerFactory */
     private $tracker_test_helper;
@@ -49,7 +52,8 @@ class MilestonesBacklogPatchTest extends RestBase {
         );
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $project = $this->getProject(REST_TestDataBuilder::PROJECT_BACKLOG_DND);

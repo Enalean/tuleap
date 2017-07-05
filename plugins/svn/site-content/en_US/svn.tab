@@ -130,3 +130,6 @@ plugin_svn_statistics	top_project_operation	Top project (number of write operati
 plugin_svn_statistics	service_usage_activities	SVN with multiple repositories activities
 
 plugin_svn	url_can_not_be_processed	The requested action can not be understood, you have been redirected to the homepage
+
+project_admin_utils	svn_multi_repository_deletion	Repository SVN deleted
+project_admin_utils	svn_multi_repository_creation	Repository SVN created

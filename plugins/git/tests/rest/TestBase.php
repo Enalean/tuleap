@@ -25,6 +25,8 @@ use RestBase;
 
 class TestBase extends RestBase
 {
+    protected $git_project_id;
+
     public function setUp()
     {
         parent::setUp();

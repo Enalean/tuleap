@@ -86,36 +86,36 @@ class fulltextsearchPlugin extends Plugin {
         }
         // tracker
         if (defined('TRACKER_BASE_URL')) {
-            $this->_addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
-            $this->_addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
-            $this->_addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
-            $this->_addHook(TRACKER_EVENT_ARTIFACT_DELETE);
-            $this->_addHook(TRACKER_EVENT_TRACKER_DELETE);
-            $this->_addHook(TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE);
-            $this->_addHook(TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE);
-            $this->_addHook('tracker_followup_event_update', 'tracker_event_artifact_post_update', false);
-            $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
+            $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
+            $this->addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE);
+            $this->addHook(TRACKER_EVENT_TRACKER_DELETE);
+            $this->addHook(TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE);
+            $this->addHook(TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE);
+            $this->addHook('tracker_followup_event_update', 'tracker_event_artifact_post_update', false);
+            $this->addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
         }
 
         // site admin
-        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('project_is_private', 'project_is_private', false);
+        $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->addHook('project_is_private', 'project_is_private', false);
 
         // wiki
-        $this->_addHook('wiki_page_updated', 'wiki_page_updated', false);
-        $this->_addHook('wiki_page_created', 'wiki_page_created', false);
-        $this->_addHook('wiki_page_deleted', 'wiki_page_deleted', false);
-        $this->_addHook('wiki_page_permissions_updated', 'wiki_page_permissions_updated', false);
-        $this->_addHook('wiki_service_permissions_updated', 'wiki_service_permissions_updated', false);
+        $this->addHook('wiki_page_updated', 'wiki_page_updated', false);
+        $this->addHook('wiki_page_created', 'wiki_page_created', false);
+        $this->addHook('wiki_page_deleted', 'wiki_page_deleted', false);
+        $this->addHook('wiki_page_permissions_updated', 'wiki_page_permissions_updated', false);
+        $this->addHook('wiki_service_permissions_updated', 'wiki_service_permissions_updated', false);
 
         // assets
-        $this->_addHook('cssfile', 'cssfile', false);
-        $this->_addHook('javascript_file');
+        $this->addHook('cssfile', 'cssfile', false);
+        $this->addHook('javascript_file');
 
         // system events
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+        $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
         // Search
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -125,15 +125,15 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook(Event::REDEFINE_SEARCH_TYPE);
 
         //Ugroups
-        $this->_addHook('project_admin_ugroup_remove_user', 'project_admin_ugroup_delete_or_remove_user');
-        $this->_addHook('project_admin_ugroup_deletion', 'project_admin_ugroup_delete_or_remove_user');
-        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD, 'ugroup_manager_update_ugroup_binding_change');
-        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE, 'ugroup_manager_update_ugroup_binding_change');
-        $this->_addHook('project_admin_remove_user_from_project_ugroups', 'eventChangeProjectUgroupsMembers');
-        $this->_addHook('project_admin_ugroup_add_user', 'eventChangeProjectUgroupsMembers');
+        $this->addHook('project_admin_ugroup_remove_user', 'project_admin_ugroup_delete_or_remove_user');
+        $this->addHook('project_admin_ugroup_deletion', 'project_admin_ugroup_delete_or_remove_user');
+        $this->addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD, 'ugroup_manager_update_ugroup_binding_change');
+        $this->addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE, 'ugroup_manager_update_ugroup_binding_change');
+        $this->addHook('project_admin_remove_user_from_project_ugroups', 'eventChangeProjectUgroupsMembers');
+        $this->addHook('project_admin_ugroup_add_user', 'eventChangeProjectUgroupsMembers');
 
-        $this->_addHook('project_admin_remove_user', 'project_admin_remove_user');
-        $this->_addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
+        $this->addHook('project_admin_remove_user', 'project_admin_remove_user');
+        $this->addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
 
         $this->addHook(Event::IS_IN_SITEADMIN);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);

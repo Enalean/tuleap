@@ -20,6 +20,8 @@
 
 namespace Tuleap\User\History;
 
+use Tuleap\Glyph\Glyph;
+
 class HistoryEntry
 {
     /**
@@ -43,9 +45,13 @@ class HistoryEntry
      */
     private $color;
     /**
-     * @var string
+     * @var Glyph
      */
-    private $icon;
+    private $small_icon;
+    /**
+     * @var Glyph
+     */
+    private $normal_icon;
     /**
      * @var \Project
      */
@@ -55,14 +61,24 @@ class HistoryEntry
      */
     private $quick_links;
 
-    public function __construct($visit_time, $xref, $link, $title, $color, $icon, \Project $project, array $quick_links)
-    {
+    public function __construct(
+        $visit_time,
+        $xref,
+        $link,
+        $title,
+        $color,
+        Glyph $small_icon,
+        Glyph $normal_icon,
+        \Project $project,
+        array $quick_links
+    ) {
         $this->visit_time  = (int) $visit_time;
         $this->xref        = $xref;
         $this->link        = $link;
         $this->title       = $title;
         $this->color       = $color;
-        $this->icon        = $icon;
+        $this->small_icon  = $small_icon;
+        $this->normal_icon = $normal_icon;
         $this->project     = $project;
         $this->quick_links = $quick_links;
     }
@@ -108,11 +124,19 @@ class HistoryEntry
     }
 
     /**
-     * @return string
+     * @return Glyph
      */
-    public function getIcon()
+    public function getSmallIcon()
     {
-        return $this->icon;
+        return $this->small_icon;
+    }
+
+    /**
+     * @return Glyph
+     */
+    public function getNormalIcon()
+    {
+        return $this->normal_icon;
     }
 
     /**

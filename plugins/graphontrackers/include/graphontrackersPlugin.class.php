@@ -44,18 +44,18 @@ class GraphOnTrackersPlugin extends Plugin {
         $this->Plugin($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         
-        $this->_addHook('cssfile',                           'cssFile',                           false);
-        $this->_addHook('tracker_collapsable_sections',      'tracker_collapsable_sections',      false);
-        $this->_addHook('tracker_urlparam_processing','tracker_urlparam_processing',false);
-        $this->_addHook('tracker_user_pref','tracker_user_pref',false);
-        $this->_addHook('tracker_form_browse_add_in','tracker_form_browse_add_in',false);
-        $this->_addHook('tracker_after_report','tracker_after_report',false);
-        $this->_addHook('tracker_graphic_report_admin','tracker_graphic_report_admin',false);
-        $this->_addHook('tracker_graphic_report_add_link','tracker_graphic_report_add_link',false);
-        $this->_addHook('tracker_graphic_report_admin_header','tracker_graphic_report_admin_header',false);
-        $this->_addHook('graphontrackers_load_chart_factories', 'graphontrackers_load_chart_factories', false);
-        $this->_addHook('artifactType_created', 'copy_graphical_reports', false);
-        $this->_addHook('artifactType_deleted', 'delete_graphical_reports', false);
+        $this->addHook('cssfile',                           'cssFile',                           false);
+        $this->addHook('tracker_collapsable_sections',      'tracker_collapsable_sections',      false);
+        $this->addHook('tracker_urlparam_processing','tracker_urlparam_processing',false);
+        $this->addHook('tracker_user_pref','tracker_user_pref',false);
+        $this->addHook('tracker_form_browse_add_in','tracker_form_browse_add_in',false);
+        $this->addHook('tracker_after_report','tracker_after_report',false);
+        $this->addHook('tracker_graphic_report_admin','tracker_graphic_report_admin',false);
+        $this->addHook('tracker_graphic_report_add_link','tracker_graphic_report_add_link',false);
+        $this->addHook('tracker_graphic_report_admin_header','tracker_graphic_report_admin_header',false);
+        $this->addHook('graphontrackers_load_chart_factories', 'graphontrackers_load_chart_factories', false);
+        $this->addHook('artifactType_created', 'copy_graphical_reports', false);
+        $this->addHook('artifactType_deleted', 'delete_graphical_reports', false);
         $this->allowedForProject = array();
     }
 

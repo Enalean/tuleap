@@ -91,7 +91,8 @@ class VisitRetriever
                 $artifact->getUri(),
                 $artifact->getTitle(),
                 $tracker->getColor(),
-                $this->glyph_finder->get('tuleap-tracker')->getInlineString(),
+                $this->glyph_finder->get('tuleap-tracker-small'),
+                $this->glyph_finder->get('tuleap-tracker'),
                 $artifact->getTracker()->getProject(),
                 $quick_links
             );

@@ -125,15 +125,4 @@ class MapTest extends TuleapTestCase {
         $m->put($key, $value1);
         $this->assertTrue($m->remove($key, $value2));
     }
-    
-    function testRemoveKey() {
-        $key            = 'key';
-        $value          = new StdClass();
-        $m =& new Map();
-        $m->put($key, $value);
-        $this->assertEqual($m->size(), 1);
-        $this->assertTrue($m->removeKey($key));
-        $this->assertEqual($m->size(), 0);
-    }
 }
-?>

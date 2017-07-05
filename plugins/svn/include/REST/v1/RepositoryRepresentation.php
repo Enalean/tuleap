@@ -32,9 +32,9 @@ class RepositoryRepresentation extends SvnRepositoryRepresentationBase
         $project_representation = new MinimalProjectRepresentation();
         $project_representation->buildMinimal($repository->getProject());
 
-        $this->id         = JsonCast::toInt($repository->getId());
-        $this->project    = $project_representation;
-        $this->uri        = self::ROUTE . '/' . $this->id;
-        $this->name       = $repository->getName();
+        $this->id      = JsonCast::toInt($repository->getId());
+        $this->project = $project_representation;
+        $this->uri     = self::ROUTE . '/' . $this->id;
+        $this->name    = $repository->getName();
     }
 }

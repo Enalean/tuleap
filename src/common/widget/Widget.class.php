@@ -29,7 +29,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
 
     var $content_id;
     var $id;
-    var $hasPreferences;
     var $owner_id;
     var $owner_type;
 
@@ -46,28 +45,26 @@ use Tuleap\Dashboard\User\UserDashboardController;
         return $this->id;
     }
 
-    function getTitle() {
-        return '';
-    }
-    function getContent() {
+    public function getTitle()
+    {
         return '';
     }
 
-    function isInstallAllowed() {
-        return true;
-    }
-    function getInstallNotAllowedMessage() {
+    public function getContent()
+    {
         return '';
     }
-    function getInstallPreferences() {
+
+    public function getInstallPreferences()
+    {
         return '';
     }
-    function getPreferences() {
+
+    public function getPreferences($widget_id)
+    {
         return '';
     }
-    function hasPreferences() {
-        return false;
-    }
+
     function updatePreferences(&$request) {
         return true;
     }
@@ -160,21 +157,6 @@ use Tuleap\Dashboard\User\UserDashboardController;
                 $additional_parameters
             )
         );
-    }
-
-    public function getContentForBurningParrot()
-    {
-        return $this->getContent();
-    }
-
-    public function getPreferencesForBurningParrot($widget_id)
-    {
-        return '';
-    }
-
-    public function getInstallPreferencesForBurningParrot()
-    {
-        return '';
     }
 
     public function displayRss()

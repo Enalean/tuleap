@@ -40,11 +40,6 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $setup_client;
 
     /**
-     * @var Client
-     */
-    protected $xml_client;
-
-    /**
      * @var RequestWrapper
      */
     protected $rest_request;
@@ -54,8 +49,6 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $project_public_id;
     protected $project_public_member_id;
     protected $project_pbi_id;
-    protected $project_computed_fields_id;
-    protected $project_burndown_id;
 
     protected $epic_tracker_id;
     protected $releases_tracker_id;
@@ -64,30 +57,14 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $user_stories_tracker_id;
     protected $deleted_tracker_id;
     protected $kanban_tracker_id;
-    protected $level_one_tracker_id;
-    protected $level_two_tracker_id;
-    protected $level_three_tracker_id;
-    protected $level_four_tracker_id;
-    protected $niveau_1_tracker_id;
-    protected $niveau_2_tracker_id;
-    protected $pokemon_tracker_id;
 
     protected $project_ids = array();
     protected $tracker_ids = array();
 
-    protected $release_artifact_ids     = array();
-    protected $epic_artifact_ids        = array();
-    protected $story_artifact_ids       = array();
-    protected $sprint_artifact_ids      = array();
-    protected $level_one_artifact_ids   = array();
-    protected $level_two_artifact_ids   = array();
-    protected $level_three_artifact_ids = array();
-    protected $level_four_artifact_ids  = array();
-    protected $niveau_1_artifact_ids    = array();
-    protected $niveau_2_artifact_ids    = array();
-    protected $pokemon_artifact_ids     = array();
-
-    protected $load_computed_fields_data = false;
+    protected $release_artifact_ids = array();
+    protected $epic_artifact_ids    = array();
+    protected $story_artifact_ids   = array();
+    protected $sprint_artifact_ids  = array();
 
     public function __construct() {
         parent::__construct();
@@ -97,23 +74,20 @@ class RestBase extends PHPUnit_Framework_TestCase {
         }
 
         $this->rest_request = new RequestWrapper();
-    }
-
-    public function setUp() {
-        parent::setUp();
 
         $this->client       = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
         $this->setup_client = new Client($this->setup_url, array('ssl.certificate_authority' => 'system'));
-        $this->xml_client   = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
 
         $this->client->setDefaultOption('headers/Accept', 'application/json');
         $this->client->setDefaultOption('headers/Content-Type', 'application/json');
 
-        $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
-        $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
-
         $this->setup_client->setDefaultOption('headers/Accept', 'application/json');
         $this->setup_client->setDefaultOption('headers/Content-Type', 'application/json');
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
 
         if (! $this->project_ids) {
             $this->initProjectIds();
@@ -128,27 +102,8 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->project_public_id          = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
         $this->project_public_member_id   = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
         $this->project_pbi_id             = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
-        $this->project_computed_fields_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_COMPUTED_FIELDS);
-        $this->project_burndown_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_BURNDOWN);
 
         $this->getTrackerIdsForProjectPrivateMember();
-        $this->getReleaseArtifactIds();
-        $this->getEpicArtifactIds();
-        $this->getStoryArtifactIds();
-        $this->getSprintArtifactIds();
-
-        if ($this->load_computed_fields_data) {
-            $this->getTrackerIdsForComputedFieldsProject();
-            $this->getLevelOneArtifactIds();
-            $this->getLevelTwoArtifactIds();
-            $this->getLevelThreeArtifactIds();
-            $this->getLevelFourArtifactIds();
-
-            $this->getTrackerIdsForBurndownProject();
-            $this->getNiveau1ArtifactIds();
-            $this->getNiveau2ArtifactIds();
-            $this->getPokemonArtifactIds();
-        }
     }
 
     protected function getResponseWithoutAuth($request) {
@@ -268,7 +223,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::KANBAN_TRACKER_SHORTNAME];
     }
 
-    private function getReleaseArtifactIds()
+    protected function getReleaseArtifactIds()
     {
         $this->getArtifactIds(
             $this->releases_tracker_id,
@@ -276,7 +231,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         );
     }
 
-    private function getEpicArtifactIds()
+    protected function getEpicArtifactIds()
     {
         $this->getArtifactIds(
             $this->epic_tracker_id,
@@ -284,7 +239,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         );
     }
 
-    private function getStoryArtifactIds()
+    protected function getStoryArtifactIds()
     {
         $this->getArtifactIds(
             $this->user_stories_tracker_id,
@@ -292,7 +247,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         );
     }
 
-    private function getSprintArtifactIds()
+    protected function getSprintArtifactIds()
     {
         $this->getArtifactIds(
             $this->sprints_tracker_id,
@@ -300,79 +255,12 @@ class RestBase extends PHPUnit_Framework_TestCase {
         );
     }
 
-    private function getTrackerIdsForComputedFieldsProject()
+    protected function getArtifactIds($tracker_id, array &$retrieved_artifact_ids)
     {
-        $this->level_one_tracker_id   = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_ONE_TRACKER_SHORTNAME];
-        $this->level_two_tracker_id   = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_TWO_TRACKER_SHORTNAME];
-        $this->level_three_tracker_id = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_THREE_TRACKER_SHORTNAME];
-        $this->level_four_tracker_id  = $this->tracker_ids[$this->project_computed_fields_id][REST_TestDataBuilder::LEVEL_FOUR_TRACKER_SHORTNAME];
-    }
+        if (count($retrieved_artifact_ids) > 0) {
+            return $retrieved_artifact_ids;
+        }
 
-    private function getLevelOneArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->level_one_tracker_id,
-            $this->level_one_artifact_ids
-        );
-    }
-
-    private function getLevelTwoArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->level_two_tracker_id,
-            $this->level_two_artifact_ids
-        );
-    }
-
-    private function getLevelThreeArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->level_three_tracker_id,
-            $this->level_three_artifact_ids
-        );
-    }
-
-    private function getLevelFourArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->level_four_tracker_id,
-            $this->level_four_artifact_ids
-        );
-    }
-
-    private function getTrackerIdsForBurndownProject()
-    {
-        $this->niveau_1_tracker_id = $this->tracker_ids[$this->project_burndown_id][REST_TestDataBuilder::NIVEAU_1_TRACKER_SHORTNAME];
-        $this->niveau_2_tracker_id = $this->tracker_ids[$this->project_burndown_id][REST_TestDataBuilder::NIVEAU_2_TRACKER_SHORTNAME];
-        $this->pokemon_tracker_id  = $this->tracker_ids[$this->project_burndown_id][REST_TestDataBuilder::POKEMON_TRACKER_SHORTNAME];
-    }
-
-    private function getNiveau1ArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->niveau_1_tracker_id,
-            $this->niveau_1_artifact_ids
-        );
-    }
-
-    private function getNiveau2ArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->niveau_2_tracker_id,
-            $this->niveau_2_artifact_ids
-        );
-    }
-
-    private function getPokemonArtifactIds()
-    {
-        $this->getArtifactIds(
-            $this->pokemon_tracker_id,
-            $this->pokemon_artifact_ids
-        );
-    }
-
-    protected function getArtifactIds($tracker_id, array &$retrieved_tracker_ids)
-    {
         $query = http_build_query(
             array('order' => 'asc')
         );
@@ -385,7 +273,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $artifacts = $response->json();
         $index     = 1;
         foreach ($artifacts as $artifact) {
-            $retrieved_tracker_ids[$index] = $artifact['id'];
+            $retrieved_artifact_ids[$index] = $artifact['id'];
             $index++;
         }
     }

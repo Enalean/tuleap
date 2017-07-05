@@ -38,6 +38,7 @@ use Tuleap\Svn\Admin\MailHeaderManager;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Admin\RestoreController;
+use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
@@ -299,7 +300,8 @@ class SvnPlugin extends Plugin
                 EventManager::instance(),
                 Backend::instance(Backend::SVN),
                 new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-                SystemEventManager::instance()
+                SystemEventManager::instance(),
+                new ProjectHistoryDao()
             );
         }
 
@@ -475,7 +477,6 @@ class SvnPlugin extends Plugin
             $logger,
             $project,
             $this->getRepositoryManager(),
-            SystemEventManager::instance(),
             $this->getAccessFileHistoryCreator(),
             $this->getMailNotificationManager(),
             new RuleName($project, new Dao())
@@ -820,14 +821,15 @@ class SvnPlugin extends Plugin
         $project_resource = new $class($this->getRepositoryManager());
         $project          = $event->getProject();
 
-        $representations = $project_resource->getSvn(
+        $collection = $project_resource->getRepositoryCollection(
             $project,
+            $event->getFilter(),
             $event->getLimit(),
             $event->getOffset()
         );
 
-        $event->addRepositoriesRepresentations($representations);
-        $event->addTotalRepositories(count($this->getRepositoryManager()->getRepositoriesInProject($project)));
+        $event->addRepositoriesRepresentations($collection->getRepositoriesRepresentations());
+        $event->addTotalRepositories($collection->getTotalSize());
     }
 
     public function rest_project_options_svn(ProjectOptionsSvn $event)

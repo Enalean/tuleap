@@ -20,7 +20,9 @@
 
 namespace Tuleap\REST\Event;
 
-class ProjectOptionsSvn
+use Tuleap\Event\Dispatchable;
+
+class ProjectOptionsSvn implements Dispatchable
 {
     const NAME = 'rest_project_options_svn';
 

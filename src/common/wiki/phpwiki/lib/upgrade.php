@@ -300,52 +300,6 @@ CREATE TABLE $rating_tbl (
         }
         echo "  ",_("CREATED");
         break;
-    case 'accesslog':
-        $log_tbl = $prefix.'accesslog';
-        // fields according to http://www.outoforder.cc/projects/apache/mod_log_sql/docs-2.0/#id2756178
-        /*
-A	User Agent agent	varchar(255)	Mozilla/4.0 (compat; MSIE 6.0; Windows)
-a	CGi request arguments	request_args	varchar(255)	user=Smith&cart=1231&item=532
-b	Bytes transfered	bytes_sent	int unsigned	32561
-c???	Text of cookie	cookie	varchar(255)	Apache=sdyn.fooonline.net 1300102700823
-f	Local filename requested	request_file	varchar(255)	/var/www/html/books-cycroad.html
-H	HTTP request_protocol	request_protocol	varchar(10)	HTTP/1.1
-h	Name of remote host	remote_host	varchar(50)	blah.foobar.com
-I	Request ID (from modd_unique_id)	id	char(19)	POlFcUBRH30AAALdBG8
-l	Ident user info	remote_logname	varcgar(50)	bobby
-M	Machine ID???	machine_id	varchar(25)	web01
-m	HTTP request method	request_method	varchar(10)	GET
-P	httpd cchild PID	child_pid	smallint unsigned	3215
-p	http port	server_port	smallint unsigned	80
-R	Referer	referer	varchar(255)	http://www.biglinks4u.com/linkpage.html
-r	Request in full form	request_line	varchar(255)	GET /books-cycroad.html HTTP/1.1
-S	Time of request in UNIX time_t format	time_stamp	int unsigned	1005598029
-T	Seconds to service request	request_duration	smallint unsigned	2
-t	Time of request in human format	request_time	char(28)	[02/Dec/2001:15:01:26 -0800]
-U	Request in simple form	request_uri	varchar(255)	/books-cycroad.html
-u	User info from HTTP auth	remote_user	varchar(50)	bobby
-v	Virtual host servicing the request	virtual_host	varchar(255)
-        */
-        $dbh->genericSqlQuery("
-CREATE TABLE $log_tbl (
-        time_stamp    int unsigned,
-	remote_host   varchar(50),
-	remote_user   varchar(50),
-        request_method varchar(10),
-	request_line  varchar(255),
-	request_args  varchar(255),
-	request_uri   varchar(255),
-	request_time  char(28),
-	status 	      smallint unsigned,
-	bytes_sent    smallint unsigned,
-        referer       varchar(255), 
-	agent         varchar(255),
-	request_duration float
-)");
-        $dbh->genericSqlQuery("CREATE INDEX log_time ON $log_tbl (time_stamp)");
-        $dbh->genericSqlQuery("CREATE INDEX log_host ON $log_tbl (remote_host)");
-        echo "  ",_("CREATED");
-        break;
     }
     echo "<br />\n";
 }
@@ -374,15 +328,6 @@ function CheckDatabaseUpdate(&$request) {
     echo "<h4>",_("Backend type: "),$backend_type,"</h4>\n";
     $prefix = isset($DBParams['prefix']) ? $DBParams['prefix'] : '';
     foreach (explode(':','session:user:pref:member') as $table) {
-        echo sprintf(_("check for table %s"), $table)," ...";
-    	if (!in_array($prefix.$table, $tables)) {
-            installTable($dbh, $table, $backend_type);
-    	} else {
-    	    echo _("OK")," <br />\n";
-        }
-    }
-    if (ACCESS_LOG_SQL) {
-        $table = "accesslog";
         echo sprintf(_("check for table %s"), $table)," ...";
     	if (!in_array($prefix.$table, $tables)) {
             installTable($dbh, $table, $backend_type);
@@ -580,22 +525,6 @@ function CheckDatabaseUpdate(&$request) {
                 }
             }
         }
-    }
-    if ((ACCESS_LOG_SQL & 2)) {
-    	echo _("check for ACCESS_LOG_SQL passwords in POST requests")," ...";
-        // Don't display passwords in POST requests (up to 2005-02-04 12:03:20)
-        $result = $dbh->genericSqlQuery(
-                    "UPDATE ".$prefix."accesslog"
-                    .' SET request_args=CONCAT(left(request_args, LOCATE("s:6:\"passwd\"",request_args)+12),"...")'
-                    .' WHERE LOCATE("s:6:\"passwd\"", request_args)'
-                    .' AND NOT(LOCATE("s:6:\"passwd\";s:15:\"<not displayed>\"", request_args))'
-                    .' AND request_method="POST"');
-        if ((DATABASE_TYPE == 'SQL' and $backend->AffectedRows()) 
-            or (DATABASE_TYPE == 'ADODB' and $backend->Affected_Rows())
-            or (DATABASE_TYPE == 'PDO' and $result))
-            echo "<b>",_("FIXED"),"</b>", "<br />\n";
-        else 
-            echo _("OK"),"<br />\n";
     }
     _upgrade_cached_html($dbh);
 

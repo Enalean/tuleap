@@ -188,16 +188,7 @@ class Git_Widget_UserPushes extends Widget {
         return true;
     }
 
-    /**
-     * Widget has preferences
-     *
-     * @return Boolean
-     */
-    function hasPreferences() {
-        return true;
-    }
-
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -228,26 +219,4 @@ class Git_Widget_UserPushes extends Widget {
             </div>
             ';
     }
-
-    /**
-     * Display preferences form
-     *
-     * @return String
-     */
-    function getPreferences() {
-        return "<table>
-                    <tr>
-                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_offset')."</td>
-                        <td><input name='plugin_git_user_pushes_offset' value='".$this->offset."'/></td>
-                    </tr>
-                    <tr>
-                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_past_days')."</td>
-                        <td><input name='plugin_git_user_pushes_past_days' value='".$this->pastDays."'/></td>
-                    </tr>
-                </table>";
-
-    }
-
 }
-
-?>

@@ -22,10 +22,10 @@
 
 require_once('common/dao/UGroupDao.class.php');
 
-use Tuleap\User\UserGroup\NameTranslator;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
+use Tuleap\User\UserGroup\NameTranslator;
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
 
@@ -133,7 +133,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
     private function getPermissionsOnArtifactUsageRetriever()
     {
-        return new PermissionsOnArtifactUsageFormatter();
+        return new PermissionsOnArtifactUsageFormatter($this->getPermissionsValidator());
     }
 
     /**
@@ -147,18 +147,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $value = $this->getPermissionsOnArtifactUGroupRetriever()->initializeUGroupsIfNoUGroupsAreChoosen($value);
 
         $is_disabled = false;
-        $is_checked  = ($this->isRequiredAccessEnabled($value) === true);
+        $is_checked  = ($this->getPermissionsValidator()->isArtifactPermissionChecked($value) === true);
 
         return  $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isRequiredAccessEnabled(array $value)
-    {
-        return (isset($value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT])
-            && $value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT] == 1);
     }
 
     /**
@@ -246,10 +237,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         );
     }
 
-    private function isCheckedArtifactValue($artifact_value) {
-        return isset($artifact_value[self::USE_IT]) && $artifact_value[self::USE_IT];
-    }
-
     private function getArtifactValueHTML($artifact_id, $can_user_restrict_permissions_to_nobody, $is_read_only)
     {
         $changeset_values   = $this->getLastChangesetValues($artifact_id);
@@ -303,9 +290,16 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      *
      * @return string html
      */
-    protected function fetchArtifactValueCommon($is_read_only, Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+    protected function fetchArtifactValueCommon(
+        $is_read_only,
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
         if ($this->isValidSubmittedValues($submitted_values)) {
-            $is_checked = is_array($value) === true && $this->isCheckedArtifactValue($value) || $artifact->useArtifactPermissions();
+            $is_checked = (is_array($value) === true
+                && $this->getPermissionsValidator()->isArtifactPermissionChecked($value)
+                || $artifact->useArtifactPermissions());
         } else {
             $is_checked = $artifact->useArtifactPermissions();
         }
@@ -607,7 +601,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     protected function validate(Tracker_Artifact $artifact, $value)
     {
-        if ($this->isRequiredAccessEnabled($value) == true) {
+        if ($this->getPermissionsValidator()->isArtifactPermissionChecked($value) === true) {
             return $this->getPermissionsValidator()->isNoneGroupSelected($value) === false;
         }
 

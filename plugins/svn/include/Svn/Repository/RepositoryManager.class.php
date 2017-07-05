@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,6 +65,10 @@ class RepositoryManager
     private $access_file_history_factory;
     /** @var SystemEventManager */
     private $system_event_manager;
+    /**
+     * @var \ProjectHistoryDao
+     */
+    private $history_dao;
 
     public function __construct(
         Dao $dao,
@@ -77,7 +81,8 @@ class RepositoryManager
         EventManager $event_manager,
         Backend $backend,
         AccessFileHistoryFactory $access_file_history_factory,
-        SystemEventManager $system_event_manager
+        SystemEventManager $system_event_manager,
+        \ProjectHistoryDao $history_dao
     ) {
         $this->dao                         = $dao;
         $this->project_manager             = $project_manager;
@@ -90,6 +95,7 @@ class RepositoryManager
         $this->backend                     = $backend;
         $this->access_file_history_factory = $access_file_history_factory;
         $this->system_event_manager        = $system_event_manager;
+        $this->history_dao                 = $history_dao;
     }
 
     /**
@@ -105,16 +111,35 @@ class RepositoryManager
     }
 
     /**
-     * @return Repository[]
+     * @return RepositoryPaginatedCollection
      */
-    public function getPagninatedRepositories(Project $project, $limit, $offset)
+    public function getRepositoryPaginatedCollection(Project $project, $limit, $offset)
     {
         $repositories = array();
         foreach ($this->dao->searchPaginatedByProject($project, $limit, $offset) as $row) {
             $repositories[] = $this->instantiateFromRow($row, $project);
         }
 
-        return $repositories;
+        return new RepositoryPaginatedCollection(
+            $repositories,
+            $this->dao->foundRows()
+        );
+    }
+
+    /**
+     * @return RepositoryPaginatedCollection
+     */
+    public function getRepositoryPaginatedCollectionByName(Project $project, $repository_name, $limit, $offset)
+    {
+        $repositories = array();
+        foreach ($this->dao->searchPaginatedByProjectAndByName($project, $repository_name, $limit, $offset) as $row) {
+            $repositories[] = $this->instantiateFromRow($row, $project);
+        }
+
+        return new RepositoryPaginatedCollection(
+            $repositories,
+            $this->dao->foundRows()
+        );
     }
 
     public function getRepositoriesInProjectWithLastCommitInfo(Project $project)
@@ -161,17 +186,26 @@ class RepositoryManager
     /**
      * @return SystemEvent or null
      */
-    public function create(Repository $repositorysvn, \SystemEventManager $system_event_manager) {
-        $id = $this->dao->create($repositorysvn);
+    public function create(Repository $svn_repository)
+    {
+        $id = $this->dao->create($svn_repository);
         if (! $id) {
             throw new CannotCreateRepositoryException ($GLOBALS['Language']->getText('plugin_svn','update_error'));
         }
-        $repositorysvn->setId($id);
 
-        $repo_event['system_path'] = $repositorysvn->getSystemPath();
-        $repo_event['project_id']  = $repositorysvn->getProject()->getId();
-        $repo_event['name']        = $repositorysvn->getProject()->getUnixNameMixedCase()."/".$repositorysvn->getName();
-        return $system_event_manager->createEvent(
+        $svn_repository->setId($id);
+
+        $this->history_dao->groupAddHistory(
+            'svn_multi_repository_creation',
+            $svn_repository->getName(),
+            $svn_repository->getProject()->getID()
+        );
+
+        $repo_event['system_path'] = $svn_repository->getSystemPath();
+        $repo_event['project_id']  = $svn_repository->getProject()->getId();
+        $repo_event['name']        = $svn_repository->getProject()->getUnixNameMixedCase()."/".$svn_repository->getName();
+
+        return $this->system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME,
             implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),
             SystemEvent::PRIORITY_HIGH);
@@ -197,6 +231,12 @@ class RepositoryManager
      */
     public function queueRepositoryDeletion(Repository $repositorysvn, SystemEventManager $system_event_manager)
     {
+        $this->history_dao->groupAddHistory(
+            'svn_multi_repository_deletion',
+            $repositorysvn->getName(),
+            $repositorysvn->getProject()->getID()
+        );
+
         return $system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             $repositorysvn->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repositorysvn->getId(),

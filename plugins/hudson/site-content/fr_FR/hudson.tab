@@ -101,7 +101,7 @@ plugin_hudson	skip_legend	Ignore ($1)
 plugin_hudson	project_job_testtrend	Tendance des résultats des tests $1
 plugin_hudson	project_job_buildhistory	Historique des builds $1
 
-plugin_hudson	widget_no_job_project	Aucun job trouvé. Veuillez <a href="/plugins/hudson/?group_id=$1">[ajouter un job]</a> d'abord.
+plugin_hudson	widget_no_job_project	Aucun job trouvé. Veuillez <a href="/plugins/hudson/?group_id=$1">ajouter un job</a> d'abord.
 plugin_hudson	widget_no_job_my	Aucun job trouvé. Veuillez ajouter un job</a> à l'un de vos projets d'abord.
 plugin_hudson	widget_no_monitoredjob_my	Aucun job surveillé. Cliquez sur préférences pour ajouter un job.
 plugin_hudson	widget_job_not_found	Job non trouvé.

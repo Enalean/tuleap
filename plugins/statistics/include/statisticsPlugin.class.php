@@ -37,15 +37,15 @@ class StatisticsPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('cssfile',                  'cssFile',                false);
-        $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
-        $this->_addHook('root_daily_start',         'root_daily_start',       false);
-        $this->_addHook('widget_instance',          'widget_instance',        false);
-        $this->_addHook('widgets',                  'widgets',                false);
-        $this->_addHook('admin_toolbar_data',       'admin_toolbar_data',     false);
-        $this->_addHook('usergroup_data',           'usergroup_data',         false);
-        $this->_addHook('groupedit_data',           'groupedit_data',         false);
-        $this->_addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
+        $this->addHook('cssfile',                  'cssFile',                false);
+        $this->addHook('site_admin_option_hook',   'site_admin_option_hook', false);
+        $this->addHook('root_daily_start',         'root_daily_start',       false);
+        $this->addHook('widget_instance',          'widget_instance',        false);
+        $this->addHook('widgets',                  'widgets',                false);
+        $this->addHook('admin_toolbar_data',       'admin_toolbar_data',     false);
+        $this->addHook('usergroup_data',           'usergroup_data',         false);
+        $this->addHook('groupedit_data',           'groupedit_data',         false);
+        $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
 
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);

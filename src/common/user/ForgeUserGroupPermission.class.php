@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-interface User_ForgeUserGroupPermission {
+abstract class User_ForgeUserGroupPermission
+{
 
     /**
      * @return int
      */
-    public function getId();
+    public function getId()
+    {
+    }
 
     /**
      * @return string the full name of the permission
      */
-    public function getName();
+    public function getName()
+    {
+    }
 
     /**
      * @return string the description of the permission
      */
-    public function getDescription();
+    public function getDescription()
+    {
+    }
+
+    public function canBeRemoved()
+    {
+        return false;
+    }
+
+    public function getCannotRemoveLabel()
+    {
+        return  "";
+    }
 }

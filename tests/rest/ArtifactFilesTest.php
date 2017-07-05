@@ -20,11 +20,12 @@
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
+use Tuleap\REST\ArtifactFileBase;
 /**
  * @group ArtifactFilesTest
  */
-class ArtifactFilesTest extends RestBase {
-
+class ArtifactFilesTest extends ArtifactFileBase
+{
     private static $DEFAULT_QUOTA = 67108864;
 
     private $first_file;

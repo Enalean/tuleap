@@ -21,8 +21,9 @@
 namespace Tuleap\Widget\Event;
 
 use Project;
+use Tuleap\Event\Dispatchable;
 
-class GetPublicAreas
+class GetPublicAreas implements Dispatchable
 {
     const NAME = 'service_public_areas';
 

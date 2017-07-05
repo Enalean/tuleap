@@ -86,7 +86,7 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
         $collection = new HeartbeatsEntryCollection($this->project, $this->user);
         $this->collector->collect($collection);
 
-        $entries = $collection->getEntries();
+        $entries = $collection->getLatestEntries();
         foreach ($entries as $entry) {
             $this->assertIsA($entry, 'Tuleap\Project\HeartbeatsEntry');
         }
@@ -99,7 +99,7 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
         $collection = new HeartbeatsEntryCollection($this->project, $this->user);
         $this->collector->collect($collection);
 
-        $this->assertCount($collection->getEntries(), 2);
+        $this->assertCount($collection->getLatestEntries(), 2);
     }
 
     public function itInformsThatThereIsAtLeastOneActivityThatUserCannotRead()

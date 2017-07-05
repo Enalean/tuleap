@@ -171,7 +171,6 @@ ${POT_FILE}: ../lib/plugin/RecentChangesCached.php
 ${POT_FILE}: ../lib/plugin/RecentChanges.php
 ${POT_FILE}: ../lib/plugin/RecentComments.php
 ${POT_FILE}: ../lib/plugin/RecentEdits.php
-${POT_FILE}: ../lib/plugin/RecentReferrers.php
 ${POT_FILE}: ../lib/plugin/RedirectTo.php
 ${POT_FILE}: ../lib/plugin/RelatedChanges.php
 ${POT_FILE}: ../lib/plugin/RichTable.php

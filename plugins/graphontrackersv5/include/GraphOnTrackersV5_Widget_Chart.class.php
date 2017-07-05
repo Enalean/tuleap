@@ -60,31 +60,29 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         return false;
     }
 
-    public function getInstallPreferences() {
-        return $this->getPreferences();
-    }
-
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
         return '
             <div class="tlp-form-element">
-                <label class="tlp-label" for="title-'. (int)$widget_id .'">'. $purifier->purify(_('Title')) .'</label>
+                <label class="tlp-label" for="title-'. $purifier->purify($widget_id) .'">
+                    '. $purifier->purify(_('Title')) .'
+                </label>
                 <input type="text"
                        class="tlp-input"
-                       id="title-'. (int)$widget_id .'"
+                       id="title-'. $purifier->purify($widget_id) .'"
                        name="chart[title]"
                        value="'. $purifier->purify($this->getTitle()) .'">
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label" for="chart-id-'. (int)$widget_id .'">
+                <label class="tlp-label" for="chart-id-'. $purifier->purify($widget_id) .'">
                     Chart Id <i class="fa fa-asterisk"></i>
                 </label>
                 <input type="number"
                        size="5"
                        class="tlp-input"
-                       id="chart-id-'. (int)$widget_id .'"
+                       id="chart-id-'. $purifier->purify($widget_id) .'"
                        name="chart[chart_id]"
                        value="'. $purifier->purify($this->chart_id) .'"
                        required
@@ -93,7 +91,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
             ';
     }
 
-    public function getInstallPreferencesForBurningParrot()
+    public function getInstallPreferences()
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -119,20 +117,6 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
                        placeholder="123">
             </div>
             ';
-    }
-
-    public function getPreferences() {
-        $hp = Codendi_HTMLPurifier::instance();
-
-        $prefs  = '';
-        $prefs .= '<table><tr><td>Title:</td><td><input type="text" class="textfield_medium" name="chart[title]" value="'. $hp->purify($this->chart_title, CODENDI_PURIFIER_CONVERT_HTML) .'" /></td></tr>';
-        $prefs .= '<tr><td>Chart Id:</td><td>';
-
-        $prefs .= '<input name="chart[chart_id]" type="text" value="'. $hp->purify($this->chart_id, CODENDI_PURIFIER_CONVERT_HTML) .'" />';
-
-        $prefs .= '</td></tr>';
-        $prefs .= '</table>';
-        return $prefs;
     }
 
     function cloneContent($id, $owner_id, $owner_type) {
@@ -205,4 +189,3 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         return 'trackers';
     }
 }
-?>

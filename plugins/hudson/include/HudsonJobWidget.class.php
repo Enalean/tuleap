@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+
 require_once('HudsonWidget.class.php');
 require_once('common/widget/Widget.class.php');
 require_once('PluginHudsonJobDao.class.php');
@@ -54,37 +56,14 @@ abstract class HudsonJobWidget extends HudsonWidget {
         db_query($sql);
     }
 
-    function getInstallPreferences() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $prefs    = '<strong>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')).'</strong><br />';
-
-        $selected_jobs_id = $this->getSelectedJobsId();
-        $jobs = $this->getAvailableJobs();
-
-        $only_one_job = (count($jobs) == 1);
-	    foreach ($jobs as $job_id => $job) {
-                $selected = ($only_one_job)?'checked="checked"':'';
-                $prefs .= '<input type="radio" name="' . $purifier->purify($this->widget_id) . '_job_id" value="'.$purifier->purify($job_id).'" ' . $selected . '> ' . $purifier->purify($job->getName()) ;
-                if (in_array($job_id, $selected_jobs_id)) {
-                        $prefs .= ' <em>('. $purifier->purify($GLOBALS['Language']->getText('widget_add', 'already_used')) .')</em>';
-                }
-                $prefs .= '<br />';
-	    }
-        return $prefs;
-    }
-
-    function hasPreferences() {
-        return true;
-    }
-
-    public function getPreferencesForBurningParrot($widget_id)
+    public function getPreferences($widget_id)
     {
         $select_id = 'job-'. (int)$widget_id;
 
         return $this->buildPreferencesForm($select_id);
     }
 
-    public function getInstallPreferencesForBurningParrot()
+    public function getInstallPreferences()
     {
         $select_id = 'widget-job-id';
 
@@ -96,38 +75,37 @@ abstract class HudsonJobWidget extends HudsonWidget {
         $this->initContent();
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $html = '<div class="tlp-form-element">
-            <label class="tlp-label" for="' . $select_id . '">
-                ' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')) . '
-            </label>
-            <select class="tlp-select"
-                id="' . $select_id . '"
-                name="' . $purifier->purify($this->widget_id) . '_job_id">';
+        $jobs = $this->getAvailableJobs();
+        if (count($jobs) > 0) {
+            $html = '<div class="tlp-form-element">
+                <label class="tlp-label" for="' . $select_id . '">
+                    ' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')) . '
+                </label>
+                <select class="tlp-select"
+                    id="' . $select_id . '"
+                    name="' . $purifier->purify($this->widget_id) . '_job_id">';
 
-        foreach ($this->getAvailableJobs() as $job_id => $job) {
-            $selected = ($job_id == $this->job_id) ? 'selected="seleceted"' : '';
+            foreach ($jobs as $job_id => $job) {
+                $selected = ($job_id == $this->job_id) ? 'selected="seleceted"' : '';
 
-            $html .= '<option value="' . $purifier->purify($job_id) . '" ' . $selected . '>
+                $html .= '<option value="' . $purifier->purify($job_id) . '" ' . $selected . '>
                 ' . $purifier->purify($job->getName()) . '
                 </option>';
+            }
+            $html .= '</select>
+                </div>';
+        } else if ($this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
+            $html = '<div class="tlp-alert-warning">' . $GLOBALS['Language']->getText('plugin_hudson',
+                    'widget_no_job_project', array($this->group_id)) . '</div>';
+        } else {
+            $message = $this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE ?
+                $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) :
+                $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
+
+            $html = '<div class="tlp-alert-warning">' . $message . '</div>';
         }
-        $html .= '</select>
-            </div>';
 
         return $html;
-    }
-
-    function getPreferences() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $prefs    = '<strong>'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'monitored_job')).'</strong><br />';
-
-        $jobs = $this->getAvailableJobs();
-
-        foreach ($jobs as $job_id => $job) {
-            $selected = ($job_id == $this->job_id)?'checked="checked"':'';
-            $prefs .= '<input type="radio" name="' . $purifier->purify($this->widget_id) . '_job_id" value="'.$purifier->purify($job_id).'" ' . $selected . '> '.$purifier->purify($job->getName()).'<br />';
-        }
-        return $prefs;
     }
 
     function updatePreferences(&$request) {
@@ -138,20 +116,6 @@ abstract class HudsonJobWidget extends HudsonWidget {
             $res = db_query($sql);
         }
         return true;
-    }
-
-    /**
-     * Returns the jobs selected for this widget
-     */
-    function getSelectedJobsId() {
-        $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."'";
-        $res = db_query($sql);
-
-        $selected_jobs_id = array();
-        while ($data = db_fetch_array($res)) {
-        	$selected_jobs_id[] = $data['job_id'];
-        }
-        return $selected_jobs_id;
     }
 
     protected abstract function initContent();

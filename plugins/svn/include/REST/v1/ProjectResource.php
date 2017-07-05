@@ -23,6 +23,8 @@ namespace Tuleap\SVN\REST\v1;
 
 use Project;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Dao;
+use Tuleap\Svn\Repository\RepositoryPaginatedCollection;
 
 class ProjectResource
 {
@@ -36,24 +38,72 @@ class ProjectResource
         $this->repository_manager = $repository_manager;
     }
 
-    public function getSvn(Project $project, $limit, $offset)
+    /**
+     * @return RepositoryRepresentationPaginatedCollection
+     */
+    public function getRepositoryCollection(Project $project, $filter, $limit, $offset)
     {
-        $results          = array();
-        $svn_repositories = $this->repository_manager->getPagninatedRepositories(
+        if ($filter) {
+            return $this->getCollectionWithFilter($project, $filter, $limit, $offset);
+        }
+
+        return $this->getCollection($project, $limit, $offset);
+    }
+
+    /**
+     * @return RepositoryRepresentationPaginatedCollection
+     */
+    private function getCollectionWithFilter(Project $project, $filter, $limit, $offset)
+    {
+        $svn_repositories_collection = $this->repository_manager->getRepositoryPaginatedCollectionByName(
+            $project,
+            $filter,
+            $limit,
+            $offset
+        );
+
+        return $this->buildCollection($svn_repositories_collection);
+    }
+
+    /**
+     * @return RepositoryRepresentationPaginatedCollection
+     */
+    private function getCollection(Project $project, $limit, $offset)
+    {
+        $svn_repositories_collection = $this->repository_manager->getRepositoryPaginatedCollection(
             $project,
             $limit,
             $offset
         );
 
+        return $this->buildCollection($svn_repositories_collection);
+    }
+
+    /**
+     * @return RepositoryRepresentationPaginatedCollection
+     */
+    private function buildCollection(RepositoryPaginatedCollection $svn_repositories_collection)
+    {
+        return new RepositoryRepresentationPaginatedCollection(
+            $this->getRepresentations($svn_repositories_collection->getRepositories()),
+            $svn_repositories_collection->getTotalSize()
+        );
+    }
+
+    /**
+     * @return RepositoryRepresentation[]
+     */
+    private function getRepresentations(array $svn_repositories)
+    {
+        $representations = array();
+
         foreach ($svn_repositories as $repository) {
             $representation = new RepositoryRepresentation();
             $representation->build($repository);
 
-            $results[] = $representation;
+            $representations[] = $representation;
         }
 
-        return array(
-            'repositories' => $results
-        );
+        return $representations;
     }
 }

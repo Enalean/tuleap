@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\Layout\IncludeAssets;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -49,17 +50,17 @@ class AgileDashboardPlugin extends Plugin {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
-            $this->_addHook('cssfile', 'cssfile', false);
-            $this->_addHook('javascript_file');
-            $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
-            $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
-            $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
-            $this->_addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
-            $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
-            $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
-            $this->_addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
-            $this->_addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
-            $this->_addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
+            $this->addHook('cssfile', 'cssfile', false);
+            $this->addHook('javascript_file');
+            $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
+            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
+            $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
+            $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
+            $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
+            $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
+            $this->addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
             $this->addHook('plugin_statistics_service_usage');
             $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
@@ -74,7 +75,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REGISTER_PROJECT_CREATION);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_GENERAL_SETTINGS);
-            $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
+            $this->addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_RESOURCES_V2);
             $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
@@ -384,22 +385,32 @@ class AgileDashboardPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    public function cssfile($params) {
+    public function cssfile($params)
+    {
         if ($this->isAnAgiledashboardRequest()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
 
             if ($this->isPlanningV2URL()) {
                 echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/planning-v2/bin/assets/planning-v2.css" />';
+            } elseif ($this->isKanbanURL()) {
+                echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/kanban/dist/kanban.css">'."\n";
             }
         }
     }
 
-    public function javascript_file() {
+    public function javascript_file()
+    {
         if ($this->isAnAgiledashboardRequest()) {
             if ($this->isPlanningV2URL()) {
                 echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
             } elseif ($this->isKanbanURL()) {
+                $kanban_include_assets = new IncludeAssets(
+                    ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
+                    $this->getPluginPath() . '/js/kanban/dist'
+                );
+
                 echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
+                echo $kanban_include_assets->getHTMLSnippet('kanban.js') ."\n";
             } else {
                 echo $this->getMinifiedAssetHTML()."\n";
             }
