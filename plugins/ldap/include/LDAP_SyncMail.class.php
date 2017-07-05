@@ -78,7 +78,7 @@ class LDAP_SyncMail {
         try {
             $mail = $this->prepareMail($recipients, $projectName, $subject, $body);
             if (! $mail->send()) {
-                $this->logger->error("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().", but failed to notify administrators of <$projectName> project :".$e->getMessage());
+                $this->logger->error("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().", but failed to notify administrators of <$projectName> project");
                 $notificationStatus = false;
             }
         } catch (InvalidArgumentException $e) {
