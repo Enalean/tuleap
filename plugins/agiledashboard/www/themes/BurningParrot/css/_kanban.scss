@@ -134,7 +134,17 @@ $kanban-column-footer-height: 50px;
         }
 
         > kanban-column {
-            display: none;
+            position: absolute;
+            z-index: 2;
+            top: $kanban-column-header-height;
+            height: calc(100% - #{$kanban-column-header-height});
+
+            > .kustom-scroll > .ngsb-wrap > .ngsb-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
         }
     }
 
@@ -409,6 +419,7 @@ add-in-place {
 }
 
 .kanban-column-label {
+    z-index: 2;
     width: $kanban-column-closed-width;
     transform: scaleX(-1) scaleY(-1);
     opacity: .3;
