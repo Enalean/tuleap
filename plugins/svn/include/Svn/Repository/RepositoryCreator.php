@@ -25,9 +25,16 @@ use SystemEvent;
 use SystemEventManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
+use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
+use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
+use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryCreator
 {
+    /**
+     * @var SvnPermissionManager
+     */
+    private $permissions_manager;
     /**
      * @var Dao
      */
@@ -44,20 +51,36 @@ class RepositoryCreator
     public function __construct(
         Dao $dao,
         SystemEventManager $system_event_manager,
-        ProjectHistoryDao $history_dao
+        ProjectHistoryDao $history_dao,
+        SvnPermissionManager $permissions_manager
     ) {
         $this->dao                  = $dao;
         $this->system_event_manager = $system_event_manager;
         $this->history_dao          = $history_dao;
+        $this->permissions_manager  = $permissions_manager;
     }
 
     /**
      * @param Repository $svn_repository
      *
+     * @param \PFUser    $user
+     *
      * @return SystemEvent or null
      * @throws CannotCreateRepositoryException
+     * @throws UserIsNotSVNAdministratorException
      */
-    public function create(Repository $svn_repository)
+    public function create(Repository $svn_repository, \PFUser $user)
+    {
+        if (! $this->permissions_manager->isAdmin($svn_repository->getProject(), $user)) {
+            throw new UserIsNotSVNAdministratorException(
+                dgettext('tuleap-svn', "User doesn't have permission to create a repository")
+            );
+        }
+
+        $this->createWithoutUserAdminCheck($svn_repository);
+    }
+
+    public function createWithoutUserAdminCheck(Repository $svn_repository)
     {
         $id = $this->dao->create($svn_repository);
         if (! $id) {
@@ -72,6 +95,16 @@ class RepositoryCreator
             $svn_repository->getProject()->getID()
         );
 
+        return $this->sendEvent($svn_repository);
+    }
+
+    /**
+     * @param Repository $svn_repository
+     *
+     * @return SystemEvent
+     */
+    private function sendEvent(Repository $svn_repository)
+    {
         $repo_event['system_path'] = $svn_repository->getSystemPath();
         $repo_event['project_id']  = $svn_repository->getProject()->getId();
         $repo_event['name']        = $svn_repository->getProject()->getUnixNameMixedCase() .

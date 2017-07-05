@@ -36,6 +36,8 @@ use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
+use Tuleap\Svn\Repository\Exception\CannotDeleteRepositoryException;
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\SvnAdmin;
 
 class RepositoryManager

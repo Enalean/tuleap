@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -18,13 +18,14 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/>
   */
 
-namespace Tuleap\Svn\Repository;
+namespace Tuleap\Svn\Repository\Exception;
 
 use Exception;
 
-class CannotFindRepositoryException extends Exception {
-
-    public function __construct() {
+class CannotFindRepositoryException extends Exception
+{
+    public function __construct()
+    {
         parent::__construct($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
     }
 }

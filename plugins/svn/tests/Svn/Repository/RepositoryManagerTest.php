@@ -93,14 +93,14 @@ class RepositoryManagerTest extends TuleapTestCase
     public function itThrowsAnExceptionWhenRepositoryNameNotFound(){
         $public_path = 'projectname/repositoryko';
 
-        $this->expectException('Tuleap\Svn\Repository\CannotFindRepositoryException');
+        $this->expectException('Tuleap\Svn\Repository\Exception\CannotFindRepositoryException');
         $this->manager->getRepositoryFromPublicPath($public_path);
     }
 
     public function itThrowsAnExceptionWhenProjectNameNotFound(){
         $public_path = 'projectnameko/repositoryname';
 
-        $this->expectException('Tuleap\Svn\Repository\CannotFindRepositoryException');
+        $this->expectException('Tuleap\Svn\Repository\Exception\CannotFindRepositoryException');
         $this->manager->getRepositoryFromPublicPath($public_path);
     }
 }

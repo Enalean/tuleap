@@ -36,8 +36,9 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
-use Tuleap\Svn\Repository\CannotCreateRepositoryException;
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
@@ -117,7 +118,6 @@ class RepositoryResource extends AuthenticatedResource
             \PermissionsManager::instance()
         );
 
-        $this->repository_creator = new RepositoryCreator($dao, $this->system_event_manager, $project_history_dao);
         $this->hook_config_updator = new HookConfigUpdator(
             $hook_dao,
             $project_history_dao,
@@ -125,6 +125,12 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->commit_rules_validator = new CommitRulesRepresentationValidator();
+        $this->repository_creator     = new RepositoryCreator(
+            $dao,
+            $this->system_event_manager,
+            $project_history_dao,
+            $this->permission_manager
+        );
     }
 
     /**
@@ -409,10 +415,6 @@ class RepositoryResource extends AuthenticatedResource
             new \URLVerification()
         );
 
-        if (! $this->permission_manager->isAdmin($project, $user)) {
-            throw new RestException(403, "User doesn't have permission to create a repository");
-        }
-
         if ($settings) {
             $this->validateSettings($settings);
         }
@@ -430,9 +432,11 @@ class RepositoryResource extends AuthenticatedResource
                     "Repository name is invalid.  Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed."
                 );
             }
-            $this->repository_creator->create($repository_to_create);
+            $this->repository_creator->create($repository_to_create, $user);
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
+        } catch (UserIsNotSVNAdministratorException $e) {
+            throw new RestException(403, "User doesn't have permission to create a repository");
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);

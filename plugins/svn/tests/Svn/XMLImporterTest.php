@@ -71,6 +71,10 @@ class TestBackendSVN extends BackendSVN {
 class XMLImporterTest extends TuleapTestCase
 {
     /**
+     * @var \PFUser
+     */
+    private $user;
+    /**
      * @var RepositoryCreator
      */
     private $repository_creator;
@@ -185,11 +189,16 @@ class XMLImporterTest extends TuleapTestCase
             $users_to_notify_dao,
             $ugroups_to_notify_dao
         );
+        $permissions_manager = mock('Tuleap\Svn\SvnPermissionManager');
         $this->repository_creator = new RepositoryCreator(
             $this->repodao,
             $this->sysevmgr,
-            mock('ProjectHistoryDao')
+            mock('ProjectHistoryDao'),
+            $permissions_manager
         );
+
+        $this->user = aUser()->build();
+        stub($permissions_manager)->isAdmin()->returns(true);
 
         Backend::clearInstances();
         Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));
@@ -236,7 +245,9 @@ class XMLImporterTest extends TuleapTestCase
             $project,
             $this->accessfilemgr,
             $this->notifmgr,
-            new RuleName($project, $this->repodao));
+            new RuleName($project, $this->repodao),
+            $this->user
+        );
     }
 
     public function itShouldImportOneRevision() {

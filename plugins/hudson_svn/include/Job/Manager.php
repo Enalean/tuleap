@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,8 @@
 
 namespace Tuleap\HudsonSvn\Job;
 
-use Tuleap\HudsonSvn\Job\Dao;
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Valid_UInt;
 use Project;
 use SVNPathsUpdater;

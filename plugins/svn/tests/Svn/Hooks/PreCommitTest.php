@@ -26,22 +26,12 @@
 namespace Tuleap\Svn\Hooks;
 
 use ForgeConfig;
-use TuleapTestCase;
-use Tuleap\Svn\Hooks\PreCommit;
-use SVN_CommitToTagDeniedException;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\ImmutableTagDao;
-use Tuleap\Svn\Admin\ImmutableTag;
-use Tuleap\Svn\Commit\CommitInfoEnhancer;
-use Tuleap\Svn\Commit\CommitInfo;
-use Tuleap\Svn\Repository\HookConfig;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
-use BackendLogger;
-
-use Project;
 use ProjectManager;
+use SVN_CommitToTagDeniedException;
+use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\Commit\CommitInfoEnhancer;
+use Tuleap\Svn\Repository\HookConfig;
+use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
