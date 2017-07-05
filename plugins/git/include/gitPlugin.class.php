@@ -31,6 +31,7 @@ use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Events\ParseGitolite3Logs;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GerritServerResourceRestrictor;
+use Tuleap\Git\GitGodObjectWrapper;
 use Tuleap\Git\Gitolite\Gitolite3LogParser;
 use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
 use Tuleap\Git\Gitolite\SSHKey\AuthorizedKeysFileCreator;
@@ -78,6 +79,13 @@ use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
+use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
+use Tuleap\Git\Repository\Settings\WebhookAddController;
+use Tuleap\Git\Repository\Settings\WebhookController;
+use Tuleap\Git\Repository\Settings\WebhookControllerCollaborator;
+use Tuleap\Git\Repository\Settings\WebhookDeleteController;
+use Tuleap\Git\Repository\Settings\WebhookEditController;
+use Tuleap\Git\Repository\Settings\WebhookRouter;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
@@ -645,8 +653,37 @@ class GitPlugin extends Plugin {
         return new Git_Backend_Gitolite($this->getGitoliteDriver(), $this->getLogger());
     }
 
-    public function process() {
-        $this->getGitController()->process();
+    public function process()
+    {
+        $router_chain = $this->getChainOfRouters();
+
+        $router_chain->process(HTTPRequest::instance());
+    }
+
+    private function getChainOfRouters()
+    {
+        $webhook_router = $this->getWebhookRouter();
+        $final_link     = new GitGodObjectWrapper($this->getGitController());
+
+        $webhook_router
+            ->chain($final_link);
+
+        return $webhook_router;
+    }
+
+    private function getWebhookRouter()
+    {
+        $repository_retriever = new RepositoryFromRequestRetriever(
+            $this->getRepositoryFactory(),
+            $this->getGitPermissionsManager()
+        );
+        $dao = new WebhookDao();
+
+        return new WebhookRouter(
+            new WebhookAddController($repository_retriever, $dao),
+            new WebhookEditController($repository_retriever, $dao),
+            new WebhookDeleteController($repository_retriever, $dao)
+        );
     }
 
     /**
@@ -1447,7 +1484,6 @@ class GitPlugin extends Plugin {
             $this->getMirrorDataMapper(),
             $this->getProjectCreatorStatus(),
             new GerritCanMigrateChecker(EventManager::instance(), $gerrit_server_factory),
-            new WebhookDao(),
             $this->getFineGrainedUpdater(),
             $this->getFineGrainedFactory(),
             $this->getFineGrainedRetriever(),

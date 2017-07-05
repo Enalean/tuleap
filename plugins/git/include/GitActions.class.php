@@ -30,7 +30,6 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
-use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
@@ -72,11 +71,6 @@ class GitActions extends PluginActions
      * @var FineGrainedUpdater
      */
     private $fine_grained_updater;
-
-    /**
-     * @var WebhookDao
-     */
-    private $webhook_dao;
 
     /**
      * @var GitRepositoryMirrorUpdater
@@ -211,7 +205,6 @@ class GitActions extends PluginActions
         GitRepositoryMirrorUpdater $mirror_updater,
         MigrationHandler $migration_handler,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        WebhookDao $webhook_dao,
         FineGrainedUpdater $fine_grained_updater,
         FineGrainedPermissionSaver $fine_grained_permission_saver,
         CITokenManager $ci_token_manager,
@@ -246,7 +239,6 @@ class GitActions extends PluginActions
         $this->mirror_updater                = $mirror_updater;
         $this->migration_handler             = $migration_handler;
         $this->gerrit_can_migrate_checker    = $gerrit_can_migrate_checker;
-        $this->webhook_dao                   = $webhook_dao;
         $this->fine_grained_updater          = $fine_grained_updater;
         $this->fine_grained_permission_saver = $fine_grained_permission_saver;
         $this->ci_token_manager              = $ci_token_manager;
@@ -657,76 +649,6 @@ class GitActions extends PluginActions
             'gerrit_can_migrate_checker' => $this->gerrit_can_migrate_checker
         ));
         return true;
-    }
-
-    public function removeWebhook(GitRepository $repository, $webhook_id) {
-        $csrf = new CSRFSynchronizerToken(Pane\Hooks::CSRF_TOKEN_ID);
-
-        $redirect_url = $this->getWebhookSettingsURL($repository);
-        $csrf->check($redirect_url);
-
-        if ($this->webhook_dao->deleteByRepositoryIdAndWebhookId($repository->getId(), $webhook_id)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_delete_success')
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_delete_error')
-            );
-        }
-        $GLOBALS['Response']->redirect($redirect_url);
-    }
-
-    public function addWebhook(GitRepository $repository, $webhook_url) {
-        $csrf = new CSRFSynchronizerToken(Pane\Hooks::CSRF_TOKEN_ID);
-
-        $redirect_url = $this->getWebhookSettingsURL($repository);
-        $csrf->check($redirect_url);
-
-        if ($this->webhook_dao->create($repository->getId(), $webhook_url)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_add_success')
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_add_error')
-            );
-        }
-        $GLOBALS['Response']->redirect($redirect_url);
-    }
-
-    public function editWebhook(GitRepository $repository, $webhook_id, $webhook_url)
-    {
-        $csrf = new CSRFSynchronizerToken(Pane\Hooks::CSRF_TOKEN_ID);
-
-        $redirect_url = $this->getWebhookSettingsURL($repository);
-        $csrf->check($redirect_url);
-
-        if ($this->webhook_dao->edit($repository->getId(), $webhook_id, $webhook_url)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_edit_success')
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'settings_hooks_edit_error')
-            );
-        }
-        $GLOBALS['Response']->redirect($redirect_url);
-    }
-
-    private function getWebhookSettingsURL(GitRepository $repository) {
-        return GIT_BASE_URL .'/?'. http_build_query(array(
-            'action'   => 'repo_management',
-            'group_id' => $repository->getProjectId(),
-            'repo_id'  => $repository->getId(),
-            'pane'     => Pane\Hooks::ID
-        ));
     }
 
     private function displayFeedbacksOnRepoManagement(GitRepository $repository) {

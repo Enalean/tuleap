@@ -34,7 +34,6 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
-use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
@@ -132,11 +131,6 @@ class Git extends PluginController {
     public static function allDefaultPermissionTypes() {
         return array(Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS);
     }
-
-    /**
-     * @var WebhookDao
-     */
-    private $webhook_dao;
 
     /**
      * @var Git_Backend_Gitolite
@@ -306,7 +300,6 @@ class Git extends PluginController {
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
-        WebhookDao $webhook_dao,
         FineGrainedUpdater $fine_grained_updater,
         FineGrainedPermissionFactory $fine_grained_permission_factory,
         FineGrainedRetriever $fine_grained_retriever,
@@ -352,7 +345,6 @@ class Git extends PluginController {
         $this->mirror_data_mapper         = $mirror_data_mapper;
         $this->project_creator_status     = $project_creator_status;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
-        $this->webhook_dao                = $webhook_dao;
         $this->ci_token_manager           = $ci_token_manager;
         $this->access_loger               = $access_loger;
         $this->detector                   = $detector;
@@ -623,9 +615,6 @@ class Git extends PluginController {
                 'update_mirroring',
                 'update_default_mirroring',
                 'restore',
-                'remove-webhook',
-                'add-webhook',
-                'edit-webhook',
                 'generate-ci-token',
             );
             if ($this->areMirrorsEnabledForProject()) {
@@ -645,9 +634,6 @@ class Git extends PluginController {
                 $this->addPermittedAction('clone');
                 if ($repository->belongsTo($user)) {
                     $this->addPermittedAction('repo_management');
-                    $this->addPermittedAction('remove-webhook');
-                    $this->addPermittedAction('edit-webhook');
-                    $this->addPermittedAction('add-webhook');
                     $this->addPermittedAction('mail');
                     $this->addPermittedAction('del');
                     $this->addPermittedAction('confirm_deletion');
@@ -835,44 +821,6 @@ class Git extends PluginController {
                 }
                 $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
-                break;
-            case 'remove-webhook';
-                if (empty($repository)) {
-                    $this->redirectNoRepositoryError();
-                    return false;
-                }
-
-                $this->addAction('removeWebhook', array($repository, $this->request->get('webhook_id')));
-                break;
-            case 'add-webhook';
-                if (empty($repository)) {
-                    $this->redirectNoRepositoryError();
-                    return false;
-                }
-                $valid_url = new Valid_HTTPURI('url');
-                $valid_url->required();
-                if (! $this->request->valid($valid_url)) {
-                    $this->addError($this->getText('actions_params_error'));
-                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
-                }
-
-                $this->addAction('addWebhook', array($repository, $this->request->get('url')));
-                break;
-            case 'edit-webhook';
-                if (empty($repository)) {
-                    $this->redirectNoRepositoryError();
-                    return false;
-                }
-                $valid_url = new Valid_HTTPURI('url');
-                $valid_url->required();
-                $valid_id = new Valid_UInt('id');
-                $valid_id->required();
-                if (! $this->request->valid($valid_url) || ! $this->request->valid($valid_id)) {
-                    $this->addError($this->getText('actions_params_error'));
-                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
-                }
-
-                $this->addAction('editWebhook', array($repository, $this->request->get('id'), $this->request->get('url')));
                 break;
             case 'mail':
                 $this->processRepoManagementNotifications($pane, $repository->getId(), $repositoryName, $user);
@@ -1315,22 +1263,6 @@ class Git extends PluginController {
         );
     }
 
-    private function changeWebhook($repository, $action_method)
-    {
-        if (empty($repository)) {
-            $this->redirectNoRepositoryError();
-            return false;
-        }
-        $valid = new Valid_HTTPURI('url');
-        $valid->required();
-        if (! $this->request->valid($valid)) {
-            $this->addError($this->getText('actions_params_error'));
-            $this->redirect('/plugins/git/?group_id='. $this->groupId);
-        }
-
-        $this->addAction($action_method, array($repository, $this->request->get('url')));
-    }
-
     private function handleAdditionalAction(/* GitRepository */ $repository, $action) {
         $handled = false;
         $params  = array(
@@ -1501,7 +1433,6 @@ class Git extends PluginController {
                 $this->project_creator_status
             ),
             $this->gerrit_can_migrate_checker,
-            $this->webhook_dao,
             $this->fine_grained_updater,
             $this->fine_grained_permission_saver,
             $this->ci_token_manager,
