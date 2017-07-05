@@ -185,7 +185,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, %{php_base}-Smarty, %{php_base}-markdown, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-11
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, %{php_base}-Smarty, %{php_base}-markdown, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-15
 Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git-gitolite3
@@ -200,7 +200,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-11
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
 Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
