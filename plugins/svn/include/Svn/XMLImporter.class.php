@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,13 @@ namespace Tuleap\Svn;
 
 use Backend;
 use Logger;
-use SimpleXMLElement;
 use Project;
-use SystemEventManager;
+use SimpleXMLElement;
 use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Repository\RepositoryCreator;
+use Tuleap\Svn\Repository\RuleName;
 
 class XMLImporter {
 
@@ -37,10 +36,11 @@ class XMLImporter {
     private $repositories_data;
 
     public function __construct(
-            Backend $backend,
-            SimpleXMLElement $xml,
-            $extraction_path)
-    {
+        Backend $backend,
+        SimpleXMLElement $xml,
+        $extraction_path,
+        RepositoryCreator $repository_creator
+    ) {
         $this->repositories_data = array();
 
         if(empty($xml->svn)) {
@@ -51,7 +51,12 @@ class XMLImporter {
             if($xml_repo->getName() != "repository") {
                 continue;
             }
-            $this->repositories_data[] = new XMLRepositoryImporter($backend, $xml_repo, $extraction_path);
+            $this->repositories_data[] = new XMLRepositoryImporter(
+                $backend,
+                $xml_repo,
+                $extraction_path,
+                $repository_creator
+            );
         }
     }
 
@@ -59,7 +64,6 @@ class XMLImporter {
         ImportConfig $configuration,
         Logger $logger,
         Project $project,
-        RepositoryManager $repository_manager,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
         RuleName $rule_name)
@@ -70,7 +74,6 @@ class XMLImporter {
                 $configuration,
                 $logger,
                 $project,
-                $repository_manager,
                 $accessfile_history_creator,
                 $mail_notification_manager,
                 $rule_name
@@ -78,6 +81,5 @@ class XMLImporter {
         }
         $logger->info("[svn] Subversion Import Finished");
     }
-
 }
 

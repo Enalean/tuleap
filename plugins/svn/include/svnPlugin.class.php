@@ -20,6 +20,9 @@
 
 require_once 'constants.php';
 
+use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
+use Tuleap\CVS\DiskUsage\FullHistoryDao;
+use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\Svn\AccessControl\AccessControlController;
@@ -41,6 +44,11 @@ use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
+use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
+use Tuleap\Svn\DiskUsage\DiskUsageCollector;
+use Tuleap\Svn\DiskUsage\DiskUsageDao;
+use Tuleap\Svn\DiskUsage\DiskUsageRetriever;
+use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
@@ -58,6 +66,7 @@ use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 use Tuleap\Svn\Repository\RuleName;
@@ -71,14 +80,6 @@ use Tuleap\Svn\ViewVC\AccessHistorySaver;
 use Tuleap\Svn\ViewVC\ViewVCProxy;
 use Tuleap\Svn\XMLImporter;
 use Tuleap\Svn\XMLSvnExporter;
-use Tuleap\Svn\DiskUsage\DiskUsageCollector;
-use Tuleap\Svn\DiskUsage\DiskUsageDao;
-use Tuleap\Svn\DiskUsage\DiskUsageRetriever;
-use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
-use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
-use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
-use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
-use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 /**
  * SVN plugin
@@ -466,22 +467,28 @@ class SvnPlugin extends Plugin
     }
 
     /**
-     *
      * @param array $params
      * @see Event::IMPORT_XML_PROJECT
      */
-    public function import_xml_project($params) {
-        $xml = $params['xml_content'];
+    public function import_xml_project($params)
+    {
+        $xml             = $params['xml_content'];
         $extraction_path = $params['extraction_path'];
-        $project = $params['project'];
-        $logger = $params['logger'];
+        $project         = $params['project'];
+        $logger          = $params['logger'];
 
-        $svn = new XMLImporter(Backend::instance(), $xml, $extraction_path);
+        $svn = new XMLImporter(
+            Backend::instance(), $xml, $extraction_path,
+            new RepositoryCreator(
+                new Dao(),
+                SystemEventManager::instance(),
+                new ProjectHistoryDao()
+            )
+        );
         $svn->import(
             $params['configuration'],
             $logger,
             $project,
-            $this->getRepositoryManager(),
             $this->getAccessFileHistoryCreator(),
             $this->getMailNotificationManager(),
             new RuleName($project, new Dao())
@@ -520,7 +527,8 @@ class SvnPlugin extends Plugin
             new ExplorerController(
                 $repository_manager,
                 $permissions_manager,
-                new RepositoryBuilder()
+                new RepositoryBuilder(),
+                new RepositoryCreator(new Dao(), SystemEventManager::instance(), new ProjectHistoryDao())
             ),
             new RepositoryDisplayController(
                 $repository_manager,
