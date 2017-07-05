@@ -192,7 +192,6 @@ class XMLImporterTest extends TuleapTestCase {
             $this->logger,
             $project,
             $this->repomgr,
-            $this->sysevmgr,
             $this->accessfilemgr,
             $this->notifmgr,
             new RuleName($project, $this->repodao));

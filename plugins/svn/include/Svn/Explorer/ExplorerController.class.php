@@ -105,7 +105,7 @@ class ExplorerController {
         } else {
             $repository_to_create = new Repository("", $repo_name, "", "", $request->getProject());
             try {
-                $this->repository_manager->create($repository_to_create, $this->system_event_manager);
+                $this->repository_manager->create($repository_to_create);
 
                 $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository', 'update_success'));
                 $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));

@@ -60,7 +60,6 @@ class XMLImporter {
         Logger $logger,
         Project $project,
         RepositoryManager $repository_manager,
-        SystemEventManager $system_event_manager,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
         RuleName $rule_name)
@@ -72,7 +71,6 @@ class XMLImporter {
                 $logger,
                 $project,
                 $repository_manager,
-                $system_event_manager,
                 $accessfile_history_creator,
                 $mail_notification_manager,
                 $rule_name

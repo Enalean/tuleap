@@ -477,7 +477,6 @@ class SvnPlugin extends Plugin
             $logger,
             $project,
             $this->getRepositoryManager(),
-            SystemEventManager::instance(),
             $this->getAccessFileHistoryCreator(),
             $this->getMailNotificationManager(),
             new RuleName($project, new Dao())
