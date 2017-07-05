@@ -160,9 +160,14 @@ class Chart {
             $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
         }
         catch (Exception $exc) {
-            echo '<p class="feedback_error">';
-            echo $GLOBALS['Language']->getText('plugin_graphontrackers_error', 'jp_graph', array($this->title->t, $exc->getMessage())) ;
-            echo '</p>';
+            $error_message = $GLOBALS['Language']->getText('plugin_graphontrackers_error', 'jp_graph', array($this->title->t, $exc->getMessage()));
+            if (headers_sent()) {
+                echo '<p class="feedback_error">';
+                echo $error_message;
+                echo '</p>';
+            } else {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $error_message);
+            }
             return false;
         }
         if (!strnatcasecmp($method, 'SetScale')) {
