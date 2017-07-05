@@ -1,8 +1,9 @@
-import angular    from 'angular';
-import ngAnimate  from 'angular-animate';
+import angular from 'angular';
+import ngAnimate from 'angular-animate';
 import ngSanitize from 'angular-sanitize';
-import dragular   from 'dragular';
-import ui_router  from 'angular-ui-router';
+import dragular from 'dragular';
+import ui_router from 'angular-ui-router';
+import angular_artifact_modal from 'angular-artifact-modal';
 
 import 'angular-locker';
 import 'angular-moment';
@@ -18,15 +19,6 @@ import shared_properties from './shared-properties/shared-properties.js';
 import uuid_generator    from './uuid-generator/uuid-generator.js';
 import socket            from './socket/socket.js';
 import user_preferences  from './user-preferences/user-preferences.js';
-
-// Modal deps should be required by modal
-import 'angular-ckeditor';
-import 'angular-bootstrap-datetimepicker';
-import 'angular-ui-select';
-import 'angular-filter';
-import 'angular-base64-upload';
-import 'tuleap-artifact-modal';
-import './modal-moment-fix.js';
 
 import KanbanConfig            from './app-config.js';
 import MainCtrl                from './app-main-controller.js';
@@ -59,7 +51,7 @@ angular.module('kanban', [
     'ngScrollbar',
     'restangular',
     'ui.bootstrap',
-    'tuleap.artifact-modal',
+    angular_artifact_modal,
     dragular,
     jwt,
     ngAnimate,

@@ -1,18 +1,19 @@
-angular
-    .module('tuleap-artifact-modal-model')
-    .service('TuleapArtifactModalWorkflowService', TuleapArtifactModalWorkflowService);
+import { copy } from 'angular';
+import _ from 'lodash';
 
-function TuleapArtifactModalWorkflowService() {
+export default WorkflowService;
+
+WorkflowService.$inject = [];
+
+function WorkflowService() {
     var self = this;
-    _.extend(self, {
-        enforceWorkflowTransitions: enforceWorkflowTransitions
-    });
+    self.enforceWorkflowTransitions = enforceWorkflowTransitions;
 
     function enforceWorkflowTransitions(source_value_id, field, workflow) {
         var field_values = getPossibleValues(source_value_id, field.values, workflow.transitions);
 
         field.values          = field_values;
-        field.filtered_values = angular.copy(field_values);
+        field.filtered_values = copy(field_values);
         field.has_transitions = true;
 
         return field;
@@ -22,7 +23,7 @@ function TuleapArtifactModalWorkflowService() {
         var possible_value_ids = getPossibleValueIds(source_value_id, transitions);
 
         var filtered_values = _.filter(field_values, function(value) {
-            return _(possible_value_ids).contains(value.id);
+            return _.contains(possible_value_ids, value.id);
         });
 
         return filtered_values;

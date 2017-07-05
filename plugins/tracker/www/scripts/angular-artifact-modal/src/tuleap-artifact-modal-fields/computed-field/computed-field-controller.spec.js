@@ -1,47 +1,53 @@
-describe("TuleapArtifactModalComputedFieldController", function() {
-    var TuleapArtifactModalComputedFieldController;
+import computed_field_module from './computed-field.js';
+import angular from 'angular';
+import 'angular-mocks';
+
+import BaseComputedFieldController from './computed-field-controller.js';
+
+describe("ComputedFieldController", function() {
+    var ComputedFieldController;
 
     beforeEach(function() {
-        module('tuleap-artifact-modal-computed-field');
+        angular.mock.module(computed_field_module);
 
         var $controller;
 
-        inject(function(
+        angular.mock.inject(function(
             _$controller_
         ) {
             $controller = _$controller_;
         });
 
-        TuleapArtifactModalComputedFieldController = $controller('TuleapArtifactModalComputedFieldController', {});
-        TuleapArtifactModalComputedFieldController.value_model = {
+        ComputedFieldController = $controller(BaseComputedFieldController, {});
+        ComputedFieldController.value_model = {
             value          : null,
             is_autocomputed: false
         };
-        TuleapArtifactModalComputedFieldController.field = {
+        ComputedFieldController.field = {
             value: 8
         };
     });
 
     describe("switchToAutocomputed() -", function() {
         it("When I switch the computed field to autocomputed, then its manual_value will be set to null and its is_autocomputed flag will be true", function() {
-            TuleapArtifactModalComputedFieldController.value_model.manual_value    = 6;
-            TuleapArtifactModalComputedFieldController.value_model.is_autocomputed = false;
+            ComputedFieldController.value_model.manual_value    = 6;
+            ComputedFieldController.value_model.is_autocomputed = false;
 
-            TuleapArtifactModalComputedFieldController.switchToAutocomputed();
+            ComputedFieldController.switchToAutocomputed();
 
-            expect(TuleapArtifactModalComputedFieldController.value_model.manual_value).toBe(null);
-            expect(TuleapArtifactModalComputedFieldController.value_model.is_autocomputed).toBe(true);
+            expect(ComputedFieldController.value_model.manual_value).toBe(null);
+            expect(ComputedFieldController.value_model.is_autocomputed).toBe(true);
         });
     });
 
     describe("switchToManual() -", function() {
         it("When I switch the computed field to manual, then its is_autocomputed flag will be false", function() {
-            TuleapArtifactModalComputedFieldController.value_model.is_autocomputed = true;
+            ComputedFieldController.value_model.is_autocomputed = true;
 
-            TuleapArtifactModalComputedFieldController.switchToManual();
+            ComputedFieldController.switchToManual();
 
-            expect(TuleapArtifactModalComputedFieldController.field.value).toEqual(8);
-            expect(TuleapArtifactModalComputedFieldController.value_model.is_autocomputed).toBe(false);
+            expect(ComputedFieldController.field.value).toEqual(8);
+            expect(ComputedFieldController.value_model.is_autocomputed).toBe(false);
         });
     });
 });

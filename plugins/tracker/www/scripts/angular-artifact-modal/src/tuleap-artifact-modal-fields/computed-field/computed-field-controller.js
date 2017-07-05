@@ -1,13 +1,11 @@
-angular
-    .module('tuleap-artifact-modal-computed-field')
-    .controller('TuleapArtifactModalComputedFieldController', TuleapArtifactModalComputedFieldController);
+export default ComputedFieldController;
 
-function TuleapArtifactModalComputedFieldController() {
+ComputedFieldController.$inject = [];
+
+function ComputedFieldController() {
     var self = this;
-    _.extend(self, {
-        switchToAutocomputed: switchToAutocomputed,
-        switchToManual      : switchToManual
-    });
+    self.switchToAutocomputed = switchToAutocomputed;
+    self.switchToManual       = switchToManual;
 
     function switchToAutocomputed() {
         self.value_model.is_autocomputed = true;

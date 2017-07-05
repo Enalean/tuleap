@@ -1,19 +1,13 @@
-angular
-    .module('tuleap.artifact-modal')
-    .service('TuleapArtifactModalParentService', TuleapArtifactModalParentService);
+import _ from 'lodash';
 
-TuleapArtifactModalParentService.$inject = [
+export default ParentService;
 
-];
+ParentService.$inject = [];
 
-function TuleapArtifactModalParentService(
-
-) {
+function ParentService() {
     var self = this;
 
-    _.extend(self, {
-        canChooseArtifactsParent: canChooseArtifactsParent
-    });
+    self.canChooseArtifactsParent = canChooseArtifactsParent;
 
     function canChooseArtifactsParent(parent_tracker, parent_artifact) {
         return (

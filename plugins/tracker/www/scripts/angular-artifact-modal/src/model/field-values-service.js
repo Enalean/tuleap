@@ -1,6 +1,8 @@
-angular
-    .module('tuleap.artifact-modal')
-    .service('TuleapArtifactFieldValuesService', TuleapArtifactFieldValuesService);
+import { copy } from 'angular';
+import _ from 'lodash';
+import moment from 'moment';
+
+export default TuleapArtifactFieldValuesService;
 
 TuleapArtifactFieldValuesService.$inject = [
     '$sce',
@@ -12,9 +14,7 @@ function TuleapArtifactFieldValuesService(
     TuleapArtifactModalAwkwardCreationFields
 ) {
     var self = this;
-    _.extend(self, {
-        getSelectedValues: getSelectedValues
-    });
+    self.getSelectedValues = getSelectedValues;
 
     /**
      * For every field in the tracker, creates a field object with the value from the given artifact
@@ -46,7 +46,7 @@ function TuleapArtifactFieldValuesService(
     }
 
     function formatExistingValue(field, artifact_value) {
-        var value_obj         = angular.copy(artifact_value);
+        var value_obj         = copy(artifact_value);
         value_obj.type        = field.type;
         value_obj.permissions = field.permissions;
 

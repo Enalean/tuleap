@@ -52,9 +52,11 @@
   },
   "scripts": {
     "bower": "bower",
-    "build": "gulp build && webpack --optimize-minimize",
+    "build": "gulp build && webpack --optimize-minimize --bail",
     "coverage": "gulp coverage && http-server -os -a 0.0.0.0 -p 9000 coverage/",
+    "install-angular-modal": "cd ../../../../tracker/www/scripts/angular-artifact-modal/ && bower install --allow-root --loglevel=warn && npm install --production",
+    "pretest": "npm run install-angular-modal",
     "test": "gulp test",
-    "watch": "concurrently 'webpack --watch' 'gulp watch'"
+    "watch": "concurrently --raw --kill-others 'webpack --watch' 'gulp watch'"
   }
 }

@@ -1,11 +1,25 @@
+import artifact_modal_module from './tuleap-artifact-modal.js';
+import angular from 'angular';
+import 'angular-mocks';
+
+import BaseModalController from './tuleap-artifact-modal-controller.js';
+
 describe("TuleapArtifactModalController", function() {
-    var $scope, $q, $controller, $timeout, controller_params, TuleapArtifactModalController, $modalInstance,
-        TuleapArtifactModalRestService, TuleapArtifactModalValidateService,
-        TuleapArtifactModalParentService, TuleapArtifactModalFieldDependenciesService,
-        TuleapArtifactModalLoading, TuleapArtifactModalFileUploadService,
+    var $scope,
+        $q,
+        $controller,
+        controller_params,
+        ArtifactModalController,
+        $modalInstance,
+        TuleapArtifactModalRestService,
+        TuleapArtifactModalValidateService,
+        TuleapArtifactModalParentService,
+        TuleapArtifactModalFieldDependenciesService,
+        TuleapArtifactModalLoading,
+        TuleapArtifactModalFileUploadService,
         mockCallback;
     beforeEach(function() {
-        module('tuleap.artifact-modal', function($provide) {
+        angular.mock.module(artifact_modal_module, function($provide) {
             $provide.decorator('TuleapArtifactModalRestService', function($delegate) {
                 spyOn($delegate, "createArtifact");
                 spyOn($delegate, "editArtifact");
@@ -40,7 +54,7 @@ describe("TuleapArtifactModalController", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _$controller_,
             $rootScope,
             _$q_,
@@ -69,7 +83,6 @@ describe("TuleapArtifactModalController", function() {
             $modalInstance.opened = $q.defer().promise;
             $modalInstance.result = $q.defer().promise;
             $scope = $rootScope.$new();
-            $timeout = _$timeout_;
 
             $controller = _$controller_;
             controller_params = {
@@ -117,7 +130,7 @@ describe("TuleapArtifactModalController", function() {
                     }
                 };
 
-                TuleapArtifactModalController = $controller('TuleapArtifactModalController', controller_params);
+                ArtifactModalController = $controller(BaseModalController, controller_params);
 
                 expect($scope.$watch).toHaveBeenCalled();
                 expect($scope.$watch.calls.count()).toEqual(1);
@@ -128,7 +141,7 @@ describe("TuleapArtifactModalController", function() {
 
     describe("isThereAtLeastOneFileField() -", function() {
         beforeEach(function() {
-            TuleapArtifactModalController = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController = $controller(BaseModalController, controller_params);
         });
 
         it("Given that there were two file fields in the model's field values, when I check if there is at least one file field, then it will return true", function() {
@@ -137,9 +150,9 @@ describe("TuleapArtifactModalController", function() {
                 { field_id: 72, type: "int" },
                 { field_id: 64, type: "file" }
             ];
-            TuleapArtifactModalController.values = values;
+            ArtifactModalController.values = values;
 
-            var result = TuleapArtifactModalController.isThereAtLeastOneFileField();
+            var result = ArtifactModalController.isThereAtLeastOneFileField();
 
             expect(result).toBeTruthy();
         });
@@ -148,9 +161,9 @@ describe("TuleapArtifactModalController", function() {
             var values = [
                 { field_id: 62, type: "int" }
             ];
-            TuleapArtifactModalController.values = values;
+            ArtifactModalController.values = values;
 
-            var result = TuleapArtifactModalController.isThereAtLeastOneFileField();
+            var result = ArtifactModalController.isThereAtLeastOneFileField();
 
             expect(result).toBeFalsy();
         });
@@ -168,14 +181,14 @@ describe("TuleapArtifactModalController", function() {
             TuleapArtifactModalRestService.createArtifact.and.returnValue(create_request.promise);
             controller_params.modal_model.creation_mode = true;
             controller_params.modal_model.tracker_id    = 39;
-            TuleapArtifactModalController               = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController                     = $controller(BaseModalController, controller_params);
             var values = [
                 { field_id: 359, value: 907 },
                 { field_id: 613, bind_value_ids: [919]}
             ];
-            TuleapArtifactModalController.values = values;
+            ArtifactModalController.values = values;
 
-            TuleapArtifactModalController.submit();
+            ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
             create_request.resolve({ id: 3042 });
             $scope.$apply();
@@ -194,7 +207,7 @@ describe("TuleapArtifactModalController", function() {
             controller_params.modal_model.creation_mode = false;
             controller_params.modal_model.artifact_id = 8155;
             controller_params.modal_model.tracker_id = 186;
-            TuleapArtifactModalController = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController = $controller(BaseModalController, controller_params);
             var values = [
                 { field_id: 983, value: 741 },
                 { field_id: 860, bind_value_ids: [754]}
@@ -203,10 +216,10 @@ describe("TuleapArtifactModalController", function() {
                 body: 'My comment',
                 format: 'text'
             };
-            TuleapArtifactModalController.values           = values;
-            TuleapArtifactModalController.followup_comment = followup_comment;
+            ArtifactModalController.values           = values;
+            ArtifactModalController.followup_comment = followup_comment;
 
-            TuleapArtifactModalController.submit();
+            ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
             edit_request.resolve({ id: 8155 });
             $scope.$apply();
@@ -220,7 +233,7 @@ describe("TuleapArtifactModalController", function() {
         });
 
         it("and given that there were 2 file fields, when I submit the modal to Tuleap, then all temporary files chosen in those fields will be uploaded before fields are validated", function() {
-            TuleapArtifactModalController    = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController    = $controller(BaseModalController, controller_params);
             var first_field_temporary_files  = [{ description: "one" }];
             var second_field_temporary_files = [{ description: "two" }];
             var first_file_field_value = {
@@ -248,9 +261,9 @@ describe("TuleapArtifactModalController", function() {
             var edit_request = $q.defer();
             TuleapArtifactModalRestService.editArtifact.and.returnValue(edit_request.promise);
             var values = [first_file_field_value, second_file_field_value];
-            TuleapArtifactModalController.values = values;
+            ArtifactModalController.values = values;
 
-            TuleapArtifactModalController.submit();
+            ArtifactModalController.submit();
             first_upload.resolve([47]);
             second_upload.resolve([71, undefined]);
             edit_request.resolve({ id: 144 });
@@ -265,9 +278,9 @@ describe("TuleapArtifactModalController", function() {
         it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", function() {
             var edit_request = $q.defer();
             TuleapArtifactModalRestService.editArtifact.and.returnValue(edit_request.promise);
-            TuleapArtifactModalController = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController = $controller(BaseModalController, controller_params);
 
-            TuleapArtifactModalController.submit();
+            ArtifactModalController.submit();
             edit_request.reject();
             $scope.$apply();
 
@@ -326,7 +339,7 @@ describe("TuleapArtifactModalController", function() {
                 }
             };
 
-            TuleapArtifactModalController = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController = $controller(BaseModalController, controller_params);
             // First apply so the watcher takes into account the initial value
             $scope.$apply();
 
@@ -393,7 +406,7 @@ describe("TuleapArtifactModalController", function() {
                 }
             };
 
-            TuleapArtifactModalController = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController = $controller(BaseModalController, controller_params);
             // First apply so the watcher takes into account the initial value
             $scope.$apply();
 
@@ -415,7 +428,7 @@ describe("TuleapArtifactModalController", function() {
 
     describe("", function() {
         beforeEach(function() {
-            TuleapArtifactModalController = $controller('TuleapArtifactModalController', controller_params);
+            ArtifactModalController = $controller(BaseModalController, controller_params);
         });
 
         describe("searchUsers() -", function() {
@@ -432,7 +445,7 @@ describe("TuleapArtifactModalController", function() {
             });
 
             it("Given an openlist field and a search query with 3 characters, when I search for all usernames containing the query, then the field's loading flag will be set to true, the REST route will be queried and when it responds, the field's loading flag will be set to false and the field's values will be replaced with the data from the REST endpoint", function() {
-                TuleapArtifactModalController.searchUsers(field, "Blu");
+                ArtifactModalController.searchUsers(field, "Blu");
                 expect(field.loading).toBeTruthy();
                 var results = [
                     { id: 296, label: "Blue" },
@@ -447,7 +460,7 @@ describe("TuleapArtifactModalController", function() {
             });
 
             it("Given an openlist field and a search query with 2 characters, when I search for all usernames containing the query, then the field's values will be emptied and the REST route won't be called", function() {
-                TuleapArtifactModalController.searchUsers(field, "Re");
+                ArtifactModalController.searchUsers(field, "Re");
 
                 expect(TuleapArtifactModalRestService.searchUsers).not.toHaveBeenCalled();
                 expect(field.loading).toBeFalsy();
@@ -458,21 +471,21 @@ describe("TuleapArtifactModalController", function() {
         describe("showParentArtifactChoice() -", function() {
             beforeEach(function() {
                 TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(true);
-                TuleapArtifactModalController.tracker = {
+                ArtifactModalController.tracker = {
                     parent: {
                         id: 64
                     }
                 };
-                TuleapArtifactModalController.parent = {
+                ArtifactModalController.parent = {
                     id: 154
                 };
-                TuleapArtifactModalController.parent_artifacts = [
+                ArtifactModalController.parent_artifacts = [
                     { id: 629 }
                 ];
             });
 
             it("Given that I can choose a parent artifact and given the list of possible parent artifacts wasn't empty, when I check if I show the parent artifact choice, then it will return true", function() {
-                var result = TuleapArtifactModalController.showParentArtifactChoice();
+                var result = ArtifactModalController.showParentArtifactChoice();
 
                 expect(TuleapArtifactModalParentService.canChooseArtifactsParent).toHaveBeenCalledWith(
                     { id: 64 },
@@ -482,9 +495,9 @@ describe("TuleapArtifactModalController", function() {
             });
 
             it("Given that the list of possible parent artifacts was empty, when I check if I show the parent artifact choice, then it will return false", function() {
-                TuleapArtifactModalController.parent_artifacts = [];
+                ArtifactModalController.parent_artifacts = [];
 
-                var result = TuleapArtifactModalController.showParentArtifactChoice();
+                var result = ArtifactModalController.showParentArtifactChoice();
 
                 expect(result).toBeFalsy();
             });
@@ -492,7 +505,7 @@ describe("TuleapArtifactModalController", function() {
             it("Given that I cannot choose a parent artifact, when I check if I show the parent artifact choice, then it will return false", function() {
                 TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(false);
 
-                var result = TuleapArtifactModalController.showParentArtifactChoice();
+                var result = ArtifactModalController.showParentArtifactChoice();
 
                 expect(result).toBeFalsy();
             });
@@ -511,7 +524,7 @@ describe("TuleapArtifactModalController", function() {
                     }
                 };
 
-                var result = TuleapArtifactModalController.formatParentArtifactTitle(artifact);
+                var result = ArtifactModalController.formatParentArtifactTitle(artifact);
 
                 expect(result).toEqual("flareboard #747 - forcipated");
             });
@@ -520,23 +533,23 @@ describe("TuleapArtifactModalController", function() {
         describe("isDisabled() -", function() {
             describe("Given that the modal was opened in creation mode", function() {
                 it("and given a field that had the 'create' permission, when I check if it is disabled, then it will return false", function() {
-                    TuleapArtifactModalController.creation_mode = true;
+                    ArtifactModalController.creation_mode = true;
                     var field = {
                         permissions: ["read", "update", "create"]
                     };
 
-                    var result = TuleapArtifactModalController.isDisabled(field);
+                    var result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(false);
                 });
 
                 it("and given a field that didn't have the 'create' permission, when I check if it is disabled then it will return true", function() {
-                    TuleapArtifactModalController.creation_mode = true;
+                    ArtifactModalController.creation_mode = true;
                     var field = {
                         permissions: ["read", "update"]
                     };
 
-                    var result = TuleapArtifactModalController.isDisabled(field);
+                    var result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(true);
                 });
@@ -544,23 +557,23 @@ describe("TuleapArtifactModalController", function() {
 
             describe("Given that the modal was opened in edition mode", function() {
                 it("and given a field that had the 'update' permission, when I check if it is disabled then it will return false", function() {
-                    TuleapArtifactModalController.creation_mode = false;
+                    ArtifactModalController.creation_mode = false;
                     var field = {
                         permissions: ["read", "update", "create"]
                     };
 
-                    var result = TuleapArtifactModalController.isDisabled(field);
+                    var result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(false);
                 });
 
                 it("and given a field that didn't have the 'update' permission, when I check if it is disabled then it will return true", function() {
-                    TuleapArtifactModalController.creation_mode = false;
+                    ArtifactModalController.creation_mode = false;
                     var field = {
                         permissions: ["read", "create"]
                     };
 
-                    var result = TuleapArtifactModalController.isDisabled(field);
+                    var result = ArtifactModalController.isDisabled(field);
 
                     expect(result).toBe(true);
                 });

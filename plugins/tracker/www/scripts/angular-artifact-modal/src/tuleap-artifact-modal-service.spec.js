@@ -1,11 +1,19 @@
+import artifact_modal_module from './tuleap-artifact-modal.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("NewTuleapArtifactModalService", function() {
-    var NewTuleapArtifactModalService, $modal, $rootScope, $q, TuleapArtifactModalRestService,
-        TuleapArtifactFieldValuesService, TuleapArtifactModalParentService,
-        TuleapArtifactModalTrackerTransformerService, TuleapArtifactModalFormTreeBuilderService,
+    var NewTuleapArtifactModalService,
+        $q,
+        TuleapArtifactModalRestService,
+        TuleapArtifactFieldValuesService,
+        TuleapArtifactModalParentService,
+        TuleapArtifactModalTrackerTransformerService,
+        TuleapArtifactModalFormTreeBuilderService,
         TuleapArtifactModalWorkflowService;
 
     beforeEach(function() {
-        module('tuleap.artifact-modal', function($provide) {
+        angular.mock.module(artifact_modal_module, function($provide) {
             $provide.decorator('TuleapArtifactModalRestService', function($delegate) {
                 spyOn($delegate, "getArtifactFieldValues");
                 spyOn($delegate, "getAllOpenParentArtifacts");
@@ -56,8 +64,7 @@ describe("NewTuleapArtifactModalService", function() {
             });
         });
 
-        inject(function(
-            _$modal_,
+        angular.mock.inject(function(
             _$q_,
             _TuleapArtifactModalRestService_,
             _TuleapArtifactModalTrackerTransformerService_,
@@ -65,10 +72,8 @@ describe("NewTuleapArtifactModalService", function() {
             _TuleapArtifactModalFormTreeBuilderService_,
             _TuleapArtifactModalParentService_,
             _TuleapArtifactModalWorkflowService_,
-            _NewTuleapArtifactModalService_,
-            _$rootScope_
+            _NewTuleapArtifactModalService_
         ) {
-            $modal                                       = _$modal_;
             $q                                           = _$q_;
             TuleapArtifactModalRestService               = _TuleapArtifactModalRestService_;
             TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
@@ -77,7 +82,6 @@ describe("NewTuleapArtifactModalService", function() {
             TuleapArtifactModalParentService             = _TuleapArtifactModalParentService_;
             TuleapArtifactModalWorkflowService           = _TuleapArtifactModalWorkflowService_;
             NewTuleapArtifactModalService                = _NewTuleapArtifactModalService_;
-            $rootScope                                   = _$rootScope_;
         });
 
         installPromiseMatchers();
@@ -85,7 +89,10 @@ describe("NewTuleapArtifactModalService", function() {
 
 
     describe("", function() {
-        var tracker_request, tracker, parent_artifacts_request, file_upload_rules_request,
+        var tracker_request,
+            tracker,
+            parent_artifacts_request,
+            file_upload_rules_request,
             file_upload_rules;
 
         beforeEach(function() {

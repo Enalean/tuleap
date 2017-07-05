@@ -1,19 +1,23 @@
+import permission_field_module from './permission-field.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("TuleapArtifactModalPermissionFieldValidateService -", function() {
-    var TuleapArtifactModalPermissionFieldValidateService;
+    var PermissionFieldValidateService;
 
     beforeEach(function() {
-        module('tuleap-artifact-modal-permission-field');
+        angular.mock.module(permission_field_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _TuleapArtifactModalPermissionFieldValidateService_
         ) {
-            TuleapArtifactModalPermissionFieldValidateService = _TuleapArtifactModalPermissionFieldValidateService_;
+            PermissionFieldValidateService = _TuleapArtifactModalPermissionFieldValidateService_;
         });
     });
 
     describe("validateFieldValue() -", function() {
         it("Given a field value that was undefined, then it will return null", function() {
-            var result = TuleapArtifactModalPermissionFieldValidateService.validateFieldValue(undefined);
+            var result = PermissionFieldValidateService.validateFieldValue(undefined);
 
             expect(result).toBe(null);
         });
@@ -29,7 +33,7 @@ describe("TuleapArtifactModalPermissionFieldValidateService -", function() {
                 }
             };
 
-            var result = TuleapArtifactModalPermissionFieldValidateService.validateFieldValue(field_value);
+            var result = PermissionFieldValidateService.validateFieldValue(field_value);
 
             expect(result).toEqual({
                 field_id: 166,

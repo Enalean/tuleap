@@ -1,8 +1,13 @@
+import highlight_module from './highlight.js';
+import angular from 'angular';
+import 'angular-mocks';
+
+
 describe("TuleapHighlightDirective", function() {
     var element, $scope, $timeout;
 
     beforeEach(function() {
-        module('tuleap-highlight', function($provide) {
+        angular.mock.module(highlight_module, function($provide) {
             $provide.decorator('$timeout', function($delegate) {
                 $delegate.cancel = jasmine.createSpy("cancel");
 
@@ -10,7 +15,7 @@ describe("TuleapHighlightDirective", function() {
             });
         });
 
-        inject(function($rootScope, $compile, _$timeout_) {
+        angular.mock.inject(function($rootScope, $compile, _$timeout_) {
             $timeout = _$timeout_;
             // Compile the directive
             $scope = $rootScope.$new();

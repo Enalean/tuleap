@@ -1,6 +1,7 @@
-angular
-    .module('tuleap-artifact-modal-model')
-    .service('TuleapArtifactModalTrackerTransformerService', TuleapArtifactModalTrackerTransformerService);
+import _ from 'lodash';
+import { copy, isUndefined } from 'angular';
+
+export default TuleapArtifactModalTrackerTransformerService;
 
 TuleapArtifactModalTrackerTransformerService.$inject = [
     '$filter',
@@ -14,13 +15,11 @@ function TuleapArtifactModalTrackerTransformerService(
     TuleapArtifactModalStructuralFields
 ) {
     var self = this;
-    _.extend(self, {
-        addFieldValuesToTracker: addFieldValuesToTracker,
-        transform              : transform
-    });
+    self.addFieldValuesToTracker = addFieldValuesToTracker;
+    self.transform               = transform;
 
     function transform(tracker, creation_mode) {
-        var transformed_tracker = angular.copy(tracker);
+        var transformed_tracker = copy(tracker);
 
         if (creation_mode) {
             transformed_tracker.fields = excludeFieldsForCreationMode(tracker.fields);
@@ -73,13 +72,13 @@ function TuleapArtifactModalTrackerTransformerService(
                 field.values          = filterHiddenValues(field.values);
                 field.values          = displayI18NLabelIfAvailable(field.values);
                 field.values          = addNoneValue(field);
-                field.filtered_values = angular.copy(field.values);
+                field.filtered_values = copy(field.values);
                 break;
             case 'msb':
                 field.values          = filterHiddenValues(field.values);
                 field.values          = displayI18NLabelIfAvailable(field.values);
                 field.values          = addNoneValue(field);
-                field.filtered_values = angular.copy(field.values);
+                field.filtered_values = copy(field.values);
                 break;
             case 'cb':
             case 'rb':
@@ -141,8 +140,8 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function transformFieldDependenciesRules(tracker) {
-        var new_rules               = angular.copy(tracker.workflow.rules.lists);
-        var fields                  = angular.copy(tracker.fields);
+        var new_rules               = copy(tracker.workflow.rules.lists);
+        var fields                  = copy(tracker.fields);
         var fields_bound_to_ugroups = getListFieldsBoundToUgroups(fields);
 
         _(new_rules)
@@ -254,7 +253,7 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function addComputedFieldValueToTracker(field, artifact_value) {
-        if (angular.isUndefined(artifact_value.value)) {
+        if (isUndefined(artifact_value.value)) {
             field.value = null;
         } else {
             field.value = artifact_value.value;

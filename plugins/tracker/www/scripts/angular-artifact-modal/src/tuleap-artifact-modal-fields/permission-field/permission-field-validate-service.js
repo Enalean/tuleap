@@ -1,8 +1,10 @@
-angular
-    .module('tuleap-artifact-modal-permission-field')
-    .service('TuleapArtifactModalPermissionFieldValidateService', TuleapArtifactModalPermissionFieldValidateService);
+import _ from 'lodash';
 
-function TuleapArtifactModalPermissionFieldValidateService() {
+export default PermissionFieldValidateService;
+
+PermissionFieldValidateService.$inject = [];
+
+function PermissionFieldValidateService() {
     return {
         validateFieldValue: validateFieldValue
     };

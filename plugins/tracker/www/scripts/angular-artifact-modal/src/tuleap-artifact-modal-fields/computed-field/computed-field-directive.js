@@ -1,10 +1,7 @@
-angular
-    .module('tuleap-artifact-modal-computed-field')
-    .directive('tuleapArtifactModalComputedField', TuleapArtifactModalComputedFieldDirective);
+import './computed-field.tpl.html';
+import ComputedFieldController from './computed-field-controller.js';
 
-TuleapArtifactModalComputedFieldDirective.$inject = [];
-
-function TuleapArtifactModalComputedFieldDirective() {
+export default function ComputedFieldDirective() {
     return {
         restrict        : 'EA',
         replace         : false,
@@ -13,8 +10,9 @@ function TuleapArtifactModalComputedFieldDirective() {
             isDisabled : '&isDisabled',
             value_model: '=valueModel'
         },
-        controller      : 'TuleapArtifactModalComputedFieldController as computed_field',
+        controller      : ComputedFieldController,
+        controllerAs    : 'computed_field',
         bindToController: true,
-        templateUrl     : 'tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html'
+        templateUrl     : 'computed-field.tpl.html'
     };
 }

@@ -1,13 +1,13 @@
-angular
-    .module('tuleap-artifact-modal-rest')
-    .service('TuleapArtifactModalRestService', TuleapArtifactModalRestService);
+import _ from 'lodash';
 
-TuleapArtifactModalRestService.$inject = [
+export default RestService;
+
+RestService.$inject = [
     '$q',
     'Restangular'
 ];
 
-function TuleapArtifactModalRestService(
+function RestService(
     $q,
     Restangular
 ) {

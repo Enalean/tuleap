@@ -1,17 +1,21 @@
+import artifact_modal_module from './tuleap-artifact-modal.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("TuleapArtifactModalParentService -", function() {
-    var TuleapArtifactModalParentService;
+    var ParentService;
 
     beforeEach(function() {
-        module('tuleap.artifact-modal');
+        angular.mock.module(artifact_modal_module);
 
-        inject(function(_TuleapArtifactModalParentService_) {
-            TuleapArtifactModalParentService = _TuleapArtifactModalParentService_;
+        angular.mock.inject(function(_TuleapArtifactModalParentService_) {
+            ParentService = _TuleapArtifactModalParentService_;
         });
     });
 
     describe("canChooseArtifactsParent() -", function() {
         it("Given no parent_tracker object, when I check if I'll be able to choose the artifact's parent, then it will return false", function() {
-            var result = TuleapArtifactModalParentService.canChooseArtifactsParent(undefined);
+            var result = ParentService.canChooseArtifactsParent(undefined);
 
             expect(result).toBeFalsy();
         });
@@ -19,7 +23,7 @@ describe("TuleapArtifactModalParentService -", function() {
         it("Given a parent_tracker object and no parent_artifact object, when I check if I'll be able to choose the artifact's parent, then it will return true", function() {
             var parent_tracker = { id: 33 };
 
-            var result = TuleapArtifactModalParentService.canChooseArtifactsParent(parent_tracker, undefined);
+            var result = ParentService.canChooseArtifactsParent(parent_tracker, undefined);
 
             expect(result).toBeTruthy();
         });
@@ -34,7 +38,7 @@ describe("TuleapArtifactModalParentService -", function() {
                 }
             };
 
-            var result = TuleapArtifactModalParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
+            var result = ParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
 
             expect(result).toBeTruthy();
         });
@@ -49,7 +53,7 @@ describe("TuleapArtifactModalParentService -", function() {
                 }
             };
 
-            var result = TuleapArtifactModalParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
+            var result = ParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
 
             expect(result).toBeFalsy();
         });
@@ -64,7 +68,7 @@ describe("TuleapArtifactModalParentService -", function() {
                 }
             };
 
-            var result = TuleapArtifactModalParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
+            var result = ParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
 
             expect(result).toBeFalsy();
         });
@@ -79,7 +83,7 @@ describe("TuleapArtifactModalParentService -", function() {
                 }
             };
 
-            var result = TuleapArtifactModalParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
+            var result = ParentService.canChooseArtifactsParent(parent_tracker, parent_artifact);
 
             expect(result).toBeFalsy();
         });

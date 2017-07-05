@@ -1,18 +1,24 @@
+import permission_field_module from './permission-field.js';
+import angular from 'angular';
+import 'angular-mocks';
+
+import BasePermissionFieldController from './permission-field-controller.js';
+
 describe('TuleapArtifactModalPermissionFieldController', function() {
     var TuleapArtifactModalPermissionFieldController;
 
     beforeEach(function() {
-        module('tuleap-artifact-modal-permission-field');
+        angular.mock.module(permission_field_module);
 
         var $controller;
 
-        inject(function(
+        angular.mock.inject(function(
             _$controller_
         ) {
             $controller = _$controller_;
         });
 
-        TuleapArtifactModalPermissionFieldController = $controller('TuleapArtifactModalPermissionFieldController');
+        TuleapArtifactModalPermissionFieldController = $controller(BasePermissionFieldController);
         TuleapArtifactModalPermissionFieldController.value_model = {
             value: {
                 is_used_by_default: null,

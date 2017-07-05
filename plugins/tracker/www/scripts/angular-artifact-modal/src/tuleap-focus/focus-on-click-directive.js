@@ -1,12 +1,12 @@
-angular
-    .module('tuleap-focus')
-    .directive('tuleapFocusOnClick', TuleapFocusOnClick);
+import angular from 'angular';
 
-TuleapFocusOnClick.$inject = [
+export default focusOnClickDirective;
+
+focusOnClickDirective.$inject = [
     '$timeout'
 ];
 
-function TuleapFocusOnClick(
+function focusOnClickDirective(
     $timeout
 ) {
     return {

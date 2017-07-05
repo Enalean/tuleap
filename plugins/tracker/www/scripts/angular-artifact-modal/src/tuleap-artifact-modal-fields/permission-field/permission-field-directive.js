@@ -1,10 +1,7 @@
-angular
-    .module('tuleap-artifact-modal-permission-field')
-    .directive('tuleapArtifactModalPermissionField', tuleapArtifactModalPermissionFieldDirective);
+import './permission-field.tpl.html';
+import PermissionFieldController from './permission-field-controller.js';
 
-tuleapArtifactModalPermissionFieldDirective.$inject = [];
-
-function tuleapArtifactModalPermissionFieldDirective() {
+export default function PermissionFieldDirective() {
     return {
         restrict        : 'EA',
         replace         : false,
@@ -13,8 +10,9 @@ function tuleapArtifactModalPermissionFieldDirective() {
             isDisabled : '&isDisabled',
             value_model: '=valueModel'
         },
-        controller      : 'TuleapArtifactModalPermissionFieldController as permission_field',
+        controller      : PermissionFieldController,
+        controllerAs    : 'permission_field',
         bindToController: true,
-        templateUrl     : 'tuleap-artifact-modal-fields/permission-field/permission-field.tpl.html'
+        templateUrl     : 'permission-field.tpl.html'
     };
 }

@@ -1,10 +1,14 @@
-describe("TuleapArtifactModalFormTreeBuilderService", function() {
-    var TuleapArtifactModalFormTreeBuilderService;
-    beforeEach(function() {
-        module('tuleap-artifact-modal-model');
+import model_module from './model.js';
+import angular from 'angular';
+import 'angular-mocks';
 
-        inject(function(_TuleapArtifactModalFormTreeBuilderService_) {
-            TuleapArtifactModalFormTreeBuilderService = _TuleapArtifactModalFormTreeBuilderService_;
+describe("TuleapArtifactModalFormTreeBuilderService", function() {
+    var FormTreeBuilderService;
+    beforeEach(function() {
+        angular.mock.module(model_module);
+
+        angular.mock.inject(function(_TuleapArtifactModalFormTreeBuilderService_) {
+            FormTreeBuilderService = _TuleapArtifactModalFormTreeBuilderService_;
         });
     });
 
@@ -34,7 +38,7 @@ describe("TuleapArtifactModalFormTreeBuilderService", function() {
                     ]
                 };
 
-                var output = TuleapArtifactModalFormTreeBuilderService.buildFormTree(tracker);
+                var output = FormTreeBuilderService.buildFormTree(tracker);
 
                 expect(output).toEqual([
                     {

@@ -1,21 +1,29 @@
-describe("TuleapArtifactModalRestService", function() {
-    var mockBackend, $q, deferred, TuleapArtifactModalRestService, request, response;
-    beforeEach(function() {
-        module('tuleap-artifact-modal-rest');
+import rest_module from './rest.js';
+import angular from 'angular';
+import 'angular-mocks';
 
-        inject(function(
+describe("TuleapArtifactModalRestService", function() {
+    var mockBackend,
+        $q,
+        deferred,
+        RestService,
+        response;
+
+    beforeEach(function() {
+        angular.mock.module(rest_module);
+
+        angular.mock.inject(function(
             $httpBackend,
             _$q_,
             _TuleapArtifactModalRestService_
         ) {
             mockBackend = $httpBackend;
             $q = _$q_;
-            TuleapArtifactModalRestService = _TuleapArtifactModalRestService_;
+            RestService = _TuleapArtifactModalRestService_;
         });
 
         deferred = $q.defer();
 
-        request  = null;
         response = null;
 
         installPromiseMatchers();
@@ -34,7 +42,7 @@ describe("TuleapArtifactModalRestService", function() {
 
         mockBackend.expectGET('/api/v1/trackers/84').respond(JSON.stringify(response));
 
-        var promise = TuleapArtifactModalRestService.getTracker(84);
+        var promise = RestService.getTracker(84);
         mockBackend.flush();
 
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
@@ -60,7 +68,7 @@ describe("TuleapArtifactModalRestService", function() {
         };
         mockBackend.expectGET('/api/v1/artifacts/792').respond(JSON.stringify(response));
 
-        var promise = TuleapArtifactModalRestService.getArtifact(792);
+        var promise = RestService.getArtifact(792);
         mockBackend.flush();
 
         expect(promise).toBeResolvedWith(jasmine.objectContaining({
@@ -82,9 +90,9 @@ describe("TuleapArtifactModalRestService", function() {
     });
 
     it("getArtifactFieldValues() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", function() {
-        spyOn(TuleapArtifactModalRestService, "getArtifact").and.returnValue(deferred.promise);
+        spyOn(RestService, "getArtifact").and.returnValue(deferred.promise);
 
-        var promise = TuleapArtifactModalRestService.getArtifactFieldValues(40);
+        var promise = RestService.getArtifactFieldValues(40);
         deferred.resolve({
             id: 40,
             values: [
@@ -129,7 +137,7 @@ describe("TuleapArtifactModalRestService", function() {
                 }
             );
 
-            var promise = TuleapArtifactModalRestService.getOpenParentArtifacts(64, 2, 0);
+            var promise = RestService.getOpenParentArtifacts(64, 2, 0);
             mockBackend.flush();
 
             expect(promise).toBeResolved();
@@ -163,7 +171,7 @@ describe("TuleapArtifactModalRestService", function() {
                 }
             );
 
-            var promise = TuleapArtifactModalRestService.getAllOpenParentArtifacts(91, 2, 0);
+            var promise = RestService.getAllOpenParentArtifacts(91, 2, 0);
             mockBackend.flush();
 
             expect(promise).toBeResolved();
@@ -176,7 +184,7 @@ describe("TuleapArtifactModalRestService", function() {
         it("Given that the first request failed, when I get all the open parent artifacts, then a promise will be rejected", function() {
             mockBackend.expectGET('/api/v1/trackers/15/parent_artifacts?limit=2&offset=0').respond(503);
 
-            var promise = TuleapArtifactModalRestService.getAllOpenParentArtifacts(15, 2, 0);
+            var promise = RestService.getAllOpenParentArtifacts(15, 2, 0);
             mockBackend.flush();
 
             expect(promise).toBeRejected();
@@ -195,7 +203,7 @@ describe("TuleapArtifactModalRestService", function() {
             );
             mockBackend.expectGET('/api/v1/trackers/55/parent_artifacts?limit=2&offset=2').respond(503);
 
-            var promise = TuleapArtifactModalRestService.getAllOpenParentArtifacts(55, 2, 0);
+            var promise = RestService.getAllOpenParentArtifacts(55, 2, 0);
             mockBackend.flush();
 
             expect(promise).toBeRejected();
@@ -210,7 +218,7 @@ describe("TuleapArtifactModalRestService", function() {
             ];
             mockBackend.expectGET('/api/v1/users?query=Blu').respond(JSON.stringify(response));
 
-            var promise = TuleapArtifactModalRestService.searchUsers("Blu");
+            var promise = RestService.searchUsers("Blu");
             mockBackend.flush();
 
             // workaround because jasmine.objectContaining does not seem to deal well with arrays
@@ -242,7 +250,7 @@ describe("TuleapArtifactModalRestService", function() {
                 values: field_values
             }).respond(JSON.stringify(response));
 
-            var promise = TuleapArtifactModalRestService.createArtifact(3, field_values);
+            var promise = RestService.createArtifact(3, field_values);
             mockBackend.flush();
 
             expect(promise).toBeResolvedWith({
@@ -259,22 +267,22 @@ describe("TuleapArtifactModalRestService", function() {
             };
             mockBackend.expectPOST('/api/v1/artifacts').respond(400, JSON.stringify(errorResponse));
 
-            var promise = TuleapArtifactModalRestService.createArtifact();
+            var promise = RestService.createArtifact();
             mockBackend.flush();
 
-            expect(TuleapArtifactModalRestService.error.is_error).toBeTruthy();
-            expect(TuleapArtifactModalRestService.error.error_message).toEqual("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
+            expect(RestService.error.is_error).toBeTruthy();
+            expect(RestService.error.error_message).toEqual("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
             expect(promise).toBeRejected();
         });
 
         it("Given the server didn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
             mockBackend.expectPOST('/api/v1/artifacts').respond(404, undefined, undefined, 'Not Found');
 
-            var promise = TuleapArtifactModalRestService.createArtifact();
+            var promise = RestService.createArtifact();
             mockBackend.flush();
 
-            expect(TuleapArtifactModalRestService.error.is_error).toBeTruthy();
-            expect(TuleapArtifactModalRestService.error.error_message).toEqual("404 Not Found");
+            expect(RestService.error.is_error).toBeTruthy();
+            expect(RestService.error.error_message).toEqual("404 Not Found");
             expect(promise).toBeRejected();
         });
     });
@@ -303,7 +311,7 @@ describe("TuleapArtifactModalRestService", function() {
                     }
                 );
 
-            var promise = TuleapArtifactModalRestService.getFollowupsComments(148, 66, 23, 'desc');
+            var promise = RestService.getFollowupsComments(148, 66, 23, 'desc');
             mockBackend.flush();
 
             expect(promise).toBeResolved();
@@ -333,7 +341,7 @@ describe("TuleapArtifactModalRestService", function() {
             };
             var description = "bullboat metrosteresis classicality";
 
-            var promise = TuleapArtifactModalRestService.uploadTemporaryFile(file_to_upload, description);
+            var promise = RestService.uploadTemporaryFile(file_to_upload, description);
             mockBackend.flush();
 
             expect(promise).toBeResolvedWith(4);
@@ -347,7 +355,7 @@ describe("TuleapArtifactModalRestService", function() {
                 offset: 4
             }).respond();
 
-            var promise = TuleapArtifactModalRestService.uploadAdditionalChunk(9, "rmNcNnltd", 4);
+            var promise = RestService.uploadAdditionalChunk(9, "rmNcNnltd", 4);
             mockBackend.flush();
 
             expect(promise).toBeResolved();
@@ -362,7 +370,7 @@ describe("TuleapArtifactModalRestService", function() {
             };
             mockBackend.expectGET('/api/v1/users/102/preferences?key=tracker_comment_invertorder_93').respond(JSON.stringify(response));
 
-            var promise = TuleapArtifactModalRestService.getUserPreference(102, 'tracker_comment_invertorder_93');
+            var promise = RestService.getUserPreference(102, 'tracker_comment_invertorder_93');
             mockBackend.flush();
 
             expect(promise).toBeResolved();
@@ -389,7 +397,7 @@ describe("TuleapArtifactModalRestService", function() {
                 comment: followup_comment
             }).respond(200);
 
-            var promise = TuleapArtifactModalRestService.editArtifact(8354, field_values, followup_comment);
+            var promise = RestService.editArtifact(8354, field_values, followup_comment);
             mockBackend.flush();
 
             expect(promise).toBeResolvedWith(jasmine.objectContaining({
@@ -411,7 +419,7 @@ describe("TuleapArtifactModalRestService", function() {
                 comment: followup_comment
             }).respond(200);
 
-            var promise = TuleapArtifactModalRestService.editArtifact(8354, field_values, followup_comment);
+            var promise = RestService.editArtifact(8354, field_values, followup_comment);
             mockBackend.flush();
 
             expect(promise).toBeResolvedWith(jasmine.objectContaining({
@@ -422,11 +430,11 @@ describe("TuleapArtifactModalRestService", function() {
         it("Given the server didn't respond, when I edit an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
             mockBackend.expectPUT('/api/v1/artifacts/6144').respond(404, undefined, undefined, 'Not Found');
 
-            var promise = TuleapArtifactModalRestService.editArtifact(6144);
+            var promise = RestService.editArtifact(6144);
             mockBackend.flush();
 
-            expect(TuleapArtifactModalRestService.error.is_error).toBeTruthy();
-            expect(TuleapArtifactModalRestService.error.error_message).toEqual("404 Not Found");
+            expect(RestService.error.is_error).toBeTruthy();
+            expect(RestService.error.error_message).toEqual("404 Not Found");
             expect(promise).toBeRejected();
         });
     });
@@ -439,7 +447,7 @@ describe("TuleapArtifactModalRestService", function() {
                 'X-UPLOAD-MAX-FILE-CHUNKSIZE': '732798'
             });
 
-            var promise = TuleapArtifactModalRestService.getFileUploadRules();
+            var promise = RestService.getFileUploadRules();
             mockBackend.flush();
 
             expect(promise).toBeResolvedWith({

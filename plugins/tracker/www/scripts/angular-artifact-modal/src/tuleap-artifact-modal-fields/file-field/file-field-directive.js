@@ -1,10 +1,11 @@
-angular
-    .module('tuleap-artifact-modal-file-field')
-    .directive('tuleapArtifactModalFileField', TuleapArtifactModalFileFieldDirective);
+import './file-field.tpl.html';
+import FileFieldController from './file-field-controller.js';
 
-TuleapArtifactModalFileFieldDirective.$inject = [];
+export default FileFieldDirective;
 
-function TuleapArtifactModalFileFieldDirective() {
+FileFieldDirective.$inject = [];
+
+function FileFieldDirective() {
     return {
         restrict        : 'EA',
         replace         : false,
@@ -13,8 +14,9 @@ function TuleapArtifactModalFileFieldDirective() {
             isDisabled : '&isDisabled',
             value_model: '=valueModel'
         },
-        controller      : 'TuleapArtifactModalFileFieldController as file_field',
+        controller      : FileFieldController,
+        controllerAs    : 'file_field',
         bindToController: true,
-        templateUrl     : 'tuleap-artifact-modal-fields/file-field/file-field.tpl.html'
+        templateUrl     : 'file-field.tpl.html'
     };
 }

@@ -1,17 +1,19 @@
+import model_module from './model.js';
+import angular from 'angular';
+import 'angular-mocks';
+import moment from 'moment';
+
 describe("TuleapArtifactFieldValuesService", function() {
-    var TuleapArtifactFieldValuesService, $window, $sce;
+    var FieldValuesService;
     beforeEach(function() {
-        module('tuleap.artifact-modal');
+        angular.mock.module(model_module);
 
-        inject(function(_TuleapArtifactFieldValuesService_, _$sce_, _$window_) {
-            TuleapArtifactFieldValuesService = _TuleapArtifactFieldValuesService_;
-            $window = _$window_;
-            $sce = _$sce_;
+        angular.mock.inject(function(
+            _TuleapArtifactFieldValuesService_,
+        ) {
+            FieldValuesService = _TuleapArtifactFieldValuesService_;
 
-            $window.moment = jasmine.createSpy("moment").and.returnValue({
-                ISO_8601: "ISO_8601",
-                format: jasmine.createSpy("format")
-            });
+            spyOn(moment.fn, 'format');
         });
     });
 
@@ -62,7 +64,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     655: {
                         field_id: 655,
@@ -128,7 +130,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         { field_id: 906, type: "cross" }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     280: { field_id: 280, type: "aid" },
                     973: { field_id: 973, type: "atid" },
@@ -156,7 +158,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     870: {
                         field_id: 870,
@@ -180,7 +182,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues([], tracker);
+                var output = FieldValuesService.getSelectedValues([], tracker);
                 expect(output).toEqual({
                     175: {
                         field_id: 175,
@@ -213,7 +215,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     901: {
                         field_id   : 901,
@@ -239,7 +241,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     336: {
                         field_id: 336,
@@ -269,7 +271,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     349: {
                         field_id: 349,
@@ -303,7 +305,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     685: {
                         field_id: 685,
@@ -340,7 +342,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     163: {
                         field_id: 163,
@@ -376,9 +378,8 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
-                expect($window.moment).toHaveBeenCalledWith("2015-05-29T00:00:00+02:00", $window.moment.ISO_8601);
-                expect($window.moment().format).toHaveBeenCalledWith("YYYY-MM-DD");
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD");
                 expect(output[824].field_id).toEqual(824);
                 expect(output[824].permissions).toEqual(["read", "update", "create"]);
             });
@@ -399,9 +400,8 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
-                expect($window.moment).toHaveBeenCalledWith("2015-06-02T18:09:43+03:00", $window.moment.ISO_8601);
-                expect($window.moment().format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm:ss");
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+                expect(moment.fn.format).toHaveBeenCalledWith("YYYY-MM-DD HH:mm:ss");
                 expect(output[609].field_id).toEqual(609);
                 expect(output[609].permissions).toEqual(["read", "update", "create"]);
             });
@@ -426,7 +426,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     613: {
                         field_id: 613,
@@ -449,7 +449,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     87:  {
                         field_id: 87,
@@ -475,7 +475,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     622: {
                         field_id: 622,
@@ -506,7 +506,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     90: {
                         field_id: 90,
@@ -537,7 +537,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     383: {
                         field_id: 383,
@@ -560,7 +560,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     860: {
                         field_id: 860,
@@ -587,7 +587,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     698: {
                         field_id: 698,
@@ -620,7 +620,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     137: {
                         field_id: 137,
@@ -648,7 +648,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     607: {
                         field_id: 607,
@@ -680,7 +680,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     910: {
                         field_id: 910,
@@ -708,7 +708,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+                var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     430: {
                         field_id: 430,
@@ -731,7 +731,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     242: {
                         field_id: 242,
@@ -758,7 +758,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                         }
                     ]
                 };
-                var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+                var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
                     897: {
                         field_id: 897,
@@ -782,7 +782,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+            var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 803: {
                     field_id: 803,
@@ -817,7 +817,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 904: {
                     field_id   : 904,
@@ -846,7 +846,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+            var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 662: {
                     field_id   : 662,
@@ -884,7 +884,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 103: {
                     field_id: 103,
@@ -917,7 +917,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+            var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 542: {
                     field_id: 542,
@@ -957,7 +957,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 665: {
                     field_id       : 665,
@@ -981,7 +981,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+            var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 304: {
                     field_id       : 304,
@@ -1031,7 +1031,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues(artifact_values, tracker);
+            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 319: {
                     field_id: 319,
@@ -1073,7 +1073,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+            var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 378: {
                     field_id: 378,
@@ -1109,7 +1109,7 @@ describe("TuleapArtifactFieldValuesService", function() {
                     }
                 ]
             };
-            var output = TuleapArtifactFieldValuesService.getSelectedValues({}, tracker);
+            var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 667: {
                     field_id: 667,

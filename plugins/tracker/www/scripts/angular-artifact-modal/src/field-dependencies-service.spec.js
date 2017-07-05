@@ -1,10 +1,14 @@
-describe("TuleapArtifactModalFieldDependenciesService", function() {
-    var TuleapArtifactModalFieldDependenciesService;
-    beforeEach(function() {
-        module('tuleap.artifact-modal');
+import artifact_modal_module from './tuleap-artifact-modal.js';
+import angular from 'angular';
+import 'angular-mocks';
 
-        inject(function(_TuleapArtifactModalFieldDependenciesService_) {
-            TuleapArtifactModalFieldDependenciesService = _TuleapArtifactModalFieldDependenciesService_;
+describe("TuleapArtifactModalFieldDependenciesService", function() {
+    var FieldDependenciesService;
+    beforeEach(function() {
+        angular.mock.module(artifact_modal_module);
+
+        angular.mock.inject(function(_TuleapArtifactModalFieldDependenciesService_) {
+            FieldDependenciesService = _TuleapArtifactModalFieldDependenciesService_;
         });
     });
 
@@ -30,7 +34,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         }
                     ];
 
-                    var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                    var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                         source_value_ids,
                         target_field,
                         field_dependencies_rules
@@ -51,7 +55,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                     };
                     var field_dependencies_rules = [];
 
-                    var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                    var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                         source_value_ids,
                         target_field,
                         field_dependencies_rules
@@ -84,7 +88,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         }
                     ];
 
-                    var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                    var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                         source_value_ids,
                         target_field,
                         field_dependencies_rules
@@ -116,7 +120,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         }
                     ];
 
-                    var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                    var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                         source_value_ids,
                         target_field,
                         field_dependencies_rules
@@ -145,7 +149,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         }
                     ];
 
-                    var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                    var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                         source_value_ids,
                         target_field,
                         field_dependencies_rules
@@ -180,7 +184,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         }
                     ];
 
-                    var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                    var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                         source_value_ids,
                         target_field,
                         field_dependencies_rules
@@ -215,7 +219,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         }
                     ];
 
-                    var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                    var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                         source_value_ids,
                         target_field,
                         field_dependencies_rules
@@ -240,7 +244,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
             ];
 
             expect(function() {
-                TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+                FieldDependenciesService.getTargetFieldPossibleValues(
                     source_value_ids,
                     undefined,
                     field_dependencies_rules
@@ -257,7 +261,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 ]
             };
 
-            var filtered_values = TuleapArtifactModalFieldDependenciesService.getTargetFieldPossibleValues(
+            var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
                 source_value_ids,
                 target_field,
                 undefined
@@ -294,7 +298,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 }
             };
 
-            TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
+            FieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
 
             expect(callback).toHaveBeenCalledWith(
                 43,
@@ -330,7 +334,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 }
             };
 
-            TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
+            FieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
 
             expect(callback.calls.count()).toEqual(2);
             expect(callback).toHaveBeenCalledWith(
@@ -369,7 +373,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 }
             };
 
-            TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
+            FieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
 
             expect(callback).toHaveBeenCalled();
             expect(callback.calls.count()).toEqual(2);
@@ -383,7 +387,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 workflow: {}
             };
 
-            TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
+            FieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
 
             expect(callback).not.toHaveBeenCalled();
         });
@@ -407,7 +411,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 }
             };
 
-            TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(tracker);
+            FieldDependenciesService.setUpFieldDependenciesActions(tracker);
 
             expect(callback).not.toHaveBeenCalled();
         });

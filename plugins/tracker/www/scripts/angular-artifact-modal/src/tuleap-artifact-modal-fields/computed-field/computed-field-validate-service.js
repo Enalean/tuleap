@@ -1,9 +1,10 @@
-angular
-    .module('tuleap-artifact-modal-computed-field')
-    .service('TuleapArtifactModalComputedFieldValidateService', TuleapArtifactModalComputedFieldValidateService);
+import _ from 'lodash';
 
+export default ComputedFieldValidateService;
 
-function TuleapArtifactModalComputedFieldValidateService() {
+ComputedFieldValidateService.$inject = [];
+
+function ComputedFieldValidateService() {
     return {
         validateFieldValue: validateFieldValue
     };

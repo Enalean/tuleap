@@ -1,19 +1,23 @@
+import computed_field_module from './computed-field.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("TuleapArtifactModalComputedFieldValidateService", function() {
-    var TuleapArtifactModalComputedFieldValidateService;
+    var ComputedFieldValidateService;
 
     beforeEach(function() {
-        module('tuleap-artifact-modal-computed-field');
+        angular.mock.module(computed_field_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _TuleapArtifactModalComputedFieldValidateService_
         ) {
-            TuleapArtifactModalComputedFieldValidateService = _TuleapArtifactModalComputedFieldValidateService_;
+            ComputedFieldValidateService = _TuleapArtifactModalComputedFieldValidateService_;
         });
     });
 
     describe("validateFieldValue() -", function() {
         it("Given a field value that was undefined, then it will return null", function() {
-            var result = TuleapArtifactModalComputedFieldValidateService.validateFieldValue(undefined);
+            var result = ComputedFieldValidateService.validateFieldValue(undefined);
 
             expect(result).toBe(null);
         });
@@ -28,7 +32,7 @@ describe("TuleapArtifactModalComputedFieldValidateService", function() {
                 value          : 10
             };
 
-            var result = TuleapArtifactModalComputedFieldValidateService.validateFieldValue(field_value);
+            var result = ComputedFieldValidateService.validateFieldValue(field_value);
 
             expect(result).toEqual({
                 field_id       : 415,
@@ -47,7 +51,7 @@ describe("TuleapArtifactModalComputedFieldValidateService", function() {
                     value          : 97
                 };
 
-                var result = TuleapArtifactModalComputedFieldValidateService.validateFieldValue(field_value);
+                var result = ComputedFieldValidateService.validateFieldValue(field_value);
 
                 expect(result).toBe(null);
             });
@@ -62,7 +66,7 @@ describe("TuleapArtifactModalComputedFieldValidateService", function() {
                     value          : 88
                 };
 
-                var result = TuleapArtifactModalComputedFieldValidateService.validateFieldValue(field_value);
+                var result = ComputedFieldValidateService.validateFieldValue(field_value);
 
                 expect(result).toEqual({
                     field_id    : 306,

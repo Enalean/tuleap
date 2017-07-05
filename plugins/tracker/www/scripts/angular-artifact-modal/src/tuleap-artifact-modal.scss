@@ -20,6 +20,8 @@ $color-artifact-background: #FFFFFF;
 $color-followups-background: #F5F5F5;
 
 @import "tuleap-highlight/highlight";
+@import '../vendor/angular-bootstrap-datetimepicker/src/scss/datetimepicker';
+@import '../vendor/angular-ui-select/dist/select';
 
 .tuleap-artifact-modal {
 

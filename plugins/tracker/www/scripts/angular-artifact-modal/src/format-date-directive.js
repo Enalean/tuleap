@@ -1,29 +1,13 @@
-angular
-    .module('tuleap.artifact-modal')
-    .directive('tuleapArtifactModalFormatDate', tuleapArtifactModalFormatDate)
-    .directive('tuleapArtifactModalFormatDatetime', tuleapArtifactModalFormatDatetime);
+export default FormatDateDirective;
 
-tuleapArtifactModalFormatDate.$inject = ['amDateFormatFilter'];
+FormatDateDirective.$inject = ['amDateFormatFilter'];
 
-function tuleapArtifactModalFormatDate(amDateFormatFilter) {
+function FormatDateDirective(amDateFormatFilter) {
     return {
         require: 'ngModel',
         link: function(scope, element, attr, ngModelCtrl) {
             ngModelCtrl.$formatters.unshift(function(viewValue) {
                 return amDateFormatFilter(viewValue, 'YYYY-MM-DD');
-            });
-        }
-    };
-}
-
-tuleapArtifactModalFormatDatetime.$inject = ['amDateFormatFilter'];
-
-function tuleapArtifactModalFormatDatetime(amDateFormatFilter) {
-    return {
-        require: 'ngModel',
-        link: function(scope, element, attr, ngModelCtrl) {
-            ngModelCtrl.$formatters.unshift(function(viewValue) {
-                return amDateFormatFilter(viewValue, 'YYYY-MM-DD HH:mm');
             });
         }
     };

@@ -1,11 +1,10 @@
-angular
-    .module('tuleap.artifact-modal')
-    .service('NewTuleapArtifactModalService', NewTuleapArtifactModalService)
-    .value('TuleapArtifactModalLoading', {
-        loading: false
-    });
+import './tuleap-artifact-modal.tpl.html';
 
-NewTuleapArtifactModalService.$inject = [
+import _ from 'lodash';
+
+export default ArtifactModalService;
+
+ArtifactModalService.$inject = [
     '$q',
     '$modal',
     'TuleapArtifactModalRestService',
@@ -19,7 +18,7 @@ NewTuleapArtifactModalService.$inject = [
     'TuleapArtifactModalFileUploadRules'
 ];
 
-function NewTuleapArtifactModalService(
+function ArtifactModalService(
     $q,
     $modal,
     TuleapArtifactModalRestService,
@@ -64,7 +63,7 @@ function NewTuleapArtifactModalService(
                     return self.initCreationModalModel(tracker_id, parent);
                 },
                 displayItemCallback: function() {
-                    var cb = (displayItemCallback) ? displayItemCallback : angular.noop;
+                    var cb = (displayItemCallback) ? displayItemCallback : _.noop;
                     return cb;
                 }
             },
@@ -96,7 +95,7 @@ function NewTuleapArtifactModalService(
                     return self.initEditionModalModel(user_id, tracker_id, artifact_id);
                 },
                 displayItemCallback: function() {
-                    var cb = (displayItemCallback) ? displayItemCallback : angular.noop;
+                    var cb = (displayItemCallback) ? displayItemCallback : _.noop;
                     return cb;
                 }
             },

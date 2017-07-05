@@ -1,13 +1,13 @@
-angular
-    .module('tuleap.artifact-modal')
-    .service('TuleapArtifactModalValidateService', TuleapArtifactModalValidateService);
+import _ from 'lodash';
 
-TuleapArtifactModalValidateService.$inject = [
+export default ValidateService;
+
+ValidateService.$inject = [
     'TuleapArtifactModalComputedFieldValidateService',
     'TuleapArtifactModalPermissionFieldValidateService'
 ];
 
-function TuleapArtifactModalValidateService(
+function ValidateService(
     TuleapArtifactModalComputedFieldValidateService,
     TuleapArtifactModalPermissionFieldValidateService
 ) {

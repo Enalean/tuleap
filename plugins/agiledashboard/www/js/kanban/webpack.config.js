@@ -6,30 +6,28 @@ var WebpackAssetsManifest = require('webpack-assets-manifest');
 var assets_dir_path = path.resolve(__dirname, './dist');
 module.exports = {
     entry : {
-        kanban: './src/app/app.js'
+        kanban: './src/app/app.js',
     },
     output: {
         path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js'
+        filename: '[name]-[chunkhash].js',
     },
     resolve: {
         modules: [
+            // This ensures that dependencies resolve their imported modules in kanban's node_modules
+            path.resolve(__dirname, 'node_modules'),
             'node_modules',
             'vendor',
-            path.resolve(__dirname, 'node_modules'),
         ],
         alias: {
             // We should probably package angular-ui-bootstrap-templates for npm ourselves
             'angular-ui-bootstrap-templates': 'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-            // Modal deps should be required by modal
-            'angular-ckeditor'                : 'angular-ckeditor/angular-ckeditor.js',
+            // Our own components and their dependencies
+            'angular-artifact-modal' : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
+            'cumulative-chart-factory': path.resolve(__dirname, '../cumulative-chart-factory.js'),
+            // Angular artifact modal fixes
             'angular-bootstrap-datetimepicker': 'angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
             'angular-ui-select'               : 'angular-ui-select/dist/select.js',
-            'angular-filter'                  : 'angular-filter/index.js',
-            'angular-base64-upload'           : 'angular-base64-upload/index.js',
-            'tuleap-artifact-modal'           : 'artifact-modal/dist/tuleap-artifact-modal.js',
-            // Our own components and their dependencies
-            'cumulative-chart-factory': path.resolve(__dirname, '../cumulative-chart-factory.js'),
         }
     },
     externals: {
@@ -45,6 +43,7 @@ module.exports = {
                 ]
             }, {
                 test: /\.po$/,
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: 'angular-gettext-loader',

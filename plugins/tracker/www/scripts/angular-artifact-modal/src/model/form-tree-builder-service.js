@@ -1,12 +1,12 @@
-angular
-    .module('tuleap-artifact-modal-model')
-    .service('TuleapArtifactModalFormTreeBuilderService', TuleapArtifactModalFormTreeBuilderService);
+import _ from 'lodash';
 
-function TuleapArtifactModalFormTreeBuilderService() {
+export default FormTreeBuilderService;
+
+FormTreeBuilderService.$inject = [];
+
+function FormTreeBuilderService() {
     var self = this;
-    _.extend(self, {
-        buildFormTree: buildFormTree
-    });
+    self.buildFormTree = buildFormTree;
 
     function buildFormTree(tracker) {
         var ordered_fields = _(tracker.structure)
@@ -30,7 +30,7 @@ function TuleapArtifactModalFormTreeBuilderService() {
 
         if (structure_field.content !== null) {
             complete_field.content = _(structure_field.content)
-               .map(function(sub_field) {
+                .map(function(sub_field) {
                     return recursiveGetCompleteField(sub_field, all_fields);
                 })
                 .compact()

@@ -1,10 +1,8 @@
-angular
-    .module('tuleap-artifact-modal-permission-field')
-    .controller('TuleapArtifactModalPermissionFieldController', TuleapArtifactModalPermissionFieldController);
+export default PermissionFieldController;
 
-TuleapArtifactModalPermissionFieldController.$inject = [];
+PermissionFieldController.$inject = [];
 
-function TuleapArtifactModalPermissionFieldController() {
+function PermissionFieldController() {
     var self = this;
 
     self.clearSelectBox      = clearSelectBox;

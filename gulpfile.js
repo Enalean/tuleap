@@ -179,13 +179,17 @@ var fat_combined_files = [
         'src/www/scripts/',
     ],
     bower_app_paths = [
-        'plugins/agiledashboard/www/js/kanban/'
+        'plugins/tracker/www/scripts/angular-artifact-modal/',
+    ],
+    angular_app_paths = [
+        'plugins/agiledashboard/www/js/kanban/',
     ],
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
-component_builder.installAndBuildNpmComponents(components_paths, 'components');
-component_builder.installAndBuildBowerComponents(bower_app_paths, 'angular-apps');
+component_builder.installAndBuildNpmComponents(components_paths, 'components', ['clean-js-core']);
+component_builder.installAndBuildBowerComponents(bower_app_paths, 'angular-artifact-modal', []);
+component_builder.installAndBuildNpmComponents(angular_app_paths, 'angular-apps', ['angular-artifact-modal']);
 
 /**
  * Javascript

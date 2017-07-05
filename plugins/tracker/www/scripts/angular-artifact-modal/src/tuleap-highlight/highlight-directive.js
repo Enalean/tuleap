@@ -1,6 +1,4 @@
-angular
-    .module('tuleap-highlight')
-    .directive('tuleapHighlightDirective', TuleapHighlightDirective);
+export default TuleapHighlightDirective;
 
 TuleapHighlightDirective.$inject = [
     '$timeout'

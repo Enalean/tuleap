@@ -1,6 +1,4 @@
-angular
-    .module('tuleap-artifact-modal-quota-display')
-    .controller('TuleapArtifactModalQuotaDisplayController', TuleapArtifactModalQuotaDisplayController);
+export default TuleapArtifactModalQuotaDisplayController;
 
 TuleapArtifactModalQuotaDisplayController.$inject = [
     '$scope',
@@ -12,12 +10,10 @@ function TuleapArtifactModalQuotaDisplayController(
     TuleapArtifactModalFileUploadRules
 ) {
     var self = this;
-    _.extend(self, {
-        file_upload_rules     : TuleapArtifactModalFileUploadRules,
-        getDiskUsagePercentage: getDiskUsagePercentage,
-        init                  : init,
-        isDiskUsageEmpty      : isDiskUsageEmpty
-    });
+    self.file_upload_rules      = TuleapArtifactModalFileUploadRules;
+    self.getDiskUsagePercentage = getDiskUsagePercentage;
+    self.init                   = init;
+    self.isDiskUsageEmpty       = isDiskUsageEmpty;
 
     init();
 

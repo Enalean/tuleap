@@ -1,7 +1,4 @@
-var model_module = angular
-    .module('tuleap-artifact-modal-model');
-
-var TuleapArtifactModalAwkwardCreationFields = [
+var AwkwardCreationFields = [
     'aid',
     'atid',
     'lud',
@@ -13,4 +10,4 @@ var TuleapArtifactModalAwkwardCreationFields = [
     'cross'
 ];
 
-model_module.constant('TuleapArtifactModalAwkwardCreationFields', TuleapArtifactModalAwkwardCreationFields);
+export default AwkwardCreationFields;

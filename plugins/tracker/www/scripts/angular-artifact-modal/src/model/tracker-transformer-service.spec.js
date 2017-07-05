@@ -1,14 +1,18 @@
+import model_module from './model.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("TuleapArtifactModalTrackerTransformerService", function() {
-    var TuleapArtifactModalTrackerTransformerService;
+    var TrackerTransformerService;
     beforeEach(function() {
-        module('tuleap-artifact-modal-model', function($provide) {
+        angular.mock.module(model_module, function($provide) {
             $provide.value('translateFilter', function(value) {
                 return value;
             });
         });
 
-        inject(function(_TuleapArtifactModalTrackerTransformerService_) {
-            TuleapArtifactModalTrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
+        angular.mock.inject(function(_TuleapArtifactModalTrackerTransformerService_) {
+            TrackerTransformerService = _TuleapArtifactModalTrackerTransformerService_;
         });
     });
 
@@ -32,7 +36,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
             it("and given the modal was opened in creation mode, when I transform the tracker, then the fields with no creation perms will be omitted but the structural ones not from the transformed tracker's fields", function() {
                 creation_mode = true;
 
-                var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);
+                var transformed_tracker = TrackerTransformerService.transform(tracker, creation_mode);
 
                 expect(transformed_tracker.fields).toEqual([
                     { field_id: 1, type: 'int', permissions: ["read", "update", "create"]},
@@ -73,7 +77,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
             it("and given the modal was opened in creation mode, when I transform the tracker, then the awkward fields for creation mode (e.g. burndown, subby, subon) will be omitted from the transformed tracker's fields", function() {
                 creation_mode = true;
 
-                var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);
+                var transformed_tracker = TrackerTransformerService.transform(tracker, creation_mode);
 
                 expect(transformed_tracker.fields).toEqual([
                     { field_id: 1, type: 'int', permissions: ["read", "update", "create"]},
@@ -90,7 +94,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
             it("and given the modal was opened in edition mode, when I transform the tracker, then the awkward fields for creation mode WILL NOT be omitted from the transformed tracker's fields", function() {
                 creation_mode = false;
 
-                var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker, creation_mode);
+                var transformed_tracker = TrackerTransformerService.transform(tracker, creation_mode);
 
                 expect(transformed_tracker.fields).toEqual([
 
@@ -126,7 +130,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         ]
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.fields[0].value).toBe(null);
                 });
@@ -148,7 +152,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         ]
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.fields[0].values).toEqual([
                         { id: 100, label: 'None' },
@@ -174,7 +178,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         ]
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.fields[0].values).toEqual([
                         { id: 100, label: 'None' },
@@ -228,7 +232,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         ]
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.fields[0].values).toEqual([
                         { id: 100, label: 'None' },
@@ -316,7 +320,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         ]
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.fields[0].values[0]).toEqual({ id: 100, label: "None" });
                     expect(transformed_tracker.fields[0].values[1]).toEqual(jasmine.objectContaining(
@@ -376,7 +380,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         ]
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.fields).toEqual([
                         {
@@ -468,7 +472,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         }
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.workflow.rules.lists).toEqual([
                         {
@@ -561,7 +565,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                         }
                     };
 
-                    var transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(tracker);
+                    var transformed_tracker = TrackerTransformerService.transform(tracker);
 
                     expect(transformed_tracker.workflow.rules.lists).toEqual(tracker.workflow.rules.lists);
                 });
@@ -593,7 +597,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                 ]
             };
 
-            var transformed_tracker = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
+            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [
@@ -633,7 +637,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                 ]
             };
 
-            var transformed_tracker = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
+            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [
@@ -663,7 +667,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                 ]
             };
 
-            var transformed_tracker = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
+            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [
@@ -750,7 +754,7 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                 ]
             };
 
-            var transformed_tracker = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
+            var transformed_tracker = TrackerTransformerService.addFieldValuesToTracker(artifact_values, tracker);
 
             expect(transformed_tracker).toEqual({
                 fields: [

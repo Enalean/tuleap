@@ -1,7 +1,4 @@
-var model_module = angular
-    .module('tuleap-artifact-modal-model');
-
-var TuleapArtifactModalStructuralFields = [
+var StructuralFields = [
     'column',
     'fieldset',
     'linebreak',
@@ -9,4 +6,4 @@ var TuleapArtifactModalStructuralFields = [
     'staticrichtext'
 ];
 
-model_module.constant('TuleapArtifactModalStructuralFields', TuleapArtifactModalStructuralFields);
+export default StructuralFields;

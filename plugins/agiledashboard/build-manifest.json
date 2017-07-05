@@ -34,8 +34,8 @@
             "includes": [
                 "../../src/www/themes/common/tlp/src/scss",
                 "../../src/www/themes/BurningParrot/css/includes",
-                "www/js/kanban/node_modules",
-                "www/js/kanban/vendor"
+                "../tracker/www/scripts",
+                "www/js/kanban/node_modules"
             ],
             "watched_includes": [
                 "www/themes/BurningParrot/css/**/_*.scss"

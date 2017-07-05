@@ -1,8 +1,12 @@
+import file_field_module from './file-field.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("TuleapArtifactModalFileUploadService", function() {
     var $q, TuleapArtifactModalFileUploadService, TuleapArtifactModalRestService,
         TuleapArtifactModalFileUploadRules;
     beforeEach(function() {
-        module('tuleap-artifact-modal-file-field', function($provide) {
+        angular.mock.module(file_field_module, function($provide) {
             $provide.decorator('TuleapArtifactModalRestService', function(
                 $delegate,
                 $q
@@ -15,7 +19,7 @@ describe("TuleapArtifactModalFileUploadService", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             _TuleapArtifactModalFileUploadService_,
             _TuleapArtifactModalRestService_,
@@ -71,7 +75,7 @@ describe("TuleapArtifactModalFileUploadService", function() {
             var temporary_files = [first_file, second_file];
             var error_response = {
                 error: {
-                    code: 403 ,
+                    code: 403,
                     message: "Forbidden: Maximum number of temporary files reached: 5"
                 }
             };

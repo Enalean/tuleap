@@ -1,14 +1,14 @@
-angular
-    .module('tuleap-artifact-modal-file-field')
-    .service('TuleapArtifactModalFileUploadService', TuleapArtifactModalFileUploadService);
+import _ from 'lodash';
 
-TuleapArtifactModalFileUploadService.$inject = [
+export default FileUploadService;
+
+FileUploadService.$inject = [
     '$q',
     'TuleapArtifactModalRestService',
     'TuleapArtifactModalFileUploadRules'
 ];
 
-function TuleapArtifactModalFileUploadService(
+function FileUploadService(
     $q,
     TuleapArtifactModalRestService,
     TuleapArtifactModalFileUploadRules

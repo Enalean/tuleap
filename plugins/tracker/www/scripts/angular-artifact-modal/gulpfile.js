@@ -3,25 +3,14 @@ var path        = require('path');
 var gulp        = require('gulp');
 var del         = require('del');
 var gettext     = require('gulp-angular-gettext');
-var runSequence = require('run-sequence');
 
-var templates_with_translated_strings_glob  = 'src/app/**/*.tpl.html';
-var javascript_with_translated_strings_glob = 'src/app/**/*.js';
-var assets_glob                             = 'src/assets/*';
-var vendor_assets_files                     = [
-    path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/src/assets/artifact_attachment_default.png'),
-    path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/src/assets/loader-mini.gif'),
-];
+var templates_with_translated_strings_glob  = 'src/**/*.tpl.html';
+var javascript_with_translated_strings_glob = 'src/**/*.js';
 var old_coverage_glob = './coverage/*';
-var build_dir         = path.resolve(__dirname, './dist');
 
 // Cleaning tasks
 gulp.task('clean-coverage', function() {
     return del(old_coverage_glob);
-});
-
-gulp.task('clean-assets', function () {
-    return del(build_dir);
 });
 
 gulp.task('watch', function() {
@@ -32,12 +21,7 @@ gulp.task('watch', function() {
     return gulp.start('test-continuous');
 });
 
-gulp.task('build', ['clean-assets'], function(cb) {
-    return runSequence([
-        'gettext-extract',
-        'copy-assets'
-    ], cb);
-});
+gulp.task('build', ['gettext-extract']);
 
 gulp.task('gettext-extract', function() {
     return gulp.src([
@@ -48,14 +32,6 @@ gulp.task('gettext-extract', function() {
         lineNumbers: false
     }))
     .pipe(gulp.dest('po/'));
-});
-
-gulp.task('copy-assets', ['clean-assets'], function() {
-    var assets = [].concat(vendor_assets_files);
-    assets.push(assets_glob);
-
-    return gulp.src(assets)
-        .pipe(gulp.dest(build_dir));
 });
 
 gulp.task('test', function(done) {

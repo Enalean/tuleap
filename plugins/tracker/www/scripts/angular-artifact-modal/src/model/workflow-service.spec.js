@@ -1,11 +1,15 @@
+import model_module from './model.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe("TuleapArtifactModalWorkflowService", function() {
-    var TuleapArtifactModalWorkflowService;
+    var WorkflowService;
 
     beforeEach(function() {
-        module('tuleap-artifact-modal-model');
+        angular.mock.module(model_module);
 
-        inject(function(_TuleapArtifactModalWorkflowService_) {
-            TuleapArtifactModalWorkflowService = _TuleapArtifactModalWorkflowService_;
+        angular.mock.inject(function(_TuleapArtifactModalWorkflowService_) {
+            WorkflowService = _TuleapArtifactModalWorkflowService_;
         });
     });
 
@@ -41,7 +45,7 @@ describe("TuleapArtifactModalWorkflowService", function() {
                     ]
                 };
 
-                TuleapArtifactModalWorkflowService.enforceWorkflowTransitions(448, field, workflow);
+                WorkflowService.enforceWorkflowTransitions(448, field, workflow);
 
                 expect(field.values).toEqual([
                     { id: 448 },
@@ -51,6 +55,5 @@ describe("TuleapArtifactModalWorkflowService", function() {
                 expect(field.has_transitions).toBeTruthy();
             });
         });
-
     });
 });

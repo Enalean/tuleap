@@ -1,8 +1,6 @@
-angular
-    .module('tuleap.artifact-modal')
-    .service('TuleapArtifactModalFieldDependenciesService', TuleapArtifactModalFieldDependenciesService);
+import _ from 'lodash';
 
-function TuleapArtifactModalFieldDependenciesService() {
+export default function TuleapArtifactModalFieldDependenciesService() {
     var self = this;
     _.extend(self, {
         getTargetFieldPossibleValues : getTargetFieldPossibleValues,

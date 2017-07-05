@@ -73,7 +73,7 @@ function installBowerComponent(component, dependent_tasks) {
     return task_name;
 }
 
-function installAndBuildNpmComponents(component_paths, components_task_name) {
+function installAndBuildNpmComponents(component_paths, components_task_name, dependent_tasks) {
     var install_tasks = [],
         build_tasks   = [];
 
@@ -86,7 +86,7 @@ function installAndBuildNpmComponents(component_paths, components_task_name) {
         });
     });
 
-    gulp.task(components_task_name, ['clean-js-core'], function(cb) {
+    gulp.task(components_task_name, dependent_tasks, function(cb) {
         promise.then(function() {
             runSequence(install_tasks.concat(build_tasks), cb);
         }).catch(function (error) {
@@ -95,7 +95,7 @@ function installAndBuildNpmComponents(component_paths, components_task_name) {
     });
 }
 
-function installAndBuildBowerComponents(component_paths, components_task_name) {
+function installAndBuildBowerComponents(component_paths, components_task_name, dependent_tasks) {
     var build_tasks = [];
 
     var promise = findComponentsWithPackageAndBuildScript(component_paths).then(function (components) {
@@ -107,7 +107,7 @@ function installAndBuildBowerComponents(component_paths, components_task_name) {
         });
     });
 
-    gulp.task(components_task_name, function(cb) {
+    gulp.task(components_task_name, dependent_tasks, function(cb) {
         promise.then(function() {
             return runBuildTasksInTheExactOrderTheyArePassed(build_tasks, cb);
         }).catch(function (error) {

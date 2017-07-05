@@ -1,8 +1,8 @@
-angular
-    .module('tuleap.artifact-modal')
-    .controller('TuleapArtifactModalController', TuleapArtifactModalController);
+import _ from 'lodash';
 
-TuleapArtifactModalController.$inject = [
+export default ArtifactModalController;
+
+ArtifactModalController.$inject = [
     '$q',
     '$scope',
     '$timeout',
@@ -18,7 +18,7 @@ TuleapArtifactModalController.$inject = [
     'TuleapArtifactModalFileUploadService'
 ];
 
-function TuleapArtifactModalController(
+function ArtifactModalController(
     $q,
     $scope,
     $timeout,
@@ -149,7 +149,7 @@ function TuleapArtifactModalController(
             $modalInstance.close();
 
             return displayItemCallback(new_artifact.id);
-        })['finally'](function() {
+        }).finally(function() {
             TuleapArtifactModalLoading.loading = false;
         });
     }

@@ -212,8 +212,9 @@
     ></textarea>
     <textarea
         ng-if="modal.values[field.field_id].value.format === 'html'"
+        ng-ckeditor
         ng-model="modal.values[field.field_id].value.content"
-        ckeditor="modal.ckeditor_options"
+        ng-config="modal.ckeditor_options"
         required="{{ field.required }}"
         ng-disabled="modal.isDisabled(field)"
         id="{{ 'tracker_field_'+field.field_id }}"
@@ -556,8 +557,9 @@
                 <textarea
                     id="followup_comment"
                     ng-if="modal.followup_comment.format === 'html'"
+                    ng-ckeditor
                     ng-model="modal.followup_comment.body"
-                    ckeditor="modal.ckeditor_options"
+                    ng-config="modal.ckeditor_options"
                     placeholder="{{ 'Add a new comment' | translate }}"
                     rows="5"
                     cols="71"

@@ -1,14 +1,10 @@
-angular
-    .module('tuleap-artifact-modal-file-field')
-    .controller('TuleapArtifactModalFileFieldController', TuleapArtifactModalFileFieldController);
+import _ from 'lodash';
 
-TuleapArtifactModalFileFieldController.$inject = [
+export default FileFieldController;
 
-];
+FileFieldController.$inject = [];
 
-function TuleapArtifactModalFileFieldController(
-
-) {
+function FileFieldController() {
     var self = this;
     _.extend(self, {
         addTemporaryFileInput  : addTemporaryFileInput,
