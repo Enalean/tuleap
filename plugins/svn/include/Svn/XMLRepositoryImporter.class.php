@@ -33,6 +33,8 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
+use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RuleName;
@@ -104,7 +106,15 @@ class XMLRepositoryImporter
         }
 
         $repo     = new Repository ("", $this->name, '', '', $project);
-        $sysevent = $this->repository_creator->createWithoutUserAdminCheck($repo);
+
+        try {
+            $sysevent = $this->repository_creator->createWithoutUserAdminCheck($repo);
+        } catch (CannotCreateRepositoryException $e) {
+            throw new XMLImporterException("Unable to create the repository");
+        } catch (RepositoryNameIsInvalidException $e) {
+            throw new XMLImporterException($e->getMessage());
+        }
+
         if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");
         }

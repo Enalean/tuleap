@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,13 +25,12 @@ use Feedback;
 use HTTPRequest;
 use Project;
 use SystemEventManager;
-use Tuleap\Svn\Dao;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
+use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\SvnPermissionManager;
 
@@ -104,28 +103,24 @@ class ExplorerController {
         $token = $this->generateTokenForCeateRepository($request->getProject());
         $token->check();
 
-        $rule = new RuleName($request->getProject(), new DAO());
         $repo_name = $request->get("repo_name");
 
-        if (! $rule->isValid($repo_name)) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'invalid_name'));
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $rule->getErrorMessage());
+        $repository_to_create = new Repository("", $repo_name, "", "", $request->getProject());
+        try {
+            $this->repository_creator->create($repository_to_create, $user);
+
+            $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository', 'update_success'));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
+        } catch (CannotCreateRepositoryException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn', 'update_error'));
             $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
-        } else {
-            $repository_to_create = new Repository("", $repo_name, "", "", $request->getProject());
-            try {
-                $this->repository_creator->create($repository_to_create, $user);
-
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository', 'update_success'));
-                $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));
-            } catch (CannotCreateRepositoryException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn', 'update_error'));
-                $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
-            } catch(UserIsNotSVNAdministratorException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-svn', "User doesn't have permission to create a repository"));
-                $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
-
-            }
+        } catch(UserIsNotSVNAdministratorException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-svn', "User doesn't have permission to create a repository"));
+            $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
+        } catch (RepositoryNameIsInvalidException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'invalid_name'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());
+            $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid(), 'name' =>$repo_name)));
         }
     }
 }
