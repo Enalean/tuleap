@@ -15,6 +15,6 @@ function TuleapArtifactModalFileFieldDirective() {
         },
         controller      : 'TuleapArtifactModalFileFieldController as file_field',
         bindToController: true,
-        templateUrl     : 'tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html'
+        templateUrl     : 'tuleap-artifact-modal-fields/file-field/file-field.tpl.html'
     };
 }

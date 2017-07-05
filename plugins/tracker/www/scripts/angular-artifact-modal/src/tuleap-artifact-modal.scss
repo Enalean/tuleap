@@ -19,7 +19,7 @@ $color-without-theme: #222222;
 $color-artifact-background: #FFFFFF;
 $color-followups-background: #F5F5F5;
 
-@import "tuleap-highlight/tuleap-highlight";
+@import "tuleap-highlight/highlight";
 
 .tuleap-artifact-modal {
 
@@ -228,9 +228,9 @@ $color-followups-background: #F5F5F5;
         .field {
             margin: 0 0 10px;
 
-            @import "tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field";
-            @import "tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field";
-            @import "tuleap-artifact-modal-fields/tuleap-artifact-modal-permission-field/tuleap-artifact-modal-permission-field";
+            @import "tuleap-artifact-modal-fields/file-field/file-field";
+            @import "tuleap-artifact-modal-fields/computed-field/computed-field";
+            @import "tuleap-artifact-modal-fields/permission-field/permission-field";
 
             > label {
                 color: #4D4D4D;
@@ -503,7 +503,7 @@ $color-followups-background: #F5F5F5;
                 top: 22px;
             }
 
-            @import "tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display";
+            @import "quota-display/quota-display";
         }
 
         .modal-cancel {

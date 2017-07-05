@@ -4,7 +4,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "(auto-computed)"
 msgstr ""
 
@@ -16,7 +16,7 @@ msgstr ""
 msgid "Add a new comment"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Add another file"
 msgstr ""
 
@@ -24,11 +24,11 @@ msgstr ""
 msgid "Artifact links"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Auto-compute"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "By: {{ file.submitted_by }}"
 msgstr ""
 
@@ -40,11 +40,11 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Computed value: Empty"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Computed value: {{ ::computed_field.field.value }}"
 msgstr ""
 
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Create a new {{ modal.title }}"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Edit the field"
 msgstr ""
 
@@ -60,8 +60,8 @@ msgstr ""
 msgid "Edited by"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Empty"
 msgstr ""
@@ -74,11 +74,11 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "File description"
 msgstr ""
 
-#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+#: src/quota-display/quota-display.tpl.html
 msgid "File upload quota allowed:"
 msgstr ""
 
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Format:"
 msgstr ""
 
-#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+#: src/quota-display/quota-display.tpl.html
 msgid "Max allowed upload size: {{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
 msgstr ""
 
@@ -110,11 +110,11 @@ msgstr ""
 msgid "References list is empty."
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Reset"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-permission-field/tuleap-artifact-modal-permission-field.tpl.html
+#: src/tuleap-artifact-modal-fields/permission-field/permission-field.tpl.html
 msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
 
@@ -126,7 +126,7 @@ msgstr ""
 msgid "Select parent:"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Size: {{ file.size | byteFmt: 2 }}"
 msgstr ""
 
@@ -134,6 +134,6 @@ msgstr ""
 msgid "The artifact will be linked to {{ modal.parent.label }}."
 msgstr ""
 
-#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+#: src/quota-display/quota-display.tpl.html
 msgid "{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} of {{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"
 msgstr ""

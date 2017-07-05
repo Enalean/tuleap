@@ -15,6 +15,6 @@ function TuleapArtifactModalComputedFieldDirective() {
         },
         controller      : 'TuleapArtifactModalComputedFieldController as computed_field',
         bindToController: true,
-        templateUrl     : 'tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html'
+        templateUrl     : 'tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html'
     };
 }

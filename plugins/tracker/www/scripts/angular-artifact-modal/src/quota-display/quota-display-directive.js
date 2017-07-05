@@ -13,6 +13,6 @@ function TuleapArtifactModalQuotaDisplay() {
         },
         controller      : 'TuleapArtifactModalQuotaDisplayController as quota_display',
         bindToController: true,
-        templateUrl     : 'tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html'
+        templateUrl     : 'quota-display/quota-display.tpl.html'
     };
 }

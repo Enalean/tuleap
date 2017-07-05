@@ -15,6 +15,6 @@ function tuleapArtifactModalPermissionFieldDirective() {
         },
         controller      : 'TuleapArtifactModalPermissionFieldController as permission_field',
         bindToController: true,
-        templateUrl     : 'tuleap-artifact-modal-fields/tuleap-artifact-modal-permission-field/tuleap-artifact-modal-permission-field.tpl.html'
+        templateUrl     : 'tuleap-artifact-modal-fields/permission-field/permission-field.tpl.html'
     };
 }
