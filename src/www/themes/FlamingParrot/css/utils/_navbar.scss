@@ -227,37 +227,29 @@
         }
 
         @media screen and (max-width: 1250px) {
+            .join-tuleap-community,
             .user-infos {
                 display: none;
             }
         }
 
         li.current-project > a {
-            height: $navbar-height;
+            padding: 0;
+            height: auto;
             background-color: $white;
-            border-right: 1px solid #e3e5ed;
             text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
             box-sizing: border-box;
             color: $navbar-color;
             font-size: 18px;
             font-weight: normal;
             letter-spacing: 1.1px;
 
-            &:before {
-                content: '';
-            }
-
-            i {
+            > i {
                 margin-right: 5px;
                 font-size: 16px;
             }
         }
-        li.current-project.cutted > a {
-            width: 180px;
-            text-overflow: ellipsis;
-        }
+
         li.current-project:hover > a:hover, li.current-project:focus > a:focus {
             color: $navbar-color;
         }
@@ -407,4 +399,33 @@
 
 .join-tuleap-community-svg {
     fill: $navbar-color;
+}
+
+.header-navbar-container {
+    display: flex;
+    justify-content: space-between;
+
+    &:before,
+    &:after {
+        content: none;
+    }
+}
+
+.header-navbar-container-project-nav,
+.header-navbar-container-user-nav {
+    display: flex;
+}
+
+.current-project {
+    padding: 0 20px;
+    border-right: 1px solid #e3e5ed;
+}
+
+#navbar-help,
+#navbar-project {
+    display: flex;
+
+    > .caret {
+        margin-left: 6px;
+    }
 }
