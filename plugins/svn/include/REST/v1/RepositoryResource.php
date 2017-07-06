@@ -146,8 +146,8 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;"name": "repo",<br>
      *   &nbsp;"settings": {<br>
      *   &nbsp;&nbsp;"commit_rules": {<br>
-     *   &nbsp;&nbsp;"mandatory_reference": true|false ,<br>
-     *   &nbsp;&nbsp;"allow_commit_message_change": true|false<br>
+     *   &nbsp;&nbsp;"is_reference_mandatory": true|false ,<br>
+     *   &nbsp;&nbsp;"is_commit_message_change_allowed": true|false<br>
      *   &nbsp;&nbsp;}<br>
      *   &nbsp;}<br>
      *  }<br>
@@ -197,8 +197,8 @@ class RepositoryResource extends AuthenticatedResource
      * {<br>
      *   &nbsp;"settings": {<br>
      *   &nbsp;&nbsp;"commit_rules": {<br>
-     *   &nbsp;&nbsp;"mandatory_reference": true|false ,<br>
-     *   &nbsp;&nbsp;"allow_commit_message_change": true|false<br>
+     *   &nbsp;&nbsp;"is_reference_mandatory": true|false ,<br>
+     *   &nbsp;&nbsp;"is_commit_message_change_allowed": true|false<br>
      *   &nbsp;&nbsp;}<br>
      *   &nbsp;}<br>
      *  }<br>
@@ -345,8 +345,8 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;"name" : "repo01",<br>
      *   &nbsp;"settings": {<br>
      *   &nbsp;&nbsp;"commit_rules": {<br>
-     *   &nbsp;&nbsp;"mandatory_reference": true|false ,<br>
-     *   &nbsp;&nbsp;"allow_commit_message_change": true|false<br>
+     *   &nbsp;&nbsp;"is_reference_mandatory": true|false ,<br>
+     *   &nbsp;&nbsp;"is_commit_message_change_allowed": true|false<br>
      *   &nbsp;&nbsp;}<br>
      *   &nbsp;}<br>
      *  }<br>

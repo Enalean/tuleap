@@ -54,8 +54,8 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
-                "mandatory_reference"         => false,
-                "allow_commit_message_change" => false
+                "is_reference_mandatory"         => false,
+                "is_commit_message_change_allowed" => false
             )
         );
     }
@@ -107,8 +107,8 @@ class RepositoryTest extends TestBase
                 "name"       => "my_repository",
                 "settings"   => array(
                     "commit_rules" => array(
-                        "mandatory_reference"       => true,
-                        "allow_commit_message_change" => true
+                        "is_reference_mandatory"       => true,
+                        "is_commit_message_change_allowed" => true
                     )
                 )
             )
@@ -122,8 +122,8 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
-                "mandatory_reference"         => true,
-                "allow_commit_message_change" => true
+                "is_reference_mandatory"         => true,
+                "is_commit_message_change_allowed" => true
             )
         );
     }
@@ -136,8 +136,8 @@ class RepositoryTest extends TestBase
                 "name"       => "my_repository",
                 "settings"   => array(
                     "commit_rules" => array(
-                        "mandatory_reference"       => true,
-                        "allow_commit_message_change" => true
+                        "is_reference_mandatory"       => true,
+                        "is_commit_message_change_allowed" => true
                     )
                 )
             )
@@ -154,8 +154,8 @@ class RepositoryTest extends TestBase
             array(
                 'settings' => array(
                     'commit_rules' => array(
-                        'mandatory_reference' => true,
-                        'allow_commit_message_change' => false
+                        'is_reference_mandatory' => true,
+                        'is_commit_message_change_allowed' => false
                     )
                 )
             )
@@ -170,8 +170,8 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
-                "mandatory_reference"         => true,
-                "allow_commit_message_change" => false
+                "is_reference_mandatory"         => true,
+                "is_commit_message_change_allowed" => false
             )
         );
     }

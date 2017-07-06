@@ -28,20 +28,20 @@ class CommitRulesRepresentation extends \Luracast\Restler\Data\ValueObject
     /**
      * @var Boolean {@type boolean} {@required true}
      */
-    public $mandatory_reference;
+    public $is_reference_mandatory;
 
     /**
      * @var Boolean {@type boolean} {@required true}
      */
-    public $allow_commit_message_change;
+    public $is_commit_message_change_allowed;
 
     public function build(HookConfig $hook_config)
     {
-        $this->mandatory_reference = JsonCast::toBoolean(
+        $this->is_reference_mandatory = JsonCast::toBoolean(
             $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)
         );
 
-        $this->allow_commit_message_change = JsonCast::toBoolean(
+        $this->is_commit_message_change_allowed = JsonCast::toBoolean(
             $hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
         );
     }
@@ -49,8 +49,8 @@ class CommitRulesRepresentation extends \Luracast\Restler\Data\ValueObject
     public function toArray()
     {
         return array(
-            HookConfig::MANDATORY_REFERENCE       => $this->mandatory_reference,
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => $this->allow_commit_message_change,
+            HookConfig::MANDATORY_REFERENCE       => $this->is_reference_mandatory,
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => $this->is_commit_message_change_allowed,
         );
     }
 }
