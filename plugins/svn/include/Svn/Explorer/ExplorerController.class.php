@@ -27,6 +27,7 @@ use SystemEventManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Repository\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\ServiceSvn;
@@ -47,16 +48,22 @@ class ExplorerController {
      * @var RepositoryBuilder
      */
     private $repository_builder;
+    /**
+     * @var RepositoryCreator
+     */
+    private $repository_creator;
 
     public function __construct(
         RepositoryManager $repository_manager,
         SvnPermissionManager $permissions_manager,
-        RepositoryBuilder $repository_builder
+        RepositoryBuilder $repository_builder,
+        RepositoryCreator $repository_creator
     ) {
         $this->repository_manager   = $repository_manager;
         $this->permissions_manager  = $permissions_manager;
         $this->system_event_manager = SystemEventManager::instance();
         $this->repository_builder   = $repository_builder;
+        $this->repository_creator   = $repository_creator;
     }
 
     public function index(ServiceSvn $service, HTTPRequest $request) {
@@ -105,7 +112,7 @@ class ExplorerController {
         } else {
             $repository_to_create = new Repository("", $repo_name, "", "", $request->getProject());
             try {
-                $this->repository_manager->create($repository_to_create);
+                $this->repository_creator->create($repository_to_create);
 
                 $GLOBALS['Response']->addFeedback('info', $repo_name.' '.$GLOBALS['Language']->getText('plugin_svn_manage_repository', 'update_success'));
                 $GLOBALS['Response']->redirect(SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getid())));

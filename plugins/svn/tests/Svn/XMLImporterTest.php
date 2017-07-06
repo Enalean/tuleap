@@ -22,31 +22,27 @@ namespace Tuleap\Svn;
 
 require_once __DIR__ .'/../bootstrap.php';
 
-use Project;
-use EventManager;
-use BaseLanguage;
-use Tuleap\Svn\Admin\Destructor;
-use UGroupManager;
-use UGroupDao;
-use UGroupUserDao;
 use Backend;
 use BackendSVN;
-use ProjectManager;
-use TuleapTestCase;
+use EventManager;
 use ForgeConfig;
-use SystemEventManager;
+use Project;
+use ProjectManager;
 use SimpleXMLElement;
-use Tuleap\Svn\XMLImporter;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Dao;
-use User\XML\Import\IFindUserFromXMLReference;
+use SystemEventManager;
+use Tuleap\HudsonGit\Logger;
+use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RuleName;
-use Tuleap\Project\XML\Import\ImportConfig;
+use TuleapTestCase;
+use UGroupDao;
+use UGroupManager;
+use UGroupUserDao;
 
 class TestBackendSVN extends BackendSVN {
     private $tc; ///< @var XMLImporterTest
@@ -72,30 +68,91 @@ class TestBackendSVN extends BackendSVN {
     }
 }
 
-class XMLImporterTest extends TuleapTestCase {
+class XMLImporterTest extends TuleapTestCase
+{
+    /**
+     * @var RepositoryCreator
+     */
+    private $repository_creator;
+    private $arpath;
 
-    private $arpath;        ///< @var string archive path
-    private $logger;        ///< @var Logger
-    private $ufinder;       ///< @var User\XML\Import\IFindUserFromXMLReference
-    private $pmdao;         ///< @var ProjectDao
-    private $evdao;         ///< @var SystemEventDao
-    private $evfdao;        ///< @var SystemEventsFollowerDao
-    public  $pm;            ///< @var ProjectManager
-    private $repodao;       ///< @var Tuleap\Svn\Dao
-    private $repomgr;       ///< @var Tuleap\Svn\Repository\RepositoryManager
-    private $sysevmgr;      ///< @var SystemEventManager
-    public  $ugdao;         ///< @var UGroupDao
-    public  $ugudao;        ///< @var UGroupUserDao
-    private $accessfiledao; ///< @var Tuleap\Svn\AccessControl\AccessFileHistoryDao
-    private $accessfilefac; ///< @var Tuleap\Svn\AccessControl\AccessFileHistoryFactory
-    private $accessfilemgr; ///< @var Tuleap\Svn\AccessControl\AccessFileHistoryCreator
-    private $notifdao;      ///< @var Tuleap\Svn\Admin\MailNotificationDao
-    private $notifmgr;      ///< @var Tuleap\Svn\Admin\MailNotificationManager
-    private $backend;       ///< @var Backend
-    private $users_to_notify_dao;
-    private $ugroups_to_notify_dao;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
-    public function setUp() {
+    /**
+     * @var \ProjectDao
+     */
+    private $pmdao;
+
+    /**
+     * @var \SystemEventDao
+     */
+    private $evdao;
+
+    /**
+     * @var \SystemEventsFollowersDao
+     */
+    private $evfdao;
+
+    /**
+     * @var \ProjectManager
+     */
+    public $pm;
+
+    /**
+     * @var Dao
+     */
+    private $repodao;
+
+    /**
+     * @var \SystemEventManager
+     */
+    private $sysevmgr;
+
+    /**
+     * @var UGroupDao
+     */
+    public  $ugdao;
+
+    /**
+     * @var UGroupUserDao
+     */
+    public  $ugudao;
+
+    /**
+     * @var AccessFileHistoryDao
+     */
+    private $accessfiledao;
+
+    /**
+     * @var AccessFileHistoryFactory
+     */
+    private $accessfilefac;
+
+    /**
+     * @var AccessFileHistoryCreator
+     */
+    private $accessfilemgr;
+
+    /**
+     * @var MailNotificationDao
+     */
+    private $notifdao;
+
+    /**
+     * @var MailNotificationManager
+     */
+    private $notifmgr;
+
+    /**
+     * @var Backend
+     */
+    private $backend;
+
+    public function setUp()
+    {
         global $Language;
         parent::setUp();
 
@@ -106,47 +163,33 @@ class XMLImporterTest extends TuleapTestCase {
         ForgeConfig::set('sys_http_user', 'codendiadm');
         ProjectManager::clearInstance();
 
-        $this->backend               = mock('Backend');
-        $this->logger                = mock('Logger');
-        $this->ufinder               = safe_mock('User\XML\Import\IFindUserFromXMLReference');
-        $this->pmdao                 = safe_mock('ProjectDao');
-        $this->evdao                 = safe_mock('SystemEventDao');
-        $this->evfdao                = safe_mock('SystemEventsFollowersDao');
-        $this->pm                    = ProjectManager::testInstance($this->pmdao);
-        $this->repodao               = safe_mock('Tuleap\Svn\Dao');
-        $svn_admin                   = mock('Tuleap\Svn\SvnAdmin');
-        $logger                      = mock('Logger');
-        $system_command              = mock('System_Command');
-        $destructor                  = mock('Tuleap\Svn\Admin\Destructor');
-        $hook_dao                    = mock('Tuleap\Svn\Repository\HookDao');
-        $event_manager               = EventManager::instance();
-        $backend                     = Backend::instance(Backend::SVN);
-        $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
-        $this->sysevmgr              = SystemEventManager::testInstance($this->evdao, $this->evfdao);
-        $this->repomgr               = new RepositoryManager(
+        $this->backend            = mock('Backend');
+        $this->logger             = mock('Logger');
+        $this->pmdao              = safe_mock('ProjectDao');
+        $this->evdao              = safe_mock('SystemEventDao');
+        $this->evfdao             = safe_mock('SystemEventsFollowersDao');
+        $this->pm                 = ProjectManager::testInstance($this->pmdao);
+        $this->repodao            = safe_mock('Tuleap\Svn\Dao');
+        $this->sysevmgr           = SystemEventManager::testInstance($this->evdao, $this->evfdao);
+        $this->ugdao              = safe_mock('UGroupDao');
+        $this->ugudao             = safe_mock('UGroupUserDao');
+        $this->accessfiledao      = safe_mock('Tuleap\Svn\AccessControl\AccessFileHistoryDao');
+        $this->accessfilefac      = new AccessFileHistoryFactory($this->accessfiledao);
+        $this->accessfilemgr      = new AccessFileHistoryCreator($this->accessfiledao, $this->accessfilefac);
+        $this->notifdao           = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
+        $users_to_notify_dao      = safe_mock('Tuleap\Svn\Notifications\UsersToNotifyDao');
+        $ugroups_to_notify_dao    = safe_mock('Tuleap\Svn\Notifications\UgroupsToNotifyDao');
+        $this->notifdao           = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
+        $this->notifmgr           = new MailNotificationManager(
+            $this->notifdao,
+            $users_to_notify_dao,
+            $ugroups_to_notify_dao
+        );
+        $this->repository_creator = new RepositoryCreator(
             $this->repodao,
-            $this->pm,
-            $svn_admin,
-            $logger,
-            $system_command,
-            $destructor,
-            $hook_dao,
-            $event_manager,
-            $backend,
-            $access_file_history_factory,
             $this->sysevmgr,
             mock('ProjectHistoryDao')
         );
-        $this->ugdao                 = safe_mock('UGroupDao');
-        $this->ugudao                = safe_mock('UGroupUserDao');
-        $this->accessfiledao         = safe_mock('Tuleap\Svn\AccessControl\AccessFileHistoryDao');
-        $this->accessfilefac         = new AccessFileHistoryFactory($this->accessfiledao);
-        $this->accessfilemgr         = new AccessFileHistoryCreator($this->accessfiledao, $this->accessfilefac);
-        $this->notifdao              = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
-        $this->users_to_notify_dao   = safe_mock('Tuleap\Svn\Notifications\UsersToNotifyDao');
-        $this->ugroups_to_notify_dao = safe_mock('Tuleap\Svn\Notifications\UgroupsToNotifyDao');
-        $this->notifdao              = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
-        $this->notifmgr              = new MailNotificationManager($this->notifdao, $this->users_to_notify_dao, $this->ugroups_to_notify_dao);
 
         Backend::clearInstances();
         Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));
@@ -191,7 +234,6 @@ class XMLImporterTest extends TuleapTestCase {
             new ImportConfig(),
             $this->logger,
             $project,
-            $this->repomgr,
             $this->accessfilemgr,
             $this->notifmgr,
             new RuleName($project, $this->repodao));
@@ -209,7 +251,7 @@ class XMLImporterTest extends TuleapTestCase {
 
         $this->stubRepoCreation(123, 85, 1585);
 
-        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
         $this->callImport($svn, $project);
 
         $this->assertFileIsOwnedBy('codendiadm', $this->arpath.'/svn_plugin/123/svn');
@@ -236,7 +278,7 @@ class XMLImporterTest extends TuleapTestCase {
         stub($this->repodao)->create()->never();
         stub($this->evdao)->store()->never();
 
-        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
         $this->callImport($svn, $project);
     }
 
@@ -253,7 +295,7 @@ class XMLImporterTest extends TuleapTestCase {
 
         $this->stubRepoCreation(123, 85, 1585);
 
-        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
         $this->callImport($svn, $project);
     }
 
@@ -278,7 +320,7 @@ XML;
         $this->stubRepoCreation(123, 85, 1585);
         stub($this->notifdao)->create()->count(2)->returns(true);
 
-        $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->repository_creator);
         $this->callImport($svn, $project);
     }
 
@@ -304,7 +346,7 @@ XML;
         stub($this->accessfiledao)->searchLastVersion()->once()->returns(null);
         stub($this->accessfiledao)->create()->once()->returns(true);
 
-        $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->ufinder);
+        $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->repository_creator);
         $this->callImport($svn, $project);
 
         $svnroot = $this->getSVNDir(123, "svn");

@@ -21,22 +21,22 @@
 namespace Tuleap\Svn;
 
 use Backend;
+use Event;
+use EventManager;
+use ForgeConfig;
 use Logger;
 use Project;
 use SimpleXMLElement;
-use Event;
-use EventManager;
-use SystemEventManager;
-use System_Command_CommandException;
 use SVN_AccessFile_Writer;
+use System_Command_CommandException;
 use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
-use ForgeConfig;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryCreator;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RuleName;
 
 class XMLRepositoryImporter
 {
@@ -59,11 +59,16 @@ class XMLRepositoryImporter
 
     /** @var Backend */
     private $backend;
+    /**
+     * @var RepositoryCreator
+     */
+    private $repository_creator;
 
     public function __construct(
         Backend $backend,
         SimpleXMLElement $xml_repo,
-        $extraction_path
+        $extraction_path,
+        RepositoryCreator $repository_creator
     ) {
         $attrs = $xml_repo->attributes();
         $this->name = $attrs['name'];
@@ -82,15 +87,15 @@ class XMLRepositoryImporter
             );
         }
 
-        $this->references = $xml_repo->references;
-        $this->backend = $backend;
+        $this->references         = $xml_repo->references;
+        $this->backend            = $backend;
+        $this->repository_creator = $repository_creator;
     }
 
     public function import(
         ImportConfig $configuration,
         Logger $logger,
         Project $project,
-        RepositoryManager $repository_manager,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
         RuleName $rule_name
@@ -100,7 +105,7 @@ class XMLRepositoryImporter
         }
 
         $repo = new Repository ("", $this->name, '', '', $project);
-        $sysevent = $repository_manager->create($repo);
+        $sysevent = $this->repository_creator->create($repo);
         if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");
         }

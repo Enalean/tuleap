@@ -21,16 +21,15 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Luracast\Restler\RestException;
-use ProjectHistoryDao;
 use PFUser;
 use Project;
+use ProjectHistoryDao;
 use SystemEvent;
 use SystemEventManager;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\v1\FullRepositoryRepresentation;
-use Tuleap\REST\v1\RepositoryPostRepresentation;
 use Tuleap\REST\v1\RepositoryRepresentationBuilder;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
@@ -41,6 +40,7 @@ use Tuleap\Svn\Repository\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\SvnAdmin;
@@ -74,25 +74,34 @@ class RepositoryResource extends AuthenticatedResource
      */
     public $project_manager;
 
+    /**
+     * @var RepositoryCreator
+     */
+    public $repository_creator;
+
     public function __construct()
     {
-        $dao                      = new Dao();
-        $logger                   = new SvnLogger();
-        $system_command           = new \System_Command();
-        $backend_svn              = \Backend::instance(\Backend::SVN);
-        $this->repository_manager = new RepositoryManager(
+        $dao                        = new Dao();
+        $logger                     = new SvnLogger();
+        $system_command             = new \System_Command();
+        $backend_svn                = \Backend::instance(\Backend::SVN);
+        $project_history_dao        = new ProjectHistoryDao();
+        $this->system_event_manager = \SystemEventManager::instance();
+        $this->project_manager      = \ProjectManager::instance();
+        $hook_dao                   = new HookDao();
+        $this->repository_manager   = new RepositoryManager(
             $dao,
-            \ProjectManager::instance(),
+            $this->project_manager,
             new SvnAdmin($system_command, $logger, $backend_svn),
             $logger,
             $system_command,
             new Destructor($dao, $logger),
-            new HookDao(),
+            $hook_dao,
             \EventManager::instance(),
             $backend_svn,
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            \SystemEventManager::instance(),
-            new ProjectHistoryDao()
+            $this->system_event_manager,
+            $project_history_dao
         );
 
         $this->user_manager       = \UserManager::instance();
@@ -101,8 +110,7 @@ class RepositoryResource extends AuthenticatedResource
             \PermissionsManager::instance()
         );
 
-        $this->system_event_manager = \SystemEventManager::instance();
-        $this->project_manager      = \ProjectManager::instance();
+        $this->repository_creator  = new RepositoryCreator($dao, $this->system_event_manager, $project_history_dao);
     }
 
     /**
@@ -389,7 +397,7 @@ class RepositoryResource extends AuthenticatedResource
                     "Repository name is invalid.  Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed."
                 );
             }
-            $this->repository_manager->create($repository_to_create);
+            $this->repository_creator->create($repository_to_create);
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
         }
