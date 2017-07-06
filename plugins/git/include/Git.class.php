@@ -39,10 +39,8 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
-use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
-use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
@@ -115,6 +113,10 @@ class Git extends PluginController {
      * @var UGroupManager
      */
     private $ugroup_manager;
+    /**
+     * @var Git_Driver_Gerrit_Template_TemplateFactory
+     */
+    private $template_factory;
 
     /**
      * Lists all git-related permission types.
@@ -131,11 +133,6 @@ class Git extends PluginController {
     public static function allDefaultPermissionTypes() {
         return array(Git::DEFAULT_PERM_READ, Git::DEFAULT_PERM_WRITE, Git::DEFAULT_PERM_WPLUS);
     }
-
-    /**
-     * @var Git_Backend_Gitolite
-     */
-    private $backend_gitolite;
 
     /**
      * @var Git_Mirror_MirrorDataMapper
@@ -240,11 +237,6 @@ class Git extends PluginController {
     private $default_fine_grained_permission_factory;
 
     /**
-     * @var CITokenManager
-     */
-    private $ci_token_manager;
-
-    /**
      * @var FineGrainedPermissionDestructor
      */
     private $fine_grained_permission_destructor;
@@ -253,11 +245,6 @@ class Git extends PluginController {
      * @var FineGrainedRepresentationBuilder
      */
     private $fine_grained_builder;
-
-    /**
-     * @var FineGrainedPermissionReplicator
-     */
-    private $fine_grained_replicator;
 
     /**
      * @var HistoryValueFormatter
@@ -296,7 +283,6 @@ class Git extends PluginController {
         GitPermissionsManager $permissions_manager,
         Git_GitRepositoryUrlManager $url_manager,
         Logger $logger,
-        Git_Backend_Gitolite $backend_gitolite,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
@@ -305,10 +291,8 @@ class Git extends PluginController {
         FineGrainedRetriever $fine_grained_retriever,
         FineGrainedPermissionSaver $fine_grained_permission_saver,
         DefaultFineGrainedPermissionFactory $default_fine_grained_permission_factory,
-        CITokenManager $ci_token_manager,
         FineGrainedPermissionDestructor $fine_grained_permission_destructor,
         FineGrainedRepresentationBuilder $fine_grained_builder,
-        FineGrainedPermissionReplicator $fine_grained_replicator,
         HistoryValueFormatter $history_value_formatter,
         PermissionChangesDetector $permission_changes_detector,
         TemplatePermissionsUpdater $template_permission_updater,
@@ -341,11 +325,9 @@ class Git extends PluginController {
         $this->plugin                     = $plugin;
         $this->url_manager                = $url_manager;
         $this->logger                     = $logger;
-        $this->backend_gitolite           = $backend_gitolite;
         $this->mirror_data_mapper         = $mirror_data_mapper;
         $this->project_creator_status     = $project_creator_status;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
-        $this->ci_token_manager           = $ci_token_manager;
         $this->access_loger               = $access_loger;
         $this->detector                   = $detector;
 
@@ -390,7 +372,6 @@ class Git extends PluginController {
         $this->fine_grained_permission_factory = $fine_grained_permission_factory;
         $this->fine_grained_retriever          = $fine_grained_retriever;
         $this->fine_grained_permission_saver   = $fine_grained_permission_saver;
-        $this->fine_grained_replicator         = $fine_grained_replicator;
 
         $this->default_fine_grained_permission_factory = $default_fine_grained_permission_factory;
         $this->fine_grained_permission_destructor      = $fine_grained_permission_destructor;
@@ -588,7 +569,6 @@ class Git extends PluginController {
                 'clone',
                 'add',
                 'del',
-                'create',
                 'confirm_deletion',
                 'save',
                 'repo_management',
@@ -699,20 +679,10 @@ class Git extends PluginController {
     public function _dispatchActionAndView($action, /* GitRepository */ $repository, $repo_id, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
-            #CREATE REF
-            case 'create':
-                $this->addView('create');
-                break;
             #admin
             case 'view':
                 $this->addAction( 'getRepositoryDetails', array($this->groupId, $repository->getId()));
                 $this->addView('view');
-                break;
-
-            #ADD REF
-            case 'add':
-                $this->addAction('createReference', array($this->groupId, $repositoryName) );
-                $this->addView('index');
                 break;
              #DELETE a repository
             case 'del':
@@ -1412,7 +1382,6 @@ class Git extends PluginController {
             $this->permissions_manager,
             $this->url_manager,
             $this->logger,
-            $this->backend_gitolite,
             $this->mirror_data_mapper,
             $this->history_dao,
             new GitRepositoryMirrorUpdater($this->mirror_data_mapper, $this->history_dao),
@@ -1426,8 +1395,6 @@ class Git extends PluginController {
             $this->gerrit_can_migrate_checker,
             $this->fine_grained_updater,
             $this->fine_grained_permission_saver,
-            $this->ci_token_manager,
-            $this->fine_grained_replicator,
             $this->fine_grained_retriever,
             $this->history_value_formatter,
             $this->permission_changes_detector,

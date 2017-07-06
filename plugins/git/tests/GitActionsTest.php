@@ -36,9 +36,6 @@ Mock::generate('GitRepositoryFactory');
 Mock::generate('PFUser');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
-require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
-
-Mock::generate('Git_Backend_Gitolite');
 
 require_once 'builders/aGitRepository.php';
 
@@ -69,7 +66,6 @@ class GitActionsTest extends TuleapTestCase {
                 mock('GitPermissionsManager'),
                 $url_manager,
                 mock('Logger'),
-                mock('Git_Backend_Gitolite'),
                 mock('Git_Mirror_MirrorDataMapper'),
                 mock('ProjectHistoryDao'),
                 mock('GitRepositoryMirrorUpdater'),
@@ -77,8 +73,6 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Tuleap\Git\GerritCanMigrateChecker'),
                 mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
                 mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-                mock('Tuleap\Git\CIToken\Manager'),
-                mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
                 mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
                 mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
                 mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
@@ -495,7 +489,6 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('GitPermissionsManager'),
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite'),
             mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao'),
             mock('GitRepositoryMirrorUpdater'),
@@ -503,8 +496,6 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Tuleap\Git\GerritCanMigrateChecker'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\CIToken\Manager'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
             mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
@@ -569,7 +560,6 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('GitPermissionsManager'),
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite'),
             mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao'),
             mock('GitRepositoryMirrorUpdater'),
@@ -577,8 +567,6 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Tuleap\Git\GerritCanMigrateChecker'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\CIToken\Manager'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
             mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
@@ -684,8 +672,6 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
      public function setUp() {
         parent::setUp();
 
-        $this->backend = mock('Git_Backend_Gitolite');
-
         $this->project_id = 458;
         $this->project    = mock('Project');
         stub($this->project)->getId()->returns($this->project_id);
@@ -732,7 +718,6 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             $this->git_permissions_manager,
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite'),
             mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao'),
             mock('GitRepositoryMirrorUpdater'),
@@ -740,8 +725,6 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Tuleap\Git\GerritCanMigrateChecker'),
             mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
             mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\CIToken\Manager'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionReplicator'),
             mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
             mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
             mock('Tuleap\Git\Permissions\PermissionChangesDetector'),

@@ -26,6 +26,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\CreateRepositoryController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\Events\ParseGitolite3Logs;
@@ -83,8 +84,6 @@ use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 use Tuleap\Git\Repository\Settings\CITokenController;
 use Tuleap\Git\Repository\Settings\CITokenRouter;
 use Tuleap\Git\Repository\Settings\WebhookAddController;
-use Tuleap\Git\Repository\Settings\WebhookController;
-use Tuleap\Git\Repository\Settings\WebhookControllerCollaborator;
 use Tuleap\Git\Repository\Settings\WebhookDeleteController;
 use Tuleap\Git\Repository\Settings\WebhookEditController;
 use Tuleap\Git\Repository\Settings\WebhookRouter;
@@ -673,16 +672,33 @@ class GitPlugin extends Plugin {
         $final_link     = new GitGodObjectWrapper($this->getGitController());
 
         $webhook_router
+            ->chain($this->getCreateRepositoryController())
             ->chain($this->getCITokenRouter($repository_retriever))
             ->chain($final_link);
 
         return $webhook_router;
     }
 
+    private function getCreateRepositoryController()
+    {
+        return new CreateRepositoryController(
+            $this->getRepositoryFactory(),
+            $this->getBackendGitolite(),
+            $this->getMirrorDataMapper(),
+            $this->getRepositoryManager(),
+            $this->getGitPermissionsManager(),
+            $this->getFineGrainedPermissionReplicator(),
+            new ProjectHistoryDao(),
+            $this->getHistoryValueFormatter(),
+            $this->getCITokenManager(),
+            $this->getGitRepositoryUrlManager()
+        );
+    }
+
     private function getCITokenRouter($repository_retriever)
     {
         return new CITokenRouter(
-            new CITokenController($repository_retriever, new CITokenManager(new CITokenDao()))
+            new CITokenController($repository_retriever, $this->getCITokenManager())
         );
     }
 
@@ -1491,7 +1507,6 @@ class GitPlugin extends Plugin {
             $this->getGitPermissionsManager(),
             $this->getGitRepositoryUrlManager(),
             $this->getLogger(),
-            $this->getBackendGitolite(),
             $this->getMirrorDataMapper(),
             $this->getProjectCreatorStatus(),
             new GerritCanMigrateChecker(EventManager::instance(), $gerrit_server_factory),
@@ -1500,10 +1515,8 @@ class GitPlugin extends Plugin {
             $this->getFineGrainedRetriever(),
             $this->getFineGrainedPermissionSaver(),
             $this->getDefaultFineGrainedPermissionFactory(),
-            new CITokenManager(new CITokenDao()),
             $this->getFineGrainedPermissionDestructor(),
             $this->getFineGrainedRepresentationBuilder(),
-            $this->getFineGrainedPermissionReplicator(),
             $this->getHistoryValueFormatter(),
             $this->getPermissionChangesDetector(),
             $this->getTemplatePermissionsUpdater(),
@@ -2355,5 +2368,13 @@ class GitPlugin extends Plugin {
             UserHelper::instance()
         );
         $collector->collect($collection);
+    }
+
+    /**
+     * @return CITokenManager
+     */
+    private function getCITokenManager()
+    {
+        return new CITokenManager(new CITokenDao());
     }
 }
