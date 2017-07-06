@@ -38,6 +38,9 @@ class ArtifactTest extends RestBase {
     protected $desc_field_id;
     protected $status_field_id;
     protected $status_value_id;
+    protected $release_name_field_id;
+    protected $release_status_field_id;
+    protected $release_status_current_value_id;
 
     /**
      * @var Client
@@ -80,6 +83,32 @@ class ArtifactTest extends RestBase {
                 $this->status_value_id = $field['values'][0]['id'];
             }
         }
+
+        $this->getReleaseTrackerInformation();
+    }
+
+    private function getReleaseTrackerInformation()
+    {
+        if ($this->release_name_field_id &&
+            $this->release_status_field_id &&
+            $this->release_status_current_value_id
+        ) {
+            return;
+        }
+
+        $release_tracker = $this->getResponse($this->client->get("trackers/$this->releases_tracker_id"))->json();
+        foreach ($release_tracker['fields'] as $field) {
+            if ($field['name'] === 'name') {
+                $this->release_name_field_id = $field['field_id'];
+            } elseif ($field['name'] === 'status') {
+                $this->release_status_field_id = $field['field_id'];
+                foreach ($field['values'] as $value) {
+                    if ($value['label'] === 'Current') {
+                        $this->release_status_current_value_id = $value['id'];
+                    }
+                }
+            }
+        }
     }
 
     private function getTracker() {
@@ -100,9 +129,9 @@ class ArtifactTest extends RestBase {
     public function testPOSTArtifact()
     {
         $xml = "<request><tracker><id>$this->releases_tracker_id</id></tracker><values><item><field_id>" .
-            REST_TestDataBuilder::RELEASE_FIELD_NAME_ID . "</field_id><value>Test Release</value></item><item><field_id>" .
-            REST_TestDataBuilder::RELEASE_FIELD_STATUS_ID . "</field_id><bind_value_ids><item>" .
-            REST_TestDataBuilder::RELEASE_STATUS_CURRENT_ID . "</item></bind_value_ids></item></values></request>";
+            $this->release_name_field_id . "</field_id><value>Test Release</value></item><item><field_id>" .
+            $this->release_status_field_id . "</field_id><bind_value_ids><item>" .
+            $this->release_status_current_value_id . "</item></bind_value_ids></item></values></request>";
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
@@ -122,7 +151,7 @@ class ArtifactTest extends RestBase {
     {
         $new_value = 'Test Release Updated';
         $xml       = "<request><tracker><id>$this->releases_tracker_id</id></tracker><values><item><field_id>" .
-            REST_TestDataBuilder::RELEASE_FIELD_NAME_ID . "</field_id><value>" . $new_value . "</value></item></values></request>";
+            $this->release_name_field_id . "</field_id><value>" . $new_value . "</value></item></values></request>";
 
         $response = $this->getResponse($this->xml_client->put('artifacts/' . $artifact_id, null, $xml));
 

@@ -47,10 +47,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const NIVEAU_2_TRACKER_SHORTNAME = 'niveau2';
     const POKEMON_TRACKER_SHORTNAME  = 'pokemon';
 
-    const RELEASE_FIELD_NAME_ID     = 190;
-    const RELEASE_FIELD_STATUS_ID   = 192;
-    const RELEASE_STATUS_CURRENT_ID = 126;
-
     const KANBAN_ID = 1;
 
     const KANBAN_TO_BE_DONE_COLUMN_ID = 230;
