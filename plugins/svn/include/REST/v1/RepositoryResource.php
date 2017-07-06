@@ -339,6 +339,19 @@ class RepositoryResource extends AuthenticatedResource
      * Create a svn repository in a given project. User must be svn administrator to be able to create the repository.
      *
      * <br>
+     * <br>
+     * A project admin can create an SVN repository like this:
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"project_id": 122,<br>
+     *   &nbsp;"name" : "repo01"<br>
+     *  }<br>
+     * </pre>
+     * <br>
+     * <br>
+     * In addition, the admin can create a repository with custom settings:
+     * <br>
      * <pre>
      * {<br>
      *   &nbsp;"project_id": 122,<br>
@@ -366,7 +379,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws 500 Error Unable to create the repository
      * @throws 409 Repository name is invalid
      */
-    protected function post($project_id, $name, SettingsRepresentation $settings)
+    protected function post($project_id, $name, SettingsRepresentation $settings = null)
     {
         $this->checkAccess();
         $this->options();
@@ -410,7 +423,10 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);
-        $this->hook_config_updator->updateHookConfig($repository->getId(), $settings->commit_rules->toArray());
+
+        if ($settings) {
+            $this->hook_config_updator->updateHookConfig($repository->getId(), $settings->commit_rules->toArray());
+        }
 
         return $this->getRepositoryRepresentation($repository, $user);
     }

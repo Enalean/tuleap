@@ -105,6 +105,29 @@ class RepositoryTest extends TestBase
             array(
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository",
+            )
+        );
+
+        $response   = $this->getResponse($this->client->post('svn', null, $params));
+        $repository = $response->json();
+
+        $this->assertArrayHasKey('id', $repository);
+        $this->assertEquals($repository['name'], 'my_repository');
+        $this->assertEquals(
+            $repository['settings']['commit_rules'],
+            array(
+                "is_reference_mandatory"           => false,
+                "is_commit_message_change_allowed" => false
+            )
+        );
+    }
+
+    public function testPOSTRepositoryForProjectAdminWithCustomSettings()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_02",
                 "settings"   => array(
                     "commit_rules" => array(
                         "is_reference_mandatory"       => true,
@@ -118,7 +141,7 @@ class RepositoryTest extends TestBase
         $repository = $response->json();
 
         $this->assertArrayHasKey('id', $repository);
-        $this->assertEquals($repository['name'], 'my_repository');
+        $this->assertEquals($repository['name'], 'my_repository_02');
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
@@ -133,13 +156,7 @@ class RepositoryTest extends TestBase
         $params = json_encode(
             array(
                 "project_id" => $this->svn_project_id,
-                "name"       => "my_repository",
-                "settings"   => array(
-                    "commit_rules" => array(
-                        "is_reference_mandatory"       => true,
-                        "is_commit_message_change_allowed" => true
-                    )
-                )
+                "name"       => "my_repository_03",
             )
         );
 
