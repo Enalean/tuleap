@@ -33,6 +33,7 @@ use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Hooks\PreCommit;
 use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SHA1CollisionDetector;
@@ -45,8 +46,9 @@ try {
     $repository_path = $argv[1];
     $transaction     = $argv[2];
 
-    $svnlook = new Svnlook(new System_Command());
-    $hook    = new PreCommit(
+    $svnlook               = new Svnlook(new System_Command());
+    $hook_config_sanitizer = new HookConfigSanitizer();
+    $hook                  = new PreCommit(
         $repository_path,
         $transaction,
         new RepositoryManager(
@@ -64,14 +66,15 @@ try {
             Backend::instance(Backend::SVN),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
             SystemEventManager::instance(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            $hook_config_sanitizer
         ),
         new CommitInfoEnhancer($svnlook, new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),
         $svnlook,
         new SHA1CollisionDetector(),
         new SvnLogger()
-        , new HookConfigRetriever(new HookDao())
+        , new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())
     );
 
     $hook->assertCommitMessageIsValid(ReferenceManager::instance());

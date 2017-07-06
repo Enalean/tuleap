@@ -20,37 +20,23 @@
 
 namespace Tuleap\Svn\Repository;
 
-class HookConfigRetriever
+class HookConfigSanitizer
 {
     /**
-     * @var HookDao
+     * @param array $hook_config
+     *
+     * @return array
      */
-    private $hook_dao;
-    /**
-     * @var HookConfigSanitizer
-     */
-    private $hook_config_sanitizer;
-
-    public function __construct(HookDao $hook_dao, HookConfigSanitizer $hook_config_sanitizer)
+    public function sanitizeHookConfigArray(array $hook_config)
     {
-        $this->hook_dao              = $hook_dao;
-        $this->hook_config_sanitizer = $hook_config_sanitizer;
+        return array_intersect_key($hook_config, array_flip($this->hookConfigKeys()));
     }
 
     /**
-     * @param Repository $repository
-     *
-     * @return HookConfig
+     * @return array
      */
-    public function getHookConfig(Repository $repository)
+    private function hookConfigKeys()
     {
-        $row = $this->hook_dao->getHookConfig($repository->getId());
-        if (! $row) {
-            $row = array();
-        }
-
-        $this->hook_config_sanitizer->sanitizeHookConfigArray($row);
-
-        return new HookConfig($repository, $row);
+        return array(HookConfig::MANDATORY_REFERENCE, HookConfig::COMMIT_MESSAGE_CAN_CHANGE);
     }
 }

@@ -34,15 +34,21 @@ class HookConfigUpdator
      * @var HookConfigChecker
      */
     private $hook_config_checker;
+    /**
+     * @var HookConfigSanitizer
+     */
+    private $hook_config_sanitizer;
 
     public function __construct(
         HookDao $hook_dao,
         \ProjectHistoryDao $project_history_dao,
-        HookConfigChecker $hook_config_checker
+        HookConfigChecker $hook_config_checker,
+        HookConfigSanitizer $hook_config_sanitizer
     ) {
-        $this->hook_dao            = $hook_dao;
-        $this->project_history_dao = $project_history_dao;
-        $this->hook_config_checker = $hook_config_checker;
+        $this->hook_dao              = $hook_dao;
+        $this->project_history_dao   = $project_history_dao;
+        $this->hook_config_checker   = $hook_config_checker;
+        $this->hook_config_sanitizer = $hook_config_sanitizer;
     }
 
     public function updateHookConfig(Repository $repository, array $hook_config)
@@ -56,7 +62,7 @@ class HookConfigUpdator
 
             $this->hook_dao->updateHookConfig(
                 $repository->getId(),
-                HookConfig::sanitizeHookConfigArray($hook_config)
+                $this->hook_config_sanitizer->sanitizeHookConfigArray($hook_config)
             );
         }
     }

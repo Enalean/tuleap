@@ -28,6 +28,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PreRevpropChange;
@@ -62,9 +63,10 @@ try {
             Backend::instance(Backend::SVN),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
             SystemEventManager::instance(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new HookConfigSanitizer()
         ),
-        new HookConfigRetriever(new HookDao())
+        new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())
     );
 
     $hook->checkAuthorized(ReferenceManager::instance());

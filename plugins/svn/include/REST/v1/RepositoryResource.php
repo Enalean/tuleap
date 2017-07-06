@@ -41,6 +41,7 @@ use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\Repository;
@@ -124,7 +125,8 @@ class RepositoryResource extends AuthenticatedResource
             $backend_svn,
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
             $this->system_event_manager,
-            $project_history_dao
+            $project_history_dao,
+            new HookConfigSanitizer()
         );
 
         $this->user_manager       = \UserManager::instance();
@@ -133,13 +135,14 @@ class RepositoryResource extends AuthenticatedResource
             \PermissionsManager::instance()
         );
 
-        $this->hook_config_updator = new HookConfigUpdator(
+        $this->hook_config_retriever = new HookConfigRetriever($hook_dao, new HookConfigSanitizer());
+        $this->hook_config_updator   = new HookConfigUpdator(
             $hook_dao,
             $project_history_dao,
-            new HookConfigChecker($this->repository_manager)
+            new HookConfigChecker($this->hook_config_retriever),
+            new HookConfigSanitizer()
         );
 
-        $this->hook_config_retriever  = new HookConfigRetriever($hook_dao);
         $this->commit_rules_validator = new CommitRulesRepresentationValidator();
         $this->repository_creator     = new RepositoryCreator(
             $dao,
