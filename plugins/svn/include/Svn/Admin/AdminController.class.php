@@ -337,16 +337,16 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request) {
+    public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request)
+    {
+        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
         $hook_config = array(
-            HookConfig::MANDATORY_REFERENCE => (bool)
-                $request->get("pre_commit_must_contain_reference"),
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool)
-                $request->get("allow_commit_message_changes")
+            HookConfig::MANDATORY_REFERENCE       => (bool) $request->get("pre_commit_must_contain_reference"),
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool) $request->get("allow_commit_message_changes")
         );
-        $this->hook_config_updator->updateHookConfig($request->get('repo_id'), $hook_config);
+        $this->hook_config_updator->updateHookConfig($repository, $hook_config);
 
-        return $this->displayHooksConfig($service, $request);
+        $this->displayHooksConfig($service, $request);
     }
 
     public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request) {

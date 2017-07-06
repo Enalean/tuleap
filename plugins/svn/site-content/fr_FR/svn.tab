@@ -133,3 +133,4 @@ plugin_svn	url_can_not_be_processed	L'action demandée ne peut pas être compris
 
 project_admin_utils	svn_multi_repository_deletion	Dépôt SVN supprimé
 project_admin_utils	svn_multi_repository_creation	Dépôt SVN créé
+project_admin_utils	svn_multi_repository_hook_update	Règles de commit modifiées
