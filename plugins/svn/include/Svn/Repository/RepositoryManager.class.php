@@ -34,7 +34,6 @@ use SystemEventManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
-use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
 use Tuleap\Svn\SvnAdmin;
@@ -317,13 +316,6 @@ class RepositoryManager
             $row = array();
         }
         return new HookConfig($repository, $row);
-    }
-
-    public function updateHookConfig($repository_id, array $hook_config) {
-        return $this->hook_dao->updateHookConfig(
-            $repository_id,
-            HookConfig::sanitizeHookConfigArray($hook_config)
-        );
     }
 
     public function markAsDeleted(Repository $repository)

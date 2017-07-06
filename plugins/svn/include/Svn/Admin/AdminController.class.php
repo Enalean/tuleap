@@ -20,26 +20,27 @@
 
 namespace Tuleap\Svn\Admin;
 
+use CSRFSynchronizerToken;
 use Feedback;
+use HTTPRequest;
+use Logger;
+use Project;
 use Rule_Email;
 use Tuleap\Svn\Notifications\CannotAddUgroupsNotificationException;
 use Tuleap\Svn\Notifications\CannotAddUsersNotificationException;
-use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
-use Tuleap\Svn\ServiceSvn;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\HookConfig;
-use Project;
-use HTTPRequest;
+use Tuleap\Svn\Repository\HookConfigUpdator;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\ServiceSvn;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 use UGroupManager;
 use UserManager;
 use Valid_Int;
 use Valid_String;
-use CSRFSynchronizerToken;
-use Logger;
 
 class AdminController
 {
@@ -63,6 +64,10 @@ class AdminController
      * @var UGroupManager
      */
     private $ugroup_manager;
+    /**
+     * @var HookConfigUpdator
+     */
+    private $hook_config_updator;
 
     public function __construct(
         MailHeaderManager $mail_header_manager,
@@ -72,7 +77,8 @@ class AdminController
         NotificationListBuilder $notification_list_builder,
         NotificationsEmailsBuilder $emails_builder,
         UserManager $user_manager,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
+        HookConfigUpdator $hook_config_updator
     ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
@@ -82,6 +88,7 @@ class AdminController
         $this->emails_builder            = $emails_builder;
         $this->user_manager              = $user_manager;
         $this->ugroup_manager            = $ugroup_manager;
+        $this->hook_config_updator       = $hook_config_updator;
     }
 
     private function generateToken(Project $project, Repository $repository) {
@@ -337,7 +344,7 @@ class AdminController
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool)
                 $request->get("allow_commit_message_changes")
         );
-        $this->repository_manager->updateHookConfig($request->get('repo_id'), $hook_config);
+        $this->hook_config_updator->updateHookConfig($request->get('repo_id'), $hook_config);
 
         return $this->displayHooksConfig($service, $request);
     }
