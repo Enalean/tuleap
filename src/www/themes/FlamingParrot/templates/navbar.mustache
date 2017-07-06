@@ -2,8 +2,8 @@
     {{# has_motd }}<div class="motd">{{{ motd }}}</div>{{/ has_motd }}
     <a id="navbar-logo" href="/" aria-label="{{ homepage_label }}"><div class="logo"></div></a>
     <div class="navbar-inner">
-        <div class="container-fluid">
-            <ul class="nav">
+        <div class="container-fluid header-navbar-container">
+            <ul class="nav header-navbar-container-project-nav">
                 {{# current_project_navbar_info }}
                     <li class="current-project">
                         <a href="{{ project_link }}" class="project-title" title="{{{ project_privacy }}">
