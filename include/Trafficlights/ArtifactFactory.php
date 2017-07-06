@@ -69,6 +69,25 @@ class ArtifactFactory
     }
 
     /**
+     * Given a list of artifact ids, return corresponding artifact objects if any
+     *
+     * @param array $artifact_ids
+     *
+     * @return array of Tracker_Artifact
+     */
+    public function getArtifactsByIdListUserCanView(PFUser $user, array $artifact_ids) {
+        $artifacts = array();
+        foreach ($artifact_ids as $artifact_id) {
+            $artifact = $this->getArtifactById($artifact_id);
+
+            if ($artifact && $artifact->userCanView($user)) {
+                $artifacts[$artifact_id] = $artifact;
+            }
+        }
+        return $artifacts;
+    }
+
+    /**
      * @param PFUser  $user           The user for which we're retrieving the campaign
      * @param int     $tracker_id     The id of the tracker
      * @param int     $milestone_id   The id of the milestone that should be linked by the campaigns

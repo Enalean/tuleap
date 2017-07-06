@@ -15,7 +15,11 @@
                 ng-click="showAddTestModal()">
                 <span translate><i class="icon-plus"></i> Add a test</span>
             </button>
-            <input type="text" class="filter" placeholder="{{ 'Id, summary, category' | translate }}" ng-model="search">
+            <select ng-model="filters.selected_report" ng-change="selectReportTests()">
+                <option value="" translate>Pre-select tests from a tracker report</option>
+                <option ng-repeat="report in test_reports" ng-value="report.id">{{ report.label }}</option>
+            </select>
+            <input type="text" class="filter" placeholder="{{ 'Id, summary, category' | translate }}" ng-model="filters.search">
         </div>
         <table id="campaign-edit-executions-list" class="table">
             <thead>
@@ -27,7 +31,7 @@
                 <tr ng-repeat-start="category in tests_list"
                     ng-hide="category.tests
                         | toArray:false
-                        | filter:matchProperties(search)
+                        | filter:matchProperties(filters.search)
                         | isEmpty"
                 >
                     <td colspan="3" class="table-cell-section">
@@ -38,7 +42,7 @@
                 <tr ng-repeat-end=""
                     ng-repeat="test in category.tests
                         | toArray:false
-                        | filter:matchProperties(search)
+                        | filter:matchProperties(filters.search)
                         | unique:'definition.id'
                         track by test.definition.id"
                     ng-class="diffState(test)"

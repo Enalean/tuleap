@@ -197,6 +197,10 @@ msgid "Please select a test"
 msgstr "Merci de sélectionner un test"
 
 #: src/app/campaign/campaign-edit.tpl.html
+msgid "Pre-select tests from a tracker report"
+msgstr "Pré-sélectionner les tests d'un rapport"
+
+#: src/app/campaign/campaign-edit.tpl.html
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 

@@ -29,14 +29,15 @@ function DefinitionService(
         getTracker           : getTracker
     };
 
-    function getDefinitions(project_id, limit, offset) {
+    function getDefinitions(project_id, limit, offset, report_id) {
         var data = $q.defer();
 
         rest.one('projects', project_id)
             .all('trafficlights_definitions')
             .getList({
                 limit: limit,
-                offset: offset
+                offset: offset,
+                report_id: report_id
             })
             .then(function(response) {
                 var result = {
