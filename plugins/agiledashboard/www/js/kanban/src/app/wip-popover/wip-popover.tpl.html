@@ -5,8 +5,8 @@
      ng-if="userIsAdmin()"
 >
     <form novalidate ng-submit="setWipLimit(column)" class="wip-limit-form-content">
+        <label class="tlp-label" for="wip-limit-input-{{ column.id }}" translate>Define max:</label>
         <div class="tlp-form-element tlp-form-element-append">
-            <label class="tlp-label" for="wip-limit-input-{{ column.id }}" translate>Define max:</label>
             <input type="number"
                    class="tlp-input tlp-input-small wip-limit-input"
                    id="wip-limit-input-{{ column.id }}"
@@ -15,8 +15,9 @@
                    ng-value="column.limit"
                    placeholder="∞"
             >
+
             <button class="tlp-append tlp-append-small tlp-button-primary tlp-button-small" type="submit">
-                <i ng-class="{'fa fa-check': ! column.saving_wip, 'fa fa-spinner': column.saving_wip}"></i>
+                <i class="fa" ng-class="{'fa-check': ! column.saving_wip, 'fa-spinner': column.saving_wip}"></i>
             </button>
         </div>
     </form>

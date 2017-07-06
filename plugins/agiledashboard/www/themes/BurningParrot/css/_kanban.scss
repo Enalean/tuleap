@@ -287,6 +287,14 @@ $kanban-column-footer-height: 50px;
     font-size: 11px;
 }
 
+.wip-limit-form {
+    margin: $tlp-half-spacing $tlp-spacing;
+}
+
+.wip-limit-input {
+    width: 55px;
+}
+
 kanban-column {
     display: flex;
     flex: 1 1 auto;
