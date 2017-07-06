@@ -38,6 +38,7 @@ use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\Repository\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
@@ -79,6 +80,11 @@ class RepositoryResource extends AuthenticatedResource
      */
     public $repository_creator;
 
+    /**
+     * @var HookConfigUpdator
+     */
+    private $hook_config_updator;
+
     public function __construct()
     {
         $dao                        = new Dao();
@@ -111,6 +117,7 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->repository_creator  = new RepositoryCreator($dao, $this->system_event_manager, $project_history_dao);
+        $this->hook_config_updator = new HookConfigUpdator(new HookDao());
     }
 
     /**
@@ -225,7 +232,7 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->checkUserIsAdmin($repository->getProject(), $user);
 
-        $this->repository_manager->updateHookConfig($id, $settings->commit_rules->toArray());
+        $this->hook_config_updator->updateHookConfig($id, $settings->commit_rules->toArray());
 
         $representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
@@ -403,7 +410,7 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);
-        $this->repository_manager->updateHookConfig($repository->getId(), $settings->commit_rules->toArray());
+        $this->hook_config_updator->updateHookConfig($repository->getId(), $settings->commit_rules->toArray());
 
         return $this->getRepositoryRepresentation($repository, $user);
     }

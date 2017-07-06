@@ -21,15 +21,9 @@
 namespace Tuleap\Svn\Repository;
 
 use Backend;
-use Mock;
-use SystemEventManager;
-use TuleapTestCase;
-use Project;
-use Tuleap\Svn\Dao;
-use \ProjectManager;
-use \ProjectDao;
 use EventManager;
-use ForgeConfig;
+use ProjectManager;
+use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
@@ -113,6 +107,16 @@ class RepositoryManagerTest extends TuleapTestCase
 
 class RepositoryManagerHookConfigTest extends TuleapTestCase
 {
+    /**
+     * @var HookDao
+     */
+    private $hook_dao;
+
+    /**
+     * @var HookConfigUpdator
+     */
+    private $hook_updater;
+
     public function setUp()
     {
         $this->project_dao           = safe_mock('ProjectDao');
@@ -149,6 +153,8 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             'access' => 'private',
             'svn_tracker' => null,
             'svn_can_change_log' => null));
+
+        $this->hook_updater = new HookConfigUpdator($this->hook_dao);
     }
 
     public function tearDown(){
@@ -177,13 +183,19 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
         $this->assertEqual(true, $mandatory_ref);
     }
 
-    public function itCanChangeTheHookConfig(){
-        stub($this->hook_dao)->updateHookConfig(22, array(
-            HookConfig::MANDATORY_REFERENCE => true
-        ))->once()->returns(true);
+    public function itCanChangeTheHookConfig()
+    {
+        stub($this->hook_dao)->updateHookConfig(
+            22,
+            array(HookConfig::MANDATORY_REFERENCE => true)
+        )->once()->returns(true);
 
-        $this->manager->updateHookConfig(22, array(
-            HookConfig::MANDATORY_REFERENCE => true,
-            'foo' => true));
+        $this->hook_updater->updateHookConfig(
+            22,
+            array(
+                HookConfig::MANDATORY_REFERENCE => true,
+                'foo'                           => true
+            )
+        );
     }
 }
