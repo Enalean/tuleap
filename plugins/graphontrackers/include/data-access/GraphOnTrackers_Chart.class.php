@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -31,6 +32,9 @@ require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
  * This class must be overriden to provide your own concrete chart (Pie, Bar, ..)
  */
 abstract class GraphOnTrackers_Chart {
+
+    const MARKER_BEGINNING_OUTPUT_DISPLAY = '💩';
+
     protected $id;
     protected $rank;
     protected $title;
@@ -101,10 +105,24 @@ abstract class GraphOnTrackers_Chart {
     		
     		$e = $this->buildGraph();
     		if($e){
-	        	echo $e->graph->GetHTMLImageMap("map".$this->getId());
+                $this->displayHTMLImageMapWithoutInterruptingExecutionFlow($e, "map".$this->getId());
 	        	$this->displayImgTag();
     		}
     	}
+    }
+
+    private function displayHTMLImageMapWithoutInterruptingExecutionFlow(GraphOnTrackers_Engine $engine, $image_map)
+    {
+        ob_start();
+        echo self::MARKER_BEGINNING_OUTPUT_DISPLAY;
+        try {
+            $html = $engine->graph->GetHTMLImageMap($image_map);
+        } catch (Exception $ex) {
+            ob_clean();
+            throw $ex;
+        }
+        echo mb_substr(ob_get_clean(), mb_strlen(self::MARKER_BEGINNING_OUTPUT_DISPLAY));
+        echo $html;
     }
     
     public function getRow() {

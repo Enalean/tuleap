@@ -42,6 +42,8 @@ require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
  */
 abstract class GraphOnTrackersV5_Chart {
 
+    const MARKER_BEGINNING_OUTPUT_FETCH = '💩';
+
     public $id;
     protected $rank;
     protected $title;
@@ -161,10 +163,27 @@ abstract class GraphOnTrackersV5_Chart {
 
             $e = $this->buildGraph();
             if($e){
-                $html .= $e->graph->GetHTMLImageMap("map".$this->getId());
+                $html  = $this->getHTMLImageMapWithoutInterruptingExecutionFlow($e, 'map' . $this->getId());
                 $html .= $this->fetchImgTag($store_in_session);
             }
         }
+        return $html;
+    }
+
+    /**
+     * @return string|false
+     */
+    private function getHTMLImageMapWithoutInterruptingExecutionFlow(GraphOnTrackersV5_Engine $engine, $image_map)
+    {
+        ob_start();
+        echo self::MARKER_BEGINNING_OUTPUT_FETCH;
+        try {
+            $html = $engine->graph->GetHTMLImageMap($image_map);
+        } catch (Exception $ex) {
+            ob_clean();
+            throw $ex;
+        }
+        echo mb_substr(ob_get_clean(), mb_strlen(self::MARKER_BEGINNING_OUTPUT_FETCH));
         return $html;
     }
 
