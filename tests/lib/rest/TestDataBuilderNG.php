@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class REST_TestDataBuilderNG extends REST_TestDataBuilder {
+class REST_TestDataBuilderNG extends REST_TestDataBuilder
+{
 
-    public function activatePlugins() {
+    public function activatePlugins()
+    {
         return $this;
     }
 
-    public function generateUsers() {
+    public function generateUsers()
+    {
         $user_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
         $user_1->setPassword(self::TEST_USER_1_PASS);
         $this->user_manager->updateDb($user_1);
@@ -56,9 +59,6 @@ class REST_TestDataBuilderNG extends REST_TestDataBuilder {
 
         $backlog = $this->project_manager->getProjectByUnixName(self::PROJECT_BACKLOG_DND);
         $this->importTemplateInProject($backlog->getId(), 'tuleap_agiledashboard_template.xml');
-
-        $computed_field = $this->project_manager->getProjectByUnixName(self::PROJECT_COMPUTED_FIELDS);
-        $this->importTemplateInProject($computed_field->getId(), 'tuleap_computedfields_template.xml');
 
         return $this;
     }

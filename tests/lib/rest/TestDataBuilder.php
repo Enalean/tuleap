@@ -22,9 +22,6 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 
 class REST_TestDataBuilder extends TestDataBuilder {
 
@@ -50,8 +47,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const NIVEAU_2_TRACKER_SHORTNAME = 'niveau2';
     const POKEMON_TRACKER_SHORTNAME  = 'pokemon';
 
-    const RELEASE_FIELD_NAME_ID     = 171;
-    const RELEASE_FIELD_STATUS_ID   = 173;
+    const RELEASE_FIELD_NAME_ID     = 190;
+    const RELEASE_FIELD_STATUS_ID   = 192;
     const RELEASE_STATUS_CURRENT_ID = 126;
 
     const KANBAN_ID = 1;
@@ -61,7 +58,7 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const KANBAN_REVIEW_COLUMN_ID     = 232;
     const KANBAN_DONE_VALUE_ID        = 233;
 
-    const TRACKER_REPORT_ID = 108;
+    const TRACKER_REPORT_ID = 112;
 
     const PLANNING_ID = 2;
 
@@ -301,207 +298,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this;
     }
 
-    public function generateComputedFieldTree()
-    {
-        echo "Create computed field tree\n";
-
-        $user                = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
-        $tracker_level_one   = $this->getLevelOneTracker();
-        $tracker_level_two   = $this->getLevelTwoTracker();
-        $tracker_level_three = $this->getLevelThreeTracker();
-        $tracker_level_four  = $this->getLevelFourTracker();
-
-        $artifact_a = $this->createEmptyArtifact($user, 'A', $tracker_level_one->getId());
-
-        $artifact_b = $this->createEmptyArtifact($user, 'B', $tracker_level_two->getId());
-        $artifact_c = $this->createEmptyArtifact($user, 'C', $tracker_level_two->getId());
-
-        $artifact_d = $this->createEmptyArtifact($user, 'D', $tracker_level_three->getId());
-        $artifact_e = $this->createEmptyArtifact($user, 'E', $tracker_level_three->getId());
-        $artifact_f = $this->createEmptyArtifact($user, 'F', $tracker_level_three->getId());
-
-        $artifact_g = $this->createEmptyArtifact($user, 'G', $tracker_level_four->getId());
-        $artifact_h = $this->createEmptyArtifact($user, 'H', $tracker_level_four->getId());
-
-        Tracker_FormElementFactory::clearCaches();
-
-        if (! $artifact_a->linkArtifact($artifact_b->getId(), $user)) {
-            echo "Cannot link parent A to children B\n";
-        }
-
-        if (! $artifact_a->linkArtifact($artifact_c->getId(), $user)) {
-            echo "Cannot link parent A to children  C\n";
-        }
-
-        if (! $artifact_b->linkArtifact($artifact_d->getId(), $user)) {
-            echo "Cannot link parent B to children  D\n";
-        }
-
-        if (! $artifact_b->linkArtifact($artifact_e->getId(), $user)) {
-            echo "Cannot link parent B to children  E\n";
-        }
-
-        if (! $artifact_b->linkArtifact($artifact_g->getId(), $user)) {
-            echo "Cannot link parent B to children  G\n";
-        }
-
-        if (! $artifact_e->linkArtifact($artifact_h->getId(), $user)) {
-            echo "Cannot link parent E to children  H\n";
-        }
-
-        if (! $artifact_c->linkArtifact($artifact_f->getId(), $user)) {
-            echo "Cannot link parent C to children F\n";
-        }
-
-        $this->setManualValueForSlowComputedArtifact($artifact_a, $user, 'A');
-
-        $this->setManualValueForComputedArtifact(
-            $artifact_b,
-            $user,
-            $tracker_level_two->getId(),
-            'B',
-            array('is_autocomputed' => true),
-            null,
-            'total_effort',
-            array('is_autocomputed' => true)
-        );
-        $this->setManualValueForComputedArtifact(
-            $artifact_c,
-            $user,
-            $tracker_level_two->getId(),
-            'C',
-            array('is_autocomputed' => true),
-            null,
-            'total_effort',
-            array('is_autocomputed' => true)
-        );
-
-        $this->setManualValueForComputedArtifact(
-            $artifact_d,
-            $user,
-            $tracker_level_three->getId(),
-            'D',
-            array('manual_value' => 5),
-            null,
-            'effort_estimate',
-            11
-        );
-        $this->setManualValueForComputedArtifact(
-            $artifact_e,
-            $user,
-            $tracker_level_three->getId(),
-            'E',
-            array('is_autocomputed' => true),
-            null,
-            'effort_estimate',
-            22
-        );
-        $this->setManualValueForComputedArtifact(
-            $artifact_f,
-            $user,
-            $tracker_level_three->getId(),
-            'F',
-            array('manual_value' => 5),
-            null,
-            null,
-            null
-        );
-
-        $this->setManualValueForComputedArtifact(
-            $artifact_g,
-            $user,
-            $tracker_level_four->getId(),
-            'G',
-            5,
-            15,
-            null,
-            null
-        );
-        $this->setManualValueForComputedArtifact(
-            $artifact_h,
-            $user,
-            $tracker_level_four->getId(),
-            'H',
-            5,
-            10,
-            null,
-            null
-        );
-
-        return $this;
-    }
-
-    private function createEmptyArtifact(PFUSer $user, $name, $tracker_id)
-    {
-        $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'name')->getId() => $name,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'remaining_effort')->getId() => null,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'capacity')->getId() => null,
-        );
-
-        return $this->tracker_artifact_factory->createArtifact(
-            $this->tracker_factory->getTrackerById($tracker_id),
-            $fields_data,
-            $user,
-            '',
-            false
-        );
-    }
-
-    private function setManualValueForComputedArtifact(
-        Tracker_Artifact $artifact,
-        PFUser $user,
-        $tracker_id,
-        $field_artifact_name,
-        $remaining_effort,
-        $capacity,
-        $field_name,
-        $field_value
-    ) {
-        $fields_data = array(
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'remaining_effort')->getId() => $remaining_effort,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'capacity')->getId()         => $capacity,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_id, 'name')->getId()             => $field_artifact_name
-        );
-
-        if ($field_name !== null) {
-            $fields_data[$this->tracker_formelement_factory->getFormElementByName($tracker_id, $field_name)->getId()] = $field_value;
-        }
-
-        $artifact->createNewChangeset($fields_data, '', $user, false);
-    }
-
-    private function getValueDao()
-    {
-        return new Tracker_FormElement_Field_ComputedDao();
-    }
-
-    private function setManualValueForSlowComputedArtifact(Tracker_Artifact $artifact, PFUser $user, $field_artifact_name)
-    {
-        $tracker_level_one    = $this->getLevelOneTracker();
-        $tracker_level_one_id = $tracker_level_one->getId();
-
-        $field = $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'progress');
-        $dar = $this->getValueDao()->searchByFieldId($field->getId());
-        if ($dar && count($dar)) {
-            $row = $dar->getRow();
-        }
-
-        $fields_data = array(
-            $field->getId() => null,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'remaining_effort')->getId() => null,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'capacity')->getId() => null,
-            $this->tracker_formelement_factory->getFormElementByName($tracker_level_one_id, 'name')->getId() => $field_artifact_name
-        );
-
-        $row['target_field_name'] = 'remaining_effort';
-        $row['fast_compute'] = 0;
-        $this->getValueDao()->save($field->getId(), $row);
-
-        $artifact->createNewChangeset($fields_data, '', $user, false);
-    }
-
-
     protected function importTemplateInProject($project_id, $template)
     {
         $xml_importer = new ProjectXMLImporter(
@@ -676,43 +472,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
     private function getTrackerInProjectPrivateMember($tracker_shortname)
     {
         return $this->getTrackerInProject($tracker_shortname, self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
-    }
-
-    /**
-     * @return Tracker
-     */
-    private function getLevelOneTracker()
-    {
-        return $this->getTrackerInProjectComputedFields(self::LEVEL_ONE_TRACKER_SHORTNAME);
-    }
-
-    /**
-     * @return Tracker
-     */
-    private function getLevelTwoTracker()
-    {
-        return $this->getTrackerInProjectComputedFields(self::LEVEL_TWO_TRACKER_SHORTNAME);
-    }
-
-    /**
-     * @return Tracker
-     */
-    private function getLevelThreeTracker()
-    {
-        return $this->getTrackerInProjectComputedFields(self::LEVEL_THREE_TRACKER_SHORTNAME);
-    }
-
-    /**
-     * @return Tracker
-     */
-    private function getLevelFourTracker()
-    {
-        return $this->getTrackerInProjectComputedFields(self::LEVEL_FOUR_TRACKER_SHORTNAME);
-    }
-
-    private function getTrackerInProjectComputedFields($tracker_shortname)
-    {
-        return $this->getTrackerInProject($tracker_shortname, self::PROJECT_COMPUTED_FIELDS);
     }
 
     private function getTrackerInProject($tracker_shortname, $project_shortname)

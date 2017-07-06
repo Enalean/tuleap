@@ -38,7 +38,6 @@ $data_builder
     ->generateBacklogItems()
     ->generateTopBacklogItems()
     ->generateKanban()
-    ->generateComputedFieldTree()
     ->deleteTracker()
     ->activateDebug()
     ->initPluginsLeakingInCoreTests();
