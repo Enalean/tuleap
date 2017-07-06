@@ -24,21 +24,21 @@
 
 namespace Tuleap\Svn\Hooks;
 
+use Logger;
+use ReferenceManager;
 use SVN_CommitToTagDeniedException;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Commit\CommitMessageValidator;
 use Tuleap\Svn\Commit\SVNLook;
-use ReferenceManager;
-use Logger;
+use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SHA1CollisionDetector;
 use Tuleap\Svn\SHA1CollisionException;
 
-
-class PreCommit {
-
+class PreCommit
+{
     private $immutable_tag_factory;
     private $commit_info_enhancer;
     private $logger;
@@ -58,6 +58,10 @@ class PreCommit {
      * @var SHA1CollisionDetector
      */
     private $sha1_collision_detector;
+    /**
+     * @var HookConfigRetriever
+     */
+    private $hook_config_retriever;
 
     public function __construct(
         $repository_path,
@@ -67,9 +71,9 @@ class PreCommit {
         ImmutableTagFactory $immutable_tag_factory,
         SVNLook $svnlook,
         SHA1CollisionDetector $sha1_collision_detector,
-        Logger $logger
-    )
-    {
+        Logger $logger,
+        HookConfigRetriever $hook_config_retriever
+    ) {
         $this->repository_manager      = $repository_manager;
         $this->immutable_tag_factory   = $immutable_tag_factory;
         $this->logger                  = $logger;
@@ -78,13 +82,21 @@ class PreCommit {
         $this->svnlook                 = $svnlook;
         $this->sha1_collision_detector = $sha1_collision_detector;
         $this->repository              = $this->repository_manager->getRepositoryFromSystemPath($repository_path);
+        $this->hook_config_retriever   = $hook_config_retriever;
 
         $this->commit_info_enhancer->enhanceWithTransaction($this->repository, $transaction);
     }
 
-    public function assertCommitMessageIsValid(ReferenceManager $reference_manager) {
-        $validator = new CommitMessageValidator($this->repository, $this->getCommitMessage());
-        $validator->assertCommitMessageIsValid($this->repository_manager, $reference_manager);
+    public function assertCommitMessageIsValid(
+        ReferenceManager $reference_manager
+    ) {
+        $validator = new CommitMessageValidator(
+            $this->repository,
+            $this->getCommitMessage(),
+            $this->hook_config_retriever,
+            $reference_manager
+        );
+        $validator->assertCommitMessageIsValid();
     }
 
     private function getCommitMessage() {
@@ -148,11 +160,13 @@ class PreCommit {
         foreach ($this->commit_info_enhancer->getCommitInfo()->getTransactionPath() as $path) {
             if ($this->isCommitDoneInImmutableTag($path)) {
                 $this->logger->debug("$path is denied");
+
                 return false;
             }
         }
 
         $this->logger->debug("Commit is allowed \o/");
+
         return true;
     }
 
@@ -214,5 +228,4 @@ class PreCommit {
 
         return $immutable_path;
     }
-
 }

@@ -40,6 +40,7 @@ use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\Svn\Repository\HookConfigChecker;
+use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\Repository;
@@ -53,34 +54,48 @@ use Tuleap\Svn\SvnPermissionManager;
 class RepositoryResource extends AuthenticatedResource
 {
     /**
+     * @var CommitRulesRepresentationValidator
+     */
+    private $commit_rules_validator;
+    /**
      * @var RepositoryManager
      */
-    public $repository_manager;
+    private $repository_manager;
 
     /**
      * @var SvnPermissionManager
      */
-    public $permission_manager;
+    private $permission_manager;
 
     /**
      * @var \UserManager
      */
-    public $user_manager;
+    private $user_manager;
 
     /**
      * @var SystemEventManager
      */
-    public $system_event_manager;
+    private $system_event_manager;
 
     /**
      * @var \ProjectManager
      */
-    public $project_manager;
+    private $project_manager;
 
     /**
      * @var RepositoryCreator
      */
-    public $repository_creator;
+    private $repository_creator;
+
+    /**
+     * @var HookConfigRetriever
+     */
+    private $hook_config_retriever;
+
+    /**
+     * @var RepositoryRepresentationBuilder
+     */
+    private $representation_builder;
 
     /**
      * @var HookConfigUpdator
@@ -124,12 +139,18 @@ class RepositoryResource extends AuthenticatedResource
             new HookConfigChecker($this->repository_manager)
         );
 
+        $this->hook_config_retriever  = new HookConfigRetriever($hook_dao);
         $this->commit_rules_validator = new CommitRulesRepresentationValidator();
         $this->repository_creator     = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
             $project_history_dao,
             $this->permission_manager
+        );
+
+        $this->representation_builder = new RepositoryRepresentationBuilder(
+            $this->permission_manager,
+            $this->hook_config_retriever
         );
     }
 
@@ -192,12 +213,7 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->sendAllowHeaders();
 
-        $representation_builder = new RepositoryRepresentationBuilder(
-            $this->permission_manager,
-            $this->repository_manager
-        );
-
-        return $representation_builder->build($repository, $user);
+        return $this->representation_builder->build($repository, $user);
     }
 
     /**
@@ -249,12 +265,7 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->hook_config_updator->updateHookConfig($repository, $settings->commit_rules->toArray());
 
-        $representation_builder = new RepositoryRepresentationBuilder(
-            $this->permission_manager,
-            $this->repository_manager
-        );
-
-        return $representation_builder->build($repository, $user);
+        return $this->representation_builder->build($repository, $user);
     }
 
     /**
@@ -340,12 +351,7 @@ class RepositoryResource extends AuthenticatedResource
      */
     private function getRepositoryRepresentation(Repository $repository, \PFUser $user)
     {
-        $representation_builder = new RepositoryRepresentationBuilder(
-            $this->permission_manager,
-            $this->repository_manager
-        );
-
-        return $representation_builder->build($repository, $user);
+        return $this->representation_builder->build($repository, $user);
     }
 
     /**

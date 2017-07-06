@@ -66,6 +66,7 @@ use Tuleap\Svn\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\Repository\HookConfigChecker;
+use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryCreator;
@@ -505,6 +506,7 @@ class SvnPlugin extends Plugin
         $permissions_manager = $this->getPermissionsManager();
 
         $history_dao = new ProjectHistoryDao();
+        $hook_dao    = new HookDao();
 
         return new SvnRouter(
             $repository_manager,
@@ -528,7 +530,8 @@ class SvnPlugin extends Plugin
                 new NotificationsEmailsBuilder(),
                 UserManager::instance(),
                 new UGroupManager(),
-                new HookConfigUpdator(new HookDao(), $history_dao, new HookConfigChecker($this->getRepositoryManager()))
+                new HookConfigUpdator($hook_dao, $history_dao, new HookConfigChecker($repository_manager)),
+                new HookConfigRetriever($hook_dao)
             ),
             new ExplorerController(
                 $repository_manager,

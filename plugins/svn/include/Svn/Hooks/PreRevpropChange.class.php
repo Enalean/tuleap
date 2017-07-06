@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,15 +24,17 @@
 
 namespace Tuleap\Svn\Hooks;
 
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\HookConfig;
-use Tuleap\Svn\Commit\CommitMessageValidator;
-use ReferenceManager;
 use Exception;
+use ReferenceManager;
+use Tuleap\Svn\Commit\CommitMessageValidator;
+use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryManager;
 
-class PreRevpropChange {
-
+class PreRevpropChange
+{
     /**
      * @var Repository
      */
@@ -51,32 +53,45 @@ class PreRevpropChange {
     private $action;
     private $propname;
     private $new_commit_message;
+    private $repository_path;
+    /**
+     * @var HookConfigRetriever
+     */
+    private $hook_config_retriever;
 
     public function __construct(
         $repository_path,
         $action,
         $propname,
         $new_commit_message,
-        RepositoryManager $repository_manager
+        RepositoryManager $repository_manager,
+        HookConfigRetriever $hook_config_retriever
     ) {
-        $this->repository_manager = $repository_manager;
-        $this->repository  = $repository_manager->getRepositoryFromSystemPath($repository_path);
-        $this->hook_config = $repository_manager->getHookConfig($this->repository);
-        $this->action = $action;
-        $this->propname = $propname;
-        $this->new_commit_message = $new_commit_message;
+        $this->repository_manager    = $repository_manager;
+        $this->repository            = $repository_manager->getRepositoryFromSystemPath($repository_path);
+        $this->hook_config           = $hook_config_retriever->getHookConfig($this->repository);
+        $this->action                = $action;
+        $this->propname              = $propname;
+        $this->new_commit_message    = $new_commit_message;
+        $this->repository_path       = $repository_path;
+        $this->hook_config_retriever = $hook_config_retriever;
     }
 
-    public function checkAuthorized(ReferenceManager $reference_manager) {
+    public function checkAuthorized(ReferenceManager $reference_manager)
+    {
         if (! ($this->action == 'M' && $this->propname == 'svn:log')) {
             throw new Exception('Cannot modify anything but svn:log');
         }
-        if(!$this->hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)) {
+        if (! $this->hook_config->getHookConfig(HookConfig::COMMIT_MESSAGE_CAN_CHANGE)) {
             throw new Exception("Commit message is not allowed to change.");
         }
 
-        $validator = new CommitMessageValidator($this->repository, $this->new_commit_message);
-        $validator->assertCommitMessageIsValid($this->repository_manager, $reference_manager);
+        $validator = new CommitMessageValidator(
+            $this->repository,
+            $this->new_commit_message,
+           $this->hook_config_retriever,
+            $reference_manager
+        );
+        $validator->assertCommitMessageIsValid();
     }
-
 }

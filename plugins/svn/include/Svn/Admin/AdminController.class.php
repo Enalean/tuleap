@@ -31,6 +31,7 @@ use Tuleap\Svn\Notifications\CannotAddUsersNotificationException;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -68,6 +69,10 @@ class AdminController
      * @var HookConfigUpdator
      */
     private $hook_config_updator;
+    /**
+     * @var HookConfigRetriever
+     */
+    private $hook_config_retriever;
 
     public function __construct(
         MailHeaderManager $mail_header_manager,
@@ -78,7 +83,8 @@ class AdminController
         NotificationsEmailsBuilder $emails_builder,
         UserManager $user_manager,
         UGroupManager $ugroup_manager,
-        HookConfigUpdator $hook_config_updator
+        HookConfigUpdator $hook_config_updator,
+        HookConfigRetriever $hook_config_retriever
     ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
@@ -89,6 +95,7 @@ class AdminController
         $this->user_manager              = $user_manager;
         $this->ugroup_manager            = $ugroup_manager;
         $this->hook_config_updator       = $hook_config_updator;
+        $this->hook_config_retriever     = $hook_config_retriever;
     }
 
     private function generateToken(Project $project, Repository $repository) {
@@ -349,17 +356,17 @@ class AdminController
         $this->displayHooksConfig($service, $request);
     }
 
-    public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request) {
-        $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
-        $hook_config = $this->repository_manager->getHookConfig($repository);
-
+    public function displayHooksConfig(ServiceSvn $service, HTTPRequest $request)
+    {
+        $repository  = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
+        $hook_config = $this->hook_config_retriever->getHookConfig($repository);
 
         $token = $this->generateToken($request->getProject(), $repository);
         $title = $GLOBALS['Language']->getText('global', 'Administration');
 
         $service->renderInPage(
             $request,
-            $repository->getName() .' – '. $title,
+            $repository->getName() . ' – ' . $title,
             'admin/hooks_config',
             new HooksConfigurationPresenter(
                 $repository,

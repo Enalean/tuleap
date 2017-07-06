@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -27,6 +27,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PreRevpropChange;
@@ -62,7 +63,8 @@ try {
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
             SystemEventManager::instance(),
             new ProjectHistoryDao()
-        )
+        ),
+        new HookConfigRetriever(new HookDao())
     );
 
     $hook->checkAuthorized(ReferenceManager::instance());
