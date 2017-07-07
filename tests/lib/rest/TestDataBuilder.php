@@ -54,8 +54,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
     const KANBAN_REVIEW_COLUMN_ID     = 232;
     const KANBAN_DONE_VALUE_ID        = 233;
 
-    const TRACKER_REPORT_ID = 112;
-
     const PLANNING_ID = 2;
 
     const PHPWIKI_PAGE_ID          = 6097;

@@ -25,15 +25,8 @@ use Tuleap\REST\TrackerBase;
 /**
  * @group TrackersTests
  */
-class TrackersTest extends TrackerBase {
-
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
+class TrackersTest extends TrackerBase
+{
     public function testOptionsTrackers() {
         $response = $this->getResponse($this->client->options('trackers'));
 
@@ -56,7 +49,7 @@ class TrackersTest extends TrackerBase {
     }
 
     public function testOptionsReportsId() {
-        $response = $this->getResponse($this->client->options($this->getReportUri()));
+        $response = $this->getResponse($this->client->options($this->report_uri));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
@@ -111,8 +104,8 @@ class TrackersTest extends TrackerBase {
         $reports        = $response->json();
         $default_report = $reports[0];
 
-        $this->assertEquals(REST_TestDataBuilder::TRACKER_REPORT_ID, $default_report['id']);
-        $this->assertEquals('tracker_reports/' . REST_TestDataBuilder::TRACKER_REPORT_ID, $default_report['uri']);
+        $this->assertEquals($this->report_id, $default_report['id']);
+        $this->assertEquals('tracker_reports/' . $this->report_id, $default_report['uri']);
         $this->assertEquals('Default', $default_report['label']);
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -120,12 +113,12 @@ class TrackersTest extends TrackerBase {
 
     public function testGetReportsId()
     {
-        $response = $this->getResponse($this->client->get($this->getReportUri()));
+        $response = $this->getResponse($this->client->get($this->report_uri));
 
         $report = $response->json();
 
-        $this->assertEquals(REST_TestDataBuilder::TRACKER_REPORT_ID, $report['id']);
-        $this->assertEquals('tracker_reports/' . REST_TestDataBuilder::TRACKER_REPORT_ID, $report['uri']);
+        $this->assertEquals($this->report_id, $report['id']);
+        $this->assertEquals('tracker_reports/' . $this->report_id, $report['uri']);
         $this->assertEquals('Default', $report['label']);
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -298,16 +291,8 @@ class TrackersTest extends TrackerBase {
         }
     }
 
-    private function getReportUri() {
-        $reports_uri = $this->getReleaseTrackerReportsUri();
-        $response_reports = $this->getResponse($this->client->get($reports_uri))->json();
-
-        return $response_reports[0]['uri'];
-    }
-
     private function getReportsArtifactsUri() {
-        $report_uri = $this->getReportUri();
-        $response_report = $this->getResponse($this->client->get($report_uri))->json();
+        $response_report = $this->getResponse($this->client->get($this->report_uri))->json();
 
 
         foreach ($response_report['resources'] as $resource) {
