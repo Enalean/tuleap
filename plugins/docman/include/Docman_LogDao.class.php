@@ -1,54 +1,36 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-
-require_once('common/dao/include/DataAccessObject.class.php');
 
 /**
  *  Data Access Object for Docman_LogDao 
  */
-class Docman_LogDao extends DataAccessObject {
-    /**
-    * Gets all tables of the db
-    * @return DataAccessResult
-    */
-    function searchAll() {
-        $sql = "SELECT * FROM plugin_docman_log";
-        return $this->retrieve($sql);
-    }
-    
-    /**
-    * Searches Docman_LogDao by Timestamp 
-    * @return DataAccessResult
-    */
-    function searchByTimestamp($time) {
-        $sql = sprintf("SELECT group_id, item_id, user_id, type, old_value, new_value FROM plugin_docman_log WHERE time = %s",
-				$this->da->quoteSmart($time));
-        return $this->retrieve($sql);
-    }
-
+class Docman_LogDao extends DataAccessObject
+{
     /**
     * Searches Docman_LogDao by ItemId 
     * @return DataAccessResult
     */
-    function searchByItemId($itemId, $order = '') {
+    public function searchByItemId($itemId, $order = '')
+    {
         $sql = sprintf("SELECT time, group_id, user_id, type, old_value, new_value, field FROM plugin_docman_log WHERE item_id = %s ".$order,
 				$this->da->quoteSmart($itemId));
         return $this->retrieve($sql);
@@ -57,54 +39,16 @@ class Docman_LogDao extends DataAccessObject {
     * Searches Docman_LogDao by ItemId order by time
     * @return DataAccessResult
     */
-    function searchByItemIdOrderByTimestamp($itemId) {
+    public function searchByItemIdOrderByTimestamp($itemId)
+    {
         return $this->searchByItemId($itemId, ' ORDER BY time DESC ');
-    }
-
-    /**
-    * Searches Docman_LogDao by UserId 
-    * @return DataAccessResult
-    */
-    function searchByUserId($userId) {
-        $sql = sprintf("SELECT time, group_id, item_id, type, old_value, new_value FROM plugin_docman_log WHERE user_id = %s",
-				$this->da->quoteSmart($userId));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Docman_LogDao by Type 
-    * @return DataAccessResult
-    */
-    function searchByType($type) {
-        $sql = sprintf("SELECT time, group_id, item_id, user_id, old_value, new_value FROM plugin_docman_log WHERE type = %s",
-				$this->da->quoteSmart($type));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Docman_LogDao by OldValue 
-    * @return DataAccessResult
-    */
-    function searchByOldValue($oldValue) {
-        $sql = sprintf("SELECT time, group_id, item_id, user_id, type, new_value FROM plugin_docman_log WHERE old_value = %s",
-				$this->da->quoteSmart($oldValue));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Docman_LogDao by NewValue 
-    * @return DataAccessResult
-    */
-    function searchByNewValue($newValue) {
-        $sql = sprintf("SELECT time, group_id, item_id, user_id, type, old_value FROM plugin_docman_log WHERE new_value = %s",
-				$this->da->quoteSmart($newValue));
-        return $this->retrieve($sql);
     }
 
     /**
      * Search in logs if user accessed the given item after the given date.
      */
-    function searchUserAccessSince($userId, $itemId, $date) {
+    public function searchUserAccessSince($userId, $itemId, $date)
+    {
         $sql = 'SELECT NULL'.
             ' FROM plugin_docman_log'.
             ' WHERE item_id = '.$this->da->escapeInt($itemId).
@@ -120,7 +64,8 @@ class Docman_LogDao extends DataAccessObject {
     * create a row in the table plugin_docman_log 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($group_id, $item_id, $user_id, $type, $old_value = null, $new_value = null, $field = null) {
+    public function create($group_id, $item_id, $user_id, $type, $old_value = null, $new_value = null, $field = null)
+    {
 		$sql = 'INSERT INTO plugin_docman_log (time, group_id, item_id, user_id, type';
         if (!is_null($old_value)) {
             $sql .= ', old_value';
@@ -146,7 +91,9 @@ class Docman_LogDao extends DataAccessObject {
         
         return $inserted;
     }
-    function getSqlStatementForLogsDaily($group_id, $logs_cond) {
+
+    public function getSqlStatementForLogsDaily($group_id, $logs_cond)
+    {
         return 'SELECT log.time AS time, '
                .'CASE WHEN log.type = 1 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_add')).
                ' WHEN log.type = 2 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_edit')).
@@ -165,6 +112,3 @@ class Docman_LogDao extends DataAccessObject {
                .' ORDER BY time DESC ';
     }
 }
-
-
-?>
