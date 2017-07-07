@@ -35,7 +35,6 @@ use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
-use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
 
 class XMLRepositoryImporter
@@ -104,8 +103,8 @@ class XMLRepositoryImporter
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: ".$rule_name->getErrorMessage());
         }
 
-        $repo = new Repository ("", $this->name, '', '', $project);
-        $sysevent = $this->repository_creator->create($repo);
+        $repo     = new Repository ("", $this->name, '', '', $project);
+        $sysevent = $this->repository_creator->createWithoutUserAdminCheck($repo);
         if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");
         }

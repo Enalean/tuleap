@@ -484,7 +484,8 @@ class SvnPlugin extends Plugin
             new RepositoryCreator(
                 new Dao(),
                 SystemEventManager::instance(),
-                new ProjectHistoryDao()
+                new ProjectHistoryDao(),
+                $this->getPermissionsManager()
             )
         );
         $svn->import(
@@ -533,7 +534,12 @@ class SvnPlugin extends Plugin
                 $repository_manager,
                 $permissions_manager,
                 new RepositoryBuilder(),
-                new RepositoryCreator(new Dao(), SystemEventManager::instance(), $history_dao, $this->getPermissionsManager())
+                new RepositoryCreator(
+                    new Dao(),
+                    SystemEventManager::instance(),
+                    new ProjectHistoryDao(),
+                    $this->getPermissionsManager()
+                )
             ),
             new RepositoryDisplayController(
                 $repository_manager,

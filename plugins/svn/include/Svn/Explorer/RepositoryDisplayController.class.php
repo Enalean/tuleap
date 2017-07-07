@@ -23,12 +23,10 @@ namespace Tuleap\Svn\Explorer;
 use Event;
 use EventManager;
 use HTTPRequest;
-use ProjectManager;
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\Svn\SvnPermissionManager;
-use Tuleap\Svn\ViewVC\AccessHistorySaver;
 use Tuleap\Svn\ViewVC\ViewVCProxy;
 
 class RepositoryDisplayController

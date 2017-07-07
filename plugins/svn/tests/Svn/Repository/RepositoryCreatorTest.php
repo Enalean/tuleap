@@ -20,10 +20,25 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\Svn\SvnPermissionManager;
+
 require_once __DIR__ . '/../../bootstrap.php';
 
 class RepositoryCreatorTest extends \TuleapTestCase
 {
+    /**
+     * @var \Project
+     */
+    private $project;
+    /**
+     * @var SvnPermissionManager
+     */
+    private $permissions_manager;
+    /**
+     * @var \PFUser
+     */
+    private $user;
+
     /**
      * @var \SystemEventManager
      */
@@ -46,18 +61,22 @@ class RepositoryCreatorTest extends \TuleapTestCase
         $this->system_event_manager = mock('SystemEventManager');
         $history_dao                = mock('ProjectHistoryDao');
         $dao                        = mock('Tuleap\Svn\Dao');
+        $this->permissions_manager  = mock('Tuleap\Svn\SvnPermissionManager');
         $this->repository_creator   = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
-            $history_dao
+            $history_dao,
+            $this->permissions_manager
         );
 
+        $this->project    = aMockProject()->withId(101)->build();
+        $this->user       = aUser()->build();
         $this->repository = new Repository(
             01,
             'repo01',
             '',
             '',
-            aMockProject()->withId(101)->build()
+            $this->project
         );
 
         stub($dao)->create()->returns(array(1));
@@ -65,7 +84,18 @@ class RepositoryCreatorTest extends \TuleapTestCase
 
     public function itCreatesTheRepository()
     {
+        stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
         stub($this->system_event_manager)->createEvent()->once();
-        $this->repository_creator->create($this->repository);
+
+        $this->repository_creator->create($this->repository, $this->user);
+    }
+
+    public function itThrowsAnExceptionWhenUserIsNotASVNAdministrator()
+    {
+        stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(false);
+        stub($this->system_event_manager)->createEvent()->never();
+        $this->expectException('Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException');
+
+        $this->repository_creator->create($this->repository, $this->user);
     }
 }

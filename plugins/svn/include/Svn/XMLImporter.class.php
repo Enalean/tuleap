@@ -66,8 +66,8 @@ class XMLImporter {
         Project $project,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
-        RuleName $rule_name)
-    {
+        RuleName $rule_name
+    ) {
         $logger->info("[svn] Importing " . count($this->repositories_data) . " SVN repositories");
         foreach($this->repositories_data as $repo) {
             $repo->import(

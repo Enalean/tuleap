@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,18 @@
 
 namespace Tuleap\Svn;
 
+use Feedback;
 use HTTPRequest;
+use Tuleap\Svn\AccessControl\AccessControlController;
+use Tuleap\Svn\Admin\AdminController;
+use Tuleap\Svn\Admin\GlobalAdminController;
+use Tuleap\Svn\Admin\ImmutableTagController;
 use Tuleap\Svn\Admin\RestoreController;
 use Tuleap\Svn\Explorer\ExplorerController;
 use Tuleap\Svn\Explorer\RepositoryDisplayController;
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
-use Tuleap\Svn\Admin\MailNotificationController;
-use Tuleap\Svn\AccessControl\AccessControlController;
-use Tuleap\Svn\Admin\AdminController;
-use Tuleap\Svn\Admin\ImmutableTagController;
-use Tuleap\Svn\Admin\GlobalAdminController;
 use UGroupManager;
-use Feedback;
 
 class SvnRouter {
 
@@ -42,7 +41,7 @@ class SvnRouter {
     /** @var ExplorerController */
     private $explorer_controller;
 
-    /** @var MailNotificationController */
+    /** @var AdminController */
     private $admin_controller;
 
     /** @var AccessControlController */
@@ -101,6 +100,7 @@ class SvnRouter {
 
             if (! $request->get('action')) {
                 $this->useDefaultRoute($request);
+
                 return;
             }
 
@@ -109,7 +109,7 @@ class SvnRouter {
             switch ($action) {
                 case "create-repository":
                     $this->checkUserCanAdministrateARepository($request);
-                    $this->explorer_controller->createRepository($this->getService($request), $request);
+                    $this->explorer_controller->createRepository($request, $request->getCurrentUser());
                     break;
                 case "settings":
                 case "display-mail-notification":
@@ -173,17 +173,15 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $this->global_admin_controller->saveAdminGroups(
                         $this->getService($request),
-                        $request,
-                        $this->ugroup_manager,
-                        $this->permissions_manager);
+                        $request
+                    );
                     break;
                 case 'admin-groups':
                     $this->checkUserCanAdministrateARepository($request);
                     $this->global_admin_controller->showAdminGroups(
                         $this->getService($request),
-                        $request,
-                        $this->ugroup_manager,
-                        $this->permissions_manager);
+                        $request
+                    );
                     break;
 
                 default:
@@ -191,7 +189,7 @@ class SvnRouter {
                     break;
             }
         } catch (CannotFindRepositoryException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn','find_error'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn', 'find_error'));
             $GLOBALS['Response']->redirect(SVN_BASE_URL .'/?group_id='. $request->get('group_id'));
         } catch (UserCannotAdministrateRepositoryException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'perm_denied'));
@@ -214,6 +212,7 @@ class SvnRouter {
             $request->set("repo_id", $repository->getId());
 
             $this->display_controller->displayRepository($this->getService($request), $request);
+
             return;
         }
     }

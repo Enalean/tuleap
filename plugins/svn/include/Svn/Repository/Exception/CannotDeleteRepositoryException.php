@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -18,8 +18,10 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/>
   */
 
-namespace Tuleap\Svn\Repository;
+namespace Tuleap\Svn\Repository\Exception;
 
 use Exception;
 
-class CannotCreateRepositoryException extends Exception {}
+class CannotDeleteRepositoryException extends Exception
+{
+}

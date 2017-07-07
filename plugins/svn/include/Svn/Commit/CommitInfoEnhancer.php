@@ -24,7 +24,7 @@
 
 namespace Tuleap\Svn\Commit;
 
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\Repository;
 
 class CommitInfoEnhancer {

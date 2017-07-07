@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 
 namespace Tuleap\Svn\Reference;
 
+use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\CannotFindRepositoryException;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../bootstrap.php';
@@ -102,5 +102,4 @@ class ExtractorTest extends TuleapTestCase {
         $this->assertEqual($reference->getGroupId(), 101);
         $this->assertEqual($reference->getKeyword(), 'svn');
     }
-
 }
