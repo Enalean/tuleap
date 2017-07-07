@@ -76,14 +76,6 @@ class Widget_ProjectPublicAreas extends Widget {
             $html .= '</p>';
         }
 
-        // ##################### Doc Manager (only for Active)
-
-        if ($project->usesDocman()) {
-            $html .= '<p><a href="/docman/?group_id='.$group_id.'">';
-            $html .= '<i class="tuleap-services-angle-double-right tuleap-services-widget"></i>';
-            $html .= $GLOBALS['Language']->getText('include_project_home','doc_man').'</a></p>';
-        }
-
         // ##################### Mailing lists (only for Active)
 
         if ($project->usesMail()) {

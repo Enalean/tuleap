@@ -306,8 +306,6 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
-        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
-        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 2");
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 2");
         $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 2");
@@ -317,8 +315,6 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForRemove() {
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = ''");
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 0');
-        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
-        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 0");
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 0");
         $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 0");

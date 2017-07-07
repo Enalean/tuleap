@@ -514,9 +514,6 @@ BurningParrot, default theme starting Tuleap 10
 for i in tools cli plugins site-content src VERSION AUTHORS; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
-# Remove old scripts: not used and add unneeded perl depedencies to the package
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanUploader.pl
-%{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
 # Hard-coded perl include that breaks packging
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
 # No need of template
@@ -973,8 +970,6 @@ fi
 %{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
-%{APP_DIR}/src/www/docman
-%{APP_DIR}/src/www/docs
 %{APP_DIR}/src/www/export
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file

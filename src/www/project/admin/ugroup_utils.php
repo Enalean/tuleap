@@ -24,8 +24,6 @@ $GLOBALS['UGROUP_AUTHENTICATED']      = ProjectUGroup::AUTHENTICATED;
 $GLOBALS['UGROUP_PROJECT_MEMBERS']    = ProjectUGroup::PROJECT_MEMBERS;
 $GLOBALS['UGROUP_PROJECT_ADMIN']      = ProjectUGroup::PROJECT_ADMIN;
 $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'] = ProjectUGroup::FILE_MANAGER_ADMIN;
-$GLOBALS['UGROUP_DOCUMENT_TECH']      = ProjectUGroup::DOCUMENT_TECH;
-$GLOBALS['UGROUP_DOCUMENT_ADMIN']     = ProjectUGroup::DOCUMENT_ADMIN;
 $GLOBALS['UGROUP_WIKI_ADMIN']         = ProjectUGroup::WIKI_ADMIN;
 $GLOBALS['UGROUP_TRACKER_ADMIN']      = ProjectUGroup::TRACKER_ADMIN;
 $GLOBALS['UGROUPS'] = array(
@@ -35,9 +33,7 @@ $GLOBALS['UGROUPS'] = array(
     'UGROUP_AUTHENTICATED'      => $GLOBALS['UGROUP_AUTHENTICATED'],
     'UGROUP_PROJECT_MEMBERS'    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
     'UGROUP_PROJECT_ADMIN'      => $GLOBALS['UGROUP_PROJECT_ADMIN'],
-    'UGROUP_DOCUMENT_TECH'      => $GLOBALS['UGROUP_DOCUMENT_TECH'],
     'UGROUP_FILE_MANAGER_ADMIN' => $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'],
-    'UGROUP_DOCUMENT_ADMIN'     => $GLOBALS['UGROUP_DOCUMENT_ADMIN'],
     'UGROUP_WIKI_ADMIN'         => $GLOBALS['UGROUP_WIKI_ADMIN'],
     'UGROUP_TRACKER_ADMIN'      => $GLOBALS['UGROUP_TRACKER_ADMIN'],
 );
@@ -53,9 +49,9 @@ $GLOBALS['UGROUPS'] = array(
 *  statics    members
 *                ^
 *                |
-*         +------+-----+- - - -   -   -
-*         |            |
-*    tracker_tech   doc_admin
+*         +------+- - - -   -   -
+*         |
+*    tracker_tech
 */
 function ugroup_get_parent($ugroup_id) {
     if ($ugroup_id == $GLOBALS['UGROUP_NONE'] || $ugroup_id == $GLOBALS['UGROUP_ANONYMOUS']) {
@@ -256,12 +252,6 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         if ($user->isMember($group_id)) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
-        // Document admin
-        if ($user->isMember($group_id,'D2')) { return true; }
-    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
-        // Document tech
-        if ($user->isMember($group_id,'D1')) { return true; }
     } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
         if ($user->isMember($group_id,'W2')) { return true; }
@@ -339,12 +329,6 @@ function ugroup_db_get_dynamic_members(
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND " . $user_status . " $having_keyword ORDER BY ".$sqlorder.")";
-    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
-        // Document admin
-        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3) AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";
-    } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
-        // Document tech
-        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2) AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
         return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND " . $user_status . "  $having_keyword ORDER BY ".$sqlorder.")";

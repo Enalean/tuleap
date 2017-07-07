@@ -534,27 +534,6 @@ class ProjectSample extends Sample
 }
 
 /**
- * Legacy document viewed processing
- *
- * @package   Sample
- * @author    Arnaud Salvucci <arnaud.salvucci@st.com>
- * @copyright 2007 STMicroelectronics
- * @license   http://opensource.org/licenses/gpl-license.php GPL
- */
-class LegacyDocumentSample  extends Sample
-{
-    /**
-     * Constructor
-     */
-    function LegacyDocumentSample()
-    {
-        $this->field = 'time';
-        $this->table = 'doc_log';
-        parent::Sample();
-    }
-}
-
-/**
  * Wiki pages viewed processing
  *
  * @package   Sample
@@ -1093,10 +1072,6 @@ class SampleFactory
 
         case 'groups':
             $this->sample = new ProjectSample();
-            break;
-
-        case 'docdl':
-            $this->sample = new LegacyDocumentSample();
             break;
 
         case 'wikidl':

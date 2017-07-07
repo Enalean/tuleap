@@ -107,8 +107,6 @@ def user_is_member(group_id, type='0'):
     elif type == 'F2': query += ' AND forum_flags IN (2)'
     elif type == 'S1': query += ' AND support_flags IN (1,2)'
     elif type == 'S2': query += ' AND support_flags IN (2,3)'
-    elif type == 'D1': query += ' AND doc_flags IN (1,2)'
-    elif type == 'D2': query += ' AND doc_flags IN (2,3)'
 
     cursor = include.dbh.cursor(cursorclass=MySQLdb.cursors.DictCursor)
     cursor.execute(query)

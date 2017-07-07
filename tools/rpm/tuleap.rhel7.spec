@@ -878,8 +878,6 @@ fi
 %{APP_DIR}/src/www/assets
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
-%{APP_DIR}/src/www/docman
-%{APP_DIR}/src/www/docs
 %{APP_DIR}/src/www/export
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file

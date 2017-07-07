@@ -38,7 +38,6 @@ class ServiceManager {
         Service::SVN,
         Service::WIKI,
         Service::TRACKERV3,
-        Service::LEGACYDOC,
     );
 
     private $list_of_services_per_project = array();

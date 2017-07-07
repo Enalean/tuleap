@@ -221,9 +221,9 @@ INSERT INTO groups_notif_delegation_message SET \
 #
 # Make the 'admin' user part of the default Admin Project so that he
 # becomes a super user
-# flags after 'A' are: bug,forum,project,patch,support,doc,file,wiki,svn,news
+# flags after 'A' are: bug,forum,project,patch,support,file,wiki,svn,news
 
-INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 1, 2, 2, 2, 2);
+INSERT INTO user_group VALUES (1, 101, 1, 'A', 2, 2, 2, 2, 2, 2, 2, 2, 2);
 
 #
 #  Default data for group_type
@@ -327,8 +327,6 @@ INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (3, "ugroup_p
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "ugroup_project_admins_name_key", "ugroup_project_admins_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (5, "ugroup_authenticated_users_name_key", "ugroup_authenticated_users_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "ugroup_file_manager_admin_name_key", "ugroup_file_manager_admin_desc_key", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "ugroup_document_tech_name_key", "ugroup_document_tech_desc_key", 100);
-INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "ugroup_document_admin_name_key", "ugroup_document_admin_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (14, "ugroup_wiki_admin_name_key", "ugroup_wiki_admin_desc_key", 100);
 
 -- Not used yet
@@ -355,23 +353,6 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',4);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('RELEASE_READ',11);
-
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',100);
-INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('DOCGROUP_READ',1,1);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',2);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',3);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',4);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',12);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCGROUP_READ',13);
-
--- No default value for DOCUMENT_READ -> use parent permissions
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',100);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',1);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',2);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',3);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',4);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',12);
-INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('DOCUMENT_READ',13);
 
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',100);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('WIKI_READ',1);

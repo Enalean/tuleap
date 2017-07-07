@@ -152,38 +152,6 @@ function export_svn_logs($project,$span,$who) {
     
 }
 
-// Export docs access logs for this group
-function export_doc_logs($project, $span, $who) {
-
-    $eol = "\n";
-    
-    $sql_doc = 	doc_logs_extract($project, $span, $who);		
-    $col_list_doc = array('time','user','email','title','local_time');
-    $docs_title = array ('time'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','docs'),
-			'user'       => '',
-			'email'      => '',
-			'title'      => '',
-			'local_time' => '');
-    $lbl_list_doc = array( 'time'       => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
-			   'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
-			   'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
-			   'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','doc'),
-			   'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
-    $result_doc=db_query($sql_doc);
-    $rows_doc = db_numrows($result_doc);
-    
-    if ($result_doc && $rows_doc > 0) {
-	// Build csv for docs access logs
-	echo build_csv_header($col_list_doc, $docs_title).$eol;
-	echo build_csv_header($col_list_doc, $lbl_list_doc).$eol;
-	while ($arr_doc = db_fetch_array($result_doc)) {    
-	    prepare_access_logs_record($project->getGroupId(),$arr_doc);
-	    echo build_csv_record($col_list_doc, $arr_doc).$eol;
-	}
-	echo build_csv_header($col_list_doc, array()).$eol;
-    }
-}
-
 // Export wiki pages access logs for this group
 function export_wiki_pg_logs($project, $span, $who, $sf) {
 
@@ -339,7 +307,6 @@ if (isset($export)) {
     export_file_logs($project, $span, $who);
     export_cvs_logs($project, $span, $who);	
     export_svn_logs($project, $span, $who);
-    export_doc_logs($project, $span, $who);
     export_wiki_pg_logs($project, $span, $who,0);
     export_wiki_att_logs($project, $span, $who);
     export_all_plugins_logs($project, $span, $who);

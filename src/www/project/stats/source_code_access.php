@@ -53,9 +53,6 @@ if (isset($_REQUEST['SUBMIT'])) {
     if ($project->usesSVN()) {
     	export_svn_logs($project, $period, $who);
     }
-    if($project->usesDocman()) {
-    	export_doc_logs($project, $period, $who);
-    }
   	if ($project->usesWiki()) {
     	export_wiki_pg_logs($project, $period, $who,0);
     	export_wiki_att_logs($project, $period, $who);
@@ -116,7 +113,6 @@ switch($view) {
     filedownload_logs_daily( $project, $span*30.5, $who);
     cvsaccess_logs_daily( $project, $span*30.5, $who);
     svnaccess_logs_daily( $project, $span*30.5, $who);
-    doc_logs_daily( $project, $span*30.5, $who);
     wiki_logs_daily( $project, $span*30.5, $who);
     wiki_attachments_logs_daily( $project, $span*30.5, $who);
     plugins_logs_daily( $project, $span*30.5, $who);
@@ -127,7 +123,6 @@ switch($view) {
     filedownload_logs_daily( $project, $span*7, $who);
     cvsaccess_logs_daily( $project, $span*7, $who);
     svnaccess_logs_daily( $project, $span*7, $who);
-    doc_logs_daily( $project, $span*7, $who);
     wiki_logs_daily( $project, $span*7, $who);
     wiki_attachments_logs_daily( $project, $span*7, $who);
     plugins_logs_daily( $project, $span*7, $who);
@@ -138,7 +133,6 @@ switch($view) {
     filedownload_logs_daily( $project, $span, $who);
     cvsaccess_logs_daily( $project, $span, $who);
     svnaccess_logs_daily( $project, $span, $who);
-    doc_logs_daily( $project, $span, $who);
     wiki_logs_daily( $project, $span, $who);
     wiki_attachments_logs_daily( $project, $span, $who);
     plugins_logs_daily( $project, $span, $who);

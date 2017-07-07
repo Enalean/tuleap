@@ -927,7 +927,6 @@ CREATE TABLE user_group (
   project_flags int(11) NOT NULL default '2',
   patch_flags int(11) NOT NULL default '1',
   support_flags int(11) NOT NULL default '1',
-  doc_flags int(11) NOT NULL default '0',
   file_flags int(11) NOT NULL default '0',
   wiki_flags int(11) NOT NULL default '0',
   svn_flags int(11) NOT NULL default '0',

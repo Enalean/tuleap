@@ -356,9 +356,6 @@ if ($group->usesForum()) {
 if ($group->usesMail()) {
     echo '	<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','lists_admin').'</A><BR>';
 }
-if ($group->usesDocman()) {
-    echo '	<A HREF="/docman/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','doc_admin').'</A><BR>';
-}
 if ($group->usesWiki()) {
     echo '	<A HREF="/wiki/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','wiki_admin').'</A><BR>';
 }

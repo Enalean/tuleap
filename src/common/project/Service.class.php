@@ -34,7 +34,6 @@ class Service {
     const SVN       = 'svn';
     const WIKI      = 'wiki';
     const TRACKERV3 = 'tracker';
-    const LEGACYDOC = 'doc';
 
     public $data;
     

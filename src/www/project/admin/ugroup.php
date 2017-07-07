@@ -106,7 +106,7 @@ $ugroupRow = array();
 $row_num   = 0;
 $result    = db_query("SELECT * FROM ugroup WHERE group_id=100 ORDER BY ugroup_id");
 while ($row = db_fetch_array($result)) {
-    if ($project->usesDocman() || ($row['name'] != 'ugroup_document_tech_name_key' && $row['name'] != 'ugroup_document_admin_name_key')) {
+    if ($row['name'] != 'ugroup_document_tech_name_key' && $row['name'] != 'ugroup_document_admin_name_key') {
         $ugroupRow[100] = $purifier->purify(util_translate_name_ugroup($row['name']).' *');
         $ugroupRow[200] = $purifier->purify(util_translate_desc_ugroup($row['description']));
         $ugroupRow[300] = array('value' => '-', 'html_attrs' => 'align="center"');
