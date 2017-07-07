@@ -108,6 +108,10 @@ class RepositoryManagerTest extends TuleapTestCase
 class RepositoryManagerHookConfigTest extends TuleapTestCase
 {
     /**
+     * @var HookConfigChecker
+     */
+    private $hook_config_checker;
+    /**
      * @var HookDao
      */
     private $hook_dao;
@@ -132,6 +136,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
         $this->project_manager = ProjectManager::testInstance($this->project_dao);
         $event_manager         = EventManager::instance();
         $system_event_manager  = mock('SystemEventManager');
+        $project_history_dao   = mock('ProjectHistoryDao');
         $this->manager         = new RepositoryManager(
             $this->dao,
             $this->project_manager,
@@ -144,7 +149,7 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             $backend,
             $access_file_history_factory,
             $system_event_manager,
-            mock('ProjectHistoryDao')
+            $project_history_dao
         );
 
         $this->project = $this->project_manager->getProjectFromDbRow(array(
@@ -154,7 +159,10 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
             'svn_tracker' => null,
             'svn_can_change_log' => null));
 
-        $this->hook_updater = new HookConfigUpdator($this->hook_dao);
+        $this->hook_config_checker = mock('Tuleap\Svn\Repository\HookConfigChecker');
+        $this->hook_updater        = new HookConfigUpdator(
+            $this->hook_dao, $project_history_dao, $this->hook_config_checker
+        );
     }
 
     public function tearDown(){
@@ -185,13 +193,15 @@ class RepositoryManagerHookConfigTest extends TuleapTestCase
 
     public function itCanChangeTheHookConfig()
     {
+        $repository = new Repository(22, 'reponame', '', '', $this->project);
         stub($this->hook_dao)->updateHookConfig(
             22,
             array(HookConfig::MANDATORY_REFERENCE => true)
         )->once()->returns(true);
+        stub($this->hook_config_checker)->hasConfigurationChanged()->returns(true);
 
         $this->hook_updater->updateHookConfig(
-            22,
+            $repository,
             array(
                 HookConfig::MANDATORY_REFERENCE => true,
                 'foo'                           => true

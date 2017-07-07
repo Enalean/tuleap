@@ -133,3 +133,4 @@ plugin_svn	url_can_not_be_processed	The requested action can not be understood, 
 
 project_admin_utils	svn_multi_repository_deletion	Repository SVN deleted
 project_admin_utils	svn_multi_repository_creation	Repository SVN created
+project_admin_utils	svn_multi_repository_hook_update	Commit hook updated
