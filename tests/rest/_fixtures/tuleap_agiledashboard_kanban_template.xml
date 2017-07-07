@@ -81,11 +81,11 @@
                   <label>Status</label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="F96-V0" label="To be done" is_hidden="0"/>
-                      <item ID="F96-V1" label="On going" is_hidden="0"/>
-                      <item ID="F96-V2" label="Review" is_hidden="0"/>
-                      <item ID="F96-V3" label="Done" is_hidden="0"/>
-                      <item ID="F96-V4" label="Canceled" is_hidden="0"/>
+                      <item ID="V900" label="To be done" is_hidden="0"/>
+                      <item ID="V901" label="On going" is_hidden="0"/>
+                      <item ID="V902" label="Review" is_hidden="0"/>
+                      <item ID="V903" label="Done" is_hidden="0"/>
+                      <item ID="V904" label="Canceled" is_hidden="0"/>
                     </items>
                   </bind>
                 </formElement>
@@ -270,9 +270,9 @@
           <description>Define the status of an artifact</description>
           <field REF="F96"/>
           <open_values>
-            <open_value REF="F96-V0"/>
-            <open_value REF="F96-V1"/>
-            <open_value REF="F96-V2"/>
+            <open_value REF="V900"/>
+            <open_value REF="V901"/>
+            <open_value REF="V902"/>
           </open_values>
         </semantic>
         <semantic type="contributor">
@@ -338,6 +338,86 @@
         <permission scope="field" REF="F100" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <permission scope="field" REF="F102" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
+      <artifacts>
+        <artifact id="1">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary_1" type="string">
+              <value><![CDATA[Do something]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="2">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary_1" type="string">
+              <value><![CDATA[Do something v2]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value/>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="3">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary_1" type="string">
+              <value><![CDATA[Doing something]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">901</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="4">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary_1" type="string">
+              <value><![CDATA[Doing something v2]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">901</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="5">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary_1" type="string">
+              <value><![CDATA[Something archived]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">903</value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="6">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary_1" type="string">
+              <value><![CDATA[Something archived v2]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id">903</value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
     </tracker>
   </trackers>
   <cardwall>
