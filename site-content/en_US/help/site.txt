@@ -14,8 +14,7 @@
 
             <h2 class="tlp-pane-subtitle">Ask question</h2>
 
-            <p>Troubleshooting, find a bug? Post your questions and get answers in the <a href="/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel mailing-list</a>
-            To consult current discussions and post a new thread, create a <a href="/account/register.php">user account</a> on Tuleap.</p>
+            <p>Latest tips and tricks and tutorial can be found on <a href="https://www.tuleap.org/get-help">tuleap.org</a> web site as well as the <a href="https://chat.tuleap.org">community chat room</a>.</p>
 
             <h2 class="tlp-pane-subtitle">Contact Us</h2>
             <p>For all other inquiries, <a href="/contact.php">get in touch</a> with us.</p>
