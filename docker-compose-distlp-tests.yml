@@ -20,6 +20,7 @@ services:
       - reverse-proxy
     networks:
       - tuleap
+      - external-connectivity
 
   reverse-proxy:
     container_name: ${BUILD_TAG}tuleap_runtests_reverse-proxy
@@ -99,19 +100,11 @@ services:
 
 volumes:
   tests-rabbitmq-data:
-    external:
-      name: ${BUILD_TAG}tuleap_runtests_rabbitmq-data
   tests-db-data:
-    external:
-      name: ${BUILD_TAG}tuleap_runtests_db-data
   tests-ldap-data:
-    external:
-      name: ${BUILD_TAG}tuleap_runtests_ldap-data
   tests-tuleap-data:
-    external:
-      name: ${BUILD_TAG}tuleap_runtests_tuleap-data
 
 networks:
   tuleap:
-    external:
-      name: ${BUILD_TAG}tuleap_runtests
+    internal: true
+  external-connectivity:
