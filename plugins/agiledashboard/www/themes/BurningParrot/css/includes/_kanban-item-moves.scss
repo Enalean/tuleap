@@ -1,0 +1,28 @@
+.kanban-item-content-moves {
+    display: flex;
+    position: absolute;
+    z-index: 1000;
+    right: -10px;
+    flex-direction: column;
+    align-self: center;
+    justify-content: space-between;
+    height: calc(100% + #{$tlp-spacing});
+    transition: opacity $transition-duration $transition-delay;
+    opacity: 0;
+}
+
+.kanban-item-content-move {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+.kanban-item:hover .kanban-item-content-moves {
+    opacity: 1;
+}
