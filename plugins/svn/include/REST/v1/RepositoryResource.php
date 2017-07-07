@@ -123,6 +123,8 @@ class RepositoryResource extends AuthenticatedResource
             $project_history_dao,
             new HookConfigChecker($this->repository_manager)
         );
+
+        $this->commit_rules_validator = new CommitRulesRepresentationValidator();
     }
 
     /**
@@ -225,6 +227,8 @@ class RepositoryResource extends AuthenticatedResource
     {
         $this->sendAllowHeaders();
         $this->checkAccess();
+
+        $this->validateSettings($settings);
 
         $user       = $this->user_manager->getCurrentUser();
         $repository = $this->getRepository($id);
@@ -409,6 +413,10 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(403, "User doesn't have permission to create a repository");
         }
 
+        if ($settings) {
+            $this->validateSettings($settings);
+        }
+
         $repository_to_create = new Repository("", $name, "", "", $project);
         try {
             $rule = new RuleName($project, new DAO());
@@ -448,5 +456,14 @@ class RepositoryResource extends AuthenticatedResource
     public function options()
     {
         Header::allowOptionsPost();
+    }
+
+    private function validateSettings(SettingsRepresentation $settings)
+    {
+        try {
+            $this->commit_rules_validator->validate($settings->commit_rules);
+        } catch (CommitRulesRepresentationMissingKeyException $exception) {
+            throw new RestException(400, "The commit rules are not well formed: " . $exception->getMessage());
+        }
     }
 }
