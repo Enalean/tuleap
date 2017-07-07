@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,15 +25,12 @@ use GitRepository;
 use GitRepositoryFactory;
 use Git_Command_Exception;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-use FileSystemIterator;
 use System_Command;
 
 class PullRequestMerger
 {
 
-    const MERGE_TEMPORARY_SUBFOLDER = '.tuleap-pr';
+    const MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
 
     /**
      * @var GitRepositoryFactory
@@ -50,7 +47,11 @@ class PullRequestMerger
 
     public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user)
     {
-        $temp_working_dir = $this->getUniqueRandomDirectory($repository_dest);
+        try {
+            $temp_working_dir = $this->getUniqueRandomDirectory();
+        } catch (\System_Command_CommandException $exception) {
+            throw new PullRequestCannotBeMerged('Temporary directory to merge the pull request can not be created');
+        }
         $executor         = new GitExec($temp_working_dir);
 
         try {
@@ -126,12 +127,19 @@ class PullRequestMerger
         return $merge_status;
     }
 
-    private function getUniqueRandomDirectory(GitRepository $repository)
+    /**
+     * @return string
+     * @throws \System_Command_CommandException
+     */
+    private function getUniqueRandomDirectory()
     {
-        $parent_tmp = $repository->getGitRootPath() . PullRequestMerger::MERGE_TEMPORARY_SUBFOLDER;
+        $parent_tmp = \ForgeConfig::get('tmp_dir') . DIRECTORY_SEPARATOR . PullRequestMerger::MERGE_TEMPORARY_SUBFOLDER;
 
-        is_dir($parent_tmp) || mkdir($parent_tmp, 0755, true);
-        return exec("mktemp -d -p $parent_tmp pr_XXXXXX");
+        is_dir($parent_tmp) || mkdir($parent_tmp, 0750, true);
+
+        $cmd = new System_Command();
+        $result_cmd = $cmd->exec('mktemp -d -p ' . escapeshellarg($parent_tmp) . ' pr_XXXXXX');
+        return $result_cmd[0];
     }
 
     private function cleanTemporaryRepository($temporary_name)
