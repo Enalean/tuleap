@@ -22,25 +22,13 @@ namespace Tuleap\Git\Repository\Settings;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use GitRepoNotFoundException;
 use GitRepository;
 use HTTPRequest;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
-use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 use Valid_HTTPURI;
 
-abstract class WebhookController
+abstract class WebhookController extends SettingsController
 {
-    /**
-     * @var RepositoryFromRequestRetriever
-     */
-    private $repository_retriever;
-
-    public function __construct(RepositoryFromRequestRetriever $repository_retriever)
-    {
-        $this->repository_retriever = $repository_retriever;
-    }
-
     protected function getURL(HTTPRequest $request, $redirect_url)
     {
         $valid_url = new Valid_HTTPURI('url');
@@ -64,28 +52,6 @@ abstract class WebhookController
                 'repo_id'  => $repository->getId(),
                 'pane'     => Pane\Hooks::ID
             ));
-    }
-
-    /**
-     * @return GitRepository
-     */
-    protected function getRepositoryUserCanAdministrate(HTTPRequest $request)
-    {
-        try {
-            return $this->repository_retriever->getRepositoryUserCanAdministrate($request);
-        } catch (GitRepoNotFoundException $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'actions_repo_not_found')
-            );
-            $GLOBALS['Response']->redirect('/plugins/git/?action=index&group_id=' . $request->getProject()->getId());
-        } catch (UserCannotAdministrateRepositoryException $exception) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_git', 'controller_access_denied')
-            );
-            $GLOBALS['Response']->redirect('/plugins/git/?group_id=' . $request->getProject()->getId());
-        }
     }
 
     protected function checkCSRF($redirect_url)

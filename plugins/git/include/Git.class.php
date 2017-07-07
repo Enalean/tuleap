@@ -615,7 +615,6 @@ class Git extends PluginController {
                 'update_mirroring',
                 'update_default_mirroring',
                 'restore',
-                'generate-ci-token',
             );
             if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
@@ -1128,14 +1127,6 @@ class Git extends PluginController {
             case 'restore':
                 $this->addAction('restoreRepository', array($repo_id, $this->groupId));
                 break;
-
-            case 'generate-ci-token':
-                $this->checkSynchronizerToken('plugins/git/?group_id='. $this->groupId .'&pane=citoken');
-                $this->ci_token_manager->generateNewTokenForRepository($repository);
-                $this->addAction('repoManagement', array($repository));
-                $this->addView('repoManagement');
-                break;
-
             case 'delete-permissions':
                 $url  = '?action=repo_management&pane=perms&group_id='.$this->groupId;
                 $csrf = new CSRFSynchronizerToken($url);

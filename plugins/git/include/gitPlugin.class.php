@@ -80,6 +80,8 @@ use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
+use Tuleap\Git\Repository\Settings\CITokenController;
+use Tuleap\Git\Repository\Settings\CITokenRouter;
 use Tuleap\Git\Repository\Settings\WebhookAddController;
 use Tuleap\Git\Repository\Settings\WebhookController;
 use Tuleap\Git\Repository\Settings\WebhookControllerCollaborator;
@@ -662,21 +664,30 @@ class GitPlugin extends Plugin {
 
     private function getChainOfRouters()
     {
-        $webhook_router = $this->getWebhookRouter();
+        $repository_retriever = new RepositoryFromRequestRetriever(
+            $this->getRepositoryFactory(),
+            $this->getGitPermissionsManager()
+        );
+
+        $webhook_router = $this->getWebhookRouter($repository_retriever);
         $final_link     = new GitGodObjectWrapper($this->getGitController());
 
         $webhook_router
+            ->chain($this->getCITokenRouter($repository_retriever))
             ->chain($final_link);
 
         return $webhook_router;
     }
 
-    private function getWebhookRouter()
+    private function getCITokenRouter($repository_retriever)
     {
-        $repository_retriever = new RepositoryFromRequestRetriever(
-            $this->getRepositoryFactory(),
-            $this->getGitPermissionsManager()
+        return new CITokenRouter(
+            new CITokenController($repository_retriever, new CITokenManager(new CITokenDao()))
         );
+    }
+
+    private function getWebhookRouter($repository_retriever)
+    {
         $dao = new WebhookDao();
 
         return new WebhookRouter(
