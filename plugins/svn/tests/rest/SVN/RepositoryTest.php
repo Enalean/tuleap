@@ -165,6 +165,25 @@ class RepositoryTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 401);
     }
 
+    public function tesPOSTRepositoryWithMissingKey()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_04",
+                "settings"   => array(
+                    "commit_rules" => array(
+                        "is_reference_mandatory" => true,
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     public function testPUTRepository()
     {
         $data = json_encode(
@@ -191,6 +210,23 @@ class RepositoryTest extends TestBase
                 "is_commit_message_change_allowed" => false
             )
         );
+    }
+
+    public function tesPUTTRepositoryWithMissingKey()
+    {
+        $params = json_encode(
+            array(
+                "settings"   => array(
+                    "commit_rules" => array(
+                        "is_reference_mandatory" => true,
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testOPTIONS()
