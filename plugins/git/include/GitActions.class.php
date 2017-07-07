@@ -33,8 +33,6 @@ use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Permissions\FineGrainedUpdater;
 use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
-use Tuleap\Git\CIToken\Manager as CITokenManager;
-use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\Permissions\PermissionChangesDetector;
@@ -76,11 +74,6 @@ class GitActions extends PluginActions
      * @var GitRepositoryMirrorUpdater
      */
     private $mirror_updater;
-
-    /**
-     * @var Git_Backend_Gitolite
-     */
-    private $backend_gitolite;
 
     /**
      * @var Logger
@@ -143,16 +136,6 @@ class GitActions extends PluginActions
     private $gerrit_can_migrate_checker;
 
     /**
-     * @var CITokenManager
-     */
-    private $ci_token_manager;
-
-    /**
-     * @var FineGrainedPermissionReplicator
-     */
-    private $fine_grained_replicator;
-
-    /**
      * @var RegexpFineGrainedEnabler
      */
     private $regexp_enabler;
@@ -199,7 +182,6 @@ class GitActions extends PluginActions
         GitPermissionsManager $git_permissions_manager,
         Git_GitRepositoryUrlManager $url_manager,
         Logger $logger,
-        Git_Backend_Gitolite $backend_gitolite,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         ProjectHistoryDao $history_dao,
         GitRepositoryMirrorUpdater $mirror_updater,
@@ -207,8 +189,6 @@ class GitActions extends PluginActions
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         FineGrainedUpdater $fine_grained_updater,
         FineGrainedPermissionSaver $fine_grained_permission_saver,
-        CITokenManager $ci_token_manager,
-        FineGrainedPermissionReplicator $fine_grained_replicator,
         FineGrainedRetriever $fine_grained_retriever,
         HistoryValueFormatter $history_value_formatter,
         PermissionChangesDetector $permission_changes_detector,
@@ -233,7 +213,6 @@ class GitActions extends PluginActions
         $this->git_permissions_manager       = $git_permissions_manager;
         $this->url_manager                   = $url_manager;
         $this->logger                        = $logger;
-        $this->backend_gitolite              = $backend_gitolite;
         $this->mirror_data_mapper            = $mirror_data_mapper;
         $this->history_dao                   = $history_dao;
         $this->mirror_updater                = $mirror_updater;
@@ -241,8 +220,6 @@ class GitActions extends PluginActions
         $this->gerrit_can_migrate_checker    = $gerrit_can_migrate_checker;
         $this->fine_grained_updater          = $fine_grained_updater;
         $this->fine_grained_permission_saver = $fine_grained_permission_saver;
-        $this->ci_token_manager              = $ci_token_manager;
-        $this->fine_grained_replicator       = $fine_grained_replicator;
         $this->fine_grained_retriever        = $fine_grained_retriever;
         $this->history_value_formatter       = $history_value_formatter;
         $this->permission_changes_detector   = $permission_changes_detector;
@@ -298,62 +275,6 @@ class GitActions extends PluginActions
             $repository->getName(),
             $repository->getProjectId()
         );
-    }
-
-    public function createReference($project_id, $repository_name) {
-        $controller = $this->getController();
-        $project_id = intval( $project_id );
-
-        try {
-            $creator = UserManager::instance()->getCurrentUser();
-            $project = ProjectManager::instance()->getProject($project_id);
-            $repository = $this->factory->buildRepository(
-                $project,
-                $repository_name,
-                $creator,
-                $this->backend_gitolite
-            );
-
-            $default_mirrors = $this->mirror_data_mapper->getDefaultMirrorIdsForProject($project);
-            if (! $default_mirrors) {
-                $default_mirrors = array();
-            }
-
-            $this->manager->create($repository, $this->backend_gitolite, $default_mirrors);
-
-            $this->backend_gitolite->savePermissions(
-                $repository,
-                $this->git_permissions_manager->getDefaultPermissions($project)
-            );
-
-            $this->fine_grained_replicator->replicateDefaultRegexpUsage($repository);
-            $this->fine_grained_replicator->replicateDefaultPermissions(
-                $repository
-            );
-
-            $this->history_dao->groupAddHistory(
-                "git_repo_create",
-                $repository_name,
-                $project_id
-            );
-
-            $this->history_dao->groupAddHistory(
-                'perm_granted_for_git_repository',
-                $this->history_value_formatter->formatValueForRepository($repository),
-                $project_id,
-                array($repository_name)
-            );
-
-            $this->ci_token_manager->generateNewTokenForRepository($repository);
-
-
-            $this->redirectToRepo($repository);
-        } catch (Exception $exception) {
-            $controller->addError($exception->getMessage());
-        }
-
-        $controller->redirect('/plugins/git/?action=index&group_id='.$project_id);
-        return;
     }
 
     /**
