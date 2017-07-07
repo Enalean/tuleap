@@ -69,7 +69,7 @@ class ArtifactTest extends RestBase {
 
         $this->getReleaseArtifactIds();
 
-        $this->project_id = $this->getProjectId(TrackerDataBuilder::XML_PROJECT_ID_SHORT_NAME);
+        $this->project_id = $this->getProjectId('rest-xml-api');
         $tracker          = $this->getTracker();
         $this->tracker_id = $tracker['id'];
 
@@ -194,7 +194,7 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
         $this->assertEquals((string) $artifact_xml->values->item[5]->label, 'Status');
         $this->assertEquals((string) $artifact_xml->values->item[5]->values->item->label, 'SM New');
-        $this->assertEquals((string) $artifact_xml->values->item[5]->bind_value_ids, '810');
+        $this->assertEquals((int) $artifact_xml->values->item[5]->bind_value_ids, $this->status_value_id);
     }
 
     /**
@@ -234,7 +234,7 @@ class ArtifactTest extends RestBase {
         $this->assertEquals((string) $artifact_xml->values->item[0]->value, 'slogan');
         $this->assertEquals((string) $artifact_xml->values->item[5]->label, 'Status');
         $this->assertEquals((string) $artifact_xml->values->item[5]->values->item->label, 'SM New');
-        $this->assertEquals((string) $artifact_xml->values->item[5]->bind_value_ids, '810');
+        $this->assertEquals((int) $artifact_xml->values->item[5]->bind_value_ids, $this->status_value_id);
 
         $this->assertEquals((string) $artifact_xml->values_by_field->slogan->value, 'slogan');
     }

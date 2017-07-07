@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project unix-name="rest-xml-api" full-name="RESTXMLAPI" description="RESTXMLAPI" access="public">
+  <long-description></long-description>
+  <services>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_members" description="">
+        <members>
+            <member format="username">rest_api_tester_1</member>
+        </members>
+    </ugroup>
+  </ugroups>
   <trackers>
     <tracker id="T6665" parent_id="0" instantiate_for_new_projects="1" log_priority_changes="1" stop_notification="1">
       <name><![CDATA[Epic]]></name>
