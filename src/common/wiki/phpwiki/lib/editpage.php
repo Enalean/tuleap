@@ -354,7 +354,6 @@ class PageEditor
      * DONE: 
      *   Always: More then 20 new external links
      *   ENABLE_SPAMASSASSIN:  content patterns by babycart (only php >= 4.3 for now)
-     *   ENABLE_SPAMBLOCKLIST: content domain blacklist
      */
     function isSpam () {
         $current = &$this->current;
@@ -390,26 +389,6 @@ class PageEditor
                              HTML::p(HTML::em(_("SpamAssassin reports: "), 
                                                 join("\n", $babycart))));
                 return true;
-            }
-        }
-        // 3. extract (new) links and check surbl for blocked domains
-        if (ENABLE_SPAMBLOCKLIST and $this->numLinks($newtext)) {
-            include_once("lib/SpamBlocklist.php");
-            include_once("lib/InlineParser.php");
-            $parsed = TransformLinks($newtext);
-            foreach ($parsed->_content as $link) {
-            	if (isa($link, 'Cached_ExternalLink')) {
-                  $uri = $link->_getURL($this->page->getName());
-                  if ($res = IsBlackListed($uri)) {
-                    // TODO: mail the admin
-                    $this->tokens['PAGE_LOCKED_MESSAGE'] = 
-                        HTML($this->getSpamMessage(),
-                             HTML::p(HTML::strong(_("External links contain blocked domains:")),
-                             HTML::ul(HTML::li(sprintf(_("%s is listed at %s"), 
-                                                       $res[2], $res[0])))));
-                    return true;
-                  }
-            	}
             }
         }
 
