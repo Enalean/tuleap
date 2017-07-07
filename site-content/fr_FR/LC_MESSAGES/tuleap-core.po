@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%d member"
@@ -337,6 +337,12 @@ msgstr "Impossible de trouver comment éditer le widget requis."
 
 msgid "We cannot find any widgets."
 msgstr "Impossible de trouver des widgets."
+
+msgid "Welcome aboard"
+msgstr "Bienvenue à bord"
+
+msgid "Welcome message and information for users"
+msgstr "Message de bienvenue et informations générales pour les utilisateurs"
 
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"

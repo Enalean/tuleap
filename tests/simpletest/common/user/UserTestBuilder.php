@@ -89,6 +89,11 @@ class UserTestBuilder {
         return $this;
     }
 
+    function withLang($lang) {
+        $this->params['language_id'] = $lang;
+        return $this;
+    }
+
     function build() {
         return new PFUser($this->params);
     }
