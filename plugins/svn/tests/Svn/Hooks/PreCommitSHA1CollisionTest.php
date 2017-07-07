@@ -38,7 +38,8 @@ class PreCommitSHA1CollisionTest extends TuleapTestCase
             mock('Tuleap\\Svn\\Admin\\ImmutableTagFactory'),
             $svnlook,
             $sha1_collision_detector,
-            mock('Logger')
+            mock('Logger'),
+            mock('Tuleap\Svn\Repository\HookConfigRetriever')
         );
 
         stub($svnlook)->getTransactionPath()->returns(array('D   trunk/f1', 'A   trunk/f2'));
@@ -61,7 +62,8 @@ class PreCommitSHA1CollisionTest extends TuleapTestCase
             mock('Tuleap\\Svn\\Admin\\ImmutableTagFactory'),
             $svnlook,
             $sha1_collision_detector,
-            mock('Logger')
+            mock('Logger'),
+            mock('Tuleap\Svn\Repository\HookConfigRetriever')
         );
 
         stub($svnlook)->getTransactionPath()->returns(array('A   trunk/f1'));

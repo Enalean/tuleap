@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,28 +24,44 @@
 
 namespace Tuleap\Svn\Commit;
 
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\HookConfig;
-use ReferenceManager;
-use ForgeConfig;
 use Exception;
+use ForgeConfig;
+use ReferenceManager;
+use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\Repository;
 
-class CommitMessageValidator {
-
+class CommitMessageValidator
+{
     /** @var Repository */
     private $repository;
 
     private $commit_message;
+    /**
+     * @var HookConfigRetriever
+     */
+    private $hook_config_retriever;
+    /**
+     * @var ReferenceManager
+     */
+    private $reference_manager;
 
-    public function __construct(Repository $repository, $commit_message) {
-        $this->repository = $repository;
-        $this->commit_message = $commit_message;
+    public function __construct(
+        Repository $repository,
+        $commit_message,
+        HookConfigRetriever $hook_config_retriever,
+        ReferenceManager $reference_manager
+    ) {
+        $this->repository            = $repository;
+        $this->commit_message        = $commit_message;
+        $this->hook_config_retriever = $hook_config_retriever;
+        $this->reference_manager     = $reference_manager;
     }
 
-    public function assertCommitMessageIsValid(RepositoryManager $repository_manager, ReferenceManager $reference_manager) {
+    public function assertCommitMessageIsValid()
+    {
         $this->assertCommitMessageIsNotEmpty();
-        $this->assertCommitMessageContainsArtifactReference($repository_manager, $reference_manager);
+        $this->assertCommitMessageContainsArtifactReference();
     }
 
     private function assertCommitMessageIsNotEmpty(){
@@ -57,19 +73,15 @@ class CommitMessageValidator {
         }
     }
 
-    private function assertCommitMessageContainsArtifactReference(
-        RepositoryManager $repository_manager,
-        ReferenceManager $reference_manager
-    ) {
-        $hookcfg = $repository_manager->getHookConfig($this->repository);
-
-        if(!$hookcfg->getHookConfig(HookConfig::MANDATORY_REFERENCE)) {
+    private function assertCommitMessageContainsArtifactReference()
+    {
+        $hook_config = $this->hook_config_retriever->getHookConfig($this->repository);
+        if (! $hook_config->getHookConfig(HookConfig::MANDATORY_REFERENCE)) {
             return;
         }
 
         $project = $this->repository->getProject();
-
-        if (! $reference_manager->stringContainsReferences($this->commit_message, $project)) {
+        if (! $this->reference_manager->stringContainsReferences($this->commit_message, $project)) {
             throw new Exception('Commit message must contains a reference');
         }
     }

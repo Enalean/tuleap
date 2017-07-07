@@ -25,18 +25,19 @@
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Admin\ImmutableTagDao;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Commit\Svnlook;
 use Tuleap\Svn\Dao;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\ImmutableTagDao;
-use Tuleap\Svn\Commit\CommitInfoEnhancer;
-use Tuleap\Svn\Commit\CommitInfo;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\SHA1CollisionDetector;
-use Tuleap\Svn\SvnLogger;
-use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Hooks\PreCommit;
+use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\SHA1CollisionDetector;
 use Tuleap\Svn\SvnAdmin;
+use Tuleap\Svn\SvnLogger;
 
 try {
     require_once 'pre.php';
@@ -70,10 +71,11 @@ try {
         $svnlook,
         new SHA1CollisionDetector(),
         new SvnLogger()
+        , new HookConfigRetriever(new HookDao())
     );
 
     $hook->assertCommitMessageIsValid(ReferenceManager::instance());
-    $hook->assertCommitToTagIsAllowed($repository_path, $transaction);
+    $hook->assertCommitToTagIsAllowed();
     $hook->assertCommitDoesNotContainSHA1Collision();
 
     exit(0);

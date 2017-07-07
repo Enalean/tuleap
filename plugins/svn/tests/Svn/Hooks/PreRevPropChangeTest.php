@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,26 +25,26 @@
 
 namespace Tuleap\Svn\Hooks;
 
-use TuleapTestCase;
-use Tuleap\Svn\Hooks\PreRevPropChange;
 use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
+use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
 class PreRevPropChangeTest extends TuleapTestCase {
+    /**
+     * @var HookConfigRetriever
+     */
+    private $hook_config_retriever;
 
     /** @var string repository path */
     private $repo_path;
 
-    /** @var Tuleap\Svn\Repository\Repository */
-    private $repo;
-
-    /** @var Tuleap\Svn\Repository\RepositoryManager */
+    /** @var RepositoryManager */
     private $repo_manager;
 
-    /** @var Tuleap\Svn\Repository\HookConfig */
+    /** @var HookConfig */
     private $hook_config;
 
     /** @var PreRevPropChange */
@@ -54,13 +54,14 @@ class PreRevPropChangeTest extends TuleapTestCase {
         global $Language;
         parent::setUp();
 
-        $this->repo         = safe_mock('Tuleap\Svn\Repository\Repository');
-        $this->repo_manager = safe_mock('Tuleap\Svn\Repository\RepositoryManager');
-        $this->hook_config  = safe_mock('Tuleap\Svn\Repository\HookConfig');
-        $this->repo_path    = "FOO";
+        $repo                        = safe_mock('Tuleap\Svn\Repository\Repository');
+        $this->repo_manager          = safe_mock('Tuleap\Svn\Repository\RepositoryManager');
+        $this->hook_config           = safe_mock('Tuleap\Svn\Repository\HookConfig');
+        $this->hook_config_retriever = mock('Tuleap\Svn\Repository\HookConfigRetriever');
+        $this->repo_path             = "FOO";
 
-        stub($this->repo_manager)->getRepositoryFromSystemPath()->returns($this->repo);
-        stub($this->repo_manager)->getHookConfig()->returns($this->hook_config);
+        stub($this->repo_manager)->getRepositoryFromSystemPath()->returns($repo);
+        stub($this->hook_config_retriever)->getHookConfig()->returns($this->hook_config);
 
         $Language = mock('BaseLanguage');
     }
@@ -71,13 +72,16 @@ class PreRevPropChangeTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    private function changeRevProp(){
+    private function changeRevProp()
+    {
         $this->hook = new PreRevPropChange(
             $this->repo_path,
             'M',
             'svn:log',
             'New Commit Message',
-            $this->repo_manager);
+            $this->repo_manager,
+            $this->hook_config_retriever
+        );
     }
 
     public function itRejectsPropChangeIfNotAllowed() {

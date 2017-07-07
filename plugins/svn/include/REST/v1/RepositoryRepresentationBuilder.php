@@ -21,8 +21,8 @@
 namespace Tuleap\REST\v1;
 
 use PFUser;
+use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\SVN\REST\v1\RepositoryRepresentation;
 use Tuleap\Svn\SvnPermissionManager;
 
@@ -34,21 +34,21 @@ class RepositoryRepresentationBuilder
     private $permission_manager;
 
     /**
-     * @var RepositoryManager
+     * @var HookConfigRetriever
      */
-    private $repository_manager;
+    private $hook_config_retriever;
 
-    public function __construct(SvnPermissionManager $permission_manager, RepositoryManager $repository_manager)
+    public function __construct(SvnPermissionManager $permission_manager, HookConfigRetriever $hook_config_retriever)
     {
-        $this->permission_manager = $permission_manager;
-        $this->repository_manager = $repository_manager;
+        $this->permission_manager    = $permission_manager;
+        $this->hook_config_retriever = $hook_config_retriever;
     }
 
     public function build(Repository $repository, PFUser $user)
     {
         if ($this->permission_manager->isAdmin($repository->getProject(), $user)) {
             $representation = new FullRepositoryRepresentation();
-            $representation->fullBuild($repository, $this->repository_manager->getHookConfig($repository));
+            $representation->fullBuild($repository, $this->hook_config_retriever->getHookConfig($repository));
 
             return $representation;
         }

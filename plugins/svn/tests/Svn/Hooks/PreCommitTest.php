@@ -31,13 +31,13 @@ use SVN_CommitToTagDeniedException;
 use Tuleap\Svn\Commit\CommitInfo;
 use Tuleap\Svn\Commit\CommitInfoEnhancer;
 use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\Svn\Repository\HookConfigRetriever;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
 class PreCommitBaseTest extends TuleapTestCase {
 
-    private $repo;
     private $commit_message;
     private $transaction;
     private $immutable_tag_factory;
@@ -94,7 +94,8 @@ class PreCommitBaseTest extends TuleapTestCase {
             $this->immutable_tag_factory,
             $svn_look,
             mock('Tuleap\\Svn\\SHA1CollisionDetector'),
-            mock('BackendLogger')
+            mock('BackendLogger'),
+            mock('Tuleap\Svn\Repository\HookConfigRetriever')
         );
         $pre_commit->assertCommitToTagIsAllowed();
     }
@@ -277,7 +278,16 @@ EOS;
     }
 }
 
-class PreCommitReferenceTest extends TuleapTestCase {
+class PreCommitReferenceTest extends TuleapTestCase
+{
+    /**
+     * @var \ReferenceManager
+     */
+    private $reference_manager;
+    /**
+     * @var HookConfigRetriever
+     */
+    private $hook_config_retriever;
 
     /** @var string repository path */
     private $repo_path;
@@ -300,7 +310,8 @@ class PreCommitReferenceTest extends TuleapTestCase {
     /** @var PreCommit */
     private $hook;
 
-    public function setUp() {
+    public function setUp()
+    {
         global $Language;
         parent::setUp();
 
@@ -314,8 +325,11 @@ class PreCommitReferenceTest extends TuleapTestCase {
         $this->repo_path    = "FOO";
         $this->transaction  = "BAR";
 
+        $this->hook_config_retriever = mock('Tuleap\Svn\Repository\HookConfigRetriever');
+        $this->reference_manager     = mock('ReferenceManager');
+
         stub($this->repo_manager)->getRepositoryFromSystemPath()->returns($this->repo);
-        stub($this->repo_manager)->getHookConfig()->returns($this->hook_config);
+        stub($this->hook_config_retriever)->getHookConfig()->returns($this->hook_config);
 
         $Language = mock('BaseLanguage');
     }
@@ -337,10 +351,13 @@ class PreCommitReferenceTest extends TuleapTestCase {
             safe_mock('Tuleap\Svn\Admin\ImmutableTagFactory'),
             $this->svnlook,
             mock('Tuleap\\Svn\\SHA1CollisionDetector'),
-            safe_mock('Logger'));
+            safe_mock('Logger'),
+            $this->hook_config_retriever
+        );
     }
 
-    public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage() {
+    public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage()
+    {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
         stub($this->svnlook)->getMessageFromTransaction()->atLeastOnce()->returns(array(""));
         stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->returns(false);
@@ -351,29 +368,30 @@ class PreCommitReferenceTest extends TuleapTestCase {
         $this->hook->assertCommitMessageIsValid(safe_mock('ReferenceManager'));
     }
 
-    public function itDoesNotRejectCommitIfCommitMessageIsEmptyAndForgeDoesNotRequireACommitMessage() {
+    public function itDoesNotRejectCommitIfCommitMessageIsEmptyAndForgeDoesNotRequireACommitMessage()
+    {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
         stub($this->svnlook)->getMessageFromTransaction()->returns(array(""));
         stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->returns(false);
 
         $this->preCommit();
 
-        $this->hook->assertCommitMessageIsValid(safe_mock('ReferenceManager'));
+        $this->hook->assertCommitMessageIsValid($this->reference_manager);
     }
 
-    public function itRejectsCommitMessagesWithoutArtifactReference(){
-        $refmgr = safe_mock('ReferenceManager');
+    public function itRejectsCommitMessagesWithoutArtifactReference()
+    {
         $project = safe_mock('Project');
 
         stub($this->svnlook)->getMessageFromTransaction()->atLeastOnce()->returns(array("Commit message witout reference"));
         stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->once()->returns(true);
         stub($this->repo)->getProject()->once()->returns($project);
         stub($project)->getId()->returns(123);
-        stub($refmgr)->stringContainsReferences("Commit message witout reference", '*')->once()->returns(false);
+        stub($this->reference_manager)->stringContainsReferences("Commit message witout reference", '*')->once( )->returns(false);
 
         $this->preCommit();
 
         $this->expectException('Exception');
-        $this->hook->assertCommitMessageIsValid($refmgr);
+        $this->hook->assertCommitMessageIsValid($this->reference_manager);
     }
 }

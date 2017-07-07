@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright (c) Enalean, 2016. All Rights Reserved.
+* Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -22,7 +22,6 @@ namespace Tuleap\Svn\Repository;
 
 use Backend;
 use EventManager;
-use ProjectManager;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
@@ -81,6 +80,8 @@ class RepositoryManagerTest extends TuleapTestCase
     {
         EventManager::clearInstance();
         Backend::clearInstances();
+
+        parent::tearDown();
     }
 
     public function itReturnsRepositoryFromAPublicPath(){
@@ -102,110 +103,5 @@ class RepositoryManagerTest extends TuleapTestCase
 
         $this->expectException('Tuleap\Svn\Repository\Exception\CannotFindRepositoryException');
         $this->manager->getRepositoryFromPublicPath($public_path);
-    }
-}
-
-class RepositoryManagerHookConfigTest extends TuleapTestCase
-{
-    /**
-     * @var HookConfigChecker
-     */
-    private $hook_config_checker;
-    /**
-     * @var HookDao
-     */
-    private $hook_dao;
-
-    /**
-     * @var HookConfigUpdator
-     */
-    private $hook_updater;
-
-    public function setUp()
-    {
-        $this->project_dao           = safe_mock('ProjectDao');
-        $this->dao                   = safe_mock('Tuleap\Svn\Dao');
-        $this->hook_dao              = mock('Tuleap\Svn\Repository\HookDao');
-        $svn_admin                   = mock('Tuleap\Svn\SvnAdmin');
-        $destructor                  = mock('Tuleap\Svn\Admin\Destructor');
-        $logger                      = mock('Logger');
-        $system_command              = mock('System_Command');
-        $backend                     = Backend::instance(Backend::SVN);
-        $access_file_history_factory = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
-
-        $this->project_manager = ProjectManager::testInstance($this->project_dao);
-        $event_manager         = EventManager::instance();
-        $system_event_manager  = mock('SystemEventManager');
-        $project_history_dao   = mock('ProjectHistoryDao');
-        $this->manager         = new RepositoryManager(
-            $this->dao,
-            $this->project_manager,
-            $svn_admin,
-            $logger,
-            $system_command,
-            $destructor,
-            $this->hook_dao,
-            $event_manager,
-            $backend,
-            $access_file_history_factory,
-            $system_event_manager,
-            $project_history_dao
-        );
-
-        $this->project = $this->project_manager->getProjectFromDbRow(array(
-            'group_id' => 123,
-            'unix_group_name' => 'test_project',
-            'access' => 'private',
-            'svn_tracker' => null,
-            'svn_can_change_log' => null));
-
-        $this->hook_config_checker = mock('Tuleap\Svn\Repository\HookConfigChecker');
-        $this->hook_updater        = new HookConfigUpdator(
-            $this->hook_dao, $project_history_dao, $this->hook_config_checker
-        );
-    }
-
-    public function tearDown(){
-        ProjectManager::clearInstance();
-        EventManager::clearInstance();
-    }
-
-    public function itReturnsARepositoryWithHookConfig() {
-        stub($this->hook_dao)->getHookConfig(33)->returns(array());
-
-        $repo = new Repository(33, 'reponame', '', '', $this->project);
-        $cfg = $this->manager->getHookConfig($repo);
-
-        $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
-        $this->assertEqual(false, $mandatory_ref);
-    }
-
-    public function itReturnsARepositoryWithDifferentHookConfig() {
-        stub($this->hook_dao)->getHookConfig(33)->returns(array(
-            HookConfig::MANDATORY_REFERENCE => true));
-
-        $repo = new Repository(33, 'reponame', '', '', $this->project);
-        $cfg = $this->manager->getHookConfig($repo);
-
-        $mandatory_ref = $cfg->getHookConfig(HookConfig::MANDATORY_REFERENCE);
-        $this->assertEqual(true, $mandatory_ref);
-    }
-
-    public function itCanChangeTheHookConfig()
-    {
-        $repository = new Repository(22, 'reponame', '', '', $this->project);
-        stub($this->hook_dao)->updateHookConfig(
-            22,
-            array(HookConfig::MANDATORY_REFERENCE => true)
-        )->once()->returns(true);
-        stub($this->hook_config_checker)->hasConfigurationChanged()->returns(true);
-
-        $this->hook_updater->updateHookConfig(
-            $repository,
-            array(
-                HookConfig::MANDATORY_REFERENCE => true,
-                'foo'                           => true
-            )
-        );
     }
 }
