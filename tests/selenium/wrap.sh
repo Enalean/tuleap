@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This is the central script to execute in order to execute "whole platform integration tests"
 # It is meant to be called without any arguments
@@ -17,9 +17,9 @@ clean_env() {
     docker volume rm ${BUILD_TAG}tuleap_runtests_tuleap-data || true
 }
 
-get_test_container_state() {
-    local test_container_id=$($DOCKERCOMPOSE ps -q test)
-    docker inspect -f '{{.State.Status}}' $test_container_id || true
+wait_until_tests_are_executed() {
+    local test_container_id="$($DOCKERCOMPOSE ps -q test)"
+    docker wait "$test_container_id"
 }
 
 mkdir -p test_results || true
@@ -33,15 +33,7 @@ docker volume create --name=${BUILD_TAG}tuleap_runtests_db-data
 docker volume create --name=${BUILD_TAG}tuleap_runtests_tuleap-data
 $DOCKERCOMPOSE up -d
 
-# The whole stack will take more than 15s to be up, no need to waste resources looking at it
-sleep 15;
-
-test_state=$(get_test_container_state)
-
-while [ "$test_state" = "running" ]; do
-    sleep 1
-    test_state=$(get_test_container_state)
-done
+wait_until_tests_are_executed
 
 $DOCKERCOMPOSE logs backend-web > test_results/backend-web.log
 $DOCKERCOMPOSE logs backend-svn > test_results/backend-svn.log
