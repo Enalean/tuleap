@@ -28,6 +28,10 @@ require_once __DIR__ . '/../../bootstrap.php';
 class RepositoryCreatorTest extends \TuleapTestCase
 {
     /**
+     * @var HookConfigUpdator
+     */
+    private $hook_config_updator;
+    /**
      * @var Dao
      */
     private $dao;
@@ -65,13 +69,15 @@ class RepositoryCreatorTest extends \TuleapTestCase
 
         $this->system_event_manager = mock('SystemEventManager');
         $history_dao                = mock('ProjectHistoryDao');
-        $this->dao                        = mock('Tuleap\Svn\Dao');
+        $this->dao                  = mock('Tuleap\Svn\Dao');
         $this->permissions_manager  = mock('Tuleap\Svn\SvnPermissionManager');
+        $this->hook_config_updator  = mock('Tuleap\Svn\Repository\HookConfigUpdator');
         $this->repository_creator   = new RepositoryCreator(
             $this->dao,
             $this->system_event_manager,
             $history_dao,
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->hook_config_updator
         );
 
         $this->project    = aMockProject()->withId(101)->build();
@@ -90,7 +96,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
     public function itCreatesTheRepository()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
-        stub($this->system_event_manager)->createEvent()->once();
+        expect($this->system_event_manager)->createEvent()->once();
 
         $this->repository_creator->create($this->repository, $this->user);
     }
@@ -98,7 +104,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
     public function itThrowsAnExceptionWhenUserIsNotASVNAdministrator()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(false);
-        stub($this->system_event_manager)->createEvent()->never();
+        expect($this->system_event_manager)->createEvent()->never();
         $this->expectException('Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException');
 
         $this->repository_creator->create($this->repository, $this->user);
@@ -107,10 +113,33 @@ class RepositoryCreatorTest extends \TuleapTestCase
     public function itThrowsAnExceptionWhenRepositoryNameIsAlreadyUsed()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
-        stub($this->system_event_manager)->createEvent()->never();
+        expect($this->system_event_manager)->createEvent()->never();
         stub($this->dao)->doesRepositoryAlreadyExist()->returns(true);
         $this->expectException('Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException');
 
         $this->repository_creator->create($this->repository, $this->user);
+    }
+
+    public function itCreatesRepositoryWithCustomSettings()
+    {
+        stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
+        expect($this->system_event_manager)->createEvent()->once();
+        $commit_rules = array(
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
+            HookConfig::MANDATORY_REFERENCE       => true
+        );
+        expect($this->hook_config_updator)->updateHookConfig()->once();
+
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
+    }
+
+    public function itCreatesRepositoryWithNoCustomSettings()
+    {
+        stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
+        expect($this->system_event_manager)->createEvent()->once();
+        $commit_rules = array();
+        expect($this->hook_config_updator)->updateHookConfig()->never();
+
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
     }
 }

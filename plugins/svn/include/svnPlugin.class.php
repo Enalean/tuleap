@@ -312,7 +312,7 @@ class SvnPlugin extends Plugin
                 new AccessFileHistoryFactory(new AccessFileHistoryDao()),
                 SystemEventManager::instance(),
                 new ProjectHistoryDao(),
-                new HookConfigSanitizer()
+                $this->getHookConfigSanitizer()
             );
         }
 
@@ -484,12 +484,7 @@ class SvnPlugin extends Plugin
 
         $svn = new XMLImporter(
             Backend::instance(), $xml, $extraction_path,
-            new RepositoryCreator(
-                new Dao(),
-                SystemEventManager::instance(),
-                new ProjectHistoryDao(),
-                $this->getPermissionsManager()
-            )
+            $this->getRepositoryCreator()
         );
         $svn->import(
             $params['configuration'],
@@ -507,10 +502,13 @@ class SvnPlugin extends Plugin
         $ugroup_manager      = $this->getUGroupManager();
         $permissions_manager = $this->getPermissionsManager();
 
-        $history_dao = new ProjectHistoryDao();
-        $hook_dao    = new HookDao();
-
-        $hook_config_retriever = new HookConfigRetriever($hook_dao, new HookConfigSanitizer());
+        $history_dao         = new ProjectHistoryDao();
+        $hook_config_updator = new HookConfigUpdator(
+            new HookDao(),
+            $history_dao,
+            new HookConfigChecker($this->getHookConfigRetriever()),
+            $this->getHookConfigSanitizer()
+        );
 
         return new SvnRouter(
             $repository_manager,
@@ -534,24 +532,14 @@ class SvnPlugin extends Plugin
                 new NotificationsEmailsBuilder(),
                 UserManager::instance(),
                 new UGroupManager(),
-                new HookConfigUpdator(
-                    $hook_dao,
-                    $history_dao,
-                    new HookConfigChecker($hook_config_retriever),
-                    new HookConfigSanitizer()
-                ),
-                $hook_config_retriever
+                $hook_config_updator,
+                $this->getHookConfigRetriever()
             ),
             new ExplorerController(
                 $repository_manager,
                 $permissions_manager,
                 new RepositoryBuilder(),
-                new RepositoryCreator(
-                    new Dao(),
-                    SystemEventManager::instance(),
-                    new ProjectHistoryDao(),
-                    $this->getPermissionsManager()
-                )
+                $this->getRepositoryCreator()
             ),
             new RepositoryDisplayController(
                 $repository_manager,
@@ -871,5 +859,42 @@ class SvnPlugin extends Plugin
     public function rest_project_options_svn(ProjectOptionsSvn $event)
     {
         $event->setPluginActivated();
+    }
+
+    /**
+     * @return RepositoryCreator
+     */
+    private function getRepositoryCreator()
+    {
+        return new RepositoryCreator(
+            new Dao(),
+            SystemEventManager::instance(),
+            new ProjectHistoryDao(),
+            $this->getPermissionsManager(),
+            new HookConfigUpdator(
+                new HookDao(),
+                new ProjectHistoryDao(),
+                new HookConfigChecker($this->getHookConfigRetriever()),
+                $this->getHookConfigSanitizer()
+            )
+        );
+    }
+
+    /**
+     * @return HookConfigSanitizer
+     */
+    private function getHookConfigSanitizer()
+    {
+        return new HookConfigSanitizer();
+    }
+
+    /**
+     * @param $hook_dao
+     *
+     * @return HookConfigRetriever
+     */
+    private function getHookConfigRetriever()
+    {
+        return new HookConfigRetriever(new HookDao(), $this->getHookConfigSanitizer());
     }
 }
