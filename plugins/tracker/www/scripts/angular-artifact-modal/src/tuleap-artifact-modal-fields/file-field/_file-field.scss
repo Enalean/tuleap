@@ -1,123 +1,98 @@
-> .file {
-    margin: 10px 0 15px 0;
+.tuleap-artifact-modal-field-file {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
 
-    > .preview {
-        height: 100px;
-        position: relative;
-
-        > .file-preview {
-            height: 100%;
-            width: 100%;
-            background: #FCFCFC no-repeat center center;
-            box-shadow: inset 0 1px 0 #E5E5E5, inset 1px 0 0 #E5E5E5, inset -1px 0 0 #E5E5E5, inset 0 -1px 0 #E5E5E5;
-
-            &:not(.image) {
-                background-image:url('artifact_attachment_default.png');
-            }
-
-            &.image {
-                background-image: none;
-                text-align: center;
-
-                > img {
-                    max-width: 100%;
-                    max-height: 100%;
-                }
-            }
-
-            > a {
-                display: block;
-                width: 100%;
-                height: 100%;
-                -moz-box-sizing: border-box;
-                box-sizing: border-box;
-                padding: 35px 0 0;
-                text-align: center;
-                font-size: 0;
-
-                &:hover {
-                    transition: all 0.1s linear;
-                    font-size: 2em;
-                    text-decoration: none;
-                    background-color: rgba(217, 237, 247, 0.9);
-                    box-shadow: inset 0 1px 0 #8FCEDB, inset 1px 0 0 #8FCEDB, inset -1px 0 0 #8FCEDB, inset 0 -1px 0 #8FCEDB;
-                }
-            }
-        }
-
-        > .toggle-marked-for-removal {
-            position: absolute;
-            top: -10px;
-            right: -9px;
-            background: #FFFFFF;
-            border-radius: 50%;
-            font-size: 22px;
-            cursor: pointer;
-
-            > .icon-remove-sign {
-                color: #777777;
-
-                &:hover {
-                    color: #999999;
-                }
-            }
-        }
-    }
-
-    > .details {
-        padding: 0 0 0 10px;
-
-        p {
-            word-wrap: break-word;
-            font-size: 0.9em;
-
-            &.description {
-                font-style: italic;
-            }
-
-            &.author, &.size {
-                margin: 0;
-                color: #999999;
-                font-size: 0.8em;
-            }
+    &:hover {
+        .tuleap-artifact-modal-field-file-preview-link,
+        .tuleap-artifact-modal-field-file-preview-toggle {
+            opacity: 1;
         }
     }
 
     &.marked-for-removal {
-        > .preview {
-            > .file-preview {
-                opacity: 0.3;
-            }
-
-            > .toggle-marked-for-removal > .icon-remove-sign {
-                color: #DA5353;
-
-                &:hover {
-                    color: lighten(#DA5353, 10%);
-                }
-            }
-        }
-
-        > .details {
+        > .tuleap-artifact-modal-field-file-details {
+            opacity: .5;
             text-decoration: line-through;
         }
     }
 }
 
-> .file-upload-input {
-    margin-top: 10px;
+.tuleap-artifact-modal-field-file-preview {
+    display: flex;
+    flex: 0 0 auto;
+    width: 90px;
+    height: 90px;
+    margin: 0 $tlp-spacing 0 0;
+    border-radius: 3px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
-    > input[type="file"] {
-        display: block;
-        margin: 0;
-        line-height: normal;
-    }
+.tuleap-artifact-modal-field-file-preview-link {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 100ms;
+    border: 1px solid $tlp-theme-color;
+    border-radius: 3px;
+    opacity: 0;
+    background: transparentize($tlp-theme-color, .8);
+    font-size: 30px;
+    text-decoration: none;
+    cursor: pointer;
+}
 
-    > .reset-upload-input {
-        margin-top: 3px;
+.tuleap-artifact-modal-field-file-details {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+
+    > a {
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
-> .add-upload-input {
-    margin-top: 10px;
+.tuleap-artifact-modal-field-file-details-info {
+    flex: 1 1 auto;
+    margin: 5px 0 0;
+
+    > .tlp-text,
+    > .tlp-text-muted {
+        margin: 0 0 5px;
+        font-size: 14px;
+    }
+}
+
+.tuleap-artifact-modal-field-file-preview-toggle {
+    flex: 0 0 auto;
+    transition: opacity 100ms;
+    opacity: 0;
+}
+
+.tuleap-artifact-modal-field-file-new-file {
+    margin: 0 0 $tlp-spacing;
+
+    > input[type="file"] {
+        display: block;
+        margin: 0 0 5px;
+    }
+}
+
+.tuleap-artifact-modal-field-file-new-file-description {
+    display: flex;
+
+    > .tlp-input {
+        flex: 1 1 auto;
+        margin: 0 5px 0 0;
+    }
+
+    > button {
+        flex: 0 0 auto;
+    }
 }

@@ -10,7 +10,7 @@ describe("TuleapArtifactModalController", function() {
         $controller,
         controller_params,
         ArtifactModalController,
-        $modalInstance,
+        tlp_modal,
         TuleapArtifactModalRestService,
         TuleapArtifactModalValidateService,
         TuleapArtifactModalParentService,
@@ -20,10 +20,11 @@ describe("TuleapArtifactModalController", function() {
         mockCallback;
     beforeEach(function() {
         angular.mock.module(artifact_modal_module, function($provide) {
-            $provide.decorator('TuleapArtifactModalRestService', function($delegate) {
+            $provide.decorator('TuleapArtifactModalRestService', function($delegate, $q) {
                 spyOn($delegate, "createArtifact");
                 spyOn($delegate, "editArtifact");
                 spyOn($delegate, "searchUsers");
+                spyOn($delegate, 'getFollowupsComments').and.returnValue($q.reject());
 
                 return $delegate;
             });
@@ -74,21 +75,21 @@ describe("TuleapArtifactModalController", function() {
             TuleapArtifactModalLoading                  = _TuleapArtifactModalLoading_;
             TuleapArtifactModalFileUploadService        = _TuleapArtifactModalFileUploadService_;
 
-            $modalInstance = jasmine.createSpyObj("$modalInstance", [
-                "close",
-                "dismiss"
+            tlp_modal = jasmine.createSpyObj('tlp_modal', [
+                'hide'
             ]);
+            var modal_instance = {
+                tlp_modal: tlp_modal
+            };
 
             mockCallback = jasmine.createSpy("displayItemCallback");
-            $modalInstance.opened = $q.defer().promise;
-            $modalInstance.result = $q.defer().promise;
             $scope = $rootScope.$new();
 
             $controller = _$controller_;
             controller_params = {
-                $scope: $scope,
-                $modalInstance: $modalInstance,
-                modal_model: {
+                $scope        : $scope,
+                modal_instance: modal_instance,
+                modal_model   : {
                     title: {
                         content: ""
                     }
@@ -196,7 +197,7 @@ describe("TuleapArtifactModalController", function() {
             expect(TuleapArtifactModalValidateService.validateArtifactFieldsValues).toHaveBeenCalledWith(values, true);
             expect(TuleapArtifactModalRestService.createArtifact).toHaveBeenCalledWith(39, values);
             expect(TuleapArtifactModalRestService.editArtifact).not.toHaveBeenCalled();
-            expect($modalInstance.close).toHaveBeenCalled();
+            expect(tlp_modal.hide).toHaveBeenCalled();
             expect(TuleapArtifactModalLoading.loading).toBeFalsy();
             expect(mockCallback).toHaveBeenCalled();
         });
@@ -227,7 +228,7 @@ describe("TuleapArtifactModalController", function() {
             expect(TuleapArtifactModalValidateService.validateArtifactFieldsValues).toHaveBeenCalledWith(values, false);
             expect(TuleapArtifactModalRestService.editArtifact).toHaveBeenCalledWith(8155, values, followup_comment);
             expect(TuleapArtifactModalRestService.createArtifact).not.toHaveBeenCalled();
-            expect($modalInstance.close).toHaveBeenCalled();
+            expect(tlp_modal.hide).toHaveBeenCalled();
             expect(TuleapArtifactModalLoading.loading).toBeFalsy();
             expect(mockCallback).toHaveBeenCalledWith(8155);
         });
@@ -284,7 +285,7 @@ describe("TuleapArtifactModalController", function() {
             edit_request.reject();
             $scope.$apply();
 
-            expect($modalInstance.close).not.toHaveBeenCalled();
+            expect(tlp_modal.hide).not.toHaveBeenCalled();
             expect(mockCallback).not.toHaveBeenCalled();
             expect(TuleapArtifactModalLoading.loading).toBeFalsy();
         });

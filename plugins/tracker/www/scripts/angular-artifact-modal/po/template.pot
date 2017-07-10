@@ -9,19 +9,11 @@ msgid "(auto-computed)"
 msgstr ""
 
 #: src/tuleap-artifact-modal.tpl.html
-msgid "-- Please choose"
-msgstr ""
-
-#: src/tuleap-artifact-modal.tpl.html
 msgid "Add a new comment"
 msgstr ""
 
 #: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Add another file"
-msgstr ""
-
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Artifact links"
 msgstr ""
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
@@ -40,20 +32,12 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
-msgid "Computed value: Empty"
-msgstr ""
-
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
-msgid "Computed value: {{ ::computed_field.field.value }}"
-msgstr ""
-
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Create a new {{ modal.title }}"
 msgstr ""
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
-msgid "Edit the field"
+msgid "Edit"
 msgstr ""
 
 #: src/tuleap-artifact-modal.tpl.html
@@ -79,15 +63,19 @@ msgid "File description"
 msgstr ""
 
 #: src/quota-display/quota-display.tpl.html
-msgid "File upload quota allowed:"
+msgid "File upload quota allowed"
 msgstr ""
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Follow-ups"
 msgstr ""
 
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Format:"
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
+msgid "Keep the file"
+msgstr ""
+
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
+msgid "Mark for removal"
 msgstr ""
 
 #: src/quota-display/quota-display.tpl.html
@@ -107,6 +95,10 @@ msgid "Only comments are displayed"
 msgstr ""
 
 #: src/tuleap-artifact-modal.tpl.html
+msgid "Please choose a parent…"
+msgstr ""
+
+#: src/tuleap-artifact-modal.tpl.html
 msgid "References list is empty."
 msgstr ""
 
@@ -123,7 +115,7 @@ msgid "Save changes"
 msgstr ""
 
 #: src/tuleap-artifact-modal.tpl.html
-msgid "Select parent:"
+msgid "Select parent"
 msgstr ""
 
 #: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html

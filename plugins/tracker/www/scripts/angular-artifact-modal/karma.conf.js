@@ -1,10 +1,12 @@
+/* eslint-disable */
 var webpack_config = require('./webpack.config.js');
 
 webpack_config.module.rules.push({
     test: /\.js$/,
     exclude: [
         /node_modules/,
-        /vendor/
+        /vendor/,
+        /\.spec\.js/,
     ],
     use: [
         {
@@ -29,6 +31,7 @@ module.exports = function(config) {
         // This is filled by gulp
         files: [
             'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
+            'src/tlp-mock.spec.js',
             'src/index.spec.js'
         ],
 

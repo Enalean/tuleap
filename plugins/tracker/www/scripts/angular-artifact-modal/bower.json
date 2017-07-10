@@ -4,9 +4,6 @@
   "license": "GPL-2.0",
   "private": true,
   "dependencies": {
-    "angular-bootstrap-datetimepicker": "~0.3.12",
-    "angular-ui-bootstrap-bower": "~0.8.0",
-    "angular-ui-select": "~0.12.1"
   },
   "devDependencies": {}
 }

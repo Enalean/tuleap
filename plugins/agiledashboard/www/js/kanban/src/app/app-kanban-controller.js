@@ -1,17 +1,14 @@
 import './edit-kanban/edit-kanban.tpl.html';
 import './error-modal/error.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
-import EditKanbanController   from './edit-kanban/edit-kanban-controller.js';
+import EditKanbanController from './edit-kanban/edit-kanban-controller.js';
 import ReportsModalController from './reports-modal/reports-modal-controller.js';
 import _ from 'lodash';
-import { element } from 'angular';
-import { dropdown } from 'tlp';
 
 export default KanbanCtrl;
 
 KanbanCtrl.$inject = [
     '$scope',
-    '$modal',
     '$sce',
     'gettextCatalog',
     'amCalendarFilter',
@@ -31,7 +28,6 @@ KanbanCtrl.$inject = [
 
 function KanbanCtrl(
     $scope,
-    $modal,
     $sce,
     gettextCatalog,
     amCalendarFilter,

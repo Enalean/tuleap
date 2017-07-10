@@ -5,11 +5,10 @@
   "homepage": "https://www.enalean.com",
   "license": "GPL-2.0",
   "private": true,
-  "main": "dist/tuleap-artifact-modal.js",
   "module": "index.js",
   "dependencies": {
     "angular": "^1.3.20",
-    "angular-base64-upload": "^0.1.22",
+    "angular-base64-upload": "0.1.21",
     "angular-filter": "^0.5.16",
     "angular-gettext": "^1.1.4",
     "angular-moment": "^0.8.3",
@@ -22,8 +21,6 @@
   "devDependencies": {
     "angular-gettext-loader": "^1.0.1",
     "angular-mocks": "^1.3.20",
-    "bower": "^1.8.0",
-    "concurrently": "^3.5.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-angular-gettext": "^2.2.0",
@@ -40,11 +37,11 @@
     "karma-webpack": "^2.0.3",
     "ng-cache-loader": "0.0.23",
     "phantomjs-prebuilt": "^2.1.14",
+    "run-sequence": "^2.0.0",
     "webpack": "^3.0.0"
   },
   "scripts": {
-    "bower": "bower",
-    "build": "gulp build",
+    "build": "true",
     "coverage": "gulp coverage && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "gulp test",
     "watch": "gulp watch"

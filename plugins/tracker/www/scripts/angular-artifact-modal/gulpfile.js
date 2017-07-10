@@ -3,6 +3,7 @@ var path        = require('path');
 var gulp        = require('gulp');
 var del         = require('del');
 var gettext     = require('gulp-angular-gettext');
+var runSequence = require('run-sequence').use(gulp);
 
 var templates_with_translated_strings_glob  = 'src/**/*.tpl.html';
 var javascript_with_translated_strings_glob = 'src/**/*.js';
@@ -13,15 +14,13 @@ gulp.task('clean-coverage', function() {
     return del(old_coverage_glob);
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function(callback) {
     gulp.watch([
         templates_with_translated_strings_glob,
         javascript_with_translated_strings_glob
     ], ['gettext-extract']);
-    return gulp.start('test-continuous');
+    return runSequence('test-continuous', callback);
 });
-
-gulp.task('build', ['gettext-extract']);
 
 gulp.task('gettext-extract', function() {
     return gulp.src([

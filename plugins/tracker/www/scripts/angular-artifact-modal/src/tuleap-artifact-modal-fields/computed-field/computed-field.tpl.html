@@ -1,78 +1,66 @@
-<button
-    ng-show="! computed_field.isDisabled() && computed_field.value_model.is_autocomputed"
-    type="button"
-    ng-attr-title="{{ 'Edit the field' | translate }} {{ computed_field.field.label }}"
-    class="switch-manual"
-    ng-click="computed_field.switchToManual()"
-    tuleap-focus-on-click="{{ ::('tracker_field_' + computed_field.field.field_id) }}"
->
-    <span
-        ng-class="::{ required: computed_field.field.required }"
-    >{{ ::computed_field.field.label }}</span>
-</button>
-<label
-    ng-show="::computed_field.isDisabled()"
-    class="tracker_formelement_label"
->{{ ::computed_field.field.label }}</label>
-<label
-    ng-show="! computed_field.isDisabled() && ! computed_field.value_model.is_autocomputed"
-    for="{{ ::('tracker_field_' + computed_field.field.field_id) }}"
-    class="tracker_formelement_label computed-field-manual-label"
-    ng-class="::{ required: computed_field.field.required }"
->{{ ::computed_field.field.label }}</label>
-<div
-    ng-show="computed_field.isDisabled() || computed_field.value_model.is_autocomputed"
+<label class="tlp-label">
+    {{ ::computed_field.field.label }}
+    <i ng-if="::(computed_field.field.required)" class="fa fa-asterisk"></i>
+</label>
+
+<div ng-if="computed_field.isDisabled() || computed_field.value_model.is_autocomputed"
     class="computed-field-autocomputed"
     ng-class="::{ readonly: computed_field.isDisabled() }"
 >
-    <span
-        class="autocomputed-value"
-        ng-hide="::computed_field.field.value === null"
+    <span class="tlp-text"
+        ng-if="::computed_field.field.value !== null"
         ng-bind="::computed_field.field.value"
     ></span>
-    <span
-        class="manual-value"
-        ng-show="computed_field.field.value === null && computed_field.value_model.manual_value !== null"
+    <span class="tlp-text"
+        ng-if="computed_field.field.value === null && computed_field.value_model.manual_value !== null"
         ng-bind="::computed_field.value_model.manual_value"
     ></span>
-    <span
-        class="autocomputed-value"
-        ng-show="computed_field.field.value === null && computed_field.value_model.manual_value === null"
+    <span class="tlp-text"
+        ng-if="computed_field.field.value === null && computed_field.value_model.manual_value === null"
         translate
-    >Empty</span>
-    <span
-        class="autocomputed-label"
-        ng-show="computed_field.value_model.is_autocomputed"
+    >
+        Empty
+    </span>
+    <span class="tlp-text-muted"
+        ng-if="computed_field.value_model.is_autocomputed"
         translate
-    >(auto-computed)</span>
+    >
+        (auto-computed)
+    </span>
+
+    <button type="button"
+        class="tuleap-artifact-modal-field-computed-edit-button tlp-button-primary tlp-button-outline tlp-button-small"
+        ng-if="! computed_field.isDisabled() && computed_field.value_model.is_autocomputed"
+        ng-click="computed_field.switchToManual()"
+        tuleap-focus-on-click="{{ ::('tracker_field_' + computed_field.field.field_id) }}"
+    >
+        <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
+    </button>
 </div>
-<div
-    ng-hide="computed_field.isDisabled() || computed_field.value_model.is_autocomputed"
-    class="input-append computed-field-manual"
+
+<div ng-if="! computed_field.isDisabled() && ! computed_field.value_model.is_autocomputed"
+    class="tlp-form-element tlp-form-element-append"
 >
-    <input
+    <input class="tlp-input"
         type="number"
+        size="5"
         step="any"
         ng-model="computed_field.value_model.manual_value"
         ng-required="! computed_field.value_model.is_autocomputed"
         id="{{ ::('tracker_field_' + computed_field.field.field_id) }}"
     >
-    <button
-        type="button"
-        class="btn switch-autocomputed"
+    <button type="button"
+        class="tlp-append tlp-button-primary tlp-button-outline"
         ng-click="computed_field.switchToAutocomputed()"
     >
-        <i class="icon-repeat icon-flip-horizontal"></i>
-        {{ 'Auto-compute' | translate }}
+        <i class="fa fa-rotate-left tlp-button-icon"></i> {{ 'Auto-compute' | translate }}
     </button>
-    <span
-        class="autocomputed-value"
-        ng-hide="::computed_field.field.value === null"
-        translate
-    >Computed value: {{ ::computed_field.field.value }}</span>
-    <span
-        class="autocomputed-value"
-        ng-show="::computed_field.field.value === null"
-        translate
-    >Computed value: Empty</span>
 </div>
+
+<p class="tlp-text-info"
+    ng-hide="(computed_field.isDisabled() || computed_field.value_model.is_autocomputed)"
+>
+    {{ 'Computed value:' || translate }}
+    <span ng-if="::computed_field.field.value !== null">{{ ::computed_field.field.value }}</span>
+    <span ng-if="::computed_field.field.value === null" translate>Empty</span>
+</p>

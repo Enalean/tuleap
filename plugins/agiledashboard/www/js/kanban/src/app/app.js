@@ -11,7 +11,6 @@ import 'angular-moment';
 import 'angular-gettext';
 import 'ng-scrollbar';
 import 'restangular';
-import 'angular-ui-bootstrap-templates';
 import '../../po/fr.po';
 
 import jwt               from './jwt/jwt.js';
@@ -52,7 +51,6 @@ angular.module('kanban', [
     'gettext',
     'ngScrollbar',
     'restangular',
-    'ui.bootstrap',
     angular_artifact_modal,
     angular_tlp,
     dragular,

@@ -280,7 +280,7 @@ $tlp-form-element-select-small-background-size: 6px;
     &[multiple] {
         height: auto;
         padding: 8px $tlp-form-element-padding-horizontal;
-        background: none;
+        background: $tlp-form-element-background;
 
         &.tlp-select-small {
             padding: 6px $tlp-form-element-small-padding-horizontal;

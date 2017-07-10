@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-05 15:07+0200\n"
+"PO-Revision-Date: 2017-07-17 17:13+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,15 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0.2\n"
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "(auto-computed)"
 msgstr "(calculé automatiquement)"
-
-#: src/tuleap-artifact-modal.tpl.html
-msgid "-- Please choose"
-msgstr "-- Sélectionner"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Add a new comment"
@@ -31,10 +27,6 @@ msgstr "Ajouter un nouveau commentaire"
 #: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
-
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Artifact links"
-msgstr "Artefacts référencés par cet artefact"
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Auto-compute"
@@ -52,21 +44,13 @@ msgstr "Annuler"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
-msgid "Computed value: Empty"
-msgstr "Valeur calculée : Aucune"
-
-#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
-msgid "Computed value: {{ ::computed_field.field.value }}"
-msgstr "Valeur calculée : {{ ::computed_field.field.value }}"
-
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Create a new {{ modal.title }}"
 msgstr "Créer un nouveau {{ modal.title }}"
 
 #: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
-msgid "Edit the field"
-msgstr "Éditer le champ"
+msgid "Edit"
+msgstr "Editer"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Edited by"
@@ -91,16 +75,20 @@ msgid "File description"
 msgstr "Description du fichier"
 
 #: src/quota-display/quota-display.tpl.html
-msgid "File upload quota allowed:"
-msgstr "Quota d'envoi de fichiers autorisé :"
+msgid "File upload quota allowed"
+msgstr "Quota d'envoi de fichiers autorisé"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Follow-ups"
 msgstr "Commentaires"
 
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Format:"
-msgstr "Format :"
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
+msgid "Keep the file"
+msgstr "Garder le fichier"
+
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
+msgid "Mark for removal"
+msgstr "Marquer pour suppression"
 
 #: src/quota-display/quota-display.tpl.html
 msgid ""
@@ -123,6 +111,10 @@ msgid "Only comments are displayed"
 msgstr "Seuls les commentaires sont affichés"
 
 #: src/tuleap-artifact-modal.tpl.html
+msgid "Please choose a parent…"
+msgstr "Veuillez choisir un parent…"
+
+#: src/tuleap-artifact-modal.tpl.html
 msgid "References list is empty."
 msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
 
@@ -140,8 +132,8 @@ msgid "Save changes"
 msgstr "Enregistrer les changements"
 
 #: src/tuleap-artifact-modal.tpl.html
-msgid "Select parent:"
-msgstr "Sélectionner un parent :"
+msgid "Select parent"
+msgstr "Sélectionner un parent"
 
 #: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Size: {{ file.size | byteFmt: 2 }}"

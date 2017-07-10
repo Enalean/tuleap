@@ -7,7 +7,7 @@ ArtifactModalController.$inject = [
     '$scope',
     '$timeout',
     '$window',
-    '$modalInstance',
+    'modal_instance',
     'modal_model',
     'displayItemCallback',
     'TuleapArtifactModalRestService',
@@ -23,7 +23,7 @@ function ArtifactModalController(
     $scope,
     $timeout,
     $window,
-    $modalInstance,
+    modal_instance,
     modal_model,
     displayItemCallback,
     TuleapArtifactModalRestService,
@@ -52,7 +52,6 @@ function ArtifactModalController(
             loading_comments: true,
             invert_order    : (modal_model.invert_followups_comments_order) ? 'asc' : 'desc'
         },
-        cancel                        : $modalInstance.dismiss,
         formatParentArtifactTitle     : formatParentArtifactTitle,
         getDropdownAttribute          : getDropdownAttribute,
         getError                      : function() { return TuleapArtifactModalRestService.error; },
@@ -93,19 +92,17 @@ function ArtifactModalController(
     function init() {
         setFieldDependenciesWatchers();
 
-        $modalInstance.opened.then(function() {
-            TuleapArtifactModalLoading.loading = false;
-            self.setupTooltips();
+        TuleapArtifactModalLoading.loading = false;
+        self.setupTooltips();
 
-            if (! self.creation_mode) {
-                fetchFollowupsComments(
-                    self.artifact_id,
-                    50,
-                    0,
-                    self.followups_comments.invert_order
-                );
-            }
-        });
+        if (! self.creation_mode) {
+            fetchFollowupsComments(
+                self.artifact_id,
+                50,
+                0,
+                self.followups_comments.invert_order
+            );
+        }
     }
 
     function setupTooltips() {
@@ -146,7 +143,7 @@ function ArtifactModalController(
 
             return promise;
         }).then(function(new_artifact) {
-            $modalInstance.close();
+            modal_instance.tlp_modal.hide();
 
             return displayItemCallback(new_artifact.id);
         }).finally(function() {

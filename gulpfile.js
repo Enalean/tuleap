@@ -178,18 +178,17 @@ var fat_combined_files = [
         'src/www/themes/common/tlp/',
         'src/www/scripts/',
     ],
-    bower_app_paths = [
-        'plugins/tracker/www/scripts/angular-artifact-modal/',
-    ],
+    bower_app_paths = [],
     angular_app_paths = [
-        'plugins/agiledashboard/www/js/kanban/',
+        'plugins/tracker/www/scripts/angular-artifact-modal/',
+        // install angular-artifact-modal must come before kanban
+        'plugins/agiledashboard/www/js/kanban/'
     ],
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
 component_builder.installAndBuildNpmComponents(components_paths, 'components', ['clean-js-core']);
-component_builder.installAndBuildBowerComponents(bower_app_paths, 'angular-artifact-modal', []);
-component_builder.installAndBuildNpmComponents(angular_app_paths, 'angular-apps', ['angular-artifact-modal']);
+component_builder.installAndBuildNpmComponents(angular_app_paths, 'angular-apps');
 
 /**
  * Javascript

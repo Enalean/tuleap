@@ -6,15 +6,12 @@ import 'angular-moment';
 import 'angular-gettext';
 import '../po/fr.po';
 
-import 'angular-ui-bootstrap-templates';
-import 'angular-bootstrap-datetimepicker';
-import 'angular-ui-select';
-
 import fields from './tuleap-artifact-modal-fields/fields.js';
 import model from './model/model.js';
 import quota_display from './quota-display/quota-display.js';
 import rest from './rest/rest.js';
 import tuleap_highlight from './tuleap-highlight/highlight.js';
+import angular_tlp from 'angular-tlp';
 
 import FieldDependenciesService from './field-dependencies-service.js';
 import FormatDateDirective from './format-date-directive.js';
@@ -28,15 +25,13 @@ angular.module('tuleap.artifact-modal', [
     'angularMoment',
     'ng.ckeditor',
     'gettext',
-    ngSanitize,
-    'ui.bootstrap',
-    'ui.bootstrap.datetimepicker',
-    'ui.select',
+    angular_tlp,
     fields,
     model,
+    ngSanitize,
     quota_display,
     rest,
-    tuleap_highlight,
+    tuleap_highlight
 ])
 .controller('TuleapArtifactModalController', ArtifactModalController)
 .directive('tuleapArtifactModalFormatDate', FormatDateDirective)

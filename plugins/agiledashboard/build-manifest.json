@@ -38,7 +38,8 @@
                 "www/js/kanban/node_modules"
             ],
             "watched_includes": [
-                "www/themes/BurningParrot/css/**/_*.scss"
+                "www/themes/BurningParrot/css/**/_*.scss",
+                "../tracker/www/scripts/angular-artifact-modal/src/**/*.scss"
             ],
             "target_dir": "www/themes/BurningParrot/css"
         }

@@ -16,19 +16,13 @@ module.exports = {
         modules: [
             // This ensures that dependencies resolve their imported modules in kanban's node_modules
             path.resolve(__dirname, 'node_modules'),
-            'node_modules',
-            'vendor',
+            'node_modules'
         ],
         alias: {
-            // We should probably package angular-ui-bootstrap-templates for npm ourselves
-            'angular-ui-bootstrap-templates': 'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
             // Our own components and their dependencies
-            'angular-artifact-modal'  : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
+            'angular-artifact-modal'  : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal'),
             'cumulative-flow-diagram' : path.resolve(__dirname, '../cumulative-flow-diagram/index.js'),
             'angular-tlp'             : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
-            // Angular artifact modal fixes
-            'angular-bootstrap-datetimepicker': 'angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
-            'angular-ui-select'               : 'angular-ui-select/dist/select.js',
         }
     },
     externals: {
@@ -40,7 +34,10 @@ module.exports = {
                 test: /\.html$/,
                 exclude: /node_modules/,
                 use: [
-                    { loader: 'ng-cache-loader' }
+                    {
+                        loader: 'ng-cache-loader',
+                        query: '-url'
+                    }
                 ]
             }, {
                 test: /\.po$/,

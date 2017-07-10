@@ -9,7 +9,7 @@ describe("TuleapArtifactFieldValuesService", function() {
         angular.mock.module(model_module);
 
         angular.mock.inject(function(
-            _TuleapArtifactFieldValuesService_,
+            _TuleapArtifactFieldValuesService_
         ) {
             FieldValuesService = _TuleapArtifactFieldValuesService_;
 
