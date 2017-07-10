@@ -64,24 +64,30 @@ class GitLog {
      */
     private function getGitReadLogFilter($group_id, $who, $span)
     {
-        return $this->getWhoFilter($group_id, $who).
-            $this->getDateFilter($span);
+        $filters = array($this->getWhoFilter($group_id, $who), $this->getDateFilter($span));
+        return implode(' AND ', array_filter($filters));
     }
 
+    /**
+     * @return string
+     */
     private function getWhoFilter($group_id, $who)
     {
-        $project = ProjectManager::instance()->getProject($group_id);
-        if ($who == "allusers") {
-            return "";
-        } else {
-            $users = $this->_dao->da->escapeIntImplode($project->getMembersId());
-            if ($who == "members") {
-                return " AND user.user_id IN ($users) ";
-            }
-            return " AND user.user_id NOT IN ($users) ";
+        if ($who === 'allusers') {
+            return '';
         }
+
+        $project = ProjectManager::instance()->getProject($group_id);
+        $users   = $this->_dao->da->escapeIntImplode($project->getMembersId());
+        if ($who === 'members') {
+            return "user.user_id IN ($users)";
+        }
+        return "user.user_id NOT IN ($users)";
     }
 
+    /**
+     * @return string
+     */
     private function getDateFilter($span)
     {
         $start_date = new DateTime();
