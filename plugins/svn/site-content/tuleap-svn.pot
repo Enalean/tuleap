@@ -56,6 +56,9 @@ msgid_plural "Users '%s' couldn't be added."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "User doesn't have permission to create a repository"
+msgstr ""
+
 msgid "User, group, email"
 msgstr ""
 
