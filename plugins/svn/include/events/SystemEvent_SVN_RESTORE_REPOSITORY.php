@@ -27,6 +27,7 @@ use SystemEventManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\ApacheConfGenerator;
@@ -115,7 +116,8 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent
             Backend::instance(Backend::SVN),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
             SystemEventManager::instance(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new HookConfigSanitizer()
         );
     }
 }

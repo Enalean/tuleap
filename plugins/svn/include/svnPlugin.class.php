@@ -67,6 +67,7 @@ use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Reference\Extractor;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
+use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryCreator;
@@ -310,7 +311,8 @@ class SvnPlugin extends Plugin
                 Backend::instance(Backend::SVN),
                 new AccessFileHistoryFactory(new AccessFileHistoryDao()),
                 SystemEventManager::instance(),
-                new ProjectHistoryDao()
+                new ProjectHistoryDao(),
+                new HookConfigSanitizer()
             );
         }
 
@@ -508,6 +510,8 @@ class SvnPlugin extends Plugin
         $history_dao = new ProjectHistoryDao();
         $hook_dao    = new HookDao();
 
+        $hook_config_retriever = new HookConfigRetriever($hook_dao, new HookConfigSanitizer());
+
         return new SvnRouter(
             $repository_manager,
             $ugroup_manager,
@@ -530,8 +534,13 @@ class SvnPlugin extends Plugin
                 new NotificationsEmailsBuilder(),
                 UserManager::instance(),
                 new UGroupManager(),
-                new HookConfigUpdator($hook_dao, $history_dao, new HookConfigChecker($repository_manager)),
-                new HookConfigRetriever($hook_dao)
+                new HookConfigUpdator(
+                    $hook_dao,
+                    $history_dao,
+                    new HookConfigChecker($hook_config_retriever),
+                    new HookConfigSanitizer()
+                ),
+                $hook_config_retriever
             ),
             new ExplorerController(
                 $repository_manager,

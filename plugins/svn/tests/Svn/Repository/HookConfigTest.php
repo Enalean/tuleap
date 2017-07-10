@@ -64,9 +64,14 @@ class HookConfigTest extends \TuleapTestCase
             )
         );
 
-        $this->hook_retriever = new HookConfigRetriever($this->hook_dao);
+        $this->hook_retriever = new HookConfigRetriever($this->hook_dao, new HookConfigSanitizer());
         $hook_checker         = mock('Tuleap\Svn\Repository\HookConfigChecker');
-        $this->hook_updater   = new HookConfigUpdator($this->hook_dao, $project_history_dao, $hook_checker);
+        $this->hook_updater   = new HookConfigUpdator(
+            $this->hook_dao,
+            $project_history_dao,
+            $hook_checker,
+            new HookConfigSanitizer()
+        );
         stub($hook_checker)->hasConfigurationChanged()->returns(true);
     }
 

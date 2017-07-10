@@ -34,6 +34,7 @@ use Tuleap\Svn\Logs\LastAccessUpdater;
 use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
+use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
@@ -71,7 +72,8 @@ try {
             Backend::instance(Backend::SVN),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
             SystemEventManager::instance(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new HookConfigSanitizer()
         ),
         new MailHeaderManager(new MailHeaderDao()),
         new EmailsToBeNotifiedRetriever(

@@ -70,6 +70,10 @@ class RepositoryManager
      * @var \ProjectHistoryDao
      */
     private $history_dao;
+    /**
+     * @var HookConfigSanitizer
+     */
+    private $hook_config_sanitizer;
 
     public function __construct(
         Dao $dao,
@@ -83,7 +87,8 @@ class RepositoryManager
         Backend $backend,
         AccessFileHistoryFactory $access_file_history_factory,
         SystemEventManager $system_event_manager,
-        \ProjectHistoryDao $history_dao
+        \ProjectHistoryDao $history_dao,
+        HookConfigSanitizer $hook_config_sanitizer
     ) {
         $this->dao                         = $dao;
         $this->project_manager             = $project_manager;
@@ -97,6 +102,7 @@ class RepositoryManager
         $this->access_file_history_factory = $access_file_history_factory;
         $this->system_event_manager        = $system_event_manager;
         $this->history_dao                 = $history_dao;
+        $this->hook_config_sanitizer       = $hook_config_sanitizer;
     }
 
     /**
@@ -310,14 +316,6 @@ class RepositoryManager
         $project = $this->project_manager->getProject($row['project_id']);
 
         return $this->instantiateFromRow($row, $project);
-    }
-
-    public function getHookConfig(Repository $repository) {
-        $row = $this->hook_dao->getHookConfig($repository->getId());
-        if(!$row) {
-            $row = array();
-        }
-        return new HookConfig($repository, $row);
     }
 
     public function markAsDeleted(Repository $repository)

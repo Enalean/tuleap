@@ -25,9 +25,19 @@ require_once __DIR__ . '/../../bootstrap.php';
 class HookConfigCheckerTest extends \TuleapTestCase
 {
     /**
+     * @var HookConfigRetriever
+     */
+    private $config_hook_retriever;
+
+    /**
      * @var Repository
      */
-    public $repository;
+    private $repository;
+
+    /**
+     * @var HookConfigSanitizer
+     */
+    private $hook_config_sanitizer;
 
     /**
      * @var RepositoryManager
@@ -43,16 +53,18 @@ class HookConfigCheckerTest extends \TuleapTestCase
     {
         parent::setUp();
 
-        $this->repository_manager  = mock('Tuleap\Svn\Repository\RepositoryManager');
-        $this->config_hook_checker = new HookConfigChecker($this->repository_manager);
+        $this->repository_manager    = mock('Tuleap\Svn\Repository\RepositoryManager');
+        $this->config_hook_retriever = mock('Tuleap\Svn\Repository\HookConfigRetriever');
+        $this->config_hook_checker   = new HookConfigChecker($this->config_hook_retriever);
 
-        $project          = aMockProject()->build();
-        $this->repository = new Repository(12, 'repo01', '', '', $project);
+        $project                     = aMockProject()->build();
+        $this->repository            = new Repository(12, 'repo01', '', '', $project);
+        $this->hook_config_sanitizer = new HookConfigSanitizer();
     }
 
     public function itReturnsTrueWhenCommitMessageParameterHaveChanged()
     {
-        stub($this->repository_manager)->getHookConfig($this->repository)->returns(
+        stub($this->config_hook_retriever)->getHookConfig($this->repository)->returns(
             new HookConfig(
                 $this->repository,
                 array(
@@ -72,7 +84,7 @@ class HookConfigCheckerTest extends \TuleapTestCase
 
     public function itReturnsTrueWhenMandatoryReferenceParameterHaveChanged()
     {
-        stub($this->repository_manager)->getHookConfig($this->repository)->returns(
+        stub($this->config_hook_retriever)->getHookConfig($this->repository)->returns(
             new HookConfig(
                 $this->repository,
                 array(
@@ -92,7 +104,7 @@ class HookConfigCheckerTest extends \TuleapTestCase
 
     public function itReturnsFalseWhenNoChangeAreMade()
     {
-        stub($this->repository_manager)->getHookConfig($this->repository)->returns(
+        stub($this->config_hook_retriever)->getHookConfig($this->repository)->returns(
             new HookConfig(
                 $this->repository,
                 array(

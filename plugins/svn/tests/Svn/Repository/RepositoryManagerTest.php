@@ -61,7 +61,8 @@ class RepositoryManagerTest extends TuleapTestCase
             $backend,
             $access_file_history_factory,
             $system_event_manager,
-            mock('ProjectHistoryDao')
+            mock('ProjectHistoryDao'),
+            mock('Tuleap\Svn\Repository\HookConfigSanitizer')
         );
         $project               = stub("Project")->getId()->returns(101);
 

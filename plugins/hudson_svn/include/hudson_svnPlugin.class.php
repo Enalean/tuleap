@@ -32,6 +32,7 @@ use Tuleap\HudsonSvn\Job\Launcher;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Hooks\PostCommit;
@@ -131,7 +132,8 @@ class hudson_svnPlugin extends Plugin {
             Backend::instance(Backend::SVN),
             $this->getAccessFileHistoryFactory(),
             SystemEventManager::instance(),
-            new ProjectHistoryDao()
+            new ProjectHistoryDao(),
+            new HookConfigSanitizer()
         );
     }
 

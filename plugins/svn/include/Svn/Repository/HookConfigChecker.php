@@ -23,18 +23,18 @@ namespace Tuleap\Svn\Repository;
 class HookConfigChecker
 {
     /**
-     * @var RepositoryManager
+     * @var HookConfigRetriever
      */
-    private $repository_manager;
+    private $hook_config_retriever;
 
-    public function __construct(RepositoryManager $repository_manager)
+    public function __construct(HookConfigRetriever $hook_config_retriever)
     {
-        $this->repository_manager = $repository_manager;
+        $this->hook_config_retriever = $hook_config_retriever;
     }
 
     public function hasConfigurationChanged(Repository $repository, array $hook_config)
     {
-        $old_hook_config = $this->repository_manager->getHookConfig($repository);
+        $old_hook_config = $this->hook_config_retriever->getHookConfig($repository);
 
         return $this->hasChanged($old_hook_config, $hook_config, HookConfig::COMMIT_MESSAGE_CAN_CHANGE)
             || $this->hasChanged($old_hook_config, $hook_config, HookConfig::MANDATORY_REFERENCE);
