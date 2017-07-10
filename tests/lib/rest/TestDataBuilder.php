@@ -85,11 +85,6 @@ class REST_TestDataBuilder extends TestDataBuilder
         $this->template_path = dirname(__FILE__).'/../../rest/_fixtures/';
     }
 
-    public function activatePlugins()
-    {
-        return $this;
-    }
-
     public function instanciateFactories()
     {
         $this->tracker_artifact_factory    = Tracker_ArtifactFactory::instance();
@@ -175,21 +170,6 @@ class REST_TestDataBuilder extends TestDataBuilder
         $user_group_users_dao     = new User_ForgeUserGroupUsersDao();
         $user_group_users_manager = new User_ForgeUserGroupUsersManager($user_group_users_dao);
         $user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
-
-        return $this;
-    }
-
-    public function generateProject()
-    {
-        $project_1 = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
-        $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_template.xml');
-        $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_kanban_template.xml');
-
-        $pbi = $this->project_manager->getProjectByUnixName(self::PROJECT_PBI_SHORTNAME);
-        $this->importTemplateInProject($pbi->getId(), 'tuleap_agiledashboard_template_pbi_6348.xml');
-
-        $backlog = $this->project_manager->getProjectByUnixName(self::PROJECT_BACKLOG_DND);
-        $this->importTemplateInProject($backlog->getId(), 'tuleap_agiledashboard_template.xml');
 
         return $this;
     }
