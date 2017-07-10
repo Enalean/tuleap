@@ -57,7 +57,7 @@ $transition-delay: 350ms;
 
     &.updating {
         > kanban-item {
-            background-image: url('loader-mini.gif');
+            background-image: url('../images/loader-mini.gif');
             background-repeat: no-repeat;
             background-position: right 5px bottom 5px;
         }
