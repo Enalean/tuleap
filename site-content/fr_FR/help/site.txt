@@ -8,22 +8,22 @@
         </div>
         <section class="tlp-pane-section">
 
-            <h2 class="tlp-pane-subtitle">Consultez la documentation Tuleap</h2>
+            <h2 class="tlp-pane-subtitle">Documentation</h2>
 
             <p>Vous avez une question sur Tuleap ou vous êtes bloqué?
                Nous vous suggérons de commencer par regarder dans la documentation :</p>
 
             <ul>
-                <li><a href="/doc/fr/">Guide Utilisateur</a></li>
-                <li><a href="/doc/en/">Guide Utilisateur (anglais)</a></li>
+                <li><a href="/doc/en/">Guide Utilisateur en anglais</a></li>
+                <li><a href="/doc/fr/">Guide Utilisateur en français</a></li>
             </ul>
+
+            <p>Parfois l'information est plus à jour dans le guide en anglais</p>
 
             <h2 class="tlp-pane-subtitle">Posez vos questions</h2>
 
-            <p>Question technique, problème, bug? Poster vos questions, obtenez des réponses en écrivant à la
-            liste de distribution de la communauté Tuleap <a href="http://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel</a>.</p>
+            <p>Le site <a href="https://www.tuleap.org/get-help">tuleap.org</a> met à disposition de nombreuses ressources ainsi qu'un <a href="https://chat.tuleap.org">salon de discussion</a> communautaire.</p>
 
-            <p>Pour consulter les discussions actuelles ou en soumettre une nouvelle, <a href="http://tuleap.net/account/register.php">enregistrez vous </a> sur la forge communautaire de Tuleap.</p>
         </section>
     </div>
 </section>
