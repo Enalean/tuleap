@@ -22,10 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\user\Admin\UserDetailsFormatter;
-use Tuleap\User\Admin\UserDetailsAccessPresenter;
-use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\User\Admin\UserChangePasswordPresenter;
+use Tuleap\User\Admin\UserDetailsAccessPresenter;
+use Tuleap\user\Admin\UserDetailsFormatter;
+use Tuleap\User\Admin\UserDetailsPresenter;
+use Tuleap\user\Admin\UserStatusBuilder;
+use Tuleap\user\Admin\UserStatusChecker;
 use Tuleap\User\Password\PasswordValidatorPresenter;
 
 require_once('pre.php');
@@ -39,11 +41,11 @@ $request->checkUserIsSuperUser();
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/admin/userdetails.js');
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/check_pw.js');
 
-$request = HTTPRequest::instance();
-$um      = UserManager::instance();
-$em      = EventManager::instance();
-$purifier  = Codendi_HTMLPurifier::instance();
-$siteadmin = new \Tuleap\Admin\AdminPageRenderer();
+$um                  = UserManager::instance();
+$em                  = EventManager::instance();
+$purifier            = Codendi_HTMLPurifier::instance();
+$siteadmin           = new \Tuleap\Admin\AdminPageRenderer();
+$user_status_checker = new UserStatusChecker();
 
 $user_id = null;
 $user    = null;
@@ -134,7 +136,10 @@ if ($request->isPost()) {
                         break;
 
                     case PFUser::STATUS_RESTRICTED:
-                        if (ForgeConfig::areRestrictedUsersAllowed()) {
+                        if (! $user_status_checker->doesPlatformAllowRestricted()) {
+                            $GLOBALS['Response']->addFeedback(Feedback::WARN, _('Your platform does not allow restricted users.'));
+                            $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
+                        } else if (ForgeConfig::areRestrictedUsersAllowed()) {
                             $user->setStatus($request->get('form_status'));
                             // If the user had a shell, set it to restricted shell
                             if ($user->getShell()
@@ -208,7 +213,6 @@ if ($request->isPost()) {
             if ($user->getUnixStatus() != 'N' && !$user->getUnixUid()) {
                 $um->assignNextUnixUid($user);
             }
-
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
 
@@ -269,7 +273,7 @@ EventManager::instance()->processEvent(
     )
 );
 
-$details_formatter = new UserDetailsFormatter();
+$details_formatter = new UserDetailsFormatter(new UserStatusBuilder($user_status_checker));
 
 $additional_password_messages = array();
 EventManager::instance()->processEvent(
