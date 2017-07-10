@@ -58,8 +58,17 @@ abstract class BaseLayout extends Response
      * @var Boolean
      */
     protected $is_rendered_through_service = false;
+
+    /**
+     * @var array
+     */
     protected $breadcrumbs;
+
+    /**
+     * @var string[] HTML
+     */
     protected $toolbar;
+
     /**
      * @var URISanitizer
      */
@@ -406,6 +415,10 @@ abstract class BaseLayout extends Response
         }
     }
 
+    /**
+     * @param string $item HTML
+     * @return $this
+     */
     public function addToolbarItem($item)
     {
         $this->toolbar[] = $item;

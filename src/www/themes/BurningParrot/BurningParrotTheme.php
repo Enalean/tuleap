@@ -104,7 +104,8 @@ class BurningParrotTheme extends BaseLayout
             $sidebar,
             $current_project_navbar_info,
             $this->getListOfIconUnicodes(),
-            $url_redirect
+            $url_redirect,
+            $this->toolbar
         );
 
         $this->renderer->renderToPage('header', $header_presenter);
