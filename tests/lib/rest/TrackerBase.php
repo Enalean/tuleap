@@ -20,15 +20,44 @@
 
 namespace Tuleap\REST;
 
+use REST_TestDataBuilder;
 use RestBase;
 
 class TrackerBase extends RestBase
 {
+    protected $report_id;
+    protected $report_uri;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->getReleaseArtifactIds();
         $this->getStoryArtifactIds();
+        $this->getReportId();
+    }
+
+    private function getReportId()
+    {
+        if ($this->report_id && $this->report_uri) {
+            return;
+        }
+
+        $reports = $this->getResponse($this->client->get("trackers/$this->releases_tracker_id/tracker_reports"))->json();
+
+        foreach ($reports as $report) {
+            if ($report['label'] === 'Default') {
+                $this->report_id  = $report['id'];
+                $this->report_uri = $report['uri'];
+            }
+        }
+    }
+
+    protected function getResponse($request)
+    {
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
+            $request
+        );
     }
 }
