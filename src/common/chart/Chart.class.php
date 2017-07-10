@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -18,44 +19,53 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Chart\ColorsForCharts;
+
 require_once('jpgraph.php');
 require_once('jpgraph_gantt.php');
 require_once('jpgraph_line.php');
 require_once('jpgraph_bar.php');
-require_once('jpgraph_date.php'); 
+require_once('jpgraph_date.php');
 
 /**
 * Chart
-* 
+*
 * Facade for jpgraph Graph
-* 
+*
 * @see jpgraph documentation for usage
 */
-class Chart {
-    
+class Chart
+{
+    /**
+     * @var ColorsForCharts
+     */
+    protected $colors_for_charts;
+
     private $width  = null;
     private $height = null;
-    
+
     protected $jpgraph_instance;
-    
+
     /**
     * Constructor
-    * 
+    *
     * @param int    $aWidth      Default is 600
     * @param int    $aHeight     Default is 400
     * @param string $aCachedName Default is ""
     * @param int    $aTimeOut    Default is 0
     * @param bool   $aInline     Default is true
-    * 
+    *
     * @return void
     */
     public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $aTimeOut = 0, $aInline = true) {
         $this->width  = $aWidth;
         $this->height = $aHeight;
-        
+
+        $this->colors_for_charts = new ColorsForCharts();
+
         $classname = $this->getGraphClass();
         $this->jpgraph_instance = new $classname($aWidth,$aHeight,$aCachedName,$aTimeOut,$aInline);
-        $this->jpgraph_instance->SetMarginColor($GLOBALS['HTML']->getChartBackgroundColor());
+        $this->jpgraph_instance->SetMarginColor($this->getChartBackgroundColor());
         $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 0);
         if ($aWidth && $aHeight) {
             $this->jpgraph_instance->img->SetAntiAliasing();
@@ -72,22 +82,22 @@ class Chart {
         $this->jpgraph_instance->legend->SetShadow(false);
         $this->jpgraph_instance->legend->SetColor($this->getMainColor());
         $this->jpgraph_instance->legend->SetFrameWeight(0);
-        $this->jpgraph_instance->legend->SetFillColor($GLOBALS['HTML']->getChartBackgroundColor());
+        $this->jpgraph_instance->legend->SetFillColor($this->getChartBackgroundColor());
         $this->jpgraph_instance->legend->SetFont($this->getFont(), FS_NORMAL, 8);
         $this->jpgraph_instance->legend->SetVColMargin(5);
         $this->jpgraph_instance->legend->SetPos(0.05, 0.5, 'right', 'center');
         $this->jpgraph_instance->legend->SetLineSpacing(10);
-        
+
         $this->jpgraph_instance->title->SetFont($this->getFont(), FS_BOLD, 12);
         $this->jpgraph_instance->title->SetColor($this->getMainColor());
         $this->jpgraph_instance->title->SetMargin(15);
-        
+
         $this->jpgraph_instance->subtitle->SetFont($this->getFont(), FS_NORMAL, 9);
         $this->jpgraph_instance->subtitle->SetColor($this->getMainColor());
         $this->jpgraph_instance->subtitle->SetAlign('left', 'top', 'left');
         $this->jpgraph_instance->subtitle->SetMargin(20);
     }
-    
+
     /**
      * Get the name of the jpgraph class to instantiate
      *
@@ -96,7 +106,7 @@ class Chart {
     protected function getGraphClass() {
         return 'Graph';
     }
-    
+
     /**
      * Use magic method to retrieve property of a jpgraph instance
      * /!\ Do not call it directly
@@ -108,7 +118,7 @@ class Chart {
     public function __get($name) {
         return $this->jpgraph_instance->$name;
     }
-    
+
     /**
      * Use magic method to set property of a jpgraph instance
      * /!\ Do not call it directly
@@ -121,7 +131,7 @@ class Chart {
     public function __set($name, $value) {
         return $this->jpgraph_instance->$name = $value;
     }
-    
+
     /**
      * Use magic method to know if a property of a jpgraph instance exists
      * /!\ Do not call it directly
@@ -133,7 +143,7 @@ class Chart {
     public function __isset($name) {
         return isset($this->jpgraph_instance->$name);
     }
-    
+
     /**
      * Use magic method to unset a property of a jpgraph instance
      * /!\ Do not call it directly
@@ -145,7 +155,7 @@ class Chart {
     public function __unset($name) {
         unset($this->jpgraph_instance->$name);
     }
-    
+
     /**
      * Use magic method to call a method of a jpgraph instance
      * /!\ Do not call it directly
@@ -170,7 +180,7 @@ class Chart {
             $this->jpgraph_instance->xaxis->SetFont($this->getFont(), FS_NORMAL, 8);
             $this->jpgraph_instance->xaxis->SetLabelAngle(45);
             $this->jpgraph_instance->xaxis->title->SetFont($this->getFont(), FS_BOLD, 8);
-            
+
             $this->jpgraph_instance->yaxis->SetColor($this->getMainColor(), $this->getMainColor());
             $this->jpgraph_instance->yaxis->SetFont($this->getFont(), FS_NORMAL, 8);
             $this->jpgraph_instance->xaxis->title->SetFont($this->getFont(), FS_BOLD, 8);
@@ -178,7 +188,7 @@ class Chart {
         }
         return $result;
     }
-    
+
     /**
      * Return the font used by the chart
      *
@@ -187,7 +197,7 @@ class Chart {
     public function getFont() {
         return FF_USERFONT;
     }
-    
+
     /**
      * Return the main color used by the chart (axis, text, ...)
      *
@@ -195,19 +205,24 @@ class Chart {
      * @see Layout->getChartMainColor
      */
     public function getMainColor() {
-        return $GLOBALS['HTML']->getChartMainColor();
+        return $this->colors_for_charts->getChartMainColor();
     }
-    
+
     /**
      * Return the colors used by the chart to draw data (part of pies, bars, ...)
      *
-     * @return string
+     * @return array
      * @see Layout->getChartColors
      */
     public function getThemedColors() {
-        return $GLOBALS['HTML']->getChartColors();
+        return $this->colors_for_charts->getChartColors();
     }
-    
+
+    private function getChartBackgroundColor()
+    {
+        return $this->colors_for_charts->getChartBackgroundColor();
+    }
+
     /**
      * Compute the height of the top margin
      *
@@ -218,7 +233,7 @@ class Chart {
     }
 
     /**
-     * Diplay a given message as png image 
+     * Diplay a given message as png image
      *
      * @param String $msg Message to display
      *
@@ -250,4 +265,3 @@ class Chart {
         }
     }
 }
-?>
