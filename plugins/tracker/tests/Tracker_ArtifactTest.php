@@ -490,6 +490,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
 
+        stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
+
         stub($art_factory)->save()->returns(true);
         $art_factory->expectOnce('save');
 
@@ -715,6 +717,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
         $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
+
+        stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
 
         stub($art_factory)->save()->returns(true);
         $art_factory->expectOnce('save');

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 
 /**
@@ -64,6 +65,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      *
      * @throws Tracker_Exception In the validation
      * @throws Tracker_NoChangeException In the validation
+     * @throws FieldValidationException
      *
      * @return Tracker_Artifact_Changeset|null
      */
@@ -234,8 +236,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         if (! $this->fields_validator->validate($artifact, $fields_data)) {
-            $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid');
-            throw new Tracker_Exception($message);
+            throw new FieldValidationException($GLOBALS['Response']->getFeedbackErrors());
         }
 
         $last_changeset = $artifact->getLastChangeset();
