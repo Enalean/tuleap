@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2014. All rights reserved
+  * Copyright (c) Enalean, 2014 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -18,7 +18,10 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_PermissionDelegationDeleteGroupModalPresenter {
+use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
+
+class Admin_PermissionDelegationDeleteGroupModalPresenter
+{
 
     /**
      * @var int
@@ -31,9 +34,9 @@ class Admin_PermissionDelegationDeleteGroupModalPresenter {
     private $name;
 
 
-    public function __construct(User_ForgeUGroup $group) {
-        $this->id   = $group->getId();
-        $this->name = $group->getName();
+    public function __construct(UserForgeUGroupPresenter $group) {
+        $this->id   = $group->id;
+        $this->name = $group->name;
     }
 
     public function group_title_delete() {

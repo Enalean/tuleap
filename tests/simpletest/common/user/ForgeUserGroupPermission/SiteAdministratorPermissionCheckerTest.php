@@ -54,4 +54,22 @@ class SiteAdministratorPermissionCheckerTest extends \TuleapTestCase
 
         $this->assertTrue($this->permission_checker->checkPlatformHasMoreThanOneSiteAdministrationPermission());
     }
+
+    public function itReturnsTrueWhenPlatformHasOnlyAUGroupContainingSiteAdminsitrationPermission()
+    {
+        $ugroup = mock('User_ForgeUGroup');
+        stub($ugroup)->getId()->returns(101);
+        stub($this->permission_dao)->isUGroupTheOnlyOneWithPlatformAdministrationPermission()->returns(false);
+
+        $this->assertTrue($this->permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission($ugroup));
+    }
+
+    public function itReturnsFalseWhenPlatformHasSeveralAUGroupContainingSiteAdminsitrationPermission()
+    {
+        $ugroup = mock('User_ForgeUGroup');
+        stub($ugroup)->getId()->returns(101);
+        stub($this->permission_dao)->isUGroupTheOnlyOneWithPlatformAdministrationPermission()->returns(true);
+
+        $this->assertFalse($this->permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission($ugroup));
+    }
 }

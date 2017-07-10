@@ -20,6 +20,7 @@
 
 use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 use \Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
+use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
 
 class User_ForgeUserGroupPermssionsFactory_BaseTest extends TuleapTestCase {
 
@@ -70,7 +71,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
     }
 
     public function itReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions() {
-        $user_group     = new User_ForgeUGroup(101, '', '');
+        $user_group      = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
         $expected_id1    = User_ForgeUserGroupPermission_ProjectApproval::ID;
         $expected_id4    = User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID;
         $expected_id5    = User_ForgeUserGroupPermission_UserManagement::ID;
@@ -92,7 +93,7 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
     }
 
     public function itReturnsArrayIfAllForgeUserGroupHasNoPermission() {
-        $user_group     = new User_ForgeUGroup(101, '', '');
+        $user_group      = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns(false);
         $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);

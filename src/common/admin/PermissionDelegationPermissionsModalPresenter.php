@@ -31,14 +31,14 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
     private $name;
 
     /**
-     * @var array
+     * @var Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter[]
      */
     private $permissions;
 
 
     public function __construct($group, array $permissions) {
-        $this->id          = $group->getId();
-        $this->name        = $group->getName();
+        $this->id          = $group->id;
+        $this->name        = $group->name;
         $this->permissions = $permissions;
 
         $this->sortPermissionsAlphabetically();
