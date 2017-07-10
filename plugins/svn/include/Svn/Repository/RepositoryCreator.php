@@ -48,18 +48,24 @@ class RepositoryCreator
      * @var ProjectHistoryDao
      */
     private $history_dao;
+    /**
+     * @var HookConfigUpdator
+     */
+    private $hook_config_updator;
 
 
     public function __construct(
         Dao $dao,
         SystemEventManager $system_event_manager,
         ProjectHistoryDao $history_dao,
-        SvnPermissionManager $permissions_manager
+        SvnPermissionManager $permissions_manager,
+        HookConfigUpdator $hook_config_updator
     ) {
         $this->dao                  = $dao;
         $this->system_event_manager = $system_event_manager;
         $this->history_dao          = $history_dao;
         $this->permissions_manager  = $permissions_manager;
+        $this->hook_config_updator  = $hook_config_updator;
     }
 
     /**
@@ -131,5 +137,14 @@ class RepositoryCreator
             implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),
             SystemEvent::PRIORITY_HIGH
         );
+    }
+
+    public function createWithSettings(Repository $repository, \PFUser $user, array $commit_rules)
+    {
+        $this->create($repository, $user);
+
+        if ($commit_rules) {
+            $this->hook_config_updator->updateHookConfig($repository, $commit_rules);
+        }
     }
 }

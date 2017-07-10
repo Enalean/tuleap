@@ -144,11 +144,12 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->commit_rules_validator = new CommitRulesRepresentationValidator();
-        $this->repository_creator     = new RepositoryCreator(
+        $this->repository_creator = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
             $project_history_dao,
-            $this->permission_manager
+            $this->permission_manager,
+            $this->hook_config_updator
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
@@ -430,7 +431,15 @@ class RepositoryResource extends AuthenticatedResource
 
         $repository_to_create = new Repository("", $name, "", "", $project);
         try {
-            $this->repository_creator->create($repository_to_create, $user);
+            $commit_rules = array();
+            if ($settings && $settings->commit_rules) {
+                $commit_rules = $settings->commit_rules->toArray();
+            }
+            $this->repository_creator->createWithSettings(
+                $repository_to_create,
+                $user,
+                $commit_rules
+            );
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
         } catch (UserIsNotSVNAdministratorException $e) {
@@ -440,10 +449,6 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);
-
-        if ($settings) {
-            $this->hook_config_updator->updateHookConfig($repository, $settings->commit_rules->toArray());
-        }
 
         return $this->getRepositoryRepresentation($repository, $user);
     }

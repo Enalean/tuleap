@@ -37,6 +37,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RuleName;
 use TuleapTestCase;
@@ -203,7 +204,8 @@ class XMLImporterTest extends TuleapTestCase
             $this->repodao,
             $this->sysevmgr,
             mock('ProjectHistoryDao'),
-            $permissions_manager
+            $permissions_manager,
+            mock('Tuleap\Svn\Repository\HookConfigUpdator')
         );
 
         $this->user = mock('PFUser');
