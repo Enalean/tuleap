@@ -6,15 +6,10 @@
 
 set -ex
 
-DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml"
+DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG}"
 
 clean_env() {
-    $DOCKERCOMPOSE down --remove-orphans || true
-    docker network rm ${BUILD_TAG}tuleap_runtests || true
-    docker volume rm ${BUILD_TAG}tuleap_runtests_rabbitmq-data || true
-    docker volume rm ${BUILD_TAG}tuleap_runtests_ldap-data || true
-    docker volume rm ${BUILD_TAG}tuleap_runtests_db-data || true
-    docker volume rm ${BUILD_TAG}tuleap_runtests_tuleap-data || true
+    $DOCKERCOMPOSE down --remove-orphans --volumes || true
 }
 
 wait_until_tests_are_executed() {
@@ -26,11 +21,6 @@ mkdir -p test_results || true
 rm -rf test_results/* || true
 clean_env
 
-docker network create ${BUILD_TAG}tuleap_runtests
-docker volume create --name=${BUILD_TAG}tuleap_runtests_rabbitmq-data
-docker volume create --name=${BUILD_TAG}tuleap_runtests_ldap-data
-docker volume create --name=${BUILD_TAG}tuleap_runtests_db-data
-docker volume create --name=${BUILD_TAG}tuleap_runtests_tuleap-data
 $DOCKERCOMPOSE up -d
 
 wait_until_tests_are_executed
