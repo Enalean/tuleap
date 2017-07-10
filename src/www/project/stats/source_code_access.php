@@ -1,10 +1,24 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-//  
+/**
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 require_once('pre.php');
 require_once '../admin/project_admin_utils.php';
 require('./source_code_access_utils.php');
@@ -18,26 +32,31 @@ if ( !$group_id ) {
 }
 $project = ProjectManager::instance()->getProject($group_id);
 
-$who  = $request->getValidated('who', new Valid_WhiteList('who', array('nonmembers', 'members', 'allusers')), 'nonmembers');
+$who_whitelist = new Valid_WhiteList('who', array('nonmembers', 'members', 'allusers'));
+$who_whitelist->required();
+$who  = $request->getValidated('who', $who_whitelist, 'nonmembers');
 
 $unsigned_int_validator = new Valid_UInt();
 $unsigned_int_validator->required();
 $span = $request->getValidated('span', $unsigned_int_validator, 14);
 
-$view = $request->getValidated('view', new Valid_WhiteList('view', array('daily', 'weekly', 'monthly')), 'daily');
+$view_whitelist = new Valid_WhiteList('view', array('daily', 'weekly', 'monthly'));
+$view_whitelist->required();
+$view = $request->getValidated('view', $view_whitelist, 'daily');
 
-if (isset($_REQUEST['SUBMIT'])) {    
-        
+if (isset($_REQUEST['SUBMIT'])) {
+
     switch ($view) {
-      case "monthly":
-        $period = $span * 30.5;
-	break;
-      case "weekly":
-        $period = $span * 7;
-	break;
-      case 'daily':
-        $period = $span;
-	break;
+        case "monthly":
+            $period = $span * 30.5;
+            break;
+        case "weekly":
+            $period = $span * 7;
+            break;
+        case 'daily':
+        default:
+            $period = $span;
+            break;
     }
         
     // Send the result in CSV format	
