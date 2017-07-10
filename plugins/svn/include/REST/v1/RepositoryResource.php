@@ -45,6 +45,7 @@ use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\Repository\ProjectHistoryFormatter;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -140,7 +141,8 @@ class RepositoryResource extends AuthenticatedResource
             $hook_dao,
             $project_history_dao,
             new HookConfigChecker($this->hook_config_retriever),
-            new HookConfigSanitizer()
+            new HookConfigSanitizer(),
+            new ProjectHistoryFormatter()
         );
 
         $this->commit_rules_validator = new CommitRulesRepresentationValidator();
@@ -149,7 +151,8 @@ class RepositoryResource extends AuthenticatedResource
             $this->system_event_manager,
             $project_history_dao,
             $this->permission_manager,
-            $this->hook_config_updator
+            $this->hook_config_updator,
+            new ProjectHistoryFormatter()
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(

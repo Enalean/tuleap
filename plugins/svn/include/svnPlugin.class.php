@@ -70,6 +70,7 @@ use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\HookDao;
+use Tuleap\Svn\Repository\ProjectHistoryFormatter;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
@@ -507,7 +508,8 @@ class SvnPlugin extends Plugin
             new HookDao(),
             $history_dao,
             new HookConfigChecker($this->getHookConfigRetriever()),
-            $this->getHookConfigSanitizer()
+            $this->getHookConfigSanitizer(),
+            new ProjectHistoryFormatter()
         );
 
         return new SvnRouter(
@@ -875,8 +877,10 @@ class SvnPlugin extends Plugin
                 new HookDao(),
                 new ProjectHistoryDao(),
                 new HookConfigChecker($this->getHookConfigRetriever()),
-                $this->getHookConfigSanitizer()
-            )
+                $this->getHookConfigSanitizer(),
+                new ProjectHistoryFormatter()
+            ),
+            new ProjectHistoryFormatter()
         );
     }
 
