@@ -26,6 +26,7 @@ use SystemEventManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
+use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\Svn\SvnPermissionManager;
 
@@ -48,6 +49,7 @@ class RepositoryCreator
      */
     private $history_dao;
 
+
     public function __construct(
         Dao $dao,
         SystemEventManager $system_event_manager,
@@ -67,6 +69,7 @@ class RepositoryCreator
      *
      * @return SystemEvent or null
      * @throws CannotCreateRepositoryException
+     * @throws RepositoryNameIsInvalidException
      * @throws UserIsNotSVNAdministratorException
      */
     public function create(Repository $svn_repository, \PFUser $user)
@@ -80,8 +83,21 @@ class RepositoryCreator
         $this->createWithoutUserAdminCheck($svn_repository);
     }
 
+    /**
+     * @param Repository $svn_repository
+     *
+     * @return SystemEvent
+     * @throws CannotCreateRepositoryException
+     * @throws RepositoryNameIsInvalidException
+     */
     public function createWithoutUserAdminCheck(Repository $svn_repository)
     {
+
+        $rule = new RuleName($svn_repository->getProject(), $this->dao);
+        if (! $rule->isValid($svn_repository->getName())) {
+            throw new RepositoryNameIsInvalidException($rule->getErrorMessage());
+        }
+
         $id = $this->dao->create($svn_repository);
         if (! $id) {
             throw new CannotCreateRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'update_error'));

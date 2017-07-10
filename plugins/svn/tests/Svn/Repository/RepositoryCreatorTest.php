@@ -20,12 +20,17 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\Svn\Dao;
 use Tuleap\Svn\SvnPermissionManager;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 class RepositoryCreatorTest extends \TuleapTestCase
 {
+    /**
+     * @var Dao
+     */
+    private $dao;
     /**
      * @var \Project
      */
@@ -60,10 +65,10 @@ class RepositoryCreatorTest extends \TuleapTestCase
 
         $this->system_event_manager = mock('SystemEventManager');
         $history_dao                = mock('ProjectHistoryDao');
-        $dao                        = mock('Tuleap\Svn\Dao');
+        $this->dao                        = mock('Tuleap\Svn\Dao');
         $this->permissions_manager  = mock('Tuleap\Svn\SvnPermissionManager');
         $this->repository_creator   = new RepositoryCreator(
-            $dao,
+            $this->dao,
             $this->system_event_manager,
             $history_dao,
             $this->permissions_manager
@@ -79,7 +84,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
             $this->project
         );
 
-        stub($dao)->create()->returns(array(1));
+        stub($this->dao)->create()->returns(array(1));
     }
 
     public function itCreatesTheRepository()
@@ -95,6 +100,16 @@ class RepositoryCreatorTest extends \TuleapTestCase
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(false);
         stub($this->system_event_manager)->createEvent()->never();
         $this->expectException('Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException');
+
+        $this->repository_creator->create($this->repository, $this->user);
+    }
+
+    public function itThrowsAnExceptionWhenRepositoryNameIsAlreadyUsed()
+    {
+        stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
+        stub($this->system_event_manager)->createEvent()->never();
+        stub($this->dao)->doesRepositoryAlreadyExist()->returns(true);
+        $this->expectException('Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException');
 
         $this->repository_creator->create($this->repository, $this->user);
     }

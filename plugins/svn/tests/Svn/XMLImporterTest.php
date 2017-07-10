@@ -71,6 +71,15 @@ class TestBackendSVN extends BackendSVN {
 class XMLImporterTest extends TuleapTestCase
 {
     /**
+     * @var Project
+     */
+    private $project;
+    /**
+     * @var RuleName
+     */
+    private $rule_name;
+
+    /**
      * @var \PFUser
      */
     private $user;
@@ -189,7 +198,7 @@ class XMLImporterTest extends TuleapTestCase
             $users_to_notify_dao,
             $ugroups_to_notify_dao
         );
-        $permissions_manager = mock('Tuleap\Svn\SvnPermissionManager');
+        $permissions_manager      = mock('Tuleap\Svn\SvnPermissionManager');
         $this->repository_creator = new RepositoryCreator(
             $this->repodao,
             $this->sysevmgr,
@@ -197,12 +206,25 @@ class XMLImporterTest extends TuleapTestCase
             $permissions_manager
         );
 
+        $this->user = mock('PFUser');
         $this->user = aUser()->build();
         stub($permissions_manager)->isAdmin()->returns(true);
 
         Backend::clearInstances();
         Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));
         $Language = mock('BaseLanguage');
+
+        $this->project = $this->pm->getProjectFromDbRow(
+            array(
+                'group_id'           => 123,
+                'unix_group_name'    => 'test_project',
+                'access'             => 'private',
+                'svn_tracker'        => null,
+                'svn_can_change_log' => null
+            )
+        );
+
+        $this->rule_name = new RuleName($this->project, $this->repodao);
     }
 
     public function tearDown() {
@@ -217,9 +239,6 @@ class XMLImporterTest extends TuleapTestCase
     }
 
     private function stubRepoCreation($project_id, $repo_id, $event_id){
-        stub($this->repodao)->doesRepositoryAlreadyExist()
-            ->once("Check the repository name is not taken")
-            ->returns(false);
         stub($this->repodao)->create()
             ->once("Create the repository")
             ->returns($repo_id);
@@ -238,36 +257,33 @@ class XMLImporterTest extends TuleapTestCase
             ->returnsEmptyDar();
     }
 
-    private function callImport(XMLImporter $importer, Project $project) {
+    private function callImport(XMLImporter $importer, Project $project)
+    {
         $importer->import(
             new ImportConfig(),
             $this->logger,
             $project,
             $this->accessfilemgr,
             $this->notifmgr,
-            new RuleName($project, $this->repodao),
+            $this->rule_name,
             $this->user
         );
     }
 
-    public function itShouldImportOneRevision() {
+    public function itShouldImportOneRevision()
+    {
         copy(__DIR__ . '/../_fixtures/svn_2revs.dump', "{$this->arpath}/svn.dump");
-        $xml = new SimpleXMLElement('<project><svn><repository name="svn" dump-file="svn.dump"/></svn></project>');
-        $project = $this->pm->getProjectFromDbRow(array(
-            'group_id' => 123,
-            'unix_group_name' => 'test_project',
-            'access' => 'private',
-            'svn_tracker' => null,
-            'svn_can_change_log' => null));
+        $xml = new SimpleXMLElement('<project><svn><repository name="svn01" dump-file="svn.dump"/></svn></project>');
 
         $this->stubRepoCreation(123, 85, 1585);
+        stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
 
         $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
-        $this->callImport($svn, $project);
+        $this->callImport($svn, $this->project);
 
-        $this->assertFileIsOwnedBy('codendiadm', $this->arpath.'/svn_plugin/123/svn');
+        $this->assertFileIsOwnedBy('codendiadm', $this->arpath.'/svn_plugin/123/svn01');
 
-        $this->assertRevision(1, 123, "svn");
+        $this->assertRevision(1, 123, "svn01");
     }
 
     private function assertFileIsOwnedBy($user, $file) {
@@ -276,13 +292,8 @@ class XMLImporterTest extends TuleapTestCase
         $this->assertIdentical($stat['uid'], $user['uid']);
     }
 
-    public function itShouldDoNothingIfNoSvnNode() {
-        $project = $this->pm->getProjectFromDbRow(array(
-            'group_id' => 123,
-            'unix_group_name' => 'test_project',
-            'access' => 'private',
-            'svn_tracker' => null,
-            'svn_can_change_log' => null));
+    public function itShouldDoNothingIfNoSvnNode()
+    {
         $xml = new SimpleXMLElement('<project></project>');
 
         stub($this->repodao)->doesRepositoryAlreadyExist()->never();
@@ -290,33 +301,46 @@ class XMLImporterTest extends TuleapTestCase
         stub($this->evdao)->store()->never();
 
         $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
-        $this->callImport($svn, $project);
+        $this->callImport($svn, $this->project);
     }
 
-    public function itShouldFailToImportIfTheSVNFileIsNotPresent() {
-        $project = $this->pm->getProjectFromDbRow(array(
-            'group_id' => 123,
-            'unix_group_name' => 'test_project',
-            'access' => 'private',
-            'svn_tracker' => null,
-            'svn_can_change_log' => null));
-        $xml = new SimpleXMLElement('<project><svn><repository name="svn" dump-file="non-existant-svn.dump"/></svn></project>');
+    public function itShouldFailsWhenRepositoryNameIsInvalid()
+    {
+        $xml = new SimpleXMLElement('<project><svn><repository name="1" /></svn></project>');
 
+        stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
+        $this->expectException('Tuleap\Svn\XMLImporterException');
+
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
+        $this->callImport($svn, $this->project);
+    }
+
+    public function itShouldFailsWhenRepositoryNameIsAlreadyExist()
+    {
+        $xml = new SimpleXMLElement('<project><svn><repository name="svn01" /></svn></project>');
+
+        stub($this->repodao)->doesRepositoryAlreadyExist()->returns(true);
+        $this->expectException('Tuleap\Svn\XMLImporterException');
+
+        $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
+        $this->callImport($svn, $this->project);
+    }
+
+    public function itShouldFailToImportIfTheSVNFileIsNotPresent()
+    {
+        $xml = new SimpleXMLElement('<project><svn><repository name="svn01" dump-file="non-existant-svn.dump"/></svn></project>');
+
+        stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
         $this->expectException('Tuleap\Svn\XMLImporterException');
 
         $this->stubRepoCreation(123, 85, 1585);
 
         $svn = new XMLImporter($this->backend, $xml, $this->arpath, $this->repository_creator);
-        $this->callImport($svn, $project);
+        $this->callImport($svn, $this->project);
     }
 
-    public function itShouldImportNotifications(){
-        $project = $this->pm->getProjectFromDbRow(array(
-            'group_id' => 123,
-            'unix_group_name' => 'test_project',
-            'access' => 'private',
-            'svn_tracker' => null,
-            'svn_can_change_log' => null));
+    public function itShouldImportNotifications()
+    {
         $xml = <<<XML
             <project>
                 <svn>
@@ -329,38 +353,35 @@ class XMLImporterTest extends TuleapTestCase
 XML;
 
         $this->stubRepoCreation(123, 85, 1585);
+        stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
         stub($this->notifdao)->create()->count(2)->returns(true);
 
         $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->repository_creator);
-        $this->callImport($svn, $project);
+        $this->callImport($svn, $this->project);
     }
 
-    public function itShouldImportSvnAccessFile() {
-        $project = $this->pm->getProjectFromDbRow(array(
-            'group_id' => 123,
-            'unix_group_name' => 'test_project',
-            'access' => 'private',
-            'svn_tracker' => null,
-            'svn_can_change_log' => null));
+    public function itShouldImportSvnAccessFile()
+    {
         $access_file = "[groups]\nmembers = usernameTOTO123\n\n\n[/]\n* = r\n@members = rw\n";
         $xml = <<<XML
             <project>
                 <svn>
-                    <repository name="svn">
+                    <repository name="svn01">
                         <access-file>$access_file</access-file>
                     </repository>
                 </svn>
             </project>
 XML;
 
+        stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
         $this->stubRepoCreation(123, 85, 1585);
         stub($this->accessfiledao)->searchLastVersion()->once()->returns(null);
         stub($this->accessfiledao)->create()->once()->returns(true);
 
         $svn = new XMLImporter($this->backend, new SimpleXMLElement($xml), $this->arpath, $this->repository_creator);
-        $this->callImport($svn, $project);
+        $this->callImport($svn, $this->project);
 
-        $svnroot = $this->getSVNDir(123, "svn");
+        $svnroot = $this->getSVNDir(123, "svn01");
         $accessfile = file_get_contents("$svnroot/.SVNAccessFile");
         $found = strstr($accessfile, "TOTO123") !== false;
         $this->assertTrue($found, "$svnroot/.SVNAccessFile:\n$accessfile");

@@ -38,6 +38,7 @@ use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
@@ -47,7 +48,6 @@ use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RuleName;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnPermissionManager;
@@ -430,22 +430,13 @@ class RepositoryResource extends AuthenticatedResource
 
         $repository_to_create = new Repository("", $name, "", "", $project);
         try {
-            $rule = new RuleName($project, new DAO());
-            if (! $rule->isValid($name)) {
-                if ($rule->getErrorMessage()) {
-                    throw new RestException(409, $rule->getErrorMessage());
-                }
-
-                throw new RestException(
-                    409,
-                    "Repository name is invalid.  Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed."
-                );
-            }
             $this->repository_creator->create($repository_to_create, $user);
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
         } catch (UserIsNotSVNAdministratorException $e) {
             throw new RestException(403, "User doesn't have permission to create a repository");
+        } catch (RepositoryNameIsInvalidException $e) {
+            throw new RestException(409, $e->getMessage());
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);
