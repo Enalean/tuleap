@@ -19,4 +19,3 @@
  */
 
 require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/TrackerDataBuilder.php';

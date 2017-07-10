@@ -105,16 +105,6 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this;
     }
 
-    /**
-     * @deprecated See initPlugins() and do all the data generation in the plugin
-     */
-    public function initPluginsLeakingInCoreTests()
-    {
-        foreach (glob(dirname(__FILE__).'/../../../plugins/*/tests/rest/init_test_data_leaking.php') as $init_file) {
-            require_once $init_file;
-        }
-    }
-
     public function initPlugins() {
         foreach (glob(dirname(__FILE__).'/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
             require_once $init_file;

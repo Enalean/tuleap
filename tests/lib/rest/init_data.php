@@ -35,5 +35,4 @@ $data_builder
     ->delegatePermissionsToManageUser()
     ->generateKanban()
     ->deleteTracker()
-    ->activateDebug()
-    ->initPluginsLeakingInCoreTests();
+    ->activateDebug();
