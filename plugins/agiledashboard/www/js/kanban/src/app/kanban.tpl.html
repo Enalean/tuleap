@@ -21,6 +21,8 @@
         <i class="fa fa-bar-chart"></i>
         <span translate>Show reports</span>
     </button>
+
+    <add-to-dashboard></add-to-dashboard>
     <div class="kanban-header-spacer"></div>
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button"
@@ -34,7 +36,6 @@
             title="{{ 'Detailed view' | translate }}">
         <i class="fa fa-th-list"></i> <span translate>Detailed view</span>
     </button>
-    <div ng-if="dashboard_dropdowns" ng-bind-html="dashboard_dropdowns" class="add-kanban-dashboard"></div>
     <input type="search"
             class="tlp-search tlp-search-small kanban-header-search"
             placeholder="{{ 'Filter...' | translate }}"

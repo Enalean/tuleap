@@ -29,6 +29,7 @@
 @import 'includes/highlight';
 @import 'includes/reports-modal';
 @import 'includes/diagram';
+@import 'includes/add-to-dashboard';
 
 $kanban-column-closed-width: 65px;
 $kanban-column-header-height: 50px;
@@ -450,10 +451,6 @@ add-in-place {
     &.loading {
         animation: 250ms linear 0s infinite alternate loadingItems;
     }
-}
-
-.add-kanban-dashboard {
-    display: flex;
 }
 
 .widget-kanban-empty-icon {

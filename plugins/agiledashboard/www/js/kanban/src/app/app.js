@@ -30,6 +30,7 @@ import DroppedService          from './dropped-service.js';
 import KanbanFilterValue       from './filter-value.js';
 import AddInPlaceDirective     from './add-in-place/add-in-place-directive.js';
 import ResizeDirective         from './resize-directive.js';
+import AddToDashboardDirective from './add-to-dashboard/add-to-dashboard-directive.js';
 import AutoFocusInputDirective from './edit-kanban/edit-kanban-autofocus-directive.js';
 import EscKeyDirective         from './esc-key/esc-key-directive.js';
 import EditKanbanDirective     from './edit-kanban/edit-kanban-directive.js';
@@ -77,6 +78,7 @@ angular.module('kanban', [
 .service('DiagramRestService', DiagramRestService)
 .directive('addInPlace', AddInPlaceDirective)
 .directive('resize', ResizeDirective)
+.directive('addToDashboard', AddToDashboardDirective)
 .directive('autoFocusInput', AutoFocusInputDirective)
 .directive('escKey', EscKeyDirective)
 .directive('kanbanColumn', KanbanColumnDirective)

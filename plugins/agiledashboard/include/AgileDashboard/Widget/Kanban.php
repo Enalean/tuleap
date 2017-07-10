@@ -131,7 +131,8 @@ abstract class Kanban extends Widget
                 $this->getCurrentUser(),
                 $user_is_kanban_admin,
                 $this->getCurrentUser()->getShortLocale(),
-                $project_id
+                $project_id,
+                true
             );
             $widget_kanban_presenter = new WidgetKanbanPresenter(
                 $is_empty,

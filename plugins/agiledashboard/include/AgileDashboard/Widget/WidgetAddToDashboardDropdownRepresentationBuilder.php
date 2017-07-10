@@ -24,12 +24,13 @@ use AgileDashboard_Kanban;
 use CSRFSynchronizerToken;
 use PFUser;
 use Project;
+use Tuleap\Dashboard\DashboardRepresentation;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 
-class WidgetAddToDashboardDropdownBuilder
+class WidgetAddToDashboardDropdownRepresentationBuilder
 {
     /**
      * @var UserDashboardRetriever
@@ -53,7 +54,7 @@ class WidgetAddToDashboardDropdownBuilder
         $my_dashboards_presenters      = $this->getAvailableDashboardsForUser($user);
         $project_dashboards_presenters = $this->getAvailableDashboardsForProject($project);
 
-        return new WidgetAddToDashboardDropdownPresenter(
+        return new WidgetAddToDashboardDropdownRepresentation(
             $user,
             $project,
             $this->getAddToMyDashboardURL($kanban),
@@ -107,11 +108,23 @@ class WidgetAddToDashboardDropdownBuilder
 
     private function getAvailableDashboardsForUser(PFUser $user)
     {
-        return $this->user_dashboard_retriever->getAllUserDashboards($user);
+        $user_dashboards_representation = array();
+        $user_dashboards                = $this->user_dashboard_retriever->getAllUserDashboards($user);
+        foreach ($user_dashboards as $user_dashboard) {
+            $user_dashboards_representation [] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());
+        }
+
+        return $user_dashboards_representation;
     }
 
     private function getAvailableDashboardsForProject(Project $project)
     {
-        return $this->project_dashboard_retriever->getAllProjectDashboards($project);
+        $project_dashboards_representation = array();
+        $project_dashboards                = $this->project_dashboard_retriever->getAllProjectDashboards($project);
+        foreach ($project_dashboards as $user_dashboard) {
+            $project_dashboards_representation [] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());
+        }
+
+        return $project_dashboards_representation;
     }
 }

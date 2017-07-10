@@ -12,7 +12,8 @@ function SharedPropertiesService() {
         nodejs_server        : undefined,
         nodejs_server_version: undefined,
         uuid                 : undefined,
-        dashboard_dropdown   : undefined
+        dashboard_dropdown   : undefined,
+        user_is_on_widget    : false
     };
 
     return {
@@ -35,7 +36,9 @@ function SharedPropertiesService() {
         setNodeServerVersion        : setNodeServerVersion,
         getNodeServerVersion        : getNodeServerVersion,
         setDashboardDropdown        : setDashboardDropdown,
-        getDashboardDropdown        : getDashboardDropdown
+        getDashboardDropdown        : getDashboardDropdown,
+        setUserIsOnWidget           : setUserIsOnWidget,
+        getUserIsOnWidget           : getUserIsOnWidget
     };
 
     function getUserId() {
@@ -116,5 +119,13 @@ function SharedPropertiesService() {
 
     function getDashboardDropdown() {
         return property.dashboard_dropdown;
+    }
+
+    function setUserIsOnWidget(user_is_on_widget) {
+        property.user_is_on_widget = user_is_on_widget;
+    }
+
+    function getUserIsOnWidget() {
+        return property.user_is_on_widget;
     }
 }

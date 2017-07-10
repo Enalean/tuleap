@@ -17,11 +17,22 @@ function MainCtrl(
 ) {
     $scope.init = init;
 
-    function init(kanban, dashboard_dropdown, user_id, user_is_admin, lang, project_id, view_mode, nodejs_server) {
+    function init(
+        kanban,
+        dashboard_dropdown,
+        user_id,
+        user_is_admin,
+        is_widget,
+        lang,
+        project_id,
+        view_mode,
+        nodejs_server
+    ) {
         SharedPropertiesService.setUserId(user_id);
         SharedPropertiesService.setKanban(kanban);
         SharedPropertiesService.setDashboardDropdown(dashboard_dropdown);
         SharedPropertiesService.setUserIsAdmin(user_is_admin);
+        SharedPropertiesService.setUserIsOnWidget(is_widget);
         SharedPropertiesService.setProjectId(project_id);
         SharedPropertiesService.setViewMode(view_mode);
         gettextCatalog.setCurrentLanguage(lang);
