@@ -21,11 +21,7 @@
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../autoload.php';
 
-if (isset($argv[1]) && $argv[1] == 'ng') {
-    $data_builder = new REST_TestDataBuilderNG();
-} else {
-    $data_builder = new REST_TestDataBuilder();
-}
+$data_builder = new REST_TestDataBuilder();
 $data_builder
     ->activatePlugins()
     ->instanciateFactories()

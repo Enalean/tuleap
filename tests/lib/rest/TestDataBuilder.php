@@ -23,7 +23,8 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 
-class REST_TestDataBuilder extends TestDataBuilder {
+class REST_TestDataBuilder extends TestDataBuilder
+{
 
     const TEST_USER_4_ID          = 105;
     const TEST_USER_4_NAME        = 'rest_api_tester_4';
@@ -77,22 +78,20 @@ class REST_TestDataBuilder extends TestDataBuilder {
     protected $release;
     protected $sprint;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->template_path = dirname(__FILE__).'/../../rest/_fixtures/';
     }
 
-    public function activatePlugins() {
-        $this->activatePlugin('tracker');
-        $this->activatePlugin('agiledashboard');
-        $this->activatePlugin('cardwall');
-        PluginManager::instance()->invalidateCache();
-        PluginManager::instance()->loadPlugins();
+    public function activatePlugins()
+    {
         return $this;
     }
 
-    public function instanciateFactories() {
+    public function instanciateFactories()
+    {
         $this->tracker_artifact_factory    = Tracker_ArtifactFactory::instance();
         $this->tracker_formelement_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory             = TrackerFactory::instance();
@@ -105,53 +104,37 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this;
     }
 
-    public function initPlugins() {
+    public function initPlugins()
+    {
         foreach (glob(dirname(__FILE__).'/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
             require_once $init_file;
         }
     }
 
-    public function generateUsers() {
-        $user_1 = new PFUser();
-        $user_1->setUserName(self::TEST_USER_1_NAME);
-        $user_1->setRealName(self::TEST_USER_1_REALNAME);
-        $user_1->setLdapId(self::TEST_USER_1_LDAPID);
+    public function generateUsers()
+    {
+        $user_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
         $user_1->setPassword(self::TEST_USER_1_PASS);
-        $user_1->setStatus(self::TEST_USER_1_STATUS);
-        $user_1->setEmail(self::TEST_USER_1_EMAIL);
-        $user_1->setLanguage($GLOBALS['Language']);
-        $this->user_manager->createAccount($user_1);
-        $user_1->setLabFeatures(true);
+        $this->user_manager->updateDb($user_1);
 
-        $user_2 = new PFUser();
-        $user_2->setUserName(self::TEST_USER_2_NAME);
+        $user_2 = $this->user_manager->getUserByUserName(self::TEST_USER_2_NAME);
         $user_2->setPassword(self::TEST_USER_2_PASS);
-        $user_2->setStatus(self::TEST_USER_2_STATUS);
-        $user_2->setEmail(self::TEST_USER_2_EMAIL);
-        $user_2->setLanguage($GLOBALS['Language']);
         $user_2->setAuthorizedKeys('ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHk9 toto@marche');
-        $this->user_manager->createAccount($user_2);
+        $this->user_manager->updateDb($user_2);
 
-        $user_3 = new PFUser();
-        $user_3->setUserName(self::TEST_USER_3_NAME);
+        $user_3 = $this->user_manager->getUserByUserName(self::TEST_USER_3_NAME);
         $user_3->setPassword(self::TEST_USER_3_PASS);
-        $user_3->setStatus(self::TEST_USER_3_STATUS);
-        $user_3->setEmail(self::TEST_USER_3_EMAIL);
-        $user_3->setLanguage($GLOBALS['Language']);
-        $this->user_manager->createAccount($user_3);
+        $this->user_manager->updateDb($user_3);
 
-        $user_4 = new PFUser();
-        $user_4->setUserName(self::TEST_USER_4_NAME);
+        $user_4 = $this->user_manager->getUserByUserName(self::TEST_USER_3_NAME);
         $user_4->setPassword(self::TEST_USER_4_PASS);
-        $user_4->setStatus(self::TEST_USER_4_STATUS);
-        $user_4->setEmail(self::TEST_USER_1_EMAIL);
-        $user_4->setLanguage($GLOBALS['Language']);
-        $this->user_manager->createAccount($user_4);
+        $this->user_manager->updateDb($user_4);
 
         return $this;
     }
 
-    public function delegatePermissionsToRetrieveMembership() {
+    public function delegatePermissionsToRetrieveMembership()
+    {
         $user = $this->user_manager->getUserById(self::TEST_USER_3_ID);
 
         // Create group
@@ -173,7 +156,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this;
     }
 
-    public function delegatePermissionsToManageUser() {
+    public function delegatePermissionsToManageUser()
+    {
         $user = $this->user_manager->getUserById(self::TEST_USER_3_ID);
 
         // Create group
@@ -195,89 +179,17 @@ class REST_TestDataBuilder extends TestDataBuilder {
         return $this;
     }
 
-    public function generateProject() {
-        $this->setGlobalsForProjectCreation();
-
-        $user_test_rest_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
-        $user_test_rest_2 = $this->user_manager->getUserByUserName(self::TEST_USER_2_NAME);
-        $user_test_rest_3 = $this->user_manager->getUserByUserName(self::TEST_USER_3_NAME);
-
-        echo "Create projects\n";
-
-        $project_1 = $this->createProject(
-            self::PROJECT_PRIVATE_MEMBER_SHORTNAME,
-            'Private member',
-            false,
-            array($user_test_rest_1, $user_test_rest_2, $user_test_rest_3),
-            array($user_test_rest_1),
-            array()
-        );
-        $this->addUserGroupsToProject($project_1);
-        $this->addUserToUserGroup($user_test_rest_1, $project_1, self::STATIC_UGROUP_1_ID);
-        $this->addUserToUserGroup($user_test_rest_1, $project_1, self::STATIC_UGROUP_2_ID);
-        $this->addUserToUserGroup($user_test_rest_2, $project_1, self::STATIC_UGROUP_2_ID);
-
+    public function generateProject()
+    {
+        $project_1 = $this->project_manager->getProjectByUnixName(self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
         $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_template.xml');
         $this->importTemplateInProject($project_1->getID(), 'tuleap_agiledashboard_kanban_template.xml');
 
-        $project_2 = $this->createProject(
-            self::PROJECT_PRIVATE_SHORTNAME,
-            'Private',
-            false,
-            array($user_test_rest_3),
-            array($user_test_rest_3),
-            array()
-        );
-
-        $project_3 = $this->createProject(
-            self::PROJECT_PUBLIC_SHORTNAME,
-            'Public',
-            true,
-            array(),
-            array(),
-            array()
-        );
-
-        $project_4 = $this->createProject(
-            self::PROJECT_PUBLIC_MEMBER_SHORTNAME,
-            'Public member',
-            true,
-            array($user_test_rest_1),
-            array(),
-            array()
-        );
-
-        $pbi = $this->createProject(
-            self::PROJECT_PBI_SHORTNAME,
-            'PBI',
-            true,
-            array($user_test_rest_1),
-            array(),
-            array()
-        );
+        $pbi = $this->project_manager->getProjectByUnixName(self::PROJECT_PBI_SHORTNAME);
         $this->importTemplateInProject($pbi->getId(), 'tuleap_agiledashboard_template_pbi_6348.xml');
 
-        $backlog = $this->createProject(
-            self::PROJECT_BACKLOG_DND,
-            'Backlog drag and drop',
-            true,
-            array($user_test_rest_1),
-            array($user_test_rest_1),
-            array()
-        );
+        $backlog = $this->project_manager->getProjectByUnixName(self::PROJECT_BACKLOG_DND);
         $this->importTemplateInProject($backlog->getId(), 'tuleap_agiledashboard_template.xml');
-
-        $computed_field_project = $this->createProject(
-            self::PROJECT_COMPUTED_FIELDS,
-            'Computed Fields',
-            true,
-            array($user_test_rest_1),
-            array($user_test_rest_1),
-            array()
-        );
-        $this->importTemplateInProject($computed_field_project->getId(), 'tuleap_computedfields_template.xml');
-
-        $this->unsetGlobalsForProjectCreation();
 
         return $this;
     }
@@ -314,7 +226,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
         $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);
     }
 
-    public function deleteTracker() {
+    public function deleteTracker()
+    {
         echo "Delete tracker\n";
 
         $tracker = $this->getDeletedTracker();
@@ -359,7 +272,8 @@ class REST_TestDataBuilder extends TestDataBuilder {
         throw new RuntimeException('Data seems not correctly initialized');
     }
 
-    public function generateKanban() {
+    public function generateKanban()
+    {
         echo "Create 'My first kanban'\n";
 
         $tracker    = $this->getKanbanTracker();

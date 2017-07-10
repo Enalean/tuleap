@@ -26,13 +26,13 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class UsersTest extends RestBase {
 
-    /** @var REST_TestDataBuilderNG */
+    /** @var REST_TestDataBuilder */
     private $data_builder;
 
     public function __construct()
     {
         parent::__construct();
-        $this->data_builder = new REST_TestDataBuilderNG();
+        $this->data_builder = new REST_TestDataBuilder();
         $this->data_builder->setForgeToAnonymous();
     }
 
