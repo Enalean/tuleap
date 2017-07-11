@@ -20,10 +20,6 @@ msgstr ""
 msgid "Archive"
 msgstr ""
 
-#: src/app/app-kanban-controller.js
-msgid "Archive:"
-msgstr ""
-
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Backlog"
 msgstr ""
@@ -42,10 +38,6 @@ msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Column name"
-msgstr ""
-
-#: src/app/app-kanban-controller.js
-msgid "Column:"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -108,16 +100,20 @@ msgstr ""
 msgid "General configuration"
 msgstr ""
 
+#: src/app/app-kanban-controller.js
+msgid "In Kanban since:"
+msgstr ""
+
+#: src/app/app-kanban-controller.js
+msgid "In column since:"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr ""
 
 #: src/app/kanban-service.js
 msgid "Kanban {{ label }} successfuly deleted"
-msgstr ""
-
-#: src/app/app-kanban-controller.js
-msgid "Kanban:"
 msgstr ""
 
 #: src/app/reports-modal/reports-modal.tpl.html

@@ -489,8 +489,9 @@ function KanbanCtrl(
             return;
         }
 
-        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('Kanban:'));
-        timeinfo += getTimeInfoEntry(item.timeinfo[column.id], gettextCatalog.getString('Column:'));
+        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('In Kanban since:'));
+        timeinfo += "\u000a\u000a";
+        timeinfo += getTimeInfoEntry(item.timeinfo[column.id], gettextCatalog.getString('In column since:'));
 
         return $sce.trustAsHtml(timeinfo);
     }
@@ -502,8 +503,9 @@ function KanbanCtrl(
             return;
         }
 
-        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('Kanban:'));
-        timeinfo += getTimeInfoEntry(item.timeinfo.archive, gettextCatalog.getString('Archive:'));
+        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('In Kanban since:'));
+        timeinfo += "\u000a\u000a";
+        timeinfo += getTimeInfoEntry(item.timeinfo.archive, gettextCatalog.getString('In column since:'));
 
         return $sce.trustAsHtml(timeinfo);
     }
@@ -512,7 +514,7 @@ function KanbanCtrl(
         var timeinfo = '';
 
         if (entry_date) {
-            timeinfo += label + ': ';
+            timeinfo += label + ' ';
             timeinfo += amCalendarFilter(entry_date);
         }
 

@@ -18,10 +18,10 @@
             ></div>
         </div>
 
-        <span ng-if="column" class="kanban-item-content-clock tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ kanban.getTimeInfo(column, item) }}">
+        <span ng-if="column" class="kanban-item-content-clock" title="{{ kanban.getTimeInfo(column, item) }}">
             <i class="fa fa-clock-o"></i>
         </span>
-        <span ng-if="item.timeinfo.archive" class="kanban-item-content-clock tlp-tooltip tlp-tooltip-left" data-tlp-tooltip="{{ kanban.getTimeInfoInArchive(item) }}">
+        <span ng-if="item.timeinfo.archive" class="kanban-item-content-clock" title="{{ kanban.getTimeInfoInArchive(item) }}">
             <i class="fa fa-clock-o"></i>
         </span>
     </div>
