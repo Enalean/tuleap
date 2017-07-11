@@ -148,16 +148,16 @@ function CardFieldsService(
             link;
 
         if (value.user_url === null) {
-            avatar       = '<div class="avatar"> </div> ';
+            avatar       = '<div class="tlp-avatar-mini"> </div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
             link         = avatar + display_name;
         } else {
-            avatar       = '<div class="avatar"><img src="' + value.avatar_url + '" /></div> ';
+            avatar       = '<div class="tlp-avatar-mini"><img src="' + value.avatar_url + '" /></div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = '<a data-nodrag="true" href="' + value.user_url + '">' + avatar + display_name + '</a>';
+            link         = '<a data-nodrag="true" class="user" href="' + value.user_url + '">' + avatar + display_name + '</a>';
         }
 
-        return $sce.trustAsHtml('<div class="user">' + link + '</div>');
+        return $sce.trustAsHtml(link);
     }
 
     function isListBoundToAValueDifferentFromNone(values) {

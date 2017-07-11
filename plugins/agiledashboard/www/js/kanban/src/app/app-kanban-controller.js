@@ -512,8 +512,8 @@ function KanbanCtrl(
         var timeinfo = '';
 
         if (entry_date) {
-            timeinfo += '<p><span><i class="icon-signin"></i> ' + label + '</span>';
-            timeinfo += ' <strong>' + amCalendarFilter(entry_date) + '</strong></p>';
+            timeinfo += label + ': ';
+            timeinfo += amCalendarFilter(entry_date);
         }
 
         return timeinfo;
