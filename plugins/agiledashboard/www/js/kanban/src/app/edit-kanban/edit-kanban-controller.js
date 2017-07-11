@@ -151,6 +151,9 @@ function EditKanbanCtrl(
                 self.adding_column     = false;
                 self.saving_new_column = false;
                 self.new_column_label  = '';
+
+                self.rebuild_scrollbars();
+
             }, function (response) {
                 self.modal_instance.hide();
                 RestErrorService.reload(response);
@@ -190,6 +193,9 @@ function EditKanbanCtrl(
             KanbanService.removeColumn(self.kanban.id, column_to_remove.id).then(function() {
                 self.deleting_column = false;
                 ColumnCollectionService.removeColumn(column_to_remove.id);
+
+                self.rebuild_scrollbars();
+
             }, function(response) {
                 self.modal_instance.hide();
                 RestErrorService.reload(response);

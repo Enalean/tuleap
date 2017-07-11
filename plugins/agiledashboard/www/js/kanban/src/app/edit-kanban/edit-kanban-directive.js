@@ -7,7 +7,8 @@ function EditKanban() {
     return {
         restrict: 'AE',
         scope   : {
-            modal_instance: '=modalInstance'
+            modal_instance: '=modalInstance',
+            rebuild_scrollbars: '&rebuildScrollbars'
         },
         templateUrl     : 'edit-kanban.tpl.html',
         controller      : EditKanbanCtrl,

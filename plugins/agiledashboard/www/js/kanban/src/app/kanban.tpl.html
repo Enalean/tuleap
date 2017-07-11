@@ -10,7 +10,9 @@
     </button>
     <div id="edit-kanban-modal"
         class="tlp-modal"
-        edit-kanban modal-instance="kanban.edit_modal"
+        edit-kanban
+        modal-instance="kanban.edit_modal"
+        rebuild-scrollbars="kanban.reflowKustomScrollBars()"
     ></div>
     <button type="button"
         class="tlp-button-primary tlp-button-outline tlp-button-small"
@@ -43,7 +45,7 @@
     <socket-disconnect></socket-disconnect>
 </div>
 
-<div class="kanban-board">
+<div class="kanban-board" resize>
     <div class="backlog kanban-column"
          ng-class="{'kanban-column-open': kanban.backlog.is_open, 'kanban-column-closed': ! kanban.backlog.is_open}"
          ng-click="kanban.expandBacklog()"

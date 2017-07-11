@@ -96,6 +96,7 @@ function KanbanCtrl(
     self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
     self.openReportModal              = openReportModal;
     self.addKanbanToMyDashboard       = addKanbanToMyDashboard;
+    self.reflowKustomScrollBars       = reflowKustomScrollBars;
 
     function init() {
         initViewMode();
@@ -225,6 +226,8 @@ function KanbanCtrl(
         } else {
             expandColumn(column);
         }
+
+        reflowKustomScrollBars();
     }
 
     function collapseBacklog() {
@@ -257,6 +260,8 @@ function KanbanCtrl(
             KanbanService.expandBacklog(kanban.id);
             expandBacklog();
         }
+
+        reflowKustomScrollBars();
     }
 
     function collapseArchive() {
@@ -288,6 +293,8 @@ function KanbanCtrl(
         } else {
             expandArchive();
         }
+
+        reflowKustomScrollBars();
     }
 
     function emptyArray(array) {
@@ -369,6 +376,8 @@ function KanbanCtrl(
 
             if (column.is_open) {
                 filterColumnCards(column);
+
+                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -400,6 +409,8 @@ function KanbanCtrl(
 
             if (self.backlog.is_open) {
                 filterBacklogCards();
+
+                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -431,6 +442,8 @@ function KanbanCtrl(
 
             if (self.archive.is_open) {
                 filterArchiveCards();
+
+                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -514,6 +527,8 @@ function KanbanCtrl(
             .then(function(response) {
                 item.updating = false;
                 _.extend(item, response.data);
+
+                reflowKustomScrollBars();
             },
             reload
         );
@@ -533,6 +548,8 @@ function KanbanCtrl(
             .then(function(response) {
                 item.updating = false;
                 _.extend(item, response.data);
+
+                reflowKustomScrollBars();
             },
             reload
         );
