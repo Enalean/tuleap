@@ -4,9 +4,9 @@ $expand-collapse-bar-height: 10px;
 $margin-between-kanban-item-on-hover: 2px;
 $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanban-item-on-hover;
 
-@import 'kanban-item-transit';
 @import 'kanban-item-card-fields';
 @import 'kanban-item-moves';
+@import 'kanban-item-transit';
 
 .kanban-item {
     margin: $margin-between-kanban-item $tlp-half-spacing;
@@ -108,6 +108,7 @@ kanban-item {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .kanban-item-content-info-link {
@@ -123,6 +124,7 @@ kanban-item {
 
 .kanban-item-content-info-label {
     flex: 1 1 auto;
+    width: 100%;
     text-align: center;
 }
 
