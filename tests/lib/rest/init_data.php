@@ -23,10 +23,8 @@ require_once dirname(__FILE__).'/../autoload.php';
 
 $data_builder = new REST_TestDataBuilder();
 $data_builder
-    ->activatePlugins()
     ->instanciateFactories()
     ->generateUsers()
-    ->generateProject()
     ->delegatePermissionsToRetrieveMembership()
     ->delegatePermissionsToManageUser()
     ->generateKanban()
