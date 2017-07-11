@@ -13,7 +13,7 @@ msgid "Add a column"
 msgstr ""
 
 #: src/app/error-modal/error.tpl.html
-msgid "An error occured while saving one of your last action. We're afraid that you will have to reload the page in order to bring you back to a consistent state."
+msgid "An error occured while saving one of your last action. <br>We're afraid that you will have to reload the page in order to bring you back to a consistent state."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -29,6 +29,7 @@ msgid "Based on the {{ trackerLink }} tracker."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Cancel"
 msgstr ""
 

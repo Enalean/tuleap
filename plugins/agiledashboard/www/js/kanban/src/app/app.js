@@ -21,7 +21,7 @@ import uuid_generator    from './uuid-generator/uuid-generator.js';
 import socket            from './socket/socket.js';
 import user_preferences  from './user-preferences/user-preferences.js';
 import error_modal       from './error-modal/error-modal.js';
-
+import ErrorCtrl         from './error-modal/error-controller.js';
 import KanbanConfig            from './app-config.js';
 import MainCtrl                from './app-main-controller.js';
 import KanbanCtrl              from './app-kanban-controller.js';
@@ -72,6 +72,7 @@ angular.module('kanban', [
 .controller('KanbanCtrl', KanbanCtrl)
 .controller('ReportsModalController', ReportsModalController)
 .controller('KanbanColumnController', KanbanColumnController)
+.controller('ErrorCtrl', ErrorCtrl)
 .service('KanbanService', KanbanService)
 .service('ColumnCollectionService', ColumnCollectionService)
 .service('DroppedService', DroppedService)

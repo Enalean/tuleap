@@ -1,34 +1,24 @@
-import './error.tpl.html';
-import ErrorCtrl from './error-controller.js';
-
 export default RestErrorService;
 
-RestErrorService.$inject = [
-    '$modal'
-];
+RestErrorService.$inject = ['TlpModalService'];
 
-function RestErrorService(
-    $modal
-) {
+function RestErrorService(TlpModalService) {
     var self = this;
     self.reload = reload;
 
     function reload(response) {
-        $modal.open({
-            keyboard    : false,
-            backdrop    : 'static',
-            templateUrl : 'error.tpl.html',
-            controller  : ErrorCtrl,
-            controllerAs: 'modal',
-            resolve     : {
-                message: function() {
-                    var message = response.status + ' ' + response.statusText;
-                    if (response.data.error) {
-                        message = response.data.error.code + ' ' + response.data.error.message;
-                    }
+        var message = response.status + ' ' + response.statusText;
+        if (response.data.error) {
+            message = response.data.error.code + ' ' + response.data.error.message;
+        }
 
-                    return message;
-                }
+        TlpModalService.open({
+            templateUrl : 'error.tpl.html',
+            controller  : 'ErrorCtrl',
+            controllerAs: 'error_modal',
+            tlpModalOptions: { keyboard: false },
+            resolve: {
+                message: message
             }
         });
     }

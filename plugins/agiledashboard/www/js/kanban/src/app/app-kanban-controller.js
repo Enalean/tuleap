@@ -1,4 +1,5 @@
 import './edit-kanban/edit-kanban.tpl.html';
+import './error-modal/error.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
 import EditKanbanController   from './edit-kanban/edit-kanban-controller.js';
 import ReportsModalController from './reports-modal/reports-modal-controller.js';
@@ -24,7 +25,8 @@ KanbanCtrl.$inject = [
     'ColumnCollectionService',
     'DroppedService',
     'KanbanFilterValue',
-    'TlpModalService'
+    'TlpModalService',
+    'RestErrorService'
 ];
 
 function KanbanCtrl(
@@ -43,7 +45,8 @@ function KanbanCtrl(
     ColumnCollectionService,
     DroppedService,
     KanbanFilterValue,
-    TlpModalService
+    TlpModalService,
+    RestErrorService
 ) {
     var self    = this,
         limit   = 50,
@@ -289,22 +292,7 @@ function KanbanCtrl(
     }
 
     function reload(response) {
-        $modal.open({
-            keyboard   : false,
-            backdrop   : 'static',
-            templateUrl: 'error.tpl.html',
-            controller : 'ErrorCtrl as modal',
-            resolve    : {
-                message: function () {
-                    var message = response.status + ' ' + response.statusText;
-                    if (response.data.error) {
-                        message = response.data.error.code + ' ' + response.data.error.message;
-                    }
-
-                    return message;
-                }
-            }
-        });
+        RestErrorService.reload(response);
     }
 
     function showEditbutton() {

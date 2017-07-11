@@ -1,9 +1,10 @@
 import angular from 'angular';
+import angular_tlp from 'angular-tlp';
 
 import RestErrorService from './rest-error-service.js';
 
 angular.module('rest-error', [
-    'ui.bootstrap'
+    angular_tlp
 ])
 .service('RestErrorService', RestErrorService);
 
