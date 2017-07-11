@@ -1,16 +1,17 @@
 import kanban_module from '../app.js';
 import angular from 'angular';
+import { modal } from 'tlp';
 import 'angular-mocks';
 
 describe("ReportsModalController -", function() {
     var ReportsModalController,
         $scope,
         $q,
-        $modalInstance,
         SharedPropertiesService,
         DiagramRestService,
         kanban_id,
-        kanban_label;
+        kanban_label,
+        modal_instance;
 
     beforeEach(function() {
         angular.mock.module(kanban_module);
@@ -34,9 +35,10 @@ describe("ReportsModalController -", function() {
 
         $scope = $rootScope.$new();
 
-        $modalInstance = jasmine.createSpy("$modalInstance");
-        kanban_id    = 2;
-        kanban_label = "Italy Kanban";
+        kanban_id      = 2;
+        kanban_label   = "Italy Kanban";
+        modal_instance = jasmine.createSpyObj("modal_instance", ["addEventListener"]);
+
         spyOn(SharedPropertiesService, "getKanban").and.returnValue({
             id     : kanban_id,
             label  : kanban_label,
@@ -54,7 +56,7 @@ describe("ReportsModalController -", function() {
 
         ReportsModalController = $controller('ReportsModalController', {
             $scope                 : $scope,
-            $modalInstance         : $modalInstance,
+            modal_instance         : modal_instance,
             SharedPropertiesService: SharedPropertiesService,
             DiagramRestService     : DiagramRestService
         });
@@ -93,10 +95,15 @@ describe("ReportsModalController -", function() {
             };
             DiagramRestService.getCumulativeFlowDiagram.and.returnValue($q.when(cumulative_flow_data));
 
+            modal_instance.addEventListener.and.callFake(function(event, callback) {
+                callback();
+            });
+
             ReportsModalController.init();
             expect(ReportsModalController.loading).toBe(true);
 
             $scope.$apply();
+
             expect(ReportsModalController.loading).toBe(false);
 
             var YYYY_MM_DD_regexp = /^\d{4}-\d{2}-\d{2}$/;

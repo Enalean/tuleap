@@ -3,17 +3,17 @@ import _ from 'lodash';
 export default ReportsModalController;
 
 ReportsModalController.$inject = [
-    '$modalInstance',
     'moment',
     'SharedPropertiesService',
-    'DiagramRestService'
+    'DiagramRestService',
+    'modal_instance'
 ];
 
 function ReportsModalController(
-    $modalInstance,
     moment,
     SharedPropertiesService,
-    DiagramRestService
+    DiagramRestService,
+    modal_instance
 ) {
     var self = this;
 
@@ -53,14 +53,16 @@ function ReportsModalController(
     self.value_last_data = self.params.last_seven_days;
     self.key_last_data   = 'last_seven_days';
 
-    self.cancel   = function() { $modalInstance.dismiss('cancel'); };
+    self.close    = function() { modal_instance.hide(); };
     self.init     = init;
     self.loadData = loadData;
 
     self.init();
 
     function init() {
-        self.loadData();
+        modal_instance.addEventListener('tlp-modal-shown', function() {
+            self.loadData();
+        });
     }
 
     function loadData() {

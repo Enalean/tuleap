@@ -1,6 +1,7 @@
 import './edit-kanban/edit-kanban.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
-import EditKanbanController from './edit-kanban/edit-kanban-controller.js';
+import EditKanbanController   from './edit-kanban/edit-kanban-controller.js';
+import ReportsModalController from './reports-modal/reports-modal-controller.js';
 import _ from 'lodash';
 import { element } from 'angular';
 import { dropdown } from 'tlp';
@@ -322,14 +323,11 @@ function KanbanCtrl(
     }
 
     function openReportModal() {
-        $modal.open({
-            backdrop    : true,
+        TlpModalService.open({
             templateUrl : 'reports-modal.tpl.html',
-            controller  : 'ReportsModalController as reports_modal',
-            windowClass : 'reports-modal'
-        }).result.catch(
-            reloadIfSomethingIsWrong
-        );
+            controller  : ReportsModalController,
+            controllerAs: 'reports_modal'
+        });
     }
 
     function reloadIfSomethingIsWrong(reason) {

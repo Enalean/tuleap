@@ -1,25 +1,12 @@
-.reports-modal {
+#reports-modal {
     width: 60vw;
-    margin-left: -30vw;
 
     @media (max-width: 767px) {
         width: auto;
         margin-left: 0;
     }
 
-    > .modal-header {
-        > h2 {
-            line-height: 30px;
-        }
-
-        > .close {
-            position: absolute;
-            top: 20px;
-            right: 15px;
-        }
-    }
-
-    > .modal-body {
+    > .tlp-modal-body {
         max-height: 100%;
 
         > .chart {
