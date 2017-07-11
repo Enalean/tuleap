@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ $http_request = HTTPRequest::instance();
 $plugin       = $plugin_manager->getPluginByName('botmattermost');
 
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->processAdmin();
+    $plugin->process();
 } else {
     header('Location: '.$http_request->getServerUrl());
 }

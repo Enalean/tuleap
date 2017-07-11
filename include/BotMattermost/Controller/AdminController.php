@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\BotMattermost;
+namespace Tuleap\BotMattermost\Controller;
 
 
 use Exception;
@@ -26,6 +26,7 @@ use HTTPRequest;
 use CSRFSynchronizerToken;
 use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BotMattermost\Presenter\AdminPresenter;
 use Valid_HTTPURI;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
@@ -48,31 +49,7 @@ class AdminController
         $this->bot_factory = $bot_factory;
     }
 
-    public function process(HTTPRequest $request)
-    {
-        if ($request->getCurrentUser()->isSuperUser()) {
-
-            $action = $request->get('action');
-            switch ($action) {
-                case 'add_bot':
-                    $this->addBot($request);
-                    break;
-                case 'edit_bot':
-                    $this->editBot($request);
-                    break;
-                case 'delete_bot':
-                    $this->deleteBot($request);
-                    break;
-                default:
-                    $this->displayIndex();
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('include_session', 'insufficient_u_access', 'Insufficient User Access'));
-            $GLOBALS['Response']->redirect('/');
-        }
-    }
-
-    private function displayIndex()
+    public function displayIndex()
     {
         try {
             $admin_presenter     = new AdminPresenter($this->csrf, $this->bot_factory->getBots());
@@ -90,15 +67,15 @@ class AdminController
         }
     }
 
-    private function addBot(HTTPRequest $request)
+    public function addBot(HTTPRequest $request)
     {
         $this->csrf->check();
         if ($this->validPostArgument($request)) {
             try {
                 $this->bot_factory->save(
-                        $request->get('bot_name'),
-                        $request->get('webhook_url'),
-                        $request->get('avatar_url')
+                    $request->get('bot_name'),
+                    $request->get('webhook_url'),
+                    $request->get('avatar_url')
                 );
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_success_add_bot'));
             } catch (CannotCreateBotException $e) {
@@ -110,7 +87,7 @@ class AdminController
         $this->redirectToIndex();
     }
 
-    private function deleteBot(HTTPRequest $request)
+    public function deleteBot(HTTPRequest $request)
     {
         $this->csrf->check();
         $id = $request->get('bot_id');
@@ -125,7 +102,7 @@ class AdminController
         $this->redirectToIndex();
     }
 
-    private function editBot(HTTPRequest $request)
+    public function editBot(HTTPRequest $request)
     {
         $this->csrf->check();
         $id = $request->get('bot_id');
