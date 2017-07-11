@@ -604,6 +604,17 @@ class UserManagerTest extends TuleapTestCase
         $adminUser->setReturnValue('isSuperUser', true);
         return $adminUser;
     }
+
+    public function itInsuresThatPluginsDoNotReceiveInvalidUsernameWhenFindingUser()
+    {
+        $user_manager  = TestHelper::getPartialMock('UserManager', array('_getEventManager'));
+        $event_manager = mock('EventManager');
+        stub($user_manager)->_getEventManager()->returns($event_manager);
+
+        $event_manager->expectNever('processEvent');
+        $this->assertEqual($user_manager->findUser(null), null);
+        $this->assertEqual($user_manager->findUser(false), null);
+    }
 }
 
 class UserManager_GetUserWithSSHKeyTest extends TuleapTestCase {

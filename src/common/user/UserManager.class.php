@@ -209,7 +209,7 @@ class UserManager {
      */
     public function findUser($ident) {
         $user = null;
-        if ($ident === false) {
+        if (! $ident) {
             return $user;
         }
         $eParams = array('ident' => $ident,
