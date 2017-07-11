@@ -25,6 +25,11 @@ use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
@@ -36,10 +41,23 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\AuthenticatedResource;
+use Tuleap\Project\UgroupDuplicator;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Widget\WidgetFactory;
+use User_ForgeUserGroupPermissionsManager;
+use User_ForgeUserGroupPermissionsDao;
+use UGroupBinding;
+use UGroupUserDao;
+use UGroupDao;
+use ReferenceManager;
 use ProjectManager;
+use ProjectCreator;
 use UserManager;
 use PFUser;
 use Project;
+use Project_InvalidFullName_Exception;
+use Project_InvalidShortName_Exception;
 use EventManager;
 use Event;
 use ProjectUGroup;
@@ -67,10 +85,13 @@ class ProjectResource extends AuthenticatedResource {
     /** @var UGroupManager */
     private $ugroup_manager;
 
+    /** @var ProjectCreator*/
+    private $project_creator;
+
     /**
-     * @var EventManager
+     * @var UgroupDuplicator
      */
-    private $event_manager;
+    private $ugroup_duplicator;
 
     /**
      * @var JsonDecoder
@@ -78,13 +99,94 @@ class ProjectResource extends AuthenticatedResource {
     private $json_decoder;
 
     public function __construct() {
-        $this->user_manager    = UserManager::instance();
-        $this->project_manager = ProjectManager::instance();
-        $this->ugroup_manager  = new UGroupManager();
-        $this->json_decoder    = new JsonDecoder();
-        $this->event_manager   = EventManager::instance();
+        $this->user_manager      = UserManager::instance();
+        $this->project_manager   = ProjectManager::instance();
+        $this->reference_manager = ReferenceManager::instance();
+        $this->ugroup_manager    = new UGroupManager();
+        $this->json_decoder      = new JsonDecoder();
+        $ugroup_user_dao         = new UGroupUserDao();
+        $this->event_manager     = EventManager::instance();
 
+        $widget_factory = new WidgetFactory(
+        $this->user_manager,
+        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+        $this->event_manager);
+
+        $widget_dao        = new DashboardWidgetDao($widget_factory);
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $project_retriever = new ProjectDashboardRetriever($project_dao);
+        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
+        $duplicator        = new ProjectDashboardDuplicator(
+            $project_dao,
+            $project_retriever,
+            $widget_dao,
+            $widget_retriever,
+            $widget_factory
+        );
+
+        $this->ugroup_duplicator        = new UgroupDuplicator(new UGroupDao(),
+                $this->ugroup_manager,
+        new UGroupBinding($ugroup_user_dao, $this->ugroup_manager),
+        $ugroup_user_dao, EventManager::instance());
+        $send_notifications = true;
+        $force_activation   = false;
+
+        $this->project_creator = new ProjectCreator(
+                $this->project_manager,
+                $this->reference_manager,
+                $this->ugroup_duplicator,
+                $send_notifications,
+                new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
+                $duplicator,
+                $force_activation);
         parent::__construct();
+    }
+
+    /**
+     * Creates a new Project
+     *
+     * Creates a new project in Tuleap. doesn't support custom fields nor project categories.
+     *
+     * @url POST
+     * @status 201
+     *
+     * @param string $shortname Name of the project
+     * @param string $description Full description of the project
+     * @param string $label A short description of the project
+     * @param boolean $is_public Define the visibility of the project
+     * @param int $template_id Template for this project.
+     *
+     *
+     * @return Tuleap\Project\REST\ProjectRepresentation
+     */
+    protected function post($shortname, $description, $label, $is_public, $template_id)
+    {
+        $this->checkAccess();
+
+        $data = array(
+            'project' => array(
+                'form_short_description' => $description,
+                'is_test'                => false,
+                'is_public'              => $is_public,
+                'built_from_template'    => $template_id,
+             ));
+
+        try
+        {
+            $project = $this->project_creator->create($shortname, $label, $data);
+        }
+        catch (Project_InvalidShortName_Exception $exception)
+        {
+            throw new RestException(400, $exception->getMessage());
+        }
+        catch (Project_InvalidFullName_Exception $exception)
+        {
+           throw new RestException(400, $exception->getMessage());
+        }
+
+        $project_representation = $this->getProjectRepresentation($project);
+
+        return $project_representation;
     }
 
     /**
