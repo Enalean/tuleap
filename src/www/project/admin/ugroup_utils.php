@@ -191,7 +191,6 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
   if (ForgeConfig::areRestrictedUsersAllowed()) $res[] = $GLOBALS['UGROUP_AUTHENTICATED'];
   if ($user->isMember($group_id))               $res[] = $GLOBALS['UGROUP_PROJECT_MEMBERS'];
   if ($user->isMember($group_id,'A'))           $res[] = $GLOBALS['UGROUP_PROJECT_ADMIN'];
-  if ($user->isMember($group_id,'D2'))          $res[] = $GLOBALS['UGROUP_DOCUMENT_ADMIN'];
   if ($user->isMember($group_id,'W2'))          $res[] = $GLOBALS['UGROUP_WIKI_ADMIN'];
   if (is_int($instances)) {
       if ($user->isTrackerAdmin($group_id,$instances))  $res[] = $GLOBALS['UGROUP_TRACKER_ADMIN'];
