@@ -24,7 +24,7 @@ class ProjectHistoryFormatter
 {
     public function getFullHistory(Repository $repository, array $hook_config)
     {
-        return $this->getRepositoryHistory($repository) .
+        return $repository->getName() .
             PHP_EOL .
             $this->getHookConfigHistory($hook_config);
     }
@@ -46,10 +46,5 @@ class ProjectHistoryFormatter
             PHP_EOL .
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE . ": " .
             $this->extractHookReadableValue($hook_config, HookConfig::COMMIT_MESSAGE_CAN_CHANGE);
-    }
-
-    public function getRepositoryHistory(Repository $repository)
-    {
-        return $repository->getName();
     }
 }
