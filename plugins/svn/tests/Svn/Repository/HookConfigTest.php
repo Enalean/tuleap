@@ -70,7 +70,8 @@ class HookConfigTest extends \TuleapTestCase
             $this->hook_dao,
             $project_history_dao,
             $hook_checker,
-            new HookConfigSanitizer()
+            new HookConfigSanitizer(),
+            new ProjectHistoryFormatter()
         );
         stub($hook_checker)->hasConfigurationChanged()->returns(true);
     }

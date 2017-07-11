@@ -77,7 +77,8 @@ class RepositoryCreatorTest extends \TuleapTestCase
             $this->system_event_manager,
             $history_dao,
             $this->permissions_manager,
-            $this->hook_config_updator
+            $this->hook_config_updator,
+            new ProjectHistoryFormatter()
         );
 
         $this->project    = aMockProject()->withId(101)->build();
@@ -128,7 +129,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true
         );
-        expect($this->hook_config_updator)->updateHookConfig()->once();
+        expect($this->hook_config_updator)->initHookConfiguration()->once();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
     }
@@ -138,7 +139,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
         expect($this->system_event_manager)->createEvent()->once();
         $commit_rules = array();
-        expect($this->hook_config_updator)->updateHookConfig()->never();
+        expect($this->hook_config_updator)->initHookConfiguration()->never();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
     }

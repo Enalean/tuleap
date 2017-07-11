@@ -52,20 +52,25 @@ class RepositoryCreator
      * @var HookConfigUpdator
      */
     private $hook_config_updator;
-
+    /**
+     * @var ProjectHistoryFormatter
+     */
+    private $project_history_formatter;
 
     public function __construct(
         Dao $dao,
         SystemEventManager $system_event_manager,
         ProjectHistoryDao $history_dao,
         SvnPermissionManager $permissions_manager,
-        HookConfigUpdator $hook_config_updator
+        HookConfigUpdator $hook_config_updator,
+        ProjectHistoryFormatter $project_history_formatter
     ) {
-        $this->dao                  = $dao;
-        $this->system_event_manager = $system_event_manager;
-        $this->history_dao          = $history_dao;
-        $this->permissions_manager  = $permissions_manager;
-        $this->hook_config_updator  = $hook_config_updator;
+        $this->dao                       = $dao;
+        $this->system_event_manager      = $system_event_manager;
+        $this->history_dao               = $history_dao;
+        $this->permissions_manager       = $permissions_manager;
+        $this->hook_config_updator       = $hook_config_updator;
+        $this->project_history_formatter = $project_history_formatter;
     }
 
     /**
@@ -80,11 +85,7 @@ class RepositoryCreator
      */
     public function create(Repository $svn_repository, \PFUser $user)
     {
-        if (! $this->permissions_manager->isAdmin($svn_repository->getProject(), $user)) {
-            throw new UserIsNotSVNAdministratorException(
-                dgettext('tuleap-svn', "User doesn't have permission to create a repository")
-            );
-        }
+        $this->checkUserHasAdministrationPermissions($svn_repository, $user);
 
         $this->createWithoutUserAdminCheck($svn_repository);
     }
@@ -98,18 +99,7 @@ class RepositoryCreator
      */
     public function createWithoutUserAdminCheck(Repository $svn_repository)
     {
-
-        $rule = new RuleName($svn_repository->getProject(), $this->dao);
-        if (! $rule->isValid($svn_repository->getName())) {
-            throw new RepositoryNameIsInvalidException($rule->getErrorMessage());
-        }
-
-        $id = $this->dao->create($svn_repository);
-        if (! $id) {
-            throw new CannotCreateRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'update_error'));
-        }
-
-        $svn_repository->setId($id);
+        $svn_repository = $this->createRepository($svn_repository);
 
         $this->history_dao->groupAddHistory(
             'svn_multi_repository_creation',
@@ -141,10 +131,69 @@ class RepositoryCreator
 
     public function createWithSettings(Repository $repository, \PFUser $user, array $commit_rules)
     {
-        $this->create($repository, $user);
+        $this->checkUserHasAdministrationPermissions($repository, $user);
+        $repository = $this->createRepository($repository);
+        $this->sendEvent($repository);
 
+        $history = $this->project_history_formatter->getRepositoryHistory($repository);
+        $key     = 'svn_multi_repository_creation';
         if ($commit_rules) {
-            $this->hook_config_updator->updateHookConfig($repository, $commit_rules);
+            $this->hook_config_updator->initHookConfiguration($repository, $commit_rules);
+            $history = $this->project_history_formatter->getFullHistory($repository, $commit_rules);
+            $key     = 'svn_multi_repository_creation_with_full_settings';
         }
+
+        $this->history_dao->groupAddHistory(
+            $key,
+            $history,
+            $repository->getProject()->getID()
+        );
+    }
+
+    /**
+     * @param Repository $repository
+     * @param \PFUser    $user
+     *
+     * @throws UserIsNotSVNAdministratorException
+     */
+    private function checkUserHasAdministrationPermissions(Repository $repository, \PFUser $user)
+    {
+        if (! $this->permissions_manager->isAdmin($repository->getProject(), $user)) {
+            throw new UserIsNotSVNAdministratorException(
+                dgettext('tuleap-svn', "User doesn't have permission to create a repository")
+            );
+        }
+    }
+
+    /**
+     * @param Repository $repository
+     *
+     * @throws RepositoryNameIsInvalidException
+     */
+    private function checkRepositoryName(Repository $repository)
+    {
+        $rule = new RuleName($repository->getProject(), $this->dao);
+        if (! $rule->isValid($repository->getName())) {
+            throw new RepositoryNameIsInvalidException($rule->getErrorMessage());
+        }
+    }
+
+    /**
+     * @param Repository $svn_repository
+     *
+     * @return Repository
+     * @throws CannotCreateRepositoryException
+     */
+    private function createRepository(Repository $svn_repository)
+    {
+        $this->checkRepositoryName($svn_repository);
+        $id = $this->dao->create($svn_repository);
+        if (! $id) {
+            throw new CannotCreateRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'update_error'));
+        }
+
+        $svn_repository->setId($id);
+
+        return $svn_repository;
     }
 }

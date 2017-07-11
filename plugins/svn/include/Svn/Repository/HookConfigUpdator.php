@@ -38,52 +38,56 @@ class HookConfigUpdator
      * @var HookConfigSanitizer
      */
     private $hook_config_sanitizer;
+    /**
+     * @var ProjectHistoryFormatter
+     */
+    private $project_history_formatter;
 
     public function __construct(
         HookDao $hook_dao,
         \ProjectHistoryDao $project_history_dao,
         HookConfigChecker $hook_config_checker,
-        HookConfigSanitizer $hook_config_sanitizer
+        HookConfigSanitizer $hook_config_sanitizer,
+        ProjectHistoryFormatter $project_history_formatter
     ) {
-        $this->hook_dao              = $hook_dao;
-        $this->project_history_dao   = $project_history_dao;
-        $this->hook_config_checker   = $hook_config_checker;
-        $this->hook_config_sanitizer = $hook_config_sanitizer;
+        $this->hook_dao                  = $hook_dao;
+        $this->project_history_dao       = $project_history_dao;
+        $this->hook_config_checker       = $hook_config_checker;
+        $this->hook_config_sanitizer     = $hook_config_sanitizer;
+        $this->project_history_formatter = $project_history_formatter;
     }
 
     public function updateHookConfig(Repository $repository, array $hook_config)
     {
-        if ($this->hook_config_checker->hasConfigurationChanged($repository, $hook_config)) {
-            $this->project_history_dao->groupAddHistory(
-                'svn_multi_repository_hook_update',
-                $this->extractOldValues($repository, $hook_config),
-                $repository->getProject()->getID()
-            );
+        $add_history = true;
 
+        $this->update($repository, $hook_config, $add_history);
+    }
+
+    public function initHookConfiguration(Repository $repository, array $hook_config)
+    {
+        $add_history = false;
+
+        $this->update($repository, $hook_config, $add_history);
+    }
+
+    private function update(Repository $repository, array $hook_config, $add_history)
+    {
+        if ($this->hook_config_checker->hasConfigurationChanged($repository, $hook_config)) {
             $this->hook_dao->updateHookConfig(
                 $repository->getId(),
                 $this->hook_config_sanitizer->sanitizeHookConfigArray($hook_config)
             );
         }
-    }
 
-    private function extractOldValues(Repository $repository, array $hook_config)
-    {
-        return $repository->getName() .
-            PHP_EOL .
-            HookConfig::MANDATORY_REFERENCE . ": " .
-            $this->extractHookReadableValue($hook_config, HookConfig::MANDATORY_REFERENCE) .
-            PHP_EOL .
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE . ": " .
-            $this->extractHookReadableValue($hook_config, HookConfig::COMMIT_MESSAGE_CAN_CHANGE);
-    }
-
-    private function extractHookReadableValue($value, $index)
-    {
-        if (isset($value[$index])) {
-            return var_export($value[$index], true);
+        if (! $add_history) {
+            return;
         }
 
-        return '-';
+        $this->project_history_dao->groupAddHistory(
+            'svn_multi_repository_hook_update',
+            $repository->getName() . PHP_EOL . $this->project_history_formatter->getHookConfigHistory($hook_config),
+            $repository->getProject()->getID()
+        );
     }
 }
