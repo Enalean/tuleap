@@ -54,17 +54,20 @@ class Widget_ProjectSvnStats extends Widget
             '&name[' . $this->id . ']=' . $this->getInstanceId() . '" />
                 </div>';
     }
-    
+
     protected $tmp_nb_of_commit;
-    public function process($owner_type, $owner_id) {
+    public function process($owner_type, $owner_id)
+    {
         $dao = new SvnCommitsDao(CodendiDataAccess::instance());
+        $colors_for_charts = new ColorsForCharts();
+
         //The default duration is 3 months back
         $nb_weeks = 4 * 3;
         $duration = 7 * $nb_weeks;
-        
+
         $day = 24 * 3600;
         $week = 7 * $day;
-        
+
         //compute the stats
         $stats = array();
         $nb_of_commits = array();
@@ -76,10 +79,10 @@ class Widget_ProjectSvnStats extends Widget
         if (count($stats)) {
             //sort the results
             uksort($stats, array($this, 'sortByTop'));
-            
+
             $today           = $_SERVER['REQUEST_TIME'];
             $start_of_period = strtotime("-$nb_weeks weeks");
-            
+
             //fill-in the holes
             $tmp_stats = array();
             foreach($stats as $whoid => $stat) {
@@ -90,14 +93,14 @@ class Widget_ProjectSvnStats extends Widget
                 }
                 $stats[$whoid]['by_week'] = $tmp_stats;
             }
-            
-            
+
+
             //fill-in the labels
             $dates = array();
             for($i = $start_of_period ; $i <= $today ; $i += $week) {
                 $dates[] = date('M d', $i);
             }
-            
+
             $nb_commiters    = count($stats);
             $widgetFormatter = new Widget_ProjectSvnStats_Layout($nb_commiters);
 
@@ -120,7 +123,7 @@ class Widget_ProjectSvnStats extends Widget
                 $c->legend->setColumns(2);
             }
 
-            $colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_commiters));
+            $colors = array_reverse(array_slice($colors_for_charts->getChartColors(), 0, $nb_commiters));
             $nb_colors = count($colors);
             $bars = array();
             $i = 0;
@@ -136,7 +139,7 @@ class Widget_ProjectSvnStats extends Widget
                 }
                 $bars[] = $l;
             }
-            
+
             $gbplot = new AccBarPlot($bars);
             $c->Add($gbplot);
         } else {
@@ -145,7 +148,7 @@ class Widget_ProjectSvnStats extends Widget
         }
         echo $c->stroke();
     }
-    
+
     protected function sortByTop($a, $b) {
         return strnatcasecmp($this->tmp_nb_of_commit[$a], $this->tmp_nb_of_commit[$b]);
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2009
  *
@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Chart\ColorsForCharts;
 
 require_once 'Statistics_DiskUsageOutput.class.php';
 require_once 'ProjectQuotaManager.class.php';
@@ -68,6 +70,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         if ($res) {
             $services = $this->_dum->getProjectServices();
 
+            $colors_for_charts = new ColorsForCharts();
+
             $titles = array('Service', 'Start size', 'End size', 'Size evolution', 'Rate evolution');
 
             echo html_build_list_table_top($titles);
@@ -79,7 +83,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
                 echo '<tr class="'. util_get_alt_row_color($i++) .'">';
                 echo '<td>';
                 if ($colored) {
-                    $color = $GLOBALS['HTML']->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
+                    $color = $colors_for_charts->getColorCodeFromColorName($this->_dum->getServiceColor($row['service']));
                     $color = $this->applyColorModifier($color.':1.5');
                     echo '<span class="plugin_statistics_table_legend" style="background-color:'.$color.';">&nbsp;</span>';
                 }
