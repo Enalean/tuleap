@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 use DateTime;
 use AgileDashboard_KanbanItemManager;
 use Luracast\Restler\RestException;
+use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
@@ -35,6 +36,7 @@ use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
 use AgileDashboard_KanbanColumnDao;
 use AgileDashboardStatisticsAggregator;
+use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use UserManager;
 use Exception;
 use TrackerFactory;
@@ -821,6 +823,12 @@ class KanbanResource extends AuthenticatedResource {
             } catch (Tracker_NoChangeException $exception) {
                 $this->resources_patcher->rollback();
             } catch (Tracker_Workflow_GlobalRulesViolationException $exception) {
+                $this->resources_patcher->rollback();
+                throw new RestException(400, $exception->getMessage());
+            } catch (FieldValidationException $exception) {
+                $this->resources_patcher->rollback();
+                throw new RestException(400, $exception->getMessage());
+            } catch (Tracker_Workflow_Transition_InvalidConditionForTransitionException $exception) {
                 $this->resources_patcher->rollback();
                 throw new RestException(400, $exception->getMessage());
             } catch (Exception $exception) {
