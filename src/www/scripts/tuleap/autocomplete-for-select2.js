@@ -66,6 +66,7 @@ tuleap.autocomplete_users_for_select2 = function(element, options) {
     };
     options.escapeMarkup = function (markup) { return markup; };
     options.templateResult = formatUser;
+    options.templateSelection = formatUserWhenSelected;
 
     tlp.select2(element, options);
 
@@ -82,5 +83,9 @@ tuleap.autocomplete_users_for_select2 = function(element, options) {
         </div>';
 
         return markup;
+    }
+
+    function formatUserWhenSelected(user) {
+        return tuleap.escaper.html(user.text);
     }
 };
