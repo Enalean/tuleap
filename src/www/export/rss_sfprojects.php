@@ -51,7 +51,7 @@ while ($row = db_fetch_array($res)) {
 	print "   <title>".htmlspecialchars($row['group_name'])."</title>\n";
 	print "   <link>$server/project/?group_id=". urlencode($row['group_id']) . "</link>\n";
 	print "   <description>";
-	print preg_replace(" *\r*\n *"," ",rss_description($row['short_description']));
+	print preg_replace("/ *\r*\n */"," ",rss_description($row['short_description']));
 	print "</description>\n";
 	print "  </item>\n";
 }
@@ -113,7 +113,7 @@ print " </channel>\n";
 	print $row['group_id']. ",";
 	print $row['unix_group_name'] . ",";
 	print $row['group_name'] . ',';
-	print '"'.preg_replace(" *\r*\n *"," ",$row['short_description']).'",';
+	print '"'.preg_replace("/ *\r*\n */"," ",$row['short_description']).'",';
 	print '"'.join(',',$lang).'",';
 	print '"'.join(',',$os).'",';
 	print '"'.join(',',$devstate).'",';
