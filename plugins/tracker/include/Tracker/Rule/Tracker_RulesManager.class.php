@@ -309,7 +309,6 @@ class Tracker_RulesManager {
     }
 
     public function process($engine, $request, $current_user) {
-        //$this->displayRules($engine);
         if ($request->get('source_field') && !$request->get('target_field')) {
             $source_field = $request->get('source_field');
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, $source_field);
@@ -354,8 +353,6 @@ class Tracker_RulesManager {
                                    $field_source_value_id, 
                                    $field_target_value_id
                                    );
-//                           $this->saveRuleValue($this->tracker->id, $field_source->getId(), 
-//                                   $field_source_value_id, $field_target->getId(), $field_target_value_id);
                         }
                    }
                 }
@@ -473,14 +470,14 @@ class Tracker_RulesManager {
        $source_field_values = $source_field->getVisibleValuesPlusNoneIfAny();
        $target_field_values = $target_field->getVisibleValuesPlusNoneIfAny();
 
-       $nb_target_field_values =count($target_field_values);
+       $purifier = Codendi_HTMLPurifier::instance();
        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) .'" method="POST">';
        echo '<table id="tracker_field_dependencies_matrix">';
 
        echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
        echo "<td></td>";
        foreach($target_field_values as $target_field_value_id=>$target_field_value) {
-           echo '<td class="matrix_cell">'.$target_field_value->getLabel()."</td>";
+           echo '<td class="matrix_cell">'.$purifier->purify($target_field_value->getLabel())."</td>";
        }
        echo "</tr>";
 
@@ -490,7 +487,7 @@ class Tracker_RulesManager {
        //Display the available transitions
        foreach($source_field_values as $source_field_value_id=>$source_field_value) {
            echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
-           echo "<td>".$source_field_value->getLabel()."</td>";
+           echo "<td>".$purifier->purify($source_field_value->getLabel())."</td>";
            foreach($target_field_values as $target_field_value_id =>$target_field_value) {
                $box_value = $source_field_value_id.'_'.$target_field_value_id;
                $this->displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value);
