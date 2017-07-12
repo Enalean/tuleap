@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011-2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -35,6 +35,10 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
      * @var FRSReleaseFactory
      */
     private $release_factory;
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $html_purifier;
 
     public function __construct(ProjectUGroup $ugroup) {
         parent::__construct($ugroup);
@@ -110,7 +114,7 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
                     $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'package')
                         . ' <a href="/file/admin/editpackagepermissions.php?package_id='
                         . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
-                        . $objname . '</a>';
+                        . $this->html_purifier->purify($objname) . '</a>';
                 } else if ($row['permission_type'] == 'RELEASE_READ') {
                     $release         = $this->release_factory->getFRSReleaseFromDb($row['object_id']);
                     $package_name    = $release->getPackage()->getName();
@@ -118,28 +122,28 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
 
                     $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'release')
                         . ' <a href="/file/admin/editreleasepermissions.php?release_id=' . urlencode($row['object_id']) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '&package_id=' . urlencode($package_id) . '">'
-                        . $objname . '</a> ('
+                        . $this->html_purifier->purify($objname) . '</a> ('
                         . $GLOBALS['Language']->getText('project_admin_editugroup', 'from_package')
                         . ' <a href="/file/admin/editreleases.php?package_id=' . urlencode($package_id) . '&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
-                        . $package_name . '</a> )';
+                        . $this->html_purifier->purify($package_name) . '</a> )';
                 } else if ($row['permission_type'] == 'WIKI_READ') {
                     $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'wiki')
                         . ' <a href="/wiki/admin/index.php?view=wikiPerms&group_id=' . urlencode($this->ugroup->getProjectId()) . '">'
-                        . $objname . '</a>';
+                        . $this->html_purifier->purify($objname) . '</a>';
                 } else if ($row['permission_type'] == 'WIKIPAGE_READ') {
                     $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'wiki_page')
                         . ' <a href="/wiki/admin/index.php?group_id=' . urlencode($this->ugroup->getProjectId()) . '&view=pagePerms&id=' . urlencode($row['object_id']) . '">'
-                        . $objname . '</a>';
+                        . $this->html_purifier->purify($objname) . '</a>';
                 } else if (strpos($row['permission_type'], 'TRACKER_ACCESS') === 0) {
                     $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'tracker')
                         . ' <a href="/tracker/admin/?func=permissions&perm_type=tracker&group_id=' . urlencode($this->ugroup->getProjectId()) . '&atid=' . urlencode($row['object_id']) . '">'
-                        . $objname . '</a>';
+                        . $this->html_purifier->purify($objname) . '</a>';
                 } else if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
                     $tracker_field_displayed[$atid] = 1;
                     $atid                           = permission_extract_atid($row['object_id']);
                     $content = $GLOBALS['Language']->getText('project_admin_editugroup', 'tracker_field')
                         . ' <a href="/tracker/admin/?group_id=' . urlencode($this->ugroup->getProjectId()) . '&atid=' . urlencode($atid) . '&func=permissions&perm_type=fields&group_first=1&selected_id=' . urlencode($this->ugroup->getId()) . '">'
-                        . $objname . '</a>';
+                        . $this->html_purifier->purify($objname) . '</a>';
                 } else if ($row['permission_type'] == 'TRACKER_ARTIFACT_ACCESS') {
                     $content = $this->html_purifier->purify($objname, CODENDI_PURIFIER_BASIC);
                 } else {
@@ -159,7 +163,7 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
                     }
                 }
 
-                $data[$row_count]['permission_name'] = permission_get_name($row['permission_type']);
+                $data[$row_count]['permission_name'] = $this->html_purifier->purify(permission_get_name($row['permission_type']));
                 $data[$row_count]['content']         = $content;
                 $row_count++;
             }

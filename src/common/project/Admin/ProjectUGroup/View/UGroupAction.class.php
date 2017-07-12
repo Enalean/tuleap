@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,7 +65,7 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
             $content .= '<ul>';
             foreach ($toRemove as $userId) {
                 if (($user = $user_manager->getUserById($userId))) {
-                    $content .= '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
+                    $content .= '<li>'.$this->purifier->purify($user->getRealName().' ('.$user->getUserName().')') . '</li>';
                 }
             }
             $content .= '</ul>';
@@ -77,7 +77,7 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
             $content .= '<ul>';
             foreach ($toAdd as $userId) {
                 if (($user = $user_manager->getUserById($userId))) {
-                    $content .= '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
+                    $content .= '<li>'.$this->purifier->purify($user->getRealName().' ('.$user->getUserName().')') . '</li>';
                 }
             }
             $content .= '</ul>';
