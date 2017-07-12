@@ -226,12 +226,6 @@ $sys_display_homepage_news = 1;
 // Should be either 'ldap' or 'codendi'
 $sys_auth_type = 'codendi';
 
-// Default Apache Subversion authentication mod.
-// Default is 'modmysql'
-// In some setup, memleak might appears on checkout of big files, 'modperl' address
-// this issue
-$sys_auth_svn_mod = 'modmysql';
-
 // System name to be used in Web pages, documentation,etc.
 $sys_name = 'Tuleap';
 

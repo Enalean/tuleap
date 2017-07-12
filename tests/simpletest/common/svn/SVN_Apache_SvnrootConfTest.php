@@ -55,42 +55,39 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     /**
      * @return SVN_Apache_SvnrootConf
      */
-    private function GivenSvnrootForTwoGroups($authentification_mode) {
+    private function GivenSvnrootForTwoGroups()
+    {
         $projects = array(array('repository_name' => 'gpig',
                                 'public_path'     => '/svnroot/gpig',
                                 'system_path'     => '/svnroot/gpig',
                                 'group_name'      => 'Guinea Pig',
-                                'group_id'        => 101,
-                                'auth_mod'        => $authentification_mode),
+                                'group_id'        => 101),
                           array('repository_name' => 'garden',
                                 'public_path'     => '/svnroot/garden',
                                 'system_path'     => '/svnroot/garden',
                                 'group_name'      => 'The Garden Project',
-                                'group_id'        => 102,
-                                'auth_mod'        => $authentification_mode));
+                                'group_id'        => 102));
         $repositories = array();
 
-        $project_manager  = mock('ProjectManager');
         $event_manager    = new SVN_Apache_SvnrootConfTestEventManager();
-        $token_manager    = mock('SVN_TokenUsageManager');
         $cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');
 
-        $factory = new SVN_Apache_Auth_Factory($project_manager, $event_manager, $token_manager, $cache_parameters);
+        $factory = new SVN_Apache_Auth_Factory($event_manager, $cache_parameters);
 
         return new SVN_Apache_SvnrootConf($factory, $projects, $repositories);
     }
 
-    private function GivenAFullApacheConfWithModMysql() {
-        $backend = $this->GivenSvnrootForTwoGroups('modmysql');
-        return $backend->getFullConf();
+    private function GivenAFullApacheConfWithModPerl()
+    {
+        $svnroot = $this->GivenSvnrootForTwoGroups();
+        return $svnroot->getFullConf();
     }
 
     function testFullConfShouldWrapEveryThing() {
-        $conf = $this->GivenAFullApacheConfWithModMysql();
+        $conf = $this->GivenAFullApacheConfWithModPerl();
         //echo '<pre>'.htmlentities($conf).'</pre>';
 
-        $this->assertNoPattern('/PerlLoadModule Apache::Tuleap/', $conf);
-        $this->assertPattern('/AuthMYSQLEnable/', $conf);
+        $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
         $this->ThenThereAreOnlyOneCustomLogStatement($conf);
     }
@@ -105,21 +102,6 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     private function ThenThereAreOnlyOneCustomLogStatement($conf) {
         preg_match_all('/CustomLog/', $conf, $matches);
         $this->assertEqual(1, count($matches[0]));
-    }
-
-    function GivenAFullApacheConfWithModPerl() {
-        $svnroot = $this->GivenSvnrootForTwoGroups('modperl');
-        return $svnroot->getFullConf();
-    }
-
-    function testFullApacheConfWithModPerl() {
-        $conf = $this->GivenAFullApacheConfWithModPerl();
-        //echo '<pre>'.htmlentities($conf).'</pre>';
-
-        $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf);
-        $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
-        $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
-        $this->ThenThereAreOnlyOneCustomLogStatement($conf);
     }
 
     public function itHasALogFileFromConfiguration() {

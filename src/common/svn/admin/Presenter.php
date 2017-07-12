@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,9 @@
 
 namespace Tuleap\SvnCore\Admin;
 
-use ForgeConfig;
-use SVN_Apache_SvnrootConf;
 
 abstract class Presenter
 {
-    public $is_token_pane_active = false;
     public $is_cache_pane_active = false;
 
     /**
@@ -50,13 +47,5 @@ abstract class Presenter
     public function token_panel_title()
     {
         return $GLOBALS['Language']->getText('svn_siteadmin', 'token_panel_title');
-    }
-
-    /**
-     * @return bool
-     */
-    public function is_svn_token_configurable()
-    {
-        return ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY) !== SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL;
     }
 }

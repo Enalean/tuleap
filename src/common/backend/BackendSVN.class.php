@@ -648,9 +648,7 @@ class BackendSVN extends Backend {
     
     protected function getSVNApacheAuthFactory() {
         return new SVN_Apache_Auth_Factory(
-            $this->getProjectManager(),
             EventManager::instance(),
-            $this->getSVNTokenManager(),
             $this->getSVNCacheParameters()
         );
     }
@@ -824,13 +822,6 @@ class BackendSVN extends Backend {
 
     private function getHookPath($project_svnroot, $hook_name) {
         return $project_svnroot.'/hooks/'.$hook_name;
-    }
-
-    /**
-     * @return SVN_TokenUsageManager
-     */
-    protected function getSVNTokenManager() {
-        return new SVN_TokenUsageManager(new SVN_TokenDao(), $this->getProjectManager());
     }
 
     /**

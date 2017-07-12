@@ -76,16 +76,11 @@ if ($svn_preamble != '') {
     $template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/svn/';
     $renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
 
-    $project_manager        = ProjectManager::instance();
-    $token_manager          = new SVN_TokenUsageManager(new SVN_TokenDao(), $project_manager);
-    $project_can_use_tokens = $token_manager->isProjectAuthorizingTokens($project);
-
     $presenter = new SVN_IntroPresenter(
         $user,
         $svn_intro_in_plugin,
         $svn_intro_info,
-        $svn_url,
-        $project_can_use_tokens
+        $svn_url
     );
 
     $renderer->renderToPage('intro', $presenter);

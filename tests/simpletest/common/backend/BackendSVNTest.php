@@ -66,7 +66,6 @@ class BackendSVNTest extends TuleapTestCase {
         mkdir(ForgeConfig::get('sys_project_backup_path'), 0777, true);
 
         $this->project_manager  = mock('ProjectManager');
-        $this->token_manager    = mock('SVN_TokenUsageManager');
         $this->cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');;
 
         $this->backend = partial_mock(
@@ -306,28 +305,24 @@ class BackendSVNTest extends TuleapTestCase {
                 "group_name"      => "Guinea Pig",
                 "repository_name" => "gpig",
                 "public_path"     => "/svnroot/gpig",
-                "system_path"     => "/svnroot/gpig",
-                "auth_mod"        => "modmysql"
+                "system_path"     => "/svnroot/gpig"
             ),
             array (
                 "group_id"        => "102",
                 "group_name"      => "Guinea Pig is \"back\"",
                 "repository_name" => "gpig2",
                 "public_path"     => "/svnroot/gpig2",
-                "system_path"     => "/svnroot/gpig2",
-                "auth_mod"        => "modmysql"
+                "system_path"     => "/svnroot/gpig2"
             ),
             array (
                 "group_id"        => "103",
                 "group_name"      => "Guinea Pig is 'angry'",
                 "repository_name" => "gpig3",
                 "public_path"     => "/svnroot/gpig3",
-                "system_path"     => "/svnroot/gpig3",
-                "auth_mod"        => "modmysql"
+                "system_path"     => "/svnroot/gpig3"
             )
         );
         $this->backend->setReturnReference('getSvnDao', $svn_dao);
-        $this->backend->setReturnReference('getSVNTokenManager', $this->token_manager);
         $this->backend->setReturnReference('getProjectManager', $this->project_manager);
         $this->backend->setReturnReference('getSVNCacheParameters', $this->cache_parameters);
 
@@ -345,7 +340,6 @@ class BackendSVNTest extends TuleapTestCase {
     public function testSetSVNPrivacy_private() {
         $this->backend->setReturnValue('chmod', true);
         $this->backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0770));
-        $this->backend->setReturnReference('getSVNTokenManager', $this->token_manager);
         $this->backend->setReturnReference('getProjectManager', $this->project_manager);
 
         $project = new MockProject($this);
@@ -527,7 +521,6 @@ class BackendSVN_SVNAccessFilePermission_Test extends TuleapTestCase {
 
         $project_manager = mock('ProjectManager');
         $event_manager   = mock('EventManager');
-        $token_manager   = mock('SVN_TokenUsageManager');
 
         $this->backend = partial_mock(
             'BackendSVN',

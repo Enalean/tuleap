@@ -26,11 +26,6 @@ class SVN_IntroPresenter {
     public $uses_ldap_info;
 
     /**
-     * @var boolean
-     */
-    private $project_can_use_tokens;
-
-    /**
      * @var string
      */
     private $svn_url;
@@ -45,11 +40,11 @@ class SVN_IntroPresenter {
      */
     public $ldap_row;
 
-    public function __construct(PFUser $user, $uses_ldap_info, $ldap_row, $svn_url, $project_can_use_tokens) {
+    public function __construct(PFUser $user, $uses_ldap_info, $ldap_row, $svn_url)
+    {
         $this->user                   = $user;
         $this->ldap_row               = $ldap_row;
         $this->svn_url                = $svn_url;
-        $this->project_can_use_tokens = $project_can_use_tokens;
         $this->uses_ldap_info         = $uses_ldap_info;
     }
 
@@ -110,9 +105,7 @@ class SVN_IntroPresenter {
             $password_content = $GLOBALS['Language']->getText('svn_intro', 'password');
         }
 
-        if ($this->project_can_use_tokens) {
-            $password_content .= ' ' . $GLOBALS['Language']->getText('svn_intro', 'token');
-        }
+        $password_content .= ' ' . $GLOBALS['Language']->getText('svn_intro', 'token');
 
         return $password_content;
     }

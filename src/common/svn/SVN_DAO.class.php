@@ -31,13 +31,12 @@ class SVN_DAO extends DataAccessObject
 
     public function searchSvnRepositories()
     {
-        $auth_mod = $this->da->quoteSmart(ForgeConfig::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY));
         $sys_dir  = $this->da->quoteSmart(ForgeConfig::get('svn_prefix'));
 
         $sql = "SELECT groups.*, service.*,
                 CONCAT('/svnroot/', unix_group_name) AS public_path,
                 CONCAT($sys_dir,'/', unix_group_name) AS system_path,
-                $auth_mod AS auth_mod, '' AS backup_path, '' AS repository_deletion_date
+                '' AS backup_path, '' AS repository_deletion_date
                 FROM groups, service
                 WHERE groups.group_id = service.group_id
                   AND service.short_name = 'svn'
