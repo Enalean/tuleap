@@ -163,6 +163,10 @@ class ProjectResource extends AuthenticatedResource {
     {
         $this->checkAccess();
 
+        if (! \ForgeConfig::get('sys_use_project_registration')) {
+            throw new RestException(403, 'Project registration is disabled');
+        }
+
         $data = array(
             'project' => array(
                 'form_short_description' => $description,
