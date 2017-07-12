@@ -121,80 +121,6 @@ $sql = "INSERT INTO stats_project_build_tmp
 $rel = $dbh->prepare($sql)->execute();
 print "Insert msg_uniq_auth from forum_group_list and forum...\n" if $verbose;
 
-## bugs_opened
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_id,'bugs_opened',COUNT(bug_id) 
-	FROM bug
-	WHERE ( date > $day_begin AND date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert bugs_opened from bug...\n" if $verbose;
-
-## bugs_closed
-$sql = "INSERT INTO stats_project_build_tmp 
-	SELECT group_id,'bugs_closed',COUNT(bug_id) 
-	FROM bug
-	WHERE ( close_date > $day_begin AND close_date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert bugs_closed from bug...\n" if $verbose;
-
-## support_opened
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_id,'support_opened',COUNT(support_id) 
-	FROM support
-	WHERE ( open_date > $day_begin AND open_date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert support_opened from support...\n" if $verbose;
-
-## support_closed
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_id,'support_closed',COUNT(support_id) 
-	FROM support
-	WHERE ( close_date > $day_begin AND close_date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert support_closed from support...\n" if $verbose;
-
-## patches_opened
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_id,'patches_opened',COUNT(patch_id) 
-	FROM patch
-	WHERE ( open_date > $day_begin AND open_date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert patches_opened from patch...\n" if $verbose;
-
-## patches_closed
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_id,'patches_closed',COUNT(patch_id) 
-	FROM patch
-	WHERE ( close_date > $day_begin AND close_date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert patches_closed from patch...\n" if $verbose;
-
-## tasks_opened
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_project_id as group_id,'tasks_opened',
-		COUNT(project_task_id) 
-	FROM project_task
-	WHERE ( start_date > $day_begin AND start_date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert tasks_opened from project_task...\n" if $verbose;
-
-## tasks_closed
-$sql = "INSERT INTO stats_project_build_tmp
-	SELECT group_project_id as group_id,'tasks_closed',
-		COUNT(project_task_id) 
-	FROM project_task
-	WHERE ( end_date > $day_begin AND end_date < $day_end )
-	GROUP BY group_id";
-$rel = $dbh->prepare($sql)->execute();
-print "Insert tasks_closed from project_task...\n" if $verbose;
-
 ## artifacts_opened
 $sql = "INSERT INTO stats_project_build_tmp
 	SELECT artifact_group_list.group_id,'artifacts_opened',
@@ -236,14 +162,6 @@ $sql = "CREATE TABLE stats_project_tmp (
         subdomain_views int(11) DEFAULT '0' NOT NULL,
         msg_posted      smallint(6) DEFAULT '0' NOT NULL,
         msg_uniq_auth   smallint(6) DEFAULT '0' NOT NULL,
-        bugs_opened     smallint(6) DEFAULT '0' NOT NULL,
-        bugs_closed     smallint(6) DEFAULT '0' NOT NULL,
-        support_opened  smallint(6) DEFAULT '0' NOT NULL,
-        support_closed  smallint(6) DEFAULT '0' NOT NULL,
-        patches_opened  smallint(6) DEFAULT '0' NOT NULL,
-        patches_closed  smallint(6) DEFAULT '0' NOT NULL,
-        tasks_opened    smallint(6) DEFAULT '0' NOT NULL,
-        tasks_closed    smallint(6) DEFAULT '0' NOT NULL,
         cvs_checkouts   smallint(6) DEFAULT '0' NOT NULL,
         cvs_commits     smallint(6) DEFAULT '0' NOT NULL,
         cvs_adds        smallint(6) DEFAULT '0' NOT NULL,
@@ -342,7 +260,7 @@ $sql = "DELETE FROM stats_project WHERE month='$year$mon' AND day='$day'";
 $rel = $dbh->prepare($sql)->execute();
 print "Cleared Old data from stats_project...\n" if $verbose;
 
-$sql = "INSERT INTO stats_project
+$sql = "INSERT INTO stats_project (month, week, day, group_id, group_ranking, group_metric, developers, file_releases, downloads, site_views, subdomain_views, msg_posted, msg_uniq_auth, cvs_checkouts, cvs_commits, cvs_adds, svn_commits, svn_adds, svn_deletes, svn_checkouts, svn_access_count, artifacts_opened, artifacts_closed)
 	SELECT * FROM stats_project_tmp";
 $rel = $dbh->prepare($sql)->execute();
 print "Wrote back new data to stats_project...\n" if $verbose;

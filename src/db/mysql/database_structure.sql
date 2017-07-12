@@ -1,6 +1,6 @@
 #
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+# Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
 #
 # This file is a part of Tuleap.
 #
@@ -690,14 +690,6 @@ CREATE TABLE stats_project (
   subdomain_views int(11) NOT NULL default '0',
   msg_posted smallint(6) NOT NULL default '0',
   msg_uniq_auth smallint(6) NOT NULL default '0',
-  bugs_opened smallint(6) NOT NULL default '0',
-  bugs_closed smallint(6) NOT NULL default '0',
-  support_opened smallint(6) NOT NULL default '0',
-  support_closed smallint(6) NOT NULL default '0',
-  patches_opened smallint(6) NOT NULL default '0',
-  patches_closed smallint(6) NOT NULL default '0',
-  tasks_opened smallint(6) NOT NULL default '0',
-  tasks_closed smallint(6) NOT NULL default '0',
   cvs_checkouts smallint(6) NOT NULL default '0',
   cvs_commits smallint(6) NOT NULL default '0',
   cvs_adds smallint(6) NOT NULL default '0',
