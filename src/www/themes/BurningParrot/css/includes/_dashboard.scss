@@ -37,12 +37,12 @@
 
 #dashboard-tabs-dropdown-trigger {
     transition: color 100ms, opacity 100ms;
-    color: $tlp-ui-dimmed;
     opacity: .5;
+    color: $tlp-ui-dimmed;
 
     &:hover {
-        color: $tlp-theme-color;
         opacity: 1;
+        color: $tlp-theme-color;
     }
 }
 
@@ -73,13 +73,14 @@
     position: relative;
     flex: 1;
     flex-direction: row;
+    align-items: flex-start;
     padding: $tlp-half-spacing / 2 0;
     transition: box-shadow 100ms;
 
     &.highlight {
         .dashboard-widget {
-            box-shadow: 0 3px 6px 0 rgba(0, 0, 0, .08);
             animation: 100ms infinite alternate shakeWidget;
+            box-shadow: 0 3px 6px 0 rgba(0, 0, 0, .08);
         }
     }
 
