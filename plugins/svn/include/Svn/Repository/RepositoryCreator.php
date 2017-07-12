@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Repository;
 
+use PFUser;
 use ProjectHistoryDao;
 use SystemEvent;
 use SystemEventManager;
@@ -74,45 +75,34 @@ class RepositoryCreator
     }
 
     /**
-     * @param Repository $svn_repository
+     * @return SystemEvent
      *
-     * @param \PFUser    $user
-     *
-     * @return SystemEvent or null
      * @throws CannotCreateRepositoryException
      * @throws RepositoryNameIsInvalidException
      * @throws UserIsNotSVNAdministratorException
      */
-    public function create(Repository $svn_repository, \PFUser $user)
+    public function create(Repository $svn_repository, PFUser $user)
     {
         $this->checkUserHasAdministrationPermissions($svn_repository, $user);
 
-        $this->createWithoutUserAdminCheck($svn_repository);
+        return $this->createWithoutUserAdminCheck($svn_repository);
     }
 
     /**
-     * @param Repository $svn_repository
-     *
      * @return SystemEvent
+     *
      * @throws CannotCreateRepositoryException
      * @throws RepositoryNameIsInvalidException
      */
     public function createWithoutUserAdminCheck(Repository $svn_repository)
     {
         $svn_repository = $this->createRepository($svn_repository);
-
-        $this->history_dao->groupAddHistory(
-            'svn_multi_repository_creation',
-            $svn_repository->getName(),
-            $svn_repository->getProject()->getID()
-        );
+        $this->logCreation($svn_repository);
 
         return $this->sendEvent($svn_repository);
     }
 
     /**
-     * @param Repository $svn_repository
-     *
      * @return SystemEvent
      */
     private function sendEvent(Repository $svn_repository)
@@ -129,22 +119,39 @@ class RepositoryCreator
         );
     }
 
-    public function createWithSettings(Repository $repository, \PFUser $user, array $commit_rules)
+    /**
+     * @return SystemEvent
+     */
+    public function createWithSettings(Repository $repository, PFUser $user, array $commit_rules)
     {
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository = $this->createRepository($repository);
-        $this->sendEvent($repository);
 
-        $history = $this->project_history_formatter->getRepositoryHistory($repository);
-        $key     = 'svn_multi_repository_creation';
         if ($commit_rules) {
             $this->hook_config_updator->initHookConfiguration($repository, $commit_rules);
-            $history = $this->project_history_formatter->getFullHistory($repository, $commit_rules);
-            $key     = 'svn_multi_repository_creation_with_full_settings';
+            $this->logCreationWithCustomSettings($repository, $commit_rules);
+        } else {
+            $this->logCreation($repository);
         }
 
+        return $this->sendEvent($repository);
+    }
+
+    private function logCreation(Repository $repository)
+    {
         $this->history_dao->groupAddHistory(
-            $key,
+            'svn_multi_repository_creation',
+            $repository->getName(),
+            $repository->getProject()->getID()
+        );
+    }
+
+    private function logCreationWithCustomSettings(Repository $repository, array $commit_rules)
+    {
+        $history = $this->project_history_formatter->getFullHistory($repository, $commit_rules);
+
+        $this->history_dao->groupAddHistory(
+            'svn_multi_repository_creation_with_full_settings',
             $history,
             $repository->getProject()->getID()
         );
@@ -152,11 +159,11 @@ class RepositoryCreator
 
     /**
      * @param Repository $repository
-     * @param \PFUser    $user
+     * @param PFUser    $user
      *
      * @throws UserIsNotSVNAdministratorException
      */
-    private function checkUserHasAdministrationPermissions(Repository $repository, \PFUser $user)
+    private function checkUserHasAdministrationPermissions(Repository $repository, PFUser $user)
     {
         if (! $this->permissions_manager->isAdmin($repository->getProject(), $user)) {
             throw new UserIsNotSVNAdministratorException(

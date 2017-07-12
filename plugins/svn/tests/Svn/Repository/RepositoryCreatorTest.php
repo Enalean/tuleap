@@ -68,14 +68,14 @@ class RepositoryCreatorTest extends \TuleapTestCase
         parent::setUp();
 
         $this->system_event_manager = mock('SystemEventManager');
-        $history_dao                = mock('ProjectHistoryDao');
+        $this->history_dao          = mock('ProjectHistoryDao');
         $this->dao                  = mock('Tuleap\Svn\Dao');
         $this->permissions_manager  = mock('Tuleap\Svn\SvnPermissionManager');
         $this->hook_config_updator  = mock('Tuleap\Svn\Repository\HookConfigUpdator');
         $this->repository_creator   = new RepositoryCreator(
             $this->dao,
             $this->system_event_manager,
-            $history_dao,
+            $this->history_dao,
             $this->permissions_manager,
             $this->hook_config_updator,
             new ProjectHistoryFormatter()
@@ -97,7 +97,9 @@ class RepositoryCreatorTest extends \TuleapTestCase
     public function itCreatesTheRepository()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
+
         expect($this->system_event_manager)->createEvent()->once();
+        expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation', '*', '*')->once();
 
         $this->repository_creator->create($this->repository, $this->user);
     }
@@ -105,8 +107,10 @@ class RepositoryCreatorTest extends \TuleapTestCase
     public function itThrowsAnExceptionWhenUserIsNotASVNAdministrator()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(false);
+
         expect($this->system_event_manager)->createEvent()->never();
         $this->expectException('Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException');
+        expect($this->history_dao)->groupAddHistory()->never();
 
         $this->repository_creator->create($this->repository, $this->user);
     }
@@ -114,9 +118,11 @@ class RepositoryCreatorTest extends \TuleapTestCase
     public function itThrowsAnExceptionWhenRepositoryNameIsAlreadyUsed()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
-        expect($this->system_event_manager)->createEvent()->never();
         stub($this->dao)->doesRepositoryAlreadyExist()->returns(true);
+
+        expect($this->system_event_manager)->createEvent()->never();
         $this->expectException('Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException');
+        expect($this->history_dao)->groupAddHistory()->never();
 
         $this->repository_creator->create($this->repository, $this->user);
     }
@@ -124,23 +130,27 @@ class RepositoryCreatorTest extends \TuleapTestCase
     public function itCreatesRepositoryWithCustomSettings()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
+
         expect($this->system_event_manager)->createEvent()->once();
+        expect($this->hook_config_updator)->initHookConfiguration()->once();
+        expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation_with_full_settings', '*', '*')->once();
+
         $commit_rules = array(
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true
         );
-        expect($this->hook_config_updator)->initHookConfiguration()->once();
-
         $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
     }
 
     public function itCreatesRepositoryWithNoCustomSettings()
     {
         stub($this->permissions_manager)->isAdmin($this->project, $this->user)->returns(true);
-        expect($this->system_event_manager)->createEvent()->once();
-        $commit_rules = array();
-        expect($this->hook_config_updator)->initHookConfiguration()->never();
 
+        expect($this->system_event_manager)->createEvent()->once();
+        expect($this->hook_config_updator)->initHookConfiguration()->never();
+        expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation', '*', '*')->once();
+
+        $commit_rules = array();
         $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
     }
 }
