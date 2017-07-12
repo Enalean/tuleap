@@ -87,7 +87,7 @@ abstract class Kanban extends Widget
 
     public function getTitle()
     {
-        return $this->kanban_title ? : '';
+        return $this->kanban_title ? : 'Kanban';
     }
 
     public function getDescription()
@@ -172,5 +172,15 @@ abstract class Kanban extends Widget
     public function isUnique()
     {
         return false;
+    }
+
+    public function getImageSource()
+    {
+        return '/themes/common/images/widgets/add-kanban-widget-from-kanban.png';
+    }
+
+    public function getImageTitle()
+    {
+        return dgettext('tuleap-agiledashboard', 'Add Kanban to dashboard');
     }
 }

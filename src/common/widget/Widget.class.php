@@ -176,4 +176,20 @@ use Tuleap\Dashboard\User\UserDashboardController;
     {
         return true;
     }
+
+    /**
+     * @return string
+     */
+    public function getImageSource()
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageTitle()
+    {
+        return '';
+    }
 }

@@ -1,3 +1,6 @@
+msgid "Add Kanban to dashboard"
+msgstr ""
+
 msgid "Add to dashboard"
 msgstr ""
 
