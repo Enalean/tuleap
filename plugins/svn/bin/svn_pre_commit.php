@@ -47,7 +47,6 @@ try {
     $transaction     = $argv[2];
 
     $svnlook               = new Svnlook(new System_Command());
-    $hook_config_sanitizer = new HookConfigSanitizer();
     $hook                  = new PreCommit(
         $repository_path,
         $transaction,
@@ -61,13 +60,9 @@ try {
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
-            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance(),
-            new ProjectHistoryDao(),
-            $hook_config_sanitizer
+            new AccessFileHistoryFactory(new AccessFileHistoryDao())
         ),
         new CommitInfoEnhancer($svnlook, new CommitInfo()),
         new ImmutableTagFactory(new ImmutableTagDao()),

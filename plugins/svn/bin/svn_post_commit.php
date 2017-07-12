@@ -67,13 +67,9 @@ try {
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
-            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance(),
-            new ProjectHistoryDao(),
-            new HookConfigSanitizer()
+            new AccessFileHistoryFactory(new AccessFileHistoryDao())
         ),
         new MailHeaderManager(new MailHeaderDao()),
         new EmailsToBeNotifiedRetriever(

@@ -308,13 +308,9 @@ class SvnPlugin extends Plugin
                     new Dao(),
                     new SvnLogger()
                 ),
-                new HookDao(),
                 EventManager::instance(),
                 Backend::instance(Backend::SVN),
-                new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-                SystemEventManager::instance(),
-                new ProjectHistoryDao(),
-                $this->getHookConfigSanitizer()
+                new AccessFileHistoryFactory(new AccessFileHistoryDao())
             );
         }
 

@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,19 +22,17 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasSVN\Dao;
+use Tuleap\ReferenceAliasSVN\ReferencesBuilder;
+use Tuleap\ReferenceAliasSVN\ReferencesImporter;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Dao as SVNDao;
-use Tuleap\ReferenceAliasSVN\ReferencesImporter;
-use Tuleap\ReferenceAliasSVN\ReferencesBuilder;
 use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Repository\HookConfigSanitizer;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Dao as SVNDao;
 use Tuleap\Svn\Dao as SVNPluginDao;
-use Tuleap\Svn\XMLRepositoryImporter;
+use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
+use Tuleap\Svn\XMLRepositoryImporter;
 
 class referencealias_svnPlugin extends Plugin
 {
@@ -111,13 +108,9 @@ class referencealias_svnPlugin extends Plugin
                 $this->getLogger(),
                 $this->getSystemCommand(),
                 $this->getDestructor(),
-                $this->getHookDao(),
                 EventManager::instance(),
                 Backend::instance(Backend::SVN),
-                $this->getAccessFileHistoryFactory(),
-                SystemEventManager::instance(),
-                new ProjectHistoryDao(),
-                new HookConfigSanitizer()
+                $this->getAccessFileHistoryFactory()
             )
         );
     }
@@ -125,11 +118,6 @@ class referencealias_svnPlugin extends Plugin
     private function getAccessFileHistoryFactory()
     {
         return new AccessFileHistoryFactory(new AccessFileHistoryDao());
-    }
-
-    private function getHookDao()
-    {
-        return new HookDao();
     }
 
     private function getSystemCommand()

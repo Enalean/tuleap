@@ -34,9 +34,7 @@ use SystemEventManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
-use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_RESTORE_REPOSITORY;
-use Tuleap\Svn\Repository\Exception\CannotDeleteRepositoryException;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\SvnAdmin;
 
@@ -46,8 +44,6 @@ class RepositoryManager
 
     /** @var Dao */
     private $dao;
-    /** @var HookDao */
-    private $hook_dao;
      /** @var ProjectManager */
     private $project_manager;
      /** @var SvnAdmin */
@@ -64,16 +60,6 @@ class RepositoryManager
     private $backend;
     /** @var AccessFileHistoryFactory */
     private $access_file_history_factory;
-    /** @var SystemEventManager */
-    private $system_event_manager;
-    /**
-     * @var \ProjectHistoryDao
-     */
-    private $history_dao;
-    /**
-     * @var HookConfigSanitizer
-     */
-    private $hook_config_sanitizer;
 
     public function __construct(
         Dao $dao,
@@ -82,13 +68,9 @@ class RepositoryManager
         Logger $logger,
         System_Command $system_command,
         Destructor $destructor,
-        HookDao $hook_dao,
         EventManager $event_manager,
         Backend $backend,
-        AccessFileHistoryFactory $access_file_history_factory,
-        SystemEventManager $system_event_manager,
-        \ProjectHistoryDao $history_dao,
-        HookConfigSanitizer $hook_config_sanitizer
+        AccessFileHistoryFactory $access_file_history_factory
     ) {
         $this->dao                         = $dao;
         $this->project_manager             = $project_manager;
@@ -96,13 +78,9 @@ class RepositoryManager
         $this->logger                      = $logger;
         $this->system_command              = $system_command;
         $this->destructor                  = $destructor;
-        $this->hook_dao                    = $hook_dao;
         $this->event_manager               = $event_manager;
         $this->backend                     = $backend;
         $this->access_file_history_factory = $access_file_history_factory;
-        $this->system_event_manager        = $system_event_manager;
-        $this->history_dao                 = $history_dao;
-        $this->hook_config_sanitizer       = $hook_config_sanitizer;
     }
 
     /**
@@ -347,9 +325,7 @@ class RepositoryManager
         }
         $this->logger->debug('Removing physically the repository');
 
-        $system_command = new System_Command();
-
-        $command_output = $system_command->exec('rm -rf '.escapeshellarg($path));
+        $command_output = $this->system_command->exec('rm -rf '.escapeshellarg($path));
         foreach ($command_output as $line) {
             $this->logger->debug('[svn '.$repository->getName().'] cannot remove repository: '. $line);
         }

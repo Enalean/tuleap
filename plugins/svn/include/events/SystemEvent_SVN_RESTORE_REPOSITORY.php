@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,24 +20,21 @@
 
 namespace Tuleap\Svn\EventRepository;
 
+use Backend;
 use EventManager;
-use ProjectHistoryDao;
+use Project;
+use ProjectManager;
+use System_Command;
 use SystemEvent;
 use SystemEventManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Repository\HookConfigSanitizer;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\Svn\Dao;
-use Tuleap\Svn\SvnLogger;
+use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SvnAdmin;
-use ProjectManager;
-use System_Command;
-use Backend;
-use Project;
+use Tuleap\Svn\SvnLogger;
 
 class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent
 {
@@ -111,13 +108,10 @@ class SystemEvent_SVN_RESTORE_REPOSITORY extends SystemEvent
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
             new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance(),
-            new ProjectHistoryDao(),
-            new HookConfigSanitizer()
+            SystemEventManager::instance()
         );
     }
 }
