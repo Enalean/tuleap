@@ -1,11 +1,14 @@
 <div class="kanban-header">
     <h1 class="kanban-header-title">{{ kanban.kanban.label }}</h1>
+
+    <go-to-kanban></go-to-kanban>
+
     <button type="button"
         class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-edit-button"
         ng-click="kanban.editKanban()"
         ng-show="kanban.showEditbutton()"
     >
-        <i class="fa fa-pencil"></i>
+        <i class="fa fa-pencil tlp-button-icon"></i>
         <span translate>Edit this Kanban</span>
     </button>
     <div id="edit-kanban-modal"
@@ -18,23 +21,24 @@
         class="tlp-button-primary tlp-button-outline tlp-button-small"
         ng-click="kanban.openReportModal()"
     >
-        <i class="fa fa-bar-chart"></i>
+        <i class="fa fa-bar-chart tlp-button-icon"></i>
         <span translate>Show reports</span>
     </button>
 
     <add-to-dashboard></add-to-dashboard>
+
     <div class="kanban-header-spacer"></div>
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button"
             ng-click="kanban.toggleCollapsedMode()"
             title="{{ 'Compact view' | translate }}">
-        <i class="fa fa-list"></i> <span translate>Compact view</span>
+        <i class="fa fa-list tlp-button-icon"></i> <span translate>Compact view</span>
     </button>
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button"
             ng-click="kanban.toggleCollapsedMode()"
             title="{{ 'Detailed view' | translate }}">
-        <i class="fa fa-th-list"></i> <span translate>Detailed view</span>
+        <i class="fa fa-th-list tlp-button-icon"></i> <span translate>Detailed view</span>
     </button>
     <input type="search"
             class="tlp-search tlp-search-small kanban-header-search"

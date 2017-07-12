@@ -26,7 +26,8 @@ function MainCtrl(
         lang,
         project_id,
         view_mode,
-        nodejs_server
+        nodejs_server,
+        kanban_url
     ) {
         SharedPropertiesService.setUserId(user_id);
         SharedPropertiesService.setKanban(kanban);
@@ -35,6 +36,7 @@ function MainCtrl(
         SharedPropertiesService.setUserIsOnWidget(is_widget);
         SharedPropertiesService.setProjectId(project_id);
         SharedPropertiesService.setViewMode(view_mode);
+        SharedPropertiesService.setKanbanUrl(kanban_url);
         gettextCatalog.setCurrentLanguage(lang);
         amMoment.changeLocale(lang);
         var uuid = UUIDGeneratorService.generateUUID();

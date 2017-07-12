@@ -32,6 +32,7 @@ import AddInPlaceDirective     from './add-in-place/add-in-place-directive.js';
 import ResizeDirective         from './resize-directive.js';
 import AddToDashboardDirective from './add-to-dashboard/add-to-dashboard-directive.js';
 import AutoFocusInputDirective from './edit-kanban/edit-kanban-autofocus-directive.js';
+import GoToKanbanDirective     from './go-to-kanban/go-to-kanban-directive.js';
 import EscKeyDirective         from './esc-key/esc-key-directive.js';
 import EditKanbanDirective     from './edit-kanban/edit-kanban-directive.js';
 import InPropertiesFilter      from './in-properties-filter/in-properties-filter.js';
@@ -85,6 +86,7 @@ angular.module('kanban', [
 .directive('graph', GraphDirective)
 .directive('wipPopover', WipPopoverDirective)
 .directive('editKanban', EditKanbanDirective)
+.directive('goToKanban', GoToKanbanDirective)
 .value('KanbanFilterValue', KanbanFilterValue)
 .filter('InPropertiesFilter', InPropertiesFilter)
 .filter('tuleapStripTags', TuleapStripTagsFilter);

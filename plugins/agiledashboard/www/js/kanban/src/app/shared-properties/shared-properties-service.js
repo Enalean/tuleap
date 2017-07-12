@@ -13,7 +13,8 @@ function SharedPropertiesService() {
         nodejs_server_version: undefined,
         uuid                 : undefined,
         dashboard_dropdown   : undefined,
-        user_is_on_widget    : false
+        user_is_on_widget    : false,
+        kanban_url           : ''
     };
 
     return {
@@ -38,7 +39,9 @@ function SharedPropertiesService() {
         setDashboardDropdown        : setDashboardDropdown,
         getDashboardDropdown        : getDashboardDropdown,
         setUserIsOnWidget           : setUserIsOnWidget,
-        getUserIsOnWidget           : getUserIsOnWidget
+        getUserIsOnWidget           : getUserIsOnWidget,
+        getKanbanUrl                : getKanbanUrl,
+        setKanbanUrl                : setKanbanUrl
     };
 
     function getUserId() {
@@ -127,5 +130,13 @@ function SharedPropertiesService() {
 
     function getUserIsOnWidget() {
         return property.user_is_on_widget;
+    }
+
+    function setKanbanUrl(kanban_url) {
+        property.kanban_url = kanban_url;
+    }
+
+    function getKanbanUrl() {
+        return property.kanban_url;
     }
 }
