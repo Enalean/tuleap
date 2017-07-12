@@ -1,29 +1,29 @@
-(function () {
-    angular
-        .module('execution')
-        .config(ExecutionConfig);
+import './execution-list.tpl.html';
+import './execution-detail.tpl.html';
 
-    ExecutionConfig.$inject = ['$stateProvider'];
+export default ExecutionConfig;
 
-    function ExecutionConfig($stateProvider) {
-        $stateProvider
-            .state('campaigns.executions', {
-                url:         '/{id:int}',
-                controller:  'ExecutionListCtrl',
-                templateUrl: 'execution/execution-list.tpl.html',
-                data: {
-                    ncyBreadcrumbLabel:  '{{ campaign.label }}',
-                    ncyBreadcrumbParent: 'campaigns.list'
-                }
-            })
-            .state('campaigns.executions.detail', {
-                url:         '/{execid:int}/{defid:int}',
-                controller:  'ExecutionDetailCtrl',
-                templateUrl: 'execution/execution-detail.tpl.html',
-                data: {
-                    ncyBreadcrumbLabel:  '{{ execution.definition.summary }}',
-                    ncyBreadcrumbParent: 'campaigns.executions'
-                }
-            });
-    }
-})();
+ExecutionConfig.$inject = ['$stateProvider'];
+
+function ExecutionConfig($stateProvider) {
+    $stateProvider
+        .state('campaigns.executions', {
+            url:         '/{id:int}',
+            controller:  'ExecutionListCtrl',
+            templateUrl: 'execution-list.tpl.html',
+            ncyBreadcrumb: {
+                label:  '{{ campaign.label }}',
+                parent: 'campaigns.list'
+            }
+        })
+        .state('campaigns.executions.detail', {
+            url:         '/{execid:int}/{defid:int}',
+            controller:  'ExecutionDetailCtrl',
+            templateUrl: 'execution-detail.tpl.html',
+            ncyBreadcrumb: {
+                label:  '{{ execution.definition.summary }}',
+                parent: 'campaigns.executions'
+            }
+        });
+}
+

@@ -1,28 +1,27 @@
-(function () {
-    angular
-        .module('graph')
-        .controller('GraphCtrl', GraphCtrl);
+import _ from 'lodash';
 
-    GraphCtrl.$inject = ['$state', 'ArtifactLinksGraphService'];
+export default GraphCtrl;
 
-    function GraphCtrl($state, ArtifactLinksGraphService) {
-        var self        = this,
-            artifact_id = $state.params.id;
+GraphCtrl.$inject = ['$state', 'ArtifactLinksGraphService'];
 
-        _.extend(self, {
-            graphd3: undefined,
-            errors : [],
-            title  : ''
+function GraphCtrl($state, ArtifactLinksGraphService) {
+    var self        = this,
+        artifact_id = $state.params.id;
+
+    _.extend(self, {
+        graphd3: undefined,
+        errors : [],
+        title  : ''
+    });
+
+    init(artifact_id);
+
+    function init(artifact_id) {
+        ArtifactLinksGraphService.showGraph(artifact_id).then(function(model) {
+            self.graphd3 = model.graph;
+            self.errors  = model.errors;
+            self.title   = model.title;
         });
-
-        init(artifact_id);
-
-        function init(artifact_id) {
-            ArtifactLinksGraphService.showGraph(artifact_id).then(function(model) {
-                self.graphd3 = model.graph;
-                self.errors  = model.errors;
-                self.title   = model.title;
-            });
-        }
     }
-})();
+}
+

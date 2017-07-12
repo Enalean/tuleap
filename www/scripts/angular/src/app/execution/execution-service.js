@@ -1,9 +1,8 @@
-angular
-    .module('campaign')
-    .service('ExecutionService', ExecutionService)
-    .constant("ExecutionConstants", {
-        "UNCATEGORIZED": "Uncategorized"
-    });
+import _ from 'lodash';
+
+import './execution-presences.tpl.html';
+
+export default ExecutionService;
 
 ExecutionService.$inject = [
     '$q',
@@ -299,7 +298,7 @@ function ExecutionService(
     function showPresencesModal() {
         return $modal.open({
             backdrop   : 'static',
-            templateUrl: 'execution/execution-presences.tpl.html',
+            templateUrl: 'execution-presences.tpl.html',
             controller : 'ExecutionPresencesCtrl as modal',
             resolve: {
                 modal_model: function () {
@@ -311,3 +310,4 @@ function ExecutionService(
         });
     }
 }
+

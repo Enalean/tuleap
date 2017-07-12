@@ -1,12 +1,12 @@
-angular
-    .module('socket')
-    .service('SocketService', SocketService);
+import _ from 'lodash';
+import moment from 'moment';
+
+export default SocketService;
 
 SocketService.$inject = [
     '$timeout',
     '$q',
     '$rootScope',
-    'moment',
     'locker',
     'SocketFactory',
     'ExecutionService',
@@ -18,7 +18,6 @@ function SocketService(
     $timeout,
     $q,
     $rootScope,
-    moment,
     locker,
     SocketFactory,
     ExecutionService,
@@ -173,3 +172,4 @@ function SocketService(
         });
     }
 }
+

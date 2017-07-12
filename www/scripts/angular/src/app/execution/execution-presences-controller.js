@@ -1,6 +1,6 @@
-angular
-    .module('execution')
-    .controller('ExecutionPresencesCtrl', ExecutionPresencesCtrl);
+import _ from 'lodash';
+
+export default ExecutionPresencesCtrl;
 
 ExecutionPresencesCtrl.$inject = [
     '$scope',
@@ -32,3 +32,4 @@ function ExecutionPresencesCtrl(
         return ((percentage_scale_max - percentage_scale_min) * presence.score / current_scale_max) + percentage_scale_min;
     };
 }
+

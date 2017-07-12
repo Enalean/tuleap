@@ -1,6 +1,8 @@
-angular
-    .module('execution')
-    .controller('ExecutionListCtrl', ExecutionListCtrl);
+import _ from 'lodash';
+
+import '../campaign/campaign-edit.tpl.html';
+
+export default ExecutionListCtrl;
 
 ExecutionListCtrl.$inject = [
     '$scope',
@@ -66,7 +68,7 @@ function ExecutionListCtrl(
 
     function openEditCampaignModal() {
         return $modal.open({
-            templateUrl: 'campaign/campaign-edit.tpl.html',
+            templateUrl: 'campaign-edit.tpl.html',
             controller : 'CampaignEditCtrl',
             resolve: {
                 editCampaignCallback: function() {
@@ -178,3 +180,4 @@ function ExecutionListCtrl(
         ).length > 0;
     }
 }
+

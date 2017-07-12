@@ -1,12 +1,16 @@
+import trafficlights_module from '../app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe ('CampaignService - ', function () {
     var mockBackend,
         CampaignService,
         SharedPropertiesService;
 
     beforeEach(function() {
-        module('campaign');
+        angular.mock.module(trafficlights_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _CampaignService_,
             $httpBackend,
             _SharedPropertiesService_) {
@@ -145,3 +149,4 @@ describe ('CampaignService - ', function () {
         });
     });
 });
+

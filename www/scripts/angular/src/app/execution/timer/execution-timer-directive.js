@@ -1,19 +1,15 @@
-angular
-    .module('execution')
-    .directive('timer', TimerDirective);
+import moment from 'moment';
 
-TimerDirective.$inject = [
-    '$interval',
-    'moment'
-];
+import './execution-timer-directive.tpl.html';
 
-function TimerDirective(
-    $interval,
-    moment
-) {
+export default TimerDirective;
+
+TimerDirective.$inject = ['$interval'];
+
+function TimerDirective($interval) {
     return {
         restrict   : 'AE',
-        templateUrl: 'execution/timer/execution-timer-directive.tpl.html',
+        templateUrl: 'execution-timer-directive.tpl.html',
         require    : 'ngModel',
         scope      : {
             execution_time: '=ngModel'
@@ -72,3 +68,4 @@ function TimerDirective(
         }
     }
 }
+

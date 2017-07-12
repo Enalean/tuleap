@@ -1,19 +1,18 @@
-(function () {
-    angular
-        .module('graph')
-        .config(GraphConfig);
+import './graph.tpl.html';
 
-    GraphConfig.$inject = ['$stateProvider'];
+export default GraphConfig;
 
-    function GraphConfig($stateProvider) {
-        $stateProvider
-            .state('graph', {
-                url:         '/graph/{id:[0-9]+}',
-                controller:  'GraphCtrl as graph',
-                templateUrl: 'graph/graph.tpl.html',
-                data: {
-                    ncyBreadcrumbSkip: true
-                }
-            });
-    }
-})();
+GraphConfig.$inject = ['$stateProvider'];
+
+function GraphConfig($stateProvider) {
+    $stateProvider
+        .state('graph', {
+            url:         '/graph/{id:[0-9]+}',
+            controller:  'GraphCtrl as graph',
+            templateUrl: 'graph.tpl.html',
+            ncyBreadcrumb: {
+                skip: true
+            },
+        });
+}
+

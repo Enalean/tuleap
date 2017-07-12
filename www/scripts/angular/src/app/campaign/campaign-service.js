@@ -1,6 +1,4 @@
-angular
-    .module('campaign')
-    .service('CampaignService', CampaignService);
+export default CampaignService;
 
 CampaignService.$inject = [
     'Restangular'
@@ -84,3 +82,4 @@ function CampaignService(
             });
     }
 }
+

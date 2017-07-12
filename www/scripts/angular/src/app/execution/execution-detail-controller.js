@@ -1,6 +1,6 @@
-angular
-    .module('execution')
-    .controller('ExecutionDetailCtrl', ExecutionDetailCtrl);
+import _ from 'lodash';
+
+export default ExecutionDetailCtrl;
 
 ExecutionDetailCtrl.$inject = [
     '$scope',
@@ -266,3 +266,4 @@ function ExecutionDetailCtrl(
         });
     }
 }
+

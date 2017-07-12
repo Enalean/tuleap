@@ -1,10 +1,10 @@
-angular
-    .module('trafficlights')
-    .config(TrafficlightsConfig);
+import './breadcrumb.tpl.html';
 
-TrafficlightsConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$breadcrumbProvider'];
+export default TrafficlightsConfig;
 
-function TrafficlightsConfig($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
+TrafficlightsConfig.$inject = ['$urlRouterProvider', '$breadcrumbProvider'];
+
+function TrafficlightsConfig($urlRouterProvider, $breadcrumbProvider) {
     $urlRouterProvider.otherwise('/campaigns');
     $breadcrumbProvider.setOptions({
         prefixStateName: 'campaigns.milestone',

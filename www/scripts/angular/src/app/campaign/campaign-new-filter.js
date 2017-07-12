@@ -1,6 +1,4 @@
-angular
-    .module('campaign')
-    .filter('CurrentPageFilter', CurrentPageFilter);
+export default CurrentPageFilter;
 
 function CurrentPageFilter() {
     return function (list, page, items_per_page) {
@@ -8,3 +6,4 @@ function CurrentPageFilter() {
         return list.slice(page * items_per_page, page * items_per_page + items_per_page);
     };
 }
+

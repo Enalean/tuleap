@@ -1,8 +1,4 @@
-angular
-    .module('trafficlights')
-    .directive('autoFocus', AutoFocus);
-
-function AutoFocus() {
+export default function AutoFocus() {
     return {
         link: {
             pre: function(scope, element, attr) {
@@ -13,3 +9,4 @@ function AutoFocus() {
         }
     };
 }
+

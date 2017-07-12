@@ -1,6 +1,6 @@
-angular
-    .module('campaign')
-    .controller('CampaignNewCtrl', CampaignNewCtrl);
+import _ from 'lodash';
+
+export default CampaignNewCtrl;
 
 CampaignNewCtrl.$inject = [
     '$scope',
@@ -80,3 +80,4 @@ function CampaignNewCtrl(
         });
     }
 }
+

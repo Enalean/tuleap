@@ -1,17 +1,22 @@
+import trafficlights_module from '../app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe('ArtifactLinksModelService', function() {
     var gettextCatalog,
         ArtifactLinksModelService;
 
     beforeEach(function() {
         gettextCatalog = jasmine.createSpyObj('gettextCatalog', [
-            'getString'
+            'getString',
+            'setStrings'
         ]);
 
-        module('tuleap.artifact-links-graph', function($provide) {
+        angular.mock.module(trafficlights_module, function($provide) {
             $provide.value('gettextCatalog', gettextCatalog);
         });
 
-        inject(function(_ArtifactLinksModelService_) {
+        angular.mock.inject(function(_ArtifactLinksModelService_) {
             ArtifactLinksModelService = _ArtifactLinksModelService_;
         });
     });

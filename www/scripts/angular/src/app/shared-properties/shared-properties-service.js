@@ -1,6 +1,4 @@
-angular
-    .module('sharedProperties')
-    .service('SharedPropertiesService', SharedPropertiesService);
+export default SharedPropertiesService;
 
 function SharedPropertiesService() {
 
@@ -117,3 +115,4 @@ function SharedPropertiesService() {
         property.milestone = milestone;
     }
 }
+

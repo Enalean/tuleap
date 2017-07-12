@@ -1,17 +1,6 @@
-angular
-    .module('campaign')
-    .controller('CampaignEditCtrl', CampaignEditCtrl)
-    .constant('CampaignEditConstants', {
-        'SELECTION_STATES': {
-            unselected: 'unselected',
-            selected  : 'selected',
-            added     : 'added',
-            removed   : 'removed',
-            all       : 'all',
-            some      : 'some',
-            none      : 'none',
-        },
-    });
+import _ from 'lodash';
+
+export default CampaignEditCtrl;
 
 CampaignEditCtrl.$inject = [
     '$scope',

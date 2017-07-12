@@ -1,6 +1,4 @@
-angular
-    .module('uuid-generator')
-    .service('UUIDGeneratorService', UUIDGeneratorService);
+export default UUIDGeneratorService;
 
 UUIDGeneratorService.$inject = ['$window'];
 

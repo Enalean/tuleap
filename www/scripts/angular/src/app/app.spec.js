@@ -1,15 +1,7 @@
-describe('TrafficlightsCtrl', function() {
-  var TrafficlightsCtrl, $location, $scope;
-
-  beforeEach(module('trafficlights'));
-
-  beforeEach(inject(function($controller, _$location_, $rootScope) {
-    $location   = _$location_;
-    $scope      = $rootScope.$new();
-    TrafficlightsCtrl = $controller('TrafficlightsCtrl', {$location: $location, $scope: $scope});
-  }));
-
-  it('has an init method', inject(function() {
-    expect($scope.init).toBeTruthy();
-  }));
-});
+import './app-controller.spec.js';
+import './app-filter.spec.js';
+import './artifact-links-graph/artifact-links-model-service.spec.js';
+import './campaign/campaign-service.spec.js';
+import './execution/execution-list-filter.spec.js';
+import './execution/execution-rest-service.spec.js';
+import './execution/execution-service.spec.js';

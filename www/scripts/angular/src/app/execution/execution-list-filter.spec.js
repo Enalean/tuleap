@@ -1,7 +1,18 @@
+import execution_module from './execution.js';
+import angular from 'angular';
+import ui_router from 'angular-ui-router';
+import 'angular-filter-pack';
+import 'angular-mocks';
+
 describe('ExecutionListFilter', function() {
-    beforeEach(module('ui.router'));
-    beforeEach(module('angularFilterPack'));
-    beforeEach(module('execution'));
+    var ngFilter;
+
+    beforeEach(angular.mock.module(ui_router));
+    beforeEach(angular.mock.module('angularFilterPack'));
+    beforeEach(angular.mock.module(execution_module));
+    beforeEach(angular.mock.inject(function($filter) {
+        ngFilter = $filter;
+    }));
 
     var list = [
         {
@@ -67,44 +78,44 @@ describe('ExecutionListFilter', function() {
         }
     ];
 
-    it('it has a CampaignListFilter filter', inject(function($filter) {
-        expect($filter('ExecutionListFilter')).not.toBeNull();
-    }));
+    it('it has a CampaignListFilter filter', function() {
+        expect(ngFilter('ExecutionListFilter')).not.toBeNull();
+    });
 
-    it('it filters on category', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'soap', {}, null);
+    it('it filters on category', function() {
+        var results = ngFilter('ExecutionListFilter')(list, 'soap', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
-    }));
+    });
 
-    it('it filters on summary', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'workflow', {}, null);
+    it('it filters on summary', function() {
+        var results = ngFilter('ExecutionListFilter')(list, 'workflow', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
-    }));
+    });
 
-    it('it filters on test def id', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '24601', {}, null);
+    it('it filters on test def id', function() {
+        var results = ngFilter('ExecutionListFilter')(list, '24601', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
-    }));
+    });
 
-    it('it filters on execution status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {passed: true}, null);
+    it('it filters on execution status', function() {
+        var results = ngFilter('ExecutionListFilter')(list, '', {passed: true}, null);
         expect(results.length).toEqual(2);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
-    }));
+    });
 
-    it('it filters on execution multiple status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {passed: true, failed: true}, null);
+    it('it filters on execution multiple status', function() {
+        var results = ngFilter('ExecutionListFilter')(list, '', {passed: true, failed: true}, null);
         expect(results.length).toEqual(3);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
         expect(results[1]).toEqual(jasmine.objectContaining({ id: 24606 }));
         expect(results[2]).toEqual(jasmine.objectContaining({ id: 24607 }));
-    }));
+    });
 
-    it('it filters on summary and execution status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'tracker', {passed: true}, null);
+    it('it filters on summary and execution status', function() {
+        var results = ngFilter('ExecutionListFilter')(list, 'tracker', {passed: true}, null);
         expect(results.length).toEqual(1);
-    }));
+    });
 });

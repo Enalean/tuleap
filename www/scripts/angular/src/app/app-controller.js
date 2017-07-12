@@ -1,6 +1,4 @@
-angular
-    .module('trafficlights')
-    .controller('TrafficlightsCtrl', TrafficlightsCtrl);
+export default TrafficlightsCtrl;
 
 TrafficlightsCtrl.$inject = [
     '$scope',

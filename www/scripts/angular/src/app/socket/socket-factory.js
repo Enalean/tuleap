@@ -1,6 +1,4 @@
-angular
-    .module('socket')
-    .service('SocketFactory', SocketFactory);
+export default SocketFactory;
 
 SocketFactory.$inject = [
     'socketFactory',
@@ -23,3 +21,4 @@ function SocketFactory(
         });
     }
 }
+

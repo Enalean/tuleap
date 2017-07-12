@@ -1,6 +1,6 @@
-angular
-    .module('campaign')
-    .service('ExecutionRestService', ExecutionRestService);
+import _ from 'lodash';
+
+export default ExecutionRestService;
 
 ExecutionRestService.$inject = [
     'Restangular',
@@ -88,3 +88,4 @@ function ExecutionRestService(
         return changePresenceOnTestExecution(execution_id, execution_id);
     }
 }
+

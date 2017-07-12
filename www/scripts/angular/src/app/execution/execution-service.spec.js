@@ -1,3 +1,7 @@
+import trafficlights_module from '../app.js';
+import angular from 'angular';
+import 'angular-mocks';
+
 describe ('ExecutionService - ', function () {
     var $q,
         $rootScope,
@@ -5,9 +9,9 @@ describe ('ExecutionService - ', function () {
         ExecutionService;
 
     beforeEach(function() {
-        module('campaign');
+        angular.mock.module(trafficlights_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             _$rootScope_,
             _ExecutionRestService_,

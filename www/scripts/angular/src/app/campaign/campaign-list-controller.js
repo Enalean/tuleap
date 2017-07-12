@@ -1,6 +1,8 @@
-angular
-    .module('campaign')
-    .controller('CampaignListCtrl', CampaignListCtrl);
+import _ from 'lodash';
+
+import './campaign-new.tpl.html';
+
+export default CampaignListCtrl;
 
 CampaignListCtrl.$inject = [
     '$scope',
@@ -102,9 +104,10 @@ function CampaignListCtrl(
 
     function openNewCampaignModal() {
         return $modal.open({
-            templateUrl: 'campaign/campaign-new.tpl.html',
+            templateUrl: 'campaign-new.tpl.html',
             controller : 'CampaignNewCtrl',
         });
     }
 
 }
+
