@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_AddPackage extends CLI_Action {
-    function CLI_Action_Frs_AddPackage() {
-        $this->CLI_Action('addPackage', 'Add a new package in frs manager.');
+    function __construct() {
+        parent::__construct('addPackage', 'Add a new package in frs manager.');
         $this->addParam(array(
             'name'           => 'package_name',
             'description'    => '--name=<package_name>      Name of the package.',
@@ -51,4 +51,3 @@ class CLI_Action_Frs_AddPackage extends CLI_Action {
         return true;
     }
 }
-?>

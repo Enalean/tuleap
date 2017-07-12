@@ -2,17 +2,17 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_AttachedFile extends CLI_Action {
-    function CLI_Action_Tracker_AttachedFile() {
-        $this->CLI_Action('attachedFile', 'Returns a file attached to a specific artifact.');
-        
+    function __construct() {
+        parent::__construct('attachedFile', 'Returns a file attached to a specific artifact.');
+
         $this->soapCommand = 'getArtifactAttachedFile';
-        
+
         $this->addParam(array(
             'name'           => 'group_artifact_id',
             'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the returned attached file belong to.',
@@ -65,7 +65,7 @@ class CLI_Action_Tracker_AttachedFile extends CLI_Action {
     }
     function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
         $file = $soap_result->bin_data;
-    
+
         if ($loaded_params['others']['output']) {
             $output = $loaded_params['others']['output'];
             while (!($fh = @fopen($output, "wb"))) {
@@ -75,15 +75,13 @@ class CLI_Action_Tracker_AttachedFile extends CLI_Action {
                     $output = get_user_input("Please specify a new file name: ");
                 }
             }
-            
+
             fwrite($fh, $file, strlen($file));
             fclose($fh);
-            
+
             if (!$loaded_params['others']['quiet']) echo "File retrieved successfully.\n";
         } else {
             if (!$loaded_params['others']['quiet']) echo $file;     // if not saving to a file, output to screen
         }
     }
 }
-
-?>

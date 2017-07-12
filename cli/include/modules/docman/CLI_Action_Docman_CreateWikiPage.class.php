@@ -9,17 +9,17 @@ require_once('CLI_Action_Docman_CreateDocument.class.php');
 
 class CLI_Action_Docman_CreateWikiPage extends CLI_Action_Docman_CreateDocument  {
 
-    function CLI_Action_Docman_CreateWikiPage() {
-        $this->CLI_Action_Docman_CreateDocument('createWikiPage', 'Create a document of type wiki');
+    function __construct() {
+        parent::__construct('createWikiPage', 'Create a document of type wiki');
         $this->setSoapCommand('createDocmanWikiPage');
-        
+
         $this->addParam(array(
             'name'           => 'content',
             'description'    => '--content=<page name>    Name of the wiki page',
             'soap'     => true,
         ));
     }
-    
+
     function validate_content(&$content) {
         if (!isset($content) || trim($content) == '') {
             echo $this->help();
@@ -28,5 +28,3 @@ class CLI_Action_Docman_CreateWikiPage extends CLI_Action_Docman_CreateDocument 
         return true;
     }
 }
-
-?>

@@ -20,8 +20,8 @@ require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_DeleteEmptyRelease extends CLI_Action {
 
-    function CLI_Action_Frs_DeleteEmptyRelease() {
-        $this->CLI_Action('deleteEmptyRelease', 'Delete an empty release in a package.');
+    function __construct() {
+        parent::__construct('deleteEmptyRelease', 'Delete an empty release in a package.');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package in which empty release will be deleted.',
@@ -57,5 +57,3 @@ class CLI_Action_Frs_DeleteEmptyRelease extends CLI_Action {
     }
 
 }
-
-?>

@@ -17,11 +17,11 @@ require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_DeleteAllEmptyPackages extends CLI_Action {
 
-    function CLI_Action_Frs_DeleteAllEmptyPackages() {
-        $this->CLI_Action('deleteAllEmptyPackages', 'Delete all empty packages in a project.');
+    function __construct() {
+        parent::__construct('deleteAllEmptyPackages', 'Delete all empty packages in a project.');
     }
 
-function soapCall($soap_params, $use_extra_params = true) {
+    function soapCall($soap_params, $use_extra_params = true) {
         $soap_params['package_id'] = 0;
         $soap_params['cleanup_all'] = 1;
         return $GLOBALS['soap']->call('deleteEmptyPackage', $soap_params, $use_extra_params);
@@ -38,5 +38,3 @@ function soapCall($soap_params, $use_extra_params = true) {
     }
 
 }
-
-?>

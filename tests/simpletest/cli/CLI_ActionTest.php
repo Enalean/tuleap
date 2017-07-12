@@ -19,7 +19,7 @@ Mock::generatePartial('CLI_Action', 'CLI_ActionTestVersion', array('help', '_get
 class CLI_ActionTest extends TuleapTestCase {
     
     function testHelp() {
-        $action =& new CLI_Action('name', 'description');
+        $action = new CLI_Action('name', 'description');
         $action->addParam(array(
             'name'        => 'loginname',
             'description' => '--username=<username> or -U <username>    Specify the user name',
@@ -43,10 +43,10 @@ EOS;
     function testExecuteHelp() {
         $codendisoap = new MockCodendiSOAP();
         
-        $module =& new MockCLI_Module();
+        $module = new MockCLI_Module();
         $module->setReturnValue('getParameter', true);
         
-        $action =& new CLI_ActionTestVersion();
+        $action = new CLI_ActionTestVersion();
         $action->setReturnReference('_getCodendiSOAP', $codendisoap);
         $action->setModule($module);
         $action->expectCallCount('help', 3);
@@ -56,4 +56,3 @@ EOS;
         $action->execute(array());
     }
 }
-?>

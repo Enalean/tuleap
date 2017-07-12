@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_DeleteCC extends CLI_Action {
-    function CLI_Action_Tracker_DeleteCC() {
-        $this->CLI_Action('deleteCC', 'Delete a CC of a specific artifact.');
+    function __construct() {
+        parent::__construct('deleteCC', 'Delete a CC of a specific artifact.');
         $this->soapCommand = 'deleteArtifactCC';
         $this->addParam(array(
             'name'           => 'group_artifact_id',
@@ -46,5 +46,3 @@ class CLI_Action_Tracker_DeleteCC extends CLI_Action {
         return true;
     }
 }
-
-?>

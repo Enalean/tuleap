@@ -2,15 +2,15 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_MajFields extends CLI_Action {
-    function CLI_Action_Tracker_MajFields($name, $description) {
-        $this->CLI_Action($name, $description);
-        
+    function __construct($name, $description) {
+        parent::__construct($name, $description);
+
         $this->addParam(array(
             'name'           => 'group_artifact_id',
             'description'    => '--tracker_id=<tracker_id>    '. $this->getGroupArtifactIdDescription(),
@@ -59,7 +59,7 @@ class CLI_Action_Tracker_MajFields extends CLI_Action {
             foreach($loaded_params['soap']['extra_fields'] as $extrafield) {
                 echo $extrafield['field_name'].": ".$extrafield['field_value']."\n";
             }
-            
+
             if (!$this->user_confirm("Is this information correct?")) {
                 exit_error("Submission aborted");
             }
@@ -67,5 +67,3 @@ class CLI_Action_Tracker_MajFields extends CLI_Action {
         return true;
     }
 }
-
-?>

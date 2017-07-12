@@ -2,17 +2,17 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_AttachedFiles extends CLI_Action {
-    function CLI_Action_Tracker_AttachedFiles() {
-        $this->CLI_Action('attachedFiles', 'Returns a list of files attached to a specific artifact.');
-        
+    function __construct() {
+        parent::__construct('attachedFiles', 'Returns a list of files attached to a specific artifact.');
+
         $this->soapCommand = 'getArtifactAttachedFiles';
-        
+
         $this->addParam(array(
             'name'           => 'group_artifact_id',
             'description'    => '--tracker_id=<tracker_id>    The ID of the tracker the returned attached files belong to.',
@@ -38,5 +38,3 @@ class CLI_Action_Tracker_AttachedFiles extends CLI_Action {
     }
 
 }
-
-?>

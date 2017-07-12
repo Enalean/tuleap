@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_Reports extends CLI_Action {
-    function CLI_Action_Tracker_Reports() {
-        $this->CLI_Action('reports', 'Returns the list of reports associated with a specific tracker.');
+    function __construct() {
+        parent::__construct('reports', 'Returns the list of reports associated with a specific tracker.');
         $this->soapCommand = 'getArtifactReports';
         $this->addParam(array(
             'name'           => 'group_artifact_id',
@@ -24,5 +24,3 @@ class CLI_Action_Tracker_Reports extends CLI_Action {
         return true;
     }
 }
-
-?>

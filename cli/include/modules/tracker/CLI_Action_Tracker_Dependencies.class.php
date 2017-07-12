@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Tracker_Dependencies extends CLI_Action {
-    function CLI_Action_Tracker_Dependencies() {
-        $this->CLI_Action('dependencies', 'Returns the list of dependencies associated with a specific artifact.');
+    function __construct() {
+        parent::__construct('dependencies', 'Returns the list of dependencies associated with a specific artifact.');
         $this->soapCommand = 'getArtifactDependencies';
         $this->addParam(array(
             'name'           => 'group_artifact_id',
@@ -35,5 +35,3 @@ class CLI_Action_Tracker_Dependencies extends CLI_Action {
         return true;
     }
 }
-
-?>

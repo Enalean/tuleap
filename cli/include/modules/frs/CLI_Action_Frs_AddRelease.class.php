@@ -2,14 +2,14 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2007. All rights reserved
 *
-* 
+*
 */
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
 class CLI_Action_Frs_AddRelease extends CLI_Action {
-    function CLI_Action_Frs_AddRelease() {
-        $this->CLI_Action('addRelease', 'Add a new release in frs manager.');
+    function __construct() {
+        parent::__construct('addRelease', 'Add a new release in frs manager.');
         $this->addParam(array(
             'name'           => 'package_id',
             'description'    => '--package_id=<package_id>    Id of the package the the release will belong to.',
@@ -71,12 +71,11 @@ class CLI_Action_Frs_AddRelease extends CLI_Action {
         } else {
             $date_check = $this->check_date($release_date);
             if ($date_check != "") {
-                exit_error($release_date . ' ' . $date_check);	
+                exit_error($release_date . ' ' . $date_check);
             } else {
-                $release_date = $this->convert_date($release_date);	
+                $release_date = $this->convert_date($release_date);
             }
         }
         return true;
     }
 }
-?>

@@ -14,11 +14,11 @@
  */
 class Log {
 	var $level;
-	
+
 	/**
 	 * Log - Constructor
 	 */
-	function Log() {
+	function __construct() {
 		$this->level = 0;		// By default, don't log
 	}
 
@@ -30,7 +30,7 @@ class Log {
 	function setLevel($level) {
 		$this->level = $level;
 	}
-	
+
 	/**
 	 * add - Add some text to the log
 	 *
@@ -42,4 +42,3 @@ class Log {
 		}
 	}
 }
-?>

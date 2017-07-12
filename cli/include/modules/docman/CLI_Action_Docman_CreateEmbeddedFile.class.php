@@ -9,17 +9,17 @@ require_once('CLI_Action_Docman_CreateDocument.class.php');
 
 class CLI_Action_Docman_CreateEmbeddedFile extends CLI_Action_Docman_CreateDocument  {
 
-    function CLI_Action_Docman_CreateEmbeddedFile() {
-        $this->CLI_Action_Docman_CreateDocument('createEmbeddedFile', 'Create a document of type embedded');
+    function __construct() {
+        parent::__construct('createEmbeddedFile', 'Create a document of type embedded');
         $this->setSoapCommand('createDocmanEmbeddedFile');
-        
+
         $this->addParam(array(
             'name'           => 'content',
             'description'    => '--content=<raw content>    content of the embedded file',
             'soap'     => true,
         ));
     }
-    
+
     function validate_content(&$content) {
         if (!isset($content) || trim($content) == '') {
             echo $this->help();
@@ -28,5 +28,3 @@ class CLI_Action_Docman_CreateEmbeddedFile extends CLI_Action_Docman_CreateDocum
         return true;
     }
 }
-
-?>
