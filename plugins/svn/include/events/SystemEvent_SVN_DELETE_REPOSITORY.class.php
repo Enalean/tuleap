@@ -24,6 +24,7 @@ use Project;
 use ProjectManager;
 use SystemEvent;
 use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\Svn\Repository\RepositoryDeleter;
 use Tuleap\Svn\Repository\RepositoryManager;
 
 class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
@@ -31,33 +32,41 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
     const NAME = 'SystemEvent_SVN_DELETE_REPOSITORY';
 
     /**
+     * @var RepositoryDeleter
+     */
+    private $repository_deleter;
+
+    /**
      * @var RepositoryManager
      */
-    public $repository_manager;
+    private $repository_manager;
 
     /**
      * @var ProjectManager
      */
-    public $project_manager;
+    private $project_manager;
 
     /**
      * @var ApacheConfGenerator
      */
-    public $generator;
+    private $generator;
 
     /**
      * @param RepositoryManager   $repository_manager
      * @param ProjectManager      $project_manager
      * @param ApacheConfGenerator $generator
+     * @param RepositoryDeleter   $repository_deleter
      */
     public function injectDependencies(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,
-        ApacheConfGenerator $generator
+        ApacheConfGenerator $generator,
+        RepositoryDeleter $repository_deleter
     ) {
         $this->repository_manager = $repository_manager;
         $this->project_manager    = $project_manager;
         $this->generator          = $generator;
+        $this->repository_deleter = $repository_deleter;
     }
 
     public function process()
@@ -84,9 +93,9 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
             return false;
         }
 
-        $this->repository_manager->markAsDeleted($repository);
+        $this->repository_deleter->markAsDeleted($repository);
         $this->repository_manager->dumpRepository($repository);
-        $this->repository_manager->delete($repository);
+        $this->repository_deleter->delete($repository);
 
         $this->generator->generate();
 

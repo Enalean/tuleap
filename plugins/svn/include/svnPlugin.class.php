@@ -282,7 +282,8 @@ class SvnPlugin extends Plugin
                 $params['dependencies'] = array(
                     $this->getRepositoryManager(),
                     ProjectManager::instance(),
-                    $this->getApacheConfGenerator()
+                    $this->getApacheConfGenerator(),
+                    $this->getRepositoryDeleter()
                 );
                 break;
         }
@@ -535,7 +536,8 @@ class SvnPlugin extends Plugin
                 UserManager::instance(),
                 new UGroupManager(),
                 $hook_config_updator,
-                $this->getHookConfigRetriever()
+                $this->getHookConfigRetriever(),
+                $this->getRepositoryDeleter()
             ),
             new ExplorerController(
                 $repository_manager,
@@ -624,7 +626,7 @@ class SvnPlugin extends Plugin
         if (! empty($params['group_id'])) {
             $project = ProjectManager::instance()->getProject($params['group_id']);
             if ($project) {
-                $this->getRepositoryManager()->deleteProjectRepositories($project);
+                $this->getRepositoryDeleter()->deleteProjectRepositories($project);
             }
         }
     }
@@ -893,12 +895,24 @@ class SvnPlugin extends Plugin
     }
 
     /**
-     * @param $hook_dao
-     *
      * @return HookConfigRetriever
      */
     private function getHookConfigRetriever()
     {
         return new HookConfigRetriever(new HookDao(), $this->getHookConfigSanitizer());
+    }
+
+    /**
+     * @return \Tuleap\Svn\Repository\RepositoryDeleter
+     */
+    private function getRepositoryDeleter()
+    {
+        return new \Tuleap\Svn\Repository\RepositoryDeleter(
+            new System_Command(),
+            new ProjectHistoryDao(),
+            new Dao(),
+            SystemEventManager::instance(),
+            $this->getRepositoryManager()
+        );
     }
 }

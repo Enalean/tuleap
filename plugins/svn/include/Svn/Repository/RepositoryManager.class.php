@@ -190,40 +190,6 @@ class RepositoryManager
         return $this->instantiateFromRowWithoutProject($row);
     }
 
-    public function delete(Repository $repository)
-    {
-        $project = $repository->getProject();
-        if (! $project) {
-            return false;
-        }
-
-        $system_path = $repository->getSystemPath();
-        if (is_dir($system_path)) {
-            return $this->system_command->exec('rm -rf '. escapeshellarg($system_path));
-        }
-
-        return false;
-    }
-
-    /**
-     * @return SystemEvent or null
-     */
-    public function queueRepositoryDeletion(Repository $repositorysvn, SystemEventManager $system_event_manager)
-    {
-        $this->history_dao->groupAddHistory(
-            'svn_multi_repository_deletion',
-            $repositorysvn->getName(),
-            $repositorysvn->getProject()->getID()
-        );
-
-        return $system_event_manager->createEvent(
-            'Tuleap\\Svn\\EventRepository\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
-            $repositorysvn->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repositorysvn->getId(),
-            SystemEvent::PRIORITY_MEDIUM,
-            SystemEvent::OWNER_ROOT
-        );
-    }
-
     /**
      * @return SystemEvent or null
      */
@@ -316,21 +282,6 @@ class RepositoryManager
         $project = $this->project_manager->getProject($row['project_id']);
 
         return $this->instantiateFromRow($row, $project);
-    }
-
-    public function markAsDeleted(Repository $repository)
-    {
-        if ($repository->canBeDeleted()) {
-            $deletion_date = time();
-            $repository->setDeletionDate($deletion_date);
-            $this->dao->markAsDeleted(
-                $repository->getId(),
-                $repository->getSystemBackupPath() . "/" . $repository->getBackupFileName(),
-                $deletion_date
-            );
-        } else {
-            throw new CannotDeleteRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'delete_repository_exception'));
-        }
     }
 
     public function dumpRepository(Repository $repository)
@@ -430,14 +381,6 @@ class RepositoryManager
             }
 
             return $params['status'];
-        }
-    }
-
-    public function deleteProjectRepositories(Project $project)
-    {
-        $repositories = $this->getRepositoriesInProject($project);
-        foreach ($repositories as $repository) {
-            $this->queueRepositoryDeletion($repository, $this->system_event_manager);
         }
     }
 }
