@@ -48,6 +48,7 @@ use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\ProjectHistoryFormatter;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
+use Tuleap\Svn\Repository\RepositoryDeleter;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
@@ -55,6 +56,8 @@ use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
+    /** @var RepositoryDeleter  */
+    private $repository_deleter;
     /**
      * @var CommitRulesRepresentationValidator
      */
@@ -159,6 +162,14 @@ class RepositoryResource extends AuthenticatedResource
             $this->permission_manager,
             $this->hook_config_retriever
         );
+
+        $this->repository_deleter = new RepositoryDeleter(
+            new \System_Command(),
+            $project_history_dao,
+            $dao,
+            $this->system_event_manager,
+            $this->repository_manager
+        );
     }
 
     /**
@@ -210,7 +221,7 @@ class RepositoryResource extends AuthenticatedResource
         $this->checkAccess();
 
         $user       = $this->user_manager->getCurrentUser();
-        $repository = $this->getRepository($id, $user);
+        $repository = $this->getRepository($id);
 
         ProjectAuthorization::userCanAccessProject(
             $user,
@@ -336,7 +347,7 @@ class RepositoryResource extends AuthenticatedResource
                 return;
             }
 
-            $this->repository_manager->queueRepositoryDeletion($repository, \SystemEventManager::instance());
+            $this->repository_deleter->queueRepositoryDeletion($repository);
         } catch (CannotFindRepositoryException $e) {
             throw new RestException('404', 'Repository not found');
         }

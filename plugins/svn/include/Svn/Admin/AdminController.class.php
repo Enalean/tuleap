@@ -34,6 +34,7 @@ use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryDeleter;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\ServiceSvn;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
@@ -73,6 +74,10 @@ class AdminController
      * @var HookConfigRetriever
      */
     private $hook_config_retriever;
+    /**
+     * @var RepositoryDeleter
+     */
+    private $repository_deleter;
 
     public function __construct(
         MailHeaderManager $mail_header_manager,
@@ -84,7 +89,8 @@ class AdminController
         UserManager $user_manager,
         UGroupManager $ugroup_manager,
         HookConfigUpdator $hook_config_updator,
-        HookConfigRetriever $hook_config_retriever
+        HookConfigRetriever $hook_config_retriever,
+        RepositoryDeleter $repository_deleter
     ) {
         $this->repository_manager        = $repository_manager;
         $this->mail_header_manager       = $mail_header_manager;
@@ -96,6 +102,7 @@ class AdminController
         $this->ugroup_manager            = $ugroup_manager;
         $this->hook_config_updator       = $hook_config_updator;
         $this->hook_config_retriever     = $hook_config_retriever;
+        $this->repository_deleter        = $repository_deleter;
     }
 
     private function generateToken(Project $project, Repository $repository) {
@@ -406,7 +413,8 @@ class AdminController
         $repository_id = $request->get('repo_id');
 
         if ($project_id === null || $repository_id === null || $repository_id === false || $project_id === false) {
-            $GLOBALS['Response']->addFeedback('error', 'actions_params_error');
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'actions_params_error');
+
             return false;
         }
 
@@ -416,14 +424,16 @@ class AdminController
             $token->check();
 
             if ($repository->canBeDeleted()) {
-                $this->repository_manager->queueRepositoryDeletion($repository, \SystemEventManager::instance());
+                $this->repository_deleter->queueRepositoryDeletion($repository);
 
                 $GLOBALS['Response']->addFeedback(
-                    'info',
-                    $GLOBALS['Language']->getText('plugin_svn', 'actions_delete_process', array($repository->getFullName()))
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText(
+                        'plugin_svn', 'actions_delete_process', array($repository->getFullName())
+                    )
                 );
                 $GLOBALS['Response']->addFeedback(
-                    'info',
+                    Feedback::INFO,
                     $GLOBALS['Language']->getText(
                         'plugin_svn',
                         'actions_delete_backup',
@@ -434,15 +444,20 @@ class AdminController
                     )
                 );
                 $GLOBALS['Response']->addFeedback(
-                    'info',
-                    $GLOBALS['Language']->getText('plugin_svn', 'feedback_event_delete', array($repository->getFullName()))
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText(
+                        'plugin_svn', 'feedback_event_delete', array($repository->getFullName())
+                    )
                 );
             } else {
                 $this->redirect($project_id);
+
                 return false;
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn', 'actions_repo_not_found'));
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn', 'actions_repo_not_found')
+            );
         }
         $this->redirect($project_id);
     }
