@@ -53,16 +53,14 @@ function ReportsModalController(
     self.value_last_data = self.params.last_seven_days;
     self.key_last_data   = 'last_seven_days';
 
-    self.close    = function() { modal_instance.hide(); };
+    self.close    = function() { modal_instance.tlp_modal.hide(); };
     self.init     = init;
     self.loadData = loadData;
 
     self.init();
 
     function init() {
-        modal_instance.addEventListener('tlp-modal-shown', function() {
-            self.loadData();
-        });
+        self.loadData();
     }
 
     function loadData() {

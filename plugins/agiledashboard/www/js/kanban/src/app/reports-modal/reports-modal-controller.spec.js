@@ -11,7 +11,7 @@ describe("ReportsModalController -", function() {
         DiagramRestService,
         kanban_id,
         kanban_label,
-        modal_instance;
+        tlp_modal;
 
     beforeEach(function() {
         angular.mock.module(kanban_module);
@@ -35,9 +35,9 @@ describe("ReportsModalController -", function() {
 
         $scope = $rootScope.$new();
 
-        kanban_id      = 2;
-        kanban_label   = "Italy Kanban";
-        modal_instance = jasmine.createSpyObj("modal_instance", ["addEventListener"]);
+        kanban_id    = 2;
+        kanban_label = "Italy Kanban";
+        tlp_modal    = jasmine.createSpy("modal_instance");
 
         spyOn(SharedPropertiesService, "getKanban").and.returnValue({
             id     : kanban_id,
@@ -56,7 +56,7 @@ describe("ReportsModalController -", function() {
 
         ReportsModalController = $controller('ReportsModalController', {
             $scope                 : $scope,
-            modal_instance         : modal_instance,
+            modal_instance         : { tlp_modal: tlp_modal },
             SharedPropertiesService: SharedPropertiesService,
             DiagramRestService     : DiagramRestService
         });
@@ -94,10 +94,6 @@ describe("ReportsModalController -", function() {
                 ]
             };
             DiagramRestService.getCumulativeFlowDiagram.and.returnValue($q.when(cumulative_flow_data));
-
-            modal_instance.addEventListener.and.callFake(function(event, callback) {
-                callback();
-            });
 
             ReportsModalController.init();
             expect(ReportsModalController.loading).toBe(true);
