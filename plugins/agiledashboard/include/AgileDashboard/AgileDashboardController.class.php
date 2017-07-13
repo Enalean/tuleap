@@ -300,6 +300,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $project_creator = new ProjectCreator(
                 ProjectManager::instance(),
                 ReferenceManager::instance(),
+                UserManager::instance(),
                 $ugroup_duplicator,
                 $send_notifications,
                 $frs_permissions_creator,

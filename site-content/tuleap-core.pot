@@ -191,6 +191,9 @@ msgstr ""
 msgid "Project name"
 msgstr ""
 
+msgid "Project registration is disabled"
+msgstr ""
+
 msgid "Project templates"
 msgstr ""
 

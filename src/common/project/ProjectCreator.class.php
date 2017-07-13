@@ -42,6 +42,7 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
@@ -91,6 +92,11 @@ class ProjectCreator {
     private $reference_manager;
 
     /**
+     * @var UserManager
+     */
+    private $user_manager;
+
+    /**
      * @var Rule_ProjectName
      */
     private $ruleShortName;
@@ -106,7 +112,6 @@ class ProjectCreator {
      * @var FRSPermissionCreator
      */
     private $frs_permissions_creator;
-
     /**
      * @var ProjectDashboardDuplicator
      */
@@ -115,6 +120,7 @@ class ProjectCreator {
     public function __construct(
         ProjectManager $projectManager,
         ReferenceManager $reference_manager,
+        UserManager $user_manager,
         UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
         FRSPermissionCreator $frs_permissions_creator,
@@ -124,6 +130,7 @@ class ProjectCreator {
         $this->send_notifications      = $send_notifications;
         $this->force_activation        = $force_activation;
         $this->reference_manager       = $reference_manager;
+        $this->user_manager            = $user_manager;
         $this->ruleShortName           = new Rule_ProjectName();
         $this->ruleFullName            = new Rule_ProjectFullName();
         $this->projectManager          = $projectManager;
@@ -138,7 +145,12 @@ class ProjectCreator {
      * @param ProjectCreationData $data project data
      * @return Project created
      */
-    public function build(ProjectCreationData $data) {
+    public function build(ProjectCreationData $data)
+    {
+        if (! \ForgeConfig::get('sys_use_project_registration') && ! $this->user_manager->getCurrentUser()->isSuperUser()) {
+            throw new ProjectRegistrationDisabledException();
+        }
+
         if (!$this->ruleShortName->isValid($data->getUnixName())) {
             throw new Project_InvalidShortName_Exception($this->ruleShortName->getErrorMessage());
         }
@@ -216,7 +228,7 @@ class ProjectCreator {
      * @param  data ProjectCreationData
      */
     protected function createProject(ProjectCreationData $data) {
-        $admin_user = UserManager::instance()->getCurrentUser();
+        $admin_user = $this->user_manager->getCurrentUser();
 
         $group_id = $this->createGroupEntry($data);
         if ($group_id === false) {

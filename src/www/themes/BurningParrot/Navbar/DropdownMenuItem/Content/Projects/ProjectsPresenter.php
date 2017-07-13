@@ -52,4 +52,9 @@ class ProjectsPresenter extends Presenter
     {
         return $GLOBALS['Language']->getText('include_menu', 'filter_projects');
     }
+
+    public function is_project_registration_enabled()
+    {
+        return \ForgeConfig::get('sys_use_project_registration', true);
+    }
 }

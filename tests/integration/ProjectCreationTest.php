@@ -54,6 +54,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
         $GLOBALS['sys_default_domain'] = '';
         $GLOBALS['sys_cookie_prefix'] = '';
         $GLOBALS['sys_force_ssl'] = 0;
+        ForgeConfig::store();
     }
 
     public function tearDown() {
@@ -66,6 +67,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_cookie_prefix']);
         unset($GLOBALS['sys_force_ssl']);
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -82,8 +84,9 @@ class ProjectCreationTest extends TuleapDbTestCase {
             EventManager::instance()
         );
 
+        $user_manager   = UserManager::instance();
         $widget_factory = new WidgetFactory(
-            UserManager::instance(),
+            $user_manager,
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
             EventManager::instance()
         );
@@ -102,9 +105,12 @@ class ProjectCreationTest extends TuleapDbTestCase {
 
         $force_activation = false;
 
+        ForgeConfig::set('sys_use_project_registration', 1);
+
         $projectCreator = new ProjectCreator(
             ProjectManager::instance(),
             ReferenceManager::instance(),
+            $user_manager,
             $ugroup_duplicator,
             $send_notifications,
             new FRSPermissionCreator(

@@ -54,6 +54,7 @@ class ProjectXMLImporterTest extends TuleapTestCase {
         $project_creator = new ProjectCreator(
             $this->project_manager,
             mock('ReferenceManager'),
+            $this->user_manager,
             $this->ugroup_duplicator,
             false,
             $frs_permissions_creator,
