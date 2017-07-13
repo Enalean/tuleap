@@ -10,3 +10,4 @@ import './kanban-column/kanban-column-service.spec.js';
 import './kanban-item/kanban-item-rest-service.spec.js';
 import './reports-modal/diagram-rest-service.spec.js';
 import './reports-modal/reports-modal-controller.spec.js';
+import 'angular-tlp/index.spec.js';

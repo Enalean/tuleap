@@ -4,6 +4,7 @@ import ngSanitize from 'angular-sanitize';
 import dragular from 'dragular';
 import ui_router from 'angular-ui-router';
 import angular_artifact_modal from 'angular-artifact-modal';
+import angular_tlp from 'angular-tlp';
 
 import 'angular-locker';
 import 'angular-moment';
@@ -34,7 +35,6 @@ import AddToDashboardDirective from './add-to-dashboard/add-to-dashboard-directi
 import AutoFocusInputDirective from './edit-kanban/edit-kanban-autofocus-directive.js';
 import GoToKanbanDirective     from './go-to-kanban/go-to-kanban-directive.js';
 import EscKeyDirective         from './esc-key/esc-key-directive.js';
-import EditKanbanDirective     from './edit-kanban/edit-kanban-directive.js';
 import InPropertiesFilter      from './in-properties-filter/in-properties-filter.js';
 import KanbanColumnDirective   from './kanban-column/kanban-column-directive.js';
 import KanbanColumnService     from './kanban-column/kanban-column-service.js';
@@ -54,6 +54,7 @@ angular.module('kanban', [
     'restangular',
     'ui.bootstrap',
     angular_artifact_modal,
+    angular_tlp,
     dragular,
     error_modal,
     jwt,
@@ -85,7 +86,6 @@ angular.module('kanban', [
 .directive('kanbanColumn', KanbanColumnDirective)
 .directive('graph', GraphDirective)
 .directive('wipPopover', WipPopoverDirective)
-.directive('editKanban', EditKanbanDirective)
 .directive('goToKanban', GoToKanbanDirective)
 .value('KanbanFilterValue', KanbanFilterValue)
 .filter('InPropertiesFilter', InPropertiesFilter)

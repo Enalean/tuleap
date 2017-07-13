@@ -8,7 +8,9 @@ EditKanbanCtrl.$inject = [
     'KanbanService',
     'ColumnCollectionService',
     'SharedPropertiesService',
-    'RestErrorService'
+    'RestErrorService',
+    'modal_instance',
+    'rebuild_scrollbars'
 ];
 
 function EditKanbanCtrl(
@@ -16,7 +18,9 @@ function EditKanbanCtrl(
     KanbanService,
     ColumnCollectionService,
     SharedPropertiesService,
-    RestErrorService
+    RestErrorService,
+    modal_instance,
+    rebuild_scrollbars
 ) {
     var self = this;
     self.kanban             = SharedPropertiesService.getKanban();
@@ -98,7 +102,7 @@ function EditKanbanCtrl(
 
         KanbanService.reorderColumns(self.kanban.id, sorted_columns_ids)
             .catch(function(response) {
-                self.modal_instance.hide();
+                modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
             });
     }
@@ -109,7 +113,7 @@ function EditKanbanCtrl(
             self.saving = false;
             updateKanbanName(self.kanban.label);
         }, function (response) {
-            self.modal_instance.hide();
+            modal_instance.tlp_modal.hide();
             RestErrorService.reload(response);
         });
     }
@@ -120,7 +124,7 @@ function EditKanbanCtrl(
 
             KanbanService.deleteKanban(self.kanban.id)
                 .then(function (response) {
-                    self.modal_instance.hide();
+                    modal_instance.tlp_modal.hide();
                     RestErrorService.reload(response);
                 });
         } else {
@@ -152,10 +156,9 @@ function EditKanbanCtrl(
                 self.saving_new_column = false;
                 self.new_column_label  = '';
 
-                self.rebuild_scrollbars();
-
+                rebuild_scrollbars();
             }, function (response) {
-                self.modal_instance.hide();
+                modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
             });
         } else {
@@ -172,7 +175,7 @@ function EditKanbanCtrl(
             column.editing        = false;
             column.original_label = column.label;
         }, function (response) {
-            self.modal_instance.hide();
+            modal_instance.tlp_modal.hide();
             RestErrorService.reload(response);
         });
     }
@@ -194,10 +197,9 @@ function EditKanbanCtrl(
                 self.deleting_column = false;
                 ColumnCollectionService.removeColumn(column_to_remove.id);
 
-                self.rebuild_scrollbars();
-
+                rebuild_scrollbars();
             }, function(response) {
-                self.modal_instance.hide();
+                modal_instance.tlp_modal.hide();
                 RestErrorService.reload(response);
             });
         } else {

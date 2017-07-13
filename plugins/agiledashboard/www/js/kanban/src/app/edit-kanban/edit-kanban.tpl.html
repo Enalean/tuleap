@@ -1,219 +1,221 @@
-<div class="tlp-modal-header">
-    <h1 class="tlp-modal-title edit-kanban-title">
-        {{ edit_modal.kanban.label }}
-        <p class="edit-kanban-title-tracker">
-            <i class="fa fa-info-circle edit-kanban-title-tracker-icon"></i>
-            <span translate
-            translate-params-tracker-link="edit_modal.title_tracker_link"
-            >Based on the {{ trackerLink }} tracker.</span>
-        </p>
-    </h1>
-    <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ Close | translate }}">&times;</div>
-</div>
-<div class="tlp-modal-body">
-    <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-cogs"></i> <span translate>General configuration</span></h2>
-    <form class="edit-kanban-label-form" ng-submit="edit_modal.saveModifications()">
-        <label class="tlp-label" for="input-kanban-label" translate>Kanban label:</label>
-        <div class="tlp-form-element tlp-form-element-append">
-            <input type="text"
-                id="input-kanban-label"
-                class="tlp-input"
-                ng-model="edit_modal.kanban.label"
-                required
-                autofocus
-            />
-            <button class="tlp-append tlp-button-primary"
-                type="submit"
-                ng-disabled="edit_modal.processing()"
-            >
-                <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.saving, 'fa-save': ! edit_modal.saving}"></i>
-                <span translate>Save</span>
-            </button>
-        </div>
-    </form>
-
-    <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-columns"></i> <span translate>Columns configuration</span></h2>
-    <div class="edit-kanban-column-configuration">
-        <p class="tlp-alert-warning edit-modal-text"
-            ng-if="! edit_modal.columnsCanBeManaged()"
-            translate
-            translate-params-tracker-link="edit_modal.info_tracker_link"
-        >
-            You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.
-        </p>
-        <p class="tlp-text-info"
-            ng-if="edit_modal.columnsCanBeManaged()"
-            translate
-            translate-params-tracker-link="edit_modal.info_tracker_link"
-        >
-            More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.
-        </p>
-        <div class="edit-kanban-column-list">
-            <div data-nodrag="true" class="edit-kanban-backlog-column">
-                <i class="fa fa-fw fa-inbox"></i> <span translate>Backlog</span>
-            </div>
-            <div
-                class="edit-kanban-reorderable-columns"
-                dragular="edit_modal.dragularOptionsForEditModal()"
-            >
-                <div
-                    ng-repeat="column in edit_modal.kanban.columns track by $id(column)"
-                    data-nodrag="{{ ! edit_modal.kanban.user_can_reorder_columns }}"
-                    class="edit-kanban-column"
-                    ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns, editing: column.editing }"
+<div class="tlp-modal">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title edit-kanban-title">
+            {{ edit_modal.kanban.label }}
+            <p class="edit-kanban-title-tracker">
+                <i class="fa fa-info-circle edit-kanban-title-tracker-icon"></i>
+                <span translate
+                translate-params-tracker-link="edit_modal.title_tracker_link"
+                >Based on the {{ trackerLink }} tracker.</span>
+            </p>
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ Close | translate }}">&times;</div>
+    </div>
+    <div class="tlp-modal-body">
+        <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-cogs"></i> <span translate>General configuration</span></h2>
+        <form class="edit-kanban-label-form" ng-submit="edit_modal.saveModifications()">
+            <label class="tlp-label" for="input-kanban-label" translate>Kanban label:</label>
+            <div class="tlp-form-element tlp-form-element-append">
+                <input type="text"
+                    id="input-kanban-label"
+                    class="tlp-input"
+                    ng-model="edit_modal.kanban.label"
+                    required
+                    autofocus
+                />
+                <button class="tlp-append tlp-button-primary"
+                    type="submit"
+                    ng-disabled="edit_modal.processing()"
                 >
-                    <div class="edit-kanban-column-label" ng-if="! column.editing">{{ column.label }}</div>
-                    <form class="edit-kanban-edit-column-container"
-                        data-nodrag="true"
-                        ng-submit="edit_modal.editColumn(column)"
-                        ng-if="column.editing"
+                    <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.saving, 'fa-save': ! edit_modal.saving}"></i>
+                    <span translate>Save</span>
+                </button>
+            </div>
+        </form>
+
+        <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-columns"></i> <span translate>Columns configuration</span></h2>
+        <div class="edit-kanban-column-configuration">
+            <p class="tlp-alert-warning edit-modal-text"
+                ng-if="! edit_modal.columnsCanBeManaged()"
+                translate
+                translate-params-tracker-link="edit_modal.info_tracker_link"
+            >
+                You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.
+            </p>
+            <p class="tlp-text-info"
+                ng-if="edit_modal.columnsCanBeManaged()"
+                translate
+                translate-params-tracker-link="edit_modal.info_tracker_link"
+            >
+                More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.
+            </p>
+            <div class="edit-kanban-column-list">
+                <div data-nodrag="true" class="edit-kanban-backlog-column">
+                    <i class="fa fa-fw fa-inbox"></i> <span translate>Backlog</span>
+                </div>
+                <div
+                    class="edit-kanban-reorderable-columns"
+                    dragular="edit_modal.dragularOptionsForEditModal()"
+                >
+                    <div
+                        ng-repeat="column in edit_modal.kanban.columns track by $id(column)"
+                        data-nodrag="{{ ! edit_modal.kanban.user_can_reorder_columns }}"
+                        class="edit-kanban-column"
+                        ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns, editing: column.editing }"
+                    >
+                        <div class="edit-kanban-column-label" ng-if="! column.editing">{{ column.label }}</div>
+                        <form class="edit-kanban-edit-column-container"
+                            data-nodrag="true"
+                            ng-submit="edit_modal.editColumn(column)"
+                            ng-if="column.editing"
+                        >
+                            <div class="tlp-form-element tlp-form-element-append">
+                                <input type="text"
+                                    class="tlp-input tlp-input-small"
+                                    ng-model="column.label"
+                                    placeholder="{{ 'Column name' | translate }}"
+                                    required
+                                    pattern=".*\S.*"
+                                    auto-focus-input
+                                >
+                                <button
+                                    class="tlp-append tlp-button-primary tlp-button-small"
+                                    type="submit"
+                                    ng-disabled="edit_modal.processing()"
+                                >
+                                    <i class="fa fa-spinner fa-spin tlp-button-icon" ng-show="edit_modal.saving_column"></i>
+                                    <span translate>Save</span>
+                                </button>
+                                <button
+                                    class="tlp-append tlp-button-primary tlp-button-outline tlp-button-small"
+                                    ng-click="edit_modal.cancelEditColumn(column)"
+                                    ng-disabled="edit_modal.processing()"
+                                >
+                                    <span translate>Cancel</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
+                            <button
+                                class="tlp-button-primary tlp-button-outline tlp-button-small edit-kanban-column-button"
+                                ng-if="column.user_can_edit_label"
+                                ng-click="edit_modal.turnColumnToEditMode(column)"
+                                ng-disabled="edit_modal.processing()"
+                            >
+                                <i class="fa fa-pencil tlp-button-icon"></i>
+                                <span translate>Edit</span>
+                            </button>
+                        </div>
+                        <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
+                            <button
+                                class="tlp-button-primary tlp-button-outline tlp-button-small edit-kanban-column-button"
+                                ng-if="column.user_can_remove_column"
+                                ng-click="edit_modal.removeColumn(column)"
+                                ng-disabled="edit_modal.processing()"
+                            >
+                                <i class="fa fa-trash-o tlp-button-icon"></i>
+                                <span translate>Remove</span>
+                            </button>
+                        </div>
+                        <div data-nodrag="true" ng-if="column.confirm_delete" class="edit-kanban-delete-column-container">
+                            <button
+                                class="tlp-button-primary tlp-button-outline tlp-button-small  edit-kanban-column-button"
+                                ng-if="column.confirm_delete"
+                                ng-click="edit_modal.cancelRemoveColumn(column)"
+                                ng-disabled="edit_modal.processing()"
+                                translate
+                            >Cancel</button>
+                            <button
+                                class="tlp-button-danger tlp-button-small edit-kanban-column-button"
+                                ng-if="column.user_can_remove_column"
+                                ng-click="edit_modal.removeColumn(column)"
+                                ng-disabled="edit_modal.processing()"
+                            >
+                                <i class="fa fa-spinner fa-spin tlp-button-icon" ng-show="edit_modal.deleting_column"></i>
+                                <span translate>Confirm deletion</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    data-nodrag="true"
+                    ng-if="edit_modal.kanban.user_can_add_columns"
+                    class="edit-kanban-add-column"
+                >
+                    <form class="edit-kanban-add-column-form"
+                        ng-submit="edit_modal.addColumn()"
+                        ng-if="edit_modal.adding_column"
                     >
                         <div class="tlp-form-element tlp-form-element-append">
                             <input type="text"
-                                class="tlp-input tlp-input-small"
-                                ng-model="column.label"
+                                class="tlp-input"
+                                ng-model="edit_modal.new_column_label"
                                 placeholder="{{ 'Column name' | translate }}"
                                 required
                                 pattern=".*\S.*"
                                 auto-focus-input
                             >
                             <button
-                                class="tlp-append tlp-button-primary tlp-button-small"
+                                class="tlp-append tlp-button-primary"
                                 type="submit"
                                 ng-disabled="edit_modal.processing()"
                             >
-                                <i class="fa fa-spinner fa-spin tlp-button-icon" ng-show="edit_modal.saving_column"></i>
-                                <span translate>Save</span>
+                                <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.saving_new_column, 'fa-plus': ! edit_modal.adding_column}"></i>
+                                <span translate>Add</span>
                             </button>
                             <button
-                                class="tlp-append tlp-button-primary tlp-button-outline tlp-button-small"
-                                ng-click="edit_modal.cancelEditColumn(column)"
+                                class="tlp-append tlp-button-primary tlp-button-outline"
+                                ng-click="edit_modal.cancelAddColumn()"
                                 ng-disabled="edit_modal.processing()"
                             >
                                 <span translate>Cancel</span>
                             </button>
                         </div>
                     </form>
-
-                    <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
-                        <button
-                            class="tlp-button-primary tlp-button-outline tlp-button-small edit-kanban-column-button"
-                            ng-if="column.user_can_edit_label"
-                            ng-click="edit_modal.turnColumnToEditMode(column)"
-                            ng-disabled="edit_modal.processing()"
-                        >
-                            <i class="fa fa-pencil tlp-button-icon"></i>
-                            <span translate>Edit</span>
-                        </button>
-                    </div>
-                    <div data-nodrag="true" ng-if="! column.editing && ! column.confirm_delete">
-                        <button
-                            class="tlp-button-primary tlp-button-outline tlp-button-small edit-kanban-column-button"
-                            ng-if="column.user_can_remove_column"
-                            ng-click="edit_modal.removeColumn(column)"
-                            ng-disabled="edit_modal.processing()"
-                        >
-                            <i class="fa fa-trash-o tlp-button-icon"></i>
-                            <span translate>Remove</span>
-                        </button>
-                    </div>
-                    <div data-nodrag="true" ng-if="column.confirm_delete" class="edit-kanban-delete-column-container">
-                        <button
-                            class="tlp-button-primary tlp-button-outline tlp-button-small  edit-kanban-column-button"
-                            ng-if="column.confirm_delete"
-                            ng-click="edit_modal.cancelRemoveColumn(column)"
-                            ng-disabled="edit_modal.processing()"
-                            translate
-                        >Cancel</button>
-                        <button
-                            class="tlp-button-danger tlp-button-small edit-kanban-column-button"
-                            ng-if="column.user_can_remove_column"
-                            ng-click="edit_modal.removeColumn(column)"
-                            ng-disabled="edit_modal.processing()"
-                        >
-                            <i class="fa fa-spinner fa-spin tlp-button-icon" ng-show="edit_modal.deleting_column"></i>
-                            <span translate>Confirm deletion</span>
-                        </button>
-                    </div>
+                    <button
+                        class="tlp-button-primary"
+                        ng-disabled="edit_modal.processing()"
+                        ng-click="edit_modal.addColumn()"
+                        ng-hide="edit_modal.adding_column"
+                    >
+                        <i class="fa fa-plus tlp-button-icon"></i> <span translate>Add a column</span>
+                    </button>
+                </div>
+                <div data-nodrag="true" class="edit-kanban-archive-column">
+                    <i class="fa fa-fw fa-archive"></i> <span translate>Archive</span>
                 </div>
             </div>
-            <div
-                data-nodrag="true"
-                ng-if="edit_modal.kanban.user_can_add_columns"
-                class="edit-kanban-add-column"
+        </div>
+
+        <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-warning"></i> <span translate>Danger zone</span></h2>
+        <div class="danger-zone">
+            <p class="edit-modal-text" translate>The deletion of a Kanban is irreversible. Please be certain before doing it.</p>
+            <button
+                class="tlp-button-danger"
+                ng-click="edit_modal.deleteKanban()"
+                ng-disabled="edit_modal.processing()"
             >
-                <form class="edit-kanban-add-column-form"
-                    ng-submit="edit_modal.addColumn()"
-                    ng-if="edit_modal.adding_column"
-                >
-                    <div class="tlp-form-element tlp-form-element-append">
-                        <input type="text"
-                            class="tlp-input"
-                            ng-model="edit_modal.new_column_label"
-                            placeholder="{{ 'Column name' | translate }}"
-                            required
-                            pattern=".*\S.*"
-                            auto-focus-input
-                        >
-                        <button
-                            class="tlp-append tlp-button-primary"
-                            type="submit"
-                            ng-disabled="edit_modal.processing()"
-                        >
-                            <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.saving_new_column, 'fa-plus': ! edit_modal.adding_column}"></i>
-                            <span translate>Add</span>
-                        </button>
-                        <button
-                            class="tlp-append tlp-button-primary tlp-button-outline"
-                            ng-click="edit_modal.cancelAddColumn()"
-                            ng-disabled="edit_modal.processing()"
-                        >
-                            <span translate>Cancel</span>
-                        </button>
-                    </div>
-                </form>
-                <button
-                    class="tlp-button-primary"
-                    ng-disabled="edit_modal.processing()"
-                    ng-click="edit_modal.addColumn()"
-                    ng-hide="edit_modal.adding_column"
-                >
-                    <i class="fa fa-plus tlp-button-icon"></i> <span translate>Add a column</span>
-                </button>
-            </div>
-            <div data-nodrag="true" class="edit-kanban-archive-column">
-                <i class="fa fa-fw fa-archive"></i> <span translate>Archive</span>
-            </div>
+                <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.deleting, 'fa-trash-o': ! edit_modal.deleting}"></i>
+                <span ng-if="edit_modal.confirm_delete" translate>Confirm deletion of this Kanban</span>
+                <span ng-if="! edit_modal.confirm_delete" translate>Delete this Kanban</span>
+            </button>
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                ng-if="edit_modal.confirm_delete"
+                ng-click="edit_modal.cancelDeleteKanban()"
+                ng-disabled="edit_modal.processing()"
+            >
+                <span translate>Cancel</span>
+            </button>
         </div>
     </div>
-
-    <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-warning"></i> <span translate>Danger zone</span></h2>
-    <div class="danger-zone">
-        <p class="edit-modal-text" translate>The deletion of a Kanban is irreversible. Please be certain before doing it.</p>
+    <div class="tlp-modal-footer">
         <button
-            class="tlp-button-danger"
-            ng-click="edit_modal.deleteKanban()"
-            ng-disabled="edit_modal.processing()"
-        >
-            <i class="fa tlp-button-icon" ng-class="{'fa-spinner fa-spin': edit_modal.deleting, 'fa-trash-o': ! edit_modal.deleting}"></i>
-            <span ng-if="edit_modal.confirm_delete" translate>Confirm deletion of this Kanban</span>
-            <span ng-if="! edit_modal.confirm_delete" translate>Delete this Kanban</span>
-        </button>
-        <button
-            class="tlp-button-primary tlp-button-outline"
-            ng-if="edit_modal.confirm_delete"
-            ng-click="edit_modal.cancelDeleteKanban()"
-            ng-disabled="edit_modal.processing()"
-        >
-            <span translate>Cancel</span>
-        </button>
+            type="button"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            data-dismiss="modal"
+            translate
+        >Cancel</button>
     </div>
-</div>
-<div class="tlp-modal-footer">
-    <button
-        type="button"
-        class="tlp-button-primary tlp-button-outline tlp-modal-action"
-        data-dismiss="modal"
-        translate
-    >Cancel</button>
 </div>

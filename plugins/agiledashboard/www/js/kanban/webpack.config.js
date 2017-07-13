@@ -23,8 +23,9 @@ module.exports = {
             // We should probably package angular-ui-bootstrap-templates for npm ourselves
             'angular-ui-bootstrap-templates': 'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
             // Our own components and their dependencies
-            'angular-artifact-modal' : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
+            'angular-artifact-modal'  : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
             'cumulative-chart-factory': path.resolve(__dirname, '../cumulative-chart-factory.js'),
+            'angular-tlp'             : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
             // Angular artifact modal fixes
             'angular-bootstrap-datetimepicker': 'angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
             'angular-ui-select'               : 'angular-ui-select/dist/select.js',

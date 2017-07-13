@@ -1,7 +1,9 @@
+import './edit-kanban/edit-kanban.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
+import EditKanbanController from './edit-kanban/edit-kanban-controller.js';
 import _ from 'lodash';
 import { element } from 'angular';
-import { dropdown, modal } from 'tlp';
+import { dropdown } from 'tlp';
 
 export default KanbanCtrl;
 
@@ -20,7 +22,8 @@ KanbanCtrl.$inject = [
     'KanbanColumnService',
     'ColumnCollectionService',
     'DroppedService',
-    'KanbanFilterValue'
+    'KanbanFilterValue',
+    'TlpModalService'
 ];
 
 function KanbanCtrl(
@@ -38,7 +41,8 @@ function KanbanCtrl(
     KanbanColumnService,
     ColumnCollectionService,
     DroppedService,
-    KanbanFilterValue
+    KanbanFilterValue,
+    TlpModalService
 ) {
     var self    = this,
         limit   = 50,
@@ -66,7 +70,6 @@ function KanbanCtrl(
         loading_items          : true,
         fully_loaded           : false
     });
-    self.edit_kanban_modal = null;
 
     self.user_prefers_collapsed_cards = true;
     self.init                         = init;
@@ -308,10 +311,14 @@ function KanbanCtrl(
     }
 
     function editKanban() {
-        if (self.edit_kanban_modal === null) {
-            self.edit_kanban_modal = modal(document.getElementById('edit-kanban-modal'));
-        }
-        self.edit_kanban_modal.show();
+        TlpModalService.open({
+            templateUrl : 'edit-kanban.tpl.html',
+            controller  : EditKanbanController,
+            controllerAs: 'edit_modal',
+            resolve     : {
+                rebuild_scrollbars: reflowKustomScrollBars
+            }
+        });
     }
 
     function openReportModal() {

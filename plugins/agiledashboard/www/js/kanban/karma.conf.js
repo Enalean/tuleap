@@ -4,7 +4,8 @@ webpack_config.module.rules.push({
     test: /\.js$/,
     exclude: [
         /node_modules/,
-        /vendor/
+        /vendor/,
+        /\.spec\.js/,
     ],
     use: [
         {
