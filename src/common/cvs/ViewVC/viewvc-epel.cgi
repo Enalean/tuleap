@@ -53,6 +53,7 @@ cfg = viewvc.load_config(CONF_PATHNAME, server)
 cfg.general.cvs_roots[repo_name] = repo_path
 cfg.options.template_dir = '/usr/share/viewvc-theme-tuleap/templates'
 cfg.options.root_as_url_component = 0
+cfg.options.allowed_views = ['annotate', 'diff', 'markup', 'roots', 'co']
 # Used by the views
 cfg.options.repo_name = repo_name
 cfg.options.root_href = os.getenv('SCRIPT_NAME', '') + '/?' + urllib.urlencode({'root': repo_name})

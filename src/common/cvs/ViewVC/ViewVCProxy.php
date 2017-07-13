@@ -183,6 +183,9 @@ class ViewVCProxy
         if ($parse) {
             $this->display($project, $body);
         } else {
+            header('Content-Type: application/octet-stream');
+            header('X-Content-Type-Options: nosniff');
+            header('Content-Disposition: attachment');
             echo $body;
             exit();
         }
