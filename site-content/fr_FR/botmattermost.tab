@@ -6,16 +6,16 @@ plugin_botmattermost	alert_success_add_bot	Robot ajouté avec succès
 plugin_botmattermost	alert_success_delete_bot	Robot supprimé avec succès
 plugin_botmattermost	alert_success_edit_bot	Robot édité avec succès
 
-plugin_botmattermost	alert_error_empty_input	les champs "nom du robot" et "URL du salon de discussion (webhook)" doivent être renseignés
+plugin_botmattermost	alert_error_empty_input	les champs "nom du robot" et "URL du webhook" doivent être renseignés
 plugin_botmattermost	alert_error_invalid_url	URL invalide
 plugin_botmattermost	alert_error_invalid_id	L'identifiant du robot est invalide
 plugin_botmattermost	alert_error_invalid_post_arguments	Les arguments soumis lors du formulaire sont invalides
-plugin_botmattermost	alert_error_bot_already_exist	Un robot avec le même nom et le même lien de salon de discussion (webhook) existe déjà
+plugin_botmattermost	alert_error_bot_already_exist	Un robot avec le même nom et le même URL de webhook existe déjà
 plugin_botmattermost	alert_error_bot_not_found	Aucun robot n'a été trouvé
-plugin_botmattermost	alert_error_channels_not_found	Aucun salon de discussion n'a été trouvé
-plugin_botmattermost	alert_error_add_bot	L'ajout du robot et de ses salons de discussion associés a échoué
-plugin_botmattermost	alert_error_delete_bot	La suppression du robot et de ses salons de discussion associés a échoué
-plugin_botmattermost	alert_error_update_bot	La mise à jour du robot et de ses salons de discussion associés a échoué
+plugin_botmattermost	alert_error_channels_not_found	Aucun canal n'a été trouvé
+plugin_botmattermost	alert_error_add_bot	L'ajout du robot a échoué
+plugin_botmattermost	alert_error_delete_bot	La suppression du robot a échoué
+plugin_botmattermost	alert_error_update_bot	La mise à jour du robot a échoué
 plugin_botmattermost	alert_error_has_no_message_content	Aucun contenu de message à envoyer
 
 
@@ -28,13 +28,13 @@ plugin_botmattermost	configuration_label_bot_id	Id
 plugin_botmattermost	configuration_label_bot_name	Nom du robot
 plugin_botmattermost	configuration_label_hook_url	URL du webhook
 plugin_botmattermost	configuration_label_avatar_url	URL de l'avatar
-plugin_botmattermost	configuration_label_channels_handles	Liste des identifiants des salons de discussion
+plugin_botmattermost	configuration_label_channels_handles	Liste des canaux
 plugin_botmattermost	configuration_input_bot_name	Nom...
 plugin_botmattermost	configuration_input_url	https://...
 plugin_botmattermost	configuration_input_avatar_url	lien vers l'avatar...
-plugin_botmattermost	configuration_input_channels_handles	Salon1\nSalon2\n@Utilisateur
-plugin_botmattermost	configuration_text_area_channels_handles_help	Ajoutez un nom de salon de discussion par ligne
-plugin_botmattermost	configuration_info_channels_handles	L'indentifiant du salon de discussion est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/monsalondediscussion<br>identifiant : monsalondediscussion
+plugin_botmattermost	configuration_input_channels_handles	Canal1\nCanal2\nCanal3
+plugin_botmattermost	configuration_text_area_channels_handles_help	Ajoutez un nom de canal par ligne
+plugin_botmattermost	configuration_info_channels_handles	L'indentifiant du canal est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/monsalondediscussion<br>identifiant : monsalondediscussion
 
 plugin_botmattermost	configuration_button_add_bot	Ajouter un robot
 plugin_botmattermost	configuration_button_update	Modifier
@@ -46,8 +46,8 @@ plugin_botmattermost	configuration_empty_list	Aucun résultat
 plugin_botmattermost	configuration_table_title	Liste des robots
 plugin_botmattermost	configuration_table_col_id	Id
 plugin_botmattermost	configuration_table_col_name	Nom
-plugin_botmattermost	configuration_table_col_webhook_url	URL des salons de discussion (webhook)
-plugin_botmattermost	configuration_table_col_channels_handles	Identifiants des salons de discussion
+plugin_botmattermost	configuration_table_col_webhook_url	URL du Webhook
+plugin_botmattermost	configuration_table_col_channels_handles	Canaux
 plugin_botmattermost	configuration_table_col_avatar	Avatar
 
 plugin_botmattermost	configuration_modal_delete_bot_content	Cette suppression est irréversible. Veuillez confirmer la suppresion du robot.

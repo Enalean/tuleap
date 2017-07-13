@@ -13,9 +13,9 @@ plugin_botmattermost	alert_error_invalid_post_arguments	Invalid post argument(s)
 plugin_botmattermost	alert_error_bot_already_exist	A bot with the same name and the same webhook URL already exists
 plugin_botmattermost	alert_error_bot_not_found	No bot found
 plugin_botmattermost	alert_error_channels_not_found	No channels found
-plugin_botmattermost	alert_error_add_bot	Failed to add the bot and its associated channels
-plugin_botmattermost	alert_error_delete_bot	Failed to delete the bot and its associated channels
-plugin_botmattermost	alert_error_update_bot	Failed to update the bot and its associated channels
+plugin_botmattermost	alert_error_add_bot	Failed to add the bot
+plugin_botmattermost	alert_error_delete_bot	Failed to delete the bot
+plugin_botmattermost	alert_error_update_bot	Failed to update the bot
 plugin_botmattermost	alert_error_has_no_message_content	No message content to send
 
 
@@ -32,7 +32,7 @@ plugin_botmattermost	configuration_label_channels_handles	Channel handles list
 plugin_botmattermost	configuration_input_bot_name	Bot name...
 plugin_botmattermost	configuration_input_url	https://...
 plugin_botmattermost	configuration_input_avatar_url	Avatar link...
-plugin_botmattermost	configuration_input_channels_handles	Channel1\nChannel2\n@User
+plugin_botmattermost	configuration_input_channels_handles	Channel1\nChannel2\nChannel3
 plugin_botmattermost	configuration_text_area_channels_handles_help	Add one channel name per row
 plugin_botmattermost	configuration_info_channels_handles	The channel handle is display in its URL<br>example: https://example.com/myGroup/channels/mychannel<br>handle: mychannel
 
