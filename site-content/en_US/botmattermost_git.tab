@@ -2,19 +2,13 @@ plugin_botmattermost_git	descriptor_description	Bot to send Git notifications in
 plugin_botmattermost_git	descriptor_name	Bot Mattermost-Git
 
 
-plugin_botmattermost_git	alert_success_update	Change(s) effected successfully
-plugin_botmattermost_git	alert_invalid_post	Query error : the bot was not found
-
 plugin_botmattermost_git	alert_error_create_bot_notification	Failed to create the bot notification for git notification
 plugin_botmattermost_git	alert_error_delete_bot_notification	Failed to delete the bot notification for git notification
 plugin_botmattermost_git	alert_error_update_bot_notification	Failed to update the bot notification for git notification
 
 plugin_botmattermost_git	title	Notification in Mattermost
-plugin_botmattermost_git	description	Choose bot(s) to send message in Mattermost when push occurs in this repository.
-
 
 plugin_botmattermost_git	push_notification_text	pushed a new commit to
-
 
 plugin_botmattermost_git	any_configured_notification	There is nothing here, start by configure a notification.
 
