@@ -51,6 +51,10 @@ $kanban-column-footer-height: 50px;
     height: calc(100vh - #{$navbar-height});
 }
 
+.kanban-admin {
+    height: calc(100vh - (#{$navbar-height} * 2));
+}
+
 .kanban-header {
     display: flex;
     flex: 0 0 auto;
