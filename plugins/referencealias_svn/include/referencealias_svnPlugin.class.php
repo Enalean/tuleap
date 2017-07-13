@@ -27,7 +27,6 @@ use Tuleap\ReferenceAliasSVN\ReferencesImporter;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Dao as SVNDao;
 use Tuleap\Svn\Dao as SVNPluginDao;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\SvnAdmin;
@@ -128,7 +127,7 @@ class referencealias_svnPlugin extends Plugin
     private function getDestructor()
     {
         return new Destructor(
-            new SvnDao(),
+            $this->getSVNDao(),
             $this->getLogger()
         );
     }
