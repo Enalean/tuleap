@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     const USER_PREFERENCE_DISPLAY_CHANGES = 'tracker_artifact_comment_display_changes';
+    const USER_PREFERENCE_INVERT_ORDER    = 'tracker_comment_invertorder';
 
     /**
      * @var Tracker_Artifact_ArtifactRenderer
@@ -132,21 +133,48 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
      */
     private function fetchFollowUps($submitted_comment = '') {
         $html = '';
-
         $html .= $this->fetchSubmitButton();
 
-        $classname = 'tracker_artifact_followup_comments-display_changes';
+        $tracker      = $this->artifact->getTracker();
+        $invert_order = $this->user->getPreference(self::USER_PREFERENCE_INVERT_ORDER . '_' . $tracker->getId()) == false;
+
+        $classname       = 'tracker_artifact_followup_comments-display_changes';
         $user_preference = $this->user->getPreference(self::USER_PREFERENCE_DISPLAY_CHANGES);
         if ($user_preference !== false && $user_preference == 0) {
             $classname = '';
         }
+
         $html .= '<div id="tracker_artifact_followup_comments" class="'. $classname .'">';
         $html .= '<div id="tracker_artifact_followup_comments-content">';
         $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h1>';
         $html .= '<ul class="tracker_artifact_followups">';
+
+        $comments = $this->artifact->getFollowupsContent();
+        if ($invert_order) {
+            $comments = array_reverse($comments);
+            $html .= $this->fetchAddNewComment($tracker, $submitted_comment);
+            $html .= $this->fetchCommentContent($comments);
+        } else {
+            $html .= $this->fetchCommentContent($comments);
+            $html .= $this->fetchAddNewComment($tracker, $submitted_comment);
+        }
+
+        $html .= '</ul>';
+        $html .= '</div>';
+        $html .= '</div>';
+
+        $html .= '</td></tr></table>'; //see fetchFields
+
+        return $html;
+    }
+
+    private function fetchCommentContent(array $comments)
+    {
+        $html = '';
+        $i    = 0;
+
         $previous_item = null;
-        $i = 0;
-        foreach ($this->artifact->getFollowupsContent() as $item) {
+        foreach ($comments as $item) {
             $diff_to_previous = $item->diffToPrevious();
             if ($previous_item) {
                 $classnames  = html_get_alt_row_color($i++) .' tracker_artifact_followup ';
@@ -158,11 +186,16 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
             $previous_item = $item;
         }
 
-        $html .= '<li>';
-        $html .= '<div class="'. html_get_alt_row_color($i++) .'">';
+        return $html;
+    }
+
+    private function fetchAddNewComment(Tracker $tracker, $submitted_comment)
+    {
+        $html = '<li>';
+        $html .= '<div>';
         $hp = Codendi_HTMLPurifier::instance();
 
-        if (count($responses = $this->artifact->getTracker()->getCannedResponseFactory()->getCannedResponses($this->artifact->getTracker()))) {
+        if (count($responses = $tracker->getCannedResponseFactory()->getCannedResponses($tracker))) {
             $html .= '<p><b>' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'use_canned') . '</b>&nbsp;';
             $html .= '<select id="tracker_artifact_canned_response_sb">';
             $html .= '<option selected="selected" value="">--</option>';
@@ -181,12 +214,6 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         }
 
         $html .= '</li>';
-
-        $html .= '</ul>';
-        $html .= '</div>';
-        $html .= '</div>';
-
-        $html .= '</td></tr></table>'; //see fetchFields
 
         return $html;
     }

@@ -162,7 +162,6 @@ document.observe('dom:loaded', function () {
                 onSuccess: function (transport) {
                     if (!transport.responseText) {
                         toggleCheckForCommentOrder();
-                        invertFollowups(followup_section);
                     }
                 }
             });
