@@ -3,12 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"X-Generator: Poedit 1.8.3\n"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
@@ -104,6 +98,10 @@ msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "General configuration"
+msgstr ""
+
+#: src/app/go-to-kanban/go-to-kanban.tpl.html
+msgid "Go to Kanban"
 msgstr ""
 
 #: src/app/app-kanban-controller.js
@@ -217,10 +215,6 @@ msgstr ""
 
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
-msgstr ""
-
-#: src/app/kanban.tpl.html
-msgid "Go to Kanban"
 msgstr ""
 
 #: src/app/reports-modal/reports-modal.tpl.html

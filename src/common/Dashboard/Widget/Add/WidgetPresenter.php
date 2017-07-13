@@ -27,6 +27,9 @@ class WidgetPresenter
     public $id;
     public $name;
     public $description;
+    public $image_source;
+    public $image_title;
+    public $has_image;
     public $is_used;
     public $can_be_added_from_widget_list;
     public $already_used_label;
@@ -38,6 +41,9 @@ class WidgetPresenter
         $this->id                            = $widget->getId();
         $this->name                          = $widget->getTitle();
         $this->description                   = $widget->getDescription();
+        $this->image_source                  = $widget->getImageSource();
+        $this->image_title                   = $widget->getImageTitle();
+        $this->has_image                     = ! empty($this->image_source);
         $this->is_used                       = $is_used;
         $this->configurations                = $widget->getInstallPreferences();
         $this->can_be_added_from_widget_list = $widget->canBeAddedFromWidgetList();

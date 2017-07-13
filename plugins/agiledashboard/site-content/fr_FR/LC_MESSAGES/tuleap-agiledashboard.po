@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.3\n"
 
+msgid "Add Kanban to dashboard"
+msgstr "Ajouter Kanban au tableau de bord"
+
 msgid "Add to dashboard"
 msgstr "Ajouter au tableau de bord"
 
