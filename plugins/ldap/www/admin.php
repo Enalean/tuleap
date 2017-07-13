@@ -115,7 +115,7 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
             echo '<ul>';
             foreach ($toRemove as $userId) {
                 if (($user = $um->getUserById($userId))) {
-                    echo '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
+                    echo '<li>' . $hp->purify($user->getRealName().' ('.$user->getUserName().')') . '</li>';
                 }
             }
             echo '</ul>';
@@ -127,7 +127,7 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
             echo '<ul>';
             foreach ($toAdd as $userId) {
                 if (($user = $um->getUserById($userId))) {
-                    echo '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
+                    echo '<li>'. $hp->purify($user->getRealName().' ('.$user->getUserName().')') . '</li>';
                 }
             }
             echo '</ul>';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,19 +24,21 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
     const IDENTIFIER = 'settings';
 
     public function getContent() {
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','settings_title') .'</h2>' .
         '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'upd_ug_name').'</p>
-        <form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">
+        <form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.urlencode($this->ugroup->getProjectId()).'">
         <input type="hidden" name="func" value="do_update">
-        <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'">
-        <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'">
+        <input type="hidden" name="group_id" value="'.$purifier->purify($this->ugroup->getProjectId()).'">
+        <input type="hidden" name="ugroup_id" value="'.$purifier->purify($this->ugroup->getId()).'">
         <p>
             <label for="ugroup_name"><strong>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'name').'</strong></label>
             <br />
             <input size="40"
                    type="text"
                    name="ugroup_name"
-                   value="'.$this->ugroup->getName().'"
+                   value="'.$purifier->purify($this->ugroup->getName()).'"
                    required
                    autofocus/>
             <br />
@@ -49,7 +51,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
                 name="ugroup_description"
                 wrap="virtual"
                 cols="40"
-                rows="3"">'.$this->ugroup->getDescription().'</textarea>
+                rows="3"">'.$purifier->purify($this->ugroup->getDescription()).'</textarea>
         </p>
         <p>
             <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />

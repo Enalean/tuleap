@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011-2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -75,12 +75,13 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
         if ($currentSource) {
             $currentBindHTML = '';
             if ($currentSource && $currentProject->userIsAdmin()) {
+                $purifier         = Codendi_HTMLPurifier::instance();
                 $currentBindHTML .= $GLOBALS['Language']->getText(
                     'project_ugroup_binding', 'current_binded',
                     array(
-                        '<a href="/project/admin/editugroup.php?group_id='.$currentProject->getID().'&ugroup_id='
-                            .$currentSource->getId().'&func=edit" ><b>'.$currentSource->getName().'</b></a>',
-                        '<a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>'
+                        '<a href="/project/admin/editugroup.php?group_id='.urlencode($currentProject->getID()).'&ugroup_id='
+                            .urlencode($currentSource->getId()).'&func=edit" ><b>'.$purifier->purify($currentSource->getName()).'</b></a>',
+                        '<a href="/projects/'. urlencode($currentProject->getUnixName()).'" ><b>'.$purifier->purify($currentProject->getUnconvertedPublicName()).'</b></a>'
                     )
                 );
             }
@@ -101,6 +102,8 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
      * @return String
      */
     private function getProjectsSelect($groupId, $sourceProject) {
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $projects       = UserManager::instance()->getCurrentUser()->getProjects(true);
         $projectSelect  = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
@@ -114,7 +117,7 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
                         if ($sourceProject == $project->getID()) {
                             $selected = 'selected="selected"';
                         }
-                        $projectSelect .= '<option value="'.$project->getID().'" '.$selected.' >'.$project->getPublicName().'</option>';
+                        $projectSelect .= '<option value="'. $purifier->purify($project->getID()) .'" '.$selected.' >'. $purifier->purify($project->getUnconvertedPublicName()).'</option>';
                     }
                 }
             }
@@ -156,6 +159,8 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
      * @return String
      */
     private function getUgroupSelect($sourceProject, ProjectUGroup $currentSource = null) {
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $ugroupList = $this->getUgroupList($sourceProject, $currentSource);
         $ugroupSelect  = '<select name="source_ugroup" >';
         $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
@@ -164,11 +169,9 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
             if ($ugroup['selected']) {
                 $selected = 'selected="selected"';
             }
-            $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
+            $ugroupSelect .= '<option value="'.$purifier->purify($ugroup['ugroup_id']).'" '.$selected.' >'.$purifier->purify($ugroup['name']).'</option>';
         }
         $ugroupSelect .= '</select>';
         return $ugroupSelect;
     }
 }
-
-?>

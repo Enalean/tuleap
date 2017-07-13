@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011-2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -137,7 +137,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '<select name="begin">';
             $content .= '<option value="" '. (in_array($this->validated_request['begin'], $this->validated_request['allowed_begin_values']) ? $selected : '') .'></option>';
             foreach($this->validated_request['allowed_begin_values'] as $b) {
-                $content .= '<option value="'. $b .'" '. ($b == $this->validated_request['begin'] ? $selected : '') .'>'. $b .'</option>';
+                $content .= '<option value="'. $hp->purify($b) .'" '. ($b == $this->validated_request['begin'] ? $selected : '') .'>'. $hp->purify($b) .'</option>';
             }
             $content .= '</select>. ';
 
@@ -232,7 +232,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
                 $output .= '<td style="text-align:right;">';
                 $output .= $this->project_admin_bullet_user_content($data['user_id'], $action);
                 $output .= '</td></tr></table>';
-                $output .= '<div style="color:#666; ">'. $data['email'] .'</div>';
+                $output .= '<div style="color:#666; ">'. $hp->purify($data['email']) .'</div>';
                 $output .= '</div>';
                 $output .= '</td>';
             }
