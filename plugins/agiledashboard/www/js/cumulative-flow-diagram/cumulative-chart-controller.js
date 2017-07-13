@@ -17,32 +17,14 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 import moment from 'moment';
 import * as d3 from 'd3';
-import cumulativeFlowChart from './cumulative-chart.js';
+import { map, first, filter, find, findIndex, forEach, defaults, reduce } from 'lodash';
 
-export default function (options) {
-    options = options || {};
+export default function (chart) {
+    var self = this;
 
-    var chart = {};
-    function factory() {
-        cumulativeFlowChart(chart);
-        chart.setOptions(options);
-        chart.init(options);
-    }
-
-    chart.setOptions = function () {
-        chart.width(options.width);
-        chart.height(options.height);
-        chart.margin(options.margin);
-        chart.data(options.data);
-        chart.legendText(options.legend_text);
-        chart.localizedFormat(options.localized_format);
-        chart.divGraph(d3.select('#' + options.graph_id));
-    };
-
-    chart.init = function () {
+    self.init = function () {
         chart.bisectDate(d3.bisector(function(d) { return moment(d.date).valueOf(); }).left);
 
         chart.svg(chart.divGraph().append('svg')
@@ -52,33 +34,33 @@ export default function (options) {
         chart.g(chart.svg().append('g')
             .attr('transform', 'translate(' + chart.margin().left + ',' + chart.margin().top + ')'));
 
-        chart.initData();
-        chart.initX();
-        chart.initYMax();
-        chart.initY();
-        chart.initColor();
-        chart.initStack();
-        chart.initArea();
-        chart.initGraph();
-        chart.initLegend();
-        chart.initTooltip();
-        chart.initAreaEvents();
-        chart.initLegendEvents();
+        self.initData();
+        self.initX();
+        self.initYMax();
+        self.initY();
+        self.initColor();
+        self.initStack();
+        self.initArea();
+        self.initGraph();
+        self.initLegend();
+        self.initTooltip();
+        self.initAreaEvents();
+        self.initLegendEvents();
     };
 
-    chart.initData = function () {
+    self.initData = function () {
         var stack_data = parseData(chart.data());
         chart.stackData(stack_data);
         chart.columns(chart.data());
 
-        var keys = _.map(chart.data(), function(column) {
+        var keys = map(chart.data(), function(column) {
             return column.id;
         });
 
         chart.keys(keys);
     };
 
-    chart.initColor = function () {
+    self.initColor = function () {
         var schemeCategory20cWithoutLightest = [
             '#3182bd',
             '#6baed6',
@@ -102,14 +84,14 @@ export default function (options) {
 
         chart.colorScale(color_scale);
 
-        var color_domain = _.map(chart.columns(), function (data, index, columns) {
+        var color_domain = map(chart.columns(), function (data, index, columns) {
             return (columns.length - 1) - index;
         });
         chart.colorScale().domain(color_domain);
     };
 
-    chart.initX = function () {
-        var first_column = _.first(chart.columns());
+    self.initX = function () {
+        var first_column = first(chart.columns());
 
         var time_scale_extent = d3.extent(first_column.values, function(d) {
             return moment(d.start_date).toDate();
@@ -125,14 +107,14 @@ export default function (options) {
             .scale(x_scale)
             .tickFormat(function(d) { return moment(d).format(chart.localizedFormat()); });
 
-        if (chart.getXAxisTicks(chart.width()) > 0) {
-            x_axis.ticks(chart.getXAxisTicks(chart.width()));
+        if (self.getXAxisTicks(chart.width()) > 0) {
+            x_axis.ticks(self.getXAxisTicks(chart.width()));
         }
 
         chart.xAxis(x_axis);
     };
 
-    chart.initY = function () {
+    self.initY = function () {
         var y_scale = d3.scaleLinear()
             .domain([0, chart.yMax()])
             .range([chart.height(), 0]);
@@ -142,15 +124,15 @@ export default function (options) {
         var y_axis = d3.axisLeft()
             .scale(y_scale);
 
-        if (chart.getYAxisTicks(chart.height()) > 0) {
-            y_axis.ticks(chart.getYAxisTicks(chart.height()));
+        if (self.getYAxisTicks(chart.height()) > 0) {
+            y_axis.ticks(self.getYAxisTicks(chart.height()));
         }
 
         chart.yAxis(y_axis);
     };
 
-    chart.initYMax = function () {
-        var first_column = _.first(chart.columns());
+    self.initYMax = function () {
+        var first_column = first(chart.columns());
 
         var max_kanban_items_count = d3.max(first_column.values, function(data_point, index) {
             return sumKanbanItemsCountsForOneDay(index);
@@ -159,7 +141,7 @@ export default function (options) {
         chart.yMax(max_kanban_items_count);
 
         function sumKanbanItemsCountsForOneDay(day_index) {
-            var columns_activated = _.filter(chart.columns(), { activated: true });
+            var columns_activated = filter(chart.columns(), { activated: true });
 
             return columns_activated.reduce(function(previous_sum, current_column) {
                 return previous_sum + current_column.values[day_index].kanban_items_count;
@@ -167,18 +149,18 @@ export default function (options) {
         }
     };
 
-    chart.initGraph = function () {
-        chart.drawAxis();
-        chart.drawArea();
-        chart.drawGuideLine();
-        chart.updateGrid();
+    self.initGraph = function () {
+        self.drawAxis();
+        self.drawArea();
+        self.drawGuideLine();
+        self.updateGrid();
     };
 
-    chart.initAreaEvents = function() {
+    self.initAreaEvents = function() {
         chart.g().selectAll('.area')
             .on('mouseover', function(d) {
                 d3.select('#area_' + d.key).classed('hover', true);
-                var column = _.find(chart.columns(), { id: d.key });
+                var column = find(chart.columns(), { id: d.key });
                 if (column) {
                     column.hover = true;
                 }
@@ -210,7 +192,7 @@ export default function (options) {
                     d3.event.relatedTarget.id !== 'tooltip_' + d.key &&
                     d3.event.relatedTarget.id !== 'area_' + d.key) {
                     d3.select('#area_' + d.key).classed('hover', false);
-                    var column = _.find(chart.columns(), {id: d.key});
+                    var column = find(chart.columns(), {id: d.key});
                     if (column) {
                         column.hover = false;
                     }
@@ -273,7 +255,7 @@ export default function (options) {
                 .text(moment(data.date).format(chart.localizedFormat()));
 
             var tooltip_content_row = tooltip.selectAll('.tooltip-content-row')
-                .data(_.filter(chart.columns(), { activated: true }))
+                .data(filter(chart.columns(), { activated: true }))
                 .enter().append('div')
                 .attr('id', function(d) { return 'tooltip_' + d.id; })
                 .attr('class', 'tooltip-content-row')
@@ -282,7 +264,7 @@ export default function (options) {
             tooltip_content_row.append('div')
                 .attr('class', 'row-legend')
                 .style('background-color', function(d) {
-                    var index = _.findIndex(chart.columns(), {id: d.id});
+                    var index = findIndex(chart.columns(), {id: d.id});
                     return chart.colorScale()(chart.columns().length - 1 - index);
                 });
 
@@ -313,11 +295,11 @@ export default function (options) {
         }
     };
 
-    chart.initLegendEvents = function() {
+    self.initLegendEvents = function() {
         d3.selectAll('.legend-value')
             .on('click', function(d) {
                 updateLegend(d, d3.select(this));
-                chart.redraw();
+                self.redraw();
             })
             .on('mouseover', function(d) {
                 d3.select('#area_' + d.id).classed('hover', true);
@@ -327,7 +309,7 @@ export default function (options) {
             });
     };
 
-    chart.initStack = function() {
+    self.initStack = function() {
         var stack = d3.stack()
             .keys(chart.keys())
             .order(d3.stackOrderNone)
@@ -336,7 +318,7 @@ export default function (options) {
         chart.stack(stack);
     };
 
-    chart.initArea = function() {
+    self.initArea = function() {
         var area = d3.area()
             .x(function(d) { return chart.xScale()(moment(d.data.date).toDate()); })
             .y0(function(d) { return chart.yScale()(d[0]); })
@@ -345,7 +327,7 @@ export default function (options) {
         chart.area(area);
     };
 
-    chart.initLegend = function() {
+    self.initLegend = function() {
         var svg_legend = chart.divGraph().append('div')
             .attr('id', 'legend')
             .append('ul');
@@ -371,7 +353,7 @@ export default function (options) {
             .text(function(d) { return d.label; });
     };
 
-    chart.initTooltip = function () {
+    self.initTooltip = function () {
         var tooltip = chart.divGraph().append('div')
             .attr('id', 'tooltip')
             .classed('tooltip-displayed', false)
@@ -380,7 +362,7 @@ export default function (options) {
         chart.tooltip(tooltip);
     };
 
-    chart.drawAxis = function() {
+    self.drawAxis = function() {
         chart.g().append('g')
             .attr('class', 'axis x-axis')
             .attr('transform', 'translate(0, ' + chart.height() + ')')
@@ -398,7 +380,7 @@ export default function (options) {
             .text(chart.legendText());
     };
 
-    chart.drawArea = function() {
+    self.drawArea = function() {
         chart.g().selectAll('.area')
             .data(chart.stack()(chart.stackData()))
             .enter()
@@ -409,14 +391,14 @@ export default function (options) {
             .attr('d', chart.area());
     };
 
-    chart.drawGuideLine = function() {
+    self.drawGuideLine = function() {
         chart.g().append('line')
             .attr('class', 'guide-line')
             .classed('guide-line-displayed', false)
             .classed('guide-line-undisplayed', true);
     };
 
-    chart.updateGrid = function () {
+    self.updateGrid = function () {
         chart.g().selectAll('.x-axis .tick line')
             .attr('y2', -chart.height());
 
@@ -440,7 +422,7 @@ export default function (options) {
             });
     };
 
-    chart.getXAxisTicks = function (size) {
+    self.getXAxisTicks = function (size) {
         var ticks = 0;
 
         if (size <= 320) {
@@ -456,7 +438,7 @@ export default function (options) {
         return ticks;
     };
 
-    chart.getYAxisTicks = function (size) {
+    self.getYAxisTicks = function (size) {
         var ticks = 0;
 
         if (size <= 320) {
@@ -472,7 +454,7 @@ export default function (options) {
         return ticks;
     };
 
-    chart.resize = function (height, width) {
+    self.resize = function (height, width) {
         if (arguments.length) {
             chart.height(height);
             chart.width(width);
@@ -480,9 +462,9 @@ export default function (options) {
         return chart;
     };
 
-    chart.redraw = function () {
-        chart.initData(chart.columns());
-        chart.initYMax();
+    self.redraw = function () {
+        self.initData(chart.columns());
+        self.initYMax();
 
         chart.xScale().range([0, chart.width()]);
         chart.yScale().range([chart.height(), 0]);
@@ -503,22 +485,22 @@ export default function (options) {
         chart.g().selectAll('.y-axis-label')
             .attr('transform', 'translate(-35,'+(chart.height() / 2)+')rotate(-90)');
 
-        chart.updateGrid();
-        if (chart.getXAxisTicks(chart.width()) > 0) {
-            chart.xAxis().ticks(chart.getXAxisTicks(chart.width()));
+        self.updateGrid();
+        if (self.getXAxisTicks(chart.width()) > 0) {
+            chart.xAxis().ticks(self.getXAxisTicks(chart.width()));
         }
 
-        if (chart.getYAxisTicks(chart.height()) > 0) {
-            chart.yAxis().ticks(chart.getYAxisTicks(chart.height()));
+        if (self.getYAxisTicks(chart.height()) > 0) {
+            chart.yAxis().ticks(self.getYAxisTicks(chart.height()));
         }
     };
 
     function parseData(data) {
         var parsed_data = [];
-        _.forEach(data, function (column) {
-            _.defaults(column, { activated: true });
+        forEach(data, function (column) {
+            defaults(column, { activated: true });
 
-            _.forEach(column.values, function (value, value_index) {
+            forEach(column.values, function (value, value_index) {
                 if (! parsed_data[value_index]) {
                     parsed_data[value_index] = {};
                 }
@@ -536,7 +518,7 @@ export default function (options) {
     }
 
     function total(data) {
-        return _.reduce(data, function(sum, value) {
+        return reduce(data, function(sum, value) {
             return (! isNaN(value)) ? sum + value : sum;
         }, 0);
     }
@@ -551,5 +533,5 @@ export default function (options) {
         }
     }
 
-    return factory;
+    return self;
 };
