@@ -26,9 +26,9 @@ plugin_botmattermost_git	modal_header_edit_configure_notification	Edition de la 
 plugin_botmattermost_git	modal_header_delete_configure_notification	Suppression de la configuration des notifications
 plugin_botmattermost_git	modal_delete_content	Cette suppression est irréversible. Veuillez confirmer la suppression de la configuration des notifications.
 
-plugin_botmattermost_git	configuration_info_channels_handles	L'indentifiant du salon de discussion est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/monsalondediscussion<br>identifiant : monsalondediscussion
-plugin_botmattermost_git	configuration_label_channels_handles	Liste des identifiants des salons de discussion
-plugin_botmattermost_git	configuration_input_channels_handles	salon1, salon2, salon3
+plugin_botmattermost_git	configuration_info_channels_handles	L'identifiant du canal est visible dans son URL<br>exemple: https://example.com/monGroupe/channels/canal<br>identifiant : canal
+plugin_botmattermost_git	configuration_label_channels_handles	Liste des canaux
+plugin_botmattermost_git	configuration_input_channels_handles	canal1, canal2, canal3
 
 plugin_botmattermost_git	attachment_pre_text_message	Pull request proposée par $1 sur le dépôt
 plugin_botmattermost_git	attachment_pre_text_project	Projet :
