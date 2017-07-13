@@ -1789,3 +1789,7 @@ project_admin_utils	tracker_formelement_update	Mise à jour du champ
 
 plugin_tracker	permission_delegation_name	Administrateur de trackers
 plugin_tracker	permission_delegation_description	Cette permission donne le droit d'administration sur tous les trackers
+
+plugin_tracker	followup_settings_label	Paramètres d'affichage
+plugin_tracker	followup_invert_comment_label	L'ordre des commentaires est inversé
+plugin_tracker	followup_display_changes_label	Les changements sont affichés

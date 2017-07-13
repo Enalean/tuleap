@@ -1791,3 +1791,7 @@ project_admin_utils	tracker_formelement_update	Update field
 
 plugin_tracker	permission_delegation_name	Global Tracker Administrator
 plugin_tracker	permission_delegation_description	This permission grants tracker administration rights on all trackers on all projects
+
+plugin_tracker	followup_settings_label	Display settings
+plugin_tracker	followup_invert_comment_label	Comments are in reversed order
+plugin_tracker	followup_display_changes_label	Changes are displayed

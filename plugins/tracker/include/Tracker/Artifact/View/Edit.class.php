@@ -146,6 +146,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
         $html .= '<div id="tracker_artifact_followup_comments" class="'. $classname .'">';
         $html .= '<div id="tracker_artifact_followup_comments-content">';
+        $html .= $this->fetchSettingsButton();
         $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h1>';
         $html .= '<ul class="tracker_artifact_followups">';
 
@@ -164,6 +165,35 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '</div>';
 
         $html .= '</td></tr></table>'; //see fetchFields
+
+        return $html;
+    }
+
+    private function fetchSettingsButton()
+    {
+        $settings_label        = $GLOBALS['Language']->getText('plugin_tracker', 'followup_settings_label');
+        $invert_comment_label  = $GLOBALS['Language']->getText('plugin_tracker', 'followup_invert_comment_label');
+        $display_changes_label = $GLOBALS['Language']->getText('plugin_tracker', 'followup_display_changes_label');
+
+        $html = '<div class="tracker_artifact_followup_comments_display_settings">';
+        $html .= '<div class="btn-group">';
+        $html .= '<a href="#" class="btn dropdown-toggle" data-toggle="dropdown">';
+        $html .= '<i class="icon-cog"></i> ' . $settings_label . ' <span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '<ul class="dropdown-menu pull-right">';
+        $html .= '<li>';
+        $html .= '<a href="#invert-order" id="invert-order-menu-item">';
+        $html .= '<i class="icon-ok" style="display: none"></i> ' . $invert_comment_label;
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '<li>';
+        $html .= '<a href="#" id="display-changes-menu-item">';
+        $html .= '<i class="icon-ok" style="display: none"></i> ' . $display_changes_label;
+        $html .= '</a>';
+        $html .= '</li>';
+        $html .= '</ul>';
+        $html .= '</div>';
+        $html .= '</div>';
 
         return $html;
     }
