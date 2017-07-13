@@ -97,78 +97,41 @@ document.observe('dom:loaded', function () {
             $('display-changes-menu-item').down('i').toggle();
         }
 
-        var display_changes_classname = 'tracker_artifact_followup_comments-display_changes',
-            div = new Element('div', {
-                'class': 'tracker_artifact_followup_comments_display_settings'
-            })
-            .insert(
-                new Element('div', {
-                    'class': 'btn-group'
-                }).insert(
-                    new Element('a', {
-                        'href': '#',
-                        'class': 'btn dropdown-toggle',
-                        'data-toggle': 'dropdown'
-                    }).update('<i class="icon-cog"></i> ' + codendi.locales.tracker_artifact.display_settings + ' <span class="caret"></span>')
+        var display_changes_classname = 'tracker_artifact_followup_comments-display_changes';
 
-                ).insert(
-                    new Element('ul', {
-                        'class': 'dropdown-menu pull-right'
-                    })
-                    .insert(
-                        new Element('li')
-                            .insert(new Element ('a', {
-                                'id': 'invert-order-menu-item',
-                                'href': '#invert-order'
-                            })
-                            .update('<i class="icon-ok" style="display: none"></i> ' + codendi.locales.tracker_artifact.reverse_order)
-                            .observe('click', function (evt) {
-                                toggleCheckForCommentOrder();
-                                invertFollowups(followup_section);
-                                new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
-                                    parameters: {
-                                        tracker: $('tracker_id').value
-                                    }
-                                });
-                                Event.stop(evt);
-                                return false;
-                            }))
-
-                    ).insert(
-                        new Element('li')
-                            .insert(new Element('a', {
-                                'id': 'display-changes-menu-item',
-                                'href': '#'
-                            })
-                            .update('<i class="icon-ok" style="display: none"></i> ' + codendi.locales.tracker_artifact.display_changes)
-                            .observe('click', function (evt) {
-                                followup_section.toggleClassName(display_changes_classname);
-                                toggleCheckForDisplayChanges();
-                                new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
-                                Event.stop(evt);
-                            }))
-                    )
-                )
-            );
-
-            followup_section.down().insert({
-                top: div
-            });
-
-            new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
+        $('invert-order-menu-item').up().observe('click', function (evt) {
+            toggleCheckForCommentOrder();
+            invertFollowups(followup_section);
+            new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
                 parameters: {
                     tracker: $('tracker_id').value
-                },
-                onSuccess: function (transport) {
-                    if (!transport.responseText) {
-                        toggleCheckForCommentOrder();
-                    }
                 }
             });
+            Event.stop(evt);
+            return false;
+        });
 
-            if (followup_section.hasClassName(display_changes_classname)) {
-                toggleCheckForDisplayChanges();
+        $('display-changes-menu-item').up().observe('click', function (evt) {
+            followup_section.toggleClassName(display_changes_classname);
+            toggleCheckForDisplayChanges();
+            new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
+            Event.stop(evt);
+        });
+
+        new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
+            parameters: {
+                tracker: $('tracker_id').value
+            },
+            onSuccess: function (transport) {
+                if (!transport.responseText) {
+                    toggleCheckForCommentOrder();
+                }
             }
+        });
+
+        if (followup_section.hasClassName(display_changes_classname)) {
+            toggleCheckForDisplayChanges();
+        }
     });
 
     $$('.tracker_artifact_field  textarea').each(function (element) {
