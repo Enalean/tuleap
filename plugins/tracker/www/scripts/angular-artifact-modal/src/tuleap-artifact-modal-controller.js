@@ -60,9 +60,6 @@ function ArtifactModalController(
         isFollowupCommentFormDisplayed: isFollowupCommentFormDisplayed,
         isLoading                     : function() { return TuleapArtifactModalRestService.is_loading; },
         isThereAtLeastOneFileField    : isThereAtLeastOneFileField,
-        newOpenListStaticValue        : newOpenListStaticValue,
-        newOpenListUserBindValue      : newOpenListUserBindValue,
-        searchUsers                   : searchUsers,
         setupTooltips                 : setupTooltips,
         showParentArtifactChoice      : showParentArtifactChoice,
         submit                        : submit,
@@ -222,39 +219,6 @@ function ArtifactModalController(
 
     function toggleFieldset(fieldset) {
         fieldset.collapsed = ! fieldset.collapsed;
-    }
-
-    function newOpenListStaticValue(newOpenValue) {
-        var item = {
-            label: newOpenValue
-        };
-
-        return item;
-    }
-
-    function newOpenListUserBindValue(email) {
-        var item = {
-            display_name: email,
-            email       : email
-        };
-
-        return item;
-    }
-
-    function searchUsers(field, query) {
-        var minimal_query_length = 3;
-
-        if (! query || minimal_query_length > query.length) {
-            field.values = [];
-            return;
-        }
-
-        field.loading = true;
-
-        TuleapArtifactModalRestService.searchUsers(query).then(function(data) {
-            field.loading = false;
-            field.values  = [].concat(data);
-        });
     }
 
     function showParentArtifactChoice() {

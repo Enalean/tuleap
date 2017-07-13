@@ -102,6 +102,12 @@ msgstr ""
 msgid "Please select a date"
 msgstr ""
 
+#: src/tuleap-artifact-modal-fields/open-list-field/static-open-list-field.tpl.html
+#: src/tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field.tpl.html
+#: src/tuleap-artifact-modal-fields/open-list-field/users-open-list-field.tpl.html
+msgid "Please select an item in the list"
+msgstr ""
+
 #: src/tuleap-artifact-modal.tpl.html
 msgid "References list is empty."
 msgstr ""

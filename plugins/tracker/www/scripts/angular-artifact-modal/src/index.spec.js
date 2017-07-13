@@ -15,3 +15,7 @@ import './tuleap-artifact-modal-fields/file-field/file-field-controller.spec.js'
 import './tuleap-artifact-modal-fields/file-field/file-upload-service.spec.js';
 import './tuleap-artifact-modal-fields/permission-field/permission-field-controller.spec.js';
 import './tuleap-artifact-modal-fields/permission-field/permission-field-validate-service.spec.js';
+import './tuleap-artifact-modal-fields/open-list-field/open-list-field-validate-service.spec.js';
+import './tuleap-artifact-modal-fields/open-list-field/static-open-list-field-controller.spec.js';
+import './tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field-controller.spec.js';
+import './tuleap-artifact-modal-fields/open-list-field/users-open-list-field-controller.spec.js';

@@ -1,0 +1,25 @@
+<div class="tlp-form-element"
+    ng-class="{
+    'tlp-form-element-disabled': ugroups_open_list_field.isDisabled(),
+    'tlp-form-element-error': ugroups_open_list_field.isRequiredAndEmpty()
+}">
+    <label
+        for="{{ ::('tracker_field_'+ ugroups_open_list_field.field.field_id) }}"
+        class="tlp-label"
+    >{{ ::ugroups_open_list_field.field.label }} <i class="fa fa-asterisk" ng-if="::ugroups_open_list_field.field.required"></i></label>
+    <select
+        multiple
+        ng-model="ugroups_open_list_field.value_model.value.bind_value_objects"
+        ng-options="field_value.label for field_value in ::ugroups_open_list_field.field.values track by field_value.id"
+        ng-disabled="::ugroups_open_list_field.isDisabled()"
+        ng-required="::ugroups_open_list_field.field.required"
+        ng-attr-title="::ugroups_open_list_field.field.hint"
+        class="tlp-select tuleap-artifact-modal-open-list-ugroups"
+        id="{{ ::('tracker_field_' + ugroups_open_list_field.field.field_id) }}"
+    ></select>
+    <p
+        class="tlp-text-danger"
+        ng-if="ugroups_open_list_field.isRequiredAndEmpty()"
+        translate
+    >Please select an item in the list</p>
+</div>

@@ -384,78 +384,27 @@
 </script>
 
 <script type="text/ng-template" id="field-tbl.tpl.html">
-<div class="field tbl">
-    <label
-        for="{{ 'tracker_field_'+ field.field_id }}"
-        class="tracker_formelement_label"
-        ng-class="{required: field.required, loading: field.loading}"
-    >{{ field.label }}</label>
-    <ui-select
-        multiple
-        ng-if="field.bindings.type === 'static'"
-        tagging="modal.newOpenListStaticValue"
-        ng-model="modal.values[field.field_id].value.bind_value_objects"
-        ng-required="{{ field.required }}"
-        ng-disabled="modal.isDisabled(field)"
-        title="{{ field.hint }}"
-        id="{{ 'tracker_field_' + field.field_id }}"
-    >
-        <ui-select-match placeholder="{{ field.hint }}">
-            {{ $item.label }}
-        </ui-select-match>
-        <ui-select-choices repeat="value in field.values | filter: {label: $select.search}">
-            <div ng-bind-html="'' + value.label | highlight: $select.search">
-            </div>
-        </ui-select-choices>
-    </ui-select>
-    <ui-select
-        multiple
-        ng-if="field.bindings.type === 'ugroups'"
-        ng-model="modal.values[field.field_id].value.bind_value_objects"
-        ng-required="{{ field.required }}"
-        ng-disabled="modal.isDisabled(field)"
-        title="{{ field.hint }}"
-        id="{{ 'tracker_field_' + field.field_id }}"
-    >
-        <ui-select-match placeholder="{{ field.hint }}">
-            {{ $item.label }}
-        </ui-select-match>
-        <ui-select-choices repeat="value in field.values | filter: {label: $select.search}">
-            <div ng-bind-html="'' + value.label | highlight: $select.search">
-            </div>
-        </ui-select-choices>
-    </ui-select>
-    <ui-select
-        multiple
-        ng-if="field.bindings.type === 'users'"
-        tagging="modal.newOpenListUserBindValue"
-        ng-model="modal.values[field.field_id].value.bind_value_objects"
-        ng-required="{{ field.required }}"
-        ng-disabled="modal.isDisabled(field)"
-        title="{{ field.hint }}"
-        id="{{ 'tracker_field_' + field.field_id }}"
-    >
-        <ui-select-match placeholder="{{ field.hint }}">
-            <div class="avatar">
-                <img ng-src="{{ $item.avatar_url }}">
-            </div>
-            <span ng-bind-html="$item.display_name" class="username"></span>
-            <div class="clearfix"></div>
-        </ui-select-match>
-        <ui-select-choices
-            repeat="value in field.values"
-            refresh="modal.searchUsers(field, $select.search)"
-            refresh-delay="300"
-        >
-            <div class="avatar">
-                <img ng-src="{{ value.avatar_url }}">
-            </div>
-            <span ng-bind-html="value.display_name | highlight: $select.search" class="username"></span>
-            <div class="clearfix"></div>
-        </ui-select-choices>
-
-    </ui-select>
-</div>
+<div
+    ng-if="::field.bindings.type === 'static'"
+    class="field"
+    tuleap-artifact-modal-static-open-list-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></div>
+<div
+    ng-if="::field.bindings.type === 'ugroups'"
+    class="field"
+    tuleap-artifact-modal-ugroups-open-list-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></div>
+<div
+    ng-if="::field.bindings.type === 'users'"
+    class="field"
+    tuleap-artifact-modal-users-open-list-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></div>
 </script>
 
 <form class="tlp-modal tlp-modal-medium-sized tuleap-artifact-modal"

@@ -4,12 +4,14 @@ export default ValidateService;
 
 ValidateService.$inject = [
     'TuleapArtifactModalComputedFieldValidateService',
-    'TuleapArtifactModalPermissionFieldValidateService'
+    'TuleapArtifactModalPermissionFieldValidateService',
+    'TuleapArtifactModalOpenListFieldValidateService'
 ];
 
 function ValidateService(
     TuleapArtifactModalComputedFieldValidateService,
-    TuleapArtifactModalPermissionFieldValidateService
+    TuleapArtifactModalPermissionFieldValidateService,
+    TuleapArtifactModalOpenListFieldValidateService
 ) {
     return {
         validateArtifactFieldsValues: validateArtifactFieldsValues
@@ -26,6 +28,8 @@ function ValidateService(
                         return TuleapArtifactModalComputedFieldValidateService.validateFieldValue(field);
                     case 'perm':
                         return TuleapArtifactModalPermissionFieldValidateService.validateFieldValue(field);
+                    case 'tbl':
+                        return TuleapArtifactModalOpenListFieldValidateService.validateFieldValue(field);
                     default:
                         return validateOtherFields(field);
                 }

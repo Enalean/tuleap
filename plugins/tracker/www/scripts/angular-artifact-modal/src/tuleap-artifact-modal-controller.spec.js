@@ -433,43 +433,6 @@ describe("TuleapArtifactModalController", function() {
             ArtifactModalController = $controller(BaseModalController, controller_params);
         });
 
-        describe("searchUsers() -", function() {
-            var field, search_request;
-            beforeEach(function() {
-                field = {
-                    loading: false,
-                    values: [
-                        { id: 410, label: "undrag" }
-                    ]
-                };
-                search_request = $q.defer();
-                TuleapArtifactModalRestService.searchUsers.and.returnValue(search_request.promise);
-            });
-
-            it("Given an openlist field and a search query with 3 characters, when I search for all usernames containing the query, then the field's loading flag will be set to true, the REST route will be queried and when it responds, the field's loading flag will be set to false and the field's values will be replaced with the data from the REST endpoint", function() {
-                ArtifactModalController.searchUsers(field, "Blu");
-                expect(field.loading).toBeTruthy();
-                var results = [
-                    { id: 296, label: "Blue" },
-                    { id: 953, label: "Blurred" }
-                ];
-                search_request.resolve(results);
-                $scope.$apply();
-
-                expect(TuleapArtifactModalRestService.searchUsers).toHaveBeenCalledWith("Blu");
-                expect(field.loading).toBeFalsy();
-                expect(field.values).toEqual(results);
-            });
-
-            it("Given an openlist field and a search query with 2 characters, when I search for all usernames containing the query, then the field's values will be emptied and the REST route won't be called", function() {
-                ArtifactModalController.searchUsers(field, "Re");
-
-                expect(TuleapArtifactModalRestService.searchUsers).not.toHaveBeenCalled();
-                expect(field.loading).toBeFalsy();
-                expect(field.values).toEqual([]);
-            });
-        });
-
         describe("showParentArtifactChoice() -", function() {
             beforeEach(function() {
                 TuleapArtifactModalParentService.canChooseArtifactsParent.and.returnValue(true);

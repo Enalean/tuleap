@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-07-21 17:17+0200\n"
+"PO-Revision-Date: 2017-07-20 17:18+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -117,6 +117,12 @@ msgstr "Veuillez choisir un parent…"
 #: src/tuleap-artifact-modal-fields/date-field/date-field.tpl.html
 msgid "Please select a date"
 msgstr "Veuillez choisir une date"
+
+#: src/tuleap-artifact-modal-fields/open-list-field/static-open-list-field.tpl.html
+#: src/tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field.tpl.html
+#: src/tuleap-artifact-modal-fields/open-list-field/users-open-list-field.tpl.html
+msgid "Please select an item in the list"
+msgstr "Veuillez choisir un élément dans la liste"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "References list is empty."

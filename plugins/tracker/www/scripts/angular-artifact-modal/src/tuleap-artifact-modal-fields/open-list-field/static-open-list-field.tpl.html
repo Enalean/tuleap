@@ -1,0 +1,29 @@
+<div class="tlp-form-element"
+    ng-class="{
+    'tlp-form-element-disabled': static_open_list_field.isDisabled(),
+    'tlp-form-element-error': static_open_list_field.isRequiredAndEmpty()
+}">
+    <label
+        for="{{ ::('tracker_field_'+ static_open_list_field.field.field_id) }}"
+        class="tlp-label"
+    >{{ ::static_open_list_field.field.label }} <i class="fa fa-asterisk" ng-if="::static_open_list_field.field.required"></i></label>
+    <select
+        multiple
+        ng-disabled="::static_open_list_field.isDisabled()"
+        ng-required="::static_open_list_field.field.required"
+        ng-attr-title="::static_open_list_field.field.hint"
+        class="tlp-select tuleap-artifact-modal-open-list-static"
+        id="{{ ::('tracker_field_' + static_open_list_field.field.field_id) }}"
+    >
+        <option
+            ng-repeat="field_value in static_open_list_field.fieldValues()"
+            value="{{ field_value.id }}"
+            ng-selected="static_open_list_field.isStaticValueSelected(field_value)"
+        >{{ field_value.label }}</option>
+    </select>
+    <p
+        class="tlp-text-danger"
+        ng-if="static_open_list_field.isRequiredAndEmpty()"
+        translate
+    >Please select an item in the list</p>
+</div>
