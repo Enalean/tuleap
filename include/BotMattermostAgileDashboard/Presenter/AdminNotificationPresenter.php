@@ -34,12 +34,9 @@ class AdminNotificationPresenter
     public $project_id;
     public $bot_assigned;
     public $title;
-    public $description;
     public $table_col_name;
-    public $table_col_webhook_url;
     public $table_col_channels;
     public $button_config;
-    public $button_update;
     public $button_close;
     public $button_delete;
     public $button_edit;
@@ -53,7 +50,6 @@ class AdminNotificationPresenter
     public $input_channels_handles;
     public $purified_info_channels_handles;
     public $alert_time_warning;
-    public $has_send_time;
     public $bot_list_is_empty;
     public $empty_bot_list;
     public $any_configured_notification;
@@ -70,14 +66,11 @@ class AdminNotificationPresenter
         $this->bot_assigned = $bot_assigned;
 
         $this->title           = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_title');
-        $this->description     = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_description');
 
         $this->table_col_name        = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_name');
-        $this->table_col_webhook_url = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_table_col_webhook_url');
         $this->table_col_channels    = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'admin_notification_table_col_channels');
 
         $this->button_config  = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'button_configure_notification');
-        $this->button_update  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_update');
         $this->button_close   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_close');
         $this->button_delete  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_delete');
         $this->button_edit    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_button_edit');
@@ -102,7 +95,6 @@ class AdminNotificationPresenter
             array(date_default_timezone_get())
         );
 
-        $this->has_send_time     = isset($this->send_time);
         $this->bot_list_is_empty = count($this->bots) === 0;
         $this->empty_bot_list    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
 
