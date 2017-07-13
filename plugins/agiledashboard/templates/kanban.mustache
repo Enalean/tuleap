@@ -14,5 +14,5 @@
         '{{ kanban_url }}'
     )"
 >
-    <ui-view class="kanban"></ui-view>
+    <ui-view class="kanban {{# user_is_kanban_admin }} kanban-admin {{/ user_is_kanban_admin }}"></ui-view>
 </div>
