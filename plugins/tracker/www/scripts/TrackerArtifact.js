@@ -117,21 +117,6 @@ document.observe('dom:loaded', function () {
             new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
             Event.stop(evt);
         });
-
-        new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
-            parameters: {
-                tracker: $('tracker_id').value
-            },
-            onSuccess: function (transport) {
-                if (!transport.responseText) {
-                    toggleCheckForCommentOrder();
-                }
-            }
-        });
-
-        if (followup_section.hasClassName(display_changes_classname)) {
-            toggleCheckForDisplayChanges();
-        }
     });
 
     $$('.tracker_artifact_field  textarea').each(function (element) {

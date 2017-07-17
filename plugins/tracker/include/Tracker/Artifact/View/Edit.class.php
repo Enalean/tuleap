@@ -139,14 +139,14 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $invert_order = $this->user->getPreference(self::USER_PREFERENCE_INVERT_ORDER . '_' . $tracker->getId()) == false;
 
         $classname       = 'tracker_artifact_followup_comments-display_changes';
-        $user_preference = $this->user->getPreference(self::USER_PREFERENCE_DISPLAY_CHANGES);
-        if ($user_preference !== false && $user_preference == 0) {
+        $display_changes = $this->user->getPreference(self::USER_PREFERENCE_DISPLAY_CHANGES);
+        if ($display_changes !== false && $display_changes == 0) {
             $classname = '';
         }
 
         $html .= '<div id="tracker_artifact_followup_comments" class="'. $classname .'">';
         $html .= '<div id="tracker_artifact_followup_comments-content">';
-        $html .= $this->fetchSettingsButton();
+        $html .= $this->fetchSettingsButton($invert_order, $display_changes);
         $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h1>';
         $html .= '<ul class="tracker_artifact_followups">';
 
@@ -169,11 +169,21 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         return $html;
     }
 
-    private function fetchSettingsButton()
+    private function fetchSettingsButton($invert_order, $display_changes)
     {
         $settings_label        = $GLOBALS['Language']->getText('plugin_tracker', 'followup_settings_label');
         $invert_comment_label  = $GLOBALS['Language']->getText('plugin_tracker', 'followup_invert_comment_label');
         $display_changes_label = $GLOBALS['Language']->getText('plugin_tracker', 'followup_display_changes_label');
+
+        $invert_order_style = '';
+        if (! $invert_order) {
+            $invert_order_style = 'style="display: none"';
+        }
+
+        $display_changes_style = '';
+        if (! $display_changes) {
+            $display_changes_style = 'style="display: none"';
+        }
 
         $html = '<div class="tracker_artifact_followup_comments_display_settings">';
         $html .= '<div class="btn-group">';
@@ -183,12 +193,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '<ul class="dropdown-menu pull-right">';
         $html .= '<li>';
         $html .= '<a href="#invert-order" id="invert-order-menu-item">';
-        $html .= '<i class="icon-ok" style="display: none"></i> ' . $invert_comment_label;
+        $html .= '<i class="icon-ok" '. $invert_order_style .'></i> ' . $invert_comment_label;
         $html .= '</a>';
         $html .= '</li>';
         $html .= '<li>';
         $html .= '<a href="#" id="display-changes-menu-item">';
-        $html .= '<i class="icon-ok" style="display: none"></i> ' . $display_changes_label;
+        $html .= '<i class="icon-ok"  '. $display_changes_style .'></i> ' . $display_changes_label;
         $html .= '</a>';
         $html .= '</li>';
         $html .= '</ul>';
