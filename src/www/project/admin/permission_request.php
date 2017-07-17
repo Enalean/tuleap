@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2011. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -195,9 +195,10 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
         $message = $row['msg_to_requester'];
     }
 }
+$purifier = Codendi_HTMLPurifier::instance();
 echo '<tr><td colspan="2" style="text-align: center;">';
 echo '<form method="post" action="permission_request.php">
-          <textarea wrap="virtual" rows="5" cols="70" name="text">'.$message.'</textarea></p>
+          <textarea wrap="virtual" rows="5" cols="70" name="text">' . $purifier->purify($message) . '</textarea></p>
           <input type="hidden" name="func" value="member_req_notif_message">
           <input type="hidden" name="group_id" value="' .$group_id. '">
           <br><input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"/></br>

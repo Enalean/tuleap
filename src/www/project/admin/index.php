@@ -141,7 +141,7 @@ if ($GLOBALS['sys_use_trove'] != 0) {
     $trove_dao = new \Tuleap\TroveCat\TroveCatLinkDao();
     foreach ($trove_dao->searchTroveCatForProject($group_id) as $row_trovecat) {
         echo '<li>';
-        echo $row_trovecat['fullpath'].' '.help_button('trove_cat',$row_trovecat['trove_cat_id']);
+        echo $hp->purify($row_trovecat['fullpath']) . ' '.help_button('trove_cat',$row_trovecat['trove_cat_id']);
         echo '</li>';
     }
 
@@ -180,11 +180,11 @@ if (user_is_super_user()) {
 }
 
 $template_group = $pm->getProject($group->getTemplate());
-$template_name = $template_group->getPublicName();
+$template_name = $template_group->getUnconvertedPublicName();
 print '
 <HR NoShade SIZE="1">
 <P>
-'.$Language->getText('project_admin_index','built_from_template','<A href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_name.' </B></A>');
+'.$Language->getText('project_admin_index','built_from_template','<A href="/projects/'.urlencode($template_group->getUnixName()).'"> <B> '. $hp->purify($template_name) .' </B></A>');
 
 if ($group->isTemplate()) {
     echo '<hr NoShade SIZE="1" /><p><b>'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects') .':</b> <a id="show_projects_link" href="projects.php?group_id='. $group_id .'">'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects_show') .'</a></p><div id="show_projects_div"></div>';
@@ -228,7 +228,7 @@ EOS;
 echo '<HR NoShade SIZE="1">';
 $parent_project = $pm->getParentProject($group_id);
 if ($parent_project) {
-    echo $Language->getText('project_admin_editugroup', 'parent').' <a href="?group_id='.$parent_project->getID().'">'.$parent_project->getPublicName().'</a>';
+    echo $Language->getText('project_admin_editugroup', 'parent').' <a href="?group_id='.$parent_project->getID().'">'. $hp->purify($parent_project->getUnconvertedPublicName()) .'</a>';
 } else {
     echo $Language->getText('project_admin_editugroup', 'no_parent');
 }
@@ -453,7 +453,7 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
 }
 echo '<hr size="1" noshade="">';
 echo '<b>'.$Language->getText('project_admin_utils','notif_message_title').'</b><br/>';
-echo '<p><div class="admin_delegation">'.$message.'</div></p>';
+echo '<p><div class="admin_delegation">'. $hp->purify($message) .'</div></p>';
 echo '<hr size="1" noshade="">';
 echo '<tr><td colspan="2">';
 echo '<p align="center">';
