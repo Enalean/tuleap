@@ -152,11 +152,10 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
         $comments = $this->artifact->getFollowupsContent();
         if ($invert_order) {
-            $comments = array_reverse($comments);
             $html .= $this->fetchAddNewComment($tracker, $submitted_comment);
-            $html .= $this->fetchCommentContent($comments);
+            $html .= $this->fetchCommentContent($comments, true);
         } else {
-            $html .= $this->fetchCommentContent($comments);
+            $html .= $this->fetchCommentContent($comments, false);
             $html .= $this->fetchAddNewComment($tracker, $submitted_comment);
         }
 
@@ -208,25 +207,31 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         return $html;
     }
 
-    private function fetchCommentContent(array $comments)
+    private function fetchCommentContent(array $comments, $invert_comments)
     {
         $html = '';
         $i    = 0;
 
-        $previous_item = null;
+        $previous_item    = null;
+        $comments_content = array();
         foreach ($comments as $item) {
             $diff_to_previous = $item->diffToPrevious();
             if ($previous_item) {
                 $classnames  = html_get_alt_row_color($i++) .' tracker_artifact_followup ';
                 $classnames .= $item->getFollowUpClassnames($diff_to_previous);
-                $html .= '<li id="followup_'. $item->getId() .'" class="'. $classnames .'">';
-                $html .= $item->fetchFollowUp($diff_to_previous);
-                $html .= '</li>';
+                $comment_html = '<li id="followup_'. $item->getId() .'" class="'. $classnames .'">';
+                $comment_html .= $item->fetchFollowUp($diff_to_previous);
+                $comment_html .= '</li>';
+                $comments_content[] = $comment_html;
             }
             $previous_item = $item;
         }
 
-        return $html;
+        if ($invert_comments) {
+            $comments_content = array_reverse($comments_content);
+        }
+
+        return implode('', $comments_content);
     }
 
     private function fetchAddNewComment(Tracker $tracker, $submitted_comment)
