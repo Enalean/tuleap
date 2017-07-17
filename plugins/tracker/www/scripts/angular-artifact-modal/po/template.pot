@@ -98,6 +98,10 @@ msgstr ""
 msgid "Please choose a parent…"
 msgstr ""
 
+#: src/tuleap-artifact-modal-fields/date-field/date-field.tpl.html
+msgid "Please select a date"
+msgstr ""
+
 #: src/tuleap-artifact-modal.tpl.html
 msgid "References list is empty."
 msgstr ""

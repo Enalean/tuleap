@@ -229,60 +229,6 @@
 </div>
 </script>
 
-<script type="text/ng-template" id="field-date.tpl.html">
-<div class="field">
-    <label
-        for="{{ 'tracker_field_' + field.field_id }}"
-        class="tracker_formelement_label"
-        ng-class="{required: field.required}"
-    >{{ field.label }}</label>
-    <div class="dropdown">
-        <div
-            class="input-append"
-            ng-class="{'dropdown-toggle': ! modal.isDisabled(field)}"
-            data-toggle="{{ modal.getDropdownAttribute(field) }}"
-        >
-            <input
-                ng-if="! field.is_time_displayed"
-                tuleap-artifact-modal-format-date
-                type="text"
-                id="{{ 'tracker_field_' + field.field_id }}"
-                class="form-control"
-                data-ng-model="modal.values[field.field_id].value"
-                placeholder="yyyy-mm-dd"
-                ng-required="{{ field.required }}"
-                ng-disabled="modal.isDisabled(field)"
-            >
-            <input
-                ng-if="field.is_time_displayed"
-                tuleap-artifact-modal-format-datetime
-                type="text"
-                id="{{ 'tracker_field_' + field.field_id }}"
-                class="form-control"
-                data-ng-model="modal.values[field.field_id].value"
-                placeholder="yyyy-mm-dd hh:mm"
-                ng-required="{{ field.required }}"
-                ng-disabled="modal.isDisabled(field)"
-            >
-            <span class="add-on"><i class="icon-calendar"></i></span>
-        </div>
-
-        <ul class="dropdown-menu">
-            <datetimepicker
-                ng-if="! field.is_time_displayed"
-                data-ng-model="modal.values[field.field_id].value"
-                data-datetimepicker-config="{ dropdownSelector: 'tracker_field_{{ field.field_id }}', minView: 'day' }"
-            ></datetimepicker>
-            <datetimepicker
-                ng-if="field.is_time_displayed"
-                data-ng-model="modal.values[field.field_id].value"
-                data-datetimepicker-config="{ dropdownSelector: 'tracker_field_{{ field.field_id }}', minView: 'minute' }"
-            ></datetimepicker>
-        </ul>
-    </div>
-</div>
-</script>
-
 <script type="text/ng-template" id="field-art_link.tpl.html">
 <div class="tlp-form-element">
     <label class="tlp-label"
@@ -423,6 +369,15 @@
 <div
     class="tlp-form-element"
     tuleap-artifact-modal-permission-field="field"
+    is-disabled="modal.isDisabled(field)"
+    value-model="modal.values[field.field_id]"
+></div>
+</script>
+
+<script type="text/ng-template" id="field-date.tpl.html">
+<div
+    class="field"
+    tuleap-artifact-modal-date-field="field"
     is-disabled="modal.isDisabled(field)"
     value-model="modal.values[field.field_id]"
 ></div>

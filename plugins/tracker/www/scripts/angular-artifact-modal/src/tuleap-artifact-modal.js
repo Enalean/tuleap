@@ -14,8 +14,6 @@ import tuleap_highlight from './tuleap-highlight/highlight.js';
 import angular_tlp from 'angular-tlp';
 
 import FieldDependenciesService from './field-dependencies-service.js';
-import FormatDateDirective from './format-date-directive.js';
-import FormatDateTimeDirective from './format-datetime-directive.js';
 import ParentService from './parent-service.js';
 import ValidateService from './validate-service.js';
 import ArtifactModalService from './tuleap-artifact-modal-service.js';
@@ -34,8 +32,6 @@ angular.module('tuleap.artifact-modal', [
     tuleap_highlight
 ])
 .controller('TuleapArtifactModalController', ArtifactModalController)
-.directive('tuleapArtifactModalFormatDate', FormatDateDirective)
-.directive('tuleapArtifactModalFormatDatetime', FormatDateTimeDirective)
 .value('TuleapArtifactModalLoading', {
     loading: false
 })
