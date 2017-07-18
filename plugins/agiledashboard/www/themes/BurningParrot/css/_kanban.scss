@@ -141,8 +141,8 @@ $kanban-column-footer-height: 50px;
         > kanban-column {
             position: absolute;
             z-index: 2;
-            top: $kanban-column-header-height;
-            height: calc(100% - #{$kanban-column-header-height});
+            top: 0;
+            left: 0;
 
             > .kustom-scroll > .ngsb-wrap > .ngsb-container {
                 position: absolute;
