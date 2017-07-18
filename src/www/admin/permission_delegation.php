@@ -26,6 +26,8 @@ require_once 'pre.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
+$csrf_token = new CSRFSynchronizerToken('/admin/permission_delegation.php');
+
 $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
 $user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory($permissions_dao, EventManager::instance());
 $user_group_permissions_dao     = new User_ForgeUserGroupPermissionsDao();
@@ -42,6 +44,7 @@ $user_group_users_manager = new User_ForgeUserGroupUsersManager($user_group_user
 
 $controller = new Admin_PermissionDelegationController(
     $request,
+    $csrf_token,
     $user_group_permissions_factory,
     $user_group_permissions_manager,
     $user_group_factory,

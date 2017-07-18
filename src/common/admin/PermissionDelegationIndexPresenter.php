@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,11 @@
  */
 class Admin_PermissionDelegationIndexPresenter
 {
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
     /**
      * @var Admin_PermissionDelegationGroupPresenter[]
@@ -45,7 +50,6 @@ class Admin_PermissionDelegationIndexPresenter
      * @var Admin_PermissionDelegationGroupModalPresenter
      */
     private $edit_group;
-
     /**
      * @var Admin_PermissionDelegationPermissionsModalPresenter
      */
@@ -53,6 +57,7 @@ class Admin_PermissionDelegationIndexPresenter
 
 
     public function __construct(
+        CSRFSynchronizerToken $csrf_token,
         array $groups,
         Admin_PermissionDelegationGroupModalPresenter $add_group,
         Admin_PermissionDelegationDeleteGroupModalPresenter $delete_group = null,
@@ -60,6 +65,7 @@ class Admin_PermissionDelegationIndexPresenter
         Admin_PermissionDelegationPermissionsModalPresenter $add_perm_presenter = null,
         Admin_PermissionDelegationGroupPresenter $current_group_presenter = null
     ) {
+        $this->csrf_token         = $csrf_token;
         $this->groups             = $groups;
         $this->current_group      = $current_group_presenter;
         $this->add_group          = $add_group;

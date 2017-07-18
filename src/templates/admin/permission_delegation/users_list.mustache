@@ -4,6 +4,9 @@
           class="tlp-pane-container"
           id="siteadmin-permission-delegation-group-details-users-container"
     >
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="id" value="{{ id }}">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">{{ users_title }}</h1>

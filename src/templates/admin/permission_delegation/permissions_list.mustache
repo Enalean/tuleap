@@ -1,5 +1,8 @@
 <section class="tlp-pane" id="siteadmin-permission-delegation-group-details-perms">
     <form action="permission_delegation.php?action=delete-permissions" method="POST" class="tlp-pane-container">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">{{ permissions_title }}</h1>
         </div>
