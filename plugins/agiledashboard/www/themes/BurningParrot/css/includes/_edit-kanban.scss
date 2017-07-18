@@ -79,6 +79,7 @@
 
 .edit-kanban-column {
     display: flex;
+    justify-content: space-between;
     padding: 3px 3px 3px 0;
     border-radius: 3px;
 
@@ -86,7 +87,6 @@
         cursor: move;
 
         > .edit-kanban-column-label {
-            width: 100%;
             padding: 4px 0 4px 22px;
             background: url('../images/drag.png') no-repeat 5px 8px;
         }
@@ -110,4 +110,8 @@
             display: none;
         }
     }
+}
+
+.edit-kanban-column-settings {
+    display: flex;
 }
