@@ -25,9 +25,11 @@ use Exception;
 use Feedback;
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Factory;
 use Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary\Validator;
+use Tuleap\BotMattermostAgileDashboard\Exception\CannotDeleteBotNotificationException;
 use Tuleap\BotMattermostAgileDashboard\Presenter\AdminNotificationPresenter;
 
 class Controller
@@ -93,6 +95,16 @@ class Controller
             'adminConfiguration',
             new AdminNotificationPresenter($this->csrf, $bots, $project_id, $bot_assigned)
         );
+    }
+
+
+    public function deleteBotNotificationByBot(Bot $bot)
+    {
+        try {
+            $this->bot_agiledashboard_factory->deleteBotNotificationByBot($bot);
+        } catch (CannotDeleteBotNotificationException $exception) {
+            $exception->getMessage();
+        }
     }
 
     private function addBotNotification()

@@ -20,6 +20,7 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 
+use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
@@ -94,6 +95,13 @@ class Factory
     public function deleteBotNotification($project_id)
     {
         if (! $this->dao->deleteNotification($project_id)) {
+            throw new CannotDeleteBotNotificationException();
+        }
+    }
+
+    public function deleteBotNotificationByBot(Bot $bot)
+    {
+        if (! $this->dao->deleteNotificationByBot($bot)) {
             throw new CannotDeleteBotNotificationException();
         }
     }

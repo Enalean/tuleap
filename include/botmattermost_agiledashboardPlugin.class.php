@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownTemplateRendererFactory;
@@ -45,6 +46,10 @@ class botmattermost_agiledashboardPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+    }
+
+    public function getHooksAndCallbacks()
+    {
         if (defined('PLUGIN_BOT_MATTERMOST_BASE_DIR')) {
             require_once PLUGIN_BOT_MATTERMOST_BASE_DIR.'/include/autoload.php';
         }
@@ -54,6 +59,9 @@ class botmattermost_agiledashboardPlugin extends Plugin
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ADMIN);
         }
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
+        $this->addHook(BotMattermostDeleted::NAME);
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getDependencies()
@@ -142,6 +150,11 @@ class botmattermost_agiledashboardPlugin extends Plugin
         );
 
         $stand_up_notification_sender->send($this->getRequest());
+    }
+
+    public function botmattermost_bot_deleted(BotMattermostDeleted $event)
+    {
+        $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
 
     private function getRenderToString()

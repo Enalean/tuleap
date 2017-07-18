@@ -21,6 +21,7 @@
 namespace Tuleap\BotMattermostAgileDashboard\BotMattermostStandUpSummary;
 
 use DataAccessObject;
+use Tuleap\BotMattermost\Bot\Bot;
 
 class Dao extends DataAccessObject
 {
@@ -104,19 +105,24 @@ class Dao extends DataAccessObject
 
     public function deleteNotification($project_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-
         $this->da->startTransaction();
-
-        $notification_id = $this->getNotificationId($project_id);
-
-        if ($this->deleteBotNotification($notification_id) === false) {
-            $this->da->rollback();
+        if ($this->deleteNotificationByNotificationId($this->getNotificationId($project_id)) === false) {
+            $this->rollBack();
 
             return false;
-        } else {
-            if ($this->deleteChannels($notification_id) === false) {
-                $this->da->rollback();
+        }
+
+        return $this->da->commit();
+    }
+
+    public function deleteNotificationByBot(Bot $bot)
+    {
+        $this->da->startTransaction();
+
+        $notifications_ids = $this->searchNotificationsIdsByBot($bot);
+        foreach ($notifications_ids as $notification_id) {
+            if ($this->deleteNotificationByNotificationId($notification_id) === false) {
+                $this->rollBack();
 
                 return false;
             }
@@ -136,6 +142,11 @@ class Dao extends DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
+    private function deleteNotificationByNotificationId($notification_id)
+    {
+        return $this->deleteBotNotification($notification_id) && $this->deleteChannels($notification_id);
+    }
+
     private function getNotificationId($project_id)
     {
         $res = $this->searchNotificationId($project_id);
@@ -152,6 +163,17 @@ class Dao extends DataAccessObject
                 WHERE project_id = $project_id";
 
         return $this->retrieveFirstRow($sql);
+    }
+
+    private function searchNotificationsIdsByBot(Bot $bot)
+    {
+        $bot_id = $this->da->escapeInt($bot->getId());
+
+        $sql = "SELECT id
+                FROM plugin_botmattermost_agiledashboard_notification
+                WHERE bot_id = $bot_id";
+
+        return $this->retrieveIds($sql);
     }
 
     private function createBotNotification($bot_id, $project_id, $send_time)
@@ -228,7 +250,7 @@ class Dao extends DataAccessObject
         $sql = "DELETE FROM plugin_botmattermost_agiledashboard_notification
                 WHERE id = $id";
 
-        $this->updateAndGetLastId($sql);
+        return $this->update($sql);
     }
 
     private function hasValue(array $array)
