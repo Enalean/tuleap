@@ -172,6 +172,7 @@ class ProjectImportTest extends TuleapDbTestCase
         $project_creator = new ProjectCreator(
             $project_manager,
             ReferenceManager::instance(),
+            $user_manager,
             $ugroup_duplicator,
             $send_notifications,
             $frs_permissions_creator,
@@ -273,6 +274,7 @@ class ProjectImportTest extends TuleapDbTestCase
         $project_creator = new ProjectCreator(
             $project_manager,
             ReferenceManager::instance(),
+            $user_manager,
             $ugroup_duplicator,
             $send_notifications,
             $frs_permissions_creator,

@@ -22,6 +22,7 @@ namespace Tuleap\Project\REST\v1;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
+use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -134,6 +135,7 @@ class ProjectResource extends AuthenticatedResource {
         $this->project_creator = new ProjectCreator(
                 $this->project_manager,
                 $this->reference_manager,
+                $this->user_manager,
                 $this->ugroup_duplicator,
                 $send_notifications,
                 new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
@@ -163,10 +165,6 @@ class ProjectResource extends AuthenticatedResource {
     {
         $this->checkAccess();
 
-        if (! \ForgeConfig::get('sys_use_project_registration')) {
-            throw new RestException(403, 'Project registration is disabled');
-        }
-
         $data = array(
             'project' => array(
                 'form_short_description' => $description,
@@ -175,17 +173,14 @@ class ProjectResource extends AuthenticatedResource {
                 'built_from_template'    => $template_id,
              ));
 
-        try
-        {
+        try {
             $project = $this->project_creator->create($shortname, $label, $data);
-        }
-        catch (Project_InvalidShortName_Exception $exception)
-        {
+        } catch (Project_InvalidShortName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
-        }
-        catch (Project_InvalidFullName_Exception $exception)
-        {
-           throw new RestException(400, $exception->getMessage());
+        } catch (Project_InvalidFullName_Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (ProjectRegistrationDisabledException $exception) {
+            throw new RestException(403, $exception->getMessage());
         }
 
         $project_representation = $this->getProjectRepresentation($project);

@@ -178,6 +178,7 @@ class TestDataBuilder {
         $this->project_creator = new ProjectCreator(
             $this->project_manager,
             ReferenceManager::instance(),
+            $this->user_manager,
             $this->ugroup_duplicator,
             $send_notifications,
             new FRSPermissionCreator(

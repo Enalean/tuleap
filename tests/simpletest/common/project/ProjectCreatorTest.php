@@ -36,11 +36,18 @@ class ProjectCreatorTest extends TuleapTestCase
         $this->project_manager = stub('ProjectManager')->getProjectByUnixName()->returns(null);
         ProjectManager::setInstance($this->project_manager);
 
-        $this->user_manager = stub('UserManager')->getUserByUserName()->returns(null);
+        $this->user_manager = mock('UserManager');
+        stub($this->user_manager)->getUserByUserName()->returns(null);
+        $user = mock('PFUser');
+        stub($user)->isSuperUser()->returns(false);
+        stub($this->user_manager)->getCurrentUser()->returns($user);
         UserManager::setInstance($this->user_manager);
 
         $backend_cvs = stub('BackendCVS')->isNameAvailable()->returns(true);
         BackendCVS::setInstance('CVS', $backend_cvs);
+
+        ForgeConfig::store();
+        ForgeConfig::set('sys_use_project_registration', 1);
 
         $this->creator = partial_mock(
             'ProjectCreator',
@@ -48,6 +55,7 @@ class ProjectCreatorTest extends TuleapTestCase
             array(
                 $this->project_manager,
                 mock('ReferenceManager'),
+                $this->user_manager,
                 mock('Tuleap\Project\UgroupDuplicator'),
                 false,
                 mock('Tuleap\FRS\FRSPermissionCreator'),
@@ -58,9 +66,9 @@ class ProjectCreatorTest extends TuleapTestCase
     public function tearDown()
     {
         BackendCVS::clearInstances();
-        UserManager::clearInstance();
         ProjectManager::clearInstance();
         SystemEventManager::clearInstance();
+        ForgeConfig::restore();
         unset($GLOBALS['Language']);
         unset($GLOBALS['svn_prefix']);
 
@@ -83,5 +91,53 @@ class ProjectCreatorTest extends TuleapTestCase
     {
         $this->expectException('Project_Creation_Exception');
         $this->creator->create('shortname', 'Valid Full Name', array());
+    }
+
+    public function itDoesNotCreateProjectWhenRegistrationIsDisabledAndTheUserIsNotSiteAdmin()
+    {
+        ForgeConfig::set('sys_use_project_registration', 0);
+
+        $this->expectException('Tuleap\\Project\\ProjectRegistrationDisabledException');
+
+        $this->creator->create('registrationdisablednotsiteadmin', 'Registration disabled without being siteadmin', array());
+    }
+
+    public function itDoesCreateProjectWhenRegistrationIsDisabledAndTheUserIsSiteAdmin()
+    {
+        $user_manager = mock('UserManager');
+        stub($user_manager)->getUserByUserName()->returns(null);
+        $user = mock('PFUser');
+        stub($user)->isSuperUser()->returns(true);
+        stub($user_manager)->getCurrentUser()->returns($user);
+        UserManager::setInstance($user_manager);
+
+        $project_manager = mock('ProjectManager');
+
+
+        $project_creator = $this->creator = partial_mock(
+            'ProjectCreator',
+            array('createProject'),
+            array(
+                $project_manager,
+                mock('ReferenceManager'),
+                $user_manager,
+                mock('Tuleap\Project\UgroupDuplicator'),
+                false,
+                mock('Tuleap\FRS\FRSPermissionCreator'),
+                mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator')
+            )
+        );
+        $project_id      = 100;
+        stub($project_creator)->createProject()->returns($project_id);
+
+        ForgeConfig::set('sys_use_project_registration', 0);
+
+        $project_manager->expectOnce('getProject', array($project_id));
+
+        $project_creator->create(
+            'registrationdisabledsiteadmin',
+            'Registration disabled but siteadmin',
+            array()
+        );
     }
 }

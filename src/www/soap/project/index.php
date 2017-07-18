@@ -95,6 +95,7 @@ if ($request->exist('wsdl')) {
     $projectCreator = new ProjectCreator(
         $projectManager,
         ReferenceManager::instance(),
+        $userManager,
         $ugroup_duplicator,
         $send_notifications,
         new Tuleap\FRS\FRSPermissionCreator(

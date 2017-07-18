@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -131,8 +131,9 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             EventManager::instance()
         );
 
+        $user_manager   = UserManager::instance();
         $widget_factory = new WidgetFactory(
-            UserManager::instance(),
+            $user_manager,
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
             EventManager::instance()
         );
@@ -154,6 +155,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $projectCreator = new ProjectCreator(
             $this->project_manager,
             ReferenceManager::instance(),
+            $user_manager,
             $ugroup_duplicator,
             $send_notifications,
             new FRSPermissionCreator(
@@ -167,7 +169,12 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $data         = $this->creation_request->getProjectValues();
         $creationData = ProjectCreationData::buildFromFormArray($data);
 
-        return $projectCreator->build($creationData);
+        try {
+            return $projectCreator->build($creationData);
+        } catch (Exception $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::WARN, $exception->getMessage());
+            $GLOBALS['Response']->redirect('/');
+        }
     }
 
     private function notifySiteAdmin(Project $project) {

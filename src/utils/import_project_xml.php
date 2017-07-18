@@ -254,6 +254,7 @@ try {
     $project_creator = new ProjectCreator(
         ProjectManager::instance(),
         ReferenceManager::instance(),
+        $user_manager,
         $ugroup_duplicator,
         $send_notifications,
         $frs_permissions_creator,

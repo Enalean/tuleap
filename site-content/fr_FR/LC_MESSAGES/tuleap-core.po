@@ -210,6 +210,9 @@ msgstr "Veuillez utiliser un lien http:// ou https://"
 msgid "Project name"
 msgstr "Nom du projet"
 
+msgid "Project registration is disabled"
+msgstr "L'enregistrement de project est désactivé"
+
 msgid "Project templates"
 msgstr "Patrons de projet"
 
