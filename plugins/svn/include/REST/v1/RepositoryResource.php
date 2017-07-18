@@ -124,13 +124,9 @@ class RepositoryResource extends AuthenticatedResource
             $logger,
             $system_command,
             new Destructor($dao, $logger),
-            $hook_dao,
             \EventManager::instance(),
             $backend_svn,
-            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            $this->system_event_manager,
-            $project_history_dao,
-            new HookConfigSanitizer()
+            new AccessFileHistoryFactory(new AccessFileHistoryDao())
         );
 
         $this->user_manager       = \UserManager::instance();

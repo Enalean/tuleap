@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,9 +32,7 @@ use Tuleap\HudsonSvn\Job\Launcher;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Hooks\PostCommit;
 use Tuleap\Svn\Dao as SvnDao;
 use Tuleap\Svn\SvnLogger;
@@ -127,24 +125,15 @@ class hudson_svnPlugin extends Plugin {
             $this->getLogger(),
             $this->getSystemCommand(),
             $this->getDestructor(),
-            $this->getHookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
-            $this->getAccessFileHistoryFactory(),
-            SystemEventManager::instance(),
-            new ProjectHistoryDao(),
-            new HookConfigSanitizer()
+            $this->getAccessFileHistoryFactory()
         );
     }
 
     private function getAccessFileHistoryFactory()
     {
         return new AccessFileHistoryFactory(new AccessFileHistoryDao());
-    }
-
-    private function getHookDao()
-    {
-        return new HookDao();
     }
 
     /**

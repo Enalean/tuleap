@@ -27,11 +27,11 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Dao;
+use Tuleap\Svn\Hooks\PreRevpropChange;
 use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigSanitizer;
 use Tuleap\Svn\Repository\HookDao;
 use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Hooks\PreRevpropChange;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 
@@ -58,13 +58,9 @@ try {
                 new Dao(),
                 new SvnLogger()
             ),
-            new HookDao(),
             EventManager::instance(),
             Backend::instance(Backend::SVN),
-            new AccessFileHistoryFactory(new AccessFileHistoryDao()),
-            SystemEventManager::instance(),
-            new ProjectHistoryDao(),
-            new HookConfigSanitizer()
+            new AccessFileHistoryFactory(new AccessFileHistoryDao())
         ),
         new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())
     );
