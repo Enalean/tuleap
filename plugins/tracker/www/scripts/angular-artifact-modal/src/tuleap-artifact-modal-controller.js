@@ -67,24 +67,27 @@ function ArtifactModalController(
         showParentArtifactChoice      : showParentArtifactChoice,
         submit                        : submit,
         toggleFieldset                : toggleFieldset,
+        initCkeditorConfig            : initCkeditorConfig,
         followup_comment              : {
             body  : '',
             format: modal_model.text_fields_format
         },
-        ckeditor_options: {
-            toolbar: [
-                ['Bold', 'Italic', 'Underline'],
-                [
-                    'NumberedList',
-                    'BulletedList',
-                    '-',
-                    'Blockquote',
-                    'Format'
+        ckeditor_options              : {
+            default_ckeditor: {
+                toolbar: [
+                    ['Bold', 'Italic', 'Underline'],
+                    [
+                        'NumberedList',
+                        'BulletedList',
+                        '-',
+                        'Blockquote',
+                        'Format'
+                    ],
+                    ['Link', 'Unlink', 'Anchor', 'Image'],
+                    ['Source']
                 ],
-                ['Link', 'Unlink', 'Anchor', 'Image'],
-                ['Source']
-            ],
-            height: '100px'
+                height: '100px'
+            }
         }
     });
 
@@ -104,6 +107,33 @@ function ArtifactModalController(
                 self.followups_comments.invert_order
             );
         }
+    }
+
+    function initCkeditorConfig(field) {
+        var id = 'default_ckeditor';
+        if (field) {
+            id = field.field_id;
+            if (! self.ckeditor_options[id]) {
+                self.ckeditor_options[id] = {
+                    toolbar: [
+                        ['Bold', 'Italic', 'Underline'],
+                        [
+                            'NumberedList',
+                            'BulletedList',
+                            '-',
+                            'Blockquote',
+                            'Format'
+                        ],
+                        ['Link', 'Unlink', 'Anchor', 'Image'],
+                        ['Source']
+                    ],
+                    height: '100px',
+                    readOnly: self.isDisabled(field)
+                };
+            }
+        }
+
+        return self.ckeditor_options[id];
     }
 
     function setupTooltips() {
