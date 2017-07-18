@@ -21,6 +21,7 @@
 use Getopt::Std;
 use Carp;
 use DBI;
+use DBI qw(:sql_types);
 
 # Svnlook path.
 my $svnlook = "/usr/bin/svnlook";
