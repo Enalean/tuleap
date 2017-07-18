@@ -262,11 +262,6 @@ class RepositoryManager
         return $this->instantiateFromRow($row, $project);
     }
 
-    public function dumpRepository(Repository $repository)
-    {
-        return $this->svnadmin->dumpRepository($repository, $repository->getSystemBackupPath());
-    }
-
     public function purgeArchivedRepositories()
     {
         if (! ForgeConfig::get('sys_file_deletion_delay')) {

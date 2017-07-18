@@ -283,7 +283,8 @@ class SvnPlugin extends Plugin
                     $this->getRepositoryManager(),
                     ProjectManager::instance(),
                     $this->getApacheConfGenerator(),
-                    $this->getRepositoryDeleter()
+                    $this->getRepositoryDeleter(),
+                    new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN))
                 );
                 break;
         }

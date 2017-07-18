@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -26,10 +26,15 @@ use SystemEvent;
 use Tuleap\Svn\ApacheConfGenerator;
 use Tuleap\Svn\Repository\RepositoryDeleter;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\SvnAdmin;
 
 class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
 {
     const NAME = 'SystemEvent_SVN_DELETE_REPOSITORY';
+    /**
+     * @var SvnAdmin
+     */
+    private $svn_admin;
 
     /**
      * @var RepositoryDeleter
@@ -56,17 +61,20 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
      * @param ProjectManager      $project_manager
      * @param ApacheConfGenerator $generator
      * @param RepositoryDeleter   $repository_deleter
+     * @param SvnAdmin            $svn_admin
      */
     public function injectDependencies(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,
         ApacheConfGenerator $generator,
-        RepositoryDeleter $repository_deleter
+        RepositoryDeleter $repository_deleter,
+        SvnAdmin $svn_admin
     ) {
         $this->repository_manager = $repository_manager;
         $this->project_manager    = $project_manager;
         $this->generator          = $generator;
         $this->repository_deleter = $repository_deleter;
+        $this->svn_admin          = $svn_admin;
     }
 
     public function process()
@@ -94,7 +102,7 @@ class SystemEvent_SVN_DELETE_REPOSITORY extends SystemEvent
         }
 
         $this->repository_deleter->markAsDeleted($repository);
-        $this->repository_manager->dumpRepository($repository);
+        $this->svn_admin->dumpRepository($repository, $repository->getSystemBackupPath());
         $this->repository_deleter->delete($repository);
 
         $this->generator->generate();
