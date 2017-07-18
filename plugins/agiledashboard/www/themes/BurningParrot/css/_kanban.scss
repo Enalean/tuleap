@@ -334,7 +334,7 @@ kanban-column {
 .ngsb-wrap {
     > .ngsb-container {
         left: 10px;
-        width: calc(100% - 20px);
+        width: calc(100% - #{$tlp-spacing});
         transition: none;
     }
 

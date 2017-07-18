@@ -95,6 +95,7 @@ kanban-item {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    width: calc(100% - #{$tlp-spacing});
     transition: padding-bottom $transition-duration;
 }
 
@@ -109,6 +110,7 @@ kanban-item {
     flex: 1 1 auto;
     flex-direction: column;
     align-items: flex-start;
+    width: calc(100% - #{$tlp-spacing});
 }
 
 .kanban-item-content-info-link {
@@ -124,8 +126,10 @@ kanban-item {
 
 .kanban-item-content-info-label {
     flex: 1 1 auto;
-    width: 100%;
+    width: calc(100% - #{$tlp-spacing});
     text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .kanban-item-content-clock {
