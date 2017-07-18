@@ -29,9 +29,14 @@ class Admin_PermissionDelegationController {
     const REDIRECT_URL = '/admin/permission_delegation.php';
 
     /**
-     * @var Codendi_Request
+     * @var HTTPRequest
      */
     private $request;
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
 
     /**
      * @var TemplateRenderer
@@ -77,7 +82,6 @@ class Admin_PermissionDelegationController {
      * @var SiteAdministratorPermissionChecker
      */
     private $site_admin_permission_checker;
-
     /**
      * @var PermissionPresenterBuilder
      */
@@ -85,7 +89,8 @@ class Admin_PermissionDelegationController {
 
 
     public function __construct(
-        Codendi_Request $request,
+        HTTPRequest $request,
+        CSRFSynchronizerToken $csrf_token,
         User_ForgeUserGroupPermissionsFactory $user_group_permissions_factory,
         User_ForgeUserGroupPermissionsManager $user_group_permissions_manager,
         User_ForgeUserGroupFactory $user_group_factory,
@@ -96,8 +101,9 @@ class Admin_PermissionDelegationController {
         SiteAdministratorPermissionChecker $site_admin_permission_checker,
         PermissionPresenterBuilder $permission_builder
     ) {
-        $this->request  = $request;
-        $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
+        $this->request    = $request;
+        $this->csrf_token = $csrf_token;
+        $this->renderer   = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
 
         $this->user_group_permissions_factory = $user_group_permissions_factory;
         $this->user_group_permissions_manager = $user_group_permissions_manager;
@@ -120,30 +126,34 @@ class Admin_PermissionDelegationController {
     }
 
     public function process() {
+        if ($this->request->isPost()) {
+            $this->csrf_token->check();
+
+            switch ($this->request->get('action')) {
+                case 'update-group':
+                    $this->updateGroup();
+                    break;
+
+                case 'delete-group':
+                    $this->deleteGroup();
+                    break;
+
+                case 'add-permissions':
+                    $this->addPermissions();
+                    break;
+
+                case 'delete-permissions':
+                    $this->deletePermissions();
+                    break;
+                case 'manage-users':
+                    $this->manageUsers();
+                    break;
+            }
+        }
         switch ($this->request->get('action')) {
-            case 'update-group':
-                $this->updateGroup();
-                break;
-
-            case 'delete-group':
-                $this->deleteGroup();
-                break;
-
             case 'show-add-permissions':
                 $this->showAddPermissions($this->request->get('id'));
                 break;
-
-            case 'add-permissions':
-                $this->addPermissions();
-                break;
-
-            case 'delete-permissions':
-                $this->deletePermissions();
-                break;
-            case 'manage-users':
-                $this->manageUsers();
-                break;
-
             case 'index':
             default     :
                 $this->index();
@@ -214,6 +224,7 @@ class Admin_PermissionDelegationController {
         }
 
         $presenter = new Admin_PermissionDelegationIndexPresenter(
+            $this->csrf_token,
             $formatted_groups,
             new Admin_PermissionDelegationGroupModalPresenter(),
             $delete_group_presenter,

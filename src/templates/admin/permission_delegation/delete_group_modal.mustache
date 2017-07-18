@@ -4,6 +4,9 @@
       class="tlp-modal tlp-modal-danger"
       role="dialog"
 >
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title">
             <i class="fa fa-trash-o tlp-modal-title-icon"></i>
