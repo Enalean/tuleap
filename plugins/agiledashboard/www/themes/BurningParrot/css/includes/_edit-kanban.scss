@@ -87,8 +87,11 @@
         cursor: move;
 
         > .edit-kanban-column-label {
+            max-width: 200px;
             padding: 4px 0 4px 22px;
             background: url('../images/drag.png') no-repeat 5px 8px;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
         &:hover {

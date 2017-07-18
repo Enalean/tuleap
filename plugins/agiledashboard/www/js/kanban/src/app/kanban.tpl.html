@@ -75,7 +75,7 @@
         <kanban-column ng-init="$ctrl.column=kanban.backlog"></kanban-column>
         <add-in-place column="kanban.backlog" create-item="kanban.createItemInPlaceInBacklog" ng-if="kanban.backlog.user_can_add_in_place && kanban.backlog.is_open"></add-in-place>
         <div ng-if="! kanban.backlog.is_open" class="kanban-column-label">
-            {{ kanban.backlog.label }}
+            <span class="kanban-column-label-title">{{ kanban.backlog.label }}</span>
             <span
                     ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded"
                     class="kanban-column-label-count"
@@ -149,7 +149,7 @@
         <kanban-column ng-init="$ctrl.column=column"></kanban-column>
         <add-in-place column="column" create-item="kanban.createItemInPlace" ng-if="column.user_can_add_in_place && column.is_open"></add-in-place>
         <div ng-if="! column.is_open" class="kanban-column-label">
-            {{ column.label }}
+            <span class="kanban-column-label-title">{{ column.label }}</span>
             <span
                     ng-if="column.loading_items || column.fully_loaded"
                     class="kanban-column-label-count"
@@ -189,7 +189,7 @@
         </div>
         <kanban-column ng-init="$ctrl.column=kanban.archive"></kanban-column>
         <div ng-if="! kanban.archive.is_open" class="kanban-column-label">
-            {{ kanban.archive.label }}
+            <span class="kanban-column-label-title">{{ kanban.archive.label }}</span>
             <span
                     ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded"
                     class="kanban-column-label-count"
