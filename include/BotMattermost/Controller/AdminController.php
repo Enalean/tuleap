@@ -21,11 +21,13 @@
 namespace Tuleap\BotMattermost\Controller;
 
 
+use EventManager;
 use Exception;
 use HTTPRequest;
 use CSRFSynchronizerToken;
 use Feedback;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\Presenter\AdminPresenter;
 use Valid_HTTPURI;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -42,11 +44,13 @@ class AdminController
 
     private $csrf;
     private $bot_factory;
+    private $event_manager;
 
-    public function __construct(CSRFSynchronizerToken $csrf, BotFactory $bot_factory)
+    public function __construct(CSRFSynchronizerToken $csrf, BotFactory $bot_factory, EventManager $event_manager)
     {
-        $this->csrf        = $csrf;
-        $this->bot_factory = $bot_factory;
+        $this->csrf          = $csrf;
+        $this->bot_factory   = $bot_factory;
+        $this->event_manager = $event_manager;
     }
 
     public function displayIndex()
@@ -93,7 +97,10 @@ class AdminController
         $id = $request->get('bot_id');
         if ($this->validBotId($id)) {
             try {
-                $this->bot_factory->deleteBotById($id);
+                $bot   = $this->bot_factory->getBotById($id);
+                $event = new BotMattermostDeleted($bot);
+                $this->bot_factory->deleteBotById($bot->getId());
+                $this->event_manager->processEvent($event);
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_botmattermost','alert_success_delete_bot'));
             } catch (CannotDeleteBotException $e) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getMessage());

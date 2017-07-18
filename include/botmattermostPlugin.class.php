@@ -85,7 +85,8 @@ class BotMattermostPlugin extends Plugin
         $router = new Router(
             new AdminController(
                 new CSRFSynchronizerToken('/plugins/botmattermost/admin/'),
-                new BotFactory(new BotDao())
+                new BotFactory(new BotDao()),
+                EventManager::instance()
             ));
 
         $router->route($request);
