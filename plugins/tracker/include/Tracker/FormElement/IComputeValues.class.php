@@ -26,9 +26,7 @@ interface Tracker_FormElement_IComputeValues
     public function getComputedValue(
         PFUser $user,
         Tracker_Artifact $artifact,
-        $timestamp = null,
-        array &$computed_artifact_ids = array(),
-        $use_fast_compute = true
+        $timestamp = null
     );
 
     public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null);

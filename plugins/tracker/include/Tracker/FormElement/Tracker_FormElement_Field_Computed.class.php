@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -103,38 +103,21 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return false;
     }
 
-    public function useFastCompute() {
-        return true;
-    }
-
     /**
-     * Given an artifact, return a numerical value of the field for this artifact.
-     *
-     * @param PFUser             $user                  The user who see the results
-     * @param Tracker_Artifact $artifact              The artifact on which the value is computed
-     * @param Array            $computed_artifact_ids Hash map to store artifacts already computed (avoid cycles)
-     *
      * @return float|null if there are no data (/!\ it's on purpose, otherwise we can mean to distinguish if there is data but 0 vs no data at all, for the graph plot)
      */
     public function getComputedValue(
         PFUser $user,
         Tracker_Artifact $artifact,
-        $timestamp = null,
-        array &$computed_artifact_ids = array(),
-        $use_fast_compute = true
+        $timestamp = null
     ) {
-        if ($use_fast_compute) {
-            return $this->getFastComputedValue(array($artifact->getId()), $timestamp, true);
-        }
-        $computed_artifact_ids[$artifact->getId()] = true;
-
-        $target_field_name = $this->getName();
-        if ($timestamp === null) {
-            $dar = $this->getDao()->getFieldValues(array($artifact->getId()), $target_field_name);
-        } else {
-            $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $target_field_name, $timestamp, $this->getId());
-        }
-        return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
+        return $this->getCalculator()->calculateForComputedFields(
+            array($artifact->getId()),
+            $timestamp,
+            true,
+            $this->getName(),
+            $this->getId()
+        );
     }
 
     public function getComputedValueWithNoStopOnManualValue(Tracker_Artifact $artifact)
@@ -194,7 +177,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getStopAtManualSetFieldMode(array $artifact_ids)
     {
-        return $this->getFastComputedValue($artifact_ids, null, false);
+        return $this->getCalculator()->calculateForComputedFields(
+            $artifact_ids,
+            null,
+            false,
+            $this->getName(),
+            $this->getId()
+        );
     }
 
     public function getFieldEmptyMessage()
@@ -204,7 +193,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getStandardCalculationMode(array $artifact_ids)
     {
-        return $this->getFastComputedValue($artifact_ids, null, true);
+        return $this->getCalculator()->calculateForComputedFields(
+            $artifact_ids,
+            null,
+            true,
+            $this->getName(),
+            $this->getId()
+        );
     }
 
     protected function getNoValueLabel()
@@ -216,7 +211,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     {
         if ($stop_on_manual_value) {
             $empty_array = array();
-            $computed_value = $this->getComputedValue($user, $artifact, null, $empty_array, $this->useFastCompute());
+            $computed_value = $this->getComputedValue($user, $artifact, null, $empty_array);
         } else {
             $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
         }
@@ -279,65 +274,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return new ComputedFieldCalculator($this->getDao());
     }
 
-    private function getFastComputedValue(array $artifact_ids_to_fetch, $timestamp = null, $stop_on_manual_value)
-    {
-        return $this->getCalculator()->calculateForComputedFields(
-            $artifact_ids_to_fetch,
-            $timestamp,
-            $stop_on_manual_value,
-            $this->getName(),
-            $this->getId()
-        );
-    }
-
-    private function computeValuesVersion(DataAccessResult $dar, PFUser $user, $timestamp, array &$computed_artifact_ids) {
-        $sum = null;
-
-        foreach ($dar as $row) {
-            if (! isset($computed_artifact_ids[$row['id']])) {
-                $linked_artifact = Tracker_ArtifactFactory::instance()->getInstanceFromRow($row);
-                if ($linked_artifact->userCanView($user)) {
-                    $this->addIfNotNull($sum, $this->getValueOrContinueComputing($user, $linked_artifact, $row, $timestamp, $computed_artifact_ids));
-                }
-            }
-        }
-
-        return $sum;
-    }
-
-    private function addIfNotNull(&$sum, $value) {
-        if ($value !== null) {
-            $sum += $value;
-        }
-    }
-
-    private function getValueOrContinueComputing(PFUser $user, Tracker_Artifact $linked_artifact, array $row, $timestamp, array &$computed_artifact_ids) {
-        if ($row['type'] == 'computed') {
-            return $this->getFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
-        } else if (! isset($row[$row['type'].'_value'])) {
-            $computed_artifact_ids[$row['id']] = true;
-            return null;
-        } else {
-            $computed_artifact_ids[$row['id']] = true;
-            return $row[$row['type'].'_value'];
-        }
-    }
-
-    private function getFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, array &$computed_artifact_ids) {
-        $field = $this->getTargetField($user, $artifact);
-        if ($field) {
-            return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids, false);
-        }
-        return null;
-    }
-
-    private function getTargetField(PFUser $user, Tracker_Artifact $artifact) {
-        return $this->getFormElementFactory()->getComputableFieldByNameForUser(
-            $artifact->getTracker()->getId(),
-            $this->getName(),
-            $user
-        );
-    }
 
     public function validateValue($value)
     {
@@ -575,7 +511,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return $changeset->getNumeric();
         } else {
             $empty_array = array();
-            return $this->getComputedValue($user, $artifact_changeset->getArtifact(), null, $empty_array, $this->useFastCompute());
+            return $this->getComputedValue($user, $artifact_changeset->getArtifact(), null, $empty_array);
         }
     }
 
@@ -765,8 +701,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array())
     {
         $purifier       = Codendi_HTMLPurifier::instance();
-        $current_user   = UserManager::instance()->getCurrentUser();
-        $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact, $current_user, true);
+        $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
         if ($computed_value === null) {
             $computed_value = $this->getFieldEmptyMessage();
         }
@@ -893,10 +828,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     {
         $changeset_value = null;
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
-            $int_row_value = $row['value'];
-            if ($int_row_value !== null) {
-                $int_row_value = $int_row_value;
-            }
+            $int_row_value   = $row['value'];
             $changeset_value = new ChangesetValueComputed($value_id, $changeset, $this, $has_changed, $int_row_value);
         }
         return $changeset_value;

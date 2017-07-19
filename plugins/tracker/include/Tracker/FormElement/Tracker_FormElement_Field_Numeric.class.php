@@ -21,7 +21,7 @@
 
 
 abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues {
-    
+
     public $default_properties = array(
         'maxchars'      => array(
             'value' => 0,
@@ -43,9 +43,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     public function getComputedValue(
         PFUser $user,
         Tracker_Artifact $artifact,
-        $timestamp = null,
-        array &$computed_artifact_ids = array(),
-        $use_fast_compute = true
+        $timestamp = null
     ) {
         if ($this->userCanRead($user)) {
             if ($timestamp !== null) {
@@ -60,7 +58,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @param PFUser             $user
      * @param Tracker_Artifact $artifact
      * @param int              $timestamp
-     * 
+     *
      * @return mixed
      */
     private function getComputedValueAt(Tracker_Artifact $artifact, $timestamp) {
@@ -71,7 +69,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     /**
      * @param PFUser             $user
      * @param Tracker_Artifact $artifact
-     * 
+     *
      * @return mixed
      */
     private function getCurrentComputedValue(Tracker_Artifact $artifact) {
@@ -87,7 +85,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         $R2 = 'R2_'. $this->id;
         return "$R2.value AS `". $this->name ."`";
     }
-    
+
     /**
      * Fetch sql snippets needed to compute aggregate functions on this field.
      *
@@ -138,14 +136,14 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             'separate_queries' => $separate,
         );
     }
-    
+
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */
     public function getAggregateFunctions() {
         return array('AVG', 'COUNT', 'COUNT_GRBY', 'MAX', 'MIN', 'STD', 'SUM');
     }
-    
+
     protected function buildMatchExpression($field_name, $criteria_value) {
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
         if (!$expr) {
@@ -159,13 +157,13 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
                 // It's a number so use  equality
                 $matches[1] = $this->cast($matches[1]);
                 $expr = $field_name.' = '.$matches[1];
-                
+
             } else if (preg_match("/^($this->pattern)\s*-\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // it's a range number1-number2
                 $matches[1] = (string)($this->cast($matches[1]));
                 $matches[2] = (string)($this->cast($matches[2]));
                 $expr = $field_name.' >= '.$matches[1].' AND '.$field_name.' <= '. $matches[2];
-                
+
             } else {
                 // Invalid syntax - no condition
                 $expr = '1';
@@ -173,12 +171,12 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         }
         return $expr;
     }
-    
+
     protected $pattern = '[+\-]*[0-9]+';
     protected function cast($value) {
         return (int)$value;
     }
-    
+
     /**
      * Fetch the html code to display the field value in new artifact submission form
      * @param array $submitted_values the values already submitted
@@ -265,7 +263,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
                 $value  = $value->getNumeric();
                 $output = $value;
                 break;
-        }        
+        }
         return $output;
     }
 
@@ -289,14 +287,14 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
-    
+
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value) {
        return $old_value->getNumeric() != $new_value;
     }
-    
+
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -314,7 +312,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" autocomplete="off" />';
         return $html;
     }
-    
+
     /**
      * Fetch the changes that has been made to this field in a followup
      * @param Tracker_ $artifact
@@ -331,23 +329,23 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         $html .= $to->getNumeric();
         return $html;
     }
-    
+
     /**
      * Validate a value
      *
-     * @param Tracker_Artifact $artifact The artifact 
-     * @param mixed            $value    data coming from the request. May be string or array. 
+     * @param Tracker_Artifact $artifact The artifact
+     * @param mixed            $value    data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
         return $this->validateValue($value);
     }
-    
+
     /**
      * Validate a value
      *
-     * @param mixed            $value    data coming from the request. May be string or array. 
+     * @param mixed            $value    data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
@@ -366,17 +364,17 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */
     protected abstract function getValidatorErrorMessage();
-    
+
     /**
      * Verifies the consistency of the imported Tracker
-     * 
-     * @return true if Tracler is ok 
+     *
+     * @return true if Tracler is ok
      */
     public function testImport() {
         if(parent::testImport()){
             if (!($this->default_properties['maxchars'] && $this->default_properties['size'])) {
                 var_dump($this, 'Properties must be "maxchars" and "size"');
-                return false;  
+                return false;
             }
         }
         return true;
