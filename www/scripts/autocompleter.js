@@ -41,7 +41,7 @@
             width: '100%',
             tokenSeparators: [",", " "],
             placeholder: input.dataset.placeholder,
-            tags: true,
+            tags: [],
             initSelection : function (element, callback) {
                 var data = [];
                 $(element.val().split(",")).each(function () {
