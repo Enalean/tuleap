@@ -24,11 +24,9 @@ class SectionsPresenter
 {
     public $emailgateway;
     public $natures;
-    public $deprecation_panel;
     public $report_config_panel;
     public $emailgateway_url;
     public $natures_url;
-    public $deprecation_url;
     public $report_config_url;
 
     public function __construct()

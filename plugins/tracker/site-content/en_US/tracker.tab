@@ -1662,16 +1662,6 @@ plugin_tracker	field_not_stored_exception	The field "$1" cannot be stored.
 plugin_tracker	comment_not_stored_exception	The comment cannot be stored.
 plugin_tracker	changeset_not_stored_exception	The changeset cannot be stored.
 
-plugin_tracker_deprecation_panel	title	Trackers
-plugin_tracker_deprecation_panel	deprecation_panel	Deprecation monitoring panel
-plugin_tracker_deprecation_panel	deprecated_computed_fields_pane	Deprecated computed fields
-plugin_tracker_deprecation_panel	warning_deprecation	The legacy Computed fields will be gone in Tuleap 9.4
-plugin_tracker_deprecation_panel	title_project	Project Name
-plugin_tracker_deprecation_panel	title_tracker	Tracker Name
-plugin_tracker_deprecation_panel	title_field	Incriminated field
-plugin_tracker_deprecation_panel	no_deprecated_fields	There is no deprecated fields
-plugin_tracker_deprecation_panel	adapt_message	This project uses trackers that are based on deprecated computed fields (configuration will be gone in Tuleap 9.4). You should adapt now the configuration of:
-
 plugin_tracker_deprecation_field	title_autocompute	Auto-compute
 plugin_tracker_deprecation_field	title_original_value	Computed value:
 plugin_tracker_deprecation_field	warning_permissions	You will not able to edit by hand the field "$1" since no update and submit permissions will be granted.

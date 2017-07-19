@@ -21,6 +21,9 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     private $user;
+    /**
+     * @var Tracker_FormElement_Field_Computed
+     */
     private $field;
     private $formelement_factory;
     private $dao;
@@ -32,10 +35,9 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
         $this->field = TestHelper::getPartialMock(
             'Tracker_FormElement_Field_Computed',
-            array('getProperty', 'getDao')
+            array('getProperty', 'getDao', 'getName')
         );
-        stub($this->field)->getProperty('target_field_name')->returns('effort');
-        stub($this->field)->getProperty('fast_compute')->returns(0);
+        stub($this->field)->getName()->returns('effort');
         stub($this->field)->getDao()->returns($this->dao);
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
@@ -124,8 +126,7 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
                 'userCanUpdate',
                 'isValid',
                 'getValueDao',
-                'getCurrentUser',
-                'getDeprecationRetriever'
+                'getCurrentUser'
             )
         );
 
@@ -143,7 +144,6 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
         stub($this->field)->userCanUpdate()->returns(true);
         stub($this->field)->isValid()->returns(true);
         stub($this->field)->getCurrentUser()->returns(mock('PFUser'));
-        stub($this->field)->getDeprecationRetriever()->returns(mock('Tuleap\Tracker\Deprecation\DeprecationRetriever'));
     }
 
     public function itCanRetrieveManualValuesWhenArrayIsGiven()
@@ -187,7 +187,7 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
         $this->artifact  = mock('Tracker_Artifact');
         $this->old_value = mock('Tuleap\Tracker\Artifact\ChangesetValueComputed');
 
-        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getNumeric', 'getDeprecationRetriever'));
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getNumeric'));
     }
 
 
@@ -278,42 +278,6 @@ class Tracker_FormElement_Field_Computed_HasChanges extends TuleapTestCase
 
         $this->assertTrue($this->field->hasChanges($this->artifact, $this->old_value, $new_value));
     }
-
-    public function itIsNotSubmitableIfItsALegacyField()
-    {
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(true);
-
-        $this->assertFalse($this->field->isSubmitable());
-    }
-
-    public function itIsSubmitableIfItsNotALegacyField()
-    {
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
-
-        $this->assertTrue($this->field->isSubmitable());
-    }
-
-    public function itIsNotUpdatableIfItsALegacyField()
-    {
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(true);
-
-        $this->assertFalse($this->field->isUpdateable());
-    }
-
-    public function itIsUpdatableIfItsNotALegacyField()
-    {
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
-
-        $this->assertTrue($this->field->isUpdateable());
-    }
 }
 
 class Tracker_FormElement_Field_Computed_BackToAutoComputed extends TuleapTestCase
@@ -356,14 +320,14 @@ class Tracker_FormElement_Field_Computed_BackToAutoComputed extends TuleapTestCa
                 'getStandardCalculationMode',
                 'getFieldEmptyMessage',
                 'getStopAtManualSetFieldMode',
-                'getTargetFieldName'
+                'getName'
             )
         );
         stub($field)->getProperty('fast_compute')->returns(0);
         stub($field)->getDao()->returns($this->dao);
         stub($field)->getValueDao()->returns($this->manual_dao);
         stub($field)->getId()->returns(23);
-        stub($field)->getTargetFieldName()->returns('effort');
+        stub($field)->getName()->returns('effort');
         return $field;
     }
 
@@ -525,7 +489,7 @@ class Tracker_FormElement_Field_Computed_DoNoCountTwiceTest extends TuleapTestCa
 
     private function getComputedField() {
         $field = partial_mock('Tracker_FormElement_Field_Computed',array('getProperty', 'getDao', 'getName', 'getId'));
-        stub($field)->getProperty('target_field_name')->returns('effort');
+        stub($field)->getName()->returns('effort');
         stub($field)->getProperty('fast_compute')->returns(0);
         stub($field)->getDao()->returns($this->dao);
         return $field;
@@ -664,7 +628,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
                 'getName',
                 'getId',
                 'getValueDao',
-                'getDeprecationRetriever',
                 'getStandardCalculationMode'
             )
         );
@@ -696,9 +659,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -714,9 +674,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         $changeset = stub($changeset)->getId()->returns(101);
 
         stub($this->manual_dao)->getManuallySetValueForChangeset($changeset, 233)->returns(array('value' => null));
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         expect($this->field)->getStandardCalculationMode()->once();
         $this->field->getComputedValueWithNoStopOnManualValue($artifact);
     }
@@ -733,9 +690,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         $changeset = stub($changeset)->getId()->returns(101);
 
         stub($this->manual_dao)->getManuallySetValueForChangeset($changeset, 233)->returns(array('value' => null));
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         expect($this->field)->getStandardCalculationMode()->once();
         $this->field->getComputedValueWithNoStopOnManualValue($artifact);
     }
@@ -756,9 +710,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(40, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -779,9 +730,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(40, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -805,9 +753,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -823,9 +768,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(4, $this->field->getComputedValue($this->user, $artifact));
     }
 
@@ -841,9 +783,6 @@ class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase
         );
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
         $this->assertEqual(25, $this->field->getComputedValue($this->user, $artifact));
     }
 }
@@ -1103,11 +1042,8 @@ class Tracker_FormElement_Field_Computed_RESTValueTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array('getDeprecationRetriever'));
 
-        $deprecation_retriever = mock('Tuleap\Tracker\Deprecation\DeprecationRetriever');
-        stub($this->field)->getDeprecationRetriever()->returns($deprecation_retriever);
-        stub($deprecation_retriever)->isALegacyField()->returns(false);
+        $this->field = partial_mock('Tracker_FormElement_Field_Computed', array());
     }
 
     public function itReturnsValueWhenCorrectlyFormatted()
