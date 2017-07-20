@@ -565,6 +565,7 @@ class Event {
      *   'mappings_registery'  => The XML mappings
      *   'artifact_id_mapping' => A mapping between xml ids and new ids for artifacts
      *   'extraction_path'     => Path where archive has been extracted
+     *   'logger'              => logger used for import
      *
      * Expected Results:
      *   The various plugins create objects from the xml content

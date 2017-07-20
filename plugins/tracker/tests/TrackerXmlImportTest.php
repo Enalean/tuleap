@@ -45,8 +45,20 @@ class TrackerXmlImportTestInstance extends TrackerXmlImport {
 
 class TrackerXmlImportTest extends TuleapTestCase {
 
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @var TrackerFactory
+     */
     private $tracker_factory;
     private $group_id = 145;
+
+    /**
+     * @var TrackerXmlImport
+     */
     private $tracker_xml_importer;
     private $extraction_path;
     private $configuration;
@@ -125,6 +137,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->xml_import      = mock('Tracker_Artifact_XMLImport');
         $this->ugroup_manager  = mock('UGroupManager');
 
+        $this->logger               = mock('Logger');
         $this->tracker_xml_importer = partial_mock(
             'TrackerXmlImportTestInstance',
             array(
@@ -145,7 +158,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 $this->xml_import,
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 $this->ugroup_manager,
-                mock('Logger'),
+                $this->logger,
                 mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
                 mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
             )
@@ -239,6 +252,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 'mappings_registery'  => $this->mapping_registery,
                 'artifact_id_mapping' => new Tracker_XML_Importer_ArtifactImportedMapping(),
                 'extraction_path'     => $this->extraction_path,
+                'logger'              => $this->logger,
+                'value_mapping'       => new TrackerXmlFieldsMapping_FromAnotherPlatform($this->mapping)
             )
         )->once();
 

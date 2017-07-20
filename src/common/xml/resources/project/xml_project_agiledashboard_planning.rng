@@ -40,5 +40,34 @@
         </element>
       </zeroOrMore>
     </element>
+    <optional>
+      <element name="kanban_list">
+        <attribute name="title">
+          <data type="string"/>
+        </attribute>
+        <zeroOrMore>
+          <element name="kanban">
+            <attribute name="tracker_id">
+              <data type="string"/>
+            </attribute>
+            <attribute name="name">
+              <data type="string"/>
+            </attribute>
+            <zeroOrMore>
+              <element name="column">
+                <attribute name="REF">
+                  <data type="IDREF"/>
+                </attribute>
+                <optional>
+                  <attribute name="wip">
+                    <data type="long"/>
+                  </attribute>
+                </optional>
+              </element>
+            </zeroOrMore>
+          </element>
+        </zeroOrMore>
+      </element>
+    </optional>
   </define>
 </grammar>

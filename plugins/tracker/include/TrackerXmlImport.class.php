@@ -282,6 +282,8 @@ class TrackerXmlImport
                 'mappings_registery'  => $registery,
                 'artifact_id_mapping' => $artifacts_id_mapping,
                 'extraction_path'     => $extraction_path,
+                'logger'              => $this->logger,
+                'value_mapping'       => $xml_mapping
             )
         );
 

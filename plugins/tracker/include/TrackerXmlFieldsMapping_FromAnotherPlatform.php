@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMapping {
+class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMapping
+{
 
     /**
      * @var array
@@ -45,23 +46,20 @@ class TrackerXmlFieldsMapping_FromAnotherPlatform implements TrackerXmlFieldsMap
         return Tracker_FormElement_Field_List_Value::XML_ID_PREFIX . $old_value_id;
     }
 
-    public function getNewOpenValueId($old_value_id) {
+    public function getNewOpenValueId($old_value_id)
+    {
         $old_reference = $this->getOldValueReferenceFromOldOpenValueId($old_value_id);
 
         if (isset($this->xml_mapping[$old_reference])) {
             $value = $this->xml_mapping[$old_reference];
 
-            return $this->getFormattedOpenValueId($value->getId());
+            return $value->getId();
         }
 
-        throw new TrackerXmlFieldsMapping_ValueNotFoundException();
+        throw new TrackerXmlFieldsMapping_ValueNotFoundException($old_value_id, $old_reference);
     }
 
     private function getOldValueReferenceFromOldOpenValueId($old_value_id) {
         return str_replace(Tracker_FormElement_Field_List_BindValue::BIND_PREFIX, Tracker_FormElement_Field_List_Value::XML_ID_PREFIX, $old_value_id);
-    }
-
-    private function getFormattedOpenValueId($value_id) {
-        return Tracker_FormElement_Field_List_BindValue::BIND_PREFIX.$value_id;
     }
 }
