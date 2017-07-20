@@ -80,7 +80,7 @@ $(error OS version not supported)
 endif
 endif
 
-.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball node srpms dist
+.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball node composer srpms dist
 
 .PRECIOUS: $(RPM_TMP) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
@@ -121,7 +121,10 @@ node:
 	     npm run build; \
 	done
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
+composer:
+	composer install --classmap-authoritative --no-dev --no-interaction --no-scripts --working-dir=$(BASE_DIR)/src/
+
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \

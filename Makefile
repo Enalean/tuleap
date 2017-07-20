@@ -91,6 +91,10 @@ autoload-docker: ## Generate autoload files
 autoload-dev:
 	@tools/utils/autoload.sh
 
+.PHONY: composer
+composer:  ## Install PHP dependencies with Composer
+	composer install --working-dir=src/
+
 ## RNG generation
 
 rnc2rng-docker: clean-rng ## Compile rnc file into rng
@@ -128,7 +132,7 @@ clean-rng:
 # Tests and all
 #
 
-post-checkout: generate-mo dev-clear-cache dev-forgeupgrade ## Clear caches, run forgeupgrade, build assets and generate language files
+post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade ## Clear caches, run forgeupgrade, build assets and generate language files
 	npm install
 	npm run build
 	git clean -fd plugins/*/www/themes/FlamingParrot
