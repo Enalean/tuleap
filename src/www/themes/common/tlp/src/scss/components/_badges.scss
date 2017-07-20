@@ -40,6 +40,10 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     text-decoration: none;
     white-space: nowrap;
     vertical-align: middle;
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .tlp-badge-icon {
@@ -49,6 +53,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 .tlp-badge-primary {
     @extend %tlp-badge;
 
+    border: 1px solid $tlp-theme-color;
     background: $tlp-theme-color;
 
     &.tlp-badge-outline {
@@ -61,6 +66,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 .tlp-badge-secondary {
     @extend %tlp-badge;
 
+    border: 1px solid $tlp-badge-secondary-background;
     background: $tlp-badge-secondary-background;
     color: $tlp-badge-secondary-color;
 
@@ -74,6 +80,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 .tlp-badge-info {
     @extend %tlp-badge;
 
+    border: 1px solid $tlp-ui-info;
     background: $tlp-ui-info;
 
     &.tlp-badge-outline {
@@ -86,6 +93,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 .tlp-badge-success {
     @extend %tlp-badge;
 
+    border: 1px solid $tlp-ui-success;
     background: $tlp-ui-success;
 
     &.tlp-badge-outline {
@@ -98,6 +106,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 .tlp-badge-warning {
     @extend %tlp-badge;
 
+    border: 1px solid $tlp-ui-warning;
     background: $tlp-ui-warning;
 
     &.tlp-badge-outline {
@@ -110,6 +119,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
 .tlp-badge-danger {
     @extend %tlp-badge;
 
+    border: 1px solid $tlp-ui-danger;
     background: $tlp-ui-danger;
 
     &.tlp-badge-outline {
@@ -123,6 +133,7 @@ $tlp-badge-secondary-outline-color: $tlp-ui-dimmed;
     .tlp-badge-#{nth($tlp-swatch-color-names, $i)} {
         @extend %tlp-badge;
 
+        border: 1px solid nth($tlp-swatch-color-primaries, $i);
         background: nth($tlp-swatch-color-primaries, $i);
 
         &.tlp-badge-outline {

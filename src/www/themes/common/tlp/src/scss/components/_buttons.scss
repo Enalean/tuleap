@@ -87,6 +87,7 @@ $tlp-button-secondary-outline-color: #888888;
     &:focus {
         transition: box-shadow $tlp-button-box-shadow-timing ease-in-out, background $tlp-button-background-timing ease-in-out, border-color $tlp-button-background-timing ease-in-out;
         box-shadow: none;
+        text-decoration: none;
     }
 
     &:disabled,

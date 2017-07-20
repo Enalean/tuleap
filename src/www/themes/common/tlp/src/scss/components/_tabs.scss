@@ -77,6 +77,7 @@ $tlp-tabs-transition: 75ms ease-out;
 
     &:hover {
         background: $tlp-ui-border-light;
+        text-decoration: none;
     }
 }
 
@@ -97,6 +98,7 @@ $tlp-tabs-transition: 75ms ease-out;
     &.tlp-tab-active,
     &:hover {
         border-bottom-color: $tlp-theme-color;
+        text-decoration: none;
     }
 
     &.tlp-tab-disabled,
