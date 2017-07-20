@@ -31,7 +31,7 @@
 @import 'includes/diagram';
 @import 'includes/add-to-dashboard';
 
-$kanban-column-closed-width: 65px;
+$kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;
 $kanban-column-footer-height: 50px;
 
@@ -125,6 +125,7 @@ $kanban-column-footer-height: 50px;
         min-width: $kanban-column-closed-width;
         background: $tlp-ui-white;
         cursor: pointer;
+        overflow: hidden;
 
         &:hover {
             background: darken($tlp-ui-white, 2%);
@@ -140,7 +141,7 @@ $kanban-column-footer-height: 50px;
 
         > kanban-column {
             position: absolute;
-            z-index: 2;
+            z-index: 3;
             top: 0;
             left: 0;
 
@@ -226,6 +227,7 @@ $kanban-column-footer-height: 50px;
     justify-content: space-between;
     width: 100%;
     height: $kanban-column-header-height;
+    max-height: 50px;
     padding: 10px;
     transition: background 100ms;
     border-top: 2px solid $tlp-theme-color;
@@ -443,7 +445,7 @@ add-in-place {
     font-size: 18px;
     font-weight: 600;
     letter-spacing: .5px;
-    line-height: 60px;
+    line-height: $kanban-column-closed-width;
     text-transform: uppercase;
     white-space: nowrap;
     writing-mode: tb-rl;
