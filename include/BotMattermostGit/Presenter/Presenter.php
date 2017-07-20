@@ -57,13 +57,9 @@ class Presenter
         $this->modal_delete_title       = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_header_delete_configure_notification');
         $this->modal_delete_content     = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'modal_delete_content');
 
-        $this->label_bot_id                    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_id');
         $this->label_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_bot_name');
-        $this->label_hook_url                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_hook_url');
         $this->label_avatar_url                = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_label_avatar_url');
         $this->label_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_label_channels_handles');
-        $this->input_bot_name                  = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_bot_name');
-        $this->input_url                       = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_input_url');
         $this->input_channels_handles          = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_input_channels_handles');
         $this->purified_info_channels_handles  = Codendi_HTMLPurifier::instance()->purify(
             $GLOBALS['Language']->getText('plugin_botmattermost_git', 'configuration_info_channels_handles'),
