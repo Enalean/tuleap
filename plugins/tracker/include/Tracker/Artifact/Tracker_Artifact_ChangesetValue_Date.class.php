@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -126,7 +126,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
                     return $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$previous_date .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$next_date;
                 }
             }
-        } else {
+        } elseif ($next_date !== '') {
             return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$next_date;
         }
         return false;

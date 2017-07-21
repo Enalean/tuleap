@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,16 +24,10 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
 
     private $field;
     private $user;
-    private $base_language;
+    private $changeset;
 
     public function setUp() {
         parent::setUp();
-
-        $this->base_language = mock('BaseLanguage');
-        stub($this->base_language)->getText('plugin_tracker_artifact','changed_from')->returns('changed from');
-        stub($this->base_language)->getText('plugin_tracker_artifact','to')->returns('to');
-
-        $GLOBALS['Language'] = $this->base_language;
 
         $this->field = stub('Tracker_FormElement_Field_Date')->getName()->returns('field_date');
         $this->user  = aUser()->withId(101)->build();
@@ -66,27 +60,80 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         $this->assertEqual($null_date->getDate(), '');
         $this->assertEqual($null_date->getSoapValue($this->user), array('value' => ''));
     }
-    
+}
+
+class Tracker_Artifact_ChangesetValue_DateDiffTest extends TuleapTestCase {
+
+
+    private $field;
+    private $base_language;
+    private $changeset;
+    private $tz;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->base_language = mock('BaseLanguage');
+        stub($this->base_language)->getText('plugin_tracker_artifact','changed_from')->returns('changed from');
+        stub($this->base_language)->getText('plugin_tracker_artifact','to')->returns('to');
+        stub($this->base_language)->getText('plugin_tracker_artifact','cleared')->returns('cleared');
+        stub($this->base_language)->getText('plugin_tracker_artifact','set_to')->returns('set_to');
+
+        stub($this->base_language)->getText('system', 'datefmt_short')->returns(Tracker_FormElement_DateFormatter::DATE_FORMAT);
+
+        $GLOBALS['Language'] = $this->base_language;
+
+        $this->field = stub('Tracker_FormElement_Field_Date')->getName()->returns('field_date');
+        stub($this->field)->formatDateForDisplay(1221221466)->returns("2008-09-12");
+        stub($this->field)->formatDateForDisplay(1234567890)->returns("2009-02-14");
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
+
+        $this->tz = date_default_timezone_get();
+        date_default_timezone_set('Europe/Paris');
+    }
+
+    public function tearDown() {
+        date_default_timezone_set($this->tz);
+        unset($GLOBALS['Language']);
+        parent::tearDown();
+    }
+
     public function testNoDiff() {
         $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $this->assertFalse($date_1->diff($date_2));
         $this->assertFalse($date_2->diff($date_1));
     }
-    
-    public function testDiff() {
-        $tz = date_default_timezone_get();
-        date_default_timezone_set('Europe/Paris');
 
-        stub($this->base_language)->getText('system', 'datefmt_short')->returns(Tracker_FormElement_DateFormatter::DATE_FORMAT);
-        stub($this->field)->formatDateForDisplay(1221221466)->returns("2008-09-12");
-        stub($this->field)->formatDateForDisplay(1234567890)->returns("2009-02-14");
-
+    public function testDiffBetween2dates() {
         $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1221221466);
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
         $this->assertEqual($date_1->diff($date_2), 'changed from 2009-02-14 to 2008-09-12');
         $this->assertEqual($date_2->diff($date_1), 'changed from 2008-09-12 to 2009-02-14');
-        
-        date_default_timezone_set($tz);
+    }
+
+    public function testDiffDateSet() {
+        $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 0);
+        $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
+        $this->assertEqual($new_date->diff($previous_date), 'set_to 2009-02-14');
+    }
+
+    public function testDiffDateCleared() {
+        $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
+        $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
+        $this->assertEqual($new_date->diff($previous_date), 'cleared');
+    }
+
+    public function testDiffDateDidNotChanged() {
+        $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
+        $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, 1234567890);
+        $this->assertEqual($new_date->diff($previous_date), '');
+    }
+
+    public function testDiffNoValueSubmittedYetBothDatesAreNull() {
+        $previous_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
+        $new_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
+        $this->assertEqual($new_date->diff($previous_date), '');
     }
 }
