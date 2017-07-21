@@ -139,7 +139,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * Keep super user info
      */
-    protected $is_super_user;
+    private $is_super_user;
 
     /**
      * The locale of the user
@@ -334,8 +334,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
 
         $is_member = false;
 
-        if ((isset($group_data[1]['admin_flags']) && $group_data[1]['admin_flags'] == 'A') || $this->doesUserHaveSuperUserPermissionDelegation()) {
-            //Codendi admins always return true
+        if ($this->isSuperUser()) {
             $is_member = true;
         } else if (isset($group_data[$group_id])) {
             if ($type === 0) { // Note: yes, this is '==='
@@ -450,10 +449,16 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return isset($tracker_data[$group_artifact_id]) ? $tracker_data[$group_artifact_id]['perm_level'] : 0;
     }
 
-
     public function isSuperUser()
     {
-        return $this->isMember(1, 'A') || $this->doesUserHaveSuperUserPermissionDelegation();
+        if ($this->is_super_user === null) {
+            $this->is_super_user = false;
+            $group_data = $this->getUserGroupData();
+            if ((isset($group_data[1]['admin_flags']) && $group_data[1]['admin_flags'] == 'A') || $this->doesUserHaveSuperUserPermissionDelegation()) {
+                $this->is_super_user = true;
+            }
+        }
+        return $this->is_super_user;
     }
 
     public function getAllUgroups() {

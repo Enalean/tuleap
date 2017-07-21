@@ -392,8 +392,8 @@ class UserTest extends TuleapTestCase {
 
     public function itReturnsTrueWhenUserIsAdminOfProjectAdministration()
     {
-        $user = partial_mock('PFUser', array('isMember', 'doesUserHaveSuperUserPermissionDelegation'));
-        stub($user)->isMember(1, 'A')->returns(true);
+        $user = partial_mock('PFUser', array('getUserGroupData', 'doesUserHaveSuperUserPermissionDelegation'));
+        stub($user)->getUserGroupData()->returns(array(1 => array('admin_flags' => 'A')));
         stub($user)->doesUserHaveSuperUserPermissionDelegation()->returns(false);
 
         $this->assertTrue($user->isSuperUser());
@@ -401,8 +401,8 @@ class UserTest extends TuleapTestCase {
 
     public function itReturnsTrueWhenUserHasSiteAdministrationPermissionDelegation()
     {
-        $user = partial_mock('PFUser', array('isMember', 'doesUserHaveSuperUserPermissionDelegation'));
-        stub($user)->isMember(1, 'A')->returns(false);
+        $user = partial_mock('PFUser', array('getUserGroupData', 'doesUserHaveSuperUserPermissionDelegation'));
+        stub($user)->getUserGroupData()->returns(array());
         stub($user)->doesUserHaveSuperUserPermissionDelegation()->returns(true);
 
         $this->assertTrue($user->isSuperUser());
@@ -410,8 +410,8 @@ class UserTest extends TuleapTestCase {
 
     public function itReturnsFalseWhenUserIsNotSiteAdministrator()
     {
-        $user = partial_mock('PFUser', array('isMember', 'doesUserHaveSuperUserPermissionDelegation'));
-        stub($user)->isMember(1, 'A')->returns(false);
+        $user = partial_mock('PFUser', array('getUserGroupData', 'doesUserHaveSuperUserPermissionDelegation'));
+        stub($user)->getUserGroupData()->returns(array());
         stub($user)->doesUserHaveSuperUserPermissionDelegation()->returns(false);
 
         $this->assertFalse($user->isSuperUser());
