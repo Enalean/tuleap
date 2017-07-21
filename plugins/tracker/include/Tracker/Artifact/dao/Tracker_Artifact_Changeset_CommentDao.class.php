@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean SAS, 2017. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
@@ -31,6 +32,23 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
                 ORDER BY id DESC
                 LIMIT 1";
         return $this->retrieve($sql);
+    }
+
+    public function searchLastVersionForArtifact($artifact_id)
+    {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = "SELECT comment_v1.*
+                FROM tracker_changeset AS changeset
+                  LEFT JOIN tracker_changeset_comment AS comment_v1 ON (comment_v1.changeset_id = changeset.id)
+                  LEFT JOIN tracker_changeset_comment AS comment_v2 ON (comment_v2.changeset_id = changeset.id AND comment_v1.id < comment_v2.id)
+                WHERE changeset.artifact_id = $artifact_id
+                AND comment_v2.id IS NULL
+                AND comment_v1.id IS NOT NULL";
+        $result = array();
+        foreach ($this->retrieve($sql) as $row) {
+            $result[$row['changeset_id']] = $row;
+        }
+        return $result;
     }
 
     public function createNewVersion($changeset_id, $body, $submitted_by, $submitted_on, $parent_id, $body_format) {
@@ -54,4 +72,3 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

@@ -79,6 +79,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $this->values[$field->getId()];
     }
 
+    public function canHoldValue()
+    {
+        return true;
+    }
+
     private function getChangesetValueFromDB(Tracker_FormElement_Field $field) {
         $dar = $this->getValueDao()->searchByFieldId($this->id, $field->getId());
         if ($dar && count($dar)) {
@@ -194,11 +199,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
         //The comment
         if ($comment = $this->getComment()) {
+            $follow_up = $comment->fetchFollowUp();
             $html .= '<div class="tracker_artifact_followup_comment">';
-            $html .= $comment->fetchFollowUp();
+            $html .= $follow_up;
             $html .= '</div>';
 
-            if ($comment->fetchFollowUp() && $diff_to_previous) {
+            if ($follow_up && $diff_to_previous) {
                 $html .= '<hr size="1" />';
             }
         }
@@ -537,7 +543,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * Returns the comment dao
      *
-     * @return Tracker_Artifact_ChangesetCommentDao The dao
+     * @return Tracker_Artifact_Changeset_CommentDao The dao
      */
     protected function getCommentDao() {
         return new Tracker_Artifact_Changeset_CommentDao();
@@ -653,6 +659,53 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             }
         }
         return $result;
+    }
+
+    public function diffToPreviousArtifactView(PFUser $user, Tracker_Artifact_Followup_Item $previous_item)
+    {
+        $result = '';
+
+        foreach ($this->getValues() as $current_changeset_value) {
+            if ($current_changeset_value === null) {
+                continue;
+            }
+            $field = $current_changeset_value->getField();
+            if (! $current_changeset_value->hasChanged() || ! $field->userCanRead($user)) {
+                continue;
+            }
+
+            $previous_changeset_value = $this->getPreviousChangesetValue($previous_item, $field);
+
+            if ($previous_changeset_value === null) {
+                $diff = $current_changeset_value->nodiff('html');
+            } else {
+                $diff = $current_changeset_value->diff($previous_changeset_value, 'html', $user);
+            }
+
+            if ($diff) {
+                $result .= $this->displayDiff($diff, 'html', $field);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @return null|Tracker_Artifact_ChangesetValue
+     */
+    private function getPreviousChangesetValue(
+        Tracker_Artifact_Followup_Item $previous_item,
+        Tracker_FormElement_Field $field
+    ) {
+        if ($previous_item->canHoldValue()) {
+            return $previous_item->getValue($field);
+        }
+
+        $previous_changeset = $this->getArtifact()->getPreviousChangeset($this->getId());
+        if ($previous_changeset !== null) {
+            return $previous_changeset->getValue($field);
+        }
+
+        return null;
     }
 
     /**
