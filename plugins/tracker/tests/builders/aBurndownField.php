@@ -20,10 +20,10 @@
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class BurndownFieldBuilder {
-    
+
     private $tracker;
     private $hierarchy_factory;
-    
+
     public function __construct() {
         $this->id            = null;
         $this->tracker_id    = null;
@@ -37,17 +37,17 @@ class BurndownFieldBuilder {
         $this->notifications = null;
         $this->rank          = null;
     }
-    
+
     public function withTracker(Tracker $tracker) {
         $this->tracker = $tracker;
         return $this;
     }
-    
+
     public function withHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;
         return $this;
     }
-    
+
     public function build() {
         $field = new Tracker_FormElement_Field_Burndown(
             $this->id,
@@ -62,14 +62,14 @@ class BurndownFieldBuilder {
             $this->notifications,
             $this->rank
         );
-        
+
         if ($this->tracker) {
             $field->setTracker($this->tracker);
         }
         if ($this->hierarchy_factory) {
             $field->setHierarchyFactory($this->hierarchy_factory);
         }
-        
+
         return $field;
     }
 }

@@ -23,8 +23,12 @@ require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
+
+        ForgeConfig::store();
+        ForgeConfig::set('sys_logger_level', Logger::DEBUG);
 
         $tracker_id = 123;
 
@@ -39,8 +43,15 @@ class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends Tuleap
         $this->setText($this->missing_duration_warning, array('plugin_tracker', 'burndown_missing_duration_warning'));
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        ForgeConfig::restore();
+    }
+
     public function itRendersNoWarningWhenTrackerHasAStartDateField() {
         stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(true);
+        stub($this->tracker)->hasFormElementWithNameAndType('remaining_effort', array('int', 'float', 'computed'))->returns(true);
         $html = $this->field->fetchAdminFormElement();
         $this->assertNoPattern('/'.$this->missing_start_date_warning.'/', $html);
     }
@@ -120,6 +131,9 @@ class Tracker_FormElement_Field_Burndown_FieldCorrectlySetTest extends TuleapTes
                 'getLogger'
             )
         );
+
+        $logger = mock('Tuleap\Tracker\FormElement\BurndownLogger');
+        stub($this->burndown_field)->getLogger()->returns($logger);
 
         $this->user = mock('PFUser');
         stub($this->user)->isAdmin()->returns(true);
@@ -236,6 +250,9 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     {
         parent::setUp();
 
+        ForgeConfig::store();
+        ForgeConfig::set('sys_logger_level', Logger::DEBUG);
+
         $this->sprint_tracker_id = 113;
         $this->sprint_tracker    = mock('Tracker');
         stub($this->sprint_tracker)->getID()->returns($this->sprint_tracker_id);
@@ -295,6 +312,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     public function tearDown() {
         parent::tearDown();
         Tracker_FormElementFactory::clearInstance();
+        ForgeConfig::restore();
     }
 
     public function itRetrievesAnEmptyArrayWhenBurndownIsInTheFutur()
@@ -463,25 +481,41 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
 
 class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends TuleapTestCase {
 
-    public function itRendersAWarningForAnyTrackerChildThatHasNoEffortField() {
+    public function setUp()
+    {
+        parent::setUp();
+
+        ForgeConfig::store();
+        ForgeConfig::set('sys_logger_level', Logger::DEBUG);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        ForgeConfig::restore();
+    }
+
+    public function itRendersAWarningForAnyTrackerChildThatHasNoEffortField()
+    {
         $warning_message = 'Foo';
         $this->setText($warning_message, array('plugin_tracker', 'burndown_missing_remaining_effort_warning'));
 
-        $stories = aMockTracker()->withName('Stories')->havingFormElementWithNameAndType('remaining_effort', array('int', 'float', 'computed'))->build();
         $bugs    = aMockTracker()->withName('Bugs')->havingNoFormElement('remaining_effort')->build();
         $chores  = aMockTracker()->withName('Chores')->havingFormElementWithNameAndType('remaining_effort', array('int', 'date'))->build();
 
-        $children   = array($stories, $bugs, $chores);
+        $children   = array($bugs, $chores);
         $tracker_id = 123;
 
-        $tracker           = aMockTracker()->withId($tracker_id)->build();
-        $hierarchy_factory = aMockHierarchyFactory()->withChildrenForTrackerId($tracker_id, $children)->build();
-        $field             = aBurndownField()->withTracker($tracker)->withHierarchyFactory($hierarchy_factory)->build();
+        $tracker              = aMockTracker()->withId($tracker_id)->build();
+        $hierarchy_factory    = aMockHierarchyFactory()->withChildrenForTrackerId($tracker_id, $children)->build();
+        $field                = aBurndownField()
+            ->withTracker($tracker)
+            ->withHierarchyFactory($hierarchy_factory)
+            ->build();
 
         $html = $field->fetchAdminFormElement();
 
-        $this->assertPattern('/'.$warning_message.'/', $html);
-        $this->assertNoPattern('/Stories/', $html);
+        $this->assertPattern('/' . $warning_message . '/', $html);
         $this->assertPattern('/Bugs/', $html);
         $this->assertPattern('/Chores/', $html);
     }

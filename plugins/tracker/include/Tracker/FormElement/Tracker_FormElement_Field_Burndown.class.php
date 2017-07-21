@@ -21,6 +21,7 @@
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\BurndownConfigurationValueRetriever;
+use Tuleap\Tracker\FormElement\BurndownConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\BurndownConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
@@ -146,7 +147,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $html = "";
         if ($user->isAdmin($artifact->getTracker()->getGroupId())
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
-            && $this->areBurndownFieldsCorrectlySet($artifact, $user)
+            && $this->getBurndownConfigurationValueChecker()->areBurndownFieldsCorrectlySet($artifact, $user)
             && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
         ) {
             $html .= '<a class="btn burndown-button-generate" data-toggle="modal" href="#burndown-generate">' .
@@ -159,16 +160,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
 
         return $html;
-    }
-
-    private function areBurndownFieldsCorrectlySet(Tracker_Artifact $artifact, PFUser $user)
-    {
-        try {
-            return $this->getBurndownConfigurationValueRetriever()->getBurndownDuration($artifact, $user) !== null
-            && $this->getBurndownConfigurationValueRetriever()->getBurndownStartDate($artifact, $user) !== null;
-        } catch (Tracker_FormElement_Field_BurndownException $e) {
-            return false;
-        }
     }
 
     private function fetchBurndownGenerationModal(Tracker_Artifact $artifact)
@@ -464,8 +455,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $days   = $burndown_data->getTimePeriod()->getCountDayUntilDate($_SERVER['REQUEST_TIME']);
         $logger = $this->getLogger();
 
-        if ($this->doesUserCanReadRemainingEffort($artifact, $user)
-            && $this->hasStartDate($artifact, $user)) {
+        if ($this->getBurndownConfigurationValueChecker()->doesUserCanReadRemainingEffort($artifact, $user)
+            && $this->getBurndownConfigurationValueChecker()->hasStartDate($artifact, $user)) {
             $cached_days = $this->getComputedDao()->getCachedDays(
                 $artifact->getId(),
                 $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user)->getId()
@@ -729,21 +720,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return TRACKER_BASE_URL .'/?'.$url_query;
     }
 
-
-
-    private function hasStartDate(Tracker_Artifact $artifact, PFUser $user) {
-        $start_date_field = $this->getBurdownConfigurationFieldRetriever()->getBurndownStartDateField($artifact, $user);
-        $artifact_value   = $artifact->getValue($start_date_field);
-
-        if ($artifact_value === null) {
-            return false;
-        }
-
-        $timestamp = $artifact_value->getTimestamp();
-
-        return $timestamp !== null;
-    }
-
     /**
      * Renders all the possible errors for this field.
      *
@@ -836,34 +812,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getChildTrackersWithoutRemainingEffort() {
         return array_filter($this->getChildTrackers(),
-            array($this, 'doesRemainingEffortFieldExists'));
-    }
-
-    /**
-     * Returns true if the given tracker misses a remaining effort field.
-     *
-     * @param Tracker $tracker
-     * @return Boolean
-     */
-    private function doesRemainingEffortFieldExists(Tracker $tracker)
-    {
-        return ! $tracker->hasFormElementWithNameAndType(
-            self::REMAINING_EFFORT_FIELD_NAME,
-            array('int', 'float', 'computed')
-        );
-    }
-
-    /**
-     * @return Boolean
-     */
-    private function doesUserCanReadRemainingEffort(Tracker_Artifact $artifact, PFUser $user)
-    {
-        $remaining_effort_field = $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user);
-        if ($remaining_effort_field === null) {
-            return false;
-        }
-
-        return true;
+            array($this->getBurdownConfigurationFieldRetriever(), 'doesRemainingEffortFieldExists'));
     }
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
@@ -900,29 +849,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     ) {
 
         try {
-            $start_date_field = $this->getBurdownConfigurationFieldRetriever()->getBurndownStartDateField($artifact, $submitter);
-            $duration_field   = $this->getBurdownConfigurationFieldRetriever()->getBurndownDurationField($artifact, $submitter);
-
             if (
                 $previous_changeset !== null &&
                 $this->isCacheBurndownAlreadyAsked($artifact) === false &&
                 $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $submitter)
             ) {
-                if ($this->hasFieldChanged($new_changeset, $start_date_field)
-                    || $this->hasFieldChanged($new_changeset, $duration_field)
-                ) {
+                if ($this->getBurndownConfigurationValueChecker()->hasConfigurationChange($artifact, $submitter, $new_changeset) === true ) {
                     $this->forceBurndownCacheGeneration($artifact->getId());
                 }
             }
         } catch (Tracker_FormElement_Field_BurndownException $e) {
         }
-    }
-
-    private function hasFieldChanged(
-        Tracker_Artifact_Changeset $new_changeset,
-        Tracker_FormElement_Field $field
-    ) {
-        return $new_changeset->getValue($field) && $new_changeset->getValue($field)->hasChanged();
     }
 
     /**
@@ -940,6 +877,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         return new BurndownConfigurationValueRetriever(
             $this->getBurdownConfigurationFieldRetriever(), $this->getLogger()
+        );
+    }
+
+    /**
+     * @return BurndownConfigurationValueChecker
+     */
+    private function getBurndownConfigurationValueChecker()
+    {
+        return new BurndownConfigurationValueChecker(
+            $this->getBurdownConfigurationFieldRetriever(),
+            $this->getBurndownConfigurationValueRetriever()
         );
     }
 }
