@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,9 +33,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Config\ConfigRouter;
-use Tuleap\Tracker\Deprecation\DeprecationController;
-use Tuleap\Tracker\Deprecation\Dao;
-use Tuleap\Tracker\Deprecation\DeprecationRetriever;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
@@ -86,15 +83,6 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
             ),
             new NatureUsagePresenterFactory(
                 $nature_dao
-            ),
-            $admin_page_renderer
-        ),
-        new DeprecationController(
-            new DeprecationRetriever(
-                new Dao(),
-                ProjectManager::instance(),
-                TrackerFactory::instance(),
-                Tracker_FormElementFactory::instance()
             ),
             $admin_page_renderer
         ),

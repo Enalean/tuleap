@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 — 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Config;
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
-use Tuleap\Tracker\Deprecation\DeprecationController;
 use CSRFSynchronizerToken;
 use Codendi_Request;
 use Response;
@@ -43,8 +42,6 @@ class ConfigRouter
     /** @var CSRFSynchronizerToken */
     private $csrf;
 
-    /** @var DeprecationController */
-    private $deprecation_controller;
     /**
      * @var TrackerReportConfigController
      */
@@ -54,13 +51,11 @@ class ConfigRouter
         CSRFSynchronizerToken $csrf,
         MailGatewayConfigController $mailgateway_controller,
         NatureConfigController $nature_controller,
-        DeprecationController $deprecation_controller,
         TrackerReportConfigController $report_config_controller
     ) {
         $this->csrf                     = $csrf;
         $this->mailgateway_controller   = $mailgateway_controller;
         $this->nature_controller        = $nature_controller;
-        $this->deprecation_controller   = $deprecation_controller;
         $this->report_config_controller = $report_config_controller;
     }
 
@@ -93,9 +88,6 @@ class ConfigRouter
                 break;
             case 'natures':
                 $this->nature_controller->index($this->csrf, $response);
-                break;
-            case 'deprecation':
-                $this->deprecation_controller->index($response);
                 break;
             case 'update-emailgateway':
                 $this->csrf->check();

@@ -23,8 +23,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
-use Tuleap\Tracker\Deprecation\DeprecationRetriever;
-use Tuleap\Tracker\Deprecation\Dao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
@@ -55,7 +53,6 @@ class Tracker implements Tracker_Dispatchable_Interface
     const PERMISSION_SUBMITTER           = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
     const PERMISSION_NONE                = 'PLUGIN_TRACKER_NONE';
     const PERMISSION_SUBMITTER_ONLY      = 'PLUGIN_TRACKER_ACCESS_SUBMITTER_ONLY';
-    const ACTION_HIDE_WARNING_DEPRECATED = 'hide-deprecated-fields';
 
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
@@ -433,10 +430,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         $hp = Codendi_HTMLPurifier::instance();
         $func = (string)$request->get('func');
         switch ($func) {
-            case self::ACTION_HIDE_WARNING_DEPRECATED:
-                $current_user->setPreference($this->getHideWarningPreferenceName(), strtotime('+7 days', time()));
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
-                break;
             case 'new-artifact':
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $this->displaySubmit($layout, $request, $current_user);
@@ -1229,31 +1222,6 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         echo $html;
         $this->displayFooter($layout);
-    }
-
-    private function getDeprecatedRetriever()
-    {
-        return new DeprecationRetriever(
-            new Dao(),
-            ProjectManager::instance(),
-            TrackerFactory::instance(),
-            Tracker_FormElementFactory::instance()
-        );
-    }
-
-    private function getDeprecatedFieldsByTracker()
-    {
-        return $this->getDeprecatedRetriever()->getDeprecatedFieldsByTracker($this);
-    }
-
-    private function getDeprecatedFieldsByProject()
-    {
-        $user = UserManager::instance()->getCurrentUser();
-        if (! $this->getDeprecatedRetriever()->isWarningDeprecatedFieldHidden($user, $this)) {
-            return $this->getDeprecatedRetriever()->getDeprecatedTrackersFieldsByProject($this->getProject());
-        }
-
-        return array();
     }
 
     public function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null, array $params = array())
@@ -3594,10 +3562,5 @@ EOS;
             }
         }
         return false;
-    }
-
-    public function getHideWarningPreferenceName()
-    {
-        return self::ACTION_HIDE_WARNING_DEPRECATED . "_" . $this->id;
     }
 }
