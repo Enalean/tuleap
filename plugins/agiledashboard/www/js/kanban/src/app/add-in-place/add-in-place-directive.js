@@ -3,31 +3,18 @@ import AddInPlaceController from './add-in-place-controller.js';
 
 export default AddInPlace;
 
-AddInPlace.$inject = ['$timeout'];
+AddInPlace.$inject = [];
 
-function AddInPlace($timeout) {
+function AddInPlace() {
     return {
-        restrict    : 'E',
-        controller  : AddInPlaceController,
-        controllerAs: 'addInPlace',
-        templateUrl : 'add-in-place.tpl.html',
-        scope       : {
+        restrict: 'E',
+        scope   : {
             column    : '=',
             createItem: '='
         },
-        link: function (scope, element, attrs, addInPlaceCtrl) {
-
-            addInPlaceCtrl.init(scope.column, scope.createItem);
-
-            scope.$watch('addInPlace.isOpen()', function (is_open) {
-                if (is_open) {
-                    $timeout(autoFocusInput);
-                }
-            });
-
-            function autoFocusInput() {
-                element.find('input[type=text]').focus();
-            }
-        }
+        templateUrl     : 'add-in-place.tpl.html',
+        controller      : AddInPlaceController,
+        controllerAs    : 'addInPlace',
+        bindToController: true
     };
 }

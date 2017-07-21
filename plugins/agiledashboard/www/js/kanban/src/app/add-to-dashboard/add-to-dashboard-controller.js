@@ -17,6 +17,7 @@ function AddToDashboardController(
 
     self.showProjectDashboards = showProjectDashboards;
     self.showDashboardDropdown = showDashboardDropdown;
+    self.$onInit               = init;
 
     function init() {
         var dashboard_dropdown = $element[0].querySelector('#dashboard-dropdown-button');
@@ -24,8 +25,6 @@ function AddToDashboardController(
             dropdown(dashboard_dropdown);
         }
     }
-
-    init();
 
     function showProjectDashboards() {
         return userIsAdmin();

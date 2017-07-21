@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import { element } from 'angular';
+import { isNull } from 'lodash';
 
 export default KanbanColumnController;
 
@@ -22,12 +23,10 @@ function KanbanColumnController(
     ColumnCollectionService
 ) {
     var self = this;
-    _.extend(self, {
-        appending_item        : false,
-        cancelDrag            : cancelDrag,
-        dragularOptions       : dragularOptions,
-        isColumnLoadedAndEmpty: isColumnLoadedAndEmpty
-    });
+    self.appending_item         = false;
+    self.cancelDrag             = cancelDrag;
+    self.dragularOptions        = dragularOptions;
+    self.isColumnLoadedAndEmpty = isColumnLoadedAndEmpty;
 
     function dragularOptions() {
         return {
@@ -54,7 +53,7 @@ function KanbanColumnController(
     }
 
     function ancestorCannotBeDragged(handle_element) {
-        return (angular.element(handle_element).closest('[data-nodrag="true"]').length > 0);
+        return (element(handle_element).closest('[data-nodrag="true"]').length > 0);
     }
 
     function dragularEnter() {
@@ -92,10 +91,10 @@ function KanbanColumnController(
     ) {
         event.stopPropagation();
 
-        var target_column_id   = getColumnId(angular.element(target_element));
+        var target_column_id   = getColumnId(element(target_element));
         var source_column      = self.column;
         var target_column      = ColumnCollectionService.getColumn(target_column_id);
-        var target_model_items = (! _.isNull(target_model)) ? target_model : source_model;
+        var target_model_items = (! isNull(target_model)) ? target_model : source_model;
         var current_kanban     = SharedPropertiesService.getKanban();
         var dropped_item       = target_model_items[target_index];
         var compared_to        = DroppedService.getComparedTo(target_model_items, target_index);

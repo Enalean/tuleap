@@ -61,7 +61,6 @@ describe("KanbanItemRestService -", function() {
                 .respond(404, {error: 404, message: 'Error'});
 
             var promise = KanbanItemRestService.getItem(410);
-            mockBackend.flush();
 
             expect(promise).toBeRejected();
             expect(RestErrorService.reload).toHaveBeenCalledWith(jasmine.objectContaining({

@@ -76,7 +76,6 @@ describe("KanbanService -", function() {
                 kanban_item_id,
                 compared_to
             );
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(RestErrorService.reload).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -131,7 +130,6 @@ describe("KanbanService -", function() {
                 kanban_item_id,
                 compared_to
             );
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(RestErrorService.reload).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -186,7 +184,6 @@ describe("KanbanService -", function() {
                 kanban_item_id,
                 compared_to
             );
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(RestErrorService.reload).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -273,7 +270,6 @@ describe("KanbanService -", function() {
                 compared_to,
                 from_column
             );
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(RestErrorService.reload).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -355,7 +351,6 @@ describe("KanbanService -", function() {
                 compared_to,
                 from_column
             );
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(RestErrorService.reload).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -430,7 +425,6 @@ describe("KanbanService -", function() {
                 kanban_item_id,
                 compared_to
             );
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(RestErrorService.reload).toHaveBeenCalledWith(jasmine.objectContaining({

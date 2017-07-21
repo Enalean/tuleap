@@ -3,7 +3,8 @@ import {
     forEach,
     isObject,
     isString,
-    isUndefined
+    isUndefined,
+    isFunction
 } from 'angular';
 
 export default TlpModalService;
@@ -34,8 +35,8 @@ function TlpModalService(
         + "    templateUrl: (string) relative URL to the template of the modal,\n"
         + "    controller: (function) Controller function for the modal. modal_instance will be injected in it \n"
         + "                 and will have a tlp_modal property that holds the TLP modal object.\n"
-        + "                 Warning: modal_instance will NOT have a tlp_modal property at controller init. It is added just after.\n"
-        + "                 You should use setTimeout() if you need it at init\n"
+        + "                 Warning: modal_instance will NOT have a tlp_modal property at controller creation. It is added just after.\n"
+        + "                 Code depending on modal_instance.tlp_modal must be in the controller's $onInit() function\n"
         + "    controllerAs: (string) The scope property name that will hold the controller instance,\n"
         + "    tlpModalOptions: (optional)(object) Options object to be passed down to TLP modal(),\n"
         + "    resolve: (optional)(object) Each key of this object is a function that will be injected in the controller. \n"
@@ -93,7 +94,7 @@ function TlpModalService(
         var body             = $document.find('body').eq(0);
         var modal_instance = {};
 
-        instanciateController(
+        var controller = prepareControllerInjection(
             scope,
             modal_instance,
             options,
@@ -105,23 +106,29 @@ function TlpModalService(
         body.append(dom_modal_element);
         modal_instance.tlp_modal = modal(dom_modal_element, tlp_modal_options);
 
+        if (isFunction(controller.$onInit)) {
+            controller.$onInit();
+        }
+
         modal_instance.tlp_modal.show();
 
         modal_instance.tlp_modal.addEventListener('tlp-modal-hidden', function() {
-            dom_modal_element.remove();
+            compiled_modal.remove();
+            scope.$destroy();
+            delete modal_instance.tlp_modal;
         });
 
         return modal_instance.tlp_modal;
     }
 
-    function instanciateController(
+    function prepareControllerInjection(
         scope,
         modal_instance,
         options,
         resolved_dependencies
     ) {
-        var controller    = options.controller;
-        var controller_as = options.controllerAs;
+        var controller_factory = options.controller;
+        var controller_as      = options.controllerAs;
 
         var controller_injected_variables = {
             $scope        : scope,
@@ -134,8 +141,17 @@ function TlpModalService(
             i++;
         });
 
-        var instanciated_controller = $controller(controller, controller_injected_variables);
-        scope[controller_as] = instanciated_controller;
+        // see https://github.com/angular/angular.js/blob/master/src/ng/controller.js#L84
+        var init_controller_later = false;
+
+        var controller_instance = $controller(
+            controller_factory,
+            controller_injected_variables,
+            init_controller_later,
+            controller_as
+        );
+
+        return controller_instance;
     }
 
     function getTemplatePromise(template_url) {

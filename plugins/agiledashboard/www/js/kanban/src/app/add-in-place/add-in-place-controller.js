@@ -1,23 +1,33 @@
-import _ from 'lodash';
-
 export default AddInPlaceCtrl;
 
-AddInPlaceCtrl.$inject = [];
+AddInPlaceCtrl.$inject = [
+    '$scope',
+    '$element',
+    '$timeout'
+];
 
-function AddInPlaceCtrl() {
+function AddInPlaceCtrl(
+    $scope,
+    $element,
+    $timeout
+) {
     var self    = this,
-        is_open = false,
-        column,
-        createItem;
+        is_open = false;
 
-    _.extend(self, {
-        summary:   '',
-        isOpen:    isOpen,
-        close:     close,
-        open:      open,
-        submit:    submit,
-        init:      init
-    });
+    self.summary = '';
+    self.isOpen  = isOpen;
+    self.close   = close;
+    self.open    = open;
+    self.submit  = submit;
+    self.$onInit = init;
+
+    function init() {
+        $scope.$watch(isOpen, function (new_value) {
+            if (new_value) {
+                $timeout(autoFocusInput);
+            }
+        });
+    }
 
     function isOpen() {
         return is_open;
@@ -32,11 +42,6 @@ function AddInPlaceCtrl() {
         is_open = true;
     }
 
-    function init(col, createItemCallback) {
-        column     = col;
-        createItem = createItemCallback;
-    }
-
     function submit() {
         var label = self.summary.trim();
 
@@ -44,8 +49,12 @@ function AddInPlaceCtrl() {
             return;
         }
 
-        createItem(label, column);
+        self.createItem(label, self.column);
 
         self.summary = '';
+    }
+
+    function autoFocusInput() {
+        $element.find('input[type=text]').focus();
     }
 }

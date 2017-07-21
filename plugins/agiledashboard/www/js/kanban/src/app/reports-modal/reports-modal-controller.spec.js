@@ -95,7 +95,7 @@ describe("ReportsModalController -", function() {
             };
             DiagramRestService.getCumulativeFlowDiagram.and.returnValue($q.when(cumulative_flow_data));
 
-            ReportsModalController.init();
+            ReportsModalController.$onInit();
             expect(ReportsModalController.loading).toBe(true);
 
             $scope.$apply();
