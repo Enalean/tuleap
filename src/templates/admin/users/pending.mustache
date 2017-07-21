@@ -49,13 +49,13 @@
                 <div class="tlp-form-element siteadmin-pending-user-actions-pending">
                     <label for="expiry-{{ id }}" class="tlp-label">{{ expiry_date_label }}</label>
                     <div class="tlp-form-element tlp-form-element-prepend">
+                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                         <input type="text"
                                id="expiry-{{ id }}"
                                class="tlp-input tlp-input-date"
                                size="11"
                                name="form_expiry"
                                value="{{ expiry_date }}">
-                        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                     </div>
                     <p class="tlp-text-info">{{{ purified_expiry_date_details }}}</p>
                 </div>
