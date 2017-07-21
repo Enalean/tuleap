@@ -124,8 +124,7 @@
 }
 
 .dashboard-widgets-empty-column {
-    display: flex;
-    flex-direction: column;
+    align-self: stretch;
     padding: 0 $tlp-half-spacing / 2;
 }
 
