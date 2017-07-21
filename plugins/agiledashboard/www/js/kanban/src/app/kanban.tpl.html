@@ -24,12 +24,14 @@
     <div class="kanban-header-spacer"></div>
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button"
+            ng-class="{ 'disabled': kanban.isCollapsedMode() }"
             ng-click="kanban.toggleCollapsedMode()"
             title="{{ 'Compact view' | translate }}">
         <i class="fa fa-list tlp-button-icon"></i> <span translate>Compact view</span>
     </button>
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button"
+            ng-class="{ 'disabled': ! kanban.isCollapsedMode() }"
             ng-click="kanban.toggleCollapsedMode()"
             title="{{ 'Detailed view' | translate }}">
         <i class="fa fa-th-list tlp-button-icon"></i> <span translate>Detailed view</span>

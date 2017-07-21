@@ -93,6 +93,7 @@ function KanbanCtrl(
     self.expandArchive                = expandArchive;
     self.toggleArchive                = toggleArchive;
     self.setIsCollapsed               = setIsCollapsed;
+    self.isCollapsedMode              = isCollapsedMode;
     self.filter                       = KanbanFilterValue;
     self.filterCards                  = filterCards;
     self.loading_modal                = NewTuleapArtifactModalService.loading;
@@ -150,6 +151,10 @@ function KanbanCtrl(
         function forceIsCollapsed(item) {
             setIsCollapsed(item, self.user_prefers_collapsed_cards);
         }
+    }
+
+    function isCollapsedMode() {
+        return self.user_prefers_collapsed_cards;
     }
 
     function setIsCollapsed(item, is_collapsed) {
