@@ -2,15 +2,11 @@ plugin_botmattermost_agiledashboard	descriptor_description	Robot pour recevoir u
 plugin_botmattermost_agiledashboard	descriptor_name	Robot Mattermost Agile Dashboard
 
 
-plugin_botmattermost_agiledashboard	alert_success_update	Changement(s) effectué(s) avec succès
-plugin_botmattermost_agiledashboard	alert_invalid_post	Erreur dans la requête : les informations renseignées sont invalides
-
 plugin_botmattermost_agiledashboard	alert_error_create_bot_notification	L'ajout du robot de notification pour le résumé des stand-up a échoué
 plugin_botmattermost_agiledashboard	alert_error_delete_bot_notification	La suppression du robot de notification pour le résumé des stand-up a échoué
 plugin_botmattermost_agiledashboard	alert_error_update_bot_notification	La mise à jour du robot de notification pour le résumé des stand-up a échoué
 
 plugin_botmattermost_agiledashboard	admin_notification_title	Notification dans Mattermost
-plugin_botmattermost_agiledashboard	admin_notification_description	Choix de robot(s) afin d'envoyer le résumé du stand-up dans Mattermost.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Heure d'envoie du rapport
 plugin_botmattermost_agiledashboard	admin_notification_time_warning	L'heure renseignée doit être adaptée en fonction du fuseau horaire $1 du serveur
 
@@ -23,7 +19,6 @@ plugin_botmattermost_agiledashboard	notification_builder_artifact_id	ID de l'art
 plugin_botmattermost_agiledashboard	notification_builder_status_open	Ouvert(e)s
 plugin_botmattermost_agiledashboard	notification_builder_status_closed	Fermé(e)s
 plugin_botmattermost_agiledashboard	notification_builder_days_remaining	Jours restants
-plugin_botmattermost_agiledashboard	notification_builder_remaining_effort	Effort restant
 plugin_botmattermost_agiledashboard	notification_builder_no_update	Aucune modification récente sur
 plugin_botmattermost_agiledashboard	notification_builder_quick_access	Accès rapide
 

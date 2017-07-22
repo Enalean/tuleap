@@ -2,15 +2,11 @@ plugin_botmattermost_agiledashboard	descriptor_description	Bot to send stand-up 
 plugin_botmattermost_agiledashboard	descriptor_name	Bot Mattermost-Agile Dashboard
 
 
-plugin_botmattermost_agiledashboard	alert_success_update	Change(s) effected successfully
-plugin_botmattermost_agiledashboard	alert_invalid_post	Query error : invalid post arguments
-
 plugin_botmattermost_agiledashboard	alert_error_create_bot_notification	Failed to create the bot notification for stand-up summary
 plugin_botmattermost_agiledashboard	alert_error_delete_bot_notification	Failed to delete the bot notification for stand-up summary
 plugin_botmattermost_agiledashboard	alert_error_update_bot_notification	Failed to update the bot notification for stand-up summary
 
 plugin_botmattermost_agiledashboard	admin_notification_title	Notification in Mattermost
-plugin_botmattermost_agiledashboard	admin_notification_description	Choose bot(s) to send a summary of the stand-up in Mattermost.
 plugin_botmattermost_agiledashboard	admin_notification_label_send_time	Stand-up summary report time
 plugin_botmattermost_agiledashboard	admin_notification_time_warning	The specified time must be adapted according to the server's time zone $1
 
@@ -23,7 +19,6 @@ plugin_botmattermost_agiledashboard	notification_builder_artifact_id	Artifact ID
 plugin_botmattermost_agiledashboard	notification_builder_status_open	Open
 plugin_botmattermost_agiledashboard	notification_builder_status_closed	Closed
 plugin_botmattermost_agiledashboard	notification_builder_days_remaining	Days Until End
-plugin_botmattermost_agiledashboard	notification_builder_remaining_effort	Remaining effort
 plugin_botmattermost_agiledashboard	notification_builder_no_update	No recent update on
 plugin_botmattermost_agiledashboard	notification_builder_quick_access	Quick access
 
