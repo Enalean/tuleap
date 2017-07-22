@@ -40,6 +40,7 @@ require_once 'common/wiki/lib/WikiCloner.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');
 
+use Tuealp\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\ProjectRegistrationDisabledException;
@@ -271,7 +272,7 @@ class ProjectCreator {
             'use_legacy_services'   => &$legacy
         ));
 
-        $this->activateServicesFromTemplate($group_id, $template_group, $data, $legacy);
+        $this->activateServicesFromTemplate($group, $template_group, $data, $legacy);
         $this->setMessageToRequesterFromTemplate($group_id, $template_id);
         $this->initForumModuleFromTemplate($group_id, $template_id);
         $this->initCVSModuleFromTemplate($group_id, $template_id);
@@ -452,8 +453,9 @@ class ProjectCreator {
 
     // Activate the same services on $group_id than those activated on
     // $template_group
-    private function activateServicesFromTemplate($group_id, Group $template_group, ProjectCreationData $data, array $legacy)
+    private function activateServicesFromTemplate(Project $group, Group $template_group, ProjectCreationData $data, array $legacy)
     {
+        $group_id    = $group->getID();
         $template_id = $template_group->getID();
         $sql         = $this->getServiceInfoQueryForNewProject($legacy, $template_id);
         $result      = db_query($sql);
@@ -489,6 +491,9 @@ class ProjectCreator {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
             }
         }
+
+        $event = new ProjectRegistrationActivateService($group, $template_group, $legacy);
+        EventManager::instance()->processEvent($event);
     }
 
     //Add the import of the message to requester from the parent project if defined
