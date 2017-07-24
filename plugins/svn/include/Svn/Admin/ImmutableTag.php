@@ -34,7 +34,7 @@ class ImmutableTag {
     }
 
     public function getPaths() {
-        return (string) $this->paths;
+        return $this->convertToArray($this->paths);
     }
 
     public function getRepository(){
@@ -42,6 +42,15 @@ class ImmutableTag {
     }
 
     public function getWhitelist(){
-        return (string) $this->whitelist;
+        return $this->convertToArray($this->whitelist);
+    }
+
+    private function convertToArray($path)
+    {
+        if (! $path) {
+            return array();
+        }
+
+        return explode(PHP_EOL, $path);
     }
 }

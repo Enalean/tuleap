@@ -108,11 +108,11 @@ class PreCommitBaseTest extends TuleapTestCase {
      }
 
     public function testCommitToTagIsAllowed() {
-        $immutable_tags = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns("");
+        $immutable_tags = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns(array());
 
         stub($this->immutable_tag_factory)->getByRepositoryId()->returns($immutable_tags);
 
-        $this->assertEqual($immutable_tags->getPaths(), "");
+        $this->assertEqual($immutable_tags->getPaths(), array());
 
         $this->assertCommitIsAllowed('A   file');
         $this->assertCommitIsAllowed('U   file');
@@ -164,7 +164,7 @@ class PreCommitBaseTest extends TuleapTestCase {
     }
 
     public function testCommitToTagIsDeniedInModule() {
-        $immutable_tag = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns('/*/tags/');
+        $immutable_tag = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns(array('/*/tags/'));
         stub("Tuleap\Svn\Admin\ImmutableTagDao")->searchByRepositoryId()->returns(array($this->repository));
         stub($this->immutable_tag_factory)->getByRepositoryId($this->repository)->returns($immutable_tag);
 
@@ -218,13 +218,9 @@ class PreCommitBaseTest extends TuleapTestCase {
         $this->assertCommitIsAllowed('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    public function testCommitToTagIsDeniedAtRootAndInModules() {
-        $paths = <<<EOS
-/tags
-/*/tags
-EOS;
-
-        $immutable_tag = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns($paths);
+    public function testCommitToTagIsDeniedAtRootAndInModules()
+    {
+        $immutable_tag = stub("Tuleap\Svn\Admin\ImmutableTag")->getPaths()->returns(array('tags', '/*/tags'));
         stub("Tuleap\Svn\Admin\ImmutableTagDao")->searchByRepositoryId()->returns(array($this->repository));
         stub($this->immutable_tag_factory)->getByRepositoryId($this->repository)->returns($immutable_tag);
 
