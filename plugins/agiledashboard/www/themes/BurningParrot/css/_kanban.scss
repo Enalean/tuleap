@@ -243,12 +243,14 @@ $kanban-column-footer-height: 50px;
 }
 
 .kanban-column-header-label {
-    flex: 1 1 auto;
+    flex: 0 0 50%;
     color: $tlp-theme-color;
     font-size: 16px;
     font-weight: 600;
     text-align: center;
+    text-overflow: ellipsis;
     text-transform: uppercase;
+    overflow: hidden;
 }
 
 .kanban-column-header-wip {
@@ -432,6 +434,7 @@ add-in-place {
 }
 
 .kanban-column-label {
+    display: flex;
     z-index: 2;
     width: $kanban-column-closed-width;
     transform: scaleX(-1) scaleY(-1);
@@ -444,6 +447,11 @@ add-in-place {
     text-transform: uppercase;
     white-space: nowrap;
     writing-mode: tb-rl;
+}
+
+.kanban-column-label-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .kanban-column-label-count {
