@@ -87,7 +87,6 @@ class Dropdown {
     listenOpenEvents() {
         this.trigger.addEventListener('click', (event) => {
             event.preventDefault();
-            event.stopPropagation();
             this.toggle();
         });
     }
