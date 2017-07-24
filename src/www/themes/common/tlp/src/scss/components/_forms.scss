@@ -633,6 +633,7 @@ span.select2-container--tlp-select2-large {
         height: $tlp-form-element-height;
         padding: 0 $tlp-form-element-padding-horizontal;
         transition: border-color $tlp-form-element-border-transition-duration linear;
+        border: 1px solid $tlp-form-element-border-color;
         background: transparentize($tlp-theme-color, .95);
         color: $tlp-theme-color;
         font-size: $tlp-form-element-font-size;
@@ -672,24 +673,20 @@ span.select2-container--tlp-select2-large {
 
 .tlp-form-element-prepend {
     > .tlp-prepend {
+        z-index: 1;
         flex: 0 0 auto;
         order: 1;
-        border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
+        margin-right: -1px;
+        border-radius: 0;
 
-        &:not([class*="tlp-button"]) {
-            border: 1px solid $tlp-form-element-border-color;
-            border-right: 0;
+        &:first-child {
+            border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
         }
     }
 
     > .tlp-input {
         order: 2;
         border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
-
-        + .tlp-prepend[class*="tlp-button"] {
-            margin-right: -1px;
-            z-index: 1;
-        }
     }
 
     > span.select2-container--tlp-select2,
@@ -713,34 +710,25 @@ span.select2-container--tlp-select2-large {
                 border-radius: 0 $tlp-form-element-border-radius 0 0;
             }
         }
-
-        + .tlp-prepend[class*="tlp-button"] {
-            margin-right: -1px;
-            z-index: 1;
-        }
     }
 }
 
 .tlp-form-element-append {
     > .tlp-append {
+        z-index: 1;
         flex: 0 0 auto;
         order: 2;
-        border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
+        margin-left: -1px;
+        border-radius: 0;
 
-        &:not([class*="tlp-button"]) {
-            border: 1px solid $tlp-form-element-border-color;
-            border-left: 0;
+        &:last-child {
+            border-radius: 0 $tlp-form-element-border-radius $tlp-form-element-border-radius 0;
         }
     }
 
     > .tlp-input {
         order: 1;
         border-radius: $tlp-form-element-border-radius 0 0 $tlp-form-element-border-radius;
-
-        + .tlp-append[class*="tlp-button"] {
-            margin-left: -1px;
-            z-index: 1;
-        }
     }
 
     > span.select2-container--tlp-select2,
@@ -761,11 +749,6 @@ span.select2-container--tlp-select2-large {
             &.select2-container--below .select2-selection--multiple {
                 border-radius: $tlp-form-element-border-radius 0 0;
             }
-        }
-
-        + .tlp-append[class*="tlp-button"] {
-            margin-left: -1px;
-            z-index: 1;
         }
     }
 }
