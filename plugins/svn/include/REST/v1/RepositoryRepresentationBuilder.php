@@ -21,6 +21,7 @@
 namespace Tuleap\REST\v1;
 
 use PFUser;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\SVN\REST\v1\RepositoryRepresentation;
@@ -37,18 +38,30 @@ class RepositoryRepresentationBuilder
      * @var HookConfigRetriever
      */
     private $hook_config_retriever;
+    /**
+     * @var ImmutableTagFactory
+     */
+    private $immutable_tag_factory;
 
-    public function __construct(SvnPermissionManager $permission_manager, HookConfigRetriever $hook_config_retriever)
-    {
-        $this->permission_manager    = $permission_manager;
+    public function __construct(
+        SvnPermissionManager $permission_manager,
+        HookConfigRetriever $hook_config_retriever,
+        ImmutableTagFactory $immutable_tag_factory
+    ) {
+        $this->permission_manager = $permission_manager;
         $this->hook_config_retriever = $hook_config_retriever;
+        $this->immutable_tag_factory = $immutable_tag_factory;
     }
 
     public function build(Repository $repository, PFUser $user)
     {
         if ($this->permission_manager->isAdmin($repository->getProject(), $user)) {
             $representation = new FullRepositoryRepresentation();
-            $representation->fullBuild($repository, $this->hook_config_retriever->getHookConfig($repository));
+            $representation->fullBuild(
+                $repository,
+                $this->hook_config_retriever->getHookConfig($repository),
+                $this->immutable_tag_factory->getByRepositoryId($repository)
+            );
 
             return $representation;
         }

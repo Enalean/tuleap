@@ -20,9 +20,11 @@
 
 namespace Tuleap\REST\v1;
 
+use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\SVN\REST\v1\CommitRulesRepresentation;
+use Tuleap\SVN\REST\v1\ImmutableTagRepresentation;
 use Tuleap\SVN\REST\v1\RepositoryRepresentation;
 use Tuleap\SVN\REST\v1\SettingsRepresentation;
 
@@ -33,15 +35,18 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
      */
     public $settings;
 
-    public function fullBuild(Repository $repository, HookConfig $hook_config)
+    public function fullBuild(Repository $repository, HookConfig $hook_config, ImmutableTag $immutable_tag)
     {
         parent::build($repository);
+
+        $immutable_tag_representation = new ImmutableTagRepresentation();
+        $immutable_tag_representation->build($immutable_tag);
 
         $commit_rules_representation = new CommitRulesRepresentation();
         $commit_rules_representation->build($hook_config);
 
         $settings_representation = new SettingsRepresentation();
-        $settings_representation->build($commit_rules_representation);
+        $settings_representation->build($commit_rules_representation, $immutable_tag_representation);
 
         $this->settings = $settings_representation;
     }

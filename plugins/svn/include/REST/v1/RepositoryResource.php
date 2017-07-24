@@ -34,6 +34,8 @@ use Tuleap\REST\v1\RepositoryRepresentationBuilder;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Admin\ImmutableTagDao;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
@@ -156,7 +158,8 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
-            $this->hook_config_retriever
+            $this->hook_config_retriever,
+            new ImmutableTagFactory(new ImmutableTagDao())
         );
 
         $this->repository_deleter = new RepositoryDeleter(

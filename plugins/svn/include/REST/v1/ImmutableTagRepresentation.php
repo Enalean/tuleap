@@ -20,23 +20,23 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-class SettingsRepresentation
+use Tuleap\Svn\Admin\ImmutableTag;
+
+class ImmutableTagRepresentation extends \Luracast\Restler\Data\ValueObject
 {
     /**
-     * @var CommitRulesRepresentation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required true}
+     * @var array {@type string} {@required true}
      */
-    public $commit_rules;
+    public $paths;
 
     /**
-     * @var ImmutableTagRepresentation {@type \Tuleap\SVN\REST\v1\ImmutableTagRepresentation} {@required false}
+     * @var array {@type string} {@required true}
      */
-    public $immutable_tags;
+    public $whitelist;
 
-    public function build(
-        CommitRulesRepresentation $commit_hook_representation,
-        ImmutableTagRepresentation $immutable_tag_representation
-    ) {
-        $this->commit_rules   = $commit_hook_representation;
-        $this->immutable_tags = $immutable_tag_representation;
+    public function build(ImmutableTag $immutable_tag)
+    {
+        $this->paths     = $immutable_tag->getPaths();
+        $this->whitelist = $immutable_tag->getWhitelist();
     }
 }

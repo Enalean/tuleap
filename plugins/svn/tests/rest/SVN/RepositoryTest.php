@@ -54,8 +54,15 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
-                "is_reference_mandatory"         => false,
+                "is_reference_mandatory"           => false,
                 "is_commit_message_change_allowed" => false
+            )
+        );
+        $this->assertEquals(
+            $repository['settings']['immutable_tags'],
+            array(
+                "paths"     => array(),
+                "whitelist" => array(),
             )
         );
     }
@@ -120,6 +127,13 @@ class RepositoryTest extends TestBase
                 "is_commit_message_change_allowed" => false
             )
         );
+        $this->assertEquals(
+            $repository['settings']['immutable_tags'],
+            array(
+                "paths"     => array(),
+                "whitelist" => array(),
+            )
+        );
     }
 
     public function testPOSTRepositoryForProjectAdminWithCustomSettings()
@@ -130,7 +144,7 @@ class RepositoryTest extends TestBase
                 "name"       => "my_repository_02",
                 "settings"   => array(
                     "commit_rules" => array(
-                        "is_reference_mandatory"       => true,
+                        "is_reference_mandatory"           => true,
                         "is_commit_message_change_allowed" => true
                     )
                 )
@@ -145,8 +159,15 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
-                "is_reference_mandatory"         => true,
+                "is_reference_mandatory"           => true,
                 "is_commit_message_change_allowed" => true
+            )
+        );
+        $this->assertEquals(
+            $repository['settings']['immutable_tags'],
+            array(
+                "paths"     => array(),
+                "whitelist" => array(),
             )
         );
     }
@@ -190,7 +211,7 @@ class RepositoryTest extends TestBase
             array(
                 'settings' => array(
                     'commit_rules' => array(
-                        'is_reference_mandatory' => true,
+                        'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
                     )
                 )
@@ -206,13 +227,20 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['commit_rules'],
             array(
-                "is_reference_mandatory"         => true,
+                "is_reference_mandatory"           => true,
                 "is_commit_message_change_allowed" => false
+            )
+        );
+        $this->assertEquals(
+            $repository['settings']['immutable_tags'],
+            array(
+                "paths"     => array(),
+                "whitelist" => array(),
             )
         );
     }
 
-    public function tesPUTTRepositoryWithMissingKey()
+    public function tesPUTRepositoryWithMissingKey()
     {
         $params = json_encode(
             array(

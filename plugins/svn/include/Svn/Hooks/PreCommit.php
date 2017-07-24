@@ -146,7 +146,7 @@ class PreCommit
     }
 
     private function repositoryUsesImmutableTags() {
-        return (bool) $this->getImmutableTagFromRepository()->getPaths();
+        return count($this->getImmutableTagFromRepository()->getPaths()) > 0;
     }
 
     private function getImmutableTagFromRepository() {
@@ -171,9 +171,7 @@ class PreCommit
     }
 
     private function isCommitDoneInImmutableTag($path) {
-        $immutable_paths = explode(PHP_EOL, $this->getImmutableTagFromRepository()->getPaths());
-
-        foreach ($immutable_paths as $immutable_path) {
+        foreach ($this->getImmutableTagFromRepository()->getPaths() as $immutable_path) {
             if ($this->isCommitForbidden($immutable_path, $path)) {
                 return true;
             }
@@ -200,7 +198,7 @@ class PreCommit
     }
 
     private function isCommitDoneOnWhitelistElement($path) {
-        $whitelist = explode(PHP_EOL, $this->getImmutableTagFromRepository()->getWhitelist());
+        $whitelist = $this->getImmutableTagFromRepository()->getWhitelist();
         if (! $whitelist) {
             return false;
         }
