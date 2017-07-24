@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,24 +25,58 @@
 namespace Tuleap\Svn\Admin;
 
 use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\REST\v1\ImmutableTagRepresentation;
 
-class ImmutableTagFactory {
-
+class ImmutableTagFactory
+{
+    /**
+     * @var ImmutableTagDao
+     */
     private $dao;
 
-    public function __construct(ImmutableTagDao $dao) {
+    public function __construct(ImmutableTagDao $dao)
+    {
         $this->dao = $dao;
     }
 
-    public function getByRepositoryId(Repository $repository) {
+    /**
+     * @return ImmutableTag
+     */
+    public function getByRepositoryId(Repository $repository)
+    {
         $row = $this->dao->searchByRepositoryId($repository->getId());
         if (! $row) {
             return $this->instantiateEmptyImmutableTag($repository);
         }
+
         return $this->instantiateFromRow($repository, $row);
     }
 
-    private function instantiateFromRow(Repository $repository, array $row) {
+    /**
+     * @return ImmutableTag
+     */
+    public function getEmpty(Repository $repository)
+    {
+        return $this->instantiateEmptyImmutableTag($repository);
+    }
+
+    /**
+     * @return ImmutableTag
+     */
+    private function instantiateEmptyImmutableTag($repository)
+    {
+        return new ImmutableTag(
+            $repository,
+            "",
+            ""
+        );
+    }
+
+    /**
+     * @return ImmutableTag
+     */
+    private function instantiateFromRow(Repository $repository, array $row)
+    {
         return new ImmutableTag(
             $repository,
             $row['paths'],
@@ -50,14 +84,18 @@ class ImmutableTagFactory {
         );
     }
 
-    private function instantiateEmptyImmutableTag($repository) {
-        return new ImmutableTag(
-                $repository,
-                "",
-                ""
-            );
+    /**
+     * @return ImmutableTag
+     */
+    public function getFromRESTRepresentation(
+        Repository $repository,
+        ImmutableTagRepresentation $immutable_tag_representation
+    ) {
+        $row = array();
+
+        $row['paths']     = implode(PHP_EOL, $immutable_tag_representation->paths);
+        $row['whitelist'] = implode(PHP_EOL, $immutable_tag_representation->whitelist);
+
+        return $this->instantiateFromRow($repository, $row);
     }
-
-
-
 }

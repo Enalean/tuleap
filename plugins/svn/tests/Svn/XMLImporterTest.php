@@ -207,7 +207,8 @@ class XMLImporterTest extends TuleapTestCase
             mock('ProjectHistoryDao'),
             $permissions_manager,
             mock('Tuleap\Svn\Repository\HookConfigUpdator'),
-            new ProjectHistoryFormatter()
+            new ProjectHistoryFormatter(),
+            mock('Tuleap\Svn\Admin\ImmutableTagCreator')
         );
 
         $this->user = mock('PFUser');

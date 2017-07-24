@@ -146,6 +146,16 @@ class RepositoryTest extends TestBase
                     "commit_rules" => array(
                         "is_reference_mandatory"           => true,
                         "is_commit_message_change_allowed" => true
+                    ),
+                    "immutable_tags" => array(
+                        "paths"      => array(
+                            "/tags1",
+                            "/tags2"
+                        ),
+                        "whitelist" => array(
+                            "/white1",
+                            "/white2"
+                        )
                     )
                 )
             )
@@ -166,8 +176,8 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['immutable_tags'],
             array(
-                "paths"     => array(),
-                "whitelist" => array(),
+                "paths"     => array('/tags1', '/tags2'),
+                "whitelist" => array('/white1', '/white2'),
             )
         );
     }
@@ -193,7 +203,7 @@ class RepositoryTest extends TestBase
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_04",
                 "settings"   => array(
-                    "commit_rules" => array(
+                    "commit_rules"   => array(
                         "is_reference_mandatory" => true,
                     )
                 )

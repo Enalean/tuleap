@@ -20,13 +20,17 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\Svn\Admin\ImmutableTag;
+
 class ProjectHistoryFormatter
 {
-    public function getFullHistory(Repository $repository, array $hook_config)
+    private $messages = array();
+
+    public function getFullHistory(Repository $repository)
     {
-        return $repository->getName() .
+        return 'Name : ' . $repository->getName() .
             PHP_EOL .
-            $this->getHookConfigHistory($hook_config);
+            implode(PHP_EOL, $this->messages);
     }
 
     private function extractHookReadableValue($value, $index)
@@ -46,5 +50,18 @@ class ProjectHistoryFormatter
             PHP_EOL .
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE . ": " .
             $this->extractHookReadableValue($hook_config, HookConfig::COMMIT_MESSAGE_CAN_CHANGE);
+    }
+
+    public function addCommitRuleHistory(array $hook_config)
+    {
+        $this->messages[] = $this->getHookConfigHistory($hook_config);
+    }
+
+    public function addImmutableTagHistory(ImmutableTag $immutable_tag)
+    {
+        $this->messages[] = "Path:" . PHP_EOL .
+            $immutable_tag->getPathsAsString() . PHP_EOL .
+            "Whitelist:" . PHP_EOL .
+            $immutable_tag->getWhitelistAsString();
     }
 }

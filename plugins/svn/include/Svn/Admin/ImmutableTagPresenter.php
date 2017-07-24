@@ -74,8 +74,8 @@ class ImmutableTagPresenter extends BaseAdminPresenter
         $this->repository_name                 = $repository->getName();
         $this->repository_full_name            = $repository->getFullName();
         $this->project_id                      = $repository->getProject()->getID();
-        $this->immutable_tags_path             = implode(PHP_EOL, $immutable_tags->getPaths());
-        $this->immutable_tags_whitelist        = implode(PHP_EOL, $immutable_tags->getWhitelist());
+        $this->immutable_tags_path             = $immutable_tags->getPathsAsString();
+        $this->immutable_tags_whitelist        = $immutable_tags->getWhitelistAsString();
         $this->immutable_tag_url_active        = true;
 
         $existing_tree = array_filter($existing_tree, array($this, 'keepOnlyDirectories'));

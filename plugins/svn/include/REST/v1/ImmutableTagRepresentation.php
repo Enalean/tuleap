@@ -22,7 +22,7 @@ namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Svn\Admin\ImmutableTag;
 
-class ImmutableTagRepresentation extends \Luracast\Restler\Data\ValueObject
+class ImmutableTagRepresentation
 {
     /**
      * @var array {@type string} {@required true}

@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\Svn\Admin\ImmutableTag;
+
 class Settings
 {
     /**
@@ -27,13 +29,37 @@ class Settings
      */
     private $commit_rules;
 
-    public function __construct(array $commit_rules)
+    /**
+     * @var ImmutableTag
+     */
+    private $immutable_tag;
+
+    public function __construct(array $commit_rules, ImmutableTag $immutable_tag)
     {
-        $this->commit_rules = $commit_rules;
+        $this->commit_rules  = $commit_rules;
+        $this->immutable_tag = $immutable_tag;
     }
 
+    /**
+     * @return array|null
+     */
     public function getCommitRules()
     {
         return $this->commit_rules;
+    }
+
+    /**
+     * @return ImmutableTag|null
+     */
+    public function getImmutableTag()
+    {
+        return $this->immutable_tag;
+    }
+
+    public function hasSettings()
+    {
+        return count($this->commit_rules) > 0
+            || count($this->immutable_tag->getPaths()) > 0
+            || count($this->immutable_tag->getWhitelist()) > 0;
     }
 }

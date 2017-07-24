@@ -23,15 +23,15 @@ namespace Tuleap\SVN\REST\v1;
 use Tuleap\REST\JsonCast;
 use Tuleap\Svn\Repository\HookConfig;
 
-class CommitRulesRepresentation extends \Luracast\Restler\Data\ValueObject
+class CommitRulesRepresentation
 {
     /**
-     * @var Boolean {@type boolean} {@required true}
+     * @var bool {@type boolean} {@required true}
      */
     public $is_reference_mandatory;
 
     /**
-     * @var Boolean {@type boolean} {@required true}
+     * @var bool {@type boolean} {@required true}
      */
     public $is_commit_message_change_allowed;
 
