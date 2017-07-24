@@ -92,7 +92,8 @@ describe("TuleapArtifactModalController", function() {
                 modal_model   : {
                     title: {
                         content: ""
-                    }
+                    },
+                    color: "inca_silver"
                 },
                 TuleapArtifactModalRestService             : TuleapArtifactModalRestService,
                 TuleapArtifactModalValidateService         : TuleapArtifactModalValidateService,
@@ -578,6 +579,26 @@ describe("TuleapArtifactModalController", function() {
 
                     expect(result).toBe(true);
                 });
+            });
+        });
+
+        describe("formatColor() -", function() {
+            it("Given color with camel case, when I format then it will return a kebab case color", function() {
+                ArtifactModalController.creation_mode = true;
+                var color = "inca_silver";
+
+                var result = ArtifactModalController.formatColor(color);
+
+                expect(result).toBe('inca-silver');
+            });
+
+            it("Given color with several camel case, when I format then it will return a kebab case color", function() {
+                ArtifactModalController.creation_mode = true;
+                var color = "lake_placid_blue";
+
+                var result = ArtifactModalController.formatColor(color);
+
+                expect(result).toBe('lake-placid-blue');
             });
         });
     });
