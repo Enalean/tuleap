@@ -139,7 +139,8 @@ class RepositoryCreatorTest extends \TuleapTestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true
         );
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
+        $settings = new Settings($commit_rules);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings);
     }
 
     public function itCreatesRepositoryWithNoCustomSettings()
@@ -151,6 +152,7 @@ class RepositoryCreatorTest extends \TuleapTestCase
         expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation', '*', '*')->once();
 
         $commit_rules = array();
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $commit_rules);
+        $settings = new Settings($commit_rules);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings);
     }
 }

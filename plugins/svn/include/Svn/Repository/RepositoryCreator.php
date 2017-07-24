@@ -122,14 +122,14 @@ class RepositoryCreator
     /**
      * @return SystemEvent
      */
-    public function createWithSettings(Repository $repository, PFUser $user, array $commit_rules)
+    public function createWithSettings(Repository $repository, PFUser $user, Settings $settings)
     {
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository = $this->createRepository($repository);
 
-        if ($commit_rules) {
-            $this->hook_config_updator->initHookConfiguration($repository, $commit_rules);
-            $this->logCreationWithCustomSettings($repository, $commit_rules);
+        if ($settings->getCommitRules()) {
+            $this->hook_config_updator->initHookConfiguration($repository, $settings->getCommitRules());
+            $this->logCreationWithCustomSettings($repository, $settings->getCommitRules());
         } else {
             $this->logCreation($repository);
         }
