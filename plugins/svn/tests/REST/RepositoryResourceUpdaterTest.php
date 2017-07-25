@@ -21,8 +21,14 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Svn\AccessControl\AccessFileHistory;
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\ImmutableTag;
+use Tuleap\Svn\Admin\ImmutableTagCreator;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\Svn\Repository\HookConfigUpdator;
+use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\Settings;
 use TuleapTestCase;
 
@@ -30,6 +36,30 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class RepositoryResourceUpdaterTest extends TuleapTestCase
 {
+    /**
+     * @var Repository
+     */
+    private $repository;
+    /**
+     * @var ImmutableTagFactory
+     */
+    private $immutable_tag_factory;
+    /**
+     * @var AccessFileHistoryFactory
+     */
+    private $access_file_factory;
+    /**
+     * @var AccessFileHistoryCreator
+     */
+    private $access_file_creator;
+    /**
+     * @var ImmutableTagCreator
+     */
+    private $immutable_tag_creator;
+    /**
+     * @var HookConfigUpdator
+     */
+    private $hook_config_updater;
     /**
      * @var RepositoryResourceUpdater
      */
@@ -43,15 +73,22 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
         $this->immutable_tag_creator = mock('Tuleap\Svn\Admin\ImmutableTagCreator');
         $this->access_file_creator   = mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator');
         $this->access_file_factory   = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
+        $project_history_formatter   = mock('Tuleap\Svn\Repository\ProjectHistoryFormatter');
+        $project_history_dao         = mock('ProjectHistoryDao');
+        $this->immutable_tag_factory = mock('Tuleap\Svn\Admin\ImmutableTagFactory');
 
         $this->updater = new RepositoryResourceUpdater(
             $this->hook_config_updater,
             $this->immutable_tag_creator,
+            $this->access_file_factory,
             $this->access_file_creator,
-            $this->access_file_factory
+            $project_history_formatter,
+            $project_history_dao,
+            $this->immutable_tag_factory
         );
 
         $this->repository = mock('Tuleap\Svn\Repository\Repository');
+        stub($this->repository)->getProject()->returns(aMockProject()->withId(101)->build());
     }
 
     public function itUpdatesRespositorySettings()
@@ -63,8 +100,8 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "",
-            ""
+            "/tags",
+            "/white"
         );
 
         $access_file = "[/] * = rw";
@@ -83,6 +120,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             time()
         );
 
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\Svn\Admin\ImmutableTag'));
         stub($this->access_file_factory)->getCurrentVersion($this->repository)->returns($current_access_file);
 
         expect($this->hook_config_updater)->updateHookConfig()->once();
@@ -91,8 +129,6 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $this->updater->update($this->repository, $settings);
     }
-
-
 
     public function itUpdatesAccessFileIfNewContentHasANewLineCaracterAtTheEnd()
     {
@@ -103,8 +139,8 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "",
-            ""
+            "/tags",
+            "/white"
         );
 
         $access_file = "[/] * = rw\n";
@@ -123,6 +159,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             time()
         );
 
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\Svn\Admin\ImmutableTag'));
         stub($this->access_file_factory)->getCurrentVersion($this->repository)->returns($current_access_file);
 
         expect($this->hook_config_updater)->updateHookConfig()->once();
@@ -141,8 +178,8 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $immutable_tag = new ImmutableTag(
             $this->repository,
-            "",
-            ""
+            "/tags",
+            "/white"
         );
 
         $access_file = "[/] * = rw";
@@ -161,11 +198,52 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             time()
         );
 
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\Svn\Admin\ImmutableTag'));
         stub($this->access_file_factory)->getCurrentVersion($this->repository)->returns($current_access_file);
 
         expect($this->hook_config_updater)->updateHookConfig()->once();
         expect($this->immutable_tag_creator)->save()->once();
         expect($this->access_file_creator)->create()->never();
+
+        $this->updater->update($this->repository, $settings);
+    }
+
+    public function itDoesNotUpdateImmutableTagsWhenTagsAreIdentical()
+    {
+        $commit_rules = array(
+            HookConfig::MANDATORY_REFERENCE       => false,
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
+        );
+
+        $immutable_tag = new ImmutableTag(
+            $this->repository,
+            "/tags",
+            "/white"
+        );
+
+        $access_file = "[/] * = rw";
+
+        $settings = new Settings(
+            $commit_rules,
+            $immutable_tag,
+            $access_file
+        );
+
+        $current_access_file = new AccessFileHistory(
+            $this->repository,
+            1,
+            1,
+            "",
+            time()
+        );
+
+        $existing_tags = new ImmutableTag($this->repository, "/tags", "/whitelist");
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns($existing_tags);
+        stub($this->access_file_factory)->getCurrentVersion($this->repository)->returns($current_access_file);
+
+        expect($this->hook_config_updater)->updateHookConfig()->once();
+        expect($this->immutable_tag_creator)->save()->once();
+        expect($this->access_file_creator)->create()->once();
 
         $this->updater->update($this->repository, $settings);
     }

@@ -59,7 +59,12 @@ class ProjectHistoryFormatter
 
     public function addImmutableTagHistory(ImmutableTag $immutable_tag)
     {
-        $this->messages[] = "Path:" . PHP_EOL .
+        $this->messages[] = $this->getImmutableTagsHistory($immutable_tag);
+    }
+
+    public function getImmutableTagsHistory(ImmutableTag $immutable_tag)
+    {
+         return "Path:" . PHP_EOL .
             $immutable_tag->getPathsAsString() . PHP_EOL .
             "Whitelist:" . PHP_EOL .
             $immutable_tag->getWhitelistAsString();

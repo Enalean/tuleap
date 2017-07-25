@@ -20,10 +20,14 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use ProjectHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
+use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
+use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Repository\HookConfigUpdator;
+use Tuleap\Svn\Repository\ProjectHistoryFormatter;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\Settings;
 
@@ -46,14 +50,33 @@ class RepositoryResourceUpdater
      */
     private $access_file_history_factory;
 
+    /**
+     * @var ProjectHistoryFormatter
+     */
+    private $project_history_formatter;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
+    /**
+     * @var ImmutableTagFactory
+     */
+    private $immutable_tag_factory;
+
     public function __construct(
         HookConfigUpdator $hook_config_updator,
         ImmutableTagCreator $immutable_tag_creator,
+        AccessFileHistoryFactory $access_file_history_factory,
         AccessFileHistoryCreator $access_file_history_creator,
-        AccessFileHistoryFactory $access_file_history_factory
+        ProjectHistoryFormatter $project_history_formatter,
+        ProjectHistoryDao $project_history_dao,
+        ImmutableTagFactory $immutable_tag_factory
     ) {
         $this->hook_config_updator         = $hook_config_updator;
         $this->immutable_tag_creator       = $immutable_tag_creator;
+        $this->project_history_formatter   = $project_history_formatter;
+        $this->project_history_dao         = $project_history_dao;
+        $this->immutable_tag_factory       = $immutable_tag_factory;
         $this->access_file_history_creator = $access_file_history_creator;
         $this->access_file_history_factory = $access_file_history_factory;
     }
@@ -64,11 +87,18 @@ class RepositoryResourceUpdater
             $this->hook_config_updator->updateHookConfig($repository, $settings->getCommitRules());
         }
 
-        if ($settings->getImmutableTag()) {
+        if ($settings->getImmutableTag() && $this->hasImmutableTagChanged($settings->getImmutableTag(), $repository)) {
             $this->immutable_tag_creator->save(
                 $repository,
                 $settings->getImmutableTag()->getPathsAsString(),
                 $settings->getImmutableTag()->getWhitelistAsString()
+            );
+
+            $history = $this->project_history_formatter->getImmutableTagsHistory($settings->getImmutableTag());
+            $this->project_history_dao->groupAddHistory(
+                'svn_multi_repository_immutable_tags_update',
+                $repository->getName() . PHP_EOL . $history,
+                $repository->getProject()->getID()
             );
         }
 
@@ -79,5 +109,13 @@ class RepositoryResourceUpdater
                 $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
             }
         }
+    }
+
+    private function hasImmutableTagChanged(ImmutableTag $new_immutable_tag, Repository $repository)
+    {
+        $old_immutable_tag = $this->immutable_tag_factory->getByRepositoryId($repository);
+
+        return $old_immutable_tag->getPathsAsString() != $new_immutable_tag->getPathsAsString()
+            || $old_immutable_tag->getWhitelistAsString() != $new_immutable_tag->getWhitelistAsString();
     }
 }
