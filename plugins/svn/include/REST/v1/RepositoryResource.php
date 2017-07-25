@@ -31,6 +31,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\v1\FullRepositoryRepresentation;
 use Tuleap\REST\v1\RepositoryRepresentationBuilder;
+use Tuleap\REST\v1\RepositoryResourceUpdater;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
@@ -61,6 +62,10 @@ use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
+    /**
+     * @var RepositoryResourceUpdater
+     */
+    private $repository_updater;
     /**
      * @var ImmutableTagFactory
      */
@@ -110,11 +115,6 @@ class RepositoryResource extends AuthenticatedResource
      */
     private $representation_builder;
 
-    /**
-     * @var HookConfigUpdator
-     */
-    private $hook_config_updator;
-
     public function __construct()
     {
         $dao                        = new Dao();
@@ -144,7 +144,7 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->hook_config_retriever = new HookConfigRetriever($hook_dao, new HookConfigSanitizer());
-        $this->hook_config_updator   = new HookConfigUpdator(
+        $hook_config_updator         = new HookConfigUpdator(
             $hook_dao,
             $project_history_dao,
             new HookConfigChecker($this->hook_config_retriever),
@@ -155,14 +155,15 @@ class RepositoryResource extends AuthenticatedResource
         $immutable_tag_dao           = new ImmutableTagDao();
         $this->immutable_tag_factory = new ImmutableTagFactory($immutable_tag_dao);
 
-        $this->repository_creator                = new RepositoryCreator(
+        $immutable_tag_creator    = new ImmutableTagCreator($immutable_tag_dao);
+        $this->repository_creator = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
             $project_history_dao,
             $this->permission_manager,
-            $this->hook_config_updator,
+            $hook_config_updator,
             new ProjectHistoryFormatter(),
-            new ImmutableTagCreator($immutable_tag_dao)
+            $immutable_tag_creator
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
@@ -178,6 +179,8 @@ class RepositoryResource extends AuthenticatedResource
             $this->system_event_manager,
             $this->repository_manager
         );
+
+        $this->repository_updater = new RepositoryResourceUpdater($hook_config_updator, $immutable_tag_creator);
     }
 
     /**
@@ -264,7 +267,17 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"commit_rules": {<br>
      *   &nbsp;&nbsp;"is_reference_mandatory": true|false ,<br>
      *   &nbsp;&nbsp;"is_commit_message_change_allowed": true|false<br>
-     *   &nbsp;&nbsp;}<br>
+     *   &nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp;"immutable_tags": {<br>
+     *   &nbsp;&nbsp;"paths": [<br>
+     *   &nbsp;&nbsp;"/tags1",<br>
+     *   &nbsp;&nbsp;"/tags2"<br>
+     *   &nbsp;&nbsp; ],<br>
+     *   &nbsp;&nbsp;"whitelist": [<br>
+     *   &nbsp;&nbsp;"/tags/whitelist1",<br>
+     *   &nbsp;&nbsp;"/tags/whitelist2"<br>
+     *   &nbsp;&nbsp; ]<br>
+     *   &nbsp;}<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -297,7 +310,8 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->checkUserIsAdmin($repository->getProject(), $user);
 
-        $this->hook_config_updator->updateHookConfig($repository, $settings->commit_rules->toArray());
+        $repository_settings = $this->getSettings($repository, $settings);
+        $this->repository_updater->update($repository, $repository_settings);
 
         return $this->representation_builder->build($repository, $user);
     }
