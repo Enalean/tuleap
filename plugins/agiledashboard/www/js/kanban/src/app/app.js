@@ -1,5 +1,4 @@
 import angular from 'angular';
-import ngAnimate from 'angular-animate';
 import ngSanitize from 'angular-sanitize';
 import dragular from 'dragular';
 import ui_router from 'angular-ui-router';
@@ -57,7 +56,6 @@ angular.module('kanban', [
     error_modal,
     jwt,
     kanban_item,
-    ngAnimate,
     ngSanitize,
     shared_properties,
     socket,
