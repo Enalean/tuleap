@@ -96,6 +96,8 @@ if ($request->exist('export') && $startDate && $endDate) {
     $csv_exporter->buildDatas($dao->getAdministrators(), "Created by");
     $csv_exporter->buildDatas($dao->getAdministratorsRealNames(), "Created by (Real name)");
     $csv_exporter->buildDatas($dao->getAdministratorsEMails(), "Created by (Email)");
+    $csv_exporter->buildDatas($dao->getBuiltFromTemplateIdBeforeEndDate(), "Template ID used for creation");
+    $csv_exporter->buildDatas($dao->getBuiltFromTemplateNameBeforeEndDate(), "Template name used for creation");
     $csv_exporter->buildDatas($dao->getNumberOfUserAddedBetweenStartDateAndEndDate(), "Users added");
 
     //Custom Descriptions
