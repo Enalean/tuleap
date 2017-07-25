@@ -43,7 +43,6 @@ class PackageResource extends AuthenticatedResource
 
     public function __construct()
     {
-        parent::__construct();
         $this->package_factory = FRSPackageFactory::instance();
         $this->release_factory = FRSReleaseFactory::instance();
         $this->project_manager = ProjectManager::instance();

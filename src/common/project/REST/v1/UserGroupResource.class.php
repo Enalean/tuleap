@@ -54,7 +54,6 @@ class UserGroupResource extends AuthenticatedResource {
     private $project_manager;
 
     public function __construct() {
-        parent::__construct();
         $this->ugroup_manager  = new UGroupManager();
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();

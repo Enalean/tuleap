@@ -35,7 +35,6 @@ class ReleaseResource extends AuthenticatedResource
 
     public function __construct()
     {
-        parent::__construct();
         $this->frs_release_factory = FRSReleaseFactory::instance();
         $this->retriever           = new Retriever(new Dao());
     }

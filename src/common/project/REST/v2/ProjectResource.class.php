@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,8 +46,6 @@ class ProjectResource extends AuthenticatedResource {
     public function __construct() {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
-
-        parent::__construct();
     }
 
     /**

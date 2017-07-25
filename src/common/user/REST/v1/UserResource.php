@@ -67,7 +67,6 @@ class UserResource extends AuthenticatedResource {
     private $forge_ugroup_permissions_manager;
 
     public function __construct() {
-        parent::__construct();
         $this->user_manager       = UserManager::instance();
         $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
