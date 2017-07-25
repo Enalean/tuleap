@@ -33,6 +33,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
 /**
@@ -163,6 +164,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
                 new UGroupDao()
             ),
             $duplicator,
+            new ServiceCreator(),
             $force_activation
         );
 

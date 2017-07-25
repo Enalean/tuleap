@@ -58,7 +58,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             $this->ugroup_duplicator,
             false,
             $frs_permissions_creator,
-            mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator')
+            mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
+            mock('Tuleap\Service\ServiceCreator')
         );
 
         $this->xml_importer = new ProjectXMLImporter(

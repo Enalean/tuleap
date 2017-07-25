@@ -33,6 +33,7 @@ use Tuleap\Project\UserRemoverDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
 require_once 'common/mvc2/PluginController.class.php';
@@ -305,6 +306,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 $send_notifications,
                 $frs_permissions_creator,
                 $duplicator,
+                new ServiceCreator(),
                 $force_activation
             );
 

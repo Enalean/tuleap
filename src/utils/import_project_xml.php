@@ -34,6 +34,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
 $posix_user = posix_getpwuid(posix_geteuid());
@@ -259,6 +260,7 @@ try {
         $send_notifications,
         $frs_permissions_creator,
         $duplicator,
+        new ServiceCreator(),
         $force_activation
     );
 

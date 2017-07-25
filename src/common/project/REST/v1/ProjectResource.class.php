@@ -45,6 +45,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermissionsDao;
@@ -133,14 +134,17 @@ class ProjectResource extends AuthenticatedResource {
         $force_activation   = false;
 
         $this->project_creator = new ProjectCreator(
-                $this->project_manager,
-                $this->reference_manager,
-                $this->user_manager,
-                $this->ugroup_duplicator,
-                $send_notifications,
-                new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
-                $duplicator,
-                $force_activation);
+            $this->project_manager,
+            $this->reference_manager,
+            $this->user_manager,
+            $this->ugroup_duplicator,
+            $send_notifications,
+            new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao()),
+            $duplicator,
+            new ServiceCreator(),
+            $force_activation
+        );
+
         parent::__construct();
     }
 

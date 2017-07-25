@@ -59,7 +59,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 mock('Tuleap\Project\UgroupDuplicator'),
                 false,
                 mock('Tuleap\FRS\FRSPermissionCreator'),
-                mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator')
+                mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
+                mock('Tuleap\Service\ServiceCreator')
             ));
     }
 
@@ -124,7 +125,8 @@ class ProjectCreatorTest extends TuleapTestCase
                 mock('Tuleap\Project\UgroupDuplicator'),
                 false,
                 mock('Tuleap\FRS\FRSPermissionCreator'),
-                mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator')
+                mock('Tuleap\Dashboard\Project\ProjectDashboardDuplicator'),
+                mock('Tuleap\Service\ServiceCreator')
             )
         );
         $project_id      = 100;
