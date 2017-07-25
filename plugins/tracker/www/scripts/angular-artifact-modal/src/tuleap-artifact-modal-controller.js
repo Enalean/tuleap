@@ -37,7 +37,7 @@ function ArtifactModalController(
         user_id = modal_model.user_id;
     _.extend(self, {
         artifact_id        : modal_model.artifact_id,
-        color              : modal_model.color,
+        color              : formatColor(modal_model.color),
         creation_mode      : modal_model.creation_mode,
         is_disk_usage_empty: true,
         ordered_fields     : modal_model.ordered_fields,
@@ -52,6 +52,7 @@ function ArtifactModalController(
             loading_comments: true,
             invert_order    : (modal_model.invert_followups_comments_order) ? 'asc' : 'desc'
         },
+        formatColor                   : formatColor,
         formatParentArtifactTitle     : formatParentArtifactTitle,
         getDropdownAttribute          : getDropdownAttribute,
         getError                      : function() { return TuleapArtifactModalRestService.error; },
@@ -244,6 +245,19 @@ function ArtifactModalController(
         var formatted_title = tracker_label + ' #' + artifact.id + ' - ' + artifact.title;
 
         return formatted_title;
+    }
+
+    function formatColor(color) {
+        var color_formatted = '';
+        var color_split     = color.split('_');
+        color_split.forEach(function (color, index) {
+            if (index === 0) {
+                color_formatted = color_formatted.concat(color);
+            } else {
+                color_formatted = color_formatted.concat('-', color);
+            }
+        });
+        return color_formatted;
     }
 
     function getTrackerLabel(artifact) {
