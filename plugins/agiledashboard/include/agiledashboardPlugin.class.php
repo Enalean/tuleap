@@ -493,6 +493,8 @@ class AgileDashboardPlugin extends Plugin {
                 $this->getPluginPath() . '/js/kanban/dist'
             );
 
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
             $params['javascript_files'][] = $kanban_include_assets->getFileURL('kanban.js');
         }
     }
