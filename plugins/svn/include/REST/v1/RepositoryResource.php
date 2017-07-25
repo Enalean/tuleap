@@ -169,7 +169,8 @@ class RepositoryResource extends AuthenticatedResource
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
-            $this->immutable_tag_factory
+            $this->immutable_tag_factory,
+            new AccessFileHistoryFactory(new AccessFileHistoryDao())
         );
 
         $this->repository_deleter = new RepositoryDeleter(
@@ -221,7 +222,8 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/tags/whitelist1",<br>
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
      *   &nbsp;&nbsp; ]<br>
-     *   &nbsp;}<br>
+     *   &nbsp;},<br>
+     *   &nbsp;&nbsp;"access_file": "[/] * = rw @members = rw\r\n[/tags] @admins = rw"<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>

@@ -18,7 +18,11 @@
         <service shortname="plugin_svn" enabled="1"/>
     </services>
     <svn>
-        <repository name="repo01"/>
+        <repository name="repo01">
+            <access-file>
+                <![CDATA[[/] * = rw @members = rw]]>
+            </access-file>
+        </repository>
         <repository name="repo02"/>
     </svn>
 </project>

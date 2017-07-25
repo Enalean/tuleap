@@ -20,6 +20,7 @@
 
 namespace Tuleap\REST\v1;
 
+use Tuleap\Svn\AccessControl\AccessFileHistory;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\Repository;
@@ -35,8 +36,12 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
      */
     public $settings;
 
-    public function fullBuild(Repository $repository, HookConfig $hook_config, ImmutableTag $immutable_tag)
-    {
+    public function fullBuild(
+        Repository $repository,
+        HookConfig $hook_config,
+        ImmutableTag $immutable_tag,
+        AccessFileHistory $access_file_history
+    ) {
         parent::build($repository);
 
         $immutable_tag_representation = new ImmutableTagRepresentation();
@@ -46,7 +51,11 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
         $commit_rules_representation->build($hook_config);
 
         $settings_representation = new SettingsRepresentation();
-        $settings_representation->build($commit_rules_representation, $immutable_tag_representation);
+        $settings_representation->build(
+            $commit_rules_representation,
+            $immutable_tag_representation,
+            $access_file_history
+        );
 
         $this->settings = $settings_representation;
     }
