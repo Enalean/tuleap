@@ -29,6 +29,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
 class TestDataBuilder {
@@ -186,6 +187,7 @@ class TestDataBuilder {
                 new UGroupDao()
             ),
             $duplicator,
+            new ServiceCreator(),
             $force_activation
         );
 

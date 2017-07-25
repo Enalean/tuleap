@@ -27,6 +27,7 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
 require_once 'exit.php';
@@ -177,6 +178,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $send_notifications,
             $frs_permissions_creator,
             $duplicator,
+            new ServiceCreator(),
             $force_activation
         );
 
@@ -279,6 +281,7 @@ class ProjectImportTest extends TuleapDbTestCase
             $send_notifications,
             $frs_permissions_creator,
             $duplicator,
+            new ServiceCreator(),
             $force_activation
         );
 

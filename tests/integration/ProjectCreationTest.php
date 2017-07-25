@@ -32,6 +32,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
 class ProjectCreationTest extends TuleapDbTestCase {
@@ -118,6 +119,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
                 new UGroupDao()
             ),
             $duplicator,
+            new ServiceCreator(),
             $force_activation
         );
 

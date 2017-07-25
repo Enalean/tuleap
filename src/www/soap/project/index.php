@@ -36,6 +36,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
 // Check if we the server is in secure mode or not.
@@ -103,6 +104,7 @@ if ($request->exist('wsdl')) {
             $ugroup_dao
         ),
         $duplicator,
+        new ServiceCreator(),
         $force_activation
     );
 

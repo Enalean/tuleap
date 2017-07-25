@@ -46,6 +46,7 @@ use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Service\ServiceCreator;
 
 /**
  * Manage creation of a new project in the forge.
@@ -116,6 +117,10 @@ class ProjectCreator {
      * @var ProjectDashboardDuplicator
      */
     private $dashboard_duplicator;
+    /**
+     * @var ServiceCreator
+     */
+    private $service_creator;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -125,6 +130,7 @@ class ProjectCreator {
         $send_notifications,
         FRSPermissionCreator $frs_permissions_creator,
         ProjectDashboardDuplicator $dashboard_duplicator,
+        ServiceCreator $service_creator,
         $force_activation = false
     ) {
         $this->send_notifications      = $send_notifications;
@@ -137,6 +143,7 @@ class ProjectCreator {
         $this->frs_permissions_creator = $frs_permissions_creator;
         $this->ugroup_duplicator       = $ugroup_duplicator;
         $this->dashboard_duplicator    = $dashboard_duplicator;
+        $this->service_creator         = $service_creator;
     }
 
     /**
@@ -468,13 +475,17 @@ class ProjectCreator {
                 $server_id = 'null';
             }
 
-            if (!service_create_service($arr, $group_id, array(
-                'system' => $template_group->isSystem(),
-                'name'   => $template_group->isSystem() ? '' : $template_group->getUnixName(),
-                'id'     => $template_id,
-                'is_used'   => $is_used,
-                'server_id' => $server_id,
-            ))) {
+            if (! $this->service_creator->createService(
+                $arr,
+                $group_id,
+                array(
+                    'system' => $template_group->isSystem(),
+                    'name' => $template_group->isSystem() ? '' : $template_group->getUnixName(),
+                    'id' => $template_id,
+                    'is_used' => $is_used,
+                    'server_id' => $server_id,
+                )
+            )) {
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
             }
         }
