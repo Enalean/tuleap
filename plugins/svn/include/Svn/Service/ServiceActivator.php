@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,11 @@
 
 namespace Tuleap\Svn\Service;
 
+use Project;
 use ServiceManager;
 use Service;
 use SvnPlugin;
+use Tuleap\Service\ServiceCreator;
 
 class ServiceActivator
 {
@@ -32,9 +34,15 @@ class ServiceActivator
      */
     private $service_manager;
 
-    public function __construct(ServiceManager $service_manager)
+    /**
+     * @var ServiceCreator
+     */
+    private $service_creator;
+
+    public function __construct(ServiceManager $service_manager, ServiceCreator $service_creator)
     {
         $this->service_manager = $service_manager;
+        $this->service_creator = $service_creator;
     }
 
     public function unuseLegacyService(array &$params)
@@ -61,11 +69,36 @@ class ServiceActivator
         }
     }
 
+    public function forceUsageOfService(Project $project, Project $template, array $legacy)
+    {
+        if ($project->usesService(SvnPlugin::SERVICE_SHORTNAME) || $legacy[Service::SVN] === true) {
+            return true;
+        }
+
+        $template_services   = $this->service_manager->getListOfAllowedServicesForProject($template);
+        $svn_plugin_service  = $this->getSVNPluginService($template_services);
+
+        return $this->service_creator->createService(
+            $svn_plugin_service->getDataAsArray(),
+            $project->getID(),
+            array(
+                'system' => $template->isSystem(),
+                'name'   => $template->isSystem() ? '' : $template->getUnixName(),
+                'id'     => $template->getID(),
+                'is_used'   => 1,
+                'is_active' => 1,
+            )
+        );
+    }
+
     private function atLeastOneSVNServiceIsUsedInTemplate(Service $svn_core_service, Service $svn_plugin_service)
     {
         return $svn_core_service->isUsed() || $svn_plugin_service->isUsed();
     }
 
+    /**
+     * @return Service
+     */
     private function getSVNCoreService(array $template_services)
     {
         foreach ($template_services as $service) {
@@ -75,6 +108,9 @@ class ServiceActivator
         }
     }
 
+    /**
+     * @return Service
+     */
     private function getSVNPluginService(array $template_services)
     {
         foreach ($template_services as $service) {

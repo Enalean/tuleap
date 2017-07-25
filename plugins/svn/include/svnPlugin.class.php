@@ -20,11 +20,13 @@
 
 require_once 'constants.php';
 
+use Tuealp\project\Event\ProjectRegistrationActivateService;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Svn\AccessControl\AccessControlController;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
@@ -158,6 +160,7 @@ class SvnPlugin extends Plugin
         $this->addHook(EVENT::REST_PROJECT_RESOURCES);
         $this->addHook(ProjectGetSvn::NAME);
         $this->addHook(ProjectOptionsSvn::NAME);
+        $this->addHook(ProjectRegistrationActivateService::NAME);
     }
 
     public function export_xml_project($params)
@@ -681,8 +684,7 @@ class SvnPlugin extends Plugin
     public function project_creation_remove_legacy_services($params)
     {
         if (! $this->isRestricted()) {
-            $activator = new ServiceActivator(ServiceManager::instance());
-            $activator->unuseLegacyService($params);
+            $this->getServiceActivator()->unuseLegacyService($params);
         }
     }
 
@@ -911,5 +913,18 @@ class SvnPlugin extends Plugin
             SystemEventManager::instance(),
             $this->getRepositoryManager()
         );
+    }
+
+    public function project_registration_activate_service(ProjectRegistrationActivateService $event)
+    {
+        $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
+    }
+
+    /**
+     * @return ServiceActivator
+     */
+    private function getServiceActivator()
+    {
+        return new ServiceActivator(ServiceManager::instance(), new ServiceCreator());
     }
 }

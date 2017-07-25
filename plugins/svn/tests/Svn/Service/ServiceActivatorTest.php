@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\Service;
 
+use Service;
+use SvnPlugin;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
@@ -36,7 +38,8 @@ class ServiceActivatorTest extends TuleapTestCase
         parent::setUp();
 
         $this->service_manager = mock('ServiceManager');
-        $this->activator       = new ServiceActivator($this->service_manager);
+        $this->service_creator = mock('Tuleap\Service\ServiceCreator');
+        $this->activator       = new ServiceActivator($this->service_manager, $this->service_creator);
 
         $this->template = aMockProject()->withId(101)->build();
         $this->data     = mock('ProjectCreationData');
@@ -115,5 +118,53 @@ class ServiceActivatorTest extends TuleapTestCase
         expect($this->data)->forceServiceUsage()->never();
 
         $this->activator->unuseLegacyService($this->params);
+    }
+
+    public function itCreatesThePluginServiceIfNotAvailableInTemplate()
+    {
+        $project = aMockProject()->withId(102)->build();
+        $legacy  = array(Service::SVN => false);
+
+        stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
+            array($this->svn_core_service, $this->svn_plugin_service)
+        );
+        stub($this->svn_plugin_service)->getDataAsArray()->returns(array());
+        stub($project)->usesService(SvnPlugin::SERVICE_SHORTNAME)->returns(false);
+
+        expect($this->service_creator)->createService()->once();
+
+        $this->activator->forceUsageOfService($project, $this->template, $legacy);
+    }
+
+    public function itDoesNotCreateServiceIfPreviouslyCreated()
+    {
+        $project = aMockProject()->withId(102)->build();
+        $legacy  = array(Service::SVN => false);
+
+        stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
+            array($this->svn_core_service, $this->svn_plugin_service)
+        );
+        stub($this->svn_plugin_service)->getDataAsArray()->returns(array());
+        stub($project)->usesService(SvnPlugin::SERVICE_SHORTNAME)->returns(true);
+
+        expect($this->service_creator)->createService()->never();
+
+        $this->activator->forceUsageOfService($project, $this->template, $legacy);
+    }
+
+    public function itDoesNotCreateServiceIfLegacyMustBeUsed()
+    {
+        $project = aMockProject()->withId(102)->build();
+        $legacy  = array(Service::SVN => true);
+
+        stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
+            array($this->svn_core_service, $this->svn_plugin_service)
+        );
+        stub($this->svn_plugin_service)->getDataAsArray()->returns(array());
+        stub($project)->usesService(SvnPlugin::SERVICE_SHORTNAME)->returns(false);
+
+        expect($this->service_creator)->createService()->never();
+
+        $this->activator->forceUsageOfService($project, $this->template, $legacy);
     }
 }

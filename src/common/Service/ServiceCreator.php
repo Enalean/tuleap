@@ -46,9 +46,11 @@ class ServiceCreator
             $link = service_replace_template_name_in_link($link, $template, $pm->getProject($group_id));
         }
 
-        $is_used   = isset($template['is_used']) ? $template['is_used'] : $arr['is_used'];
+        $is_used   = isset($template['is_used'])   ? $template['is_used'] : $arr['is_used'];
+        $is_active = isset($template['is_active']) ? $template['is_active'] : $arr['is_active'];
         $server_id = isset($template['server_id']) ? $template['server_id'] : $arr['server_id'];
-        $sql       = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, location, server_id, is_in_iframe) VALUES (" . db_ei($group_id) . ", '" . db_es($arr['label']) . "', '" . db_es($arr['description']) . "', '" . db_es($arr['short_name']) . "', '" . db_es($link) . "', " . db_ei($arr['is_active']) . ", " . ($force_enable ? 1 : db_ei($is_used)) . ", '" . db_es($arr['scope']) . "', " . db_ei($arr['rank']) . ",  '" . db_es($arr['location']) . "', " . db_ei($server_id) . ", " . db_ei($arr['is_in_iframe']) . ")";
+
+        $sql       = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, location, server_id, is_in_iframe) VALUES (".db_ei($group_id).", '".db_es($arr['label'])."', '".db_es($arr['description'])."', '".db_es($arr['short_name'])."', '".db_es($link)."', ".db_ei($is_active).", ". ($force_enable ? 1 : db_ei($is_used)) .", '".db_es($arr['scope'])."', ".db_ei($arr['rank']).",  '".db_es($arr['location'])."', ". db_ei($server_id) .", ". db_ei($arr['is_in_iframe']) .")";
         $result    = db_query($sql);
 
         if ($result) {
