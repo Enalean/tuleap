@@ -37,7 +37,7 @@ $kanban-column-footer-height: 50px;
 
 @keyframes loadingItems {
     0% {
-        opacity: .3;
+        opacity: .4;
     }
 
     100% {
@@ -285,6 +285,7 @@ $kanban-column-footer-height: 50px;
     color: $tlp-theme-color;
     font-size: 28px;
     font-weight: 300;
+    animation: none;
 
     &.loading {
         animation: 250ms linear 0s infinite alternate loadingItems;
