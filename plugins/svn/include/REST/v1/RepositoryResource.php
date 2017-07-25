@@ -52,6 +52,7 @@ use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryDeleter;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\Settings;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnPermissionManager;
@@ -448,10 +449,13 @@ class RepositoryResource extends AuthenticatedResource
             if ($settings && $settings->commit_rules) {
                 $commit_rules = $settings->commit_rules->toArray();
             }
+
+            $repository_settings = new Settings($commit_rules);
+
             $this->repository_creator->createWithSettings(
                 $repository_to_create,
                 $user,
-                $commit_rules
+                $repository_settings
             );
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
