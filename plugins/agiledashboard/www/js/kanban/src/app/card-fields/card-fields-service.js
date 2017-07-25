@@ -150,11 +150,11 @@ function CardFieldsService(
         if (value.user_url === null) {
             avatar       = '<div class="tlp-avatar-mini"> </div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = avatar + display_name;
+            link         = avatar + '<span>' + display_name + '</span>';
         } else {
             avatar       = '<div class="tlp-avatar-mini"><img src="' + value.avatar_url + '" /></div> ';
             display_name = highlight(_.escape(value.display_name), filter_terms);
-            link         = '<a data-nodrag="true" class="user" href="' + value.user_url + '">' + avatar + display_name + '</a>';
+            link         = '<a data-nodrag="true" class="user" href="' + value.user_url + '">' + avatar + '<span>' + display_name + '</span></a>';
         }
 
         return $sce.trustAsHtml(link);
