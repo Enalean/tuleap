@@ -188,10 +188,6 @@ $kanban-column-footer-height: 50px;
             }
         }
 
-        > kanban-column {
-            background: mix($tlp-ui-warning, $tlp-ui-white, 20%);
-        }
-
         // scss-lint:disable SelectorDepth
         .ngsb-wrap > .ngsb-scrollbar > .ngsb-thumb-container > .ngsb-thumb-pos {
             &:hover > .ngsb-thumb,
@@ -222,6 +218,7 @@ $kanban-column-footer-height: 50px;
 
 .kanban-column-header {
     display: flex;
+    z-index: 4;
     flex: 0 0 $kanban-column-header-height;
     align-items: center;
     justify-content: space-between;
