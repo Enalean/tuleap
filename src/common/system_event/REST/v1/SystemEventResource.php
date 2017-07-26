@@ -57,8 +57,6 @@ class SystemEventResource extends AuthenticatedResource
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
-
-        parent::__construct();
     }
 
     /**

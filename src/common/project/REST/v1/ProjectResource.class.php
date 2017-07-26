@@ -144,8 +144,6 @@ class ProjectResource extends AuthenticatedResource {
             new ServiceCreator(),
             $force_activation
         );
-
-        parent::__construct();
     }
 
     /**

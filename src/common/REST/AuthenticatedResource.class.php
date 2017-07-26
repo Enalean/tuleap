@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,22 +32,16 @@ class AuthenticatedResource  implements iUseAuthentication {
 
     protected $is_authenticated;
 
-    private $access_level;
-
-    public function __construct() {
-        $this->setAccessLevel();
-    }
-
     public function __setAuthenticationStatus($is_authenticated = false) {
         $this->is_authenticated = $is_authenticated;
     }
 
-    private function setAccessLevel() {
-        $this->access_level = self::ACCESS_LEVEL_NORMAL;
-
+    private function getAccessLevel()
+    {
         if (! ForgeConfig::areAnonymousAllowed()) {
-            $this->access_level = self::ACCESS_LEVEL_FORBID_ANON;
+            return self::ACCESS_LEVEL_FORBID_ANON;
         }
+        return self::ACCESS_LEVEL_NORMAL;
     }
 
     /**
@@ -56,8 +50,9 @@ class AuthenticatedResource  implements iUseAuthentication {
      *
      * @access private
      */
-    protected function checkAccess() {
-        if ($this->access_level === self::ACCESS_LEVEL_FORBID_ANON && ! $this->is_authenticated) {
+    protected function checkAccess()
+    {
+        if (! $this->is_authenticated && $this->getAccessLevel() === self::ACCESS_LEVEL_FORBID_ANON) {
             throw new RestException(401);
         }
     }
