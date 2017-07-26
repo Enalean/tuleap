@@ -139,6 +139,33 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getBuiltFromTemplateIdBeforeEndDate()
+    {
+        $end_date = $this->da->escapeInt($this->end_date);
+
+        $sql = "SELECT group_id, built_from_template AS result
+                FROM groups
+                WHERE status='A'
+                  AND register_time <= $end_date
+                GROUP BY group_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getBuiltFromTemplateNameBeforeEndDate()
+    {
+        $end_date = $this->da->escapeInt($this->end_date);
+
+        $sql = "SELECT project.group_id, template.group_name AS result
+                FROM groups AS project
+                    INNER JOIN  groups AS template ON (template.group_id = project.built_from_template)
+                WHERE project.status='A'
+                  AND project.register_time <= $end_date
+                GROUP BY project.group_id";
+
+        return $this->retrieve($sql);
+    }
+
     public function getCVSActivities() {
         $cvs_format_start_date = $this->formatDateForCVS($this->start_date);
         $cvs_format_end_date   = $this->formatDateForCVS($this->end_date);
