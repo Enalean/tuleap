@@ -1,7 +1,7 @@
 import angular from 'angular';
 import ngSanitize from 'angular-sanitize';
 
-import 'ng-ckeditor';
+import 'imports-loader?CKEDITOR=>window.CKEDITOR!ng-ckeditor';
 import 'angular-moment';
 import 'angular-gettext';
 import '../po/fr.po';

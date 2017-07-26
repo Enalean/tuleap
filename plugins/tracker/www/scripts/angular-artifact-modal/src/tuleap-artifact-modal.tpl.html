@@ -219,15 +219,13 @@
         class="tlp-textarea"
         id="{{ 'tracker_field_'+field.field_id }}"
     ></textarea>
-    <textarea ng-if="modal.values[field.field_id].value.format === 'html'"
-        ng-ckeditor
-        ng-model="modal.values[field.field_id].value.content"
-        ng-config="modal.ckeditor_options"
-        required="{{ field.required }}"
-        ng-disabled="modal.isDisabled(field)"
-        class="tlp-textarea"
-        id="{{ 'tracker_field_'+field.field_id }}"
-    ></textarea>
+    <ng-ckeditor
+            id="{{ 'tracker_field_'+field.field_id }}"
+            ng-if="modal.values[field.field_id].value.format === 'html'"
+            ng-model="modal.values[field.field_id].value.content"
+            ng-config="modal.initCkeditorConfig(field)"
+            required="{{ field.required }}"
+    ></ng-ckeditor>
 </div>
 </script>
 
@@ -600,15 +598,11 @@
                     placeholder="{{ 'Add a new comment' | translate }}"
                     rows="3"
                 ></textarea>
-                <textarea id="followup_comment"
+                <ng-ckeditor
                     ng-if="modal.followup_comment.format === 'html'"
-                    ng-ckeditor
                     ng-model="modal.followup_comment.body"
-                    ng-config="modal.ckeditor_options"
-                    class="tlp-textarea"
-                    placeholder="{{ 'Add a new comment' | translate }}"
-                    rows="3"
-                ></textarea>
+                    ng-config="modal.initCkeditorConfig()"
+                ></ng-ckeditor>
             </div>
         </div>
     </div>

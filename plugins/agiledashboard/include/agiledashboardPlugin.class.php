@@ -492,6 +492,9 @@ class AgileDashboardPlugin extends Plugin {
                 ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
                 $this->getPluginPath() . '/js/kanban/dist'
             );
+            $ckeditor_path = '/scripts/ckeditor-4.3.2/';
+            $GLOBALS['HTML']->includeFooterJavascriptSnippet('window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";');
+            $params['javascript_files'][] = $ckeditor_path .'ckeditor.js';
 
             $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
             $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
