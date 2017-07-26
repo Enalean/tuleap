@@ -114,7 +114,7 @@ class RepositoryCreator
 
         return $this->system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME,
-            implode(SystemEvent::PARAMETER_SEPARATOR, $repo_event),
+            SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($repo_event),
             SystemEvent::PRIORITY_HIGH
         );
     }

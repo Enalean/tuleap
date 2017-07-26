@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -55,5 +55,22 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
         $this->done();
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public static function serializeParameters(array $parameters)
+    {
+        return json_encode($parameters);
+    }
+
+    public function getParametersAsArray()
+    {
+        $unserialized_parameters = json_decode($this->getParameters(), true);
+        if ($unserialized_parameters === null) {
+            return parent::getParametersAsArray();
+        }
+        return array_values($unserialized_parameters);
     }
 }
