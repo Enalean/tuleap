@@ -410,7 +410,7 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param $project_id project id {@type int} {@from body}
      * @param $name Repository name {@type string} {@form body}
-     * @param SettingsRepresentation $settings Repository settings {@type \Tuleap\SVN\REST\v1\SettingsRepresentation} {@required false}
+     * @param SettingsPOSTRepresentation $settings Repository settings {@type \Tuleap\SVN\REST\v1\SettingsPOSTRepresentation} {@required false}
      *
      * @return \Tuleap\SVN\REST\v1\RepositoryRepresentation
      * @throws 400 BadRequest Given project does not exist or project does not use SVN service
@@ -418,7 +418,7 @@ class RepositoryResource extends AuthenticatedResource
      * @throws 500 Error Unable to create the repository
      * @throws 409 Repository name is invalid
      */
-    protected function post($project_id, $name, SettingsRepresentation $settings = null)
+    protected function post($project_id, $name, SettingsPOSTRepresentation $settings = null)
     {
         $this->checkAccess();
         $this->options();
@@ -439,7 +439,10 @@ class RepositoryResource extends AuthenticatedResource
             new \URLVerification()
         );
 
-        if ($settings) {
+        if ($settings !== null) {
+            if ($settings->layout !== null) {
+                throw new RestException(500, 'It is not yet possible to define a layout when creating the repository');
+            }
             $this->validateSettings($settings);
         }
 
