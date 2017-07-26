@@ -30,6 +30,15 @@ msgstr "Attention"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Cannot find changed directories information"
+msgstr "Impossible de trouver les informations des repertoires mis à jour"
+
+msgid "Cannot find changed files information"
+msgstr "Impossible de trouver les informations des fichiers mis à jour"
+
+msgid "Cannot find committer information"
+msgstr "Impossible de trouver les informations du committer"
+
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 

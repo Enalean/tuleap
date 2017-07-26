@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -100,7 +100,9 @@ class CommitInfoEnhancer {
                 $this->commit_info->setAddedFiles($file_added);
                 $this->commit_info->setDeletedFiles($file_deleted);
             } else {
-                throw new CannotFindSVNCommitInfoException();
+                throw new CannotFindSVNCommitInfoException(
+                    dgettext('tuleap-svn', 'Cannot find changed files information')
+                );
             }
         } else {
             throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
@@ -113,7 +115,9 @@ class CommitInfoEnhancer {
             if (count($changed_dir) > 0) {
                 $this->commit_info->setChangedDirectories($changed_dir);
             } else {
-                throw new CannotFindSVNCommitInfoException();
+                throw new CannotFindSVNCommitInfoException(
+                    dgettext('tuleap-svn', 'Cannot find changed directories information')
+                );
             }
         } else {
             throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));

@@ -12,6 +12,15 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Cannot find changed directories information"
+msgstr ""
+
+msgid "Cannot find changed files information"
+msgstr ""
+
+msgid "Cannot find committer information"
+msgstr ""
+
 msgid "Confirm deletion"
 msgstr ""
 
