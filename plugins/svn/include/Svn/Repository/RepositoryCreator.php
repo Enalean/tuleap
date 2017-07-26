@@ -24,6 +24,7 @@ use PFUser;
 use ProjectHistoryDao;
 use SystemEvent;
 use SystemEventManager;
+use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
@@ -57,6 +58,10 @@ class RepositoryCreator
      * @var ProjectHistoryFormatter
      */
     private $project_history_formatter;
+    /**
+     * @var ImmutableTagCreator
+     */
+    private $immutable_tag_creator;
 
     public function __construct(
         Dao $dao,
@@ -64,7 +69,8 @@ class RepositoryCreator
         ProjectHistoryDao $history_dao,
         SvnPermissionManager $permissions_manager,
         HookConfigUpdator $hook_config_updator,
-        ProjectHistoryFormatter $project_history_formatter
+        ProjectHistoryFormatter $project_history_formatter,
+        ImmutableTagCreator $immutable_tag_creator
     ) {
         $this->dao                       = $dao;
         $this->system_event_manager      = $system_event_manager;
@@ -72,6 +78,7 @@ class RepositoryCreator
         $this->permissions_manager       = $permissions_manager;
         $this->hook_config_updator       = $hook_config_updator;
         $this->project_history_formatter = $project_history_formatter;
+        $this->immutable_tag_creator     = $immutable_tag_creator;
     }
 
     /**
@@ -127,9 +134,9 @@ class RepositoryCreator
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository = $this->createRepository($repository);
 
-        if ($settings->getCommitRules()) {
-            $this->hook_config_updator->initHookConfiguration($repository, $settings->getCommitRules());
-            $this->logCreationWithCustomSettings($repository, $settings->getCommitRules());
+        if ($settings->hasSettings()) {
+            $this->addSettingsToRepository($repository, $settings);
+            $this->logCreationWithCustomSettings($repository);
         } else {
             $this->logCreation($repository);
         }
@@ -146,9 +153,9 @@ class RepositoryCreator
         );
     }
 
-    private function logCreationWithCustomSettings(Repository $repository, array $commit_rules)
+    private function logCreationWithCustomSettings(Repository $repository)
     {
-        $history = $this->project_history_formatter->getFullHistory($repository, $commit_rules);
+        $history = $this->project_history_formatter->getFullHistory($repository);
 
         $this->history_dao->groupAddHistory(
             'svn_multi_repository_creation_with_full_settings',
@@ -202,5 +209,30 @@ class RepositoryCreator
         $svn_repository->setId($id);
 
         return $svn_repository;
+    }
+
+    /**
+     * @param Repository $repository
+     * @param Settings   $settings
+     */
+    private function addSettingsToRepository(Repository $repository, Settings $settings)
+    {
+        $commit_rules = $settings->getCommitRules();
+        if ($commit_rules) {
+            $this->hook_config_updator->initHookConfiguration($repository, $commit_rules);
+
+            $this->project_history_formatter->addCommitRuleHistory($commit_rules);
+        }
+
+        $immutable_tag = $settings->getImmutableTag();
+        if ($immutable_tag) {
+            $this->immutable_tag_creator->save(
+                $repository,
+                $immutable_tag->getPathsAsString(),
+                $immutable_tag->getWhitelistAsString()
+            );
+
+            $this->project_history_formatter->addImmutableTagHistory($immutable_tag);
+        }
     }
 }

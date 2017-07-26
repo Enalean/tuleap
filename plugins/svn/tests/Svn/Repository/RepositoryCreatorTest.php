@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Repository;
 
+use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\SvnPermissionManager;
 
@@ -78,7 +79,8 @@ class RepositoryCreatorTest extends \TuleapTestCase
             $this->history_dao,
             $this->permissions_manager,
             $this->hook_config_updator,
-            new ProjectHistoryFormatter()
+            new ProjectHistoryFormatter(),
+            mock('Tuleap\Svn\Admin\ImmutableTagCreator')
         );
 
         $this->project    = aMockProject()->withId(101)->build();
@@ -135,11 +137,13 @@ class RepositoryCreatorTest extends \TuleapTestCase
         expect($this->hook_config_updator)->initHookConfiguration()->once();
         expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation_with_full_settings', '*', '*')->once();
 
-        $commit_rules = array(
+        $commit_rules  = array(
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true
         );
-        $settings = new Settings($commit_rules);
+        $immutable_tag = new ImmutableTag($this->repository, array(), array());
+        $settings      = new Settings($commit_rules, $immutable_tag);
+
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings);
     }
 
@@ -151,8 +155,10 @@ class RepositoryCreatorTest extends \TuleapTestCase
         expect($this->hook_config_updator)->initHookConfiguration()->never();
         expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation', '*', '*')->once();
 
-        $commit_rules = array();
-        $settings = new Settings($commit_rules);
+        $commit_rules  = array();
+        $immutable_tag = new ImmutableTag($this->repository, array(), array());
+        $settings      = new Settings($commit_rules, $immutable_tag);
+
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings);
     }
 }

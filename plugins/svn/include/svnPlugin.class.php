@@ -558,7 +558,7 @@ class SvnPlugin extends Plugin
             new ImmutableTagController(
                 $repository_manager,
                 new Svnlook(new System_Command()),
-                new ImmutableTagCreator(new ImmutableTagDao()),
+                $this->getImmutableTagCreator(),
                 new ImmutableTagFactory(new ImmutableTagDao())
             ),
             new GlobalAdminController(
@@ -881,7 +881,8 @@ class SvnPlugin extends Plugin
                 $this->getHookConfigSanitizer(),
                 new ProjectHistoryFormatter()
             ),
-            new ProjectHistoryFormatter()
+            new ProjectHistoryFormatter(),
+            $this->getImmutableTagCreator()
         );
     }
 
@@ -926,5 +927,13 @@ class SvnPlugin extends Plugin
     private function getServiceActivator()
     {
         return new ServiceActivator(ServiceManager::instance(), new ServiceCreator());
+    }
+
+    /**
+     * @return ImmutableTagCreator
+     */
+    private function getImmutableTagCreator()
+    {
+        return new ImmutableTagCreator(new ImmutableTagDao());
     }
 }

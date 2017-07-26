@@ -34,6 +34,7 @@ use Tuleap\REST\v1\RepositoryRepresentationBuilder;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
+use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Dao;
@@ -42,6 +43,7 @@ use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
+use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigSanitizer;
@@ -59,12 +61,15 @@ use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
-    /** @var RepositoryDeleter  */
-    private $repository_deleter;
     /**
-     * @var CommitRulesRepresentationValidator
+     * @var ImmutableTagFactory
      */
-    private $commit_rules_validator;
+    private $immutable_tag_factory;
+
+    /**
+     * @var RepositoryDeleter
+     */
+    private $repository_deleter;
     /**
      * @var RepositoryManager
      */
@@ -147,20 +152,23 @@ class RepositoryResource extends AuthenticatedResource
             new ProjectHistoryFormatter()
         );
 
-        $this->commit_rules_validator = new CommitRulesRepresentationValidator();
-        $this->repository_creator = new RepositoryCreator(
+        $immutable_tag_dao           = new ImmutableTagDao();
+        $this->immutable_tag_factory = new ImmutableTagFactory($immutable_tag_dao);
+
+        $this->repository_creator                = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
             $project_history_dao,
             $this->permission_manager,
             $this->hook_config_updator,
-            new ProjectHistoryFormatter()
+            new ProjectHistoryFormatter(),
+            new ImmutableTagCreator($immutable_tag_dao)
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
-            new ImmutableTagFactory(new ImmutableTagDao())
+            $this->immutable_tag_factory
         );
 
         $this->repository_deleter = new RepositoryDeleter(
@@ -200,7 +208,17 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"commit_rules": {<br>
      *   &nbsp;&nbsp;"is_reference_mandatory": true|false ,<br>
      *   &nbsp;&nbsp;"is_commit_message_change_allowed": true|false<br>
-     *   &nbsp;&nbsp;}<br>
+     *   &nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp;"immutable_tags": {<br>
+     *   &nbsp;&nbsp;"paths": [<br>
+     *   &nbsp;&nbsp;"/tags1",<br>
+     *   &nbsp;&nbsp;"/tags2"<br>
+     *   &nbsp;&nbsp; ],<br>
+     *   &nbsp;&nbsp;"whitelist": [<br>
+     *   &nbsp;&nbsp;"/tags/whitelist1",<br>
+     *   &nbsp;&nbsp;"/tags/whitelist2"<br>
+     *   &nbsp;&nbsp; ]<br>
+     *   &nbsp;}<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -267,8 +285,6 @@ class RepositoryResource extends AuthenticatedResource
     {
         $this->sendAllowHeaders();
         $this->checkAccess();
-
-        $this->validateSettings($settings);
 
         $user       = $this->user_manager->getCurrentUser();
         $repository = $this->getRepository($id);
@@ -397,8 +413,18 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;"name" : "repo01",<br>
      *   &nbsp;"settings": {<br>
      *   &nbsp;&nbsp;"commit_rules": {<br>
-     *   &nbsp;&nbsp;"is_reference_mandatory": true|false ,<br>
+     *   &nbsp;&nbsp;"is_reference_mandatory": true|false,<br>
      *   &nbsp;&nbsp;"is_commit_message_change_allowed": true|false<br>
+     *   &nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp;"immutable_tags": {<br>
+     *   &nbsp;&nbsp;"paths": [<br>
+     *   &nbsp;&nbsp;"/tags1",<br>
+     *   &nbsp;&nbsp;"/tags2"<br>
+     *   &nbsp;&nbsp; ],<br>
+     *   &nbsp;&nbsp;"whitelist": [<br>
+     *   &nbsp;&nbsp;"/tags/whitelist1",<br>
+     *   &nbsp;&nbsp;"/tags/whitelist2"<br>
+     *   &nbsp;&nbsp; ]<br>
      *   &nbsp;&nbsp;}<br>
      *   &nbsp;}<br>
      *  }<br>
@@ -439,21 +465,13 @@ class RepositoryResource extends AuthenticatedResource
             new \URLVerification()
         );
 
-        if ($settings !== null) {
-            if ($settings->layout !== null) {
-                throw new RestException(500, 'It is not yet possible to define a layout when creating the repository');
-            }
-            $this->validateSettings($settings);
+        if ($settings !== null && $settings->layout !== null) {
+            throw new RestException(500, 'It is not yet possible to define a layout when creating the repository');
         }
 
         $repository_to_create = new Repository("", $name, "", "", $project);
         try {
-            $commit_rules = array();
-            if ($settings && $settings->commit_rules) {
-                $commit_rules = $settings->commit_rules->toArray();
-            }
-
-            $repository_settings = new Settings($commit_rules);
+            $repository_settings = $this->getSettings($repository_to_create, $settings);
 
             $this->repository_creator->createWithSettings(
                 $repository_to_create,
@@ -487,12 +505,37 @@ class RepositoryResource extends AuthenticatedResource
         Header::allowOptionsPost();
     }
 
-    private function validateSettings(SettingsRepresentation $settings)
+    /**
+     * @return Settings
+     */
+    private function getSettings(Repository $repository, SettingsRepresentation $settings = null)
     {
-        try {
-            $this->commit_rules_validator->validate($settings->commit_rules);
-        } catch (CommitRulesRepresentationMissingKeyException $exception) {
-            throw new RestException(400, "The commit rules are not well formed: " . $exception->getMessage());
+        $commit_rules = $this->buildDefaultCommitRules();
+        if ($settings && $settings->commit_rules) {
+            $commit_rules = $settings->commit_rules->toArray();
         }
+
+        $immutable_tag = $this->immutable_tag_factory->getEmpty($repository);
+        if ($settings && $settings->immutable_tags) {
+            $immutable_tag = $this->immutable_tag_factory->getFromRESTRepresentation(
+                $repository,
+                $settings->immutable_tags
+            );
+        }
+
+        return new Settings($commit_rules, $immutable_tag);
+    }
+
+    /**
+     * @return array
+     */
+    private function buildDefaultCommitRules()
+    {
+        $commit_rules = array(
+            HookConfig::MANDATORY_REFERENCE       => false,
+            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
+        );
+
+        return $commit_rules;
     }
 }
