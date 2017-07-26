@@ -80,7 +80,8 @@ class RepositoryCreatorTest extends \TuleapTestCase
             $this->permissions_manager,
             $this->hook_config_updator,
             new ProjectHistoryFormatter(),
-            mock('Tuleap\Svn\Admin\ImmutableTagCreator')
+            mock('Tuleap\Svn\Admin\ImmutableTagCreator'),
+            mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator')
         );
 
         $this->project    = aMockProject()->withId(101)->build();
@@ -142,7 +143,8 @@ class RepositoryCreatorTest extends \TuleapTestCase
             HookConfig::MANDATORY_REFERENCE       => true
         );
         $immutable_tag  = new ImmutableTag($this->repository, array(), array());
-        $settings       = new Settings($commit_rules, $immutable_tag);
+        $access_file    = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
+        $settings       = new Settings($commit_rules, $immutable_tag, $access_file);
         $initial_layout = array();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
@@ -158,7 +160,8 @@ class RepositoryCreatorTest extends \TuleapTestCase
 
         $commit_rules   = array();
         $immutable_tag  = new ImmutableTag($this->repository, array(), array());
-        $settings       = new Settings($commit_rules, $immutable_tag);
+        $access_file    = "";
+        $settings       = new Settings($commit_rules, $immutable_tag, $access_file);
         $initial_layout = array();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);

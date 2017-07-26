@@ -273,11 +273,13 @@ class SvnPlugin extends Plugin
     public function get_system_event_class($params)
     {
         switch ($params['type']) {
-            case 'SVN_CREATE_REPOSITORY':
-                include_once dirname(__FILE__).'/events/SystemEvent_SVN_CREATE_REPOSITORY.class.php';
-                $params['class'] = 'SystemEvent_SVN_CREATE_REPOSITORY';
+            case 'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY':
+                $params['class'] = 'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY';
                 $params['dependencies'] = array(
-                    $this->getBackendSVN()
+                    $this->getAccessFileHistoryCreator(),
+                    $this->getRepositoryManager(),
+                    $this->getBackendSVN(),
+                    $this->getBackendSystem()
                 );
                 break;
             case 'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_DELETE_REPOSITORY':
@@ -485,8 +487,14 @@ class SvnPlugin extends Plugin
         $logger          = $params['logger'];
 
         $svn = new XMLImporter(
-            Backend::instance(), $xml, $extraction_path,
-            $this->getRepositoryCreator()
+            Backend::instance(),
+            $xml,
+            $extraction_path,
+            $this->getRepositoryCreator(),
+            $this->getBackendSVN(),
+            $this->getBackendSystem(),
+            $this->getAccessFileHistoryCreator(),
+            $this->getRepositoryManager()
         );
         $svn->import(
             $params['configuration'],
@@ -882,7 +890,8 @@ class SvnPlugin extends Plugin
                 new ProjectHistoryFormatter()
             ),
             new ProjectHistoryFormatter(),
-            $this->getImmutableTagCreator()
+            $this->getImmutableTagCreator(),
+            $this->getAccessFileHistoryCreator()
         );
     }
 
@@ -935,5 +944,13 @@ class SvnPlugin extends Plugin
     private function getImmutableTagCreator()
     {
         return new ImmutableTagCreator(new ImmutableTagDao());
+    }
+
+    /**
+     * @return Backend
+     */
+    private function getBackendSystem()
+    {
+        return Backend::instance('System');
     }
 }

@@ -24,6 +24,7 @@ use PFUser;
 use ProjectHistoryDao;
 use SystemEvent;
 use SystemEventManager;
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
@@ -62,6 +63,10 @@ class RepositoryCreator
      * @var ImmutableTagCreator
      */
     private $immutable_tag_creator;
+    /**
+     * @var AccessFileHistoryCreator
+     */
+    private $access_file_history_creator;
 
     public function __construct(
         Dao $dao,
@@ -70,15 +75,17 @@ class RepositoryCreator
         SvnPermissionManager $permissions_manager,
         HookConfigUpdator $hook_config_updator,
         ProjectHistoryFormatter $project_history_formatter,
-        ImmutableTagCreator $immutable_tag_creator
+        ImmutableTagCreator $immutable_tag_creator,
+        AccessFileHistoryCreator $access_file_history_creator
     ) {
-        $this->dao                       = $dao;
-        $this->system_event_manager      = $system_event_manager;
-        $this->history_dao               = $history_dao;
-        $this->permissions_manager       = $permissions_manager;
-        $this->hook_config_updator       = $hook_config_updator;
-        $this->project_history_formatter = $project_history_formatter;
-        $this->immutable_tag_creator     = $immutable_tag_creator;
+        $this->dao                         = $dao;
+        $this->system_event_manager        = $system_event_manager;
+        $this->history_dao                 = $history_dao;
+        $this->permissions_manager         = $permissions_manager;
+        $this->hook_config_updator         = $hook_config_updator;
+        $this->project_history_formatter   = $project_history_formatter;
+        $this->immutable_tag_creator       = $immutable_tag_creator;
+        $this->access_file_history_creator = $access_file_history_creator;
     }
 
     /**
@@ -116,10 +123,10 @@ class RepositoryCreator
      */
     private function sendEvent(Repository $svn_repository, array $initial_repository_layout)
     {
-        $repo_event['system_path']   = $svn_repository->getSystemPath();
-        $repo_event['project_id']    = $svn_repository->getProject()->getId();
-        $repo_event['name']          = $svn_repository->getProject()->getUnixNameMixedCase() .
-            "/" . $svn_repository->getName();
+        $repo_event['system_path']    = $svn_repository->getSystemPath();
+        $repo_event['project_id']     = $svn_repository->getProject()->getId();
+        $repo_event['name']           = $svn_repository->getProject()->getUnixNameMixedCase() . "/" . $svn_repository->getName();
+        $repo_event['repository_id']  = $svn_repository->getId();
         $repo_event['initial_layout'] = $initial_repository_layout;
 
         return $this->system_event_manager->createEvent(
@@ -236,6 +243,11 @@ class RepositoryCreator
             );
 
             $this->project_history_formatter->addImmutableTagHistory($immutable_tag);
+        }
+
+        $access_file = $settings->getAccessFileContent();
+        if ($access_file) {
+            $this->access_file_history_creator->storeInDB($repository, $access_file, time());
         }
     }
 }

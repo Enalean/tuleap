@@ -28,6 +28,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\RepositoryCreator;
+use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
 
 class XMLImporter {
@@ -39,7 +40,11 @@ class XMLImporter {
         Backend $backend,
         SimpleXMLElement $xml,
         $extraction_path,
-        RepositoryCreator $repository_creator
+        RepositoryCreator $repository_creator,
+        Backend $backend_svn,
+        Backend $backend_system,
+        AccessFileHistoryCreator $access_file_history_creator,
+        RepositoryManager $repository_manager
     ) {
         $this->repositories_data = array();
 
@@ -55,7 +60,11 @@ class XMLImporter {
                 $backend,
                 $xml_repo,
                 $extraction_path,
-                $repository_creator
+                $repository_creator,
+                $backend_svn,
+                $backend_system,
+                $access_file_history_creator,
+                $repository_manager
             );
         }
     }

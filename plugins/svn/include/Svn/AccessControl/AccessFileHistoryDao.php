@@ -106,7 +106,7 @@ class AccessFileHistoryDao extends DataAccessObject {
         return $this->retrieveFirstRow($sql);
     }
 
-    public function useAnOldVersion($repository_id, $version_id) {
+    public function useAVersion($repository_id, $version_id) {
         $repository_id = $this->da->escapeInt($repository_id);
         $version_id    = $this->da->escapeInt($version_id);
 

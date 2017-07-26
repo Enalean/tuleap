@@ -32,8 +32,10 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\v1\FullRepositoryRepresentation;
 use Tuleap\REST\v1\RepositoryRepresentationBuilder;
 use Tuleap\REST\v1\RepositoryResourceUpdater;
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
+use Tuleap\Svn\AccessControl\CannotCreateAccessFileHistoryException;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagDao;
@@ -144,33 +146,40 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->hook_config_retriever = new HookConfigRetriever($hook_dao, new HookConfigSanitizer());
+        $project_history_formatter   = new ProjectHistoryFormatter();
         $hook_config_updator         = new HookConfigUpdator(
             $hook_dao,
             $project_history_dao,
             new HookConfigChecker($this->hook_config_retriever),
             new HookConfigSanitizer(),
-            new ProjectHistoryFormatter()
+            $project_history_formatter
         );
 
         $immutable_tag_dao           = new ImmutableTagDao();
         $this->immutable_tag_factory = new ImmutableTagFactory($immutable_tag_dao);
-
-        $immutable_tag_creator    = new ImmutableTagCreator($immutable_tag_dao);
-        $this->repository_creator = new RepositoryCreator(
+        $immutable_tag_creator       = new ImmutableTagCreator(
+            $immutable_tag_dao,
+            $this->immutable_tag_factory,
+            $project_history_formatter,
+            $project_history_dao
+        );
+        $access_file_history_factory = new AccessFileHistoryFactory(new AccessFileHistoryDao());
+        $this->repository_creator    = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
             $project_history_dao,
             $this->permission_manager,
             $hook_config_updator,
-            new ProjectHistoryFormatter(),
-            $immutable_tag_creator
+            $project_history_formatter,
+            $immutable_tag_creator,
+            new AccessFileHistoryCreator(new AccessFileHistoryDao(), $access_file_history_factory)
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
             $this->immutable_tag_factory,
-            new AccessFileHistoryFactory(new AccessFileHistoryDao())
+            $access_file_history_factory
         );
 
         $this->repository_deleter = new RepositoryDeleter(
@@ -440,12 +449,13 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"whitelist": [<br>
      *   &nbsp;&nbsp;"/tags/whitelist1",<br>
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
-     *   &nbsp;&nbsp; ],<br>
+     *   &nbsp;&nbsp; ]<br>
+     *   &nbsp;&nbsp;},<br>
      *   &nbsp;&nbsp;"layout": [<br>
      *   &nbsp;&nbsp;"/trunk",<br>
      *   &nbsp;&nbsp;"/tags"<br>
-     *   &nbsp;&nbsp; ]<br>
-     *   &nbsp;&nbsp;}<br>
+     *   &nbsp;&nbsp; ],<br>
+     *   &nbsp;&nbsp;"access_file": "[/] * = rw \r\n@members = rw\r\n[/tags] @admins = rw"<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -503,6 +513,8 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(403, "User doesn't have permission to create a repository");
         } catch (RepositoryNameIsInvalidException $e) {
             throw new RestException(409, $e->getMessage());
+        } catch (CannotCreateAccessFileHistoryException $e) {
+            throw new RestException(500, "Unable to store access file");
         }
 
         $repository = $this->repository_manager->getRepositoryByName($project, $name);
@@ -542,7 +554,12 @@ class RepositoryResource extends AuthenticatedResource
             );
         }
 
-        return new Settings($commit_rules, $immutable_tag);
+        $access_file = "";
+        if ($settings && $settings->access_file) {
+            $access_file = $settings->access_file;
+        }
+
+        return new Settings($commit_rules, $immutable_tag, $access_file);
     }
 
     /**

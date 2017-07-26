@@ -34,10 +34,16 @@ class Settings
      */
     private $immutable_tag;
 
-    public function __construct(array $commit_rules, ImmutableTag $immutable_tag)
+    /**
+     * @var string
+     */
+    private $access_file;
+
+    public function __construct(array $commit_rules, ImmutableTag $immutable_tag, $access_file)
     {
         $this->commit_rules  = $commit_rules;
         $this->immutable_tag = $immutable_tag;
+        $this->access_file   = $access_file;
     }
 
     /**
@@ -56,10 +62,19 @@ class Settings
         return $this->immutable_tag;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getAccessFileContent()
+    {
+        return $this->access_file;
+    }
+
     public function hasSettings()
     {
         return count($this->commit_rules) > 0
             || count($this->immutable_tag->getPaths()) > 0
-            || count($this->immutable_tag->getWhitelist()) > 0;
+            || count($this->immutable_tag->getWhitelist()) > 0
+            || $this->access_file !== "";
     }
 }
