@@ -182,7 +182,7 @@ class RepositoryTest extends TestBase
         );
     }
 
-    public function tesPOSTRepositoryForProjectMember()
+    public function testPOSTRepositoryForProjectMember()
     {
         $params = json_encode(
             array(
@@ -196,7 +196,7 @@ class RepositoryTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 401);
     }
 
-    public function tesPOSTRepositoryWithMissingKey()
+    public function testPOSTRepositoryWithMissingKey()
     {
         $params = json_encode(
             array(
@@ -271,13 +271,30 @@ class RepositoryTest extends TestBase
         );
     }
 
-    public function tesPUTRepositoryWithMissingKey()
+    public function testPUTRepositoryWithMissingCommitRulesKey()
     {
         $params = json_encode(
             array(
                 "settings"   => array(
                     "commit_rules" => array(
                         "is_reference_mandatory" => true,
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPUTRepositoryWithMissingImmutableTagsKey()
+    {
+        $params = json_encode(
+            array(
+                "settings"   => array(
+                    "immutable_tags" => array(
+                        "paths" => array(),
                     )
                 )
             )
