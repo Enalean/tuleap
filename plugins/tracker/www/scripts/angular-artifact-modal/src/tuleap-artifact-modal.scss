@@ -3,6 +3,20 @@
 @import 'tuleap-artifact-modal-fields/file-field/file-field';
 @import 'tuleap-artifact-modal-fields/computed-field/computed-field';
 
+.tuleap-artifact-modal-title {
+    display: flex;
+    align-items: center;
+}
+
+.tuleap-artifact-modal-title-badge {
+    margin: 0 10px 0 0;
+    padding: 8px 12px;
+    border-radius: 24px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
 .tuleap-artifact-modal-body {
     display: flex;
     padding: 0;

@@ -465,16 +465,16 @@
     ng-submit="modal.submit()"
 >
     <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title"
+        <h1 class="tlp-modal-title tuleap-artifact-modal-title"
             id="artifact-modal-label"
             ng-if="modal.creation_mode"
             translate
         >Create a new {{ modal.title }}</h1>
-        <h1 class="tlp-modal-title"
+        <h1 class="tlp-modal-title tuleap-artifact-modal-title"
             id="artifact-modal-label"
             ng-if="! modal.creation_mode"
         >
-            <span class="tlp-badge-{{ modal.color }}">{{ modal.tracker.item_name }} #{{ modal.artifact_id }}</span>
+            <span class="tuleap-artifact-modal-title-badge tlp-badge-{{ modal.color }}">{{ modal.tracker.item_name }} #{{ modal.artifact_id }}</span>
             <span class="title">{{ modal.title }}</span>
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ Close | translate }}">&times;</div>
