@@ -141,10 +141,11 @@ class RepositoryCreatorTest extends \TuleapTestCase
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true
         );
-        $immutable_tag = new ImmutableTag($this->repository, array(), array());
-        $settings      = new Settings($commit_rules, $immutable_tag);
+        $immutable_tag  = new ImmutableTag($this->repository, array(), array());
+        $settings       = new Settings($commit_rules, $immutable_tag);
+        $initial_layout = array();
 
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
     }
 
     public function itCreatesRepositoryWithNoCustomSettings()
@@ -155,10 +156,11 @@ class RepositoryCreatorTest extends \TuleapTestCase
         expect($this->hook_config_updator)->initHookConfiguration()->never();
         expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation', '*', '*')->once();
 
-        $commit_rules  = array();
-        $immutable_tag = new ImmutableTag($this->repository, array(), array());
-        $settings      = new Settings($commit_rules, $immutable_tag);
+        $commit_rules   = array();
+        $immutable_tag  = new ImmutableTag($this->repository, array(), array());
+        $settings       = new Settings($commit_rules, $immutable_tag);
+        $initial_layout = array();
 
-        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings);
+        $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
     }
 }

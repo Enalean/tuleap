@@ -228,18 +228,13 @@ class RepositoryTest extends TestBase
                 'project_id' => $this->svn_project_id,
                 'name'       => 'my_repository_05',
                 'settings'   => array(
-                    'commit_rules' => array(
-                        'is_reference_mandatory'           => true,
-                        'is_commit_message_change_allowed' => true
-                    ),
-                    'layout' => array()
+                    'layout' => array('/trunk', '/branches')
                 )
             )
         );
 
-        $this->setExpectedException('Guzzle\Http\Exception\ServerErrorResponseException');
         $response = $this->getResponse($this->client->post('svn', null, $params));
-        $this->assertEquals($response->getStatusCode(), 500);
+        $this->assertEquals($response->getStatusCode(), 201);
     }
 
     public function testPUTRepository()

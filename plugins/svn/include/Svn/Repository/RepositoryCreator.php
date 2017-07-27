@@ -106,18 +106,21 @@ class RepositoryCreator
         $svn_repository = $this->createRepository($svn_repository);
         $this->logCreation($svn_repository);
 
-        return $this->sendEvent($svn_repository);
+        $initial_repository_layout = array();
+
+        return $this->sendEvent($svn_repository, $initial_repository_layout);
     }
 
     /**
      * @return SystemEvent
      */
-    private function sendEvent(Repository $svn_repository)
+    private function sendEvent(Repository $svn_repository, array $initial_repository_layout)
     {
-        $repo_event['system_path'] = $svn_repository->getSystemPath();
-        $repo_event['project_id']  = $svn_repository->getProject()->getId();
-        $repo_event['name']        = $svn_repository->getProject()->getUnixNameMixedCase() .
+        $repo_event['system_path']   = $svn_repository->getSystemPath();
+        $repo_event['project_id']    = $svn_repository->getProject()->getId();
+        $repo_event['name']          = $svn_repository->getProject()->getUnixNameMixedCase() .
             "/" . $svn_repository->getName();
+        $repo_event['initial_layout'] = $initial_repository_layout;
 
         return $this->system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME,
@@ -129,7 +132,7 @@ class RepositoryCreator
     /**
      * @return SystemEvent
      */
-    public function createWithSettings(Repository $repository, PFUser $user, Settings $settings)
+    public function createWithSettings(Repository $repository, PFUser $user, Settings $settings, array $initial_repository_layout)
     {
         $this->checkUserHasAdministrationPermissions($repository, $user);
         $repository = $this->createRepository($repository);
@@ -141,7 +144,7 @@ class RepositoryCreator
             $this->logCreation($repository);
         }
 
-        return $this->sendEvent($repository);
+        return $this->sendEvent($repository, $initial_repository_layout);
     }
 
     private function logCreation(Repository $repository)

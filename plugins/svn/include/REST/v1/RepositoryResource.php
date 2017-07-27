@@ -440,6 +440,10 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"whitelist": [<br>
      *   &nbsp;&nbsp;"/tags/whitelist1",<br>
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
+     *   &nbsp;&nbsp; ],<br>
+     *   &nbsp;&nbsp;"layout": [<br>
+     *   &nbsp;&nbsp;"/trunk",<br>
+     *   &nbsp;&nbsp;"/tags"<br>
      *   &nbsp;&nbsp; ]<br>
      *   &nbsp;&nbsp;}<br>
      *   &nbsp;}<br>
@@ -481,18 +485,17 @@ class RepositoryResource extends AuthenticatedResource
             new \URLVerification()
         );
 
-        if ($settings !== null && $settings->layout !== null) {
-            throw new RestException(500, 'It is not yet possible to define a layout when creating the repository');
-        }
-
         $repository_to_create = new Repository("", $name, "", "", $project);
         try {
-            $repository_settings = $this->getSettings($repository_to_create, $settings);
+            $repository_settings       = $this->getSettings($repository_to_create, $settings);
+            $has_initial_layout        = $settings !== null && $settings->layout !== null;
+            $initial_repository_layout = $has_initial_layout ? $settings->layout : array();
 
             $this->repository_creator->createWithSettings(
                 $repository_to_create,
                 $user,
-                $repository_settings
+                $repository_settings,
+                $initial_repository_layout
             );
         } catch (CannotCreateRepositoryException $e) {
             throw new RestException(500, "Unable to create the repository");
