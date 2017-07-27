@@ -39,7 +39,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
     public function process() {
         $system_path     = $this->getRequiredParameter(0);
         $project_id      = (int)$this->getRequiredParameter(1);
-        $repository_name = $this->getRequiredParameter(2);
+        $initial_layout  = $this->getParameter(3) ?: array();
 
         $backendSystem = Backend::instance('System');
 
@@ -47,7 +47,12 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
         $backendSystem->flushNscdAndFsCache();
 
         $backendSvn = Backend::instance('SVN');
-        if (! $backendSvn->createRepositorySVN($project_id, $system_path, ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/')) {
+        if (! $backendSvn->createRepositorySVN(
+            $project_id,
+            $system_path,
+            ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
+            $initial_layout
+        )) {
             $this->error("Could not create/initialize project SVN repository");
             return false;
         }

@@ -1,22 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\SvnCore\Cache\ParameterDao;
@@ -116,10 +116,13 @@ class BackendSVN extends Backend {
         );
     }
 
-    public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path) {
+    public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path, array $initial_layout)
+    {
         if (!$this->createRepository($project_id, $svn_dir)) {
             return false;
         }
+
+        $this->createDirectoryLayout($svn_dir, $initial_layout);
 
         $params = array(
             'project_id' => $project_id
@@ -196,6 +199,26 @@ class BackendSVN extends Backend {
      */
     function repositoryExists(Project $project) {
         return is_dir($project->getSVNRootPath());
+    }
+
+    private function createDirectoryLayout($system_path, array $initial_layout)
+    {
+        if (empty($initial_layout)) {
+            return;
+        }
+
+        $filtered_layout = array();
+        foreach ($initial_layout as $requested_path) {
+            $path_to_create = $system_path . DIRECTORY_SEPARATOR . $requested_path;
+            if (strpos(Tuleap\URI\URIModifier::removeDotSegments($path_to_create), $system_path) !== 0) {
+                return;
+            }
+
+            $path_to_create_encoded = Tuleap\URI\URIModifier::normalizePercentEncoding($path_to_create);
+            $filtered_layout[]      = escapeshellarg('file://' . $path_to_create_encoded);
+        }
+
+        $this->system('svn mkdir --username="Tuleap" --message "Initial layout creation" --parents ' . implode(' ', $filtered_layout));
     }
 
     /**
