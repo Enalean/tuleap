@@ -20,12 +20,13 @@
 
 namespace Tuleap\Svn\EventRepository;
 
-use Backend;
 use ForgeConfig;
 use SystemEvent;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\CannotCreateAccessFileHistoryException;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\SVNRepositoryCreationException;
+use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 
 class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
 {
@@ -52,8 +53,8 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
     public function injectDependencies(
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
-        Backend $backend_svn,
-        Backend $backend_system
+        \BackendSVN $backend_svn,
+        \BackendSystem $backend_system
     ) {
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;
@@ -81,13 +82,18 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
         // Force NSCD flush (otherwise uid & gid will not exist)
         $this->backend_system->flushNscdAndFsCache();
 
-        if (! $this->backend_svn->createRepositorySVN(
-            $project_id,
-            $system_path,
-            ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
-            $initial_layout
-        )) {
-            $this->error("Could not create/initialize project SVN repository");
+        try {
+            $this->backend_svn->createRepositorySVN(
+                $project_id,
+                $system_path,
+                ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
+                $initial_layout
+            );
+        } catch (SVNRepositoryLayoutInitializationException $exception) {
+            $this->warning($exception->getMessage());
+            return true;
+        } catch (SVNRepositoryCreationException $exception) {
+            $this->error($exception->getMessage());
             return false;
         }
 
@@ -99,7 +105,6 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
         }
 
         $this->done();
-
         return true;
     }
 

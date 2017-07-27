@@ -19,8 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\SVNRepositoryCreationException;
+use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 use Tuleap\SvnCore\Cache\ParameterDao;
 use Tuleap\SvnCore\Cache\ParameterRetriever;
+use Tuleap\URI\URIModifier;
 
 require_once('www/svn/svn_utils.php');
 
@@ -116,13 +119,22 @@ class BackendSVN extends Backend {
         );
     }
 
+    /**
+     * @throws SVNRepositoryCreationException
+     * @throws SVNRepositoryLayoutInitializationException
+     */
     public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path, array $initial_layout)
     {
-        if (!$this->createRepository($project_id, $svn_dir)) {
-            return false;
+        if (! $this->createRepository($project_id, $svn_dir)) {
+            throw new SVNRepositoryCreationException(_('Could not create/initialize SVN repository'));
         }
 
-        $this->createDirectoryLayout($svn_dir, $initial_layout);
+        $exception = null;
+        try {
+            $this->createDirectoryLayout($svn_dir, $initial_layout);
+        } catch (SVNRepositoryLayoutInitializationException $layout_initialization_exception) {
+            $exception = $layout_initialization_exception;
+        }
 
         $params = array(
             'project_id' => $project_id
@@ -135,7 +147,7 @@ class BackendSVN extends Backend {
 
         $project=$this->getProjectManager()->getProject($project_id);
 
-        if (!$this->updateHooks(
+        if (! $this->updateHooks(
                 $project,
                 $svn_dir,
                 true,
@@ -144,16 +156,18 @@ class BackendSVN extends Backend {
                 ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
                 'svn_pre_commit.php'
             )) {
-            return false;
+            throw new SVNRepositoryCreationException(_('Could not update hooks of the SVN repository'));
         }
 
-        if (!$this->createSVNAccessFile ($project_id, $svn_dir)) {
-            return false;
+        if (! $this->createSVNAccessFile ($project_id, $svn_dir)) {
+            throw new SVNRepositoryCreationException(_('Could not the access file of the SVN repository'));
         }
 
         $this->forceUpdateApacheConf();
 
-        return true;
+        if ($exception !== null) {
+            throw $exception;
+        }
     }
 
     private function createRepository($group_id, $system_path) {
@@ -201,6 +215,9 @@ class BackendSVN extends Backend {
         return is_dir($project->getSVNRootPath());
     }
 
+    /**
+     * @throws SVNRepositoryLayoutInitializationException
+     */
     private function createDirectoryLayout($system_path, array $initial_layout)
     {
         if (empty($initial_layout)) {
@@ -209,16 +226,22 @@ class BackendSVN extends Backend {
 
         $filtered_layout = array();
         foreach ($initial_layout as $requested_path) {
-            $path_to_create = $system_path . DIRECTORY_SEPARATOR . $requested_path;
-            if (strpos(Tuleap\URI\URIModifier::removeDotSegments($path_to_create), $system_path) !== 0) {
-                return;
+            $path_to_create = URIModifier::removeDotSegments(
+                URIModifier::removeEmptySegments($system_path . DIRECTORY_SEPARATOR . $requested_path)
+            );
+            if (strpos($path_to_create, $system_path) !== 0) {
+                throw new SVNRepositoryLayoutInitializationException(sprintf(_('The directory %s is not valid'), $requested_path));
             }
 
-            $path_to_create_encoded = Tuleap\URI\URIModifier::normalizePercentEncoding($path_to_create);
+            $path_to_create_encoded = URIModifier::normalizePercentEncoding($path_to_create);
             $filtered_layout[]      = escapeshellarg('file://' . $path_to_create_encoded);
         }
 
-        $this->system('svn mkdir --username="Tuleap" --message "Initial layout creation" --parents ' . implode(' ', $filtered_layout));
+        $result = $this->system('svn mkdir --username="Tuleap" --message "Initial layout creation" --parents ' . implode(' ', $filtered_layout));
+
+        if ($result === false) {
+            throw new SVNRepositoryLayoutInitializationException(_('Could not commit repository initial layout'));
+        }
     }
 
     /**

@@ -74,4 +74,12 @@ class URIModifier
 
         return implode(DIRECTORY_SEPARATOR, $uri_parts);
     }
+
+    /**
+     * @return string
+     */
+    public static function removeEmptySegments($uri)
+    {
+        return preg_replace('/' . preg_quote(DIRECTORY_SEPARATOR, '/') . '+/', DIRECTORY_SEPARATOR, $uri);
+    }
 }

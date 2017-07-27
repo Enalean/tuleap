@@ -459,7 +459,7 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/tags/whitelist1",<br>
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
      *   &nbsp;&nbsp; ]<br>
-     *   &nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp; },<br>
      *   &nbsp;&nbsp;"layout": [<br>
      *   &nbsp;&nbsp;"/trunk",<br>
      *   &nbsp;&nbsp;"/tags"<br>

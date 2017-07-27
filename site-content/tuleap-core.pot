@@ -65,6 +65,18 @@ msgstr ""
 msgid "Configure services"
 msgstr ""
 
+msgid "Could not commit repository initial layout"
+msgstr ""
+
+msgid "Could not create/initialize SVN repository"
+msgstr ""
+
+msgid "Could not the access file of the SVN repository"
+msgstr ""
+
+msgid "Could not update hooks of the SVN repository"
+msgstr ""
+
 msgid "Dashboard creation failed."
 msgstr ""
 
@@ -224,6 +236,10 @@ msgstr ""
 
 #, php-format
 msgid "The dashboard '%s' doesn't exist."
+msgstr ""
+
+#, php-format
+msgid "The directory %s is not valid"
 msgstr ""
 
 #, php-format
