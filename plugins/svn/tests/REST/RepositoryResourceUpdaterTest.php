@@ -91,7 +91,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
         stub($this->repository)->getProject()->returns(aMockProject()->withId(101)->build());
     }
 
-    public function itUpdatesRespositorySettings()
+    public function itUpdatesRepositorySettings()
     {
         $commit_rules = array(
             HookConfig::MANDATORY_REFERENCE       => false,

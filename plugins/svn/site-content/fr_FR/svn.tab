@@ -136,3 +136,4 @@ project_admin_utils	svn_multi_repository_creation	Dépôt SVN créé
 project_admin_utils	svn_multi_repository_creation_with_full_settings	Dépôt SVN créé avec des paramètres personnalisés
 project_admin_utils	svn_multi_repository_hook_update	Règles de commit mises à jour
 project_admin_utils	svn_multi_repository_immutable_tags_update	Tags non modifiables mis à jour
+project_admin_utils	svn_multi_repository_access_file_update	Fichier de contrôle d'accès mis à jour

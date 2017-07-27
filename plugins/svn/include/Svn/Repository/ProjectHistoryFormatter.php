@@ -69,4 +69,14 @@ class ProjectHistoryFormatter
             "Whitelist:" . PHP_EOL .
             $immutable_tag->getWhitelistAsString();
     }
+
+    public function addAccessFileContentHistory($access_file)
+    {
+        $this->messages[] = $this->getAccessFileHistory($access_file);
+    }
+
+    public function getAccessFileHistory($access_file)
+    {
+        return "Access file:" . PHP_EOL . $access_file;
+    }
 }
