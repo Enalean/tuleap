@@ -21,6 +21,7 @@
 namespace Tuleap\REST\v1;
 
 use PFUser;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
 use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\Repository;
@@ -42,15 +43,21 @@ class RepositoryRepresentationBuilder
      * @var ImmutableTagFactory
      */
     private $immutable_tag_factory;
+    /**
+     * @var AccessFileHistoryFactory
+     */
+    private $access_file_history_factory;
 
     public function __construct(
         SvnPermissionManager $permission_manager,
         HookConfigRetriever $hook_config_retriever,
-        ImmutableTagFactory $immutable_tag_factory
+        ImmutableTagFactory $immutable_tag_factory,
+        AccessFileHistoryFactory $access_file_history_factory
     ) {
-        $this->permission_manager = $permission_manager;
-        $this->hook_config_retriever = $hook_config_retriever;
-        $this->immutable_tag_factory = $immutable_tag_factory;
+        $this->permission_manager          = $permission_manager;
+        $this->hook_config_retriever       = $hook_config_retriever;
+        $this->immutable_tag_factory       = $immutable_tag_factory;
+        $this->access_file_history_factory = $access_file_history_factory;
     }
 
     public function build(Repository $repository, PFUser $user)
@@ -60,7 +67,8 @@ class RepositoryRepresentationBuilder
             $representation->fullBuild(
                 $repository,
                 $this->hook_config_retriever->getHookConfig($repository),
-                $this->immutable_tag_factory->getByRepositoryId($repository)
+                $this->immutable_tag_factory->getByRepositoryId($repository),
+                $this->access_file_history_factory->getCurrentVersion($repository)
             );
 
             return $representation;

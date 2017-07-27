@@ -58,12 +58,18 @@ class RepositoryTest extends TestBase
                 "is_commit_message_change_allowed" => false
             )
         );
+
         $this->assertEquals(
             $repository['settings']['immutable_tags'],
             array(
                 "paths"     => array(),
                 "whitelist" => array(),
             )
+        );
+
+        $this->assertEquals(
+            $repository['settings']['access_file'],
+            "[/] * = rw @members = rw"
         );
     }
 

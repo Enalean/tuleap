@@ -20,6 +20,8 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use Tuleap\Svn\AccessControl\AccessFileHistory;
+
 class SettingsRepresentation
 {
     /**
@@ -32,11 +34,18 @@ class SettingsRepresentation
      */
     public $immutable_tags;
 
+    /**
+     * @var string {@type string} {@required false}
+     */
+    public $access_file;
+
     public function build(
         CommitRulesRepresentation $commit_hook_representation,
-        ImmutableTagRepresentation $immutable_tag_representation
+        ImmutableTagRepresentation $immutable_tag_representation,
+        AccessFileHistory $access_file_history
     ) {
         $this->commit_rules   = $commit_hook_representation;
         $this->immutable_tags = $immutable_tag_representation;
+        $this->access_file    = $access_file_history->getContent();
     }
 }
