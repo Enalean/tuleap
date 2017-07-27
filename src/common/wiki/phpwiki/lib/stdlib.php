@@ -123,18 +123,13 @@ define('MAX_PAGENAME_LENGTH', 100);
 function MangleXmlIdentifier($str) {
     if (!$str)
         return 'empty.';
-    
-    return preg_replace('/[^-_:A-Za-z0-9]|(?<=^)[^A-Za-z]/e',
-                        "'x' . sprintf('%02x', ord('\\0')) . '.'",
-                        $str);
-}
 
-function UnMangleXmlIdentifier($str) {
-    if ($str == 'empty.')
-        return '';
-    return preg_replace('/x(\w\w)\./e',
-                        "sprintf('%c', hex('\\0'))",
-                        $str);
+    return preg_replace_callback(
+        '/[^-_:A-Za-z0-9]|(?<=^)[^A-Za-z]/',
+        function (array $matches) {
+            return 'x' . sprintf('%02x', ord($matches[0])) . '.';
+        },
+        $str);
 }
 
 /**
@@ -1498,7 +1493,7 @@ function glob_to_pcre ($glob) {
     $glob = str_replace("/", '\/', $glob);
     // first convert some unescaped expressions to pcre style: . => \.
     $special = ".^$";
-    $re = preg_replace('/([^\xff])?(['.preg_quote($special).'])/', 
+    $re = preg_replace('/([^\xff])?(['.preg_quote($special, '/').'])/',
                        "\\1\xff\\2", $glob);
 
     // * => .*, ? => .

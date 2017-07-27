@@ -733,13 +733,25 @@ class Theme {
         $qtext = urlencode($text);
         $url = $this->_findButton("$qtext.png");
         if ($url && strstr($url, '%')) {
-            $url = preg_replace('|([^/]+)$|e', 'urlencode("\\1")', $url);
+            $url = preg_replace_callback(
+                '|([^/]+)$|',
+                function (array $matches) {
+                    return urlencode($matches[1]);
+                },
+                $url
+            );
         }
         if (!$url) {// Jeff complained about png not supported everywhere. 
                     // This was not PC until 2005.
             $url = $this->_findButton("$qtext.gif");
             if ($url && strstr($url, '%')) {
-                $url = preg_replace('|([^/]+)$|e', 'urlencode("\\1")', $url);
+                $url = preg_replace_callback(
+                    '|([^/]+)$|',
+                    function (array $matches) {
+                        return urlencode($matches[1]);
+                    },
+                    $url
+                );
             }
         }
         if ($url and $this->DUMP_MODE) {

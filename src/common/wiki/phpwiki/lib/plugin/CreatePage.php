@@ -118,7 +118,7 @@ extends WikiPlugin
                         $var['author'] = $user->getId();
 
                     foreach ($var as $key => $val) {
-                        $initial_content = preg_replace("/%%$key%%/",$val,$initial_content);
+                        $initial_content = preg_replace('/%%' . preg_quote($key, '/') . '%%/', $val, $initial_content);
                     }
                     // need to destroy the template so that editpage doesn't overwrite it.
                     unset($param['template']);
