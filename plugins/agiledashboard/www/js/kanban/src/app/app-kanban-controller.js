@@ -103,6 +103,7 @@ function KanbanCtrl(
 
     function init() {
         initViewMode();
+        initFilter();
         loadColumns();
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
@@ -123,6 +124,13 @@ function KanbanCtrl(
 
     function initViewMode() {
         self.user_prefers_collapsed_cards = SharedPropertiesService.doesUserPrefersCompactCards();
+    }
+
+    function initFilter() {
+        angular.element('.kanban-header-search').on('input', function(event) {
+            self.filter.terms = event.target.value;
+            filterCards();
+        });
     }
 
     function saveCardsViewMode() {
