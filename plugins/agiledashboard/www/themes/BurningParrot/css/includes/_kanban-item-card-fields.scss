@@ -13,7 +13,6 @@
     }
 
     .extra-card-field-content {
-        display: flex;
         margin: 0 15px 0 0;
 
         .extra-card-field-title {
@@ -33,13 +32,10 @@
             text-decoration: none;
         }
 
-        .user {
-            display: flex;
-
-            > .tlp-avatar-mini {
-                margin: 0 3px 0 0;
-                flex: 0 0 auto;
-            }
+        .user > .tlp-avatar-mini {
+            position: relative;
+            top: 6px;
+            margin: 0 3px 0 0;
         }
     }
 }
