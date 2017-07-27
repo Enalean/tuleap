@@ -183,7 +183,9 @@ define([
                 return;
             }
 
-            if (MessageContentVerifier.hasPresencesOnExecutions(message.data)) {
+            if (MessageContentVerifier.isExecutionDeleted(message)) {
+                self.executions_collection[room_id].remove(message.data.artifact.id);
+            } else if (MessageContentVerifier.hasPresencesOnExecutions(message.data)) {
                 message.data = self.executions_collection[room_id].update(message.data.presence);
                 self.scores.addScoreByUserIdAndRoomId(message.data.user, room_id);
                 extendUserWithScore(room_id, message.data.user);

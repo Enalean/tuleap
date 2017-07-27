@@ -72,10 +72,10 @@ define([
          * Function to remove an
          * execution
          *
-         * @param user_id (int)
+         * @param execution_id (int)
          */
-        self.remove = function(user_id) {
-            delete self.presences_collection[user_id];
+        self.remove = function(execution_id) {
+            delete self.presences_collection[execution_id];
         };
 
         /**

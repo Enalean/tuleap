@@ -60,6 +60,20 @@ define([
      * @access public
      *
      * Function to verify if content message sent
+     * is about deleting an execution
+     *
+     * @param data (Object)
+     * @returns {boolean}
+     */
+    function isExecutionDeleted(message) {
+        return message.cmd === 'trafficlights_execution:delete'
+            && _.has(message.data, 'artifact.id');
+    }
+
+    /**
+     * @access public
+     *
+     * Function to verify if content message sent
      * a new status for an artifact
      *
      * @param data (Object)
@@ -75,6 +89,7 @@ define([
     return {
         hasCardFields              : hasCardFields,
         hasPresencesOnExecutions   : hasPresencesOnExecutions,
+        isExecutionDeleted         : isExecutionDeleted,
         hasChangeStatusOnExecutions: hasChangeStatusOnExecutions
     };
 });
