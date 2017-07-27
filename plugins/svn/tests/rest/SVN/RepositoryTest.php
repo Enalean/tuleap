@@ -254,7 +254,8 @@ class RepositoryTest extends TestBase
                     'commit_rules' => array(
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
-                    )
+                    ),
+                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw"
                 )
             )
         );
@@ -278,6 +279,10 @@ class RepositoryTest extends TestBase
                 "paths"     => array(),
                 "whitelist" => array(),
             )
+        );
+        $this->assertEquals(
+            $repository['settings']['access_file'],
+            "[/]\r\n* = rw\r\n@members = rw"
         );
     }
 

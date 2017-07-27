@@ -20,6 +20,7 @@
 
 namespace Tuleap\REST\v1;
 
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\Repository;
@@ -35,11 +36,19 @@ class RepositoryResourceUpdater
      * @var ImmutableTagCreator
      */
     private $immutable_tag_creator;
+    /**
+     * @var AccessFileHistoryCreator
+     */
+    private $access_file_history_creator;
 
-    public function __construct(HookConfigUpdator $hook_config_updator, ImmutableTagCreator $immutable_tag_creator)
-    {
-        $this->hook_config_updator   = $hook_config_updator;
-        $this->immutable_tag_creator = $immutable_tag_creator;
+    public function __construct(
+        HookConfigUpdator $hook_config_updator,
+        ImmutableTagCreator $immutable_tag_creator,
+        AccessFileHistoryCreator $access_file_history_creator
+    ) {
+        $this->hook_config_updator         = $hook_config_updator;
+        $this->immutable_tag_creator       = $immutable_tag_creator;
+        $this->access_file_history_creator = $access_file_history_creator;
     }
 
     public function update(Repository $repository, Settings $settings)
@@ -54,6 +63,10 @@ class RepositoryResourceUpdater
                 $settings->getImmutableTag()->getPathsAsString(),
                 $settings->getImmutableTag()->getWhitelistAsString()
             );
+        }
+
+        if ($settings->getAccessFileContent()) {
+            $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
         }
     }
 }

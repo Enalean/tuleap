@@ -164,6 +164,10 @@ class RepositoryResource extends AuthenticatedResource
             $project_history_dao
         );
         $access_file_history_factory = new AccessFileHistoryFactory(new AccessFileHistoryDao());
+        $access_file_history_creator = new AccessFileHistoryCreator(
+            new AccessFileHistoryDao(),
+            $access_file_history_factory
+        );
         $this->repository_creator    = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
@@ -172,7 +176,7 @@ class RepositoryResource extends AuthenticatedResource
             $hook_config_updator,
             $project_history_formatter,
             $immutable_tag_creator,
-            new AccessFileHistoryCreator(new AccessFileHistoryDao(), $access_file_history_factory)
+            $access_file_history_creator
         );
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
@@ -190,7 +194,11 @@ class RepositoryResource extends AuthenticatedResource
             $this->repository_manager
         );
 
-        $this->repository_updater = new RepositoryResourceUpdater($hook_config_updator, $immutable_tag_creator);
+        $this->repository_updater = new RepositoryResourceUpdater(
+            $hook_config_updator,
+            $immutable_tag_creator,
+            $access_file_history_creator
+        );
     }
 
     /**
@@ -288,7 +296,8 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/tags/whitelist1",<br>
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
      *   &nbsp;&nbsp; ]<br>
-     *   &nbsp;}<br>
+     *   &nbsp;},<br>
+     *   &nbsp;"access_file": "[/] * = rw @members = rw\r\n[/tags] @admins = rw"<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -297,8 +306,8 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @url PUT {id}
      *
-     * @param int $id       Id of the repository
-     * @param int $settings The new settings of the SVN repository {@from body} {@type Tuleap\SVN\REST\v1\SettingsRepresentation}
+     * @param int $id Id of the repository
+     * @param SettingsRepresentation $settings The new settings of the SVN repository {@from body} {@type Tuleap\SVN\REST\v1\SettingsRepresentation}
      *
      * @return FullRepositoryRepresentation
      *
