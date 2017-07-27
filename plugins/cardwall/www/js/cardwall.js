@@ -534,7 +534,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         }
 
         function addUsername(container, user_id) {
-            var realname = tracker_user_data[ field_id ][ user_id ][ 'realname' ],
+            var realname = tuleap.escaper.html(tracker_user_data[ field_id ][ user_id ][ 'realname' ]),
                 label = tracker_user_data[ field_id ][ user_id ][ 'label' ],
                 username_div;
 
@@ -550,11 +550,15 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
         }
 
-        function addAvatar( container, user_id ) {
-            var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
+        function addAvatar(container, user_id) {
+            var username = tuleap.escaper.html(tracker_user_data[ field_id ][ user_id ][ 'username' ]),
                 label = tracker_user_data[ field_id ][ user_id ][ 'label' ],
                 avatar_img,
-                avatar_div;
+                avatar_div,
+                user_div;
+
+            user_div = new Element( 'div' );
+            user_div.addClassName( 'card-field-users' );
 
             avatar_div = new Element( 'div' );
             avatar_div.addClassName( 'avatar' );
@@ -571,7 +575,10 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             });
             avatar_div.appendChild(avatar_img);
 
-            container.insert( avatar_div );
+            user_div.insert( avatar_div );
+            addUsername(user_div, user_id);
+
+            container.insert( user_div );
             container.insert(' ');
         }
     }

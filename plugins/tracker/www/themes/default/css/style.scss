@@ -3374,3 +3374,13 @@ td.tracker-global-notifications-checkbox-cell {
         font-size: 13px;
     }
 }
+
+.card-field-users {
+    display: flex;
+    align-items: center;
+    margin: 0 0 5px;
+
+    .avatar {
+        margin: 0 5px 0 0;
+    }
+}
