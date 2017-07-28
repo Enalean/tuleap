@@ -46,7 +46,7 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
      */
     public $warn_no_values;
 
-    public $is_display_avatar_selected = "";
+    public $is_display_avatar_selected = "true";
 
     /**
      * @var WidgetAdditionalButtonPresenter
