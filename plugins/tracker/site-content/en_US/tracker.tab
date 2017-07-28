@@ -1085,7 +1085,7 @@ plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
 plugin_tracker_formelement_admin	aggregate_label	Computed value
-plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.<p><strong>Note</strong>: <ul><li>If you still use deprecated field, "Fast computation" will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same "Target field" name.</li><li>else the calcul will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same field name.</li></ul>
+plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.<p><strong>Note</strong>: <ul><li>Calculation will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same field name.</li></ul>
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
 plugin_tracker_formelement_admin	burndown_label	Burndown Chart
