@@ -20,14 +20,49 @@
 
 namespace Tuleap\Svn\EventRepository;
 
-use SystemEvent;
 use Backend;
 use ForgeConfig;
+use SystemEvent;
+use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
+use Tuleap\Svn\AccessControl\CannotCreateAccessFileHistoryException;
+use Tuleap\Svn\Repository\RepositoryManager;
 
-class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
+class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
+{
     const NAME = 'SystemEvent_SVN_CREATE_REPOSITORY';
 
-    public function verbalizeParameters($with_link) {
+    /**
+     * @var \BackendSystem
+     */
+    private $backend_system;
+    /**
+     * @var \BackendSVN
+     */
+    private $backend_svn;
+
+    /**
+     * @var RepositoryManager
+     */
+    private $repository_manager;
+    /**
+     * @var AccessFileHistoryCreator
+     */
+    private $access_file_history_creator;
+
+    public function injectDependencies(
+        AccessFileHistoryCreator $access_file_history_creator,
+        RepositoryManager $repository_manager,
+        Backend $backend_svn,
+        Backend $backend_system
+    ) {
+        $this->access_file_history_creator = $access_file_history_creator;
+        $this->repository_manager          = $repository_manager;
+        $this->backend_svn                 = $backend_svn;
+        $this->backend_system              = $backend_system;
+    }
+
+    public function verbalizeParameters($with_link)
+    {
         $path            = $this->getRequiredParameter(0);
         $project_id      = $this->getRequiredParameter(1);
         $repository_name = $this->getRequiredParameter(2);
@@ -36,18 +71,17 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
         return $txt;
     }
 
-    public function process() {
-        $system_path     = $this->getRequiredParameter(0);
-        $project_id      = (int)$this->getRequiredParameter(1);
-        $initial_layout  = $this->getParameter(3) ?: array();
 
-        $backendSystem = Backend::instance('System');
+    public function process() {
+        $system_path    = $this->getRequiredParameter(0);
+        $project_id     = (int)$this->getRequiredParameter(1);
+        $repository_id  = $this->getRequiredParameter(3);
+        $initial_layout = $this->getParameter(4) ?: array();
 
         // Force NSCD flush (otherwise uid & gid will not exist)
-        $backendSystem->flushNscdAndFsCache();
+        $this->backend_system->flushNscdAndFsCache();
 
-        $backendSvn = Backend::instance('SVN');
-        if (! $backendSvn->createRepositorySVN(
+        if (! $this->backend_svn->createRepositorySVN(
             $project_id,
             $system_path,
             ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
@@ -55,6 +89,13 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent {
         )) {
             $this->error("Could not create/initialize project SVN repository");
             return false;
+        }
+
+        try {
+            $repository = $this->repository_manager->getRepositoryById($repository_id);
+            $this->access_file_history_creator->useAVersion($repository, 1);
+        } catch (CannotCreateAccessFileHistoryException $e) {
+            //Do nothing
         }
 
         $this->done();

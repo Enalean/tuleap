@@ -140,6 +140,10 @@ class RepositoryTest extends TestBase
                 "whitelist" => array(),
             )
         );
+        $this->assertEquals(
+            $repository['settings']['access_file'],
+            ""
+        );
     }
 
     public function testPOSTRepositoryForProjectAdminWithCustomSettings()
@@ -162,7 +166,8 @@ class RepositoryTest extends TestBase
                             "/white1",
                             "/white2"
                         )
-                    )
+                    ),
+                    "access_file" => "[/] * = rw\r\n@members = rw"
                 )
             )
         );
@@ -185,6 +190,10 @@ class RepositoryTest extends TestBase
                 "paths"     => array('/tags1', '/tags2'),
                 "whitelist" => array('/white1', '/white2'),
             )
+        );
+        $this->assertEquals(
+            $repository['settings']['access_file'],
+            "[/] * = rw\r\n@members = rw"
         );
     }
 

@@ -37,11 +37,20 @@ use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
+use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
 
 class XMLRepositoryImporter
 {
     const SERVICE_NAME = 'svn';
+    /**
+     * @var \Backend
+     */
+    private $backend_svn;
+    /**
+     * @var \Backend
+     */
+    private $backend_system;
 
     /** @var string */
     private $dump_file_path;
@@ -64,12 +73,24 @@ class XMLRepositoryImporter
      * @var RepositoryCreator
      */
     private $repository_creator;
+    /**
+     * @var AccessFileHistoryCreator
+     */
+    private $access_file_history_creator;
+    /**
+     * @var RepositoryManager
+     */
+    private $repository_manager;
 
     public function __construct(
         Backend $backend,
         SimpleXMLElement $xml_repo,
         $extraction_path,
-        RepositoryCreator $repository_creator
+        RepositoryCreator $repository_creator,
+        Backend $backend_svn,
+        Backend $backend_system,
+        AccessFileHistoryCreator $access_file_history_creator,
+        RepositoryManager $repository_manager
     ) {
         $attrs = $xml_repo->attributes();
         $this->name = $attrs['name'];
@@ -88,9 +109,13 @@ class XMLRepositoryImporter
             );
         }
 
-        $this->references         = $xml_repo->references;
-        $this->backend            = $backend;
-        $this->repository_creator = $repository_creator;
+        $this->references                  = $xml_repo->references;
+        $this->backend                     = $backend;
+        $this->repository_creator          = $repository_creator;
+        $this->backend_svn                 = $backend_svn;
+        $this->backend_system              = $backend_system;
+        $this->access_file_history_creator = $access_file_history_creator;
+        $this->repository_manager          = $repository_manager;
     }
 
     public function import(
@@ -120,6 +145,12 @@ class XMLRepositoryImporter
         }
 
         $logger->info("[svn] Creating SVN repository {$this->name}");
+        $sysevent->injectDependencies(
+            $this->access_file_history_creator,
+            $this->repository_manager,
+            $this->backend_svn,
+            $this->backend_system
+        );
         $sysevent->process();
         if ($sysevent->getStatus() != \SystemEvent::STATUS_DONE) {
             $logger->error($sysevent->getLog());

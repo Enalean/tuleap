@@ -45,28 +45,14 @@ class AccessFileHistoryCreator {
     }
 
     public function create(Repository $repository, $content, $timestamp) {
-        $id             = 0;
-        $version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
-
-        $file_history = new AccessFileHistory(
-            $repository,
-            $id,
-            $version_number + 1,
-            $this->cleanContent($repository, $content),
-            $timestamp
-        );
-        if (! $this->dao->create($file_history)) {
-            throw new CannotCreateAccessFileHistoryException(
-                $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
-            );
-        }
+        $file_history = $this->storeInDB($repository, $content, $timestamp);
 
         $this->saveAccessFile($repository, $file_history);
         return $file_history;
     }
 
-    public function useAnOldVersion(Repository $repository, $version_id) {
-        if (! $this->dao->useAnOldVersion($repository->getId(), $version_id)) {
+    public function useAVersion(Repository $repository, $version_id) {
+        if (! $this->dao->useAVersion($repository->getId(), $version_id)) {
             throw new CannotCreateAccessFileHistoryException(
                 $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
             );
@@ -96,5 +82,30 @@ class AccessFileHistoryCreator {
                 );
             }
         }
+    }
+
+    /**
+     * @return AccessFileHistory
+     * @throws CannotCreateAccessFileHistoryException
+     */
+    public function storeInDB(Repository $repository, $content, $timestamp)
+    {
+        $id             = 0;
+        $version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
+
+        $file_history = new AccessFileHistory(
+            $repository,
+            $id,
+            $version_number + 1,
+            $this->cleanContent($repository, $content),
+            $timestamp
+        );
+        if (! $this->dao->create($file_history)) {
+            throw new CannotCreateAccessFileHistoryException(
+                $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
+            );
+        }
+
+        return $file_history;
     }
 }
