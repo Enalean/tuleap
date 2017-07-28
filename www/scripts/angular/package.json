@@ -18,6 +18,7 @@
     "angular-socket-io": "^0.7.0",
     "angular-ui-router": "~0.2.10",
     "animate.css": "3.5.2",
+    "d3": "^3.5.17",
     "lodash": "^2.4.2",
     "moment": "^2.18.1",
     "restangular": "~1.4.0"
@@ -29,7 +30,6 @@
     "del": "^3.0.0",
     "gulp": "3.9.1",
     "gulp-angular-gettext": "^2.2.0",
-    "gulp-sass": "^3.1.0",
     "http-server": "^0.10.0",
     "istanbul-instrumenter-loader": "^2.0.0",
     "jasmine-core": "^2.4.1",

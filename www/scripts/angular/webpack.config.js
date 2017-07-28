@@ -32,7 +32,7 @@ module.exports = {
         }
     },
     externals: {
-      d3: 'd3'
+      tlp: 'tlp'
     },
     module: {
         rules: [

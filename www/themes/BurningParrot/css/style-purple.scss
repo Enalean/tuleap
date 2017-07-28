@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean,  2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Trafficlights;
+@import 'variables/colors';
+@import 'variables/margins';
+@import 'variables/variables-purple';
 
-use Service as CoreService;
-
-class Service extends CoreService {
-
-    /**
-     * Display header for service tracker
-     *
-     * @param string $title       The title
-     * @param array  $breadcrumbs array of breadcrumbs (array of 'url' => string, 'title' => string)
-     * @param array  $toolbar     array of toolbars (array of 'url' => string, 'title' => string)
-     *
-     * @return void
-     */
-    public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
-        parent::displayHeader($title, $breadcrumbs, $toolbar, $params);
-    }
-
-}
+@import 'trafficlights';

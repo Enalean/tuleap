@@ -19,6 +19,7 @@
  */
 
 
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -39,8 +40,6 @@ class TrafficlightsPlugin extends Plugin {
         parent::__construct($id);
         $this->filesystem_path = TRAFFICLIGHTS_BASE_DIR;
         $this->setScope(self::SCOPE_PROJECT);
-        $this->addHook('cssfile');
-        $this->addHook('javascript_file');
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
@@ -55,6 +54,9 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
         $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function getServiceShortname() {
@@ -250,19 +252,27 @@ class TrafficlightsPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    function cssfile($params) {
-        // Only show the stylesheet if we're actually in the Trafficlights pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/scripts/angular/bin/assets/trafficlights.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+    public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event)
+    {
+        if ($this->currentRequestIsForPlugin()) {
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 
-    public function javascript_file() {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="scripts/move-breadcrumb.js"></script>'."\n";
-            echo '<script type="text/javascript" src="scripts/resize-content.js"></script>'."\n";
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if ($this->currentRequestIsForPlugin()) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if ($this->currentRequestIsForPlugin()) {
+            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/trafficlights.js';
+            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/socket.io.js';
+            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/move-breadcrumb.js';
         }
     }
 

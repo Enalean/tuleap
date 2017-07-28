@@ -1,5 +1,7 @@
 /**
- * Copyright (c) Enalean SAS - 2014. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
+@import 'variables/colors';
+@import 'variables/margins-condensed';
+@import 'variables/variables-grey';
 
-    function resizeContent() {
-        var toolbar = $('.toolbar');
-        var content_height = $('body').outerHeight() - $('.navbar').height() - $('.breadcrumb').outerHeight();
-
-        if (! toolbar.hasClass('hide-toolbar')) {
-            content_height -= $('.toolbar').outerHeight();
-        }
-
-        $('div.content').css({
-            height: content_height + 'px'
-        });
-    }
-
-    $(document).ready(resizeContent);
-    $(window).resize(resizeContent);
-
-})(jQuery);
+@import 'trafficlights';
