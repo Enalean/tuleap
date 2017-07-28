@@ -117,7 +117,6 @@ class SvnPlugin extends Plugin
     /** @var PermissionsManager */
     private $permissions_manager;
 
-
     public function __construct($id)
     {
         parent::__construct($id);
@@ -148,7 +147,7 @@ class SvnPlugin extends Plugin
         $this->addHook('plugin_statistics_disk_usage_collect_project');
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
-
+        $this->addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
@@ -244,6 +243,19 @@ class SvnPlugin extends Plugin
         $old_ugroup_name = null;
 
         $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
+    }
+
+    public function systemevent_user_rename(array $params)
+    {
+        $new_ugroup_name = null;
+        $old_ugroup_name = null;
+        $user            = $params['user'];
+
+        $projects = $this->getProjectManager()->getAllProjectsForUser($user);
+
+        foreach ($projects as $project) {
+            $this->updateAllAccessFileOfProject($project, $new_ugroup_name, $old_ugroup_name);
+        }
     }
 
     private function updateAllAccessFileOfProject(Project $project, $new_ugroup_name, $old_ugroup_name) {
@@ -394,6 +406,15 @@ class SvnPlugin extends Plugin
     private function getForgeUserGroupFactory()
     {
         return new User_ForgeUserGroupFactory(new UserGroupDao());
+    }
+
+    /**
+     * @return ProjectManager
+     */
+    private function getProjectManager()
+    {
+        return ProjectManager::instance();
+
     }
 
     public function process(HTTPRequest $request)
