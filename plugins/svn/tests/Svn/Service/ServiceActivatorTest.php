@@ -88,6 +88,34 @@ class ServiceActivatorTest extends TuleapTestCase
         $this->activator->unuseLegacyService($this->params);
     }
 
+    public function itUnsetsSVNCoreEvenIfItsTheOnlySVNServiceInTemplate()
+    {
+        stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
+            array($this->svn_core_service)
+        );
+
+        stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
+
+        expect($this->data)->unsetProjectServiceUsage(101)->once();
+        expect($this->data)->forceServiceUsage()->never();
+
+        $this->activator->unuseLegacyService($this->params);
+    }
+
+    public function itDoesNothingIfSVNPluginIsTheOnlySVNServiceInTemplate()
+    {
+        stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
+            array($this->svn_plugin_service)
+        );
+
+        stub($this->data)->projectShouldInheritFromTemplate()->returns(true);
+
+        expect($this->data)->unsetProjectServiceUsage()->never();
+        expect($this->data)->forceServiceUsage()->never();
+
+        $this->activator->unuseLegacyService($this->params);
+    }
+
     public function itDoesNotActivatePluginIfBothSVNServicesAreNotActivatedIntoTemplate()
     {
         stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
@@ -120,6 +148,23 @@ class ServiceActivatorTest extends TuleapTestCase
         $this->activator->unuseLegacyService($this->params);
     }
 
+    public function itCreatesThePluginServiceIfPluginServiceDoesNotExistInTemplate()
+    {
+        $project = aMockProject()->withId(102)->build();
+        $legacy  = array(Service::SVN => false);
+
+        stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
+            array($this->svn_core_service)
+        );
+        stub($this->service_manager)->getListOfAllowedServicesForProject($project)->returns(
+            array()
+        );
+
+        expect($this->service_creator)->createService()->once();
+
+        $this->activator->forceUsageOfService($project, $this->template, $legacy);
+    }
+
     public function itCreatesThePluginServiceIfNotAvailableInTemplate()
     {
         $project = aMockProject()->withId(102)->build();
@@ -128,8 +173,9 @@ class ServiceActivatorTest extends TuleapTestCase
         stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
             array($this->svn_core_service, $this->svn_plugin_service)
         );
-        stub($this->svn_plugin_service)->getDataAsArray()->returns(array());
-        stub($project)->usesService(SvnPlugin::SERVICE_SHORTNAME)->returns(false);
+        stub($this->service_manager)->getListOfAllowedServicesForProject($project)->returns(
+            array()
+        );
 
         expect($this->service_creator)->createService()->once();
 
@@ -144,8 +190,9 @@ class ServiceActivatorTest extends TuleapTestCase
         stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
             array($this->svn_core_service, $this->svn_plugin_service)
         );
-        stub($this->svn_plugin_service)->getDataAsArray()->returns(array());
-        stub($project)->usesService(SvnPlugin::SERVICE_SHORTNAME)->returns(true);
+        stub($this->service_manager)->getListOfAllowedServicesForProject($project)->returns(
+            array($this->svn_plugin_service)
+        );
 
         expect($this->service_creator)->createService()->never();
 
@@ -160,8 +207,26 @@ class ServiceActivatorTest extends TuleapTestCase
         stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
             array($this->svn_core_service, $this->svn_plugin_service)
         );
-        stub($this->svn_plugin_service)->getDataAsArray()->returns(array());
-        stub($project)->usesService(SvnPlugin::SERVICE_SHORTNAME)->returns(false);
+        stub($this->service_manager)->getListOfAllowedServicesForProject($project)->returns(
+            array($this->svn_plugin_service)
+        );
+
+        expect($this->service_creator)->createService()->never();
+
+        $this->activator->forceUsageOfService($project, $this->template, $legacy);
+    }
+
+    public function itDoesNotCreateThePluginServiceIfNoSVNAvailableInTemplate()
+    {
+        $project = aMockProject()->withId(102)->build();
+        $legacy  = array(Service::SVN => false);
+
+        stub($this->service_manager)->getListOfAllowedServicesForProject($this->template)->returns(
+            array()
+        );
+        stub($this->service_manager)->getListOfAllowedServicesForProject($project)->returns(
+            array()
+        );
 
         expect($this->service_creator)->createService()->never();
 
