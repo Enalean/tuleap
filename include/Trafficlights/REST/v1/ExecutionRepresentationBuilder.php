@@ -190,7 +190,7 @@ class ExecutionRepresentationBuilder {
             return '';
         }
 
-        return $changeset_value->getText();
+        return $changeset_value->getValue();
     }
 
     private function getExecutionTime(PFUser $user, Tracker_Artifact $execution) {

@@ -30,8 +30,8 @@
             </span>
             <img ng-src="scripts/angular/bin/assets/status-{{ execution.status | dasherize }}-white-big.png" />
 
-            <p id="last-execution-comment" ng-if="execution.previous_result.result">
-                {{ execution.previous_result.result }}
+            <p id="last-execution-comment" ng-if="execution.previous_result.result" >
+                <ng-bind-html ng-bind-html="sanitizeHtml(execution.previous_result.result)"></ng-bind-html>
                 <span class="read-more" ng-if="execution.previous_result.result.length > 150"></span>
             </p>
     </div>
