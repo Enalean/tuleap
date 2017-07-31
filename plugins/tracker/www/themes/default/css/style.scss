@@ -3382,5 +3382,10 @@ td.tracker-global-notifications-checkbox-cell {
 
     .avatar {
         margin: 0 5px 0 0;
+        flex: 0 0 auto;
+    }
+
+    .realname {
+        text-align: left;
     }
 }
