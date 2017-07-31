@@ -24,24 +24,24 @@
 
 namespace Tuleap\Svn\Hooks;
 
-use PFUser;
-use Tuleap\Svn\Logs\LastAccessUpdater;
-use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Admin\MailHeaderManager;
-use Tuleap\Svn\Commit\CannotFindSVNCommitInfoException;
-use Tuleap\Svn\Admin\MailReference;
-use Tuleap\Svn\Commit\CommitInfoEnhancer;
-use Tuleap\Svn\Commit\CommitInfo;
-use ReferenceManager;
+use EventManager;
+use ForgeConfig;
 use MailBuilder;
 use MailEnhancer;
-use ForgeConfig;
 use Notification;
-use UserManager;
-use EventManager;
+use PFUser;
+use ReferenceManager;
 use SvnPlugin;
+use Tuleap\Svn\Admin\MailHeaderManager;
+use Tuleap\Svn\Admin\MailReference;
+use Tuleap\Svn\Commit\CannotFindSVNCommitInfoException;
+use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\Svn\Commit\CommitInfoEnhancer;
+use Tuleap\Svn\Logs\LastAccessUpdater;
+use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
+use Tuleap\Svn\Repository\Repository;
+use Tuleap\Svn\Repository\RepositoryManager;
+use UserManager;
 
 class PostCommit
 {
@@ -167,7 +167,8 @@ class PostCommit
      * @return PFUser
      * @throws CannotFindSVNCommitInfoException
      */
-    private function getCommitter(CommitInfo $commit_info) {
+    private function getCommitter(CommitInfo $commit_info)
+    {
         $user_name = $commit_info->getUser();
         if (ForgeConfig::get('sys_auth_type') === ForgeConfig::AUTH_TYPE_LDAP) {
             $user = $this->user_manager->findUser($user_name);
@@ -176,7 +177,7 @@ class PostCommit
         }
 
         if ($user === null) {
-            throw new CannotFindSVNCommitInfoException();
+            throw new CannotFindSVNCommitInfoException(dgettext('tuleap-svn', 'Cannot find committer information'));
         }
 
         return $user;
