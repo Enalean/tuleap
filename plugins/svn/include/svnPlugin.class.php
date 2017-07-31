@@ -567,7 +567,9 @@ class SvnPlugin extends Plugin
                 $repository_manager,
                 new Svnlook(new System_Command()),
                 $this->getImmutableTagCreator(),
-                new ImmutableTagFactory(new ImmutableTagDao())
+                new ImmutableTagFactory(new ImmutableTagDao()),
+                new ProjectHistoryFormatter(),
+                new ProjectHistoryDao()
             ),
             new GlobalAdminController(
                 $this->getForgeUserGroupFactory(),

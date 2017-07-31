@@ -167,6 +167,7 @@ class RepositoryResource extends AuthenticatedResource
             new AccessFileHistoryDao(),
             $access_file_history_factory
         );
+        $project_history_formatter   = new ProjectHistoryFormatter();
         $this->repository_creator    = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
@@ -196,8 +197,11 @@ class RepositoryResource extends AuthenticatedResource
         $this->repository_updater = new RepositoryResourceUpdater(
             $hook_config_updator,
             $immutable_tag_creator,
+            $access_file_history_factory,
             $access_file_history_creator,
-            $access_file_history_factory
+            $project_history_formatter,
+            $project_history_dao,
+            $this->immutable_tag_factory
         );
     }
 
