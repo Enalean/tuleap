@@ -31,7 +31,6 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\v1\FullRepositoryRepresentation;
 use Tuleap\REST\v1\RepositoryRepresentationBuilder;
-use Tuleap\REST\v1\RepositoryResourceUpdater;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
@@ -197,7 +196,8 @@ class RepositoryResource extends AuthenticatedResource
         $this->repository_updater = new RepositoryResourceUpdater(
             $hook_config_updator,
             $immutable_tag_creator,
-            $access_file_history_creator
+            $access_file_history_creator,
+            $access_file_history_factory
         );
     }
 

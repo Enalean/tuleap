@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\REST\v1;
+namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
+use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\Repository;
@@ -40,15 +41,21 @@ class RepositoryResourceUpdater
      * @var AccessFileHistoryCreator
      */
     private $access_file_history_creator;
+    /**
+     * @var AccessFileHistoryFactory
+     */
+    private $access_file_history_factory;
 
     public function __construct(
         HookConfigUpdator $hook_config_updator,
         ImmutableTagCreator $immutable_tag_creator,
-        AccessFileHistoryCreator $access_file_history_creator
+        AccessFileHistoryCreator $access_file_history_creator,
+        AccessFileHistoryFactory $access_file_history_factory
     ) {
         $this->hook_config_updator         = $hook_config_updator;
         $this->immutable_tag_creator       = $immutable_tag_creator;
         $this->access_file_history_creator = $access_file_history_creator;
+        $this->access_file_history_factory = $access_file_history_factory;
     }
 
     public function update(Repository $repository, Settings $settings)
@@ -66,7 +73,11 @@ class RepositoryResourceUpdater
         }
 
         if ($settings->getAccessFileContent()) {
-            $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
+            $current_version = $this->access_file_history_factory->getCurrentVersion($repository);
+
+            if ($current_version->getContent() !== $settings->getAccessFileContent()) {
+                $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
+            }
         }
     }
 }
