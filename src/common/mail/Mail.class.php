@@ -1,6 +1,21 @@
 <?php
-/*
- * 
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/dao/UserDao.class.php');
@@ -56,15 +71,22 @@ class Mail implements Codendi_Mail_Interface {
      * CVS Revision...: Revision: 1.4 
      * Copyright......: 2001, 2002 Richard Heyes
      */
-    function _encodeHeader($input, $charset) {
-		preg_match_all('/(\s?\w*[\x80-\xFF]+\w*\s?)/', $input, $matches);
-		foreach ($matches[1] as $value) {
-			$replacement = preg_replace('/([\x80-\xFF])/e', '"=" . strtoupper(dechex(ord("\1")))', $value);
-			$input = str_replace($value, '=?' . $charset . '?Q?' . $replacement . '?=', $input);
-		}
-		
-		return $input;
-	}
+    function _encodeHeader($input, $charset)
+    {
+        preg_match_all('/(\s?\w*[\x80-\xFF]+\w*\s?)/', $input, $matches);
+        foreach ($matches[1] as $value) {
+            $replacement = preg_replace_callback(
+                '/([\x80-\xFF])/',
+                function (array $matches) {
+                    return '=' . strtoupper(dechex(ord($matches[1])));
+                },
+                $value
+            );
+            $input      = str_replace($value, '=?' . $charset . '?Q?' . $replacement . '?=', $input);
+        }
+
+        return $input;
+    }
     
     /**
      * Given a header, this function will decode it

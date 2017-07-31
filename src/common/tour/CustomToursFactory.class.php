@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -167,7 +167,7 @@ class Tuleap_CustomToursFactory {
             $attributes = (isset($uri_parts[1])) ? explode('&', $uri_parts[1]) : array();
             foreach ($attributes as $attribute) {
                 $key_value = explode('=', $attribute);
-                $key       = preg_quote($key_value[0]);
+                $key       = preg_quote($key_value[0], '/');
                 $url       = preg_replace("/$key=$placeholder/", $attribute, $url);
             }
         }

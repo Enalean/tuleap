@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -137,7 +137,7 @@ class SVN_RepositoryListing {
     }
 
     private function extractDirectoryContent($line, $svn_path) {
-        $match_path_regex = (substr($svn_path, -1) == '/') ? "%^$svn_path%" : "%^$svn_path/%";
+        $match_path_regex = (substr($svn_path, -1) == '/') ? '%^' . preg_quote($svn_path, '%') . '%' : '%^' . preg_quote($svn_path, '%') . '/%';
 
         if (preg_match($match_path_regex, $line)) {
             return trim(preg_replace($match_path_regex, '', $line), '/');
@@ -154,4 +154,3 @@ class SVN_RepositoryListing {
         return $user->getId();
     }
 }
-?>

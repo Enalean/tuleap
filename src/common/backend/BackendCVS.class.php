@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -687,7 +687,7 @@ class BackendCVS extends Backend {
         $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/config';
         $this->_RcsCheckout($filename);
         $file = file_get_contents($filename);
-        $file = preg_replace('%'.$oldLockDir.'%m', $newLockDir, $file);
+        $file = preg_replace('%' . preg_quote($oldLockDir, '%') . '%m', $newLockDir, $file);
         file_put_contents($filename, $file);
         $this->_RcsCommit($filename);
 
@@ -706,8 +706,8 @@ class BackendCVS extends Backend {
         $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/loginfo';
         $this->_RcsCheckout($filename);
         $file = file_get_contents($filename);
-        $file = preg_replace('%(\s+)'.$project->getUnixName(false).'(\s+)%m', '$1'.$newName.'$2', $file);
-        $file = preg_replace('%'.$GLOBALS['cvs_prefix'].'/'.$project->getUnixName(false).'%m', $GLOBALS['cvs_prefix'].'/'.$newName, $file);
+        $file = preg_replace('%(\s+)'. preg_quote($project->getUnixName(false), '%') . '(\s+)%m', '$1'.$newName.'$2', $file);
+        $file = preg_replace('%' . preg_quote($GLOBALS['cvs_prefix'].'/'.$project->getUnixName(false), '%') . '%m', $GLOBALS['cvs_prefix'].'/'.$newName, $file);
         file_put_contents($filename, $file);
         $this->_RcsCommit($filename);
         return true;
@@ -725,11 +725,9 @@ class BackendCVS extends Backend {
         $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/commitinfo';
         $this->_RcsCheckout($filename);
         $file = file_get_contents($filename);
-        $file = preg_replace('%(\s+)'.$project->getUnixName(false).'(\s+)%m', '$1'.$newName.'$2', $file);
+        $file = preg_replace('%(\s+)'. preg_quote($project->getUnixName(false), '%').'(\s+)%m', '$1'.$newName.'$2', $file);
         file_put_contents($filename, $file);
         $this->_RcsCommit($filename);
         return true;
     }
 }
-
-?>

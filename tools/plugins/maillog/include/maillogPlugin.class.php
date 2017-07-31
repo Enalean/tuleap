@@ -93,7 +93,13 @@ class maillogPlugin extends Plugin {
                 echo $message['body'];
             } else {
                 $input = preg_replace("/=\r?\n/", '', $message['html_body']);
-                $input = preg_replace('/=([a-f0-9]{2})/ie', "chr(hexdec('\\1'))", $input);
+                $input = preg_replace_callback(
+                    '/=([a-f0-9]{2})/i',
+                    function(array $matches) {
+                        return chr(hexdec($matches[1]));
+                    },
+                    $input
+                );
 
                 echo '<base href="https://gmail.example.com/">';
                 echo $input;

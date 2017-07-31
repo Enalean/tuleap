@@ -370,7 +370,7 @@ class ReferenceManager {
             $ref= new Reference(0, // no ID yet
                                 $row['keyword'],
                                 $row['description'],
-                                preg_replace('`group_id='. $template_id .'(&|$)`', 'group_id='. $group_id .'$1', $row['link']), // link
+                                preg_replace('`group_id='. preg_quote($template_id, '`') .'(&|$)`', 'group_id='. $group_id .'$1', $row['link']), // link
                                 'P', // scope is 'project'
                                 $row['service_short_name'],  // service ID - N/A
                                 $row['nature'],

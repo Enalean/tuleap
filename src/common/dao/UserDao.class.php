@@ -580,7 +580,7 @@ class UserDao extends DataAccessObject {
     public function replaceStringInList($subject, $search, $replace) {
         $tokens = explode(',', $subject);
         foreach($tokens as $k => $str) {
-            $tokens[$k] = preg_replace('%^(\s*)'.$search.'(\s*)$%', '$1'.$replace.'$2', $str);
+            $tokens[$k] = preg_replace('%^(\s*)' . preg_quote($search, '%') . '(\s*)$%', '$1'.$replace.'$2', $str);
         }
         return implode(',', $tokens);
     }
