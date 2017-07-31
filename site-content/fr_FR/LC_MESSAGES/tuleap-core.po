@@ -82,6 +82,18 @@ msgstr "Fermer"
 msgid "Configure services"
 msgstr "Configurer les services"
 
+msgid "Could not commit repository initial layout"
+msgstr "Impossible de commiter la structure initiale du dépôt"
+
+msgid "Could not create/initialize SVN repository"
+msgstr "Impossible de créer/initialiser le dépôt SVN"
+
+msgid "Could not the access file of the SVN repository"
+msgstr "Impossible d'accèder au fichier de contrôle d'accès du dépôt SVN"
+
+msgid "Could not update hooks of the SVN repository"
+msgstr "Impossible de mettre à jour les hooks du dépôt SVN"
+
 msgid "Dashboard creation failed."
 msgstr "La création du tableau de bord a échouée."
 
@@ -244,6 +256,10 @@ msgstr "Le tableau de bord \"%s\" existe déjà."
 #, php-format
 msgid "The dashboard '%s' doesn't exist."
 msgstr "Le tableau de bord \"%s\" n’existe pas."
+
+#, php-format
+msgid "The directory %s is not valid"
+msgstr "Le répertoire %s n'est valide"
 
 #, php-format
 msgid "The entered value '%s' is invalid."

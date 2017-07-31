@@ -20,6 +20,9 @@
 
 namespace Tuleap\Svn\EventRepository;
 
+use Tuleap\Svn\SVNRepositoryCreationException;
+use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
+
 require_once __DIR__ . '/../bootstrap.php';
 
 
@@ -73,5 +76,68 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
         );
 
         $this->assertEqual(array_values($parameters), $system_event->getParametersAsArray());
+    }
+
+    public function itMarksTheEventAsDoneWhenTheRepositoryIsSuccessfullyCreated()
+    {
+        $system_event = partial_mock(
+            'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY',
+            array('done', 'getRequiredParameter')
+        );
+
+        $system_event->injectDependencies(
+            mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
+            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
+            mock('BackendSVN'),
+            mock('BackendSystem')
+        );
+
+        $system_event->expectOnce('done');
+
+        $system_event->process();
+    }
+
+    public function itGeneratesAnErrorIfTheRepositoryCanNotBeCreated()
+    {
+        $system_event = partial_mock(
+            'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY',
+            array('error', 'done', 'getRequiredParameter')
+        );
+
+        $backend_svn    = mock('BackendSVN');
+        $backend_svn->throwOn('createRepositorySVN', new SVNRepositoryCreationException());
+        $system_event->injectDependencies(
+            mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
+            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
+            $backend_svn,
+            mock('BackendSystem')
+        );
+
+        $system_event->expectOnce('error');
+        $system_event->expectNever('done');
+
+        $system_event->process();
+    }
+
+    public function itGeneratesAWarningIfTheDirectoryLayoutCanNotBeCreated()
+    {
+        $system_event = partial_mock(
+            'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY',
+            array('warning', 'done', 'getRequiredParameter')
+        );
+
+        $backend_svn    = mock('BackendSVN');
+        $backend_svn->throwOn('createRepositorySVN', new SVNRepositoryLayoutInitializationException());
+        $system_event->injectDependencies(
+            mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
+            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
+            $backend_svn,
+            mock('BackendSystem')
+        );
+
+        $system_event->expectOnce('warning');
+        $system_event->expectNever('done');
+
+        $system_event->process();
     }
 }

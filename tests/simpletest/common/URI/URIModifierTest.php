@@ -49,4 +49,10 @@ class URIModifierTest extends \TuleapTestCase
         $this->assertEqual('/a/b', URIModifier::normalizePercentEncoding('/a/b'));
         $this->assertEqual('/%5B%5D/a', URIModifier::normalizePercentEncoding('/[]/a'));
     }
+
+    public function itRemovesEmptySegments()
+    {
+        $this->assertEqual('/a/b/c/', URIModifier::removeEmptySegments('/a//b////c/'));
+        $this->assertEqual('/a/../b/', URIModifier::removeEmptySegments('/a//..//b//'));
+    }
 }
