@@ -165,6 +165,9 @@ msgstr "Page d'accueil"
 msgid "Image"
 msgstr "Image"
 
+msgid "Initial layout creation"
+msgstr "Création de la structure initiale"
+
 msgid "Instant messaging"
 msgstr "Messagerie Instantanée"
 

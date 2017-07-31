@@ -278,6 +278,7 @@ class SvnPlugin extends Plugin
                 $params['dependencies'] = array(
                     $this->getAccessFileHistoryCreator(),
                     $this->getRepositoryManager(),
+                    UserManager::instance(),
                     $this->getBackendSVN(),
                     $this->getBackendSystem()
                 );
@@ -486,15 +487,17 @@ class SvnPlugin extends Plugin
         $project         = $params['project'];
         $logger          = $params['logger'];
 
+        $user_manager    = UserManager::instance();
+
         $svn = new XMLImporter(
-            Backend::instance(),
             $xml,
             $extraction_path,
             $this->getRepositoryCreator(),
             $this->getBackendSVN(),
             $this->getBackendSystem(),
             $this->getAccessFileHistoryCreator(),
-            $this->getRepositoryManager()
+            $this->getRepositoryManager(),
+            $user_manager
         );
         $svn->import(
             $params['configuration'],
@@ -502,7 +505,8 @@ class SvnPlugin extends Plugin
             $project,
             $this->getAccessFileHistoryCreator(),
             $this->getMailNotificationManager(),
-            new RuleName($project, new Dao())
+            new RuleName($project, new Dao()),
+            $user_manager->getCurrentUser()
         );
     }
 

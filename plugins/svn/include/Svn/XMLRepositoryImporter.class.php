@@ -66,9 +66,6 @@ class XMLRepositoryImporter
 
     /** @var SimpleXMLElement */
     private $references;
-
-    /** @var Backend */
-    private $backend;
     /**
      * @var RepositoryCreator
      */
@@ -81,16 +78,20 @@ class XMLRepositoryImporter
      * @var RepositoryManager
      */
     private $repository_manager;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
 
     public function __construct(
-        Backend $backend,
         SimpleXMLElement $xml_repo,
         $extraction_path,
         RepositoryCreator $repository_creator,
         Backend $backend_svn,
         Backend $backend_system,
         AccessFileHistoryCreator $access_file_history_creator,
-        RepositoryManager $repository_manager
+        RepositoryManager $repository_manager,
+        \UserManager $user_manager
     ) {
         $attrs = $xml_repo->attributes();
         $this->name = $attrs['name'];
@@ -110,12 +111,12 @@ class XMLRepositoryImporter
         }
 
         $this->references                  = $xml_repo->references;
-        $this->backend                     = $backend;
         $this->repository_creator          = $repository_creator;
         $this->backend_svn                 = $backend_svn;
         $this->backend_system              = $backend_system;
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;
+        $this->user_manager                = $user_manager;
     }
 
     public function import(
@@ -124,7 +125,8 @@ class XMLRepositoryImporter
         Project $project,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
-        RuleName $rule_name
+        RuleName $rule_name,
+        \PFUser $committer
     ) {
         if (! $rule_name->isValid($this->name)) {
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: ".$rule_name->getErrorMessage());
@@ -133,7 +135,7 @@ class XMLRepositoryImporter
         $repo     = new Repository ("", $this->name, '', '', $project);
 
         try {
-            $sysevent = $this->repository_creator->createWithoutUserAdminCheck($repo);
+            $sysevent = $this->repository_creator->createWithoutUserAdminCheck($repo, $committer);
         } catch (CannotCreateRepositoryException $e) {
             throw new XMLImporterException("Unable to create the repository");
         } catch (RepositoryNameIsInvalidException $e) {
@@ -148,6 +150,7 @@ class XMLRepositoryImporter
         $sysevent->injectDependencies(
             $this->access_file_history_creator,
             $this->repository_manager,
+            $this->user_manager,
             $this->backend_svn,
             $this->backend_system
         );
@@ -178,7 +181,7 @@ class XMLRepositoryImporter
         }
 
         if (! $this->currentUserIsHTTPUser()) {
-            $this->backend->recurseChownChgrp(
+            $this->backend_system->recurseChownChgrp(
                 $repo->getSystemPath(),
                 ForgeConfig::get('sys_http_user'),
                 $project->getUnixName(),
