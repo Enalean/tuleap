@@ -136,6 +136,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 
     &:hover {
         background: $tlp-ui-border-light;
+        text-decoration: none;
     }
 
     > .tlp-dropdown-menu-item-icon {

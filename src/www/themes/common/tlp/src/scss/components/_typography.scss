@@ -123,6 +123,15 @@ ol {
 
 a {
     color: $tlp-theme-color;
+    text-decoration: none;
+
+    &.tlp-link-underlined {
+        text-decoration: underline;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 strong {
