@@ -85,6 +85,6 @@ class Computed extends Tracker_FormElement_View_Admin_Field
 
     private function isMigrated()
     {
-        return $this->canUpgrade() && $this->formElement->useFastCompute();
+        return $this->canUpgrade();
     }
 }

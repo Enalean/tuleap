@@ -1084,7 +1084,7 @@ plugin_tracker_artifact_changeset	header_html_changeset	Dernières modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	État
 
 plugin_tracker_formelement_admin	aggregate_label	Champ calculé
-plugin_tracker_formelement_admin	aggregate_description	Calcule la valeur (somme des valeurs) du champ en fonction des artefacts liés.<p><strong>Note</strong> : <ul><li>Si vous utilisez toujours des champs dépréciés, l'option "Calcul rapide" ne vérifie pas les permissions sur les artefacts liés <strong>ET</strong> utilisera le même nom "Champ cible" pour l'ensemble des artifacts liés.</li><li>sinon le calcul ne vérifie pas les permissions sur les artefacts liés <strong>ET</strong> se basera sur le nom du camps pour faire la somme des artifacts liés.</li></ul>
+plugin_tracker_formelement_admin	aggregate_description	Calcule la valeur (somme des valeurs) du champ en fonction des artefacts liés.<p><strong>Note</strong> : <ul><li>Le calcul ne vérifie pas les permissions sur les artefacts liés <strong>ET</strong> se base sur le nom du champs pour faire la somme des artifacts liés.</li></ul>
 plugin_tracker_formelement_admin	crossreferences_label	Références Croisées
 plugin_tracker_formelement_admin	crossreferences_description	Affiche les références croisées de l'artefact
 plugin_tracker_formelement_admin	burndown_label	Diagramme de complétion
