@@ -249,6 +249,7 @@ $kanban-column-footer-height: 50px;
     text-align: center;
     text-overflow: ellipsis;
     text-transform: uppercase;
+    white-space: nowrap;
     overflow: hidden;
 }
 
