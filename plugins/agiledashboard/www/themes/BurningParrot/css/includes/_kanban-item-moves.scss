@@ -1,18 +1,15 @@
 .kanban-item-content-moves {
-    display: flex;
     position: absolute;
     z-index: 1000;
-    right: -10px;
-    flex-direction: column;
-    align-self: center;
-    justify-content: space-between;
-    height: calc(100% + #{$tlp-spacing});
+    right: 15px;
+    height: 100%;
     transition: opacity $transition-duration $transition-delay;
     opacity: 0;
 }
 
 .kanban-item-content-move {
     display: flex;
+    position: absolute;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
@@ -21,6 +18,14 @@
     padding: 0;
     border-radius: 50%;
     font-size: 12px;
+
+    &:first-child {
+        top: -10px;
+    }
+
+    &:last-child {
+        bottom: -10px;
+    }
 }
 
 .kanban-item:hover .kanban-item-content-moves {
