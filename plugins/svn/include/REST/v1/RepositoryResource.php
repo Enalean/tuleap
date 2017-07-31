@@ -311,14 +311,14 @@ class RepositoryResource extends AuthenticatedResource
      * @url PUT {id}
      *
      * @param int $id Id of the repository
-     * @param SettingsRepresentation $settings The new settings of the SVN repository {@from body} {@type Tuleap\SVN\REST\v1\SettingsRepresentation}
+     * @param SettingsPUTRepresentation $settings The new settings of the SVN repository {@from body} {@type Tuleap\SVN\REST\v1\SettingsPUTRepresentation}
      *
      * @return FullRepositoryRepresentation
      *
      * @throws 404
      * @throws 403
      */
-    protected function put($id, SettingsRepresentation $settings)
+    protected function put($id, SettingsPUTRepresentation $settings)
     {
         $this->sendAllowHeaders();
         $this->checkAccess();
@@ -333,6 +333,11 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->checkUserIsAdmin($repository->getProject(), $user);
+
+        if (! $settings->isAccessFileKeySent()) {
+            throw new RestException('400', '`settings[access_file]` is required');
+            return;
+        }
 
         $repository_settings = $this->getSettings($repository, $settings);
         $this->repository_updater->update($repository, $repository_settings);
