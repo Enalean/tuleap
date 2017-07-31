@@ -14,6 +14,7 @@
         ng-attr-title="::static_open_list_field.field.hint"
         class="tlp-select tuleap-artifact-modal-open-list-static"
         id="{{ ::('tracker_field_' + static_open_list_field.field.field_id) }}"
+        style="width: 100%"
     >
         <option
             ng-repeat="field_value in static_open_list_field.fieldValues()"

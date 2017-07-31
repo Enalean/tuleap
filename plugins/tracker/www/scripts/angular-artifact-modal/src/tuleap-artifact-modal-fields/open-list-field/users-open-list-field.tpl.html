@@ -15,6 +15,7 @@
         ng-attr-title="::users_open_list_field.field.hint"
         class="tlp-select tuleap-artifact-modal-open-list-users"
         id="{{ ::('tracker_field_' + users_open_list_field.field.field_id) }}"
+        style="width: 100%"
     >
         <option
             ng-repeat="field_value in ::users_open_list_field.value_model.value.bind_value_objects"
