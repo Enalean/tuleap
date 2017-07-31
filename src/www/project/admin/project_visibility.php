@@ -38,11 +38,20 @@ if (! $request->getProject()) {
     exit_no_group();
 }
 
+$ugroup_user_dao = new UGroupUserDao();
+$ugroup_manager  = new UGroupManager();
+
+$ugroup_binding = new UGroupBinding(
+    $ugroup_user_dao,
+    $ugroup_manager
+);
+
 $project_visibility_router = new ProjectVisibilityRouter(
     new ProjectVisibilityController(
         ProjectManager::instance(),
         new ProjectVisibilityUserConfigurationPermissions(),
-        new ServicesUsingTruncatedMailRetriever(EventManager::instance())
+        new ServicesUsingTruncatedMailRetriever(EventManager::instance()),
+        $ugroup_binding
     )
 );
 $project_visibility_router->route($request);

@@ -64,11 +64,21 @@ if ($request->isPost() && $request->valid($vFunc)) {
     /*
       updating the database
     */
+
+    $ugroup_user_dao = new UGroupUserDao();
+    $ugroup_manager  = new UGroupManager();
+
+    $ugroup_binding = new UGroupBinding(
+        $ugroup_user_dao,
+        $ugroup_manager
+    );
+
     switch ($request->get('func')) {
     case 'adduser':
         // add user to this project
         $form_unix_name = $request->get('form_unix_name');
         $res = account_add_user_to_group ($group_id, $form_unix_name);
+        $ugroup_binding->reloadUgroupBindingInProject($group);
         break;
 
     case 'rmuser':
@@ -81,9 +91,10 @@ if ($request->isPost() && $request->valid($vFunc)) {
             new \Tuleap\Project\UserRemoverDao(),
             UserManager::instance(),
             new ProjectHistoryDao(),
-            new UGroupManager()
+            $ugroup_manager
         );
         $user_remover->removeUserFromProject($group_id, $rm_id);
+        $ugroup_binding->reloadUgroupBindingInProject($group);
         break;
 
     case 'change_group_type':
