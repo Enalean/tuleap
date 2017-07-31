@@ -59,8 +59,9 @@ extends WikiPlugin_WikiAdminSelect
     }
 
     function renameHelper($name, $from, $to, $options = false) {
-    	if ($options['regex'])
-    	    return preg_replace('/'.$from.'/'.($options['icase']?'i':''), $to, $name);
+        if ($options['regex']) {
+            return preg_replace('/' . str_replace('/', '\/', $from) . '/'.($options['icase']?'i':''), $to, $name);
+        }
     	elseif ($options['icase'])
     	    return str_ireplace($from, $to, $name);
     	else

@@ -459,7 +459,7 @@ class PhpError {
            $dir .= "\\";
         } else 
            $dir .= '/';
-        $errfile = preg_replace('|^' . preg_quote($dir) . '|', '', $this->errfile);
+        $errfile = preg_replace('|^' . preg_quote($dir, '|') . '|', '', $this->errfile);
         $lines = explode("\n", $this->errstr);
         if (DEBUG & _DEBUG_VERBOSE) {
           $msg = sprintf("%s:%d: %s[%d]: %s",
@@ -588,7 +588,7 @@ class PhpErrorOnce extends PhpError {
            $dir .= "\\";
         } else 
            $dir .= '/';
-        $errfile = preg_replace('|^' . preg_quote($dir) . '|', '', $this->errfile);
+        $errfile = preg_replace('|^' . preg_quote($dir, '|') . '|', '', $this->errfile);
         if (is_string($this->errstr))
 	        $lines = explode("\n", $this->errstr);
 	    elseif (is_object($this->errstr))

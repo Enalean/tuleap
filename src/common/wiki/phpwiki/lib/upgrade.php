@@ -674,32 +674,6 @@ function _convert_cached_html (&$dbh) {
     return $count;
 }
 
-function CheckPluginUpdate(&$request) {
-    echo "<h3>",_("check for necessary plugin argument updates"),"</h3>\n";
-    $process = array('msg' => _("change RandomPage pages => numpages"),
-                     'match' => "/(<\?\s*plugin\s+ RandomPage\s+)pages/",
-                     'replace' => "\\1numpages");
-    $dbi = $request->getDbh();
-    $allpages = $dbi->getAllPages(false);
-    while ($page = $allpages->next()) {
-        $current = $page->getCurrentRevision();
-        $pagetext = $current->getPackedContent();
-        foreach ($process as $p) {
-            if (preg_match($p['match'], $pagetext)) {
-                echo $page->getName()," ",$p['msg']," ... ";
-                if ($newtext = preg_replace($p['match'], $p['replace'], $pagetext)) {
-                    $meta = $current->_data;
-                    $meta['summary'] = "upgrade: ".$p['msg'];
-                    $page->save($newtext, $current->getVersion() + 1, $meta);
-                    echo _("OK"), "<br />\n";
-                } else {
-                    echo " <b><font color=\"red\">", _("FAILED"), "</font></b><br />\n";
-                }
-            }
-        }
-    }
-}
-
 function fixConfigIni($match, $new) {
     $file = FindFile("config/config.ini");
     $found = false;
@@ -805,7 +779,6 @@ function DoUpgrade($request) {
     CheckActionPageUpdate($request);
     CheckPgsrcUpdate($request);
     //CheckThemeUpdate($request);
-    //CheckPluginUpdate($request);
     CheckConfigUpdate($request);
     EndLoadDump($request);
 }

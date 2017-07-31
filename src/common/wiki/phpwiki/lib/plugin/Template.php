@@ -168,7 +168,7 @@ extends WikiPlugin
                 $var['BASE_URL'] = PHPWIKI_BASE_URL;
 
             foreach ($var as $key => $val) {
-                $initial_content = preg_replace("/%%$key%%/", $val, $initial_content);
+                $initial_content = preg_replace('/%%' . preg_quote($key, '/') . '%%/', $val, $initial_content);
             }
         }
 
