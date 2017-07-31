@@ -259,7 +259,7 @@ class BackendSVN extends Backend {
                 $command  ='REPOS="$1"'."\n";
                 $command .='REV="$2"'."\n";
 
-                $command .= $post_commit_launcher.' ' . $hook_commit_path .'/'.$post_commit_file.' "$REPOS" "$REV" 2>&1 >/dev/null';
+                $command .= $post_commit_launcher.' ' . $hook_commit_path .'/'.$post_commit_file.' "$REPOS" "$REV" >/dev/null';
 
                 $this->addBlock($filename, $command);
                 $this->chown($filename, $this->getHTTPUser());

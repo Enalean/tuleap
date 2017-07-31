@@ -24,8 +24,4 @@ use Exception;
 
 class CannotFindRepositoryException extends Exception
 {
-    public function __construct()
-    {
-        parent::__construct($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
-    }
 }
