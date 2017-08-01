@@ -4,10 +4,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "<i class=\"icon-list\"></i> Tests list"
-msgstr ""
-
 #: src/app/execution/execution-list.tpl.html
 msgid "<i class=\"icon-pencil\"></i> Edit"
 msgstr ""
@@ -18,10 +14,6 @@ msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "<i class=\"icon-plus\"></i> Add a test"
-msgstr ""
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "<i class=\"icon-plus\"></i> New campaign"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
@@ -38,12 +30,12 @@ msgstr ""
 msgid "Campaign label"
 msgstr ""
 
-#: src/app/campaign/campaign-controller.js
-msgid "Campaigns"
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Campaign label or status..."
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Campaigns list"
+#: src/app/campaign/campaign-controller.js
+msgid "Campaigns"
 msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
@@ -75,6 +67,10 @@ msgstr ""
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr ""
 
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Details"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 msgid "Edit this test"
 msgstr ""
@@ -84,7 +80,6 @@ msgstr ""
 msgid "Failed"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
 msgstr ""
@@ -112,6 +107,10 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Milestone tests"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "New campaign"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
@@ -152,12 +151,12 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: src/app/campaign/campaign-edit.tpl.html
-msgid "Tests"
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Test campaigns"
 msgstr ""
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Tests Progression"
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Tests"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

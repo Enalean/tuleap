@@ -9,12 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 2.0.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "<i class=\"icon-list\"></i> Tests list"
-msgstr "<i class=\"icon-list\"></i> Liste des tests"
 
 #: src/app/execution/execution-list.tpl.html
 msgid "<i class=\"icon-pencil\"></i> Edit"
@@ -28,64 +24,27 @@ msgstr "<i class=\"icon-pencil\"></i> Édition de {{ campaign.label }}"
 msgid "<i class=\"icon-plus\"></i> Add a test"
 msgstr "<i class=\"icon-plus\"></i> Ajouter un test"
 
-#: src/app/campaign/campaign-list.tpl.html
-msgid "<i class=\"icon-plus\"></i> New campaign"
-msgstr "<i class=\"icon-plus\"></i> Nouvelle campagne"
-
 #: src/app/campaign/campaign-new.tpl.html
-msgid ""
-"<span class=\"total-definitions\">{{ getFilteredDefinitions(environment."
-"filter).length }}</span> test"
-msgid_plural ""
-"<span class='total-definitions'>{{ getFilteredDefinitions(environment."
-"filter).length }}</span> tests"
-msgstr[0] "Sélectionnez un test"
-msgstr[1] ""
-
-#: src/app/execution/execution-list.tpl.html
-msgid "Add a test <span class=\"caret\"></span>"
-msgstr "Ajouter un test <span class=\"caret\"></span>"
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid ""
-"All <strong>{{ environment.nb_selected_all }}</strong> tests are selected."
+msgid "All tests"
 msgstr ""
-"Les <strong>{{ environment.nb_selected_all }}</strong> tests sont "
-"sélectionnés."
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid ""
-"All <strong>{{ environment.nb_selected_all }}</strong> tests on this page "
-"are selected."
-msgstr ""
-"Les <strong>{{ environment.nb_selected_all }}</strong> tests sur cette page "
-"sont sélectionnés."
-
-#: src/app/execution/execution-list.tpl.html
-msgid "All environments"
-msgstr "Tous les environnements"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
 msgstr "Bloqué"
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "by"
-msgstr "par"
-
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
 msgstr "Label de la campagne"
 
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Campaign label or status..."
+msgstr "Label ou statut de campagne…"
+
 #: src/app/campaign/campaign-controller.js
 msgid "Campaigns"
 msgstr "Campagnes"
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Campaigns list"
-msgstr "Liste de campagnes"
 
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
@@ -93,8 +52,8 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: src/app/campaign/campaign-new.tpl.html
-msgid "Category"
-msgstr "Catégorie"
+msgid "Choose tests"
+msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Comment..."
@@ -116,6 +75,10 @@ msgstr "Graphe de dépendances de &#34;{{ graph.title }}&#34;"
 msgid "Dependencies graph of &#34;{{ modal.title }}&#34;"
 msgstr "Graphe de dépendances de &#34;{{ modal.title }}&#34;"
 
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Details"
+msgstr "Détails"
+
 #: src/app/execution/execution-detail.tpl.html
 msgid "Edit this test"
 msgstr "Éditer ce test"
@@ -125,8 +88,6 @@ msgstr "Éditer ce test"
 msgid "Failed"
 msgstr "Échoué"
 
-#: src/app/campaign/campaign-list.tpl.html
-#: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
 msgstr "Filtrer …"
@@ -135,10 +96,6 @@ msgstr "Filtrer …"
 #: src/app/graph/graph.tpl.html
 msgid "Focus graph"
 msgstr "Recentrer le graphe"
-
-#: src/app/execution/execution-list.tpl.html
-msgid "For all"
-msgstr "Pour tous"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Hide closed campaigns"
@@ -157,40 +114,26 @@ msgid "Load closed campaigns"
 msgstr "Charger les campagnes fermées"
 
 #: src/app/campaign/campaign-new.tpl.html
-msgid "No tests on this page are selected."
-msgstr "Aucun test sur cette page n’est sélectionné."
+msgid "Milestone tests"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "New campaign"
+msgstr "Nouvelle campagne"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "No tests"
+msgstr "Aucun test"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Not run"
 msgstr "Non exécuté"
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Oh no!"
-msgstr "Oh non !"
-
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
 msgstr "Succès"
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Please choose the environments for \"{{ campaign.label }}\" campaign:"
-msgstr ""
-"Merci de choisir les environnements pour la campagne \"{{ campaign."
-"label }}\" :"
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Please choose the environments for the new campaign:"
-msgstr "Merci de choisir les environnements pour la nouvelle campagne :"
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid ""
-"Please configure the test execution tracker and\n"
-"                        add environments in order to be able to go further."
-msgstr ""
-"Merci de configurer l’outil de suivi d’exécution des tests et d’ajouter des "
-"environnements afin de pouvoir continuer."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "Please select a test"
@@ -208,13 +151,6 @@ msgstr "Enregistrer les changements"
 msgid "Score users"
 msgstr "Score des utilisateurs"
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid ""
-"Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests."
-msgstr ""
-"Sélectionner les <strong>{{ environment.nb_selected_all_total }}</strong> "
-"tests."
-
 #: src/app/execution/execution-detail.tpl.html
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
@@ -223,21 +159,13 @@ msgstr "Afficher le graphe de dépendances"
 msgid "Summary"
 msgstr "Résumé"
 
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Test campaigns"
+msgstr "Campagne de tests"
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Tests"
 msgstr "Tests"
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Test name"
-msgstr "Nom du test"
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "Tests are run in an environment."
-msgstr "Les tests sont exécutés pour un environnement."
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Tests Progression"
-msgstr "Progression des tests"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "There are no campaigns"
@@ -251,10 +179,6 @@ msgstr "Il n’existe pas de campagne ouverte"
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 
-#: src/app/campaign/campaign-new.tpl.html
-msgid "You have not any environment defined."
-msgstr "Vous n’avez pas d’environnement défini."
-
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Zoom in"
@@ -265,25 +189,22 @@ msgstr "Zoom avant"
 msgid "Zoom out"
 msgstr "Zoom arrière"
 
-#: src/app/campaign/campaign-edit.tpl.html
-msgid "{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} will be added"
-msgstr "{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} seront ajoutés"
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
+msgstr "par"
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} will be removed"
-msgstr "{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} seront supprimés"
+msgid ""
+"{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} "
+"will be added"
+msgstr ""
+"{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} "
+"seront ajoutés"
 
-#~ msgid "<i class=\"icon-list\"></i>  Tests list"
-#~ msgstr "<i class=\"icon-list\"></i>  Liste de tests"
-
-#~ msgid "Campaign"
-#~ msgstr "Campagne"
-
-#~ msgid "New campaign"
-#~ msgstr "Nouvelle campagne"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Total"
-#~ msgstr "Total"
+#: src/app/campaign/campaign-edit.tpl.html
+msgid ""
+"{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} "
+"will be removed"
+msgstr ""
+"{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} "
+"seront supprimés"

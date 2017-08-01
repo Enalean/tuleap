@@ -2,19 +2,11 @@
 @import 'includes/socket';
 @import 'includes/artifact-links-graph';
 @import 'includes/graph';
-
-#trafficlights-app {
-    height: 100%;
-}
+@import 'includes/campaign';
 
 .loader {
     display: block;
     margin: 0 auto;
     width: 26px;
     height: 26px;
-}
-
-input[type="text"].filter {
-    background: url('search-input.png') no-repeat 8px 8px;
-    padding-left: 25px;
 }
