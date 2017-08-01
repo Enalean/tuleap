@@ -1,0 +1,8 @@
+{
+  "label": "Button Bars",
+  "children": [
+    "radios",
+    "checkboxes",
+    "sizes-colors"
+  ]
+}
