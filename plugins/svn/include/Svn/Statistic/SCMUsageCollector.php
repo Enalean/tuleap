@@ -51,6 +51,7 @@ class SCMUsageCollector
         return $content;
     }
 
+
     private function collectAccessesByMonth(Statistics_Formatter $formatter)
     {
         $accesses_by_month = array();
@@ -60,16 +61,25 @@ class SCMUsageCollector
             $formatter->endDate,
             $formatter->groupId
         );
+
+        $accesses_by_month['month'][]            = $GLOBALS['Language']->getText('plugin_svn_statistics', 'month');
+        $accesses_by_month['nb_browse'][]        = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_browse');
+        $accesses_by_month['nb_read'] []         = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_read');
+        $accesses_by_month['nb_write'] []        = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_write');
+        $accesses_by_month['nb_project_read'] [] = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_project_read');
+        $accesses_by_month['nb_user_read'] []    = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_user_read');
+        $accesses_by_month['nb_project_write'][] = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_project_write');
+        $accesses_by_month['nb_user_write'] []   = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_user_write');
+
         foreach ($global_accesses as $access) {
-            $accesses_by_month[$access['month'] . ' ' . $access['year']] = array(
-                'nb_read'    => $access['nb_read'],
-                'nb_browse'  => $access['nb_browse'],
-                'nb_write'   => $access['nb_write'],
-                'nb_project_read'  => 0,
-                'nb_user_read'     => 0,
-                'nb_project_write' => 0,
-                'nb_user_write'    => 0
-            );
+            $accesses_by_month['month'][]            = $access['month'] . " " . $access['year'];
+            $accesses_by_month['nb_read'][]          = $access['nb_read'];
+            $accesses_by_month['nb_browse'][]        = $access['nb_browse'];
+            $accesses_by_month['nb_write'][]         = $access['nb_write'];
+            $accesses_by_month['nb_project_read'][]  = 0;
+            $accesses_by_month['nb_user_read'][]     = 0;
+            $accesses_by_month['nb_project_write'][] = 0;
+            $accesses_by_month['nb_user_write'][]    = 0;
         }
 
         $project_user_read_accesses = $this->dao->searchUsersAndProjectsCountWithReadOperations(
@@ -78,8 +88,8 @@ class SCMUsageCollector
             $formatter->groupId
         );
         foreach ($project_user_read_accesses as $access) {
-            $accesses_by_month[$access['month'] . ' ' . $access['year']]['nb_project_read'] = $access['nb_project'];
-            $accesses_by_month[$access['month'] . ' ' . $access['year']]['nb_user_read']    = $access['nb_user'];
+            $accesses_by_month['nb_project_read'][$access['month'] . ' ' . $access['year']] = $access['nb_project'];
+            $accesses_by_month['nb_user_read'][$access['month'] . ' ' . $access['year']]    = $access['nb_user'];
         }
 
         $project_user_write_accesses = $this->dao->searchUsersAndProjectsCountWithWriteOperations(
@@ -88,59 +98,12 @@ class SCMUsageCollector
             $formatter->groupId
         );
         foreach ($project_user_write_accesses as $access) {
-            $accesses_by_month[$access['month'] . ' ' . $access['year']]['nb_project_write'] = $access['nb_project'];
-            $accesses_by_month[$access['month'] . ' ' . $access['year']]['nb_user_write']    = $access['nb_user'];
+            $accesses_by_month['nb_project_write'][$access['month'] . ' ' . $access['year']] = $access['nb_project'];
+            $accesses_by_month['nb_user_write'][$access['month'] . ' ' . $access['year']]    = $access['nb_user'];
         }
 
-        foreach ($accesses_by_month as $month => $access) {
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'month'),
-                    $month
-                )
-            );
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_browse'),
-                    $access['nb_browse']
-                )
-            );
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_read'),
-                    $access['nb_read']
-                )
-            );
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_write'),
-                    $access['nb_write']
-                )
-            );
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_project_read'),
-                    $access['nb_project_read']
-                )
-            );
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_user_read'),
-                    $access['nb_user_read']
-                )
-            );
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_project_write'),
-                    $access['nb_project_write']
-                )
-            );
-            $formatter->addLine(
-                array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_user_write'),
-                    $access['nb_user_write']
-                )
-            );
+        foreach ($accesses_by_month as $line) {
+            $formatter->addLine($line);
         }
     }
 
