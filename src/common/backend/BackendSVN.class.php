@@ -123,7 +123,7 @@ class BackendSVN extends Backend {
      * @throws SVNRepositoryCreationException
      * @throws SVNRepositoryLayoutInitializationException
      */
-    public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path, array $initial_layout)
+    public function createRepositorySVN($project_id, $svn_dir, $hook_commit_path, PFUser $user, array $initial_layout)
     {
         if (! $this->createRepository($project_id, $svn_dir)) {
             throw new SVNRepositoryCreationException(_('Could not create/initialize SVN repository'));
@@ -131,7 +131,7 @@ class BackendSVN extends Backend {
 
         $exception = null;
         try {
-            $this->createDirectoryLayout($svn_dir, $initial_layout);
+            $this->createDirectoryLayout($project_id, $svn_dir, $user, $initial_layout);
         } catch (SVNRepositoryLayoutInitializationException $layout_initialization_exception) {
             $exception = $layout_initialization_exception;
         }
@@ -218,7 +218,7 @@ class BackendSVN extends Backend {
     /**
      * @throws SVNRepositoryLayoutInitializationException
      */
-    private function createDirectoryLayout($system_path, array $initial_layout)
+    private function createDirectoryLayout($project_id, $system_path, PFUser $user, array $initial_layout)
     {
         if (empty($initial_layout)) {
             return;
@@ -237,11 +237,43 @@ class BackendSVN extends Backend {
             $filtered_layout[]      = escapeshellarg('file://' . $path_to_create_encoded);
         }
 
-        $result = $this->system('svn mkdir --username="Tuleap" --message "Initial layout creation" --parents ' . implode(' ', $filtered_layout));
+        $current_ctype_locale    = setlocale(LC_CTYPE, 0);
+        $current_messages_locale = setlocale(LC_MESSAGES, 0);
+        $user_locale             = $user->getLocale();
+        setlocale(LC_CTYPE, "$user_locale.UTF-8");
+        setlocale(LC_MESSAGES, "$user_locale.UTF-8");
+
+        $user_name = $this->getUsernameUsableInSVN($project_id, $user);
+
+        $result = $this->system('svn mkdir --username=' . escapeshellarg($user_name) .
+            ' --message ' . escapeshellarg(_('Initial layout creation')) . ' --parents ' . implode(' ', $filtered_layout));
+
+        setlocale(LC_CTYPE, $current_ctype_locale);
+        setlocale(LC_MESSAGES, $current_messages_locale);
 
         if ($result === false) {
             throw new SVNRepositoryLayoutInitializationException(_('Could not commit repository initial layout'));
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function getUsernameUsableInSVN($project_id, PFUser $user)
+    {
+        $intro_information = false;
+        EventManager::instance()->processEvent(Event::SVN_INTRO, array(
+            'svn_intro_in_plugin' => false,
+            'svn_intro_info'      => &$intro_information,
+            'group_id'            => $project_id,
+            'user_id'             => $user->getId()
+        ));
+        $user_name = $user->getUserName();
+        if ($intro_information !== false) {
+            $user_name = $intro_information->getLogin();
+        }
+
+        return strtolower($user_name);
     }
 
     /**

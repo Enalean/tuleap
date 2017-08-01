@@ -99,7 +99,7 @@ class RepositoryCreator
     {
         $this->checkUserHasAdministrationPermissions($svn_repository, $user);
 
-        return $this->createWithoutUserAdminCheck($svn_repository);
+        return $this->createWithoutUserAdminCheck($svn_repository, $user);
     }
 
     /**
@@ -108,26 +108,27 @@ class RepositoryCreator
      * @throws CannotCreateRepositoryException
      * @throws RepositoryNameIsInvalidException
      */
-    public function createWithoutUserAdminCheck(Repository $svn_repository)
+    public function createWithoutUserAdminCheck(Repository $svn_repository, PFUser $committer)
     {
         $svn_repository = $this->createRepository($svn_repository);
         $this->logCreation($svn_repository);
 
         $initial_repository_layout = array();
 
-        return $this->sendEvent($svn_repository, $initial_repository_layout);
+        return $this->sendEvent($svn_repository, $committer, $initial_repository_layout);
     }
 
     /**
      * @return SystemEvent
      */
-    private function sendEvent(Repository $svn_repository, array $initial_repository_layout)
+    private function sendEvent(Repository $svn_repository, PFUser $committer, array $initial_repository_layout)
     {
         $repo_event['system_path']    = $svn_repository->getSystemPath();
         $repo_event['project_id']     = $svn_repository->getProject()->getId();
         $repo_event['name']           = $svn_repository->getProject()->getUnixNameMixedCase() . "/" . $svn_repository->getName();
         $repo_event['repository_id']  = $svn_repository->getId();
         $repo_event['initial_layout'] = $initial_repository_layout;
+        $repo_event['user_id']        = $committer->getId();
 
         return $this->system_event_manager->createEvent(
             'Tuleap\\Svn\\EventRepository\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME,
@@ -151,7 +152,7 @@ class RepositoryCreator
             $this->logCreation($repository);
         }
 
-        return $this->sendEvent($repository, $initial_repository_layout);
+        return $this->sendEvent($repository, $user, $initial_repository_layout);
     }
 
     private function logCreation(Repository $repository)

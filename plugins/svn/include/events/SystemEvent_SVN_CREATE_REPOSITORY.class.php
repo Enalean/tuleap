@@ -46,6 +46,10 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
      */
     private $repository_manager;
     /**
+     * @var \UserManager
+     */
+    private $user_manager;
+    /**
      * @var AccessFileHistoryCreator
      */
     private $access_file_history_creator;
@@ -53,11 +57,13 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
     public function injectDependencies(
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
+        \UserManager $user_manager,
         \BackendSVN $backend_svn,
         \BackendSystem $backend_system
     ) {
         $this->access_file_history_creator = $access_file_history_creator;
         $this->repository_manager          = $repository_manager;
+        $this->user_manager                = $user_manager;
         $this->backend_svn                 = $backend_svn;
         $this->backend_system              = $backend_system;
     }
@@ -78,6 +84,10 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
         $project_id     = (int)$this->getRequiredParameter(1);
         $repository_id  = $this->getRequiredParameter(3);
         $initial_layout = $this->getParameter(4) ?: array();
+        $user           = $this->user_manager->getUserById($this->getParameter(5));
+        if ($user === null) {
+            $user = $this->user_manager->getUserAnonymous();
+        }
 
         // Force NSCD flush (otherwise uid & gid will not exist)
         $this->backend_system->flushNscdAndFsCache();
@@ -87,6 +97,7 @@ class SystemEvent_SVN_CREATE_REPOSITORY extends SystemEvent
                 $project_id,
                 $system_path,
                 ForgeConfig::get('tuleap_dir').'/plugins/svn/bin/',
+                $user,
                 $initial_layout
             );
         } catch (SVNRepositoryLayoutInitializationException $exception) {

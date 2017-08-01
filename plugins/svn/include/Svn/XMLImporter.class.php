@@ -33,18 +33,18 @@ use Tuleap\Svn\Repository\RuleName;
 
 class XMLImporter {
 
-    /** @var array */
+    /** @var XMLRepositoryImporter[] */
     private $repositories_data;
 
     public function __construct(
-        Backend $backend,
         SimpleXMLElement $xml,
         $extraction_path,
         RepositoryCreator $repository_creator,
         Backend $backend_svn,
         Backend $backend_system,
         AccessFileHistoryCreator $access_file_history_creator,
-        RepositoryManager $repository_manager
+        RepositoryManager $repository_manager,
+        \UserManager $user_manager
     ) {
         $this->repositories_data = array();
 
@@ -57,14 +57,14 @@ class XMLImporter {
                 continue;
             }
             $this->repositories_data[] = new XMLRepositoryImporter(
-                $backend,
                 $xml_repo,
                 $extraction_path,
                 $repository_creator,
                 $backend_svn,
                 $backend_system,
                 $access_file_history_creator,
-                $repository_manager
+                $repository_manager,
+                $user_manager
             );
         }
     }
@@ -75,7 +75,8 @@ class XMLImporter {
         Project $project,
         AccessFileHistoryCreator $accessfile_history_creator,
         MailNotificationManager $mail_notification_manager,
-        RuleName $rule_name
+        RuleName $rule_name,
+        \PFUser $committer
     ) {
         $logger->info("[svn] Importing " . count($this->repositories_data) . " SVN repositories");
         foreach($this->repositories_data as $repo) {
@@ -85,7 +86,8 @@ class XMLImporter {
                 $project,
                 $accessfile_history_creator,
                 $mail_notification_manager,
-                $rule_name
+                $rule_name,
+                $committer
             );
         }
         $logger->info("[svn] Subversion Import Finished");

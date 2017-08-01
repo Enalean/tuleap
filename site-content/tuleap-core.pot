@@ -146,6 +146,9 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
+msgid "Initial layout creation"
+msgstr ""
+
 msgid "Instant messaging"
 msgstr ""
 

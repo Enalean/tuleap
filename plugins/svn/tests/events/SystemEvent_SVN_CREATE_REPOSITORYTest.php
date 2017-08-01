@@ -88,6 +88,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
         $system_event->injectDependencies(
             mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
             mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
+            mock('UserManager'),
             mock('BackendSVN'),
             mock('BackendSystem')
         );
@@ -109,6 +110,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
         $system_event->injectDependencies(
             mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
             mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
+            mock('UserManager'),
             $backend_svn,
             mock('BackendSystem')
         );
@@ -131,6 +133,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase
         $system_event->injectDependencies(
             mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
             mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
+            mock('UserManager'),
             $backend_svn,
             mock('BackendSystem')
         );
