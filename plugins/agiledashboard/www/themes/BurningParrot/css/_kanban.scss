@@ -238,11 +238,13 @@ $kanban-column-footer-height: 50px;
 }
 
 .kanban-column-header-wip-warning {
-    margin: 0 5px;
+    margin: 0 0 0 10px;
 }
 
 .kanban-column-header-label {
-    flex: 0 0 50%;
+    flex: 1 1 auto;
+    margin: 0 10px;
+    overflow: hidden;
     color: $tlp-theme-color;
     font-size: 16px;
     font-weight: 600;
@@ -250,13 +252,13 @@ $kanban-column-footer-height: 50px;
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
-    overflow: hidden;
 }
 
 .kanban-column-header-wip {
     display: flex;
     position: relative;
     z-index: 1000;
+    flex: 0 0 auto;
     align-items: center;
 }
 
