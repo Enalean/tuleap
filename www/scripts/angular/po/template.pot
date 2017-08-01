@@ -4,10 +4,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: src/app/execution/execution-list.tpl.html
-msgid "<i class=\"icon-pencil\"></i> Edit"
-msgstr ""
-
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "<i class=\"icon-pencil\"></i> Edit {{ campaign.label }} campaign"
 msgstr ""
@@ -71,6 +67,10 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
+#: src/app/execution/execution-list.tpl.html
+msgid "Edit"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 msgid "Edit this test"
 msgstr ""
@@ -78,10 +78,6 @@ msgstr ""
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Failed"
-msgstr ""
-
-#: src/app/execution/execution-list.tpl.html
-msgid "Filter..."
 msgstr ""
 
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
@@ -98,7 +94,8 @@ msgid "Id"
 msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "Id, summary, category"
+#: src/app/execution/execution-list.tpl.html
+msgid "Id, summary, category…"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

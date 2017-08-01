@@ -1,97 +1,157 @@
 <socket-disconnect></socket-disconnect>
-<div id="execution-utils">
-    <div id="execution-utils-information">
-        <div id="execution-utils-campaign">
-            <h1>{{ campaign.label }}</h1>
-            <button
-                    type="button"
-                    class="btn btn-small dropdown-toggle"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    onclick="this.blur();"
-                    ng-click="openEditCampaignModal()"
-                    translate
-            >
-                <i class="icon-pencil"></i> Edit
-            </button>
-        </div>
-        <div id="execution-utils-avatars">
-        <span class="execution-avatar" ng-repeat="presence in presences_on_campaign | orderBy:'-score' | limitTo:6">
-            <img data-toggle="tooltip"
-                 title="{{ presence.real_name }}"
-                 ng-src="{{ presence.avatar_url }}"
-                 onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
-                 alt="avatar">
-            <span animate-change="presence.score" change-class="ng-animate" class="presence-score" ng-if="presence.score >= 0">{{ presence.score }}</span>
-            <span animate-change="presence.score" change-class="ng-animate" class="presence-score" ng-if="presence.score < 0">0</span>
-        </span>
-            <span id="more-avatars" ng-if="presences_on_campaign.length > 3" ng-click="showPresencesModal()"><i class="icon-ellipsis-horizontal"></i></span>
-        </div>
-    </div>
-    <div id="execution-utils-progress-bar">
-        <div class="sense-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">
-            <span>{{ campaign.nb_of_passed }}</span>
-        </div>
-        <div class="sense-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">
-            <span>{{ campaign.nb_of_failed }}</span>
-        </div>
-        <div class="sense-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">
-            <span>{{ campaign.nb_of_blocked }}</span>
-        </div>
-        <div class="sense-of-progress-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">
-            <span>{{ campaign.nb_of_notrun }}</span>
-        </div>
-    </div>
-</div>
-
-<div id="executions">
-    <div id="executions-pane">
-        <div id="execution-filter">
-            <form class="form-inline">
-                <div id="filter">
-                    <div>
-                        <input type="text" class="filter" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
-                    </div>
-                    <div class="btn-group">
-                        <label class="btn" ng-model="status.passed"  title="{{ 'Passed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-passed-color.png" alt="{{ 'Passed' | translate }}"></label>
-                        <label class="btn" ng-model="status.failed"  title="{{ 'Failed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-failed-color.png" alt="{{ 'Failed' | translate }}"></label>
-                        <label class="btn" ng-model="status.blocked" title="{{ 'Blocked' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked-color.png" alt="{{ 'Blocked' | translate }}"></label>
-                        <label class="btn" ng-model="status.notrun"  title="{{ 'Not run' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-notrun-color.png" alt="{{ 'Not run' | translate }}"></label>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div id="execution-list">
-            <div ng-repeat="category in categories" ng-if="canCategoryBeDisplayed(category)">
-                <div class="category">{{ category.label }}</div>
-                <a class="execution-item {{ execution.status | dasherize }}"
-                   ng-repeat="execution in category.executions | ExecutionListFilter:search:status track by $index"
-                   ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
-                   ng-class="{active: checkActiveClassOnExecution(execution)}">
-                   <span class="execution-item-content" ng-click="viewTestExecution(execution)">
-                       <span class="execution-item-content-title">
-                           <span ng-if="execution.viewed_by" ng-repeat="user in execution.viewed_by">
-                              <img class="avatar ng-enter"
-                                   data-toggle="tooltip"
-                                   title="{{ user.real_name }}"
-                                   ng-src="{{ user.avatar_url }}"
-                                   onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
-                                   alt="avatar">
-                          </span>
-                           <span class="execution-item-content-id">#{{ execution.definition.id }}</span>{{ execution.definition.summary}}
-                       </span>
-                   </span>
-                </a>
+<div class="tlp-framed test-campaign">
+    <div class="test-campaign-header">
+        <h1 class="test-campaign-header-title">{{ campaign.label }}</h1>
+        <button type="button"
+                class="tlp-button-primary edit-campaign-button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                onclick="this.blur();"
+                ng-click="openEditCampaignModal()">
+            <i class="fa fa-pencil tlp-button-icon"></i> <span translate>Edit</span>
+        </button>
+        <div class="test-campaign-header-spacer"></div>
+        <div class="test-campaign-tester" ng-repeat="presence in presences_on_campaign | orderBy:'-score' | limitTo:6">
+            <div class="tlp-avatar tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
+                <img title="{{ presence.real_name }}"
+                     ng-src="{{ presence.avatar_url }}"
+                     onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
+                     alt="avatar">
             </div>
-
-            <img src="scripts/angular/bin/assets/loader.gif" ng-if="loading()" class="loader">
+            <span class="presence-score" ng-if="presence.score >= 0">{{ presence.score }}</span>
+            <span class="presence-score" ng-if="presence.score < 0">0</span>
         </div>
     </div>
 
-    <div ui-view>
-        <div id="no-current-execution">
-            <i class="icon-hand-left"></i> {{ 'Please select a test' | translate }}
+    <div class="test-campaign-current-progression-container">
+        <div class="test-campaign-current-progression">
+            <div class="tests-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">
+                {{ campaign.nb_of_passed }}
+            </div>
+            <div class="tests-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">
+                {{ campaign.nb_of_failed }}
+            </div>
+            <div class="tests-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">
+                {{ campaign.nb_of_blocked }}
+            </div>
+            <div class="tests-notrun" ng-if="campaign.nb_of_notrun" style="width: {{ campaign.nb_of_notrun * 100 / campaign.total }}%">
+                {{ campaign.nb_of_notrun }}
+            </div>
         </div>
+    </div>
+
+    <div class="test-campaign-tests">
+        <section class="tlp-pane tests-pane">
+            <div class="tlp-pane-container">
+                <section class="tlp-pane-section tests-list-filters">
+                    <input type="search"
+                           class="tlp-search tlp-search-small tests-list-filter-search"
+                           placeholder="{{ 'Id, summary, category…' | translate }}"
+                           ng-model="search">
+
+                    <div class="tlp-button-bar">
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-passed" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-passed"
+                                   class="tlp-button-small tlp-button-secondary"
+                                   ng-click="toggleStatus('passed')"
+                                   title="{{ 'Passed' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-check-circle test-status-icon passed"></i>
+                            </label>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-failed" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-failed"
+                                   class="tlp-button-small tlp-button-secondary"
+                                   ng-click="toggleStatus('failed')"
+                                   title="{{ 'Failed' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-times-circle test-status-icon failed"></i>
+                            </label>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-blocked" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-blocked"
+                                   class="tlp-button-small tlp-button-secondary"
+                                   ng-click="toggleStatus('blocked')"
+                                   title="{{ 'Blocked' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-exclamation-circle test-status-icon blocked"></i>
+                            </label>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <input type="checkbox" id="status-filter-notrun" class="tlp-button-bar-checkbox">
+                            <label for="status-filter-notrun"
+                                   class="tlp-button-small tlp-button-secondary"
+                                   ng-click="toggleStatus('notrun')"
+                                   title="{{ 'Not run' | translate }}">
+                                <i class="fa fa-fw fa-lg fa-question-circle test-status-icon notrun"></i>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="tlp-pane-section tests-list-section">
+                    <ul class="tests-list">
+                        <li class="tests-list-category"
+                            ng-repeat-start="category in categories"
+                            ng-if="canCategoryBeDisplayed(category)">
+                            {{ category.label }}
+                        </li>
+                        <li class="tests-list-test {{ execution.status | dasherize }}"
+                            ng-repeat-end=""
+                            ng-repeat="execution in category.executions | ExecutionListFilter:search:status track by $index"
+                            ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
+                            ng-click="viewTestExecution(execution)"
+                            ng-class="{active: checkActiveClassOnExecution(execution)}">
+                            <div class="tlp-avatar-small tlp-tooltip tlp-tooltip-top"
+                                 data-tlp-tooltip="{{ presence.real_name }}"
+                                 ng-if="execution.viewed_by"
+                                 ng-repeat="user in execution.viewed_by">
+                                <img title="{{ user.real_name }}"
+                                     ng-src="{{ user.avatar_url }}"
+                                     onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
+                                     alt="avatar">
+                            </div>
+                            <span class="tests-list-test-title">
+                                <span class="tests-list-test-id">
+                                    #{{ execution.definition.id }}
+                                </span>
+                                {{ execution.definition.summary}}
+                            </span>
+                            <i class="fa fa-check-circle test-status-icon passed"
+                               ng-if="execution.status === 'passed'"
+                               title="{{ 'Passed' | translate }}"></i>
+                            <i class="fa fa-times-circle test-status-icon failed"
+                               ng-if="execution.status === 'failed'"
+                               title="{{ 'Failed' | translate }}"></i>
+                            <i class="fa fa-exclamation-circle test-status-icon blocked"
+                               ng-if="execution.status === 'blocked'"
+                               title="{{ 'Blocked' | translate }}"></i>
+                        </li>
+                        <!--
+                        <span class="execution-item-content" ng-click="viewTestExecution(execution)">
+                             <span ng-if="execution.viewed_by" ng-repeat="user in execution.viewed_by">
+                                <img class="avatar ng-enter"
+                                     data-toggle="tooltip"
+                                     title="{{ user.real_name }}"
+                                     ng-src="{{ user.avatar_url }}"
+                                     onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
+                                     alt="avatar">
+                            </span>
+                        </span>
+                        -->
+                    </ul>
+
+                    <img src="scripts/angular/bin/assets/loader.gif" ng-if="loading()" class="loader">
+                </section>
+            </div>
+        </section>
+
+        <section class="current-test" ui-view>
+            <section class="no-tests-selected">
+                <i class="fa fa-hand-o-left no-tests-selected-icon"></i>
+                {{ 'Please select a test' | translate }}
+            </section>
+        </section>
     </div>
 </div>
+

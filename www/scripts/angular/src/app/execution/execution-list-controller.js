@@ -36,12 +36,17 @@ function ExecutionListCtrl(
     _.extend($scope, {
         openEditCampaignModal      : openEditCampaignModal,
         checkActiveClassOnExecution: checkActiveClassOnExecution,
+        toggleStatus               : toggleStatus,
         viewTestExecution          : viewTestExecution,
         showPresencesModal         : showPresencesModal
     });
 
     function checkActiveClassOnExecution(execution) {
         return $state.includes('campaigns.executions.detail', { execid: execution.id, defid: execution.definition.id });
+    }
+
+    function toggleStatus(executionStatus) {
+        $scope.status[executionStatus] = !$scope.status[executionStatus];
     }
 
     function viewTestExecution(current_execution) {

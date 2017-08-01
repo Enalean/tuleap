@@ -13,7 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/execution/execution-list.tpl.html
-msgid "<i class=\"icon-pencil\"></i> Edit"
+msgid "Edit"
 msgstr "Éditer"
 
 #: src/app/campaign/campaign-edit.tpl.html
@@ -106,8 +106,9 @@ msgid "Id"
 msgstr "Id"
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "Id, summary, category"
-msgstr "Id, résumé, catégorie"
+#: src/app/execution/execution-list.tpl.html
+msgid "Id, summary, category…"
+msgstr "Id, résumé, catégorie…"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"

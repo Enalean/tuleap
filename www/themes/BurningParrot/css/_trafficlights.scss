@@ -1,8 +1,10 @@
+@import 'global-variables';
 @import 'includes/colors';
 @import 'includes/socket';
 @import 'includes/artifact-links-graph';
 @import 'includes/graph';
 @import 'includes/campaign';
+@import 'includes/execution';
 
 .loader {
     display: block;

@@ -19,7 +19,7 @@
                 <option value="" translate>Pre-select tests from a tracker report</option>
                 <option ng-repeat="report in test_reports" ng-value="report.id">{{ report.label }}</option>
             </select>
-            <input type="text" class="filter" placeholder="{{ 'Id, summary, category' | translate }}" ng-model="filters.search">
+            <input type="text" class="filter" placeholder="{{ 'Id, summary, category…' | translate }}" ng-model="filters.search">
         </div>
         <table id="campaign-edit-executions-list" class="table">
             <thead>
