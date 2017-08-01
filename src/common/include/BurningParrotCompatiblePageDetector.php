@@ -50,7 +50,7 @@ class BurningParrotCompatiblePageDetector
             || $this->isInHomepage()
             || $this->isInContact()
             || $this->isInHelp()
-            || $this->isInKanban();
+            || $this->isInBurningParrotCompatiblePage();
     }
 
     public function isInSiteAdmin(PFUser $current_user)
@@ -110,10 +110,11 @@ class BurningParrotCompatiblePageDetector
         return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
-    private function isInKanban()
+    private function isInBurningParrotCompatiblePage()
     {
-        $request = HTTPRequest::instance();
+        $burning_parrot_compatible_event = new BurningParrotCompatiblePageEvent();
+        EventManager::instance()->processEvent($burning_parrot_compatible_event);
 
-        return $request->get('action') === 'showKanban';
+        return $burning_parrot_compatible_event->isInBurningParrotCompatiblePage();
     }
 }
