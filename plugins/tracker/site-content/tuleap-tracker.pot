@@ -42,6 +42,9 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr ""
 
+msgid "Cross tracker search"
+msgstr ""
+
 msgid "Delete"
 msgstr ""
 
@@ -79,6 +82,9 @@ msgid "Renderer id"
 msgstr ""
 
 msgid "Save"
+msgstr ""
+
+msgid "Search into multiple trackers and multiple projects."
 msgstr ""
 
 #, php-format
