@@ -160,7 +160,8 @@ class LDAP_UserWrite {
         return 'uid='.$this->getUserLdapId($user);
     }
 
-    private function updateUserLdapId(PFUser $user) {
+    private function updateUserLdapId(PFUser $user)
+    {
         $user->setLdapId($user->getUserName());
         $this->user_dao->updateByRow(array('user_id' => $user->getId(), 'ldap_id' => $this->getEdUid($user)));
     }
@@ -205,6 +206,7 @@ class LDAP_UserWrite {
         if ($new_dn != $old_dn) {
             $this->ldap->renameUser($old_dn, $this->getUserRDN($new_user));
             $this->updateUserLdapId($new_user);
+            $this->ldap_user_dao->updateLdapUid($new_user->getId(), $new_user->getLdapId());
         }
     }
 }
