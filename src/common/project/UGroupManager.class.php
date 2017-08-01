@@ -314,6 +314,14 @@ class UGroupManager {
     }
 
     /**
+     * @return DataAccessResult
+     */
+    public function searchBindedUgroupsInProject(Project $project)
+    {
+        return $this->getDao()->searchBindedUgroupsInProject($project->getID());
+    }
+
+    /**
      * Wrapper for dao method that updates binding option for a given ProjectUGroup
      *
      * @param Integer $ugroup_id Id of the user group

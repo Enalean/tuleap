@@ -32,6 +32,7 @@ use ProjectManager;
 use ProjectTruncatedEmailsPresenter;
 use ProjectVisibilityPresenter;
 use TemplateRendererFactory;
+use UGroupBinding;
 
 class ProjectVisibilityController
 {
@@ -49,15 +50,21 @@ class ProjectVisibilityController
      * @var ServicesUsingTruncatedMailRetriever
      */
     private $service_truncated_mails_retriever;
+    /**
+     * @var UGroupBinding
+     */
+    private $ugroup_binding;
 
     public function __construct(
         ProjectManager $project_manager,
         ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
-        ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever
+        ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
+        UGroupBinding $ugroup_binding
     ) {
         $this->project_manager                   = $project_manager;
         $this->project_visibility_configuration  = $project_visibility_configuration;
         $this->service_truncated_mails_retriever = $service_truncated_mails_retriever;
+        $this->ugroup_binding                    = $ugroup_binding;
     }
 
     public function display(HTTPRequest $request)
@@ -110,6 +117,8 @@ class ProjectVisibilityController
 
         $this->updateProjectVisibility($current_user, $project, $request);
         $this->updateTruncatedMails($current_user, $project, $request);
+
+        $this->ugroup_binding->reloadUgroupBindingInProject($project);
 
         $GLOBALS['Response']->addFeedback('info', _("Update successful"));
         $GLOBALS['Response']->redirect(
