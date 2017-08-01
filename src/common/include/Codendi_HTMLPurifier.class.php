@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -43,6 +43,7 @@ class Codendi_HTMLPurifier {
      * Hold an instance of the class
      */
     private static $Codendi_HTMLPurifier_instance;
+    private $config = array();
 
     /**
      * Constructor
@@ -126,21 +127,23 @@ class Codendi_HTMLPurifier {
      * HTML Purifier configuration factory
      */
     function getHPConfig($level) {
-        $config = null;
+        if (isset($this->config[$level])) {
+            return $this->config[$level];
+        }
         switch($level) {
         case CODENDI_PURIFIER_LIGHT:
-            $config = $this->getLightConfig();
+            $this->config[CODENDI_PURIFIER_LIGHT] = $this->getLightConfig();
             break;
 
         case CODENDI_PURIFIER_FULL:
-            $config = $this->getCodendiConfig();
+            $this->config[CODENDI_PURIFIER_FULL] = $this->getCodendiConfig();
             break;
 
         case CODENDI_PURIFIER_STRIP_HTML:
-            $config = $this->getStripConfig();
+            $this->config[CODENDI_PURIFIER_STRIP_HTML] = $this->getStripConfig();
             break;
         }
-        return $config;
+        return $this->config[$level];
     }
 
     /**
@@ -235,8 +238,6 @@ class Codendi_HTMLPurifier {
 
             $config = $this->getHPConfig($level);
             $clean = $hp->purify($html, $config);
-            // Quite big object, it's better to unset it (memory).
-            unset($config);
             break;
 
         case CODENDI_PURIFIER_BASIC:
