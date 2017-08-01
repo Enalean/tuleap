@@ -251,11 +251,15 @@ class RepositoryTest extends TestBase
         $data = json_encode(
             array(
                 'settings' => array(
-                    'commit_rules' => array(
+                    'commit_rules'   => array(
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
                     ),
-                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw"
+                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags" => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    )
                 )
             )
         );
@@ -286,11 +290,115 @@ class RepositoryTest extends TestBase
         );
     }
 
+    public function testPUTRepositoryWithEmptyAccessFile()
+    {
+        $data = json_encode(
+            array(
+                'settings' => array(
+                    'commit_rules'   => array(
+                        'is_reference_mandatory'           => true,
+                        'is_commit_message_change_allowed' => false
+                    ),
+                    "access_file"    => "",
+                    "immutable_tags" => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    )
+                )
+            )
+        );
+
+        $response = $this->getResponse($this->client->put('svn/1', null, $data));
+
+        $repository = $response->json();
+
+        $this->assertArrayHasKey('id', $repository);
+        $this->assertEquals($repository['name'], 'repo01');
+        $this->assertEquals(
+            $repository['settings']['commit_rules'],
+            array(
+                "is_reference_mandatory"           => true,
+                "is_commit_message_change_allowed" => false
+            )
+        );
+        $this->assertEquals(
+            $repository['settings']['immutable_tags'],
+            array(
+                "paths"     => array(),
+                "whitelist" => array(),
+            )
+        );
+        $this->assertEquals(
+            $repository['settings']['access_file'],
+            ""
+        );
+    }
+
     public function testPUTRepositoryWithMissingCommitRulesKey()
     {
         $params = json_encode(
             array(
-                "settings"   => array(
+                'settings' => array(
+                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags" => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPUTRepositoryWithMissingImmutableTagKey()
+    {
+        $params = json_encode(
+            array(
+                'settings' => array(
+                    'commit_rules' => array(
+                        'is_reference_mandatory'           => true,
+                        'is_commit_message_change_allowed' => false
+                    ),
+                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw"
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPUTRepositoryWithMissingAccessFileKey()
+    {
+        $params = json_encode(
+            array(
+                'settings' => array(
+                    'commit_rules'   => array(
+                        'is_reference_mandatory'           => true,
+                        'is_commit_message_change_allowed' => false
+                    ),
+                    "immutable_tags" => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPUTRepositoryWithMissingCommitRulesCommitChangedKey()
+    {
+        $params = json_encode(
+            array(
+                "settings" => array(
                     "commit_rules" => array(
                         "is_reference_mandatory" => true,
                     )
@@ -303,11 +411,11 @@ class RepositoryTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testPUTRepositoryWithMissingImmutableTagsKey()
+    public function testPUTRepositoryWithMissingImmutableTagsWhiteListKey()
     {
         $params = json_encode(
             array(
-                "settings"   => array(
+                "settings" => array(
                     "immutable_tags" => array(
                         "paths" => array(),
                     )

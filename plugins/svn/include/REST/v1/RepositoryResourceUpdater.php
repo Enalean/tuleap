@@ -83,11 +83,9 @@ class RepositoryResourceUpdater
 
     public function update(Repository $repository, Settings $settings)
     {
-        if ($settings->getCommitRules()) {
-            $this->hook_config_updator->updateHookConfig($repository, $settings->getCommitRules());
-        }
+        $this->hook_config_updator->updateHookConfig($repository, $settings->getCommitRules());
 
-        if ($settings->getImmutableTag() && $this->hasImmutableTagChanged($settings->getImmutableTag(), $repository)) {
+        if ($this->hasImmutableTagChanged($settings->getImmutableTag(), $repository)) {
             $this->immutable_tag_creator->save(
                 $repository,
                 $settings->getImmutableTag()->getPathsAsString(),
@@ -102,12 +100,10 @@ class RepositoryResourceUpdater
             );
         }
 
-        if ($settings->getAccessFileContent()) {
-            $current_version = $this->access_file_history_factory->getCurrentVersion($repository);
+        $current_version = $this->access_file_history_factory->getCurrentVersion($repository);
 
-            if ($current_version->getContent() !== $settings->getAccessFileContent()) {
-                $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
-            }
+        if ($current_version->getContent() !== $settings->getAccessFileContent()) {
+            $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
         }
     }
 
