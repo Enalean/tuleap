@@ -89,8 +89,9 @@ class Project extends Group implements PFO_Project {
         $this->project_data_array = $this->data_array;
     }
 
-    private function cacheServices() {
-        if ($this->services !== null) {
+    private function cacheServiceClassnames()
+    {
+        if ($this->serviceClassnames !== null) {
             return;
         }
 
@@ -98,7 +99,19 @@ class Project extends Group implements PFO_Project {
             'file' => 'ServiceFile',
             'svn'  => 'ServiceSVN'
         );
-        EventManager::instance()->processEvent(Event::SERVICE_CLASSNAMES, array('classnames' => &$this->serviceClassnames));
+
+        EventManager::instance()->processEvent(
+            Event::SERVICE_CLASSNAMES,
+            array('classnames' => &$this->serviceClassnames)
+        );
+    }
+
+    private function cacheServices() {
+        if ($this->services !== null) {
+            return;
+        }
+
+        $this->cacheServiceClassnames();
 
         // Get Service data
         $allowed_services = ServiceManager::instance()->getListOfAllowedServicesForProject($this);
@@ -164,11 +177,15 @@ class Project extends Group implements PFO_Project {
      *
      * @return string
      */
-    public function getServiceClassName($short_name) {
+    public function getServiceClassName($short_name)
+    {
+        $this->cacheServiceClassnames();
+
         $classname = 'Service';
         if (isset($this->serviceClassnames[$short_name])) {
             $classname = $this->serviceClassnames[$short_name];
         }
+
         return $classname;
     }
 

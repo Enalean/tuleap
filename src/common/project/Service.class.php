@@ -199,12 +199,4 @@ class Service {
     public function getInternationalizedName() {
         return $GLOBALS['Language']->getText('project_admin_editservice', $this->getLabel());
     }
-
-    /**
-     * @return array
-     */
-    public function getDataAsArray()
-    {
-        return $this->data;
-    }
 }

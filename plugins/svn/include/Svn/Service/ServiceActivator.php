@@ -25,6 +25,7 @@ use ServiceManager;
 use Service;
 use SvnPlugin;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Svn\ServiceSvn;
 
 class ServiceActivator
 {
@@ -58,10 +59,10 @@ class ServiceActivator
         $svn_core_service    = $this->getSVNCoreService($template_services);
         $svn_plugin_service  = $this->getSVNPluginService($template_services);
 
-        if ($svn_core_service && $svn_plugin_service) {
+        if ($svn_core_service) {
             $data->unsetProjectServiceUsage($svn_core_service->getId());
 
-            if ($this->atLeastOneSVNServiceIsUsedInTemplate($svn_core_service, $svn_plugin_service)) {
+            if ($svn_plugin_service && $this->atLeastOneSVNServiceIsUsedInTemplate($svn_core_service, $svn_plugin_service)) {
                 $data->forceServiceUsage($svn_plugin_service->getId());
             }
 
@@ -71,24 +72,30 @@ class ServiceActivator
 
     public function forceUsageOfService(Project $project, Project $template, array $legacy)
     {
-        if ($project->usesService(SvnPlugin::SERVICE_SHORTNAME) || $legacy[Service::SVN] === true) {
+        $project_services       = $this->service_manager->getListOfAllowedServicesForProject($project);
+        $new_svn_plugin_service = $this->getSVNPluginService($project_services);
+
+        if ($new_svn_plugin_service || $legacy[Service::SVN] === true) {
             return true;
         }
 
         $template_services   = $this->service_manager->getListOfAllowedServicesForProject($template);
         $svn_plugin_service  = $this->getSVNPluginService($template_services);
+        $svn_core_service    = $this->getSVNCoreService($template_services);
 
-        return $this->service_creator->createService(
-            $svn_plugin_service->getDataAsArray(),
-            $project->getID(),
-            array(
-                'system' => $template->isSystem(),
-                'name'   => $template->isSystem() ? '' : $template->getUnixName(),
-                'id'     => $template->getID(),
-                'is_used'   => 1,
-                'is_active' => 1,
-            )
-        );
+        if ($svn_core_service || $svn_plugin_service) {
+            return $this->service_creator->createService(
+                ServiceSvn::getDefaultServiceData($project->getID()),
+                $project->getID(),
+                array(
+                    'system' => $template->isSystem(),
+                    'name'   => $template->isSystem() ? '' : $template->getUnixName(),
+                    'id'     => $template->getID(),
+                    'is_used'   => 1,
+                    'is_active' => 1,
+                )
+            );
+        }
     }
 
     private function atLeastOneSVNServiceIsUsedInTemplate(Service $svn_core_service, Service $svn_plugin_service)

@@ -21,6 +21,7 @@ namespace Tuleap\Svn;
 
 use Service;
 use HTTPRequest;
+use SvnPlugin;
 use TemplateRendererFactory;
 use User_ForgeUserGroupFactory;
 use UserGroupDao;
@@ -91,5 +92,20 @@ class ServiceSvn extends Service
             )
         );
         $this->displayHeader($title, $breadcrumbs, $toolbar, $params);
+    }
+
+    public static function getDefaultServiceData($project_id)
+    {
+        return array(
+            'label'        => 'plugin_svn:service_lbl_key',
+            'description'  => 'plugin_svn:service_desc_key',
+            'link'         => "/plugins/svn/?group_id=$project_id",
+            'short_name'   => SvnPlugin::SERVICE_SHORTNAME,
+            'scope'        => 'system',
+            'rank'         => 136,
+            'location'     => 'master',
+            'is_in_iframe' => 0,
+            'server_id'    => 0,
+        );
     }
 }
