@@ -44,6 +44,7 @@ use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
 
@@ -679,6 +680,9 @@ class trackerPlugin extends Plugin {
             case Tracker_Widget_ProjectRenderer::ID:
                 $params['instance'] = new Tracker_Widget_ProjectRenderer();
                 break;
+            case ProjectCrossTrackerSearch::NAME:
+                $params['instance'] = new ProjectCrossTrackerSearch();
+                break;
         }
     }
 
@@ -701,6 +705,7 @@ class trackerPlugin extends Plugin {
 
             case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
+                $params['codendi_widgets'][] = ProjectCrossTrackerSearch::NAME;
                 break;
         }
     }

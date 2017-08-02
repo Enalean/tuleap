@@ -59,6 +59,9 @@ msgstr "Configurer les trackers"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Cross tracker search"
+msgstr "Recherche multi outil de suivi"
+
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -97,6 +100,9 @@ msgstr "Id du rendu"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Search into multiple trackers and multiple projects."
+msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
 
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
