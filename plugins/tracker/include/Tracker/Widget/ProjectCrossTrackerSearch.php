@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Widget;
 
 use TemplateRendererFactory;
+use Tuleap\Tracker\CrossTracker\CrossTrackerPresenter;
 use Widget;
 
 class ProjectCrossTrackerSearch extends Widget
@@ -39,9 +40,13 @@ class ProjectCrossTrackerSearch extends Widget
             TRACKER_TEMPLATE_DIR . '/widgets'
         );
 
+        $cross_tracker_presenter = new CrossTrackerPresenter($this->getCurrentUser());
+
         return $renderer->renderToString(
             'project-cross-tracker-search',
-            new ProjectCrossTrackerSearchPresenter()
+            new ProjectCrossTrackerSearchPresenter(
+                $cross_tracker_presenter
+            )
         );
     }
 
