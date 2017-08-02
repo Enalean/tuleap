@@ -73,8 +73,6 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
         $this->immutable_tag_creator = mock('Tuleap\Svn\Admin\ImmutableTagCreator');
         $this->access_file_creator   = mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator');
         $this->access_file_factory   = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
-        $project_history_formatter   = mock('Tuleap\Svn\Repository\ProjectHistoryFormatter');
-        $project_history_dao         = mock('ProjectHistoryDao');
         $this->immutable_tag_factory = mock('Tuleap\Svn\Admin\ImmutableTagFactory');
 
         $this->updater = new RepositoryResourceUpdater(
@@ -82,8 +80,6 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             $this->immutable_tag_creator,
             $this->access_file_factory,
             $this->access_file_creator,
-            $project_history_formatter,
-            $project_history_dao,
             $this->immutable_tag_factory
         );
 

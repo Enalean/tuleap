@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016. All rights reserved.
+ * Copyright Enalean (c) 2016 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,28 +24,71 @@
 
 namespace Tuleap\Svn\Admin;
 
+use ProjectHistoryDao;
+use Tuleap\Svn\Repository\ProjectHistoryFormatter;
 use Tuleap\Svn\Repository\Repository;
 
-class ImmutableTagCreator {
-
+class ImmutableTagCreator
+{
+    /**
+     * @var ProjectHistoryFormatter
+     */
+    private $project_history_formatter;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
+    /**
+     * @var ImmutableTagFactory
+     */
+    private $immutable_tag_factory;
+    /**
+     * @var ImmutableTagDao
+     */
     private $dao;
 
-    public function __construct(ImmutableTagDao $dao) {
-        $this->dao = $dao;
+    public function __construct(
+        ImmutableTagDao $dao,
+        ProjectHistoryFormatter $project_history_formatter,
+        ProjectHistoryDao $project_history_dao,
+        ImmutableTagFactory $immutable_tag_factory
+    ) {
+        $this->dao                       = $dao;
+        $this->project_history_formatter = $project_history_formatter;
+        $this->project_history_dao       = $project_history_dao;
+        $this->immutable_tag_factory     = $immutable_tag_factory;
     }
 
-    public function save(Repository $repository, $immutable_tags_path, $immutable_tags_whitelist) {
+    public function save(Repository $repository, $immutable_tags_path, $immutable_tags_whitelist)
+    {
+        $this->saveWithoutHistory($repository, $immutable_tags_path, $immutable_tags_whitelist);
+
+        $immutable_tags = $this->immutable_tag_factory->getByRepositoryId($repository);
+        $history        = $this->project_history_formatter->getImmutableTagsHistory($immutable_tags);
+        $this->project_history_dao->groupAddHistory(
+            'svn_multi_repository_immutable_tags_update',
+            $repository->getName() . PHP_EOL . $history,
+            $repository->getProject()->getID()
+        );
+    }
+
+    public function saveWithoutHistory(Repository $repository, $immutable_tags_path, $immutable_tags_whitelist)
+    {
         if (! $this->dao->save(
             $repository,
             $this->cleanImmutableTag($immutable_tags_path),
-            $this->cleanImmutableTag($immutable_tags_whitelist))
-        ) {
-            throw new CannotCreateImmuableTagException ($GLOBALS['Language']->getText('plugin_svn','create_immutable_tag_error'));
+            $this->cleanImmutableTag($immutable_tags_whitelist)
+        )) {
+            throw new CannotCreateImmuableTagException (
+                $GLOBALS['Language']->getText('plugin_svn', 'create_immutable_tag_error')
+            );
         }
     }
 
-    private function cleanImmutableTag($immutable_tags_path) {
+    private function cleanImmutableTag($immutable_tags_path)
+    {
         $immutable_paths = explode(PHP_EOL, $immutable_tags_path);
-        return implode(PHP_EOL, array_map('trim',$immutable_paths));
+
+        return implode(PHP_EOL, array_map('trim', $immutable_paths));
     }
 }

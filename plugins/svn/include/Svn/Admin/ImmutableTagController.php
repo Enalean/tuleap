@@ -41,29 +41,17 @@ class ImmutableTagController
     private $immutable_tag_creator;
     private $immutable_tag_factory;
     private $repository_manager;
-    /**
-     * @var ProjectHistoryFormatter
-     */
-    private $project_history_formatter;
-    /**
-     * @var ProjectHistoryDao
-     */
-    private $project_history_dao;
 
     public function __construct(
         RepositoryManager $repository_manager,
         Svnlook $svnlook,
         ImmutableTagCreator $immutable_tag_creator,
-        ImmutableTagFactory $immutable_tag_factory,
-        ProjectHistoryFormatter $project_history_formatter,
-        ProjectHistoryDao $project_history_dao
+        ImmutableTagFactory $immutable_tag_factory
     ) {
         $this->repository_manager        = $repository_manager;
         $this->svnlook                   = $svnlook;
         $this->immutable_tag_creator     = $immutable_tag_creator;
         $this->immutable_tag_factory     = $immutable_tag_factory;
-        $this->project_history_formatter = $project_history_formatter;
-        $this->project_history_dao       = $project_history_dao;
     }
 
     public function displayImmutableTag(ServiceSvn $service, HTTPRequest $request) {
@@ -107,14 +95,6 @@ class ImmutableTagController
 
                     $immutable_tags_whitelist = trim($request->get('immutable-tags-whitelist'));
                     $this->immutable_tag_creator->save($repository, $immutable_tags_path, $immutable_tags_whitelist);
-
-                    $immutable_tag = $this->immutable_tag_factory->getByRepositoryId($repository);
-                    $history       = $this->project_history_formatter->getImmutableTagsHistory($immutable_tag);
-                    $this->project_history_dao->groupAddHistory(
-                        'svn_multi_repository_immutable_tags_update',
-                        $repository->getName() . PHP_EOL . $history,
-                        $repository->getProject()->getID()
-                    );
                 }
             } catch (CannotCreateImmuableTagException $exception) {
                 $GLOBALS['Response']->addFeedback(

@@ -577,9 +577,7 @@ class SvnPlugin extends Plugin
                 $repository_manager,
                 new Svnlook(new System_Command()),
                 $this->getImmutableTagCreator(),
-                new ImmutableTagFactory(new ImmutableTagDao()),
-                new ProjectHistoryFormatter(),
-                new ProjectHistoryDao()
+                $this->getImmutableTagFactory()
             ),
             new GlobalAdminController(
                 $this->getForgeUserGroupFactory(),
@@ -955,7 +953,12 @@ class SvnPlugin extends Plugin
      */
     private function getImmutableTagCreator()
     {
-        return new ImmutableTagCreator(new ImmutableTagDao());
+        return new ImmutableTagCreator(
+            new ImmutableTagDao(),
+            $this->getProjectHistoryFormatter(),
+            $this->getProjectHistoryDao(),
+            $this->getImmutableTagFactory()
+        );
     }
 
     /**
@@ -980,5 +983,13 @@ class SvnPlugin extends Plugin
     private function getProjectHistoryFormatter()
     {
         return new ProjectHistoryFormatter();
+    }
+
+    /**
+     * @return ImmutableTagFactory
+     */
+    private function getImmutableTagFactory()
+    {
+        return new ImmutableTagFactory(new ImmutableTagDao());
     }
 }
