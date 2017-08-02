@@ -1,12 +1,9 @@
-<div class="input-append">
-    <input type="text" ng-model="execution_time_format">
-    <button
-            class="btn start-stop-count"
-            ng-class="{'btn-danger': time_is_started}"
-            ng-click="toggleTimer()"
-            type="button"
-    >
-        <i class="icon-play" ng-if="! time_is_started"></i>
-        <i class="icon-pause" ng-if="time_is_started"></i>
-    </button>
-</div>
+<input type="text" size="5" class="tlp-input" placeholder="00:00" ng-model="execution_time_format">
+<button type="button"
+        class="tlp-append tlp-button-primary tlp-button-outline"
+        ng-class="{'tlp-button-danger': time_is_started}"
+        ng-click="toggleTimer()">
+    <i class="fa fa-play" ng-if="! time_is_started"></i>
+    <i class="fa fa-pause" ng-if="time_is_started"></i>
+</button>
+

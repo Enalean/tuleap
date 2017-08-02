@@ -226,7 +226,7 @@
         background: $tlp-ui-success;
         color: $tlp-ui-white;
 
-        > .current-test-header-info {
+        > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
         }
     }
@@ -235,7 +235,7 @@
         background: $tlp-ui-danger;
         color: $tlp-ui-white;
 
-        > .current-test-header-info {
+        > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
         }
     }
@@ -244,7 +244,7 @@
         background: $tlp-ui-info;
         color: $tlp-ui-white;
 
-        > .current-test-header-info {
+        > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
         }
     }
@@ -257,7 +257,7 @@
             display: none;
         }
 
-        > .current-test-header-info {
+        > .current-test-header-who {
             color: transparentize($tlp-ui-white, .3);
         }
     }
@@ -265,7 +265,7 @@
 
 .current-test-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex: 0 0 auto;
 }
 
@@ -283,12 +283,37 @@
     font-size: 24px;
 }
 
-.current-test-header-info {
+.current-test-header-who,
+.current-test-header-comment {
+    font-size: 16px;
+}
+
+.current-test-header-comment {
+    margin: 10px 0 0;
     font-size: 14px;
+    line-height: 22px;
+    font-style: italic;
 }
 
 .current-test-header-actions {
     font-size: 20px;
+}
+
+.current-test-header-action {
+    display: inline-block;
+    vertical-align: middle;
+    width: 27px;
+    font-size: 27px;
+    cursor: pointer;
+    color: $tlp-ui-white;
+
+    &:not(:last-child) {
+        margin-right: 8px;
+    }
+}
+
+.notrun .current-test-header-action {
+    filter: drop-shadow(0 0 .5px #bbb);
 }
 
 .current-test-content {
@@ -349,6 +374,8 @@
     font-size: 30px;
 
     &.tlp-button-secondary {
-        color: #666;
+        background: $tlp-ui-dimmed;
+        border-color: $tlp-ui-dimmed;
+        color: $tlp-ui-white;
     }
 }

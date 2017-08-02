@@ -2,64 +2,72 @@
 
 <div class="tuleap-modal-loading" ng-if="artifact_links_graph_modal_loading.is_loading || edit_artifact_modal_loading.loading"></div>
 
-<div id="current-execution">
-    <div id="current-execution-title">
-        <h2 class="{{ execution.status | dasherize }}">
-            <img id="show-artifact-links-graph-modal"
-                 src="scripts/angular/bin/assets/artifact-link-graph.svg"
-                 type="image/svg+xml"
-                 alt="Graph"
-                 ng-click="showArtifactLinksGraphModal(execution)"
-                 title="{{ 'Show dependencies graph for this test' | translate }}"
-
-            />
-            <a href="/plugins/tracker/?aid={{ execution.definition.id }}" id="edit-artifact">
-                <i class="icon-edit" ng-click="showEditArtifactModal($event, execution.definition)" title="{{ 'Edit this test' | translate }}"></i>
-            </a>
-            {{ execution.definition.summary }}
-        </h2>
-    </div>
-
-    <div id="current-execution-last-execution" class="{{ execution.status | dasherize }}" ng-if="(execution.status | dasherize) !== 'notrun'">
-            <img ng-src="scripts/angular/bin/assets/status-{{ execution.status | dasherize }}-white-big.png" />
-            <span ng-if="execution.previous_result.submitted_on">
-                {{ execution.previous_result.submitted_on | amCalendar }}
-            </span>
-            <span ng-if="execution.previous_result.submitted_by.real_name">
-                <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
-            </span>
-            <img ng-src="scripts/angular/bin/assets/status-{{ execution.status | dasherize }}-white-big.png" />
-
-            <p id="last-execution-comment" ng-if="execution.previous_result.result" >
-                <ng-bind-html ng-bind-html="sanitizeHtml(execution.previous_result.result)"></ng-bind-html>
-                <span class="read-more" ng-if="execution.previous_result.result.length > 150"></span>
-            </p>
-    </div>
-
-    <div id="current-execution-description">
-        <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>
-    </div>
-
-    <div id="current-execution-result">
-        <form name="execution_form">
-            <div>
-                <textarea placeholder="{{ 'Comment...' | translate }}" ng-model="execution.results"></textarea>
-                <timer id="execution-timer" ng-model="timer.execution_time"></timer>
+<section id="test" class="tlp-pane current-test" ng-class="execution.status | dasherize">
+    <div class="tlp-pane-container">
+        <section class="tlp-pane-header current-test-header">
+            <i class="fa fa-check current-test-status" ng-if="execution.status === 'passed'"></i>
+            <i class="fa fa-times current-test-status" ng-if="execution.status === 'failed'"></i>
+            <i class="fa fa-exclamation current-test-status" ng-if="execution.status === 'blocked'"></i>
+            <div class="current-test-header-title-container">
+                <h1 class="current-test-header-title">
+                    {{ execution.definition.summary }}
+                </h1>
+                <div class="current-test-header-who">
+                    <span ng-if="execution.previous_result.submitted_on">
+                        {{ execution.previous_result.submitted_on | amCalendar }}
+                    </span>
+                    <span ng-if="execution.previous_result.submitted_by.real_name">
+                        <span translate>by</span> {{ execution.previous_result.submitted_by.real_name }}
+                    </span>
+                </div>
+                <div class="current-test-header-comment" ng-if="execution.previous_result.result">
+                    <ng-bind-html ng-bind-html="sanitizeHtml(execution.previous_result.result)"></ng-bind-html>
+                </div>
             </div>
-            <div id="result-choices">
-                <button class="btn btn-circle btn-xl btn-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)" ng-disabled="execution.saving">
-                    <img src="scripts/angular/bin/assets/status-passed-white-big.png" alt="{{ 'Passed' | translate }}">
+
+            <div class="current-test-header-actions">
+                <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action">
+                    <i class="fa fa-fw fa-pencil"
+                       ng-click="showEditArtifactModal($event, execution.definition)"
+                       title="{{ 'Edit this test' | translate }}"></i>
+                </a>
+                <img class="current-test-header-action"
+                     src="scripts/angular/bin/assets/artifact-link-graph.svg"
+                     type="image/svg+xml"
+                     alt="Graph"
+                     ng-click="showArtifactLinksGraphModal(execution)"
+                     title="{{ 'Show dependencies graph for this test' | translate }}"
+                />
+            </div>
+        </section>
+
+        <section class="tlp-pane-section current-test-content">
+            <h2>Steps</h2>
+            <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>
+        </section>
+
+        <section class="tlp-pane-section current-test-footer">
+            <div class="current-test-comment-counter">
+                <textarea class="tlp-textarea current-test-comment"
+                          placeholder="{{ 'Comment...' | translate }}"
+                          ng-model="execution.results">
+                </textarea>
+                <timer class="tlp-form-element tlp-form-element-append current-test-counter" ng-model="timer.execution_time"></timer>
+            </div>
+            <div class="current-test-results">
+                <button id="test-result-passed" type="button" class="current-test-result tlp-button-large tlp-button-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)" ng-disabled="execution.saving">
+                    <i class="fa fa-fw fa-check-circle"></i>
                 </button>
-                <button class="btn btn-circle btn-xl btn-danger" title="{{ 'Failed' | translate }}" ng-click="fail(execution)" ng-disabled="execution.saving">
-                    <img src="scripts/angular/bin/assets/status-failed-white-big.png" alt="{{ 'Failed' | translate }}">
+                <button id="test-result-failed" type="button" class="current-test-result tlp-button-large tlp-button-danger" title="{{ 'Failed' | translate }}" ng-click="fail(execution)" ng-disabled="execution.saving">
+                    <i class="fa fa-fw fa-times-circle"></i>
                 </button>
-                <button class="btn btn-circle btn-xl btn-info" title="{{ 'Blocked' | translate }}" ng-click="block(execution)" ng-disabled="execution.saving">
-                    <img src="scripts/angular/bin/assets/status-blocked-white-big.png" alt="{{ 'Blocked' | translate }}">
+                <button id="test-result-blocked" type="button" class="current-test-result tlp-button-large tlp-button-info" title="{{ 'Blocked' | translate }}" ng-click="block(execution)" ng-disabled="execution.saving">
+                    <i class="fa fa-fw fa-exclamation-circle"></i>
                 </button>
-                <button class="btn btn-circle btn-xl btn-default" title="{{ 'Not run' | translate }}" ng-click="notrun(execution)" ng-disabled="execution.saving">
-                    <img src="scripts/angular/bin/assets/status-notrun-white-big.png" alt="{{ 'Not run' | translate }}">
+                <button id="test-result-notrun" type="button" class="current-test-result tlp-button-large tlp-button-secondary" title="{{ 'Not run' | translate }}" ng-click="notrun(execution)" ng-disabled="execution.saving">
+                    <i class="fa fa-fw fa-question-circle"></i>
                 </button>
             </div>
-        </form>
+        </section>
     </div>
 </div>
