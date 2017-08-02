@@ -91,11 +91,27 @@ class ServiceActivator
                     'system' => $template->isSystem(),
                     'name'   => $template->isSystem() ? '' : $template->getUnixName(),
                     'id'     => $template->getID(),
-                    'is_used'   => 1,
-                    'is_active' => 1,
+                    'is_used'   => (int) $this->mustServiceBeUsed($svn_core_service, $svn_plugin_service),
+                    'is_active' => (int) $this->mustServiceBeActive($svn_core_service, $svn_plugin_service),
                 )
             );
         }
+    }
+
+    private function mustServiceBeActive(
+        Service $svn_core_service = null,
+        Service $svn_plugin_service = null
+    ) {
+        return (bool) (($svn_core_service && $svn_core_service->isActive()) ||
+            ($svn_plugin_service && $svn_plugin_service->isActive()));
+    }
+
+    private function mustServiceBeUsed(
+        Service $svn_core_service = null,
+        Service $svn_plugin_service = null
+    ) {
+        return (bool) (($svn_core_service && $svn_core_service->isUsed()) ||
+            ($svn_plugin_service && $svn_plugin_service->isUsed()));
     }
 
     private function atLeastOneSVNServiceIsUsedInTemplate(Service $svn_core_service, Service $svn_plugin_service)
