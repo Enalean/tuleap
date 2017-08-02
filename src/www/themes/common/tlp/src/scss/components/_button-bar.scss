@@ -1,0 +1,98 @@
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can retribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+.tlp-button-bar {
+    display: flex;
+}
+
+.tlp-button-bar-item {
+    margin: 0 -1px 0 0;
+
+    &:first-child > label[class*="tlp-button"] {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &:last-child > label[class*="tlp-button"] {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    &:not(:first-child):not(:last-child) > label[class*="tlp-button"] {
+        border-radius: 0;
+    }
+}
+
+.tlp-button-bar-checkbox {
+    visibility: hidden;
+    position: absolute;
+
+    &:checked {
+        + .tlp-button-primary {
+            @include tlp-button-darken($tlp-theme-color, 10%);
+
+            &.tlp-button-outline {
+                background: darken($tlp-button-outline-hover-color, 5%);
+            }
+        }
+
+        + .tlp-button-secondary {
+            @include tlp-button-darken($tlp-button-secondary-background, 10%);
+
+            &.tlp-button-outline {
+                border: 1px solid darken($tlp-button-secondary-outline-border, 10%);
+                background: darken($tlp-button-outline-hover-color, 5%);
+                color: $tlp-button-secondary-outline-color;
+            }
+        }
+
+        + .tlp-button-info {
+            @include tlp-button-darken($tlp-ui-info, 10%);
+
+            &.tlp-button-outline {
+                background: darken($tlp-button-outline-hover-color, 5%);
+            }
+        }
+
+        + .tlp-button-success {
+            @include tlp-button-darken($tlp-ui-success, 10%);
+
+            &.tlp-button-outline {
+                background: darken($tlp-button-outline-hover-color, 5%);
+            }
+        }
+
+        + .tlp-button-warning {
+            @include tlp-button-darken($tlp-ui-warning, 10%);
+
+            &.tlp-button-outline {
+                background: darken($tlp-button-outline-hover-color, 5%);
+            }
+        }
+
+        + .tlp-button-danger {
+            @include tlp-button-darken($tlp-ui-danger, 10%);
+
+            &.tlp-button-outline {
+                background: darken($tlp-button-outline-hover-color, 5%);
+            }
+        }
+    }
+}
