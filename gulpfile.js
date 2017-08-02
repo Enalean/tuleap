@@ -182,7 +182,8 @@ var fat_combined_files = [
     angular_app_paths = [
         'plugins/tracker/www/scripts/angular-artifact-modal/',
         // install angular-artifact-modal must come before kanban
-        'plugins/agiledashboard/www/js/kanban/'
+        'plugins/agiledashboard/www/js/kanban/',
+        'plugins/tracker/www/scripts/cross-tracker/'
     ],
     asset_dir = 'www/assets';
 

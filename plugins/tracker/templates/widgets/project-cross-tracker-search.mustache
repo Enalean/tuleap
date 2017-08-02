@@ -1,5 +1,15 @@
-<div class="empty-pane">
-    <p class="empty-pane-text">
-        {{ nothing_selected }}
-    </p>
-</div>
+{{# cross_tracker_presenter }}
+    <div ng-app="cross-tracker"
+         ng-controller="MainController"
+         ng-init="init(
+                '{{ language }}',
+                {{ user_id }}
+            )"
+    >
+        <div class="empty-pane">
+            <p class="empty-pane-text">
+                {{ nothing_selected }}
+            </p>
+        </div>
+    </div>
+{{/ cross_tracker_presenter }}
