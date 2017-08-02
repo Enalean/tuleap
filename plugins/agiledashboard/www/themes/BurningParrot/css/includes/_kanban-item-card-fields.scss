@@ -1,0 +1,41 @@
+.extra-card-fields {
+    margin: 0;
+    padding: $tlp-half-spacing;
+}
+
+.extra-card-field {
+    display: inline-block;
+    list-style-type: none;
+    font-size: 12px;
+
+    &.large {
+        width: 100%;
+    }
+
+    .extra-card-field-content {
+        margin: 0 15px 0 0;
+
+        .extra-card-field-title {
+            margin: 0 3px 0 0;
+            color: $tlp-ui-dimmed;
+        }
+
+        .color {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            margin: 0 3px 0 0;
+            border-radius: 50%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .user > .tlp-avatar-mini {
+            position: relative;
+            top: 6px;
+            margin: 0 3px 0 0;
+        }
+    }
+}

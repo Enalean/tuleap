@@ -22,7 +22,7 @@ use Admin_Homepage_Dao;
 use CSRFSynchronizerToken;
 use Event;
 use EventManager;
-use Layout;
+use Tuleap\Layout\BaseLayout;
 use Project;
 use ProjectManager;
 use Tuleap\Layout\SidebarPresenter;
@@ -37,7 +37,7 @@ use ForgeConfig;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 
-class BurningParrotTheme extends Layout
+class BurningParrotTheme extends BaseLayout
 {
     /** @var ProjectManager */
     private $project_manager;
@@ -70,6 +70,11 @@ class BurningParrotTheme extends Layout
         $this->includeFooterJavascriptFile($this->include_asset->getFileURL('navbar-history.js'));
     }
 
+    protected function getUser()
+    {
+        return $this->request->getCurrentUser();
+    }
+
     public function includeCalendarScripts()
     {
     }
@@ -99,7 +104,8 @@ class BurningParrotTheme extends Layout
             $sidebar,
             $current_project_navbar_info,
             $this->getListOfIconUnicodes(),
-            $url_redirect
+            $url_redirect,
+            $this->toolbar
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

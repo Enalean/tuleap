@@ -16,16 +16,20 @@
     "gulp-sass": "^3.1.0",
     "gulp-scss-lint": "^0.4.0",
     "lodash.map": "4.6.0",
+    "lodash.partialright": "^4.2.1",
+    "lodash.spread": "^4.2.1",
     "merge2": "1.0.2",
     "read-pkg": "2.0.0",
     "run-sequence": "1.2.2"
   },
   "scripts": {
+    "angular-apps": "gulp angular-apps",
     "build": "gulp build",
+    "components": "gulp components",
     "core": "gulp core",
     "js": "gulp js",
     "sass": "gulp sass",
-    "watch": "gulp watch",
-    "scss-lint": "gulp scss-lint"
+    "scss-lint": "gulp scss-lint",
+    "watch": "gulp watch"
   }
 }

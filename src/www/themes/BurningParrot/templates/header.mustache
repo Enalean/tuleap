@@ -58,6 +58,14 @@
             {{/ sidebar }}
 
             <main role="main" class="{{ main_classes }}">
+                {{# has_toolbar }}
+                    <nav class="toolbar">
+                        {{# toolbar }}
+                            {{{ . }}}
+                        {{/ toolbar }}
+                    </nav>
+                {{/ has_toolbar }}
+
                 {{# has_feedbacks }}
                     <div id="feedback">
                         {{# feedbacks }}

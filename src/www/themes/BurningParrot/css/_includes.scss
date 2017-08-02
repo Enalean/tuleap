@@ -18,6 +18,7 @@
  */
 
 @import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
+@import '../../common/css/utils/tooltip';
 
 @import 'includes/global-variables';
 @import 'includes/smooth-scrollbar-overrides';
@@ -29,3 +30,4 @@
 @import 'includes/dashboard';
 @import 'includes/homepage';
 @import 'includes/toggler';
+@import 'includes/modals';

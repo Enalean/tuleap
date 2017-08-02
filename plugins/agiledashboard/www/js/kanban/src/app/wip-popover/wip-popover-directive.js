@@ -1,4 +1,5 @@
 import './wip-popover.tpl.html';
+import { dropdown as createDropdown } from 'tlp';
 
 export default WipPopover;
 
@@ -14,7 +15,10 @@ function WipPopover($timeout) {
             setWipLimit: '&setWipLimit'
         },
         link: function(scope, element, attrs) {
-            toggleWipPopover();
+            $timeout(function() {
+                createDropdown(document.getElementById('kanban-column-header-wip-limit-' + scope.column.id));
+                toggleWipPopover();
+            });
 
             function toggleWipPopover() {
                 angular.element('body').click(function (event) {

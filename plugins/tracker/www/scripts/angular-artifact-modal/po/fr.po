@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-02-24 15:56+0100\n"
+"PO-Revision-Date: 2017-07-20 17:18+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,33 +14,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 1.8.12\n"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "(auto-computed)"
 msgstr "(calculé automatiquement)"
-
-#: src/tuleap-artifact-modal.tpl.html
-msgid "-- Please choose"
-msgstr "-- Sélectionner"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Add a new comment"
 msgstr "Ajouter un nouveau commentaire"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Add another file"
 msgstr "Ajouter un autre fichier"
 
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Artifact links"
-msgstr "Artefacts référencés par cet artefact"
-
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
 msgid "Auto-compute"
 msgstr "Calcul automatique"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "By: {{ file.submitted_by }}"
 msgstr "Par: {{ file.submitted_by }}"
 
@@ -52,28 +44,20 @@ msgstr "Annuler"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
-msgid "Computed value: Empty"
-msgstr "Valeur calculée : Aucune"
-
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
-msgid "Computed value: {{ ::computed_field.field.value }}"
-msgstr "Valeur calculée : {{ ::computed_field.field.value }}"
-
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Create a new {{ modal.title }}"
 msgstr "Créer un nouveau {{ modal.title }}"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
-msgid "Edit the field"
-msgstr "Éditer le champ"
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
+msgid "Edit"
+msgstr "Editer"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Edited by"
 msgstr "Modifié par"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field.tpl.html
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/computed-field/computed-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Empty"
 msgstr "Aucun(e)"
@@ -86,23 +70,27 @@ msgstr "Entrer des ids d'artefacts séparés par une virgule"
 msgid "Error:"
 msgstr "Erreur :"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "File description"
 msgstr "Description du fichier"
 
-#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
-msgid "File upload quota allowed:"
-msgstr "Quota d'envoi de fichiers autorisé :"
+#: src/quota-display/quota-display.tpl.html
+msgid "File upload quota allowed"
+msgstr "Quota d'envoi de fichiers autorisé"
 
 #: src/tuleap-artifact-modal.tpl.html
 msgid "Follow-ups"
 msgstr "Commentaires"
 
-#: src/tuleap-artifact-modal.tpl.html
-msgid "Format:"
-msgstr "Format :"
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
+msgid "Keep the file"
+msgstr "Garder le fichier"
 
-#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
+msgid "Mark for removal"
+msgstr "Marquer pour suppression"
+
+#: src/quota-display/quota-display.tpl.html
 msgid ""
 "Max allowed upload size: {{ quota_display.file_upload_rules.disk_quota | "
 "byteFmt: 2 }}"
@@ -123,14 +111,28 @@ msgid "Only comments are displayed"
 msgstr "Seuls les commentaires sont affichés"
 
 #: src/tuleap-artifact-modal.tpl.html
+msgid "Please choose a parent…"
+msgstr "Veuillez choisir un parent…"
+
+#: src/tuleap-artifact-modal-fields/date-field/date-field.tpl.html
+msgid "Please select a date"
+msgstr "Veuillez choisir une date"
+
+#: src/tuleap-artifact-modal-fields/open-list-field/static-open-list-field.tpl.html
+#: src/tuleap-artifact-modal-fields/open-list-field/ugroups-open-list-field.tpl.html
+#: src/tuleap-artifact-modal-fields/open-list-field/users-open-list-field.tpl.html
+msgid "Please select an item in the list"
+msgstr "Veuillez choisir un élément dans la liste"
+
+#: src/tuleap-artifact-modal.tpl.html
 msgid "References list is empty."
 msgstr "Cet artefact n'est pas référencé, et n'est pas source de références."
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Reset"
 msgstr "Annuler"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-permission-field/tuleap-artifact-modal-permission-field.tpl.html
+#: src/tuleap-artifact-modal-fields/permission-field/permission-field.tpl.html
 msgid "Restrict access to this artifact for the following user groups:"
 msgstr ""
 "Restreindre l'accès à cet artefact pour les groupes d'utilisateurs suivants :"
@@ -140,10 +142,10 @@ msgid "Save changes"
 msgstr "Enregistrer les changements"
 
 #: src/tuleap-artifact-modal.tpl.html
-msgid "Select parent:"
-msgstr "Sélectionner un parent :"
+msgid "Select parent"
+msgstr "Sélectionner un parent"
 
-#: src/tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field.tpl.html
+#: src/tuleap-artifact-modal-fields/file-field/file-field.tpl.html
 msgid "Size: {{ file.size | byteFmt: 2 }}"
 msgstr "Taille : {{ file.size | byteFmt: 2 }}"
 
@@ -151,7 +153,7 @@ msgstr "Taille : {{ file.size | byteFmt: 2 }}"
 msgid "The artifact will be linked to {{ modal.parent.label }}."
 msgstr "L'artifact sera lié à  {{ modal.parent.label }}."
 
-#: src/tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display.tpl.html
+#: src/quota-display/quota-display.tpl.html
 msgid ""
 "{{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} of "
 "{{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}"

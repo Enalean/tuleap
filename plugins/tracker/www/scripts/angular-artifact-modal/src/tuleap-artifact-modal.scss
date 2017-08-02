@@ -1,523 +1,212 @@
-$color-swatch-inca-silver: #767676 ;
-$color-swatch-chrome-silver: #A5A5A5 ;
-$color-swatch-fiesta-red: #DC2F2F ;
-$color-swatch-teddy-brown: #9B6542 ;
-$color-swatch-clockwork-orange: #FF9400 ;
-$color-swatch-red-wine: #9E1919 ;
-$color-swatch-acid-green: #92C71E ;
-$color-swatch-army-green: #7F9A42 ;
-$color-swatch-sherwood-green: #28C43A ;
-$color-swatch-ocean-turquoise: #28C4A0 ;
-$color-swatch-daphne-blue: #0FD8D8 ;
-$color-swatch-lake-placid-blue: #33C0EA ;
-$color-swatch-deep-blue: #2B6CDC ;
-$color-swatch-plum-crazy: #890DE1 ;
-$color-swatch-peggy-pink: #E10DCB ;
-$color-swatch-flamingo-pink: #FF87C4 ;
+@import 'tuleap-highlight/highlight';
+@import 'quota-display/quota-display';
+@import 'tuleap-artifact-modal-fields/file-field/file-field';
+@import 'tuleap-artifact-modal-fields/computed-field/computed-field';
+@import 'tuleap-artifact-modal-fields/open-list-field/open-list-field';
 
-$color-without-theme: #222222;
-$color-artifact-background: #FFFFFF;
-$color-followups-background: #F5F5F5;
 
-@import "tuleap-highlight/tuleap-highlight";
+.tuleap-artifact-modal-title {
+    display: flex;
+    align-items: center;
+}
 
-.tuleap-artifact-modal {
+.tuleap-artifact-modal-title-badge {
+    margin: 0 10px 0 0;
+    padding: 8px 12px;
+    border-radius: 24px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 20px;
+}
 
-    &.fade.in {
-        top: 50%;
-        margin-top: -47vm;
-        margin-top: -47vmin;
+.tuleap-artifact-modal-body {
+    display: flex;
+    padding: 0;
+    overflow-y: hidden;
+    background: $tlp-theme-background-color;
+
+    &.edition-mode .tuleap-artifact-modal-followups {
+        display: none;
+    }
+}
+
+.tuleap-artifact-modal-artifact {
+    flex: 1 1 auto;
+    width: 65%;
+    padding: $tlp-spacing;
+    overflow-y: auto;
+
+    .tlp-property:last-child,
+    .tlp-form-element:last-child {
+        margin: 0 0 $tlp-spacing;
+    }
+}
+
+.tuleap-artifact-modal-artifact-field-user {
+    display: flex;
+    align-items: center;
+
+    > .tlp-avatar {
+        margin: 0 5px 0 0;
     }
 
-    &.creation-mode {
-        width: 50vw;
-        margin-left: -25vw;
+    > a {
+        text-decoration: none;
 
-        @media (max-width: 767px) {
-            width: auto;
-            margin-left: 0;
-        }
-
-        .artifact-column {
-            width: 100%;
+        &:hover {
+            text-decoration: underline;
         }
     }
+}
 
-    &.edition-mode {
-        width: 70vw;
-        margin-left: -35vw;
+.tuleap-artifact-modal-artifact-field-burndown-image {
+    max-width: 100%;
+}
 
-        @media (max-width: 767px) {
-            width: auto;
-            margin-left: 0;
+fieldset {
+    margin: 0 0 $tlp-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: $tlp-ui-white;
+}
+
+.tuleap-artifact-modal-followups {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 35%;
+    padding: $tlp-spacing;
+    overflow-y: auto;
+    border-left: 1px solid $tlp-ui-border-normal;
+    background: $tlp-ui-white;
+
+    &.invert-order {
+        > .tuleap-artifact-modal-followups-comments {
+            order: 3;
+        }
+
+        > .tuleap-artifact-modal-followups-add-form {
+            order: 2;
+            margin: 0 0 $tlp-double-spacing;
         }
     }
+}
 
-    .followups-title {
-        color: $color-without-theme;
-    }
-    .column {
-        float: left;
-        box-sizing: border-box;
-        height: 100%;
-    }
+.tuleap-artifact-modal-followups-title {
+    flex: 0 0 auto;
+    order: 1;
+    cursor: default;
+}
 
-    .artifact-column {
-        width: 65%;
-        background-color: $color-artifact-background;
-        overflow-y: auto;
-    }
+.tuleap-artifact-modal-followups-title-icon {
+    margin: 0 5px 0 0;
+}
 
-    .followups-column {
-        width: 35%;
-        background: $color-followups-background;
-        overflow-y: auto;
-    }
+.tuleap-artifact-modal-followups-add-form {
+    flex: 0 0 auto;
+    order: 3;
+    width: 100%;
+    margin: $tlp-double-spacing 0 0;
+}
 
-    .modal-header {
-        min-height: 30px;
-        box-sizing: border-box;
-        padding: 0;
-        overflow: auto;
-        border-bottom: 3px solid $color-without-theme;
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
-        background: $color-followups-background;
+.tuleap-artifact-modal-label-with-format {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 5px;
 
-        .column {
-            padding: 9px 15px;
-        }
-
-        .artifact-type {
-            border-radius: 3px;
-            color: #FFFFFF;
-            font-weight: normal;
-            padding: 2px 7px;
-            text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-            position: relative;
-            top: -2px;
-
-            &.inca_silver {
-                background-color: $color-swatch-inca-silver;
-            }
-            &.chrome_silver {
-                background-color: $color-swatch-chrome-silver;
-            }
-            &.fiesta_red {
-                background-color: $color-swatch-fiesta-red;
-            }
-            &.teddy_brown {
-                background-color: $color-swatch-teddy-brown;
-            }
-            &.clockwork_orange {
-                background-color: $color-swatch-clockwork-orange;
-            }
-            &.red_wine {
-                background-color: $color-swatch-red-wine;
-            }
-            &.acid_green {
-                background-color: $color-swatch-acid-green;
-            }
-            &.army_green {
-                background-color: $color-swatch-army-green;
-            }
-            &.sherwood_green {
-                background-color: $color-swatch-sherwood-green;
-            }
-            &.ocean_turquoise {
-                background-color: $color-swatch-ocean-turquoise;
-            }
-            &.daphne_blue {
-                background-color: $color-swatch-daphne-blue;
-            }
-            &.lake_placid_blue {
-                background-color: $color-swatch-lake-placid-blue;
-            }
-            &.deep_blue {
-                background-color: $color-swatch-deep-blue;
-            }
-            &.plum_crazy {
-                background-color: $color-swatch-plum-crazy;
-            }
-            &.peggy_pink {
-                background-color: $color-swatch-peggy-pink;
-            }
-            &.flamingo_pink {
-                background-color: $color-swatch-flamingo-pink;
-            }
-        }
-
-        .title {
-            font-size: 1.3em;
-        }
-
-        .followups-column {
-            text-align: center;
-            text-transform: uppercase;
-
-            .followups-title {
-                margin: 0;
-                font-size: 1em;
-                line-height: 32px;
-
-                > i {
-                    margin-left: 5px;
-                }
-
-                .tooltip-inner {
-                    text-transform: initial;
-                }
-            }
-        }
-
-        .close {
-            position: absolute;
-            top: 11px;
-            right: 15px;
-        }
+    > .tlp-label {
+        flex: 0 0 auto;
+        margin: 0 5px 0 0;
     }
 
-    .modal-body {
-        box-sizing: border-box;
-        padding: 0;
-        height: 70vm;
-        height: 70vmin;
-        max-height: 70vm;
-        max-height: 70vmin;
-        @media (max-height: 700px) {
-            height: 50vm;
-            height: 50vmin;
-            max-height: 50vm;
-            max-height: 50vmin;
-        }
+    > .tlp-select {
+        flex: 0 0 auto;
+        width: auto;
+    }
+}
 
-        @media (max-height: 550px) {
-            height: 40vm;
-            height: 40vmin;
-            max-height: 40vm;
-            max-height: 40vmin;
-        }
+.tuleap-artifact-modal-followups-comments {
+    display: flex;
+    flex: 1 0 auto;
+    flex-direction: column;
+    order: 2;
+    width: 100%;
+}
 
-        .column {
-            max-height: inherit;
-            padding: 15px;
-            box-sizing: border-box;
-        }
+.tuleap-artifact-modal-followups-comments-empty {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    margin: $tlp-spacing;
+    color: transparentize($tlp-theme-color, .7);
+    font-style: italic;
+}
 
-        .modal-textarea {
-            width: 100%;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
+.tuleap-artifact-modal-followups-comment {
+    margin: 0 0 $tlp-double-spacing;
 
-        .ng-invalid {
-            border-color: #FF0000;
-        }
-
-        .required::after {
-            content: ' *';
-            color: #D0021B;
-            font-size: 1.3em;
-        }
-
-        .artifact-link-value {
-            padding: 5px 10px;
-            border-left: 1px dotted #C7C7C7;
-        }
-
-        .field {
-            margin: 0 0 10px;
-
-            @import "tuleap-artifact-modal-fields/tuleap-artifact-modal-file-field/tuleap-artifact-modal-file-field";
-            @import "tuleap-artifact-modal-fields/tuleap-artifact-modal-computed-field/tuleap-artifact-modal-computed-field";
-            @import "tuleap-artifact-modal-fields/tuleap-artifact-modal-permission-field/tuleap-artifact-modal-permission-field";
-
-            > label {
-                color: #4D4D4D;
-            }
-
-            .add-on {
-                cursor: pointer;
-            }
-
-            &.burndown > img {
-                width: 100%;
-            }
-
-            .datetimepicker {
-                width: 260px;
-                font-size: 0.9em;
-
-                th.left:before {
-                    content: "\f053";
-                    font-family: FontAwesome;
-                }
-
-                th.right:before {
-                    content: "\f054";
-                    font-family: FontAwesome;
-                }
-
-                td {
-                    padding: 4px;
-                }
-            }
-
-            &.subby {
-                .avatar {
-                    float: left;
-                    height: 25px;
-                    width: 25px;
-                }
-
-                .username {
-                    margin-left: 5px;
-                }
-            }
-
-            &.tbl {
-                .tracker_formelement_label {
-                    &.loading {
-                        background-image: url('loader-mini.gif');
-                        background-repeat: no-repeat;
-                        background-position: right 5px bottom 5px;
-                    }
-                }
-
-                .ui-select-match-item {
-                    padding: 1px 7px 2px;
-                    font-size: 11px;
-                    border-radius: 3px;
-                }
-
-                .avatar {
-                    float: left;
-                    height: 20px;
-                    width: 20px;
-                }
-
-                .username {
-                    margin-left: 5px;
-                }
-
-                .ui-select-container {
-                    padding: 0;
-                }
-
-                input.ui-select-search {
-                    background: #FFF !important;
-                    border: 1px solid #CCC;
-                }
-            }
-        }
-
-        fieldset {
-            margin: 20px 0;
-            background: #FFFFFF;
-            border-radius: 3px;
-            border: 1px solid #E9E9E9;
-
-            > legend {
-                float: left;
-                padding: 0 10px 0 30px;
-                margin: 0 0 10px;
-                border: none;
-                border-bottom: 2px solid $color-without-theme;
-                cursor: pointer;
-                font-size: 1.2em;
-                background: #FFF url('/themes/common/images/toggle-fontawesome-minus.png') no-repeat 10px center;
-
-                &:hover {
-                    background-color: #FAFAFA;
-                    transition: background-color 0.1s linear;
-                }
-            }
-
-            > .fieldset-content {
-                padding: 0 10px;
-            }
-
-            &.collapsed {
-                > legend {
-                    margin: 0;
-                    border: none;
-                    background: #FFF url('/themes/common/images/toggle-fontawesome-plus.png') no-repeat 10px center;
-
-                    &:hover {
-                        background-color: #FAFAFA;
-                        transition: background-color 0.1s linear;
-                    }
-                }
-
-                > .fieldset-content {
-                    overflow: hidden;
-                    padding: 0;
-                    height: 0;
-                }
-            }
-        }
-
-        .followups-column {
-            padding: 15px 8px 15px 15px;
-
-            .followups-comments {
-                flex: 1 1 auto;
-                order: 1;
-                margin-bottom: 30px;
-
-                li {
-                    list-style-type: none;
-                    margin: 0 0 40px;
-
-                    &.loading-followups {
-                        height: 16px;
-                        background: url('loader-mini.gif') no-repeat center center;
-                    }
-
-                    &.empty-followups {
-                        padding: 20px 0;
-                        color: #AAA;
-                        font-size: 12px;
-                        text-align: center;
-                    }
-
-                    &:last-child {
-                        margin: 0;
-                    }
-
-                    > .followup-comment-header {
-                        margin: 0 0 10px;
-
-                        .followup-comment-submitted-avatar {
-                            float: left;
-                            height: 35px;
-                            width: 35px;
-                            margin: 0 10px 0 0;
-                        }
-
-                        .followup-comment-submitted-by {
-                            display: block;
-                            margin: 0 0 0 5px;
-                            color: #444;
-                            font-size: 13px;
-                            font-weight: 600;
-                            line-height: 17px;
-
-                            &:hover {
-                                opacity: 0.8;
-                                text-decoration: none;
-                            }
-                        }
-
-                        > .followup-comment-submitted-on {
-                            display: block;
-                            color: #888;
-                            font-size: 11px;
-                            font-style: italic;
-                        }
-
-                        > .followup-comment-edited-by {
-                            margin: 10px 0 0;
-                            color: #4DB3D0;
-                            font-size: 11px;
-                            line-height: 12px;
-
-                            > .followup-comment-last-modified-by {
-                                color: #4DB3D0;
-                                font-weight: 600;
-
-                                &:hover {
-                                    opacity: 0.8;
-                                    text-decoration: none;
-                                }
-                            }
-                        }
-                    }
-
-                    > .followup-comment-content {
-                        font-size: 0.9em;
-                    }
-                }
-            }
-
-            #add-followup {
-                min-height: 120px;
-                flex: 2 0 auto;
-                order: 2;
-                padding: 0 8px 0 0;
-                box-sizing: border-box;
-
-                label {
-                    text-align: left;
-                }
-
-                #followup_comment_label {
-                    display: inline-block;
-                    float: left;
-                    position: relative;
-                    top: 4px;
-                    font-weight: bold;
-                    color: #666;
-                }
-
-                textarea {
-                    margin: 0;
-                    width: 100%;
-                    box-sizing: border-box;
-                    font-size: 12px;
-                    resize: none;
-                }
-            }
-
-            &.invert-order {
-                .followups-comments {
-                    order: 2;
-                }
-
-                #add-followup {
-                    order: 1;
-                    margin-bottom: 30px;
-                }
-            }
-        }
+    &:last-child {
+        margin: 0;
     }
 
-    .modal-footer {
-        box-sizing: border-box;
-        position: relative;
-        z-index: 1;
-        text-align: center;
+    a {
+        text-decoration: none;
 
-        @media (max-width: 1200px) {
-            text-align: right;
-        }
-
-        .disk-usage {
-            position: absolute;
-            top: 12px;
-            text-align: left;
-            font-size: 11px;
-            color: #4DB3D0;
-
-            &.empty-disk-usage {
-                top: 22px;
-            }
-
-            @import "tuleap-artifact-modal-quota-display/tuleap-artifact-modal-quota-display";
-        }
-
-        .modal-cancel {
-            width: 114px;
+        &:hover {
+            text-decoration: underline;
         }
     }
+}
 
-    .modal-body .field > label.format-chooser, label.format-chooser {
-        float: right;
-        font-size: 0.9em;
-        color: #888;
+.tuleap-artifact-modal-followups-comment-header {
+    display: flex;
+    margin: 0 0 $tlp-half-spacing;
 
-        select {
-            margin: 0;
+    > .tlp-avatar {
+        flex: 0 0 auto;
+        margin: 0 5px 0 0;
+    }
+}
+
+.tuleap-artifact-modal-followups-comment-header-authors {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 12px;
+
+    &.multiple-authors > .tuleap-artifact-modal-followups-comment-header-author {
+        flex-direction: row;
+
+        > .tuleap-artifact-modal-followups-comment-header-time {
+            margin: 0 0 0 5px;
         }
+    }
+}
+
+.tuleap-artifact-modal-followups-comment-header-author {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.tuleap-artifact-modal-followups-comment-content {
+    font-size: 14px;
+    line-height: 18px;
+
+    p,
+    ul,
+    ol,
+    a,
+    blockquote {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    img {
+        max-width: 100%;
     }
 }

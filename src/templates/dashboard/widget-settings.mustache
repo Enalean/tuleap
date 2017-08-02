@@ -1,7 +1,7 @@
 <script id="dashboard-add-widget-settings-placeholder" type="x-tmpl-mustache">
     {{=<% %>=}}
         <input type="hidden" name="widget-name" value="{{ id }}">
-        <div>
+        <div class="dashboard-add-widget-settings-content">
             <h2 class="tlp-modal-subtitle">{{ name }}</h2>
             <p>{{{ description }}}</p>
             {{# need_configuration }}
@@ -9,6 +9,9 @@
                     {{{ configurations }}}
                 </div>
             {{/ need_configuration }}
+            {{# has_image }}
+                <img src="{{ image_source }}" class="dashboard-add-widget-settings-image" title="{{ image_title }}" />
+            {{/ has_image }}
         </div>
     <%={{ }}=%>
 </script>

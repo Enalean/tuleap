@@ -1,0 +1,77 @@
+<label class="tlp-label">
+    {{ file_field.field.label }}
+    <i ng-if="file_field.field.required" class="fa fa-asterisk"></i>
+</label>
+
+<span ng-if="! file_field.field.file_descriptions" class="empty_value" translate>Empty</span>
+
+<div ng-repeat="file in file_field.field.file_descriptions track by file.id"
+    ng-class="{ 'marked-for-removal': file.marked_for_removal }"
+    class="tuleap-artifact-modal-field-file"
+>
+    <div class="tuleap-artifact-modal-field-file-preview"
+        ng-style="{ 'background-image': file.display_as_image ? 'url(\'{{ file.html_preview_url }}\')' : 'url(\'/plugins/tracker/scripts/angular-artifact-modal/src/assets/artifact_attachment_default.png\')' }"
+    >
+        <a class="tuleap-artifact-modal-field-file-preview-link" href="{{ file.html_url }}" target="_blank">
+            <i class="fa fa-external-link"></i>
+        </a>
+    </div>
+
+    <div class="tuleap-artifact-modal-field-file-details">
+        <a href="{{ file.html_url }}" target="_blank">{{ file.name }}</a>
+        <blockquote class="tuleap-artifact-modal-field-file-details-info">
+            <p class="tlp-text">{{ file.description }}</p>
+            <p class="tlp-text-muted" translate>By: {{ file.submitted_by }}</p>
+            <p class="tlp-text-muted" translate>Size: {{ file.size | byteFmt: 2 }}</p>
+        </blockquote>
+    </div>
+
+    <button type="button"
+        ng-if="! file.marked_for_removal"
+        class="tuleap-artifact-modal-field-file-preview-toggle tlp-button-danger tlp-button-outline tlp-button-small"
+        ng-click="file_field.toggleMarkedForRemoval(file, $index)"
+    >
+        <i class="fa fa-trash-o tlp-button-icon"></i> {{ 'Mark for removal' | translate }}
+    </button>
+    <button type="button"
+        ng-if="file.marked_for_removal"
+        class="tuleap-artifact-modal-field-file-preview-toggle tlp-button-success tlp-button-outline tlp-button-small"
+        ng-click="file_field.toggleMarkedForRemoval(file, $index)"
+    >
+        <i class="fa fa-rotate-left tlp-button-icon"></i> {{ 'Keep the file' | translate }}
+    </button>
+</div>
+
+<div ng-repeat="file_upload in file_field.value_model.temporary_files" class="tuleap-artifact-modal-field-file-new-file">
+    <input type="file"
+        ng-model="file_upload.file"
+        ng-disabled="file_field.isDisabled()"
+        ng-required="{{ file_field.field.required }}"
+        onload="file_field.onFileLoaded"
+        base-sixty-four-input
+    >
+    <div class="tuleap-artifact-modal-field-file-new-file-description">
+        <input type="text"
+            class="tlp-input tlp-input-small"
+            ng-model="file_upload.description"
+            ng-disabled="file_field.isDisabled()"
+            placeholder="{{ 'File description' | translate }}"
+        >
+        <button type="button"
+            class="tlp-button-secondary tlp-button-small"
+            ng-click="file_field.resetTemporaryFileInput($index)"
+        >
+            <i class="fa fa-trash-o tlp-button-icon"></i>
+            {{ 'Reset' | translate }}
+        </button>
+    </div>
+</div>
+
+<button type="button"
+    class="tlp-button-primary tlp-button-outline tlp-button-small"
+    ng-click="file_field.addTemporaryFileInput()"
+    ng-disabled="file_field.isDisabled()"
+>
+    <i class="fa fa-plus tlp-button-icon"></i>
+    {{ 'Add another file' | translate }}
+</button>

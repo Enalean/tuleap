@@ -18,11 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\AgileDashboard\Widget\MyKanban;
+use Tuleap\AgileDashboard\Widget\ProjectKanban;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanDao;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanDeletor;
+use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\Layout\IncludeAssets;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -93,6 +102,11 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
             $this->addHook(ITEM_PRIORITY_CHANGE);
             $this->addHook(Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION);
+            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+            $this->addHook('widget_instance');
+            $this->addHook('widgets');
+            $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -312,6 +326,64 @@ class AgileDashboardPlugin extends Plugin {
 
     }
 
+    public function widgetInstance($params)
+    {
+        if ($params['widget'] !== MyKanban::NAME && $params['widget'] !== ProjectKanban::NAME) {
+            return;
+        }
+
+        $widget_kanban_dao       = new WidgetKanbanDao();
+        $widget_kanban_creator   = new WidgetKanbanCreator(
+            $widget_kanban_dao
+        );
+        $widget_kanban_retriever = new WidgetKanbanRetriever(
+            $widget_kanban_dao
+        );
+        $widget_kanban_deletor   = new WidgetKanbanDeletor(
+            $widget_kanban_dao
+        );
+        $permission_manager      = new AgileDashboard_PermissionsManager();
+        $kanban_factory          = new AgileDashboard_KanbanFactory(
+            TrackerFactory::instance(),
+            new AgileDashboard_KanbanDao()
+        );
+
+        switch ($params['widget']) {
+            case MyKanban::NAME:
+                $params['instance'] = new MyKanban(
+                    $widget_kanban_creator,
+                    $widget_kanban_retriever,
+                    $widget_kanban_deletor,
+                    $kanban_factory,
+                    TrackerFactory::instance(),
+                    $permission_manager
+                );
+                break;
+            case ProjectKanban::NAME:
+                $params['instance'] = new ProjectKanban(
+                    $widget_kanban_creator,
+                    $widget_kanban_retriever,
+                    $widget_kanban_deletor,
+                    $kanban_factory,
+                    TrackerFactory::instance(),
+                    $permission_manager
+                );
+                break;
+            default:
+                break;
+        }
+    }
+
+    public function widgets($params)
+    {
+        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
+            $params['codendi_widgets'][] = MyKanban::NAME;
+        }
+        if ($params['owner_type'] == ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
+            $params['codendi_widgets'][] = ProjectKanban::NAME;
+        }
+    }
+
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
 
@@ -387,13 +459,11 @@ class AgileDashboardPlugin extends Plugin {
 
     public function cssfile($params)
     {
-        if ($this->isAnAgiledashboardRequest()) {
+        if ($this->isAnAgiledashboardRequest() && ! $this->isKanbanURL()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
 
             if ($this->isPlanningV2URL()) {
                 echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/planning-v2/bin/assets/planning-v2.css" />';
-            } elseif ($this->isKanbanURL()) {
-                echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/kanban/dist/kanban.css">'."\n";
             }
         }
     }
@@ -403,18 +473,52 @@ class AgileDashboardPlugin extends Plugin {
         if ($this->isAnAgiledashboardRequest()) {
             if ($this->isPlanningV2URL()) {
                 echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
-            } elseif ($this->isKanbanURL()) {
-                $kanban_include_assets = new IncludeAssets(
-                    ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
-                    $this->getPluginPath() . '/js/kanban/dist'
-                );
-
-                echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
-                echo $kanban_include_assets->getHTMLSnippet('kanban.js') ."\n";
             } else {
                 echo $this->getMinifiedAssetHTML()."\n";
             }
         }
+    }
+
+    public function burning_parrot_get_stylesheets(array $params)
+    {
+        if ($this->isInDashboard() || $this->isKanbanURL()) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    public function burning_parrot_get_javascript_files(array $params)
+    {
+        if ($this->isInDashboard() || $this->isKanbanURL()) {
+            $kanban_include_assets = new IncludeAssets(
+                ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
+                $this->getPluginPath() . '/js/kanban/dist'
+            );
+            $ckeditor_path = '/scripts/ckeditor-4.3.2/';
+            $GLOBALS['HTML']->includeFooterJavascriptSnippet('window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";');
+            $params['javascript_files'][] = $ckeditor_path .'ckeditor.js';
+
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
+            $params['javascript_files'][] = $kanban_include_assets->getFileURL('kanban.js');
+        }
+    }
+
+    private function isInDashboard()
+    {
+        return $this->isInPersonalDashboard() || $this->isInProjectDashboard();
+    }
+
+    private function isInPersonalDashboard()
+    {
+        $is_managing_bookmarks = strpos($_SERVER['REQUEST_URI'], '/my/bookmark') === 0;
+
+        return ! $is_managing_bookmarks && strpos($_SERVER['REQUEST_URI'], '/my/') === 0;
+    }
+
+    private function isInProjectDashboard()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
     private function isAnAgiledashboardRequest() {
@@ -907,6 +1011,13 @@ class AgileDashboardPlugin extends Plugin {
         $milestone = $this->getMilestoneFactory()->getBareMilestoneByArtifact($user, $artifact);
         if ($milestone) {
             $collection->add(new Tuleap\AgileDashboard\Milestone\ArtifactView($milestone, $request, $user));
+        }
+    }
+
+    public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event)
+    {
+        if ($this->isKanbanURL()) {
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

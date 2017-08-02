@@ -1,0 +1,21 @@
+<div ng-if="quota_display.file_upload_rules.disk_usage > 0"
+    class="tlp-property"
+>
+    <label class="tlp-label">
+        <i class="angular-artifact-modal-disk-usage-file-upload-icon fa fa-file-text-o"></i> {{ 'File upload quota allowed' | translate }}
+    </label>
+    <div class="angular-artifact-modal-disk-usage-progress-info">
+        <div class="angular-artifact-modal-disk-usage-progress-bar">
+            <div class="angular-artifact-modal-disk-usage-progress-bar-progression" ng-style="{'width': quota_display.getDiskUsagePercentage() };"></div>
+        </div>
+        <span class="tlp-text-info" translate>
+            {{ quota_display.file_upload_rules.disk_usage | byteFmt: 2 }} of {{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}
+        </span>
+    </div>
+</div>
+<div ng-if="quota_display.isDiskUsageEmpty()"
+    class="tlp-text-info"
+    translate
+>
+    Max allowed upload size: {{ quota_display.file_upload_rules.disk_quota | byteFmt: 2 }}
+</div>

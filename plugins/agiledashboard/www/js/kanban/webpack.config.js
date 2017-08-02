@@ -6,31 +6,27 @@ var WebpackAssetsManifest = require('webpack-assets-manifest');
 var assets_dir_path = path.resolve(__dirname, './dist');
 module.exports = {
     entry : {
-        kanban: './src/app/app.js'
+        kanban: './src/app/app.js',
     },
     output: {
         path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js'
+        filename: '[name]-[chunkhash].js',
     },
     resolve: {
         modules: [
-            'node_modules',
-            'vendor',
+            // This ensures that dependencies resolve their imported modules in kanban's node_modules
             path.resolve(__dirname, 'node_modules'),
+            'node_modules'
         ],
         alias: {
-            // We should probably package angular-ui-bootstrap-templates for npm ourselves
-            'angular-ui-bootstrap-templates': 'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-            // Modal deps should be required by modal
-            'angular-ckeditor'                : 'angular-ckeditor/angular-ckeditor.js',
-            'angular-bootstrap-datetimepicker': 'angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
-            'angular-ui-select'               : 'angular-ui-select/dist/select.js',
-            'angular-filter'                  : 'angular-filter/index.js',
-            'angular-base64-upload'           : 'angular-base64-upload/index.js',
-            'tuleap-artifact-modal'           : 'artifact-modal/dist/tuleap-artifact-modal.js',
             // Our own components and their dependencies
-            'cumulative-chart-factory': path.resolve(__dirname, '../cumulative-chart-factory.js'),
+            'angular-artifact-modal'  : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal'),
+            'cumulative-flow-diagram' : path.resolve(__dirname, '../cumulative-flow-diagram/index.js'),
+            'angular-tlp'             : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
         }
+    },
+    externals: {
+        tlp: 'tlp'
     },
     module: {
         rules: [
@@ -38,10 +34,14 @@ module.exports = {
                 test: /\.html$/,
                 exclude: /node_modules/,
                 use: [
-                    { loader: 'ng-cache-loader' }
+                    {
+                        loader: 'ng-cache-loader',
+                        query: '-url'
+                    }
                 ]
             }, {
                 test: /\.po$/,
+                exclude: /node_modules/,
                 use: [
                     {
                         loader: 'angular-gettext-loader',

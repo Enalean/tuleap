@@ -1,209 +1,206 @@
-<div class="tuleap-modal-loading" ng-if="kanban.loading_modal.loading"></div>
-<socket-disconnect></socket-disconnect>
-<div id="kanban-header">
-    <h1>{{ kanban.kanban.label }}</h1>
+<div class="kanban-header">
+    <h1 class="kanban-header-title">{{ kanban.kanban.label }}</h1>
 
-    <button type="button" class="btn btn-small" ng-click="kanban.editKanban()" ng-show="kanban.showEditbutton()">
-        <i class="icon-edit"></i>
+    <go-to-kanban></go-to-kanban>
+
+    <button type="button"
+        class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-edit-button"
+        ng-click="kanban.editKanban()"
+        ng-show="kanban.showEditbutton()"
+    >
+        <i class="fa fa-pencil tlp-button-icon"></i>
         <span translate>Edit this Kanban</span>
     </button>
-
-    <button type="button" class="btn btn-small" ng-click="kanban.openReportModal()">
-        <i class="icon-bar-chart"></i>
+    <button type="button"
+        class="tlp-button-primary tlp-button-outline tlp-button-small"
+        ng-click="kanban.openReportModal()"
+    >
+        <i class="fa fa-bar-chart tlp-button-icon"></i>
         <span translate>Show reports</span>
     </button>
 
-    <div class="btn-group view-switcher" data-toggle="buttons-radio">
-        <button
-            type="button"
-            class="btn btn-small"
-            ng-class="{active: kanban.user_prefers_collapsed_cards}"
-            ng-click="kanban.toggleCollapsedMode()"
-            title="{{ 'Compact view' | translate }}">
-            <i class="icon-list"></i> <span translate>Compact view</span>
-        </button>
-        <button
-            type="button"
-            class="btn btn-small"
-            ng-class="{active: ! kanban.user_prefers_collapsed_cards}"
-            ng-click="kanban.toggleCollapsedMode()"
-            title="{{ 'Detailed view' | translate }}">
-            <i class="icon-th-list"></i> <span translate>Detailed view</span>
-        </button>
-    </div>
+    <add-to-dashboard></add-to-dashboard>
 
-    <div class="input-search">
-        <input
-            type="search"
-            class="search"
+    <div class="kanban-header-spacer"></div>
+    <button type="button"
+            class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button"
+            ng-click="kanban.toggleCollapsedMode()"
+            title="{{ 'Compact view' | translate }}"
+            ng-disabled="kanban.isCollapsedMode()"
+    >
+        <i class="fa fa-list tlp-button-icon"></i> <span translate>Compact view</span>
+    </button>
+    <button type="button"
+            class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-view-button"
+            ng-click="kanban.toggleCollapsedMode()"
+            title="{{ 'Detailed view' | translate }}"
+            ng-disabled="! kanban.isCollapsedMode()"
+    >
+        <i class="fa fa-th-list tlp-button-icon"></i> <span translate>Detailed view</span>
+    </button>
+    <input type="search"
+            class="tlp-search tlp-search-small kanban-header-search"
             placeholder="{{ 'Filter...' | translate }}"
             ng-model="kanban.filter.terms"
             ng-keyup="kanban.filterCards()"
-        >
-    </div>
-
-    <div class="clearfix"></div>
+    >
+    <div class="tuleap-modal-loading" ng-if="kanban.loading_modal.loading"></div>
+    <socket-disconnect></socket-disconnect>
 </div>
 
-<div id="kanban-board" resize>
-    <div class="backlog column"
-        ng-class="{'column-displayed': kanban.backlog.is_open, 'column-hidden': ! kanban.backlog.is_open, 'small_column': kanban.backlog.is_small_width}"
-        ng-click="kanban.expandBacklog()"
-        ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
-        ng-style="{width: kanban.backlog.resize_width}"
+<div class="kanban-board" resize>
+    <div class="backlog kanban-column"
+         ng-class="{'kanban-column-open': kanban.backlog.is_open, 'kanban-column-closed': ! kanban.backlog.is_open}"
+         ng-click="kanban.expandBacklog()"
+         ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
     >
-        <div class="column-header" class="backlog"
-            ng-style="{width: kanban.backlog.resize_width}"
-        >
-            <span
-                ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded"
-                class="wip-count"
-                ng-class="{ loading: kanban.backlog.loading_items }"
-            >{{ kanban.backlog.content.length }}</span>
-            <span
-                ng-if="! kanban.backlog.loading_items && ! kanban.backlog.fully_loaded"
-                class="wip-count"
-            >{{ kanban.backlog.nb_items_at_kanban_init }}</span>
-            <span class="toggle-column"
-                title="{{ 'Toggle the backlog' | translate }}"
-                ng-click="kanban.toggleBacklog(); $event.stopPropagation();"
+        <div class="kanban-column-header">
+            <span class="kanban-column-header-toggle"
+                  title="{{ 'Toggle the backlog' | translate }}"
+                  ng-click="kanban.toggleBacklog(); $event.stopPropagation();"
             >
-                <i class="icon-inbox"></i>
+                <i class="fa fa-inbox"></i>
             </span>
-            <span class="column-label">{{ kanban.backlog.label }}</span>
-        </div>
-        <kanban-column
-            ng-init="$ctrl.column=kanban.backlog"
-        ></kanban-column>
-        <add-in-place column="kanban.backlog" create-item="kanban.createItemInPlaceInBacklog" ng-if="kanban.backlog.user_can_add_in_place && kanban.backlog.is_open"></add-in-place>
-        <div class="column-label">
-            <div ng-style="{top: kanban.backlog.resize_top, left: kanban.backlog.resize_left}">
-                {{ kanban.backlog.label }}
+            <span ng-if="kanban.backlog.is_open" class="kanban-column-header-label">{{ kanban.backlog.label }}</span>
+            <div ng-if="kanban.backlog.is_open" class="kanban-column-header-wip">
                 <span
-                    ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded"
-                    class="count"
-                    ng-class="{ loading: kanban.backlog.loading_items }"
+                        ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded"
+                        class="kanban-column-header-wip-count"
+                        ng-class="{ loading: kanban.backlog.loading_items }"
                 >{{ kanban.backlog.content.length }}</span>
                 <span
-                    ng-if="! kanban.backlog.loading_items && ! kanban.backlog.fully_loaded"
-                    class="count"
+                        ng-if="! kanban.backlog.loading_items && ! kanban.backlog.fully_loaded"
+                        class="kanban-column-header-wip-count"
                 >{{ kanban.backlog.nb_items_at_kanban_init }}</span>
             </div>
+        </div>
+        <kanban-column ng-init="$ctrl.column=kanban.backlog"></kanban-column>
+        <add-in-place column="kanban.backlog" create-item="kanban.createItemInPlaceInBacklog" ng-if="kanban.backlog.user_can_add_in_place && kanban.backlog.is_open"></add-in-place>
+        <div ng-if="! kanban.backlog.is_open" class="kanban-column-label">
+            <span class="kanban-column-label-title">{{ kanban.backlog.label }}</span>
+            <span
+                    ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded"
+                    class="kanban-column-label-count"
+                    ng-class="{ loading: kanban.backlog.loading_items }"
+            >{{ kanban.backlog.content.length }}</span>
+            <span
+                    ng-if="! kanban.backlog.loading_items && ! kanban.backlog.fully_loaded"
+                    class="kanban-column-label-count"
+            >{{ kanban.backlog.nb_items_at_kanban_init }}</span>
         </div>
     </div>
 
     <div ng-repeat="column in kanban.board.columns"
-        class="column"
-        ng-class="{
-            'column-displayed': column.is_open,
-            'column-hidden': ! column.is_open,
-            'wip-reached': kanban.isColumnWipReached(column),
-            'small_column': column.is_small_width
-        }"
-        ng-click="kanban.expandColumn(column)"
-        ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
-        ng-style="{width: column.resize_width}"
-        data-column-id="{{ column.id }}"
+         class="kanban-column"
+         ng-class="{'kanban-column-open': column.is_open,
+                    'kanban-column-closed': ! column.is_open,
+                    'wip-reached': kanban.isColumnWipReached(column)
+                   }"
+         ng-click="kanban.expandColumn(column)"
+         ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
+         data-column-id="{{ column.id }}"
     >
-        <div class="column-header"
-            ng-style="{width: column.resize_width}"
-        >
-            <span class="wip-limit"
-                ng-class="{'infinity': !column.limit, 'editable': kanban.userIsAdmin()}"
+        <div class="kanban-column-header">
+            <span class="kanban-column-header-toggle"
+                  title="{{ 'Toggle this column' | translate }}"
+                  ng-click="kanban.toggleColumn(column); $event.stopPropagation();"
             >
-                <span ng-show="! column.limit">∞</span>
-                <span ng-show="column.limit"><i class="icon-chevron-left"></i>{{ column.limit }}</span>
+                <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa fa-plus-square'"></i>
             </span>
-            <wip-popover column="column" user-is-admin="kanban.userIsAdmin()" set-wip-limit="kanban.setWipLimitForColumn(column)"></wip-popover>
+            <span class="kanban-column-header-wip-warning tlp-tooltip tlp-tooltip-bottom"
+                  ng-if="column.is_open && kanban.isColumnWipReached(column)"
+                  data-tlp-tooltip="{{ 'You have reached the work in progress limit for this column!' | translate }}"
+            >
+                <i class="fa fa-exclamation-triangle"></i>
+            </span>
+            <span ng-if="column.is_open" class="kanban-column-header-label">{{ column.label }}</span>
+            <div ng-if="column.is_open" class="kanban-column-header-wip">
+                <span
+                        ng-if="! column.loading_items && ! column.fully_loaded"
+                        class="kanban-column-header-wip-count"
+                >{{ column.nb_items_at_kanban_init }}</span>
+                <span
+                        ng-if="column.loading_items || column.fully_loaded"
+                        class="kanban-column-header-wip-count"
+                        ng-class="{ loading: column.loading_items }"
+                >
+                    {{ column.content.length }}
+                </span>
+                <div class="tlp-dropdown">
+                    <span class="kanban-column-header-wip-limit"
+                          ng-class="{
+                              'infinity': ! column.limit,
+                              'editable': kanban.userIsAdmin(),
+                              'tlp-badge-outline': ! column.limit,
+                              'tlp-badge-primary': ! kanban.isColumnWipReached(column),
+                              'tlp-badge-warning': kanban.isColumnWipReached(column)
+                          }"
+                          id="kanban-column-header-wip-limit-{{ column.id }}"
+                    >
+                        <span class="kanban-column-header-wip-limit-infinite" ng-show="! column.limit">∞</span>
+                        <span ng-show="column.limit">
+                            <i class="fa fa-chevron-left kanban-column-header-wip-limit-chevron"></i>{{ column.limit }}
+                        </span>
+                    </span>
+                    <div class="tlp-dropdown-menu tlp-dropdown-menu-right" role="menu">
+                        <wip-popover column="column" user-is-admin="kanban.userIsAdmin()" set-wip-limit="kanban.setWipLimitForColumn(column)"></wip-popover>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <kanban-column ng-init="$ctrl.column=column"></kanban-column>
+        <add-in-place column="column" create-item="kanban.createItemInPlace" ng-if="column.user_can_add_in_place && column.is_open"></add-in-place>
+        <div ng-if="! column.is_open" class="kanban-column-label">
+            <span class="kanban-column-label-title">{{ column.label }}</span>
             <span
-                ng-if="column.loading_items || column.fully_loaded"
-                class="wip-count"
-                ng-class="{ loading: column.loading_items }"
+                    ng-if="column.loading_items || column.fully_loaded"
+                    class="kanban-column-label-count"
+                    ng-class="{ loading: column.loading_items }"
             >{{ column.content.length }}</span>
             <span
-                ng-if="! column.loading_items && ! column.fully_loaded"
-                class="wip-count"
-            >{{ column.nb_items_at_kanban_init }}</span>
-            <span class="toggle-column"
-                title="{{ 'Toggle this column' | translate }}"
-                ng-click="kanban.toggleColumn(column); $event.stopPropagation();"
-            >
-                <i ng-class="column.is_open ? 'icon-minus-sign-alt' : 'icon-plus-sign-alt'"></i>
-            </span>
-            <span class="warning-wip do-animate"
-                ng-if="kanban.isColumnWipReached(column)"
-                tooltip="{{ 'You have reached the work in progress limit for this column!' | translate }}"
-                tooltip-trigger
-                tooltip-animation="true"
-                tooltip-placement="bottom"
-                tooltip-append-to-body="true"
-            >
-                <i class="icon-warning-sign"></i>
-            </span>
-            <span class="column-label">{{ column.label }}</span>
-        </div>
-        <kanban-column
-            ng-init="$ctrl.column=column"
-        ></kanban-column>
-        <add-in-place column="column" create-item="kanban.createItemInPlace" ng-if="column.user_can_add_in_place && column.is_open"></add-in-place>
-        <div class="column-label">
-            <div ng-style="{top: column.resize_top, left: column.resize_left}">
-                {{ column.label }}
-                <span
-                    ng-if="column.loading_items || column.fully_loaded"
-                    class="count"
-                    ng-class="{ loading: column.loading_items }"
-                >{{ column.content.length }}</span>
-                <span
                     ng-if="! column.loading_items && ! column.fully_loaded"
-                    class="count"
-                >{{ column.nb_items_at_kanban_init }}</span>
-            </div>
+                    class="kanban-column-label-count"
+            >{{ column.nb_items_at_kanban_init }}</span>
         </div>
     </div>
 
-    <div class="archive column"
-        ng-class="{'column-displayed': kanban.archive.is_open, 'column-hidden': ! kanban.archive.is_open, 'small_column': kanban.archive.is_small_width}"
-        ng-click="kanban.expandArchive()"
-        ng-attr-title="{{ kanban.archive.is_open ? '' : 'Toggle the archive' | translate }}"
-        ng-style="{width: kanban.archive.resize_width}"
+    <div class="archive kanban-column"
+         ng-class="{'kanban-column-open': kanban.archive.is_open, 'kanban-column-closed': ! kanban.archive.is_open}"
+         ng-click="kanban.expandArchive()"
+         ng-attr-title="{{ kanban.archive.is_open ? '' : 'Toggle the archive' | translate }}"
     >
-        <div class="column-header"
-            ng-style="{width: kanban.archive.resize_width}"
-        >
+        <div class="kanban-column-header">
+            <span class="kanban-column-header-toggle"
+                  title="{{ 'Toggle the archive' | translate }}"
+                  ng-click="kanban.toggleArchive(); $event.stopPropagation();"
+            >
+                <i class="fa fa-archive"></i>
+            </span>
+            <span ng-if="kanban.archive.is_open" class="kanban-column-header-label">{{ kanban.archive.label }}</span>
+            <div ng-if="kanban.archive.is_open" class="kanban-column-header-wip">
+                <span
+                        ng-if="! kanban.archive.loading_items && ! kanban.archive.fully_loaded"
+                        class="kanban-column-header-wip-count"
+                >{{ kanban.archive.nb_items_at_kanban_init }}</span>
+                <span
+                        ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded"
+                        class="kanban-column-header-wip-count"
+                        ng-class="{ loading: kanban.archive.loading_items }"
+                >{{ kanban.archive.content.length }}</span>
+            </div>
+        </div>
+        <kanban-column ng-init="$ctrl.column=kanban.archive"></kanban-column>
+        <div ng-if="! kanban.archive.is_open" class="kanban-column-label">
+            <span class="kanban-column-label-title">{{ kanban.archive.label }}</span>
             <span
-                ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded"
-                class="wip-count"
-                ng-class="{ loading: kanban.archive.loading_items }"
+                    ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded"
+                    class="kanban-column-label-count"
+                    ng-class="{ loading: kanban.archive.loading_items }"
             >{{ kanban.archive.content.length }}</span>
             <span
-                ng-if="! kanban.archive.loading_items && ! kanban.archive.fully_loaded"
-                class="wip-count"
-            >{{ kanban.archive.nb_items_at_kanban_init }}</span>
-            <span class="toggle-column"
-                title="{{ 'Toggle the archive' | translate }}"
-                ng-click="kanban.toggleArchive(); $event.stopPropagation();"
-            >
-                <i class="icon-archive"></i>
-            </span>
-            <span class="column-label">{{ kanban.archive.label }}</span>
-        </div>
-        <kanban-column
-            ng-init="$ctrl.column=kanban.archive"
-        ></kanban-column>
-        <div class="column-label">
-            <div ng-style="{top: kanban.archive.resize_top, left: kanban.archive.resize_left}">
-                {{ kanban.archive.label }}
-                <span
-                    ng-if="kanban.archive.loading_items || kanban.archive.fully_loaded"
-                    class="count"
-                    ng-class="{ loading: kanban.archive.loading_items }"
-                >{{ kanban.archive.content.length }}</span>
-                <span
                     ng-if="! kanban.archive.loading_items && ! kanban.archive.fully_loaded"
-                    class="count"
-                >{{ kanban.archive.nb_items_at_kanban_init }}</span>
-            </div>
+                    class="kanban-column-label-count"
+            >{{ kanban.archive.nb_items_at_kanban_init }}</span>
         </div>
     </div>
 </div>

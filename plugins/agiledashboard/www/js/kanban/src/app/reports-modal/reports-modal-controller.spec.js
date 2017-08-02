@@ -1,16 +1,17 @@
 import kanban_module from '../app.js';
 import angular from 'angular';
+import { modal } from 'tlp';
 import 'angular-mocks';
 
 describe("ReportsModalController -", function() {
     var ReportsModalController,
         $scope,
         $q,
-        $modalInstance,
         SharedPropertiesService,
         DiagramRestService,
         kanban_id,
-        kanban_label;
+        kanban_label,
+        tlp_modal;
 
     beforeEach(function() {
         angular.mock.module(kanban_module);
@@ -34,9 +35,10 @@ describe("ReportsModalController -", function() {
 
         $scope = $rootScope.$new();
 
-        $modalInstance = jasmine.createSpy("$modalInstance");
         kanban_id    = 2;
         kanban_label = "Italy Kanban";
+        tlp_modal    = jasmine.createSpy("modal_instance");
+
         spyOn(SharedPropertiesService, "getKanban").and.returnValue({
             id     : kanban_id,
             label  : kanban_label,
@@ -54,7 +56,7 @@ describe("ReportsModalController -", function() {
 
         ReportsModalController = $controller('ReportsModalController', {
             $scope                 : $scope,
-            $modalInstance         : $modalInstance,
+            modal_instance         : { tlp_modal: tlp_modal },
             SharedPropertiesService: SharedPropertiesService,
             DiagramRestService     : DiagramRestService
         });
@@ -97,6 +99,7 @@ describe("ReportsModalController -", function() {
             expect(ReportsModalController.loading).toBe(true);
 
             $scope.$apply();
+
             expect(ReportsModalController.loading).toBe(false);
 
             var YYYY_MM_DD_regexp = /^\d{4}-\d{2}-\d{2}$/;

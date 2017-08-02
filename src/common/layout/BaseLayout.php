@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,19 @@
 
 namespace Tuleap\Layout;
 
-use Tuleap\Layout\IncludeAssets;
-use UserManager;
-use Widget_Static;
-use Response;
-use ForgeConfig;
 use Codendi_HTMLPurifier;
+use Event;
 use EventManager;
+use ForgeConfig;
+use PermissionsOverrider_PermissionsOverriderManager;
+use Project;
+use ProjectManager;
+use Response;
 use Toggler;
+use Tuleap\Sanitizer\URISanitizer;
+use UserManager;
+use Valid_LocalURI;
+use Widget_Static;
 
 abstract class BaseLayout extends Response
 {
@@ -47,19 +52,46 @@ abstract class BaseLayout extends Response
     /** @var IncludeAssets */
     protected $include_asset;
 
+    /**
+     * Set to true if HTML object is displayed through a Service
+     *
+     * @var Boolean
+     */
+    protected $is_rendered_through_service = false;
+
+    /**
+     * @var array
+     */
+    protected $breadcrumbs;
+
+    /**
+     * @var string[] HTML
+     */
+    protected $toolbar;
+
+    /**
+     * @var URISanitizer
+     */
+    protected $uri_sanitizer;
+
     public function __construct($root)
     {
         parent::__construct();
         $this->root    = $root;
         $this->imgroot = $root . '/images/';
 
+        $this->breadcrumbs = array();
+        $this->toolbar     = array();
+
         $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
+        $this->uri_sanitizer = new URISanitizer(new Valid_LocalURI());
     }
 
     abstract public function header(array $params);
     abstract public function footer(array $params);
     abstract public function displayStaticWidget(Widget_Static $widget);
     abstract public function includeCalendarScripts();
+    abstract protected function getUser();
 
     /**
      * Build an img tag
@@ -259,8 +291,8 @@ abstract class BaseLayout extends Response
             }
         }
 
-        $paths = array();
-        $time = $GLOBALS['debug_time_start'];
+        $paths       = array();
+        $time        = $GLOBALS['debug_time_start'];
         foreach ($GLOBALS['DBSTORE'] as $d) {
             foreach ($d['trace'] as $trace) {
                 $time_taken = 1000 * round($trace[2] - $trace[1], 3);
@@ -364,5 +396,97 @@ abstract class BaseLayout extends Response
                 self::debugDisplayPaths($next, $red, $padding+20);
             }
         }
+    }
+
+    public function addBreadcrumbs($breadcrumbs)
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+        foreach ($breadcrumbs as $breadcrumb) {
+            $classname = '';
+            if (isset($breadcrumb['classname'])) {
+                $classname = 'class="breadcrumb-step-' . $purifier->purify($breadcrumb['classname']) . '"';
+            }
+            $this->addBreadcrumb(
+                '<a href="' .
+                $this->uri_sanitizer->sanitizeForHTMLAttribute($purifier->purify($breadcrumb['url'])) .
+                '" ' . $classname . '>' .
+                $purifier->purify($breadcrumb['title']) . '</a>'
+            );
+        }
+    }
+
+    /**
+     * @param string $item HTML
+     * @return $this
+     */
+    public function addToolbarItem($item)
+    {
+        $this->toolbar[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getListOfIconUnicodes()
+    {
+        $list_of_icon_unicodes = array();
+
+        EventManager::instance()->processEvent(Event::SERVICE_ICON, array(
+            'list_of_icon_unicodes' => &$list_of_icon_unicodes
+        ));
+
+        return $list_of_icon_unicodes;
+    }
+
+    /**
+     * Set to true if HTML object is displayed through a Service
+     *
+     * @see Service
+     *
+     * @param Boolean $value
+     */
+    public function setRenderedThroughservice($value)
+    {
+        $this->is_rendered_through_service = $value;
+    }
+
+    protected function addBreadcrumb($step)
+    {
+        $this->breadcrumbs[] = $step;
+
+        return $this;
+    }
+
+    protected function getProjectSidebar($params, $project)
+    {
+        $builder = new ProjectSidebarBuilder(
+            EventManager::instance(),
+            ProjectManager::instance(),
+            PermissionsOverrider_PermissionsOverriderManager::instance(),
+            Codendi_HTMLPurifier::instance(),
+            $this->uri_sanitizer
+        );
+
+        return $builder->getSidebar($this->getUser(), $params['toptab'], $project);
+    }
+
+    protected function getProjectPrivacy(Project $project)
+    {
+        if ($project->isPublic()) {
+            $privacy = 'public';
+
+            if (ForgeConfig::areAnonymousAllowed()) {
+                $privacy .= '_w_anon';
+            } else {
+                $privacy .= '_wo_anon';
+            }
+
+        } else {
+            $privacy = 'private';
+        }
+
+        return $privacy;
     }
 }

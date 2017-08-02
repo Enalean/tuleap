@@ -1,13 +1,13 @@
-angular
-    .module('tuleap.artifact-modal')
-    .service('NewTuleapArtifactModalService', NewTuleapArtifactModalService)
-    .value('TuleapArtifactModalLoading', {
-        loading: false
-    });
+import './tuleap-artifact-modal.tpl.html';
+import TuleapArtifactModalController from './tuleap-artifact-modal-controller.js';
 
-NewTuleapArtifactModalService.$inject = [
+import _ from 'lodash';
+
+export default ArtifactModalService;
+
+ArtifactModalService.$inject = [
     '$q',
-    '$modal',
+    'TlpModalService',
     'TuleapArtifactModalRestService',
     'TuleapArtifactModalLoading',
     'TuleapArtifactModalParentService',
@@ -19,9 +19,9 @@ NewTuleapArtifactModalService.$inject = [
     'TuleapArtifactModalFileUploadRules'
 ];
 
-function NewTuleapArtifactModalService(
+function ArtifactModalService(
     $q,
-    $modal,
+    TlpModalService,
     TuleapArtifactModalRestService,
     TuleapArtifactModalLoading,
     TuleapArtifactModalParentService,
@@ -34,13 +34,11 @@ function NewTuleapArtifactModalService(
 ) {
     var self = this;
 
-    _.extend(self, {
-        initCreationModalModel: initCreationModalModel,
-        initEditionModalModel : initEditionModalModel,
-        loading               : TuleapArtifactModalLoading,
-        showCreation          : showCreation,
-        showEdition           : showEdition
-    });
+    self.initCreationModalModel = initCreationModalModel;
+    self.initEditionModalModel  = initEditionModalModel;
+    self.loading                = TuleapArtifactModalLoading;
+    self.showCreation           = showCreation;
+    self.showEdition            = showEdition;
 
     /**
      * Opens a new modal pop-in which will display a form with all the fields defined in the
@@ -54,21 +52,15 @@ function NewTuleapArtifactModalService(
     function showCreation(tracker_id, parent, displayItemCallback) {
         TuleapArtifactModalLoading.loading = true;
 
-        return $modal.open({
-            backdrop   : 'static',
-            keyboard   : false,
-            templateUrl: 'tuleap-artifact-modal.tpl.html',
-            controller : 'TuleapArtifactModalController as modal',
-            resolve    : {
-                modal_model: function() {
-                    return self.initCreationModalModel(tracker_id, parent);
-                },
-                displayItemCallback: function() {
-                    var cb = (displayItemCallback) ? displayItemCallback : angular.noop;
-                    return cb;
-                }
-            },
-            windowClass: 'tuleap-artifact-modal creation-mode'
+        return TlpModalService.open({
+            templateUrl    : 'tuleap-artifact-modal.tpl.html',
+            controller     : TuleapArtifactModalController,
+            controllerAs   : 'modal',
+            tlpModalOptions: { keyboard: false },
+            resolve        : {
+                modal_model        : self.initCreationModalModel(tracker_id, parent),
+                displayItemCallback: (displayItemCallback) ? displayItemCallback : _.noop
+            }
         });
     }
 
@@ -86,21 +78,15 @@ function NewTuleapArtifactModalService(
     function showEdition(user_id, tracker_id, artifact_id, displayItemCallback) {
         TuleapArtifactModalLoading.loading = true;
 
-        return $modal.open({
-            backdrop   : 'static',
-            keyboard   : false,
-            templateUrl: 'tuleap-artifact-modal.tpl.html',
-            controller : 'TuleapArtifactModalController as modal',
-            resolve    : {
-                modal_model: function() {
-                    return self.initEditionModalModel(user_id, tracker_id, artifact_id);
-                },
-                displayItemCallback: function() {
-                    var cb = (displayItemCallback) ? displayItemCallback : angular.noop;
-                    return cb;
-                }
-            },
-            windowClass: 'tuleap-artifact-modal edition-mode'
+        return TlpModalService.open({
+            templateUrl    : 'tuleap-artifact-modal.tpl.html',
+            controller     : TuleapArtifactModalController,
+            controllerAs   : 'modal',
+            tlpModalOptions: { keyboard: false },
+            resolve        : {
+                modal_model        : self.initEditionModalModel(user_id, tracker_id, artifact_id),
+                displayItemCallback: (displayItemCallback) ? displayItemCallback : _.noop
+            }
         });
     }
 

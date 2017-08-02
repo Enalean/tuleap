@@ -23,6 +23,14 @@
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: $tlp-ui-white;
+
+    &.tlp-pane-collapsable > .tlp-pane-container > .tlp-pane-header {
+        cursor: pointer;
+    }
+
+    &.tlp-pane-collapsed > .tlp-pane-container > .tlp-pane-section {
+        display: none;
+    }
 }
 
 .tlp-pane-container {

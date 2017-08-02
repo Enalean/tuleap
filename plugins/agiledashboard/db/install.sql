@@ -69,6 +69,16 @@ CREATE TABLE IF NOT EXISTS plugin_agiledashboard_scrum_mono_milestones (
     project_id INT(11) NOT NULL PRIMARY KEY
 );
 
+DROP TABLE IF EXISTS plugin_agiledashboard_kanban_widget;
+CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_widget (
+  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'u',
+  title varchar(255) NOT NULL,
+  kanban_id int(11) NOT NULL,
+  KEY (owner_id, owner_type)
+);
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 0, 'system', 152);

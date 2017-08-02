@@ -1,13 +1,14 @@
-import './error/error.tpl.html';
 import './edit-kanban/edit-kanban.tpl.html';
+import './error-modal/error.tpl.html';
 import './reports-modal/reports-modal.tpl.html';
+import EditKanbanController from './edit-kanban/edit-kanban-controller.js';
+import ReportsModalController from './reports-modal/reports-modal-controller.js';
 import _ from 'lodash';
 
 export default KanbanCtrl;
 
 KanbanCtrl.$inject = [
     '$scope',
-    '$modal',
     '$sce',
     'gettextCatalog',
     'amCalendarFilter',
@@ -20,12 +21,13 @@ KanbanCtrl.$inject = [
     'KanbanColumnService',
     'ColumnCollectionService',
     'DroppedService',
-    'KanbanFilterValue'
+    'KanbanFilterValue',
+    'TlpModalService',
+    'RestErrorService'
 ];
 
 function KanbanCtrl(
     $scope,
-    $modal,
     $sce,
     gettextCatalog,
     amCalendarFilter,
@@ -38,7 +40,9 @@ function KanbanCtrl(
     KanbanColumnService,
     ColumnCollectionService,
     DroppedService,
-    KanbanFilterValue
+    KanbanFilterValue,
+    TlpModalService,
+    RestErrorService
 ) {
     var self    = this,
         limit   = 50,
@@ -46,8 +50,8 @@ function KanbanCtrl(
         kanban  = SharedPropertiesService.getKanban(),
         user_id = SharedPropertiesService.getUserId();
 
-    self.kanban = kanban;
-    self.board  = {
+    self.kanban  = kanban;
+    self.board   = {
         columns: kanban.columns
     };
     self.backlog = _.extend(kanban.backlog, {
@@ -56,11 +60,7 @@ function KanbanCtrl(
         nb_items_at_kanban_init: 0,
         filtered_content       : [],
         loading_items          : true,
-        fully_loaded           : false,
-        resize_left            : '',
-        resize_top             : '',
-        resize_width           : '',
-        is_small_width         : false
+        fully_loaded           : false
     });
     self.archive = _.extend(kanban.archive, {
         id                     : 'archive',
@@ -68,11 +68,7 @@ function KanbanCtrl(
         nb_items_at_kanban_init: 0,
         filtered_content       : [],
         loading_items          : true,
-        fully_loaded           : false,
-        resize_left            : '',
-        resize_top             : '',
-        resize_width           : '',
-        is_small_width         : false
+        fully_loaded           : false
     });
 
     self.user_prefers_collapsed_cards = true;
@@ -93,6 +89,7 @@ function KanbanCtrl(
     self.expandArchive                = expandArchive;
     self.toggleArchive                = toggleArchive;
     self.setIsCollapsed               = setIsCollapsed;
+    self.isCollapsedMode              = isCollapsedMode;
     self.filter                       = KanbanFilterValue;
     self.filterCards                  = filterCards;
     self.loading_modal                = NewTuleapArtifactModalService.loading;
@@ -102,6 +99,8 @@ function KanbanCtrl(
     self.moveKanbanItemToTop          = moveKanbanItemToTop;
     self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
     self.openReportModal              = openReportModal;
+    self.addKanbanToMyDashboard       = addKanbanToMyDashboard;
+    self.reflowKustomScrollBars       = reflowKustomScrollBars;
 
     function init() {
         initViewMode();
@@ -148,6 +147,10 @@ function KanbanCtrl(
         function forceIsCollapsed(item) {
             setIsCollapsed(item, self.user_prefers_collapsed_cards);
         }
+    }
+
+    function isCollapsedMode() {
+        return self.user_prefers_collapsed_cards;
     }
 
     function setIsCollapsed(item, is_collapsed) {
@@ -214,6 +217,8 @@ function KanbanCtrl(
         } else {
             expandColumn(column);
         }
+
+        reflowKustomScrollBars();
     }
 
     function collapseBacklog() {
@@ -246,6 +251,8 @@ function KanbanCtrl(
             KanbanService.expandBacklog(kanban.id);
             expandBacklog();
         }
+
+        reflowKustomScrollBars();
     }
 
     function collapseArchive() {
@@ -277,6 +284,8 @@ function KanbanCtrl(
         } else {
             expandArchive();
         }
+
+        reflowKustomScrollBars();
     }
 
     function emptyArray(array) {
@@ -284,22 +293,7 @@ function KanbanCtrl(
     }
 
     function reload(response) {
-        $modal.open({
-            keyboard   : false,
-            backdrop   : 'static',
-            templateUrl: 'error.tpl.html',
-            controller : 'ErrorCtrl as modal',
-            resolve    : {
-                message: function () {
-                    var message = response.status + ' ' + response.statusText;
-                    if (response.data.error) {
-                        message = response.data.error.code + ' ' + response.data.error.message;
-                    }
-
-                    return message;
-                }
-            }
-        });
+        RestErrorService.reload(response);
     }
 
     function showEditbutton() {
@@ -307,41 +301,22 @@ function KanbanCtrl(
     }
 
     function editKanban() {
-        $modal.open({
-            backdrop    : true,
+        TlpModalService.open({
             templateUrl : 'edit-kanban.tpl.html',
-            controller  : 'EditKanbanCtrl as edit_modal',
+            controller  : EditKanbanController,
+            controllerAs: 'edit_modal',
             resolve     : {
-                kanban: function() {
-                    return kanban;
-                },
-                addColumnToKanban: function() {
-                    return addColumn;
-                },
-                removeColumnToKanban: function() {
-                    return removeColumn;
-                },
-                updateKanbanName: function() {
-                    return updateKanbanName;
-                },
-                deleteThisKanban: function() {
-                    return deleteKanban;
-                }
+                rebuild_scrollbars: reflowKustomScrollBars
             }
-        }).result.catch(
-            reloadIfSomethingIsWrong
-        );
+        });
     }
 
     function openReportModal() {
-        $modal.open({
-            backdrop    : true,
+        TlpModalService.open({
             templateUrl : 'reports-modal.tpl.html',
-            controller  : 'ReportsModalController as reports_modal',
-            windowClass : 'reports-modal'
-        }).result.catch(
-            reloadIfSomethingIsWrong
-        );
+            controller  : ReportsModalController,
+            controllerAs: 'reports_modal'
+        });
     }
 
     function reloadIfSomethingIsWrong(reason) {
@@ -378,6 +353,8 @@ function KanbanCtrl(
 
             if (column.is_open) {
                 filterColumnCards(column);
+
+                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -409,6 +386,8 @@ function KanbanCtrl(
 
             if (self.backlog.is_open) {
                 filterBacklogCards();
+
+                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -440,6 +419,8 @@ function KanbanCtrl(
 
             if (self.archive.is_open) {
                 filterArchiveCards();
+
+                reflowKustomScrollBars();
             }
 
             if (offset + limit < data.total) {
@@ -477,8 +458,9 @@ function KanbanCtrl(
             return;
         }
 
-        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('Kanban:'));
-        timeinfo += getTimeInfoEntry(item.timeinfo[column.id], gettextCatalog.getString('Column:'));
+        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('In Kanban since:'));
+        timeinfo += "\u000a\u000a";
+        timeinfo += getTimeInfoEntry(item.timeinfo[column.id], gettextCatalog.getString('In column since:'));
 
         return $sce.trustAsHtml(timeinfo);
     }
@@ -490,8 +472,9 @@ function KanbanCtrl(
             return;
         }
 
-        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('Kanban:'));
-        timeinfo += getTimeInfoEntry(item.timeinfo.archive, gettextCatalog.getString('Archive:'));
+        timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('In Kanban since:'));
+        timeinfo += "\u000a\u000a";
+        timeinfo += getTimeInfoEntry(item.timeinfo.archive, gettextCatalog.getString('In column since:'));
 
         return $sce.trustAsHtml(timeinfo);
     }
@@ -500,8 +483,8 @@ function KanbanCtrl(
         var timeinfo = '';
 
         if (entry_date) {
-            timeinfo += '<p><span><i class="icon-signin"></i> ' + label + '</span>';
-            timeinfo += ' <strong>' + amCalendarFilter(entry_date) + '</strong></p>';
+            timeinfo += label + ' ';
+            timeinfo += amCalendarFilter(entry_date);
         }
 
         return timeinfo;
@@ -521,6 +504,8 @@ function KanbanCtrl(
             .then(function(response) {
                 item.updating = false;
                 _.extend(item, response.data);
+
+                reflowKustomScrollBars();
             },
             reload
         );
@@ -540,6 +525,8 @@ function KanbanCtrl(
             .then(function(response) {
                 item.updating = false;
                 _.extend(item, response.data);
+
+                reflowKustomScrollBars();
             },
             reload
         );
@@ -645,19 +632,7 @@ function KanbanCtrl(
         );
     }
 
-    function addColumn(new_column) {
-        ColumnCollectionService.addColumn(new_column);
-    }
-
-    function removeColumn(column_id) {
-        ColumnCollectionService.removeColumn(column_id);
-    }
-
-    function updateKanbanName(label) {
-        KanbanService.updateKanbanName(label);
-    }
-
-    function deleteKanban() {
-        KanbanService.removeKanban();
+    function addKanbanToMyDashboard() {
+        KanbanService.addKanbanToMyDashboard();
     }
 }

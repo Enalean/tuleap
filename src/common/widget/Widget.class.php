@@ -171,4 +171,25 @@ use Tuleap\Dashboard\User\UserDashboardController;
     {
         return "";
     }
+
+    public function canBeAddedFromWidgetList()
+    {
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageSource()
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageTitle()
+    {
+        return '';
+    }
 }

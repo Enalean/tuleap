@@ -1,16 +1,18 @@
 <div
-    id="kanban-app"
     ng-app="kanban"
     ng-controller="MainCtrl"
     ng-init="init(
         {{ kanban_representation }},
+        {{ dashboard_dropdown_representation }},
         {{ user_id }},
         {{ user_is_kanban_admin }},
+        {{ is_widget }},
         '{{ language }}',
         {{ project_id }},
         '{{ view_mode }}',
-        '{{ nodejs_server }}'
+        '{{ nodejs_server }}',
+        '{{ kanban_url }}'
     )"
 >
-    <ui-view></ui-view>
+    <ui-view class="kanban {{# user_is_kanban_admin }} kanban-admin {{/ user_is_kanban_admin }}"></ui-view>
 </div>
