@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
@@ -105,6 +106,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook('widget_instance');
             $this->addHook('widgets');
+            $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1009,6 +1011,13 @@ class AgileDashboardPlugin extends Plugin {
         $milestone = $this->getMilestoneFactory()->getBareMilestoneByArtifact($user, $artifact);
         if ($milestone) {
             $collection->add(new Tuleap\AgileDashboard\Milestone\ArtifactView($milestone, $request, $user));
+        }
+    }
+
+    public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event)
+    {
+        if ($this->isKanbanURL()) {
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 
