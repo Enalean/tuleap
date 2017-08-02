@@ -30,6 +30,7 @@ module.exports = function(config) {
         files: [
             'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
             '../../../../../src/www/scripts/d3/v4/d3.min.js',
+            'src/app/tlp-mock.spec.js',
             'src/app/app.spec.js'
         ],
 

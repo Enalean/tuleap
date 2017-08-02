@@ -1,12 +1,7 @@
 import angular from 'angular';
 
 import 'restangular';
-import 'angular-ui-bootstrap-templates';
 import 'angular-filter-pack';
-import 'tuleap-artifact-modal';
-
-// tuleap.artifact-modal deps
-import 'angular-moment';
 
 import ExecutionConfig from './execution-config.js';
 import ExecutionRestService from './execution-rest-service.js';
@@ -19,9 +14,7 @@ import ExecutionListFilter from './execution-list-filter.js';
 
 export default angular.module('execution', [
     'restangular',
-    'ui.bootstrap',
-    'angularFilterPack',
-    'tuleap.artifact-modal'
+    'angularFilterPack'
 ])
 .config(ExecutionConfig)
 .service('ExecutionRestService', ExecutionRestService)

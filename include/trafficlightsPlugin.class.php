@@ -270,6 +270,13 @@ class TrafficlightsPlugin extends Plugin {
     public function burning_parrot_get_javascript_files(array $params)
     {
         if ($this->currentRequestIsForPlugin()) {
+            $ckeditor_path = '/scripts/ckeditor-4.3.2/';
+            $GLOBALS['HTML']->includeFooterJavascriptSnippet('window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";');
+            $params['javascript_files'][] = $ckeditor_path .'ckeditor.js';
+
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
+
             $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/trafficlights.js';
             $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/socket.io.js';
             $params['javascript_files'][] = $this->getPluginPath() . '/scripts/move-breadcrumb.js';

@@ -33,8 +33,6 @@ Test and tracability plugin
 #
 # Build
 %build
-npm install
-npm run build
 find www/themes -name '*.scss' | xargs rm -f
 
 #
@@ -44,7 +42,7 @@ find www/themes -name '*.scss' | xargs rm -f
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
 
-%{__cp} -ar www include db templates site-content README VERSION ChangeLog $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
+%{__cp} -ar www include db templates site-content README VERSION ChangeLog resources $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
 
 %pre
 if [ "$1" -eq "1" ]; then

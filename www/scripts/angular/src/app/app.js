@@ -3,19 +3,13 @@ import ngAnimate from 'angular-animate';
 import ngSanitize from 'angular-sanitize';
 import ui_router from 'angular-ui-router';
 import animate_change from 'angular-animate-change';
+import angular_artifact_modal from 'angular-artifact-modal';
+import angular_tlp from 'angular-tlp';
 
 import 'angular-breadcrumb';
 import 'angular-gettext';
 import '../../po/fr.po';
 import 'angular-moment';
-
-// Modal deps should be required by modal
-import 'angular-ckeditor';
-import 'angular-bootstrap-datetimepicker';
-import 'angular-ui-select';
-import 'angular-filter';
-import 'angular-base64-upload';
-import './modal-moment-fix.js';
 
 import shared_properties from './shared-properties/shared-properties.js';
 import uuid_generator from './uuid-generator/uuid-generator.js';
@@ -37,6 +31,8 @@ export default angular.module('trafficlights', [
     ngSanitize,
     ui_router,
     animate_change,
+    angular_artifact_modal,
+    angular_tlp,
     'ncy-angular-breadcrumb',
     'gettext',
     'angularMoment',

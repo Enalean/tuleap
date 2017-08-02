@@ -26,4 +26,4 @@ if [ $LAST_TAG == $PACKAGE_VERSION ]; then
 fi
 
 docker build -t $DOCKERIMAGE rpm
-docker run --rm -v $TULEAP_PATH:/tuleap -v $PWD:/tuleap/plugins/trafficlights -v $WORKSPACE:/output -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE $DOCKERIMAGE
+docker run --rm -v $TULEAP_PATH:/tuleap:ro -v $PWD:/trafficlights:ro -v $WORKSPACE:/output -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE $DOCKERIMAGE

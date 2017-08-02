@@ -6,7 +6,7 @@ export default CampaignListCtrl;
 
 CampaignListCtrl.$inject = [
     '$scope',
-    '$modal',
+    'TlpModalService',
     '$filter',
     'CampaignService',
     'SharedPropertiesService',
@@ -15,7 +15,7 @@ CampaignListCtrl.$inject = [
 
 function CampaignListCtrl(
     $scope,
-    $modal,
+    TlpModalService,
     $filter,
     CampaignService,
     SharedPropertiesService,
@@ -103,7 +103,7 @@ function CampaignListCtrl(
     }
 
     function openNewCampaignModal() {
-        return $modal.open({
+        return TlpModalService.open({
             templateUrl: 'campaign-new.tpl.html',
             controller : 'CampaignNewCtrl',
         });

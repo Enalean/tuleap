@@ -13,22 +13,16 @@ module.exports = {
     },
     resolve: {
         modules: [
+            path.resolve(__dirname, 'node_modules'),
             'node_modules',
             'vendor'
         ],
         alias: {
-            // We should probably package angular-ui-bootstrap-templates for npm ourselves
-            'angular-ui-bootstrap-templates'  : 'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
+            'angular-artifact-modal': path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal'),
+            'angular-tlp'           : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
             // Bower only deps
-            'angular-ui-utils'                : 'angular-ui-utils/unique.js',
-            'angular-filter-pack'             : 'angular-filter-pack/dist/angular-filter-pack.js',
-            // Modal deps should be required by modal
-            'angular-ckeditor'                : 'angular-ckeditor/angular-ckeditor.js',
-            'angular-bootstrap-datetimepicker': 'angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
-            'angular-ui-select'               : 'angular-ui-select/dist/select.js',
-            'angular-filter'                  : 'angular-filter/index.js',
-            'angular-base64-upload'           : 'angular-base64-upload/index.js',
-            'tuleap-artifact-modal'           : 'artifact-modal/dist/tuleap-artifact-modal.js',
+            'angular-ui-utils'      : 'angular-ui-utils/unique.js',
+            'angular-filter-pack'   : 'angular-filter-pack/dist/angular-filter-pack.js',
         }
     },
     externals: {

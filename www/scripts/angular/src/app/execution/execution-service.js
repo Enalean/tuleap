@@ -7,7 +7,7 @@ export default ExecutionService;
 ExecutionService.$inject = [
     '$q',
     '$rootScope',
-    '$modal',
+    'TlpModalService',
     'ExecutionConstants',
     'ExecutionRestService'
 ];
@@ -15,7 +15,7 @@ ExecutionService.$inject = [
 function ExecutionService(
     $q,
     $rootScope,
-    $modal,
+    TlpModalService,
     ExecutionConstants,
     ExecutionRestService
 ) {
@@ -292,15 +292,13 @@ function ExecutionService(
     }
 
     function showPresencesModal() {
-        return $modal.open({
-            backdrop   : 'static',
-            templateUrl: 'execution-presences.tpl.html',
-            controller : 'ExecutionPresencesCtrl as modal',
+        return TlpModalService.open({
+            templateUrl : 'execution-presences.tpl.html',
+            controller  : 'ExecutionPresencesCtrl',
+            controllerAs: 'modal',
             resolve: {
-                modal_model: function () {
-                    return {
-                        presences: self.presences_on_campaign
-                    };
+                modal_model: {
+                    presences: self.presences_on_campaign
                 }
             }
         });

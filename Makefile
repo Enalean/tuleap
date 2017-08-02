@@ -26,7 +26,7 @@ rpm: $(RPM_TMP)/RPMS/noarch/$(FRONTEND_NAME_VERSION)-$(RELEASE)$(DIST).noarch.rp
 $(RPM_TMP)/RPMS/noarch/%.noarch.rpm: $(RPM_TMP)/SRPMS/%.src.rpm
 	$(RPMBUILD) --rebuild $<
 
-$(RPM_TMP)/SRPMS/%-$(VERSION)-$(RELEASE)$(DIST).src.rpm: $(RPM_TMP)/SPECS/%.spec $(RPM_TMP)/SOURCES/%-$(VERSION).tar.gz
+$(RPM_TMP)/SRPMS/%-$(VERSION)-$(RELEASE)$(DIST).src.rpm: npm-build $(RPM_TMP)/SPECS/%.spec $(RPM_TMP)/SOURCES/%-$(VERSION).tar.gz
 	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$*.spec
 
 $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
@@ -34,6 +34,16 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 		sed -e 's/@@VERSION@@/$(VERSION)/g' |\
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' \
 		> $@
+
+.PHONY: npm-build
+npm-build:
+	cd $(BASE_DIR) &&\
+		npm install &&\
+		npm run build &&\
+	cd $(BASE_DIR)/www/scripts/angular &&\
+		npm install &&\
+		bower install --allow-root --config.interactive=false &&\
+		npm run build
 
 $(RPM_TMP)/SOURCES/$(BACKEND_NAME_VERSION).tar.gz: $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(BACKEND_NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(BACKEND_NAME_VERSION)
@@ -59,7 +69,6 @@ $(RPM_TMP)/SOURCES/$(FRONTEND_NAME_VERSION).tar.gz: $(RPM_TMP)
 	cd $(RPM_TMP)/SOURCES && \
 		find $(FRONTEND_NAME_VERSION)/www/scripts/angular \(\
 		-path "*/.DS_Store" -o\
-		-path "*/bin" -o\
 		-path "*/build" -o\
 		-path "*/node_modules" -o\
 		-path "*/vendor"\
@@ -74,5 +83,9 @@ $(RPM_TMP):
 docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
-	su --login --command "make -C /tuleap/plugins/trafficlights all RELEASE=$(RELEASE)" build
+	mkdir /build/sources
+	cp -R /tuleap /build/sources
+	cp -R /trafficlights /build/sources/tuleap/plugins
+	chown build -R /build/sources
+	su --login --command "make -C /build/sources/tuleap/plugins/trafficlights all RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output

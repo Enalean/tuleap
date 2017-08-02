@@ -28,11 +28,6 @@ Test and tracability plugin
 #
 # Build
 %build
-cd www/scripts/angular
-sed -i -e "s%tuleap_dir: .*%tuleap_dir: '/tuleap',%" build.config.js
-npm install
-bower install --allow-root --config.interactive=false
-npm run build
 
 #
 # Install

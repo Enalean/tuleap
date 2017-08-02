@@ -9,13 +9,12 @@ ExecutionListCtrl.$inject = [
     '$state',
     '$filter',
     '$q',
-    '$modal',
+    'TlpModalService',
     'ExecutionService',
     'CampaignService',
     'SocketService',
     'SharedPropertiesService',
-    'ExecutionRestService',
-    'NewTuleapArtifactModalService'
+    'ExecutionRestService'
 ];
 
 function ExecutionListCtrl(
@@ -23,13 +22,12 @@ function ExecutionListCtrl(
     $state,
     $filter,
     $q,
-    $modal,
+    TlpModalService,
     ExecutionService,
     CampaignService,
     SocketService,
     SharedPropertiesService,
-    ExecutionRestService,
-    NewTuleapArtifactModalService
+    ExecutionRestService
 ) {
     var execution_id;
 
@@ -72,7 +70,7 @@ function ExecutionListCtrl(
     }
 
     function openEditCampaignModal() {
-        return $modal.open({
+        return TlpModalService.open({
             templateUrl: 'campaign-edit.tpl.html',
             controller : 'CampaignEditCtrl',
             resolve: {

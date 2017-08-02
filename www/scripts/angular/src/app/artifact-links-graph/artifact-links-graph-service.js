@@ -4,14 +4,14 @@ import './artifact-links-graph.tpl.html';
 export default ArtifactLinksGraphService;
 
 ArtifactLinksGraphService.$inject = [
-    '$modal',
+    'TlpModalService',
     'ArtifactLinksGraphModalLoading',
     'ArtifactLinksGraphRestService',
     'ArtifactLinksModelService'
 ];
 
 function ArtifactLinksGraphService(
-    $modal,
+    TlpModalService,
     ArtifactLinksGraphModalLoading,
     ArtifactLinksGraphRestService,
     ArtifactLinksModelService
@@ -26,7 +26,7 @@ function ArtifactLinksGraphService(
     function showGraphModal(execution) {
         ArtifactLinksGraphModalLoading.loading.is_loading = true;
 
-        return $modal.open({
+        return TlpModalService.open({
             backdrop   : 'static',
             templateUrl: 'artifact-links-graph.tpl.html',
             controller : 'ArtifactLinksGraphCtrl as modal',

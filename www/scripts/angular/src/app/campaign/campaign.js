@@ -2,13 +2,8 @@ import angular from 'angular';
 import ui_router from 'angular-ui-router';
 
 import 'restangular';
-import 'angular-ui-bootstrap-templates';
 import 'angular-gettext';
 import 'angular-ui-utils';
-import 'tuleap-artifact-modal';
-
-// tuleap.artifact-modal deps
-import 'angular-moment';
 
 import CampaignConfig from './campaign-config.js';
 import CampaignService from './campaign-service.js';
@@ -21,10 +16,8 @@ import CurrentPageFilter from './campaign-new-filter.js';
 export default angular.module('campaign', [
     ui_router,
     'restangular',
-    'ui.bootstrap',
     'gettext',
-    'ui.unique',
-    'tuleap.artifact-modal'
+    'ui.unique'
 ])
 .config(CampaignConfig)
 .service('CampaignService', CampaignService)
