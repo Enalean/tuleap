@@ -17,23 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Tuleap\Tracker\CrossTracker;
 
-namespace Tuleap\Tracker\Widget;
+use PFUser;
 
-use Tuleap\Tracker\CrossTracker\CrossTrackerPresenter;
-
-class ProjectCrossTrackerSearchPresenter
+class CrossTrackerPresenter
 {
-    public $nothing_selected;
-    /**
-     * @var CrossTrackerPresenter
-     */
-    public $cross_tracker_presenter;
 
-    public function __construct(CrossTrackerPresenter $cross_tracker_presenter)
+    /** @var string */
+    public $language;
+
+    /** @var int */
+    public $user_id;
+
+    public function __construct(PFUser $user)
     {
-        $this->cross_tracker_presenter = $cross_tracker_presenter;
-
-        $this->nothing_selected = _('There is nothing here');
+        $this->language = $user->getShortLocale();
+        $this->user_id  = $user->getId();
     }
 }
