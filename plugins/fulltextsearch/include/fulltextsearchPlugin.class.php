@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BurningParrotCompatiblePageEvent;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -135,7 +136,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook('project_admin_remove_user', 'project_admin_remove_user');
         $this->addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
 
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
@@ -593,11 +594,10 @@ class fulltextsearchPlugin extends Plugin {
         );
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

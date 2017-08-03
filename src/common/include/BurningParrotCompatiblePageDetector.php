@@ -45,7 +45,7 @@ class BurningParrotCompatiblePageDetector
             return false;
         }
 
-        return $this->isInSiteAdmin($current_user)
+        return $this->isInCoreServicesSiteAdmin($current_user)
             || $this->isInDashboard()
             || $this->isInHomepage()
             || $this->isInContact()
@@ -53,28 +53,17 @@ class BurningParrotCompatiblePageDetector
             || $this->isInBurningParrotCompatiblePage();
     }
 
-    public function isInSiteAdmin(PFUser $current_user)
+    private function isInCoreServicesSiteAdmin(PFUser $current_user)
     {
-        $is_in_site_admin = false;
-        EventManager::instance()->processEvent(
-            Event::IS_IN_SITEADMIN,
-            array(
-                'is_in_siteadmin' => &$is_in_site_admin
-            )
-        );
-
         $uri = $_SERVER['REQUEST_URI'];
 
-        $is_in_site_admin = $is_in_site_admin ||
-            (
-                (
+        $is_in_site_admin = (
                     strpos($uri, '/admin/') === 0 ||
                     strpos($uri, '/tracker/admin/restore.php') === 0
                 ) &&
-                strpos($uri, '/admin/register_admin.php') !== 0
-            );
+                strpos($uri, '/admin/register_admin.php') !== 0;
 
-        return $current_user->isSuperUser() && $is_in_site_admin;
+        return $is_in_site_admin && $current_user->isSuperUser();
     }
 
     private function isInDashboard()

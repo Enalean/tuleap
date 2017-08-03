@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\User\UserDashboardController;
 
 /**
@@ -49,7 +50,7 @@ class AdminDelegationPlugin extends Plugin {
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->addHook('widget_instance',        'widget_instance',        false);
         $this->addHook('widgets',                'widgets',                false);
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
@@ -121,11 +122,10 @@ class AdminDelegationPlugin extends Plugin {
         );
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

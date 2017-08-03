@@ -29,6 +29,7 @@ use Tuleap\Bugzilla\Reference\ReferenceDestructor;
 use Tuleap\Bugzilla\Reference\ReferenceRetriever;
 use Tuleap\Bugzilla\Reference\ReferenceSaver;
 use Tuleap\Bugzilla\Reference\RESTReferenceCreator;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 
@@ -43,7 +44,7 @@ class bugzilla_referencePlugin extends Plugin
         bindtextdomain('tuleap-bugzilla_reference', BUGZILLA_REFERENCE_BASE_DIR . '/site-content');
 
         $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
-        $this->addHook(Event::IS_IN_SITEADMIN, 'isInSiteAdmin');
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
@@ -74,10 +75,10 @@ class bugzilla_referencePlugin extends Plugin
         );
     }
 
-    public function isInSiteAdmin(array $params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], BUGZILLA_REFERENCE_BASE_URL . '/admin/') === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

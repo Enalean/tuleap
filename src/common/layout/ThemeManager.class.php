@@ -73,7 +73,7 @@ class ThemeManager
     private function isAllowedTheme(PFUser $current_user, $name)
     {
         if ($name === self::$BURNING_PARROT) {
-            return $this->page_detector->isInSiteAdmin($current_user);
+            return $this->page_detector->isInCompatiblePage($current_user);
         }
 
         return true;

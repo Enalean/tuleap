@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
@@ -52,7 +53,7 @@ class StatisticsPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
         $this->addHook(Event::AFTER_MASSMAIL_TO_PROJECT_ADMINS);
 
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(ProjectDetailsPresenter::GET_MORE_INFO_LINKS);
 
         $this->addHook('aggregate_statistics');
@@ -117,13 +118,12 @@ class StatisticsPlugin extends Plugin {
         );
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
             && ! strpos($_SERVER['REQUEST_URI'], 'project_stat.php')
         ) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 
