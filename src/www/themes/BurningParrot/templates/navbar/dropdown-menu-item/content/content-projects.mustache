@@ -12,13 +12,11 @@
         {{# projects }}
             <div class="nav-dropdown-content-projects-list-project">
                 <a href="{{ project_uri }}" class="nav-dropdown-content-projects-list-project-name">
-                    {{# is_private }}
-                        <i class="fa fa-fw fa-lock nav-dropdown-content-projects-list-project-name-access"></i>
-                    {{/ is_private }}
-                    {{^ is_private }}
-                        <i class="fa fa-fw fa-unlock nav-dropdown-content-projects-list-project-name-access"></i>
-                    {{/ is_private }}
-                    {{ project_name }}
+                    <i class="fa fa-fw
+                        {{# is_private }}fa-lock{{/ is_private }}
+                        {{^ is_private }}fa-unlock{{/ is_private }}
+                        nav-dropdown-content-projects-list-project-name-access"
+                     ></i>{{ project_name }}
                 </a>
                 {{# user_administers }}
                     <a href="{{ project_config_uri }}" class="nav-dropdown-content-projects-list-project-config"><i class="fa fa-cog"></i></a>
