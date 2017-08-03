@@ -21,6 +21,7 @@
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Controller\AdminController;
+use Tuleap\BurningParrotCompatiblePageEvent;
 
 require_once 'constants.php';
 
@@ -32,7 +33,7 @@ class BotMattermostPlugin extends Plugin
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->addHook('site_admin_option_hook');
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
     }
@@ -71,11 +72,10 @@ class BotMattermostPlugin extends Plugin
         }
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 
