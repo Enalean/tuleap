@@ -32,6 +32,7 @@ use SimpleXMLElement;
 use SystemEventManager;
 use Tuleap\HudsonGit\Logger;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Svn\AccessControl\AccessFileHistory;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
@@ -72,6 +73,10 @@ class TestBackendSVN extends BackendSVN {
 
 class XMLImporterTest extends TuleapTestCase
 {
+    /**
+     * @var AccessFileHistory
+     */
+    private $access_file;
     /**
      * @var Backend
      */
@@ -206,7 +211,12 @@ class XMLImporterTest extends TuleapTestCase
         $this->ugudao             = safe_mock('UGroupUserDao');
         $this->accessfiledao      = safe_mock('Tuleap\Svn\AccessControl\AccessFileHistoryDao');
         $this->accessfilefac      = new AccessFileHistoryFactory($this->accessfiledao);
-        $this->accessfilemgr      = new AccessFileHistoryCreator($this->accessfiledao, $this->accessfilefac);
+        $this->accessfilemgr      = new AccessFileHistoryCreator(
+            $this->accessfiledao,
+            $this->accessfilefac,
+            mock('\ProjectHistoryDao'),
+            mock('Tuleap\Svn\Repository\ProjectHistoryFormatter')
+        );
         $this->notifdao           = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
         $users_to_notify_dao      = safe_mock('Tuleap\Svn\Notifications\UsersToNotifyDao');
         $ugroups_to_notify_dao    = safe_mock('Tuleap\Svn\Notifications\UgroupsToNotifyDao');
@@ -252,6 +262,7 @@ class XMLImporterTest extends TuleapTestCase
         $this->repository_manager          = mock('Tuleap\Svn\Repository\RepositoryManager');
         $this->backend_svn                 = Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));
         $this->backend_system              = mock('BackendSystem');
+        $this->access_file                 = mock('Tuleap\Svn\AccessControl\AccessFileHistory');
     }
 
     public function tearDown() {
@@ -304,6 +315,7 @@ class XMLImporterTest extends TuleapTestCase
 
         $this->stubRepoCreation(123, 85, 1585);
         stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
+        stub($this->accessfiledao)->searchCurrentVersion()->returns(false);
 
         stub($this->user_manager)->getUserById()->returns(mock('PFUser'));
 
@@ -429,6 +441,7 @@ XML;
         stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
         stub($this->notifdao)->create()->count(2)->returns(true);
         stub($this->user_manager)->getUserById()->returns(mock('PFUser'));
+        stub($this->accessfiledao)->searchCurrentVersion()->returns(false);
 
         $svn = new XMLImporter(
             new SimpleXMLElement($xml),
@@ -461,6 +474,7 @@ XML;
         stub($this->accessfiledao)->searchLastVersion()->once()->returns(null);
         stub($this->accessfiledao)->create()->once()->returns(true);
         stub($this->user_manager)->getUserById()->returns(mock('PFUser'));
+        stub($this->accessfiledao)->searchCurrentVersion()->returns(false);
 
         $svn = new XMLImporter(
             new SimpleXMLElement($xml),

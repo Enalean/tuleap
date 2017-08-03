@@ -341,11 +341,17 @@ class SvnPlugin extends Plugin
     }
 
     /** @return Tuleap\Svn\AccessControl\AccessFileHistoryCreator */
-    private function getAccessFileHistoryCreator() {
-        if(empty($this->accessfile_history_manager)) {
+    private function getAccessFileHistoryCreator()
+    {
+        if (empty($this->accessfile_history_manager)) {
             $this->accessfile_history_creator = new AccessFileHistoryCreator(
-                $this->getAccessFileHistoryDao(), $this->getAccessFileHistoryFactory());
+                $this->getAccessFileHistoryDao(),
+                $this->getAccessFileHistoryFactory(),
+                $this->getProjectHistoryDao(),
+                $this->getProjectHistoryFormatter()
+            );
         }
+
         return $this->accessfile_history_creator;
     }
 
@@ -516,13 +522,13 @@ class SvnPlugin extends Plugin
         $ugroup_manager      = $this->getUGroupManager();
         $permissions_manager = $this->getPermissionsManager();
 
-        $history_dao         = new ProjectHistoryDao();
+        $history_dao         = $this->getProjectHistoryDao();
         $hook_config_updator = new HookConfigUpdator(
             new HookDao(),
             $history_dao,
             new HookConfigChecker($this->getHookConfigRetriever()),
             $this->getHookConfigSanitizer(),
-            new ProjectHistoryFormatter()
+            $this->getProjectHistoryFormatter()
         );
 
         return new SvnRouter(
@@ -886,16 +892,16 @@ class SvnPlugin extends Plugin
         return new RepositoryCreator(
             new Dao(),
             SystemEventManager::instance(),
-            new ProjectHistoryDao(),
+            $this->getProjectHistoryDao(),
             $this->getPermissionsManager(),
             new HookConfigUpdator(
                 new HookDao(),
-                new ProjectHistoryDao(),
+                $this->getProjectHistoryDao(),
                 new HookConfigChecker($this->getHookConfigRetriever()),
                 $this->getHookConfigSanitizer(),
-                new ProjectHistoryFormatter()
+                $this->getProjectHistoryFormatter()
             ),
-            new ProjectHistoryFormatter(),
+            $this->getProjectHistoryFormatter(),
             $this->getImmutableTagCreator(),
             $this->getAccessFileHistoryCreator()
         );
@@ -924,7 +930,7 @@ class SvnPlugin extends Plugin
     {
         return new \Tuleap\Svn\Repository\RepositoryDeleter(
             new System_Command(),
-            new ProjectHistoryDao(),
+            $this->getProjectHistoryDao(),
             new Dao(),
             SystemEventManager::instance(),
             $this->getRepositoryManager()
@@ -958,5 +964,21 @@ class SvnPlugin extends Plugin
     private function getBackendSystem()
     {
         return Backend::instance('System');
+    }
+
+    /**
+     * @return ProjectHistoryDao
+     */
+    private function getProjectHistoryDao()
+    {
+        return new ProjectHistoryDao();
+    }
+
+    /**
+     * @return ProjectHistoryFormatter
+     */
+    private function getProjectHistoryFormatter()
+    {
+        return new ProjectHistoryFormatter();
     }
 }

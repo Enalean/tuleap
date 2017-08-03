@@ -249,6 +249,8 @@ class RepositoryCreator
         $access_file = $settings->getAccessFileContent();
         if ($access_file) {
             $this->access_file_history_creator->storeInDB($repository, $access_file, time());
+
+            $this->project_history_formatter->addAccessFileContentHistory($access_file);
         }
     }
 }

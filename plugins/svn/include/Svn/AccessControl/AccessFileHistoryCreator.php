@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,10 @@
 
 namespace Tuleap\Svn\AccessControl;
 
-use Tuleap\Svn\Repository\Repository;
 use SVN_AccessFile_Writer;
 use SVNAccessFile;
+use Tuleap\Svn\Repository\ProjectHistoryFormatter;
+use Tuleap\Svn\Repository\Repository;
 
 class AccessFileHistoryCreator {
 
@@ -35,19 +36,33 @@ class AccessFileHistoryCreator {
      * @var AccessFileHistoryDao
      */
     private $dao;
+    /**
+     * @var \ProjectHistoryDao
+     */
+    private $project_history_dao;
+    /**
+     * @var ProjectHistoryFormatter
+     */
+    private $project_history_formatter;
 
     public function __construct(
         AccessFileHistoryDao $dao,
-        AccessFileHistoryFactory $access_file_factory
+        AccessFileHistoryFactory $access_file_factory,
+        \ProjectHistoryDao $project_history_dao,
+        ProjectHistoryFormatter $project_history_formatter
     ) {
-        $this->dao                 = $dao;
-        $this->access_file_factory = $access_file_factory;
+        $this->dao                       = $dao;
+        $this->access_file_factory       = $access_file_factory;
+        $this->project_history_dao       = $project_history_dao;
+        $this->project_history_formatter = $project_history_formatter;
     }
 
-    public function create(Repository $repository, $content, $timestamp) {
+    public function create(Repository $repository, $content, $timestamp)
+    {
         $file_history = $this->storeInDB($repository, $content, $timestamp);
-
+        $this->logHistory($repository, $content);
         $this->saveAccessFile($repository, $file_history);
+
         return $file_history;
     }
 
@@ -90,8 +105,8 @@ class AccessFileHistoryCreator {
      */
     public function storeInDB(Repository $repository, $content, $timestamp)
     {
-        $id             = 0;
-        $version_number = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
+        $id              = 0;
+        $version_number  = $this->access_file_factory->getLastVersion($repository)->getVersionNumber();
 
         $file_history = new AccessFileHistory(
             $repository,
@@ -107,5 +122,15 @@ class AccessFileHistoryCreator {
         }
 
         return $file_history;
+    }
+
+    private function logHistory(Repository $repository, $content)
+    {
+        $access_file = $this->project_history_formatter->getAccessFileHistory($content);
+        $this->project_history_dao->groupAddHistory(
+            'svn_multi_repository_access_file_update',
+            $repository->getName() . PHP_EOL . $access_file,
+            $repository->getProject()->getID()
+        );
     }
 }

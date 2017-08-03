@@ -165,6 +165,9 @@ class RepositoryResource extends AuthenticatedResource
         $access_file_history_factory = new AccessFileHistoryFactory(new AccessFileHistoryDao());
         $access_file_history_creator = new AccessFileHistoryCreator(
             new AccessFileHistoryDao(),
+            $access_file_history_factory,
+            $project_history_dao,
+            $project_history_formatter,
             $access_file_history_factory
         );
         $project_history_formatter   = new ProjectHistoryFormatter();
@@ -244,7 +247,7 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
      *   &nbsp;&nbsp; ]<br>
      *   &nbsp;},<br>
-     *   &nbsp;&nbsp;"access_file": "[/] * = rw @members = rw\r\n[/tags] @admins = rw"<br>
+     *   &nbsp;&nbsp;"access_file": "[/]\r\n* = rw @members = rw\r\n[/tags]\r\n@admins = rw"<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -301,7 +304,7 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
      *   &nbsp;&nbsp; ]<br>
      *   &nbsp;},<br>
-     *   &nbsp;"access_file": "[/] * = rw @members = rw\r\n[/tags] @admins = rw"<br>
+     *   &nbsp;"access_file": "[/]\r\n* = rw @members = rw\r\n[/tags]\r\n@admins = rw"<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
