@@ -263,7 +263,8 @@ class ProjectCreator {
 
         $em     = EventManager::instance();
         $legacy = array(
-            Service::SVN => true
+            Service::SVN       => true,
+            Service::TRACKERV3 => true
         );
 
         $em->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, array(
@@ -290,7 +291,7 @@ class ProjectCreator {
 
         $this->initFRSModuleFromTemplate($group, $template_id, $ugroup_mapping);
 
-        if ($data->projectShouldInheritFromTemplate()) {
+        if ($data->projectShouldInheritFromTemplate() && $legacy[Service::TRACKERV3]) {
             list($tracker_mapping, $report_mapping) =
                 $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
         } else {
@@ -315,6 +316,7 @@ class ProjectCreator {
             'group_id'              => $group_id,
             'template_id'           => $template_id,
             'project_creation_data' => $data,
+            'legacy_service_usage'  => $legacy,
         ));
 
         $this->autoActivateProject($group);
