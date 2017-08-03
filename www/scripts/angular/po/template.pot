@@ -133,6 +133,10 @@ msgid "Please select a test"
 msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
+msgid "Pre-select tests from a tracker report"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
 msgid "Save changes"
 msgstr ""
 

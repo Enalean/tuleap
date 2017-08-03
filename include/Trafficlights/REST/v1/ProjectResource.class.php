@@ -23,6 +23,7 @@ namespace Tuleap\Trafficlights\REST\v1;
 use Luracast\Restler\RestException;
 use Trafficlights_Tracker_ArtifactFactory;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Trafficlights\ArtifactDao;
 use Tuleap\Trafficlights\ArtifactFactory;
 use Tuleap\Trafficlights\MalformedQueryParameterException;
@@ -31,6 +32,8 @@ use UserManager;
 use TrackerFactory;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tracker_ReportFactory;
+use Tracker_URLVerification;
 use PFUser;
 use Tuleap\Trafficlights\Config;
 use Tuleap\Trafficlights\ConfigConformanceValidator;
@@ -180,10 +183,11 @@ class ProjectResource {
      * @param int $id Id of the project
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
+     * @param int $report_id Id of the report from which to get the definitions {@from path}
      *
      * @return array {DefinitionRepresentation}
      */
-    protected function getDefinitions($id, $limit = 10, $offset = 0) {
+    protected function getDefinitions($id, $limit = 10, $offset = 0, $report_id = null) {
         $this->optionsDefinitions($id);
 
         $project = $this->getProject($id);
@@ -198,20 +202,100 @@ class ProjectResource {
             throw new RestException(403, 'Access denied to the test definition tracker');
         }
 
-        $paginated_artifacts = $this->trafficlights_artifact_factory->getPaginatedArtifactsByTrackerIdUserCanView($this->user, $tracker_id, null, $limit, $offset, false);
-        $result = array();
+        $result = array(
+            'definitions' => array(),
+            'total'       => 0
+        );
 
-        foreach ($paginated_artifacts->getArtifacts() as $artifact) {
-            $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation($this->user, $artifact);
+        if (isset($report_id)) {
+            $result = $this->getDefinitionsSliceFromReport($report_id, $limit, $offset);
+        } else {
+            $result = $this->getDefinitionsSliceFromTracker($tracker_id, $limit, $offset);
+        }
+
+        $this->sendPaginationHeaders($limit, $offset, $result['total']);
+
+        return $result['definitions'];
+    }
+
+    /** @return Tracker_Report */
+    private function getReportById(PFUser $user, $id) {
+        $store_in_session = false;
+        $report = Tracker_ReportFactory::instance()->getReportById(
+            $id,
+            $user->getId(),
+            $store_in_session
+        );
+
+        if (! $report) {
+            throw new RestException(404, 'The given report id does not correspond to any existing report');
+        }
+
+        $tracker = $report->getTracker();
+        if (! $tracker->userCanView($user)) {
+            throw new RestException(403, 'You are not allowed to access the requested report');
+        }
+
+        ProjectAuthorization::userCanAccessProject($user, $tracker->getProject(), new Tracker_URLVerification());
+
+        return $report;
+    }
+
+    /** @return array {Tracker_Artifact} */
+    private function getDefinitionsSliceFromReport($report_id, $limit, $offset) {
+        $report = $this->getReportById($this->user, $report_id);
+        $matching_ids = $report->getMatchingIds();
+
+        if (isset($matching_ids['id']) && ! empty($matching_ids['id'])) {
+            $matching_artifact_ids = explode(',', $matching_ids['id']);
+            $artifacts_count       = count($matching_artifact_ids);
+            $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
+            $artifacts             = $this->trafficlights_artifact_factory
+                                          ->getArtifactsByIdListUserCanView($this->user, $slice_matching_ids);
+        }
+
+        return array(
+            'definitions' => $this->getDefinitionRepresentationsFromArtifactsList($artifacts),
+            'total'       => $artifacts_count
+        );
+    }
+
+    /** @return array {Tracker_Artifact} */
+    private function getDefinitionsSliceFromTracker($tracker_id, $limit, $offset) {
+        $paginated_artifacts =
+            $this->trafficlights_artifact_factory
+                 ->getPaginatedArtifactsByTrackerIdUserCanView(
+                     $this->user,
+                     $tracker_id,
+                     null,
+                     $limit,
+                     $offset,
+                     false
+                 );
+        $artifacts = $paginated_artifacts->getArtifacts();
+        $artifacts_count = $paginated_artifacts->getTotalSize();
+
+        return array(
+            'definitions' => $this->getDefinitionRepresentationsFromArtifactsList($artifacts),
+            'total'       => $artifacts_count
+        );
+    }
+
+    /** @return array {DefinitionRepresentation} */
+    private function getDefinitionRepresentationsFromArtifactsList(array $artifacts) {
+        $definition_representations = array();
+
+        foreach ($artifacts as $artifact) {
+            $definition_representation =
+                $this->definition_representation_builder
+                     ->getDefinitionRepresentation($this->user, $artifact);
 
             if ($definition_representation) {
-                $result[] = $this->definition_representation_builder->getDefinitionRepresentation($this->user, $artifact);
+                $definition_representations[] = $definition_representation;
             }
         }
 
-        $this->sendPaginationHeaders($limit, $offset, $paginated_artifacts->getTotalSize());
-
-        return $result;
+        return $definition_representations;
     }
 
     private function getProject($id) {

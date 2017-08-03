@@ -35,10 +35,14 @@ function CampaignEditCtrl(
     CampaignEditConstants,
     editCampaignCallback
 ) {
+    var project_id,
+        campaign_id;
 
     _.extend($scope, {
         tests_list            : {},
-        search                : '',
+        test_reports          : [],
+        filters               : {},
+        selectReportTests     : selectReportTests,
         showAddTestModal      : showAddTestModal,
         matchProperties       : matchProperties,
         toggleCategory        : toggleCategory,
@@ -55,16 +59,19 @@ function CampaignEditCtrl(
     init();
 
     function init() {
-        var project_id  = SharedPropertiesService.getProjectId();
-        var campaign_id = $state.params.id;
+        project_id  = SharedPropertiesService.getProjectId();
+        campaign_id = $state.params.id;
 
         SharedPropertiesService.setCampaignId(campaign_id);
 
         $scope.campaign = CampaignService.getCampaign(campaign_id);
+        $scope.filters.search   = '';
+
+        loadTestReports();
 
         $q.all([
-            loadDefinitions(project_id),
-            loadExecutions(campaign_id)
+            loadDefinitions(),
+            loadExecutions()
         ]).then(function(results) {
             var definitions = results[0],
                 executions = results[1];
@@ -72,23 +79,37 @@ function CampaignEditCtrl(
         });
     }
 
-    function loadDefinitions(project_id, limit, offset, definitions) {
-        limit       = limit || 10;
-        offset      = offset || 0;
-        definitions = definitions || [];
+    function loadTestReports() {
+        DefinitionService.getDefinitionReports().then(function(reports) {
+            // data: [{id: <int>, label: <string>}]
+            $scope.test_reports = reports;
+        });
+    }
 
-        return DefinitionService.getDefinitions(project_id, limit, offset).then(function(data) {
+    function loadDefinitions(options) {
+        var options     = options || {},
+            limit       = options.limit || 10,
+            offset      = options.offset || 0,
+            report_id   = options.report_id,
+            definitions = options.definitions || [];
+
+        return DefinitionService.getDefinitions(project_id, limit, offset, report_id).then(function(data) {
             definitions = definitions.concat(data.results);
 
             if (definitions.length === data.total) {
                 return definitions;
             }
 
-            return loadDefinitions(project_id, limit, offset + limit, definitions);
+            return loadDefinitions({
+                limit: limit,
+                offset: offset + limit,
+                report_id: report_id,
+                definitions: definitions
+            });
         });
     }
 
-    function loadExecutions(campaign_id) {
+    function loadExecutions() {
         return ExecutionService.loadExecutions(campaign_id).then(function() {
             return ExecutionService.executionsForCampaign(campaign_id);
         });
@@ -207,6 +228,23 @@ function CampaignEditCtrl(
             })
             .flatten()
             .value();
+    }
+
+    function selectReportTests() {
+        var selected_report = $scope.filters.selected_report;
+
+        if (_.isEmpty(selected_report)) {
+            return;
+        }
+
+        loadDefinitions({ report_id: selected_report })
+            .then(function(definitions) {
+                _.forEach($scope.tests_list, function(category) {
+                    _.forEach(category.tests, function(test) {
+                        test.selected = _.some(definitions, { id: test.definition.id });
+                    });
+                });
+            });
     }
 
     function showAddTestModal() {
