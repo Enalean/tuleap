@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  * @copyright Nicolas Terray
  *
  * PHP_BigFile is free software; you can redistribute it and/or modify
@@ -134,7 +135,7 @@ class PHP_BigFile {
      * @return boolean true on success or false on failure
      */
     public function stream_open($path, $mode, $options, &$opened_path) {
-        $this->path   = preg_replace('`^'. preg_quote(self::PROTOCOL .'://') .'`', '', $path);
+        $this->path   = preg_replace('`^'. preg_quote(self::PROTOCOL .'://', '`') .'`', '', $path);
         $this->offset = 0;
         $this->mode   = $mode;
         $fileExists   = self::isFile($this->path) && is_readable($this->path);

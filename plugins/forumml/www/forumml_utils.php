@@ -253,7 +253,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
             }
 
             // Remove listname from suject
-            $subject = preg_replace('/^[ ]*\['.$list_name.'\]/i', '', $msg['subject']);
+            $subject = preg_replace('/^[ ]*\['. preg_quote($list_name, '/') .'\]/i', '', $msg['subject']);
 
             print "<a href='message.php?group_id=".$request->get('group_id')."&topic=".$msg['id_message']."&list=".$request->get('list')."'>
 							".$hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML)."
