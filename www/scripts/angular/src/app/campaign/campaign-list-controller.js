@@ -104,8 +104,9 @@ function CampaignListCtrl(
 
     function openNewCampaignModal() {
         return TlpModalService.open({
-            templateUrl: 'campaign-new.tpl.html',
-            controller : 'CampaignNewCtrl',
+            templateUrl : 'campaign-new.tpl.html',
+            controller  : 'CampaignNewCtrl',
+            controllerAs: 'campaign_modal'
         });
     }
 

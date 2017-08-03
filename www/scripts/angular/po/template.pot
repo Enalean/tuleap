@@ -13,6 +13,10 @@ msgid "<i class=\"icon-plus\"></i> Add a test"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
+msgid "A campaign label is required"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
 msgid "All tests"
 msgstr ""
 
@@ -41,6 +45,10 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Choose tests"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Close"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
@@ -83,6 +91,10 @@ msgstr ""
 #: src/app/artifact-links-graph/artifact-links-graph.tpl.html
 #: src/app/graph/graph.tpl.html
 msgid "Focus graph"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "From Test definition tracker reports"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

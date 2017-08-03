@@ -3,8 +3,7 @@ import _ from 'lodash';
 export default CampaignNewCtrl;
 
 CampaignNewCtrl.$inject = [
-    '$scope',
-    '$modalInstance',
+    'modal_instance',
     '$state',
     'CampaignService',
     'DefinitionService',
@@ -12,8 +11,7 @@ CampaignNewCtrl.$inject = [
 ];
 
 function CampaignNewCtrl(
-    $scope,
-    $modalInstance,
+    modal_instance,
     $state,
     CampaignService,
     DefinitionService,
@@ -22,10 +20,11 @@ function CampaignNewCtrl(
     var project_id   = SharedPropertiesService.getProjectId(),
         milestone_id = SharedPropertiesService.getCurrentMilestone().id;
 
-    _.extend($scope, {
+    var self = this;
+
+    _.extend(self, {
         submitting_campaign:  false,
         createCampaign:       createCampaign,
-        cancel:               cancel,
         has_milestone:        !! milestone_id,
         campaign: {
             label:    ''
@@ -42,41 +41,37 @@ function CampaignNewCtrl(
         getDefinitionReports();
     }
 
-    function createCampaign(campaign, test_params) {
-        $scope.submitting_campaign = true;
+    function createCampaign() {
+        self.submitting_campaign = true;
 
         var campaign_data = {
             project_id: project_id,
-            label:      campaign.label,
+            label:      self.campaign.label,
         };
 
-        var test_selector = test_params.selector;
+        var test_selector = self.test_params.selector;
         var report_id     = null;
 
-        if (! isNaN(test_params.selector)) {
+        if (! isNaN(self.test_params.selector)) {
             test_selector = 'report';
-            report_id     = test_params.selector;
+            report_id     = self.test_params.selector;
         }
 
         CampaignService
             .createCampaign(campaign_data, test_selector, milestone_id, report_id)
             .then(function () {
-                $modalInstance.close();
+                modal_instance.tlp_modal.hide();
                 $state.go('campaigns.list', {}, {reload: true});
             })
             .finally(function () {
-                $scope.submitting_campaign = false;
+                self.submitting_campaign = false;
             });
-    }
-
-    function cancel() {
-        $modalInstance.dismiss();
     }
 
     function getDefinitionReports() {
         DefinitionService.getDefinitionReports().then(function(data) {
             // data: [{id: <int>, label: <string>}]
-            $scope.test_reports = data;
+            self.test_reports = data;
         });
     }
 }
