@@ -701,6 +701,7 @@ class trackerPlugin extends Plugin {
             case UserDashboardController::LEGACY_DASHBOARD_TYPE:
                 $params['codendi_widgets'][] = Tracker_Widget_MyArtifacts::ID;
                 $params['codendi_widgets'][] = Tracker_Widget_MyRenderer::ID;
+                $params['codendi_widgets'][] = ProjectCrossTrackerSearch::NAME;
                 break;
 
             case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
