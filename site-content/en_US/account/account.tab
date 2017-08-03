@@ -211,6 +211,8 @@ account_login	create_acct	<b><A HREF="register.php">[Create a new Account]</A></
 account_login	login_with_tuleap	Login
 account_login	page_title	$1 login
 account_login	help_subject	Unable to login under $1
+account_login	not_a_member	Not a member yet?
+account_login	create_account_label	Create an account
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostlogin.php

@@ -26,4 +26,8 @@
     </form>
 
     {{{ additional_connectors }}}
+
+    {{# display_new_account_button }}
+        <div class="not-a-member">{{ not_a_member }} <a href="/account/register.php">{{ create_account_label }}</a></div>
+    {{/ display_new_account_button }}
 </div>
