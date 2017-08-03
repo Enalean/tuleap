@@ -147,8 +147,15 @@ function _getPageRevision ($params)
  * @return string
  * @see urlencode
  */
-function UrlencodeControlCharacters($str) {
-    return preg_replace('/([\x00-\x1F])/e', "urlencode('\\1')", $str);
+function UrlencodeControlCharacters($str)
+{
+    return preg_replace_callback(
+        '/([\x00-\x1F])/',
+        function (array $matches) {
+            return urlencode($matches[1]);
+        },
+        $str
+    );
 }
 
 /**

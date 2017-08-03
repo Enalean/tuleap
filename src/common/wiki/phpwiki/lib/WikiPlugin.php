@@ -152,11 +152,14 @@ class WikiPlugin
     // Patch by Dan F:
     // Expand [arg] to $request->getArg("arg") unless preceded by ~
     function expandArg($argval, &$request) {
-        // return preg_replace('/\[(\w[\w\d]*)\]/e', '$request->getArg("$1")',
         // Replace the arg unless it is preceded by a ~
-        $ret = preg_replace('/([^~]|^)\[(\w[\w\d]*)\]/e',
-                            '"$1" . $request->getArg("$2")',
-                           $argval);
+        $ret = preg_replace_callback(
+            '/([^~]|^)\[(\w[\w\d]*)\]/',
+            function (array $matches) use ($request) {
+                return $matches[1] . $request->getArg($matches[2]);
+            },
+            $argval
+        );
         // Ditch the ~ so later versions can be expanded if desired
         return preg_replace('/~(\[\w[\w\d]*\])/', '$1', $ret);
     }

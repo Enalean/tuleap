@@ -1034,7 +1034,16 @@ extends WikiDB_backend
         $s = empty($data) ? array() : @unserialize($data);
         if ($s === false) {
             //Fix errors due to utf8 . See http://php.net/unserialize comments
-            $s = unserialize(preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $data));
+            $s = unserialize(
+                preg_replace_callback(
+                    '!s:(\d+):"(.*?)";!s',
+                    function (array $matches) {
+                        $length = strlen($matches[2]);
+                        return "s:$length:\"{$matches[2]}\";";
+                    },
+                    $data
+                )
+            );
         }
         return $s;
     }
