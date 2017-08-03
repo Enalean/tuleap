@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
@@ -232,7 +233,7 @@ class GitPlugin extends Plugin {
 
     public function getHooksAndCallbacks()
     {
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::GET_GLYPH, 'getGlyph');
         $this->addHook(HeartbeatsEntryCollection::NAME);
 
@@ -260,11 +261,10 @@ class GitPlugin extends Plugin {
         );
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/admin/') === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

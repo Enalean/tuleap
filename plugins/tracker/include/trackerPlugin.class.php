@@ -18,6 +18,7 @@
  */
 
 use Tuealp\project\Event\ProjectRegistrationActivateService;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
@@ -129,7 +130,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::CAN_USER_ACCESS_UGROUP_INFO);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
         $this->addHook('site_admin_option_hook');
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
@@ -228,11 +229,10 @@ class trackerPlugin extends Plugin {
         );
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

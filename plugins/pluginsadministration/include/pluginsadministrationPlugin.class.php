@@ -1,14 +1,26 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+use Tuleap\BurningParrotCompatiblePageEvent;
 
 require_once('common/plugin/Plugin.class.php');
 
-/**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- *
- *
- *
- * PluginsAdministrationPlugin
- */
 class PluginsAdministrationPlugin extends Plugin
 {
 
@@ -16,16 +28,15 @@ class PluginsAdministrationPlugin extends Plugin
     {
         parent::__construct($id);
         $this->addHook('cssfile', 'cssFile', false);
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

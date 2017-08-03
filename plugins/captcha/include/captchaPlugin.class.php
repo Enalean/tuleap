@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Captcha\Administration\Controller;
 use Tuleap\Captcha\Administration\Router;
 use Tuleap\Captcha\ConfigurationNotFoundException;
@@ -46,7 +47,7 @@ class captchaPlugin extends Plugin
         $this->addHook(Event::USER_REGISTER_ADDITIONAL_FIELD, 'addAdditionalFieldUserRegistration');
         $this->addHook(Event::BEFORE_USER_REGISTRATION, 'checkCaptchaBeforeSubmission');
         $this->addHook('site_admin_option_hook', 'addSiteAdministrationOptionHook');
-        $this->addHook(Event::IS_IN_SITEADMIN, 'isInSiteAdmin');
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
     }
 
     /**
@@ -160,10 +161,10 @@ class captchaPlugin extends Plugin
         );
     }
 
-    public function isInSiteAdmin(array $params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], CAPTCHA_BASE_URL . '/admin/') === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

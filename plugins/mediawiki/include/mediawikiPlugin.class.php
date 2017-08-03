@@ -23,6 +23,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -79,7 +80,7 @@ class MediaWikiPlugin extends Plugin {
 
             // Site admin link
             $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-            $this->addHook(Event::IS_IN_SITEADMIN);
+            $this->addHook(BurningParrotCompatiblePageEvent::NAME);
 
             $this->addHook(Event::PROJECT_ACCESS_CHANGE);
             $this->addHook(Event::SITE_ACCESS_CHANGE);
@@ -602,11 +603,10 @@ class MediaWikiPlugin extends Plugin {
         );
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/forge_admin.php?action=site_index') === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

@@ -24,6 +24,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogExporter;
 use Tuleap\Userlog\UserLogRouter;
@@ -38,7 +39,7 @@ class userlogPlugin extends Plugin {
         $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(Event::HIT, 'logUser', false);
-        $this->addHook(Event::IS_IN_SITEADMIN);
+        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -83,11 +84,10 @@ class userlogPlugin extends Plugin {
         );
     }
 
-    /** @see Event::IS_IN_SITEADMIN */
-    public function is_in_siteadmin($params)
+    public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['is_in_siteadmin'] = true;
+            $event->setIsInBurningParrotCompatiblePage();
         }
     }
 

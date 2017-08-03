@@ -1237,14 +1237,6 @@ class Event {
     const SVN_REPOSITORY_CREATED = 'svn_repository_created';
 
     /**
-     * Are we in a siteadmin page?
-     *
-     * Parameters:
-     *  - is_in_siteadmin => (output) Boolean
-     */
-    const IS_IN_SITEADMIN = 'is_in_siteadmin';
-
-    /**
      * When a project is created, ask plugins if some actions must be made for ugroup duplication
      *
      * Parameters:
