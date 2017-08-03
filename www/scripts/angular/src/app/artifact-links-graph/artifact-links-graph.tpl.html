@@ -1,14 +1,16 @@
-<div class="modal-header">
-    <button type="button" class="close" ng-click="modal.cancel()" aria-hidden="true">×</button>
-    <h3 translate>Dependencies graph of &#34;{{ modal.title }}&#34;</h3>
-</div>
-
-<div class="artifact-links-graph-modal modal-body">
-    <div ng-repeat="error in modal.errors track by $index" class="alert alert-error">{{ error }}</div>
-    <div id="artifact-links-graph-utils" class="btn-group btn-group-vertical">
-        <button id="focus-graph" type="button" class="btn" title="{{ 'Focus graph' | translate }}"><i class="icon-screenshot"></i></button>
-        <button id="zoomin-graph" type="button" class="btn" title="{{ 'Zoom in' | translate }}"><i class="icon-zoom-in"></i></button>
-        <button id="zoomout-graph" type="button" class="btn" title="{{ 'Zoom out' | translate }}"><i class="icon-zoom-out"></i></button>
+<div class="tlp-modal">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" translate>Dependencies graph of &#34;{{ modal.title }}&#34;</h1>
+        <div class="tlp-modal-close" data-dismiss="modal">&times;</div>
     </div>
-    <graph id="artifact-links-graph" class="graph" model="modal.graph"></graph>
+
+    <div class="tlp-modal-body artifact-links-graph-modal">
+        <div ng-repeat="error in modal.errors track by $index" class="alert alert-error">{{ error }}</div>
+        <div id="artifact-links-graph-utils">
+            <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>
+            <button id="zoomin-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Zoom in' | translate }}"><i class="fa fa-search-plus tlp-button-icon"></i></button>
+            <button id="zoomout-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Zoom out' | translate }}"><i class="fa fa-search-minus tlp-button-icon"></i></button>
+        </div>
+        <graph id="artifact-links-graph" class="graph" model="modal.graph"></graph>
+    </div>
 </div>

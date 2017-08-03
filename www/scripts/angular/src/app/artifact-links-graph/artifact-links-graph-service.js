@@ -27,13 +27,11 @@ function ArtifactLinksGraphService(
         ArtifactLinksGraphModalLoading.loading.is_loading = true;
 
         return TlpModalService.open({
-            backdrop   : 'static',
-            templateUrl: 'artifact-links-graph.tpl.html',
-            controller : 'ArtifactLinksGraphCtrl as modal',
+            templateUrl : 'artifact-links-graph.tpl.html',
+            controller  : 'ArtifactLinksGraphCtrl',
+            controllerAs: 'modal',
             resolve: {
-                modal_model: function () {
-                    return self.showGraph(execution.id);
-                }
+                modal_model: self.showGraph(execution.id)
             }
         });
     }

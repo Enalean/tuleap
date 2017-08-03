@@ -83,29 +83,6 @@ function ExecutionDetailCtrl(
         ArtifactLinksGraphService.showGraphModal(execution);
     }
 
-    function showEditModal($event, backlog_item, milestone) {
-        var when_left_mouse_click = 1;
-
-        function callback(item_id) {
-            return BacklogItemCollectionService.refreshBacklogItem(item_id).then(function() {
-                if (milestone) {
-                    MilestoneService.updateInitialEffort(milestone);
-                }
-            });
-        }
-
-        if ($event.which === when_left_mouse_click) {
-            $event.preventDefault();
-
-            NewTuleapArtifactModalService.showEdition(
-                SharedPropertiesService.getUserId(),
-                backlog_item.artifact.tracker.id,
-                backlog_item.artifact.id,
-                callback
-            );
-        }
-    }
-
     function showEditArtifactModal($event, definition) {
         var when_left_mouse_click = 1;
 

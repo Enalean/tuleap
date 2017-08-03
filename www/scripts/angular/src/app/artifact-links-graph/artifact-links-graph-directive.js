@@ -9,7 +9,8 @@ Graph.$inject = [
     'ArtifactLinksGraphRestService',
     'ArtifactLinksModelService',
     'ArtifactLinksArtifactsList',
-    '$q'
+    '$q',
+    '$timeout'
 ];
 
 function Graph(
@@ -17,7 +18,8 @@ function Graph(
     ArtifactLinksGraphRestService,
     ArtifactLinksModelService,
     ArtifactLinksArtifactsList,
-    $q
+    $q,
+    $timeout
 ) {
     return {
         restrict: 'E',
@@ -27,6 +29,21 @@ function Graph(
         link: function (scope, element) {
             var complements_graph = {};
             var nodes_duplicate = {};
+
+            var loader,
+                scaleMin,
+                scaleMax,
+                width,
+                height,
+                zoom,
+                text,
+                circle,
+                path,
+                figures,
+                nodes,
+                links,
+                graph,
+                svg;
 
             function graphd3() {
                 graphd3.init();
@@ -154,7 +171,7 @@ function Graph(
                     .enter().append("path")
                     .attr("class", function(d) {
                         if (d.id) {
-                            return "link " + d.type + " " + d.source.id + "_" + d.target.id;
+                            return "link " + d.type + " link_" + d.source.id + "_" + d.target.id;
                         } else {
                             return "link " + d.type;
                         }
@@ -170,7 +187,7 @@ function Graph(
                         .enter().append("circle")
                         .attr("class", function(d) {
                             if (d.id) {
-                                return d.color + " " + d.id;
+                                return d.color + " circle_" + d.id;
                             } else {
                                 return d.color;
                             }
@@ -213,7 +230,7 @@ function Graph(
                         .append("a")
                         .attr("class", function (d) {
                             if (d.id) {
-                                return "graph-label updatable " + d.id;
+                                return "graph-label updatable text_" + d.id;
                             }
                         })
                         .attr("xlink:href", function(d) {
@@ -484,7 +501,8 @@ function Graph(
                 function removeNode(node) {
                     _.remove(graphd3.graph().nodes(), function (d3_node) {
                         if (d3_node.id === node.id) {
-                            d3.selectAll("." + node.id).remove();
+                            d3.selectAll(".circle_" + node.id).remove();
+                            d3.selectAll(".text_" + node.id).remove();
                             return true;
                         } else {
                             return false;
@@ -511,7 +529,7 @@ function Graph(
                         _(complement.links).compact().forEach(function (link) {
                             _.remove(graphd3.graph().links(), function (d3_link) {
                                 if (d3_link.source.id === link.source.id && d3_link.target.id === link.target.id) {
-                                    d3.selectAll("." + link.id).remove();
+                                    d3.selectAll(".link_" + link.id).remove();
                                     return true;
                                 } else {
                                     return false;
@@ -675,7 +693,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3();
+            $timeout(graphd3, 0);
         }
     };
 
