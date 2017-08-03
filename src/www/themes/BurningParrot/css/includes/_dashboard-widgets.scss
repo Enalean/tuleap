@@ -101,6 +101,15 @@
     border-left: 1px solid $tlp-ui-border-light;
 }
 
+.dashboard-add-widget-settings-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-add-widget-settings-image {
+    align-self: center;
+}
+
 .dashboard-add-widget-list-header {
     display: flex;
     align-items: baseline;

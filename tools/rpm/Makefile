@@ -41,7 +41,7 @@ PLUGIN_BUGZILLA_REFERENCE_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/bugzill
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 THEME_BURNINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BurningParrot/VERSION)
 
-ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/agiledashboard/www/js/kanban plugins/frs/www/js/angular
+ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/frs/www/js/angular
 
 ifdef GIT_BRANCH
 TAG_RELEASE = $(subst -, ,$(GIT_BRANCH))
@@ -142,6 +142,7 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node mo
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/package.json -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/README.md -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/src -o\
+				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/angular-tlp -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
 				-path $(PKG_NAME)-$(version)/plugins/frs/www/js/angular -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\

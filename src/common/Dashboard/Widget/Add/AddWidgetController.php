@@ -84,7 +84,6 @@ class AddWidgetController
             $this->checkThatDashboardBelongsToTheOwner($request, $dashboard_type, $dashboard_id);
             $widget = $this->factory->getInstanceByWidgetName($name);
 
-
             if (! $widget->isUnique() || ! $this->isUniqueWidgetAlreadyAddedInDashboard($widget, $dashboard_id, $dashboard_type)) {
                 $this->creator->create(
                     $this->getOwnerIdByDashboardType($request, $dashboard_type),
@@ -97,6 +96,11 @@ class AddWidgetController
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
                     _('The widget has been added successfully')
+                );
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    _('The widget is already used')
                 );
             }
         } catch (Exception $exception) {
@@ -112,7 +116,7 @@ class AddWidgetController
     {
         $used_widgets = $this->getUsedWidgets($dashboard_id, $dashboard_type);
 
-        return in_array($widget->getId(), $used_widgets);
+        return $widget->isUnique() && in_array($widget->getId(), $used_widgets);
     }
 
     private function displayWidgetEntries(

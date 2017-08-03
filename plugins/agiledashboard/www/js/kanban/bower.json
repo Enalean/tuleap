@@ -2,13 +2,7 @@
   "name": "kanban",
   "version": "0.0.1",
   "dependencies": {
-    "angular-ui-bootstrap-bower": "~0.8.0",
-    "artifact-modal": "https://tuleap.net/plugins/git/tuleap/artifact-modal.git#4956057b41d3dbc44835d2efb23412d123561df9"
   },
   "devDependencies": {
-  },
-  "resolutions": {
-    "moment": "^2.9.0",
-    "angular": "1.3.20"
   }
 }

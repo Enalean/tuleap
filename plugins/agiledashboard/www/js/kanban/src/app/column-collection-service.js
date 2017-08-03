@@ -87,13 +87,9 @@ function ColumnCollectionService(
         column.loading_items           = true;
         column.nb_items_at_kanban_init = 0;
         column.fully_loaded            = false;
-        column.resize_left             = '';
-        column.resize_top              = '';
-        column.resize_width            = '';
         column.wip_in_edit             = false;
         column.limit_input             = column.limit;
         column.saving_wip              = false;
-        column.is_small_width          = false;
         column.is_defered              = !column.is_open;
         column.original_label          = column.label;
     }

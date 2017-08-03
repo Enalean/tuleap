@@ -1,13 +1,13 @@
-angular
-    .module('tuleap.artifact-modal')
-    .controller('TuleapArtifactModalController', TuleapArtifactModalController);
+import _ from 'lodash';
 
-TuleapArtifactModalController.$inject = [
+export default ArtifactModalController;
+
+ArtifactModalController.$inject = [
     '$q',
     '$scope',
     '$timeout',
     '$window',
-    '$modalInstance',
+    'modal_instance',
     'modal_model',
     'displayItemCallback',
     'TuleapArtifactModalRestService',
@@ -18,12 +18,12 @@ TuleapArtifactModalController.$inject = [
     'TuleapArtifactModalFileUploadService'
 ];
 
-function TuleapArtifactModalController(
+function ArtifactModalController(
     $q,
     $scope,
     $timeout,
     $window,
-    $modalInstance,
+    modal_instance,
     modal_model,
     displayItemCallback,
     TuleapArtifactModalRestService,
@@ -37,7 +37,7 @@ function TuleapArtifactModalController(
         user_id = modal_model.user_id;
     _.extend(self, {
         artifact_id        : modal_model.artifact_id,
-        color              : modal_model.color,
+        color              : formatColor(modal_model.color),
         creation_mode      : modal_model.creation_mode,
         is_disk_usage_empty: true,
         ordered_fields     : modal_model.ordered_fields,
@@ -52,7 +52,7 @@ function TuleapArtifactModalController(
             loading_comments: true,
             invert_order    : (modal_model.invert_followups_comments_order) ? 'asc' : 'desc'
         },
-        cancel                        : $modalInstance.dismiss,
+        formatColor                   : formatColor,
         formatParentArtifactTitle     : formatParentArtifactTitle,
         getDropdownAttribute          : getDropdownAttribute,
         getError                      : function() { return TuleapArtifactModalRestService.error; },
@@ -60,31 +60,31 @@ function TuleapArtifactModalController(
         isFollowupCommentFormDisplayed: isFollowupCommentFormDisplayed,
         isLoading                     : function() { return TuleapArtifactModalRestService.is_loading; },
         isThereAtLeastOneFileField    : isThereAtLeastOneFileField,
-        newOpenListStaticValue        : newOpenListStaticValue,
-        newOpenListUserBindValue      : newOpenListUserBindValue,
-        searchUsers                   : searchUsers,
         setupTooltips                 : setupTooltips,
         showParentArtifactChoice      : showParentArtifactChoice,
         submit                        : submit,
         toggleFieldset                : toggleFieldset,
+        initCkeditorConfig            : initCkeditorConfig,
         followup_comment              : {
             body  : '',
             format: modal_model.text_fields_format
         },
-        ckeditor_options: {
-            toolbar: [
-                ['Bold', 'Italic', 'Underline'],
-                [
-                    'NumberedList',
-                    'BulletedList',
-                    '-',
-                    'Blockquote',
-                    'Format'
+        ckeditor_options              : {
+            default_ckeditor: {
+                toolbar: [
+                    ['Bold', 'Italic', 'Underline'],
+                    [
+                        'NumberedList',
+                        'BulletedList',
+                        '-',
+                        'Blockquote',
+                        'Format'
+                    ],
+                    ['Link', 'Unlink', 'Anchor', 'Image'],
+                    ['Source']
                 ],
-                ['Link', 'Unlink', 'Anchor', 'Image'],
-                ['Source']
-            ],
-            height: '100px'
+                height: '100px'
+            }
         }
     });
 
@@ -93,19 +93,44 @@ function TuleapArtifactModalController(
     function init() {
         setFieldDependenciesWatchers();
 
-        $modalInstance.opened.then(function() {
-            TuleapArtifactModalLoading.loading = false;
-            self.setupTooltips();
+        TuleapArtifactModalLoading.loading = false;
+        self.setupTooltips();
 
-            if (! self.creation_mode) {
-                fetchFollowupsComments(
-                    self.artifact_id,
-                    50,
-                    0,
-                    self.followups_comments.invert_order
-                );
+        if (! self.creation_mode) {
+            fetchFollowupsComments(
+                self.artifact_id,
+                50,
+                0,
+                self.followups_comments.invert_order
+            );
+        }
+    }
+
+    function initCkeditorConfig(field) {
+        var id = 'default_ckeditor';
+        if (field) {
+            id = field.field_id;
+            if (! self.ckeditor_options[id]) {
+                self.ckeditor_options[id] = {
+                    toolbar: [
+                        ['Bold', 'Italic', 'Underline'],
+                        [
+                            'NumberedList',
+                            'BulletedList',
+                            '-',
+                            'Blockquote',
+                            'Format'
+                        ],
+                        ['Link', 'Unlink', 'Anchor', 'Image'],
+                        ['Source']
+                    ],
+                    height: '100px',
+                    readOnly: self.isDisabled(field)
+                };
             }
-        });
+        }
+
+        return self.ckeditor_options[id];
     }
 
     function setupTooltips() {
@@ -146,10 +171,10 @@ function TuleapArtifactModalController(
 
             return promise;
         }).then(function(new_artifact) {
-            $modalInstance.close();
+            modal_instance.tlp_modal.hide();
 
             return displayItemCallback(new_artifact.id);
-        })['finally'](function() {
+        }).finally(function() {
             TuleapArtifactModalLoading.loading = false;
         });
     }
@@ -196,39 +221,6 @@ function TuleapArtifactModalController(
         fieldset.collapsed = ! fieldset.collapsed;
     }
 
-    function newOpenListStaticValue(newOpenValue) {
-        var item = {
-            label: newOpenValue
-        };
-
-        return item;
-    }
-
-    function newOpenListUserBindValue(email) {
-        var item = {
-            display_name: email,
-            email       : email
-        };
-
-        return item;
-    }
-
-    function searchUsers(field, query) {
-        var minimal_query_length = 3;
-
-        if (! query || minimal_query_length > query.length) {
-            field.values = [];
-            return;
-        }
-
-        field.loading = true;
-
-        TuleapArtifactModalRestService.searchUsers(query).then(function(data) {
-            field.loading = false;
-            field.values  = [].concat(data);
-        });
-    }
-
     function showParentArtifactChoice() {
         var canChoose = TuleapArtifactModalParentService.canChooseArtifactsParent(
             self.tracker.parent,
@@ -247,6 +239,19 @@ function TuleapArtifactModalController(
         var formatted_title = tracker_label + ' #' + artifact.id + ' - ' + artifact.title;
 
         return formatted_title;
+    }
+
+    function formatColor(color) {
+        var color_formatted = '';
+        var color_split     = color.split('_');
+        color_split.forEach(function (color, index) {
+            if (index === 0) {
+                color_formatted = color_formatted.concat(color);
+            } else {
+                color_formatted = color_formatted.concat('-', color);
+            }
+        });
+        return color_formatted;
     }
 
     function getTrackerLabel(artifact) {

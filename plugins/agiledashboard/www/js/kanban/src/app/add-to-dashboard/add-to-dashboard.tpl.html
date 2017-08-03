@@ -1,0 +1,32 @@
+<div class="tlp-dropdown dashboard-dropdown" ng-show="add_to_dashboard.showDashboardDropdown()">
+    <a type="button" id="dashboard-dropdown-button" class="tlp-button-primary tlp-button-outline tlp-button-small">
+        <i class="fa fa-tachometer tlp-button-icon"></i>
+        {{ add_to_dashboard.dashboard_dropdown.dashboard }}
+        <i class="fa fa-caret-down tlp-button-icon-right"></i>
+    </a>
+    <div class="tlp-dropdown-menu" role="menu">
+        <div class="dashboard-dropdown-menu">
+            <span class="tlp-dropdown-menu-title dashboard-dropdown-menu-title" role="menuitem">{{ add_to_dashboard.dashboard_dropdown.my_dashboard }}</span>
+            <a ng-repeat="user_dashboard in add_to_dashboard.dashboard_dropdown.user_dashboards"
+               href="{{ add_to_dashboard.dashboard_dropdown.my_dashboard_url }}&dashboard-id={{ user_dashboard.id }}"
+               class="tlp-dropdown-menu-item"
+               role="menuitem"
+            >
+                {{ user_dashboard.name }}
+            </a>
+            <div class="dashboard-dropdown-menu-projects" ng-show="add_to_dashboard.showProjectDashboards()">
+                    <span class="tlp-dropdown-menu-title dashboard-dropdown-menu-title"
+                          role="menuitem">
+                        {{ add_to_dashboard.dashboard_dropdown.project_dashboard }}
+                    </span>
+                <a ng-repeat="project_dashboard in add_to_dashboard.dashboard_dropdown.project_dashboards"
+                   href="{{ add_to_dashboard.dashboard_dropdown.project_dashboard_url }}&dashboard-id={{ project_dashboard.id }}"
+                   class="tlp-dropdown-menu-item"
+                   role="menuitem"
+                >
+                    {{ project_dashboard.name }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

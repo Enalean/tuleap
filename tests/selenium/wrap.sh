@@ -21,7 +21,7 @@ mkdir -p test_results || true
 rm -rf test_results/* || true
 clean_env
 
-$DOCKERCOMPOSE up -d
+$DOCKERCOMPOSE up -d --build
 
 wait_until_tests_are_executed
 

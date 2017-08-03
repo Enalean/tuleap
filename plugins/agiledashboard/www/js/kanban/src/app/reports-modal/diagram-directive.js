@@ -1,4 +1,5 @@
-import cumulativeFlowChartFactory from 'cumulative-chart-factory';
+import { cumulativeFlowChartFactory } from 'cumulative-flow-diagram';
+import { cumulativeFlowChartController } from 'cumulative-flow-diagram';
 
 export default Graph;
 
@@ -47,22 +48,24 @@ function Graph(
                 localized_format: localized_format
             };
 
-            var cumulative_chart = cumulativeFlowChartFactory(options);
-            cumulative_chart();
+            var cumulative_chart_factory    = cumulativeFlowChartFactory(options);
+            var cumulative_chart            = cumulative_chart_factory.build();
+            var cumulative_chart_controller = cumulativeFlowChartController(cumulative_chart);
+            cumulative_chart_controller.init();
 
             function resize() {
                 var sizes = getSizesElement();
                 var width  = sizes.width;
                 var height = sizes.height;
 
-                cumulative_chart.resize(height, width);
+                cumulative_chart_controller.resize(height, width);
 
                 cumulative_chart.svg().attr('width', cumulative_chart.width() + options.margin.left + options.margin.right)
                     .attr('height', cumulative_chart.height() + options.margin.top + options.margin.bottom);
 
                 cumulative_chart.g().attr('transform', 'translate(' + options.margin.left + ',' + options.margin.top + ')');
 
-                cumulative_chart.redraw();
+                cumulative_chart_controller.redraw();
             }
 
             angular.element($window).on('resize', resize);

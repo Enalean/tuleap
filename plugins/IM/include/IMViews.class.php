@@ -1,4 +1,26 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+use Tuleap\Chart\ColorsForCharts;
+
 require_once('pre.php');
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
@@ -222,8 +244,10 @@ class IMViews extends Views {
             $purifier = Codendi_HTMLPurifier::instance();
             $uh = new UserHelper();
 
+            $colors_for_charts = new ColorsForCharts();
+
             $nick_color_arr = array();  // association array nickname => color
-            $available_colors = $GLOBALS['HTML']->getTextColors();
+            $available_colors = $colors_for_charts->getTextColors();
 
             echo '<table class="logs">';
             echo ' <tr>';
@@ -252,10 +276,10 @@ class IMViews extends Views {
                 if ( ! array_key_exists($conv->getNickname(), $nick_color_arr)) {
                     // if all the colors have been used, we start again with the same colors
                     if (sizeof($available_colors) == 0) {
-                        $available_colors = $GLOBALS['HTML']->getChartColors();
+                        $available_colors = $colors_for_charts->getChartColors();
                     }
                     $current_color = array_pop($available_colors);  // remove a color from the array, and set it to current color
-                    $nick_color_arr[$conv->getNickname()] = $GLOBALS['HTML']->getColorCodeFromColorName($current_color);
+                    $nick_color_arr[$conv->getNickname()] = $colors_for_charts->getColorCodeFromColorName($current_color);
                 }
 
                 echo ' <tr class="'.get_class($conv).'">';

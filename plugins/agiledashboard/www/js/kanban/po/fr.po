@@ -11,10 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.3\n"
 
-#: src/app/reports-modal/reports-modal.tpl.html
-msgid "{{ reports_modal.kanban_label }} reports"
-msgstr "Rapports de {{ reports_modal.kanban_label }}"
-
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Add"
 msgstr "Ajouter"
@@ -23,7 +19,7 @@ msgstr "Ajouter"
 msgid "Add a column"
 msgstr "Ajouter une colonne"
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid ""
 "An error occured while saving one of your last action. We're afraid that you "
 "will have to reload the page in order to bring you back to a consistent "
@@ -36,21 +32,13 @@ msgstr ""
 msgid "Archive"
 msgstr "Archive"
 
-#: src/app/app-kanban-controller.js
-msgid "Archive:"
-msgstr "Archive :"
-
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Backlog"
 msgstr "Backlog"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid ""
-"Based on the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban."
-"tracker.id }}\">{{ edit_modal.kanban.tracker.label }}</a> tracker."
-msgstr ""
-"Basé sur l’outil de suivi <a href=\"/plugins/tracker/?tracker={{ edit_modal."
-"kanban.tracker.id }}\">{{ edit_modal.kanban.tracker.label }}</a>."
+msgid "Based on the {{ trackerLink }} tracker."
+msgstr "Basé sur l’outil de suivi {{ trackerLink }}."
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Cancel"
@@ -63,10 +51,6 @@ msgstr "Titre de la carte"
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Column name"
 msgstr "Nom de la colonne"
-
-#: src/app/app-kanban-controller.js
-msgid "Column:"
-msgstr "Colonne :"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Columns configuration"
@@ -112,7 +96,7 @@ msgstr "Éditer"
 msgid "Edit this Kanban"
 msgstr "Éditer ce Kanban"
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
@@ -128,21 +112,21 @@ msgstr "Filtrer..."
 msgid "General configuration"
 msgstr "Configuration générale"
 
+#: src/app/app-kanban-controller.js
+msgid "In Kanban since:"
+msgstr "Dans le Kanban depuis :"
+
+#: src/app/app-kanban-controller.js
+msgid "In column since:"
+msgstr "Dans la colonne depuis :"
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
-msgstr "Label du Kanban :"
+msgstr "Label du Kanban :"
 
 #: src/app/kanban-service.js
 msgid "Kanban {{ label }} successfuly deleted"
 msgstr "Le Kanban {{ label }} a été supprimé"
-
-#: src/app/app-kanban-controller.js
-msgid "Kanban {{ label }} successfuly deleted"
-msgstr "Le Kanban {{ label }} a été supprimé"
-
-#: src/app/app-kanban-controller.js
-msgid "Kanban:"
-msgstr "Kanban :"
 
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "Last 3 months"
@@ -165,20 +149,18 @@ msgid "Last year"
 msgstr "Dernière année"
 
 #. moment.js Date format
-#: src/app/reports-modal/reports-modal-controller.js
+#: src/app/reports-modal/diagram-directive.js
 msgid "MM/DD"
 msgstr "DD/MM"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid ""
 "More information about columns are available in the field administration "
-"used by the semantic status in the <a href=\"/plugins/tracker/?"
-"tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+"used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 "Plus d’informations concernant les colonnes sont disponibles dans "
-"l’administration du champs utilisé par la sémantique de statut dans <a href="
-"\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">l’outil de "
-"suivi</a>."
+"l’administration du champ utilisé par la sémantique de statut dans l’outil "
+"de suivi {{ trackerLink }}."
 
 #: src/app/kanban-item/kanban-item.tpl.html
 msgid "Move to bottom"
@@ -188,17 +170,17 @@ msgstr "Déplacer en bas"
 msgid "Move to top"
 msgstr "Déplacer en haut"
 
-#: src/app/reports-modal/reports-modal-controller.js
+#: src/app/reports-modal/diagram-directive.js
 msgid "Nb. of cards"
 msgstr "Nb. de cartes"
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "OK, reload the page"
 msgstr "OK, rafraichir la page"
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Oh snap!"
-msgstr "Oups !"
+msgstr "Oups !"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Remove"
@@ -208,7 +190,7 @@ msgstr "Supprimer"
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Show details"
 msgstr "Afficher plus de détails"
 
@@ -247,13 +229,11 @@ msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 msgid ""
 "You can't manage columns of the tracker configuration. More information "
 "about columns are available in the field administration used by the semantic "
-"status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban."
-"tracker.id }}\">tracker</a>."
+"status in the {{ trackerLink }} tracker."
 msgstr ""
 "Vous ne pouvez pas gérer les colonnes. Plus d’informations concernant les "
 "colonnes sont disponibles dans l’administration du champ utilisé par la "
-"sémantique de statut dans <a href=\"/plugins/tracker/?tracker={{ edit_modal."
-"kanban.tracker.id }}\">l’outil de suivi</a>."
+"sémantique de statut dans l’outil de suivi {{ trackerLink }}."
 
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
@@ -262,3 +242,7 @@ msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "{{ reports_modal.kanban_label }} reports"
 msgstr "Rapports de {{ reports_modal.kanban_label }}"
+
+#: src/app/kanban.tpl.html
+msgid "Go to Kanban"
+msgstr "Aller sur le Kanban"

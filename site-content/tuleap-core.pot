@@ -261,6 +261,9 @@ msgstr ""
 msgid "The widget has been added successfully"
 msgstr ""
 
+msgid "The widget is already used"
+msgstr ""
+
 msgid "There are no items <br> you can see"
 msgstr ""
 

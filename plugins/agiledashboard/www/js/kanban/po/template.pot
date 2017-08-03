@@ -12,16 +12,12 @@ msgstr ""
 msgid "Add a column"
 msgstr ""
 
-#: src/app/error/error.tpl.html
-msgid "An error occured while saving one of your last action. We're afraid that you will have to reload the page in order to bring you back to a consistent state."
+#: src/app/error-modal/error.tpl.html
+msgid "An error occured while saving one of your last action. <br>We're afraid that you will have to reload the page in order to bring you back to a consistent state."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Archive"
-msgstr ""
-
-#: src/app/app-kanban-controller.js
-msgid "Archive:"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -29,10 +25,11 @@ msgid "Backlog"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "Based on the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">{{ edit_modal.kanban.tracker.label }}</a> tracker."
+msgid "Based on the {{ trackerLink }} tracker."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Cancel"
 msgstr ""
 
@@ -42,10 +39,6 @@ msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Column name"
-msgstr ""
-
-#: src/app/app-kanban-controller.js
-msgid "Column:"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
@@ -92,7 +85,7 @@ msgstr ""
 msgid "Edit this Kanban"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Error details"
 msgstr ""
 
@@ -108,16 +101,24 @@ msgstr ""
 msgid "General configuration"
 msgstr ""
 
+#: src/app/go-to-kanban/go-to-kanban.tpl.html
+msgid "Go to Kanban"
+msgstr ""
+
+#: src/app/app-kanban-controller.js
+msgid "In Kanban since:"
+msgstr ""
+
+#: src/app/app-kanban-controller.js
+msgid "In column since:"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr ""
 
 #: src/app/kanban-service.js
 msgid "Kanban {{ label }} successfuly deleted"
-msgstr ""
-
-#: src/app/app-kanban-controller.js
-msgid "Kanban:"
 msgstr ""
 
 #: src/app/reports-modal/reports-modal.tpl.html
@@ -146,7 +147,7 @@ msgid "MM/DD"
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+msgid "More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 
 #: src/app/kanban-item/kanban-item.tpl.html
@@ -161,11 +162,11 @@ msgstr ""
 msgid "Nb. of cards"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "OK, reload the page"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Oh snap!"
 msgstr ""
 
@@ -177,7 +178,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/app/error/error.tpl.html
+#: src/app/error-modal/error.tpl.html
 msgid "Show details"
 msgstr ""
 
@@ -210,7 +211,7 @@ msgid "You are disconnected from real time. Please reload your page."
 msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
-msgid "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the <a href=\"/plugins/tracker/?tracker={{ edit_modal.kanban.tracker.id }}\">tracker</a>."
+msgid "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 
 #: src/app/kanban.tpl.html

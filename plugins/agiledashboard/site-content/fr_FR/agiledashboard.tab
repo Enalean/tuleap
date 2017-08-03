@@ -192,3 +192,6 @@ plugin_agiledashboard_first_kanban	created	Une <a href="$1">première instance d
 plugin_agiledashboard_first_scrum	error_existing_tracker	Un outil de suivi existant ($1) a empêché la configuration initiale de scrum.
 plugin_agiledashboard_first_scrum	internal_error	Une erreur interne a empêché la configuration initiale de scrum.
 plugin_agiledashboard_first_scrum	created	La configuration initiale de scrum a été effectuée pour vous.
+
+# Widget category
+widget_categ_label	plugin_agiledashboard	Tableau de bord agile

@@ -1,0 +1,36 @@
+<label for="{{ ::('tracker_field_' + permission_field.field.field_id) }}"
+    class="tlp-label"
+>
+    {{ ::permission_field.field.label }}
+    <i ng-if="::(permission_field.field.required)" class="fa fa-asterisk"></i>
+</label>
+
+<label for="{{ ::('perm_' + permission_field.field.field_id) }}"
+    class="tlp-label tlp-checkbox"
+    ng-if="::(! permission_field.field.required)"
+>
+    <input type="checkbox"
+        ng-model="permission_field.value_model.value.is_used_by_default"
+        ng-true-value="true"
+        ng-false-value="null"
+        ng-disabled="::permission_field.isDisabled()"
+        ng-change="permission_field.clearSelectBox()"
+        id="{{ ::('perm_' + permission_field.field.field_id) }}"
+    >
+    {{ 'Restrict access to this artifact for the following user groups:' | translate }}
+</label>
+<label for="{{ ::('tracker_field_' + permission_field.field.field_id) }}"
+    class="tlp-label"
+    ng-if="::(permission_field.field.required)"
+>
+    {{ 'Restrict access to this artifact for the following user groups:' | translate }}
+</label>
+
+<select multiple
+    class="tlp-select"
+    ng-model="permission_field.value_model.value.granted_groups"
+    ng-options="::field_value.id as field_value.label for field_value in permission_field.field.values.ugroup_representations"
+    ng-disabled="permission_field.isSelectBoxDisabled()"
+    ng-required="permission_field.isSelectBoxRequired()"
+    id="{{ ::('tracker_field_' + permission_field.field.field_id) }}"
+></select>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Chart\ColorsForCharts;
 
 require_once 'common/chart/Chart.class.php';
 
@@ -61,7 +63,7 @@ class Git_LastPushesGraph {
      * @var Array
      */
     protected $year    = array();
-    
+
     /**
      * Constructor.
      *
@@ -85,7 +87,7 @@ class Git_LastPushesGraph {
         }
         $this->displayChart = false;
         $this->weeksNumber  = min($weeksNumber, self::MAX_WEEKSNUMBER);
-        // Init some class properties according to 'weeks number' parameter         
+        // Init some class properties according to 'weeks number' parameter
         $today              = $_SERVER['REQUEST_TIME'];
         $startPeriod        = strtotime("-$this->weeksNumber weeks");
         $weekInSeconds      = self::WEEKS_IN_SECONDS ;
@@ -158,8 +160,9 @@ class Git_LastPushesGraph {
      * @return BarPlot
      */
     private function displayRepositoryPushesByWeek() {
+        $colors_for_charts = new ColorsForCharts();
         $nbRepo   = count($this->repoList);
-        $colors   = array_slice($GLOBALS['HTML']->getChartColors(), 0, $nbRepo);
+        $colors   = array_slice($colors_for_charts->getChartColors(), 0, $nbRepo);
         $nbColors = count($colors);
         $i        = 0;
         $bplot    = array();
@@ -201,12 +204,12 @@ class Git_LastPushesGraph {
                 }
             }
             $pushes = array_pad($pushes, $this->weeksNumber, 0);
-        }  
-        return $pushes;      
+        }
+        return $pushes;
     }
-    
+
     /**
-     * Create a JpGraph accumulated barPlot chart 
+     * Create a JpGraph accumulated barPlot chart
      *
      * @param Array $bplot Array of JpGraph barPlot objects
      * @param Chart $graph The output graph that will contains accumulated barPlots

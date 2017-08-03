@@ -1,0 +1,30 @@
+<div class="tlp-modal tlp-modal-warning">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="modal-big-content-label">
+            <i class="fa fa-warning tlp-modal-title-icon"></i> <span translate>Oh snap!</span>
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <p translate>An error occured while saving one of your last action. <br/>We're afraid that you will have to reload the page in order to bring you back to a consistent state.</p>
+        <p ng-show="! details">
+            <button type="button" class="tlp-button-warning tlp-button-outline" ng-click="details = true" translate>
+                Show details
+            </button>
+        </p>
+        <div ng-show="details" class="details">
+            <h4 translate>Error details</h4>
+            <pre>{{ message }}</pre>
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-warning tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"><span
+                translate>Cancel</span></button>
+        <button type="button" class="tlp-button-warning tlp-modal-action" ng-disabled="reloading"
+                ng-click="ok();"><span
+                translate>OK, reload the page</span></button>
+    </div>
+</div>

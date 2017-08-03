@@ -6,6 +6,8 @@ var gulp      = require('gulp'),
     scss_lint = require('gulp-scss-lint'),
     tuleap    = require('./tools/utils/tuleap-gulp-build');
 
+var component_builder = require('./tools/utils/component-builder.js');
+
 var fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
         'src/www/scripts/polyphills/storage.js',
@@ -176,10 +178,17 @@ var fat_combined_files = [
         'src/www/themes/common/tlp/',
         'src/www/scripts/',
     ],
+    bower_app_paths = [],
+    angular_app_paths = [
+        'plugins/tracker/www/scripts/angular-artifact-modal/',
+        // install angular-artifact-modal must come before kanban
+        'plugins/agiledashboard/www/js/kanban/'
+    ],
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
-tuleap.declare_component_tasks(components_paths);
+component_builder.installAndBuildNpmComponents(components_paths, 'components', ['clean-js-core']);
+component_builder.installAndBuildNpmComponents(angular_app_paths, 'angular-apps');
 
 /**
  * Javascript
@@ -269,7 +278,7 @@ gulp.task('clean', ['clean-core', 'clean-plugins']);
 
 gulp.task('core', ['js', 'sass']);
 
-gulp.task('build', ['components'], function() {
+gulp.task('build', ['components', 'angular-apps'], function() {
     return gulp.start('core');
 });
 

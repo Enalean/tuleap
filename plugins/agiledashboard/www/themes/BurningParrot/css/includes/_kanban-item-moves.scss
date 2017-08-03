@@ -1,0 +1,32 @@
+.kanban-item-content-moves {
+    position: absolute;
+    z-index: 1000;
+    right: 15px;
+    height: 100%;
+    transition: opacity $transition-duration $transition-delay;
+    opacity: 0;
+}
+
+.kanban-item-content-move {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 12px;
+
+    &:first-child {
+        top: -10px;
+    }
+
+    &:last-child {
+        bottom: -10px;
+    }
+}
+
+.kanban-item:hover .kanban-item-content-moves {
+    opacity: 1;
+}

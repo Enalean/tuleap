@@ -6,19 +6,15 @@ export default KanbanConfig;
 KanbanConfig.$inject = [
     '$stateProvider',
     '$urlRouterProvider',
-    'RestangularProvider',
-    '$animateProvider'
+    'RestangularProvider'
 ];
 
 function KanbanConfig(
     $stateProvider,
     $urlRouterProvider,
-    RestangularProvider,
-    $animateProvider
+    RestangularProvider
 ) {
     $urlRouterProvider.otherwise('/kanban');
-
-    $animateProvider.classNameFilter(/do-animate/);
 
     $stateProvider.state('kanban', {
         url         : "/kanban",

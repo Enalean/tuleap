@@ -1,127 +1,118 @@
-<div class="kanban-item-content">
-    <div class="type-border"></div>
+<div class="kanban-item-content-type-border"></div>
 
-    <div data-nodrag="true" class="moves">
-        <span class="icon-stack" title="{{ 'Move to top' | translate }}" aria-label="{{ 'Move to top' | translate }}" role="button" ng-click="kanban.moveKanbanItemToTop(item)">
-            <i class="icon-circle icon-stack-base"></i>
-            <i class="icon-chevron-up icon-light"></i>
+<div class="kanban-item-content">
+    <div class="kanban-item-content-collapsed">
+        <div class="kanban-item-content-info">
+            <a data-nodrag="true"
+               href="/plugins/tracker/?aid={{ item.id }}"
+               ng-click="kanban.showEditModal($event, item)"
+               class="kanban-item-content-info-link"
+            >
+                <span class="kanban-item-content-info-link-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
+            </a>
+
+            <div class="kanban-item-content-info-label"
+                 tuleap-simple-field
+                 value="item.label"
+                 filter-terms="$ctrl.kanban_filter.terms"
+            ></div>
+        </div>
+
+        <span ng-if="column" class="kanban-item-content-clock" title="{{ kanban.getTimeInfo(column, item) }}">
+            <i class="fa fa-clock-o"></i>
         </span>
-        <span class="icon-stack" title="{{ 'Move to bottom' | translate }}" aria-label="{{ 'Move to bottom' | translate }}" role="button" ng-click="kanban.moveKanbanItemToBottom(item)">
-            <i class="icon-circle icon-stack-base"></i>
-            <i class="icon-chevron-down icon-light"></i>
+        <span ng-if="item.timeinfo.archive" class="kanban-item-content-clock" title="{{ kanban.getTimeInfoInArchive(item) }}">
+            <i class="fa fa-clock-o"></i>
         </span>
     </div>
 
-    <i ng-if="column" class="icon-time"
-        tooltip-html-unsafe="{{ kanban.getTimeInfo(column, item) }}"
-        tooltip-trigger
-        tooltip-animation="true"
-        tooltip-popup-delay="750"
-        tooltip-append-to-body="true"
-        tooltip-class="timeinfo"
-        tooltip-placement="top"></i>
-    <i ng-if="item.timeinfo.archive" class="icon-time"
-        tooltip-html-unsafe="{{ kanban.getTimeInfoInArchive(item) }}"
-        tooltip-trigger
-        tooltip-animation="true"
-        tooltip-popup-delay="750"
-        tooltip-append-to-body="true"
-        tooltip-class="timeinfo"
-        tooltip-placement="left"></i>
-
-    <a data-nodrag="true"
-        href="/plugins/tracker/?aid={{ item.id }}"
-        ng-click="kanban.showEditModal($event, item)"
-        class="kanban-item-link"
-    >
-        <span class="kanban-item-tracker-name">{{ item.item_name }}</span> #<span ng-bind-html="item.id | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
-    </a>
-
-    <div
-        class="kanban-item-label"
-        tuleap-simple-field
-        value="item.label"
-        filter-terms="$ctrl.kanban_filter.terms"
-    ></div>
-
     <ul class="extra-card-fields" ng-if="item.card_fields.length > 0">
-        <li
-            ng-repeat="card_field in item.card_fields track by $index"
+        <li ng-repeat="card_field in item.card_fields track by $index"
             ng-class="{ large: $ctrl.cardFieldIsText(card_field.type) && card_field.value }"
+            class="extra-card-field"
         >
             <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value"
+                    class="extra-card-field-content"
+                    ng-if="$ctrl.cardFieldIsSimpleValue(card_field.type) && card_field.value"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <tuleap-simple-field
-                    value="card_field.value"
-                    filter-terms="$ctrl.kanban_filter.terms"
+                        value="card_field.value"
+                        filter-terms="$ctrl.kanban_filter.terms"
                 ></tuleap-simple-field>
             </div>
             <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsList(card_field.type) && card_field.values.length > 0 && $ctrl.isListBoundToAValueDifferentFromNone(card_field.values)"
+                    class="extra-card-field-content"
+                    ng-if="$ctrl.cardFieldIsList(card_field.type) && card_field.values.length > 0 && $ctrl.isListBoundToAValueDifferentFromNone(card_field.values)"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span ng-bind-html="$ctrl.getCardFieldListValues(card_field.values, $ctrl.kanban_filter.terms)"></span>
             </div>
             <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsDate(card_field.type) && card_field.value"
+                    class="extra-card-field-content"
+                    ng-if="$ctrl.cardFieldIsDate(card_field.type) && card_field.value"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
             </div>
             <card-text-field
-                ng-if="$ctrl.cardFieldIsText(card_field.type)"
-                field="card_field"
-                filter-terms="$ctrl.kanban_filter.terms"
+                    ng-if="$ctrl.cardFieldIsText(card_field.type)"
+                    field="card_field"
+                    filter-terms="$ctrl.kanban_filter.terms"
             ></card-text-field>
             <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0"
+                    class="extra-card-field-content"
+                    ng-if="$ctrl.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span ng-bind-html="$ctrl.getCardFieldFileValue(item.id, card_field.field_id, card_field.file_descriptions, $ctrl.kanban_filter.terms)"></span>
             </div>
             <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsCross(card_field.type) && card_field.value"
+                    class="extra-card-field-content"
+                    ng-if="$ctrl.cardFieldIsCross(card_field.type) && card_field.value"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span ng-bind-html="$ctrl.getCardFieldCrossValue(card_field.value, $ctrl.kanban_filter.terms)"></span>
             </div>
             <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0"
+                    class="extra-card-field-content"
+                    ng-if="$ctrl.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span ng-bind-html="$ctrl.getCardFieldPermissionsValue(card_field.granted_groups) | tuleapHighlight:$ctrl.kanban_filter.terms"></span>
             </div>
             <div
-                class="card-field"
-                ng-if="$ctrl.cardFieldIsUser(card_field.type) && card_field.value"
+                    class="extra-card-field-content"
+                    ng-if="$ctrl.cardFieldIsUser(card_field.type) && card_field.value"
             >
                 <span class="extra-card-field-title">{{ card_field.label }}: </span>
                 <span ng-bind-html="$ctrl.getCardFieldUserValue(card_field.value, $ctrl.kanban_filter.terms)"></span>
             </div>
             <card-computed-field
-                ng-if="$ctrl.cardFieldIsComputed(card_field.type)"
-                field="card_field"
-                filter-terms="$ctrl.kanban_filter.terms"
+                    ng-if="$ctrl.cardFieldIsComputed(card_field.type)"
+                    field="card_field"
+                    filter-terms="$ctrl.kanban_filter.terms"
             ></card-computed-field>
             <!-- Artifact links & Burndown fields are not managed yet -->
         </li>
     </ul>
+
+    <div data-nodrag="true"
+        class="kanban-item-content-expand-collapse"
+        title="{{ 'Expand/collapse the card' | translate }}"
+        aria-label="{{ 'Expand/collapse the card' | translate }}"
+        role="button"
+        ng-click="kanban.setIsCollapsed(item, ! item.is_collapsed)"
+    >
+        <i class="kanban-item-content-expand-collapse-icon fa" ng-class="{ 'fa-angle-down': item.is_collapsed, 'fa-angle-up': ! item.is_collapsed }"></i>
+    </div>
 </div>
 
-<div data-nodrag="true"
-    class="kanban-item-expand-collapse"
-    style="cursor:pointer;"
-    title="{{ 'Expand/collapse the card' | translate }}"
-    aria-label="{{ 'Expand/collapse the card' | translate }}"
-    role="button"
-    ng-click="kanban.setIsCollapsed(item, ! item.is_collapsed)">
-    <i ng-class="{ 'icon-chevron-down': item.is_collapsed, 'icon-chevron-up': ! item.is_collapsed }"></i>
+<div data-nodrag="true" class="kanban-item-content-moves">
+    <span class="tlp-button-primary kanban-item-content-move" title="{{ 'Move to top' | translate }}" aria-label="{{ 'Move to top' | translate }}" role="button" ng-click="kanban.moveKanbanItemToTop(item)">
+        <i class="fa fa-chevron-up kanban-item-content-move-icon"></i>
+    </span>
+    <span class="tlp-button-primary kanban-item-content-move" title="{{ 'Move to bottom' | translate }}" aria-label="{{ 'Move to bottom' | translate }}" role="button" ng-click="kanban.moveKanbanItemToBottom(item)">
+        <i class="fa fa-chevron-down kanban-item-content-move-icon"></i>
+    </span>
 </div>

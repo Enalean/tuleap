@@ -1,0 +1,32 @@
+<div class="tlp-form-element"
+    ng-class="{
+    'tlp-form-element-disabled': users_open_list_field.isDisabled(),
+    'tlp-form-element-error': users_open_list_field.isRequiredAndEmpty()
+}">
+    <label
+        for="{{ ::('tracker_field_'+ users_open_list_field.field.field_id) }}"
+        class="tlp-label"
+        ng-class="{ loading: users_open_list_field.field.loading }"
+    >{{ ::users_open_list_field.field.label }} <i class="fa fa-asterisk" ng-if="::users_open_list_field.field.required"></i></label>
+    <select
+        multiple
+        ng-disabled="::users_open_list_field.isDisabled()"
+        ng-required="::users_open_list_field.field.required"
+        ng-attr-title="::users_open_list_field.field.hint"
+        class="tlp-select tuleap-artifact-modal-open-list-users"
+        id="{{ ::('tracker_field_' + users_open_list_field.field.field_id) }}"
+        style="width: 100%"
+    >
+        <option
+            ng-repeat="field_value in ::users_open_list_field.value_model.value.bind_value_objects"
+            ng-attr-is-anonymous="{{ field_value.is_anonymous }}"
+            value="{{ users_open_list_field.getFieldValue(field_value) }}"
+            selected
+        >{{ field_value.email }}</option>
+    </select>
+    <p
+        class="tlp-text-danger"
+        ng-if="users_open_list_field.isRequiredAndEmpty()"
+        translate
+    >Please select an item in the list</p>
+</div>

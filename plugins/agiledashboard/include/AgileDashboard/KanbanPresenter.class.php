@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownBuilder;
+use Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\User\UserDashboardDao;
+use Tuleap\Dashboard\User\UserDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Widget\WidgetFactory;
 
 class KanbanPresenter {
 
@@ -25,6 +33,9 @@ class KanbanPresenter {
 
     /** @var string json of Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder */
     public $kanban_representation;
+
+    /** @var string json of Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder */
+    public $dashboard_dropdown_representation;
 
     /** @var boolean */
     public $user_is_kanban_admin;
@@ -41,12 +52,16 @@ class KanbanPresenter {
     /** @var string */
     public $nodejs_server;
 
+    /** @var boolean */
+    public $is_widget;
+
     public function __construct(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
         $user_is_kanban_admin,
         $language,
-        $project_id
+        $project_id,
+        $is_widget
     ) {
         $user_preferences              = new AgileDashboard_KanbanUserPreferences();
         $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
@@ -62,12 +77,35 @@ class KanbanPresenter {
             )
         );
 
-        $this->kanban_representation = json_encode($kanban_representation_builder->build($kanban, $user));
-        $this->user_is_kanban_admin  = (int) $user_is_kanban_admin;
-        $this->language              = $language;
-        $this->project_id            = $project_id;
-        $this->user_id               = $user->getId();
-        $this->view_mode             = $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
-        $this->nodejs_server         = ForgeConfig::get('nodejs_server');
+        $widget_factory    = new WidgetFactory(
+            UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+        $widget_dao              = new DashboardWidgetDao($widget_factory);
+        $widget_dropdown_builder = new WidgetAddToDashboardDropdownRepresentationBuilder(
+            new UserDashboardRetriever(
+                new UserDashboardDao($widget_dao)
+            ),
+            new ProjectDashboardRetriever(new ProjectDashboardDao($widget_dao))
+        );
+        $project_manager = ProjectManager::instance();
+
+        $this->is_widget                         = (int) $is_widget;
+        $this->kanban_representation             = json_encode($kanban_representation_builder->build($kanban, $user));
+        $this->dashboard_dropdown_representation = json_encode($widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)));
+        $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;
+        $this->language                          = $language;
+        $this->project_id                        = $project_id;
+        $this->user_id                           = $user->getId();
+        $this->view_mode                         = $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
+        $this->nodejs_server                     = ForgeConfig::get('nodejs_server');
+        $this->kanban_url                        = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
+            array(
+                'group_id' => $this->project_id,
+                'action'   => 'showKanban',
+                'id'       => $kanban->getId()
+            )
+        );
     }
 }

@@ -1,0 +1,29 @@
+<div
+    class="tlp-form-element"
+    ng-class="{
+        'tlp-form-element-disabled': date_field.isDisabled(),
+        'tlp-form-element-error': date_field.isRequiredAndEmpty()
+    }"
+>
+    <label
+        for="{{ ::('tracker_field_' + date_field.field.field_id) }}"
+        class="tlp-label"
+    >
+        {{ ::date_field.field.label }}
+        <i ng-if="::date_field.field.required" class="fa fa-asterisk"></i>
+    </label>
+    <div class="tlp-form-element tlp-form-element-prepend">
+        <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
+        <input type="text"
+                class="tlp-input tlp-input-date"
+                size="{{ ::date_field.getFieldSize() }}"
+                ng-model="date_field.value_model.value"
+                ng-disabled="::date_field.isDisabled()"
+        >
+    </div>
+    <p
+        class="tlp-text-danger"
+        ng-show="date_field.isRequiredAndEmpty()"
+        translate
+    >Please select a date</p>
+</div>
