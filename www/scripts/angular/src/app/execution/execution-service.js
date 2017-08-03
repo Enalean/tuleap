@@ -7,7 +7,6 @@ export default ExecutionService;
 ExecutionService.$inject = [
     '$q',
     '$rootScope',
-    'TlpModalService',
     'ExecutionConstants',
     'ExecutionRestService'
 ];
@@ -15,7 +14,6 @@ ExecutionService.$inject = [
 function ExecutionService(
     $q,
     $rootScope,
-    TlpModalService,
     ExecutionConstants,
     ExecutionRestService
 ) {
@@ -41,7 +39,6 @@ function ExecutionService(
         displayPresencesForAllExecutions  : displayPresencesForAllExecutions,
         displayPresencesByExecution       : displayPresencesByExecution,
         displayError                      : displayError,
-        showPresencesModal                : showPresencesModal,
         executionsForCampaign             : executionsForCampaign
     });
 
@@ -289,19 +286,6 @@ function ExecutionService(
     function displayError(execution, response) {
         execution.saving = false;
         execution.error  = response.status + ': ' + response.data.error.message;
-    }
-
-    function showPresencesModal() {
-        return TlpModalService.open({
-            templateUrl : 'execution-presences.tpl.html',
-            controller  : 'ExecutionPresencesCtrl',
-            controllerAs: 'modal',
-            resolve: {
-                modal_model: {
-                    presences: self.presences_on_campaign
-                }
-            }
-        });
     }
 
     function executionsForCampaign(campaign_id) {

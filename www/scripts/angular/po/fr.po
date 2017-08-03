@@ -56,6 +56,7 @@ msgid "Choose tests"
 msgstr "Sélectionner les tests"
 
 #: src/app/campaign/campaign-new.tpl.html
+#: src/app/execution/execution-presences.tpl.html
 msgid "Close"
 msgstr "Fermer"
 
@@ -156,10 +157,6 @@ msgstr "Pré-sélectionner les tests d'un rapport"
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 
-#: src/app/execution/execution-presences.tpl.html
-msgid "Score users"
-msgstr "Score des utilisateurs"
-
 #: src/app/execution/execution-detail.tpl.html
 msgid "Show dependencies graph for this test"
 msgstr "Afficher le graphe de dépendances"
@@ -209,6 +206,10 @@ msgid ""
 msgstr ""
 "{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} "
 "seront ajoutés"
+
+#: src/app/execution/execution-presences.tpl.html
+msgid "{{ modal.title }} test campaign scores"
+msgstr "Scores pour la campagne de tests {{ modal.title }}"
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid ""

@@ -66,7 +66,17 @@ function ExecutionListCtrl(
     }
 
     function showPresencesModal() {
-        ExecutionService.showPresencesModal();
+        return TlpModalService.open({
+            templateUrl : 'execution-presences.tpl.html',
+            controller  : 'ExecutionPresencesCtrl',
+            controllerAs: 'modal',
+            resolve: {
+                modal_model: {
+                    title:     $scope.campaign.label,
+                    presences: ExecutionService.presences_on_campaign
+                }
+            }
+        });
     }
 
     function openEditCampaignModal() {
