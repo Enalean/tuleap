@@ -22,6 +22,8 @@
             <access-file>
                 <![CDATA[[/] * = rw @members = rw]]>
             </access-file>
+            <notification path="/trunk" emails="project-svn@list.example.com"/>
+            <notification path="/tags" emails="project-announce@list.example.com, project-devel@lists.example.com"/>
         </repository>
         <repository name="repo02"/>
     </svn>

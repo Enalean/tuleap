@@ -18,16 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\REST\v1;
+namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Svn\AccessControl\AccessFileHistory;
 use Tuleap\Svn\Admin\ImmutableTag;
+use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\Repository;
-use Tuleap\SVN\REST\v1\CommitRulesRepresentation;
-use Tuleap\SVN\REST\v1\ImmutableTagRepresentation;
-use Tuleap\SVN\REST\v1\RepositoryRepresentation;
-use Tuleap\SVN\REST\v1\SettingsRepresentation;
 
 class FullRepositoryRepresentation extends RepositoryRepresentation
 {
@@ -36,11 +33,19 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
      */
     public $settings;
 
+    /**
+     * @param Repository         $repository
+     * @param HookConfig         $hook_config
+     * @param ImmutableTag       $immutable_tag
+     * @param AccessFileHistory  $access_file_history
+     * @param MailNotification[] $notifications
+     */
     public function fullBuild(
         Repository $repository,
         HookConfig $hook_config,
         ImmutableTag $immutable_tag,
-        AccessFileHistory $access_file_history
+        AccessFileHistory $access_file_history,
+        array $notifications
     ) {
         parent::build($repository);
 
@@ -54,7 +59,8 @@ class FullRepositoryRepresentation extends RepositoryRepresentation
         $settings_representation->build(
             $commit_rules_representation,
             $immutable_tag_representation,
-            $access_file_history
+            $access_file_history,
+            $notifications
         );
 
         $this->settings = $settings_representation;

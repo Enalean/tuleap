@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\REST\v1;
+namespace Tuleap\SVN\REST\v1;
 
 use PFUser;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\Repository;
-use Tuleap\SVN\REST\v1\RepositoryRepresentation;
 use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryRepresentationBuilder
@@ -47,28 +47,43 @@ class RepositoryRepresentationBuilder
      * @var AccessFileHistoryFactory
      */
     private $access_file_history_factory;
+    /**
+     * @var MailNotificationManager
+     */
+    private $mail_notification_manager;
+    /**
+     * @var NotificationsBuilder
+     */
+    private $notification_list_builder;
 
     public function __construct(
         SvnPermissionManager $permission_manager,
         HookConfigRetriever $hook_config_retriever,
         ImmutableTagFactory $immutable_tag_factory,
-        AccessFileHistoryFactory $access_file_history_factory
+        AccessFileHistoryFactory $access_file_history_factory,
+        MailNotificationManager $mail_notification_manager,
+        NotificationsBuilder $notification_list_builder
     ) {
         $this->permission_manager          = $permission_manager;
         $this->hook_config_retriever       = $hook_config_retriever;
         $this->immutable_tag_factory       = $immutable_tag_factory;
         $this->access_file_history_factory = $access_file_history_factory;
+        $this->mail_notification_manager   = $mail_notification_manager;
+        $this->notification_list_builder   = $notification_list_builder;
     }
 
     public function build(Repository $repository, PFUser $user)
     {
         if ($this->permission_manager->isAdmin($repository->getProject(), $user)) {
-            $representation = new FullRepositoryRepresentation();
+            $representation     = new FullRepositoryRepresentation();
+            $mail_notifications = $this->mail_notification_manager->getByRepository($repository);
+            $notification_list  = $this->notification_list_builder->getNotifications($mail_notifications);
             $representation->fullBuild(
                 $repository,
                 $this->hook_config_retriever->getHookConfig($repository),
                 $this->immutable_tag_factory->getByRepositoryId($repository),
-                $this->access_file_history_factory->getCurrentVersion($repository)
+                $this->access_file_history_factory->getCurrentVersion($repository),
+                $notification_list
             );
 
             return $representation;
