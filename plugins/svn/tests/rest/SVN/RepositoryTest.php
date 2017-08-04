@@ -71,6 +71,24 @@ class RepositoryTest extends TestBase
             $repository['settings']['access_file'],
             "[/] * = rw @members = rw"
         );
+
+        $this->assertEquals(
+            $repository['settings']['email_notifications'],
+            array(
+                array(
+                    'user_groups' => array(),
+                    'users'       => array(),
+                    'emails'      => array("project-announce@list.example.com", "project-devel@lists.example.com"),
+                    'path'        => "/tags",
+                ),
+                array(
+                    'user_groups' => array(),
+                    'users'       => array(),
+                    'emails'      => array("project-svn@list.example.com"),
+                    'path'        => "/trunk"
+                )
+            )
+        );
     }
 
     public function testGETRepositoryForProjectMember()

@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use CodendiDataAccess;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
@@ -29,8 +30,6 @@ use SystemEventManager;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\v1\FullRepositoryRepresentation;
-use Tuleap\REST\v1\RepositoryRepresentationBuilder;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
@@ -39,8 +38,13 @@ use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\MailNotificationDao;
+use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
+use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
+use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
@@ -56,6 +60,7 @@ use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryDeleter;
 use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 use Tuleap\Svn\Repository\Settings;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
@@ -185,7 +190,19 @@ class RepositoryResource extends AuthenticatedResource
             $this->permission_manager,
             $this->hook_config_retriever,
             $this->immutable_tag_factory,
-            $access_file_history_factory
+            $access_file_history_factory,
+            new MailNotificationManager(
+                new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
+                new UsersToNotifyDao(),
+                new UgroupsToNotifyDao()
+            ),
+            new NotificationsBuilder(
+                new NotificationsEmailsBuilder(),
+                new UsersToNotifyDao(),
+                \UserManager::instance(),
+                new UgroupsToNotifyDao(),
+                new \UGroupManager()
+            )
         );
 
         $this->repository_deleter = new RepositoryDeleter(
@@ -244,7 +261,24 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
      *   &nbsp;&nbsp; ]<br>
      *   &nbsp;},<br>
-     *   &nbsp;&nbsp;"access_file": "[/]\r\n* = rw @members = rw\r\n[/tags]\r\n@admins = rw"<br>
+     *   &nbsp;&nbsp;"access_file": "[/] * = rw @members = rw\r\n[/tags] @admins = rw",<br>
+     *   &nbsp;&nbsp;"email_notifications": {<br>
+     *   &nbsp;&nbsp;&nbsp;"path": "trunk",<br>
+     *   &nbsp;&nbsp;&nbsp;"user_groups": {<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"id": "101_3",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"uri": "user_groups/101_3",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"label": "Project members"<br>
+     *   &nbsp;&nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp;&nbsp;"users": {<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"id": "333",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"uri": "/users/333",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"username": "..."<br>
+     *   &nbsp;&nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;"bar@example.com"<br>
+     *   &nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;}<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -336,6 +370,7 @@ class RepositoryResource extends AuthenticatedResource
 
         if (! $settings->isAccessFileKeySent()) {
             throw new RestException('400', '`settings[access_file]` is required');
+
             return;
         }
 
@@ -403,6 +438,7 @@ class RepositoryResource extends AuthenticatedResource
 
             if ($this->isDeletionAlreadyQueued($repository)) {
                 throw new RestException('400', 'Repository already in queue for deletion');
+
                 return;
             }
 
