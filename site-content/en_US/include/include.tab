@@ -123,7 +123,6 @@ include_layout	banner	Banner
 include_layout	logo	Logo
 include_layout	counter	Counter
 include_layout	Help	Help
-include_layout	network_gallery	Network Gallery
 include_layout	template_warning	Beware this project is a template project
 #
 #-----------------------------------------------
