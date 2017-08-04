@@ -292,9 +292,9 @@ class Git_Gitolite_GitoliteConfWriter {
     private function proceedToRenameInSpecifiedProjectFile($project_file_path, $old_name, $new_name) {
         $orig = file_get_contents($project_file_path);
 
-        $dest = preg_replace('`(^|\n)repo '. preg_quote($old_name) .'/`', '$1repo '. $new_name .'/', $orig);
+        $dest = preg_replace('`(^|\n)repo '. preg_quote($old_name, '`') .'/`', '$1repo '. $new_name .'/', $orig);
         $dest = str_replace('@'. $old_name .'_project_', '@'. $new_name .'_project_', $dest);
-        $dest = preg_replace("%$old_name/(.*) = \"%", "$new_name/$1 = \"", $dest);
+        $dest = preg_replace("%" . preg_quote($old_name, '%') . "/(.*) = \"%", "$new_name/$1 = \"", $dest);
         file_put_contents($project_file_path, $dest);
     }
 

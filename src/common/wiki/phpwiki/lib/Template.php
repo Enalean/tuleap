@@ -50,27 +50,21 @@ class Template
             $this->_locals = array();
     }
 
-    function _munge_input($template) {
-
+    function _munge_input($template)
+    {
         // Convert < ?plugin expr ? > to < ?php $this->_printPluginPI("expr"); ? >
-        $orig[] = '/<\?plugin.*?\?>/se';
-        $repl[] = "\$this->_mungePlugin('\\0')";
+        $template = preg_replace_callback(
+            '/<\?plugin.*?\?>/s',
+            function (array $matches) {
+                return sprintf(
+                    '<?php $this->_printPlugin(%s); ?>',
+                    "'" . str_replace("'", "\'", $matches[0]) . "'"
+                );
+            },
+            $template);
         
         // Convert < ?= expr ? > to < ?php $this->_print(expr); ? >
-        $orig[] = '/<\?=(.*?)\?>/s';
-        $repl[] = '<?php $this->_print(\1);?>';
-        
-        return preg_replace($orig, $repl, $template);
-    }
-
-    function _mungePlugin($pi) {
-        // HACK ALERT: PHP's preg_replace, with the /e option seems to
-        // escape both single and double quotes with backslashes.
-        // So we need to unescape the double quotes here...
-
-        $pi = preg_replace('/(?!<\\\\)\\\\"/x', '"', $pi);
-        return sprintf('<?php $this->_printPlugin(%s); ?>',
-                       "'" . str_replace("'", "\'", $pi) . "'");
+        return preg_replace('/<\?=(.*?)\?>/s', '<?php $this->_print(\1);?>', $template);
     }
     
     function _printPlugin ($pi) {

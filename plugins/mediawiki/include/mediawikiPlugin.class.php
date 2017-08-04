@@ -289,7 +289,7 @@ class MediaWikiPlugin extends Plugin {
 
     public function service_replace_template_name_in_link($params) {
         $params['link'] = preg_replace(
-            '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name']).'(/|$)#',
+            '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name'], '#').'(/|$)#',
             '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
             $params['link']
         );
