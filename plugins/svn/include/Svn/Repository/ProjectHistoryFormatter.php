@@ -28,7 +28,7 @@ class ProjectHistoryFormatter
 
     public function getFullHistory(Repository $repository)
     {
-        return 'Name : ' . $repository->getName() .
+        return "Repository: " . $repository->getName() .
             PHP_EOL .
             implode(PHP_EOL, $this->messages);
     }

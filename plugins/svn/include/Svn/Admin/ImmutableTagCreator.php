@@ -67,7 +67,7 @@ class ImmutableTagCreator
         $history        = $this->project_history_formatter->getImmutableTagsHistory($immutable_tags);
         $this->project_history_dao->groupAddHistory(
             'svn_multi_repository_immutable_tags_update',
-            $repository->getName() . PHP_EOL . $history,
+            "Repository: " . $repository->getName() . PHP_EOL . $history,
             $repository->getProject()->getID()
         );
     }

@@ -111,7 +111,7 @@ class RepositoryDeleter
     {
         $this->history_dao->groupAddHistory(
             'svn_multi_repository_deletion',
-            $repository->getName(),
+            "Repository: " . $repository->getName(),
             $repository->getProject()->getID()
         );
 

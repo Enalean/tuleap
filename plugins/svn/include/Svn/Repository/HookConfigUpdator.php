@@ -67,7 +67,7 @@ class HookConfigUpdator
 
         $this->project_history_dao->groupAddHistory(
             'svn_multi_repository_hook_update',
-            $repository->getName() . PHP_EOL . $this->project_history_formatter->getHookConfigHistory($hook_config),
+            "Repository: " . $repository->getName() . PHP_EOL . $this->project_history_formatter->getHookConfigHistory($hook_config),
             $repository->getProject()->getID()
         );
     }
