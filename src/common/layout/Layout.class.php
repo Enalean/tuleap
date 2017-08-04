@@ -1025,23 +1025,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo "\t<CENTER>\n".$this->getSearchBox()."\t</CENTER>\n";
     }
 
-
-    /**
-     * @return string the message of the day
-     */
-    protected function getMOTD() {
-        $motd = $GLOBALS['Language']->getContent('others/motd');
-        if (! strpos($motd, "empty.txt")) { # empty.txt returned when no motd file found
-            ob_start();
-            include($motd);
-            return ob_get_clean();
-        }
-    }
-
-    protected function getBrowserDeprecatedMessage() {
-        return HTTPRequest::instance()->getBrowser()->getDeprecatedMessage();
-    }
-
     /**
      * Return the background color (classname) for priority
      *

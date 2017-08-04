@@ -73,6 +73,12 @@ class HeaderPresenter
     /** @var bool */
     public $has_toolbar;
 
+    /** @var bool */
+    public $has_motd;
+
+    /** @var string */
+    public $motd;
+
     public function __construct(
         $title,
         $imgroot,
@@ -85,7 +91,8 @@ class HeaderPresenter
         $sidebar,
         $current_project_navbar_info_presenter,
         $unicode_icons,
-        array $toolbar
+        array $toolbar,
+        $motd
     ) {
         $this->title                                 = html_entity_decode($title);
         $this->imgroot                               = $imgroot;
@@ -100,6 +107,8 @@ class HeaderPresenter
         $this->unicode_icons                         = $unicode_icons;
         $this->toolbar                               = $toolbar;
         $this->has_toolbar                           = count($toolbar) > 0;
+        $this->motd                                  = $motd;
+        $this->has_motd                              = ! empty($motd);
 
         $this->buildFeedbacks($feedback_logs);
 
