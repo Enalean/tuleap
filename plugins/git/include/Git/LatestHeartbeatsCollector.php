@@ -20,7 +20,7 @@
 
 namespace Tuleap\Git;
 
-use Codendi_HTMLPurifier;
+use Git_GitRepositoryUrlManager;
 use Git_LogDao;
 use GitRepository;
 use GitRepositoryFactory;
@@ -36,6 +36,10 @@ class LatestHeartbeatsCollector
      * @var Git_LogDao
      */
     private $dao;
+    /**
+     * @var Git_GitRepositoryUrlManager
+     */
+    private $git_url_manager;
     /**
      * @var GlyphFinder
      */
@@ -56,15 +60,17 @@ class LatestHeartbeatsCollector
     public function __construct(
         GitRepositoryFactory $factory,
         Git_LogDao $dao,
+        Git_GitRepositoryUrlManager $git_url_manager,
         GlyphFinder $glyph_finder,
         UserManager $user_manager,
         UserHelper $user_helper
     ) {
-        $this->factory      = $factory;
-        $this->dao          = $dao;
-        $this->glyph_finder = $glyph_finder;
-        $this->user_manager = $user_manager;
-        $this->user_helper  = $user_helper;
+        $this->factory         = $factory;
+        $this->dao             = $dao;
+        $this->git_url_manager = $git_url_manager;
+        $this->glyph_finder    = $glyph_finder;
+        $this->user_manager    = $user_manager;
+        $this->user_helper     = $user_helper;
     }
 
     public function collect(HeartbeatsEntryCollection $collection)
@@ -99,7 +105,7 @@ class LatestHeartbeatsCollector
     {
         $nb_commits      = (int)$push_row['commits_number'];
         $pushed_by       = $this->user_manager->getUserById($push_row['user_id']);
-        $repository_link = $this->getRepositoryLink($repository);
+        $repository_link = $repository->getHTMLLink($this->git_url_manager);
 
         if ($pushed_by && $pushed_by->getId() && ! $pushed_by->isNone()) {
             $user_link = $this->user_helper->getLinkOnUser($pushed_by);
@@ -144,18 +150,5 @@ class LatestHeartbeatsCollector
         }
 
         return $message;
-    }
-
-    /**
-     * @param GitRepository $repository
-     * @return string
-     */
-    private function getRepositoryLink(GitRepository $repository)
-    {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $project  = $repository->getProject();
-        $url      = GIT_BASE_URL . '/' . urlencode($project->getUnixName()) . '/' . urlencode($repository->getFullName());
-
-        return '<a href="' . $url . '">' . $purifier->purify($repository->getFullName()) . '</a>';
     }
 }

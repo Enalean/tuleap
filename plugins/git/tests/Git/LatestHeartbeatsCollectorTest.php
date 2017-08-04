@@ -68,6 +68,7 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
         $this->collector = new LatestHeartbeatsCollector(
             $this->factory,
             $dao,
+            mock('Git_GitRepositoryUrlManager'),
             $glyph_finder,
             mock('UserManager'),
             mock('UserHelper')
