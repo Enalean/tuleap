@@ -26,6 +26,7 @@ use SystemEvent;
 use SystemEventManager;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
+use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
@@ -67,6 +68,10 @@ class RepositoryCreator
      * @var AccessFileHistoryCreator
      */
     private $access_file_history_creator;
+    /**
+     * @var MailNotificationManager
+     */
+    private $mail_notification_manager;
 
     public function __construct(
         Dao $dao,
@@ -76,7 +81,8 @@ class RepositoryCreator
         HookConfigUpdator $hook_config_updator,
         ProjectHistoryFormatter $project_history_formatter,
         ImmutableTagCreator $immutable_tag_creator,
-        AccessFileHistoryCreator $access_file_history_creator
+        AccessFileHistoryCreator $access_file_history_creator,
+        MailNotificationManager $mail_notification_manager
     ) {
         $this->dao                         = $dao;
         $this->system_event_manager        = $system_event_manager;
@@ -86,6 +92,7 @@ class RepositoryCreator
         $this->project_history_formatter   = $project_history_formatter;
         $this->immutable_tag_creator       = $immutable_tag_creator;
         $this->access_file_history_creator = $access_file_history_creator;
+        $this->mail_notification_manager   = $mail_notification_manager;
     }
 
     /**
@@ -251,6 +258,13 @@ class RepositoryCreator
             $this->access_file_history_creator->storeInDB($repository, $access_file, time());
 
             $this->project_history_formatter->addAccessFileContentHistory($access_file);
+        }
+
+        $mail_notifications = $settings->getMailNotification();
+        if ($mail_notifications) {
+            foreach ($mail_notifications as $notification) {
+                $this->mail_notification_manager->create($notification);
+            }
         }
     }
 }

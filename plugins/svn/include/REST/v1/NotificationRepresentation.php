@@ -23,16 +23,16 @@ namespace Tuleap\SVN\REST\v1;
 class NotificationRepresentation
 {
     /**
-     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation} {@required true}
+     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation} {@required false}
      */
     public $user_groups;
 
     /**
-     * @var array {@type Tuleap\User\REST\MinimalUserRepresentation} {@required true}
+     * @var array {@type Tuleap\User\REST\MinimalUserRepresentation} {@required false}
      */
     public $users;
     /**
-     * @var array {@type string} {@required true}
+     * @var array {@type string} {@required true} {@min 1}
      */
     public $emails;
     /**

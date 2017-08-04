@@ -38,6 +38,7 @@ use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagDao;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Dao;
@@ -68,6 +69,10 @@ use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
+    /**
+     * @var NotificationsEmailsBuilder
+     */
+    private $emails_builder;
     /**
      * @var RepositoryResourceUpdater
      */
@@ -175,6 +180,12 @@ class RepositoryResource extends AuthenticatedResource
             $project_history_formatter
         );
         $project_history_formatter   = new ProjectHistoryFormatter();
+        $mail_notification_manager    = new MailNotificationManager(
+            new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
+            new UsersToNotifyDao(),
+            new UgroupsToNotifyDao()
+        );
+
         $this->repository_creator    = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
@@ -183,21 +194,19 @@ class RepositoryResource extends AuthenticatedResource
             $hook_config_updator,
             $project_history_formatter,
             $immutable_tag_creator,
-            $access_file_history_creator
+            $access_file_history_creator,
+            $mail_notification_manager
         );
 
+        $this->emails_builder         = new NotificationsEmailsBuilder();
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
             $this->immutable_tag_factory,
             $access_file_history_factory,
-            new MailNotificationManager(
-                new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
-                new UsersToNotifyDao(),
-                new UgroupsToNotifyDao()
-            ),
+            $mail_notification_manager,
             new NotificationsBuilder(
-                new NotificationsEmailsBuilder(),
+                $this->emails_builder,
                 new UsersToNotifyDao(),
                 \UserManager::instance(),
                 new UgroupsToNotifyDao(),
@@ -509,7 +518,22 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/trunk",<br>
      *   &nbsp;&nbsp;"/tags"<br>
      *   &nbsp;&nbsp; ],<br>
-     *   &nbsp;&nbsp;"access_file": "[/] * = rw \r\n@members = rw\r\n[/tags] @admins = rw"<br>
+     *   &nbsp;&nbsp;"access_file": "[/] * = rw \r\n@members = rw\r\n[/tags] @admins = rw",<br>
+     *   &nbsp;&nbsp;"email_notifications": [<br>
+     *   &nbsp;&nbsp;&nbsp;{<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/trunk",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bar@example.com"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp;&nbsp;{<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/tags",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;&nbsp;}<br>
+     *   &nbsp;&nbsp;]<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
@@ -613,7 +637,19 @@ class RepositoryResource extends AuthenticatedResource
             $access_file = $settings->access_file;
         }
 
-        return new Settings($commit_rules, $immutable_tag, $access_file);
+        $mail_notification = array();
+        if ($settings && $settings->email_notifications) {
+            foreach ($settings->email_notifications as $notification) {
+                $mail_notification[] = new MailNotification(
+                    0,
+                    $repository,
+                    $this->emails_builder->transformNotificationEmailsArrayAsString($notification->emails),
+                    $notification->path
+                );
+            }
+        }
+
+        return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification);
     }
 
     /**

@@ -40,7 +40,7 @@ class SettingsRepresentation
     public $access_file;
 
     /**
-     * @var NotificationRepresentation[] {@type \Tuleap\SVN\REST\v1\NotificationRepresentation} {@required false}
+     * @var array {@type \Tuleap\SVN\REST\v1\NotificationRepresentation} {@required false}
      */
     public $email_notifications;
 

@@ -185,7 +185,21 @@ class RepositoryTest extends TestBase
                             "/white2"
                         )
                     ),
-                    "access_file" => "[/] * = rw\r\n@members = rw"
+                    "access_file"         => "[/] * = rw\r\n@members = rw",
+                    "email_notifications" => array(
+                        array(
+                            'user_groups' => array(),
+                            'users'       => array(),
+                            'emails'      => array("project-announce@list.example.com", "project-devel@lists.example.com"),
+                            'path'        => "/tags",
+                        ),
+                        array(
+                            'user_groups' => array(),
+                            'users'       => array(),
+                            'emails'      => array("project-svn@list.example.com"),
+                            'path'        => "/trunk"
+                        )
+                    )
                 )
             )
         );
@@ -212,6 +226,24 @@ class RepositoryTest extends TestBase
         $this->assertEquals(
             $repository['settings']['access_file'],
             "[/] * = rw\r\n@members = rw"
+        );
+
+        $this->assertEquals(
+            $repository['settings']['email_notifications'],
+            array(
+                array(
+                    'user_groups' => array(),
+                    'users'       => array(),
+                    'emails'      => array("project-announce@list.example.com", "project-devel@lists.example.com"),
+                    'path'        => "/tags",
+                ),
+                array(
+                    'user_groups' => array(),
+                    'users'       => array(),
+                    'emails'      => array("project-svn@list.example.com"),
+                    'path'        => "/trunk"
+                )
+            )
         );
     }
 
@@ -262,6 +294,51 @@ class RepositoryTest extends TestBase
 
         $response = $this->getResponse($this->client->post('svn', null, $params));
         $this->assertEquals($response->getStatusCode(), 201);
+    }
+
+    public function testPOSTWithEmailNotificationWithMissingPathKey()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_02",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'emails' => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPOSTWithEmailNotificationWithMissingEmailsKey()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_02",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'path' => "/tags",
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testPUTRepository()
