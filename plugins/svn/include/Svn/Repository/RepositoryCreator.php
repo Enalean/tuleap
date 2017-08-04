@@ -159,7 +159,7 @@ class RepositoryCreator
     {
         $this->history_dao->groupAddHistory(
             'svn_multi_repository_creation',
-            $repository->getName(),
+            "Repository: " . $repository->getName(),
             $repository->getProject()->getID()
         );
     }
