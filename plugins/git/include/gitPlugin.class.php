@@ -2363,6 +2363,7 @@ class GitPlugin extends Plugin {
         $collector = new LatestHeartbeatsCollector(
             $this->getRepositoryFactory(),
             new Git_LogDao(),
+            $this->getGitRepositoryUrlManager(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
             UserManager::instance(),
             UserHelper::instance()
