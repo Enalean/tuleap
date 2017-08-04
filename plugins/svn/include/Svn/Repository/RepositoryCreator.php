@@ -237,7 +237,7 @@ class RepositoryCreator
 
         $immutable_tag = $settings->getImmutableTag();
         if ($immutable_tag) {
-            $this->immutable_tag_creator->save(
+            $this->immutable_tag_creator->saveWithoutHistory(
                 $repository,
                 $immutable_tag->getPathsAsString(),
                 $immutable_tag->getWhitelistAsString()

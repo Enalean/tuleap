@@ -158,17 +158,16 @@ class RepositoryResource extends AuthenticatedResource
         $this->immutable_tag_factory = new ImmutableTagFactory($immutable_tag_dao);
         $immutable_tag_creator       = new ImmutableTagCreator(
             $immutable_tag_dao,
-            $this->immutable_tag_factory,
             $project_history_formatter,
-            $project_history_dao
+            $project_history_dao,
+            $this->immutable_tag_factory
         );
         $access_file_history_factory = new AccessFileHistoryFactory(new AccessFileHistoryDao());
         $access_file_history_creator = new AccessFileHistoryCreator(
             new AccessFileHistoryDao(),
             $access_file_history_factory,
             $project_history_dao,
-            $project_history_formatter,
-            $access_file_history_factory
+            $project_history_formatter
         );
         $project_history_formatter   = new ProjectHistoryFormatter();
         $this->repository_creator    = new RepositoryCreator(
@@ -202,8 +201,6 @@ class RepositoryResource extends AuthenticatedResource
             $immutable_tag_creator,
             $access_file_history_factory,
             $access_file_history_creator,
-            $project_history_formatter,
-            $project_history_dao,
             $this->immutable_tag_factory
         );
     }
