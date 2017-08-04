@@ -29,6 +29,10 @@
     text-transform: uppercase;
     white-space: nowrap;
 
+    &:hover {
+        text-decoration: none;
+    }
+
     > .nav-link-icon {
         display: none;
         font-size: initial;
@@ -205,6 +209,10 @@
     letter-spacing: 1.1px;
     text-decoration: none;
     text-transform: uppercase;
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .current-project-icon {

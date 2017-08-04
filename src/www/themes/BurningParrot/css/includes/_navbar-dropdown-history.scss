@@ -90,6 +90,7 @@
 
     &:hover {
         background-color: transparentize($tlp-theme-color, .9);
+        text-decoration: none;
         cursor: pointer;
     }
 }

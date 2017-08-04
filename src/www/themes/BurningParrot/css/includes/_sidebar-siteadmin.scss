@@ -139,6 +139,7 @@
 
     &:hover {
         background: darken($tlp-theme-sidebar-background-color, 3%);
+        text-decoration: none;
     }
 }
 

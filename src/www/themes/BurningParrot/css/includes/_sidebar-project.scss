@@ -30,6 +30,7 @@
 
     &:hover {
         background: darken($tlp-theme-sidebar-background-color, 4%);
+        text-decoration: none;
     }
 }
 
@@ -59,6 +60,7 @@
     &:hover,
     &:focus {
         background: darken($tlp-theme-sidebar-background-color, 2%);
+        text-decoration: none;
     }
 
     &.active {
