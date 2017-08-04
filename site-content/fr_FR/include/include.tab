@@ -116,7 +116,6 @@ include_layout	banner	Bannière
 include_layout	logo	Logo
 include_layout	counter	Compteur
 include_layout	Help	Aide
-include_layout	network_gallery	Galerie réseau
 include_layout	template_warning	Attention ce projet est un patron de projet
 #
 #-----------------------------------------------

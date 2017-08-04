@@ -1042,47 +1042,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return HTTPRequest::instance()->getBrowser()->getDeprecatedMessage();
     }
 
-    function getOsdnNavBar() {
-        $output = '
-        <!-- OSDN navbar -->
-        <div class="osdnnavbar">
-        ';
-
-        echo $this->getBrowserDeprecatedMessage();
-        $motd = $this->getMOTD();
-        if ($motd) {
-            echo $motd;
-        } else {
-            // MN : Before displaying the osdn nav drop down, we verify that the osdn_sites array exists
-            include($GLOBALS['Language']->getContent('layout/osdn_sites'));
-            if (isset($osdn_sites)) {
-                $output .= '<span class="osdn">'.$GLOBALS['Language']->getText('include_layout','network_gallery').'&nbsp;:&nbsp;';
-                // if less than 5 sites are defined, we only display the min number
-                $output .= $this->_getOsdnRandpick($osdn_sites, min(5, count($osdn_sites)));
-                $output .= '</span>';
-            }
-        }
-
-        $output .= '</div>
-        <!-- End OSDN NavBar -->
-        ';
-        return $output;
-    }
-
-    function _getOsdnRandpick($sitear, $num_sites = 1) {
-        $output = '';
-        shuffle($sitear);
-        reset($sitear);
-        $i = 0;
-        while ( ( $i < $num_sites ) && (list($key,$val) = each($sitear)) ) {
-            list($key,$val) = each($val);
-            $output .= "&nbsp;&middot;&nbsp;<a href='$val' class='osdntext'>$key</a>\n";
-            $i++;
-        }
-        $output .= '&nbsp;&middot;&nbsp;';
-        return $output;
-    }
-
     /**
      * Return the background color (classname) for priority
      *
