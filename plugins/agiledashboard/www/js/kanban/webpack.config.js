@@ -2,6 +2,7 @@
 var path                  = require('path');
 var webpack               = require('webpack');
 var WebpackAssetsManifest = require('webpack-assets-manifest');
+var BabelPresetEnv        = require('babel-preset-env');
 
 var assets_dir_path = path.resolve(__dirname, './dist');
 module.exports = {
@@ -31,6 +32,30 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.js$/,
+                exclude: [
+                    /node_modules/,
+                    /vendor/
+                ],
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
+                                [
+                                    BabelPresetEnv,
+                                    {
+                                        targets: {
+                                            ie: 11
+                                        },
+                                        modules: false
+                                    }
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }, {
                 test: /\.html$/,
                 exclude: /node_modules/,
                 use: [
