@@ -6,6 +6,7 @@
 
 set -ex
 
+MAX_TEST_EXECUTION_TIME='30m'
 DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG}"
 
 clean_env() {
@@ -14,7 +15,8 @@ clean_env() {
 
 wait_until_tests_are_executed() {
     local test_container_id="$($DOCKERCOMPOSE ps -q test)"
-    docker wait "$test_container_id"
+    timeout "$MAX_TEST_EXECUTION_TIME" docker wait "$test_container_id" || \
+        echo 'Tests take to much time to execute. End of execution will not be waited for!'
 }
 
 mkdir -p test_results || true
