@@ -66,7 +66,8 @@ class AccessFileHistoryCreator {
         return $file_history;
     }
 
-    public function useAVersion(Repository $repository, $version_id) {
+    public function useAVersion(Repository $repository, $version_id)
+    {
         if (! $this->dao->useAVersion($repository->getId(), $version_id)) {
             throw new CannotCreateAccessFileHistoryException(
                 $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
@@ -74,6 +75,9 @@ class AccessFileHistoryCreator {
         }
 
         $current_version = $this->access_file_factory->getCurrentVersion($repository);
+        $this->logUseAVersionHistory($repository, $current_version);
+
+
         $this->saveAccessFile($repository, $current_version);
     }
 
@@ -130,6 +134,19 @@ class AccessFileHistoryCreator {
         $this->project_history_dao->groupAddHistory(
             'svn_multi_repository_access_file_update',
             $repository->getName() . PHP_EOL . $access_file,
+            $repository->getProject()->getID()
+        );
+    }
+
+    private function logUseAVersionHistory(Repository $repository, AccessFileHistory $version)
+    {
+        $old_version =
+            "Name: " . $repository->getName() . PHP_EOL .
+            "version #" . $version->getVersionNumber();
+
+        $this->project_history_dao->groupAddHistory(
+            'svn_multi_repository_access_file_use_version',
+            $old_version,
             $repository->getProject()->getID()
         );
     }
