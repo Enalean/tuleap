@@ -609,4 +609,19 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public function addValue() {
         return;
     }
+
+    protected function isSearchingNone($criteria_value)
+    {
+        if (empty($criteria_value)) {
+            return true;
+        }
+
+        if (is_array($criteria_value)
+            && in_array(Tracker_FormElement_Field_List::NONE_VALUE, $criteria_value)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
 }
