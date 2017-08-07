@@ -9,5 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/app/empty-state/empty-state.tpl.html
+msgid "There is nothing here"
+msgstr "Il n’y a rien ici"

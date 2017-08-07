@@ -24,7 +24,6 @@ use Tuleap\Tracker\CrossTracker\CrossTrackerPresenter;
 
 class ProjectCrossTrackerSearchPresenter
 {
-    public $nothing_selected;
     /**
      * @var CrossTrackerPresenter
      */
@@ -33,7 +32,5 @@ class ProjectCrossTrackerSearchPresenter
     public function __construct(CrossTrackerPresenter $cross_tracker_presenter)
     {
         $this->cross_tracker_presenter = $cross_tracker_presenter;
-
-        $this->nothing_selected = _('There is nothing here');
     }
 }
