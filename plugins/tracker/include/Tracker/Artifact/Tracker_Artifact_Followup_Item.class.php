@@ -45,6 +45,15 @@ abstract class Tracker_Artifact_Followup_Item {
         $for_modal = false
     );
 
+    public function diffToPreviousArtifactView(PFUser $user, Tracker_Artifact_Followup_Item $previous_item)
+    {
+        return $this->diffToPrevious();
+    }
+
+    abstract public function getValue(Tracker_FormElement_Field $field);
+
+    abstract public function canHoldValue();
+
     public function getAvatarIfEnabled() {
         if (ForgeConfig::get('sys_enable_avatars')) {
             return '<div class="tracker_artifact_followup_avatar">' . $this->getHTMLAvatar() . '</div>';

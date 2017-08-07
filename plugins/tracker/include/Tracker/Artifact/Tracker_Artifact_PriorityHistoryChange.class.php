@@ -233,4 +233,14 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
     ) {
         return '';
     }
+
+    public function getValue(Tracker_FormElement_Field $field)
+    {
+        return null;
+    }
+
+    public function canHoldValue()
+    {
+        return false;
+    }
 }

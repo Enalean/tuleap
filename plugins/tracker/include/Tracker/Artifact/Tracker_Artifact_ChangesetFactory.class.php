@@ -86,6 +86,42 @@ class Tracker_Artifact_ChangesetFactory {
     }
 
     /**
+     * @param Tracker_Artifact $artifact
+     * @return Tracker_Artifact_Changeset[]
+     * @internal param PFUser $user
+     */
+    public function getChangesetsForArtifactWithComments(Tracker_Artifact $artifact)
+    {
+        $comment_dao    = new Tracker_Artifact_Changeset_CommentDao();
+        $comments_cache = $comment_dao->searchLastVersionForArtifact($artifact->getId());
+
+        $changesets = $this->getChangesetsForArtifact($artifact);
+        foreach ($changesets as $changeset) {
+            $this->setCommentsFromCache($changeset, $comments_cache);
+        }
+        return $changesets;
+    }
+
+    private function setCommentsFromCache(Tracker_Artifact_Changeset $changeset, array $comments_cache)
+    {
+        if (isset($comments_cache[$changeset->getId()])) {
+            $row = $comments_cache[$changeset->getId()];
+            $comment = new Tracker_Artifact_Changeset_Comment(
+                $row['id'],
+                $changeset,
+                $row['comment_type_id'],
+                $row['canned_response_id'],
+                $row['submitted_by'],
+                $row['submitted_on'],
+                $row['body'],
+                $row['body_format'],
+                $row['parent_id']
+            );
+            $changeset->setLatestComment($comment);
+        }
+    }
+
+    /**
      * Get all changesets in a format ready for json conversion
      *
      * @param Tracker_Artifact $artifact

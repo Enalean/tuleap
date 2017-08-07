@@ -1270,10 +1270,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * @return Tracker_Artifact_Followup_Item[]
      */
-    public function getFollowupsContent() {
+    public function getFollowupsContent()
+    {
         return $this->getSortedBySubmittedOn(
             array_merge(
-                $this->getChangesets(),
+                $this->getChangesetFactory()->getChangesetsForArtifactWithComments($this),
                 $this->getPriorityHistory()
             )
         );
