@@ -1,6 +1,5 @@
 dist/
 node_modules/
-vendor/
 test-results.xml
 coverage/
 .sass-cache/
