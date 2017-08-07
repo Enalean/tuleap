@@ -557,11 +557,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return array
      */
-    public function getValuesByKeyword($keyword, $limit = 10) {
+    public function getValuesByKeyword($keyword, $limit = 10)
+    {
         $values = array();
         //pretty slow, but we do not have a better way to filter a value function
         foreach($this->getAllValues($keyword) as $v) {
-            if (false !== stristr($v->getLabel(), $keyword)) {
+            if (false !== stripos($v->getLabel(), $keyword)) {
                 $values[] = $v;
                 if ( --$limit === 0 ) {
                     break;
