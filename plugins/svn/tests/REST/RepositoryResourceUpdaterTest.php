@@ -26,6 +26,9 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\MailNotification;
+use Tuleap\Svn\Admin\MailNotificationDao;
+use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\Repository;
@@ -36,6 +39,10 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class RepositoryResourceUpdaterTest extends TuleapTestCase
 {
+    /**
+     * @var MailNotificationManager
+     */
+    private $mail_notification_manager;
     /**
      * @var Repository
      */
@@ -69,18 +76,20 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->hook_config_updater   = mock('Tuleap\Svn\Repository\HookConfigUpdator');
-        $this->immutable_tag_creator = mock('Tuleap\Svn\Admin\ImmutableTagCreator');
-        $this->access_file_creator   = mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator');
-        $this->access_file_factory   = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
-        $this->immutable_tag_factory = mock('Tuleap\Svn\Admin\ImmutableTagFactory');
+        $this->hook_config_updater       = mock('Tuleap\Svn\Repository\HookConfigUpdator');
+        $this->immutable_tag_creator     = mock('Tuleap\Svn\Admin\ImmutableTagCreator');
+        $this->access_file_creator       = mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator');
+        $this->access_file_factory       = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
+        $this->immutable_tag_factory     = mock('Tuleap\Svn\Admin\ImmutableTagFactory');
+        $this->mail_notification_manager = mock('Tuleap\Svn\Admin\MailNotificationManager');
 
         $this->updater = new RepositoryResourceUpdater(
             $this->hook_config_updater,
             $this->immutable_tag_creator,
             $this->access_file_factory,
             $this->access_file_creator,
-            $this->immutable_tag_factory
+            $this->immutable_tag_factory,
+            $this->mail_notification_manager
         );
 
         $this->repository = mock('Tuleap\Svn\Repository\Repository');
@@ -129,7 +138,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
         $this->updater->update($this->repository, $settings);
     }
 
-    public function itUpdatesAccessFileIfNewContentHasANewLineCaracterAtTheEnd()
+    public function itUpdatesAccessFileIfNewContentHasANewLineCharacterAtTheEnd()
     {
         $commit_rules = array(
             HookConfig::MANDATORY_REFERENCE       => false,

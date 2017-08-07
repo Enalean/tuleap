@@ -346,14 +346,23 @@ class RepositoryTest extends TestBase
         $data = json_encode(
             array(
                 'settings' => array(
-                    'commit_rules'   => array(
+                    'commit_rules'        => array(
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
                     ),
-                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags" => array(
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags"      => array(
                         "paths"     => array(),
                         "whitelist" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            )
+                        )
                     )
                 )
             )
@@ -383,6 +392,21 @@ class RepositoryTest extends TestBase
             $repository['settings']['access_file'],
             "[/]\r\n* = rw\r\n@members = rw"
         );
+
+        $this->assertEquals(
+            $repository['settings']['email_notifications'],
+            array(
+                array(
+                    'path'        => "/tags",
+                    'emails'      => array(
+                        "project-announce@list.example.com",
+                        "project-devel@lists.example.com"
+                    ),
+                    "user_groups" => array(),
+                    "users"       => array()
+                )
+            )
+        );
     }
 
     public function testPUTRepositoryWithEmptyAccessFile()
@@ -398,6 +422,15 @@ class RepositoryTest extends TestBase
                     "immutable_tags" => array(
                         "paths"     => array(),
                         "whitelist" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            )
+                        )
                     )
                 )
             )
@@ -438,6 +471,14 @@ class RepositoryTest extends TestBase
                     "immutable_tags" => array(
                         "paths"     => array(),
                         "whitelist" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com"
+                            )
+                        )
                     )
                 )
             )
@@ -457,7 +498,15 @@ class RepositoryTest extends TestBase
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
                     ),
-                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw"
+                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw",
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com"
+                            )
+                        )
+                    )
                 )
             )
         );
@@ -479,7 +528,38 @@ class RepositoryTest extends TestBase
                     "immutable_tags" => array(
                         "paths"     => array(),
                         "whitelist" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com"
+                            )
+                        )
                     )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPUTRepositoryWithMissingEmailNotificationsKey()
+    {
+        $params = json_encode(
+            array(
+                'settings' => array(
+                    'commit_rules'   => array(
+                        'is_reference_mandatory'           => true,
+                        'is_commit_message_change_allowed' => false
+                    ),
+                    "immutable_tags" => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    ),
+                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw"
                 )
             )
         );
@@ -496,6 +576,19 @@ class RepositoryTest extends TestBase
                 "settings" => array(
                     "commit_rules" => array(
                         "is_reference_mandatory" => true,
+                    ),
+                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags" => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com"
+                            )
+                        )
                     )
                 )
             )
@@ -513,6 +606,19 @@ class RepositoryTest extends TestBase
                 "settings" => array(
                     "immutable_tags" => array(
                         "paths" => array(),
+                    ),
+                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags" => array(
+                        "paths"     => array(),
+                        "whitelist" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com"
+                            )
+                        )
                     )
                 )
             )

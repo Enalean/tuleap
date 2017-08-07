@@ -142,4 +142,15 @@ class MailNotificationDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function deleteByRepositoryId($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "DELETE FROM plugin_svn_notification
+                WHERE repository_id = $repository_id
+                ";
+
+        return $this->update($sql);
+    }
 }
