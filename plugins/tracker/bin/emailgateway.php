@@ -64,6 +64,7 @@ $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
     $notifier,
     $incoming_mail_dao,
     $artifact_factory,
+    Tracker_FormElementFactory::instance(),
     new Tracker_ArtifactByEmailStatus($tracker_config),
     $logger,
     $filter

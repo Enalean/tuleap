@@ -549,7 +549,7 @@ class Tracker_FormElementFactory {
     public function getUsedFieldsWithDefaultValue(Tracker $tracker, Array $fields_data, PFUser $user) {
         $fields = $this->getUsedFields($tracker);
         foreach ($fields as $field) {
-            if ($field->userCanSubmit()) {
+            if ($field->userCanSubmit($user)) {
                 $fields_data = $this->augmentFieldsDataWithDefaultValue($field, $fields_data);
             }
         }

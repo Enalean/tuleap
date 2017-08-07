@@ -65,6 +65,10 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
      * @var MailGatewayFilter
      */
     private $mail_filter;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formelement_factory;
 
     public function __construct(
         Tracker_Artifact_MailGateway_Parser $parser,
@@ -73,6 +77,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
         Tracker_Artifact_MailGateway_Notifier $notifier,
         Tracker_Artifact_Changeset_IncomingMailDao $incoming_mail_dao,
         Tracker_ArtifactFactory $artifact_factory,
+        Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
         Logger $logger,
         MailGatewayFilter $mail_filter
@@ -83,6 +88,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
         $this->citation_stripper        = $citation_stripper;
         $this->notifier                 = $notifier;
         $this->artifact_factory         = $artifact_factory;
+        $this->formelement_factory      = $formelement_factory;
         $this->tracker_artifactbyemail  = $tracker_artifactbyemail;
         $this->incoming_mail_dao        = $incoming_mail_dao;
         $this->mail_filter              = $mail_filter;
@@ -98,6 +104,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
                 $this->notifier,
                 $this->incoming_mail_dao,
                 $this->artifact_factory,
+                $this->formelement_factory,
                 $this->tracker_artifactbyemail,
                 $this->logger,
                 $this->mail_filter
@@ -111,6 +118,7 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
             $this->notifier,
             $this->incoming_mail_dao,
             $this->artifact_factory,
+            $this->formelement_factory,
             $this->tracker_artifactbyemail,
             $this->logger,
             $this->mail_filter

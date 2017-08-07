@@ -41,6 +41,7 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
         $this->tracker                  = mock('Tracker');
         $this->incoming_message_factory = mock('Tracker_Artifact_MailGateway_IncomingMessageFactory');
         $this->artifact_factory         = mock('Tracker_ArtifactFactory');
+        $this->formelement_factory      = mock('Tracker_FormElementFactory');
         $this->parser                   = mock('Tracker_Artifact_MailGateway_Parser');
         $this->tracker_config           = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
         $this->logger                   = mock('Logger');
@@ -77,6 +78,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
             $this->notifier,
             $this->incoming_mail_dao,
             $this->artifact_factory,
+            $this->formelement_factory,
             new Tracker_ArtifactByEmailStatus($this->tracker_config),
             $this->logger,
             $filter
@@ -197,6 +199,7 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
             $this->notifier,
             $this->incoming_mail_dao,
             $this->artifact_factory,
+            $this->formelement_factory,
             new Tracker_ArtifactByEmailStatus($this->tracker_config),
             $this->logger,
             $filter
@@ -236,6 +239,23 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         stub($this->tracker)->userCanSubmitArtifact()->returns(true);
 
         expect($this->artifact_factory)->createArtifact()->once();
+
+        $this->mailgateway->process($this->raw_email);
+    }
+
+    public function itUsesDefaultValuesForFields()
+    {
+        stub($this->tracker_config)->isInsecureEmailgatewayEnabled()->returns(true);
+        stub($this->tracker_config)->isTokenBasedEmailgatewayEnabled()->returns(false);
+        stub($this->tracker)->isEmailgatewayEnabled()->returns(true);
+        stub($this->incoming_message)->isAFollowUp()->returns(false);
+        stub($this->tracker)->userCanSubmitArtifact()->returns(true);
+
+        expect($this->formelement_factory)->getUsedFieldsWithDefaultValue(
+            $this->tracker,
+            '*',
+            $this->user
+        )->once();
 
         $this->mailgateway->process($this->raw_email);
     }
