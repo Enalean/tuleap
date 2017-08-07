@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\Request\CurrentPage;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -506,19 +507,9 @@ class AgileDashboardPlugin extends Plugin {
 
     private function isInDashboard()
     {
-        return $this->isInPersonalDashboard() || $this->isInProjectDashboard();
-    }
+        $current_page = new CurrentPage();
 
-    private function isInPersonalDashboard()
-    {
-        $is_managing_bookmarks = strpos($_SERVER['REQUEST_URI'], '/my/bookmark') === 0;
-
-        return ! $is_managing_bookmarks && strpos($_SERVER['REQUEST_URI'], '/my/') === 0;
-    }
-
-    private function isInProjectDashboard()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+        return $current_page->isDashboard();
     }
 
     private function isAnAgiledashboardRequest() {

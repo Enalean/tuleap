@@ -26,6 +26,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\NoArchive;
+use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -1509,18 +1510,8 @@ class trackerPlugin extends Plugin {
 
     private function isInDashboard()
     {
-        return $this->isInPersonalDashboard() || $this->isInProjectDashboard();
-    }
+        $current_page = new CurrentPage();
 
-    private function isInPersonalDashboard()
-    {
-        $is_managing_bookmarks = strpos($_SERVER['REQUEST_URI'], '/my/bookmark') === 0;
-
-        return ! $is_managing_bookmarks && strpos($_SERVER['REQUEST_URI'], '/my/') === 0;
-    }
-
-    private function isInProjectDashboard()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+        return $current_page->isDashboard();
     }
 }

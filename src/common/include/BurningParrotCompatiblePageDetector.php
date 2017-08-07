@@ -21,11 +21,10 @@
 namespace Tuleap;
 
 use Admin_Homepage_Dao;
-use Event;
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
+use Tuleap\Request\CurrentPage;
 
 class BurningParrotCompatiblePageDetector
 {
@@ -33,10 +32,15 @@ class BurningParrotCompatiblePageDetector
      * @var Admin_Homepage_Dao
      */
     private $homepage_dao;
+    /**
+     * @var CurrentPage
+     */
+    private $current_page;
 
-    public function __construct(Admin_Homepage_Dao $homepage_dao)
+    public function __construct(CurrentPage $current_page, Admin_Homepage_Dao $homepage_dao)
     {
         $this->homepage_dao = $homepage_dao;
+        $this->current_page = $current_page;
     }
 
     public function isInCompatiblePage(PFUser $current_user)
@@ -46,7 +50,7 @@ class BurningParrotCompatiblePageDetector
         }
 
         return $this->isInCoreServicesSiteAdmin($current_user)
-            || $this->isInDashboard()
+            || $this->current_page->isDashboard()
             || $this->isInHomepage()
             || $this->isInContact()
             || $this->isInHelp()
@@ -66,11 +70,6 @@ class BurningParrotCompatiblePageDetector
         return $is_in_site_admin && $current_user->isSuperUser();
     }
 
-    private function isInDashboard()
-    {
-        return $this->isInPersonalDasboard() || $this->isInProjectDashboard();
-    }
-
     public function isInHomepage()
     {
         return $_SERVER['REQUEST_URI'] === '/'
@@ -85,18 +84,6 @@ class BurningParrotCompatiblePageDetector
     private function isInHelp()
     {
         return strpos($_SERVER['REQUEST_URI'], '/help/') === 0;
-    }
-
-    private function isInPersonalDasboard()
-    {
-        $is_managing_bookmarks = strpos($_SERVER['REQUEST_URI'], '/my/bookmark') === 0;
-
-        return ! $is_managing_bookmarks && strpos($_SERVER['REQUEST_URI'], '/my/') === 0;
-    }
-
-    private function isInProjectDashboard()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
     private function isInBurningParrotCompatiblePage()
