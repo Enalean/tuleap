@@ -48,6 +48,11 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
     private $artifact_factory;
 
     /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formelement_factory;
+
+    /**
      * @var Tracker_ArtifactByEmailStatus
      */
     protected $tracker_artifactbyemail;
@@ -74,6 +79,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
         Tracker_Artifact_MailGateway_Notifier $notifier,
         Tracker_Artifact_Changeset_IncomingMailDao $incoming_mail_dao,
         Tracker_ArtifactFactory $artifact_factory,
+        Tracker_FormElementFactory $formelement_factory,
         Tracker_ArtifactByEmailStatus $tracker_artifactbyemail,
         Logger $logger,
         MailGatewayFilter $mail_filter
@@ -84,6 +90,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
         $this->citation_stripper        = $citation_stripper;
         $this->notifier                 = $notifier;
         $this->artifact_factory         = $artifact_factory;
+        $this->formelement_factory      = $formelement_factory;
         $this->tracker_artifactbyemail  = $tracker_artifactbyemail;
         $this->incoming_mail_dao        = $incoming_mail_dao;
         $this->mail_filter              = $mail_filter;
@@ -200,6 +207,7 @@ abstract class Tracker_Artifact_MailGateway_MailGateway {
             $title_field->getId()       => $title,
             $description_field->getId() => $body
         );
+        $field_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $field_data, $user);
 
         UserManager::instance()->setCurrentUser($user);
         return $this->artifact_factory->createArtifact($tracker, $field_data, $user, '');
