@@ -922,7 +922,8 @@ class SvnPlugin extends Plugin
             ),
             $this->getProjectHistoryFormatter(),
             $this->getImmutableTagCreator(),
-            $this->getAccessFileHistoryCreator()
+            $this->getAccessFileHistoryCreator(),
+            $this->getMailNotificationManager()
         );
     }
 

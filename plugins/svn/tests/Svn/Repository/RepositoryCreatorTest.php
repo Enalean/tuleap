@@ -81,7 +81,8 @@ class RepositoryCreatorTest extends \TuleapTestCase
             $this->hook_config_updator,
             new ProjectHistoryFormatter(),
             mock('Tuleap\Svn\Admin\ImmutableTagCreator'),
-            mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator')
+            mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator'),
+            mock('Tuleap\Svn\Admin\MailNotificationManager')
         );
 
         $this->project    = aMockProject()->withId(101)->build();
@@ -138,14 +139,15 @@ class RepositoryCreatorTest extends \TuleapTestCase
         expect($this->hook_config_updator)->initHookConfiguration()->once();
         expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation_with_full_settings', '*', '*')->once();
 
-        $commit_rules  = array(
+        $commit_rules       = array(
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => true
         );
-        $immutable_tag  = new ImmutableTag($this->repository, array(), array());
-        $access_file    = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
-        $settings       = new Settings($commit_rules, $immutable_tag, $access_file);
-        $initial_layout = array();
+        $immutable_tag      = new ImmutableTag($this->repository, array(), array());
+        $access_file        = "[/]\r\n* = rw \r\n@members = rw\r\n[/tags]\r\n@admins = rw";
+        $mail_notifications = array();
+        $settings           = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications);
+        $initial_layout     = array();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
     }
@@ -158,11 +160,12 @@ class RepositoryCreatorTest extends \TuleapTestCase
         expect($this->hook_config_updator)->initHookConfiguration()->never();
         expect($this->history_dao)->groupAddHistory('svn_multi_repository_creation', '*', '*')->once();
 
-        $commit_rules   = array();
-        $immutable_tag  = new ImmutableTag($this->repository, array(), array());
-        $access_file    = "";
-        $settings       = new Settings($commit_rules, $immutable_tag, $access_file);
-        $initial_layout = array();
+        $commit_rules       = array();
+        $immutable_tag      = new ImmutableTag($this->repository, array(), array());
+        $access_file        = "";
+        $mail_notifications = array();
+        $settings           = new Settings($commit_rules, $immutable_tag, $access_file, $mail_notifications);
+        $initial_layout     = array();
 
         $this->repository_creator->createWithSettings($this->repository, $this->user, $settings, $initial_layout);
     }

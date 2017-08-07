@@ -21,6 +21,7 @@
 namespace Tuleap\Svn\Repository;
 
 use Tuleap\Svn\Admin\ImmutableTag;
+use Tuleap\Svn\Admin\MailNotification;
 
 class Settings
 {
@@ -38,12 +39,29 @@ class Settings
      * @var string
      */
     private $access_file;
+    /**
+     * @var MailNotification[]
+     */
+    private $mail_notification;
 
-    public function __construct(array $commit_rules, ImmutableTag $immutable_tag, $access_file)
-    {
-        $this->commit_rules  = $commit_rules;
-        $this->immutable_tag = $immutable_tag;
-        $this->access_file   = $access_file;
+    /**
+     * Settings constructor.
+     *
+     * @param array                 $commit_rules
+     * @param ImmutableTag          $immutable_tag
+     * @param                       $access_file
+     * @param MailNotification[]    $mail_notification
+     */
+    public function __construct(
+        array $commit_rules,
+        ImmutableTag $immutable_tag,
+        $access_file,
+        array $mail_notification
+    ) {
+        $this->commit_rules      = $commit_rules;
+        $this->immutable_tag     = $immutable_tag;
+        $this->access_file       = $access_file;
+        $this->mail_notification = $mail_notification;
     }
 
     /**
@@ -70,11 +88,20 @@ class Settings
         return $this->access_file;
     }
 
+    /**
+     * @return MailNotification[]|null
+     */
+    public function getMailNotification()
+    {
+        return $this->mail_notification;
+    }
+
     public function hasSettings()
     {
         return count($this->commit_rules) > 0
             || count($this->immutable_tag->getPaths()) > 0
             || count($this->immutable_tag->getWhitelist()) > 0
+            || count($this->mail_notification) > 0
             || $this->access_file !== "";
     }
 }

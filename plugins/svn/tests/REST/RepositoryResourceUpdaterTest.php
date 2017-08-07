@@ -102,10 +102,13 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $access_file = "[/] * = rw";
 
+        $mail_notifications = array();
+
         $settings = new Settings(
             $commit_rules,
             $immutable_tag,
-            $access_file
+            $access_file,
+            $mail_notifications
         );
 
         $current_access_file = new AccessFileHistory(
@@ -141,10 +144,13 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $access_file = "[/] * = rw\n";
 
+        $mail_notifications = array();
+
         $settings = new Settings(
             $commit_rules,
             $immutable_tag,
-            $access_file
+            $access_file,
+            $mail_notifications
         );
 
         $current_access_file = new AccessFileHistory(
@@ -180,10 +186,13 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $access_file = "[/] * = rw";
 
+        $mail_notifications = array();
+
         $settings = new Settings(
             $commit_rules,
             $immutable_tag,
-            $access_file
+            $access_file,
+            $mail_notifications
         );
 
         $current_access_file = new AccessFileHistory(
@@ -219,10 +228,13 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
 
         $access_file = "[/] * = rw";
 
+        $mail_notifications = array();
+
         $settings = new Settings(
             $commit_rules,
             $immutable_tag,
-            $access_file
+            $access_file,
+            $mail_notifications
         );
 
         $current_access_file = new AccessFileHistory(
