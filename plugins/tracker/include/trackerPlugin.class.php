@@ -22,6 +22,7 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -231,7 +232,7 @@ class trackerPlugin extends Plugin {
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0 || $this->isInDashboard()) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
@@ -261,9 +262,7 @@ class trackerPlugin extends Plugin {
 
         if ($include_tracker_css_file ||
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
+            $this->isInDashboard()) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
         }
@@ -283,6 +282,14 @@ class trackerPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+        }
+
+        if ($this->isInDashboard()) {
+            $cross_tracker_include_assets = new IncludeAssets(
+                ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/scripts/cross-tracker/dist',
+                $this->getPluginPath() . '/scripts/cross-tracker/dist'
+            );
+            $params['javascript_files'][] = $cross_tracker_include_assets->getFileURL('cross-tracker.js');
         }
     }
 
@@ -1498,5 +1505,22 @@ class trackerPlugin extends Plugin {
             UserHelper::instance()
         );
         $collector->collect($collection);
+    }
+
+    private function isInDashboard()
+    {
+        return $this->isInPersonalDashboard() || $this->isInProjectDashboard();
+    }
+
+    private function isInPersonalDashboard()
+    {
+        $is_managing_bookmarks = strpos($_SERVER['REQUEST_URI'], '/my/bookmark') === 0;
+
+        return ! $is_managing_bookmarks && strpos($_SERVER['REQUEST_URI'], '/my/') === 0;
+    }
+
+    private function isInProjectDashboard()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 }
