@@ -379,6 +379,15 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         if ($criteria_value) {
             $a = 'A_'. $this->field->id;
             $b = 'B_'. $this->field->id;
+            if ($this->isSearchingNone($criteria_value)) {
+                return " LEFT JOIN (
+                    tracker_changeset_value AS $a
+                    INNER JOIN tracker_changeset_value_list AS $b ON (
+                        $b.changeset_value_id = $a.id
+                    )
+                ) ON ($a.changeset_id = c.id AND $a.field_id = ". $this->field->id .")";
+            }
+
             return " INNER JOIN tracker_changeset_value AS $a
                      ON ($a.changeset_id = c.id
                          AND $a.field_id = ". $this->field->id ."
@@ -406,11 +415,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                    array(100),
                                    array_keys($this->getAllValues())
                                ));
-            if (count($ids_to_search) > 1) {
-                return " $b.bindvalue_id IN(". implode(',', $ids_to_search) .") ";
-            } else if (count($ids_to_search)) {
-                return " $b.bindvalue_id = ". implode('', $ids_to_search) ." ";
+
+            if ($this->isSearchingNone($criteria_value)) {
+                $values_id = array_values($criteria_value);
+
+                return " $b.bindvalue_id IN (". implode(',', $values_id) .") OR $b.bindvalue_id IS NULL ";
             }
+
+            return " $b.bindvalue_id IN(". implode(',', $ids_to_search) .") ";
         }
         return '';
     }
