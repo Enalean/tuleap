@@ -227,10 +227,10 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForDateFieldAdvanced(), '*', '*', '*', '*')->returnsDar(
             array('id' => '42,9001', 'last_changeset_id' => '421,90011')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListField(), '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListField(), $this->getWhereForListField(), '*', '*', '*')->returnsDar(
             array('id' => '42', 'last_changeset_id' => '421')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListFieldAdvanced(), '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListFieldAdvanced(), $this->getWhereForListFieldAdvanced(), '*', '*', '*')->returnsDar(
             array('id' => '42,66', 'last_changeset_id' => '421,661')
         );
         stub($dao)->searchMatchingIds()->returnsDar(
@@ -253,13 +253,19 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function getFromForListField() {
-        return new FromFragmentsExpectation(array('/ tracker_changeset_value_list AS ..323.* ..'.
-            preg_quote('323.bindvalue_id IN(106)') .'/s'));
+        return new FromFragmentsExpectation(array('/ tracker_changeset_value_list AS ..323 /s'));
+    }
+
+    private function getWhereForListField() {
+        return new FromFragmentsExpectation(array('/'. preg_quote('323.bindvalue_id IN(106)') .' /s'));
     }
 
     private function getFromForListFieldAdvanced() {
-        return new FromFragmentsExpectation(array('/ tracker_changeset_value_list AS ..323.* ..'.
-            preg_quote('323.bindvalue_id IN(106,107)') .'/s'));
+        return new FromFragmentsExpectation(array('/ tracker_changeset_value_list AS ..323.* /s'));
+    }
+
+    private function getWhereForListFieldAdvanced() {
+        return new FromFragmentsExpectation(array('/'. preg_quote('323.bindvalue_id IN(106,107)') .' /s'));
     }
 
     protected function convertCriteriaToSoapParameter($criteria) {

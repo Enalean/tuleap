@@ -246,59 +246,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $values;
     }
 
-    /**
-     * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve
-     * the last changeset of all artifacts.
-     * @param array $criteria_value array of id => criteria_value (which are array)
-     * @return string
-     */
-     public function getCriteriaFrom($criteria_value) {
-         //Only filter query if criteria is valuated
-        if ($criteria_value) {
-            $fields_id = array($this->field->id);
-            $values_id = array_values($criteria_value);
-
-            $a = 'A_'. $this->field->id;
-            $b = 'B_'. $this->field->id;
-            $c = 'C_'. $this->field->id;
-            if ($this->isSearchingNone($criteria_value)) {
-                return " LEFT JOIN (
-                    tracker_changeset_value AS $a
-                    INNER JOIN tracker_changeset_value_list AS $c ON (
-                        $c.changeset_value_id = $a.id
-                    )
-                ) ON ($a.changeset_id = c.id AND $a.field_id IN (".implode(',', $fields_id)."))";
-            }
-
-            return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id IN (".implode(',', $fields_id)."))
-                     INNER JOIN tracker_changeset_value_list AS $c ON (
-                        $c.changeset_value_id = $a.id
-                        AND $c.bindvalue_id IN(". implode(',', $values_id) .")
-                     ) ";
-        }
-        return '';
-     }
-
-    /**
-     * Get the "where" statement to allow search with this field
-     * @param array $criteria_value array of id => criteria_value (which are array)
-     * @return string
-     * @see getCriteriaFrom
-     */
-    public function getCriteriaWhere($criteria_value) {
-        if ($criteria_value) {
-            $a = 'A_' . $this->field->id;
-            $b = 'B_' . $this->field->id;
-            $c = 'C_' . $this->field->id;
-            if ($this->isSearchingNone($criteria_value)) {
-                $values_id = array_values($criteria_value);
-
-                return " $c.bindvalue_id IN (". implode(',', $values_id) .") OR $c.bindvalue_id IS NULL ";
-            }
-        }
-
-        return '';
+    protected function getIdsToSearch($criteria_value)
+    {
+        return array_values($criteria_value);
     }
 
     /**
