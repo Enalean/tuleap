@@ -2,7 +2,6 @@
      data-column-id="{{ column.id }}"
      class="bottom wip-limit-form"
      ng-class="{'in': column.wip_in_edit}"
-     ng-if="userIsAdmin()"
 >
     <form novalidate ng-submit="setWipLimit(column)" class="wip-limit-form-content">
         <label class="tlp-label" for="wip-limit-input-{{ column.id }}" translate>Define max:</label>
