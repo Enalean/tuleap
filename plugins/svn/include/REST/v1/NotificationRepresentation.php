@@ -32,7 +32,7 @@ class NotificationRepresentation
      */
     public $users;
     /**
-     * @var array {@type string} {@required true} {@min 1}
+     * @var array {@type email} {@required true} {@min 1}
      */
     public $emails;
     /**
