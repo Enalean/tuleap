@@ -33,7 +33,7 @@ class SettingsPUTRepresentation extends SettingsRepresentation
     public $immutable_tags;
 
     /**
-     * @var array {@type \Tuleap\SVN\REST\v1\NotificationRepresentation} {@required true}
+     * @var array {@type \Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation} {@required true}
      */
     public $email_notifications;
 

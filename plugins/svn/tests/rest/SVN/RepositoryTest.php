@@ -26,8 +26,6 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 
 class RepositoryTest extends TestBase
 {
-
-
     private function getResponseWithProjectMember($request)
     {
         return $this->getResponseByToken(
@@ -102,9 +100,11 @@ class RepositoryTest extends TestBase
      */
     public function testDELETERepositoryForProjectAdmin()
     {
-        $response  = $this->getResponse($this->client->delete(
-            'svn/1'
-        ));
+        $response = $this->getResponse(
+            $this->client->delete(
+                'svn/1'
+            )
+        );
 
         $this->assertEquals($response->getStatusCode(), 202);
     }
@@ -165,12 +165,12 @@ class RepositoryTest extends TestBase
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_02",
                 "settings"   => array(
-                    "commit_rules" => array(
+                    "commit_rules"        => array(
                         "is_reference_mandatory"           => true,
                         "is_commit_message_change_allowed" => true
                     ),
-                    "immutable_tags" => array(
-                        "paths"      => array(
+                    "immutable_tags"      => array(
+                        "paths"     => array(
                             "/tags1",
                             "/tags2"
                         ),
@@ -184,7 +184,10 @@ class RepositoryTest extends TestBase
                         array(
                             'user_groups' => array(),
                             'users'       => array(102, 103),
-                            'emails'      => array("project-announce@list.example.com", "project-devel@lists.example.com"),
+                            'emails'      => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            ),
                             'path'        => "/tags",
                         ),
                         array(
@@ -222,36 +225,12 @@ class RepositoryTest extends TestBase
             "[/] * = rw\r\n@members = rw"
         );
 
-        $user_102 = array(
-            "id"           => 102,
-            "uri"          => "users/102",
-            "user_url"     => "/users/rest_api_tester_1",
-            "real_name"    => "Test User 1",
-            "display_name" => "Test User 1 (rest_api_tester_1)",
-            "username"     => "rest_api_tester_1",
-            "ldap_id"      => "tester1",
-            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
-            "is_anonymous" => false
-        );
-
-        $user_103 = array(
-            "id"           => 103,
-            "uri"          => "users/103",
-            "user_url"     => "/users/rest_api_tester_2",
-            "real_name"    => "",
-            "display_name" => " (rest_api_tester_2)",
-            "username"     => "rest_api_tester_2",
-            "ldap_id"      => "",
-            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
-            "is_anonymous" => false
-        );
-
         $this->assertEquals(
             $repository['settings']['email_notifications'],
             array(
                 array(
                     'user_groups' => array(),
-                    'users'       => array($user_102, $user_103),
+                    'users'       => array($this->user_102, $this->user_103),
                     'emails'      => array("project-announce@list.example.com", "project-devel@lists.example.com"),
                     'path'        => "/tags",
                 ),
@@ -315,7 +294,8 @@ class RepositoryTest extends TestBase
                             'emails' => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            )
+                            ),
+                            "users"  => array(102)
                         )
                     )
                 )
@@ -357,7 +337,7 @@ class RepositoryTest extends TestBase
                         "project-devel@lists.example.com"
                     ),
                     "user_groups" => array(),
-                    "users"       => array()
+                    "users"       => array($this->user_102)
                 )
             )
         );

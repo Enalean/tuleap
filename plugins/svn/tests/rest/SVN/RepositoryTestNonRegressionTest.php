@@ -238,7 +238,8 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'   => "/tags",
                             'emails' => array(
                                 "project-announce@list.example.com"
-                            )
+                            ),
+                            "users" => array()
                         )
                     )
                 )
@@ -265,7 +266,8 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'   => "/tags",
                             'emails' => array(
                                 "project-announce@list.example.com"
-                            )
+                            ),
+                            "users" => array()
                         )
                     )
                 )
@@ -295,7 +297,8 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'   => "/tags",
                             'emails' => array(
                                 "project-announce@list.example.com"
-                            )
+                            ),
+                            "users" => array()
                         )
                     )
                 )
@@ -348,7 +351,8 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'path'   => "/tags",
                             'emails' => array(
                                 "project-announce@list.example.com"
-                            )
+                            ),
+                            "users" => array()
                         )
                     )
                 )
@@ -361,6 +365,33 @@ class RepositoryTestNonRegressionTest extends TestBase
     }
 
     public function testPUTRepositoryWithMissingImmutableTagsWhiteListKey()
+    {
+        $params = json_encode(
+            array(
+                "settings" => array(
+                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags" => array(
+                        "paths"     => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com"
+                            ),
+                            "users" => array()
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPUTRepositoryWithMissingUsersKey()
     {
         $params = json_encode(
             array(

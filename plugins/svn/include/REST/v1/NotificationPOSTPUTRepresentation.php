@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-class NotificationPOSTRepresentation
+class NotificationPOSTPUTRepresentation
 {
     /**
      * @var array {@type int} {@required true} {@min 0}

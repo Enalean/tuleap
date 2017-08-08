@@ -31,6 +31,16 @@ class TestBase extends RestBase
     const PROJECT_NAME = 'svn-plugin-test';
 
     /**
+     * @var array
+     */
+    public $user_102;
+
+    /**
+     * @var array
+     */
+    public $user_103;
+
+    /**
      * @var int
      */
     protected $svn_project_id;
@@ -40,6 +50,30 @@ class TestBase extends RestBase
         parent::setUp();
 
         $this->svn_project_id = $this->getProjectId(self::PROJECT_NAME);
+
+        $this->user_102 = array(
+            "id"           => 102,
+            "uri"          => "users/102",
+            "user_url"     => "/users/rest_api_tester_1",
+            "real_name"    => "Test User 1",
+            "display_name" => "Test User 1 (rest_api_tester_1)",
+            "username"     => "rest_api_tester_1",
+            "ldap_id"      => "tester1",
+            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
+            "is_anonymous" => false
+        );
+
+        $this->user_103 = array(
+            "id"           => 103,
+            "uri"          => "users/103",
+            "user_url"     => "/users/rest_api_tester_2",
+            "real_name"    => "",
+            "display_name" => " (rest_api_tester_2)",
+            "username"     => "rest_api_tester_2",
+            "ldap_id"      => "",
+            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
+            "is_anonymous" => false
+        );
     }
 
     protected function getResponse($request)

@@ -132,13 +132,48 @@ class MailNotificationManager {
      */
     public function updateFromREST(Repository $repository, array $new_email_notification)
     {
-        if (! $this->dao->updateGloballyForRepository($repository->getId(), $new_email_notification)) {
+        if (! $this->updateGloballyForRepository($repository->getId(), $new_email_notification)) {
             throw new CannotCreateMailHeaderException();
         }
 
         foreach($new_email_notification as $notification) {
             $this->logCreateInProjectHistory($notification);
         }
+    }
+
+    /**
+     * @param                    $repository_id
+     * @param MailNotification[] $new_email_notification
+     *
+     * @return bool|object
+     */
+    private function updateGloballyForRepository($repository_id, array $new_email_notification)
+    {
+        $this->dao->da->startTransaction();
+
+        if (! $this->dao->deleteByRepositoryId($repository_id)) {
+            $this->dao->da->rollback();
+            return false;
+        }
+
+        foreach($new_email_notification as $notification) {
+            $notification_id = $this->dao->create($notification);
+            if (! $notification_id) {
+                $this->dao->da->rollback();
+                return false;
+            }
+
+            $notification->setId($notification_id);
+
+            try {
+                $this->notificationAddUsers($notification);
+            } catch (CannotAddUsersNotificationException $e) {
+                $this->dao->da->rollback();
+                return false;
+            }
+        }
+
+        return $this->dao->da->commit();
     }
 
     /**
