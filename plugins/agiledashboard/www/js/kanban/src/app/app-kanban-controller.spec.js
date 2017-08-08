@@ -17,6 +17,7 @@ describe('KanbanCtrl - ', function() {
         SocketService,
         DroppedService,
         ColumnCollectionService,
+        UserPreferencesService,
         kanban;
 
     function emptyArray(array) {
@@ -37,7 +38,8 @@ describe('KanbanCtrl - ', function() {
             _KanbanColumnService_,
             _SocketService_,
             _DroppedService_,
-            _ColumnCollectionService_
+            _ColumnCollectionService_,
+            _UserPreferencesService_
         ) {
             $controller                   = _$controller_;
             $q                            = _$q_;
@@ -50,6 +52,7 @@ describe('KanbanCtrl - ', function() {
             SocketService                 = _SocketService_;
             DroppedService                = _DroppedService_;
             ColumnCollectionService       = _ColumnCollectionService_;
+            UserPreferencesService         = _UserPreferencesService_;
         });
 
         kanban = {
@@ -65,6 +68,7 @@ describe('KanbanCtrl - ', function() {
         };
 
         spyOn(SharedPropertiesService, "getKanban").and.returnValue(kanban);
+        spyOn(SharedPropertiesService, "getUserId").and.returnValue(757);
 
         spyOn(KanbanService, 'getBacklog').and.returnValue($q.defer().promise);
         spyOn(KanbanService, 'getBacklogSize').and.returnValue($q.defer().promise);
@@ -94,7 +98,8 @@ describe('KanbanCtrl - ', function() {
             NewTuleapArtifactModalService: NewTuleapArtifactModalService,
             KanbanColumnService          : KanbanColumnService,
             SocketService                : SocketService,
-            ColumnCollectionService      : ColumnCollectionService
+            ColumnCollectionService      : ColumnCollectionService,
+            UserPreferencesService        : UserPreferencesService
         });
 
         installPromiseMatchers();
@@ -574,7 +579,7 @@ describe('KanbanCtrl - ', function() {
         var fake_event;
         beforeEach(function() {
             spyOn(NewTuleapArtifactModalService, 'showEdition');
-            spyOn(SharedPropertiesService, 'getUserId').and.returnValue(102);
+            SharedPropertiesService.getUserId.and.returnValue(102);
             fake_event = {
                 which: 1,
                 preventDefault: jasmine.createSpy("preventDefault")
@@ -785,6 +790,73 @@ describe('KanbanCtrl - ', function() {
                 item.id,
                 compared_to
             );
+        });
+    });
+
+    describe("saveCardsViewMode() -", () => {
+        beforeEach(() => {
+            kanban.id = 33;
+            spyOn(SharedPropertiesService, "setUserPrefersCompactCards").and.callThrough();
+            spyOn(UserPreferencesService, "setPreference");
+            spyOn(KanbanCtrl, "reflowKustomScrollBars");
+            kanban.backlog.content = [
+                { is_collapsed: false },
+                { is_collapsed: true }
+            ];
+            kanban.archive.content = [
+                { is_collapsed: true },
+                { is_collapsed: false }
+            ];
+            kanban.columns[0].content = [
+                { is_collapsed: false }
+            ];
+            kanban.columns[1].content = [
+                { is_collapsed: false },
+                { is_collapsed: true }
+            ];
+        });
+
+        it("Given kanban items that were in both view modes, when I change the cards' view mode to 'compact', then it is saved in my user preferences and each kanban item is forced to 'compact' mode", () => {
+            KanbanCtrl.user_prefers_collapsed_cards = true;
+            KanbanCtrl.saveCardsViewMode();
+
+            expect(SharedPropertiesService.setUserPrefersCompactCards).toHaveBeenCalledWith(true);
+            expect(UserPreferencesService.setPreference).toHaveBeenCalledWith(
+                757,
+                'agiledashboard_kanban_item_view_mode_33',
+                'compact-view'
+            );
+            expect(KanbanCtrl.reflowKustomScrollBars).toHaveBeenCalled();
+
+            var all_columns      = [kanban.archive, kanban.backlog, ...kanban.columns];
+            var all_kanban_items = all_columns.reduce(
+                (all_items, column) => all_items.concat(column.content),
+                []
+            );
+            all_kanban_items.forEach(item => {
+                expect(item.is_collapsed).toBe(true);
+            });
+        });
+
+        it("Given kanban items that were in both view modes, when I change the cards' view mode to 'detailed', then it is saved in my user preferences and each kanban item is forced to 'detailed' mode", () => {
+            KanbanCtrl.user_prefers_collapsed_cards = false;
+            KanbanCtrl.saveCardsViewMode();
+
+            expect(SharedPropertiesService.setUserPrefersCompactCards).toHaveBeenCalledWith(false);
+            expect(UserPreferencesService.setPreference).toHaveBeenCalledWith(
+                757,
+                'agiledashboard_kanban_item_view_mode_33',
+                'detailed-view'
+            );
+            expect(KanbanCtrl.reflowKustomScrollBars).toHaveBeenCalled();
+            var all_columns      = [kanban.archive, kanban.backlog, ...kanban.columns];
+            var all_kanban_items = all_columns.reduce(
+                (all_items, column) => all_items.concat(column.content),
+                []
+            );
+            all_kanban_items.forEach(item => {
+                expect(item.is_collapsed).toBe(false);
+            });
         });
     });
 });
