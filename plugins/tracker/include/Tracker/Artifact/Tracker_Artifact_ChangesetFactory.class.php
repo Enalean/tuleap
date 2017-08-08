@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,33 @@
 class Tracker_Artifact_ChangesetFactory {
     /** Tracker_Artifact_ChangesetDao */
     private $dao;
-
+    /**
+     * @var Tracker_Artifact_Changeset_ValueDao
+     */
+    private $changeset_value_dao;
+    /**
+     * @var Tracker_Artifact_Changeset_CommentDao
+     */
+    private $changeset_comment_dao;
     /** @var Tracker_Artifact_ChangesetJsonFormatter */
     private $json_formatter;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $tracker_form_element_factory;
 
-    public function __construct(Tracker_Artifact_ChangesetDao $dao, Tracker_Artifact_ChangesetJsonFormatter $json_formatter) {
-        $this->dao = $dao;
-        $this->json_formatter = $json_formatter;
+    public function __construct(
+        Tracker_Artifact_ChangesetDao $dao,
+        Tracker_Artifact_Changeset_ValueDao $changeset_value_dao,
+        Tracker_Artifact_Changeset_CommentDao $changeset_comment_dao,
+        Tracker_Artifact_ChangesetJsonFormatter $json_formatter,
+        Tracker_FormElementFactory $tracker_form_element_factory
+    ) {
+        $this->dao                          = $dao;
+        $this->changeset_value_dao          = $changeset_value_dao;
+        $this->changeset_comment_dao        = $changeset_comment_dao;
+        $this->json_formatter               = $json_formatter;
+        $this->tracker_form_element_factory = $tracker_form_element_factory;
     }
 
     /**
@@ -86,26 +106,28 @@ class Tracker_Artifact_ChangesetFactory {
     }
 
     /**
-     * @param Tracker_Artifact $artifact
      * @return Tracker_Artifact_Changeset[]
-     * @internal param PFUser $user
      */
-    public function getChangesetsForArtifactWithComments(Tracker_Artifact $artifact)
+    public function getFullChangesetsForArtifact(Tracker_Artifact $artifact, PFUser $user)
     {
-        $comment_dao    = new Tracker_Artifact_Changeset_CommentDao();
-        $comments_cache = $comment_dao->searchLastVersionForArtifact($artifact->getId());
+        $changeset_values_cache = $this->changeset_value_dao->searchByArtifactId($artifact->getId());
+        $comments_cache         = $this->changeset_comment_dao->searchLastVersionForArtifact($artifact->getId());
 
-        $changesets = $this->getChangesetsForArtifact($artifact);
+        $changesets         = $this->getChangesetsForArtifact($artifact);
+        $previous_changeset = null;
         foreach ($changesets as $changeset) {
-            $this->setCommentsFromCache($changeset, $comments_cache);
+            $this->setCommentsFromCache($comments_cache, $changeset);
+            $this->setFieldValuesFromCache($user, $changeset_values_cache, $changeset, $previous_changeset);
+
+            $previous_changeset = $changeset;
         }
         return $changesets;
     }
 
-    private function setCommentsFromCache(Tracker_Artifact_Changeset $changeset, array $comments_cache)
+    private function setCommentsFromCache(array $cache, Tracker_Artifact_Changeset $changeset)
     {
-        if (isset($comments_cache[$changeset->getId()])) {
-            $row = $comments_cache[$changeset->getId()];
+        if (isset($cache[$changeset->getId()])) {
+            $row = $cache[$changeset->getId()];
             $comment = new Tracker_Artifact_Changeset_Comment(
                 $row['id'],
                 $changeset,
@@ -118,6 +140,28 @@ class Tracker_Artifact_ChangesetFactory {
                 $row['parent_id']
             );
             $changeset->setLatestComment($comment);
+        }
+    }
+
+    private function setFieldValuesFromCache(
+        PFUser $user,
+        array $cache,
+        Tracker_Artifact_Changeset $changeset,
+        Tracker_Artifact_Changeset $previous_changeset = null
+    ) {
+        foreach ($cache[$changeset->getId()] as $changeset_value_row) {
+            $field = $this->tracker_form_element_factory->getFieldById($changeset_value_row['field_id']);
+            if ($field === null || ! $field->userCanRead($user)) {
+                continue;
+            }
+            if ($changeset_value_row['has_changed']) {
+                $changeset_value = $field->getChangesetValue($changeset, $changeset_value_row['id'], $changeset_value_row['has_changed']);
+                $changeset->setFieldValue($field, $changeset_value);
+            } elseif ($previous_changeset !== null) {
+                $changeset->setFieldValue($field, $previous_changeset->getValue($field));
+            } else {
+                $changeset->setNoFieldValue($field);
+            }
         }
     }
 
@@ -146,5 +190,3 @@ class Tracker_Artifact_ChangesetFactory {
         );
     }
 }
-
-?>

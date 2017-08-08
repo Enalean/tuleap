@@ -1274,7 +1274,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     {
         return $this->getSortedBySubmittedOn(
             array_merge(
-                $this->getChangesetFactory()->getChangesetsForArtifactWithComments($this),
+                $this->getChangesetFactory()->getFullChangesetsForArtifact($this, $this->getCurrentUser()),
                 $this->getPriorityHistory()
             )
         );
@@ -1369,9 +1369,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getChangesetFactory() {
         return new Tracker_Artifact_ChangesetFactory(
             $this->getChangesetDao(),
+            new Tracker_Artifact_Changeset_ValueDao(),
+            $this->getChangesetCommentDao(),
             new Tracker_Artifact_ChangesetJsonFormatter(
                 $this->getMustacheRenderer()
-            )
+            ),
+            $this->getFormElementFactory()
         );
     }
 

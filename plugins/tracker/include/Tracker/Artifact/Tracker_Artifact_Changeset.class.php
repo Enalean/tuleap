@@ -97,6 +97,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $this->values[$field->getId()] = $value;
     }
 
+    public function setNoFieldValue(Tracker_FormElement_Field $field)
+    {
+        $this->values[$field->getId()] = false;
+    }
+
     /**
      * Returns the submission date of this changeset (timestamp)
      *
