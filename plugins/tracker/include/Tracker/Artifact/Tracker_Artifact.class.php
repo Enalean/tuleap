@@ -469,7 +469,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function fetchNotificationButton() {
         $alternate_text = $this->getUnsubscribeButtonAlternateText();
 
-        $html  = '<button class="btn btn-default tracker-artifact-notification" title="' . $alternate_text . '">';
+        $html  = '<button type="button" class="btn btn-default tracker-artifact-notification" title="' . $alternate_text . '">';
         $html .= '<i class="icon-bell-alt"></i> ' . $this->getUnsubscribeButtonLabel();
         $html .= '</button>';
 
