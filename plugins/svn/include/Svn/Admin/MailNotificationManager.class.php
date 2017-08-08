@@ -137,7 +137,7 @@ class MailNotificationManager {
      * @param string $path
      * @return MailNotification[]
      */
-    private function getByPathStrictlyEqual(Repository $repository, $path)
+    public function getByPathStrictlyEqual(Repository $repository, $path)
     {
         $mail_notification = array();
         foreach ($this->dao->searchByPathStrictlyEqual($repository->getId(), $path) as $row) {

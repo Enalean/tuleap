@@ -26,8 +26,6 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\MailNotification;
-use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\HookConfigUpdator;
@@ -82,6 +80,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
         $this->access_file_factory       = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
         $this->immutable_tag_factory     = mock('Tuleap\Svn\Admin\ImmutableTagFactory');
         $this->mail_notification_manager = mock('Tuleap\Svn\Admin\MailNotificationManager');
+        $notification_updater_checker    = mock('Tuleap\SVN\REST\v1\NotificationUpdateChecker');
 
         $this->updater = new RepositoryResourceUpdater(
             $this->hook_config_updater,
@@ -89,7 +88,8 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             $this->access_file_factory,
             $this->access_file_creator,
             $this->immutable_tag_factory,
-            $this->mail_notification_manager
+            $this->mail_notification_manager,
+            $notification_updater_checker
         );
 
         $this->repository = mock('Tuleap\Svn\Repository\Repository');
