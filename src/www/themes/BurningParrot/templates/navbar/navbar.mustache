@@ -1,21 +1,26 @@
 {{# navbar_presenter }}
 <header>
+    {{# has_motd }}
+        <div class="header-motd">{{{ motd }}}</div>
+    {{/ has_motd }}
     <div class="header-container">
-        <a href="/" id="logo" aria-label="{{ homepage_label }}"></a>
+        <div class="header-nav">
+            <a href="/" id="logo" aria-label="{{ homepage_label }}"></a>
 
-        {{> navbar/current-project-nav }}
+            {{> navbar/current-project-nav }}
 
-        {{> navbar/global-nav }}
-    </div>
-
-    {{# is_search_and_user_nav_displayed }}
-        <div class="header-container">
-            {{> navbar/search }}
-
-            {{> navbar/join-community }}
-
-            {{> navbar/user-nav }}
+            {{> navbar/global-nav }}
         </div>
-    {{/ is_search_and_user_nav_displayed }}
+
+        {{# is_search_and_user_nav_displayed }}
+            <div class="header-nav">
+                {{> navbar/search }}
+
+                {{> navbar/join-community }}
+
+                {{> navbar/user-nav }}
+            </div>
+        {{/ is_search_and_user_nav_displayed }}
+    </div>
 </header>
 {{/ navbar_presenter }}

@@ -309,16 +309,6 @@ class FlamingParrot_Theme extends Layout {
         return $additional_tabs;
     }
 
-    protected function getMOTD() {
-        $motd       = parent::getMOTD();
-        $deprecated = $this->getBrowserDeprecatedMessage();
-        if ($motd && $deprecated) {
-            return $deprecated.'<br />'.$motd;
-        } else {
-            return $motd.$deprecated;
-        }
-    }
-
     private function displayNewAccount() {
         $display_new_user = true;
         EventManager::instance()->processEvent('display_newaccount', array('allow' => &$display_new_user));

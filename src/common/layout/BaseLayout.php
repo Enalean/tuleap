@@ -24,6 +24,7 @@ use Codendi_HTMLPurifier;
 use Event;
 use EventManager;
 use ForgeConfig;
+use HTTPRequest;
 use PermissionsOverrider_PermissionsOverriderManager;
 use Project;
 use ProjectManager;
@@ -122,6 +123,29 @@ abstract class BaseLayout extends Response
         $return .= ' />';
 
         return $return;
+    }
+
+    protected function getMOTD()
+    {
+        $motd      = '';
+        $motd_file = $GLOBALS['Language']->getContent('others/motd');
+        if (! strpos($motd_file, "empty.txt")) { # empty.txt returned when no motd file found
+            ob_start();
+            include($motd_file);
+            $motd = ob_get_clean();
+        }
+
+        $deprecated = $this->getBrowserDeprecatedMessage();
+        if ($motd && $deprecated) {
+            return $deprecated . '<br />' . $motd;
+        } else {
+            return $motd . $deprecated;
+        }
+    }
+
+    private function getBrowserDeprecatedMessage()
+    {
+        return HTTPRequest::instance()->getBrowser()->getDeprecatedMessage();
     }
 
     public function getImagePath($src)

@@ -71,6 +71,7 @@ main[role=main]:not(.tlp-framed) > #feedback {
     margin: 0 0 30px;
 }
 
+@import 'header';
 @import 'sidebar';
 @import 'toolbar';
 @import 'navbar';
