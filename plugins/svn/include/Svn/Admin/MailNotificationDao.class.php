@@ -143,13 +143,31 @@ class MailNotificationDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function deleteByRepositoryId($repository_id)
+    public function updateGloballyForRepository($repository_id, array $new_email_notification)
     {
+        $this->da->startTransaction();
+
         $repository_id = $this->da->escapeInt($repository_id);
 
+        if (! $this->deleteByRepositoryId($repository_id)) {
+            $this->da->rollback();
+            return false;
+        }
+
+        foreach($new_email_notification as $notification) {
+            if (! $this->create($notification)) {
+                $this->da->rollback();
+                return false;
+            }
+        }
+
+        return $this->da->commit();
+    }
+
+    private function deleteByRepositoryId($repository_id)
+    {
         $sql = "DELETE FROM plugin_svn_notification
-                WHERE repository_id = $repository_id
-                ";
+                WHERE repository_id = $repository_id";
 
         return $this->update($sql);
     }
