@@ -75,6 +75,28 @@ class MailNotificationManager {
         $this->notificationAddUgroups($notification_id, $autocompleter);
     }
 
+    /**
+     * @param Repository         $repository
+     * @param MailNotification[] $new_email_notification
+     *
+     * @throws CannotCreateMailHeaderException
+     */
+    public function updateFromREST(Repository $repository, array $new_email_notification)
+    {
+        if (! $this->dao->deleteByRepositoryId($repository->getId())) {
+            throw new CannotCreateMailHeaderException();
+        }
+
+        foreach($new_email_notification as $notification) {
+            if (! $this->dao->create($notification)) {
+                throw new CannotCreateMailHeaderException();
+            }
+        }
+    }
+
+    /**
+     * @return MailNotification[]
+     */
     public function getByRepository(Repository $repository) {
         $mail_notification = array();
         foreach ($this->dao->searchByRepositoryId($repository->getId()) as $row) {
@@ -207,5 +229,12 @@ class MailNotificationManager {
             }
         }
         return false;
+    }
+
+    public function removeByRepositoryId(Repository $repository)
+    {
+        if (! $this->dao->deleteByRepositoryId($repository->getId())) {
+            throw new CannotCreateMailHeaderException();
+        }
     }
 }

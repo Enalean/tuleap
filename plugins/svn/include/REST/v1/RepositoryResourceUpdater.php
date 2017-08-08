@@ -25,6 +25,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\ImmutableTag;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagFactory;
+use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\HookConfigUpdator;
 use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\Settings;
@@ -51,19 +52,25 @@ class RepositoryResourceUpdater
      * @var ImmutableTagFactory
      */
     private $immutable_tag_factory;
+    /**
+     * @var MailNotificationManager
+     */
+    private $mail_notification_manager;
 
     public function __construct(
         HookConfigUpdator $hook_config_updator,
         ImmutableTagCreator $immutable_tag_creator,
         AccessFileHistoryFactory $access_file_history_factory,
         AccessFileHistoryCreator $access_file_history_creator,
-        ImmutableTagFactory $immutable_tag_factory
+        ImmutableTagFactory $immutable_tag_factory,
+        MailNotificationManager $mail_notification_manager
     ) {
         $this->hook_config_updator         = $hook_config_updator;
         $this->immutable_tag_creator       = $immutable_tag_creator;
         $this->access_file_history_creator = $access_file_history_creator;
         $this->access_file_history_factory = $access_file_history_factory;
         $this->immutable_tag_factory       = $immutable_tag_factory;
+        $this->mail_notification_manager   = $mail_notification_manager;
     }
 
     public function update(Repository $repository, Settings $settings)
@@ -82,6 +89,8 @@ class RepositoryResourceUpdater
         if ($current_version->getContent() !== $settings->getAccessFileContent()) {
             $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
         }
+
+        $this->mail_notification_manager->updateFromREST($repository, $settings->getMailNotification());
     }
 
     private function hasImmutableTagChanged(ImmutableTag $new_immutable_tag, Repository $repository)

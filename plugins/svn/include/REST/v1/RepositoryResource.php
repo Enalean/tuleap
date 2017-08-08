@@ -227,7 +227,8 @@ class RepositoryResource extends AuthenticatedResource
             $immutable_tag_creator,
             $access_file_history_factory,
             $access_file_history_creator,
-            $this->immutable_tag_factory
+            $this->immutable_tag_factory,
+            $mail_notification_manager
         );
     }
 
@@ -344,7 +345,22 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;"/tags/whitelist2"<br>
      *   &nbsp;&nbsp; ]<br>
      *   &nbsp;},<br>
-     *   &nbsp;"access_file": "[/]\r\n* = rw @members = rw\r\n[/tags]\r\n@admins = rw"<br>
+     *   &nbsp;"access_file": "[/] * = rw @members = rw\r\n[/tags] @admins = rw",<br>
+     *   &nbsp;&nbsp;"email_notifications": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/trunk",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bar@example.com"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/tags",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+     *   &nbsp;&nbsp;]<br>
      *   &nbsp;}<br>
      *  }<br>
      * </pre>
