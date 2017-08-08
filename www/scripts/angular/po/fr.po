@@ -13,14 +13,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "<i class=\"icon-pencil\"></i> Edit {{ campaign.label }} campaign"
-msgstr "<i class=\"icon-pencil\"></i> Édition de {{ campaign.label }}"
+msgid "Edit {{ campaign.label }} campaign"
+msgstr "Édition de la campagne {{ campaign.label }}"
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "<i class=\"icon-plus\"></i> Add a test"
-msgstr "<i class=\"icon-plus\"></i> Ajouter un test"
+msgid "Add a test"
+msgstr "Ajouter un test"
 
 #: src/app/campaign/campaign-new.tpl.html
+#: src/app/campaign/campaign-edit.tpl.html
 msgid "A campaign label is required"
 msgstr "Le label de la campagne est obligatoire"
 

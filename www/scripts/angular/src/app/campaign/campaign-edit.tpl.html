@@ -1,84 +1,120 @@
-<form name="editCampaignForm" ng-submit="editCampaign(campaign)">
-    <div id="campaign-edit-header" class="modal-header">
-      <h3 translate><i class="icon-pencil"></i> Edit {{ campaign.label }} campaign</h3>
-      <button class="close" ng-click="cancel()">&times;</button>
+<form class="tlp-modal tlp-modal-medium-sized"
+      name="editCampaignForm"
+      ng-submit="editCampaign(campaign)">
+    <div class="tlp-modal-header">
+      <h1 class="tlp-modal-title">
+          <i class="fa fa-pencil tlp-modal-title-icon"></i>
+          <span translate>Edit {{ campaign.label }} campaign</span>
+      </h1>
+      <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">&times;</div>
     </div>
 
-    <div id="campaign-edit-container" class="modal-body">
-        <label for="campaign-label" translate>Campaign label</label>
-        <input id="campaign-label" type="text" ng-model="campaign.label" placeholder="A campaign name is required" required="required" ng-trim />
-        <h3 translate>Tests</h3>
-        <div id="campaign-edit-action-bar">
-            <button
-                type="button"
-                class="btn"
-                ng-click="showAddTestModal()">
-                <span translate><i class="icon-plus"></i> Add a test</span>
-            </button>
-            <select ng-model="filters.selected_report" ng-change="selectReportTests()">
-                <option value="" translate>Pre-select tests from a tracker report</option>
-                <option ng-repeat="report in test_reports" ng-value="report.id">{{ report.label }}</option>
-            </select>
-            <input type="text" class="filter" placeholder="{{ 'Id, summary, category…' | translate }}" ng-model="filters.search">
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element"
+             ng-class="{ 'tlp-form-element-error': editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid }">
+            <label class="tlp-label" for="campaign-label">
+                {{ 'Campaign label' | translate }} <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text"
+                   class="tlp-input edit-campaign-label-input"
+                   id="campaign-label"
+                   name="campaign_label"
+                   ng-model="campaign.label"
+                   placeholder="{{ 'Campaign label' | translate }}"
+                   required
+                   ng-trim />
+            <p class="tlp-text-danger" ng-show="editCampaignForm.campaign_label.$dirty && editCampaignForm.campaign_label.$invalid">
+                {{ 'A campaign label is required' | translate }}
+                <i class="fa fa-frown-o"></i>
+            </p>
         </div>
-        <table id="campaign-edit-executions-list" class="table">
+        <h2 class="tlp-modal-subtitle" translate>Tests</h2>
+        <div class="tlp-table-actions">
+            <button type="button"
+                    class="tlp-button-primary tlp-table-actions-element"
+                    ng-click="showAddTestModal()">
+                <i class="fa fa-plus"></i> {{ 'Add a test' | translate }}
+            </button>
+            <div class="tlp-table-actions-spacer"></div>
+            <div class="tlp-form-element tlp-table-actions-element">
+                <select class="tlp-select tlp-select-adjusted"
+                        ng-model="filters.selected_report"
+                        ng-change="selectReportTests()">
+                    <option value="" translate>Pre-select tests from a tracker report</option>
+                    <option ng-repeat="report in test_reports" ng-value="report.id">{{ report.label }}</option>
+                </select>
+            </div>
+            <div class="tlp-table-actions-spacer edit-campaign-tests-list-actions-spacer-small"></div>
+            <div class="tlp-form-element edit-campaign-tests-search-container">
+                <input type="search"
+                       class="tlp-search tlp-table-actions-element"
+                       id="edit-campaign-tests-list-filter"
+                       data-target-table-id="edit-campaign-tests-list"
+                       autocomplete="off"
+                       placeholder="{{ 'Id, summary, category…' | translate }}">
+            </div>
+        </div>
+        <table class="tlp-table edit-campaign-tests-list" id="edit-campaign-tests-list">
             <thead>
-                <th></th>
-                <th translate>Id</th>
+                <th class="edit-campaign-tests-list-header check"><i class="fa"></i></th>
+                <th class="edit-campaign-tests-list-header id tlp-table-cell-numeric" translate>Id</th>
                 <th translate>Summary</th>
             </thead>
             <tbody>
-                <tr ng-repeat-start="category in tests_list"
-                    ng-hide="category.tests
-                        | toArray:false
-                        | filter:matchProperties(filters.search)
-                        | isEmpty"
-                >
-                    <td colspan="3" class="table-cell-section">
-                        <i class="checklist-check" ng-class="categoryCheckmark(category)" ng-click="toggleCategory(category)"></i>
-                        {{ category.label }}
+                <tr class="tlp-table-empty-filter">
+                    <td colspan="3" class="tlp-table-cell-empty">
+                        There aren't any matching tests
                     </td>
                 </tr>
-                <tr ng-repeat-end=""
+            </tbody>
+            <tbody ng-repeat-start="category in tests_list">
+                <tr ng-click="toggleCategory(category)">
+                    <td colspan="3" class="tlp-table-cell-section">
+                        <i class="fa edit-campaign-tests-list-check edit-campaign-tests-list-section-check"
+                           ng-class="categoryCheckmark(category)"></i>
+                        <span class="edit-campaign-tests-list-section-label">{{ category.label }}</span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-repeat-end="">
+                <tr class="edit-campaign-tests-list-test"
                     ng-repeat="test in category.tests
                         | toArray:false
-                        | filter:matchProperties(filters.search)
                         | unique:'definition.id'
                         track by test.definition.id"
                     ng-class="diffState(test)"
-                >
-                    <td><i class="checklist-check" ng-class="testCheckmark(test)" ng-click="toggleTest(test)"></i></td>
-                    <td>{{ test.definition.id }}</td>
-                    <td>{{ test.definition.summary }}</td>
+                    ng-click="toggleTest(test)">
+                    <td>
+                        <i class="fa edit-campaign-tests-list-check"
+                           ng-class="testCheckmark(test)"></i>
+                    </td>
+                    <td class="tlp-table-cell-numeric tlp-table-cell-filterable">{{ test.definition.id }}</td>
+                    <td class="tlp-table-cell-filterable">{{ test.definition.summary }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div id="campaign-edit-footer" class="modal-footer">
-        <div id="campaign-edit-executions-diff">
-            <div id="campaign-edit-executions-add" ng-if="addedTests().length > 0" translate>
+    <div class="tlp-modal-footer">
+        <div class="edit-campaign-tests-diff">
+            <div class="tlp-badge-success tlp-badge-outline" ng-if="addedTests().length > 0" translate>
                 {{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} will be added
             </div>
-            <div id="campaign-edit-executions-remove" ng-if="removedTests().length > 0" translate>
+            <div class="tlp-badge-danger tlp-badge-outline" ng-if="removedTests().length > 0" translate>
                 {{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} will be removed
             </div>
         </div>
-        <div id="campaign-edit-button-bar">
-            <button
-                type="button"
-                class="btn btn-large"
-                ng-click="cancel()">
-                <span translate>Cancel</span>
-            </button>
-            <button
-                type="submit"
-                class="btn btn-large btn-primary"
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal">
+            {{ 'Cancel' | translate }}
+        </button>
+        <button type="submit"
+                class="tlp-button-primary tlp-modal-action"
                 ng-disabled="submitting_changes || ! editCampaignForm.$valid">
-                <i class="icon-spinner icon-spin" ng-if="submitting_changes"></i>
-                <span translate>Save changes</span>
-            </button>
-        </div>
+            <i class="fa fa-spinner fa-spin" ng-if="submitting_changes"></i>
+            {{ 'Save changes' | translate }}
+        </button>
     </div>
 </form>
 

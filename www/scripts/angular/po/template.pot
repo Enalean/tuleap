@@ -5,15 +5,12 @@ msgstr ""
 "Project-Id-Version: \n"
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "<i class=\"icon-pencil\"></i> Edit {{ campaign.label }} campaign"
+#: src/app/campaign/campaign-new.tpl.html
+msgid "A campaign label is required"
 msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "<i class=\"icon-plus\"></i> Add a test"
-msgstr ""
-
-#: src/app/campaign/campaign-new.tpl.html
-msgid "A campaign label is required"
+msgid "Add a test"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
@@ -47,6 +44,7 @@ msgstr ""
 msgid "Choose tests"
 msgstr ""
 
+#: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-presences.tpl.html
 msgid "Close"
@@ -82,6 +80,10 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Edit this test"
+msgstr ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Edit {{ campaign.label }} campaign"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html

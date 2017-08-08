@@ -81,20 +81,18 @@ function ExecutionListCtrl(
 
     function openEditCampaignModal() {
         return TlpModalService.open({
-            templateUrl: 'campaign-edit.tpl.html',
-            controller : 'CampaignEditCtrl',
+            templateUrl:  'campaign-edit.tpl.html',
+            controller :  'CampaignEditCtrl',
+            controllerAs: 'edit_modal',
             resolve: {
-                editCampaignCallback: function() {
-                    return function(campaign) {
-                        $scope.campaign = campaign;
-                        ExecutionService.updateCampaign(campaign);
-                        ExecutionService
-                            .synchronizeExecutions($scope.campaign_id)
-                            .then(hideDetailsForRemovedTestExecution);
-                    };
+                editCampaignCallback: function(campaign) {
+                    $scope.campaign = campaign;
+                    ExecutionService.updateCampaign(campaign);
+                    ExecutionService
+                        .synchronizeExecutions($scope.campaign_id)
+                        .then(hideDetailsForRemovedTestExecution);
                 }
-            },
-            windowClass: 'modal-lg',
+            }
         });
     }
 

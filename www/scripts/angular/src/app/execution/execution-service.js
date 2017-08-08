@@ -160,6 +160,7 @@ function ExecutionService(
 
         groupExecutionsByCategory(self.campaign_id, executions);
         self.campaign['nb_of_' + status]++;
+        self.campaign.total++;
     }
 
     function removeTestExecution(execution_to_remove) {
@@ -168,6 +169,7 @@ function ExecutionService(
         });
         delete self.executions[execution_to_remove.id];
         self.campaign['nb_of_' + execution_to_remove.status]--;
+        self.campaign.total--;
     }
 
     function updateTestExecution(execution_updated) {

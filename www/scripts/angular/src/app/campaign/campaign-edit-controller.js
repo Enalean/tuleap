@@ -1,14 +1,15 @@
 import _ from 'lodash';
+import * as tlp from 'tlp';
 
 export default CampaignEditCtrl;
 
 CampaignEditCtrl.$inject = [
+    'modal_instance',
     '$scope',
     '$q',
-    '$modalInstance',
     '$state',
     '$filter',
-    '$modal',
+    '$timeout',
     'SharedPropertiesService',
     'CampaignService',
     'DefinitionService',
@@ -20,12 +21,12 @@ CampaignEditCtrl.$inject = [
 ];
 
 function CampaignEditCtrl(
+    modal_instance,
     $scope,
     $q,
-    $modalInstance,
     $state,
     $filter,
-    $modal,
+    $timeout,
     SharedPropertiesService,
     CampaignService,
     DefinitionService,
@@ -44,12 +45,10 @@ function CampaignEditCtrl(
         filters               : {},
         selectReportTests     : selectReportTests,
         showAddTestModal      : showAddTestModal,
-        matchProperties       : matchProperties,
         toggleCategory        : toggleCategory,
         toggleTest            : toggleTest,
         addedTests            : addedTests,
         removedTests          : removedTests,
-        cancel                : cancel,
         editCampaign          : editCampaign,
         categoryCheckmark     : categoryCheckmark,
         testCheckmark         : testCheckmark,
@@ -59,6 +58,12 @@ function CampaignEditCtrl(
     init();
 
     function init() {
+        $timeout(function() {
+            var searchField = document.getElementById('edit-campaign-tests-list-filter');
+            tlp.filterInlineTable(searchField);
+            searchField.addEventListener('keydown', preventSubmit);
+        }, 0);
+
         project_id  = SharedPropertiesService.getProjectId();
         campaign_id = $state.params.id;
 
@@ -75,7 +80,7 @@ function CampaignEditCtrl(
         ]).then(function(results) {
             var definitions = results[0],
                 executions = results[1];
-            $scope.tests_list = getInitialTestsList(definitions, executions);
+            $scope.tests_list = buildInitialTestsList(definitions, executions);
         });
     }
 
@@ -115,7 +120,7 @@ function CampaignEditCtrl(
         });
     }
 
-    function getInitialTestsList(definitions, executions) {
+    function buildInitialTestsList(definitions, executions) {
         var tests_list = {};
 
         _.forEach(definitions, function(definition) {
@@ -156,12 +161,19 @@ function CampaignEditCtrl(
         };
     }
 
-    function matchProperties(search) {
-        return function(test) {
-            return test.definition.id.toString().indexOf(search) === 0 ||
-                   test.definition.summary.indexOf(search) !== -1 ||
-                   test.definition.category.indexOf(search) !== -1;
-        };
+    function preventSubmit(event) {
+        var event = event || window.event;
+        var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+
+        if (keyCode === 13) {
+            event.cancelBubble = true;
+            event.returnValue = false;
+
+            if (event.stopPropagation) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        }
     }
 
     function selectedTests(category) {
@@ -185,27 +197,27 @@ function CampaignEditCtrl(
     function categoryCheckmark(category) {
         switch (selectedTests(category).length) {
           case 0:
-              return 'icon-check-empty';
+              return 'fa-square-o';
           case _.size(category.tests):
-              return 'icon-check';
+              return 'fa-check-square-o';
           default:
-              return 'icon-check-minus';
+              return 'fa-minus-square-o';
         }
     }
 
     function testCheckmark(test) {
-        return test.selected ? 'icon-check' : 'icon-check-empty';
+        return test.selected ? 'fa-check-square-o' : 'fa-square-o';
     }
 
     function diffState(test) {
         if (test.execution !== null && test.selected) {
-            return 'test-selected';
+            return 'selected';
         } else if (test.execution !== null) {
-            return 'test-removed';
+            return 'removed';
         } else if (test.selected) {
-            return 'test-added';
+            return 'added';
         } else {
-            return 'test-unselected';
+            return 'unselected';
         }
     }
 
@@ -265,10 +277,6 @@ function CampaignEditCtrl(
         $scope.tests_list[category].tests[definition.id] = buildTest(definition, null, true);
     }
 
-    function cancel() {
-        $modalInstance.dismiss();
-    }
-
     function editCampaign(campaign) {
         $scope.submitting_changes = true;
 
@@ -288,7 +296,7 @@ function CampaignEditCtrl(
                 editCampaignCallback(campaign);
             }
 
-            $modalInstance.close();
+            modal_instance.tlp_modal.hide();
         });
     }
 }

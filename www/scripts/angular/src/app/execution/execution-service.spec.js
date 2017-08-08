@@ -287,7 +287,8 @@ describe ('ExecutionService - ', function () {
                 nb_of_passed: 0,
                 nb_of_failed: 0,
                 nb_of_notrun: 0,
-                nb_of_blocked: 0
+                nb_of_blocked: 0,
+                total: 0
             };
 
             var categories = {};
@@ -323,7 +324,8 @@ describe ('ExecutionService - ', function () {
                 nb_of_passed: 0,
                 nb_of_failed: 0,
                 nb_of_notrun: 1,
-                nb_of_blocked: 0
+                nb_of_blocked: 0,
+                total: 1
             });
         });
     });
@@ -337,7 +339,8 @@ describe ('ExecutionService - ', function () {
                 nb_of_passed: 0,
                 nb_of_failed: 0,
                 nb_of_notrun: 1,
-                nb_of_blocked: 0
+                nb_of_blocked: 0,
+                total: 1
             };
 
             var execution_to_save = {
@@ -361,7 +364,8 @@ describe ('ExecutionService - ', function () {
                 nb_of_passed: 0,
                 nb_of_failed: 1,
                 nb_of_notrun: 0,
-                nb_of_blocked: 0
+                nb_of_blocked: 0,
+                total: 1
             };
 
             ExecutionService.campaign   = campaign;
@@ -380,7 +384,8 @@ describe ('ExecutionService - ', function () {
                 nb_of_passed: 0,
                 nb_of_failed: 0,
                 nb_of_notrun: 0,
-                nb_of_blocked: 1
+                nb_of_blocked: 1,
+                total: 1
             };
 
             var execution_to_save = {
@@ -417,7 +422,8 @@ describe ('ExecutionService - ', function () {
                 nb_of_passed: 0,
                 nb_of_failed: 0,
                 nb_of_notrun: 1,
-                nb_of_blocked: 0
+                nb_of_blocked: 0,
+                total: 1
             };
 
             var execution = {
@@ -450,6 +456,7 @@ describe ('ExecutionService - ', function () {
             expect(ExecutionService.executions[4]).toEqual(undefined);
             expect(ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]).toEqual(undefined);
             expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
+            expect(ExecutionService.campaign.total).toEqual(0);
         });
     });
 

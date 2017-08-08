@@ -99,3 +99,65 @@
     display: flex;
     justify-content: center;
 }
+
+.edit-campaign-label-input {
+    max-width: 500px;
+}
+
+.edit-campaign-tests-list-actions-spacer-small {
+    flex: 0 0 1%;
+}
+
+.edit-campaign-tests-search-container {
+    flex: 1 1 25%;
+}
+
+.edit-campaign-tests-list {
+    table-layout: fixed;
+
+    .tlp-table-cell-section {
+        position: relative;
+    }
+
+    tbody > tr {
+        cursor: pointer;
+    }
+}
+
+.edit-campaign-tests-list-header {
+    &.check {
+        width: 2.25em;
+    }
+    &.id {
+        width: 3.5em;
+    }
+}
+
+.edit-campaign-tests-list-section-check {
+    line-height: 1.1em;
+    vertical-align: bottom;
+}
+
+.edit-campaign-tests-list-section-label {
+    position: absolute;
+    left: 2em;
+}
+
+.edit-campaign-tests-list-test {
+    &.added {
+        color: $tlp-ui-success;
+    }
+    &.removed {
+        color: $tlp-swatch-chrome-silver;
+        text-decoration: line-through;
+    }
+}
+
+.edit-campaign-tests-diff {
+    margin-right: auto;
+    align-self: center;
+
+    > [class*="tlp-badge-"]:not(:last-child) {
+        margin: 0 10px 0 0;
+    }
+}
