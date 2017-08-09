@@ -44,7 +44,7 @@
             tags: [],
             initSelection : function (element, callback) {
                 var data = [];
-                $(element.val().split(",")).each(function () {
+                $(element.val().split(", ")).each(function () {
                     data.push({id: this, text: this});
                 });
                 callback(data);
