@@ -44,7 +44,7 @@ use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
-use Tuleap\Svn\Notifications\Notification;
+use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
@@ -240,7 +240,16 @@ class RepositoryResource extends AuthenticatedResource
             $access_file_history_creator,
             $this->immutable_tag_factory,
             $mail_notification_manager,
-            new NotificationUpdateChecker($mail_notification_manager)
+            new NotificationUpdateChecker(
+                $mail_notification_manager,
+                new EmailsToBeNotifiedRetriever(
+                    $mail_notification_manager,
+                    $user_to_notify_dao,
+                    $ugroup_to_notify_dao,
+                    $ugroup_manager,
+                    $this->user_manager
+                )
+            )
         );
 
         $this->settings_representation_validator = new SettingsRepresentationValidator();

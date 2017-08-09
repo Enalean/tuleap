@@ -109,4 +109,9 @@ class MailNotification
     {
         $this->id = $id;
     }
+
+    public function setUsers(array $notified_users)
+    {
+        $this->notified_users = $notified_users;
+    }
 }

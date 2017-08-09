@@ -80,7 +80,8 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
             $this->notification_manager,
             $this->user_dao,
             $notified_ugroups_dao,
-            $ugroup_manager
+            $ugroup_manager,
+            mock('UserManager')
         );
     }
 
