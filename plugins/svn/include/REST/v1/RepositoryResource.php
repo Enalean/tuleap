@@ -229,7 +229,8 @@ class RepositoryResource extends AuthenticatedResource
             $access_file_history_factory,
             $access_file_history_creator,
             $this->immutable_tag_factory,
-            $mail_notification_manager
+            $mail_notification_manager,
+            new NotificationUpdateChecker($mail_notification_manager)
         );
     }
 

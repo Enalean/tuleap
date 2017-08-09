@@ -56,6 +56,10 @@ class RepositoryResourceUpdater
      * @var MailNotificationManager
      */
     private $mail_notification_manager;
+    /**
+     * @var NotificationUpdateChecker
+     */
+    private $notification_update_checker;
 
     public function __construct(
         HookConfigUpdator $hook_config_updator,
@@ -63,7 +67,8 @@ class RepositoryResourceUpdater
         AccessFileHistoryFactory $access_file_history_factory,
         AccessFileHistoryCreator $access_file_history_creator,
         ImmutableTagFactory $immutable_tag_factory,
-        MailNotificationManager $mail_notification_manager
+        MailNotificationManager $mail_notification_manager,
+        NotificationUpdateChecker $notification_update_checker
     ) {
         $this->hook_config_updator         = $hook_config_updator;
         $this->immutable_tag_creator       = $immutable_tag_creator;
@@ -71,6 +76,7 @@ class RepositoryResourceUpdater
         $this->access_file_history_factory = $access_file_history_factory;
         $this->immutable_tag_factory       = $immutable_tag_factory;
         $this->mail_notification_manager   = $mail_notification_manager;
+        $this->notification_update_checker = $notification_update_checker;
     }
 
     public function update(Repository $repository, Settings $settings)
@@ -90,7 +96,9 @@ class RepositoryResourceUpdater
             $this->access_file_history_creator->create($repository, $settings->getAccessFileContent(), time());
         }
 
-        $this->mail_notification_manager->updateFromREST($repository, $settings->getMailNotification());
+        if ($this->notification_update_checker->hasNotificationChanged($repository, $settings->getMailNotification())) {
+            $this->mail_notification_manager->updateFromREST($repository, $settings->getMailNotification());
+        }
     }
 
     private function hasImmutableTagChanged(ImmutableTag $new_immutable_tag, Repository $repository)
