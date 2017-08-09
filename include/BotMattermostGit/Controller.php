@@ -28,9 +28,11 @@ use GitRepository;
 use GitRepositoryFactory;
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermostGit\BotMattermostGitNotification\Factory;
 use Tuleap\BotMattermostGit\BotMattermostGitNotification\Validator;
+use Tuleap\BotMattermostGit\Exception\CannotDeleteBotNotificationException;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;
 
 class Controller
@@ -136,6 +138,16 @@ class Controller
             $repository_id = $this->request->get('repository_id');
 
             $this->bot_git_factory->deleteBotNotification($repository_id);
+        }
+    }
+
+    public function deleteBotNotificationByBot(Bot $bot)
+    {
+        try {
+            $this->bot_git_factory->deleteBotNotificationByBot($bot);
+        } catch (CannotDeleteBotNotificationException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            $GLOBALS['Response']->redirect(BOT_MATTERMOST_BASE_URL.'/admin/');
         }
     }
 

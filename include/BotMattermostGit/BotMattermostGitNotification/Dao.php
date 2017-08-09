@@ -21,6 +21,7 @@
 namespace Tuleap\BotMattermostGit\BotMattermostGitNotification;
 
 use DataAccessObject;
+use Tuleap\BotMattermost\Bot\Bot;
 
 class Dao extends DataAccessObject
 {
@@ -198,5 +199,18 @@ class Dao extends DataAccessObject
         }
 
         return (trim(implode('', $array)) !== '');
+    }
+
+    public function deleteNotificationByBot(Bot $bot)
+    {
+        $bot_id = $this->da->escapeInt($bot->getId());
+
+        $sql = "DELETE notification, channel
+                FROM plugin_botmattermost_git_notification AS notification
+                INNER JOIN plugin_botmattermost_git_notification_channel AS channel
+                  ON notification.id = channel.notification_id
+                WHERE bot_id = $bot_id";
+
+        return $this->update($sql);
     }
 }

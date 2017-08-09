@@ -2,9 +2,9 @@ plugin_botmattermost_git	descriptor_description	Robot pour recevoir des notifica
 plugin_botmattermost_git	descriptor_name	Robot Mattermost-Git Plugin
 
 
-plugin_botmattermost_git	alert_error_create_bot_notification	L'ajout du robot de notification a échoué
-plugin_botmattermost_git	alert_error_delete_bot_notification	La suppression du robot de notification a échoué
-plugin_botmattermost_git	alert_error_update_bot_notification	La mise à jour du robot de notification a échoué
+plugin_botmattermost_git	alert_error_create_bot_notification	L'ajout de la notification Git a échoué
+plugin_botmattermost_git	alert_error_delete_bot_notification	La suppression de la notification Git a échoué
+plugin_botmattermost_git	alert_error_update_bot_notification	La mise à jour de la notification Git a échoué
 
 plugin_botmattermost_git	title	Notifications dans Mattermost
 plugin_botmattermost_git	description	Choisis un robot afin d'envoyer des notifications dans Mattermost lorsqu'un push à lieu dans ce dépot.

@@ -20,6 +20,7 @@
 
 namespace Tuleap\BotMattermostGit\BotMattermostGitNotification;
 
+use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 use Tuleap\BotMattermostGit\Exception\CannotCreateBotNotificationException;
@@ -71,6 +72,13 @@ class Factory
     public function deleteBotNotification($repository_id)
     {
         if (! $this->dao->deleteNotification($repository_id)) {
+            throw new CannotDeleteBotNotificationException();
+        }
+    }
+
+    public function deleteBotNotificationByBot(Bot $bot)
+    {
+        if (! $this->dao->deleteNotificationByBot($bot)) {
             throw new CannotDeleteBotNotificationException();
         }
     }

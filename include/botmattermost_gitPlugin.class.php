@@ -20,6 +20,7 @@
 
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
+use Tuleap\BotMattermost\BotMattermostDeleted;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServices\ClientBotMattermost;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
@@ -68,6 +69,7 @@ class botmattermost_gitPlugin extends Plugin
         if (defined('PULLREQUEST_BASE_DIR')) {
             $this->addHook(GetCreatePullRequest::NAME);
         }
+        $this->addHook(BotMattermostDeleted::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -155,6 +157,11 @@ class botmattermost_gitPlugin extends Plugin
         if (strpos($_SERVER['REQUEST_URI'], $git_plugin->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/autocompleter.js"></script>';
         }
+    }
+
+    public function botmattermost_bot_deleted(BotMattermostDeleted $event)
+    {
+        $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
 
     public function process()
