@@ -44,7 +44,7 @@ import TuleapStripTagsFilter   from './strip-tags/strip-tags-filter.js';
 import WipPopoverDirective     from './wip-popover/wip-popover-directive.js';
 import KanbanColumnController  from './kanban-column/kanban-column-controller.js';
 
-angular.module('kanban', [
+export default angular.module('kanban', [
     'angular-locker',
     'angularMoment',
     'gettext',
@@ -86,6 +86,10 @@ angular.module('kanban', [
 .directive('goToKanban', GoToKanbanDirective)
 .value('KanbanFilterValue', KanbanFilterValue)
 .filter('InPropertiesFilter', InPropertiesFilter)
-.filter('tuleapStripTags', TuleapStripTagsFilter);
+.filter('tuleapStripTags', TuleapStripTagsFilter)
+.name;
 
-export default 'kanban';
+var kanban_elements = document.getElementsByClassName('widget-kanban');
+[].forEach.call(kanban_elements, function (kanban_element) {
+    angular.bootstrap(kanban_element, ['kanban']);
+});

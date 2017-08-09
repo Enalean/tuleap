@@ -8,7 +8,6 @@
   "dependencies": {
     "angular": "^1.6.5",
     "angular-gettext": "^2.3.10",
-    "angular-ui-router": "0.2.10",
     "moment": "^2.18.1"
   },
   "devDependencies": {

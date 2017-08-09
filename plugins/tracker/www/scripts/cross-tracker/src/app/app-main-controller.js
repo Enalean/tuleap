@@ -18,6 +18,6 @@ function MainController(
     function init(language, user_id) {
         SharedPropertiesService.setUserId(user_id);
         gettextCatalog.setCurrentLanguage(language);
-        moment.updateLocale(language);
+        moment.locale(language);
     }
 }
