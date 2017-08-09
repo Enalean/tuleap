@@ -25,6 +25,7 @@ use HTTPRequest;
 use PFUser;
 use EventManager;
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\Request\CurrentPage;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectsPresenter;
@@ -72,6 +73,7 @@ class PresenterBuilder
                 $url_redirect
             ),
             new BurningParrotCompatiblePageDetector(
+                new CurrentPage(),
                 new Admin_Homepage_Dao()
             ),
             $this->current_user,

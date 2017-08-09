@@ -20,6 +20,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
 
 if (version_compare(phpversion(), '5.3', '<') && version_compare(phpversion(), '7', '>=')) {
@@ -228,6 +229,7 @@ date_default_timezone_set(TimezoneRetriever::getUserTimezone($current_user));
 
 $theme_manager = new ThemeManager(
     new BurningParrotCompatiblePageDetector(
+        new CurrentPage(),
         new Admin_Homepage_Dao()
     )
 );
