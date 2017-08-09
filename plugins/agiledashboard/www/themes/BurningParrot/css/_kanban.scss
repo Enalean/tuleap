@@ -264,10 +264,13 @@ $kanban-column-footer-height: 50px;
 
 .kanban-column-header-wip-limit {
     font-size: 13px;
-    cursor: pointer;
 
     &.infinity {
         padding: 5px 9px 3px;
+    }
+
+    &.editable {
+        cursor: pointer;
     }
 }
 

@@ -1,4 +1,5 @@
 import './wip-popover.tpl.html';
+import angular from 'angular';
 import { dropdown as createDropdown } from 'tlp';
 
 export default WipPopover;
@@ -11,7 +12,6 @@ function WipPopover($timeout) {
         templateUrl: 'wip-popover.tpl.html',
         scope      : {
             column     : '=',
-            userIsAdmin: '&userIsAdmin',
             setWipLimit: '&setWipLimit'
         },
         link: function(scope, element, attrs) {
