@@ -23,6 +23,7 @@ namespace Tuleap\Trafficlights;
 use Plugin;
 use Codendi_Request;
 use MVC2_Controller;
+use TrackerFactory;
 
 class Router {
 
@@ -36,6 +37,9 @@ class Router {
      */
     private $config;
 
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
     /**
      * @param \Service
      */
@@ -43,20 +47,22 @@ class Router {
 
     public function __construct(
         Plugin $plugin,
-        Config $config
+        Config $config,
+        TrackerFactory $tracker_factory
     ) {
-        $this->config = $config;
-        $this->plugin = $plugin;
+        $this->config          = $config;
+        $this->plugin          = $plugin;
+        $this->tracker_factory = $tracker_factory;
     }
 
     public function route(Codendi_Request $request) {
         switch ($request->get('action')) {
             case 'admin':
-                $controller = new AdminController($request, $this->config);
+                $controller = new AdminController($request, $this->config, $this->tracker_factory);
                 $this->renderAction($controller, 'admin', $request);
                 break;
             case 'admin-update':
-                $controller = new AdminController($request, $this->config);
+                $controller = new AdminController($request, $this->config, $this->tracker_factory);
                 $this->executeAction($controller, 'update');
                 $this->renderIndex($request);
                 break;
@@ -66,7 +72,7 @@ class Router {
     }
 
     private function renderIndex(Codendi_Request $request) {
-        $controller = new IndexController($request, $this->config);
+        $controller = new IndexController($request, $this->config, $this->tracker_factory);
         $this->renderAction($controller, 'index', $request);
     }
 

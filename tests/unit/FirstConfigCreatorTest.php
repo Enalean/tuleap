@@ -48,16 +48,19 @@ class FirstConfigCreatorTest extends TuleapTestCase
     private $campaign_tracker_id          = 333;
     private $definition_tracker_id        = 444;
     private $execution_tracker_id         = 555;
+    private $issue_tracker_id             = 666;
 
     private $project_id                   = 102;
     private $new_campaign_tracker_id      = 334;
     private $new_definition_tracker_id    = 445;
     private $new_execution_tracker_id     = 556;
+    private $new_issue_tracker_id         = 667;
     private $tracker_mapping;
 
     private $campaign_tracker_xml_path;
     private $definition_tracker_xml_path;
     private $execution_tracker_xml_path;
+    private $issue_tracker_xml_path;
 
     public function setUp()
     {
@@ -66,13 +69,15 @@ class FirstConfigCreatorTest extends TuleapTestCase
         $this->campaign_tracker_xml_path   = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_campaign.xml';
         $this->definition_tracker_xml_path = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_test_def.xml';
         $this->execution_tracker_xml_path  = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_test_exec.xml';
+        $this->issue_tracker_xml_path      = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_bugs.xml';
 
         $this->template = stub('Project')->getId()->returns($this->template_id);
         $this->project = stub('Project')->getId()->returns($this->project_id);
         $this->tracker_mapping = array(
             $this->campaign_tracker_id => $this->new_campaign_tracker_id,
             $this->definition_tracker_id => $this->new_definition_tracker_id,
-            $this->execution_tracker_id => $this->new_execution_tracker_id
+            $this->execution_tracker_id => $this->new_execution_tracker_id,
+            $this->issue_tracker_id => $this->new_issue_tracker_id
         );
 
         $this->config = mock('Tuleap\\Trafficlights\\Config');
@@ -89,6 +94,9 @@ class FirstConfigCreatorTest extends TuleapTestCase
             ->getTrackerItemNameFromXMLFile($this->execution_tracker_xml_path)
             ->returns('test_exec');
         stub($this->xml_import)
+            ->getTrackerItemNameFromXMLFile($this->issue_tracker_xml_path)
+            ->returns('bugs');
+        stub($this->xml_import)
             ->createFromXMLFile($this->project, $this->campaign_tracker_xml_path)
             ->returns(aTracker()->withId($this->new_campaign_tracker_id)->build());
         stub($this->xml_import)
@@ -97,6 +105,9 @@ class FirstConfigCreatorTest extends TuleapTestCase
         stub($this->xml_import)
             ->createFromXMLFile($this->project, $this->execution_tracker_xml_path)
             ->returns(aTracker()->withId($this->new_execution_tracker_id)->build());
+        stub($this->xml_import)
+            ->createFromXMLFile($this->project, $this->issue_tracker_xml_path)
+            ->returns(aTracker()->withId($this->new_issue_tracker_id)->build());
 
         $this->config_creator = new FirstConfigCreator(
             $this->config,
@@ -121,12 +132,16 @@ class FirstConfigCreatorTest extends TuleapTestCase
         stub($this->config)
             ->getTestExecutionTrackerId($this->template)
             ->returns($this->execution_tracker_id);
+        stub($this->config)
+            ->getIssueTrackerId($this->template)
+            ->returns($this->issue_tracker_id);
 
         expect($this->config)->setProjectConfiguration(
             $this->project,
             $this->new_campaign_tracker_id,
             $this->new_definition_tracker_id,
-            $this->new_execution_tracker_id
+            $this->new_execution_tracker_id,
+            $this->new_issue_tracker_id
         )->once();
 
         expect($this->xml_import)->createFromXMLFile()->never();
@@ -149,12 +164,16 @@ class FirstConfigCreatorTest extends TuleapTestCase
         stub($this->config)
             ->getTestExecutionTrackerId($this->project)
             ->returns(3);
+        stub($this->config)
+            ->getIssueTrackerId($this->project)
+            ->returns(4);
 
         expect($this->config)->setProjectConfiguration(
             $this->project,
             $this->new_campaign_tracker_id,
             $this->new_definition_tracker_id,
-            $this->new_execution_tracker_id
+            $this->new_execution_tracker_id,
+            $this->new_issue_tracker_id
         )->never();
 
         $this->config_creator->createConfigForProjectFromTemplate(
@@ -175,6 +194,9 @@ class FirstConfigCreatorTest extends TuleapTestCase
         stub($this->config)
             ->getTestExecutionTrackerId($this->template)
             ->returns($this->execution_tracker_id);
+        stub($this->config)
+            ->getIssueTrackerId($this->template)
+            ->returns($this->issue_tracker_id);
 
         expect($this->xml_import)->createFromXMLFile()->count(1);
 
@@ -182,7 +204,8 @@ class FirstConfigCreatorTest extends TuleapTestCase
             $this->project,
             $this->new_campaign_tracker_id,
             $this->new_definition_tracker_id,
-            $this->new_execution_tracker_id
+            $this->new_execution_tracker_id,
+            $this->new_issue_tracker_id
         )->once();
 
         $this->config_creator->createConfigForProjectFromTemplate(
@@ -198,7 +221,7 @@ class FirstConfigCreatorTest extends TuleapTestCase
      */
     public function itCreatesTTLTrackersFromXMLTemplates()
     {
-        expect($this->xml_import)->createFromXMLFile()->count(3);
+        expect($this->xml_import)->createFromXMLFile()->count(4);
 
         $this->config_creator->createConfigForProjectFromXML($this->project);
     }
@@ -209,7 +232,8 @@ class FirstConfigCreatorTest extends TuleapTestCase
             $this->project,
             $this->new_campaign_tracker_id,
             $this->new_definition_tracker_id,
-            $this->new_execution_tracker_id
+            $this->new_execution_tracker_id,
+            $this->new_issue_tracker_id
         )->once();
 
         $this->config_creator->createConfigForProjectFromXML($this->project);
@@ -224,7 +248,7 @@ class FirstConfigCreatorTest extends TuleapTestCase
             ->getTrackerByShortnameAndProjectId('campaign', $this->project->getId())
             ->returns(aTracker()->withId($this->new_campaign_tracker_id)->build());
 
-        expect($this->xml_import)->createFromXMLFile()->count(2);
+        expect($this->xml_import)->createFromXMLFile()->count(3);
 
         $this->config_creator->createConfigForProjectFromXML($this->project);
     }

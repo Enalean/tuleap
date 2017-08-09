@@ -20,25 +20,73 @@
 
 namespace Tuleap\Trafficlights;
 
-class AdminController extends TrafficlightsController {
+use Feedback;
 
-    public function admin() {
+class AdminController extends TrafficlightsController
+{
+
+    public function admin()
+    {
         return $this->renderToString(
             'admin',
             new AdminPresenter(
                 $this->config->getCampaignTrackerId($this->project),
                 $this->config->getTestDefinitionTrackerId($this->project),
-                $this->config->getTestExecutionTrackerId($this->project)
+                $this->config->getTestExecutionTrackerId($this->project),
+                $this->config->getIssueTrackerId($this->project)
             )
         );
     }
 
-    public function update() {
+    public function update()
+    {
+        $project_trackers    = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
+        $project_tracker_ids = array_map(
+            function ($tracker) {
+                return $tracker->getId();
+            },
+            $project_trackers
+        );
+
         $this->config->setProjectConfiguration(
             $this->project,
-            $this->request->get('campaign_tracker_id'),
-            $this->request->get('test_definition_tracker_id'),
-            $this->request->get('test_execution_tracker_id')
+            $this->checkTrackerIdForProject(
+                $this->request->get('campaign_tracker_id'),
+                $this->config->getCampaignTrackerId($this->project),
+                $project_tracker_ids
+            ),
+            $this->checkTrackerIdForProject(
+                $this->request->get('test_definition_tracker_id'),
+                $this->config->getTestDefinitionTrackerId($this->project),
+                $project_tracker_ids
+            ),
+            $this->checkTrackerIdForProject(
+                $this->request->get('test_execution_tracker_id'),
+                $this->config->getTestExecutionTrackerId($this->project),
+                $project_tracker_ids
+            ),
+            $this->checkTrackerIdForProject(
+                $this->request->get('issue_tracker_id'),
+                $this->config->getIssueTrackerId($this->project),
+                $project_tracker_ids
+            )
         );
+    }
+
+    private function checkTrackerIdForProject($submitted_id, $original_id, $project_tracker_ids)
+    {
+        $is_valid_project_tracker_id = in_array($submitted_id, $project_tracker_ids);
+        if (! $is_valid_project_tracker_id) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText(
+                    'plugin_trafficlights',
+                    'invalid_tracker_id_for_project',
+                    $submitted_id
+                )
+            );
+        }
+
+        return $is_valid_project_tracker_id ? $submitted_id : $original_id;
     }
 }

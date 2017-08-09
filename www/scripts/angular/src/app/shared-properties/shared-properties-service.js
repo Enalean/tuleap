@@ -13,26 +13,30 @@ function SharedPropertiesService() {
     };
 
     return {
-        getProjectId          : getProjectId,
-        setProjectId          : setProjectId,
-        getCampaignId         : getCampaignId,
-        setCampaignId         : setCampaignId,
-        getCurrentUser        : getCurrentUser,
-        setCurrentUser        : setCurrentUser,
-        getNodeServerAddress  : getNodeServerAddress,
-        setNodeServerAddress  : setNodeServerAddress,
-        getUUID               : getUUID,
-        setUUID               : setUUID,
-        setNodeServerVersion  : setNodeServerVersion,
-        getNodeServerVersion  : getNodeServerVersion,
-        setCampaignTrackerId  : setCampaignTrackerId,
-        getCampaignTrackerId  : getCampaignTrackerId,
-        setDefinitionTrackerId: setDefinitionTrackerId,
-        getDefinitionTrackerId: getDefinitionTrackerId,
-        setExecutionTrackerId : setExecutionTrackerId,
-        getExecutionTrackerId : getExecutionTrackerId,
-        getCurrentMilestone   : getCurrentMilestone,
-        setCurrentMilestone   : setCurrentMilestone
+        getProjectId           : getProjectId,
+        setProjectId           : setProjectId,
+        getCampaignId          : getCampaignId,
+        setCampaignId          : setCampaignId,
+        getCurrentUser         : getCurrentUser,
+        setCurrentUser         : setCurrentUser,
+        getNodeServerAddress   : getNodeServerAddress,
+        setNodeServerAddress   : setNodeServerAddress,
+        getUUID                : getUUID,
+        setUUID                : setUUID,
+        setNodeServerVersion   : setNodeServerVersion,
+        getNodeServerVersion   : getNodeServerVersion,
+        setCampaignTrackerId   : setCampaignTrackerId,
+        getCampaignTrackerId   : getCampaignTrackerId,
+        setDefinitionTrackerId : setDefinitionTrackerId,
+        getDefinitionTrackerId : getDefinitionTrackerId,
+        setExecutionTrackerId  : setExecutionTrackerId,
+        getExecutionTrackerId  : getExecutionTrackerId,
+        setIssueTrackerId      : setIssueTrackerId,
+        getIssueTrackerId      : getIssueTrackerId,
+        setAccessToIssueTracker: setAccessToIssueTracker,
+        canAccessIssueTracker  : canAccessIssueTracker,
+        getCurrentMilestone    : getCurrentMilestone,
+        setCurrentMilestone    : setCurrentMilestone
     };
 
     function getProjectId() {
@@ -105,6 +109,22 @@ function SharedPropertiesService() {
 
     function getExecutionTrackerId() {
         return property.execution_tracker_id;
+    }
+
+    function setIssueTrackerId(issue_tracker_id) {
+        property.issue_tracker_id = issue_tracker_id;
+    }
+
+    function getIssueTrackerId() {
+        return property.issue_tracker_id;
+    }
+
+    function setAccessToIssueTracker(flag) {
+        property.can_access_issue_tracker = flag;
+    }
+
+    function canAccessIssueTracker() {
+        return property.can_access_issue_tracker;
     }
 
     function getCurrentMilestone() {

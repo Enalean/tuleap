@@ -24,6 +24,7 @@ use MVC2_PluginController;
 use Codendi_Request;
 use Planning_Milestone;
 use PFUser;
+use TrackerFactory;
 
 abstract class TrafficlightsController extends MVC2_PluginController {
 
@@ -33,6 +34,9 @@ abstract class TrafficlightsController extends MVC2_PluginController {
      * @var Config
      */
     protected $config;
+
+    /** @var TrackerFactory */
+    protected $tracker_factory;
 
     /**
      * @var Project
@@ -44,12 +48,16 @@ abstract class TrafficlightsController extends MVC2_PluginController {
      */
     protected $current_milestone;
 
-    public function __construct(Codendi_Request $request, Config $config) {
+    public function __construct(
+        Codendi_Request $request,
+        Config $config,
+        TrackerFactory $tracker_factory
+    ) {
         parent::__construct(self::NAME, $request);
 
         $this->project           = $request->getProject();
         $this->config            = $config;
-
+        $this->tracker_factory   = $tracker_factory;
         $this->current_milestone = $this->getMilestone(
             $request->getCurrentUser(),
             (int)$request->getValidated('milestone_id', 'int', 0)

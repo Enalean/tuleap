@@ -11,7 +11,9 @@ plugin_trafficlights	_covered_by_reverse	Covers
 plugin_trafficlights	admin_campaign_tracker	Test Campaigns Tracker
 plugin_trafficlights	admin_definition_tracker	Test Definitions Tracker
 plugin_trafficlights	admin_execution_tracker	Test Executions Tracker
+plugin_trafficlights	admin_issue_tracker	Issue Tracker
 plugin_trafficlights	admin_tracker_placeholder	Enter the tracker id…
+plugin_trafficlights	invalid_tracker_id_for_project	Invalid tracker id $1 for this project
 
 plugin_trafficlights	misconfigured_title	Great Scott!
 plugin_trafficlights	misconfigured_message	You should configure things before being able to use this service.

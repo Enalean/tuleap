@@ -42,6 +42,9 @@ class IndexPresenter {
     /** @var int */
     public $test_execution_tracker_id;
 
+    /** @var int */
+    public $issue_tracker_id;
+
     /** @var string */
     public $misconfigured_title;
 
@@ -63,6 +66,9 @@ class IndexPresenter {
     /** @var  array */
     public $tracker_ids;
 
+    /** @var  array */
+    public $tracker_permissions;
+
     /** @var string */
     public $current_milestone;
 
@@ -71,6 +77,8 @@ class IndexPresenter {
         $campaign_tracker_id,
         $test_definition_tracker_id,
         $test_execution_tracker_id,
+        $issue_tracker_id,
+        $issue_tracker_access,
         PFUser $current_user,
         $current_milestone
     ) {
@@ -87,11 +95,17 @@ class IndexPresenter {
         $this->test_definition_tracker_id = intval($test_definition_tracker_id);
         $this->test_execution_tracker_id  = intval($test_execution_tracker_id);
         $this->campaign_tracker_id        = intval($campaign_tracker_id);
+        $this->issue_tracker_id           = intval($issue_tracker_id);
         $this->nodejs_server              = TuleapConfig::get('nodejs_server');
         $this->tracker_ids                = json_encode(array(
             'definition_tracker_id' => $this->test_definition_tracker_id,
             'execution_tracker_id'  => $this->test_execution_tracker_id,
-            'campaign_tracker_id'   => $this->campaign_tracker_id
+            'campaign_tracker_id'   => $this->campaign_tracker_id,
+            'issue_tracker_id'      => $this->issue_tracker_id
+        ));
+
+        $this->tracker_permissions = json_encode(array(
+            'issue_tracker_access' => $issue_tracker_access
         ));
 
         if (isset($current_milestone)) {

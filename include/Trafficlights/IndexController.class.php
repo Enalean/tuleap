@@ -30,9 +30,20 @@ class IndexController extends TrafficlightsController {
                 $this->config->getCampaignTrackerId($this->project),
                 $this->config->getTestDefinitionTrackerId($this->project),
                 $this->config->getTestExecutionTrackerId($this->project),
+                $this->config->getIssueTrackerId($this->project),
+                $this->userCanLinkIssues(),
                 $this->request->getCurrentUser(),
                 $this->current_milestone
             )
         );
+    }
+
+    public function userCanLinkIssues()
+    {
+        $issue_tracker_id = $this->config->getIssueTrackerId($this->project);
+        $issue_tracker    = $this->tracker_factory->getTrackerById($issue_tracker_id);
+
+        return (! empty($issue_tracker)) &&
+            $issue_tracker->userCanSubmitArtifact($this->request->getCurrentUser());
     }
 }

@@ -8,10 +8,12 @@ plugin_trafficlights	plugin_tab_title	Campagnes de test
 plugin_trafficlights	_covered_by_forward	Couvert par
 plugin_trafficlights	_covered_by_reverse	Couvre
 
-plugin_trafficlights	admin_campaign_tracker	Outil de suivi de Campagnes
-plugin_trafficlights	admin_definition_tracker	Outil de suivi de Définitions des tests
-plugin_trafficlights	admin_execution_tracker	Outil de suivi d'Exécutions des tests
+plugin_trafficlights	admin_campaign_tracker	Outil de suivi des campagnes de tests
+plugin_trafficlights	admin_definition_tracker	Outil de suivi des définitions de tests
+plugin_trafficlights	admin_execution_tracker	Outil de suivi des exécutions de tests
+plugin_trafficlights	admin_issue_tracker	Outil de suivi des bugs
 plugin_trafficlights	admin_tracker_placeholder	Entrez l'id de l'outil de suivi…
+plugin_trafficlights	invalid_tracker_id_for_project	Id d'outil de suivi $1 invalide pour ce projet
 
 plugin_trafficlights	misconfigured_title	Nom de Zeus !
 plugin_trafficlights	misconfigured_message	Vous devriez configurer la chose avant de pouvoir utiliser ce service.

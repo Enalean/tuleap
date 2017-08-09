@@ -64,7 +64,8 @@ class FirstConfigCreator
         $template_tracker_ids = array(
             CAMPAIGN_TRACKER_SHORTNAME   => $this->config->getCampaignTrackerId($template),
             DEFINITION_TRACKER_SHORTNAME => $this->config->getTestDefinitionTrackerId($template),
-            EXECUTION_TRACKER_SHORTNAME  => $this->config->getTestExecutionTrackerId($template)
+            EXECUTION_TRACKER_SHORTNAME  => $this->config->getTestExecutionTrackerId($template),
+            ISSUE_TRACKER_SHORTNAME      => $this->config->getIssueTrackerId($template)
         );
         $project_tracker_ids = array();
 
@@ -81,7 +82,8 @@ class FirstConfigCreator
             $project,
             $project_tracker_ids[CAMPAIGN_TRACKER_SHORTNAME],
             $project_tracker_ids[DEFINITION_TRACKER_SHORTNAME],
-            $project_tracker_ids[EXECUTION_TRACKER_SHORTNAME]
+            $project_tracker_ids[EXECUTION_TRACKER_SHORTNAME],
+            $project_tracker_ids[ISSUE_TRACKER_SHORTNAME]
         );
     }
 
@@ -89,7 +91,8 @@ class FirstConfigCreator
     {
         return (! $this->config->getCampaignTrackerId($project)) ||
                (! $this->config->getTestDefinitionTrackerId($project)) ||
-               (! $this->config->getTestExecutionTrackerId($project));
+               (! $this->config->getTestExecutionTrackerId($project)) ||
+               (! $this->config->getIssueTrackerId($project));
     }
 
     public function createConfigForProjectFromXML(Project $project)
@@ -98,7 +101,8 @@ class FirstConfigCreator
         $tracker_itemnames = array(
             CAMPAIGN_TRACKER_SHORTNAME,
             DEFINITION_TRACKER_SHORTNAME,
-            EXECUTION_TRACKER_SHORTNAME
+            EXECUTION_TRACKER_SHORTNAME,
+            ISSUE_TRACKER_SHORTNAME
         );
 
         if (! $this->isConfigNeeded($project)) {
@@ -127,7 +131,8 @@ class FirstConfigCreator
             $project,
             $tracker_ids[CAMPAIGN_TRACKER_SHORTNAME],
             $tracker_ids[DEFINITION_TRACKER_SHORTNAME],
-            $tracker_ids[EXECUTION_TRACKER_SHORTNAME]
+            $tracker_ids[EXECUTION_TRACKER_SHORTNAME],
+            $tracker_ids[ISSUE_TRACKER_SHORTNAME]
         );
 
         $this->success();

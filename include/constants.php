@@ -24,3 +24,4 @@ define('TRAFFICLIGHTS_RESOURCE_DIR', TRAFFICLIGHTS_BASE_DIR.'/resources');
 define('CAMPAIGN_TRACKER_SHORTNAME', 'campaign');
 define('DEFINITION_TRACKER_SHORTNAME', 'test_def');
 define('EXECUTION_TRACKER_SHORTNAME', 'test_exec');
+define('ISSUE_TRACKER_SHORTNAME', 'bugs');

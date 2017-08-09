@@ -55,8 +55,10 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
                 $campaign_tracker_id = $tracker->getId();
             } elseif ($tracker->getItemName() === 'test_def') {
                 $test_def_tracker_id = $tracker->getId();
-            } elseif($tracker->getItemName() === 'test_exec') {
+            } elseif ($tracker->getItemName() === 'test_exec') {
                 $test_exec_tracker_id = $tracker->getId();
+            } elseif ($tracker->getItemName() === 'bugs') {
+                $issue_tracker_id = $tracker->getId();
             }
         }
 
@@ -64,7 +66,8 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
             $project,
             $campaign_tracker_id,
             $test_def_tracker_id,
-            $test_exec_tracker_id
+            $test_exec_tracker_id,
+            $issue_tracker_id
         );
     }
 
@@ -72,10 +75,11 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
         Project $project,
         $campaign_tracker_id,
         $test_def_tracker_id,
-        $test_exec_tracker_id
+        $test_exec_tracker_id,
+        $issue_tracker_id
     ) {
         $config = new Config(new Dao());
-        $config->setProjectConfiguration($project, $campaign_tracker_id, $test_def_tracker_id, $test_exec_tracker_id);
+        $config->setProjectConfiguration($project, $campaign_tracker_id, $test_def_tracker_id, $test_exec_tracker_id, $issue_tracker_id);
     }
 
     private function installPlugin() {

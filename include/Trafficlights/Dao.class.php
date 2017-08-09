@@ -36,15 +36,17 @@ class Dao extends DataAccessObject {
         $project_id,
         $campaign_tracker_id,
         $test_definition_tracker_id,
-        $test_execution_tracker_id
+        $test_execution_tracker_id,
+        $issue_tracker_id
     ) {
         $project_id                 = $this->da->escapeInt($project_id);
         $campaign_tracker_id        = $this->da->escapeInt($campaign_tracker_id);
         $test_definition_tracker_id = $this->da->escapeInt($test_definition_tracker_id);
         $test_execution_tracker_id  = $this->da->escapeInt($test_execution_tracker_id);
+        $issue_tracker_id           = $this->da->escapeInt($issue_tracker_id);
 
-        $sql = "REPLACE INTO plugin_trafficlights (project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id)
-                VALUES ($project_id, $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id)";
+        $sql = "REPLACE INTO plugin_trafficlights (project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id, issue_tracker_id)
+                VALUES ($project_id, $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id, $issue_tracker_id)";
 
         return $this->update($sql);
     }

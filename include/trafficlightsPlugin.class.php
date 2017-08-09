@@ -298,8 +298,9 @@ class TrafficlightsPlugin extends Plugin
     }
 
     public function process(Codendi_Request $request) {
-        $config = new Config(new Dao());
-        $router = new Tuleap\Trafficlights\Router($this, $config);
+        $config          = new Config(new Dao());
+        $tracker_factory = TrackerFactory::instance();
+        $router = new Tuleap\Trafficlights\Router($this, $config, $tracker_factory);
         $router->route($request);
     }
 

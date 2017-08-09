@@ -20,7 +20,8 @@
 
 namespace Tuleap\Trafficlights;
 
-class AdminPresenter {
+class AdminPresenter
+{
 
     /** @var int */
     public $campaign_tracker_id;
@@ -30,6 +31,9 @@ class AdminPresenter {
 
     /** @var int */
     public $test_execution_tracker_id;
+
+    /** @var int */
+    public $issue_tracker_id;
 
     /** @var string */
     public $title;
@@ -44,20 +48,30 @@ class AdminPresenter {
     public $executions;
 
     /** @var string */
+    public $issues;
+
+    /** @var string */
     public $submit;
 
     /** @var string */
     public $placeholder;
 
-    public function __construct($campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id) {
+    public function __construct(
+        $campaign_tracker_id,
+        $test_definition_tracker_id,
+        $test_execution_tracker_id,
+        $issue_tracker_id
+    ) {
         $this->campaign_tracker_id        = $campaign_tracker_id;
         $this->test_definition_tracker_id = $test_definition_tracker_id;
         $this->test_execution_tracker_id  = $test_execution_tracker_id;
+        $this->issue_tracker_id           = $issue_tracker_id;
 
         $this->title       = $GLOBALS['Language']->getText('global', 'Administration');
         $this->campaigns   = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_campaign_tracker');
         $this->definitions = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_definition_tracker');
         $this->executions  = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_execution_tracker');
+        $this->issues      = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_issue_tracker');
         $this->submit      = $GLOBALS['Language']->getText('global', 'btn_submit');
         $this->placeholder = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_tracker_placeholder');
     }
