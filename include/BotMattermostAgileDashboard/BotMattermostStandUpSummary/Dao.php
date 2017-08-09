@@ -117,18 +117,15 @@ class Dao extends DataAccessObject
 
     public function deleteNotificationByBot(Bot $bot)
     {
-        $this->da->startTransaction();
+        $bot_id = $this->da->escapeInt($bot->getId());
 
-        $notifications_ids = $this->searchNotificationsIdsByBot($bot);
-        foreach ($notifications_ids as $notification_id) {
-            if ($this->deleteNotificationByNotificationId($notification_id) === false) {
-                $this->rollBack();
+        $sql = "DELETE notification, channel
+                FROM plugin_botmattermost_agiledashboard_notification AS notification
+                INNER JOIN plugin_botmattermost_agiledashboard_notification_channel AS channel
+                  ON notification.id = channel.notification_id
+                WHERE bot_id = $bot_id";
 
-                return false;
-            }
-        }
-
-        return $this->da->commit();
+        return $this->update($sql);
     }
 
     public function searchTime($project_id)
