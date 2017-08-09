@@ -211,10 +211,11 @@ class XMLImporterTest extends TuleapTestCase
         $this->ugudao             = safe_mock('UGroupUserDao');
         $this->accessfiledao      = safe_mock('Tuleap\Svn\AccessControl\AccessFileHistoryDao');
         $this->accessfilefac      = new AccessFileHistoryFactory($this->accessfiledao);
+        $project_history_dao      = mock('\ProjectHistoryDao');
         $this->accessfilemgr      = new AccessFileHistoryCreator(
             $this->accessfiledao,
             $this->accessfilefac,
-            mock('\ProjectHistoryDao'),
+            $project_history_dao,
             mock('Tuleap\Svn\Repository\ProjectHistoryFormatter')
         );
         $this->notifdao           = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
@@ -224,13 +225,14 @@ class XMLImporterTest extends TuleapTestCase
         $this->notifmgr           = new MailNotificationManager(
             $this->notifdao,
             $users_to_notify_dao,
-            $ugroups_to_notify_dao
+            $ugroups_to_notify_dao,
+            $project_history_dao
         );
         $permissions_manager      = mock('Tuleap\Svn\SvnPermissionManager');
         $this->repository_creator = new RepositoryCreator(
             $this->repodao,
             $this->sysevmgr,
-            mock('ProjectHistoryDao'),
+            $project_history_dao,
             $permissions_manager,
             mock('Tuleap\Svn\Repository\HookConfigUpdator'),
             new ProjectHistoryFormatter(),

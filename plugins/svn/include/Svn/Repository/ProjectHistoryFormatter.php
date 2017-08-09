@@ -21,6 +21,7 @@
 namespace Tuleap\Svn\Repository;
 
 use Tuleap\Svn\Admin\ImmutableTag;
+use Tuleap\Svn\Admin\MailNotification;
 
 class ProjectHistoryFormatter
 {
@@ -78,5 +79,21 @@ class ProjectHistoryFormatter
     public function getAccessFileHistory($access_file)
     {
         return "Access file:" . PHP_EOL . $access_file;
+    }
+
+    /**
+     * @param MailNotification[] $mail_notifications
+     *
+     * @return string
+     */
+    public function addNotificationHistory(array $mail_notifications)
+    {
+        $message = '';
+        foreach ($mail_notifications as $mail_notification) {
+            $message .= "Path: " . $mail_notification->getPath() . PHP_EOL;
+            $message .= "Emails: " . $mail_notification->getNotifiedMails() . PHP_EOL;
+        }
+
+        $this->messages[] = "Notifications:" . PHP_EOL . $message;
     }
 }

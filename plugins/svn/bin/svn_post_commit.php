@@ -74,7 +74,8 @@ try {
             new MailNotificationManager(
                 new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
                 new UsersToNotifyDao(),
-                new UgroupsToNotifyDao()
+                new UgroupsToNotifyDao(),
+                new ProjectHistoryDao()
             ),
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),

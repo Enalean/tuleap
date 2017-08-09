@@ -373,7 +373,8 @@ class SvnPlugin extends Plugin
             $this->mail_notification_manager = new MailNotificationManager(
                 $this->getMailNotificationDao(),
                 new UsersToNotifyDao(),
-                new UgroupsToNotifyDao()
+                new UgroupsToNotifyDao(),
+                $this->getProjectHistoryDao()
             );
         }
         return $this->mail_notification_manager;
