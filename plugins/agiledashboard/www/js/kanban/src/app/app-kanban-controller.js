@@ -89,13 +89,12 @@ function KanbanCtrl(
     self.expandArchive                = expandArchive;
     self.toggleArchive                = toggleArchive;
     self.setIsCollapsed               = setIsCollapsed;
-    self.isCollapsedMode              = isCollapsedMode;
     self.filter                       = KanbanFilterValue;
     self.filterCards                  = filterCards;
     self.loading_modal                = NewTuleapArtifactModalService.loading;
     self.showEditModal                = showEditModal;
     self.moveItemAtTheEnd             = moveItemAtTheEnd;
-    self.toggleCollapsedMode          = toggleCollapsedMode;
+    self.saveCardsViewMode            = saveCardsViewMode;
     self.moveKanbanItemToTop          = moveKanbanItemToTop;
     self.moveKanbanItemToBottom       = moveKanbanItemToBottom;
     self.openReportModal              = openReportModal;
@@ -126,9 +125,7 @@ function KanbanCtrl(
         self.user_prefers_collapsed_cards = SharedPropertiesService.doesUserPrefersCompactCards();
     }
 
-    function toggleCollapsedMode() {
-        self.user_prefers_collapsed_cards = !self.user_prefers_collapsed_cards;
-
+    function saveCardsViewMode() {
         SharedPropertiesService.setUserPrefersCompactCards(self.user_prefers_collapsed_cards);
         UserPreferencesService.setPreference(
             user_id,
@@ -142,15 +139,11 @@ function KanbanCtrl(
             column.content.forEach(forceIsCollapsed);
         });
 
-        reflowKustomScrollBars();
+        self.reflowKustomScrollBars();
 
         function forceIsCollapsed(item) {
             setIsCollapsed(item, self.user_prefers_collapsed_cards);
         }
-    }
-
-    function isCollapsedMode() {
-        return self.user_prefers_collapsed_cards;
     }
 
     function setIsCollapsed(item, is_collapsed) {
