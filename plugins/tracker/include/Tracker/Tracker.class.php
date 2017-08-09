@@ -2901,6 +2901,7 @@ EOS;
 
                     if ($field && ! $field->isCSVImportable()) {
                         $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field_name));
+                        continue;
                     }
 
                     if (! $field) {
@@ -3045,7 +3046,7 @@ EOS;
                 $mode = 'creation';
                 $fields_data = array();
                 foreach ($data_line as $idx => $data_cell) {
-                    if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
+                    if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement')) {
                         $field = $fields[$idx];
                         if ($field->isCSVImportable()) {
                             $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
