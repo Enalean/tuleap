@@ -36,9 +36,9 @@ class Parser
             \s
             -
             \s
-            (?P<username>.+)
+            (?P<username>\S+)
             \s
-            \[(?P<date>.+)\]
+            \[(?P<date>.+?)\]
             \s
             (?P<url>.+)
             \s
