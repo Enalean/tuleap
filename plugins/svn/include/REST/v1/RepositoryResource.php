@@ -34,6 +34,7 @@ use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\AccessControl\CannotCreateAccessFileHistoryException;
+use Tuleap\Svn\Admin\CannotCreateMailHeaderException;
 use Tuleap\Svn\Admin\Destructor;
 use Tuleap\Svn\Admin\ImmutableTagCreator;
 use Tuleap\Svn\Admin\ImmutableTagDao;
@@ -395,12 +396,15 @@ class RepositoryResource extends AuthenticatedResource
 
         if (! $settings->isAccessFileKeySent()) {
             throw new RestException('400', '`settings[access_file]` is required');
-
-            return;
         }
 
         $repository_settings = $this->getSettings($repository, $settings);
-        $this->repository_updater->update($repository, $repository_settings);
+
+        try {
+            $this->repository_updater->update($repository, $repository_settings);
+        } catch (CannotCreateMailHeaderException $exception) {
+            throw new RestException('500', 'An error occured while saving the notifications.');
+        }
 
         return $this->representation_builder->build($repository, $user);
     }

@@ -83,14 +83,8 @@ class MailNotificationManager {
      */
     public function updateFromREST(Repository $repository, array $new_email_notification)
     {
-        if (! $this->dao->deleteByRepositoryId($repository->getId())) {
+        if (! $this->dao->updateGloballyForRepository($repository->getId(), $new_email_notification)) {
             throw new CannotCreateMailHeaderException();
-        }
-
-        foreach($new_email_notification as $notification) {
-            if (! $this->dao->create($notification)) {
-                throw new CannotCreateMailHeaderException();
-            }
         }
     }
 
@@ -229,12 +223,5 @@ class MailNotificationManager {
             }
         }
         return false;
-    }
-
-    public function removeByRepositoryId(Repository $repository)
-    {
-        if (! $this->dao->deleteByRepositoryId($repository->getId())) {
-            throw new CannotCreateMailHeaderException();
-        }
     }
 }
