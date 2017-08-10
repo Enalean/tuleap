@@ -20,10 +20,44 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use Tuleap\Svn\AccessControl\AccessFileHistory;
+
 class SettingsPOSTRepresentation extends SettingsRepresentation
 {
     /**
      * @var array {@type string} {@required false}
      */
     public $layout;
+
+    /**
+     * @var CommitRulesRepresentation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required false}
+     */
+    public $commit_rules;
+
+    /**
+     * @var ImmutableTagRepresentation {@type \Tuleap\SVN\REST\v1\ImmutableTagRepresentation} {@required false}
+     */
+    public $immutable_tags;
+
+    /**
+     * @var string {@type string} {@required false}
+     */
+    public $access_file;
+
+    /**
+     * @var array {@type \Tuleap\SVN\REST\v1\NotificationPOSTRepresentation} {@required false}
+     */
+    public $email_notifications;
+
+    public function build(
+        CommitRulesRepresentation $commit_hook_representation,
+        ImmutableTagRepresentation $immutable_tag_representation,
+        AccessFileHistory $access_file_history,
+        array $email_representation
+    ) {
+        $this->commit_rules        = $commit_hook_representation;
+        $this->immutable_tags      = $immutable_tag_representation;
+        $this->access_file         = $access_file_history->getContent();
+        $this->email_notifications = $email_representation;
+    }
 }

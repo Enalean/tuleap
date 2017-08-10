@@ -38,13 +38,15 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
 
     public function itThrowAnExceptionWHenPathAreNotUnique()
     {
-        $notification_representation_01 = new NotificationRepresentation();
-        $notification_representation_01->path = "/tags";
+        $notification_representation_01         = new NotificationRepresentation();
+        $notification_representation_01->path   = "/tags";
         $notification_representation_01->emails = array('test@example.com');
+        $notification_representation_01->users  = array();
 
-        $notification_representation_02 = new NotificationRepresentation();
-        $notification_representation_02->path = "/tags";
+        $notification_representation_02         = new NotificationRepresentation();
+        $notification_representation_02->path   = "/tags";
         $notification_representation_02->emails = array('user@example.com');
+        $notification_representation_02->users  = array();
 
 
         $settings = new SettingsPOSTRepresentation();
@@ -56,13 +58,15 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
 
     public function itDontThrowExceptionWhenPathAreUnique()
     {
-        $notification_representation_01 = new NotificationRepresentation();
-        $notification_representation_01->path = "/tags";
+        $notification_representation_01         = new NotificationRepresentation();
+        $notification_representation_01->path   = "/tags";
         $notification_representation_01->emails = array('test@example.com');
+        $notification_representation_01->users  = array();
 
-        $notification_representation_02 = new NotificationRepresentation();
-        $notification_representation_02->path = "/trunks";
+        $notification_representation_02         = new NotificationRepresentation();
+        $notification_representation_02->path   = "/trunks";
         $notification_representation_02->emails = array('user@example.com');
+        $notification_representation_02->users  = array();
 
 
         $settings = new SettingsPOSTRepresentation();
@@ -90,5 +94,19 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
     public function itDontRaiseErrorWhenSettingsAreNotProvided()
     {
         $this->validator->validateForPUTRepresentation(null);
+    }
+
+    public function itThrowsAnExceptionWhenUsersAndEmailAreBothEmpty()
+    {
+        $notification_representation_01         = new NotificationRepresentation();
+        $notification_representation_01->path   = "/tags";
+        $notification_representation_01->emails = array();
+        $notification_representation_01->users  = array();
+
+        $settings                      = new SettingsPOSTRepresentation();
+        $settings->email_notifications = array($notification_representation_01);
+
+        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->validator->validateForPOSTRepresentation($settings);
     }
 }

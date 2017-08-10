@@ -55,7 +55,8 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'emails' => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            )
+                            ),
+                            'users' => array()
                         )
                     )
                 )
@@ -74,25 +75,58 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_07",
                 "settings"   => array(
-                    "access_file" => "[/]\r\n* = rw\r\n@members = rw",
+                    "email_notifications" => array(
+                        array(
+                            'path'  => "/tags",
+                            'users' => array()
+                        )
+                    )
                 )
             )
         );
 
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponse($this->client->post('svn', null, $params));
-        $this->assertEquals($response->getStatusCode(), 201);
+        $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    public function testPOSTWithNotEmailNotificationKey()
+    public function testPOSTWithEmailNotificationWithMissingUsersKey()
     {
         $params = json_encode(
             array(
                 "project_id" => $this->svn_project_id,
-                "name"       => "my_repository_07",
+                "name"       => "my_repository_08",
                 "settings"   => array(
                     "email_notifications" => array(
                         array(
-                            'path'  => "/tags"
+                            'emails' => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            ),
+                            'path' => "/tags"
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPOSTWithEmailNotificationWithEmptyNotification()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_08",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'users' => array(),
+                            'emails' => array(),
+                            'path' => "/tags"
                         )
                     )
                 )
@@ -155,7 +189,8 @@ class RepositoryTestNonRegressionTest extends TestBase
                             'emails' => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            )
+                            ),
+                            "users" => array()
                         )
                     )
                 )

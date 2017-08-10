@@ -65,6 +65,7 @@ class SettingsRepresentationValidator
     {
         if (isset($settings)) {
             $this->validatePathAreUnique($settings);
+            $this->validateAtLeastOneNotificationSent($settings);
         }
     }
 
@@ -73,6 +74,25 @@ class SettingsRepresentationValidator
         $non_unique_path = $this->getNonUniquePath($settings);
         if (count($non_unique_path) > 0) {
             throw new SettingsInvalidException('One path or more are not unique: ' . implode(', ', $non_unique_path));
+        }
+    }
+
+    private function validateAtLeastOneNotificationSent(SettingsPOSTRepresentation $settings = null)
+    {
+        $empty_notification = array();
+        if ($settings) {
+            foreach ($settings->email_notifications as $notification) {
+                if (count($notification->emails) === 0 && count($notification->users) === 0) {
+                    $empty_notification[] = $notification->path;
+                }
+            }
+        }
+
+        if (count($empty_notification) > 0) {
+            throw new SettingsInvalidException(
+                "Notification should concern at least one email or one user for path: " .
+                implode(',', $empty_notification)
+            );
         }
     }
 }

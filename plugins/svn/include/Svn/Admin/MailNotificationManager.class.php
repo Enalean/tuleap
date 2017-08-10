@@ -222,6 +222,7 @@ class MailNotificationManager {
      * @return bool
      *
      * @throws CannotAddUsersNotificationException
+     * @return bool
      */
     private function notificationAddUsers(MailNotification $notification)
     {
@@ -234,7 +235,7 @@ class MailNotificationManager {
         }
 
         if (! empty($users_not_added)) {
-            throw new CannotAddUsersNotificationException($users_not_added);
+            throw new CannotAddUsersNotificationException(implode(',', $users_not_added));
         }
 
         return empty($users_not_added);
