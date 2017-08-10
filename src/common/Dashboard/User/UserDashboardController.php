@@ -28,12 +28,12 @@ use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
+use Tuleap\Dashboard\JavascriptFilesIncluder;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
-use Tuleap\Layout\IncludeAssets;
 
 class UserDashboardController
 {
@@ -77,9 +77,9 @@ class UserDashboardController
      */
     private $widget_minimizor;
     /**
-     * @var IncludeAssets
+     * @var JavascriptFilesIncluder
      */
-    private $include_assets;
+    private $javascript_files_includer;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -91,18 +91,18 @@ class UserDashboardController
         DashboardWidgetPresenterBuilder $widget_presenter_builder,
         WidgetDeletor $widget_deletor,
         WidgetMinimizor $widget_minimizor,
-        IncludeAssets $include_assets
+        JavascriptFilesIncluder $javascript_files_includer
     ) {
-        $this->csrf                     = $csrf;
-        $this->retriever                = $retriever;
-        $this->saver                    = $saver;
-        $this->deletor                  = $deletor;
-        $this->updator                  = $updator;
-        $this->widget_retriever         = $widget_retriever;
-        $this->widget_presenter_builder = $widget_presenter_builder;
-        $this->widget_deletor           = $widget_deletor;
-        $this->widget_minimizor         = $widget_minimizor;
-        $this->include_assets           = $include_assets;
+        $this->csrf                      = $csrf;
+        $this->retriever                 = $retriever;
+        $this->saver                     = $saver;
+        $this->deletor                   = $deletor;
+        $this->updator                   = $updator;
+        $this->widget_retriever          = $widget_retriever;
+        $this->widget_presenter_builder  = $widget_presenter_builder;
+        $this->widget_deletor            = $widget_deletor;
+        $this->widget_minimizor          = $widget_minimizor;
+        $this->javascript_files_includer = $javascript_files_includer;
     }
 
     /**
@@ -147,7 +147,7 @@ class UserDashboardController
             )
         );
 
-        $GLOBALS['Response']->includeFooterJavascriptFile($this->include_assets->getFileUrl('dashboard.js'));
+        $this->javascript_files_includer->includeJavascriptFiles($user_dashboards_presenter);
         $GLOBALS['Response']->footer(array('without_content' => true));
     }
 

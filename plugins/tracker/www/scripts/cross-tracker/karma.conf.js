@@ -30,6 +30,7 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         // This is filled by gulp
         files: [
+            'node_modules/angular/angular.js',
             'src/app/tlp-mock.spec.js',
             'src/app/app.spec.js'
         ],

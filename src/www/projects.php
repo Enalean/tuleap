@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\JavascriptFilesIncluder;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -93,7 +94,10 @@ if ($project && !$project->isError()) {
                 new DashboardWidgetPresenterBuilder($widget_factory),
                 new WidgetDeletor($dashboard_widget_dao),
                 new WidgetMinimizor($dashboard_widget_dao),
-                new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
+                new JavascriptFilesIncluder(
+                    new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets'),
+                    EventManager::instance()
+                )
             ),
             new WidgetDashboardController(
                 $csrf_token,

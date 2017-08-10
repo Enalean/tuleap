@@ -19,6 +19,7 @@
 
 use Tuealp\project\Event\ProjectRegistrationActivateService;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Dashboard\CollectionOfWidgetsThatNeedJavascriptDependencies;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
@@ -51,7 +52,6 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
-use Tuleap\Admin\AdminSidebarPresenterBuilder;
 use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Service\ServiceCreator;
@@ -175,6 +175,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
 
         $this->addHook(HeartbeatsEntryCollection::NAME);
+        $this->addHook(CollectionOfWidgetsThatNeedJavascriptDependencies::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -283,14 +284,6 @@ class trackerPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
-        }
-
-        if ($this->isInDashboard()) {
-            $cross_tracker_include_assets = new IncludeAssets(
-                ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/scripts/cross-tracker/dist',
-                $this->getPluginPath() . '/scripts/cross-tracker/dist'
-            );
-            $params['javascript_files'][] = $cross_tracker_include_assets->getFileURL('cross-tracker.js');
         }
     }
 
@@ -1513,5 +1506,18 @@ class trackerPlugin extends Plugin {
         $current_page = new CurrentPage();
 
         return $current_page->isDashboard();
+    }
+
+    public function getWidgetsThatNeedJavascriptDependencies(
+        CollectionOfWidgetsThatNeedJavascriptDependencies $collection
+    ) {
+        $cross_tracker_include_assets = new IncludeAssets(
+            ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/scripts/cross-tracker/dist',
+            $this->getPluginPath() . '/scripts/cross-tracker/dist'
+        );
+        $javascript[] = array('file' => $cross_tracker_include_assets->getFileURL('angular.js'), 'unique-name' => 'angular');
+        $javascript[] = array('file' => $cross_tracker_include_assets->getFileURL('cross-tracker.js'));
+
+        $collection->add(ProjectCrossTrackerSearch::NAME, $javascript);
     }
 }

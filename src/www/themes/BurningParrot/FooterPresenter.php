@@ -32,16 +32,27 @@ class FooterPresenter
         $is_footer_shown,
         $tuleap_version
     ) {
+        $is_file_already_included = array();
+        $is_snippet_already_included = array();
         foreach ($javascript_in_footer as $javascript) {
             if (isset($javascript['file'])) {
                 $content    = $javascript['file'];
                 $is_snippet = false;
+                if (isset($is_file_already_included[$content])) {
+                    continue;
+                }
+                $is_file_already_included[$content] = true;
             } else {
                 $content    = $javascript['snippet'];
                 $is_snippet = true;
+                if (isset($is_snippet_already_included[$content])) {
+                    continue;
+                }
+                $is_snippet_already_included[$content] = true;
             }
             $this->javascript_in_footer[] = new JavascriptPresenter($content, $is_snippet);
         }
+
         $this->tuleap_version  = $tuleap_version;
         $this->is_footer_shown = $is_footer_shown;
         $this->footer          = $this->getFooter();

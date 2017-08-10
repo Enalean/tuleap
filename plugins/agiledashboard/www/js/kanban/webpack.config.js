@@ -27,7 +27,8 @@ module.exports = {
         }
     },
     externals: {
-        tlp: 'tlp'
+        tlp:     'tlp',
+        angular: 'angular'
     },
     module: {
         rules: [
