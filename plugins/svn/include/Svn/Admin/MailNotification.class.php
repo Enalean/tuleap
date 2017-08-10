@@ -20,23 +20,47 @@
 
 namespace Tuleap\Svn\Admin;
 
+use PFUser;
 use Tuleap\Svn\Repository\Repository;
+use User_UGroup;
 
 class MailNotification
 {
+    /**
+     * @var string
+     */
     private $notified_mails;
     private $path;
     private $repository;
     private $id;
+    /**
+     * @var PFUser[]
+     */
+    private $notified_users;
+    /**
+     * @var User_UGroup[]
+     */
+    private $notified_ugroups;
 
-    public function __construct($id, Repository $repository, $notified_mails, $path)
-    {
-        $this->id             = $id;
-        $this->repository     = $repository;
-        $this->notified_mails = $notified_mails;
-        $this->path           = $path;
+    public function __construct(
+        $id,
+        Repository $repository,
+        $path,
+        $notified_mails,
+        array $notified_users,
+        array $notified_ugroups
+    ) {
+        $this->id               = $id;
+        $this->repository       = $repository;
+        $this->notified_mails   = $notified_mails;
+        $this->path             = $path;
+        $this->notified_users   = $notified_users;
+        $this->notified_ugroups = $notified_ugroups;
     }
 
+    /**
+     * @return string
+     */
     public function getNotifiedMails()
     {
         return $this->notified_mails;
@@ -55,5 +79,29 @@ class MailNotification
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return PFUser[]
+     */
+    public function getNotifiedUsers()
+    {
+        return $this->notified_users;
+    }
+
+    /**
+     * @return User_UGroup[]
+     */
+    public function getNotifiedUgroups()
+    {
+        return $this->notified_ugroups;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 }

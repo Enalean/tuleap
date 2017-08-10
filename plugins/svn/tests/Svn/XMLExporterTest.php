@@ -24,10 +24,9 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use ForgeConfig;
 use SimpleXMLElement;
-use Tuleap\Project\XML\Export\DirectoryArchive;
+use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\Svn\Admin\MailNotification;
 use TuleapTestCase;
-use Tuleap\Project\XML\Export\ZipArchive;
 use XML_SimpleXMLCDATAFactory;
 
 class XMLSvnExporterTest extends TuleapTestCase
@@ -78,8 +77,22 @@ class XMLSvnExporterTest extends TuleapTestCase
 
         stub($mail_notification_manager)->getByRepository($repository)->returns(
             array(
-                new MailNotification(1, $repository, 'mail@example.com', '/'),
-                new MailNotification(2, $repository, 'mail2@example.com', '/trunk')
+                new MailNotification(
+                    1,
+                    $repository,
+                    '/',
+                    'mail@example.com',
+                    array(),
+                    array()
+                ),
+                new MailNotification(
+                    2,
+                    $repository,
+                    '/trunk',
+                    'mail2@example.com',
+                    array(),
+                    array()
+                )
             )
         );
 

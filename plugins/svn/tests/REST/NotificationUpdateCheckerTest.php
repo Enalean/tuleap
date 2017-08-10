@@ -87,8 +87,10 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             new MailNotification(
                 1,
                 $this->repository,
+                "/tags",
                 "foo@example.com,bar@example.com",
-                "/tags"
+                array(),
+                array()
             )
         );
 
@@ -106,14 +108,18 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             new MailNotification(
                 1,
                 $this->repository,
+                "/tags",
                 "foo@example.com,bar@example.com",
-                "/tags"
+                array(),
+                array()
             ),
             new MailNotification(
                 1,
                 $this->repository,
+                "/trunk",
                 "foo@example.com",
-                "/trunk"
+                array(),
+                array()
             )
         );
 
@@ -135,8 +141,10 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             new MailNotification(
                 1,
                 $this->repository,
+                "/tags",
                 "foo@example.com,bar@example.com",
-                "/tags"
+                array(),
+                array()
             )
         );
 
@@ -159,8 +167,10 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             new MailNotification(
                 1,
                 $this->repository,
+                "/tags",
                 "bar@example.com,foo@example.com",
-                "/tags"
+                array(),
+                array()
             )
         );
 

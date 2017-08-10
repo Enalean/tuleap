@@ -214,13 +214,13 @@ class AdminController
             $mail_notification = new MailNotification(
                 0,
                 $repository,
+                $form_path,
                 $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
-                $form_path
+                $autocompleter->getUsers(),
+                $autocompleter->getUgroups()
             );
             try {
-                $notification_id = $this->mail_notification_manager->createWithHistory($mail_notification);
-                $this->mail_notification_manager->notificationAddUsers($notification_id, $autocompleter);
-                $this->mail_notification_manager->notificationAddUgroups($notification_id, $autocompleter);
+                $this->mail_notification_manager->create($mail_notification);
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
@@ -301,8 +301,10 @@ class AdminController
         $email_notification = new MailNotification(
             $notification_id,
             $repository,
+            $new_path,
             $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
-            $new_path
+            $autocompleter->getUsers(),
+            $autocompleter->getUgroups()
         );
         try {
             if (! $autocompleter->isNotificationEmpty()) {
