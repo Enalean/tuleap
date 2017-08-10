@@ -42,3 +42,4 @@ plugin_botmattermost_agiledashboard	configuration_info_channels_handles	The chan
 plugin_botmattermost_agiledashboard	configuration_label_channels_handles	Channel handles list
 plugin_botmattermost_agiledashboard	configuration_input_channels_handles	channel1, channel2, channel3
 plugin_botmattermost_agiledashboard	empty_channel_list	No channel selected, the channel defined at the webhook creation will be used as default
+plugin_botmattermost_agiledashboard	configuration_empty_bot_list	No bots are defined by the system administrator. The notification configuration is not available.

@@ -42,3 +42,4 @@ plugin_botmattermost_agiledashboard	configuration_info_channels_handles	L'identi
 plugin_botmattermost_agiledashboard	configuration_label_channels_handles	Liste des canaux
 plugin_botmattermost_agiledashboard	configuration_input_channels_handles	canal1, canal2, canal3
 plugin_botmattermost_agiledashboard	empty_channel_list	Aucun canal n'a été renseigné, celui défini lors de la création du webhook sera utilisé par défaut
+plugin_botmattermost_agiledashboard	configuration_empty_bot_list	Aucun robot n'a été défini par l'administrateur du système. La configuration des notifications n'est donc pas disponible.

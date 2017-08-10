@@ -3,10 +3,15 @@
     {{^ bot_assigned }}
         <div class="agiledashboard-notification-mattermost-configuration-empty-state">
             <p>{{ any_configured_notification }}</p>
-            <p class="agiledashboard-notification-mattermost-configuration-description">{{ any_configured_notification_tips }}</p>
-            <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
-                <i class="icon-plus"></i> {{ button_config }}
-            </button>
+            {{# has_bots }}
+                <p class="agiledashboard-notification-mattermost-configuration-description">{{ any_configured_notification_tips }}</p>
+                <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
+                    <i class="icon-plus"></i> {{ button_config }}
+                </button>
+            {{/ has_bots}}
+            {{^ has_bots }}
+                <p>{{ empty_bot_list }}</p>
+            {{/ has_bots }}
         </div>
         {{> modal-add-bot }}
     {{/ bot_assigned }}
@@ -46,6 +51,7 @@
                     </button>
                 </section>
                 {{> modal-delete-bot }}
+            </section>
         </section>
     {{/ bot_assigned }}
 </div>

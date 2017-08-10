@@ -102,11 +102,11 @@ class AdminNotificationPresenter
         );
 
         $this->bot_list_is_empty = count($this->bots) === 0;
-        $this->empty_bot_list    = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
+        $this->empty_bot_list    = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_empty_bot_list');
 
         $this->any_configured_notification      = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification');
         $this->any_configured_notification_tips = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'any_configured_notification_tips');
-        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
+        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_empty_bot_list');
         $this->empty_channel_list               = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'empty_channel_list');
     }
 }
