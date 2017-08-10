@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
+use REST_TestDataBuilder;
 use RestBase;
 
 /**
@@ -39,5 +40,13 @@ class TestBase extends RestBase
         parent::setUp();
 
         $this->svn_project_id = $this->getProjectId(self::PROJECT_NAME);
+    }
+
+    protected function getResponse($request)
+    {
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
+            $request
+        );
     }
 }
