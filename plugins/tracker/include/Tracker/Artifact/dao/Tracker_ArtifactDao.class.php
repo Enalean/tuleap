@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -249,30 +250,29 @@ class Tracker_ArtifactDao extends DataAccessObject {
      *
      * @return DataAccessResult The result of the query
      */
-    public function searchOpenSubmittedByOrAssignedToUserId($user_id) {
+    public function searchOpenSubmittedByOrAssignedToUserId($user_id)
+    {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
+        // The [SC|SS|ST.tracker_id = A.tracker_id is not mandatory but it gives a small perf boost
+        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
-                    INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)          -- Last changeset is needed (no need of history)
-                    LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
-                        tracker_semantic_status as SS
-                        INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
-                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
-                    ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
-
-                    INNER JOIN (                                                                -- Look if there is any contibutor semantic defined
+                    LEFT JOIN (
                         tracker_semantic_contributor as SC
-                        INNER JOIN tracker_changeset_value AS CV1 ON (SC.field_id = CV1.field_id)
-                        INNER JOIN tracker_changeset_value_list AS CVL ON (CV1.id = CVL.changeset_value_id)
-                    ) ON (T.id = SC.tracker_id AND C.id = CV1.changeset_id)
-
-                    LEFT JOIN (                         -- For the /title/ if any
+                        INNER JOIN tracker_changeset_value AS CV1 ON (CV1.field_id = SC.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL ON (CVL.changeset_value_id = CV1.id)
+                    ) ON (SC.tracker_id = A.tracker_id AND CV1.changeset_id = A.last_changeset_id)
+                    LEFT JOIN (
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3 ON (CV3.field_id = SS.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CVL2.changeset_value_id = CV3.id)
+                    ) ON (SS.tracker_id = A.tracker_id AND CV3.changeset_id = A.last_changeset_id)
+                    LEFT JOIN (
                         tracker_changeset_value AS CV2
-                        INNER JOIN tracker_semantic_title as ST ON (CV2.field_id = ST.field_id)
-                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
-                    ) ON (C.id = CV2.changeset_id)
+                        INNER JOIN tracker_semantic_title as ST ON (ST.field_id = CV2.field_id)
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (CVT.changeset_value_id = CV2.id)
+                    ) ON (ST.tracker_id = A.tracker_id AND CV2.changeset_id = A.last_changeset_id)
                 WHERE (A.submitted_by = $user_id
                         OR
                        CVL.bindvalue_id = $user_id)
