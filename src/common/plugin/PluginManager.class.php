@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2015 - 2016. All rights reserved
+ * Copyright (c) Enalean SAS, 2015 - 2017. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -101,8 +101,11 @@ class PluginManager {
         }
     }
 
-    private function loadPluginFiles($path) {
-        include_once $path;
+    private function loadPluginFiles($path)
+    {
+        if (file_exists($path)) {
+            include_once $path;
+        }
         $autoload = dirname($path).'/autoload.php';
         if (file_exists($autoload)) {
             include_once $autoload;
