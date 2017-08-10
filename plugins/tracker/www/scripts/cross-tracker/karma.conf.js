@@ -58,9 +58,6 @@ module.exports = function(config) {
 
         webpackMiddleware: {
             stats: 'errors-only'
-        },
-
-        // To avoid error when there ins't tests
-        failOnEmptyTestSuite: false
+        }
     });
 };
