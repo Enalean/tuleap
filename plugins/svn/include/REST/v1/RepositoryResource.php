@@ -640,7 +640,7 @@ class RepositoryResource extends AuthenticatedResource
      */
     private function getSettings(Repository $repository, SettingsRepresentation $settings = null)
     {
-        $commit_rules = $this->buildDefaultCommitRules();
+        $commit_rules = array();
         if ($settings && $settings->commit_rules) {
             $commit_rules = $settings->commit_rules->toArray();
         }
@@ -671,18 +671,5 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification);
-    }
-
-    /**
-     * @return array
-     */
-    private function buildDefaultCommitRules()
-    {
-        $commit_rules = array(
-            HookConfig::MANDATORY_REFERENCE       => false,
-            HookConfig::COMMIT_MESSAGE_CAN_CHANGE => false,
-        );
-
-        return $commit_rules;
     }
 }
