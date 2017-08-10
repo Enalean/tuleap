@@ -174,6 +174,9 @@ function ArtifactModalController(
             modal_instance.tlp_modal.hide();
 
             return displayItemCallback(new_artifact.id);
+        }).catch(function() {
+            // Do nothing
+            // This catch is required since angular 1.6, but the error is already handled and displayed by the REST service
         }).finally(function() {
             TuleapArtifactModalLoading.loading = false;
         });

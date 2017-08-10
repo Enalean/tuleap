@@ -35,6 +35,7 @@ function EditKanbanCtrl(
     self.title_tracker_link = "<a class='edit-kanban-title-tracker-link' href='/plugins/tracker/?tracker=" + self.kanban.tracker.id + "'>" + self.kanban.tracker.label + "</a>";
     self.info_tracker_link  = "<a href='/plugins/tracker/?tracker=" + self.kanban.tracker.id + "'>" + self.kanban.tracker.label + "</a>";
 
+    self.$onInit                     = init;
     self.initModalValues             = initModalValues;
     self.initDragular                = initDragular;
     self.dragularOptionsForEditModal = dragularOptionsForEditModal;
@@ -51,8 +52,10 @@ function EditKanbanCtrl(
     self.editColumn                  = editColumn;
     self.columnsCanBeManaged         = columnsCanBeManaged;
 
-    self.initModalValues();
-    self.initDragular();
+    function init() {
+        self.initModalValues();
+        self.initDragular();
+    }
 
     function updateKanbanName(label) {
         KanbanService.updateKanbanName(label);

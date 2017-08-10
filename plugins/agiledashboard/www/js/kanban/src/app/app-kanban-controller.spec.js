@@ -2,6 +2,7 @@ import kanban_module from './app.js';
 import angular from 'angular';
 import 'angular-mocks';
 import tlp from 'tlp';
+import BaseController from './app-kanban-controller.js';
 
 describe('KanbanCtrl - ', function() {
     var $rootScope,
@@ -84,12 +85,13 @@ describe('KanbanCtrl - ', function() {
         spyOn(DroppedService, "reorderColumn").and.returnValue($q.when());
         spyOn(DroppedService, "moveToColumn").and.returnValue($q.when());
         spyOn(ColumnCollectionService, "getColumn");
+        spyOn(SocketService, "listenNodeJSServer").and.returnValue($q.defer().promise);
 
         tlp.modal = jasmine.createSpy('modal');
 
         $scope = $rootScope.$new();
 
-        KanbanCtrl = $controller('KanbanCtrl', {
+        KanbanCtrl = $controller(BaseController, {
             $scope                       : $scope,
             $q                           : $q,
             SharedPropertiesService      : SharedPropertiesService,
@@ -112,7 +114,7 @@ describe('KanbanCtrl - ', function() {
                 var get_archive_request    = $q.defer();
                 KanbanService.getArchive.and.returnValue(get_archive_request.promise);
 
-                KanbanCtrl.init();
+                KanbanCtrl.$onInit();
 
                 expect(KanbanCtrl.archive.loading_items).toBeTruthy();
                 expect(KanbanService.getArchive).toHaveBeenCalledWith(kanban.id, 50, 0);
@@ -140,7 +142,7 @@ describe('KanbanCtrl - ', function() {
 
                 KanbanCtrl.archive.is_open = false;
 
-                KanbanCtrl.init();
+                KanbanCtrl.$onInit();
                 get_archive_size_request.resolve(6);
                 $scope.$apply();
 
@@ -157,7 +159,7 @@ describe('KanbanCtrl - ', function() {
                 var get_backlog_request    = $q.defer();
                 KanbanService.getBacklog.and.returnValue(get_backlog_request.promise);
 
-                KanbanCtrl.init();
+                KanbanCtrl.$onInit();
 
                 expect(KanbanCtrl.backlog.loading_items).toBeTruthy();
                 expect(KanbanService.getBacklog).toHaveBeenCalledWith(kanban.id, 50, 0);
@@ -185,7 +187,7 @@ describe('KanbanCtrl - ', function() {
 
                 KanbanCtrl.backlog.is_open = false;
 
-                KanbanCtrl.init();
+                KanbanCtrl.$onInit();
                 get_backlog_size_request.resolve(28);
                 $scope.$apply();
 
@@ -208,7 +210,7 @@ describe('KanbanCtrl - ', function() {
                     is_open: true
                 };
 
-                KanbanCtrl.init();
+                KanbanCtrl.$onInit();
 
                 var column = kanban.columns[0];
                 expect(column.content).toEqual([]);
@@ -252,7 +254,7 @@ describe('KanbanCtrl - ', function() {
                     is_open: false
                 };
 
-                KanbanCtrl.init();
+                KanbanCtrl.$onInit();
 
                 var column = kanban.columns[0];
                 expect(column.content).toEqual([]);
@@ -267,7 +269,7 @@ describe('KanbanCtrl - ', function() {
                 expect(column.is_defered).toBeTruthy();
                 expect(column.original_label).toEqual('undisfranchised');
 
-                KanbanCtrl.init();
+                KanbanCtrl.$onInit();
                 get_column_size_request.resolve(42);
                 $scope.$apply();
 

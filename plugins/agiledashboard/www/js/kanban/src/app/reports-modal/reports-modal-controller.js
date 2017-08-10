@@ -54,10 +54,8 @@ function ReportsModalController(
     self.key_last_data   = 'last_seven_days';
 
     self.close    = function() { modal_instance.tlp_modal.hide(); };
-    self.init     = init;
+    self.$onInit  = init;
     self.loadData = loadData;
-
-    self.init();
 
     function init() {
         self.loadData();

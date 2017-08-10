@@ -100,7 +100,7 @@ describe("KanbanColumnController -", function() {
             };
             KanbanColumnController.column = source_column;
             KanbanColumnController.dragularOptions().onInit();
-            spyOn($rootScope, "$broadcast");
+            spyOn($rootScope, "$broadcast").and.callThrough();
         });
 
         it("When I reorder an item in the same column, then the item will be reordered using DroppedService", function() {

@@ -72,7 +72,7 @@ function KanbanCtrl(
     });
 
     self.user_prefers_collapsed_cards = true;
-    self.init                         = init;
+    self.$onInit                      = init;
     self.isColumnWipReached           = isColumnWipReached;
     self.setWipLimitForColumn         = setWipLimitForColumn;
     self.userIsAdmin                  = userIsAdmin;
@@ -118,8 +118,6 @@ function KanbanCtrl(
             SocketService.listenTokenExpired();
         });
     }
-
-    self.init();
 
     function initViewMode() {
         self.user_prefers_collapsed_cards = SharedPropertiesService.doesUserPrefersCompactCards();

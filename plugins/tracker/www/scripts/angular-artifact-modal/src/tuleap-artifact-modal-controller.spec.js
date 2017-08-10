@@ -24,7 +24,12 @@ describe("TuleapArtifactModalController", function() {
                 spyOn($delegate, "createArtifact");
                 spyOn($delegate, "editArtifact");
                 spyOn($delegate, "searchUsers");
-                spyOn($delegate, 'getFollowupsComments').and.returnValue($q.reject());
+                spyOn($delegate, 'getFollowupsComments').and.returnValue($q.resolve({
+                    data: {
+                        results: []
+                    },
+                    total: 0
+                }));
 
                 return $delegate;
             });
@@ -179,8 +184,7 @@ describe("TuleapArtifactModalController", function() {
         });
 
         it("and no artifact_id, when I submit the modal to Tuleap, then the field values will be validated, the artifact will be created , the modal will be closed and the callback will be called", function() {
-            var create_request = $q.defer();
-            TuleapArtifactModalRestService.createArtifact.and.returnValue(create_request.promise);
+            TuleapArtifactModalRestService.createArtifact.and.returnValue($q.resolve({ id: 3042 }));
             controller_params.modal_model.creation_mode = true;
             controller_params.modal_model.tracker_id    = 39;
             ArtifactModalController                     = $controller(BaseModalController, controller_params);
@@ -192,7 +196,6 @@ describe("TuleapArtifactModalController", function() {
 
             ArtifactModalController.submit();
             expect(TuleapArtifactModalLoading.loading).toBeTruthy();
-            create_request.resolve({ id: 3042 });
             $scope.$apply();
 
             expect(TuleapArtifactModalValidateService.validateArtifactFieldsValues).toHaveBeenCalledWith(values, true);
@@ -278,12 +281,10 @@ describe("TuleapArtifactModalController", function() {
         });
 
         it("and given the server responded an error, when I submit the modal to Tuleap, then the modal will not be closed and the callback won't be called", function() {
-            var edit_request = $q.defer();
-            TuleapArtifactModalRestService.editArtifact.and.returnValue(edit_request.promise);
+            TuleapArtifactModalRestService.editArtifact.and.returnValue($q.reject());
             ArtifactModalController = $controller(BaseModalController, controller_params);
 
             ArtifactModalController.submit();
-            edit_request.reject();
             $scope.$apply();
 
             expect(tlp_modal.hide).not.toHaveBeenCalled();

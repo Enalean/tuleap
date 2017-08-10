@@ -185,7 +185,6 @@ describe("TuleapArtifactModalRestService", function() {
             mockBackend.expectGET('/api/v1/trackers/15/parent_artifacts?limit=2&offset=0').respond(503);
 
             var promise = RestService.getAllOpenParentArtifacts(15, 2, 0);
-            mockBackend.flush();
 
             expect(promise).toBeRejected();
         });
@@ -204,7 +203,6 @@ describe("TuleapArtifactModalRestService", function() {
             mockBackend.expectGET('/api/v1/trackers/55/parent_artifacts?limit=2&offset=2').respond(503);
 
             var promise = RestService.getAllOpenParentArtifacts(55, 2, 0);
-            mockBackend.flush();
 
             expect(promise).toBeRejected();
         });
@@ -268,22 +266,20 @@ describe("TuleapArtifactModalRestService", function() {
             mockBackend.expectPOST('/api/v1/artifacts').respond(400, JSON.stringify(errorResponse));
 
             var promise = RestService.createArtifact();
-            mockBackend.flush();
 
+            expect(promise).toBeRejected();
             expect(RestService.error.is_error).toBeTruthy();
             expect(RestService.error.error_message).toEqual("Bad Request: error: Le champ I want to (i_want_to) est obligatoire.");
-            expect(promise).toBeRejected();
         });
 
         it("Given the server didn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
             mockBackend.expectPOST('/api/v1/artifacts').respond(404, undefined, undefined, 'Not Found');
 
             var promise = RestService.createArtifact();
-            mockBackend.flush();
 
+            expect(promise).toBeRejected();
             expect(RestService.error.is_error).toBeTruthy();
             expect(RestService.error.error_message).toEqual("404 Not Found");
-            expect(promise).toBeRejected();
         });
     });
 
@@ -431,11 +427,10 @@ describe("TuleapArtifactModalRestService", function() {
             mockBackend.expectPUT('/api/v1/artifacts/6144').respond(404, undefined, undefined, 'Not Found');
 
             var promise = RestService.editArtifact(6144);
-            mockBackend.flush();
 
+            expect(promise).toBeRejected();
             expect(RestService.error.is_error).toBeTruthy();
             expect(RestService.error.error_message).toEqual("404 Not Found");
-            expect(promise).toBeRejected();
         });
     });
 

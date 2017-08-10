@@ -1,7 +1,7 @@
 import angular from 'angular';
 import ngSanitize from 'angular-sanitize';
 import dragular from 'dragular';
-import ui_router from 'angular-ui-router';
+import ui_router from '@uirouter/angularjs';
 import angular_artifact_modal from 'angular-artifact-modal';
 import angular_tlp from 'angular-tlp';
 
