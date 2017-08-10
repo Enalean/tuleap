@@ -55,7 +55,8 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
         $mail_notification_manager   = new MailNotificationManager(
             $this->mail_notification_dao,
             $user_to_notify_dao,
-            $ugroup_to_notify_dao
+            $ugroup_to_notify_dao,
+            mock('\ProjectHistoryDao')
         );
 
         $this->notification_update_checker = new NotificationUpdateChecker($mail_notification_manager);

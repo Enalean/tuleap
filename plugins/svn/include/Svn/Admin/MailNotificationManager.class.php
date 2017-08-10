@@ -20,6 +20,7 @@
 
 namespace Tuleap\Svn\Admin;
 
+use ProjectHistoryDao;
 use Tuleap\Svn\Notifications\CannotAddUgroupsNotificationException;
 use Tuleap\Svn\Notifications\CannotAddUsersNotificationException;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
@@ -38,15 +39,21 @@ class MailNotificationManager {
      * @var UgroupsToNotifyDao
      */
     private $ugroup_to_notify_dao;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $project_history_dao;
 
     public function __construct(
         MailNotificationDao $dao,
         UsersToNotifyDao $user_to_notify_dao,
-        UgroupsToNotifyDao $ugroup_to_notify_dao
+        UgroupsToNotifyDao $ugroup_to_notify_dao,
+        ProjectHistoryDao $project_history_dao
     ) {
         $this->dao                  = $dao;
         $this->user_to_notify_dao   = $user_to_notify_dao;
         $this->ugroup_to_notify_dao = $ugroup_to_notify_dao;
+        $this->project_history_dao = $project_history_dao;
     }
 
     public function create(MailNotification $mail_notification) {
@@ -55,6 +62,16 @@ class MailNotificationManager {
             throw new CannotCreateMailHeaderException ();
         }
         return $notification_id;
+    }
+
+    private function logInProjectHistory(MailNotification $email_notification) {
+        $this->project_history_dao->groupAddHistory(
+            'svn_multi_repository_notification_update',
+            "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
+            "Path: " . $email_notification->getPath() . PHP_EOL .
+            "Emails: " . $email_notification->getNotifiedMails(),
+            $email_notification->getRepository()->getProject()->getID()
+        );
     }
 
     public function update(MailNotification $email_notification, RequestFromAutocompleter $autocompleter)
@@ -85,6 +102,10 @@ class MailNotificationManager {
     {
         if (! $this->dao->updateGloballyForRepository($repository->getId(), $new_email_notification)) {
             throw new CannotCreateMailHeaderException();
+        }
+
+        foreach($new_email_notification as $notification) {
+            $this->logInProjectHistory($notification);
         }
     }
 

@@ -265,6 +265,8 @@ class RepositoryCreator
             foreach ($mail_notifications as $notification) {
                 $this->mail_notification_manager->create($notification);
             }
+
+            $this->project_history_formatter->addNotificationHistory($mail_notifications);
         }
     }
 }

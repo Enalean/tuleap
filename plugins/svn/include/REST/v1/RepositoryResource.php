@@ -184,7 +184,8 @@ class RepositoryResource extends AuthenticatedResource
         $mail_notification_manager    = new MailNotificationManager(
             new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
             new UsersToNotifyDao(),
-            new UgroupsToNotifyDao()
+            new UgroupsToNotifyDao(),
+            $project_history_dao
         );
 
         $this->repository_creator    = new RepositoryCreator(
