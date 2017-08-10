@@ -140,6 +140,10 @@ class AccessFileHistoryCreator {
 
     private function logUseAVersionHistory(Repository $repository, AccessFileHistory $version)
     {
+        if ($version->getVersionNumber() === 0) {
+            return;
+        }
+
         $old_version =
             "Repository: " . $repository->getName() . PHP_EOL .
             "version #" . $version->getVersionNumber();
