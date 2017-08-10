@@ -51,16 +51,13 @@ class NotificationListBuilder
 
     /**
      * @param MailNotification[] $notifications
-     * @param NotificationsEmailsBuilder $emails_builder
      * @return array
      */
-    public function getNotificationsPresenter(array $notifications, NotificationsEmailsBuilder $emails_builder)
+    public function getNotificationsPresenter(array $notifications)
     {
         $notifications_presenters = array();
         foreach ($notifications as $notification) {
-            $emails_to_be_notified = $emails_builder->transformNotificationEmailsStringAsArray(
-                $notification->getNotifiedMails()
-            );
+            $emails_to_be_notified = $notification->getNotifiedMails();
             $user_presenters   = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
             $ugroup_presenters = $this->ugroup_to_be_notified_builder->getCollectionOfUgroupToBeNotifiedPresenter($notification);
             $notifications_presenters[] = new NotificationPresenter(

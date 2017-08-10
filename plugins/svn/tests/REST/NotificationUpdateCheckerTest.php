@@ -23,6 +23,7 @@ namespace Tuleap\SVN\REST\v1;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\Repository;
 use TuleapTestCase;
 
@@ -56,7 +57,8 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             $this->mail_notification_dao,
             $user_to_notify_dao,
             $ugroup_to_notify_dao,
-            mock('\ProjectHistoryDao')
+            mock('\ProjectHistoryDao'),
+            new NotificationsEmailsBuilder()
         );
 
         $this->notification_update_checker = new NotificationUpdateChecker($mail_notification_manager);
@@ -88,7 +90,7 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 1,
                 $this->repository,
                 "/tags",
-                "foo@example.com,bar@example.com",
+                array("foo@example.com", "bar@example.com"),
                 array(),
                 array()
             )
@@ -109,7 +111,7 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 1,
                 $this->repository,
                 "/tags",
-                "foo@example.com,bar@example.com",
+                array("foo@example.com", "bar@example.com"),
                 array(),
                 array()
             ),
@@ -117,7 +119,7 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 1,
                 $this->repository,
                 "/trunk",
-                "foo@example.com",
+                array("foo@example.com"),
                 array(),
                 array()
             )
@@ -142,7 +144,7 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 1,
                 $this->repository,
                 "/tags",
-                "foo@example.com,bar@example.com",
+                array("foo@example.com", "bar@example.com"),
                 array(),
                 array()
             )
@@ -168,7 +170,7 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 1,
                 $this->repository,
                 "/tags",
-                "bar@example.com,foo@example.com",
+                array("bar@example.com", "foo@example.com"),
                 array(),
                 array()
             )

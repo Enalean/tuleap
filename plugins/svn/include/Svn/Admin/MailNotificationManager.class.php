@@ -23,10 +23,10 @@ namespace Tuleap\Svn\Admin;
 use ProjectHistoryDao;
 use Tuleap\Svn\Notifications\CannotAddUgroupsNotificationException;
 use Tuleap\Svn\Notifications\CannotAddUsersNotificationException;
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\Repository;
-use Tuleap\User\RequestFromAutocompleter;
 
 class MailNotificationManager {
 
@@ -43,17 +43,23 @@ class MailNotificationManager {
      * @var ProjectHistoryDao
      */
     private $project_history_dao;
+    /**
+     * @var NotificationsEmailsBuilder
+     */
+    private $notifications_emails_builder;
 
     public function __construct(
         MailNotificationDao $dao,
         UsersToNotifyDao $user_to_notify_dao,
         UgroupsToNotifyDao $ugroup_to_notify_dao,
-        ProjectHistoryDao $project_history_dao
+        ProjectHistoryDao $project_history_dao,
+        NotificationsEmailsBuilder $notifications_emails_builder
     ) {
-        $this->dao                  = $dao;
-        $this->user_to_notify_dao   = $user_to_notify_dao;
-        $this->ugroup_to_notify_dao = $ugroup_to_notify_dao;
-        $this->project_history_dao  = $project_history_dao;
+        $this->dao                          = $dao;
+        $this->user_to_notify_dao           = $user_to_notify_dao;
+        $this->ugroup_to_notify_dao         = $ugroup_to_notify_dao;
+        $this->project_history_dao          = $project_history_dao;
+        $this->notifications_emails_builder = $notifications_emails_builder;
     }
 
     public function create(MailNotification $mail_notification)
@@ -83,7 +89,7 @@ class MailNotificationManager {
             'svn_multi_repository_notification_create',
             "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
             "Path: " . $email_notification->getPath() . PHP_EOL .
-            "Emails: " . $email_notification->getNotifiedMails(),
+            "Emails: " . $email_notification->getNotifiedMailsAsString(),
             $email_notification->getRepository()->getProject()->getID()
         );
     }
@@ -93,7 +99,7 @@ class MailNotificationManager {
             'svn_multi_repository_notification_update',
             "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
             "Path: " . $email_notification->getPath() . PHP_EOL .
-            "Emails: " . $email_notification->getNotifiedMails(),
+            "Emails: " . $email_notification->getNotifiedMailsAsString(),
             $email_notification->getRepository()->getProject()->getID()
         );
     }
@@ -193,7 +199,7 @@ class MailNotificationManager {
             $row['id'],
             $repository,
             $row['svn_path'],
-            $row['mailing_list'],
+            $this->notifications_emails_builder->transformNotificationEmailsStringAsArray($row['mailing_list']),
             array(),
             array()
         );

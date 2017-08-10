@@ -215,7 +215,7 @@ class AdminController
                 0,
                 $repository,
                 $form_path,
-                $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
+                $autocompleter->getEmails(),
                 $autocompleter->getUsers(),
                 $autocompleter->getUgroups()
             );
@@ -302,7 +302,7 @@ class AdminController
             $notification_id,
             $repository,
             $new_path,
-            $this->emails_builder->transformNotificationEmailsArrayAsString($autocompleter->getEmails()),
+            $autocompleter->getEmails(),
             $autocompleter->getUsers(),
             $autocompleter->getUgroups()
         );

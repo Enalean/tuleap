@@ -58,7 +58,7 @@ class MailNotificationDao extends DataAccessObject {
     }
 
     public function create(MailNotification $mail_notification) {
-        $mailing_list  = $this->da->quoteSmart($mail_notification->getNotifiedMails());
+        $mailing_list  = $this->da->quoteSmart($mail_notification->getNotifiedMailsAsString());
         $path          = $this->da->quoteSmart($mail_notification->getPath());
         $repository_id = $this->da->escapeInt($mail_notification->getRepository()->getId());
 
@@ -74,7 +74,7 @@ class MailNotificationDao extends DataAccessObject {
     {
         $notification_id = $this->da->escapeInt($email_notification->getId());
         $new_path        = $this->da->quoteSmart($email_notification->getPath());
-        $mailing_list    = $this->da->quoteSmart($email_notification->getNotifiedMails());
+        $mailing_list    = $this->da->quoteSmart($email_notification->getNotifiedMailsAsString());
 
         $sql = "UPDATE plugin_svn_notification
                 SET svn_path = $new_path, mailing_list = $mailing_list

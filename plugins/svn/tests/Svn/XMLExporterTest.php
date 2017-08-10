@@ -81,7 +81,7 @@ class XMLSvnExporterTest extends TuleapTestCase
                     1,
                     $repository,
                     '/',
-                    'mail@example.com',
+                    array('mail@example.com'),
                     array(),
                     array()
                 ),
@@ -89,7 +89,7 @@ class XMLSvnExporterTest extends TuleapTestCase
                     2,
                     $repository,
                     '/trunk',
-                    'mail2@example.com',
+                    array('mail2@example.com'),
                     array(),
                     array()
                 )

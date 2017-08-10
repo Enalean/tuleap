@@ -91,7 +91,7 @@ class ProjectHistoryFormatter
         $message = '';
         foreach ($mail_notifications as $mail_notification) {
             $message .= "Path: " . $mail_notification->getPath() . PHP_EOL;
-            $message .= "Emails: " . $mail_notification->getNotifiedMails() . PHP_EOL;
+            $message .= "Emails: " . $mail_notification->getNotifiedMailsAsString() . PHP_EOL;
         }
 
         $this->messages[] = "Notifications:" . PHP_EOL . $message;

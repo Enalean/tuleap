@@ -33,6 +33,7 @@ use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Repository;
@@ -82,6 +83,10 @@ class XMLRepositoryImporter
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var NotificationsEmailsBuilder
+     */
+    private $notifications_emails_builder;
 
     public function __construct(
         SimpleXMLElement $xml_repo,
@@ -91,7 +96,8 @@ class XMLRepositoryImporter
         Backend $backend_system,
         AccessFileHistoryCreator $access_file_history_creator,
         RepositoryManager $repository_manager,
-        \UserManager $user_manager
+        \UserManager $user_manager,
+        NotificationsEmailsBuilder $notifications_emails_builder
     ) {
         $attrs = $xml_repo->attributes();
         $this->name = $attrs['name'];
@@ -110,13 +116,14 @@ class XMLRepositoryImporter
             );
         }
 
-        $this->references                  = $xml_repo->references;
-        $this->repository_creator          = $repository_creator;
-        $this->backend_svn                 = $backend_svn;
-        $this->backend_system              = $backend_system;
-        $this->access_file_history_creator = $access_file_history_creator;
-        $this->repository_manager          = $repository_manager;
-        $this->user_manager                = $user_manager;
+        $this->references                   = $xml_repo->references;
+        $this->repository_creator           = $repository_creator;
+        $this->backend_svn                  = $backend_svn;
+        $this->backend_system               = $backend_system;
+        $this->access_file_history_creator  = $access_file_history_creator;
+        $this->repository_manager           = $repository_manager;
+        $this->user_manager                 = $user_manager;
+        $this->notifications_emails_builder = $notifications_emails_builder;
     }
 
     public function import(
@@ -242,11 +249,18 @@ class XMLRepositoryImporter
     private function importSubscriptions(
         Logger $logger,
         Repository $repo,
-        MailNotificationManager $mail_notification_manager)
-    {
-        foreach($this->subscriptions as $subscription) {
+        MailNotificationManager $mail_notification_manager
+    ) {
+        foreach ($this->subscriptions as $subscription) {
             $logger->info("[svn {$this->name}] Add subscription to {$subscription['path']}: {$subscription['emails']}");
-            $notif = new MailNotification(0, $repo, $subscription['path'], $subscription['emails'], array(), array());
+            $notif = new MailNotification(
+                0,
+                $repo,
+                $subscription['path'],
+                $this->notifications_emails_builder->transformNotificationEmailsStringAsArray($subscription['emails']),
+                array(),
+                array()
+            );
             $mail_notification_manager->create($notif);
         }
     }

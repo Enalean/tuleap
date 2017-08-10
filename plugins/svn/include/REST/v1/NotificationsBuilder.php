@@ -95,12 +95,8 @@ class NotificationsBuilder
      */
     private function extractMails(MailNotification $notification)
     {
-        $notified_mails = $this->emails_builder->transformNotificationEmailsStringAsArray(
-            $notification->getNotifiedMails()
-        );
-
         $mails = array();
-        foreach ($notified_mails as $mail) {
+        foreach ($notification->getNotifiedMails() as $mail) {
             $mails[] = $mail;
         }
 
