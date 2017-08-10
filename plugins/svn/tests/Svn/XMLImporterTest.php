@@ -205,6 +205,7 @@ class XMLImporterTest extends TuleapTestCase
         ProjectManager::clearInstance();
 
         $this->user_manager       = mock('UserManager');
+        $this->ugroup_manager     = mock('UgroupManager');
         $this->logger             = mock('Logger');
         $this->pmdao              = safe_mock('ProjectDao');
         $this->evdao              = safe_mock('SystemEventDao');
@@ -223,7 +224,7 @@ class XMLImporterTest extends TuleapTestCase
             $project_history_dao,
             mock('Tuleap\Svn\Repository\ProjectHistoryFormatter')
         );
-        $this->notifdao           = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
+
         $users_to_notify_dao      = safe_mock('Tuleap\Svn\Notifications\UsersToNotifyDao');
         $ugroups_to_notify_dao    = safe_mock('Tuleap\Svn\Notifications\UgroupsToNotifyDao');
         $this->notifdao           = safe_mock('Tuleap\Svn\Admin\MailNotificationDao');
@@ -232,8 +233,10 @@ class XMLImporterTest extends TuleapTestCase
             $users_to_notify_dao,
             $ugroups_to_notify_dao,
             $project_history_dao,
-            new NotificationsEmailsBuilder()
+            new NotificationsEmailsBuilder(),
+            $this->ugroup_manager
         );
+
         $permissions_manager      = mock('Tuleap\Svn\SvnPermissionManager');
         $this->repository_creator = new RepositoryCreator(
             $this->repodao,
@@ -283,6 +286,7 @@ class XMLImporterTest extends TuleapTestCase
         SystemEventManager::clearInstance();
         EventManager::clearInstance();
         Backend::clearInstances();
+
         parent::tearDown();
     }
 

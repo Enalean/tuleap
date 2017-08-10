@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\Admin;
 
+use PFUser;
+use Project;
 use ProjectHistoryDao;
 use Tuleap\Svn\Notifications\CannotAddUgroupsNotificationException;
 use Tuleap\Svn\Notifications\CannotAddUsersNotificationException;
@@ -27,6 +29,7 @@ use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\Repository;
+use UGroupManager;
 
 class MailNotificationManager {
 
@@ -48,18 +51,25 @@ class MailNotificationManager {
      */
     private $notifications_emails_builder;
 
+    /**
+     * @var UGroupManager
+     */
+    private $ugroup_manager;
+
     public function __construct(
         MailNotificationDao $dao,
         UsersToNotifyDao $user_to_notify_dao,
         UgroupsToNotifyDao $ugroup_to_notify_dao,
         ProjectHistoryDao $project_history_dao,
-        NotificationsEmailsBuilder $notifications_emails_builder
+        NotificationsEmailsBuilder $notifications_emails_builder,
+        UGroupManager $ugroup_manager
     ) {
         $this->dao                          = $dao;
         $this->user_to_notify_dao           = $user_to_notify_dao;
         $this->ugroup_to_notify_dao         = $ugroup_to_notify_dao;
         $this->project_history_dao          = $project_history_dao;
         $this->notifications_emails_builder = $notifications_emails_builder;
+        $this->ugroup_manager               = $ugroup_manager;
     }
 
     public function create(MailNotification $mail_notification)
@@ -79,32 +89,38 @@ class MailNotificationManager {
     {
         $notification_id = $this->create($mail_notification);
 
-        $this->logCreateInProjectHistory($mail_notification);
+        $this->logCreateInProjectHistory($mail_notification->getRepository());
 
         return $notification_id;
     }
 
-    private function logCreateInProjectHistory(MailNotification $email_notification) {
-        $this->project_history_dao->groupAddHistory(
-            'svn_multi_repository_notification_create',
-            "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
-            "Path: " . $email_notification->getPath() . PHP_EOL .
-            "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
-            "Users: " . $email_notification->getNotifiedUsersAsString() . PHP_EOL .
-            "User groups: " . $email_notification->getNotifiedUserGroupsAsString(),
-            $email_notification->getRepository()->getProject()->getID()
-        );
+    private function logCreateInProjectHistory(Repository $repository) {
+        $this->logActionWithSnapshot($repository, 'svn_multi_repository_notification_create');
     }
 
-    private function logUpdateInProjectHistory(MailNotification $email_notification) {
+    private function logUpdateInProjectHistory(Repository $repository) {
+        $this->logActionWithSnapshot($repository, 'svn_multi_repository_notification_update');
+    }
+
+    private function logDeleteInProjectHistory(Repository $repository) {
+        $this->logActionWithSnapshot($repository, 'svn_multi_repository_notification_delete');
+    }
+
+    private function logActionWithSnapshot(Repository $repository, $action_name)
+    {
+        $message = "Repository: " . $repository->getName() . PHP_EOL;
+
+        foreach($this->getByRepository($repository) as $email_notification) {
+            $message .= "Path: " . $email_notification->getPath() . PHP_EOL .
+                "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
+                "Users: " . $email_notification->getNotifiedUsersAsString() . PHP_EOL .
+                "User groups: " . $email_notification->getNotifiedUserGroupsAsString() . PHP_EOL;
+        }
+
         $this->project_history_dao->groupAddHistory(
-            'svn_multi_repository_notification_update',
-            "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
-            "Path: " . $email_notification->getPath() . PHP_EOL .
-            "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
-            "Users: " . $email_notification->getNotifiedUsersAsString() . PHP_EOL .
-            "User groups: " . $email_notification->getNotifiedUserGroupsAsString(),
-            $email_notification->getRepository()->getProject()->getID()
+            $action_name,
+            $message,
+            $repository->getProject()->getID()
         );
     }
 
@@ -125,7 +141,7 @@ class MailNotificationManager {
         $this->notificationAddUsers($email_notification);
         $this->notificationAddUgroups($email_notification);
 
-        $this->logUpdateInProjectHistory($email_notification);
+        $this->logUpdateInProjectHistory($email_notification->getRepository());
     }
 
     /**
@@ -140,9 +156,7 @@ class MailNotificationManager {
             throw new CannotCreateMailHeaderException();
         }
 
-        foreach($new_email_notification as $notification) {
-            $this->logCreateInProjectHistory($notification);
-        }
+        $this->logCreateInProjectHistory($repository);
     }
 
     /**
@@ -240,15 +254,37 @@ class MailNotificationManager {
         return $mail_notification;
     }
 
-    public function instantiateFromRow(array $row, Repository $repository) {
+    private function instantiateFromRow(array $row, Repository $repository) {
+        $notification_id = $row['id'];
+
         return new MailNotification(
-            $row['id'],
+            $notification_id,
             $repository,
             $row['svn_path'],
             $this->notifications_emails_builder->transformNotificationEmailsStringAsArray($row['mailing_list']),
-            array(),
-            array()
+            $this->getUsersForNotification($notification_id),
+            $this->getUgroupsForNotification($repository->getProject(), $notification_id)
         );
+    }
+
+    private function getUsersForNotification($notification_id)
+    {
+        $users_to_be_notified = array();
+        foreach ($this->user_to_notify_dao->searchUsersByNotificationId($notification_id) as $user_row) {
+            $users_to_be_notified[] = new PFUser($user_row);
+        }
+
+        return $users_to_be_notified;
+    }
+
+    private function getUgroupsForNotification(Project $project, $notification_id)
+    {
+        $ugroups_to_be_notified = array();
+        foreach ($this->ugroup_to_notify_dao->searchUgroupsByNotificationId($notification_id) as $ugroup_row) {
+            $ugroups_to_be_notified[] = $this->ugroup_manager->instanciateGroupForProject($project, $ugroup_row);
+        }
+
+        return $ugroups_to_be_notified;
     }
 
     public function removeByNotificationId($notification_id)
@@ -262,6 +298,12 @@ class MailNotificationManager {
         if (! $this->dao->deleteByNotificationId($notification_id)) {
             throw new CannotDeleteMailNotificationException();
         }
+    }
+
+    public function removeByPathWithHistory(MailNotification $email_notification)
+    {
+        $this->removeByNotificationId($email_notification->getId());
+        $this->logDeleteInProjectHistory($email_notification->getRepository());
     }
 
     /**

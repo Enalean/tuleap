@@ -88,7 +88,7 @@ class UGroupManager {
         }
     }
 
-    private function instanciateGroupForProject(Project $project, array $row) {
+    public function instanciateGroupForProject(Project $project, array $row) {
         // force group_id as it is set to 100 for dynamic groups
         $row['group_id'] = $project->getID();
         return new ProjectUGroup($row);

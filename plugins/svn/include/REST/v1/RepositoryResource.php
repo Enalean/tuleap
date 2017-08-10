@@ -197,6 +197,8 @@ class RepositoryResource extends AuthenticatedResource
             $project_history_formatter
         );
 
+        $this->ugroup_manager = new UGroupManager();
+
         $project_history_formatter = new ProjectHistoryFormatter();
         $this->emails_builder      = new NotificationsEmailsBuilder();
         $mail_notification_manager = new MailNotificationManager(
@@ -204,10 +206,11 @@ class RepositoryResource extends AuthenticatedResource
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),
             $project_history_dao,
-            $this->emails_builder
+            $this->emails_builder,
+            $this->ugroup_manager
         );
 
-        $this->repository_creator    = new RepositoryCreator(
+        $this->repository_creator = new RepositoryCreator(
             $dao,
             $this->system_event_manager,
             $project_history_dao,
@@ -222,7 +225,6 @@ class RepositoryResource extends AuthenticatedResource
 
         $user_to_notify_dao           = new UsersToNotifyDao();
         $ugroup_to_notify_dao         = new UgroupsToNotifyDao();
-        $this->ugroup_manager = new \UGroupManager();
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
