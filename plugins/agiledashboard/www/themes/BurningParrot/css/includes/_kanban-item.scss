@@ -1,7 +1,7 @@
 $transition-duration: 50ms;
 $transition-delay: 500ms;
-$expand-collapse-bar-height: 10px;
-$margin-between-kanban-item-on-hover: 2px;
+$expand-collapse-bar-height: 8px;
+$margin-between-kanban-item-on-hover: 4px;
 $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanban-item-on-hover;
 
 @import 'kanban-item-card-fields';
@@ -14,10 +14,22 @@ $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanba
     transition: margin $transition-duration $transition-delay;
 
     &.updating > kanban-item {
-        background: $tlp-ui-white url('../images/loader-mini.gif') no-repeat right 5px bottom 5px;
+        background: $tlp-ui-white url('../images/loader-mini.gif') no-repeat right 8px bottom 8px;
     }
 
     &.compact-view {
+        &.updating > kanban-item {
+            background: $tlp-ui-white url('../images/loader-mini.gif') no-repeat right 8px center;
+
+            .kanban-item-content-clock {
+                opacity: 0;
+            }
+        }
+
+        .kanban-item-content-collapsed {
+            padding: 5px 10px;
+        }
+
         .kanban-item-content-info {
             flex-direction: row;
             align-items: baseline;
@@ -28,8 +40,15 @@ $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanba
         }
 
         .kanban-item-content-info-label {
+            margin: 0;
             font-size: 14px;
             text-align: left;
+        }
+
+        .kanban-item-content-clock {
+            position: relative;
+            right: 0;
+            margin: 0 0 0 5px;
         }
 
         .extra-card-fields {
@@ -102,7 +121,7 @@ kanban-item {
 .kanban-item-content-collapsed {
     display: flex;
     flex: 1 1 auto;
-    padding: 5px 10px;
+    padding: 5px 10px 0;
 }
 
 .kanban-item-content-info {
@@ -126,14 +145,16 @@ kanban-item {
 
 .kanban-item-content-info-label {
     flex: 1 1 auto;
-    width: calc(100% - #{$tlp-spacing});
+    width: 100%;
+    margin: 10px 0;
+    overflow: hidden;
     text-align: center;
     text-overflow: ellipsis;
-    overflow: hidden;
 }
 
 .kanban-item-content-clock {
-    flex: 0 0 auto;
+    position: absolute;
+    right: 10px;
     color: $tlp-ui-dimmed;
     font-size: 12px;
     cursor: help;
