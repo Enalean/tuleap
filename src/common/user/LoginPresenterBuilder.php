@@ -24,7 +24,6 @@ class User_LoginPresenterBuilder {
     public function build($return_to, $printer_version, $form_loginname, $is_secure, CSRFSynchronizerToken $login_csrf)
     {
         $additional_connectors = '';
-
         EventManager::instance()->processEvent(
             Event::LOGIN_ADDITIONAL_CONNECTOR,
             array(
@@ -34,12 +33,21 @@ class User_LoginPresenterBuilder {
             )
         );
 
+        $display_new_account_button = true;
+        EventManager::instance()->processEvent(
+            'display_newaccount',
+            array(
+                'allow' => &$display_new_account_button
+            )
+        );
+
         $presenter = new User_LoginPresenter(
             $return_to,
             $printer_version,
             $form_loginname,
             $additional_connectors,
-            $login_csrf
+            $login_csrf,
+            $display_new_account_button
         );
 
         $authoritative = false;

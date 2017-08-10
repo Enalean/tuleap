@@ -204,6 +204,8 @@ account_login	lost_pw	Oups, j'ai perdu mon mot de passe
 account_login	create_acct	<b><A HREF="register.php">[Créer un nouveau compte]</A></b><BR> Si vous visitez le site <b>$1</b> pour la première fois vous pouvez créer votre compte dès maintenant ! La création d'un <a href="register.php">nouveau compte</a> ne prend que quelques secondes et vous pourrez ensuite tirer parti de tous les avantages offerts par le site $1.
 account_login	login_with_tuleap	Connexion
 account_login	help_subject	Impossible de se connecter sur $1
+account_login	not_a_member	Pas encore membre ?
+account_login	create_account_label	Créer un compte
 #
 #-----------------------------------------------
 # Script: SF/www/account/lostlogin.php

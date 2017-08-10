@@ -29,6 +29,7 @@ class LDAP_LoginPresenter extends User_LoginPresenter
             $login_presenter->getFormLoginName(),
             '',
             $login_presenter->getCSRFToken(),
+            $login_presenter->getDisplayNewAccountButton(),
             false
         );
     }

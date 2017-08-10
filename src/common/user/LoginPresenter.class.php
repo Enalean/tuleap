@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class User_LoginPresenter {
+class User_LoginPresenter
+{
     private $return_to;
     private $pv;
     private $form_loginname;
+    private $display_new_account_button;
     private $allow_password_recovery;
     private $additional_connectors;
     /**
@@ -35,14 +37,16 @@ class User_LoginPresenter {
         $form_loginname,
         $additional_connectors,
         CSRFSynchronizerToken $csrf_token,
+        $display_new_account_button = true,
         $allow_password_recovery = true
     ) {
-        $this->return_to               = $return_to;
-        $this->pv                      = $pv;
-        $this->form_loginname          = $form_loginname;
-        $this->allow_password_recovery = $allow_password_recovery;
-        $this->additional_connectors   = $additional_connectors;
-        $this->csrf_token              = $csrf_token;
+        $this->return_to                  = $return_to;
+        $this->pv                         = $pv;
+        $this->form_loginname             = $form_loginname;
+        $this->display_new_account_button = $display_new_account_button;
+        $this->allow_password_recovery    = $allow_password_recovery;
+        $this->additional_connectors      = $additional_connectors;
+        $this->csrf_token                 = $csrf_token;
     }
 
     public function getTemplateDir() {
@@ -65,12 +69,24 @@ class User_LoginPresenter {
         return $this->getReturnTo();
     }
 
+    public function display_new_account_button() {
+        return $this->display_new_account_button;
+    }
+
     public function allow_password_recovery() {
         return $this->allow_password_recovery;
     }
 
     public function help_email() {
         return ForgeConfig::get('sys_email_admin');
+    }
+
+    public function not_a_member() {
+        return $GLOBALS['Language']->getText('account_login', 'not_a_member');
+    }
+
+    public function create_account_label() {
+        return $GLOBALS['Language']->getText('account_login', 'create_account_label');
     }
 
     public function need_help() {
@@ -147,5 +163,10 @@ class User_LoginPresenter {
     public function csrf_token_value()
     {
         return $this->csrf_token->getToken();
+    }
+
+    public function getDisplayNewAccountButton()
+    {
+        return $this->display_new_account_button;
     }
 }
