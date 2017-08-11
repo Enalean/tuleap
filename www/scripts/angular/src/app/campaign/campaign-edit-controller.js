@@ -55,14 +55,10 @@ function CampaignEditCtrl(
         diffState             : diffState,
     });
 
-    init();
-
-    function init() {
-        $timeout(function() {
-            var searchField = document.getElementById('edit-campaign-tests-list-filter');
-            tlp.filterInlineTable(searchField);
-            searchField.addEventListener('keydown', preventSubmit);
-        }, 0);
+    this.$onInit = function() {
+        var searchField = document.getElementById('edit-campaign-tests-list-filter');
+        tlp.filterInlineTable(searchField);
+        searchField.addEventListener('keydown', preventSubmit);
 
         project_id  = SharedPropertiesService.getProjectId();
         campaign_id = $state.params.id;
@@ -82,7 +78,7 @@ function CampaignEditCtrl(
                 executions = results[1];
             $scope.tests_list = buildInitialTestsList(definitions, executions);
         });
-    }
+    };
 
     function loadTestReports() {
         DefinitionService.getDefinitionReports().then(function(reports) {

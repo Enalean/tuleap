@@ -69,7 +69,7 @@
             </tbody>
             <tbody ng-repeat-start="category in tests_list">
                 <tr ng-click="toggleCategory(category)">
-                    <td colspan="3" class="tlp-table-cell-section">
+                    <td colspan="3" class="tlp-table-cell-section tlp-table-cell-filterable">
                         <i class="fa edit-campaign-tests-list-check edit-campaign-tests-list-section-check"
                            ng-class="categoryCheckmark(category)"></i>
                         <span class="edit-campaign-tests-list-section-label">{{ category.label }}</span>
