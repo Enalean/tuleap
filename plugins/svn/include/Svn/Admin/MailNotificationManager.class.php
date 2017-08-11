@@ -68,12 +68,22 @@ class MailNotificationManager {
     {
         $notification_id = $this->create($mail_notification);
 
-        $this->logInProjectHistory($mail_notification);
+        $this->logCreateInProjectHistory($mail_notification);
 
         return $notification_id;
     }
 
-    public function logInProjectHistory(MailNotification $email_notification) {
+    private function logCreateInProjectHistory(MailNotification $email_notification) {
+        $this->project_history_dao->groupAddHistory(
+            'svn_multi_repository_notification_create',
+            "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
+            "Path: " . $email_notification->getPath() . PHP_EOL .
+            "Emails: " . $email_notification->getNotifiedMails(),
+            $email_notification->getRepository()->getProject()->getID()
+        );
+    }
+
+    private function logUpdateInProjectHistory(MailNotification $email_notification) {
         $this->project_history_dao->groupAddHistory(
             'svn_multi_repository_notification_update',
             "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
@@ -100,7 +110,7 @@ class MailNotificationManager {
         $this->notificationAddUsers($notification_id, $autocompleter);
         $this->notificationAddUgroups($notification_id, $autocompleter);
 
-        $this->logInProjectHistory($email_notification);
+        $this->logUpdateInProjectHistory($email_notification);
     }
 
     /**
@@ -116,7 +126,7 @@ class MailNotificationManager {
         }
 
         foreach($new_email_notification as $notification) {
-            $this->logInProjectHistory($notification);
+            $this->logCreateInProjectHistory($notification);
         }
     }
 

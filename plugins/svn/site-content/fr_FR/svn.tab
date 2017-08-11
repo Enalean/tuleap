@@ -138,4 +138,5 @@ project_admin_utils	svn_multi_repository_hook_update	Règles de commit mises à 
 project_admin_utils	svn_multi_repository_immutable_tags_update	Tags non modifiables mis à jour
 project_admin_utils	svn_multi_repository_access_file_update	Fichier de contrôle d'accès mis à jour
 project_admin_utils	svn_multi_repository_access_file_use_version	Utilisation d'une version pour le fichier contrôle d'accès
-project_admin_utils	svn_multi_repository_notification_update	Notification créée ou modifiée pour le chemin
+project_admin_utils	svn_multi_repository_notification_create	Notification créée pour le chemin
+project_admin_utils	svn_multi_repository_notification_update	Notification modifiée pour le chemin
