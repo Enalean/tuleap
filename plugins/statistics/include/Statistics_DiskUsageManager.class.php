@@ -557,7 +557,7 @@ class Statistics_DiskUsageManager {
         $start = microtime(true);
         $size  = $this->svn_collector->collectForSubversionRepositories($project);
         if (! $size) {
-            $path = ForgeConfig::get('svn_prefix').'/'.$project->getUnixName();
+            $path = $project->getSVNRootPath();
             $size = $this->getDirSize($path.'/');
         }
 
