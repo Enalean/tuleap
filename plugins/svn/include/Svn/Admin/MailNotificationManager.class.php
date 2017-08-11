@@ -56,12 +56,17 @@ class MailNotificationManager {
         $this->project_history_dao  = $project_history_dao;
     }
 
-    public function create(MailNotification $mail_notification) {
+    public function create(MailNotification $mail_notification)
+    {
         $notification_id = $this->dao->create($mail_notification);
         if (! $notification_id) {
-            throw new CannotCreateMailHeaderException ();
+            throw new CannotCreateMailHeaderException();
         }
-        return $notification_id;
+
+        $mail_notification->setId($notification_id);
+
+        $this->notificationAddUsers($mail_notification);
+        $this->notificationAddUgroups($mail_notification);
     }
 
     public function createWithHistory(MailNotification $mail_notification)
@@ -93,7 +98,7 @@ class MailNotificationManager {
         );
     }
 
-    public function update(MailNotification $email_notification, RequestFromAutocompleter $autocompleter)
+    public function update(MailNotification $email_notification)
     {
         $notification_id = $email_notification->getId();
 
@@ -107,8 +112,8 @@ class MailNotificationManager {
             throw new CannotCreateMailHeaderException();
         }
 
-        $this->notificationAddUsers($notification_id, $autocompleter);
-        $this->notificationAddUgroups($notification_id, $autocompleter);
+        $this->notificationAddUsers($email_notification);
+        $this->notificationAddUgroups($email_notification);
 
         $this->logUpdateInProjectHistory($email_notification);
     }
@@ -187,8 +192,10 @@ class MailNotificationManager {
         return new MailNotification(
             $row['id'],
             $repository,
+            $row['svn_path'],
             $row['mailing_list'],
-            $row['svn_path']
+            array(),
+            array()
         );
     }
 
@@ -206,17 +213,16 @@ class MailNotificationManager {
     }
 
     /**
-     * @param $notification_id
-     * @param RequestFromAutocompleter $autocompleter
      * @return bool
+     *
      * @throws CannotAddUsersNotificationException
      */
-    public function notificationAddUsers($notification_id, RequestFromAutocompleter $autocompleter)
+    private function notificationAddUsers(MailNotification $notification)
     {
-        $users           = $autocompleter->getUsers();
+        $users           = $notification->getNotifiedUsers();
         $users_not_added = array();
         foreach ($users as $user) {
-            if (! $this->user_to_notify_dao->insert($notification_id, $user->getId())) {
+            if (! $this->user_to_notify_dao->insert($notification->getId(), $user->getId())) {
                 $users_not_added[] = $user->getName();
             }
         }
@@ -229,17 +235,16 @@ class MailNotificationManager {
     }
 
     /**
-     * @param $notification_id
-     * @param RequestFromAutocompleter $autocompleter
      * @return bool
+     *
      * @throws CannotAddUgroupsNotificationException
      */
-    public function notificationAddUgroups($notification_id, RequestFromAutocompleter $autocompleter)
+    private function notificationAddUgroups(MailNotification $notification)
     {
-        $ugroups           = $autocompleter->getUgroups();
+        $ugroups           = $notification->getNotifiedUgroups();
         $ugroups_not_added = array();
         foreach ($ugroups as $ugroup) {
-            if (! $this->ugroup_to_notify_dao->insert($notification_id, $ugroup->getId())) {
+            if (! $this->ugroup_to_notify_dao->insert($notification->getId(), $ugroup->getId())) {
                 $ugroups_not_added[] = $ugroup->getTranslatedName();
             }
         }

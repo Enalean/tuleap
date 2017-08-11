@@ -24,7 +24,7 @@ use PFUser;
 use Tuleap\Svn\Admin\MailNotification;
 use TuleapTestCase;
 
-require_once __DIR__ .'/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 {
@@ -61,8 +61,12 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
             ->withMembers(
                 array(
                     aUser()->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
-                    aUser()->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail('charles@example.com')->build(),
-                    aUser()->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail('suspended@example.com')->build()
+                    aUser()->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail(
+                        'charles@example.com'
+                    )->build(),
+                    aUser()->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail(
+                        'suspended@example.com'
+                    )->build()
                 )
             )
             ->build();
@@ -82,9 +86,18 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itReturnsEmailsAsArray()
     {
-        stub($this->notification_manager)->getByPath()->returns(array(
-            new MailNotification(1, $this->repository, 'jdoe@example.com, jsmith@example.com', '/path')
-        ));
+        stub($this->notification_manager)->getByPath()->returns(
+            array(
+                new MailNotification(
+                    1,
+                    $this->repository,
+                    '/path',
+                    'jdoe@example.com, jsmith@example.com',
+                    array(),
+                    array()
+                )
+            )
+        );
         stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
@@ -96,10 +109,26 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itCombinesEmailsFromMultipleMatchingNotifications()
     {
-        stub($this->notification_manager)->getByPath()->returns(array(
-            new MailNotification(1, $this->repository, 'jsmith@example.com', '/path'),
-            new MailNotification(2, $this->repository, 'jdoe@example.com', '/path')
-        ));
+        stub($this->notification_manager)->getByPath()->returns(
+            array(
+                new MailNotification(
+                    1,
+                    $this->repository,
+                    '/path',
+                    'jsmith@example.com',
+                    array(),
+                    array()
+                ),
+                new MailNotification(
+                    2,
+                    $this->repository,
+                    '/path',
+                    'jdoe@example.com',
+                    array(),
+                    array()
+                )
+            )
+        );
         stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
@@ -111,9 +140,18 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itReturnsEmailsOfUsersForNotification()
     {
-        stub($this->notification_manager)->getByPath()->returns(array(
-            new MailNotification(1, $this->repository, '', '/path')
-        ));
+        stub($this->notification_manager)->getByPath()->returns(
+            array(
+                new MailNotification(
+                    1,
+                    $this->repository,
+                    '/path',
+                    '',
+                    array(),
+                    array()
+                )
+            )
+        );
         stub($this->user_dao)->searchUsersByNotificationId(1)->returnsDar(array('email' => 'jsmith@example.com'));
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
@@ -125,9 +163,18 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itReturnsEmailsOfUgroupMembersForNotification()
     {
-        stub($this->notification_manager)->getByPath()->returns(array(
-            new MailNotification(101, $this->repository, 'jsmith@example.com', '/path'),
-        ));
+        stub($this->notification_manager)->getByPath()->returns(
+            array(
+                new MailNotification(
+                    101,
+                    $this->repository,
+                    '/path',
+                    'jsmith@example.com',
+                    array(),
+                    array()
+                ),
+            )
+        );
         stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
@@ -138,9 +185,18 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itRemovesGroupMembersThatAreNotAlive()
     {
-        stub($this->notification_manager)->getByPath()->returns(array(
-            new MailNotification(101, $this->repository, 'jsmith@example.com', '/path'),
-        ));
+        stub($this->notification_manager)->getByPath()->returns(
+            array(
+                new MailNotification(
+                    101,
+                    $this->repository,
+                    '/path',
+                    'jsmith@example.com',
+                    array(),
+                    array()
+                ),
+            )
+        );
         stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
@@ -150,9 +206,18 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itRemovesDuplicates()
     {
-        stub($this->notification_manager)->getByPath()->returns(array(
-            new MailNotification(1, $this->repository, 'jsmith@example.com', '/path'),
-        ));
+        stub($this->notification_manager)->getByPath()->returns(
+            array(
+                new MailNotification(
+                    1,
+                    $this->repository,
+                    '/path',
+                    'jsmith@example.com',
+                    array(),
+                    array()
+                ),
+            )
+        );
         stub($this->user_dao)->searchUsersByNotificationId()->returnsDar(array('email' => 'jsmith@example.com'));
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');

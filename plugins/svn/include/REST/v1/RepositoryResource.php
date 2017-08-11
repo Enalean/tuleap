@@ -665,8 +665,10 @@ class RepositoryResource extends AuthenticatedResource
                 $mail_notification[] = new MailNotification(
                     0,
                     $repository,
+                    $notification->path,
                     $this->emails_builder->transformNotificationEmailsArrayAsString($notification->emails),
-                    $notification->path
+                    array(),
+                    array()
                 );
             }
         }
