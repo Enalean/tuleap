@@ -13,7 +13,7 @@ plugin_botmattermost_git	description	Choose a bot to send message in Mattermost 
 plugin_botmattermost_git	push_notification_text	pushed a new commit to
 
 plugin_botmattermost_git	any_configured_notification	The Mattermost notification has not yet been configured.
-plugin_botmattermost_git	any_configured_notification_tips	To begin, clic on add notification button below.
+plugin_botmattermost_git	any_configured_notification_tips	To begin, click on add notification button below.
 
 
 plugin_botmattermost_git	button_configure_notification	Add notification
@@ -28,7 +28,7 @@ plugin_botmattermost_git	configuration_info_channels_handles	The channel handle 
 plugin_botmattermost_git	configuration_label_channels_handles	Channel handles list
 plugin_botmattermost_git	configuration_input_channels_handles	channel1, channel2, channel3
 plugin_botmattermost_git	empty_channel_list	No channel selected, the channel defined at the webhook creation will be used as default
-
+plugin_botmattermost_git	empty_bot_list	No bots are defined by the system administrator. The notification configuration is not available.
 
 plugin_botmattermost_git	attachment_pre_text_message	Pull request submitted by $1 on the repository
 plugin_botmattermost_git	attachment_pre_text_project	Project:

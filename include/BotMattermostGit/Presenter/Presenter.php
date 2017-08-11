@@ -69,7 +69,7 @@ class Presenter
 
         $this->any_configured_notification      = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification');
         $this->any_configured_notification_tips = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'any_configured_notification_tips');
-        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost', 'configuration_empty_list');
+        $this->empty_bot_list                   = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'empty_bot_list');
         $this->empty_channel_list               = $GLOBALS['Language']->getText('plugin_botmattermost_git', 'empty_channel_list');
 
 
