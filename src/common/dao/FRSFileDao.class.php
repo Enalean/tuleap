@@ -122,7 +122,7 @@ class FRSFileDao extends DataAccessObject {
     }
 
     function searchFileByNameFromRelease($file_name, $release_id){
-    	$file_name = $this->da->quoteSmart('%/'.$file_name);
+        $file_name  = $this->da->quoteSmart('%/' . $this->getDa()->escapeLikeValue($file_name));
     	$release_id = $this->da->quoteSmart($release_id);
     	$sql = 'SELECT file_id'
     	    .' from frs_file'
