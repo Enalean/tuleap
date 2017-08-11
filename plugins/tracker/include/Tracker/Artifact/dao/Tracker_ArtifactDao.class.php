@@ -254,11 +254,34 @@ class Tracker_ArtifactDao extends DataAccessObject {
     {
         $user_id = $this->da->escapeInt($user_id);
         // The [SC|SS|ST.tracker_id = A.tracker_id is not mandatory but it gives a small perf boost
-        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on
+        $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on, G.group_name
                 FROM tracker_artifact AS A
                     INNER JOIN tracker AS T ON (A.tracker_id = T.id)
                     INNER JOIN groups AS G ON (G.group_id = T.group_id)
-                    LEFT JOIN (
+                    LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (T.id = SS.tracker_id AND A.last_changeset_id = CV3.changeset_id)
+                    LEFT JOIN (                         -- For the /title/ if any
+                        tracker_changeset_value AS CV2
+                        INNER JOIN tracker_semantic_title as ST ON (CV2.field_id = ST.field_id)
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
+                    ) ON (A.last_changeset_id = CV2.changeset_id)
+                WHERE A.submitted_by = $user_id
+                  AND (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                     )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
+                UNION
+                SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, A.last_changeset_id AS changeset_id, CVT.value AS title, CVT.body_format AS title_format, A.submitted_by, A.submitted_on, G.group_name
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id)
+                    INNER JOIN groups AS G ON (G.group_id = T.group_id)
+                    INNER JOIN (
                         tracker_semantic_contributor as SC
                         INNER JOIN tracker_changeset_value AS CV1 ON (CV1.field_id = SC.field_id)
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CVL.changeset_value_id = CV1.id)
@@ -273,9 +296,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         INNER JOIN tracker_semantic_title as ST ON (ST.field_id = CV2.field_id)
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CVT.changeset_value_id = CV2.id)
                     ) ON (ST.tracker_id = A.tracker_id AND CV2.changeset_id = A.last_changeset_id)
-                WHERE (A.submitted_by = $user_id
-                        OR
-                       CVL.bindvalue_id = $user_id)
+                WHERE CVL.bindvalue_id = $user_id
                   AND (
                         SS.field_id IS NULL -- Use the status semantic only if it is defined
                         OR
@@ -283,7 +304,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                      )
                   AND G.status = 'A'
                   AND T.deletion_date IS NULL
-               ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
+               ORDER BY group_name ASC, tracker_id ASC, id DESC";
         return $this->retrieve($sql);
     }
 
