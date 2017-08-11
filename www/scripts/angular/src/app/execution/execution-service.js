@@ -95,7 +95,6 @@ function ExecutionService(
         self.executions_by_categories_by_campaigns[campaign_id] = {};
 
         return getAllRemoteExecutions(campaign_id, limit, offset).then(function(executions) {
-            groupExecutionsByCategory(campaign_id, executions);
             self.loading[campaign_id] = false;
             return;
         });
@@ -107,6 +106,7 @@ function ExecutionService(
         return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
           var total_executions = data.total;
 
+          groupExecutionsByCategory(campaign_id, data.results);
           $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
           remote_executions = remote_executions.concat(data.results);
 
