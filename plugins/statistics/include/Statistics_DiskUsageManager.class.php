@@ -535,7 +535,7 @@ class Statistics_DiskUsageManager {
         $start = microtime(true);
         $size  = $this->cvs_collector->collectForCVSRepositories($project);
         if (! $size) {
-            $path = ForgeConfig::get('cvs_prefix').'/'.$project->getUnixName();
+            $path = ForgeConfig::get('cvs_prefix').'/'.$project->getUnixNameMixedCase();
             $size = $this->getDirSize($path.'/');
         }
 
