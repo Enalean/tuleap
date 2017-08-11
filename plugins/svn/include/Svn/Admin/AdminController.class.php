@@ -218,7 +218,7 @@ class AdminController
                 $form_path
             );
             try {
-                $notification_id = $this->mail_notification_manager->create($mail_notification);
+                $notification_id = $this->mail_notification_manager->createWithHistory($mail_notification);
                 $this->mail_notification_manager->notificationAddUsers($notification_id, $autocompleter);
                 $this->mail_notification_manager->notificationAddUgroups($notification_id, $autocompleter);
                 $GLOBALS['Response']->addFeedback(
