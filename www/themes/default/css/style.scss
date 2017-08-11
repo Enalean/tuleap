@@ -2,23 +2,8 @@
 
     img.avatar {
         margin: 0 10px 0 0;
-        width: 35px;
-        height: 35px;
-    }
-
-    .panel-header {
-        padding: 20px;
-        margin: 0;
-        color: #747474;
-        line-height: 22px;
-        font-size: 15px;
-        font-weight: 600;
-        letter-spacing: .5px;
-        text-transform: uppercase;
-    }
-
-    .panel-content {
-        padding: 20px;
+        width: 20px;
+        height: 20px;
     }
 
     .bot-assigned-label {
@@ -31,8 +16,46 @@
         cursor: pointer;
     }
 
-    .button-group {
-        margin: 20px 0 0 0;
+    .panel {
+        margin: 0 0 20px;
+        border: 1px solid #dddddd;
+        border-radius: 3px;
+        background: #fff;
+        max-width: 960px;
+        min-width: 400px;
+        width: 100%;
+    }
+
+    .panel-header {
+        background: #eeeeee;
+        border-bottom: 2px solid #333333;
+        padding: 10px;
+    }
+
+    .panel-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .panel-section {
+        flex-flow: row wrap;
+        align-self: flex-start;
+        padding: 20px;
+        border-left: 1px solid #f3f3f3;
+    }
+
+    .panel-section-actions {
+        align-self: center;
+    }
+
+    .panel-section:first-child {
+        border-left: 0;
+    }
+
+    .panel-name {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
     }
 }
 

@@ -11,29 +11,34 @@
         {{> modal-add-bot }}
     {{/ bot_assigned }}
     {{# bot_assigned }}
-        <h4 class="panel-header">{{# avatar }}<img class="avatar img-circle" src="{{ avatar }}">{{/ avatar }}{{ name }}
-        </h4>
-        <section class="panel-content">
-            <p class="bot-assigned-label">{{ label_channels_handles }}</p>
-            {{# channels }}
-                <p>{{ channels }}</p>
-            {{/ channels }}
-            {{^ channels }}
-                <div class="git-notification-mattermost-configuration-empty-state">
-                    <p class="git-notification-mattermost-configuration-description">{{ empty_channel_list }}</p>
-                </div>
-            {{/ channels }}
-
-            <div class="button-group">
-                <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-edit-{{ id }}">
-                    <i class="icon-edit"></i> {{ button_edit }}
-                </button>
-                {{> modal-edit-bot }}
-                <button class="btn btn-danger" data-toggle="modal" href="#admin-config-bot-delete-{{ id }}">
-                    <i class="icon-trash"></i> {{ button_delete }}
-                </button>
+        <section class="panel">
+            <div class="panel-header">
+                <p class="panel-name">
+                    {{# avatar }}<img class="avatar img-circle" src="{{ avatar }}">{{/ avatar }}
+                    {{ name }}
+                </p>
             </div>
-            {{> modal-delete-bot }}
+            <div class="panel-container">
+                <section class="panel-section">
+                    <p class="bot-assigned-label">{{ label_channels_handles }}</p>
+                    {{# channels }}<p>{{ channels }}</p>{{/ channels }}
+                    {{^ channels }}
+                        <div class="git-notification-mattermost-configuration-empty-state">
+                            <p class="git-notification-mattermost-configuration-description">{{ empty_channel_list }}</p>
+                        </div>
+                    {{/ channels }}
+                </section>
+                <section class="panel-section panel-section-actions button-group">
+                    <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-edit-{{ id }}">
+                        <i class="icon-edit"></i> {{ button_edit }}
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" href="#admin-config-bot-delete-{{ id }}">
+                        <i class="icon-trash"></i> {{ button_delete }}
+                    </button>
+                    {{> modal-edit-bot }}
+                    {{> modal-delete-bot }}
+                </section>
+            </div>
         </section>
     {{/ bot_assigned }}
 </div>
