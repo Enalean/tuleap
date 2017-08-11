@@ -1,13 +1,30 @@
-<h2>{{ title }}</h2>
-<form action="" method="POST">
-    <input type="hidden" name="action" value="admin-update" />
-    <label class="control-label" for="campaign_id">{{ campaigns }}</label>
-    <input type="text" name="campaign_tracker_id" id="campaign_id" value="{{ campaign_tracker_id }}" placeholder="{{ placeholder }}" />
-    <label class="control-label" for="test_definition_id">{{ definitions }}</label>
-    <input type="text" name="test_definition_tracker_id" id="test_definition_id" value="{{ test_definition_tracker_id }}" placeholder="{{ placeholder }}" />
-    <label class="control-label" for="test_execution_id">{{ executions }}</label>
-    <input type="text" name="test_execution_tracker_id" id="test_execution_id" value="{{ test_execution_tracker_id }}" placeholder="{{ placeholder }}" />
-    <div>
-        <button type="submit" class="btn btn-primary">{{ submit }}</button>
-    </div>
-</form>
+<div class="tlp-framed">
+    <h1>{{ title }}</h1>
+    <form action="" method="POST">
+        <input type="hidden" name="action" value="admin-update" />
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="campaign_id">
+                {{ campaigns }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text" name="campaign_tracker_id" id="campaign_id" value="{{ campaign_tracker_id }}" placeholder="{{ placeholder }}" required/>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="test_definition_id">
+                {{ definitions }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text" name="test_definition_tracker_id" id="test_definition_id" value="{{ test_definition_tracker_id }}" placeholder="{{ placeholder }}" required/>
+        </div>
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="test_execution_id">
+                {{ executions }}
+                <i class="fa fa-asterisk"></i>
+            </label>
+            <input type="text" name="test_execution_tracker_id" id="test_execution_id" value="{{ test_execution_tracker_id }}" placeholder="{{ placeholder }}" required/>
+        </div>
+        <div class="tlp-form-element">
+            <button type="submit" class="tlp-button-primary">{{ submit }}</button>
+        </div>
+    </form>
+</div>
