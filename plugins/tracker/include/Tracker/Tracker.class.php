@@ -2301,7 +2301,8 @@ EOS;
      *
      * @return boolean True if the user is tracker admin, false otherwise
      */
-    function userIsAdmin($user = false) {
+    public function userIsAdmin($user = false)
+    {
         if (! $user instanceof PFUser) {
             $user_manager = UserManager::instance();
             if (! $user) {
@@ -2311,11 +2312,19 @@ EOS;
             }
         }
 
+        static $cache_is_admin = array();
+
+        if (isset($cache_is_admin[$this->getId()][$user->getId()])) {
+            return $cache_is_admin[$this->getId()][$user->getId()];
+        }
+
         if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
+            $cache_is_admin[$this->getId()][$user->getId()] = true;
             return true;
         }
 
         if ($this->getTrackerManager()->userCanAdminAllProjectTrackers($user)) {
+            $cache_is_admin[$this->getId()][$user->getId()] = true;
             return true;
         }
 
@@ -2328,11 +2337,13 @@ EOS;
                 if($permission_type == self::PERMISSION_ADMIN) {
 
                     if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
+                        $cache_is_admin[$this->getId()][$user->getId()] = true;
                         return true;
                     }
                 }
             }
         }
+        $cache_is_admin[$this->getId()][$user->getId()] = false;
         return false;
     }
 

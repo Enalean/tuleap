@@ -722,6 +722,16 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->registered_user);
     }
 
+    public function itCachesTrackerAdminPermission()
+    {
+        $user = mock('PFUser');
+        stub($user)->getId()->returns(101);
+        $user->expectOnce('isSuperUser');
+
+        $this->tracker->userIsAdmin($user);
+        $this->tracker->userIsAdmin($user);
+    }
+
     //
     // Tracker admin edit option permissions
     //
