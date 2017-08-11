@@ -36,7 +36,8 @@ function ExecutionListCtrl(
         checkActiveClassOnExecution: checkActiveClassOnExecution,
         toggleStatus               : toggleStatus,
         viewTestExecution          : viewTestExecution,
-        showPresencesModal         : showPresencesModal
+        showPresencesModal         : showPresencesModal,
+        positiveScore              : positiveScore
     });
 
     function checkActiveClassOnExecution(execution) {
@@ -209,6 +210,10 @@ function ExecutionListCtrl(
             $scope.search,
             $scope.status
         ).length > 0;
+    }
+
+    function positiveScore(score) {
+        return score ? Math.max(score, 0) : '-';
     }
 }
 

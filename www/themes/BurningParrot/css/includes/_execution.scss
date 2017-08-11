@@ -28,21 +28,12 @@
     position: relative;
     margin: 0 0 0 5px;
 
-    > .presence-score {
-        padding: 1px 5px;
+    > .tlp-badge-primary {
         position: absolute;
         top: -6px;
         right: -1px;
+        padding: 1px 5px;
         font-size: 10px;
-        font-weight: bold;
-        text-align: center;
-        line-height: 13px;
-        border-radius: 50%;
-        -webkit-border-radius: 50%;
-        -khtml-border-radius: 50%;
-        -moz-border-radius: 50%;
-        background: $tlp-theme-color;
-        color: #fff;
     }
 }
 

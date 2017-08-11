@@ -18,8 +18,7 @@
                      onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
                      alt="avatar">
             </div>
-            <span class="presence-score" ng-if="presence.score >= 0">{{ presence.score }}</span>
-            <span class="presence-score" ng-if="presence.score < 0">0</span>
+            <span class="tlp-badge-primary">{{ positiveScore(presence.score) }}</span>
         </div>
         <i class="fa fa-trophy test-campaign-header-trophy" ng-click="showPresencesModal()"></i>
     </div>
