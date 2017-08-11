@@ -29,14 +29,13 @@ function ExecutionListCtrl(
     SharedPropertiesService,
     ExecutionRestService
 ) {
-    var execution_id;
-
     _.extend($scope, {
         openEditCampaignModal      : openEditCampaignModal,
         checkActiveClassOnExecution: checkActiveClassOnExecution,
         toggleStatus               : toggleStatus,
         viewTestExecution          : viewTestExecution,
         showPresencesModal         : showPresencesModal,
+        canCategoryBeDisplayed     : canCategoryBeDisplayed,
         positiveScore              : positiveScore
     });
 
@@ -52,8 +51,8 @@ function ExecutionListCtrl(
         var old_execution,
             old_execution_id = '';
 
-        if (_.has(ExecutionService.executions, execution_id)) {
-            old_execution = ExecutionService.executions[execution_id];
+        if (_.has(ExecutionService.executions, $scope.execution_id)) {
+            old_execution = ExecutionService.executions[$scope.execution_id];
         }
 
         if (! _.isEmpty(old_execution)) {
@@ -103,16 +102,16 @@ function ExecutionListCtrl(
             toolbar.removeClass('hide-toolbar');
         }
 
-        if (execution_id) {
-            ExecutionRestService.leaveTestExecution(execution_id);
-            ExecutionService.removeViewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
+        if ($scope.execution_id) {
+            ExecutionRestService.leaveTestExecution($scope.execution_id);
+            ExecutionService.removeViewTestExecution($scope.execution_id, SharedPropertiesService.getCurrentUser());
         }
 
         ExecutionService.removeAllPresencesOnCampaign();
     });
 
     $scope.$on('execution-detail-destroy', function() {
-        execution_id = '';
+        $scope.execution_id = '';
     });
 
     $scope.$on('controller-reload', function() {
@@ -159,7 +158,6 @@ function ExecutionListCtrl(
             blocked: false,
             notrun:  false
         };
-        $scope.canCategoryBeDisplayed = canCategoryBeDisplayed;
         $scope.presences_on_campaign  = ExecutionService.presences_on_campaign;
 
         ExecutionService.updateCampaign($scope.campaign);
@@ -185,7 +183,7 @@ function ExecutionListCtrl(
         ExecutionRestService.changePresenceOnTestExecution(current_execution_id, old_execution_id).then(function() {
             ExecutionService.removeViewTestExecution(old_execution_id, SharedPropertiesService.getCurrentUser());
             ExecutionService.viewTestExecution(current_execution_id, SharedPropertiesService.getCurrentUser());
-            execution_id = current_execution_id;
+            $scope.execution_id = current_execution_id;
         });
     }
 
@@ -205,11 +203,13 @@ function ExecutionListCtrl(
     }
 
     function canCategoryBeDisplayed(category) {
-        return $filter('ExecutionListFilter')(
+        var filtered_executions = $filter('ExecutionListFilter')(
             category.executions,
             $scope.search,
             $scope.status
-        ).length > 0;
+        );
+
+        return _.size(filtered_executions) > 0;
     }
 
     function positiveScore(score) {

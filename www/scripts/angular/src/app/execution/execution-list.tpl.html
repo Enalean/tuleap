@@ -8,7 +8,7 @@
                 aria-expanded="false"
                 onclick="this.blur();"
                 ng-click="openEditCampaignModal()">
-            <i class="fa fa-pencil tlp-button-icon"></i> <span translate>Edit</span>
+            <i class="fa fa-pencil tlp-button-icon"></i> {{ 'Edit' | translate }}
         </button>
         <div class="test-campaign-header-spacer"></div>
         <div class="test-campaign-tester" ng-repeat="presence in presences_on_campaign | orderBy:'-score' | limitTo:6">
@@ -98,7 +98,12 @@
                         </li>
                         <li class="tests-list-test {{ execution.status | dasherize }}"
                             ng-repeat-end=""
-                            ng-repeat="execution in category.executions | ExecutionListFilter:search:status track by $index"
+                            ng-repeat="execution in category.executions
+                                | toArray:false
+                                | ExecutionListFilter:search:status
+                                | orderBy:'definition.id'
+                                | unique:'definition.id'
+                                track by execution.definition.id"
                             ui-sref=".detail({ execid: execution.id, defid: execution.definition.id })"
                             ng-click="viewTestExecution(execution)"
                             ng-class="{active: checkActiveClassOnExecution(execution)}">
@@ -127,18 +132,6 @@
                                ng-if="execution.status === 'blocked'"
                                title="{{ 'Blocked' | translate }}"></i>
                         </li>
-                        <!--
-                        <span class="execution-item-content" ng-click="viewTestExecution(execution)">
-                             <span ng-if="execution.viewed_by" ng-repeat="user in execution.viewed_by">
-                                <img class="avatar ng-enter"
-                                     data-toggle="tooltip"
-                                     title="{{ user.real_name }}"
-                                     ng-src="{{ user.avatar_url }}"
-                                     onerror="this.src='scripts/angular/bin/assets/avatar_default.png'"
-                                     alt="avatar">
-                            </span>
-                        </span>
-                        -->
                     </ul>
 
                     <img src="scripts/angular/bin/assets/loader.gif" ng-if="loading()" class="loader">
