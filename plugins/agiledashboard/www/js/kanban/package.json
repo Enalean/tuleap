@@ -52,7 +52,7 @@
     "webpack-assets-manifest": "^0.7.0"
   },
   "scripts": {
-    "build": "gulp build && webpack --optimize-minimize --bail",
+    "build": "gulp build && webpack --optimize-minimize --bail && webpack --config externalize-angular-webpack.config.js --optimize-minimize --bail",
     "coverage": "gulp coverage && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "install-angular-modal": "cd ../../../../tracker/www/scripts/angular-artifact-modal/ && npm install --production",
     "pretest": "npm run install-angular-modal",

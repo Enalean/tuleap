@@ -31,12 +31,12 @@ use Project;
 use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\DashboardDoesNotExistException;
+use Tuleap\Dashboard\JavascriptFilesIncluder;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -77,9 +77,9 @@ class ProjectDashboardController
      */
     private $widget_minimizor;
     /**
-     * @var IncludeAssets
+     * @var JavascriptFilesIncluder
      */
-    private $include_assets;
+    private $javascript_files_includer;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -90,17 +90,17 @@ class ProjectDashboardController
         DashboardWidgetPresenterBuilder $widget_presenter_builder,
         WidgetDeletor $widget_deletor,
         WidgetMinimizor $widget_minimizor,
-        IncludeAssets $include_assets
+        JavascriptFilesIncluder $javascript_files_includer
     ) {
-        $this->csrf                     = $csrf;
-        $this->project                  = $project;
-        $this->retriever                = $retriever;
-        $this->saver                    = $saver;
-        $this->widget_retriever         = $widget_retriever;
-        $this->widget_presenter_builder = $widget_presenter_builder;
-        $this->widget_deletor           = $widget_deletor;
-        $this->widget_minimizor         = $widget_minimizor;
-        $this->include_assets           = $include_assets;
+        $this->csrf                      = $csrf;
+        $this->project                   = $project;
+        $this->retriever                 = $retriever;
+        $this->saver                     = $saver;
+        $this->widget_retriever          = $widget_retriever;
+        $this->widget_presenter_builder  = $widget_presenter_builder;
+        $this->widget_deletor            = $widget_deletor;
+        $this->widget_minimizor          = $widget_minimizor;
+        $this->javascript_files_includer = $javascript_files_includer;
     }
 
     /**
@@ -174,7 +174,7 @@ class ProjectDashboardController
             )
         );
 
-        $GLOBALS['Response']->includeFooterJavascriptFile($this->include_assets->getFileUrl('dashboard.js'));
+        $this->javascript_files_includer->includeJavascriptFiles($project_dashboards_presenter);
         $GLOBALS['Response']->footer(array());
     }
 

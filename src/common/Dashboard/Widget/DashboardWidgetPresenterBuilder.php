@@ -40,7 +40,7 @@ class DashboardWidgetPresenterBuilder
      * @param DashboardWidgetLine[] $widgets_lines
      * @param bool $can_update_dashboards
      *
-     * @return array
+     * @return DashboardWidgetLinePresenter[]
      */
     public function getWidgetsPresenter(
         Dashboard $dashboard,
@@ -63,7 +63,7 @@ class DashboardWidgetPresenterBuilder
     }
 
     /**
-     * @return array
+     * @return DashboardWidgetColumnPresenter[]
      */
     private function getColumnsPresenterByLine(
         Dashboard $dashboard,
@@ -80,7 +80,7 @@ class DashboardWidgetPresenterBuilder
     }
 
     /**
-     * @return array
+     * @return DashboardWidgetPresenter[]
      */
     private function getWidgetsPresenterByColumn(
         Dashboard $dashboard,

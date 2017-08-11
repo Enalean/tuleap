@@ -14,7 +14,8 @@ module.exports = {
         filename: '[name]-[chunkhash].js',
     },
     externals: {
-        tlp: 'tlp'
+        tlp    : 'tlp',
+        angular: 'angular'
     },
     module: {
         rules: [

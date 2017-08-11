@@ -21,6 +21,7 @@
 namespace Tuleap\Dashboard;
 
 use Codendi_HTMLPurifier;
+use Tuleap\Dashboard\Widget\DashboardWidgetLinePresenter;
 
 abstract class DashboardPresenter
 {
@@ -30,6 +31,10 @@ abstract class DashboardPresenter
     public $is_active;
     public $delete_confirm;
     public $has_widget;
+
+    /**
+     * @var DashboardWidgetLinePresenter[]
+     */
     public $widget_lines;
 
     public $url_add_widget_content;

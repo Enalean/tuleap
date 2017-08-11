@@ -116,6 +116,8 @@ function KanbanCtrl(
             SocketService.listenKanbanColumnDelete();
             SocketService.listenKanban();
             SocketService.listenTokenExpired();
+        }).catch(() => {
+            // ignore the fact that there is no nodejs server
         });
     }
 
