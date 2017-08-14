@@ -125,9 +125,9 @@
             >
                 <i ng-class="column.is_open ? 'fa fa-minus-square' : 'fa fa-plus-square'"></i>
             </span>
-            <span class="kanban-column-header-wip-warning tlp-tooltip tlp-tooltip-bottom"
+            <span class="kanban-column-header-wip-warning"
                   ng-if="column.is_open && kanban.isColumnWipReached(column)"
-                  data-tlp-tooltip="{{ 'You have reached the work in progress limit for this column!' | translate }}"
+                  title="{{ 'You have reached the work in progress limit for this column!' | translate }}"
             >
                 <i class="fa fa-exclamation-triangle"></i>
             </span>
