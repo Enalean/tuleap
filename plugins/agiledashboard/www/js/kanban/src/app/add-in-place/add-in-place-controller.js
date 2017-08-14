@@ -34,6 +34,7 @@ function AddInPlaceCtrl(
     }
 
     function close() {
+        blurInput();
         self.summary = '';
         is_open      = false;
     }
@@ -57,5 +58,9 @@ function AddInPlaceCtrl(
 
     function autoFocusInput() {
         $element.find('input[type=text]').focus();
+    }
+
+    function blurInput() {
+        $element.find('input[type=text]').blur();
     }
 }
