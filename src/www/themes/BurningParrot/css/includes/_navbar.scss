@@ -47,6 +47,10 @@
             display: none;
         }
     }
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .nav-link {
