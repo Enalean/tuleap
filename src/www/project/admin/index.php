@@ -273,17 +273,8 @@ print '<TABLE WIDTH="100%" BORDER="0">';
 $user_helper = new UserHelper();
 
 while ($row_memb=db_fetch_array($res_memb)) {
-    $display_name = '';
 
-    $em->processEvent('get_user_display_name', array(
-        'user_id'           => $row_memb['user_id'],
-        'user_name'         => $row_memb['user_name'],
-        'realname'          => $row_memb['realname'],
-        'user_display_name' => &$display_name
-    ));
-    if (!$display_name) {
-        $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
-    }
+    $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
 
     $edit_settings = '';
     if ($row_memb['is_generic']) {
