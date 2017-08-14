@@ -49,20 +49,10 @@ class Widget_ProjectMembers extends Widget {
         if (db_numrows($res_admin) > 0) {
             $user_helper = UserHelper::instance();
             $hp          = Codendi_HTMLPurifier::instance();
-            $em          = EventManager::instance();
             $html .= '<span class="develtitle">' . $GLOBALS['Language']->getText('include_project_home','proj_admins').':</span><br />';
             while ($row_admin = db_fetch_array($res_admin)) {
-                $display_name = '';
-                $em->processEvent('get_user_display_name', array(
-                          'user_id'           => $row_admin['user_id'],
-                          'user_name'         => $row_admin['user_name'],
-                          'realname'          => $row_admin['realname'],
-                          'user_display_name' => &$display_name
-                      ));
-                if (!$display_name) {
-                    $display_name = $hp->purify($user_helper->getDisplayNameFromUserId($row_admin['user_id']));
-                }
-                $html .= '<a href="/users/'.$row_admin['user_name'].'/">'. $display_name .'</a><br />';
+                $display_name = $hp->purify($user_helper->getDisplayNameFromUserId($row_admin['user_id']));
+                $html        .= '<a href="/users/'.$row_admin['user_name'].'/">'. $display_name .'</a><br />';
             }
         }
         $html .= '<span class="develtitle widget-project-team-project-members-title">' . $GLOBALS['Language']->getText('include_project_home','proj_members') . ':</span><br />';

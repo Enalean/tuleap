@@ -54,9 +54,6 @@ class IMPlugin extends Plugin
         $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->addHook('account_pi_entry', 'im_process_display_user_jabber_id_in_account', false);
         $this->addHook('user_home_pi_entry', 'im_process_display_user_jabber_id', false);
-        $this->addHook('get_user_display_name', 'im_process_display_presence', false);
-        $this->addHook('widget_instance', 'myPageBox', false);
-        $this->addHook('widgets', 'widgets', false);
         $this->addHook('user_preferences_appearance', 'user_preferences_appearance', false);
         $this->addHook('update_user_preferences_appearance', 'update_user_preferences_appearance', false);
         $this->addHook('project_export_entry', 'provide_exportable_items', false);
@@ -174,40 +171,6 @@ class IMPlugin extends Plugin
         $presence = $this->getPresence($jid);
         $purifier = Codendi_HTMLPurifier::instance();
         return '<img src="'.$purifier->purify($presence['icon']).'" title="'.$purifier->purify($presence['status']).'"  alt="'.$purifier->purify($presence['status']).'" border="0" height="16" width="16" style="vertical-align:top">';
-    }
-
-    protected $dynamicpresence_alreadydisplayed;
-    function getDynamicPresence($jid) {
-        $id = md5($jid);
-        $html = '<img class="jid_'. $id .'"src="'. $this->getThemePath() .'/images/icons/blank.png" width="16" height="16" alt="" style="vertical-align:top" />';
-        if (!$this->dynamicpresence_alreadydisplayed) {
-            $html .= '<script type="text/javascript">'. "
-            var plugin_im_presence = [];
-            document.observe('dom:loaded', function() {
-            new Ajax.Request('/plugins/IM/?action=get_presence', {
-                parameters: {
-                    'jids[]':plugin_im_presence
-                },
-                onSuccess: function(transport) {
-                    var presences = JSON.parse(transport.responseText);
-                    \$A(presences).each(function (presence) {
-                        var html = '<img src=\"'+ presence.icon +'\" title=\"'+ presence.status +'\" />';
-                        $$('.jid_'+presence.id).each(function (img) {
-                            img.src = presence.icon;
-                            img.alt = presence.status;
-                            img.title = presence.status;
-                        });
-                    });
-                }
-            });
-            });
-            </script>";
-        }
-        $html .= '<script type="text/javascript">'. "
-        plugin_im_presence[plugin_im_presence.length] = '$jid';
-        </script>";
-        $this->dynamicpresence_alreadydisplayed = true;
-        return $html;
     }
 
     function getPresence($jid) {
@@ -621,44 +584,9 @@ class IMPlugin extends Plugin
             );
 	}
 
-
-    function getDisplayPresence($user_id, $user_name, $realname) {
-        $user_helper = UserHelper::instance();
-        $hp = Codendi_HTMLPurifier::instance();
-        $im_object = $this->_get_im_object();
-        if(isset($im_object)&&$im_object){
-	        $jabberConf = $im_object->get_server_conf();
-
-	        $server_dns = $jabberConf['server_dns'];
-
-	        $jid_value = $user_name.'@'.$server_dns;
-	        $adm_port_im = $jabberConf['webadmin_unsec_port'];
-
-	        $presence = $this->getDynamicPresence ($jid_value);
-        }else{
-        	$presence='';
-        }
-
-        return $presence . $hp->purify($user_helper->getDisplayName($user_name, $realname));
-    }
-
-    function myPageBox($params) {
-        if ($params['widget'] == 'plugin_im_myroster') {
-            require_once('IM_Widget_MyRoster.class.php');
-            $params['instance'] = new IM_Widget_MyRoster($this);
-        }
-    }
-
     public function uninstall()
     {
         $this->removeOrphanWidgets(array('plugin_im_myroster'));
-    }
-
-    public function widgets($params)
-    {
-        if ($params['owner_type'] == UserDashboardController::LEGACY_DASHBOARD_TYPE) {
-            $params['codendi_widgets'][] = 'plugin_im_myroster';
-        }
     }
 
         function user_preferences_appearance($params) {
@@ -697,17 +625,6 @@ class IMPlugin extends Plugin
             $exportable_items['labels']['im_muc_logs']            = $GLOBALS['Language']->getText('plugin_im', 'muc_logs_title');
             $exportable_items['data_export_links']['im_muc_logs'] = '/plugins/IM/?log_start_date=&log_end_date=&action=muc_logs&type=export&group_id='.$exportable_items['group_id'];
         }
-
-	/**
-	 * display project members presence
-	 * @param array $params:contains the data which comes from the envent listened.
-	 */
-	function im_process_display_presence ($params) {
-        $user = $this->getUserManager()->getCurrentUser();
-        if ($user->isloggedIn() && !$this->getUserManager()->getCurrentUser()->isRestricted() && (! $user->getPreference('plugin_im_hide_users_presence'))) {
-            $params['user_display_name'] = $this->getDisplayPresence($params['user_id'], $params['user_name'], $params['realname']);
-        }
-	}
 
     function jsFile($params) {
         // Only include the js files if we're actually in the IM pages.

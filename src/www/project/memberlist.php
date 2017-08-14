@@ -55,7 +55,6 @@ $title_arr=array();
 $title_arr[]=$Language->getText('project_memberlist','developer');
 $title_arr[]=$Language->getText('project_export_artifact_history_export','email');
 
-$em = EventManager::instance();
 $user_helper = new UserHelper();
 $hp = Codendi_HTMLPurifier::instance();
 
@@ -63,16 +62,7 @@ echo html_build_list_table_top ($title_arr);
 
 $res_memb = db_query($query);
 while ( $row_memb=db_fetch_array($res_memb) ) {
-    $display_name = '';
-    $em->processEvent('get_user_display_name', array(
-        'user_id'           => $row_memb['user_id'],
-        'user_name'         => $row_memb['user_name'],
-        'realname'          => $row_memb['realname'],
-        'user_display_name' => &$display_name
-    ));
-    if (!$display_name) {
-        $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
-    }
+	$display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
 	print "\t<tr>\n";
 	print "\t\t";
 	if ( $row_memb['admin_flags']=='A' ) {
