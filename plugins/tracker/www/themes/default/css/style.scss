@@ -2112,45 +2112,21 @@ td.first-column {
 }
 
 .artifact-children-table {
+    width: auto;
     min-width: 50%;
 }
 
-.artifact-children-table, .artifact-children-table tr, .artifact-children-table td, .artifact-children-table tbody {
-    height: 100%;
-    vertical-align: top;
-    border: 0px;
-    margin: 0px;
-    border-collapse: collapse;
-    border-spacing: 0px;
-    zoom: 1;
+.artifact-children-table-head {
+    background: #ffffff;
 }
 
-.artifact-children-table td {
-    padding: 0px;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    border-left: 1px white solid;
+.artifact-children-table-title {
+    width: 100%;
 }
 
-.artifact-children-table, .artifact-children-table tbody {
-    overflow: auto;
-}
-
-.artifact-children-table > tbody > tr:nth-child(odd) > td {
-    background-color: #f9f9f9;
-}
-
-tr.artifact-children-table-head {
-    vertical-align: middle;
-    height: 2em;
-}
-
-.artifact-child > td {
-    border-left: 0 none;
-}
-
-.toggle-child > img {
-    vertical-align: middle;
+.artifact-children-table-xref,
+.artifact-children-table-status {
+    white-space: nowrap;
 }
 
 .trigger_triggering_field_remove {
