@@ -52,6 +52,7 @@ function AddInPlaceCtrl(
         self.createItem(label, self.column);
 
         self.summary = '';
+        autoFocusInput();
     }
 
     function autoFocusInput() {
