@@ -201,6 +201,9 @@ div.flatpickr-calendar {
     &:after {
         margin: 0 #{-$tlp-dropdown-arrow-size};
         border-width: $tlp-dropdown-arrow-size;
+    }
+
+    &.arrowTop:after {
         border-bottom-color: $tlp-theme-color;
     }
 
