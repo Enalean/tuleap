@@ -49,9 +49,9 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         this.imgroot   = imgroot;
         this.insertTable();
         this.body = this.container.down('tbody');
-        this.row_template = new Template('<tr class="artifact-child" data-child-id="#{id}" data-parent-id="#{parent_id}"> \
+        this.row_template = new Template('<tr data-child-id="#{id}" data-parent-id="#{parent_id}"> \
                 <td> \
-                    <a href="#" class="toggle-child"><img src="'+ tuleap.escaper.html(imgroot +'pointer_right.png') +'" /></a> \
+                    <a href="#" class="toggle-child"><i class="icon-caret-right icon-fixed-width"></i></a> \
                     <a href="#{url}">#{xref}</a> \
                 </td> \
                 <td>#{title}</td> \
@@ -63,12 +63,12 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         var title  = this.locales.tracker_hierarchy.title_column_name,
             status = this.locales.tracker_hierarchy.status_column_name;
 
-        this.container.insert('<table class="artifact-children-table"> \
+        this.container.insert('<table class="table artifact-children-table"> \
                 <thead> \
-                    <tr class="boxtable artifact-children-table-head"> \
-                        <th class="boxtitle"></th> \
-                        <th class="boxtitle">'+ tuleap.escaper.html(title) +'</th> \
-                        <th class="boxtitle">'+ tuleap.escaper.html(status) +'</th> \
+                    <tr class="artifact-children-table-head"> \
+                        <th></th> \
+                        <th>'+ tuleap.escaper.html(title) +'</th> \
+                        <th>'+ tuleap.escaper.html(status) +'</th> \
                     </tr> \
                 </thead> \
                 <tbody> \
@@ -185,7 +185,7 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
         this.children      = [];
         this.is_open       = false;
 
-        this.icon          = element.down('a.toggle-child img');
+        this.icon          = element.down('a.toggle-child > i');
         this.icon.observe('click', function (evt) {
             if (this.is_open) {
                 this.close();
@@ -253,10 +253,12 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
     },
 
     useShowIcon: function () {
-        this.icon.src = this.icon.src.sub(/down.png$/, 'right.png');
+        this.icon.classList.remove('icon-caret-down');
+        this.icon.classList.add('icon-caret-right');
     },
 
     useHideIcon: function () {
-        this.icon.src = this.icon.src.sub(/right.png$/, 'down.png');
+        this.icon.classList.add('icon-caret-down');
+        this.icon.classList.remove('icon-caret-right');
     }
 });
