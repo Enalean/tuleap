@@ -84,6 +84,16 @@ tuleap.core = tuleap.core || { };
             }
         };
 
+        var bindInputEventOnFilter = function(filter_element_selected) {
+            if (filter_element_selected) {
+                filter_element_selected.addEventListener('input', function (event) {
+                    if (event.target && event.target.value === '') {
+                        clearFilterProjects();
+                    }
+                });
+            }
+        };
+
         var init = function(filter_element_selected, list_element_selector, excluded_element_selector) {
             filter_element   = filter_element_selected;
             list_element     = list_element_selector;
@@ -91,6 +101,7 @@ tuleap.core = tuleap.core || { };
 
             bindClickEventOnFilter(filter_element_selected);
             bindKeyUpEventOnFilter(filter_element_selected);
+            bindInputEventOnFilter(filter_element_selected);
         };
 
         return {init: init};
