@@ -58,6 +58,7 @@ $kanban-column-footer-height: 50px;
 .kanban-header {
     display: flex;
     flex: 0 0 auto;
+    flex-wrap: wrap;
     align-items: center;
     padding: $tlp-spacing;
 }
@@ -490,4 +491,13 @@ add-in-place {
 
 .kanban-header-url {
     margin: 0 $tlp-double-spacing 0 0;
+}
+
+.kanban-header-title,
+.kanban-header-url,
+.kanban-header-report-button,
+.kanban-header-add-to-dashboard,
+.kanban-header-search {
+    margin-top: $tlp-half-spacing;
+    margin-bottom: $tlp-half-spacing;
 }
