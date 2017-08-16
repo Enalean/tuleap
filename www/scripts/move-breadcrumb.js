@@ -25,10 +25,10 @@
                 return;
             }
 
-            $('.breadcrumb').first().replaceWith(origin);
+            $('main').prepend(origin);
             origin.removeAttr('id');
 
-            if ($('.breadcrumb > li').length === 0) {
+            if ($('.breadcrumb > a').length === 0) {
                 $('.breadcrumb').remove();
             }
 
