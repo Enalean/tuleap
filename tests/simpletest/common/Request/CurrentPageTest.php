@@ -28,19 +28,18 @@ class CurrentPageTest extends TuleapTestCase
      * @var CurrentPage
      */
     private $current_page;
-    private $old_request_uri;
 
     public function setUp()
     {
         parent::setUp();
-        $this->old_request_uri = $_SERVER['REQUEST_URI'];
+        $this->preserveServer('REQUEST_URI');
 
         $this->current_page = new CurrentPage();
     }
 
     public function tearDown()
     {
-        $_SERVER['REQUEST_URI'] = $this->old_request_uri;
+        $this->restoreOriginalServer();
         parent::tearDown();
     }
 
