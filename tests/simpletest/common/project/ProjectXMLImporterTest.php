@@ -76,7 +76,8 @@ class ProjectXMLImporterTest extends TuleapTestCase {
             $frs_permissions_creator,
             $user_removal,
             $project_creator,
-            mock('Tuleap\FRS\UploadedLinksUpdater')
+            mock('Tuleap\FRS\UploadedLinksUpdater'),
+            mock('Tuleap\Dashboard\Project\ProjectDashboardXMLImporter')
         );
 
         $this->xml_file_path              = dirname(__FILE__).'/_fixtures/fake_project.xml';

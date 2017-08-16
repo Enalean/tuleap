@@ -21,7 +21,12 @@
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Project\ProjectDashboardSaver;
+use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -29,12 +34,9 @@ use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
@@ -398,14 +400,15 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     private function importConfiguration() {
-        $ugroup_user_dao    = new UGroupUserDao();
-        $ugroup_manager     = new UGroupManager();
-        $ugroup_duplicator  = new UgroupDuplicator(
+        $ugroup_user_dao   = new UGroupUserDao();
+        $ugroup_manager    = new UGroupManager();
+        $event_manager     = EventManager::instance();
+        $ugroup_duplicator = new UgroupDuplicator(
             new UGroupDao(),
             $ugroup_manager,
             new UGroupBinding($ugroup_user_dao, $ugroup_manager),
             $ugroup_user_dao,
-            EventManager::instance()
+            $event_manager
         );
 
         $send_notifications = false;
@@ -416,10 +419,11 @@ class Planning_Controller extends MVC2_PluginController {
             new UGroupDao()
         );
 
+        $user_manager   = UserManager::instance();
         $widget_factory = new WidgetFactory(
-            UserManager::instance(),
+            $user_manager,
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            EventManager::instance()
+            $event_manager
         );
 
         $widget_dao        = new DashboardWidgetDao($widget_factory);
@@ -437,7 +441,7 @@ class Planning_Controller extends MVC2_PluginController {
         $project_creator = new ProjectCreator(
             ProjectManager::instance(),
             ReferenceManager::instance(),
-            UserManager::instance(),
+            $user_manager,
             $ugroup_duplicator,
             $send_notifications,
             $frs_permissions_creator,
@@ -447,28 +451,45 @@ class Planning_Controller extends MVC2_PluginController {
             $force_activation
         );
 
+        $logger       = new ProjectXMLImporterLogger();
         $xml_importer = new ProjectXMLImporter(
-            EventManager::instance(),
+            $event_manager,
             ProjectManager::instance(),
-            UserManager::instance(),
+            $user_manager,
             new XML_RNGValidator(),
             $ugroup_manager,
-            new XMLImportHelper(UserManager::instance()),
+            new XMLImportHelper($user_manager),
             ServiceManager::instance(),
-            new ProjectXMLImporterLogger(),
+            $logger,
             $ugroup_duplicator,
             $frs_permissions_creator,
             new UserRemover(
                 ProjectManager::instance(),
-                EventManager::instance(),
+                $event_manager,
                 new ArtifactTypeFactory(false),
                 new UserRemoverDao(),
-                UserManager::instance(),
+                $user_manager,
                 new ProjectHistoryDao(),
                 new UGroupManager()
             ),
             $project_creator,
-            new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance())
+            new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
+            new ProjectDashboardXMLImporter(
+                new ProjectDashboardSaver(
+                    new ProjectDashboardDao(
+                        new DashboardWidgetDao(
+                            new WidgetFactory(
+                                $user_manager,
+                                new User_ForgeUserGroupPermissionsManager(
+                                    new User_ForgeUserGroupPermissionsDao()
+                                ),
+                                $event_manager
+                            )
+                        )
+                    )
+                ),
+                $logger
+            )
         );
 
         try {

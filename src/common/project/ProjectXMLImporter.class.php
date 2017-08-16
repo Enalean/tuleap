@@ -23,6 +23,7 @@ require_once "account.php";
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
+use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -79,6 +80,11 @@ class ProjectXMLImporter {
      */
     private $uploaded_links_updater;
 
+    /**
+     * @var ProjectDashboardXMLImporter
+     */
+    private $dashboard_importer;
+
     public function __construct(
         EventManager $event_manager,
         ProjectManager $project_manager,
@@ -92,7 +98,8 @@ class ProjectXMLImporter {
         FRSPermissionCreator $frs_permissions_creator,
         UserRemover $user_remover,
         ProjectCreator $project_creator,
-        UploadedLinksUpdater $uploaded_links_updater
+        UploadedLinksUpdater $uploaded_links_updater,
+        ProjectDashboardXMLImporter $dashboard_importer
     ) {
         $this->event_manager           = $event_manager;
         $this->project_manager         = $project_manager;
@@ -107,6 +114,7 @@ class ProjectXMLImporter {
         $this->user_remover            = $user_remover;
         $this->project_creator         = $project_creator;
         $this->uploaded_links_updater  = $uploaded_links_updater;
+        $this->dashboard_importer      = $dashboard_importer;
     }
 
     public function importNewFromArchive(
@@ -232,6 +240,8 @@ class ProjectXMLImporter {
         $user_creator = $this->user_manager->getCurrentUser();
 
         $this->importUgroups($project, $xml_element, $user_creator);
+
+        $this->importDashboards($xml_element, $user_creator, $project);
 
         $frs = new FRSXMLImporter(
             $this->logger,
@@ -464,5 +474,10 @@ class ProjectXMLImporter {
 
     private function isAllowedToLoadHugeFiles() {
         return defined('IS_SCRIPT') && IS_SCRIPT;
+    }
+
+    private function importDashboards(SimpleXMLElement $xml_element, PFUser $user, Project $project)
+    {
+        $this->dashboard_importer->import($xml_element, $user, $project);
     }
 }

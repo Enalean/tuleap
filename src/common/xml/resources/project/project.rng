@@ -7,6 +7,7 @@
   <include href="frs-definition.rng"/>
   <include href="nature-definition.rng"/>
   <include href="mediawiki-definition.rng"/>
+  <include href="dashboard.rng"/>
   <include href="xml_project_agiledashboard_planning.rng"/>
   <include href="xml_project_cardwall_data.rng"/>
   <include href="tracker-definition.rng"/>
@@ -16,6 +17,11 @@
       <interleave>
         <ref name="project_attributes"/>
         <ref name="project_tags"/>
+        <zeroOrMore>
+          <element name="dashboards">
+            <ref name="dashboards"/>
+          </element>
+        </zeroOrMore>
         <zeroOrMore>
           <element name="trackers">
             <ref name="trackers"/>

@@ -1,0 +1,5 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+dashboards = element dashboard {
+   attribute name { xsd:string }
+}+
