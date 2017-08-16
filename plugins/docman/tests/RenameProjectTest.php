@@ -1,5 +1,6 @@
 <?php
 /*
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  *
@@ -21,22 +22,20 @@
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_VersionFactory','Docman_VersionFactoryTestVersion2', array('_getVersionDao',));
+Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion2', array('_getVersionDao'));
 
 Mock::generate('Docman_VersionDao');
 
 Mock::generate('Project');
 
-class RenameProjectTest extends TuleapTestCase {
-
-    function testRenameProjectTest() {
-
-        $rem  = new Docman_VersionFactoryTestVersion2($this);
-
-        $docman_root = dirname(__FILE__) . '/../tests/_fixtures/docman/';
+class RenameProjectTest extends TuleapTestCase
+{
+    public function testRenameProjectTest()
+    {
+        $docman_root = $this->getTmpDir();
         $old_name = 'toto';
         $new_name = 'TestProj';
-        mkdir ($docman_root.$old_name);
+        mkdir($docman_root.$old_name);
 
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', $old_name, array(true));
@@ -48,12 +47,7 @@ class RenameProjectTest extends TuleapTestCase {
         $fact->setReturnValue('_getVersionDao', $dao);
         $dao->setReturnValue('renameProject', true, array($docman_root, $project, $new_name));
 
-
         $this->assertFalse(is_dir($docman_root.$old_name), "Docman old rep should be renamed");
         $this->assertTrue(is_dir($docman_root.$new_name), "Docman new Rep should be created");
-
-        rmdir($docman_root."/".$new_name);
-
-   }
+    }
 }
-?>
