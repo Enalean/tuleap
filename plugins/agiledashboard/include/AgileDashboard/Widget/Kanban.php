@@ -171,7 +171,7 @@ abstract class Kanban extends Widget
 
     public function isUnique()
     {
-        return false;
+        return true;
     }
 
     public function getImageSource()
