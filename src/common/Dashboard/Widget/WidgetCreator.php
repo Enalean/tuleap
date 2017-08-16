@@ -37,10 +37,7 @@ class WidgetCreator
 
     public function create($owner_id, $owner_type, $dashboard_id, Widget $widget, Codendi_Request $request)
     {
-        $content_id = 0;
-        if (! $widget->isUnique()) {
-            $content_id = $widget->create($request);
-        }
+        $content_id = (int) $widget->create($request);
 
         $this->dao->create($owner_id, $owner_type, $dashboard_id, $widget->getId(), $content_id);
     }
