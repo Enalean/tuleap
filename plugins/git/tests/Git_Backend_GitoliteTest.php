@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -61,63 +61,46 @@ abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
 }
 
 class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
-    
+
     protected $fixturesPath;
 
     private   $forkPermissions;
 
     public function setUp() {
-        $this->fixtureRenamePath = dirname(__FILE__).'/_fixtures/rename';
-        
-        if (file_exists($this->fixtureRenamePath)){
-            @rmdir($this->fixtureRenamePath .'/legacy');
-            @rmdir($this->fixtureRenamePath .'/newone');
-            @rmdir($this->fixtureRenamePath);
-        }
-        
-        mkdir($this->fixtureRenamePath .'/legacy', 0777, true);
-        
-        $link =dirname(__FILE__).'/_fixtures/tmp/perms';
-        if (file_exists($link)) {
-            unlink($link);
-        }
-        symlink(dirname(__FILE__).'/_fixtures/perms', $link);
+        parent::setUp();
+        $this->fixtureRenamePath = $this->getTmpDir() . '/rename';
+
+        mkdir($this->fixtureRenamePath .'/legacy', 0770, true);
+
         $this->forkPermissions = array();
     }
-    
-    public function tearDown() {
-        @rmdir($this->fixtureRenamePath .'/legacy');
-        @rmdir($this->fixtureRenamePath .'/newone');
-        @rmdir($this->fixtureRenamePath);
-        unlink(dirname(__FILE__).'/_fixtures/tmp/perms');
-    }
-    
+
     function getPartialMock($className, $methods) {
         $partialName = $className.'Partial'.uniqid();
         Mock::generatePartial($className, $partialName, $methods);
         return new $partialName($this);
     }
-    
+
     public function testRenameProjectOk() {
         $project = $this->getPartialMock('Project', array('getUnixName'));
         $project->setReturnValue('getUnixName', 'legacy');
-        
+
         $backend = $this->getPartialMock('Git_Backend_Gitolite', array('glRenameProject', 'getBackend'));
-        
+
         $driver = new MockGit_GitoliteDriver();
         $driver->setReturnValue('getRepositoriesPath', $this->fixtureRenamePath);
         $backend->setDriver($driver);
-        
+
         $bck = new MockBackend();
         $bck->expectNever('log');
         $backend->setReturnValue('getBackend', $bck);
-        
+
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/legacy'));
         $this->assertFalse(is_dir($this->fixtureRenamePath .'/newone'));
-        
+
         $backend->expectOnce('glRenameProject', array('legacy', 'newone'));
         $this->assertTrue($backend->renameProject($project, 'newone'));
-        
+
         clearstatcache(true, $this->fixtureRenamePath .'/legacy');
         $this->assertFalse(is_dir($this->fixtureRenamePath .'/legacy'));
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
@@ -128,7 +111,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
         $new_repo_path = "gpig/$new_namespace/$name.git";
-        
+
         $driver = mock('Git_GitoliteDriver');
 
         $project = mock('Project');
@@ -160,18 +143,18 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $driver     = new MockGit_GitoliteDriver();
         $driver->setReturnValue('fork', true);
         $project    = new MockProject();
-        
+
         $project->setReturnValue('getUnixName', 'gpig');
-        
+
         $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $new_namespace);
         $new_repo->setProject($project);
         $new_repo->setPath($new_repo_path);
         $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
         $old_repo->setProject($project);
-        
+
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
         $backend->__construct($driver, mock('Logger'));
-        
+
         $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($project));
         $driver->expectNever('push');
@@ -185,53 +168,53 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $new_project_name = 'gpig';
         $namespace        = '';
         $new_repo_path    = "$new_project_name/$namespace/$repo_name.git";
-        
+
         $driver     = new MockGit_GitoliteDriver();
         $driver->setReturnValue('fork', true);
-        
+
         $new_project    = new MockProject();
         $new_project->setReturnValue('getUnixName', $new_project_name);
-        
+
         $old_project    = new MockProject();
         $old_project->setReturnValue('getUnixName', 'garden');
-        
+
         $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($repo_name, $namespace);
         $new_repo->setProject($new_project);
         $new_repo->setPath($new_repo_path);
         $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($repo_name, $namespace);
         $old_repo->setProject($old_project);
-        
+
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
         $backend->__construct($driver, mock('Logger'));
-        
+
         $driver->expectOnce('fork', array($repo_name, $old_project_name.'/'. $namespace, $new_project_name.'/'. $namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($new_project));
         $driver->expectNever('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo, $this->forkPermissions);
     }
-    
+
     public function testForkWithTargetPathAlreadyExistingShouldNotFork() {
         $name  = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
         $new_repo_path = "gpig/$new_namespace/$name.git";
-        
+
         $driver     = new MockGit_GitoliteDriver();
         $dao        = new MockGitDao();
-        
+
         $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $new_namespace);
         $new_repo->setPath($new_repo_path);
         $project_id = $new_repo->getProject()->getId();
-        
+
         $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
-        
+
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
         $backend->__construct($driver, mock('Logger'));
         $backend->setDao($dao);
-        
+
         $this->expectException('GitRepositoryAlreadyExistsException');
-        
+
         $backend->expectNever('clonePermissions');
         $dao->expectNever('save');
         $dao->setReturnValue('isRepositoryExisting', true, array($project_id, $new_repo_path));
@@ -241,51 +224,51 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
 
         $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }
-    
+
     public function testClonePermsWithPersonalFork() {
         $old_repo_id = 110;
         $new_repo_id = 220;
-        
+
         $project = new MockProject();
-        
+
         $old = new MockGitRepository();
         $old->setReturnValue('getId', $old_repo_id);
         $old->setReturnValue('getProject', $project);
-        
+
         $new = new MockGitRepository();
         $new->setReturnValue('getId', $new_repo_id);
         $new->setReturnValue('getProject', $project);
-        
+
         $backend  = $this->_GivenABackendGitolite();
-        
+
         $permissionsManager = $backend->getPermissionsManager();
         $permissionsManager->expectOnce('duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::allPermissionTypes()));
-        
+
         $backend->clonePermissions($old, $new);
     }
-    
+
     public function testClonePermsCrossProjectFork() {
         $old_repo_id = 110;
         $old_project = new MockProject();
         $old_project->setReturnValue('getId', 1);
-        
+
         $new_repo_id = 220;
         $new_project = new MockProject();
         $new_project->setReturnValue('getId', 2);
-        
+
         $old = new MockGitRepository();
         $old->setReturnValue('getId', $old_repo_id);
         $old->setReturnValue('getProject', $old_project);
-        
+
         $new = new MockGitRepository();
         $new->setReturnValue('getId', $new_repo_id);
         $new->setReturnValue('getProject', $new_project);
-        
+
         $backend  = $this->_GivenABackendGitolite();
-        
+
         $permissionsManager = $backend->getPermissionsManager();
         $permissionsManager->expectOnce('duplicateWithoutStatic', array($old_repo_id, $new_repo_id, Git::allPermissionTypes()));
-        
+
         $backend->clonePermissions($old, $new);
     }
 }
