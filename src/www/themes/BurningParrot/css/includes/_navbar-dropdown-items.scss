@@ -21,4 +21,5 @@ $nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
 .nav-dropdown-content-item:hover {
     background-color: transparentize($tlp-theme-color, .9);
     color: $tlp-theme-color;
+    text-decoration: none;
 }
