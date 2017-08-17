@@ -7,6 +7,7 @@ ExecutionDetailCtrl.$inject = [
     '$state',
     '$sce',
     '$rootScope',
+    'gettextCatalog',
     'ExecutionService',
     'DefinitionService',
     'SharedPropertiesService',
@@ -21,6 +22,7 @@ function ExecutionDetailCtrl(
     $state,
     $sce,
     $rootScope,
+    gettextCatalog,
     ExecutionService,
     DefinitionService,
     SharedPropertiesService,
@@ -90,7 +92,31 @@ function ExecutionDetailCtrl(
             $scope.linkedIssueAlertVisible = true;
         }
 
-        NewTuleapArtifactModalService.showCreation(SharedPropertiesService.getIssueTrackerId(), null, callback);
+        var current_definition = $scope.execution.definition;
+        var issue_details = gettextCatalog.getString('Campaign') + ' <em>' + $scope.campaign.label + '</em><br/>'
+            + gettextCatalog.getString('Test summary') + ' <em>' + current_definition.summary + '</em><br/>'
+            + gettextCatalog.getString('Test description') + '<br/>'
+            + '<blockquote>' + current_definition.description + '</blockquote>';
+
+        if ($scope.execution.previous_result.result) {
+            issue_details = '<p>' + $scope.execution.previous_result.result + '</p>' + issue_details;
+        }
+
+        var prefill_values = [{
+            name: 'details',
+            value: issue_details,
+            format: 'html'
+        }, {
+            name: 'links',
+            links: [],
+            unformatted_links: $scope.execution.id.toString()
+        }];
+
+        NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getIssueTrackerId(),
+            null,
+            callback,
+            prefill_values);
     }
 
     function closeLinkedIssueAlert() {

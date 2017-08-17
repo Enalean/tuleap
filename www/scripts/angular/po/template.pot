@@ -26,6 +26,10 @@ msgstr ""
 msgid "Bug"
 msgstr ""
 
+#: src/app/execution/execution-detail-controller.js
+msgid "Campaign"
+msgstr ""
+
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
@@ -169,6 +173,14 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Test campaigns"
+msgstr ""
+
+#: src/app/execution/execution-detail-controller.js
+msgid "Test description"
+msgstr ""
+
+#: src/app/execution/execution-detail-controller.js
+msgid "Test summary"
 msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html

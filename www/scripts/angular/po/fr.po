@@ -34,6 +34,10 @@ msgstr "Bloqué"
 msgid "Bug"
 msgstr "Le bug"
 
+#: src/app/execution/execution-detail-controller.js
+msgid "Campaign"
+msgstr "Campagne"
+
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
@@ -178,6 +182,14 @@ msgstr "Résumé"
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Test campaigns"
 msgstr "Campagne de tests"
+
+#: src/app/execution/execution-detail-controller.js
+msgid "Test description"
+msgstr "Description du test"
+
+#: src/app/execution/execution-detail-controller.js
+msgid "Test summary"
+msgstr "Résumé du test"
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Tests"
