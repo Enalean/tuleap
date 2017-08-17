@@ -1,0 +1,5 @@
+msgid "Timesheeting"
+msgstr ""
+
+msgid "Timesheeting for Tuleap artifacts"
+msgstr ""

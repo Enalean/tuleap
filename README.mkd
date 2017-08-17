@@ -1,0 +1,4 @@
+Timesheeting
+=============
+
+This plugin allows users to add spend time on artifacts.
