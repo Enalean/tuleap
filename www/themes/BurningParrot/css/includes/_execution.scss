@@ -214,6 +214,19 @@
     margin: 0 4px 0 0;
 }
 
+.linked-issue-alert {
+    display: flex;
+}
+
+.linked-issue-alert-text {
+    flex: 1 1 auto;
+}
+
+.linked-issue-alert-close.tlp-button-outline {
+    border: 0;
+    box-shadow: unset;
+}
+
 .current-test {
     flex: 1 1 auto;
     min-height: 100%;
@@ -295,6 +308,9 @@
 
 .current-test-header-actions {
     font-size: 20px;
+    display: flex;
+    flex: 0 0 100px;
+    justify-content: space-between;
 }
 
 .current-test-header-action {
@@ -304,10 +320,6 @@
     font-size: 27px;
     cursor: pointer;
     color: $tlp-ui-white;
-
-    &:not(:last-child) {
-        margin-right: 8px;
-    }
 }
 
 .notrun .current-test-header-action {

@@ -23,6 +23,7 @@ import TrafficlightsConfig from './app-config.js';
 import AutoFocusDirective from './app-directive.js';
 import InPropertiesFilter from './app-filter.js';
 import TrafficlightsCtrl from './app-controller.js';
+import OpenTlpDropdownDirective from './open-tlp-dropdown-directive.js';
 
 export default angular.module('trafficlights', [
     ngSanitize,
@@ -44,6 +45,7 @@ export default angular.module('trafficlights', [
 ])
 .config(TrafficlightsConfig)
 .directive('autoFocus', AutoFocusDirective)
+.directive('openTlpDropdown', OpenTlpDropdownDirective)
 .filter('InPropertiesFilter', InPropertiesFilter)
 .controller('TrafficlightsCtrl', TrafficlightsCtrl)
 .name;

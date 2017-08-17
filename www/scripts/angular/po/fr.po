@@ -13,17 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/campaign/campaign-edit.tpl.html
-msgid "Edit {{ campaign.label }} campaign"
-msgstr "Édition de la campagne {{ campaign.label }}"
+#: src/app/campaign/campaign-new.tpl.html
+msgid "A campaign label is required"
+msgstr "Le label de la campagne est obligatoire"
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Add a test"
 msgstr "Ajouter un test"
-
-#: src/app/campaign/campaign-new.tpl.html
-#: src/app/campaign/campaign-edit.tpl.html
-msgid "A campaign label is required"
-msgstr "Le label de la campagne est obligatoire"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "All tests"
@@ -33,6 +29,10 @@ msgstr "Tous les tests"
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
 msgstr "Bloqué"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Bug"
+msgstr "Le bug"
 
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
@@ -56,6 +56,7 @@ msgstr "Annuler"
 msgid "Choose tests"
 msgstr "Sélectionner les tests"
 
+#: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-presences.tpl.html
 msgid "Close"
@@ -93,6 +94,10 @@ msgstr "Éditer"
 msgid "Edit this test"
 msgstr "Éditer ce test"
 
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "Edit {{ campaign.label }} campaign"
+msgstr "Édition de la campagne {{ campaign.label }}"
+
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Failed"
@@ -119,6 +124,10 @@ msgstr "Id"
 #: src/app/execution/execution-list.tpl.html
 msgid "Id, summary, category…"
 msgstr "Id, résumé, catégorie…"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Link to a new bug"
+msgstr "Lier à un nouveau bug"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"
@@ -199,6 +208,10 @@ msgstr "Zoom arrière"
 #: src/app/execution/execution-detail.tpl.html
 msgid "by"
 msgstr "par"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "has been successfully linked to this test."
+msgstr "a bien été lié au test."
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid ""

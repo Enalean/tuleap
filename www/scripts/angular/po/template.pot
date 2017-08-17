@@ -22,6 +22,10 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Bug"
+msgstr ""
+
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Campaign label"
@@ -113,6 +117,10 @@ msgstr ""
 msgid "Id, summary, category…"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Link to a new bug"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"
 msgstr ""
@@ -191,6 +199,10 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "by"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "has been successfully linked to this test."
 msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html

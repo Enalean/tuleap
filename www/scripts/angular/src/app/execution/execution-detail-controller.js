@@ -38,8 +38,13 @@ function ExecutionDetailCtrl(
     $scope.notrun                      = notrun;
     $scope.sanitizeHtml                = sanitizeHtml;
     $scope.getStatusLabel              = getStatusLabel;
+    $scope.canAccessIssueTracker       = SharedPropertiesService.canAccessIssueTracker();
+    $scope.showLinkToNewBugModal       = showLinkToNewBugModal;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
     $scope.showEditArtifactModal       = showEditArtifactModal;
+    $scope.closeLinkedIssueAlert       = closeLinkedIssueAlert;
+    $scope.linkedIssueId               = null;
+    $scope.linkedIssueAlertVisible     = false;
 
     initialization();
     resetTimer();
@@ -77,6 +82,19 @@ function ExecutionDetailCtrl(
         $scope.timer = {
             execution_time: 0
         };
+    }
+
+    function showLinkToNewBugModal() {
+        function callback(artifact_id) {
+            $scope.linkedIssueId           = artifact_id;
+            $scope.linkedIssueAlertVisible = true;
+        }
+
+        NewTuleapArtifactModalService.showCreation(SharedPropertiesService.getIssueTrackerId(), null, callback);
+    }
+
+    function closeLinkedIssueAlert() {
+        $scope.linkedIssueAlertVisible = false;
     }
 
     function showArtifactLinksGraphModal(execution) {

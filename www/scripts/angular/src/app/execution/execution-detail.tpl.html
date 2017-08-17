@@ -2,6 +2,18 @@
 
 <div class="tuleap-modal-loading" ng-if="artifact_links_graph_modal_loading.is_loading || edit_artifact_modal_loading.loading"></div>
 
+<div class="linked-issue-alert tlp-alert-success" ng-if="linkedIssueAlertVisible">
+    <span class="linked-issue-alert-text">
+    {{ "Bug" | translate }} <a ng-href="/plugins/tracker/?aid={{ linkedIssueId }}">#{{ linkedIssueId }}</a> {{ "has been successfully linked to this test." | translate }}
+    </span>
+    <button type="button"
+        class="linked-issue-alert-close tlp-button-success tlp-button-outline tlp-button-mini"
+        ng-click="closeLinkedIssueAlert()"
+    >
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+    </button>
+</div>
+
 <section id="test" class="tlp-pane current-test" ng-class="execution.status | dasherize">
     <div class="tlp-pane-container">
         <section class="tlp-pane-header current-test-header">
@@ -26,6 +38,17 @@
             </div>
 
             <div class="current-test-header-actions">
+
+                <div class="tlp-dropdown" ng-if="canAccessIssueTracker">
+                    <i class="fa fa-bug fa-fw current-test-header-action" id="dropdown-link-bug" open-tlp-dropdown></i>
+                    <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
+                        <a class="tlp-dropdown-menu-item" role="menuitem" ng-click="showLinkToNewBugModal()">
+                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i>
+                            <span translate>Link to a new bug</span>
+                        </a>
+                    </div>
+                </div>
+
                 <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action">
                     <i class="fa fa-fw fa-pencil"
                        ng-click="showEditArtifactModal($event, execution.definition)"
