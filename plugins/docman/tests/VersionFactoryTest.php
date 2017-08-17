@@ -2,7 +2,7 @@
 
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -102,7 +102,7 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
                                             'filename'  => 'noFile',
                                             'filesize'  => null,
                                             'filetype'  => null,
-                                            'path'      => dirname(__FILE__).'/_fixtures/noFile'));
+                                            'path'      => $this->getTmpDir().'/noFile'));
 
         $versionFactory->expectOnce('archiveBeforePurge', array($version));
         $this->assertFalse($versionFactory->PurgeDeletedVersion($version));
@@ -125,7 +125,7 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
                                             'filename'  => 'fileToPurge.txt',
                                             'filesize'  => null,
                                             'filetype'  => null,
-                                            'path'      => dirname(__FILE__).'/_fixtures/fileToPurge_txt'));
+                                            'path'      => $this->getTmpDir().'/fileToPurge_txt'));
 
         $fp = fopen($version->getPath(), 'w');
 
@@ -154,7 +154,7 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
             'filename'  => 'fileToDontPurge.txt',
             'filesize'  => null,
             'filetype'  => null,
-            'path'      => dirname(__FILE__).'/_fixtures/fileToPurge_txt'));
+            'path'      => $this->getTmpDir().'/fileToPurge_txt'));
         fopen($version->getPath(), 'w');
 
         stub($versionFactory)->archiveBeforePurge()->returns(false);
@@ -167,7 +167,7 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
 
 
     function testRestoreOneVersion() {
-        $filePath       = dirname(__FILE__).'/_fixtures/version.test';
+        $filePath       = $this->getTmpDir().'/version.test';
         touch($filePath);
         $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = new MockDocman_VersionDao($this);
@@ -207,7 +207,7 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
     }
 
     function testRestoreOneVersionButFileIsDeleted() {
-        $filePath       = dirname(__FILE__).'/_fixtures/version.test';
+        $filePath       = $this->getTmpDir().'/version.test';
         $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = new MockDocman_VersionDao($this);
         $versionFactory->setReturnValue('_getVersionDao', $dao);
@@ -233,7 +233,7 @@ class Docman_VersionFactoryTest extends TuleapTestCase {
     }
 
     function testRestoreOneVersionAlreadyPurged() {
-        $filePath       = dirname(__FILE__).'/_fixtures/version.test';
+        $filePath       = $this->getTmpDir().'/version.test';
         $versionFactory = new Docman_VersionFactoryTestVersion($this);
         $dao            = new MockDocman_VersionDao($this);
         $versionFactory->setReturnValue('_getVersionDao', $dao);

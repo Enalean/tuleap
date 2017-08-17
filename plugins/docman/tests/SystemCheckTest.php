@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,7 +43,7 @@ class Docman_SystemCheckTest extends TuleapTestCase {
         $config_checker  = new PluginConfigChecker($logger);
         $backend         = BackendSystem::instance();
 
-        $this->root_dir_path = dirname(__FILE__).'/_fixtures/';
+        $this->root_dir_path = $this->getTmpDir();
 
         $plugin_info = stub('DocmanPluginInfo')->getPropertyValueForName('docman_root')->returns($this->root_dir_path);
         stub($this->plugin)->getPluginInfo()->returns($plugin_info);
@@ -60,7 +60,6 @@ class Docman_SystemCheckTest extends TuleapTestCase {
 
     public function tearDown() {
         ForgeConfig::restore();
-        rmdir($this->root_dir_path . 'project_01');
 
         parent::tearDown();
     }
@@ -72,6 +71,6 @@ class Docman_SystemCheckTest extends TuleapTestCase {
 
         $this->system_check->process();
 
-        $this->assertTrue(is_dir($this->root_dir_path . 'project_01'));
+        $this->assertTrue(is_dir($this->root_dir_path . '/project_01'));
     }
 }
