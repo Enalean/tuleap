@@ -5,7 +5,7 @@
     </div>
 
     <div class="tlp-modal-body artifact-links-graph-modal">
-        <div ng-repeat="error in modal.errors track by $index" class="alert alert-error">{{ error }}</div>
+        <div ng-repeat="error in modal.errors track by $index" class="tlp-alert-danger">{{ error }}</div>
         <div id="artifact-links-graph-utils">
             <button id="focus-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Focus graph' | translate }}"><i class="fa fa-bullseye tlp-button-icon"></i></button>
             <button id="zoomin-graph" type="button" class="tlp-button-secondary tlp-button-mini" title="{{ 'Zoom in' | translate }}"><i class="fa fa-search-plus tlp-button-icon"></i></button>
