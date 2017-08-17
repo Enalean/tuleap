@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard;
 
 use EventManager;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Widget\ProjectHeartbeat;
 
 class JavascriptFilesIncluder
 {
@@ -123,6 +124,11 @@ class JavascriptFilesIncluder
     {
         $collection = new CollectionOfWidgetsThatNeedJavascriptDependencies();
         $this->event_manager->processEvent($collection);
+
+        $collection->add(
+            ProjectHeartbeat::NAME,
+            array(array('file' => $this->include_assets->getFileURL('widget-project-heartbeat.js')))
+        );
 
         return $collection;
     }

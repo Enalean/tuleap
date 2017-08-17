@@ -4,7 +4,6 @@ import asyncWidgetInit from './dashboard-async-widget.js';
 import minimizeInit from './dashboard-minimize.js';
 import dragDropInit from './dashboard-drag-drop.js';
 import loadTogglers from './dashboard-load-togglers.js';
-import loadHeartbeat from './widgets/project-heartbeat';
 
 document.addEventListener('DOMContentLoaded', function () {
     modalInit();
@@ -13,5 +12,4 @@ document.addEventListener('DOMContentLoaded', function () {
     asyncWidgetInit();
     minimizeInit();
     loadTogglers();
-    loadHeartbeat();
 });
