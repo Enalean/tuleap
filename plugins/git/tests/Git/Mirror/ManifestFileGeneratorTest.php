@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2015. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -46,7 +46,7 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase {
         parent::setUp();
         $this->current_time       = $_SERVER['REQUEST_TIME'];
         $this->time_in_the_past   = 1414684049;
-        $this->fixture_dir        = dirname(__FILE__) .'/_fixtures';
+        $this->fixture_dir        = $this->getTmpDir();
         $this->manifest_directory = $this->fixture_dir .'/manifests';
         mkdir($this->manifest_directory);
 

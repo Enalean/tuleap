@@ -1,6 +1,7 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -23,28 +24,26 @@ require_once 'bootstrap.php';
 
 class GitDriverTest extends TuleapTestCase {
 
+    private $curDir;
+    private $fixturesPath;
     private $destinationPath;
     private $sourcePath;
 
     public function setUp() {
+        parent::setUp();
         $this->curDir = getcwd();
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
 
-        $this->sourcePath = "/var/tmp/".uniqid();
-        mkdir($this->sourcePath, 0770, true);
-        $this->destinationPath = "/var/tmp/".uniqid();
-        mkdir($this->destinationPath, 0770, true);
+        $this->sourcePath = $this->getTmpDir() . '/source';
+        mkdir($this->sourcePath, 0770);
+        $this->destinationPath = $this->getTmpDir() . '/destination';
+        mkdir($this->destinationPath, 0770);
         @exec('GIT_DIR='.$this->sourcePath.' git --bare init --shared=group');
     }
 
     public function tearDown() {
         chdir($this->curDir);
-        @unlink($this->fixturesPath.'/tmp/hooks/blah');
-        @unlink($this->fixturesPath.'/tmp/config');
-        @exec('/bin/rm -rdf '.$this->fixturesPath.'/tmp/repo.git');
-        @exec('/bin/rm -rdf '.$this->fixturesPath.'/tmp/fork.git');
-        @exec('/bin/rm -rdf '.$this->destinationPath);
-        @exec('/bin/rm -rdf '.$this->sourcePath);
+        parent::tearDown();
     }
 
     public function itExtractsTheGitVersion() {
@@ -54,27 +53,27 @@ class GitDriverTest extends TuleapTestCase {
     }
 
     public function testInitBareRepo() {
-        $path = $this->fixturesPath.'/tmp/repo.git';
-        $driver = new GitDriver();
-        mkdir($path, 0770, true);
+        $path = $this->getTmpDir();
         chdir($path);
+
+        $driver = new GitDriver();
         $driver->init(true);
         $this->assertTrue(file_exists($path.'/HEAD'));
         $this->assertEqual(file_get_contents($path.'/description'), 'Default description for this project'.PHP_EOL);
     }
 
     public function testInitStdRepo() {
-        $path = $this->fixturesPath.'/tmp/repo.git';
-        $driver = new GitDriver();
-        mkdir($path, 0770, true);
+        $path = $this->getTmpDir();
         chdir($path);
+
+        $driver = new GitDriver();
         $driver->init(false);
         $this->assertTrue(file_exists($path.'/.git/HEAD'));
     }
 
     public function testForkRepo() {
-        $srcPath = $this->fixturesPath.'/tmp/repo.git';
-        $dstPath = $this->fixturesPath.'/tmp/fork.git';
+        $srcPath = $this->getTmpDir() . '/tmp/repo.git';
+        $dstPath = $this->getTmpDir() . '/tmp/fork.git';
 
         mkdir($srcPath, 0770, true);
         @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
@@ -165,7 +164,7 @@ class GitDriverTest extends TuleapTestCase {
     }
 
     public function testSetRepositoryAccessPublic() {
-        $srcPath = $this->fixturesPath.'/tmp/repo.git';
+        $srcPath = $this->getTmpDir().'/tmp/repo.git';
 
         mkdir($srcPath, 0770, true);
         @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
@@ -180,7 +179,7 @@ class GitDriverTest extends TuleapTestCase {
     }
 
     public function testSetRepositoryAccessPrivate() {
-        $srcPath = $this->fixturesPath.'/tmp/repo.git';
+        $srcPath = $this->getTmpDir().'/tmp/repo.git';
 
         mkdir($srcPath, 0770, true);
         @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
@@ -195,8 +194,8 @@ class GitDriverTest extends TuleapTestCase {
     }
 
     public function testForkRepoUnixPermissions() {
-        $srcPath = $this->fixturesPath.'/tmp/repo.git';
-        $dstPath = $this->fixturesPath.'/tmp/fork.git';
+        $srcPath = $this->getTmpDir().'/tmp/repo.git';
+        $dstPath = $this->getTmpDir().'/tmp/fork.git';
 
         mkdir($srcPath, 0770, true);
         @exec('GIT_DIR='.$srcPath.' git --bare init --shared=group');
@@ -218,53 +217,54 @@ class GitDriverTest extends TuleapTestCase {
     }
 
     public function testActivateHook() {
-        copy($this->fixturesPath.'/hooks/post-receive', $this->fixturesPath.'/tmp/hooks/blah');
+        mkdir($this->getTmpDir().'/hooks', 0770, true);
+        copy($this->fixturesPath.'/hooks/post-receive', $this->getTmpDir().'/hooks/blah');
 
         $driver = new GitDriver();
-        $driver->activateHook('blah', $this->fixturesPath.'/tmp');
+        $driver->activateHook('blah', $this->getTmpDir());
 
-        $this->assertTrue(is_executable($this->fixturesPath.'/tmp/hooks/blah'));
+        $this->assertTrue(is_executable($this->getTmpDir().'/hooks/blah'));
     }
 
     public function testSetConfigSimple() {
-        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+        copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $driver = new GitDriver();
-        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', 'abcd');
+        $driver->setConfig($this->getTmpDir(), 'hooks.showrev', 'abcd');
 
-        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $config = parse_ini_file($this->getTmpDir().'/config', true);
         $this->assertEqual($config['hooks']['showrev'], 'abcd');
     }
 
     public function testSetConfigComplex() {
-        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+        copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $val = "t=%s; git log --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t~1..\$t";
 
         $driver = new GitDriver();
-        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', $val);
+        $driver->setConfig($this->getTmpDir(), 'hooks.showrev', $val);
 
-        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $config = parse_ini_file($this->getTmpDir().'/config', true);
         $this->assertEqual($config['hooks']['showrev'], 't=%s; git log --name-status --pretty=\'format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=git.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b\' $t~1..$t');
     }
 
     public function testSetConfigWithSpace() {
-        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+        copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $driver = new GitDriver();
-        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', '[MyVal] ');
+        $driver->setConfig($this->getTmpDir(), 'hooks.showrev', '[MyVal] ');
 
-        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $config = parse_ini_file($this->getTmpDir().'/config', true);
         $this->assertEqual($config['hooks']['showrev'], '[MyVal] ');
     }
 
     public function testSetEmptyConfig() {
-        copy($this->fixturesPath.'/config', $this->fixturesPath.'/tmp/config');
+        copy($this->fixturesPath.'/config', $this->getTmpDir().'/config');
 
         $driver = new GitDriver();
-        $driver->setConfig($this->fixturesPath.'/tmp', 'hooks.showrev', '');
+        $driver->setConfig($this->getTmpDir(), 'hooks.showrev', '');
 
-        $config = parse_ini_file($this->fixturesPath.'/tmp/config', true);
+        $config = parse_ini_file($this->getTmpDir().'/config', true);
         $this->assertEqual($config['hooks']['showrev'], '');
     }
 }

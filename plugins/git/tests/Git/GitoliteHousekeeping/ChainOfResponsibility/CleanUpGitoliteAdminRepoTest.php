@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,10 +23,14 @@ require_once 'common/backend/BackendService.class.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTest extends TuleapTestCase {
 
+    private $fixtures;
+
     public function setUp() {
         parent::setUp();
         $this->response = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
-        $this->fixtures = dirname(__FILE__) .'/_fixtures';
+        $this->fixtures = $this->getTmpDir();
+        copy(dirname(__FILE__) . '/_fixtures/gitolite_admin.tgz', $this->fixtures . '/gitolite_admin.tgz');
+
         $this->remote_admin_repository = 'gitolite_admin';
 
         `tar -xzf $this->fixtures/gitolite_admin.tgz --directory $this->fixtures`;
@@ -40,11 +44,6 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
             $this->remote_admin_repository
         );
         $this->command->clearExecuteAs();
-    }
-
-    public function tearDown() {
-        `rm -rf $this->fixtures/{gitolite_admin.git,admin,admin.old}`;
-        parent::tearDown();
     }
 
     public function itAbortsIfThereIsAlreadyABackupDir() {

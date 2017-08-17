@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,34 +36,28 @@ Mock::generate('DataAccessResult');
 
 class GitRepositoryTest extends TuleapTestCase {
 
-    public function setUp() {
-        $link =dirname(__FILE__).'/_fixtures/tmp/perms';
-        if (file_exists($link)) {
-            unlink($link);
-        }
-        symlink(dirname(__FILE__).'/_fixtures/perms', $link);
-    }
-    
-    public function tearDown() {
-        unlink(dirname(__FILE__).'/_fixtures/tmp/perms');
-    }
-   
-        
-    public function testDeletionPathShouldBeInProjectPath() {
+    public function testDeletionPathShouldBeInProjectPath()
+    {
+        $tmp_folder = $this->getTmpDir() . '/perms';
+        symlink(dirname(__FILE__).'/_fixtures/perms', $tmp_folder);
+
         $repo = new GitRepository();
         $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/default.conf'));
-        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/default.conf'));
-        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/coincoin.git.git'));
-        
+        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', $tmp_folder . '/default.conf'));
+        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', $tmp_folder . '/coincoin.git.git'));
+
         $this->assertFalse($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/../../default.conf'));
         $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
+
+        unlink($tmp_folder);
     }
-    
+
+
     public function testDeletionShouldAffectDotGit() {
         $repo = new GitRepository();
         $this->assertTrue($repo->isDotGit('default.git'));
         $this->assertTrue($repo->isDotGit('default.git.git'));
-        
+
         $this->assertFalse($repo->isDotGit('default.conf'));
         $this->assertFalse($repo->isDotGit('d'));
         $this->assertFalse($repo->isDotGit('defaultgit'));
@@ -125,17 +119,17 @@ class GitRepositoryTest extends TuleapTestCase {
         $repo->expectOnce('_getProjectManager');
         $project->expectNever('getID');
     }
-    
+
     public function _newUser($name) {
         $user = new PFUser(array('language_id' => 1));
         $user->setUserName($name);
         return $user;
     }
-    
+
     public function testGetFullName_appendsNameSpaceToName() {
         $repo = $this->_GivenARepositoryWithNameAndNamespace('tulip', null);
         $this->assertEqual('tulip', $repo->getFullName());
-        
+
         $repo = $this->_GivenARepositoryWithNameAndNamespace('tulip', 'u/johan');
         $this->assertEqual('u/johan/tulip', $repo->getFullName());
     }
@@ -150,50 +144,50 @@ class GitRepositoryTest extends TuleapTestCase {
     public function testProjectRepositoryDosNotBelongToUser() {
         $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
-        
+
         $repo = new GitRepository();
         $repo->setCreator($user);
         $repo->setScope(GitRepository::REPO_SCOPE_PROJECT);
-        
+
         $this->assertFalse($repo->belongsTo($user));
     }
-    
+
     public function testUserRepositoryBelongsToUser() {
         $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
-        
+
         $repo = new GitRepository();
         $repo->setCreator($user);
         $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
-        
+
         $this->assertTrue($repo->belongsTo($user));
     }
     public function testUserRepositoryDoesNotBelongToAnotherUser() {
         $creator = new PFUser(array('language_id' => 1));
         $creator->setId(123);
-        
+
         $user = new PFUser(array('language_id' => 1));
         $user->setId(456);
-        
+
         $repo = new GitRepository();
         $repo->setCreator($creator);
         $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
-        
+
         $this->assertFalse($repo->belongsTo($user));
     }
-    
+
     public function itIsMigratableIfItIsAGitoliteRepo() {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
         $this->assertTrue($repo->canMigrateToGerrit());
     }
-    
+
     public function itIsNotMigratableIfItIsAGitshellRepo() {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITSHELL);
         $this->assertFalse($repo->canMigrateToGerrit());
     }
-    
+
     public function itIsNotMigratableIfAlreadyAGerritRepo() {
         $repo = new GitRepository();
         $repo->setBackendType(GitDao::BACKEND_GITOLITE);
@@ -227,13 +221,14 @@ class GitRepositoryTest extends TuleapTestCase {
 
         $this->assertFalse($repository->isMigratedToGerrit());
     }
+    /**/
 }
 
 class GitRepository_CanDeletedTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
-        
+
         $this->backend = stub('GitBackend')->getGitRootPath()->returns(dirname(__FILE__).'/_fixtures');
         $project       = stub('Project')->getUnixName()->returns('perms');
 
@@ -241,7 +236,7 @@ class GitRepository_CanDeletedTest extends TuleapTestCase {
         $this->repo->setBackend($this->backend);
         $this->repo->setProject($project);
     }
-    
+
     public function itCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed() {
         stub($this->backend)->canBeDeleted()->returns(true);
         $this->repo->setPath('perms/coincoin.git.git');
@@ -255,10 +250,10 @@ class GitRepository_CanDeletedTest extends TuleapTestCase {
 
         $this->assertFalse($this->repo->canBeDeleted());
     }
-    
+
     public function itCannotBeDeletedIfBackendForbidIt() {
         stub($this->backend)->canBeDeleted()->returns(false);
-        
+
         $this->repo->setPath('perms/coincoin.git.git');
         $this->assertFalse($this->repo->canBeDeleted());
     }
@@ -290,5 +285,3 @@ class GitRepository_GetAccessUrlTest extends TuleapTestCase {
         $this->assertEqual($this->repository->getAccessURL(), $access_url);
     }
 }
-
-?>
