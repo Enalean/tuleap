@@ -53,6 +53,7 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
             $this->is_trove_cat_enabled
             && ! $this->is_project_registration_enabled
             && ! $this->projects;
-        $this->display_dropdown = ! $this->display_only_trovemap && $user->isLoggedIn();
+        $this->display_dropdown      = $user->isLoggedIn() &&
+            ($this->has_projects || $this->is_trove_cat_enabled || $this->is_project_registration_enabled);
     }
 }

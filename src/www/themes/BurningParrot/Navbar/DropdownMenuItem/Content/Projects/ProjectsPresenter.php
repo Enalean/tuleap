@@ -38,6 +38,11 @@ class ProjectsPresenter extends Presenter
         $this->projects = $projects;
     }
 
+    public function is_member_of_at_least_one_project()
+    {
+        return count($this->projects) > 0;
+    }
+
     public function browse_all()
     {
         return $GLOBALS['Language']->getText('include_menu', 'browse_all');
@@ -48,6 +53,11 @@ class ProjectsPresenter extends Presenter
         return $GLOBALS['Language']->getText('include_menu', 'add_project');
     }
 
+    public function is_there_something_to_filter()
+    {
+        return $this->is_member_of_at_least_one_project() || $this->is_trove_cat_enabled();
+    }
+
     public function filter()
     {
         return $GLOBALS['Language']->getText('include_menu', 'filter_projects');
@@ -56,5 +66,10 @@ class ProjectsPresenter extends Presenter
     public function is_project_registration_enabled()
     {
         return \ForgeConfig::get('sys_use_project_registration', true);
+    }
+
+    public function is_trove_cat_enabled()
+    {
+        return \ForgeConfig::get('sys_use_trove');
     }
 }
