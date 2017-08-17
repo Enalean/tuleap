@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 require_once 'common/tracker/ArtifactType.class.php';
 require_once dirname(__FILE__).'/../../../plugins/tracker/include/autoload.php';
+require_once dirname(__FILE__).'/../../../plugins/tracker/include/manual_autoload.php';
 require_once dirname(__FILE__).'/../../../plugins/tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Migration/V3.class.php';
@@ -53,7 +54,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     public function setUp() {
         parent::setUp();
         ForgeConfig::store();
-        ForgeConfig::set('codendi_log', dirname(__FILE__));
+        ForgeConfig::set('codendi_log', $this->getTmpDir());
 
         if (!self::$defect_tracker_converted && $this->thisTestIsNotUnderDevelopment()) {
             $this->convertTrackers();
@@ -67,9 +68,6 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     }
 
     public function tearDown() {
-        if (is_file(ForgeConfig::get('codendi_log').'/tv3_to_tv5.log')) {
-            unlink(ForgeConfig::get('codendi_log').'/tv3_to_tv5.log');
-        }
         ForgeConfig::restore();
         parent::tearDown();
     }
