@@ -8,8 +8,8 @@
 
 // ################################## Trove Globals
 
-$TROVE_MAXPERROOT = 3;
-$TROVE_BROWSELIMIT = 20;
+$GLOBALS['TROVE_MAXPERROOT']  = 3;
+$GLOBALS['TROVE_BROWSELIMIT'] = 20;
 
 
 // adds a group to a trove node
