@@ -89,7 +89,14 @@ class PresenterBuilder
         $dropdown_menu_item_content_project_presenters         = $dropdown_menu_item_content_project_presenters_builder->build(
             $this->current_user
         );
-        if ($dropdown_menu_item_content_project_presenters) {
+
+        $is_project_dropdown_visible = $this->current_user->isLoggedIn() && (
+                count($dropdown_menu_item_content_project_presenters) > 0 ||
+                \ForgeConfig::get('sys_use_trove') ||
+                \ForgeConfig::get('sys_use_project_registration')
+            );
+
+        if ($is_project_dropdown_visible) {
             $global_dropdown_menu_items[] = new DropdownMenuItemPresenter(
                 $GLOBALS['Language']->getText('include_menu', 'projects'),
                 'fa fa-archive',

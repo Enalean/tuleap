@@ -1,13 +1,20 @@
 <div class="nav-dropdown-content-projects-adaptable">
-    <div class="nav-dropdown-content-projects-filter">
-        <input id="nav-dropdown-content-projects-filter-projects"
-            type="search"
-            class="tlp-search tlp-search-small"
-            placeholder="{{ filter }}">
-        <a href="/softwaremap/trove_list.php" class="tlp-button-primary tlp-button-outline tlp-button-small">
-            <i class="fa fa-list tlp-button-icon"></i> {{ browse_all }}
-        </a>
-    </div>
+    {{# is_there_something_to_filter }}
+        <div class="nav-dropdown-content-projects-filter">
+            {{# is_member_of_at_least_one_project }}
+                <input id="nav-dropdown-content-projects-filter-projects"
+                       type="search"
+                       class="tlp-search tlp-search-small
+                            {{# is_trove_cat_enabled }}nav-dropdown-content-projects-filter-projects-full-width{{/ is_trove_cat_enabled }}"
+                       placeholder="{{ filter }}">
+            {{/ is_member_of_at_least_one_project }}
+            {{# is_trove_cat_enabled }}
+                <a href="/softwaremap/trove_list.php" class="tlp-button-primary tlp-button-outline tlp-button-small tlp-button-wide">
+                    <i class="fa fa-list tlp-button-icon"></i> {{ browse_all }}
+                </a>
+            {{/ is_trove_cat_enabled }}
+        </div>
+    {{/ is_there_something_to_filter }}
     <div class="nav-dropdown-content-projects-lists">
         {{# projects }}
             <div class="nav-dropdown-content-projects-list-project">
