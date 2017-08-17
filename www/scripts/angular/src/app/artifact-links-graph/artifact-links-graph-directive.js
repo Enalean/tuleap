@@ -284,6 +284,7 @@ function Graph(
                 graphd3.height(element.height());
 
                 graphd3.svg(d3.select(element[0]).append("svg")
+                        .attr('class', 'graph-container')
                         .attr("width", graphd3.width())
                         .attr("height", graphd3.height())
                         .append("g")
@@ -326,7 +327,7 @@ function Graph(
 
             graphd3.redraw = function() {
                 d3.select(".overlay").attr("width", graphd3.width()).attr("height", graphd3.height());
-                d3.select("svg").attr("width", graphd3.width()).attr("height", graphd3.height());
+                d3.select(".graph-container").attr("width", graphd3.width()).attr("height", graphd3.height());
                 graphd3.graph().size([graphd3.width(), graphd3.height()]).resume();
             };
 

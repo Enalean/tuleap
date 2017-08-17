@@ -170,7 +170,7 @@ class TrafficlightsPlugin extends Plugin {
             );
 
             $link = array(
-                'icon' => $this->getPluginPath() . '/themes/default/images/artifact-link-graph.svg',
+                'icon' => $this->getPluginPath() . '/themes/BurningParrot/images/artifact-link-graph.svg',
                 'link' => $this->getPluginPath() . '/?group_id=' . $tracker->getGroupId() . '#/graph/' . $params['artifact']->getId(),
                 'label'=> $GLOBALS['Language']->getText('plugin_trafficlights', 'references_graph_url')
             );
