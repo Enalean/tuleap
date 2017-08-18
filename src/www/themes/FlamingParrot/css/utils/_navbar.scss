@@ -129,7 +129,7 @@
         }
 
         .nav-form-button {
-            padding: 0 20px;
+            padding: 0 15px;
             border: 0;
             background: $white;
             color: #747474;
@@ -166,7 +166,7 @@
             white-space: nowrap;
             overflow: hidden;
             display: flex;
-            padding: 0 0 0 10px;
+            padding: 0 20px 0 10px;
             height: 100%;
             align-items: center;
             line-height: normal;
@@ -187,9 +187,14 @@
             font-weight: 400;
         }
 
+        .icon-time {
+            position: relative;
+            top: 1px;
+        }
+
         .icon-cog {
             position: relative;
-            top: 3px;
+            top: 1.5px;
         }
 
         @media screen and (max-width: 1250px) {

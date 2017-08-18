@@ -36,7 +36,7 @@
 
     > .nav-link-icon {
         display: none;
-        font-size: initial;
+        font-size: 16px;
 
         @media screen and (max-width: $max-width) {
             display: inline;
@@ -117,7 +117,7 @@
     border: 0;
     background: none;
     color: $tlp-ui-dimmed;
-    font-size: initial;
+    font-size: 16px;
     letter-spacing: 1px;
     cursor: pointer;
 
@@ -125,6 +125,10 @@
         transition: color 100ms linear;
         color: $tlp-theme-color;
     }
+}
+
+.nav-form-button-icon {
+    font-size: 16px;
 }
 
 #logo {
