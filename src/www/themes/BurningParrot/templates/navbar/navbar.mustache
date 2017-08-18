@@ -12,15 +12,13 @@
             {{> navbar/global-nav }}
         </div>
 
-        {{# is_search_and_user_nav_displayed }}
-            <div class="header-nav">
-                {{> navbar/search }}
+        <div class="header-nav">
+            {{> navbar/search }}
 
-                {{> navbar/join-community }}
+            {{> navbar/join-community }}
 
-                {{> navbar/user-nav }}
-            </div>
-        {{/ is_search_and_user_nav_displayed }}
+            {{> navbar/user-nav }}
+        </div>
     </div>
 </header>
 {{/ navbar_presenter }}

@@ -96,7 +96,7 @@ class UserNavPresenter
         return new MenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'login'),
             $this->url_redirect->buildReturnToLogin($_SERVER),
-            '',
+            'fa fa-sign-in',
             ''
         );
     }
@@ -106,7 +106,7 @@ class UserNavPresenter
         return new MenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'new_user'),
             '/account/register.php',
-            '',
+            'fa fa-user-plus',
             ''
         );
     }

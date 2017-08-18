@@ -1,38 +1,14 @@
-@mixin logo-background($navbar-color) {
-    background: $navbar-color url('../images/organization_logo.png') no-repeat center center;
-}
-
-@mixin logo-background-medium($navbar-color) {
-    background: $navbar-color url('../images/organization_logo_medium.png') no-repeat center center;
-}
-
-@mixin logo-background-small($navbar-color) {
-    background: $navbar-color url('../images/organization_logo_small.png') no-repeat center center;
-}
-
 .logo {
     width: $sidebar-width;
     max-width: $sidebar-width;
     height: $navbar-height;
     float: left;
-    @include logo-background($navbar-color);
-
-    @media screen and (max-width: 1366px) {
-        width: 155px;
-        max-width: 155px;
-        @include logo-background-medium($navbar-color);
-    }
-
-    @media screen and (max-width: 1300px) {
-        width: $sidebar-width-collapsed;
-        max-width: $sidebar-width-collapsed;
-        @include logo-background-small($navbar-color);
-    }
+    background: $navbar-color url('../images/organization_logo.png') no-repeat center center;
 
     &.logo-collapsed {
         width: $sidebar-width-collapsed;
         max-width: $sidebar-width-collapsed;
-        @include logo-background-small($navbar-color);
+        background: $navbar-color url('../images/organization_logo_small.png') no-repeat center center;
     }
 }
 
@@ -111,7 +87,6 @@
         font-size: 14px;
         letter-spacing: normal;
         text-transform: none;
-        border-left: 1px solid #e3e5ed;
     }
 
     .admin-link {
@@ -120,14 +95,6 @@
 
     .icon {
         font-size: 16px;
-    }
-
-    @media screen and (max-width: 1400px) {
-        font-size: 12px;
-    }
-
-    @media screen and (max-width: 980px) {
-        font-size: .9em;
     }
 
     .container-fluid {
@@ -146,19 +113,15 @@
             align-items: center;
             height: $navbar-height;
 
-            & .join-tuleap-community {
-                padding: 10px 10px 10px 5px;
+            .join-tuleap-community {
+                padding: 12px 10px 10px 0;
             }
         }
 
         & > li > a {
             height: $navbar-height - 12px - 5px;
-            padding: 12px 10px 5px;
+            padding: 13px 15px 5px;
             text-align: center;
-
-            @media screen and (max-width: 1024px) {
-                padding: 12px 15px 5px;
-            }
         }
 
         .nav-form {
@@ -221,6 +184,7 @@
 
         .user-infos-login-name {
             font-size: 12px;
+            font-weight: 400;
         }
 
         .icon-cog {
@@ -229,31 +193,37 @@
         }
 
         @media screen and (max-width: 1250px) {
-            .join-tuleap-community,
             .user-infos {
                 display: none;
             }
         }
 
-        li.current-project > a {
-            padding: 0;
-            height: auto;
-            background-color: $white;
-            text-align: left;
-            box-sizing: border-box;
-            color: $navbar-color;
-            font-size: 18px;
-            font-weight: normal;
-            letter-spacing: 1.1px;
+        li.current-project {
+            margin: 0 -10px 0 0;
+            padding: 0 20px;
+            border-right: 1px solid #e3e5ed;
 
-            > i {
-                margin-right: 5px;
-                font-size: 16px;
+            > a {
+                padding: 0;
+                height: auto;
+                background-color: $white;
+                text-align: left;
+                box-sizing: border-box;
+                color: $navbar-color;
+                font-size: 18px;
+                font-weight: normal;
+                letter-spacing: 1.1px;
+
+                > i {
+                    margin-right: 5px;
+                    font-size: 16px;
+                }
             }
-        }
 
-        li.current-project:hover > a:hover, li.current-project:focus > a:focus {
-            color: $navbar-color;
+            &:hover > a:hover,
+            &:focus > a:focus {
+                color: $navbar-color;
+            }
         }
 
         ul.dropdown-menu {
@@ -331,23 +301,27 @@
 
         @import 'navbar-dropdown-history';
 
-        .projects-nav ul.dropdown-menu {
-            width: 300px;
-            max-height: 590px;
-            overflow: hidden;
+        .projects-nav {
+            margin: 0 0 0 10px;
 
-            #filter-projects {
-                width: 87%;
-                height: 30px;
-                margin: 10px auto;
-                padding: 0 15px;
-                display: block;
-                border-radius: 20px;
-                box-sizing: border-box;
+            ul.dropdown-menu {
+                width: 300px;
+                max-height: 590px;
+                overflow: hidden;
 
-                &:focus {
-                    box-shadow: none;
-                    border-color: $navbar-color;
+                #filter-projects {
+                    width: 87%;
+                    height: 30px;
+                    margin: 10px auto;
+                    padding: 0 15px;
+                    display: block;
+                    border-radius: 20px;
+                    box-sizing: border-box;
+
+                    &:focus {
+                        box-shadow: none;
+                        border-color: $navbar-color;
+                    }
                 }
             }
         }
@@ -361,15 +335,16 @@
     }
 
     .navbar-search {
-        margin: 8px 10px 0 0;
+        margin: 9px 10px 0 0;
 
         input[type="text"] {
+            width: 144px;
+            height: 26px;
+            padding: 0 10px;
             border-radius: 14px;
-            padding-right: 15px;
-            padding-left: 15px;
+            box-shadow: none;
 
             &:focus {
-                box-shadow: none;
                 z-index: 0;
                 border: 1px solid $navbar-color-hover;
             }
@@ -399,6 +374,10 @@
     }
 }
 
+.join-tuleap-community-container {
+    border-right: 1px solid #e3e5ed;
+}
+
 .join-tuleap-community-svg {
     fill: $navbar-color;
 }
@@ -418,16 +397,11 @@
     display: flex;
 }
 
-.current-project {
-    padding: 0 20px;
-    border-right: 1px solid #e3e5ed;
-}
-
 #navbar-help,
 #navbar-project {
     display: flex;
 
     > .caret {
-        margin-left: 6px;
+        margin-left: 5px;
     }
 }
