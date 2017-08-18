@@ -72,11 +72,6 @@ class PresenterBuilder
                 $this->displayNewAccountMenuItem(),
                 $url_redirect
             ),
-            new BurningParrotCompatiblePageDetector(
-                new CurrentPage(),
-                new Admin_Homepage_Dao()
-            ),
-            $this->current_user,
             new JoinCommunityPresenter()
         );
     }

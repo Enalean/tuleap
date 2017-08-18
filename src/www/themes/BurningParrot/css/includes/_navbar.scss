@@ -24,6 +24,7 @@
     transition: color 100ms linear;
     color: $tlp-ui-dimmed;
     font-size: 12px;
+    font-weight: 600;
     letter-spacing: 1px;
     text-decoration: none;
     text-transform: uppercase;
@@ -111,6 +112,7 @@
 }
 
 .nav-form-button {
+    padding: 0;
     transition: color 100ms linear;
     border: 0;
     background: none;
@@ -125,22 +127,20 @@
     }
 }
 
-.nav-form-button-icon {
-    display: inline;
-}
-
 #logo {
     display: inline-block;
     flex: 0 0 auto;
     width: $sidebar-expanded-width;
     height: $navbar-height;
     background: $tlp-theme-color url('../images/organization_logo.png') no-repeat center center;
+
+    + #global-nav {
+        margin: 0 0 0 $tlp-half-spacing;
+    }
 }
 
 #global-nav {
     display: flex;
-    margin: 0 0 0 $tlp-spacing / 2;
-    font-weight: 600;
 }
 
 #global-search {
@@ -156,26 +156,23 @@
 
 #user-nav {
     display: flex;
-    margin: 0 0 0 $tlp-spacing / 2;
+    margin: 0 0 0 $tlp-half-spacing;
     border-left: 1px solid $tlp-ui-border-normal;
     white-space: nowrap;
-
-    > .nav-link:first-child {
-        padding: 0 $tlp-spacing 0 $tlp-spacing / 2;
-    }
 
     > .user-block {
         display: flex;
         align-items: center;
+        padding: 0 20px 0 10px;
 
         > .user-block-names {
             display: flex;
             flex-direction: column;
-            margin: 0 0 0 $tlp-spacing / 2;
+            margin: 0 0 0 $tlp-half-spacing;
             letter-spacing: normal;
             text-transform: none;
 
-            @media screen and (max-width: 1100px) {
+            @media screen and (max-width: 1250px) {
                 display: none;
             }
 
@@ -188,7 +185,7 @@
 
             > .user-nav-username {
                 font-size: 12px;
-                font-weight: 600;
+                font-weight: 400;
             }
         }
     }
@@ -222,7 +219,7 @@
 }
 
 .join-tuleap-community {
-    width: 40px;
+    width: 36px;
     height: 100%;
     padding: 0 0 0 $tlp-half-spacing;
     fill: $tlp-theme-color;

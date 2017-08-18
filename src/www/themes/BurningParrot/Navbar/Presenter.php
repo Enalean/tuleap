@@ -25,11 +25,6 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 
 class Presenter
 {
-    /** @var PFUser */
-    private $current_user;
-    /** @var BurningParrotCompatiblePageDetector */
-    private $page_detector;
-
     /** @var GlobalNavPresenter */
     public $global_nav_presenter;
 
@@ -42,32 +37,18 @@ class Presenter
     /** @var JoinCommunityPresenter */
     public $community_presenter;
 
-    public $is_search_and_user_nav_displayed;
     public $homepage_label;
 
     public function __construct(
         GlobalNavPresenter $global_nav_presenter,
         SearchPresenter $search_presenter,
         UserNavPresenter $user_nav_presenter,
-        BurningParrotCompatiblePageDetector $page_detector,
-        PFUser $current_user,
         JoinCommunityPresenter $community_presenter
     ) {
-        $this->global_nav_presenter             = $global_nav_presenter;
-        $this->search_presenter                 = $search_presenter;
-        $this->user_nav_presenter               = $user_nav_presenter;
-        $this->current_user                     = $current_user;
-        $this->page_detector                    = $page_detector;
-        $this->is_search_and_user_nav_displayed = (! $this->hideSearchAndUserNav());
-        $this->community_presenter              = $community_presenter;
-        $this->homepage_label                   = _('Homepage');
-    }
-
-    private function hideSearchAndUserNav()
-    {
-        return (
-            ! $this->current_user->isLoggedIn()
-            && $this->page_detector->isInHomepage()
-        );
+        $this->global_nav_presenter = $global_nav_presenter;
+        $this->search_presenter     = $search_presenter;
+        $this->user_nav_presenter   = $user_nav_presenter;
+        $this->community_presenter  = $community_presenter;
+        $this->homepage_label       = _('Homepage');
     }
 }
