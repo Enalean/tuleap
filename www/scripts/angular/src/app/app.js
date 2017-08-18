@@ -1,8 +1,6 @@
 import angular from 'angular';
-import ngAnimate from 'angular-animate';
 import ngSanitize from 'angular-sanitize';
 import ui_router from 'angular-ui-router';
-import animate_change from 'angular-animate-change';
 import angular_artifact_modal from 'angular-artifact-modal';
 import angular_tlp from 'angular-tlp';
 
@@ -27,10 +25,8 @@ import InPropertiesFilter from './app-filter.js';
 import TrafficlightsCtrl from './app-controller.js';
 
 export default angular.module('trafficlights', [
-    ngAnimate,
     ngSanitize,
     ui_router,
-    animate_change,
     angular_artifact_modal,
     angular_tlp,
     'ncy-angular-breadcrumb',
