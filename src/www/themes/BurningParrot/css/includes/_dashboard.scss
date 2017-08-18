@@ -77,7 +77,7 @@
     padding: $tlp-half-spacing / 2 0;
     transition: box-shadow 100ms;
 
-    &.highlight {
+    &.shake-widgets {
         .dashboard-widget {
             animation: 100ms infinite alternate shakeWidget;
             box-shadow: 0 3px 6px 0 rgba(0, 0, 0, .08);
