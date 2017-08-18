@@ -70,7 +70,7 @@ function initLayoutDropdown(dropdown_button, row) {
         var current_layout   = row.dataset.currentLayout;
 
         parent_container.classList.add('shown');
-        row.classList.add('highlight');
+        row.classList.add('shake-widgets');
         hideUnapplicableLayoutsAndCheckCurrentLayout(current_dropdown, nb_columns, current_layout);
     });
     tlp_dropdown.addEventListener('tlp-dropdown-hidden', function(event) {
@@ -78,7 +78,7 @@ function initLayoutDropdown(dropdown_button, row) {
         var parent_container = current_dropdown.parentElement;
 
         parent_container.classList.remove('shown');
-        row.classList.remove('highlight');
+        row.classList.remove('shake-widgets');
     });
 }
 
@@ -102,7 +102,7 @@ function initLayoutChangeButtons(dropdown, row) {
             if (layout_name === current_layout) { return; }
 
             applyLayout(row, layout_name);
-            row.classList.add('highlight');
+            row.classList.add('shake-widgets');
             var sibling_svg = radio_button.nextElementSibling;
             if (sibling_svg) {
                 markPathAsSelected(dropdown, sibling_svg.querySelector('.dashboard-dropdown-layout-field-path'));
