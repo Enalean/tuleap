@@ -431,6 +431,7 @@ legend {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
+    height: 1px; // Fix IE11 sorcery
     min-height: 64px;
     padding-top: 0;
     padding-bottom: 0;
