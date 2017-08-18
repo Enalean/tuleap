@@ -55,9 +55,7 @@ pipeline {
             steps {
                 parallel 'UT SimpleTest PHP 5.3': {
                     sh """
-                    mkdir -p working_copy/ut-simpletest-php-53
-                    cp -R sources/* working_copy/ut-simpletest-php-53/
-                    cid="\$(docker create -v \$WORKSPACE/working_copy/ut-simpletest-php-53:/tuleap \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php53)"
+                    cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php53)"
                     docker start --attach "\$cid" || true
                     mkdir -p 'results/ut-simpletest-php-53'
                     docker cp "\$cid":/output/unit_tests_report.xml results/ut-simpletest-php-53/
@@ -77,9 +75,7 @@ pipeline {
                 },
                 'UT SimpleTest PHP 5.6': {
                     sh """
-                    mkdir -p working_copy/ut-simpletest-php-56
-                    cp -R sources/* working_copy/ut-simpletest-php-56/
-                    cid="\$(docker create -v \$WORKSPACE/working_copy/ut-simpletest-php-56:/tuleap \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php56)"
+                    cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php56)"
                     docker start --attach "\$cid" || true
                     mkdir -p 'results/ut-simpletest-php-56'
                     docker cp "\$cid":/output/unit_tests_report.xml results/ut-simpletest-php-56/
