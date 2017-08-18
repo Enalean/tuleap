@@ -19,8 +19,10 @@
  */
 
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
+use Tuleap\Timesheeting\Router;
 
 require_once 'autoload.php';
+require_once 'constants.php';
 
 class timesheetingPlugin extends Plugin
 {
@@ -30,6 +32,15 @@ class timesheetingPlugin extends Plugin
         $this->setScope(Plugin::SCOPE_PROJECT);
 
         bindtextdomain('tuleap-timesheeting', __DIR__.'/../site-content');
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        if (defined('TRACKER_BASE_URL')) {
+            $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
+        }
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getPluginInfo() {
@@ -43,5 +54,30 @@ class timesheetingPlugin extends Plugin
     public function getDependencies()
     {
         return array('tracker');
+    }
+
+    /**
+     * @see TRACKER_EVENT_FETCH_ADMIN_BUTTONS
+     */
+    public function trackerEventFetchAdminButtons($params)
+    {
+        $url = '/plugins/timesheeting/?'. http_build_query(array(
+                'tracker' => $params['tracker_id'],
+                'action'  => 'admin-timesheeting'
+        ));
+
+        $params['items']['timesheeting'] = array(
+            'url'         => $url,
+            'short_title' => dgettext('tuleap-timesheeting', 'Timesheeting'),
+            'title'       => dgettext('tuleap-timesheeting', 'Timesheeting'),
+            'description' => dgettext('tuleap-timesheeting', 'Timesheeting for Tuleap artifacts'),
+            'img'         => TIMESHEETING_BASE_URL . '/images/icon-timesheeting.png'
+        );
+    }
+
+    public function process(Codendi_Request $request)
+    {
+        $router = new Router(TrackerFactory::instance());
+        $router->route($request);
     }
 }

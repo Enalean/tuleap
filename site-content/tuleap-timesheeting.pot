@@ -1,3 +1,9 @@
+msgid "Access denied. You don't have permissions to perform this action."
+msgstr ""
+
+msgid "The request is not valid."
+msgstr ""
+
 msgid "Timesheeting"
 msgstr ""
 

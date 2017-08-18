@@ -1,6 +1,12 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Access denied. You don't have permissions to perform this action."
+msgstr "Accès refusé. Vous n'avez pas les droits suffisants pour effectuer cette action."
+
+msgid "The request is not valid."
+msgstr "La requête n'est pas valide."
+
 msgid "Timesheeting"
 msgstr "Timesheeting"
 
