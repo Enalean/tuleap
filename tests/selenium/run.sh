@@ -32,15 +32,9 @@ composer_install() {
     su -c 'composer --working-dir=/tuleap/tests/selenium install' -l runner
 }
 
-npm_run_build() {
-    su -c 'cd /tuleap && npm install' -l runner
-    su -c 'cd /tuleap && npm run build' -l runner
-}
-
 setup_user
 
 composer_install
-npm_run_build
 
 is_server_ready
 

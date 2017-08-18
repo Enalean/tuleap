@@ -59,7 +59,6 @@ Requires: %{php_base}-zendframework
 Requires: php-ZendFramework2-Loader
 Requires: %{php_base}-markdown
 Requires: php-jwt
-Requires: php-paragonie-random-compat
 Requires: tuleap-core-subversion
 
 # PHPWiki
@@ -520,6 +519,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
 # Remove development tools and utility files
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/gerrit_setup
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/githooks
@@ -949,6 +950,7 @@ fi
 # Split src for src/www/themes
 %dir %{APP_DIR}/src
 %{APP_DIR}/src/common
+%{APP_DIR}/src/vendor
 %{APP_DIR}/src/COPYING
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
