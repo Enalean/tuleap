@@ -42,14 +42,4 @@ class NotificationsEmailsBuilder
 
         return $emails;
     }
-
-    /**
-     * @return string
-     */
-    public function transformNotificationEmailsArrayAsString($emails)
-    {
-        $emails = implode(',', $emails);
-
-        return $emails;
-    }
 }

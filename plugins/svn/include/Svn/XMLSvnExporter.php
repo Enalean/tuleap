@@ -112,7 +112,7 @@ class XMLSvnExporter
         foreach ($this->mail_notification_manager->getByRepository($repository) as $notification) {
             $node_notification = $node->addChild("notification");
             $node_notification->addAttribute("path", $notification->getPath());
-            $node_notification->addAttribute("emails", $notification->getNotifiedMails());
+            $node_notification->addAttribute("emails", $notification->getNotifiedMailsAsString());
         }
     }
 

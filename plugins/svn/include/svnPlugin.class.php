@@ -374,7 +374,8 @@ class SvnPlugin extends Plugin
                 $this->getMailNotificationDao(),
                 new UsersToNotifyDao(),
                 new UgroupsToNotifyDao(),
-                $this->getProjectHistoryDao()
+                $this->getProjectHistoryDao(),
+                $this->getNotificationEmailsBuilder()
             );
         }
         return $this->mail_notification_manager;
@@ -525,7 +526,8 @@ class SvnPlugin extends Plugin
             $this->getBackendSystem(),
             $this->getAccessFileHistoryCreator(),
             $this->getRepositoryManager(),
-            $user_manager
+            $user_manager,
+            $this->getNotificationEmailsBuilder()
         );
         $svn->import(
             $params['configuration'],
@@ -572,7 +574,7 @@ class SvnPlugin extends Plugin
                     new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao()),
                     new CollectionOfUgroupToBeNotifiedPresenterBuilder(new UgroupsToNotifyDao())
                 ),
-                new NotificationsEmailsBuilder(),
+                $this->getNotificationEmailsBuilder(),
                 UserManager::instance(),
                 new UGroupManager(),
                 $hook_config_updator,
@@ -1014,5 +1016,13 @@ class SvnPlugin extends Plugin
     private function getImmutableTagFactory()
     {
         return new ImmutableTagFactory(new ImmutableTagDao());
+    }
+
+    /**
+     * @return NotificationsEmailsBuilder
+     */
+    private function getNotificationEmailsBuilder()
+    {
+        return new NotificationsEmailsBuilder();
     }
 }

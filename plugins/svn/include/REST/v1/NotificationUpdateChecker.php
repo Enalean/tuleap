@@ -62,8 +62,8 @@ class NotificationUpdateChecker
 
             foreach ($old_notifications as $old_notification) {
                 if ($new_notification->getPath() === $old_notification->getPath()) {
-                    if ($this->sortNotification(explode(',', $new_notification->getNotifiedMails()))
-                        !== $this->sortNotification(explode(',', $old_notification->getNotifiedMails()))
+                    if ($this->sortNotification($new_notification->getNotifiedMails())
+                        !== $this->sortNotification($old_notification->getNotifiedMails())
                     ) {
                         return true;
                     }

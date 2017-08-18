@@ -32,6 +32,7 @@ use Tuleap\Svn\Dao;
 use Tuleap\Svn\Logs\LastAccessDao;
 use Tuleap\Svn\Logs\LastAccessUpdater;
 use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
+use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\RepositoryManager;
@@ -75,7 +76,8 @@ try {
                 new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
                 new UsersToNotifyDao(),
                 new UgroupsToNotifyDao(),
-                new ProjectHistoryDao()
+                new ProjectHistoryDao(),
+                new NotificationsEmailsBuilder()
             ),
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),

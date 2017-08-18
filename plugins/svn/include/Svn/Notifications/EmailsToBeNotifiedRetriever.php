@@ -71,10 +71,9 @@ class EmailsToBeNotifiedRetriever
         return array_unique(array_values(array_filter($notified_emails)));
     }
 
-    private function addEmails($notification, &$emails)
+    private function addEmails(MailNotification $notification, &$emails)
     {
-        $mail_list = explode(",", $notification->getNotifiedMails());
-        $mail_list = array_map('trim', $mail_list);
+        $mail_list = array_map('trim', $notification->getNotifiedMails());
         $emails    = array_merge($mail_list, $emails);
     }
 

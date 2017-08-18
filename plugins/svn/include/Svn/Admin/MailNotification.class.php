@@ -27,7 +27,7 @@ use User_UGroup;
 class MailNotification
 {
     /**
-     * @var string
+     * @var array
      */
     private $notified_mails;
     private $path;
@@ -46,7 +46,7 @@ class MailNotification
         $id,
         Repository $repository,
         $path,
-        $notified_mails,
+        array $notified_mails,
         array $notified_users,
         array $notified_ugroups
     ) {
@@ -59,11 +59,16 @@ class MailNotification
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getNotifiedMails()
     {
         return $this->notified_mails;
+    }
+
+    public function getNotifiedMailsAsString()
+    {
+        return implode(',', $this->notified_mails);
     }
 
     public function getPath()

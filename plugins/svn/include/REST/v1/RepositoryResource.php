@@ -180,12 +180,15 @@ class RepositoryResource extends AuthenticatedResource
             $project_history_dao,
             $project_history_formatter
         );
-        $project_history_formatter   = new ProjectHistoryFormatter();
-        $mail_notification_manager    = new MailNotificationManager(
+
+        $project_history_formatter = new ProjectHistoryFormatter();
+        $this->emails_builder      = new NotificationsEmailsBuilder();
+        $mail_notification_manager = new MailNotificationManager(
             new MailNotificationDao(CodendiDataAccess::instance(), new RepositoryRegexpBuilder()),
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),
-            $project_history_dao
+            $project_history_dao,
+            $this->emails_builder
         );
 
         $this->repository_creator    = new RepositoryCreator(
@@ -200,7 +203,6 @@ class RepositoryResource extends AuthenticatedResource
             $mail_notification_manager
         );
 
-        $this->emails_builder         = new NotificationsEmailsBuilder();
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
@@ -666,7 +668,7 @@ class RepositoryResource extends AuthenticatedResource
                     0,
                     $repository,
                     $notification->path,
-                    $this->emails_builder->transformNotificationEmailsArrayAsString($notification->emails),
+                    $notification->emails,
                     array(),
                     array()
                 );

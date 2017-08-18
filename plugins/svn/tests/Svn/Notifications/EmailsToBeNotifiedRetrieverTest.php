@@ -92,7 +92,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     1,
                     $this->repository,
                     '/path',
-                    'jdoe@example.com, jsmith@example.com',
+                    array('jdoe@example.com', 'jsmith@example.com'),
                     array(),
                     array()
                 )
@@ -115,7 +115,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     1,
                     $this->repository,
                     '/path',
-                    'jsmith@example.com',
+                    array('jsmith@example.com'),
                     array(),
                     array()
                 ),
@@ -123,7 +123,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     2,
                     $this->repository,
                     '/path',
-                    'jdoe@example.com',
+                    array('jdoe@example.com'),
                     array(),
                     array()
                 )
@@ -146,7 +146,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     1,
                     $this->repository,
                     '/path',
-                    '',
+                    array(),
                     array(),
                     array()
                 )
@@ -169,7 +169,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     101,
                     $this->repository,
                     '/path',
-                    'jsmith@example.com',
+                    array('jsmith@example.com'),
                     array(),
                     array()
                 ),
@@ -191,7 +191,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     101,
                     $this->repository,
                     '/path',
-                    'jsmith@example.com',
+                    array('jsmith@example.com'),
                     array(),
                     array()
                 ),
@@ -212,7 +212,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     1,
                     $this->repository,
                     '/path',
-                    'jsmith@example.com',
+                    array('jsmith@example.com'),
                     array(),
                     array()
                 ),
