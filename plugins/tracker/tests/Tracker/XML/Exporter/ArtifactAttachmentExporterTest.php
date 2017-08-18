@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,9 +37,10 @@ class ArtifactAttachmentExporterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->archive_path    = dirname(__FILE__) . '/_fixtures/test.zip';
+        $this->archive_path    = $this->getTmpDir() . '/test.zip';
         $this->file01_path     = dirname(__FILE__) . '/_fixtures/file01.txt';
-        $this->extraction_path = dirname(__FILE__) . '/_fixtures/extracted/';
+        $this->extraction_path = $this->getTmpDir() . '/extraction';
+        mkdir($this->extraction_path);
 
         $this->initArchive();
     }

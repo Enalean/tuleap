@@ -67,7 +67,7 @@ class XMLSvnExporterTest extends TuleapTestCase
 
         $this->fixtures_dir = dirname(__FILE__) . '/../_fixtures';
 
-        $this->zip = new ZipArchive($this->fixtures_dir . '/archive.zip');
+        $this->zip = new ZipArchive($this->getTmpDir() . '/archive.zip');
 
         $repository = mock('Tuleap\Svn\Repository\Repository');
         stub($repository)->getName()->returns('MyRepo');
@@ -97,12 +97,10 @@ class XMLSvnExporterTest extends TuleapTestCase
         );
 
         ForgeConfig::store();
-        ForgeConfig::set('tmp_dir', '/tmp');
+        ForgeConfig::set('tmp_dir', $this->getTmpDir());
 
-        mkdir('/tmp/export');
-        mkdir('/tmp/export/svn');
-
-        touch($this->fixtures_dir . '/MyRepo.svn');
+        mkdir($this->getTmpDir() . '/tmp/export/svn', 0770, true);
+        touch($this->getTmpDir() . '/MyRepo.svn');
 
         $data = '<?xml version="1.0" encoding="UTF-8"?>
                  <projects />';
@@ -113,9 +111,6 @@ class XMLSvnExporterTest extends TuleapTestCase
     public function tearDown()
     {
         ForgeConfig::restore();
-        rmdir('/tmp/export/svn');
-        rmdir('/tmp/export');
-
         parent::tearDown();
     }
 

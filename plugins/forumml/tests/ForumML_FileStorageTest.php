@@ -1,26 +1,26 @@
 <?php
-
 /**
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * 
+ *
  * Originally written by Mohamed CHAARI, 2007.
- * 
+ *
  * This file is a part of codendi.
- * 
+ *
  * codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  * $Id$
  */
 
@@ -31,28 +31,12 @@ Mock::generatePartial('ForumML_FileStorage', 'ForumML_FileStorageTestVersion', a
 class ForumML_FileStorageTest extends TuleapTestCase {
     private $_fixture;
     private $_namePattern;
-    
+
     public function setUp()
     {
         parent::setUp();
-        $this->_fixture = dirname(__FILE__) . '/_fixtures';
+        $this->_fixture = $this->getTmpDir();
         $this->_namePattern = "`[^a-z0-9_-]`i";
-    }
-
-    public function tearDown() {
-        $this->_deleteIfExists($this->_fixture.'/gpig-interest/2007_10_24/Screenshot_jpg');
-        $this->_deleteIfExists($this->_fixture.'/gpig-interest/2007_10_24');
-        $this->_deleteIfExists($this->_fixture.'/gpig-interest');
-
-        parent::tearDown();
-    }
-
-    private function _deleteIfExists($path) {
-        if (is_dir($path)) {
-            rmdir($path);
-        } elseif (file_exists($path)) {
-            unlink($path);
-        }
     }
 
     private function _getFileStorage($path) {
@@ -68,8 +52,8 @@ class ForumML_FileStorageTest extends TuleapTestCase {
 		$this->assertIsA($fstorage->root, 'string');
 		$this->assertEqual($fstorage->root,$this->_fixture);
 	}
-	
-    // case 1: an attachment file whose name has more than 64 characters  		
+
+    // case 1: an attachment file whose name has more than 64 characters
 	function test_getPathFileNameWithMoreThan64Char() {
 		$fs1 = $this->_getFileStorage($this->_fixture);
 		$name1 = "a string with more than 64 characters, which is the limit allowed for ForumML attachments";
@@ -108,15 +92,15 @@ class ForumML_FileStorageTest extends TuleapTestCase {
 		$this->assertNotNull($path2);
 		$this->assertIsA($path2, 'string');
 		$path_array2 = explode("/",$path2);
-		$fname2 = $path_array2[count($path_array2) - 1];		
-		$this->assertEqual($fname2,"filename_less_than_64_chars");				
+		$fname2 = $path_array2[count($path_array2) - 1];
+		$this->assertEqual($fname2,"filename_less_than_64_chars");
 		$this->assertNotEqual(strlen($fname2),64);
 		// check path components
 		$flist2 = $path_array2[count($path_array2) - 3];
 		$this->assertEqual($flist2,$list1);
 		$fdate2 = $path_array2[count($path_array2) - 2];
-		$this->assertEqual($fdate2,$date1);		
-		// check regexp		
+		$this->assertEqual($fdate2,$date1);
+		// check regexp
 		$this->assertPattern($this->_namePattern,$name2);
     }
 
@@ -151,14 +135,14 @@ class ForumML_FileStorageTest extends TuleapTestCase {
 		$fname4 = $path_array4[count($path_array4) - 1];
 		$this->assertPattern('/^attachment.*/', $fname4);
 	}
-	
+
     // case 5: same attachment name submitted 2 times same day for same list
     function testGetPathWithSameFileName() {
         $fs = new ForumML_FileStorageTestVersion($this);
         $fs->root = $this->_fixture;
         $fs->setReturnValueAt(0, 'fileExists', false);
         $fs->setReturnValueAt(1, 'fileExists', true);
- 
+
         $list = "gpig-interest";
 		$date = "2007_10_24";
 		$type = "store";

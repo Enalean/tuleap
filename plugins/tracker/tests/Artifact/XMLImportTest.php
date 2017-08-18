@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -95,7 +95,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
         $this->artifact = mock('Tracker_Artifact');
 
-        $this->extraction_path = dirname(__FILE__) . '/_fixtures';
+        $this->extraction_path = $this->getTmpDir();
 
         $this->static_value_dao = mock('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
@@ -116,11 +116,6 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
             mock('Tracker_ArtifactFactory'),
             mock('\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao')
         );
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        unset($GLOBALS['Response']);
     }
 }
 
@@ -888,11 +883,6 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
-    public function tearDown() {
-        parent::tearDown();
-        unlink($this->extraction_path.'/34_File33.png');
-    }
-
     public function itCreatesAChangesetWithSummaryWhenFileFormElementDoesNotExist() {
         stub($this->artifact_creator)->createBare()->returns(mock('Tracker_Artifact'));
         $data = array(
@@ -1030,12 +1020,6 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
 
-    public function tearDown() {
-        parent::tearDown();
-        unlink($this->extraction_path.'/34_File33.png');
-        unlink($this->extraction_path.'/34_File34.pdf');
-    }
-
     public function itCreatesAChangesetWithTwoFileElements() {
         stub($this->artifact_creator)->createBare()->returns(mock('Tracker_Artifact'));
         stub($this->artifact_creator)->createFirstChangeset()->returns(mock('Tracker_Artifact'));
@@ -1125,13 +1109,6 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
 
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
     }
-
-    public function tearDown() {
-        parent::tearDown();
-        unlink($this->extraction_path.'/34_File33.png');
-        unlink($this->extraction_path.'/34_File34.pdf');
-    }
-
 
     public function itCreatesChangesetsThatOnlyReferenceConcernedFiles() {
         $artifact = mock('Tracker_Artifact');
