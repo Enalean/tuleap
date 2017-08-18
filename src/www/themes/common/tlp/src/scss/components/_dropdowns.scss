@@ -208,6 +208,9 @@ div.flatpickr-calendar {
     }
 
     > .flatpickr-month {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         padding: 10px;
         border: 1px solid $tlp-theme-color;
         border-radius: $tlp-dropdown-radius $tlp-dropdown-radius 0 0;
@@ -216,16 +219,26 @@ div.flatpickr-calendar {
 
         > .flatpickr-prev-month,
         > .flatpickr-next-month {
+            display: flex;
             position: relative;
-            bottom: -2px;
+            top: auto;
+            right: auto;
+            left: auto;
+            align-items: center;
+            justify-content: center;
             width: 25px;
             height: 25px;
+            float: none;
             border-radius: 50%;
             font-size: 16px;
 
             &:hover {
                 background: $tlp-ui-white;
                 color: $tlp-theme-color;
+            }
+
+            > .fa {
+                line-height: 25px;
             }
         }
 
