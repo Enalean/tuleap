@@ -333,8 +333,6 @@ class Account_TimezonesCollection {
         'CET',
         'Chile/Continental',
         'Chile/EasterIsland',
-        'China/Beijing',
-        'China/Shanghai',
         'CST6CDT',
         'Cuba',
         'EET',
