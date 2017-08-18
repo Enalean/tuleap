@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -32,19 +32,12 @@ class SystemEventProcessManagerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->fixtures_dir = dirname(__FILE__).'/_fixtures';
+        $this->fixtures_dir = $this->getTmpDir();
         $this->fixture_file = $this->fixtures_dir.'/tuleap_process_system_event.pid';
-        mkdir($this->fixtures_dir);
 
         $this->process = stub('SystemEventProcess')->getPidFile()->returns($this->fixture_file);
 
         $this->process_manager = new SystemEventProcessManager();
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        $this->recurseDeleteInDir($this->fixtures_dir);
-        rmdir($this->fixtures_dir);
     }
 
     public function itWritesPidFileOnStart() {

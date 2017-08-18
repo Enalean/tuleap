@@ -49,11 +49,11 @@ class PluginManagerTest extends TuleapTestCase {
     function testGetAllPlugins() {
         //The plugins
         $plugins        = new MockCollection($this);
-        
+
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->setReturnReference('getAllPlugins', $plugins);
-        
+
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
@@ -62,14 +62,14 @@ class PluginManagerTest extends TuleapTestCase {
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
         );
-        
+
         $this->assertReference($pm->getAllPlugins(), $plugins);
     }
-    
+
     function testIsPluginAvailable() {
         //The plugins
         $plugin = new MockPlugin($this);
-        
+
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->setReturnValueAt(0, 'isPluginAvailable', true);
@@ -84,16 +84,16 @@ class PluginManagerTest extends TuleapTestCase {
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
         );
-        
+
         $this->assertTrue($pm->isPluginAvailable($plugin));
         $this->assertFalse($pm->isPluginAvailable($plugin));
     }
-    
+
     function testEnablePlugin() {
         //The plugins
         $plugin = new MockPlugin($this);
         $plugin->setReturnValue('canBeMadeAvailable', true);
-        
+
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('availablePlugin');
@@ -109,13 +109,13 @@ class PluginManagerTest extends TuleapTestCase {
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
         );
-        
+
         $pm->availablePlugin($plugin);
     }
     function testDisablePlugin() {
         //The plugins
         $plugin = new MockPlugin($this);
-        
+
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('unavailablePlugin');
@@ -131,37 +131,21 @@ class PluginManagerTest extends TuleapTestCase {
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
         );
-        
+
         $pm->unavailablePlugin($plugin);
     }
 
-    function _remove_directory($dir) {
-      if ($handle = opendir("$dir")) {
-       while (false !== ($item = readdir($handle))) {
-         if ($item != "." && $item != "..") {
-           if (is_dir("$dir/$item")) {
-             $this->_remove_directory("$dir/$item");
-           } else {
-             unlink("$dir/$item");
-           }
-         }
-       }
-       closedir($handle);
-       rmdir($dir);
-      }
-    }
-
     function testInstallPlugin() {
-        $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
-        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
-        $GLOBALS['sys_pluginsroot'] = dirname(__FILE__).'/test/custom/';
+        $GLOBALS['sys_pluginsroot'] = $this->getTmpDir().'/test/custom/';
+        $GLOBALS['sys_custompluginsroot'] = $this->getTmpDir().'/test/custom/';
+        $GLOBALS['sys_pluginsroot'] = $this->getTmpDir().'/test/custom/';
 
-        mkdir(dirname(__FILE__).'/test');
-        mkdir(dirname(__FILE__).'/test/custom');
+        mkdir($this->getTmpDir().'/test');
+        mkdir($this->getTmpDir().'/test/custom');
 
         //The plugins
         $plugin = new MockPlugin($this);
-        
+
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('createPlugin', array('New_Plugin'));
@@ -185,14 +169,12 @@ class PluginManagerTest extends TuleapTestCase {
         );
 
         $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
-        
+
         // plugin manager must call postInstall 1 time on plugin after its creation
         $plugin->expectCallCount('postInstall', 1);
 
         // Plugin dir was created in "/etc"
-        $this->assertTrue(is_dir(dirname(__FILE__).'/test/custom/New_Plugin'));
-
-        $this->_remove_directory(dirname(__FILE__).'/test');
+        $this->assertTrue(is_dir($this->getTmpDir().'/test/custom/New_Plugin'));
     }
 
     function testIsNameValide() {
@@ -212,12 +194,12 @@ class PluginManagerTest extends TuleapTestCase {
         $this->assertFalse($pm->isNameValid('\\'));
         $this->assertFalse($pm->isNameValid('.'));
     }
-    
+
     function testGetPluginByname() {
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
         $plugin_factory->expectOnce('getPluginByName');
-        
+
         //The plugins manager
         $pm = new PluginManager(
             $plugin_factory,
@@ -226,7 +208,7 @@ class PluginManagerTest extends TuleapTestCase {
             mock('ForgeUpgradeConfig'),
             mock('Tuleap\Markdown\ContentInterpretor')
         );
-        
+
         $pm->getPluginByName('plugin_name');
     }
 }

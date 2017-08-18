@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All rights reserved
+ * Copyright (c) Enalean 2011 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ class BackendAliasesTest extends TuleapTestCase {
     private $alias_file;
 
     public function setUp() {
-        $GLOBALS['alias_file'] = dirname(__FILE__) . '/_fixtures/etc/aliases.codendi';
+        $GLOBALS['alias_file'] = $this->getTmpDir() . '/aliases.codendi';
         $this->alias_file      = $GLOBALS['alias_file'];
 
         $udao = mock('UserDao');

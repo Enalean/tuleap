@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $GLOBALS['homedir_prefix'] = dirname(__FILE__).'/_fixtures/users';
+        $GLOBALS['homedir_prefix'] = $this->getTmpDir();
         $this->toto_name = 'toto';
         $this->toto_home = $GLOBALS['homedir_prefix'].'/'.$this->toto_name;
         mkdir($this->toto_home);
@@ -57,16 +57,10 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        parent::tearDown();
-
         EventManager::clearInstance();
         unset($GLOBALS['homedir_prefix']);
-        $backend = Backend::instance();
-        $backend->recurseDeleteInDir($this->toto_home);
-        rmdir($this->toto_home);
 
-        $backend->recurseDeleteInDir($this->foobar_home);
-        rmdir($this->foobar_home);
+        parent::tearDown();
     }
 
     public function itDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount() {

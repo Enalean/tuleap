@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 – 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/wiki/lib/WikiAttachment.class.php');
@@ -27,8 +28,8 @@ class WikiAttachmentTest extends TuleapTestCase {
 
     public function tearDown()
     {
-        parent::tearDown();
         clearstatcache();
+        parent::tearDown();
     }
 
     function testGetFilesystemName() {
@@ -47,7 +48,7 @@ class WikiAttachmentTest extends TuleapTestCase {
     function testCreateNoFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
-        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        $wa->basedir = $this->getTmpDir();
         $wa->setReturnValue('dbadd', true);
 
         $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
@@ -61,7 +62,8 @@ class WikiAttachmentTest extends TuleapTestCase {
     function testCreateFolderAlreadyExistNoFilesystemName() {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('toto.txt');
-        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        $wa->basedir = $this->getTmpDir();
+        mkdir("$wa->basedir/toto.txt");
         $wa->setReturnValue('dbadd', true);
 
         $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
@@ -75,7 +77,7 @@ class WikiAttachmentTest extends TuleapTestCase {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
-        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        $wa->basedir = $this->getTmpDir();
         $wa->setReturnValue('dbadd', true);
         mkdir($wa->basedir.'/'.$wa->getFilesystemName());
 
@@ -92,7 +94,7 @@ class WikiAttachmentTest extends TuleapTestCase {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
-        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        $wa->basedir = $this->getTmpDir();
         $wa->setReturnValue('dbadd', true);
 
         $this->assertFalse(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
@@ -108,7 +110,7 @@ class WikiAttachmentTest extends TuleapTestCase {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
-        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        $wa->basedir = $this->getTmpDir();
         mkdir($wa->basedir.'/'.$wa->getFilesystemName());
         touch($wa->basedir.'/'.$wa->getFilesystemName().'/0');
 
@@ -125,7 +127,7 @@ class WikiAttachmentTest extends TuleapTestCase {
         $wa = new WikiAttachmentTestVersion();
         $wa->setFilename('testing.txt');
         $wa->initFilesystemName();
-        $wa->basedir = dirname(__FILE__).'/_fixtures';
+        $wa->basedir = $this->getTmpDir();
         mkdir($wa->basedir.'/'.$wa->getFilesystemName());
         touch($wa->basedir.'/'.$wa->getFilesystemName().'/0');
         touch($wa->basedir.'/'.$wa->getFilesystemName().'/1');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
     // Use of construct/destruct to save time (avoid destruction and recreate of svn repo each time)
     public function __construct() {
         parent::__construct();
-        $this->svn_prefix = dirname(__FILE__).'/_fixtures';
+        $this->svn_prefix = $this->tempdir();
         $project_name = 'svnrepo';
         $this->project = stub('Project')->getSVNRootPath()->returns($this->svn_prefix . '/' . $project_name);
         $this->svnrepo = $this->svn_prefix . '/' . $project_name;
@@ -36,8 +36,13 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
         exec("svn mkdir --parents -m 'that is 2.0' file://$this->svnrepo/tags/2.0");
     }
 
+    // We cannot use parent::getTmpDir() else the svn_prefix folder will be wiped during the teardown
+    private function tempdir() {
+        return trim(`mktemp -d -p /tmp svn_tests_XXXXXX`);
+    }
+
     public function __destruct() {
-        exec("/bin/rm -rf $this->svnrepo");
+        exec("/bin/rm -rf $this->svn_prefix");
     }
 
     public function setUp() {

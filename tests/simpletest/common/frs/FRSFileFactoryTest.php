@@ -1,4 +1,23 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('common/frs/FRSFileFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
@@ -34,12 +53,14 @@ class FRSFileFactoryTest extends TuleapTestCase
 {
 
     function setUp() {
+        parent::setUp();
         $GLOBALS['Language']           = new MockBaseLanguage($this);
-        $GLOBALS['ftp_frs_dir_prefix'] = dirname(__FILE__).'/_fixtures';
-        $GLOBALS['ftp_incoming_dir']   = dirname(__FILE__).'/_fixtures';
+        $GLOBALS['ftp_frs_dir_prefix'] = $this->getTmpDir();
+        $GLOBALS['ftp_incoming_dir']   = $this->getTmpDir();
         ForgeConfig::store();
         ForgeConfig::set('ftp_frs_dir_prefix', $GLOBALS['ftp_frs_dir_prefix']);
         ForgeConfig::set('ftp_incoming_dir', $GLOBALS['ftp_incoming_dir']);
+        copy(__DIR__ . '/_fixtures/file_sample', $GLOBALS['ftp_incoming_dir'] . '/file_sample');
     }
 
     function tearDown() {
@@ -47,6 +68,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         unset($GLOBALS['ftp_frs_dir_prefix']);
         unset($GLOBALS['ftp_incoming_dir']);
         ForgeConfig::restore();
+        parent::tearDown();
     }
 
     function testgetUploadSubDirectory() {
@@ -581,7 +603,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
-         
+
         // Cleanup
         $this->removeDeletedReleaseDir('prj', 'p1_r1', '');
         $this->removeRelease('prj', 'p1_r1', 'toto.xls');
@@ -616,7 +638,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
-         
+
         // Cleanup
         $this->removeDeletedReleaseDir('prj', 'p1_r1', '');
         $this->removeRelease('prj', 'p1_r1', '');
@@ -964,7 +986,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $r->setPackageID(123);
         $r->setGroupID(1112);
         $r->setProject($p);
-        
+
         $f = new FRSFile();
         $f->setRelease($r);
         $f->setGroup($p);
