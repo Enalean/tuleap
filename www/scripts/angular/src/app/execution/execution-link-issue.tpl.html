@@ -1,0 +1,59 @@
+<form class="tlp-modal"
+    name="linkIssueForm"
+    ng-submit="modal.linkIssue()"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" translate>Link "{{ modal.test_summary }}" to an existing bug</h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">&times;</div>
+    </div>
+
+    <div class="tlp-modal-body">
+        <div class="tlp-property">
+            <p translate>Enter the id of the bug you want to link to "{{ modal.test_summary }}". The description of this test will be added as a follow-up comment to the linked bug.</p>
+        </div>
+        <div class="tlp-form-element"
+            ng-class="{ 'tlp-form-element-error': linkIssueForm.issue_id.$dirty && linkIssueForm.issue_id.$invalid }">
+            <label class="tlp-label" for="issue-id">
+                <span translate>Bug Id</span> <i class="fa fa-asterisk"></i>
+            </label>
+            <div class="link-issue-modal-input-container">
+                <input type="number"
+                    class="tlp-input"
+                    size="15"
+                    id="issue-id"
+                    name="issue_id"
+                    ng-model="modal.issue.id"
+                    required="required"
+                    ng-trim
+                    auto-focus
+                />
+                <div class="link-issue-modal-input-info">
+                    <span class="tlp-text-danger"
+                        ng-show="(linkIssueForm.$dirty && linkIssueForm.$invalid) || modal.error_message"
+                    >
+                        <span ng-if="linkIssueForm.issue_id.$invalid" translate>Invalid artifact id.</span>
+                        {{ modal.error_message }}
+                        <i class="fa fa-frown-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-outline tlp-modal-action"
+            data-dismiss="modal"
+            translate
+        >Cancel</button>
+        <button
+            type="submit"
+            class="tlp-button-primary tlp-modal-action"
+            ng-disabled="modal.linking_in_progress || ! linkIssueForm.$valid">
+            <i class="fa fa-spinner fa-spin" ng-if="modal.linking_in_progress"></i>
+            <span translate>Link</span>
+        </button>
+
+    </div>
+</form>

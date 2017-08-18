@@ -78,7 +78,7 @@ class IndexPresenter {
         $test_definition_tracker_id,
         $test_execution_tracker_id,
         $issue_tracker_id,
-        $issue_tracker_access,
+        $issue_tracker_permissions,
         PFUser $current_user,
         $current_milestone
     ) {
@@ -104,8 +104,8 @@ class IndexPresenter {
             'issue_tracker_id'      => $this->issue_tracker_id
         ));
 
-        $this->tracker_permissions = json_encode(array(
-            'issue_tracker_access' => $issue_tracker_access
+        $this->issue_tracker_config = json_encode(array(
+            'permissions' => $issue_tracker_permissions
         ));
 
         if (isset($current_milestone)) {

@@ -41,6 +41,7 @@ use Tracker_NoChangeException;
 use TrackerFactory;
 use Tracker_URLVerification;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\RealTime\NodeJSClient;
 use Tracker_Permission_PermissionsSerializer;
@@ -57,6 +58,9 @@ class ExecutionsResource {
     const FIELD_STATUS       = 'status';
     const FIELD_TIME         = 'time';
     const HTTP_CLIENT_UUID   = 'HTTP_X_CLIENT_UUID';
+
+    /** @var Config */
+    private $config;
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -83,15 +87,15 @@ class ExecutionsResource {
     private $permissions_serializer;
 
     public function __construct() {
-        $config                      = new Config(new Dao());
-        $conformance_validator       = new ConfigConformanceValidator($config);
+        $this->config                = new Config(new Dao());
+        $conformance_validator       = new ConfigConformanceValidator($this->config);
 
         $this->user_manager          = UserManager::instance();
         $this->tracker_factory       = TrackerFactory::instance();
         $this->formelement_factory   = Tracker_FormElementFactory::instance();
         $this->artifact_factory      = Tracker_ArtifactFactory::instance();
         $this->trafficlights_artifact_factory = new ArtifactFactory(
-            $config,
+            $this->config,
             $conformance_validator,
             $this->artifact_factory,
             new ArtifactDao()
@@ -126,6 +130,13 @@ class ExecutionsResource {
      * @url OPTIONS {id}/presences
      */
     public function optionsPresences() {
+        Header::allowOptionsPatch();
+    }
+
+    /**
+     * @url OPTIONS {id}/issues
+     */
+    public function optionsIssues() {
         Header::allowOptionsPatch();
     }
 
@@ -206,12 +217,7 @@ class ExecutionsResource {
             $changes         = $this->getChanges($status, $time, $results, $artifact, $user);
             $previous_status = $this->getPreviousStatus($artifact);
             $previous_user   = $this->getPreviousSubmittedBy($artifact);
-
-            $updater = new Tracker_REST_Artifact_ArtifactUpdater(
-                new Tracker_REST_Artifact_ArtifactValidator(
-                    $this->formelement_factory
-                )
-            );
+            $updater         = $this->getArtifactUpdater();
 
             $updater->update($user, $artifact, $changes);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
@@ -300,6 +306,65 @@ class ExecutionsResource {
         }
 
         $this->optionsPresences();
+    }
+
+    /**
+     * Create an artifact link between an issue and a test execution
+     *
+     * @url PATCH {id}/issues
+     *
+     * @param string                         $id        Id of the test execution artifact
+     * @param string                         $issue_id  Id of the issue artifact {@from body}
+     * @param ChangesetCommentRepresentation $comment   Comment describing the test execution {body, format} {@from body}
+     *
+     * @throws 400
+     * @throws 404
+     * @throws 500
+     */
+    protected function patchIssueLink($id, $issue_id, ChangesetCommentRepresentation $comment = null)
+    {
+        $user               = $this->user_manager->getCurrentUser();
+        $execution_artifact = $this->getArtifactById($user, $id);
+        $issue_artifact     = $this->getArtifactById($user, $issue_id);
+
+        if (! $execution_artifact || ! $issue_artifact) {
+            throw new RestException(404);
+        }
+
+        $tracker = $issue_artifact->getTracker();
+        if ($tracker->getId() !== $this->config->getIssueTrackerId($tracker->getProject())) {
+            throw new RestException(400, 'The given artifact does not belong to issue tracker');
+        }
+
+        $is_linked = $issue_artifact->linkArtifact($execution_artifact->getId(), $user);
+        if (! $is_linked) {
+            throw new RestException(400, 'Could not link the issue artifact to the test execution');
+        }
+
+        try {
+            $updater = $this->getArtifactUpdater();
+            $updater->update($user, $issue_artifact, array(), $comment);
+        } catch (Tracker_FormElement_InvalidFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoChangeException $exception) {
+            // Do nothing
+        } catch (Tracker_Exception $exception) {
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
+            }
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $this->optionsIssues();
+    }
+
+    private function getArtifactUpdater()
+    {
+        return new Tracker_REST_Artifact_ArtifactUpdater(
+            new Tracker_REST_Artifact_ArtifactValidator(
+                $this->formelement_factory
+            )
+        );
     }
 
     /** @return array */

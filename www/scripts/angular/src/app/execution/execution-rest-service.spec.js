@@ -103,4 +103,46 @@ describe ('ExecutionRestService - ', function () {
             expect(response.status).toEqual(200);
         });
     });
+
+    it("linkIssue() - ", function() {
+        var issueId   = 400;
+        var execution = {
+            id: 100,
+            previous_result: {
+                result: 'Something wrong'
+            },
+            definition: {
+                summary: 'test summary',
+                description: 'test description'
+            }
+        };
+
+        var expectedBody = new RegExp(execution.definition.summary
+                                    + ".*"
+                                    + execution.definition.description);
+        var matchPayload = {
+            id: issueId,
+            comment: {
+                body  : 'MATCHING TEST SUMMARY + DESCRIPTION',
+                format: 'html'
+            },
+            test: function(data) {
+                var payload = JSON.parse(data);
+                return payload.issue_id === issueId &&
+                    expectedBody.test(payload.comment.body) &&
+                    payload.comment.format === 'html';
+            }
+        };
+        mockBackend
+            .expectPATCH('/api/v1/trafficlights_executions/100/issues', matchPayload)
+            .respond();
+
+        var promise = ExecutionRestService.linkIssue(issueId, execution);
+
+        mockBackend.flush();
+
+        promise.then(function(response) {
+            expect(response.status).toEqual(200);
+        });
+    });
 });

@@ -28,6 +28,7 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
     private $tracker_factory;
 
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
+    const ISSUE_TRACKER_SHORTNAME     = 'bugs';
 
     const USER_TESTER_NAME   = 'rest_api_ttl_1';
     const USER_TESTER_PASS   = 'welcome0';

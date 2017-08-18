@@ -214,6 +214,15 @@
     margin: 0 4px 0 0;
 }
 
+.link-issue-modal-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.link-issue-modal-input-info {
+    margin-left: 10px;
+}
+
 .linked-issue-alert {
     display: flex;
 }

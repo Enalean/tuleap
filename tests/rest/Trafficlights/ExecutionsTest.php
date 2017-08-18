@@ -19,6 +19,8 @@
  */
 namespace Trafficlights;
 
+use TrafficlightsDataBuilder;
+
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
@@ -49,10 +51,42 @@ class ExecutionsTest extends BaseTest {
         ))));
     }
 
-    private function getLastExecutionForValid73Campaign() {
+    public function testPatchIssueLinkExecutions()
+    {
+        $issue_tracker_id = $this->tracker_ids[$this->project_id][TrafficlightsDataBuilder::ISSUE_TRACKER_SHORTNAME];
+
+        $issue    = $this->getLastArtifactFromTracker($issue_tracker_id);
+        $issue_id = $issue['id'];
+
+        $execution = $this->getLastExecutionForValid73Campaign();
+        $response  = $this->getResponse($this->client->patch(
+            'trafficlights_executions/'. $execution['id'] . '/issues',
+            null,
+            json_encode(array(
+                'issue_id' => $issue_id,
+                'comment'  => array(
+                    'body'     => 'test result',
+                    'format'   => 'html'
+                )
+            ))
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $issue_links = $this->getArtifactData($issue_id, '/linked_artifacts?direction=forward');
+
+        $this->assertEquals($execution['id'], $issue_links['collection'][0]['id']);
+
+        $comments = $this->getArtifactData($issue_id, '/changesets?fields=comments');
+
+        $this->assertEquals('test result', $comments[0]['last_comment']['body']);
+    }
+
+    private function getLastExecutionForValid73Campaign()
+    {
         $campaign = $this->getValid73Campaign();
 
-        $all_executions_request  = $this->client->get('trafficlights_campaigns/'. $campaign['id'] .'/trafficlights_executions');
+        $all_executions_request  = $this->client->get('trafficlights_campaigns/'. $campaign['id'] . '/trafficlights_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
 
         $executions     = $all_executions_response->json();
@@ -60,5 +94,24 @@ class ExecutionsTest extends BaseTest {
         $this->assertEquals('Import default template', $last_execution['definition']['summary']);
 
         return $last_execution;
+    }
+
+    private function getLastArtifactFromTracker($tracker_id)
+    {
+        $all_artifacts_request  = $this->client->get('trackers/'. $tracker_id . '/artifacts');
+        $all_artifacts_response = $this->getResponse($all_artifacts_request);
+
+        $artifacts      = $all_artifacts_response->json();
+        $last_artifact = end($artifacts);
+
+        return $last_artifact;
+    }
+
+    private function getArtifactData($artifact_id, $optional_querypath = '')
+    {
+        $artifact_request  = $this->client->get('artifacts/'. $artifact_id . $optional_querypath);
+        $artifact_response = $this->getResponse($artifact_request);
+
+        return $artifact_response->json();
     }
 }

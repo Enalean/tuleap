@@ -20,9 +20,14 @@
 
 namespace Tuleap\Trafficlights;
 
-class IndexController extends TrafficlightsController {
+use Tracker_FormElementFactory;
 
-    public function index() {
+class IndexController extends TrafficlightsController
+{
+
+    public function index()
+    {
+        $current_user = $this->request->getCurrentUser();
         return $this->renderToString(
             'index',
             new IndexPresenter(
@@ -31,19 +36,29 @@ class IndexController extends TrafficlightsController {
                 $this->config->getTestDefinitionTrackerId($this->project),
                 $this->config->getTestExecutionTrackerId($this->project),
                 $this->config->getIssueTrackerId($this->project),
-                $this->userCanLinkIssues(),
-                $this->request->getCurrentUser(),
+                $this->issueTrackerPermissionsForUser($current_user),
+                $current_user,
                 $this->current_milestone
             )
         );
     }
 
-    public function userCanLinkIssues()
+    public function issueTrackerPermissionsForUser($current_user)
     {
         $issue_tracker_id = $this->config->getIssueTrackerId($this->project);
         $issue_tracker    = $this->tracker_factory->getTrackerById($issue_tracker_id);
+        if (! $issue_tracker) {
+            return array(
+                "create" => false,
+                "link"   => false
+            );
+        }
 
-        return (! empty($issue_tracker)) &&
-            $issue_tracker->userCanSubmitArtifact($this->request->getCurrentUser());
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $link_field           = $form_element_factory->getAnArtifactLinkField($current_user, $issue_tracker);
+        return array(
+            "create" => $issue_tracker->userCanSubmitArtifact($current_user),
+            "link"   => $link_field && $link_field->userCanUpdate($current_user)
+        );
     }
 }

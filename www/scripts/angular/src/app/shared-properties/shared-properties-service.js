@@ -13,30 +13,30 @@ function SharedPropertiesService() {
     };
 
     return {
-        getProjectId           : getProjectId,
-        setProjectId           : setProjectId,
-        getCampaignId          : getCampaignId,
-        setCampaignId          : setCampaignId,
-        getCurrentUser         : getCurrentUser,
-        setCurrentUser         : setCurrentUser,
-        getNodeServerAddress   : getNodeServerAddress,
-        setNodeServerAddress   : setNodeServerAddress,
-        getUUID                : getUUID,
-        setUUID                : setUUID,
-        setNodeServerVersion   : setNodeServerVersion,
-        getNodeServerVersion   : getNodeServerVersion,
-        setCampaignTrackerId   : setCampaignTrackerId,
-        getCampaignTrackerId   : getCampaignTrackerId,
-        setDefinitionTrackerId : setDefinitionTrackerId,
-        getDefinitionTrackerId : getDefinitionTrackerId,
-        setExecutionTrackerId  : setExecutionTrackerId,
-        getExecutionTrackerId  : getExecutionTrackerId,
-        setIssueTrackerId      : setIssueTrackerId,
-        getIssueTrackerId      : getIssueTrackerId,
-        setAccessToIssueTracker: setAccessToIssueTracker,
-        canAccessIssueTracker  : canAccessIssueTracker,
-        getCurrentMilestone    : getCurrentMilestone,
-        setCurrentMilestone    : setCurrentMilestone
+        getProjectId          : getProjectId,
+        setProjectId          : setProjectId,
+        getCampaignId         : getCampaignId,
+        setCampaignId         : setCampaignId,
+        getCurrentUser        : getCurrentUser,
+        setCurrentUser        : setCurrentUser,
+        getNodeServerAddress  : getNodeServerAddress,
+        setNodeServerAddress  : setNodeServerAddress,
+        getUUID               : getUUID,
+        setUUID               : setUUID,
+        setNodeServerVersion  : setNodeServerVersion,
+        getNodeServerVersion  : getNodeServerVersion,
+        setCampaignTrackerId  : setCampaignTrackerId,
+        getCampaignTrackerId  : getCampaignTrackerId,
+        setDefinitionTrackerId: setDefinitionTrackerId,
+        getDefinitionTrackerId: getDefinitionTrackerId,
+        setExecutionTrackerId : setExecutionTrackerId,
+        getExecutionTrackerId : getExecutionTrackerId,
+        setIssueTrackerId     : setIssueTrackerId,
+        getIssueTrackerId     : getIssueTrackerId,
+        setIssueTrackerConfig : setIssueTrackerConfig,
+        getIssueTrackerConfig : getIssueTrackerConfig,
+        getCurrentMilestone   : getCurrentMilestone,
+        setCurrentMilestone   : setCurrentMilestone
     };
 
     function getProjectId() {
@@ -119,12 +119,12 @@ function SharedPropertiesService() {
         return property.issue_tracker_id;
     }
 
-    function setAccessToIssueTracker(flag) {
-        property.can_access_issue_tracker = flag;
+    function setIssueTrackerConfig(config) {
+        property.issue_tracker_config = config;
     }
 
-    function canAccessIssueTracker() {
-        return property.can_access_issue_tracker;
+    function getIssueTrackerConfig() {
+        return property.issue_tracker_config;
     }
 
     function getCurrentMilestone() {

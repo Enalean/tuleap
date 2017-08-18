@@ -34,6 +34,10 @@ msgstr "Bloqué"
 msgid "Bug"
 msgstr "Le bug"
 
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "Bug Id"
+msgstr "Id bug"
+
 #: src/app/execution/execution-detail-controller.js
 msgid "Campaign"
 msgstr "Campagne"
@@ -53,6 +57,7 @@ msgstr "Campagnes"
 
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
+#: src/app/execution/execution-link-issue.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -62,6 +67,7 @@ msgstr "Sélectionner les tests"
 
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
+#: src/app/execution/execution-link-issue.tpl.html
 #: src/app/execution/execution-presences.tpl.html
 msgid "Close"
 msgstr "Fermer"
@@ -102,6 +108,15 @@ msgstr "Éditer ce test"
 msgid "Edit {{ campaign.label }} campaign"
 msgstr "Édition de la campagne {{ campaign.label }}"
 
+#: src/app/execution/execution-link-issue.tpl.html
+msgid ""
+"Enter the id of the bug you want to link to \"{{ modal.test_summary }}\". "
+"The description of this test will be added as a follow-up comment to the "
+"linked bug."
+msgstr ""
+"Entrez l'id du bug à lier avec \"{{ modal.test_summary }}\". La description "
+"du test sera ajoutée en commentaire du bug lié."
+
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Failed"
@@ -129,9 +144,25 @@ msgstr "Id"
 msgid "Id, summary, category…"
 msgstr "Id, résumé, catégorie…"
 
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "Invalid artifact id."
+msgstr "Id artefact invalide."
+
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "Link"
+msgstr "Lier"
+
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "Link \"{{ modal.test_summary }}\" to an existing bug"
+msgstr "Lier \"{{ modal.test_summary }}\" à un bug existant"
+
 #: src/app/execution/execution-detail.tpl.html
 msgid "Link to a new bug"
 msgstr "Lier à un nouveau bug"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Link to an existing bug"
+msgstr "Lier à un bug existant"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"

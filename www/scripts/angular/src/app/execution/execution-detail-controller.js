@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import './execution-link-issue.tpl.html';
+
 export default ExecutionDetailCtrl;
 
 ExecutionDetailCtrl.$inject = [
@@ -14,7 +16,8 @@ ExecutionDetailCtrl.$inject = [
     'ArtifactLinksGraphService',
     'ArtifactLinksGraphModalLoading',
     'NewTuleapArtifactModalService',
-    'ExecutionRestService'
+    'ExecutionRestService',
+    'TlpModalService'
 ];
 
 function ExecutionDetailCtrl(
@@ -29,10 +32,12 @@ function ExecutionDetailCtrl(
     ArtifactLinksGraphService,
     ArtifactLinksGraphModalLoading,
     NewTuleapArtifactModalService,
-    ExecutionRestService
+    ExecutionRestService,
+    TlpModalService
 ) {
     var execution_id,
-        campaign_id;
+        campaign_id,
+        issue_config = SharedPropertiesService.getIssueTrackerConfig();
 
     $scope.pass                        = pass;
     $scope.fail                        = fail;
@@ -40,8 +45,11 @@ function ExecutionDetailCtrl(
     $scope.notrun                      = notrun;
     $scope.sanitizeHtml                = sanitizeHtml;
     $scope.getStatusLabel              = getStatusLabel;
-    $scope.canAccessIssueTracker       = SharedPropertiesService.canAccessIssueTracker();
+    $scope.linkMenuIsVisible           = issue_config.permissions.create || issue_config.permissions.link;
+    $scope.canCreateIssue              = issue_config.permissions.create;
+    $scope.canLinkIssue                = issue_config.permissions.link;
     $scope.showLinkToNewBugModal       = showLinkToNewBugModal;
+    $scope.showLinkToExistingBugModal  = showLinkToExistingBugModal;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
     $scope.showEditArtifactModal       = showEditArtifactModal;
     $scope.closeLinkedIssueAlert       = closeLinkedIssueAlert;
@@ -117,6 +125,25 @@ function ExecutionDetailCtrl(
             null,
             callback,
             prefill_values);
+    }
+
+    function showLinkToExistingBugModal() {
+        function callback(artifact_id) {
+            $scope.linkedIssueId           = artifact_id;
+            $scope.linkedIssueAlertVisible = true;
+        }
+
+        return TlpModalService.open({
+            templateUrl : 'execution-link-issue.tpl.html',
+            controller  : 'ExecutionLinkIssueCtrl',
+            controllerAs: 'modal',
+            resolve: {
+                modal_model: {
+                    test_execution: $scope.execution
+                },
+                modal_callback: callback
+            }
+        });
     }
 
     function closeLinkedIssueAlert() {

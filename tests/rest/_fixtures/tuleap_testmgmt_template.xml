@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-    unix-name="test-mgmt" full-name="Trafficlights" description="For test" access="public">
+<project unix-name="test-mgmt" full-name="Trafficlights" description="For test" access="public">
   <trackers>
     <tracker id="T805" parent_id="0" instantiate_for_new_projects="1">
       <name><![CDATA[Validation Campaign]]></name>
@@ -544,7 +543,7 @@
         <permission scope="field" REF="F11055" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
-    <tracker instantiate_for_new_projects="0">
+    <tracker id="T808" instantiate_for_new_projects="0">
       <name>Bugs</name>
       <item_name>bugs</item_name>
       <description>Bugs Tracker</description>
@@ -788,7 +787,7 @@
               <label>Cross references</label>
               <description>List of items referenced by or referencing this item.</description>
             </formElement>
-            <formElement type="art_link" ID="F29" rank="1" use_it="0">
+            <formElement type="art_link" ID="F29" rank="1" use_it="1">
               <name>references</name>
               <label>References</label>
               <properties size="30"/>
@@ -909,22 +908,22 @@
               </columns>
             </renderer>
             <renderer type="plugin_graphontrackersv5" rank="1">
-                <name>Charts</name>
-                <description>Graphic Report</description>
-                <charts>
-                    <chart type="pie" width="600" height="400" rank="0" base="F19">
-                        <title>Status</title>
-                        <description>Number of Artifacts by Status</description>
-                    </chart>
-                    <chart type="bar" width="600" height="400" rank="1" base="F11">
-                        <title>Severity</title>
-                        <description>Number of Artifacts by severity level</description>
-                    </chart>
-                    <chart type="pie" width="600" height="400" rank="2" base="F24">
-                        <title>Assignment</title>
-                        <description>Number of Artifacts by Assignee</description>
-                    </chart>
-                </charts>
+              <name>Charts</name>
+              <description>Graphic Report</description>
+              <charts>
+                <chart type="pie" width="600" height="400" rank="0" base="F19">
+                  <title>Status</title>
+                  <description>Number of Artifacts by Status</description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="1" base="F11">
+                  <title>Severity</title>
+                  <description>Number of Artifacts by severity level</description>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="2" base="F24">
+                  <title>Assignment</title>
+                  <description>Number of Artifacts by Assignee</description>
+                </chart>
+              </charts>
             </renderer>
           </renderers>
         </report>
@@ -966,62 +965,62 @@
         <field_id REF="F19"/>
         <is_used>1</is_used>
         <transitions>
-            <transition>
-                <from_id REF="null"/>
-                <to_id REF="F19-V0"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V0"/>
-                <to_id REF="F19-V1"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V0"/>
-                <to_id REF="F19-V2"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V0"/>
-                <to_id REF="F19-V4"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V1"/>
-                <to_id REF="F19-V2"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V1"/>
-                <to_id REF="F19-V4"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V3"/>
-                <to_id REF="F19-V4"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V4"/>
-                <to_id REF="F19-V5"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V5"/>
-                <to_id REF="F19-V3"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V5"/>
-                <to_id REF="F19-V4"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V0"/>
-                <to_id REF="F19-V3"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V1"/>
-                <to_id REF="F19-V3"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V2"/>
-                <to_id REF="F19-V3"/>
-            </transition>
-            <transition>
-                <from_id REF="F19-V2"/>
-                <to_id REF="F19-V4"/>
-            </transition>
+          <transition>
+            <from_id REF="null"/>
+            <to_id REF="F19-V0"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V0"/>
+            <to_id REF="F19-V1"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V0"/>
+            <to_id REF="F19-V2"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V0"/>
+            <to_id REF="F19-V4"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V1"/>
+            <to_id REF="F19-V2"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V1"/>
+            <to_id REF="F19-V4"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V3"/>
+            <to_id REF="F19-V4"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V4"/>
+            <to_id REF="F19-V5"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V5"/>
+            <to_id REF="F19-V3"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V5"/>
+            <to_id REF="F19-V4"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V0"/>
+            <to_id REF="F19-V3"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V1"/>
+            <to_id REF="F19-V3"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V2"/>
+            <to_id REF="F19-V3"/>
+          </transition>
+          <transition>
+            <from_id REF="F19-V2"/>
+            <to_id REF="F19-V4"/>
+          </transition>
         </transitions>
       </workflow>
       <permissions>
@@ -1079,6 +1078,18 @@
         <permission scope="field" REF="F34" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
         <!--TODO TRACKER_ADMIN <permission scope="field" REF="F31" ugroup="UGROUP_PLUGIN_TRACKER_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/> -->
       </permissions>
+      <artifacts>
+        <artifact id="1">
+          <changeset>
+            <submitted_by format="username">rest_api_ttl_1</submitted_by>
+            <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+            <comments/>
+            <field_change field_name="summary" type="string">
+              <value><![CDATA[Some bug]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
     </tracker>
   </trackers>
   <agiledashboard>

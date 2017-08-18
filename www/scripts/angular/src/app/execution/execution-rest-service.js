@@ -24,7 +24,8 @@ function ExecutionRestService(
         postTestExecution            : postTestExecution,
         putTestExecution             : putTestExecution,
         changePresenceOnTestExecution: changePresenceOnTestExecution,
-        leaveTestExecution           : leaveTestExecution
+        leaveTestExecution           : leaveTestExecution,
+        linkIssue                    : linkIssue
     });
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -86,6 +87,26 @@ function ExecutionRestService(
 
     function leaveTestExecution(execution_id) {
         return changePresenceOnTestExecution(execution_id, execution_id);
+    }
+
+    function linkIssue(issue_id, test_execution) {
+        var comment = '<p>' + test_execution.previous_result.result + '</p>'
+            + ' <em>' + test_execution.definition.summary + '</em><br/>'
+            + '<blockquote>' + test_execution.definition.description + '</blockquote>';
+
+        return rest
+            .one('trafficlights_executions', test_execution.id)
+            .all('issues')
+            .patch({
+                issue_id: issue_id,
+                comment : {
+                    body  : comment,
+                    format: 'html'
+                }
+            })
+            .catch(function (response) {
+                return Promise.reject(response.data.error);
+            });
     }
 }
 

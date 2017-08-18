@@ -39,12 +39,16 @@
 
             <div class="current-test-header-actions">
 
-                <div class="tlp-dropdown" ng-if="canAccessIssueTracker">
+                <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
                     <i class="fa fa-bug fa-fw current-test-header-action" id="dropdown-link-bug" open-tlp-dropdown></i>
                     <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
-                        <a class="tlp-dropdown-menu-item" role="menuitem" ng-click="showLinkToNewBugModal()">
+                        <a class="tlp-dropdown-menu-item" role="menuitem" ng-if="canCreateIssue" ng-click="showLinkToNewBugModal()">
                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i>
                             <span translate>Link to a new bug</span>
+                        </a>
+                        <a class="tlp-dropdown-menu-item" role="menuitem" ng-if="canLinkIssue" ng-click="showLinkToExistingBugModal()">
+                            <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link"></i>
+                            <span translate>Link to an existing bug</span>
                         </a>
                     </div>
                 </div>
