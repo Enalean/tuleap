@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -19,11 +20,11 @@
  */
 require_once('common/include/Codendi_File.class.php');
 class Codendi_FileTest extends TuleapTestCase {
-    
+
     protected $small_file;
     protected $big_file;
     protected $no_sufficient_space;
-    
+
     function __destruct() {
         if (file_exists($this->big_file)) {
             unlink($this->big_file);
@@ -31,15 +32,16 @@ class Codendi_FileTest extends TuleapTestCase {
     }
     function __construct($name = 'Codendi_File test') {
         parent::__construct($name);
-        $this->small_file     = dirname(__FILE__) . '/_fixtures/small_file';
-        $this->big_file       = dirname(__FILE__) . '/_fixtures/big_file';
+        $this->small_file     = $this->tempdir() .'/small_file';
+        $this->big_file       = $this->tempdir() .'/big_file';
         $this->test_big_files = true;
-        
+
+        file_put_contents($this->small_file, 'Small content');
         $realpath = $this->big_file;
         if (is_link($this->big_file)) {
             $realpath = readlink($this->big_file);
         }
-        
+
         if (!file_exists($realpath) || @filesize($realpath) === 0) { //save same ci time, create the big file only once
             touch($realpath);
             if (!file_exists($realpath)) {
@@ -54,13 +56,18 @@ class Codendi_FileTest extends TuleapTestCase {
             }
         }
     }
-    
+
+    // We cannot use parent::getTmpDir() else the svn_prefix folder will be wiped during the teardown
+    private function tempdir() {
+        return trim(`mktemp -d -p /tmp file_tests_XXXXXX`);
+    }
+
     function test_default_PHP_behavior() {
         $this->assertTrue(is_file($this->small_file));
-        $this->assertEqual(filesize($this->small_file), 14);
+        $this->assertEqual(filesize($this->small_file), 13);
         if ($this->test_big_files) {
             if (PHP_INT_SIZE == 4) {
-                $this->assertFalse(is_file($this->big_file)); // PHP 32 bits behavior is wrong with files > 4Gb. 
+                $this->assertFalse(is_file($this->big_file)); // PHP 32 bits behavior is wrong with files > 4Gb.
                                                               // Hope that it will be fixed one day
                                                               // PHP6?
                 $this->assertFalse(filesize($this->big_file));
@@ -71,15 +78,15 @@ class Codendi_FileTest extends TuleapTestCase {
             }
         }
     }
-    
+
     function test_our_hacks() {
         $big_file = $this->big_file;
         if (is_link($this->big_file)) {
             $big_file = readlink($this->big_file);
         }
-        
+
         $this->assertTrue(Codendi_File::isFile($this->small_file));
-        $this->assertEqual(Codendi_File::getSize($this->small_file), 14);
+        $this->assertEqual(Codendi_File::getSize($this->small_file), 13);
         if ($this->test_big_files) {
             $this->assertTrue(Codendi_File::isFile($big_file));
             $this->assertTrue(Codendi_File::getSize($big_file) > 4000000000);
@@ -87,4 +94,3 @@ class Codendi_FileTest extends TuleapTestCase {
         }
     }
 }
-?>

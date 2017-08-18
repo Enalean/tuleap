@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,7 @@ class UsersToBeImportedCollection_toCSVTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->output_filename = __DIR__ .'/_fixtures/output.csv';
+        $this->output_filename = $this->getTmpDir() . '/output.csv';
 
         $this->collection = new UsersToBeImportedCollection();
     }

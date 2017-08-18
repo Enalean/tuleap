@@ -155,7 +155,7 @@ class PluginTest extends TuleapTestCase {
         $this->assertNotEqual($p->getScope(), Plugin::SCOPE_USER);
     }
     function testGetPluginEtcRoot() {
-        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        $GLOBALS['sys_custompluginsroot'] = $this->getTmpDir().'/test/custom/';
         $shortname = 'shortname';
         $pm = new MockPluginManager($this);
         $pm->setReturnValue('getNameForPlugin', $shortname);
@@ -185,8 +185,8 @@ class PluginTest extends TuleapTestCase {
         $GLOBALS['sys_user_theme']        = 'current_theme';
         $GLOBALS['sys_pluginspath']       = '/plugins';
         $GLOBALS['sys_custompluginspath'] = '/customplugins';
-        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__).'/test/plugins/';
-        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        $GLOBALS['sys_pluginsroot']       = $this->getTmpDir().'/test/plugins/';
+        $GLOBALS['sys_custompluginsroot'] = $this->getTmpDir().'/test/custom/';
         mkdir(dirname($GLOBALS['sys_pluginsroot']));
 
         $shortname     = 'shortname';
@@ -281,8 +281,8 @@ class PluginTest extends TuleapTestCase {
         unset($GLOBALS['sys_user_theme']);
         $GLOBALS['sys_pluginspath']       = '/plugins';
         $GLOBALS['sys_custompluginspath'] = '/customplugins';
-        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__).'/test/plugins/';
-        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        $GLOBALS['sys_pluginsroot']       = $this->getTmpDir().'/test/plugins/';
+        $GLOBALS['sys_custompluginsroot'] = $this->getTmpDir().'/test/custom/';
 
         $shortname     = 'shortname';
         $pm = new MockPluginManager($this);

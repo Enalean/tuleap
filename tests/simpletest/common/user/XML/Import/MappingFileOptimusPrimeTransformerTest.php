@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->filename = __DIR__ .'/_fixtures/users.csv';
+        $this->filename = $this->getTmpDir() .'/users.csv';
 
         $this->user_manager = mock('UserManager');
 

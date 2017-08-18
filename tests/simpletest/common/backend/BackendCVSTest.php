@@ -1,24 +1,23 @@
 <?php
-/* 
+/*
  * Copyright (c) The Codendi Team, Xerox, 2009. All Rights Reserved.
+ * Copyright (c) Enalean 2011 - 2017. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
  */
 
 
@@ -35,7 +34,7 @@ require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 
 
-Mock::generatePartial('BackendCVS', 'BackendCVSTestVersion', array('getUserManager', 
+Mock::generatePartial('BackendCVS', 'BackendCVSTestVersion', array('getUserManager',
                                                                        'getProjectManager',
                                                                        'chown',
                                                                        'chgrp',
@@ -50,7 +49,7 @@ Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', 
 'repositoryExists', 'getProjectManager'));
 
 class BackendCVSTest extends TuleapTestCase {
-    
+
     function __construct($name = 'BackendCVS test') {
         parent::__construct($name);
     }
@@ -58,24 +57,24 @@ class BackendCVSTest extends TuleapTestCase {
     public function setUp()
     {
         parent::setUp();
-        $GLOBALS['cvs_prefix']                = dirname(__FILE__) . '/_fixtures/cvsroot';
-        $GLOBALS['cvslock_prefix']            = dirname(__FILE__) . '/_fixtures/var/lock/cvs';
-        $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
+        mkdir($this->getTmpDir() . '/var/lock/cvs', 0770, true);
+        mkdir($this->getTmpDir() . '/cvsroot');
+        mkdir($this->getTmpDir() . '/tmp');
+        copy(__DIR__ . '/_fixtures/cvsroot/loginfo.cvsnt', $this->getTmpDir() . '/cvsroot/loginfo.cvsnt');
+        $GLOBALS['cvs_prefix']                = $this->getTmpDir() . '/cvsroot';
+        $GLOBALS['cvslock_prefix']            = $this->getTmpDir() . '/var/lock/cvs';
+        $GLOBALS['tmp_dir']                   = $this->getTmpDir() . '/tmp';
         $GLOBALS['cvs_cmd']                   = "/usr/bin/cvs";
-        $GLOBALS['cvs_root_allow_file']       = dirname(__FILE__) . '/_fixtures/etc/cvs_root_allow';
+        $GLOBALS['cvs_root_allow_file']       = $this->getTmpDir() . '/cvs_root_allow';
         ForgeConfig::store();
-        ForgeConfig::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
+        ForgeConfig::set('sys_project_backup_path', $this->getTmpDir() . '/tmp');
         mkdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
     }
-    
-    
+
+
     public function tearDown()
     {
-        system('rm -rf '. escapeshellarg($GLOBALS['cvs_prefix']     .'/TestProj'));
-        system('rm -rf '. escapeshellarg($GLOBALS['cvslock_prefix'] .'/TestProj'));
-        //clear the cache between each tests
         Backend::clearInstances();
-        rmdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['cvslock_prefix']);
         unset($GLOBALS['tmp_dir']);
@@ -84,11 +83,11 @@ class BackendCVSTest extends TuleapTestCase {
         ForgeConfig::restore();
         parent::tearDown();
     }
-    
+
     function testConstructor() {
         $backend = BackendCVS::instance();
     }
-    
+
 
     function testArchiveProjectCVS() {
         $project = new MockProject($this);
@@ -106,7 +105,7 @@ class BackendCVSTest extends TuleapTestCase {
         // Setup test data
         mkdir($projdir);
         mkdir($projdir."/CVSROOT");
-        
+
         //$this->assertTrue(is_dir($projdir),"Project dir should be created");
 
         $this->assertEqual($backend->archiveProjectCVS(142),True);
@@ -156,7 +155,7 @@ class BackendCVSTest extends TuleapTestCase {
 
         $commitinfov_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo,v");
         $this->assertTrue(in_array($backend->block_marker_start,$commitinfov_file),"commitinfo file should be under version control and contain block");
-       
+
         $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/TestProj"),"CVS lock dir should be created");
 
         $writers_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/writers");
@@ -181,14 +180,14 @@ class BackendCVSTest extends TuleapTestCase {
         $this->assertTrue($backend->getCVSRootListNeedUpdate(),"Need to update the repo list");
 
         $this->assertEqual($backend->CVSRootListUpdate(),True);
-        
+
         // Now test CVSRootListUpdate
         $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file']),"cvs_root_allow file should be created");
         $cvs_config_array1 = file($GLOBALS['cvs_root_allow_file']);
 
         $this->assertTrue(in_array("/cvsroot/gpig\n",$cvs_config_array1),"Project gpig should be listed in root file");
         $this->assertTrue(in_array("/cvsroot/TestProj\n",$cvs_config_array1),"Project TestProj should be listed in root file");
-      
+
         $service_dao->setReturnValue('searchActiveUnixGroupByUsedService',array(array('unix_group_name'=>'TestProj'),array('unix_group_name'=>'gpig')));
         $backend->setCVSRootListNeedUpdate();
         $this->assertTrue($backend->getCVSRootListNeedUpdate(),"Need to update the repo list");
@@ -222,38 +221,38 @@ class BackendCVSTest extends TuleapTestCase {
         unlink($GLOBALS['cvs_root_allow_file'].".old");
         unlink($GLOBALS['cvs_root_allow_file'].".new");
     }
-    
+
     public function testSetCVSPrivacy_private() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
         $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 02770));
-        
+
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
-        
+
         $this->assertTrue($backend->setCVSPrivacy($project, true));
     }
-    
+
     public function testsetCVSPrivacy_public() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
         $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 02775));
-        
+
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
-        
+
         $this->assertTrue($backend->setCVSPrivacy($project, false));
     }
-    
+
     public function testSetCVSPrivacy_no_repository() {
         $path_that_doesnt_exist = md5(uniqid(rand(), true));
-        
+
         $backend = new BackendCVSTestVersion($this);
         $backend->expectNever('chmod');
-        
+
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', $path_that_doesnt_exist);
-        
+
         $this->assertFalse($backend->setCVSPrivacy($project, true));
         $this->assertFalse($backend->setCVSPrivacy($project, false));
     }
@@ -271,11 +270,11 @@ class BackendCVSTest extends TuleapTestCase {
 
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
-        
+
         $backend->createProjectCVS(142);
-        
+
         $this->assertEqual($backend->renameCVSRepository($project, "foobar"), true);
-        
+
         // Test repo location
         $repoPath = $GLOBALS['cvs_prefix']."/foobar";
         $this->assertTrue(is_dir($repoPath),"CVS dir should be renamed");
@@ -309,11 +308,11 @@ class BackendCVSTest extends TuleapTestCase {
 
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
-        
+
         $backend->createProjectCVS(142);
-        
+
         $this->assertEqual($backend->renameCVSRepository($project, "foobar"), true);
-        
+
         // Test repo location
         $repoPath = $GLOBALS['cvs_prefix']."/foobar";
         $this->assertTrue(is_dir($repoPath),"CVS dir should be renamed");
@@ -328,7 +327,7 @@ class BackendCVSTest extends TuleapTestCase {
         $file = file_get_contents($repoPath."/CVSROOT/loginfo");
         $this->assertTrue(preg_match('#^ALL \('.$GLOBALS['codendi_bin_prefix']."/log_accum -T foobar -C foobar -s %{sVv}\)>/dev/null 2>&1$#m", $file), "CVS loginfo log_accum should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
-        
+
         // Test loginfo file
         $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
         $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix']."/commit_prep -T foobar -r$#m", $file), "CVS commitinfo should use new project name");
@@ -344,7 +343,7 @@ class BackendCVSTest extends TuleapTestCase {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj',array(false));
         $project->setReturnValue('getUnixName', 'testproj',array(true));
-        
+
         // Simulate loginfo generated for CVSNT
         $cvsdir = $GLOBALS['cvs_prefix'].'/foobar';
         mkdir($cvsdir);
@@ -358,37 +357,37 @@ class BackendCVSTest extends TuleapTestCase {
         $backend = new BackendCVS4RenameCVSNT($this);
         $backend->setReturnValue('useCVSNT', true);
         $backend->renameLogInfoFile($project, 'foobar');
-        
+
         // Test loginfo file
         $file = file_get_contents($cvsdir."/CVSROOT/loginfo");
         $this->assertTrue(preg_match('#^DEFAULT chgrp -f -R\s*foobar '.$cvsdir.'$#m', $file), "CVS loginfo should use new project name");
         $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix'].'/log_accum -T foobar -C foobar -s %{sVv}$#m', $file), "CVS loginfo should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
-        
+
         $backend->recurseDeleteInDir($cvsdir);
         rmdir($cvsdir);
     }
-    
+
     public function testIsNameAvailable() {
         $cvsdir = $GLOBALS['cvs_prefix'].'/foobar';
         mkdir ($cvsdir);
-     
+
         $backend = new BackendCVSTestVersion($this);
         $this->assertEqual($backend->isNameAvailable("foobar"), false);
-         
+
         $backend->recurseDeleteInDir($cvsdir);
-        
+
         rmdir($cvsdir);
     }
-    
+
     public function testUpdateCVSWritersForGivenMember() {
-    
+
         $backend = new BackendCVS4RenameCVSNT($this);
 
         // The user
         $user = mock('PFUser');
         $user->setReturnValue('getId', array(142));
-       
+
         $project1 = new MockProject($this);
         $project1->setReturnValue('getId', 102);
         $project1->setReturnValue('usesCVS', true);
@@ -399,30 +398,30 @@ class BackendCVSTest extends TuleapTestCase {
 
         $projects =  array(102, 101);
         $user->setReturnValue('getProjects', $projects);
-         
-        
+
+
         $backend->setReturnValue('repositoryExists', true);
         $backend->setReturnValue('updateCVSwriters', true);
-        
+
         $pm = new MockProjectManager();
         $backend->setReturnValue('getProjectManager', $pm);
-       
+
         $pm->setReturnReference('getProject', $project1, array(102));
         $pm->setReturnReference('getProject', $project2, array(101));
-      
-        
+
+
         $this->assertEqual($backend->updateCVSWritersForGivenMember($user), true);
-        
-        
+
+
         $backend->expectCallCount('repositoryExists', 2);
         $backend->expectAt(0, 'repositoryExists', array($project1));
         $backend->expectAt(1, 'repositoryExists', array($project2));
-       
+
         $backend->expectCallCount('updateCVSwriters', 2);
         $backend->expectAt(0, 'updateCVSwriters', array(102));
         $backend->expectAt(1, 'updateCVSwriters', array(101));
-       
-            
+
+
     }
 
     function testUpdateCVSWatchModeNotifyMissing() {
@@ -434,7 +433,7 @@ class BackendCVSTest extends TuleapTestCase {
         $backend->setReturnValue('getProjectManager', $pm);
         $backend->setReturnValue('getCVSWatchMode', false);
 
-        $backend->expectOnce('log', array('No such file: '.dirname(__FILE__).'/_fixtures/cvsroot/TestProj/CVSROOT/notify', 'error'));
+        $backend->expectOnce('log', array('No such file: '.$GLOBALS['cvs_prefix'].'/TestProj/CVSROOT/notify', 'error'));
 
         $this->assertFalse($backend->updateCVSWatchMode(1));
     }
@@ -459,7 +458,7 @@ class BackendCVSTest extends TuleapTestCase {
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
     }
-    
+
     function testCheckCVSModeFilesMissing() {
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
@@ -496,12 +495,12 @@ class BackendCVSTest extends TuleapTestCase {
         $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
         rmdir($GLOBALS['cvs_prefix']."/TestProj");
     }
-    
+
     function testCheckCVSModeNeedOwnerUpdate() {
         $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
         mkdir($cvsdir .'/CVSROOT', 0700, true);
         chmod($cvsdir .'/CVSROOT', 04700);
-        
+
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
         $project->setReturnValue('isPublic', true);
@@ -510,10 +509,10 @@ class BackendCVSTest extends TuleapTestCase {
 
         $backend = $this->GivenACVSRepositoryWithWrongOwnership($project, $cvsdir);
         $backend->expectOnce('log', array('Restoring ownership on CVS dir: '.$cvsdir, 'info'));
-        
+
         $this->assertTrue($backend->checkCVSMode($project));
     }
-    
+
     /**
      * @return BackendCVS
      */
@@ -527,12 +526,12 @@ class BackendCVSTest extends TuleapTestCase {
         touch($cvsdir.'/CVSROOT/loginfo');
         touch($cvsdir.'/CVSROOT/commitinfo');
         touch($cvsdir.'/CVSROOT/config');
-        
+
         //fake the fact that the repo has wrong ownership
         $stat = stat($cvsdir.'/CVSROOT/loginfo');
         $project->setReturnValue('getUnixGID', $stat['gid'] + 1);
         $backend->setReturnValue('getHTTPUserUID', $stat['uid']);
-        
+
         return $backend;
     }
 }

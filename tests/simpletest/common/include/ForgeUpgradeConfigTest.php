@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -25,7 +25,10 @@ class ForgeUpgradeConfigTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->fixtures = dirname(__FILE__).'/_fixtures';
+        $this->fixtures = $this->getTmpDir();
+        $source      = escapeshellarg(dirname(__FILE__).'/_fixtures');
+        $destination = escapeshellarg($this->fixtures);
+        exec("cp -a $source/* $destination/");
         $this->command = mock('System_Command');
     }
 
