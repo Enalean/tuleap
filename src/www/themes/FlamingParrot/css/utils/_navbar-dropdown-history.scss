@@ -98,6 +98,7 @@ $history-dropdown-item-text-color: #333333;
 
 .history-item {
     display: flex;
+    position: relative;
     flex: 1 0 auto;
     align-items: center;
     padding: $history-dropdown-spacing;
@@ -112,6 +113,18 @@ $history-dropdown-item-text-color: #333333;
     &:hover {
         background-color: transparentize($main, .9);
         cursor: pointer;
+
+        .history-item-content-description-info {
+            transform: translateY(-10px);
+            transition: transform 50ms 500ms;
+        }
+
+        .history-item-content-description-links {
+            transform: translateY(-5px);
+            transition: transform 50ms 500ms, opacity 50ms 500ms;
+            opacity: 1;
+            pointer-events: auto;
+        }
     }
 }
 
@@ -150,6 +163,31 @@ $history-dropdown-item-text-color: #333333;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.history-item-content-description-links {
+    position: absolute;
+    transition: transform 50ms, opacity 50ms;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.history-item-content-description-link {
+    margin: 0 10px 0 0;
+    color: $main;
+    font-size: 12px;
+
+    &:hover {
+        text-decoration: underline;
+
+        .history-item-content-description-link-icon {
+            text-decoration: none;
+        }
+    }
+}
+
+.history-item-content-description-link-icon {
+    margin: 0 3px 0 0;
 }
 
 .history-item-content-project {
