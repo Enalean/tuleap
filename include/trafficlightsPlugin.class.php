@@ -31,15 +31,20 @@ use Tuleap\Trafficlights\Nature\NatureCoveredByPresenter;
 
 require_once 'constants.php';
 
-class TrafficlightsPlugin extends Plugin {
-
+class TrafficlightsPlugin extends Plugin
+{
     /**
      * Plugin constructor
      */
-    function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->filesystem_path = TRAFFICLIGHTS_BASE_DIR;
         $this->setScope(self::SCOPE_PROJECT);
+    }
+
+    public function getHooksAndCallbacks()
+    {
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
@@ -47,16 +52,25 @@ class TrafficlightsPlugin extends Plugin {
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
-        $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED);
-        $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
-        $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
-        $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+
+        if (defined('AGILEDASHBOARD_BASE_URL')) {
+            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+        }
+
+        if (defined('TRACKER_BASE_URL')) {
+            $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED);
+            $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
+            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
+            $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
+        }
+
+        return parent::getHooksAndCallbacks();
     }
 
     public function getServiceShortname() {
@@ -245,7 +259,7 @@ class TrafficlightsPlugin extends Plugin {
     /**
      * @return TrafficlightsPluginInfo
      */
-    function getPluginInfo() {
+    public function getPluginInfo() {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new TrafficlightsPluginInfo($this);
         }
@@ -283,7 +297,7 @@ class TrafficlightsPlugin extends Plugin {
         }
     }
 
-    function process(Codendi_Request $request) {
+    public function process(Codendi_Request $request) {
         $config = new Config(new Dao());
         $router = new Tuleap\Trafficlights\Router($this, $config);
         $router->route($request);
@@ -300,8 +314,13 @@ class TrafficlightsPlugin extends Plugin {
     /**
      * @see REST_PROJECT_RESOURCES
      */
-    function rest_project_resources(array $params) {
+    public function rest_project_resources(array $params) {
         $injector = new Trafficlights_REST_ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
+    }
+
+    public function tracker_add_system_natures($params)
+    {
+        $params['natures'][] = NatureCoveredByPresenter::NATURE_COVERED_BY;
     }
 }
