@@ -1,7 +1,13 @@
 {
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Enalean/mustache.php.git"
+    }
+  ],
   "require": {
     "paragonie/random_compat": "^2.0",
-    "mustache/mustache": "^2.12"
+    "mustache/mustache": "dev-feature/strict-variables"
   },
   "config": {
     "platform": {

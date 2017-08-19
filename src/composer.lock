@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3fe4b904659a257f52198a27de5ad794",
+    "content-hash": "d4a514c7b3003d179d3b801e4ee4bc09",
     "packages": [
         {
             "name": "mustache/mustache",
-            "version": "v2.12.0",
+            "version": "dev-feature/strict-variables",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bobthecow/mustache.php.git",
-                "reference": "fe8fe72e9d580591854de404cc59a1b83ca4d19e"
+                "url": "https://github.com/Enalean/mustache.php.git",
+                "reference": "6a5504e5de474406058590d8360fb272031cdf9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/mustache.php/zipball/fe8fe72e9d580591854de404cc59a1b83ca4d19e",
-                "reference": "fe8fe72e9d580591854de404cc59a1b83ca4d19e",
+                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/6a5504e5de474406058590d8360fb272031cdf9a",
+                "reference": "6a5504e5de474406058590d8360fb272031cdf9a",
                 "shasum": ""
             },
             "require": {
@@ -33,7 +33,6 @@
                     "Mustache": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -50,7 +49,10 @@
                 "mustache",
                 "templating"
             ],
-            "time": "2017-07-11T12:54:05+00:00"
+            "support": {
+                "source": "https://github.com/Enalean/mustache.php/tree/feature/strict-variables"
+            },
+            "time": "2017-08-25T14:00:21+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -104,7 +106,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mustache/mustache": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
