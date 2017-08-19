@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -27,10 +27,18 @@ class SiteCache {
     }
 
     public function invalidatePluginBasedCaches() {
+        $this->invalidateTemplateEngine();
         $this->invalidateRestler();
         $this->invalidateLanguage();
         $this->invalidateWSDL();
         $this->invalidatePlugin();
+    }
+
+    private function invalidateTemplateEngine()
+    {
+        $this->logger->info('Invalidate template engine cache');
+        $template_engine_cache = new \Tuleap\Templating\TemplateCache();
+        $template_engine_cache->invalidate();
     }
 
     private function invalidateRestler() {

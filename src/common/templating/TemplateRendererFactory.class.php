@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'mustache/MustacheRenderer.class.php';
-require_once 'mustache/MustacheDebugRenderer.class.php';
+use Tuleap\Templating\TemplateCache;
 
 /**
  * Handles TemplateRenderer's instanciation. 
  */
-class TemplateRendererFactory {
-    
+class TemplateRendererFactory
+{
+    /**
+     * @var TemplateCache
+     */
+    private $template_cache;
+
+    public function __construct(TemplateCache $template_cache)
+    {
+        $this->template_cache = $template_cache;
+    }
+
     /**
      * Creates a new factory instance.
      * 
@@ -35,28 +44,16 @@ class TemplateRendererFactory {
      * @return \TemplateRendererFactory 
      */
     public static function build() {
-        return new TemplateRendererFactory();
+        return new TemplateRendererFactory(new TemplateCache());
     }
     
     /**
      * Returns a new TemplateRenderer according to Config.
      * 
-     * For now, it will mostly switch between MustacheRenderer and
-     * MustacheDebugRenderer (when DEBUG_MODE is enabled).
-     * 
      * @param string $plugin_templates_dir
      * @return TemplateRenderer
      */
     public function getRenderer($plugin_templates_dir) {
-        $renderer_class = $this->getRendererClassName();
-        return new $renderer_class($plugin_templates_dir);
-    }
-
-    /**
-     * @return string
-     */
-    private function getRendererClassName() {
-        return ForgeConfig::get('DEBUG_MODE') ? 'MustacheDebugRenderer' : 'MustacheRenderer';
+        return new MustacheRenderer($this->template_cache, $plugin_templates_dir);
     }
 }
-?>

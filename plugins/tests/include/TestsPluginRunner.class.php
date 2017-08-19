@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 — 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 — 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,6 @@ require_once dirname(__FILE__) . '/TestsPluginFilterIterator.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRunnerPresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRequest.class.php';
-require_once 'common/templating/TemplateRendererFactory.class.php';
-
-// We must include manually MustacheLoader so that if there is a fatal error during the parsing of a file,
-// then we don't need to invoke autoloader and display a cryptic cannot-nest-class-declaration error.
-require_once 'common/templating/mustache/vendor/MustacheLoader.php';
 
 require_once dirname(__FILE__) . '/TestsPluginOrderedSuite.php';
 
@@ -47,6 +42,13 @@ class TestsPluginRunner {
     public $rootCategory = 'tests_to_run';
 
     public function __construct(TestsPluginRequest $request) {
+        $locar_inc_finder = new Config_LocalIncFinder();
+        $local_inc        = $locar_inc_finder->getLocalIncPath();
+        require($local_inc);
+        require($GLOBALS['db_config_file']);
+        ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist');
+        ForgeConfig::loadFromFile($local_inc);
+
         $this->request   = $request;
         $title           = $this->getTitleByOrder($request->getOrder());
         $this->mainSuite = $this->buildSuite($title);
@@ -197,4 +199,3 @@ class TestsPluginRunner {
         return !(preg_match("/^.*\/tests\/rest(\/.+|$)$/", $pathName));
     }
 }
-?>

@@ -1,5 +1,7 @@
 <?php
 
+use Tuleap\Templating\TemplateCache;
+
 require_once('pre.php');
 
 Tuleap\Instrument\Collect::increment('service.api.soap.accessed');
@@ -56,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     require_once 'common/templating/mustache/MustacheRenderer.class.php';
     site_header(array('title' => "SOAP API"));
-    $renderer = new MustacheRenderer('templates');
+    $renderer = new MustacheRenderer(new TemplateCache(),'templates');
     $renderer->renderToPage('soap_index', array());
     site_footer(array());
 }

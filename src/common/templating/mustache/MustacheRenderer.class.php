@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,62 +18,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Templating\Mustache\MustacheEngine;
+use Tuleap\Templating\TemplateCache;
+
 /**
  * Adapts the Mustache template engine to the expected Tuleap interface. 
  */
-class MustacheRenderer extends TemplateRenderer {
-
+class MustacheRenderer extends TemplateRenderer
+{
     /**
-     * @var Mustache
+     * @var MustacheEngine
      */
     protected $template_engine;
-    
-    /**
-     * @var Array|ArrayAccess
-     */
-    protected $template_loader;
-    
-    /**
-     * @var array
-     */
-    protected $options = array('throws_exceptions'  => array(
-        MustacheException::UNKNOWN_VARIABLE         => true,
-        MustacheException::UNCLOSED_SECTION         => true,
-        MustacheException::UNEXPECTED_CLOSE_SECTION => true,
-        MustacheException::UNKNOWN_PARTIAL          => true,
-        MustacheException::UNKNOWN_PRAGMA           => true,
-    ));
 
-    public function __construct($plugin_templates_dir)
+    public function __construct(TemplateCache $template_cache, $plugin_templates_dir)
     {
-        $this->template_engine = $this->buildTemplateEngine();
-
-        if (! is_array($plugin_templates_dir)) {
-            $plugin_templates_dir = array($plugin_templates_dir);
-        }
+        $templates_directories = (array) $plugin_templates_dir;
 
         $common_templates_dir = ForgeConfig::get('codendi_dir') .'/src/templates/common/';
         if (is_dir($common_templates_dir)) {
-            $plugin_templates_dir[] = $common_templates_dir;
+            $templates_directories[] = $common_templates_dir;
         }
 
-        $this->template_loader = new MustacheChainedPathLoader($plugin_templates_dir);
-    }
-    
-    /**
-     * Builds a new Mustache instance.
-     * 
-     * @return \Mustache 
-     */
-    protected function buildTemplateEngine() {
-        return new Mustache(null, null, null, $this->options);
+        $template_loader = new Mustache_Loader_CascadingLoader();
+        foreach ($templates_directories as $templates_directory) {
+            $template_loader->addLoader(new Mustache_Loader_ProductionFilesystemLoader($templates_directory));
+        }
+
+        $this->template_engine = new MustacheEngine($template_loader, $template_cache);
     }
     
     /**
      * @see TemplateEngine
      * @return string
      */
-    public function renderToString($template_name, $presenter) {
-       return $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
+    public function renderToString($template_name, $presenter)
+    {
+       return $this->template_engine->render($template_name, $presenter);
     }
 }
