@@ -20,35 +20,15 @@
 
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
-use Mustache;
+require_once __DIR__ . '/../../../bootstrap.php';
 
-class MarkdownMustache extends Mustache
+class MarkdownTemplateRendererFactoryTest extends \TuleapTestCase
 {
-    private $markdown_special_characters = array(
-        '|'  => '&#124;',
-        '\\' => '&#92;',
-        '*'  => '&#42;',
-        '_'  => '&#95;',
-        '{'  => '&#123;',
-        '}'  => '&#125;',
-        '+'  => '&#43;',
-        '-'  => '&#45;',
-        '.'  => '&#46;',
-        '`'  => '&#96;',
-        '>'  => '&#62;',
-        '$'  => '&#36;',
-        '~'  => '&#126;',
-        '['  => '&#91;',
-        ']'  => '&#93;',
-        '('  => '&#40;',
-        ')'  => '&#41;',
-        '!'  => '&#33;'
-    );
-
-    protected function _renderEscaped($tag_name, $leading, $trailing)
+    public function itGetsAMarkdownRenderer()
     {
-        $rendered = strtr($this->_renderUnescaped($tag_name, '', ''), $this->markdown_special_characters);
-
-        return $leading.$rendered.$trailing;
+        $this->assertIsA(
+            MarkdownTemplateRendererFactory::build(),
+            'Tuleap\\BotMattermost\\SenderServices\\MarkdownEngine\\MarkdownTemplateRendererFactory'
+        );
     }
 }

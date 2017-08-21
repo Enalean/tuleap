@@ -10,7 +10,7 @@ URL:		https://enalean.com
 Source0:	%{name}-%{version}.tar.gz
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
-Requires:	php(language) >= 5.3, tuleap >= 9.2, php-guzzle-Guzzle
+Requires:	php(language) >= 5.3, tuleap >= 9.11, php-guzzle-Guzzle
 
 
 %description

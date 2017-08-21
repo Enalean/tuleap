@@ -21,11 +21,43 @@
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
 use MustacheRenderer;
+use Tuleap\Templating\Mustache\MustacheEngine;
+use Tuleap\Templating\TemplateCache;
 
 class MarkdownMustacheRenderer extends MustacheRenderer
 {
-    protected function buildTemplateEngine()
+    private static $markdown_special_characters = array(
+        '|'  => '&#124;',
+        '\\' => '&#92;',
+        '*'  => '&#42;',
+        '_'  => '&#95;',
+        '{'  => '&#123;',
+        '}'  => '&#125;',
+        '+'  => '&#43;',
+        '-'  => '&#45;',
+        '.'  => '&#46;',
+        '`'  => '&#96;',
+        '>'  => '&#62;',
+        '$'  => '&#36;',
+        '~'  => '&#126;',
+        '['  => '&#91;',
+        ']'  => '&#93;',
+        '('  => '&#40;',
+        ')'  => '&#41;',
+        '!'  => '&#33;'
+    );
+
+
+    protected function getEngine(\Mustache_Loader $loader, TemplateCache $template_cache)
     {
-        return new MarkdownMustache(null, null, null, $this->options);
+        $special_characters = self::$markdown_special_characters;
+
+        return new MustacheEngine(
+            $loader,
+            $template_cache,
+            function($value) use ($special_characters) {
+                return strtr($value, $special_characters);
+            }
+        );
     }
 }

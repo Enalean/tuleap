@@ -20,16 +20,12 @@
 
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
-use ForgeConfig;
 use TemplateRendererFactory;
 
 class MarkdownTemplateRendererFactory extends TemplateRendererFactory
 {
-    public static function build() {
-        return new MarkdownTemplateRendererFactory();
-    }
-
-    public function getRenderer($plugin_templates_dir) {
-        return new MarkdownMustacheRenderer($plugin_templates_dir);
+    public function getRenderer($plugin_templates_dir)
+    {
+        return new MarkdownMustacheRenderer($this->getTemplateCache(), $plugin_templates_dir);
     }
 }

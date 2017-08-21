@@ -20,27 +20,19 @@
 
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
-use TuleapTestCase;
-
-class MarkdownMustacheTest extends TuleapTestCase
+class MarkdownMustacheRendererTest extends \TuleapTestCase
 {
-
-    private $markdown_mustache;
-    private $renderer;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->markdown_mustache = new MarkdownMustache();
-        $this->renderer          = new MarkdownMustacheRenderer(dirname(__FILE__).'/templates');
-    }
-
     public function itVerifiesThatMarkdownEngineConvertSpecialCharactersIntoHtmlEntities()
     {
+        $renderer = new MarkdownMustacheRenderer(
+            mock('Tuleap\\Templating\\TemplateCache'),
+            __DIR__ .'/templates'
+        );
+
         $text   = '![my](text)|{~}\*+-._$>`';
-        $result = $this->renderer->renderToString(
+        $result = $renderer->renderToString(
             'simple-text',
             array('text' => $text)
         );
