@@ -94,6 +94,16 @@ class MailNotification
         return $this->notified_users;
     }
 
+    public function getNotifiedUsersAsString()
+    {
+        $users = array();
+        foreach ($this->notified_users as $user) {
+            $users[] = $user->getUserName();
+        }
+
+        return implode(',', $users);
+    }
+
     /**
      * @return User_UGroup[]
      */
