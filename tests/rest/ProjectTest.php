@@ -59,7 +59,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 201);
     }
 
-    public function testGET() {
+    public function testGET()
+    {
         $response      = $this->getResponse($this->client->get('projects'));
         $json_projects = $response->json();
 
@@ -125,6 +126,9 @@ class ProjectTest extends ProjectBase
         $this->assertArrayHasKey('label', $json_projects[0]);
         $this->assertEquals('Private member', $json_projects[0]['label']);
 
+        $this->assertArrayHasKey('member_of', $json_projects[0]);
+        $this->assertTrue($json_projects[0]['member_of']);
+
         $this->assertArrayHasKey('additional_informations', $json_projects[0]);
         $this->assertEquals(
             $this->releases_tracker_id,
@@ -173,7 +177,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($json_project['shortname'], REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
     }
 
-    public function testThatAdminGetEvenPrivateProjectThatSheIsNotMemberOf() {
+    public function testThatAdminGetEvenPrivateProjectThatSheIsNotMemberOf()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'));
         $admin_projects = $response->json();
 
@@ -181,6 +186,8 @@ class ProjectTest extends ProjectBase
             if ($project['id'] !== $this->project_private_id) {
                 continue;
             }
+
+            $this->assertFalse($project['member_of']);
 
             $project_members_uri = "user_groups/$this->project_private_id"."_3/users";
             $project_members = $this
