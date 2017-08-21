@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuealp\project\Event\ProjectRegistrationActivateService;
+use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\CollectionOfWidgetsThatNeedJavascriptDependencies;
 use Tuleap\Dashboard\Project\ProjectDashboardController;

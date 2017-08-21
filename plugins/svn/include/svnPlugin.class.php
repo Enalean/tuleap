@@ -20,7 +20,7 @@
 
 require_once 'constants.php';
 
-use Tuealp\project\Event\ProjectRegistrationActivateService;
+use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
