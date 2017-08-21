@@ -40,7 +40,7 @@ require_once 'common/wiki/lib/WikiCloner.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO',     'A');
 
-use Tuealp\project\Event\ProjectRegistrationActivateService;
+use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\ProjectRegistrationDisabledException;
