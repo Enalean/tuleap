@@ -24,10 +24,11 @@ use Tuleap\Templating\TemplateCache;
 
 class MustacheEngine extends \Mustache_Engine
 {
-    public function __construct(\Mustache_Loader $loader, TemplateCache $cache)
+    public function __construct(\Mustache_Loader $loader, TemplateCache $cache, $escape_callback = null)
     {
         parent::__construct(
             array(
+                'escape'           => $escape_callback,
                 'entity_flags'     => ENT_QUOTES,
                 'strict_callables' => true,
                 'loader'           => $loader,

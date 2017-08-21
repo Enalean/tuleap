@@ -43,8 +43,17 @@ class TemplateRendererFactory
      * 
      * @return \TemplateRendererFactory 
      */
-    public static function build() {
-        return new TemplateRendererFactory(new TemplateCache());
+    public static function build()
+    {
+        return new self(new TemplateCache());
+    }
+
+    /**
+     * @return TemplateCache
+     */
+    public function getTemplateCache()
+    {
+        return $this->template_cache;
     }
     
     /**
