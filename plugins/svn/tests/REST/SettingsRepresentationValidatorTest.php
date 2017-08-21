@@ -109,4 +109,70 @@ class SettingsRepresentationValidatorTest extends \TuleapTestCase
         $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
         $this->validator->validateForPOSTRepresentation($settings);
     }
+
+    public function itThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPOST()
+    {
+        $notification_representation_01 = new NotificationRepresentation();
+        $notification_representation_01->path = "/tags";
+        $notification_representation_01->emails = array('test@example.com', 'test1@example.com', 'test@example.com');
+
+        $settings = new SettingsPOSTRepresentation();
+        $settings->email_notifications = array($notification_representation_01);
+
+        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->validator->validateForPOSTRepresentation($settings);
+    }
+
+    public function itDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPOST()
+    {
+        $notification_representation_01 = new NotificationRepresentation();
+        $notification_representation_01->path = "/tags";
+        $notification_representation_01->emails = array('test@example.com');
+
+        $notification_representation_02 = new NotificationRepresentation();
+        $notification_representation_02->path = "/trunks";
+        $notification_representation_02->emails = array('test@example.com');
+
+
+        $settings = new SettingsPOSTRepresentation();
+        $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
+
+        $this->validator->validateForPOSTRepresentation($settings);
+    }
+
+    public function itThrowsAnExceptionWhenSameMailIsAddedTwiceOnTheSamePathOnPUT()
+    {
+        $notification_representation_01         = new NotificationRepresentation();
+        $notification_representation_01->path   = "/tags";
+        $notification_representation_01->emails = array('test@example.com', 'test1@example.com', 'test@example.com');
+
+        $settings                      = new SettingsPUTRepresentation();
+        $settings->email_notifications = array($notification_representation_01);
+        $settings->access_file         = "";
+        $settings->immutable_tags      = array();
+        $settings->commit_rules        = array();
+
+        $this->expectException('Tuleap\SVN\REST\v1\SettingsInvalidException');
+        $this->validator->validateForPUTRepresentation($settings);
+    }
+
+    public function itDontThrowExceptionWhenSameMailIsUsedForTwoDifferentPathOnPUT()
+    {
+        $notification_representation_01         = new NotificationRepresentation();
+        $notification_representation_01->path   = "/tags";
+        $notification_representation_01->emails = array('test@example.com');
+
+        $notification_representation_02         = new NotificationRepresentation();
+        $notification_representation_02->path   = "/trunks";
+        $notification_representation_02->emails = array('test@example.com');
+
+
+        $settings                      = new SettingsPUTRepresentation();
+        $settings->email_notifications = array($notification_representation_01, $notification_representation_02);
+        $settings->access_file         = "";
+        $settings->immutable_tags      = array();
+        $settings->commit_rules        = array();
+
+        $this->validator->validateForPUTRepresentation($settings);
+    }
 }
