@@ -20,8 +20,6 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Svn\AccessControl\AccessFileHistory;
-
 class SettingsPUTRepresentation extends SettingsRepresentation
 {
     /**
@@ -43,9 +41,4 @@ class SettingsPUTRepresentation extends SettingsRepresentation
      * @var string {@type string} {@required false}
      */
     public $access_file;
-
-    public function isAccessFileKeySent()
-    {
-        return isset($this->access_file);
-    }
 }

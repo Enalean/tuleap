@@ -104,6 +104,37 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    public function testPOSTWithDuplicatePath()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_07",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            )
+                        ),
+                        array(
+                            'path'   => "/tags",
+                            'emails' => array(
+                                "test@list.example.com"
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     public function testPUTRepositoryWithEmptyAccessFile()
     {
         $data = json_encode(

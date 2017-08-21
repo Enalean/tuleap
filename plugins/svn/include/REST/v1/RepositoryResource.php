@@ -51,7 +51,6 @@ use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
 use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
 use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
 use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
-use Tuleap\Svn\Repository\HookConfig;
 use Tuleap\Svn\Repository\HookConfigChecker;
 use Tuleap\Svn\Repository\HookConfigRetriever;
 use Tuleap\Svn\Repository\HookConfigSanitizer;
@@ -70,6 +69,10 @@ use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
+    /**
+     * @var SettingsRepresentationValidator
+     */
+    private $settings_representation_validator;
     /**
      * @var NotificationsEmailsBuilder
      */
@@ -235,6 +238,8 @@ class RepositoryResource extends AuthenticatedResource
             $mail_notification_manager,
             new NotificationUpdateChecker($mail_notification_manager)
         );
+
+        $this->settings_representation_validator = new SettingsRepresentationValidator();
     }
 
     /**
@@ -398,8 +403,10 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->checkUserIsAdmin($repository->getProject(), $user);
 
-        if (! $settings->isAccessFileKeySent()) {
-            throw new RestException('400', '`settings[access_file]` is required');
+        try {
+            $this->settings_representation_validator->validateForPUTRepresentation($settings);
+        } catch (SettingsInvalidException $e) {
+            throw new RestException(400, $e->getMessage());
         }
 
         $repository_settings = $this->getSettings($repository, $settings);
@@ -589,6 +596,12 @@ class RepositoryResource extends AuthenticatedResource
 
         if (! $project->usesService(\SvnPlugin::SERVICE_SHORTNAME)) {
             throw new RestException(400, "Project does not use SVN service");
+        }
+
+        try {
+            $this->settings_representation_validator->validateForPOSTRepresentation($settings);
+        } catch (SettingsInvalidException $e) {
+            throw new RestException(400, $e->getMessage());
         }
 
         ProjectAuthorization::userCanAccessProject(
