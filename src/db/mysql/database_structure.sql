@@ -1639,6 +1639,15 @@ CREATE TABLE dashboards_lines_columns_widgets (
     content_id INT DEFAULT '0' NOT NULL,
     INDEX col_idx(column_id)
 );
+
+DROP TABLE IF EXISTS project_label;
+CREATE TABLE project_label (
+    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    project_id INT(11) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    INDEX project_idx(project_id)
+);
+
 #
 # EOF
 #

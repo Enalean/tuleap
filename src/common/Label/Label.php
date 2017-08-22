@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$sidebar-width: 250px;
-$sidebar-width-collapsed: 50px;
-$navbar-height: 45px;
-$footer-height: 200px;
-$baseLineHeight: 20px;
+namespace Tuleap\Label;
 
-@import '../../../common/css/utils/colors';
+class Label
+{
+    private $id;
+    private $name;
+
+    /**
+     * @param int    $id
+     * @param string $name
+     */
+    public function __construct($id, $name)
+    {
+        $this->id   = $id;
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+}
