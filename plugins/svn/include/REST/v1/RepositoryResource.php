@@ -556,13 +556,18 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bar@example.com"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;102,<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;103<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
      *   &nbsp;&nbsp;&nbsp;},<br>
      *   &nbsp;&nbsp;&nbsp;{<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/tags",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com"<br>
-     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": []<br>
      *   &nbsp;&nbsp;&nbsp;}<br>
      *   &nbsp;&nbsp;]<br>
      *   &nbsp;}<br>
@@ -612,7 +617,7 @@ class RepositoryResource extends AuthenticatedResource
 
         $repository_to_create = new Repository("", $name, "", "", $project);
         try {
-            $repository_settings       = $this->getSettings($repository_to_create, $settings);
+            $repository_settings       = $this->getPOSTSettings($repository_to_create, $settings);
             $has_initial_layout        = $settings !== null && $settings->layout !== null;
             $initial_repository_layout = $has_initial_layout ? $settings->layout : array();
 
@@ -656,6 +661,23 @@ class RepositoryResource extends AuthenticatedResource
      */
     private function getSettings(Repository $repository, SettingsRepresentation $settings = null)
     {
+        return $this->extractSettingsFromRepresentation($repository, $settings);
+    }
+
+    /**
+     * @return Settings
+     */
+    private function getPOSTSettings(Repository $repository, SettingsPOSTRepresentation $settings = null)
+    {
+        return $this->extractSettingsFromRepresentation($repository, $settings);
+    }
+
+    /**
+     * @throws RestException
+     * @return Settings
+     */
+    private function extractSettingsFromRepresentation(Repository $repository, SettingsRepresentationInterface $settings = null)
+    {
         $commit_rules = array();
         if ($settings && $settings->commit_rules) {
             $commit_rules = $settings->commit_rules->toArray();
@@ -677,12 +699,23 @@ class RepositoryResource extends AuthenticatedResource
         $mail_notification = array();
         if ($settings && $settings->email_notifications) {
             foreach ($settings->email_notifications as $notification) {
+                $users_notification = array();
+                if ($notification->users) {
+                    foreach ($notification->users as $user_id) {
+                        $user = $this->user_manager->getUserById($user_id);
+                        if (! $user) {
+                            throw new RestException(400, "User $user_id not found");
+                        }
+                        $users_notification[] = $user;
+                    }
+                }
+
                 $mail_notification[] = new MailNotification(
                     0,
                     $repository,
                     $notification->path,
                     $notification->emails,
-                    array(),
+                    $users_notification,
                     array()
                 );
             }

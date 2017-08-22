@@ -22,7 +22,7 @@ namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Svn\AccessControl\AccessFileHistory;
 
-class SettingsRepresentation
+class SettingsRepresentation implements SettingsRepresentationInterface
 {
     /**
      * @var CommitRulesRepresentation {@type \Tuleap\SVN\REST\v1\CommitRulesRepresentation} {@required false}

@@ -182,10 +182,14 @@ class RepositoryTest extends TestBase
                     "access_file"         => "[/] * = rw\r\n@members = rw",
                     "email_notifications" => array(
                         array(
+                            'user_groups' => array(),
+                            'users'       => array(102, 103),
                             'emails'      => array("project-announce@list.example.com", "project-devel@lists.example.com"),
                             'path'        => "/tags",
                         ),
                         array(
+                            'user_groups' => array(),
+                            'users'       => array(),
                             'emails'      => array("project-svn@list.example.com"),
                             'path'        => "/trunk"
                         )
@@ -218,12 +222,36 @@ class RepositoryTest extends TestBase
             "[/] * = rw\r\n@members = rw"
         );
 
+        $user_102 = array(
+            "id"           => 102,
+            "uri"          => "users/102",
+            "user_url"     => "/users/rest_api_tester_1",
+            "real_name"    => "Test User 1",
+            "display_name" => "Test User 1 (rest_api_tester_1)",
+            "username"     => "rest_api_tester_1",
+            "ldap_id"      => "tester1",
+            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
+            "is_anonymous" => false
+        );
+
+        $user_103 = array(
+            "id"           => 103,
+            "uri"          => "users/103",
+            "user_url"     => "/users/rest_api_tester_2",
+            "real_name"    => "",
+            "display_name" => " (rest_api_tester_2)",
+            "username"     => "rest_api_tester_2",
+            "ldap_id"      => "",
+            "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
+            "is_anonymous" => false
+        );
+
         $this->assertEquals(
             $repository['settings']['email_notifications'],
             array(
                 array(
                     'user_groups' => array(),
-                    'users'       => array(),
+                    'users'       => array($user_102, $user_103),
                     'emails'      => array("project-announce@list.example.com", "project-devel@lists.example.com"),
                     'path'        => "/tags",
                 ),
