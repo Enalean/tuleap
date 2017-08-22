@@ -48,8 +48,9 @@ function ArtifactModalService(
      * @param {int} tracker_id               The tracker to which the item we want to add/edit belongs
      * @param {object} parent                The artifact's parent item
      * @param {function} displayItemCallback The function to call after receiving the last HTTP response. It will be called with the new artifact's id.
+     * @param {array} prefill_values         The prefill values for creation, using field name as identifier
      */
-    function showCreation(tracker_id, parent, displayItemCallback) {
+    function showCreation(tracker_id, parent, displayItemCallback, prefill_values) {
         TuleapArtifactModalLoading.loading = true;
 
         return TlpModalService.open({
@@ -58,7 +59,7 @@ function ArtifactModalService(
             controllerAs   : 'modal',
             tlpModalOptions: { keyboard: false },
             resolve        : {
-                modal_model        : self.initCreationModalModel(tracker_id, parent),
+                modal_model        : self.initCreationModalModel(tracker_id, parent, prefill_values),
                 displayItemCallback: (displayItemCallback) ? displayItemCallback : _.noop
             }
         });
@@ -97,7 +98,7 @@ function ArtifactModalService(
         { id: TEXT_FORMAT_HTML_ID, label: 'HTML' }
     ];
 
-    function initCreationModalModel(tracker_id, parent_artifact) {
+    function initCreationModalModel(tracker_id, parent_artifact, prefill_values) {
         var modal_model = {};
 
         modal_model.creation_mode = true;
@@ -112,8 +113,9 @@ function ArtifactModalService(
             modal_model.color       = transformed_tracker.color_name;
             modal_model.title       = transformed_tracker.label;
 
+            var initial_values = mapPrefillsToFieldValues(prefill_values || [], modal_model.tracker.fields);
             applyWorkflowTransitions(transformed_tracker, modal_model.creation_mode, {});
-            modal_model.values = TuleapArtifactFieldValuesService.getSelectedValues({}, transformed_tracker);
+            modal_model.values = TuleapArtifactFieldValuesService.getSelectedValues(initial_values, transformed_tracker);
             applyFieldDependencies(transformed_tracker, modal_model.values);
             modal_model.ordered_fields = TuleapArtifactModalFormTreeBuilderService.buildFormTree(transformed_tracker);
 
@@ -269,5 +271,22 @@ function ArtifactModalService(
             });
 
         return promise;
+    }
+
+    function mapPrefillsToFieldValues(prefill_values, tracker_fields) {
+        var field_values = {};
+
+        prefill_values.forEach(function(prefill) {
+            var field = _.find(tracker_fields, {name: prefill.name});
+            if (field) {
+                field_values[field.field_id] = Object.assign(
+                    {},
+                    prefill,
+                    { field_id: field.field_id }
+                );
+            }
+        });
+
+        return field_values;
     }
 }
