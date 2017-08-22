@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import './promise-polyfill.js';
+import '../polyphills/promise-polyfill.js';
 import { get, put } from 'tlp-fetch';
 import initNavbarHistoryController from './navbar-history-controller.js';
 

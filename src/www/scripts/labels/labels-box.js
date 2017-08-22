@@ -1,25 +1,28 @@
+import '../polyphills/promise-polyfill.js';
+import { get } from 'tlp-fetch';
 import { sanitize } from 'dompurify';
-import { getJSON } from 'jquery';
 
 export function create(element, labels_endpoint) {
     buildLabelsRecursively(element, labels_endpoint, 0);
 }
 
-function buildLabelsRecursively(element, labels_endpoint, offset) {
+async function buildLabelsRecursively(element, labels_endpoint, offset) {
     const limit = 50;
 
-    getJSON(labels_endpoint, {limit, offset})
-        .success(
-            (result, status, xhr) => {
-                result.labels.forEach(
-                    label => element.appendChild(buildLabelElement(label))
-                );
-
-                if (offset + limit < xhr.getResponseHeader('X-PAGINATION-SIZE')) {
-                    buildLabelsRecursively(element, labels_endpoint, offset + limit)
-                }
-            }
+    try {
+        const response = await get(`${labels_endpoint}/?limit=${limit}&offset=${offset}`);
+        const json     = await response.json();
+        json.labels.forEach(
+            label => element.appendChild(buildLabelElement(label))
         );
+
+        const is_recursion_needed = offset + limit < response.headers.get('X-PAGINATION-SIZE');
+        if (is_recursion_needed) {
+            buildLabelsRecursively(element, labels_endpoint, offset + limit)
+        }
+    } catch (e) {
+        // silently ignore errors
+    }
 }
 
 function buildLabelElement(label) {
