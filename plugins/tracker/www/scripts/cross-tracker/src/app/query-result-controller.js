@@ -28,14 +28,13 @@ export default class QueryResultController {
         backend_cross_tracker_report,
         user,
         error_displayer,
-        translated_fetch_artifacts_error_message
+        gettext_provider
     ) {
         this.widget_content               = widget_content;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.localized_date_format        = user.getUserPreferredDateFormat();
         this.error_displayer              = error_displayer;
-
-        this.translated_fetch_artifacts_error_message = translated_fetch_artifacts_error_message;
+        this.gettext_provider             = gettext_provider;
 
         this.table_element = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-results');
         this.table_results = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
@@ -90,7 +89,7 @@ export default class QueryResultController {
             const formatted_artifacts = this.formatArtifacts(artifacts);
             this.updateArtifacts(formatted_artifacts);
         } catch (error) {
-            this.error_displayer.displayError(this.translated_fetch_artifacts_error_message);
+            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));
             throw error;
         } finally {
             this.hideLoadingState();
@@ -115,7 +114,7 @@ export default class QueryResultController {
             const formatted_artifacts = this.formatArtifacts(artifacts);
             this.updateArtifacts(formatted_artifacts);
         } catch(error) {
-            this.error_displayer.displayError(this.translated_fetch_artifacts_error_message);
+            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the query result'));
             throw error;
         } finally {
             this.hideLoadingState();

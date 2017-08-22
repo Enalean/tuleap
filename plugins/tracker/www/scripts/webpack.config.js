@@ -1,8 +1,8 @@
 /* eslint-disable */
-var path                        = require('path');
-var webpack                     = require('webpack');
-var WebpackAssetsManifest       = require('webpack-assets-manifest');
-var BabelPresetEnv              = require('babel-preset-env');
+var path                  = require('path');
+var webpack               = require('webpack');
+var WebpackAssetsManifest = require('webpack-assets-manifest');
+var BabelPresetEnv        = require('babel-preset-env');
 
 var assets_dir_path = path.resolve(__dirname, '../assets');
 
@@ -41,6 +41,13 @@ module.exports = {
             {
                 test: /\.mustache$/,
                 use: { loader: 'raw-loader' }
+            }, {
+                test: /\.po$/,
+                exclude: /node_modules/,
+                use: [
+                    { loader: 'json-loader' },
+                    { loader: 'po-gettext-loader' }
+                ]
             }
         ]
     },

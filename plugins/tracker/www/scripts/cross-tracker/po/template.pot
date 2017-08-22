@@ -1,9 +1,23 @@
-msgid ""
+msgid "Error while fetching the cross tracker report"
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: \n"
 
-#: src/app/empty-state/empty-state.tpl.html
-msgid "There is nothing here"
+msgid "Error while fetching the list of projects you are member of"
+msgstr ""
+
+msgid "Error while fetching the list of trackers of this project"
+msgstr ""
+
+msgid "Error while fetching the query result"
+msgstr ""
+
+msgid "Error while updating the cross tracker report"
+msgstr ""
+
+msgid "Please choose..."
+msgstr ""
+
+msgid "Report has been successfully saved"
+msgstr ""
+
+msgid "Tracker selection is limited to 10 trackers"
 msgstr ""

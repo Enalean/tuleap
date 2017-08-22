@@ -1,17 +1,38 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Juliana LECLAIRE <juliana.leclaire@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.3\n"
+"X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/app/empty-state/empty-state.tpl.html
-msgid "There is nothing here"
-msgstr "Il n’y a rien ici"
+msgid "Error while fetching the cross tracker report"
+msgstr "Erreur à la récupération du rapport multi outil de suivi"
+
+msgid "Error while fetching the list of projects you are member of"
+msgstr "Erreur à la récupération de la liste des projets dont vous êtes membre"
+
+msgid "Error while fetching the list of trackers of this project"
+msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet"
+
+msgid "Error while fetching the query result"
+msgstr "Erreur à la récupération du résultat de la requête"
+
+msgid "Error while updating the cross tracker report"
+msgstr "Erreur lors de la mise à jour du rapport multi outil de suivi"
+
+msgid "Please choose..."
+msgstr "Veuillez choisir..."
+
+msgid "Report has been successfully saved"
+msgstr "Rapport enregistré avec succès"
+
+msgid "Tracker selection is limited to 10 trackers"
+msgstr "Vous ne pouvez pas sélectionner plus de 10 outils de suivi"

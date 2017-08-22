@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Gettext from 'node-gettext';
+import french_translations from '../../po/fr.po';
+
 import ReadingTrackersController from './reading-mode/reading-trackers-controller.js';
 import ReadingModeController from './reading-mode/reading-mode-controller.js';
 import WritingModeController from './writing-mode/writing-mode-controller.js';
@@ -45,6 +48,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const localized_php_date_format = widget_element.dataset.dateFormat;
         const is_anonymous              = (widget_element.dataset.isAnonymous == 'true');
 
+        const gettext_provider = new Gettext();
+        gettext_provider.addTranslations('fr_FR', 'cross-tracker', french_translations);
+        gettext_provider.setLocale(locale);
+        gettext_provider.setTextDomain('cross-tracker');
+
         const tracker_selection                  = new TrackerSelection();
         const report_mode                        = new ReportMode();
         const backend_cross_tracker_report       = new BackendCrossTrackerReport(report_id);
@@ -60,14 +68,12 @@ document.addEventListener('DOMContentLoaded', function () {
             is_anonymous
         );
 
-        const translated_fetch_artifacts_error_message = widget_element.querySelector('.query-fetch-error').textContent;
-
         const query_result_controller = new QueryResultController(
             widget_element,
             backend_cross_tracker_report,
             user,
             error_displayer,
-            translated_fetch_artifacts_error_message
+            gettext_provider
         );
 
         const reading_trackers_controller = new ReadingTrackersController(
@@ -96,7 +102,8 @@ document.addEventListener('DOMContentLoaded', function () {
             user,
             widget_loader_displayer,
             success_displayer,
-            error_displayer
+            error_displayer,
+            gettext_provider
         );
 
         new WritingModeController(
@@ -113,7 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
             report_mode,
             user,
             error_displayer,
-            tracker_selection_loader_displayer
+            tracker_selection_loader_displayer,
+            gettext_provider
         );
 
         const tracker_selector = new TrackerSelector(
@@ -121,7 +129,8 @@ document.addEventListener('DOMContentLoaded', function () {
             tracker_selection,
             writing_cross_tracker_report,
             error_displayer,
-            tracker_selection_loader_displayer
+            tracker_selection_loader_displayer,
+            gettext_provider
         );
 
         new TrackerSelectionController(
@@ -129,7 +138,9 @@ document.addEventListener('DOMContentLoaded', function () {
             tracker_selection,
             writing_cross_tracker_report,
             backend_cross_tracker_report,
-            tracker_selector
+            tracker_selector,
+            error_displayer,
+            gettext_provider
         );
     }
 });

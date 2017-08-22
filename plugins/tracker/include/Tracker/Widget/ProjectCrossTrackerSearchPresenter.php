@@ -27,17 +27,10 @@ class ProjectCrossTrackerSearchPresenter
     public $locale;
     public $date_format;
     public $is_anonymous;
-    public $too_many_trackers_selected_error;
-    public $could_not_fetch_list_of_trackers_error;
-    public $could_not_fetch_list_of_projects_error;
-    public $put_report_error;
-    public $put_report_success;
-    public $fetch_report_error;
     public $fetch_query_error;
     public $project_label;
     public $tracker_label;
     public $add_button_label;
-    public $please_choose_label;
     public $cancel;
     public $save_report;
     public $search;
@@ -54,53 +47,24 @@ class ProjectCrossTrackerSearchPresenter
     public function __construct($report_id, \PFUser $user)
     {
         $this->report_id    = $report_id;
-        $this->locale       = $user->getShortLocale();
+        $this->locale       = $user->getLocale();
         $this->date_format  = $GLOBALS['Language']->getText('system', 'datefmt_short');
         $this->is_anonymous = $user->isAnonymous() ? 'true' : 'false';
 
-        $this->too_many_trackers_selected_error       = dgettext(
-            'tuleap-tracker',
-            'Tracker selection is limited to 10 trackers'
-        );
-        $this->could_not_fetch_list_of_trackers_error = dgettext(
-            'tuleap-tracker',
-            'Error while fetching the list of trackers of this project'
-        );
-        $this->could_not_fetch_list_of_projects_error = dgettext(
-            'tuleap-tracker',
-            'Error while fetching the list of projects you are member of'
-        );
-        $this->fetch_report_error                     = dgettext(
-            'tuleap-tracker',
-            'Error while fetching the cross tracker report'
-        );
-        $this->put_report_error                       = dgettext(
-            'tuleap-tracker',
-            'Error while updating the cross tracker report'
-        );
-        $this->put_report_success                     = dgettext(
-            'tuleap-tracker',
-            'Report has been successfully saved'
-        );
-        $this->fetch_query_error                      = dgettext(
-            'tuleap-tracker',
-            'Error while fetching the query result'
-        );
-        $this->project_label                          = dgettext('tuleap-tracker', 'Project');
-        $this->tracker_label                          = dgettext('tuleap-tracker', 'Tracker');
-        $this->add_button_label                       = dgettext('tuleap-tracker', 'Add');
-        $this->please_choose_label                    = dgettext('tuleap-tracker', 'Please choose...');
-        $this->cancel                                 = dgettext('tuleap-tracker', 'Cancel');
-        $this->save_report                            = dgettext('tuleap-tracker', 'Save report');
-        $this->search                                 = dgettext('tuleap-tracker', 'Search');
-        $this->trackers_empty                         = dgettext('tuleap-tracker', 'No trackers selected');
-        $this->artifact_label                         = dgettext('tuleap-tracker', 'Artifact');
-        $this->status_label                           = dgettext('tuleap-tracker', 'Status');
-        $this->last_update_label                      = dgettext('tuleap-tracker', 'Last update date');
-        $this->submitted_by_label                     = dgettext('tuleap-tracker', 'Submitted by');
-        $this->assigned_to_label                      = dgettext('tuleap-tracker', 'Assigned to');
-        $this->artifacts_empty                        = dgettext('tuleap-tracker', 'No matching artifacts found');
-        $this->limited_results_label                  = dgettext(
+        $this->project_label         = dgettext('tuleap-tracker', 'Project');
+        $this->tracker_label         = dgettext('tuleap-tracker', 'Tracker');
+        $this->add_button_label      = dgettext('tuleap-tracker', 'Add');
+        $this->cancel                = dgettext('tuleap-tracker', 'Cancel');
+        $this->save_report           = dgettext('tuleap-tracker', 'Save report');
+        $this->search                = dgettext('tuleap-tracker', 'Search');
+        $this->trackers_empty        = dgettext('tuleap-tracker', 'No trackers selected');
+        $this->artifact_label        = dgettext('tuleap-tracker', 'Artifact');
+        $this->status_label          = dgettext('tuleap-tracker', 'Status');
+        $this->last_update_label     = dgettext('tuleap-tracker', 'Last update date');
+        $this->submitted_by_label    = dgettext('tuleap-tracker', 'Submitted by');
+        $this->assigned_to_label     = dgettext('tuleap-tracker', 'Assigned to');
+        $this->artifacts_empty       = dgettext('tuleap-tracker', 'No matching artifacts found');
+        $this->limited_results_label = dgettext(
             'tuleap-tracker',
             'Only the first 30 results are shown'
         );

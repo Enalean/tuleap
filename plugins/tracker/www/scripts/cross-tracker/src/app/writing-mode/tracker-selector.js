@@ -20,6 +20,7 @@
 import { render } from 'mustache';
 import { watch } from 'wrist';
 import { getTrackersOfProject } from '../rest-querier.js';
+import tracker_option_template from './tracker-option.mustache';
 
 export default class TrackerSelector {
     constructor(
@@ -27,17 +28,18 @@ export default class TrackerSelector {
         tracker_selection,
         writing_cross_tracker_report,
         error_displayer,
-        tracker_selection_loader_displayer
+        tracker_selection_loader_displayer,
+        gettext_provider
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.error_displayer              = error_displayer;
         this.loader_displayer             = tracker_selection_loader_displayer;
+        this.gettext_provider             = gettext_provider;
 
-        this.form_trackers                  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers');
-        this.trackers_input                 = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-input');
-        this.translated_fetch_error_message = this.widget_content.querySelector('.tracker-selector-error').textContent;
+        this.form_trackers  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers');
+        this.trackers_input = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-input');
 
         this.trackers = new Map();
 
@@ -61,7 +63,7 @@ export default class TrackerSelector {
                 });
             }
         } catch (error) {
-            this.error_displayer.displayError(this.translated_fetch_error_message);
+            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the list of trackers of this project'));
             throw error;
         } finally {
             this.loader_displayer.hide();
@@ -87,11 +89,14 @@ export default class TrackerSelector {
     }
 
     displayOptions() {
-        const trackers = [...this.trackers.values()];
-        const template = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-placeholder').textContent;
+        const trackers            = [...this.trackers.values()];
+        const please_choose_label = this.gettext_provider.gettext('Please choose...');
 
         this.clearOptions();
-        this.trackers_input.insertAdjacentHTML('beforeEnd', render(template, { trackers }));
+        this.trackers_input.insertAdjacentHTML('beforeEnd', render(tracker_option_template, {
+            please_choose_label,
+            trackers
+        }));
     }
 
     clearOptions() {

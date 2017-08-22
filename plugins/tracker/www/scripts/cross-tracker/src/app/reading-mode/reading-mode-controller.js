@@ -32,7 +32,8 @@ export default class ReadingModeController {
         user,
         widget_loader_displayer,
         success_displayer,
-        error_displayer
+        error_displayer,
+        gettext_provider
     ) {
         this.widget_content               = widget_content;
         this.report_mode                  = report_mode;
@@ -44,6 +45,7 @@ export default class ReadingModeController {
         this.widget_loader_displayer      = widget_loader_displayer;
         this.success_displayer            = success_displayer;
         this.error_displayer              = error_displayer;
+        this.gettext_provider             = gettext_provider;
 
         this.reading_mode                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode');
         this.reading_mode_trackers_empty = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-trackers-empty');
@@ -51,10 +53,6 @@ export default class ReadingModeController {
         this.reading_mode_actions        = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions');
         this.reading_mode_save_report    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-save');
         this.reading_mode_cancel_report  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel');
-
-        this.translated_fetch_cross_tracker_report_message       = this.widget_content.querySelector('.reading-mode-fetch-error').textContent;
-        this.translated_put_cross_tracker_report_message_success = this.widget_content.querySelector('.reading-mode-put-success').textContent;
-        this.translated_put_cross_tracker_report_message_error   = this.widget_content.querySelector('.reading-mode-put-error').textContent;
 
         this.loadBackendReport().then(() => {
             if (user.isAnonymous()) {
@@ -116,11 +114,11 @@ export default class ReadingModeController {
             if (trackers) {
                 this.initTrackers(trackers);
             }
-            this.success_displayer.displaySuccess(this.translated_put_cross_tracker_report_message_success);
+            this.success_displayer.displaySuccess(this.gettext_provider.gettext('Report has been successfully saved'));
             this.hideReportActions();
             this.backend_cross_tracker_report.loaded = true;
         } catch (error) {
-            this.error_displayer.displayError(this.translated_put_cross_tracker_report_message_error);
+            this.error_displayer.displayError(this.gettext_provider.gettext('Error while updating the cross tracker report'));
             throw error;
         } finally {
             this.hideSaveReportLoading();
@@ -152,7 +150,7 @@ export default class ReadingModeController {
             this.backend_cross_tracker_report.loaded = true;
         } catch (error) {
             this.reading_trackers_controller.setDisabled();
-            this.error_displayer.displayError(this.translated_fetch_cross_tracker_report_message);
+            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the cross tracker report'));
             throw error;
         } finally {
             this.widget_loader_displayer.hide();
