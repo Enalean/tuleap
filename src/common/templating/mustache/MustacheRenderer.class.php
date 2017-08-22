@@ -29,7 +29,7 @@ class MustacheRenderer extends TemplateRenderer
     /**
      * @var MustacheEngine
      */
-    protected $template_engine;
+    private $template_engine;
 
     public function __construct(TemplateCache $template_cache, $plugin_templates_dir)
     {
@@ -45,7 +45,15 @@ class MustacheRenderer extends TemplateRenderer
             $template_loader->addLoader(new Mustache_Loader_ProductionFilesystemLoader($templates_directory));
         }
 
-        $this->template_engine = new MustacheEngine($template_loader, $template_cache);
+        $this->template_engine = $this->getEngine($template_loader, $template_cache);
+    }
+
+    /**
+     * @return MustacheEngine
+     */
+    protected function getEngine(\Mustache_Loader $loader, TemplateCache $template_cache)
+    {
+        return new MustacheEngine($loader, $template_cache);
     }
     
     /**
