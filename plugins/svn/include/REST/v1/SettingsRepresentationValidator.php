@@ -58,6 +58,7 @@ class SettingsRepresentationValidator
             }
 
             $this->validatePathAreUnique($settings);
+            $this->validateAtLeastOneNotificationSent($settings);
         }
     }
 
@@ -77,10 +78,10 @@ class SettingsRepresentationValidator
         }
     }
 
-    private function validateAtLeastOneNotificationSent(SettingsPOSTRepresentation $settings = null)
+    private function validateAtLeastOneNotificationSent(SettingsRepresentation $settings = null)
     {
         $empty_notification = array();
-        if ($settings) {
+        if ($settings && $settings->email_notifications) {
             foreach ($settings->email_notifications as $notification) {
                 if (count($notification->emails) === 0 && count($notification->users) === 0) {
                     $empty_notification[] = $notification->path;

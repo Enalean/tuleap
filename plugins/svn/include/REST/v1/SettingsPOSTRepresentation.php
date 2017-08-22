@@ -45,7 +45,7 @@ class SettingsPOSTRepresentation extends SettingsRepresentation
     public $access_file;
 
     /**
-     * @var array {@type \Tuleap\SVN\REST\v1\NotificationPOSTRepresentation} {@required false}
+     * @var array {@type \Tuleap\SVN\REST\v1\NotificationPOSTPUTRepresentation} {@required false}
      */
     public $email_notifications;
 

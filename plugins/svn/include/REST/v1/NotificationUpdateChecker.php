@@ -33,7 +33,7 @@ class NotificationUpdateChecker
 
     public function __construct(MailNotificationManager $mail_notification_manager)
     {
-        $this->mail_notification_manager = $mail_notification_manager;
+        $this->mail_notification_manager       = $mail_notification_manager;
     }
 
     /**
@@ -51,7 +51,11 @@ class NotificationUpdateChecker
         }
 
         foreach ($new_notifications as $new_notification) {
-            if (! $this->mail_notification_manager->isAnExistingPath($repository, 0, $new_notification->getPath())) {
+            if (! $this->mail_notification_manager->isAnExistingPath(
+                $repository,
+                0,
+                $new_notification->getPath()
+            )) {
                 return true;
             }
 
@@ -68,6 +72,10 @@ class NotificationUpdateChecker
                         return true;
                     }
                 }
+            }
+
+            if (count($new_notification->getNotifiedUsers()) > 0) {
+                return true;
             }
         }
 

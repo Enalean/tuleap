@@ -21,10 +21,8 @@
 namespace Tuleap\Svn\Admin;
 
 
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 use DataAccessObject;
-use Project;
+use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
 
 class MailNotificationDao extends DataAccessObject {
 
@@ -143,29 +141,10 @@ class MailNotificationDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function updateGloballyForRepository($repository_id, array $new_email_notification)
+    public function deleteByRepositoryId($repository_id)
     {
-        $this->da->startTransaction();
-
         $repository_id = $this->da->escapeInt($repository_id);
 
-        if (! $this->deleteByRepositoryId($repository_id)) {
-            $this->da->rollback();
-            return false;
-        }
-
-        foreach($new_email_notification as $notification) {
-            if (! $this->create($notification)) {
-                $this->da->rollback();
-                return false;
-            }
-        }
-
-        return $this->da->commit();
-    }
-
-    private function deleteByRepositoryId($repository_id)
-    {
         $sql = "DELETE FROM plugin_svn_notification
                 WHERE repository_id = $repository_id";
 

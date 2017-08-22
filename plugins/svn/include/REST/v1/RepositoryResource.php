@@ -44,6 +44,7 @@ use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Dao;
 use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\Svn\Notifications\Notification;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
@@ -206,6 +207,9 @@ class RepositoryResource extends AuthenticatedResource
             $mail_notification_manager
         );
 
+        $user_to_notify_dao           = new UsersToNotifyDao();
+        $ugroup_to_notify_dao         = new UgroupsToNotifyDao();
+        $ugroup_manager               = new \UGroupManager();
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
@@ -214,10 +218,10 @@ class RepositoryResource extends AuthenticatedResource
             $mail_notification_manager,
             new NotificationsBuilder(
                 $this->emails_builder,
-                new UsersToNotifyDao(),
-                \UserManager::instance(),
-                new UgroupsToNotifyDao(),
-                new \UGroupManager()
+                $user_to_notify_dao,
+                $this->user_manager,
+                $ugroup_to_notify_dao,
+                $ugroup_manager
             )
         );
 
@@ -362,12 +366,16 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bar@example.com"<br>
-     *   &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": []<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/tags",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"102"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;]<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
      *   &nbsp;&nbsp;]<br>
