@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -60,6 +60,26 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
             $this->factory->getRepositoryById(GitRepositoryGitoliteAdmin::ID),
             'GitRepositoryGitoliteAdmin'
         );
+    }
+
+    public function itCanonicalizesRepositoryName()
+    {
+        $user    = mock('PFUser');
+        $project = mock('Project');
+        $backend = mock('Git_Backend_Interface');
+
+
+        $repository = $this->factory->buildRepository($project, 'a', $user, $backend);
+        $this->assertEqual($repository->getName(), 'a');
+
+        $repository = $this->factory->buildRepository($project, 'a/b', $user, $backend);
+        $this->assertEqual($repository->getName(), 'a/b');
+
+        $repository = $this->factory->buildRepository($project, 'a//b', $user, $backend);
+        $this->assertEqual($repository->getName(), 'a/b');
+
+        $repository = $this->factory->buildRepository($project, 'a///b', $user, $backend);
+        $this->assertEqual($repository->getName(), 'a/b');
     }
 }
 

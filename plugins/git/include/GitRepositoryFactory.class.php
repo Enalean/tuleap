@@ -336,7 +336,7 @@ class GitRepositoryFactory {
         $repository->setDescription($description);
         $repository->setCreator($creator);
         $repository->setProject($project);
-        $repository->setName($repository_name);
+        $repository->setName(preg_replace('/\/+/','/', $repository_name));
         return $repository;
     }
 }
