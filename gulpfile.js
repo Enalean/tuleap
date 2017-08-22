@@ -174,17 +174,14 @@ var fat_combined_files = [
         target_dir: 'src/www/themes/BurningParrot/css'
     },
     components_paths = [
-        'plugins/tracker/',
-        'plugins/tracker/grammar/',
         'src/www/themes/common/tlp/',
-        'src/www/scripts/',
+        'src/www/scripts/'
     ],
     bower_app_paths = [],
     angular_app_paths = [
         'plugins/tracker/www/scripts/angular-artifact-modal/',
         // install angular-artifact-modal must come before kanban
         'plugins/agiledashboard/www/js/kanban/',
-        'plugins/tracker/www/scripts/cross-tracker/'
     ],
     asset_dir = 'www/assets';
 

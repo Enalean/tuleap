@@ -130,18 +130,6 @@ pipeline {
                         junit 'results/karma/test-frs-results.xml'
                     }
                 },
-                'Karma CrossTracker widget': {
-                    withCredentials(npm_credentials) {
-                        sh """
-                        cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro -e NPM_REGISTRY="\$NPM_REGISTRY" -e NPM_USER="\$NPM_USER" -e NPM_PASSWORD="\$NPM_PASSWORD" -e NPM_EMAIL="\$NPM_EMAIL" \$DOCKER_REGISTRY/enalean/tuleap-test-karma --path plugins/tracker/www/scripts/cross-tracker --output-dir /output)"
-                        docker start --attach "\$cid" || true
-                        mkdir -p 'results/karma'
-                        docker cp "\$cid":/output/test-results.xml results/karma/test-cross-tracker-results.xml
-                        docker rm -fv "\$cid"
-                        """
-                        junit 'results/karma/test-cross-tracker-results.xml'
-                    }
-                },
                 'REST CentOS 6 PHP 5.3 Apache 2.2 MySQL 5.1': { runRESTTests('c6-php53-httpd22-mysql51') },
                 'REST CentOS 6 PHP 5.6 Apache 2.4 MySQL 5.6': { runRESTTests('c6-php56-httpd24-mysql56') },
                 'SOAP': {

@@ -4,18 +4,18 @@ var webpack                     = require('webpack');
 var WebpackAssetsManifest       = require('webpack-assets-manifest');
 var BabelPresetEnv              = require('babel-preset-env');
 
-var assets_dir_path = path.resolve(__dirname, './dist');
+var assets_dir_path = path.resolve(__dirname, '../assets');
+
 module.exports = {
     entry : {
-        'cross-tracker': './src/app/app.js',
+        'cross-tracker': './cross-tracker/src/app/index.js',
     },
     output: {
         path    : assets_dir_path,
         filename: '[name]-[chunkhash].js',
     },
     externals: {
-        tlp    : 'tlp',
-        angular: 'angular'
+        tlp: 'tlp'
     },
     module: {
         rules: [
@@ -37,32 +37,13 @@ module.exports = {
                         }
                     }
                 ]
-            },
-            {
-                test: /\.html$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'ng-cache-loader',
-                        query: '-url'
-                    }
-                ]
-            }, {
-                test: /\.po$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'angular-gettext-loader',
-                        query: 'browserify=true'
-                    }
-                ]
             }
         ]
     },
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
-            merge: false,
+            merge: true,
             writeToDisk: true
         }),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !

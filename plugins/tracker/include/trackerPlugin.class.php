@@ -1512,10 +1512,9 @@ class trackerPlugin extends Plugin {
         CollectionOfWidgetsThatNeedJavascriptDependencies $collection
     ) {
         $cross_tracker_include_assets = new IncludeAssets(
-            ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/scripts/cross-tracker/dist',
-            $this->getPluginPath() . '/scripts/cross-tracker/dist'
+            ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/assets',
+            $this->getPluginPath() . '/assets'
         );
-        $javascript[] = array('file' => $cross_tracker_include_assets->getFileURL('angular.js'), 'unique-name' => 'angular');
         $javascript[] = array('file' => $cross_tracker_include_assets->getFileURL('cross-tracker.js'));
 
         $collection->add(ProjectCrossTrackerSearch::NAME, $javascript);

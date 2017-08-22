@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -18,19 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard;
-
-use TuleapTestCase;
-
-class SameVersionOfAngularTest extends TuleapTestCase
-{
-    public function testThatAngularIsTheSameVersionForCrossTrackerAndKanban()
-    {
-        $kanban        = json_decode(file_get_contents(__DIR__ . '/../www/js/kanban/package-lock.json'));
-        $cross_tracker = json_decode(file_get_contents(__DIR__ . '/../../tracker/www/scripts/cross-tracker/package-lock.json'));
-        $this->assertEqual(
-            $kanban->dependencies->angular,
-            $cross_tracker->dependencies->angular
-        );
-    }
-}
+document.addEventListener('DOMContentLoaded', function () {
+});
