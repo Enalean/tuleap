@@ -356,7 +356,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         this.update_url     = codendi.tracker.base_url + '?func=artifact-update&aid=' + this.artifact_id;
         this.collection_url = codendi.tracker.base_url + '?func=get-values&formElement=' + this.field_id;
 
-        this.users          = { };
+        this.users          = new Map();
         this.is_display_avatar_selected = element.up('.cardwall_board').readAttribute('data-display-avatar');
     },
 
@@ -413,16 +413,16 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     getAvailableUsers : function() {
         var user_collection = [];
 
-        if ( $H( this.users ).size() == 0 ) {
-            this.users = this.tracker_user_data[ this.field_id ] || { };
+        if ( this.users.size === 0 ) {
+            this.users = this.tracker_user_data[ this.field_id ] || new Map();
         }
 
-        if (  $H( this.users ).size() == 0 ) {
+        if (  this.users.size === 0 ) {
             this.fetchUsers();
         }
 
-        $H( this.users ).each( function( user_details ) {
-            user_collection.push( [ user_details.value.id, user_details.value.label ] );
+        this.users.forEach(function(user_details) {
+            user_collection.push( [ user_details.id, user_details.label ] );
         });
 
         return user_collection;
@@ -436,7 +436,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             asynchronous : false,
             onSuccess : function ( data ) {
                 data.responseJSON.forEach(function( user_details ){
-                    users[ user_details['id'] ] = user_details;
+                    users.set(user_details['id'], user_details);
                 });
             }
         });
@@ -448,16 +448,19 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     getDefaultUsers : function() {
+        var users = new Map();
         var none_id = this.null_user_id;
-
-        return {
-            none_id : {
-                "id"       : none_id,
-                "label"  : "None",
-                "username" : "None",
-                "realname" : "None"
+        users.set(
+            none_id,
+            {
+                "id": none_id,
+                "label": "None",
+                "username": "None",
+                "realname": "None"
             }
-        };
+        );
+
+        return users;
     },
 
     preRequestCallback : function() {
@@ -480,9 +483,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
     success : function() {
         var field_id                     = this.field_id,
-            is_multi_select              = (this.isMultipleSelect() === true),
-            tracker_user_data            = this.tracker_user_data,
-            is_display_avatar_selected   = this.is_display_avatar_selected;
+            is_multi_select              = (this.isMultipleSelect() === true);
 
         var self = this;
 
@@ -534,8 +535,9 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         }
 
         function addUsername(container, user_id) {
-            var realname = tuleap.escaper.html(tracker_user_data[ field_id ][ user_id ][ 'realname' ]),
-                label = tracker_user_data[ field_id ][ user_id ][ 'label' ],
+            var user = tracker_user_data[ field_id ].get(user_id);
+            var realname = tuleap.escaper.html(user.realname),
+                label = user.label,
                 username_div;
 
             username_div = new Element( 'div' );
@@ -551,8 +553,9 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
         }
 
         function addAvatar(container, user_id) {
-            var username = tuleap.escaper.html(tracker_user_data[ field_id ][ user_id ][ 'username' ]),
-                label = tracker_user_data[ field_id ][ user_id ][ 'label' ],
+            var user = tracker_user_data[ field_id ].get(user_id);
+            var username = tuleap.escaper.html(user.username),
+                label = user.label,
                 avatar_img,
                 avatar_div,
                 user_div;
