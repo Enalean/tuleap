@@ -19,7 +19,9 @@
 
 namespace Tuleap\Project\REST;
 
+use PFUser;
 use Project;
+use Tuleap\REST\JsonCast;
 
 /**
  * Basic representation of a project
@@ -35,11 +37,23 @@ class ProjectRepresentation extends MinimalProjectRepresentation
      * @var Array {@type Tuleap\Project\REST\ProjectAdditionalInformationsRepresentation}
      */
     public $additional_informations = array();
+    /**
+     * @var boolean
+     */
+    public $member_of;
 
-    public function build(Project $project, array $resources, array $informations)
+    public function build(Project $project, PFUser $user, array $resources, array $informations)
     {
         $this->buildMinimal($project);
+        $this->member_of               = JsonCast::toBoolean($this->isProjectMember($user, $project));
         $this->resources               = $resources;
         $this->additional_informations = $informations;
+    }
+
+    private function isProjectMember(PFUser $user, Project $project)
+    {
+        $project_data = $user->getUserGroupData();
+
+        return isset($project_data[$project->getID()]);
     }
 }
