@@ -46,6 +46,12 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_timeline_event (
     INDEX idx_pr_pull_request_id(pull_request_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_label (
+    pull_request_id INT(11) NOT NULL,
+    label_id INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY (label_id, pull_request_id)
+);
+
 INSERT INTO reference (id, keyword, description, link, scope, service_short_name, nature)
 VALUES (31, 'pr', 'plugin_pullrequest:reference_pullrequest_desc_key', '/plugins/git/?action=pull-requests&repo_id=$repo_id&group_id=$group_id#/pull-requests/$1/overview', 'S', 'plugin_pullrequest', 'pullrequest'),
 (32, 'pullrequest', 'plugin_pullrequest:reference_pullrequest_desc_key', '/plugins/git/?action=pull-requests&repo_id=$repo_id&group_id=$group_id#/pull-requests/$1/overview', 'S', 'plugin_pullrequest', 'pullrequest');

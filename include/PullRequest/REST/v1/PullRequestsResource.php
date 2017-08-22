@@ -24,6 +24,7 @@ use EventManager;
 use Luracast\Restler\RestException;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Label\Label;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
@@ -39,6 +40,8 @@ use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
+use Tuleap\PullRequest\Label\LabelDao;
+use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
@@ -71,6 +74,9 @@ class PullRequestsResource extends AuthenticatedResource
 {
 
     const MAX_LIMIT = 50;
+
+    /** @var LabelsCurlyCoatedRetriever */
+    private $labels_retriever;
 
     /** @var GitRepositoryFactory */
     private $git_repository_factory;
@@ -162,6 +168,8 @@ class PullRequestsResource extends AuthenticatedResource
             new FineGrainedRetriever(new FineGrainedDao()),
             new \System_Command()
         );
+
+        $this->labels_retriever = new LabelsCurlyCoatedRetriever(new LabelDao());
     }
 
     /**
@@ -210,6 +218,68 @@ class PullRequestsResource extends AuthenticatedResource
 
         return $pr_representation_factory->getPullRequestRepresentation($pull_request, $repository_src, $repository_dest, $user);
     }
+
+    /**
+     * @url OPTIONS {id}/labels
+     */
+    public function optionsLabels($id)
+    {
+        $this->sendAllowHeadersForLabels();
+    }
+
+    /**
+     * Get labels
+     *
+     * Get the labels that are defined for this pull request
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url GET {id}/labels
+     *
+     * @access protected
+     *
+     * @param int $id pull request ID
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array
+     *
+     * @throws 403
+     * @throws 404 x Pull request does not exist
+     */
+    protected function getLabels($id, $limit = self::MAX_LIMIT, $offset = 0)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersForLabels();
+
+        $user            = $this->user_manager->getCurrentUser();
+        $pull_request    = $this->getPullRequest($id);
+        $repository_src  = $this->getRepository($pull_request->getRepositoryId());
+
+        $this->checkUserCanReadRepository($user, $repository_src);
+
+        $collection = $this->labels_retriever->getPaginatedLabelsForPullRequest($pull_request, $limit, $offset);
+        $labels_representation = array_map(
+            function (Label $label) {
+                $representation = new LabelRepresentation();
+                $representation->build($label);
+
+                return $representation;
+            },
+            $collection->getLabels()
+        );
+
+        $this->sendAllowHeadersForLabels();
+        Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
+
+        return array(
+            'labels' => $labels_representation
+        );
+    }
+
+
 
     /**
      * Get pull request's impacted files
@@ -828,6 +898,11 @@ class PullRequestsResource extends AuthenticatedResource
     }
 
     private function sendAllowHeadersForTimeline()
+    {
+        HEADER::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForLabels()
     {
         HEADER::allowOptionsGet();
     }

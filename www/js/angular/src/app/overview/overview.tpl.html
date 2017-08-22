@@ -26,6 +26,9 @@
             </div>
             <span class="pull-request-reference">{{ overview.pull_request.reference_src }}</span>
         </div>
+        <labels class="item-labels-box"
+                ng-if="overview.pull_request.id"
+                labels-endpoint="/api/v1/pull_requests/{{ overview.pull_request.id }}/labels" />
     </div>
 
     <div class="pull-request-author-date">

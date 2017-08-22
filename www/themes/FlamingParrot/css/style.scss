@@ -47,6 +47,15 @@
     .pull-request-summary:hover {
         border-color: transparentize($main, .5);
     }
+
+    .pull-request-details > .item-labels-box {
+        justify-content: flex-start;
+        margin: 30px 0 0;
+
+        &:empty {
+            margin: 0;
+        }
+    }
 }
 
 body {
