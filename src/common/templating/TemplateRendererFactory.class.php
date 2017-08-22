@@ -40,12 +40,12 @@ class TemplateRendererFactory
      * 
      * Mostly used at places where renderers where instanciated manually, and
      * where injecting a factory needed a lot of refactoring.
-     * 
-     * @return \TemplateRendererFactory 
+     *
+     * @return static
      */
     public static function build()
     {
-        return new self(new TemplateCache());
+        return new static(new TemplateCache());
     }
 
     /**
