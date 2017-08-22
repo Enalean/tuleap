@@ -40,12 +40,12 @@ class ProjectRepresentation extends MinimalProjectRepresentation
     /**
      * @var boolean
      */
-    public $member_of;
+    public $is_member_of;
 
     public function build(Project $project, PFUser $user, array $resources, array $informations)
     {
         $this->buildMinimal($project);
-        $this->member_of               = JsonCast::toBoolean($this->isProjectMember($user, $project));
+        $this->is_member_of            = JsonCast::toBoolean($this->isProjectMember($user, $project));
         $this->resources               = $resources;
         $this->additional_informations = $informations;
     }

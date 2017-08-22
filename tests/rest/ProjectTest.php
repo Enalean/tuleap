@@ -126,8 +126,8 @@ class ProjectTest extends ProjectBase
         $this->assertArrayHasKey('label', $json_projects[0]);
         $this->assertEquals('Private member', $json_projects[0]['label']);
 
-        $this->assertArrayHasKey('member_of', $json_projects[0]);
-        $this->assertTrue($json_projects[0]['member_of']);
+        $this->assertArrayHasKey('is_member_of', $json_projects[0]);
+        $this->assertTrue($json_projects[0]['is_member_of']);
 
         $this->assertArrayHasKey('additional_informations', $json_projects[0]);
         $this->assertEquals(
@@ -187,7 +187,7 @@ class ProjectTest extends ProjectBase
                 continue;
             }
 
-            $this->assertFalse($project['member_of']);
+            $this->assertFalse($project['is_member_of']);
 
             $project_members_uri = "user_groups/$this->project_private_id"."_3/users";
             $project_members = $this
