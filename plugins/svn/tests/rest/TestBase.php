@@ -28,7 +28,9 @@ use RestBase;
  */
 class TestBase extends RestBase
 {
-    const PROJECT_NAME = 'svn-plugin-test';
+    const PROJECT_NAME  = 'svn-plugin-test';
+    const UGROUP_NAME_1 = 'svn_ugroup_1';
+    const UGROUP_NAME_2 = 'svn_ugroup_2';
 
     /**
      * @var array
@@ -43,6 +45,16 @@ class TestBase extends RestBase
     /**
      * @var int
      */
+    public $user_group_2_id;
+
+    /**
+     * @var int
+     */
+    public $user_group_1_id;
+
+    /**
+     * @var int
+     */
     protected $svn_project_id;
 
     public function setUp()
@@ -50,6 +62,10 @@ class TestBase extends RestBase
         parent::setUp();
 
         $this->svn_project_id = $this->getProjectId(self::PROJECT_NAME);
+        $user_groups          = $this->getUserGroupsByProjectId($this->svn_project_id);
+
+        $this->user_group_1_id = $user_groups[self::UGROUP_NAME_1];
+        $this->user_group_2_id = $user_groups[self::UGROUP_NAME_2];
 
         $this->user_102 = array(
             "id"           => 102,

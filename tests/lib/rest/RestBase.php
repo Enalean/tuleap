@@ -21,11 +21,11 @@
 require_once dirname(__FILE__).'/../autoload.php';
 require_once 'common/autoload.php';
 
-use \Guzzle\Http\Client;
-use \Test\Rest\RequestWrapper;
+use Guzzle\Http\Client;
+use Test\Rest\RequestWrapper;
 
-class RestBase extends PHPUnit_Framework_TestCase {
-
+class RestBase extends PHPUnit_Framework_TestCase
+{
     protected $base_url  = 'http://localhost/api/v1';
     private   $setup_url = 'http://localhost/api/v1';
 
@@ -60,6 +60,7 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
     protected $project_ids = array();
     protected $tracker_ids = array();
+    protected $user_groups_ids = array();
 
     protected $release_artifact_ids = array();
     protected $epic_artifact_ids    = array();
@@ -95,6 +96,10 @@ class RestBase extends PHPUnit_Framework_TestCase {
 
         if (! $this->tracker_ids) {
             $this->initTrackerIds();
+        }
+
+        if (! $this->user_groups_ids) {
+            $this->initUserGroupsId();
         }
 
         $this->project_private_member_id  = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
@@ -275,6 +280,38 @@ class RestBase extends PHPUnit_Framework_TestCase {
         foreach ($artifacts as $artifact) {
             $retrieved_artifact_ids[$index] = $artifact['id'];
             $index++;
+        }
+    }
+
+    public function getUserGroupsByProjectId($project_id)
+    {
+        if (isset($this->user_groups_ids[$project_id])) {
+            return $this->user_groups_ids[$project_id];
+        }
+
+        return array();
+    }
+
+    private function initUserGroupsId()
+    {
+        foreach ($this->project_ids as $project_id) {
+            $this->extractUserGroupsForProject($project_id);
+        }
+    }
+
+    private function extractUserGroupsForProject($project_id)
+    {
+        try {
+            $response = $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->setup_client->get("projects/$project_id/user_groups")
+            );
+
+            $ugroups = $response->json();
+            foreach($ugroups as $ugroup) {
+                $this->user_groups_ids[$project_id][$ugroup['short_name']] = $ugroup['id'];
+            }
+        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
         }
     }
 }

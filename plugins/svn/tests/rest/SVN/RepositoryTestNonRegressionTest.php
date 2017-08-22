@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class RepositoryTestNonRegressionTest extends TestBase
 {
@@ -31,7 +31,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "project_id" => $this->svn_project_id,
                 "name"       => "my_repository_05",
                 "settings"   => array(
-                    "commit_rules"   => array(
+                    "commit_rules" => array(
                         "is_reference_mandatory" => true,
                     )
                 )
@@ -52,11 +52,12 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings"   => array(
                     "email_notifications" => array(
                         array(
-                            'emails' => array(
+                            'emails'      => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
                             ),
-                            'users' => array()
+                            'users'       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -77,8 +78,9 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings"   => array(
                     "email_notifications" => array(
                         array(
-                            'path'  => "/tags",
-                            'users' => array()
+                            'path'        => "/tags",
+                            'users'       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -99,11 +101,12 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings"   => array(
                     "email_notifications" => array(
                         array(
-                            'emails' => array(
+                            'emails'      => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
                             ),
-                            'path' => "/tags"
+                            'path'        => "/tags",
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -124,9 +127,10 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings"   => array(
                     "email_notifications" => array(
                         array(
-                            'users' => array(),
-                            'emails' => array(),
-                            'path' => "/tags"
+                            'users'       => array(),
+                            'emails'      => array(),
+                            'path'        => "/tags",
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -147,17 +151,48 @@ class RepositoryTestNonRegressionTest extends TestBase
                 "settings"   => array(
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
-                            )
+                            ),
+                            'users'       => array(),
+                            'user_groups' => array()
                         ),
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "test@list.example.com"
-                            )
+                            ),
+                            'users'       => array(),
+                            'user_groups' => array()
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPOSTWithNonExistingGroupId()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_07",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'path'        => "/tags",
+                            'emails'      => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            ),
+                            'users'       => array(),
+                            'user_groups' => array("101_1000")
                         )
                     )
                 )
@@ -174,23 +209,24 @@ class RepositoryTestNonRegressionTest extends TestBase
         $data = json_encode(
             array(
                 'settings' => array(
-                    'commit_rules'   => array(
+                    'commit_rules'        => array(
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
                     ),
-                    "access_file"    => "",
-                    "immutable_tags" => array(
+                    "access_file"         => "",
+                    "immutable_tags"      => array(
                         "paths"     => array(),
                         "whitelist" => array()
                     ),
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
                             ),
-                            "users" => array()
+                            "users"       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -228,18 +264,19 @@ class RepositoryTestNonRegressionTest extends TestBase
         $params = json_encode(
             array(
                 'settings' => array(
-                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags" => array(
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags"      => array(
                         "paths"     => array(),
                         "whitelist" => array()
                     ),
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com"
                             ),
-                            "users" => array()
+                            "users"       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -256,18 +293,19 @@ class RepositoryTestNonRegressionTest extends TestBase
         $params = json_encode(
             array(
                 'settings' => array(
-                    'commit_rules' => array(
+                    'commit_rules'        => array(
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
                     ),
-                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw",
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com"
                             ),
-                            "users" => array()
+                            "users"       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -284,21 +322,22 @@ class RepositoryTestNonRegressionTest extends TestBase
         $params = json_encode(
             array(
                 'settings' => array(
-                    'commit_rules'   => array(
+                    'commit_rules'        => array(
                         'is_reference_mandatory'           => true,
                         'is_commit_message_change_allowed' => false
                     ),
-                    "immutable_tags" => array(
+                    "immutable_tags"      => array(
                         "paths"     => array(),
                         "whitelist" => array()
                     ),
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com"
                             ),
-                            "users" => array()
+                            "users"       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -323,7 +362,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                         "paths"     => array(),
                         "whitelist" => array()
                     ),
-                    "access_file"  => "[/]\r\n* = rw\r\n@members = rw"
+                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw"
                 )
             )
         );
@@ -338,21 +377,22 @@ class RepositoryTestNonRegressionTest extends TestBase
         $params = json_encode(
             array(
                 "settings" => array(
-                    "commit_rules" => array(
+                    "commit_rules"        => array(
                         "is_reference_mandatory" => true,
                     ),
-                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags" => array(
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags"      => array(
                         "paths"     => array(),
                         "whitelist" => array()
                     ),
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com"
                             ),
-                            "users" => array()
+                            "users"       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -369,17 +409,18 @@ class RepositoryTestNonRegressionTest extends TestBase
         $params = json_encode(
             array(
                 "settings" => array(
-                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags" => array(
-                        "paths"     => array()
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags"      => array(
+                        "paths" => array()
                     ),
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com"
                             ),
-                            "users" => array()
+                            "users"       => array(),
+                            'user_groups' => array()
                         )
                     )
                 )
@@ -396,16 +437,44 @@ class RepositoryTestNonRegressionTest extends TestBase
         $params = json_encode(
             array(
                 "settings" => array(
-                    "access_file"    => "[/]\r\n* = rw\r\n@members = rw",
-                    "immutable_tags" => array(
-                        "paths"     => array()
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags"      => array(
+                        "paths" => array()
+                    ),
+                    "email_notifications" => array(
+                        array(
+                            'path'        => "/tags",
+                            'emails'      => array(
+                                "project-announce@list.example.com"
+                            ),
+                            'user_groups' => array()
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPUTRepositoryWithMissingUserGroupsKey()
+    {
+        $params = json_encode(
+            array(
+                "settings" => array(
+                    "access_file"         => "[/]\r\n* = rw\r\n@members = rw",
+                    "immutable_tags"      => array(
+                        "paths" => array()
                     ),
                     "email_notifications" => array(
                         array(
                             'path'   => "/tags",
                             'emails' => array(
                                 "project-announce@list.example.com"
-                            )
+                            ),
+                            'users'  => array()
                         )
                     )
                 )
