@@ -25,7 +25,7 @@
     "webpack-assets-manifest": "^0.6.2"
   },
   "scripts": {
-    "build": "webpack --optimize-minimize",
+    "build": "webpack --optimize-minimize --bail",
     "watch": "webpack --watch"
   }
 }
