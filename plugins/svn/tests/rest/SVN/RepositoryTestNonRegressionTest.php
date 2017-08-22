@@ -94,6 +94,29 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    public function testPOSTWithEmailNotificationWithMissingUserGroupsKey()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_07",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'path'   => "/tags",
+                            'users'  => array(),
+                            "emails" => array()
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     public function testPOSTWithEmailNotificationWithMissingUsersKey()
     {
         $params = json_encode(

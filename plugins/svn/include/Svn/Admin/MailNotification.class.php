@@ -124,4 +124,9 @@ class MailNotification
     {
         $this->notified_users = $notified_users;
     }
+
+    public function setUserGroups(array $user_groups)
+    {
+        $this->notified_ugroups = $user_groups;
+    }
 }

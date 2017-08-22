@@ -43,6 +43,16 @@ class TestBase extends RestBase
     public $user_103;
 
     /**
+     * @var array
+     */
+    public $user_group_101;
+
+    /**
+     * @var array
+     */
+    public $user_group_102;
+
+    /**
      * @var int
      */
     public $user_group_2_id;
@@ -89,6 +99,24 @@ class TestBase extends RestBase
             "ldap_id"      => "",
             "avatar_url"   => "http://localhost/themes/common/images/avatar_default.png",
             "is_anonymous" => false
+        );
+
+        $this->user_group_101 = array(
+            "id"         => $this->user_group_1_id,
+            "uri"        => "user_groups/" . $this->user_group_1_id,
+            "label"      => self::UGROUP_NAME_1,
+            "users_uri"  => "user_groups/".$this->user_group_1_id."/users",
+            "short_name" => self::UGROUP_NAME_1,
+            "key"        => self::UGROUP_NAME_1,
+        );
+
+        $this->user_group_102 = array(
+            "id"         => $this->user_group_2_id,
+            "uri"        => "user_groups/" . $this->user_group_2_id,
+            "label"      =>  self::UGROUP_NAME_2,
+            "users_uri"  => "user_groups/".$this->user_group_2_id."/users",
+            "short_name" => self::UGROUP_NAME_2,
+            "key"        =>  self::UGROUP_NAME_2
         );
     }
 
