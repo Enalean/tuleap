@@ -1301,84 +1301,84 @@ class Tracker implements Tracker_Dispatchable_Interface
     protected function getAdminItems() {
         $items = array(
                 'editoptions' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-editoptions',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-editoptions',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','settings'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','settings'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_title'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-general.png'),
                 ),
                 'editperms' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-perms',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-perms',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','permissions'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_permissions'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_permissions'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-perms.png'),
                 ),
                 'editformElements' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-formElements',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-formElements',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','field_usage'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mng_field_usage'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_use'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-form.png'),
                 ),
                 'dependencies' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-dependencies',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-dependencies',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies_desc'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-fdependencies.png'),
                 ),
                 'editsemantic' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-semantic',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-semantic',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','semantic'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_semantic'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_semantic_desc'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-semantic.png'),
                 ),
                 'editworkflow' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func='. Workflow::FUNC_ADMIN_RULES,
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func='. Workflow::FUNC_ADMIN_RULES,
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','workflow'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow_desc'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-workflow.png'),
                 ),
                 'editcanned' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-canned',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-canned',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','canned_resp'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mng_response'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','add_del_resp'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-canned.png'),
                 ),
                 'editnotifications' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=notifications',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_notif'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-notifs.png'),
                 ),
                 'csvimport' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-csvimport',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-csvimport',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import_desc'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-import.png'),
                 ),
                 'export' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-export',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-export',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','export_desc'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-export.png'),
                 ),
                 'hierarchy' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-hierarchy',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-hierarchy',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy_desc'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-hierarchy.png'),
                 ),
                 'clean' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-clean',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-clean',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','clean'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','clean'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','clean_desc'),
@@ -1402,7 +1402,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     array(
                         array(
                                 'title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration'),
-                                'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin',
+                                'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin',
                         ),
                     ),
                     $breadcrumbs
@@ -1531,12 +1531,12 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function getPermsItems() {
         return array(
                 'tracker' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&amp;func=admin-perms-tracker',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&func=admin-perms-tracker',
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_tracker_permissions'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_tracker_permissions')
                 ),
                 'fields' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&amp;func=admin-perms-fields',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&func=admin-perms-fields',
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_fields_tracker_permissions'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_fields_tracker_permissions')
                 )
