@@ -25,6 +25,7 @@ function ExecutionRestService(
         putTestExecution             : putTestExecution,
         changePresenceOnTestExecution: changePresenceOnTestExecution,
         leaveTestExecution           : leaveTestExecution,
+        getArtifactById              : getArtifactById,
         linkIssue                    : linkIssue
     });
 
@@ -87,6 +88,15 @@ function ExecutionRestService(
 
     function leaveTestExecution(execution_id) {
         return changePresenceOnTestExecution(execution_id, execution_id);
+    }
+
+    function getArtifactById(artifact_id) {
+        return rest
+            .one('artifacts', artifact_id)
+            .get()
+            .then(function(response) {
+                return response.data;
+            });
     }
 
     function linkIssue(issue_id, test_execution) {

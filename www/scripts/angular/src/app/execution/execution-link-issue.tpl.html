@@ -1,5 +1,5 @@
 <form class="tlp-modal"
-    name="linkIssueForm"
+    name="link_issue_form"
     ng-submit="modal.linkIssue()"
 >
     <div class="tlp-modal-header">
@@ -12,7 +12,7 @@
             <p translate>Enter the id of the bug you want to link to "{{ modal.test_summary }}". The description of this test will be added as a follow-up comment to the linked bug.</p>
         </div>
         <div class="tlp-form-element"
-            ng-class="{ 'tlp-form-element-error': linkIssueForm.issue_id.$dirty && linkIssueForm.issue_id.$invalid }">
+            ng-class="{ 'tlp-form-element-error': link_issue_form.issue_id.$dirty && link_issue_form.issue_id.$invalid }">
             <label class="tlp-label" for="issue-id">
                 <span translate>Bug Id</span> <i class="fa fa-asterisk"></i>
             </label>
@@ -23,15 +23,21 @@
                     id="issue-id"
                     name="issue_id"
                     ng-model="modal.issue.id"
+                    ng-model-options="{debounce: modal.issue_debounce}"
                     required="required"
                     ng-trim
                     auto-focus
                 />
                 <div class="link-issue-modal-input-info">
+                    <i class="fa fa-spinner fa-spin" ng-if="link_issue_form.issue_id.$pending"></i>
+                    <span ng-show="link_issue_form.$valid">
+                        <span class="tlp-badge-{{ modal.issue.xref_color }} tlp-badge-outline">{{ modal.issue.xref }}</span>
+                        {{ modal.issue.title }}
+                    </span>
                     <span class="tlp-text-danger"
-                        ng-show="(linkIssueForm.$dirty && linkIssueForm.$invalid) || modal.error_message"
+                        ng-show="(link_issue_form.$dirty && link_issue_form.$invalid) || modal.error_message"
                     >
-                        <span ng-if="linkIssueForm.issue_id.$invalid" translate>Invalid artifact id.</span>
+                        <span ng-if="link_issue_form.issue_id.$invalid" translate>The entered id is incorrect.</span>
                         {{ modal.error_message }}
                         <i class="fa fa-frown-o"></i>
                     </span>
@@ -50,7 +56,7 @@
         <button
             type="submit"
             class="tlp-button-primary tlp-modal-action"
-            ng-disabled="modal.linking_in_progress || ! linkIssueForm.$valid">
+            ng-disabled="modal.linking_in_progress || ! link_issue_form.$valid">
             <i class="fa fa-spinner fa-spin" ng-if="modal.linking_in_progress"></i>
             <span translate>Link</span>
         </button>

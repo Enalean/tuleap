@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/campaign/campaign-edit.tpl.html
@@ -145,10 +145,6 @@ msgid "Id, summary, category…"
 msgstr "Id, résumé, catégorie…"
 
 #: src/app/execution/execution-link-issue.tpl.html
-msgid "Invalid artifact id."
-msgstr "Id artefact invalide."
-
-#: src/app/execution/execution-link-issue.tpl.html
 msgid "Link"
 msgstr "Lier"
 
@@ -226,6 +222,10 @@ msgstr "Résumé du test"
 msgid "Tests"
 msgstr "Tests"
 
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "The entered id is incorrect."
+msgstr "L’id saisi est incorrect."
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "There are no campaigns"
 msgstr "Il n'existe pas de campagne"
@@ -275,3 +275,6 @@ msgid ""
 msgstr ""
 "{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} "
 "seront supprimés"
+
+#~ msgid "Invalid artifact id."
+#~ msgstr "Id artefact invalide."

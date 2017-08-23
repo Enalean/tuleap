@@ -132,10 +132,6 @@ msgid "Id, summary, category…"
 msgstr ""
 
 #: src/app/execution/execution-link-issue.tpl.html
-msgid "Invalid artifact id."
-msgstr ""
-
-#: src/app/execution/execution-link-issue.tpl.html
 msgid "Link"
 msgstr ""
 
@@ -211,6 +207,10 @@ msgstr ""
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Tests"
+msgstr ""
+
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "The entered id is incorrect."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

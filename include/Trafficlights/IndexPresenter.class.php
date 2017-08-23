@@ -78,7 +78,7 @@ class IndexPresenter {
         $test_definition_tracker_id,
         $test_execution_tracker_id,
         $issue_tracker_id,
-        $issue_tracker_permissions,
+        $issue_tracker_config,
         PFUser $current_user,
         $current_milestone
     ) {
@@ -104,9 +104,7 @@ class IndexPresenter {
             'issue_tracker_id'      => $this->issue_tracker_id
         ));
 
-        $this->issue_tracker_config = json_encode(array(
-            'permissions' => $issue_tracker_permissions
-        ));
+        $this->issue_tracker_config = json_encode($issue_tracker_config);
 
         if (isset($current_milestone)) {
             $milestone_representation = new MilestoneRepresentation($current_milestone);
