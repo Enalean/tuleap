@@ -308,7 +308,7 @@ class AdminController
         );
         try {
             if (! $autocompleter->isNotificationEmpty()) {
-                $this->mail_notification_manager->update($email_notification, $autocompleter);
+                $this->mail_notification_manager->update($email_notification);
             } else {
                 $this->mail_notification_manager->removeByNotificationId($notification_id);
             }

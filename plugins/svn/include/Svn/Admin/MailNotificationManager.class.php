@@ -89,7 +89,8 @@ class MailNotificationManager {
             'svn_multi_repository_notification_create',
             "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
             "Path: " . $email_notification->getPath() . PHP_EOL .
-            "Emails: " . $email_notification->getNotifiedMailsAsString(),
+            "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
+            "Users: " . $email_notification->getNotifiedUsersAsString(),
             $email_notification->getRepository()->getProject()->getID()
         );
     }
@@ -99,7 +100,8 @@ class MailNotificationManager {
             'svn_multi_repository_notification_update',
             "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
             "Path: " . $email_notification->getPath() . PHP_EOL .
-            "Emails: " . $email_notification->getNotifiedMailsAsString(),
+            "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
+            "Users: " . $email_notification->getNotifiedUsersAsString(),
             $email_notification->getRepository()->getProject()->getID()
         );
     }
