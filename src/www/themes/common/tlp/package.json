@@ -7,7 +7,7 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "babel-polyfill": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "dom4": "^1.8.3",
     "flatpickr": "1.9.1",
     "jquery": "2.1.0",
@@ -15,23 +15,23 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "babel-core": "^6.24.1",
-    "babel-loader": "^7.0.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.5.1",
     "concurrently": "^3.4.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
-    "gulp-header": "1.8.2",
+    "gulp-header": "^1.8.9",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-    "gulp-scss-lint": "^0.3.9",
+    "gulp-scss-lint": "^0.5.0",
     "run-sequence": "^1.2.2",
-    "webpack": "^2.5.1",
-    "webpack-assets-manifest": "^0.7.0"
+    "webpack": "^3.5.5",
+    "webpack-assets-manifest": "^1.0.0"
   },
   "scripts": {
-    "build": "gulp build && webpack --optimize-minimize",
-    "watch": "concurrently 'webpack --watch' 'gulp watch'"
+    "build": "gulp build && webpack --optimize-minimize --bail",
+    "watch": "concurrently --raw --kill-others 'webpack --watch' 'gulp watch'"
   }
 }

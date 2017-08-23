@@ -18,14 +18,92 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const get = (input, init = {}) => {
-    const method = 'GET',
-        { credentials = 'same-origin' } = init;
+export {
+    get,
+    recursiveGet,
+    put
+}
 
-    return fetch(input, {method, credentials, ...init}).then(checkResponse);
+const get = async (input, init = {}) => {
+    const method = 'GET';
+    const {
+        credentials = 'same-origin',
+        params
+    } = init;
+
+    let url = input;
+    if (params) {
+        url += encodeAllParamsToURI(params);
+    }
+
+    const response = await fetch(url, {
+        method,
+        credentials,
+        ...init
+    });
+    return checkResponse(response);
 };
 
-export const put = (input, init = {}) => {
+const encodeAllParamsToURI = (params) => {
+    let url_params = '';
+    const [first_param, ...other_params] = Object.entries(params);
+
+    url_params += '?' + encodeParamToURI(first_param);
+
+    for (const param of other_params) {
+        url_params += '&' + encodeParamToURI(param);
+    }
+
+    return url_params;
+}
+
+const encodeParamToURI = ([key, value] = param) => {
+    return encodeURIComponent(key) + '=' + encodeURIComponent(JSON.stringify(value));
+}
+
+const recursiveGet = async (input, init = {}) => {
+    const {
+        params,
+        callback = function(){}
+    } = init;
+
+    const {
+        limit = 100,
+        offset = 0
+    } = params;
+
+    const response = await get(input, {
+        ...init,
+        params: {
+            ...params,
+            limit,
+            offset
+        }
+    });
+    const json    = await response.json();
+    const results = [].concat(json);
+    callback(results);
+
+    const total      = Number.parseInt(response.headers.get('X-PAGINATION-SIZE'), 10);
+    const new_offset = offset + limit;
+
+    if (new_offset >= total) {
+       return results;
+    }
+
+    const new_init = {
+        ...init,
+        params: {
+            ...params,
+            offset: new_offset
+        }
+    };
+
+    const second_response = await recursiveGet(input, new_init);
+    return results.concat(second_response);
+};
+
+const put = (input, init = {}) => {
     const method = 'PUT',
           { credentials = 'same-origin' } = init;
 

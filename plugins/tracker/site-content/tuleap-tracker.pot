@@ -18,6 +18,9 @@ msgstr ""
 msgid "%s tracker"
 msgstr ""
 
+msgid "Add"
+msgstr ""
+
 #, php-format
 msgid "Add a new %s"
 msgstr ""
@@ -54,6 +57,12 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
+msgid "Error while fetching the list of projects you are member of"
+msgstr ""
+
+msgid "Error while fetching the list of trackers of this project"
+msgstr ""
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -76,6 +85,12 @@ msgid "Notified people"
 msgstr ""
 
 msgid "On all updates?"
+msgstr ""
+
+msgid "Please choose..."
+msgstr ""
+
+msgid "Project"
 msgstr ""
 
 msgid "Renderer id"
@@ -265,13 +280,16 @@ msgstr ""
 msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
-msgid "There is nothing here"
-msgstr ""
-
 msgid "This template does not use trackers"
 msgstr ""
 
+msgid "Tracker"
+msgstr ""
+
 msgid "Tracker renderer"
+msgstr ""
+
+msgid "Tracker selection is limited to 10 trackers"
 msgstr ""
 
 #, php-format

@@ -17,37 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    get,
-    recursiveGet,
-    put
-} from './fetch-wrapper.js';
+export default class LoaderDisplayer {
+    constructor(widget_content) {
+        this.loader        = widget_content.querySelector('.dashboard-widget-content-cross-tracker-loading');
+        this.ongoing_loads = [];
+    }
 
-export {
-    default as locale
-} from './default_locale.js';
+    show() {
+        if (this.ongoing_loads.length === 0) {
+            this.loader.classList.add('shown');
+        }
+        this.ongoing_loads.push('ongoing');
+    }
 
-export {
-    default as modal
-} from './modal.js';
-
-export {
-    default as dropdown
-} from './dropdowns.js';
-
-export {
-    default as filterInlineTable
-} from './filter-inline-table.js';
-
-
-import jQuery from 'jquery';
-// Many scripts still depend on jQuery being on window
-window.jQuery = jQuery;
-
-export {
-    default as select2
-} from '../vendor-overrides/select2.js';
-
-export {
-    default as datePicker
-} from '../vendor-overrides/flatpickr.js';
+    hide() {
+        this.ongoing_loads.pop();
+        if (this.ongoing_loads.length === 0) {
+            this.loader.classList.remove('shown');
+        }
+    }
+}

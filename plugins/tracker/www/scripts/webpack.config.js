@@ -37,6 +37,10 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.mustache$/,
+                use: { loader: 'raw-loader' }
             }
         ]
     },
@@ -46,6 +50,7 @@ module.exports = {
             merge: true,
             writeToDisk: true
         }),
+        new webpack.optimize.ModuleConcatenationPlugin(),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]

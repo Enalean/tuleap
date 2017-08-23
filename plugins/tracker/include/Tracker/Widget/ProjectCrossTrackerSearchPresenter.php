@@ -28,12 +28,33 @@ class ProjectCrossTrackerSearchPresenter
      * @var CrossTrackerPresenter
      */
     public $cross_tracker_presenter;
-    public $nothing_selected;
+    public $too_many_trackers_selected_error;
+    public $could_not_fetch_list_of_trackers_error;
+    public $could_not_fetch_list_of_projects_error;
+    public $project_label;
+    public $tracker_label;
+    public $add_button_label;
+    public $please_choose_label;
 
     public function __construct(CrossTrackerPresenter $cross_tracker_presenter)
     {
         $this->cross_tracker_presenter = $cross_tracker_presenter;
 
-        $this->nothing_selected = dgettext('tuleap-tracker', 'There is nothing here');
+        $this->too_many_trackers_selected_error       = dgettext(
+            'tuleap-tracker',
+            'Tracker selection is limited to 10 trackers'
+        );
+        $this->could_not_fetch_list_of_trackers_error = dgettext(
+            'tuleap-tracker',
+            'Error while fetching the list of trackers of this project'
+        );
+        $this->could_not_fetch_list_of_projects_error = dgettext(
+            'tuleap-tracker',
+            'Error while fetching the list of projects you are member of'
+        );
+        $this->project_label                          = dgettext('tuleap-tracker', 'Project');
+        $this->tracker_label                          = dgettext('tuleap-tracker', 'Tracker');
+        $this->add_button_label                       = dgettext('tuleap-tracker', 'Add');
+        $this->please_choose_label                    = dgettext('tuleap-tracker', 'Please choose...');
     }
 }

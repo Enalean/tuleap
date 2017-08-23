@@ -17,37 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    get,
-    recursiveGet,
-    put
-} from './fetch-wrapper.js';
+export default class TrackerSelection {
+    constructor() {
+        this.selected_project = null;
+        this.selected_tracker = null;
+    }
 
-export {
-    default as locale
-} from './default_locale.js';
-
-export {
-    default as modal
-} from './modal.js';
-
-export {
-    default as dropdown
-} from './dropdowns.js';
-
-export {
-    default as filterInlineTable
-} from './filter-inline-table.js';
-
-
-import jQuery from 'jquery';
-// Many scripts still depend on jQuery being on window
-window.jQuery = jQuery;
-
-export {
-    default as select2
-} from '../vendor-overrides/select2.js';
-
-export {
-    default as datePicker
-} from '../vendor-overrides/flatpickr.js';
+    clearTrackerSelection() {
+        this.selected_tracker = null;
+    }
+}
