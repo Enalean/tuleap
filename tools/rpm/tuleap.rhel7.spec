@@ -678,12 +678,12 @@ fi
 #    else
 #        /usr/sbin/useradd -c 'Git' -m -d '/var/lib/gitolite' -g gitolite gitolite
 #    fi
-#
-#    echo 'source /opt/rh/git19/enable' > /var/lib/gitolite/.profile
-#    chown gitolite:gitolite /var/lib/gitolite/.profile
 #else
 #    true
 #fi
+#
+# echo 'source /opt/rh/rh-git29/enable' > /var/lib/gitolite/.profile
+# chown gitolite:gitolite /var/lib/gitolite/.profile
 #
 #chmod 750 /var/lib/gitolite
 #
