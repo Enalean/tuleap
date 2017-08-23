@@ -195,11 +195,25 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the public projects and the projects the current user is member of.
      *
+     * <p>
      * If current user is site administrator, then returns all active projects.
-     *
      * <br>
-     * ?query is optional. When filled, it is a json object to search on shortname
-     * with exact match: {"shortname": "guinea-pig"}
+     * <br>
+     * ?query is optional. When filled, it is a json object with either:
+     * <ul>
+     *   <li>a property "shorname" to search on shortname with exact match.
+     *     Example: <pre>{"shortname": "guinea-pig"}</pre>
+     *   </li>
+     *   <li>a property "is_member_of" to search projects the current user is member of.
+     *     Example: <pre>{"is_member_of": true}</pre>
+     *   </li>
+     * </ul>
+     * </p>
+     *
+     * <p>
+     *   <strong>/!\</strong> Please note that {"is_member_of": false} is not supported and will result
+     *   in a 400 Bad Request error.
+     * </p>
      *
      * @url GET
      * @access hybrid
@@ -267,12 +281,26 @@ class ProjectResource extends AuthenticatedResource {
     private function getMyAndPublicProjectsFromExactMatch($query, PFUser $user, $offset, $limit)
     {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-        if (! isset($json_query['shortname'])) {
-            throw new RestException(400, 'You can only search on "shortname"');
+        if (! isset($json_query['shortname'])
+            && ! isset($json_query['is_member_of'])
+        ) {
+            throw new RestException(400, "You can only search on 'shortname' or 'is_member_of': true");
         }
 
-        return $this->project_manager->getMyAndPublicProjectsForRESTByShortname(
-            $json_query['shortname'],
+        if (isset($json_query['is_member_of']) && ! $json_query['is_member_of']) {
+            throw new RestException(400, "Searching for projects you are not member of is not supported. Use 'is_member_of': true");
+        }
+
+        if (isset($json_query['shortname'])) {
+            return $this->project_manager->getMyAndPublicProjectsForRESTByShortname(
+                $json_query['shortname'],
+                $user,
+                $offset,
+                $limit
+            );
+        }
+
+        return $this->project_manager->getMyProjectsForREST(
             $user,
             $offset,
             $limit

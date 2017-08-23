@@ -150,6 +150,29 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testGETByMembership()
+    {
+        $response      = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->get('projects?query='. urlencode('{"is_member_of":true}'))
+        );
+        $json_projects = $response->json();
+
+        $this->assertEquals(1, count($json_projects));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGETByNonMembershipShouldFail()
+    {
+        $response = $this->getResponse($this->client->get('projects?query='. urlencode('{"is_member_of":false}')));
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
     private function valuesArePresent(array $values, array $array) {
         foreach ($values as $value) {
             if (! in_array($value, $array)) {
