@@ -149,7 +149,7 @@ class CreateRepositoryController extends RouterLink
 
             $this->history_dao->groupAddHistory(
                 "git_repo_create",
-                $repository_name,
+                $repository->getName(),
                 $project_id
             );
 
@@ -157,7 +157,7 @@ class CreateRepositoryController extends RouterLink
                 'perm_granted_for_git_repository',
                 $this->history_value_formatter->formatValueForRepository($repository),
                 $project_id,
-                array($repository_name)
+                array($repository->getName())
             );
 
             $this->ci_token_manager->generateNewTokenForRepository($repository);
