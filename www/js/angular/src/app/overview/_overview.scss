@@ -1,10 +1,30 @@
 @import "timeline/timeline";
 @import "merge-modal/merge-modal";
 
+#pull-request-overview {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 3px;
+    background: #ffffff;
+
+    > h3 {
+        margin: 0 0 40px;
+        color: #747474;
+        line-height: 22px;
+        font-family: "SourceSansPro",Helvetica,Arial,sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+
+        > i {
+            margin: 0 5px 0 0;
+        }
+    }
+}
+
 #pull-request-info {
     display: flex;
-    justify-content: space-between;
-    padding: 0 15px;
 
     .pull-request-label {
         display: block;
@@ -69,7 +89,7 @@
 
     > .pull-request-author-date,
     > .pull-request-changes-ci {
-        flex: 0 0 20%;
+        flex: 0 0 auto;
         transition: opacity 100ms linear;
     }
 
@@ -102,7 +122,6 @@
 
 #pull-request-actions {
     width: 100%;
-    padding: 15px;
     box-sizing: border-box;
     text-align: center;
     transition: opacity 100ms linear;
@@ -124,11 +143,19 @@
 
     .btn {
         min-width: 150px;
-        margin: 15px 0 0;
+        margin: 20px 5px 0 0;
+
+        &:last-child {
+            margin: 20px 0 0;
+        }
     }
 
     &.in-edition {
         opacity: .3;
         transition: opacity 100ms linear;
+    }
+
+    > .alert {
+        margin: 0;
     }
 }

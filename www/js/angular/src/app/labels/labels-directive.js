@@ -7,11 +7,7 @@ function Labels($window) {
     return {
         restrict: 'E',
         link: function (scope, element, attrs) {
-            scope.$watch(function() {
-                return attrs.labelsEndpoint;
-            }, function(new_value) {
-                $window.LabelsCreator.create(element[0], new_value);
-            });
+            $window.LabelsCreator.create(element[0], attrs.labelsEndpoint);
         }
     };
 }

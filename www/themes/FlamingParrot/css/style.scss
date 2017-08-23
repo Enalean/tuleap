@@ -1,6 +1,24 @@
 @import '../../default/css/style.scss';
 
-@mixin definitions($main) {
+@mixin definitions($main, $main-background, $light-grey) {
+    &.git-pull-requests {
+        background: $main-background;
+
+        .main .content {
+            background: #ffffff;
+        }
+    }
+
+    #pull-request,
+    .dashboard {
+        background: $main-background;
+    }
+
+    #pull-request-overview,
+    #timeline {
+        border: 1px solid $light-grey;
+    }
+
     #modal-generate-pull-request .modal-header {
         border-color: $main;
     }
@@ -40,80 +58,75 @@
         background: $main;
     }
 
-    .dashboard > h2 {
-        border-color: $main;
+    #pullrequest-app {
+        border-top: 2px solid $main;
     }
 
     .pull-request-summary:hover {
         border-color: transparentize($main, .5);
     }
 
-    .pull-request-details > .item-labels-box {
-        justify-content: flex-start;
-        margin: 30px 0 0;
-
-        &:empty {
-            margin: 0;
-        }
+    .pull-request-header {
+        background: $main-background;
     }
 }
 
 body {
     @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
-    @include definitions($main);
+    @include definitions($main, $main-background, $light-grey);
 
     &.FlamingParrot_Blue {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_Green {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_BlueGrey {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_Purple {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_Red {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_DarkOrange {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkorange';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_DarkBlue {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkblue';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_DarkGreen {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkgreen';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_DarkBlueGrey {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkbluegrey';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_DarkPurple {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkpurple';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 
     &.FlamingParrot_DarkRed {
         @import '../../../../../../src/www/themes/FlamingParrot/css/utils/variables-darkred';
-        @include definitions($main);
+        @include definitions($main, $main-background, $light-grey);
     }
 }

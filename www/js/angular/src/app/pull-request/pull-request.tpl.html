@@ -1,3 +1,5 @@
+<pull-request-header pull-request-id="{{ pull_request.$state.params.id }}"></pull-request-header>
+
 <ul class="nav nav-tabs">
     <li ng-class="{active: pull_request.$state.includes('overview')}">
         <a ui-sref="overview"><i class="icon-pencil"></i> {{ 'Pull Request Details' | translate }}</a>

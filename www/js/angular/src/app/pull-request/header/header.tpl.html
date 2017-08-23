@@ -1,0 +1,7 @@
+<div class="pull-request-header">
+    <h2>{{ pull_request_controller.pull_request.title }}</h2>
+    <div>
+        <labels class="item-labels-box"
+            labels-endpoint="/api/v1/pull_requests/{{ pull_request_controller.pull_request_id }}/labels" />
+    </div>
+</div>

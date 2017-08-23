@@ -46,6 +46,10 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Details"
+msgstr ""
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Discussion"
 msgstr ""
