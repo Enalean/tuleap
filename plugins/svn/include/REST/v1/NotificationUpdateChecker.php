@@ -22,6 +22,7 @@ namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Repository\Repository;
 
 class NotificationUpdateChecker
@@ -31,9 +32,17 @@ class NotificationUpdateChecker
      */
     private $mail_notification_manager;
 
-    public function __construct(MailNotificationManager $mail_notification_manager)
-    {
+    /**
+     * @var EmailsToBeNotifiedRetriever
+     */
+    private $emails_to_be_notified_retriever;
+
+    public function __construct(
+        MailNotificationManager $mail_notification_manager,
+        EmailsToBeNotifiedRetriever $emails_to_be_notified_retriever
+    ) {
         $this->mail_notification_manager       = $mail_notification_manager;
+        $this->emails_to_be_notified_retriever = $emails_to_be_notified_retriever;
     }
 
     /**
@@ -59,7 +68,7 @@ class NotificationUpdateChecker
                 return true;
             }
 
-            $old_notifications = $this->mail_notification_manager->getByPathStrictlyEqual(
+            $old_notifications = $this->emails_to_be_notified_retriever->getNotificationsForPath(
                 $repository,
                 $new_notification->getPath()
             );
@@ -71,11 +80,12 @@ class NotificationUpdateChecker
                     ) {
                         return true;
                     }
-                }
-            }
 
-            if (count($new_notification->getNotifiedUsers()) > 0) {
-                return true;
+                    if ($this->sortNotification($new_notification->getNotifiedUsers())
+                        !== $this->sortNotification($old_notification->getNotifiedUsers())) {
+                        return true;
+                    }
+                }
             }
         }
 

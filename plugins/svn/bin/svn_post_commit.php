@@ -81,7 +81,8 @@ try {
             ),
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),
-            new UGroupManager()
+            new UGroupManager(),
+            UserManager::instance()
         ),
         new MailBuilder(
             TemplateRendererFactory::build(),
