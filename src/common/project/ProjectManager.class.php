@@ -762,6 +762,17 @@ class ProjectManager {
         return $this->getPaginatedProjects($matching_projects, $total_size);
     }
 
+    /**
+     * @return Tuleap\Project\PaginatedProjects
+     */
+    public function getMyProjectsForREST(PFUser $user, $offset, $limit)
+    {
+        $matching_projects = $this->_getDao()->getMyProjectsForREST($user, $offset, $limit);
+        $total_size        = $this->_getDao()->foundRows();
+
+        return $this->getPaginatedProjects($matching_projects, $total_size);
+    }
+
     public function getMyAndPublicProjectsForRESTByShortname($shortname, PFUser $user, $offset, $limit)
     {
         $dao = $this->_getDao();
