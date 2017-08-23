@@ -93,6 +93,7 @@ class ProjectHistoryFormatter
             $message .= "Path: " . $mail_notification->getPath() . PHP_EOL;
             $message .= "Emails: " . $mail_notification->getNotifiedMailsAsString() . PHP_EOL;
             $message .= "Users: " . $mail_notification->getNotifiedUsersAsString() . PHP_EOL;
+            $message .= "User Groups: " . $mail_notification->getNotifiedUserGroupsAsString() . PHP_EOL;
         }
 
         $this->messages[] = "Notifications:" . PHP_EOL . $message;

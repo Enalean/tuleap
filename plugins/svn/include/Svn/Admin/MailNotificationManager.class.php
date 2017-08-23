@@ -90,7 +90,8 @@ class MailNotificationManager {
             "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
             "Path: " . $email_notification->getPath() . PHP_EOL .
             "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
-            "Users: " . $email_notification->getNotifiedUsersAsString(),
+            "Users: " . $email_notification->getNotifiedUsersAsString() . PHP_EOL .
+            "User groups: " . $email_notification->getNotifiedUserGroupsAsString(),
             $email_notification->getRepository()->getProject()->getID()
         );
     }
@@ -101,7 +102,8 @@ class MailNotificationManager {
             "Repository: " . $email_notification->getRepository()->getName() . PHP_EOL .
             "Path: " . $email_notification->getPath() . PHP_EOL .
             "Emails: " . $email_notification->getNotifiedMailsAsString() . PHP_EOL .
-            "Users: " . $email_notification->getNotifiedUsersAsString(),
+            "Users: " . $email_notification->getNotifiedUsersAsString() . PHP_EOL .
+            "User groups: " . $email_notification->getNotifiedUserGroupsAsString(),
             $email_notification->getRepository()->getProject()->getID()
         );
     }

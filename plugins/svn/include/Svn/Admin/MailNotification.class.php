@@ -21,8 +21,8 @@
 namespace Tuleap\Svn\Admin;
 
 use PFUser;
+use ProjectUGroup;
 use Tuleap\Svn\Repository\Repository;
-use User_UGroup;
 
 class MailNotification
 {
@@ -38,7 +38,7 @@ class MailNotification
      */
     private $notified_users;
     /**
-     * @var User_UGroup[]
+     * @var ProjectUGroup[]
      */
     private $notified_ugroups;
 
@@ -105,7 +105,7 @@ class MailNotification
     }
 
     /**
-     * @return User_UGroup[]
+     * @return ProjectUGroup[]
      */
     public function getNotifiedUgroups()
     {
@@ -129,4 +129,16 @@ class MailNotification
     {
         $this->notified_ugroups = $user_groups;
     }
+
+    public function getNotifiedUserGroupsAsString()
+    {
+        $user_groups = array();
+
+        foreach ($this->notified_ugroups as $ugroup) {
+            $user_groups[] = $ugroup->getNormalizedName();
+        }
+
+        return implode(',', $user_groups);
+    }
+
 }
