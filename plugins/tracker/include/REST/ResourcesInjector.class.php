@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,9 @@
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Tracker\REST\ReportRepresentation;
+use Tuleap\Tracker\REST\v1\CrossTracker\CrossTrackerReportRepresentation;
 
- /**
+/**
   * Inject resource into restler
   */
 class Tracker_REST_ResourcesInjector {
@@ -33,6 +34,10 @@ class Tracker_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactFilesResource', 'artifact_files');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactTemporaryFilesResource', 'artifact_temporary_files');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ReportsResource', ReportRepresentation::ROUTE);
+        $restler->addAPIClass(
+            '\\Tuleap\\Tracker\\REST\\v1\\CrossTracker\\CrossTrackerReportsResource',
+            CrossTrackerReportRepresentation::ROUTE
+        );
     }
 
     public function declareProjectPlanningResource(array &$resources, Project $project) {

@@ -22,6 +22,8 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
+use Tuleap\Tracker\CrossTracker\CrossTrackerSaver;
 
 class REST_TestDataBuilder extends TestDataBuilder
 {
@@ -261,6 +263,16 @@ class REST_TestDataBuilder extends TestDataBuilder
 
         $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao(), $this->tracker_factory, $this->hierarchy_checker);
         $kanban_manager->createKanban('My first kanban', $tracker_id);
+
+        return $this;
+    }
+
+    public function generateCrossTracker()
+    {
+        echo "Generate Cross Tracker\n";
+
+        $cross_tracker_saver = new CrossTrackerSaver(new CrossTrackerReportDao());
+        $cross_tracker_saver->save(array($this->getKanbanTracker()));
 
         return $this;
     }
