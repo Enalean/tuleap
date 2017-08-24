@@ -45,6 +45,24 @@ class SettingsRepresentationValidator
         return $non_unique_path;
     }
 
+    private function getNonUniqueEmail(SettingsRepresentation $settings)
+    {
+        $non_unique_mail = array();
+
+        if (! isset($settings->email_notifications)) {
+            return $non_unique_mail;
+        }
+
+        foreach ($settings->email_notifications as $notification) {
+            $duplicated_values = array_diff_key($notification->emails, array_unique($notification->emails));
+            if (count($duplicated_values) > 0) {
+                $non_unique_mail[$notification->path] = $duplicated_values;
+            }
+        }
+
+        return $non_unique_mail;
+    }
+
     private function isAccessFileKeySent(SettingsRepresentation $settings = null)
     {
         return isset($settings->access_file);
@@ -59,6 +77,7 @@ class SettingsRepresentationValidator
 
             $this->validatePathAreUnique($settings);
             $this->validateAtLeastOneNotificationSent($settings);
+            $this->validateMailAreUnique($settings);
         }
     }
 
@@ -67,6 +86,7 @@ class SettingsRepresentationValidator
         if (isset($settings)) {
             $this->validatePathAreUnique($settings);
             $this->validateAtLeastOneNotificationSent($settings);
+            $this->validateMailAreUnique($settings);
         }
     }
 
@@ -93,6 +113,22 @@ class SettingsRepresentationValidator
             throw new SettingsInvalidException(
                 "Notification should concern at least one email or one user for path: " .
                 implode(',', $empty_notification)
+            );
+        }
+    }
+
+    private function validateMailAreUnique(SettingsRepresentation $settings)
+    {
+        $non_unique_mail = $this->getNonUniqueEmail($settings);
+
+        $exceptions = array();
+        foreach ($non_unique_mail as $path => $mail) {
+            $exceptions[] = $path . ' : ' . implode(', ', $mail);
+        }
+
+        if (count($exceptions) > 0) {
+            throw new SettingsInvalidException(
+                'One email or more are not unique for path: ' . implode(PHP_EOL, $exceptions)
             );
         }
     }
