@@ -27,6 +27,7 @@ use AgileDashboard_PermissionsManager;
 use KanbanPresenter;
 use TemplateRendererFactory;
 use TrackerFactory;
+use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Widget;
 
 abstract class Kanban extends Widget
@@ -182,5 +183,12 @@ abstract class Kanban extends Widget
     public function getImageTitle()
     {
         return dgettext('tuleap-agiledashboard', 'Add Kanban to dashboard');
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $provider = new KanbanJavascriptDependenciesProvider();
+
+        return $provider->getDependencies();
     }
 }

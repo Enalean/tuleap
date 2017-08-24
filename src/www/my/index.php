@@ -73,8 +73,7 @@ $router                     = new UserDashboardRouter(
         new WidgetDeletor($dashboard_widget_dao),
         new WidgetMinimizor($dashboard_widget_dao),
         new JavascriptFilesIncluder(
-            new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets'),
-            EventManager::instance()
+            new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
         )
     ),
     new WidgetDashboardController(

@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\CollectionOfWidgetsThatNeedJavascriptDependencies;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
 use Tuleap\AgileDashboard\Widget\WidgetKanbanCreator;
@@ -109,7 +108,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook('widget_instance');
             $this->addHook('widgets');
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-            $this->addHook(CollectionOfWidgetsThatNeedJavascriptDependencies::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -493,8 +491,8 @@ class AgileDashboardPlugin extends Plugin {
     public function burning_parrot_get_javascript_files(array $params)
     {
         if ($this->isKanbanURL()) {
-            $javascript_dependencies = $this->getKanbanJavascriptDependencies();
-            foreach ($javascript_dependencies as $javascript) {
+            $provider = new KanbanJavascriptDependenciesProvider();
+            foreach ($provider->getDependencies() as $javascript) {
                 if (isset($javascript['snippet'])) {
                     $GLOBALS['HTML']->includeFooterJavascriptSnippet($javascript['snippet']);
                 } else {
@@ -1072,35 +1070,6 @@ class AgileDashboardPlugin extends Plugin {
         return new MonoMilestoneItemsFinder(
             new MonoMilestoneBacklogItemDao(),
             $this->getArtifactFactory()
-        );
-    }
-
-    public function getWidgetsThatNeedJavascriptDependencies(
-        CollectionOfWidgetsThatNeedJavascriptDependencies $collection
-    ) {
-        $javascript_dependencies = $this->getKanbanJavascriptDependencies();
-        $collection->add(MyKanban::NAME, $javascript_dependencies);
-        $collection->add(ProjectKanban::NAME, $javascript_dependencies);
-    }
-
-    /**
-     * @return array
-     */
-    private function getKanbanJavascriptDependencies()
-    {
-        $kanban_include_assets = new IncludeAssets(
-            ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/js/kanban/dist',
-            $this->getPluginPath() . '/js/kanban/dist'
-        );
-        $ckeditor_path = '/scripts/ckeditor-4.3.2/';
-
-        return array(
-            array('file' => $kanban_include_assets->getFileURL('angular.js'), 'unique-name' => 'angular'),
-            array('snippet' => 'window.CKEDITOR_BASEPATH = "' . $ckeditor_path . '";'),
-            array('file' => $ckeditor_path . 'ckeditor.js'),
-            array('file' => '/scripts/codendi/Tooltip.js'),
-            array('file' => '/scripts/codendi/Tooltip-loader.js'),
-            array('file' => $kanban_include_assets->getFileURL('kanban.js')),
         );
     }
 }

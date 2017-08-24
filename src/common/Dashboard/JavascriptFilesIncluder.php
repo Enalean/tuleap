@@ -20,7 +20,6 @@
 
 namespace Tuleap\Dashboard;
 
-use EventManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Widget\ProjectHeartbeat;
 
@@ -30,15 +29,10 @@ class JavascriptFilesIncluder
      * @var IncludeAssets
      */
     private $include_assets;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
 
-    public function __construct(IncludeAssets $include_assets, EventManager $event_manager)
+    public function __construct(IncludeAssets $include_assets)
     {
         $this->include_assets = $include_assets;
-        $this->event_manager  = $event_manager;
     }
 
     /**
@@ -60,29 +54,11 @@ class JavascriptFilesIncluder
             return;
         }
 
-        $widgets_that_need_javascript_dependencies = $this->getWidgetsThatNeedSpecialJavascriptDependencies();
-        if (count($widgets_that_need_javascript_dependencies) === 0) {
-            return;
-        }
-
-        $this->includeDependencies($current_dashboard, $widgets_that_need_javascript_dependencies);
-    }
-
-    /**
-     * @param DashboardPresenter $current_dashboard
-     * @param CollectionOfWidgetsThatNeedJavascriptDependencies $widgets_that_need_javascript_dependencies
-     * @return bool
-     */
-    private function includeDependencies(
-        DashboardPresenter $current_dashboard,
-        CollectionOfWidgetsThatNeedJavascriptDependencies $widgets_that_need_javascript_dependencies
-    ) {
         $is_unique_dependency_included = array();
         foreach ($current_dashboard->widget_lines as $line) {
             foreach ($line->widget_columns as $column) {
                 foreach ($column->widgets as $widget) {
-                    $javascript_dependencies = $widgets_that_need_javascript_dependencies->get($widget->widget_name);
-                    foreach ($javascript_dependencies as $javascript) {
+                    foreach ($widget->javascript_dependencies as $javascript) {
                         if (isset($javascript['unique-name'])) {
                             if (isset($is_unique_dependency_included[$javascript['unique-name']])) {
                                 continue;
@@ -98,8 +74,6 @@ class JavascriptFilesIncluder
                 }
             }
         }
-
-        return false;
     }
 
     /**
@@ -115,21 +89,5 @@ class JavascriptFilesIncluder
         }
 
         return null;
-    }
-
-    /**
-     * @return CollectionOfWidgetsThatNeedJavascriptDependencies
-     */
-    private function getWidgetsThatNeedSpecialJavascriptDependencies()
-    {
-        $collection = new CollectionOfWidgetsThatNeedJavascriptDependencies();
-        $this->event_manager->processEvent($collection);
-
-        $collection->add(
-            ProjectHeartbeat::NAME,
-            array(array('file' => $this->include_assets->getFileURL('widget-project-heartbeat.js')))
-        );
-
-        return $collection;
     }
 }

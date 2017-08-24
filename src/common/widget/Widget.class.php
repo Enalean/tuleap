@@ -192,4 +192,10 @@ use Tuleap\Dashboard\User\UserDashboardController;
     {
         return '';
     }
+
+    /** @return array */
+    public function getJavascriptDependencies()
+    {
+        return array();
+    }
 }

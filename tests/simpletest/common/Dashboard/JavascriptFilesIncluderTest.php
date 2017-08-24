@@ -28,7 +28,6 @@ use TuleapTestCase;
 
 require_once 'www/themes/BurningParrot/BurningParrotTheme.php';
 require_once 'IncludeAssetsForTestingPurpose.php';
-require_once 'EventManagerForTestingPurpose.php';
 
 class JavascriptFilesIncluderTest extends TuleapTestCase
 {
@@ -41,8 +40,7 @@ class JavascriptFilesIncluderTest extends TuleapTestCase
         $GLOBALS['Response'] = mock('Tuleap\Theme\BurningParrot\BurningParrotTheme');
 
         $this->includer = new JavascriptFilesIncluder(
-            new IncludeAssetsForTestingPurpose('', ''),
-            new EventManagerForTestingPurpose()
+            new IncludeAssetsForTestingPurpose('', '')
         );
     }
 
@@ -115,12 +113,26 @@ class JavascriptFilesIncluderTest extends TuleapTestCase
      */
     private function getDashboardWithWidgets($widget_names)
     {
+        $dependencies = array(
+            'first_widget' => array(
+                array('file'    => 'dependency_one'),
+                array('snippet' => 'dependency_two'),
+                array('file'    => 'dependency_three', 'unique-name' => 'angular')
+            ),
+            'second_widget' => array(
+                array('file' => 'dependency_one'),
+                array('file' => 'dependency_three', 'unique-name' => 'angular'),
+                array('file' => 'dependency_four')
+            ),
+            'widget_without_dependencies' => array()
+        );
+
         $widget_presenters = array();
         foreach ($widget_names as $widget_name) {
             $widget_presenters[] = new DashboardWidgetPresenter(
                 mock('Tuleap\Dashboard\Dashboard'),
                 stub('Tuleap\Dashboard\Widget\DashboardWidget')->getName()->returns($widget_name),
-                mock('Widget'),
+                stub('Widget')->getJavascriptDependencies()->returns($dependencies[$widget_name]),
                 true
             );
         }
