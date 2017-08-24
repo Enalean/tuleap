@@ -73,6 +73,9 @@ msgstr "Impossible de réduire le widget."
 msgid "Cannot update the requested dashboard."
 msgstr "Impossible d'éditer le tableau de bord demandé."
 
+msgid "Categories"
+msgstr "Catégories"
+
 msgid "Clear history"
 msgstr "Effacer l'historique"
 
@@ -234,6 +237,9 @@ msgstr "Patrons de projet"
 msgid "Project web site"
 msgstr "Site web du projet"
 
+msgid "Projects in category"
+msgstr "Projets dans la catégorie selectionnée"
+
 msgid "RSS"
 msgstr "RSS"
 
@@ -242,6 +248,9 @@ msgstr "Récemment"
 
 msgid "SVN"
 msgstr "SVN"
+
+msgid "Short description"
+msgstr "Description courte"
 
 msgid "Shortcut list"
 msgstr "Liste des raccourcis"
@@ -285,6 +294,9 @@ msgstr "Le widget est déjà utilisé"
 
 msgid "There are no items <br> you can see"
 msgstr "Il n'y a aucun élément <br> visible"
+
+msgid "There are no projects in this category"
+msgstr "Aucun projet dans cette catégorie"
 
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."

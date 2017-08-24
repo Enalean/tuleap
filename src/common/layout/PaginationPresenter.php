@@ -43,6 +43,8 @@ class PaginationPresenter
     public $previous_is_disabled;
     public $next_is_disabled;
     public $last_is_disabled;
+    public $has_result;
+    public $offset_start_range;
 
     public function __construct($limit, $offset, $nb_displayed, $nb_total, $base_url, $default_params)
     {

@@ -56,6 +56,9 @@ msgstr ""
 msgid "Cannot update the requested dashboard."
 msgstr ""
 
+msgid "Categories"
+msgstr ""
+
 msgid "Clear history"
 msgstr ""
 
@@ -215,6 +218,9 @@ msgstr ""
 msgid "Project web site"
 msgstr ""
 
+msgid "Projects in category"
+msgstr ""
+
 msgid "RSS"
 msgstr ""
 
@@ -222,6 +228,9 @@ msgid "Recently"
 msgstr ""
 
 msgid "SVN"
+msgstr ""
+
+msgid "Short description"
 msgstr ""
 
 msgid "Shortcut list"
@@ -265,6 +274,9 @@ msgid "The widget is already used"
 msgstr ""
 
 msgid "There are no items <br> you can see"
+msgstr ""
+
+msgid "There are no projects in this category"
 msgstr ""
 
 msgid "There are no widgets here."

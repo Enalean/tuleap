@@ -39,12 +39,13 @@ if ($request->exist('form_cat')) {
     $form_cat = $GLOBALS['sys_default_trove_cat'];
 }
 
+$special_cat = $request->getValidated('special_cat');
+
 // get info about current folder
 $res_trove_cat = db_query('SELECT * FROM trove_cat WHERE trove_cat_id=' . $form_cat);
 if (db_numrows($res_trove_cat) < 1) {
     $category = $trove_cat_dao->getParentCategoriesUnderRoot();
     if ($category->count() === 0) {
-        echo db_error();
         exit_error(
             $Language->getText('softwaremap_trove_list', 'invalid_cat'),
             $Language->getText('softwaremap_trove_list', 'cat_not_exist')
@@ -54,45 +55,13 @@ if (db_numrows($res_trove_cat) < 1) {
 }
 $row_trove_cat = db_fetch_array($res_trove_cat);
 
+$current_category_name = $row_trove_cat['fullpath'];
 
-$HTML->header(array('title'=>$Language->getText('softwaremap_trove_list','map')));
-echo'
-	<h2>'.$Language->getText('softwaremap_trove_list','map').' '.help_button('overview.html#software-map-or-project-tree').'</h2>
-	<HR NoShade>
-';
-
-$purifier = Codendi_HTMLPurifier::instance();
-
-// ######## two column table for key on right
-// first print all parent cats and current cat
-print '<TABLE width=100% border="0" cellspacing="0" cellpadding="0">
-<TR valign="top"><TD>';
 $folders = explode(" :: ",$row_trove_cat['fullpath']);
 $folders_ids = explode(" :: ",$row_trove_cat['fullpath_ids']);
 $folders_len = count($folders);
-for ($i=0;$i<$folders_len;$i++) {
-	for ($sp=0;$sp<($i*2);$sp++) {
-		print " &nbsp; ";
-	}
-	html_image("ic/ofolder15.png",array());
-	print "&nbsp; ";
-	// no anchor for current cat
-	if ($folders_ids[$i] != $form_cat) {
-            print '<A href="/softwaremap/trove_list.php?form_cat='
-			.$folders_ids[$i].'">';
-	} else {
-		print '<B>';
-	}
-	print $purifier->purify($folders[$i]);
-	if ($folders_ids[$i] != $form_cat) {
-		print '</A>';
-	} else {
-		print '</B>';
-	}
-	print "<BR>\n";
-}
 
-// print subcategories
+$sub_categories = array();
 
 $sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects 
 FROM trove_cat AS t, trove_cat AS t2 LEFT JOIN (SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
@@ -111,19 +80,14 @@ WHERE t.parent = $form_cat
 GROUP BY t.trove_cat_id
 ORDER BY fullname";
 $res_sub = db_query($sql);
-echo db_error();
-$nb_listed_projects=0;
 while ($row_sub = db_fetch_array($res_sub)) {
-	for ($sp=0;$sp<($folders_len*2);$sp++) {
-		print " &nbsp; ";
-	}
-	print ('<a href="trove_list.php?form_cat='.$row_sub['trove_cat_id'].'">');
-	html_image("ic/cfolder15.png",array());
-        $nb_proj_in_cat=($row_sub['subprojects']?$purifier->purify($row_sub['subprojects']):'0');
-        $nb_listed_projects+=$nb_proj_in_cat;
-	print ('&nbsp; '.$purifier->purify($row_sub['fullname']).'</a> <I>('
-		.$nb_proj_in_cat
-		.' '.$Language->getText('softwaremap_trove_list','projs').')</I><BR>');
+    $sub_categories[] = array(
+        'id'       => $row_sub['trove_cat_id'],
+        'count'    => (int) $row_sub['subprojects'],
+        'name'     => $row_sub['fullname'],
+        'none'     => false,
+        'selected' => $row_sub['trove_cat_id'] == $form_cat,
+    );
 }
 
 // MV: Add a None case
@@ -142,48 +106,28 @@ AND trove_cat_root = ". $form_cat;
     $res_total = db_query("SELECT count(*) as count FROM groups WHERE " .trove_get_visibility_for_user('access', $current_user). " AND status='A' and type=1");
     $row_total = db_fetch_array($res_total);
     $nb_not_cat=$row_total['count']-$row_nb['count'];
-    for ($sp=0;$sp<($folders_len*2);$sp++) {
-        print " &nbsp; ";
-    }
-    html_image("ic/cfolder15.png",array());
-    print "&nbsp; ";
 
-    print '<a href="/softwaremap/trove_list.php?form_cat='.$form_cat.'&special_cat=none"><em>'.$Language->getText('softwaremap_trove_list','not_categorized').'</em></a> <I>('.$nb_not_cat.' '.$Language->getText('softwaremap_trove_list','projs').')</I><BR>';
-
-    print "<br />";
+    $sub_categories[]= array(
+        'id'       => $form_cat,
+        'count'    => $nb_not_cat,
+        'name'     => $Language->getText('softwaremap_trove_list','not_categorized'),
+        'none'     => true,
+        'selected' => $special_cat == 'none',
+    );
 }
 
-// ########### right column: root level
-print '</TD><TD>';
 // here we print list of root level categories, and use open folder for current
+$root_categories = array();
 $res_rootcat = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
 	.'parent=0 ORDER BY fullname');
-echo db_error();
-print $Language->getText('softwaremap_trove_list','browse_by');
 while ($row_rootcat = db_fetch_array($res_rootcat)) {
-	// print open folder if current, otherwise closed
-	// also make anchor if not current
-	print ('<BR>');
-	if (($row_rootcat['trove_cat_id'] == $row_trove_cat['root_parent'])
-		|| ($row_rootcat['trove_cat_id'] == $row_trove_cat['trove_cat_id'])) {
-		html_image('ic/ofolder15.png',array());
-		print ('&nbsp; <B>'.$purifier->purify($row_rootcat['fullname'])."</B>\n");
-	} else {
-		print ('<A href="/softwaremap/trove_list.php?form_cat='
-			.$row_rootcat['trove_cat_id'].'">');
-		html_image('ic/cfolder15.png',array());
-		print ('&nbsp; '.$purifier->purify($row_rootcat['fullname'])."\n");
-		print ('</A>');
-	}
+    $root_categories[] = array(
+        'id'       => $row_rootcat['trove_cat_id'],
+        'name'     => $row_rootcat['fullname'],
+        'selected' => $row_rootcat['trove_cat_id'] == $folders_ids[0],
+    );
 }
-print '</TD></TR></TABLE>';
-?>
-<HR noshade>
-<?php
-// one listing for each project
 
-//BAD QUERY!!!
-$special_cat = $request->getValidated('special_cat');
 if ($special_cat === 'none') {
     $qry_root_trov = 'SELECT group_id'
         .' FROM trove_group_link'
@@ -200,7 +144,7 @@ if ($special_cat === 'none') {
     if(count($prj_list_categorized) > 0) {
         $sql_list_categorized=' AND groups.group_id NOT IN ('.implode(',', $prj_list_categorized).') ';
     }
-    $query_projlist = "SELECT groups.group_id, "
+    $query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
         . "groups.group_name, "
         . "groups.unix_group_name, "
         . "groups.status, "
@@ -220,7 +164,7 @@ if ($special_cat === 'none') {
 else {
 // now do limiting query
 
-$query_projlist = "SELECT groups.group_id, "
+$query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
 	. "groups.group_name, "
 	. "groups.unix_group_name, "
 	. "groups.status, "
@@ -239,95 +183,56 @@ $query_projlist = "SELECT groups.group_id, "
 	. "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 
+$limit  = $TROVE_BROWSELIMIT;
+$offset = (int) $request->getValidated('offset', 'uint', 0);
+$query_projlist .= " LIMIT $limit OFFSET $offset ";
+
 $res_grp = db_query($query_projlist);
-echo db_error();
-$querytotalcount = db_numrows($res_grp);
-	
-// #################################################################
-// limit/offset display
 
-$page = $request->getValidated('page', 'uint');
-if (! $page) {
-    $page = 1;
+$res_count = db_query('SELECT FOUND_ROWS() as nb');
+$row_count = db_fetch_array($res_count);
+$total_nb_projects = $row_count['nb'];
+
+$projects = array();
+while ($row = db_fetch_array($res_grp)) {
+    $cat = trove_getcatlisting($row['group_id'], 1);
+
+    $projects[]= array(
+        'longname'    => $row['group_name'],
+        'shortname'   => strtolower($row['unix_group_name']),
+        'description' => $row['short_description'],
+        'categories'  => $cat,
+        'date'        => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['register_time']),
+    );
 }
 
-// store this as a var so it can be printed later as well
-$html_limit = '<SPAN><CENTER><FONT size="-1">';
-if ($querytotalcount ==0) {
-    $html_limit .= $Language->getText('softwaremap_trove_list','no_project_in_cat')."<br>\n";
-}
-else {
-     $html_limit .= $Language->getText('softwaremap_trove_list','projs_in_res',$querytotalcount);
-
-// only display pages stuff if there is more to display
-if ($querytotalcount > $TROVE_BROWSELIMIT) {
-	$html_limit .= ' '.$Language->getText('softwaremap_trove_list','display_per_page',$TROVE_BROWSELIMIT);
-
-	// display all the numbers
-	for ($i=1;$i<=ceil($querytotalcount/$TROVE_BROWSELIMIT);$i++) {
-		$html_limit .= ' ';
-		if ($page != $i) {
-			$html_limit .= '<A href="/softwaremap/trove_list.php?form_cat='.$form_cat;
-			$html_limit .= '&page='.$i;
-                        if ($special_cat) {
-                            $html_limit .= "&special_cat=".$purifier->purify($special_cat);
-                        }
-			$html_limit .= '">';
-		} else $html_limit .= '<B>';
-		$html_limit .= '&lt;'.$i.'&gt;';
-		if ($page != $i) {
-			$html_limit .= '</A>';
-		} else $html_limit .= '</B>';
-		$html_limit .= ' ';
-	}
-}
-}
-$html_limit .= '</FONT></CENTER></SPAN>';
-
-print $html_limit."<HR>\n";
-
-// #################################################################
-// print actual project listings
-// note that the for loop starts at 1, not 0
-for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) { 
-	$row_grp = db_fetch_array($res_grp);
-
-	// check to see if row is in page range
-	if (($i_proj > (($page-1)*$TROVE_BROWSELIMIT)) && ($i_proj <= ($page*$TROVE_BROWSELIMIT))) {
-		$viewthisrow = 1;
-	} else {
-		$viewthisrow = 0;
-	}	
-
-	if ($row_grp && $viewthisrow) {
-		print '<TABLE border="0" cellpadding="0" width="100%"><TR valign="top"><TD colspan="2">';
-		print "$i_proj. <a href=\"/projects/". $purifier->purify(strtolower($row_grp['unix_group_name'])) ."/\"><B>"
-			.$purifier->purify($row_grp['group_name'])."</B></a> ";
-		if ($row_grp['short_description']) {
-			print "- " . $purifier->purify($row_grp['short_description']);
-		}
-
-		print '<BR>&nbsp;';
-		// extra description
-		print '</TD></TR><TR valign="top"><TD>';
-		// list all trove categories
-		print trove_getcatlisting($row_grp['group_id'], 0);
-
-		print '</TD>'."\n".'<TD align="right">'; // now the right side of the display
-		print $Language->getText('softwaremap_trove_list','activity_percentile').' <B>'.$row_grp['percentile'].'</B>';
-		print '<BR>'.$Language->getText('softwaremap_trove_list','activity_ranking').' <B>'.$row_grp['ranking'].'</B>';
-		print '<BR>'.$Language->getText('softwaremap_trove_list','register_date').' <B>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row_grp['register_time']).'</B>';
-		print '</TD></TR></TABLE>';
-		print '<HR>';
-	} // end if for row and range chacking
+$pagination_params = array(
+    'form_cat' => $form_cat
+);
+if ($special_cat) {
+    $pagination_params['special_cat'] = $special_cat;
 }
 
-// print bottom navigation if there are more projects to display
-if ($querytotalcount > $TROVE_BROWSELIMIT) {
-	print $html_limit;
-}
+$renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/softwaremap');
 
-// print '<P><FONT size="-1">This listing was produced by the following query: '
-//	.$query_projlist.'</FONT>';
+$GLOBALS['HTML']->header(array('title' => $Language->getText('softwaremap_trove_list','map'), 'main_classes' => array('tlp-framed')));
+
+$renderer->renderToPage(
+    'software_map',
+    new \Tuleap\Trove\SoftwareMapPresenter(
+        $current_category_name,
+        $sub_categories,
+        $root_categories,
+        $projects,
+        new \Tuleap\Layout\PaginationPresenter(
+            $TROVE_BROWSELIMIT,
+            $offset,
+            count($projects),
+            $total_nb_projects,
+            '/softwaremap/trove_list.php',
+            $pagination_params
+        )
+    )
+);
 
 $HTML->footer(array());
