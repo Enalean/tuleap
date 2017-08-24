@@ -24,7 +24,6 @@ use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 
 require_once('pre.php');
-require_once('vars.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('www/project/export/project_export_utils.php');
