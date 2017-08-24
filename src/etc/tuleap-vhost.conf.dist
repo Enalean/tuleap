@@ -28,31 +28,6 @@ NameVirtualHost *:80
     CustomLog logs/access_log commonvhost
 </VirtualHost>
 
-#
-# Project web site virtual hosts alias
-#
-<VirtualHost *:80>
-        ServerName %sys_default_domain%
-        ServerAlias *.%sys_default_domain%
-        VirtualDocumentRoot /home/groups/%1/htdocs
-        # We won't allow cgi scripts to run on project web sites. (see installation guide)
-        DirectoryIndex index.html index.php
-        # PHP variables
-        php_admin_value open_basedir "/home/groups/"
-        php_admin_value include_path "."
-        php_admin_flag safe_mode on
-        php_admin_flag safe_mode_gid on
-        <Directory /home/groups>
-               Options Indexes FollowSymlinks
-               AllowOverride All
-               order allow,deny
-               allow from all
-       </Directory>
-
-        LogFormat "%v %h %l %u %t \"%r\" %>s %b" commonvhost
-        CustomLog logs/access_log commonvhost
-</VirtualHost>
-
 ##
 ## SSL Virtual Host Context
 ##
