@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@
  */
 class Git_Exec {
 
-    const GIT19_PATH = '/opt/rh/git19/root';
+    const GIT29_PATH = '/opt/rh/rh-git29/root';
 
     private $work_tree;
     private $git_dir;
@@ -40,13 +40,14 @@ class Git_Exec {
         } else {
             $this->git_dir = $git_dir;
         }
-        if (self::isGit19Installed()) {
-            $this->git_cmd = self::GIT19_PATH.'/usr/bin/git';
+        if (self::isGit29Installed()) {
+            $this->git_cmd = self::GIT29_PATH.'/usr/bin/git';
         }
     }
 
-    public static function isGit19Installed() {
-        return is_file(self::GIT19_PATH.'/usr/bin/git');
+    public static function isGit29Installed()
+    {
+        return is_file(self::GIT29_PATH.'/usr/bin/git');
     }
 
     public function init() {

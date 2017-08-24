@@ -43,7 +43,7 @@ GERRIT_PORT=8080
 
 # Hardly need to modify
 SSH_KEY=/home/codendiadm/.ssh/id_rsa-gerrit
-GIT=/opt/rh/git19/root/usr/bin/git
+GIT=/opt/rh/git29/root/usr/bin/git
 
 setup_gerrit_permissions() {
     echo 'You must set the following permissions to the All-Projects project (All-Projects -> General -> Edit Config):'

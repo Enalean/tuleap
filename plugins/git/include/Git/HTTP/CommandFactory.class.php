@@ -96,11 +96,9 @@ class Git_HTTP_CommandFactory {
 
 
     private function getGitHttpBackendCommand() {
-        $command = new Git_HTTP_CommandCentos5GitHttpBackend();
-        if (Git_Exec::isGit19Installed()) {
-            $command = new Git_HTTP_CommandSCL19GitHttpBackend();
-        } elseif (is_file('/usr/libexec/git-core/git-http-backend')) {
-            $command = new Git_HTTP_CommandCentos6GitHttpBackend();
+        $command = new Git_HTTP_CommandCentos6GitHttpBackend();
+        if (Git_Exec::isGit29Installed()) {
+            $command = new \Tuleap\Git\HTTP\CommandSCL29GitHttpBackend();
         }
         return $command;
     }

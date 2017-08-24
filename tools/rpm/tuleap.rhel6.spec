@@ -199,7 +199,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git19-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, %{php_base}-Smarty, %{php_base}-markdown, gitolite3, gitphp-tuleap >= 0.2.5-15
 Requires: geshi, php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
@@ -768,11 +768,12 @@ if [ "$1" -eq "1" ]; then
         /usr/sbin/useradd -c 'Git' -m -d '/var/lib/gitolite' -g gitolite gitolite
     fi
 
-    echo 'source /opt/rh/git19/enable' > /var/lib/gitolite/.profile
-    chown gitolite:gitolite /var/lib/gitolite/.profile
 else
     true
 fi
+
+echo 'source /opt/rh/rh-git29/enable' > /var/lib/gitolite/.profile
+chown gitolite:gitolite /var/lib/gitolite/.profile
 
 chmod 750 /var/lib/gitolite
 
