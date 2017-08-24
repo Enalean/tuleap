@@ -19,8 +19,11 @@
 
 namespace Tuleap\Project\REST\v1;
 
-use Tuleap\Project\HeartbeatsEntry;
+use Tuleap\Label\Label;
+use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
@@ -77,6 +80,9 @@ use Wiki;
 class ProjectResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
+
+    /** @var LabelsCurlyCoatedRetriever */
+    private $labels_retriever;
 
     /** @var UserManager */
     private $user_manager;
@@ -144,6 +150,8 @@ class ProjectResource extends AuthenticatedResource {
             new ServiceCreator(),
             $force_activation
         );
+
+        $this->labels_retriever = new LabelsCurlyCoatedRetriever(new LabelDao());
     }
 
     /**
@@ -475,6 +483,55 @@ class ProjectResource extends AuthenticatedResource {
      * @param int $id Id of the project
      */
     public function optionsHeartbeats($id) {
+        $this->sendAllowHeadersForProject();
+    }
+
+    /**
+     * Get labels
+     *
+     * Get labels used by the project
+     *
+     * <p><code>query</code> parameter allows you to search for a particular label with wildcard</p>
+     *
+     * @url GET {id}/labels
+     * @access hybrid
+     *
+     * @param int $id Id of the project
+     * @param string $query Search particular label, if not used, returns all project labels
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 1} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
+     *
+     * @return array {@type LabelRepresentation}
+     */
+    public function getLabels($id, $query = '', $limit = self::MAX_LIMIT, $offset = 0) {
+        $this->checkAccess();
+
+        $project = $this->getProjectForUser($id);
+        $collection = $this->labels_retriever->getPaginatedMatchingLabelsForProject($project, $query, $limit, $offset);
+        $labels_representation = array_map(
+            function (Label $label) {
+                $representation = new LabelRepresentation();
+                $representation->build($label);
+
+                return $representation;
+            },
+            $collection->getLabels()
+        );
+
+        $this->sendAllowHeadersForProject();
+        Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
+
+        return array(
+            'labels' => $labels_representation
+        );
+    }
+
+    /**
+     * @url OPTIONS {id}/labels
+     *
+     * @param int $id Id of the project
+     */
+    public function optionsLabels($id) {
         $this->sendAllowHeadersForProject();
     }
 
