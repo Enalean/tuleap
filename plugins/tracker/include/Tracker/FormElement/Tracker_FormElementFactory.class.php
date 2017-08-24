@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 
 require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
 require_once('common/widget/Widget_Static.class.php');
@@ -1119,6 +1119,13 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * @return PropagatePropertiesDao
+     */
+    protected function getPropagatePropertiesDao() {
+        return new PropagatePropertiesDao();
+    }
+
+    /**
      * format a tracker field short name
      * @todo move this function in a utility class
      * @param string $label
@@ -1249,7 +1256,8 @@ class Tracker_FormElementFactory {
         return true;
     }
 
-    public function updateFormElement($form_element, $form_element_data) {
+    public function updateFormElement(Tracker_FormElement $form_element, $form_element_data)
+    {
         //check that the new name is not already used
         if (isset($form_element_data['name'])) {
             if (trim($form_element_data['name'])) {
@@ -1277,7 +1285,7 @@ class Tracker_FormElementFactory {
         $form_element_data['rank']      = $rank;
         if ($form_element->updateProperties($form_element_data)) {
             if ($this->getDao()->save($form_element)) {
-                return $this->getDao()->propagateUpdatedProperties($form_element);
+                return $this->getPropagatePropertiesDao()->propagateProperties($form_element);
             }
         }
         return false;

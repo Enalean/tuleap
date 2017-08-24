@@ -1,35 +1,36 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/dao/include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for Tracker_FormElement_Field 
+ *  Data Access Object for Tracker_FormElement_Field
  */
 class Tracker_FormElement_FieldDao extends DataAccessObject {
-    
+
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_field';
     }
-    
+
     public function searchByTrackerIdAndName($tracker_id, $name) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $name  = $this->da->quoteSmart($name);
@@ -39,7 +40,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                   AND name = $name";
         return $this->retrieve($sql);
     }
-    
+
     public function searchUsedByTrackerIdAndName($tracker_id, $name) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $name  = $this->da->quoteSmart($name);
@@ -50,7 +51,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                   AND use_it = 1";
         return $this->retrieve($sql);
     }
-    
+
     public function searchUnusedByTrackerId($tracker_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -60,7 +61,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY parent_id, rank";
         return $this->retrieve($sql);
     }
-    
+
     public function searchUsedByTrackerId($tracker_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -71,7 +72,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     public function searchUsedByIdAndType($tracker_id, $field_id, $type) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
@@ -90,7 +91,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     public function searchUsedUserListFieldByTrackerId($tracker_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -101,7 +102,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     public function getUsedUserListFieldById($tracker_id, $field_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
@@ -114,7 +115,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     public function searchUsedUserSbFieldByTrackerId($tracker_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -126,7 +127,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     public function getUsedUserSbFieldById($tracker_id, $field_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $field_id    = $this->da->escapeInt($field_id);
@@ -161,7 +162,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     function searchUsedByParentId($parent_id) {
         $parent_id  = $this->da->escapeInt($parent_id);
         $sql = "SELECT *
@@ -171,7 +172,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     function searchUsedByTrackerIdAndType($tracker_id, $type, $used = null) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
@@ -180,7 +181,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
             $type = $this->da->quoteSmart($type);
             $type_stm = " = $type";
         }
-        
+
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id 
@@ -191,7 +192,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         $sql.= " ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     function searchByTrackerIdAndType($tracker_id, $type) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
@@ -207,7 +208,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY rank";
         return $this->retrieve($sql);
     }
-    
+
     /**
     * Searches field_id for (multi_)assigned_to By TrackerId
     * @return DataAccessResult
@@ -220,13 +221,13 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                $TrackerId);
         return $this->retrieve($sql);
     }
-    
+
     function searchById($id) {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT * FROM tracker_field WHERE id = $id";
         return $this->retrieve($sql);
     }
-    
+
     function searchNextUsedSibling($tracker_id, $id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $id         = $this->da->escapeInt($id);
@@ -239,7 +240,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 LIMIT 1";
         return $this->retrieve($sql);
     }
-    
+
     function searchPreviousUsedSibling($tracker_id, $id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $id         = $this->da->escapeInt($id);
@@ -252,7 +253,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 LIMIT 1";
         return $this->retrieve($sql);
     }
-    
+
     function searchByTrackerId($tracker_id) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
@@ -261,7 +262,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ORDER BY parent_id, rank";
         return $this->retrieve($sql);
     }
-    
+
     public function duplicate($from_field_id, $to_tracker_id) {
         //TODO: duplicate tracker_id
         $from_field_id  = $this->da->escapeInt($from_field_id);
@@ -272,7 +273,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 WHERE id = $from_field_id";
         return $this->updateAndGetLastId($sql);
     }
-    
+
     public function mapNewParentsAfterDuplication($tracker_id, $mapping) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $cases = '';
@@ -289,10 +290,10 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         }
         return true;
     }
-    
+
     public function save($field) {
         $rank = (int)$this->prepareRanking($field->id, $field->parent_id, $field->rank, 'id', 'parent_id');
-        
+
         $sql = "UPDATE $this->table_name
                 SET parent_id         = ". $this->da->escapeInt($field->parent_id) .", 
                     label             = ". $this->da->quoteSmart($field->label) .", 
@@ -311,16 +312,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         }
         return false;
     }
-    
-    public function propagateUpdatedProperties($original_field) {
-        $sql = "UPDATE $this->table_name AS original 
-                INNER JOIN $this->table_name AS target ON (target.original_field_id = original.id)
-                SET target.label = original.label,
-                    target.description = original.description
-                WHERE original.id = $original_field->id";
-        return $this->update($sql);
-    }
-    
+
     public function setType($field,$type) {
         $sql = "UPDATE $this->table_name
                 SET formElement_type = ". $this->da->quoteSmart($type) ."
@@ -330,22 +322,22 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         }
         return false;
     }
- 
+
     public function delete($field) {
         $sql = "DELETE FROM $this->table_name
                 WHERE id = ". $this->da->escapeInt($field->id);
         return $this->update($sql);
     }
-    
+
     public function searchSharedTargets($id) {
         $id  = $this->da->escapeInt($id);
         $sql = "SELECT * FROM tracker_field WHERE original_field_id = $id";
         return $this->retrieve($sql);
     }
-    
+
     /**
      * Returns all the original shared fields of a project
-     * 
+     *
      * Given:
      * Project A
      * |-- Tracker Release
@@ -357,12 +349,12 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
      *     |-- Field #600 Confidentiality <-------------------------|
      * |-- Tracker Sprint                                           |
      *     |-- Field #650 Confidnetiality (original_field_id = 600)-'
-     * 
+     *
      * This method returns rows of field 334 and 600
-     * 
+     *
      * @param int $project_id
-     * 
-     * @return DataAccessResult 
+     *
+     * @return DataAccessResult
      */
     public function searchProjectSharedFieldsOriginals($project_id) {
         $project_id = $this->da->escapeInt($project_id);
@@ -377,7 +369,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 GROUP BY original_field.id";
         return $this->retrieve($sql);
     }
-    
+
     public function searchProjectSharedFieldsTargets($project_id) {
         $project_id  = $this->da->escapeInt($project_id);
         $sql = "SELECT tracker_field.*
@@ -387,10 +379,10 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                   AND tracker_field.original_field_id != 0";
         return $this->retrieve($sql);
     }
-    
+
     public function searchFieldIdsByGroupId($group_id) {
         $group_id  = $this->da->escapeInt($group_id);
-        
+
         $sql = "
             SELECT f.*
         
@@ -401,7 +393,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
             AND   f.use_it   = 1
             AND   t.deletion_date IS NULL
         ";
-        
+
         return $this->retrieveIds($sql);
     }
 
@@ -412,7 +404,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
      *
      * Warning: the 2 parts of the union are deeply integrated, the second union
      * query is an extension of the first one
-     * 
+     *
      * @return DataAccessResult
      */
     public function searchAllSharedFieldsOfProject($project_id) {
@@ -438,11 +430,11 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 ) as combined";
         return $this->retrieve($sql);
     }
-    
+
     public function searchFieldFromTrackerIdAndSharedFieldId($tracker_id, $shared_field_id) {
         $tracker_id      = $this->da->escapeInt($tracker_id);
         $shared_field_id = $this->da->escapeInt($shared_field_id);
-        
+
         $sql = "SELECT f1.*
                 FROM tracker_field AS f1
                 INNER JOIN tracker_field AS f2 ON (
@@ -461,7 +453,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 WHERE f1.tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
-    
+
     public function create($type, $tracker_id, $parent_id, $name, $prefix_name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id) {
         $type              = $this->da->quoteSmart($type);
         $tracker_id        = $this->da->escapeInt($tracker_id);
@@ -476,7 +468,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         $notifications     = ($notifications ? 1 : "NULL");
         $rank              = $this->da->escapeInt($this->prepareRanking(0, $parent_id, $rank, 'id', 'parent_id'));
         $original_field_id = $this->da->escapeInt($original_field_id);
-        
+
         $sql = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id) ";
         if ($name) {
             $name = $this->da->quoteSmart($name);
@@ -491,20 +483,17 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         }
         return $this->updateAndGetLastId($sql);
     }
-    
+
     public function updateOriginalFieldId($id, $original_field_id) {
         $original_field_id = $this->da->escapeInt($original_field_id);
         $id                = $this->da->escapeInt($id);
-        
+
         $sql = "
             UPDATE $this->table_name  
             SET   original_field_id = $original_field_id 
             WHERE id                = $id
         ";
-        
+
         return $this->update($sql);
     }
 }
-
-
-?>
