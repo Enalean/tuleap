@@ -789,7 +789,7 @@ else
     # Launch forgeupgrade
     true
 
-    %{_bindir}/tuleap --clear-caches
+    %{_bindir}/tuleap --clear-caches &> /dev/null
 fi
 
 # In any cases fix the context
