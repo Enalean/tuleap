@@ -24,8 +24,6 @@ ini_set('memory_limit', -1);
 require_once('pre.php');
 session_require(array('isloggedin'=>1));
 
-require_once 'vars.php'; //load licenses
-
 $request = HTTPRequest::instance();
 
 $router = new Project_OneStepCreation_OneStepCreationRouter(

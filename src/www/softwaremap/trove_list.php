@@ -20,7 +20,6 @@
  */
 
 require_once('pre.php');    
-require_once('vars.php');
 require_once('trove.php');
 
 if ($GLOBALS['sys_use_trove'] == 0) {
