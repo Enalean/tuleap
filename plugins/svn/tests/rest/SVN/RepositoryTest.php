@@ -191,7 +191,10 @@ class RepositoryTest extends TestBase
                             'path'        => "/tags",
                         ),
                         array(
-                            'user_groups' => array(),
+                            'user_groups' => array(
+                                $this->user_group_1_id,
+                                $this->user_group_2_id
+                            ),
                             'users'       => array(),
                             'emails'      => array("project-svn@list.example.com"),
                             'path'        => "/trunk"
@@ -225,6 +228,24 @@ class RepositoryTest extends TestBase
             "[/] * = rw\r\n@members = rw"
         );
 
+        $user_group_1 = array(
+            "id"         => $this->user_group_1_id,
+            "uri"        => "user_groups/" . $this->user_group_1_id,
+            "label"      => TestBase::UGROUP_NAME_1,
+            "users_uri"  => "user_groups/".$this->user_group_1_id."/users",
+            "short_name" => TestBase::UGROUP_NAME_1,
+            "key"        => TestBase::UGROUP_NAME_1
+        );
+
+        $user_group_2 = array(
+            "id"         =>  $this->user_group_2_id,
+            "uri"        => "user_groups/".$this->user_group_2_id,
+            "label"      => TestBase::UGROUP_NAME_2,
+            "users_uri"  => "user_groups/".$this->user_group_2_id."/users",
+            "short_name" => TestBase::UGROUP_NAME_2,
+            "key"        => TestBase::UGROUP_NAME_2
+        );
+
         $this->assertEquals(
             $repository['settings']['email_notifications'],
             array(
@@ -235,7 +256,7 @@ class RepositoryTest extends TestBase
                     'path'        => "/tags",
                 ),
                 array(
-                    'user_groups' => array(),
+                    'user_groups' => array($user_group_1, $user_group_2),
                     'users'       => array(),
                     'emails'      => array("project-svn@list.example.com"),
                     'path'        => "/trunk"
@@ -290,12 +311,13 @@ class RepositoryTest extends TestBase
                     ),
                     "email_notifications" => array(
                         array(
-                            'path'   => "/tags",
-                            'emails' => array(
+                            'path'        => "/tags",
+                            'emails'      => array(
                                 "project-announce@list.example.com",
                                 "project-devel@lists.example.com"
                             ),
-                            "users"  => array(102)
+                            "users"       => array(102),
+                            "user_groups" => array()
                         )
                     )
                 )

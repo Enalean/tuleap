@@ -23,6 +23,11 @@ namespace Tuleap\SVN\REST\v1;
 class NotificationPOSTPUTRepresentation
 {
     /**
+     * @var array {@type string} {@required true} {@min 0}
+     */
+    public $user_groups;
+
+    /**
      * @var array {@type int} {@required true} {@min 0}
      */
     public $users;

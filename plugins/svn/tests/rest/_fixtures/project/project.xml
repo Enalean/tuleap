@@ -13,6 +13,17 @@
                 <member format="username">rest_api_tester_1</member>
             </members>
         </ugroup>
+        <ugroup name="svn_ugroup_1" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="svn_ugroup_2" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_3</member>
+            </members>
+        </ugroup>
     </ugroups>
     <services>
         <service shortname="plugin_svn" enabled="1"/>

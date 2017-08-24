@@ -27,6 +27,7 @@ use Project;
 use ProjectHistoryDao;
 use SystemEvent;
 use SystemEventManager;
+use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -70,6 +71,10 @@ use Tuleap\Svn\SvnPermissionManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
+    /**
+     * @var \UGroupManager
+     */
+    private $ugroup_manager;
     /**
      * @var SettingsRepresentationValidator
      */
@@ -207,9 +212,10 @@ class RepositoryResource extends AuthenticatedResource
             $mail_notification_manager
         );
 
+
         $user_to_notify_dao           = new UsersToNotifyDao();
         $ugroup_to_notify_dao         = new UgroupsToNotifyDao();
-        $ugroup_manager               = new \UGroupManager();
+        $this->ugroup_manager = new \UGroupManager();
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->permission_manager,
             $this->hook_config_retriever,
@@ -221,7 +227,7 @@ class RepositoryResource extends AuthenticatedResource
                 $user_to_notify_dao,
                 $this->user_manager,
                 $ugroup_to_notify_dao,
-                $ugroup_manager
+                $this->ugroup_manager
             )
         );
 
@@ -246,7 +252,7 @@ class RepositoryResource extends AuthenticatedResource
                     $mail_notification_manager,
                     $user_to_notify_dao,
                     $ugroup_to_notify_dao,
-                    $ugroup_manager,
+                    $this->ugroup_manager,
                     $this->user_manager
                 )
             )
@@ -577,14 +583,19 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;102,<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;103<br>
-     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user_groups": []<br>
      *   &nbsp;&nbsp;&nbsp;},<br>
      *   &nbsp;&nbsp;&nbsp;{<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/tags",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"emails": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
-     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": []<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": [],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user_groups": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"122_101",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"122_102"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
      *   &nbsp;&nbsp;&nbsp;}<br>
      *   &nbsp;&nbsp;]<br>
      *   &nbsp;}<br>
@@ -727,13 +738,41 @@ class RepositoryResource extends AuthenticatedResource
                     }
                 }
 
+                $user_groups_notification = array();
+                if ($notification->user_groups) {
+                    foreach ($notification->user_groups as $group_id) {
+                        $project_ugroup = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($group_id);
+                        $group          = $this->ugroup_manager->getById(
+                            $project_ugroup['user_group_id']
+                        );
+                        if ($group->getId() === 0) {
+                            throw new RestException(400, "Group $group_id not found");
+                        }
+
+                        if ($group->isStatic() && $group->getProject()->getID() !== $repository->getProject()->getID()) {
+                            throw new RestException(
+                                400,
+                                "Group $group_id not found for project " . $repository->getProject()->getID()
+                            );
+                        }
+
+                        if (! $group->isStatic()) {
+                            throw new RestException(
+                                400,
+                                "Dynamics user groups are not supported yet"
+                            );
+                        }
+                        $user_groups_notification[] = $group;
+                    }
+                }
+
                 $mail_notification[] = new MailNotification(
                     0,
                     $repository,
                     $notification->path,
                     $notification->emails,
                     $users_notification,
-                    array()
+                    $user_groups_notification
                 );
             }
         }
