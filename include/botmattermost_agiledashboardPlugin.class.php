@@ -35,6 +35,7 @@ use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationBuilder
 use Tuleap\BotMattermostAgileDashboard\SenderServices\StandUpNotificationSender;
 use Tuleap\BotMattermost\SenderServices\EncoderMessage;
 use Tuleap\BotMattermost\SenderServices\Sender;
+use Tuleap\Cron\EventCronJobEveryMinute;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -58,7 +59,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
             $this->addHook('javascript_file');
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ADMIN);
         }
-        $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
+        $this->addHook(EventCronJobEveryMinute::NAME);
         $this->addHook(BotMattermostDeleted::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -106,7 +107,7 @@ class botmattermost_agiledashboardPlugin extends Plugin
         );
     }
 
-    public function proccess_system_check()
+    public function cron_job_every_minute(EventCronJobEveryMinute $event)
     {
         $artifact_factory         = Tracker_ArtifactFactory::instance();
         $milestone_status_counter = new AgileDashboard_Milestone_MilestoneStatusCounter(

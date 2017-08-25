@@ -26,7 +26,7 @@ use Tuleap\BotMattermost\Bot\Bot;
 class Dao extends DataAccessObject
 {
 
-    const SYSTEM_EVENT_INTERVAL = '00:30:00';
+    const SEND_TIME_INTERVAL = '00:00:59';
 
     public function searchBotNotification($project_id)
     {
@@ -50,7 +50,7 @@ class Dao extends DataAccessObject
 
     public function searchAgileDashboardBotsForSummary()
     {
-        $interval   = $this->da->quoteSmart(self::SYSTEM_EVENT_INTERVAL);
+        $interval   = $this->da->quoteSmart(self::SEND_TIME_INTERVAL);
 
         $sql = "SELECT *
                 FROM plugin_botmattermost_bot
