@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -83,10 +83,6 @@ class ProjectHistoryPresenter {
         $this->offset             = $offset;
         $this->limit              = $limit;
         $this->forward_sub_events = $forward_sub_events;
-    }
-
-    public function list_table_top() {
-        return html_build_list_table_top($this->titles);
     }
 
     public function start_field_date() {
