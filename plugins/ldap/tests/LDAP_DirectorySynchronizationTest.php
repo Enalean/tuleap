@@ -1,26 +1,28 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
  * 
  * Originally written by Manuel VACELET, 2009.
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  * 
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  * 
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once __DIR__ . '/../include/constants.php';
 require_once dirname(__FILE__).'/../include/LDAP_DirectorySynchronization.class.php';
 require_once dirname(__FILE__).'/../include/LDAP_SyncReminderNotificationManager.class.php';
 require_once 'common/language/BaseLanguage.class.php';
@@ -75,13 +77,16 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         unset($GLOBALS['Language']);
     }
 
-    function testNoDBUpdateIfLdapSearchFalse() {
+    function testNoDBUpdateIfLdapSearchFalse()
+    {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
 
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', 0);
-        $ldap->setReturnValue('search', false);
-        $ldap->expectCallCount('search', 3);
+        $ldap->setReturnValueAt(0, 'search', false);
+        $ldap->setReturnValueAt(1, 'search', false);
+        $ldap->setReturnValueAt(2, 'search', true);
+        $ldap->expectCallCount('search', 1);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
@@ -317,13 +322,16 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
         $lri->setReturnValueAt(1, 'valid', false);
         $lri->setReturnReference('current', $res);
 
+        $empty_lri = new MockLDAPResultIterator($this);
+        $empty_lri->setReturnValue('count', 0);
+
         $ldap = new MockInhLDAP($this);
         $ldap->setReturnValue('getErrno', LDAP::ERR_SUCCESS);
         $param1 = 'ou=People,dc=st,dc=com ';
         $param2 = ' ou=Intranet,dc=st,dc=com ';
-        $ldap->setReturnValueAt(0, 'search', false);
+        $ldap->setReturnValueAt(0, 'search', $empty_lri);
         $ldap->setReturnValueAt(1, 'search', $lri);
-        $ldap->setReturnValueAt(2, 'search', false);
+        $ldap->setReturnValueAt(2, 'search', $empty_lri);
         $ldap->expectCallCount('search', 2);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
         $sync->__construct($ldap, mock('TruncateLevelLogger'));
@@ -352,4 +360,3 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
     }
 
 }
-?>
