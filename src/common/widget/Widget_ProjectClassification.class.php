@@ -39,9 +39,7 @@ class Widget_ProjectClassification extends Widget {
         $group_id = $request->get('group_id');
         $html = '';
         if ($GLOBALS['sys_use_trove'] != 0) {
-            ob_start();
-            trove_getcatlisting($group_id, 0, 1);
-            $html = ob_get_clean();
+            $html = trove_getcatlisting($group_id, 1);
         }
 
         return $html;

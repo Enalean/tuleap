@@ -160,77 +160,43 @@ function trove_get_html_allcat_selectfull($group_id) {
 // ###############################################################
 // gets discriminator listing for a group
 
-function trove_getcatlisting($group_id,$a_filter,$a_cats) {
-	global $discrim_url;
-	global $expl_discrim;
-	global $form_cat;
-	global $Language;
+function trove_getcatlisting($group_id, $a_cats)
+{
+    $res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
+        . 'trove_cat.fullpath_ids AS fullpath_ids,'
+        . 'trove_cat.trove_cat_id AS trove_cat_id '
+        . 'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
+        . 'trove_group_link.trove_cat_id AND trove_group_link.group_id='
+        . db_ei($group_id) . ' '
+        . 'ORDER BY trove_cat.fullpath');
 
-	$res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
-		.'trove_cat.fullpath_ids AS fullpath_ids,'
-		.'trove_cat.trove_cat_id AS trove_cat_id '
-		.'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
-		.'trove_group_link.trove_cat_id AND trove_group_link.group_id='
-		.db_ei($group_id).' '
-		.'ORDER BY trove_cat.fullpath');
+    if (db_numrows($res_trovecat) < 1) {
+        return $GLOBALS['Language']->getText('include_trove', 'not_categorized_yet',
+            array('/softwaremap/trove_list.php', "/project/admin/group_trove.php?group_id=$group_id"));
+    }
 
-// LJ Added a link to the categorization admin page
-// LJ in case the project is not yet categorized
+    // first unset the vars were using here
+    $purifier = Codendi_HTMLPurifier::instance();
 
-	if (db_numrows($res_trovecat) < 1) {
-	  print $Language->getText('include_trove','not_categorized_yet',array('/softwaremap/trove_list.php',"/project/admin/group_trove.php?group_id=$group_id"));
-	}
+    $html = '<ul>';
+    while ($row_trovecat = db_fetch_array($res_trovecat)) {
+        $folders = explode(" :: ", $row_trovecat['fullpath']);
+        $folders_ids = explode(" :: ", $row_trovecat['fullpath_ids']);
+        $folders_len = count($folders);
+        $html .= '<li> ' . $purifier->purify($folders[0]) . ': ';
 
-	// first unset the vars were using here
-	$proj_discrim_used='';
-	$isfirstdiscrim = 1;
-        $purifier = Codendi_HTMLPurifier::instance();
-	echo '<UL>';
-	while ($row_trovecat = db_fetch_array($res_trovecat)) {
-		$folders = explode(" :: ",$row_trovecat['fullpath']);
-		$folders_ids = explode(" :: ",$row_trovecat['fullpath_ids']);
-		$folders_len = count($folders);
-		// if first in discrim print root category
-		if ((!isset($proj_discrim_used[$folders_ids[0]]))||(!$proj_discrim_used[$folders_ids[0]])) {
-			if (!$isfirstdiscrim) print '<BR>';
-				print ('<LI> '.$purifier->purify($folders[0]).': ');
-		}
-
-		// filter links, to add discriminators
-		// first check to see if filter is already applied
-		$filterisalreadyapplied = 0;
-		for ($i=0;$i<sizeof($expl_discrim);$i++) {
-			if ($folders_ids[$folders_len-1] == $expl_discrim[$i])
-				$filterisalreadyapplied = 1;
-			}
-			// then print the stuff
-                        if ((isset($proj_discrim_used[$folders_ids[0]]))&&($proj_discrim_used[$folders_ids[0]])) {
-                            print ', ';
-                        }
-
-			if ($a_cats) print '<A href="/softwaremap/trove_list.php?form_cat='
-				.$folders_ids[$folders_len-1].$discrim_url.'">';
-			print ($purifier->purify($folders[$folders_len-1]));
-			if ($a_cats) print '</A>';
-
-			if ($a_filter) {
-				if ($filterisalreadyapplied) {
-					print ' ('.$Language->getText('include_trove','now_filter').') ';
-				} else {
-					print ' <A href="/softwaremap/trove_list.php?form_cat='
-						.$purifier->purify(urlencode($form_cat));
-					if ($discrim_url) {
-						print $discrim_url.','.$folders_ids[$folders_len-1];
-					} else {
-						print '&discrim='.$folders_ids[$folders_len-1];
-					}
-					print '">['.$Language->getText('include_trove','filter').']</A> ';
-				}
-			}
-		$proj_discrim_used[$folders_ids[0]] = 1;
-		$isfirstdiscrim = 0;
-	}
-	echo '</UL>';
+        if ($a_cats) {
+            $html .= '<a href="/softwaremap/trove_list.php?form_cat='
+                . $folders_ids[$folders_len - 1] . '">';
+        }
+        $html .= $purifier->purify($folders[$folders_len - 1]);
+        if ($a_cats) {
+            $html .= '</a>';
+        }
+        $html .= '</li>';
+    }
+    $html .= '</ul>';
+    return $html;
 }
 
 // returns a full path for a trove category
