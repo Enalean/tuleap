@@ -23,7 +23,6 @@ use PFUser;
 
 class CrossTrackerPresenter
 {
-
     /** @var string */
     public $language;
 

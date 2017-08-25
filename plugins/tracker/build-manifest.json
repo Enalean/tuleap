@@ -78,5 +78,10 @@
         "www/scripts/tracker-report-nature-column.js",
         "www/scripts/tracker-admin-notifications.js",
         "www/scripts/tracker-admin-notifications-popover.js"
+    ],
+    "components": [
+        "plugins/tracker/",
+        "plugins/tracker/www/scripts/",
+        "plugins/tracker/grammar/"
     ]
 }

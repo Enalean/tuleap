@@ -28,9 +28,12 @@ class ProjectCrossTrackerSearchPresenter
      * @var CrossTrackerPresenter
      */
     public $cross_tracker_presenter;
+    public $nothing_selected;
 
     public function __construct(CrossTrackerPresenter $cross_tracker_presenter)
     {
         $this->cross_tracker_presenter = $cross_tracker_presenter;
+
+        $this->nothing_selected = dgettext('tuleap-tracker', 'There is nothing here');
     }
 }

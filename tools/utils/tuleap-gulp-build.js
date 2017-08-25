@@ -11,6 +11,8 @@ var gulp        = require('gulp'),
     scss_lint   = require('gulp-scss-lint'),
     sass        = require('gulp-sass');
 
+var component_builder = require('./component-builder.js');
+
 function get_all_plugins_from_manifests() {
     var plugins_path = './plugins';
 
@@ -79,6 +81,13 @@ function declare_plugin_tasks(asset_dir) {
             clean_tasks.push('clean-' + task_name);
         }
 
+        if ('components' in plugin) {
+            task_name = 'components-' + name;
+
+            component_builder.installAndBuildNpmComponents(plugin['components'], task_name, ['clean-js-' + name]);
+            javascript_tasks.push(task_name);
+        }
+
         if ('themes' in plugin) {
             task_name = 'sass-' + name;
 
@@ -126,7 +135,10 @@ function concat_files_plugin(base_dir, name, files, asset_dir) {
         .pipe(concat(name))
         .pipe(rev())
         .pipe(gulp.dest(path.join(base_dir, asset_dir)))
-        .pipe(rev.manifest('manifest.json'))
+        .pipe(rev.manifest({
+            path: 'manifest.json',
+            merge: true
+        }))
         .pipe(gulp.dest(path.join(base_dir, asset_dir)));
 }
 
