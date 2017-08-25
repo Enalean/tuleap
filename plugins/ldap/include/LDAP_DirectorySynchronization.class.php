@@ -84,9 +84,9 @@ class LDAP_DirectorySynchronization {
             $search_depth = LDAP::SCOPE_ONELEVEL;
         }
 
-        foreach (split(';', $this->ldap->getLDAPParam('people_dn')) as $PeopleDn) {
+        foreach (explode(';', $this->ldap->getLDAPParam('people_dn')) as $PeopleDn) {
             $lri = $this->ldap->search($PeopleDn, $ldap_query, $search_depth, $attributes);
-            if (count($lri) == 1 && $lri != false) {
+            if ($lri === false ||count($lri) === 1) {
                 break;
             }
         }
