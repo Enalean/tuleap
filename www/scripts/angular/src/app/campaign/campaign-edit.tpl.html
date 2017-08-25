@@ -48,7 +48,7 @@
             <div class="tlp-form-element edit-campaign-tests-search-container">
                 <input type="search"
                        class="tlp-search tlp-table-actions-element"
-                       id="edit-campaign-tests-list-filter"
+                       enable-tlp-table-filter
                        data-target-table-id="edit-campaign-tests-list"
                        autocomplete="off"
                        placeholder="{{ 'Id, summary, category…' | translate }}">
@@ -95,7 +95,7 @@
         </table>
     </div>
 
-    <div class="tlp-modal-footer">
+    <div class="tlp-modal-footer edit-campaign-footer">
         <div class="edit-campaign-tests-diff">
             <div class="tlp-badge-success tlp-badge-outline"
                 ng-if="addedTests().length > 0"

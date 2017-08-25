@@ -56,10 +56,6 @@ function CampaignEditCtrl(
     });
 
     this.$onInit = function() {
-        var searchField = document.getElementById('edit-campaign-tests-list-filter');
-        tlp.filterInlineTable(searchField);
-        searchField.addEventListener('keydown', preventSubmit);
-
         project_id  = SharedPropertiesService.getProjectId();
         campaign_id = $state.params.id;
 
@@ -155,21 +151,6 @@ function CampaignEditCtrl(
             execution: execution,
             selected: selected
         };
-    }
-
-    function preventSubmit(event) {
-        var event = event || window.event;
-        var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-
-        if (keyCode === 13) {
-            event.cancelBubble = true;
-            event.returnValue = false;
-
-            if (event.stopPropagation) {
-                event.stopPropagation();
-                event.preventDefault();
-            }
-        }
     }
 
     function selectedTests(category) {
