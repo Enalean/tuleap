@@ -115,6 +115,7 @@ class EmailsToBeNotifiedRetriever
         $notifications = $this->notification_manager->getByPathStrictlyEqual($repository, $path);
         foreach ($notifications as $notification) {
             $this->addUser($notification);
+            $this->addUgroup($notification);
         }
 
         return $notifications;
@@ -129,5 +130,16 @@ class EmailsToBeNotifiedRetriever
         }
 
         $notification->setUsers($users);
+    }
+
+    private function addUgroup(MailNotification $notification)
+    {
+        $user_groups = array();
+
+        foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
+            $user_groups[] = $this->ugroup_manager->getById($row['ugroup_id']);
+        }
+
+        $notification->setUserGroups($user_groups);
     }
 }

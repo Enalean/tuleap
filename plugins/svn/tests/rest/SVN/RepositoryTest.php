@@ -22,7 +22,7 @@ namespace Tuleap\SVN\REST;
 
 use REST_TestDataBuilder;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class RepositoryTest extends TestBase
 {
@@ -228,24 +228,6 @@ class RepositoryTest extends TestBase
             "[/] * = rw\r\n@members = rw"
         );
 
-        $user_group_1 = array(
-            "id"         => $this->user_group_1_id,
-            "uri"        => "user_groups/" . $this->user_group_1_id,
-            "label"      => TestBase::UGROUP_NAME_1,
-            "users_uri"  => "user_groups/".$this->user_group_1_id."/users",
-            "short_name" => TestBase::UGROUP_NAME_1,
-            "key"        => TestBase::UGROUP_NAME_1
-        );
-
-        $user_group_2 = array(
-            "id"         =>  $this->user_group_2_id,
-            "uri"        => "user_groups/".$this->user_group_2_id,
-            "label"      => TestBase::UGROUP_NAME_2,
-            "users_uri"  => "user_groups/".$this->user_group_2_id."/users",
-            "short_name" => TestBase::UGROUP_NAME_2,
-            "key"        => TestBase::UGROUP_NAME_2
-        );
-
         $this->assertEquals(
             $repository['settings']['email_notifications'],
             array(
@@ -256,7 +238,7 @@ class RepositoryTest extends TestBase
                     'path'        => "/tags",
                 ),
                 array(
-                    'user_groups' => array($user_group_1, $user_group_2),
+                    'user_groups' => array($this->user_group_101, $this->user_group_102),
                     'users'       => array(),
                     'emails'      => array("project-svn@list.example.com"),
                     'path'        => "/trunk"
@@ -317,7 +299,10 @@ class RepositoryTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             "users"       => array(102),
-                            "user_groups" => array()
+                            "user_groups" => array(
+                                $this->user_group_1_id,
+                                $this->user_group_2_id
+                            )
                         )
                     )
                 )
@@ -358,7 +343,7 @@ class RepositoryTest extends TestBase
                         "project-announce@list.example.com",
                         "project-devel@lists.example.com"
                     ),
-                    "user_groups" => array(),
+                    "user_groups" => array($this->user_group_101, $this->user_group_102),
                     "users"       => array($this->user_102)
                 )
             )
@@ -369,7 +354,10 @@ class RepositoryTest extends TestBase
     {
         $response = $this->getResponse($this->client->get('svn/1'));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(
+            array('OPTIONS', 'GET', 'PUT', 'DELETE'),
+            $response->getHeader('Allow')->normalize()->toArray()
+        );
     }
 
     public function testOPTIONSId()

@@ -46,7 +46,7 @@ class NotificationUpdateChecker
     }
 
     /**
-     * @param Repository         $repository
+     * @param Repository $repository
      * @param MailNotification[] $new_notifications
      *
      * @return bool
@@ -83,6 +83,11 @@ class NotificationUpdateChecker
 
                     if ($this->sortNotification($new_notification->getNotifiedUsers())
                         !== $this->sortNotification($old_notification->getNotifiedUsers())) {
+                        return true;
+                    }
+
+                    if ($this->sortNotification($new_notification->getNotifiedUgroups())
+                        !== $this->sortNotification($old_notification->getNotifiedUgroups())) {
                         return true;
                     }
                 }

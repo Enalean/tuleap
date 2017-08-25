@@ -391,7 +391,8 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"foo@example.com",<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"bar@example.com"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;],<br>
-     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": []<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": [],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user_groups": []<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;},<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"path": "/tags",<br>
@@ -400,6 +401,10 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;],<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": [<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"102"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;],<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user_groups": [<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"101_3",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"105"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;]<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
      *   &nbsp;&nbsp;]<br>
@@ -602,8 +607,8 @@ class RepositoryResource extends AuthenticatedResource
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;],<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"users": [],<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"user_groups": [<br>
-     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"122_101",<br>
-     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"122_102"<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"122_4",<br>
+     *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"102"<br>
      *   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
      *   &nbsp;&nbsp;&nbsp;}<br>
      *   &nbsp;&nbsp;]<br>

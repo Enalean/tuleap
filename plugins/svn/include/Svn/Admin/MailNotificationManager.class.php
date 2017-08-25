@@ -173,6 +173,13 @@ class MailNotificationManager {
                 $this->dao->da->rollback();
                 return false;
             }
+
+            try {
+                $this->notificationAddUgroups($notification);
+            } catch (CannotAddUgroupsNotificationException $e) {
+                $this->dao->da->rollback();
+                return false;
+            }
         }
 
         return $this->dao->da->commit();
