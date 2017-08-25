@@ -25,8 +25,10 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use ProjectHistoryDao;
+use ProjectUGroup;
 use SystemEvent;
 use SystemEventManager;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -68,9 +70,14 @@ use Tuleap\Svn\Repository\Settings;
 use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 use Tuleap\Svn\SvnPermissionManager;
+use UGroupManager;
 
 class RepositoryResource extends AuthenticatedResource
 {
+    /**
+     * @var UserGroupRetriever
+     */
+    private $user_group_id_retriever;
     /**
      * @var \UGroupManager
      */
@@ -259,6 +266,8 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $this->settings_representation_validator = new SettingsRepresentationValidator();
+
+        $this->user_group_id_retriever = new UserGroupRetriever(new UGroupManager());
     }
 
     /**
@@ -741,27 +750,22 @@ class RepositoryResource extends AuthenticatedResource
                 $user_groups_notification = array();
                 if ($notification->user_groups) {
                     foreach ($notification->user_groups as $group_id) {
-                        $project_ugroup = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($group_id);
-                        $group          = $this->ugroup_manager->getById(
-                            $project_ugroup['user_group_id']
-                        );
-                        if ($group->getId() === 0) {
-                            throw new RestException(400, "Group $group_id not found");
-                        }
+                        $group = $this->user_group_id_retriever->getExistingUserGroup($group_id);
 
-                        if ($group->isStatic() && $group->getProject()->getID() !== $repository->getProject()->getID()) {
+                        if (! $group->isStatic() && ! $this->isAnAuthorizedDynamicUgroup($group)) {
                             throw new RestException(
                                 400,
-                                "Group $group_id not found for project " . $repository->getProject()->getID()
+                                "Notifications can not be sent to ugroups Anonymous Authenticated and Registered"
                             );
                         }
 
-                        if (! $group->isStatic()) {
+                        if ($group->getProject()->getId() != $repository->getProject()->getID()) {
                             throw new RestException(
                                 400,
-                                "Dynamics user groups are not supported yet"
+                                "You can't add a user group from a different project"
                             );
                         }
+
                         $user_groups_notification[] = $group;
                     }
                 }
@@ -778,5 +782,11 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         return new Settings($commit_rules, $immutable_tag, $access_file, $mail_notification);
+    }
+
+    private function isAnAuthorizedDynamicUgroup(ProjectUGroup $group)
+    {
+        return $group->getId() == ProjectUGroup::PROJECT_MEMBERS ||
+            $group->getId() == ProjectUGroup::PROJECT_ADMIN;
     }
 }

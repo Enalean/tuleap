@@ -20,6 +20,8 @@
 
 namespace Tuleap\SVN\REST;
 
+use ProjectUGroup;
+
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class RepositoryTestNonRegressionTest extends TestBase
@@ -192,7 +194,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             'users'       => array(),
-                            'user_groups' => array("101_1000")
+                            'user_groups' => array("1000")
                         )
                     )
                 )
@@ -202,6 +204,86 @@ class RepositoryTestNonRegressionTest extends TestBase
         $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponse($this->client->post('svn', null, $params));
         $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPOSTWithUGroupIdFromAnOtherProject()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_07",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'path'        => "/tags",
+                            'emails'      => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            ),
+                            'users'       => array(),
+                            'user_groups' => array("110_".ProjectUGroup::PROJECT_MEMBERS)
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPOSTWithUnsupportedDynamicUGroupId()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_07",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'path'        => "/tags",
+                            'emails'      => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            ),
+                            'users'       => array(),
+                            'user_groups' => array($this->svn_project_id."_".ProjectUGroup::ANONYMOUS)
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testPOSTWithSupportedDynamicUGroupId()
+    {
+        $params = json_encode(
+            array(
+                "project_id" => $this->svn_project_id,
+                "name"       => "my_repository_07",
+                "settings"   => array(
+                    "email_notifications" => array(
+                        array(
+                            'path'        => "/tags",
+                            'emails'      => array(
+                                "project-announce@list.example.com",
+                                "project-devel@lists.example.com"
+                            ),
+                            'users'       => array(),
+                            'user_groups' => array($this->svn_project_id."_".ProjectUGroup::PROJECT_MEMBERS)
+                        )
+                    )
+                )
+            )
+        );
+
+        $response = $this->getResponse($this->client->post('svn', null, $params));
+        $this->assertEquals($response->getStatusCode(), 201);
     }
 
     public function testPUTRepositoryWithEmptyAccessFile()

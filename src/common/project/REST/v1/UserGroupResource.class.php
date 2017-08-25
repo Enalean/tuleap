@@ -19,18 +19,19 @@
 
 namespace Tuleap\Project\REST\v1;
 
-use \ProjectManager;
-use \UserManager;
-use \ProjectUGroup;
-use \PFUser;
-use \UGroupManager;
-use \URLVerification;
-use \Tuleap\Project\REST\UserGroupRepresentation;
-use \Tuleap\User\REST\UserRepresentation;
-use \Tuleap\REST\Header;
-use \Tuleap\REST\ProjectAuthorization;
-use \Luracast\Restler\RestException;
+use Luracast\Restler\RestException;
+use PFUser;
+use ProjectManager;
+use ProjectUGroup;
+use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\User\REST\UserRepresentation;
+use UGroupManager;
+use URLVerification;
+use UserManager;
 
 /**
  * Wrapper for user_groups related REST methods
@@ -44,6 +45,11 @@ class UserGroupResource extends AuthenticatedResource {
     const EMAIL_ID    = 'email';
     const LDAP_ID_ID  = 'ldap_id';
 
+    /**
+     * @var UserGroupRetriever
+     */
+    private $user_group_retriever;
+
     /** @var UGroupManager */
     private $ugroup_manager;
 
@@ -54,9 +60,10 @@ class UserGroupResource extends AuthenticatedResource {
     private $project_manager;
 
     public function __construct() {
-        $this->ugroup_manager  = new UGroupManager();
-        $this->user_manager    = UserManager::instance();
-        $this->project_manager = ProjectManager::instance();
+        $this->ugroup_manager       = new UGroupManager();
+        $this->user_manager         = UserManager::instance();
+        $this->project_manager      = ProjectManager::instance();
+        $this->user_group_retriever = new UserGroupRetriever($this->ugroup_manager);
     }
 
     /**
@@ -80,7 +87,7 @@ class UserGroupResource extends AuthenticatedResource {
     public function getId($id) {
         $this->checkAccess();
 
-        $ugroup     = $this->getExistingUserGroup($id);
+        $ugroup     = $this->user_group_retriever->getExistingUserGroup($id);
         $project_id = $ugroup->getProjectId();
 
         if ($project_id) {
@@ -131,7 +138,7 @@ class UserGroupResource extends AuthenticatedResource {
     protected function getUsers($id, $limit = 10, $offset = 0) {
         $this->checkLimitValueIsAcceptable($limit);
 
-        $user_group = $this->getExistingUserGroup($id);
+        $user_group = $this->user_group_retriever->getExistingUserGroup($id);
         $this->checkGroupIsViewable($user_group->getId());
         $project_id = $user_group->getProjectId();
         $this->userCanSeeUserGroupMembers($project_id);
@@ -184,7 +191,7 @@ class UserGroupResource extends AuthenticatedResource {
     protected function putUsers($id, array $user_references) {
         $this->checkAccess();
 
-        $user_group = $this->getExistingUserGroup($id);
+        $user_group = $this->user_group_retriever->getExistingUserGroup($id);
         $this->checkUgroupValidity($user_group);
 
         $project_id = $user_group->getProjectId();
@@ -337,55 +344,6 @@ class UserGroupResource extends AuthenticatedResource {
         $user_representation->build($member);
 
         return $user_representation;
-    }
-
-    /**
-     * Checks if the given id is appropriate (format: projectId_ugroupId or format: ugroupId)
-     *
-     * @param string $id Id of the ugroup
-     *
-     * @return boolean
-     *
-     * @throws 400
-     */
-    private function checkIdIsAppropriate($id) {
-        try {
-            UserGroupRepresentation::checkRESTIdIsAppropriate($id);
-        } catch (\Exception $e) {
-            throw new RestException(400, $e->getMessage());
-        }
-    }
-
-    /**
-     * Checks if the given user group exists
-     *
-     * @param int $id
-     *
-     * @return ProjectUGroup
-     *
-     * @throws 404
-     */
-    private function getExistingUserGroup($id) {
-        $this->checkIdIsAppropriate($id);
-
-        $values        = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($id);
-        $user_group_id = $values['user_group_id'];
-
-        $user_group = $this->ugroup_manager->getById($user_group_id);
-
-        if ($user_group->getId() === 0) {
-            throw new RestException(404, 'User Group does not exist');
-        }
-
-        if (! $user_group->isStatic()) {
-            $user_group->setProjectId($values['project_id']);
-        }
-
-        if ($user_group->isStatic() && $values['project_id'] && $values['project_id'] != $user_group->getProjectId()) {
-            throw new RestException(404, 'User Group does not exist in project');
-        }
-
-        return $user_group;
     }
 
     /**
