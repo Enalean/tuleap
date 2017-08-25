@@ -110,6 +110,13 @@ const put = (input, init = {}) => {
     return fetch(input, {method, credentials, ...init}).then(checkResponse);
 };
 
+export const patch = (input, init = {}) => {
+    const method = 'PATCH',
+          { credentials = 'same-origin' } = init;
+
+    return fetch(input, {method, credentials, ...init}).then(checkResponse);
+};
+
 function checkResponse(response) {
     if (response.ok) {
         return response;

@@ -96,16 +96,19 @@ var webpack_config_for_navbar_history = {
 
 var webpack_config_for_labels = {
     entry: {
-        LabelsCreator: [
+        'labels-box': [
             'regenerator-runtime/runtime', // for async/await
             'whatwg-fetch',
             './labels/labels-box.js'
         ]
     },
+    externals: {
+        jquery: 'jQuery'
+    },
     output: {
         path: assets_dir_path,
         filename: '[name]-[chunkhash].js',
-        library: 'LabelsCreator'
+        library: 'LabelsBox'
     },
     resolve: {
         alias: {
