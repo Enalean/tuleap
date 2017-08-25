@@ -112,7 +112,7 @@ class pullrequestPlugin extends Plugin
     {
         if (strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0) {
             $include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
-            echo '<script type="text/javascript" src="'. $include_asset->getFileURL('LabelsCreator.js') .'"></script>';
+            echo '<script type="text/javascript" src="'. $include_asset->getFileURL('labels-box.js') .'"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/angular/bin/assets/tuleap-pullrequest.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/move-button-back.js"></script>';
         }

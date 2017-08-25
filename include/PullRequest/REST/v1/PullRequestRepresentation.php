@@ -125,6 +125,11 @@ class PullRequestRepresentation
     public $user_can_abandon;
 
     /**
+     * @var bool {@type bool}
+     */
+    public $user_can_update_labels;
+
+    /**
      * @var string {@type string}
      */
     public $merge_status;
@@ -160,6 +165,7 @@ class PullRequestRepresentation
         GitRepository $repository_dest,
         $user_can_merge,
         $user_can_abandon,
+        $user_can_update_labels,
         PullRequestShortStatRepresentation $pr_short_stat_representation
     ) {
         $this->id  = JsonCast::toInt($pull_request->getId());
@@ -196,9 +202,10 @@ class PullRequestRepresentation
             )
         );
 
-        $this->user_can_merge   = $user_can_merge;
-        $this->user_can_abandon = $user_can_abandon;
-        $this->merge_status     = $this->expandMergeStatusName($pull_request->getMergeStatus());
+        $this->user_can_update_labels = $user_can_update_labels;
+        $this->user_can_merge         = $user_can_merge;
+        $this->user_can_abandon       = $user_can_abandon;
+        $this->merge_status           = $this->expandMergeStatusName($pull_request->getMergeStatus());
 
         $this->short_stat = $pr_short_stat_representation;
 

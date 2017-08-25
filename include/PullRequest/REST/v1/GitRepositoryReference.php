@@ -21,15 +21,22 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use GitRepository;
+use Tuleap\Project\REST\ProjectReference;
 
 class GitRepositoryReference extends \Tuleap\Git\REST\v1\GitRepositoryReference
 {
+    /** @var string */
     public $name;
-    
+
+    /** @var ProjectReference */
+    public $project;
+
     public function build(GitRepository $repository)
     {
         parent::build($repository);
         $this->name = $repository->getFullName();
+        $this->project = new ProjectReference();
+        $this->project->build($repository->getProject());
     }
 
 }

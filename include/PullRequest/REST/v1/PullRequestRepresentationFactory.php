@@ -52,6 +52,8 @@ class PullRequestRepresentationFactory
         $user_can_abandon = $user_can_merge ||
             $this->access_control_verifier->canWrite($user, $repository_src, $pull_request->getBranchSrc());
 
+        $user_can_update_labels = $user_can_merge;
+
         $pull_request_representation = new PullRequestRepresentation();
         $pull_request_representation->build(
             $pull_request,
@@ -59,7 +61,9 @@ class PullRequestRepresentationFactory
             $repository_dest,
             $user_can_merge,
             $user_can_abandon,
-            $short_stat_repres);
+            $user_can_update_labels,
+            $short_stat_repres
+        );
 
         return $pull_request_representation;
     }
