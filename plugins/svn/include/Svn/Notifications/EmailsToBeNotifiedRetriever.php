@@ -137,7 +137,12 @@ class EmailsToBeNotifiedRetriever
         $user_groups = array();
 
         foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
-            $user_groups[] = $this->ugroup_manager->getById($row['ugroup_id']);
+            $user_group = $this->ugroup_manager->getById($row['ugroup_id']);
+
+            $user_group->setProjectId($notification->getRepository()->getProject()->getID());
+            $user_group->setProject($notification->getRepository()->getProject());
+
+            $user_groups[] = $user_group;
         }
 
         $notification->setUserGroups($user_groups);

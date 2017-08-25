@@ -87,7 +87,7 @@ class NotificationUpdateChecker
                     }
 
                     if ($this->sortNotification($new_notification->getNotifiedUgroups())
-                        !== $this->sortNotification($old_notification->getNotifiedUgroups())) {
+                        != $this->sortNotification($old_notification->getNotifiedUgroups())) {
                         return true;
                     }
                 }
