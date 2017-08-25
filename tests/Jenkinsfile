@@ -2,6 +2,17 @@
 
 def npm_credentials = [usernamePassword(credentialsId: 'nexus.enalean.com_readonly', passwordVariable: 'NPM_PASSWORD', usernameVariable: 'NPM_USER')];
 
+def runRESTTests(String version) {
+    sh """
+    mkdir -p working_copy/api-$version
+    cp -R sources/* working_copy/api-$version/
+    cp working_copy/api-$version/tests/rest/bin/composer.json working_copy/api-$version/composer.json
+    mkdir -p results/api-$version
+    docker run --rm -v \$WORKSPACE/working_copy/api-$version/:/usr/share/tuleap -v \$WORKSPACE/results/api-$version:/output \$DOCKER_REGISTRY/enalean/tuleap-test-rest:$version
+    """
+    junit "results/api-$version/rest_tests.xml"
+}
+
 pipeline {
     agent {
         label 'docker'
@@ -130,6 +141,20 @@ pipeline {
                         """
                         junit 'results/karma/test-cross-tracker-results.xml'
                     }
+                },
+                'REST CentOS 6 PHP 5.3 Apache 2.2 MySQL 5.1': { runRESTTests('c6-php53-httpd22-mysql51') },
+                'REST CentOS 6 PHP 5.6 Apache 2.4 MySQL 5.6': { runRESTTests('c6-php56-httpd24-mysql56') },
+                'SOAP': {
+                    sh """
+                    mkdir -p working_copy/api-soap
+                    cp -R sources/* working_copy/api-soap/
+                    cid="\$(docker create -v \$WORKSPACE/working_copy/api-soap:/tuleap \$DOCKER_REGISTRY/enalean/tuleap-test-soap)"
+                    docker start --attach "\$cid" || true
+                    mkdir -p 'results/api-soap'
+                    docker cp "\$cid":/output/soap_tests.xml results/api-soap/ || true
+                    docker rm -fv "\$cid"
+                    """
+                    junit 'results/api-soap/soap_tests.xml'
                 },
                 failFast: false
             }
