@@ -1,7 +1,7 @@
 <?php
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// Copyright (c) Enalean, 2015. All Rights Reserved.
+// Copyright (c) Enalean, 2015-2017. All Rights Reserved.
 //
 // 
 //
@@ -196,9 +196,10 @@ if (($func=='do_create')||($func=='do_update')) {
             $link=str_replace('$projectname',$project->getUnixName(),$link);
         }
         $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
-        if ($GLOBALS['sys_force_ssl']) {
-            $sys_default_protocol='https'; 
-        } else { $sys_default_protocol='http'; }
+        $sys_default_protocol='http';
+        if (ForgeConfig::get('sys_https_host')) {
+            $sys_default_protocol='https';
+        }
         $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
         $link=str_replace('$group_id',$group_id,$link);
     }
@@ -242,9 +243,10 @@ if ($func=='do_create') {
         $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
         $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
         $nbproj=1;
-        if ($GLOBALS['sys_force_ssl']) {
+        $sys_default_protocol='http';
+        if (ForgeConfig::get('sys_https_host')) {
             $sys_default_protocol='https'; 
-        } else { $sys_default_protocol='http'; }
+        }
         while ($arr = db_fetch_array($result1)) {
             $my_group_id=$arr['group_id'];
             // Substitute values in links

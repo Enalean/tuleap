@@ -263,7 +263,7 @@ class Tracker_DateReminderManager {
      * @return String
      */
     protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
-        $protocol = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+        $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $link     = ' <'.$protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
 
         $output   = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient).' ==============+';
@@ -289,7 +289,7 @@ class Tracker_DateReminderManager {
     protected function getBodyHtml(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
         $format   = Codendi_Mail_Interface::FORMAT_HTML;
         $hp       = Codendi_HTMLPurifier::instance();
-        $protocol = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+        $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $link     = $protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId();
 
         $output   ='<h1>'.$hp->purify($artifact->fetchMailTitle($recipient, $format, false)).'</h1>'.PHP_EOL;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,6 @@
 function forge_get_config($key, $scope = 'core') {
     $conf_variables_mapping = array(
         'web_host'          => 'sys_default_domain',
-        'use_ssl'           => 'sys_force_ssl',
         'forge_name'        => 'sys_name',
         //'lists_host'        => 'sys_lists_host',
         //'config_path'       => 'sys_custom_dir',

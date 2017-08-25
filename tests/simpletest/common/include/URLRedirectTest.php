@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,20 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
 
     private $url_redirect;
 
-    public function setUp() {
+    public function setUp()
+    {
+        parent::setUp();
+        ForgeConfig::store();
+        ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_https_host', 'example.com');
+
         $event_manager      = mock('EventManager');
         $this->url_redirect = new URLRedirect($event_manager);
-        $GLOBALS['sys_force_ssl'] = 1;
-        $GLOBALS['sys_https_host'] = 'example.com';
-        $GLOBALS['sys_default_domain'] = 'example.com';
-        parent::setUp();
     }
 
-    public function tearDown() {
-        unset($GLOBALS['sys_force_ssl']);
-        unset($GLOBALS['sys_https_host']);
-        unset($GLOBALS['sys_default_domain']);
+    public function tearDown()
+    {
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -58,15 +59,6 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
             array('REQUEST_URI' => '/account/register.php')
         );
         $this->assertEqual('/account/login.php?return_to=%2Fmy%2F', $login_url_from_register_page);
-    }
-
-    public function itStayInSSLWhenForceSSLIsOn() {
-        $GLOBALS['sys_force_ssl'] = 1;
-
-        $this->assertEqual(
-            '/my/index.php',
-            $this->url_redirect->makeReturnToUrl('/my/index.php', '')
-        );
     }
 
     public function itNotRedirectToUntrustedWebsite() {

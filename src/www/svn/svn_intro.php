@@ -3,7 +3,7 @@
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
  *
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,7 +48,7 @@ if ($svn_preamble != '') {
     echo $hp->purify(util_unconvert_htmlspecialchars($svn_preamble), CODENDI_PURIFIER_FULL);
 } else {
     $host = $GLOBALS['sys_default_domain'];
-    if ($GLOBALS['sys_force_ssl']) {
+    if (ForgeConfig::get('sys_https_host')) {
        $svn_url = 'https://'. $host;
     } else if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
       $svn_url = 'http://'.$host;

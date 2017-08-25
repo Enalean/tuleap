@@ -58,7 +58,7 @@ require $utils_path."/cvs1/checkins.pl";
 require $utils_path."/hudson.pl";
 
 my $codendi_srv;
-if ($sys_force_ssl) {
+if ($sys_https_host) {
   $codendi_srv="https://$sys_https_host";
 } else {
   $codendi_srv="http://$sys_default_domain";

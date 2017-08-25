@@ -7,7 +7,7 @@
 # For usage, see the usage subroutine or run the script with no
 # command line arguments.
 #
-# Copyright Enalean (c) 2015. All rights reserved.
+# Copyright Enalean (c) 2015-2017. All rights reserved.
 #
 # $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
 # $LastChangedDate: 2012-03-23 08:59:24 +0000 (Fri, 23 Mar 2012) $
@@ -244,7 +244,7 @@ $gname =~ s|.*/||; # Remove everything until the last slash
 my $group_id = &set_group_info_from_name($gname);
 
 my $codendi_srv;
-if ($sys_force_ssl) {
+if ($sys_https_host) {
   $codendi_srv="https://$sys_https_host";
 } else {
   $codendi_srv="http://$sys_default_domain";

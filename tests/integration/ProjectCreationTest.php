@@ -54,7 +54,6 @@ class ProjectCreationTest extends TuleapDbTestCase {
         $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
         $GLOBALS['sys_default_domain'] = '';
         $GLOBALS['sys_cookie_prefix'] = '';
-        $GLOBALS['sys_force_ssl'] = 0;
         ForgeConfig::store();
     }
 
@@ -67,7 +66,6 @@ class ProjectCreationTest extends TuleapDbTestCase {
         unset($GLOBALS['ftp_anon_dir_prefix']);
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_cookie_prefix']);
-        unset($GLOBALS['sys_force_ssl']);
         ForgeConfig::restore();
         parent::tearDown();
     }

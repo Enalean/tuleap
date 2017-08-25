@@ -636,18 +636,18 @@ class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
         $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 
-    public function itReturnsHTTPSURLWhenForcedAndRequestDoesNotFromATrustedProxy()
+    public function itReturnsHTTPSURLWhenHTTPSIsAvailableAndRequestDoesNotFromATrustedProxy()
     {
-        ForgeConfig::set('sys_force_ssl', 1);
+        ForgeConfig::set('sys_https_host', 'example.com');
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
         $this->assertEqual('https://example.com', $this->request->getServerUrl());
     }
 
-    public function itReturnsHTTPSURLWhenForcedAndProxyIsMisconfigured()
+    public function itReturnsHTTPSURLWhenHTTPSIsAvailableAndProxyIsMisconfigured()
     {
-        ForgeConfig::set('sys_force_ssl', 1);
+        ForgeConfig::set('sys_https_host', 'example.com');
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'http';
 
         $this->assertEqual('https://example.com', $this->request->getServerUrl());
@@ -671,7 +671,9 @@ class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServer
         $this->assertEqual('https://meow.test', $this->request->getServerUrl());
     }
 
-    public function itReturnsTheConfiguredHTTPNameWhenInHTTP() {
+    public function itReturnsTheConfiguredHTTPNameWhenInHTTP()
+    {
+        ForgeConfig::set('sys_https_host', '');
         $this->assertEqual('http://example.clear.test', $this->request->getServerUrl());
     }
 
@@ -688,9 +690,9 @@ class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServer
         $this->assertEqual('https://example.clear.test', $this->request->getServerUrl());
     }
 
-    public function itReturnsHTTPSURLWhenForced()
+    public function itReturnsHTTPSURLWhenHTTPSIsAvailable()
     {
-        ForgeConfig::set('sys_force_ssl', 1);
+        ForgeConfig::set('sys_https_host', 'example.clear.test');
 
         $this->assertEqual('https://example.clear.test', $this->request->getServerUrl());
     }

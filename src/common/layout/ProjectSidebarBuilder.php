@@ -194,10 +194,9 @@ class ProjectSidebarBuilder
                 );
             }
             $link = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
-            if (ForgeConfig::get('sys_force_ssl')) {
+            $sys_default_protocol = 'http';
+            if (ForgeConfig::get('sys_https_host')) {
                 $sys_default_protocol = 'https';
-            } else {
-                $sys_default_protocol = 'http';
             }
             $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
             $link = str_replace('$group_id', $project_id, $link);

@@ -33,7 +33,6 @@ $sys_lang = 'en_US';
 $sys_supported_languages = 'en_US';
 $sys_themedefault = 'Tuleap';
 $sys_themeroot = $codendi_dir . '/src/www/themes';
-$sys_force_ssl  = 0;
 $sys_custompluginsroot = $sys_custom_dir . '/plugins/';
 
 $sys_password_lifetime = 10000000000000;

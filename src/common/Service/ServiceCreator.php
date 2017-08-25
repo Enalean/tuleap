@@ -35,10 +35,9 @@ class ServiceCreator
             $link = str_replace('$projectname', $pm->getProject($group_id)->getUnixName(), $link);
             $link = str_replace('$sys_default_domain', $GLOBALS['sys_default_domain'], $link);
             $link = str_replace('$group_id', $group_id, $link);
-            if ($GLOBALS['sys_force_ssl']) {
+            $sys_default_protocol = 'http';
+            if (\ForgeConfig::get('sys_https_host')) {
                 $sys_default_protocol = 'https';
-            } else {
-                $sys_default_protocol = 'http';
             }
             $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
         } else {

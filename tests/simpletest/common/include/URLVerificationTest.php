@@ -1,22 +1,22 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/user/User.class.php');
@@ -85,15 +85,14 @@ class URLVerificationBaseTest extends TuleapTestCase {
     protected $user;
     protected $request;
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         ForgeConfig::store();
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $GLOBALS['Response']           = mock('Layout');
-        $GLOBALS['sys_default_domain'] = 'default';
-        $GLOBALS['sys_https_host']     = 'default';
-        $GLOBALS['sys_force_ssl']      = 0;
+        $GLOBALS['Response'] = mock('Layout');
+        ForgeConfig::set('sys_default_domain', 'default');
+        ForgeConfig::set('sys_https_host', 'default');
         unset($GLOBALS['group_id']);
 
         $this->fixtures = dirname(__FILE__).'/_fixtures';
@@ -106,15 +105,13 @@ class URLVerificationBaseTest extends TuleapTestCase {
         UserManager::setInstance($this->user_manager);
 
         $this->request = mock('HTTPRequest');
+        stub($this->request)->isSecure()->returns(true);
     }
 
     function tearDown() {
         UserManager::clearInstance();
         unset($GLOBALS['Language']);
         unset($GLOBALS['Response']);
-        unset($GLOBALS['sys_default_domain']);
-        unset($GLOBALS['sys_force_ssl']);
-        unset($GLOBALS['sys_https_host']);
         unset($GLOBALS['group_id']);
         unset($_REQUEST['type_of_search']);
         ForgeConfig::restore();
@@ -194,51 +191,37 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
     }
 
-    function testVerifyProtocolHTTPAndForceSslEquals1() {
-        $server = array();
-        $GLOBALS['sys_force_ssl'] = 1;
+    public function testVerifyProtocolHTTPAndHTTPSIsAvailable()
+    {
         $urlVerification = new URLVerification();
 
-        $urlVerification->verifyProtocol($this->request);
+        $request = mock('HTTPRequest');
+        stub($request)->isSecure()->returns(false);
+
+        $urlVerification->verifyProtocol($request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], 'https');
     }
 
-    function testVerifyProtocolHTTPSAndForceSslEquals1() {
-        stub($this->request)->isSecure()->returns(true);
-        $GLOBALS['sys_force_ssl'] = 1;
+    public function testVerifyProtocolHTTPSAndHTTPSIsAvailable()
+    {
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], null);
     }
 
-    function testVerifyProtocolHTTPAndForceSslEquals0() {
-        $server = array();
-        $GLOBALS['sys_force_ssl'] = 0;
+    public function testVerifyProtocolHTTPAndHTTPSIsNotAvailable()
+    {
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], null);
     }
 
-    function testVerifyProtocolHTTPSAndForceSslEquals0() {
-        stub($this->request)->isSecure()->returns(true);
-        $GLOBALS['sys_force_ssl'] = 0;
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($this->request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['protocol'], null);
-    }
-
-   function testVerifyHostHTTPSAndForceSslEquals1() {
-        $server = array('HTTP_HOST'   => 'secure.example.com',
-                        'SERVER_NAME' => 'secure.example.com',
-                        'SCRIPT_NAME' => '');
-        stub($this->request)->isSecure()->returns(true);
-
-        $GLOBALS['sys_force_ssl']      = 1;
-        $GLOBALS['sys_https_host']     = 'secure.example.com';
+   public function testVerifyHostHTTPSAndHTTPSIsAvailable()
+   {
+        ForgeConfig::set('sys_https_host', 'secure.example.com');
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
@@ -246,90 +229,24 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $this->assertEqual($chunks['host'], null);
     }
 
-    function testVerifyHostHTTPAndForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'example.com',
-                        'SERVER_NAME' => 'example.com',
-                        'SCRIPT_NAME' => '');
+    public function testVerifyHostHTTPAndHTTPSIsAvailable()
+    {
+        ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_https_host', 'secure.example.com');
 
-        $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_default_domain'] = 'example.com';
-
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($this->request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
-    }
-
-    function testVerifyHostHTTPSAndForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'secure.example.com',
-                        'SERVER_NAME' => 'secure.example.com',
-                        'SCRIPT_NAME' => '');
-        stub($this->request)->isSecure()->returns(true);
-
-        $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
+        $request = mock('HTTPRequest');
+        stub($request)->isSecure()->returns(false);
 
         $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($this->request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
-    }
-
-    function testVerifyHostHTTPAndForceSslEquals1() {
-        $server = array('HTTP_HOST'   => 'example.com',
-                        'SERVER_NAME' => 'example.com',
-                        'SCRIPT_NAME' => '');
-
-        $GLOBALS['sys_force_ssl']      = 1;
-        $GLOBALS['sys_default_domain'] = 'example.com';
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
-
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($this->request);
+        $urlVerification->verifyProtocol($request);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['host'], 'secure.example.com');
     }
 
-    function testVerifyHostInvalidHostHTTPForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'test.example.com',
-                        'SERVER_NAME' => 'test.example.com',
-                        'SCRIPT_NAME' => '');
-
-        $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_default_domain'] = 'example.com';
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
-
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($this->request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
-    }
-
-    function testVerifyHostInvalidHostHTTPSForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'test.example.com',
-                        'SERVER_NAME' => 'test.example.com',
-                        'SCRIPT_NAME' => '');
-        stub($this->request)->isSecure()->returns(true);
-
-        $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_default_domain'] = 'example.com';
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
-
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyProtocol($this->request);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
-    }
-
-    function testVerifyHostInvalidHostForceSslEquals1() {
-        $server = array('HTTP_HOST'   => 'test.example.com',
-                        'SERVER_NAME' => 'test.example.com',
-                        'SCRIPT_NAME' => '');
-        stub($this->request)->isSecure()->returns(true);
-
-        $GLOBALS['sys_force_ssl']      = 1;
-        $GLOBALS['sys_default_domain'] = 'example.com';
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
+    public function testVerifyHostInvalidHostAndHTTPSIsAvailable()
+    {
+        ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_https_host', 'secure.example.com');
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyProtocol($this->request);
@@ -400,7 +317,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         stub($this->user)->isAnonymous()->returns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
+        ForgeConfig::set('sys_https_host', 'secure.example.com');
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
@@ -417,7 +334,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         stub($this->user)->isAnonymous()->returns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
+        ForgeConfig::set('sys_https_host', 'secure.example.com');
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
@@ -432,7 +349,7 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
         stub($this->user)->isAnonymous()->returns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
-        $GLOBALS['sys_https_host'] = 'secure.example.com';
+        ForgeConfig::set('sys_https_host', 'secure.example.com');
 
         $this->urlVerification->verifyRequest($server);
         $chunks = $this->urlVerification->getUrlChunks();
@@ -484,7 +401,6 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
     function testGetRedirectionRequestModified() {
         $server = array('HTTP_HOST' => 'secure.example.com',
                         'REQUEST_URI' => '/user.php');
-        stub($this->request)->isSecure()->returns(true);
         $chunks =  array('script'=> '/project.php');
 
         $urlVerification = new URLVerificationTestVersion2($this);
@@ -786,21 +702,22 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
     private $user;
     private $project;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->url_verification = new URLVerification();
         $this->user             = mock('PFUser');
         $this->project          = mock('Project');
 
-        $GLOBALS['sys_default_domain'] = 'default';
-        $GLOBALS['sys_https_host']     = 'default';
+        ForgeConfig::store();
+        ForgeConfig::set('sys_default_domain', 'default');
+        ForgeConfig::set('sys_https_host', 'default');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
+        ForgeConfig::restore();
         parent::tearDown();
-
-        unset($GLOBALS['sys_default_domain']);
-        unset($GLOBALS['sys_https_host']);
     }
 
     public function itGrantsAccessToProjectMembers() {
@@ -904,10 +821,10 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
         $this->assertFalse($this->url_verification->isInternal('javascript:alert(1)'));
         $this->assertTrue($this->url_verification->isInternal('/path/to/feature'));
         $this->assertTrue(
-                $this->url_verification->isInternal('http://' . $GLOBALS['sys_default_domain'] . '/smthing')
+                $this->url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
             );
         $this->assertTrue(
-                $this->url_verification->isInternal('https://' . $GLOBALS['sys_https_host'] . '/smthing')
+                $this->url_verification->isInternal('https://' . ForgeConfig::get('sys_https_host') . '/smthing')
             );
 
     }

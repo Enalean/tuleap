@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -159,8 +159,8 @@ class URLVerification {
      */
     public function isInternal($uri) {
         $url_decoded = urldecode($uri);
-        $pattern_only_internal = '/^(http:\/\/'.$GLOBALS['sys_default_domain'].'|'
-                                  . 'https:\/\/'.$GLOBALS['sys_https_host'].'|'
+        $pattern_only_internal = '/^(http:\/\/'.ForgeConfig::get('sys_default_domain').'|'
+                                  . 'https:\/\/'.ForgeConfig::get('sys_https_host').'|'
                                   . '\/)/';
         return preg_match($pattern_only_internal, $url_decoded) === 1;
     }
@@ -225,9 +225,9 @@ class URLVerification {
      * @return void
      */
     public function verifyProtocol(HTTPRequest $request) {
-        if (! $request->isSecure() && $GLOBALS['sys_force_ssl'] == 1) {
+        if (! $request->isSecure() && ForgeConfig::get('sys_https_host')) {
             $this->urlChunks['protocol'] = 'https';
-            $this->urlChunks['host']     = $GLOBALS['sys_https_host'];
+            $this->urlChunks['host']     = ForgeConfig::get('sys_https_host');
         }
     }
 
