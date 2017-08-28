@@ -27,11 +27,11 @@ use Tuleap\PullRequest\PullRequest;
 class LabelsCurlyCoatedRetriever
 {
     /**
-     * @var LabelDao
+     * @var PullRequestLabelDao
      */
     private $dao;
 
-    public function __construct(LabelDao $dao)
+    public function __construct(PullRequestLabelDao $dao)
     {
         $this->dao = $dao;
     }

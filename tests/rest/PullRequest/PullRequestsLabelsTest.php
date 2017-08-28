@@ -43,7 +43,7 @@ class PullRequestsLabelsTest extends RestBase
     {
         $response = $this->getResponse($this->client->options('pull_requests/1/labels'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETLabel()
@@ -51,5 +51,88 @@ class PullRequestsLabelsTest extends RestBase
         $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
 
         $this->assertEquals(array(), $response['labels']);
+    }
+
+    /**
+     * @depends testGETLabel
+     */
+    public function testPATCHAddUnknownLabel()
+    {
+        $response = $this->getResponse($this->client->patch('pull_requests/1/labels',null, json_encode(
+            array(
+                'add' => array(
+                    array('label' => 'Emergency Fix')
+                )
+            )
+        )));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $this->assertCount(1, $response['labels']);
+        $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
+    }
+
+    /**
+     * @depends testPATCHAddUnknownLabel
+     */
+    public function testNewLabelIsAddedToProject()
+    {
+        $response = $this->getResponse($this->client->get('projects/112/labels'))->json();
+        $this->assertCount(1, $response['labels']);
+        $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
+    }
+
+    /**
+     * @depends testNewLabelIsAddedToProject
+     */
+    public function testPATCHRemoveLabel()
+    {
+        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $label_ids = array_map(
+            function ($label) { return array('id' => $label['id']); },
+            $response['labels']
+        );
+
+        $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(
+            array(
+                'remove' => $label_ids
+            )
+        )));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $this->assertEquals(array(), $response['labels']);
+    }
+
+    /**
+     * @depends testPATCHRemoveLabel
+     */
+    public function testRemovedLabelsAreNotRemovedInProject()
+    {
+        $response = $this->getResponse($this->client->get('projects/112/labels'))->json();
+        $this->assertCount(1, $response['labels']);
+        $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
+    }
+
+    /**
+     * @depends testRemovedLabelsAreNotRemovedInProject
+     */
+    public function testPATCHAddProjectLabel()
+    {
+        $response = $this->getResponse($this->client->get('projects/112/labels'))->json();
+        $expected_label = $response['labels'][0];
+
+        $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(
+            array(
+                'add' => array(
+                    array('id' => $expected_label['id'])
+                )
+            )
+        )));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
+        $this->assertCount(1, $response['labels']);
+        $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
 }

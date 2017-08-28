@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,9 @@
 
 namespace Tuleap\PullRequest;
 
-class PullRequest
+use Tuleap\Label\Labelable;
+
+class PullRequest implements Labelable
 {
 
     const STATUS_ABANDONED = 'A';

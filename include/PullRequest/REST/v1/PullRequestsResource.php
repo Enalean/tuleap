@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,17 @@ use Luracast\Restler\RestException;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Label\Label;
+use Tuleap\Label\REST\LabelRepresentation;
+use Tuleap\Label\REST\LabelsPATCHRepresentation;
+use Tuleap\Label\REST\LabelsUpdater;
+use Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException;
+use Tuleap\Label\UnknownLabelException;
+use Tuleap\Project\Label\LabelDao;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
-use Tuleap\PullRequest\Exception\InvalidBuildStatusException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
@@ -40,7 +45,7 @@ use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
-use Tuleap\PullRequest\Label\LabelDao;
+use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
@@ -74,6 +79,9 @@ class PullRequestsResource extends AuthenticatedResource
 {
 
     const MAX_LIMIT = 50;
+
+    /** @var LabelsUpdater */
+    private $labels_updater;
 
     /** @var LabelsCurlyCoatedRetriever */
     private $labels_retriever;
@@ -169,7 +177,8 @@ class PullRequestsResource extends AuthenticatedResource
             new \System_Command()
         );
 
-        $this->labels_retriever = new LabelsCurlyCoatedRetriever(new LabelDao());
+        $this->labels_retriever = new LabelsCurlyCoatedRetriever(new PullRequestLabelDao());
+        $this->labels_updater   = new LabelsUpdater(new LabelDao(), new PullRequestLabelDao);
     }
 
     /**
@@ -279,7 +288,82 @@ class PullRequestsResource extends AuthenticatedResource
         );
     }
 
+    /**
+     * Update labels
+     *
+     * <p>Update the labels of the pull request. You can add or remove labels.</p>
+     *
+     * <p>Example of payload:</p>
+     *
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"add": [<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 1 },<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 2 },<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 3 }<br>
+     * &nbsp;&nbsp;],<br>
+     * &nbsp;&nbsp;"remove": [<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 4 },<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 5 },<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 6 }<br>
+     * &nbsp;&nbsp;]<br>
+     * }<br>
+     * </pre>
+     *
+     * <p>This will add labels with ids 1, 2, and 3; and will remove labels with ids 4, 5, and 6.</p>
+     *
+     * <p>You can also create labels, they will be added to the list of project labels. Example:</p>
+     *
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"add": [<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 1 },<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "id": 2 },<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;{ "label": "Emergency Fix" }<br>
+     * &nbsp;&nbsp;]<br>
+     * }<br>
+     * </pre>
+     *
+     * <p>This will create "Emergency Fix" label (if it does not already exist, else it uses the existing one),
+     * and add it to the current pull request. Please note that you must use the id to remove labels from the
+     * pull request.</p>
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url PATCH {id}/labels
+     *
+     * @access protected
+     *
+     * @param int $id pull request ID
+     * @param LabelsPATCHRepresentation $body
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404 x Pull request does not exist
+     */
+    protected function patchLabels($id, LabelsPATCHRepresentation $body)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersForLabels();
 
+        $user            = $this->user_manager->getCurrentUser();
+        $pull_request    = $this->getPullRequest($id);
+        $repository_src  = $this->getRepository($pull_request->getRepositoryId());
+
+        $this->checkUserCanWrite($user, $repository_src, $pull_request->getBranchDest());
+
+        try {
+            $this->labels_updater->update($repository_src->getProjectId(), $pull_request, $body);
+        } catch (UnknownLabelException $exception) {
+            throw new RestException(400, "Label is unknown in the project");
+        } catch (UnableToAddAndRemoveSameLabelException $exception) {
+            throw new RestException(400, "Unable to add and remove the same label");
+        } catch (\Exception $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+    }
 
     /**
      * Get pull request's impacted files
@@ -904,7 +988,7 @@ class PullRequestsResource extends AuthenticatedResource
 
     private function sendAllowHeadersForLabels()
     {
-        HEADER::allowOptionsGet();
+        HEADER::allowOptionsGetPatch();
     }
 
     private function sendAllowHeadersForComments()
