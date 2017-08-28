@@ -31,6 +31,7 @@ class MustacheEngine extends \Mustache_Engine
                 'escape'           => $escape_callback,
                 'entity_flags'     => ENT_QUOTES,
                 'strict_callables' => true,
+                'strict_variables' => true,
                 'loader'           => $loader,
                 'cache'            => $cache->getPath()
             )
