@@ -68,6 +68,16 @@ class AccessFileHistoryCreator {
 
     public function useAVersion(Repository $repository, $version_id)
     {
+        $this->useVersion($repository, $version_id, false);
+    }
+
+    public function useAVersionWithHistory(Repository $repository, $version_id)
+    {
+        $this->useVersion($repository, $version_id, true);
+    }
+
+    private function useVersion(Repository $repository, $version_id, $log_history)
+    {
         if (! $this->dao->useAVersion($repository->getId(), $version_id)) {
             throw new CannotCreateAccessFileHistoryException(
                 $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
@@ -75,10 +85,11 @@ class AccessFileHistoryCreator {
         }
 
         $current_version = $this->access_file_factory->getCurrentVersion($repository);
-        $this->logUseAVersionHistory($repository, $current_version);
-
-
         $this->saveAccessFile($repository, $current_version);
+
+        if ($log_history) {
+            $this->logUseAVersionHistory($repository, $current_version);
+        }
     }
 
     private function cleanContent(Repository $repository, $content) {
