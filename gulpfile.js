@@ -7,6 +7,7 @@ var gulp      = require('gulp'),
     tuleap    = require('./tools/utils/tuleap-gulp-build');
 
 var component_builder = require('./tools/utils/component-builder.js');
+var sass_builder      = require('./tools/utils/sass-builder.js');
 
 var fat_combined_files = [
         'src/www/scripts/polyphills/json2.js',
@@ -120,58 +121,70 @@ var fat_combined_files = [
         'src/www/scripts/tuleap/autocomplete-for-select2.js'
     ],
     common_scss = {
-        files: [
-            'src/www/themes/common/css/print.scss',
-            'src/www/themes/common/css/style.scss'
-        ],
-        target_dir: 'src/www/themes/common/css'
+        themes: {
+            "common": {
+                files: [
+                    'src/www/themes/common/css/print.scss',
+                    'src/www/themes/common/css/style.scss'
+                ],
+                target_dir: 'src/www/themes/common/css'
+            }
+        }
     },
     select2_scss = {
-        files: [
-            'src/www/scripts/select2/select2.scss'
-        ],
-        target_dir: 'src/www/scripts/select2'
+        themes: {
+            "common": {
+                files: [
+                    'src/www/scripts/select2/select2.scss'
+                ],
+                target_dir: 'src/www/scripts/select2'
+            }
+        }
     },
-    theme_flamingparrot_scss = {
-        files: [
-            'src/www/themes/FlamingParrot/css/print.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_Orange.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlue.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlueGrey.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_Red.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_Green.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkOrange.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_Blue.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkGreen.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_Purple.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkRed.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_DarkPurple.scss',
-            'src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss'
-        ],
-        watched_includes: [
-            'src/www/themes/FlamingParrot/css/**/_*.scss'
-        ],
-        target_dir: 'src/www/themes/FlamingParrot/css'
-    },
-    theme_burningparrot_scss = {
-        files: [
-            'src/www/themes/BurningParrot/css/burning-parrot-blue.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-blue-condensed.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-green.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-green-condensed.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-grey.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-grey-condensed.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-orange.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-orange-condensed.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-purple.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-purple-condensed.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-red.scss',
-            'src/www/themes/BurningParrot/css/burning-parrot-red-condensed.scss'
-        ],
-        watched_includes: [
-            'src/www/themes/BurningParrot/css/**/_*.scss'
-        ],
-        target_dir: 'src/www/themes/BurningParrot/css'
+    core_scss = {
+        themes: {
+            "FlamingParrot": {
+                files: [
+                    'src/www/themes/FlamingParrot/css/print.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_Orange.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlue.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_DarkBlueGrey.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_Red.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_Green.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_DarkOrange.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_Blue.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_DarkGreen.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_Purple.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_DarkRed.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_DarkPurple.scss',
+                    'src/www/themes/FlamingParrot/css/FlamingParrot_BlueGrey.scss'
+                ],
+                watched_includes: [
+                    'src/www/themes/FlamingParrot/css/**/_*.scss'
+                ],
+                target_dir: 'src/www/themes/FlamingParrot/css'
+            },
+            "BurningParrot": {
+                files: [
+                    'src/www/themes/BurningParrot/css/burning-parrot-blue.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-blue-condensed.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-green.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-green-condensed.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-grey.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-grey-condensed.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-orange.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-orange-condensed.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-purple.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-purple-condensed.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-red.scss',
+                    'src/www/themes/BurningParrot/css/burning-parrot-red-condensed.scss'
+                ],
+                watched_includes: [
+                    'src/www/themes/BurningParrot/css/**/_*.scss'
+                ],
+                target_dir: 'src/www/themes/BurningParrot/css'
+            }
+        }
     },
     components_paths = [
         'src/www/themes/common/tlp/',
@@ -188,6 +201,13 @@ var fat_combined_files = [
 tuleap.declare_plugin_tasks(asset_dir);
 component_builder.installAndBuildNpmComponents(components_paths, 'components', ['clean-js-core']);
 component_builder.installAndBuildNpmComponents(angular_app_paths, 'angular-apps');
+var base_dir = '.'
+sass_builder.cleanAndBuildSass('sass-core-common', base_dir, common_scss);
+sass_builder.cleanAndBuildSass('sass-core-select2', base_dir, select2_scss);
+sass_builder.cleanAndBuildSass('sass-core', base_dir, core_scss);
+sass_builder.lintSass('scss-lint-core-common', base_dir, common_scss);
+sass_builder.lintSass('scss-lint-core-select2', base_dir, select2_scss);
+sass_builder.lintSass('scss-lint-core', base_dir, core_scss);
 
 /**
  * Javascript
@@ -215,34 +235,20 @@ gulp.task('js', ['js-core', 'js-plugins']);
 /**
  * Sass
  */
-gulp.task('scss-lint-core', function() {
-    return gulp.src([].concat(
-        common_scss.files,
-        select2_scss.files,
-        theme_flamingparrot_scss.files
-    ))
-        .pipe(scss_lint({
-            config: '.scss-lint.yml'
-        }));
-});
 
-gulp.task('scss-lint', ['scss-lint-core', 'scss-lint-plugins']);
+gulp.task('scss-lint', [
+    'scss-lint-core-common',
+    'scss-lint-core-select2',
+    'scss-lint-core',
+    'scss-lint-plugins'
+]);
 
-gulp.task('clean-sass-core', function() {
-    tuleap.sass_clean('.', common_scss.files);
-    tuleap.sass_clean('.', select2_scss.files);
-    tuleap.sass_clean('.', theme_flamingparrot_scss.files);
-    tuleap.sass_clean('.', theme_burningparrot_scss.files);
-});
-
-gulp.task('sass-core', ['clean-sass-core'], function() {
-    tuleap.sass_build('.', common_scss);
-    tuleap.sass_build('.', select2_scss);
-    tuleap.sass_build('.', theme_flamingparrot_scss);
-    tuleap.sass_build('.', theme_burningparrot_scss);
-});
-
-gulp.task('sass', ['sass-core', 'sass-plugins']);
+gulp.task('sass', [
+    'sass-core-common',
+    'sass-core-select2',
+    'sass-core',
+    'sass-plugins'
+]);
 
 /**
  * Global
@@ -271,7 +277,7 @@ gulp.task('watch', function() {
     tuleap.watch_plugins();
 });
 
-gulp.task('clean-core', ['clean-js-core', 'clean-sass-core']);
+gulp.task('clean-core', ['clean-js-core']);
 
 gulp.task('clean', ['clean-core', 'clean-plugins']);
 
