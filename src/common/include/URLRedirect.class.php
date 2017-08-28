@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,9 +56,6 @@ class URLRedirect
             if (strstr($query, 'pv=2')) {
                 $print_view = '&pv=2';
             }
-        }
-        if (strpos($url['path'], '/projects') === 0) {
-            $GLOBALS['Response']->send401UnauthorizedHeader();
         }
 
         $url = '/account/login.php?return_to=' . urlencode($returnTo) . $print_view;
