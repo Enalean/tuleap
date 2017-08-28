@@ -220,7 +220,7 @@ class AdminController
                 $autocompleter->getUgroups()
             );
             try {
-                $this->mail_notification_manager->create($mail_notification);
+                $this->mail_notification_manager->createWithHistory($mail_notification);
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
