@@ -94,6 +94,9 @@ DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 
 DROP TABLE IF EXISTS plugin_tracker_recently_visited;
 
+DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report;
+DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report_tracker;
+
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 
