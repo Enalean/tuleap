@@ -63,82 +63,6 @@ echo'
 
 $purifier = Codendi_HTMLPurifier::instance();
 
-// #####################################
-// this section limits search and requeries if there are discrim elements
-
-unset ($discrim_url);
-unset ($discrim_desc);
-
-if (isset($discrim)) {
-        $discrim_queryalias='';
-        $discrim_queryand='';
-        $discrim_url_b='';
-
-	// commas are ANDs
-	$expl_discrim = explode(',',$discrim);
-
-	// need one link for each "get out of this limit" links
-	$discrim_url = '&discrim=';
-
-	$lims=sizeof($expl_discrim);
-	if ($lims > 2) {
-		$lims=2;
-	}
-
-	// one per argument	
-	for ($i=0;$i<$lims;$i++) {
-		// make sure these are all ints, no url trickery
-		$expl_discrim[$i] = intval($expl_discrim[$i]);
-
-		// need one aliased table for everything
-		$discrim_queryalias .= ',trove_group_link trove_group_link_'.$i.' ';
-		
-		// need additional AND entries for aliased tables
-		$discrim_queryand .= 'AND trove_group_link_'.$i.'.trove_cat_id='
-			.$expl_discrim[$i].' AND trove_group_link_'.$i.'.group_id='
-			.'groups.group_id ';
-
-		// must build query string for all urls
-		if ($i==0) {
-			$discrim_url .= $expl_discrim[$i];
-		} else {
-			$discrim_url .= ','.$expl_discrim[$i];
-		}
-		// must also do this for EACH "get out of this limit" links
-		// convoluted logic to build urls for these, but works quickly
-		for ($j=0;$j<sizeof($expl_discrim);$j++) {
-			if ($i!=$j) {
-				if (!$discrim_url_b[$j]) {
-					$discrim_url_b[$j] = '&discrim='.$expl_discrim[$i];
-				} else {
-					$discrim_url_b[$j] .= ','.$expl_discrim[$i];
-				}
-			}
-		}
-
-	}
-
-	// build text for top of page on what viewier is seeing
-	$discrim_desc = '<FONT size="-1">
-<span class="highlight">
-'.$Language->getText('softwaremap_trove_list','limit_view').'
-</span>';
-	
-	for ($i=0;$i<sizeof($expl_discrim);$i++) {
-		$discrim_desc .= '<BR> &nbsp; &nbsp; &nbsp; '
-			.$purifier->purify(trove_getfullpath($expl_discrim[$i]))
-			.' <A href="/softwaremap/trove_list.php?form_cat='.$form_cat
-			.$discrim_url_b[$i].'">['.$Language->getText('softwaremap_trove_list','remove_view').']'
-			.'</A>';
-	}
-	$discrim_desc .= "<HR></FONT>\n";
-} 
-
-// #######################################
-
-if (!isset($discrim_desc)) $discrim_desc="";
-print '<P>'.$discrim_desc;
-
 // ######## two column table for key on right
 // first print all parent cats and current cat
 print '<TABLE width=100% border="0" cellspacing="0" cellpadding="0">
@@ -154,9 +78,8 @@ for ($i=0;$i<$folders_len;$i++) {
 	print "&nbsp; ";
 	// no anchor for current cat
 	if ($folders_ids[$i] != $form_cat) {
-            if (!isset($discrim_url)) $discrim_url="";
             print '<A href="/softwaremap/trove_list.php?form_cat='
-			.$folders_ids[$i].$discrim_url.'">';
+			.$folders_ids[$i].'">';
 	} else {
 		print '<B>';
 	}
@@ -194,8 +117,7 @@ while ($row_sub = db_fetch_array($res_sub)) {
 	for ($sp=0;$sp<($folders_len*2);$sp++) {
 		print " &nbsp; ";
 	}
-        if (!isset($discrim_url)) $discrim_url="";
-	print ('<a href="trove_list.php?form_cat='.$row_sub['trove_cat_id'].$discrim_url.'">');
+	print ('<a href="trove_list.php?form_cat='.$row_sub['trove_cat_id'].'">');
 	html_image("ic/cfolder15.png",array());
         $nb_proj_in_cat=($row_sub['subprojects']?$purifier->purify($row_sub['subprojects']):'0');
         $nb_listed_projects+=$nb_proj_in_cat;
@@ -242,14 +164,13 @@ while ($row_rootcat = db_fetch_array($res_rootcat)) {
 	// print open folder if current, otherwise closed
 	// also make anchor if not current
 	print ('<BR>');
-    if (!isset($discrim_url)) $discrim_url="";
 	if (($row_rootcat['trove_cat_id'] == $row_trove_cat['root_parent'])
 		|| ($row_rootcat['trove_cat_id'] == $row_trove_cat['trove_cat_id'])) {
 		html_image('ic/ofolder15.png',array());
 		print ('&nbsp; <B>'.$purifier->purify($row_rootcat['fullname'])."</B>\n");
 	} else {
 		print ('<A href="/softwaremap/trove_list.php?form_cat='
-			.$row_rootcat['trove_cat_id'].$discrim_url.'">');
+			.$row_rootcat['trove_cat_id'].'">');
 		html_image('ic/cfolder15.png',array());
 		print ('&nbsp; '.$purifier->purify($row_rootcat['fullname'])."\n");
 		print ('</A>');
@@ -298,8 +219,6 @@ if ($special_cat === 'none') {
 }
 else {
 // now do limiting query
-    if (!isset($discrim_queryalias)) $discrim_queryalias="";
-    if (!isset($discrim_queryand)) $discrim_queryand="";
 
 $query_projlist = "SELECT groups.group_id, "
 	. "groups.group_name, "
@@ -312,13 +231,11 @@ $query_projlist = "SELECT groups.group_id, "
 	. "FROM groups "
 	. "LEFT JOIN project_metric USING (group_id) "
 	. ", trove_group_link "
-	. $discrim_queryalias
 	. "WHERE trove_group_link.group_id=groups.group_id AND "
 	. "(" .trove_get_visibility_for_user('groups.access', $current_user). ") AND "
         . "(groups.type=1) AND "
 	. "(groups.status='A') AND "
 	. "trove_group_link.trove_cat_id=$form_cat "
-	. $discrim_queryand
 	. "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 
@@ -351,7 +268,7 @@ if ($querytotalcount > $TROVE_BROWSELIMIT) {
 		$html_limit .= ' ';
 		if ($page != $i) {
 			$html_limit .= '<A href="/softwaremap/trove_list.php?form_cat='.$form_cat;
-			$html_limit .= $discrim_url.'&page='.$i;
+			$html_limit .= '&page='.$i;
                         if ($special_cat) {
                             $html_limit .= "&special_cat=".$purifier->purify($special_cat);
                         }
@@ -394,7 +311,7 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 		// extra description
 		print '</TD></TR><TR valign="top"><TD>';
 		// list all trove categories
-		trove_getcatlisting($row_grp['group_id'],1,0);
+		print trove_getcatlisting($row_grp['group_id'], 0);
 
 		print '</TD>'."\n".'<TD align="right">'; // now the right side of the display
 		print $Language->getText('softwaremap_trove_list','activity_percentile').' <B>'.$row_grp['percentile'].'</B>';
