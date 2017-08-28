@@ -30,6 +30,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\WidgetCreator;
+use Tuleap\Widget\MyWelcomeMessage;
 use Tuleap\Widget\WidgetFactory;
 use Widget;
 
@@ -294,6 +295,7 @@ class AddWidgetController
                     'mymonitoredforums', 'mymonitoredfp', 'myartifacts', 'mybugs', //'mywikipage' //not yet
                     'mytasks', 'mysrs', 'myimageviewer',
                     'mylatestsvncommits', 'mysystemevent', 'myrss',
+                    MyWelcomeMessage::NAME,
                 );
                 break;
             case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:

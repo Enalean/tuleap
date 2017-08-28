@@ -317,6 +317,12 @@ msgstr ""
 msgid "We cannot find any widgets."
 msgstr ""
 
+msgid "Welcome aboard"
+msgstr ""
+
+msgid "Welcome message and information for users"
+msgstr ""
+
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
 msgstr ""

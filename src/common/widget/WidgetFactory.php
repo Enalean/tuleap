@@ -126,6 +126,9 @@ class WidgetFactory
                     $widget = new Widget_MySystemEvent();
                 }
                 break;
+            case MyWelcomeMessage::NAME:
+                $widget = new MyWelcomeMessage($user);
+                break;
             case 'projectdescription':
                 $widget = new Widget_ProjectDescription();
                 break;
