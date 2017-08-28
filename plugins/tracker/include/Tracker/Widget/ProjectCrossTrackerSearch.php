@@ -38,19 +38,20 @@ class ProjectCrossTrackerSearch extends Widget
         parent::__construct(self::NAME);
     }
 
+    public function loadContent($id)
+    {
+        $this->content_id = $id;
+    }
+
     public function getContent()
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(
             TRACKER_TEMPLATE_DIR . '/widgets'
         );
 
-        $cross_tracker_presenter = new CrossTrackerPresenter($this->getCurrentUser());
-
         return $renderer->renderToString(
             'project-cross-tracker-search',
-            new ProjectCrossTrackerSearchPresenter(
-                $cross_tracker_presenter
-            )
+            new ProjectCrossTrackerSearchPresenter($this->content_id)
         );
     }
 
@@ -61,7 +62,7 @@ class ProjectCrossTrackerSearch extends Widget
 
     public function getIcon()
     {
-        return "fa-list";
+        return "fa-list-ul";
     }
 
     public function getTitle()

@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.dashboard-widget-content-crosstrackersearch {
+    margin: $tlp-spacing 0;
+}
+
 .dashboard-widget-content.dashboard-widget-content-cross-tracker {
     margin: 0 $tlp-spacing $tlp-spacing;
 }
 
 .dashboard-widget-content-cross-tracker-loading {
     display: none;
-    height: 200px;
+    height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 
     &.shown {
@@ -31,13 +35,18 @@
     }
 }
 
+.dashboard-widget-content-cross-tracker-success,
 .dashboard-widget-content-cross-tracker-error {
     display: none;
-    margin: 0 0 $tlp-spacing;
+    margin: $tlp-spacing;
 
     &.shown {
         display: block;
     }
+}
+
+.dashboard-widget-content-cross-tracker-too-many-selected-error {
+    margin: $tlp-spacing 0;
 }
 
 .dashboard-widget-content-cross-tracker-form {
@@ -48,6 +57,7 @@
     }
 }
 
+.dashboard-widget-content-cross-tracker-successmessage,
 .dashboard-widget-content-cross-tracker-errormessage,
 .dashboard-widget-content-cross-tracker-error-hidden {
     display: none;
@@ -75,4 +85,71 @@
 
 .dashboard-widget-content-cross-tracker-remove-tracker {
     cursor: pointer;
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-fields {
+    display: flex;
+    flex-direction: column;
+    color: $tlp-theme-color;
+    font-size: 15px;
+
+    &:hover {
+        margin: 0;
+        background-color: transparentize($tlp-theme-color, .9);
+        cursor: pointer;
+    }
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-trackers-list {
+    display: flex;
+    flex-direction: row;
+    margin: $tlp-spacing;
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-trackers {
+    display: flex;
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-tracker {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-tracker-project-name {
+    color: $tlp-ui-dimmed;
+    font-weight: 400;
+}
+
+.dashboard-widget-content-cross-tracker-writing-mode-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel,
+.dashboard-widget-content-cross-tracker-reading-mode-actions-cancel {
+    margin: 0 $tlp-spacing / 2 0 0;
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-actions {
+    display: flex;
+    margin: $tlp-spacing / 2 $tlp-spacing;
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-trackers-empty {
+    margin: 0 0 0 $tlp-spacing;
+    font-style: italic;
+}
+
+.dashboard-widget-content-cross-tracker-writing-mode {
+    margin: $tlp-spacing;
+}
+
+.reading-mode-disabled {
+    cursor: inherit;
+    pointer-events: none;
+}
+
+.cross-tracker-hide {
+    display: none;
 }

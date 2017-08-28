@@ -25,22 +25,26 @@ import project_option_template from './project-option.mustache';
 export default class ProjectSelector {
     constructor(
         widget_content,
+        reading_cross_tracker_report,
         tracker_selection,
         error_displayer,
         loader_displayer
     ) {
-        this.widget_content    = widget_content;
-        this.tracker_selection = tracker_selection;
-        this.error_displayer   = error_displayer;
-        this.loader_displayer  = loader_displayer;
-        this.form_projects     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
-        this.projects_input    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
-        this.projects          = new Map();
+        this.reading_cross_tracker_report = reading_cross_tracker_report;
+        this.widget_content               = widget_content;
+        this.tracker_selection            = tracker_selection;
+        this.error_displayer              = error_displayer;
+        this.loader_displayer             = loader_displayer;
+        this.form_projects                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
+        this.projects_input               = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
+        this.projects                     = new Map();
+        this.projects_loaded              = false;
+
         this.translated_too_many_trackers_message = this.widget_content.querySelector('.project-selector-error').textContent;
 
-        this.setDisabled();
-        this.loadProjects();
         this.listenSelectElementChange();
+        this.listenChangeMode();
+        this.setDisabled();
     }
 
     async loadProjects() {
@@ -91,5 +95,18 @@ export default class ProjectSelector {
         };
 
         watch(this.projects_input, 'value', inputChanged);
+    }
+
+    listenChangeMode() {
+        const updateMode = (property_name, old_value, new_value) => {
+            if (! new_value) {
+                if (! this.projects_loaded) {
+                    this.loadProjects();
+                }
+                this.projects_loaded = true;
+            }
+        };
+
+        watch(this.reading_cross_tracker_report, 'reading_mode', updateMode);
     }
 }

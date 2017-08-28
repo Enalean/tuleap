@@ -74,11 +74,17 @@ msgstr "Éditer"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
+msgid "Error while fetching the cross tracker report"
+msgstr "Erreur à la récupération du rapport multi outil de suivi"
+
 msgid "Error while fetching the list of projects you are member of"
 msgstr "Erreur à la récupération de la liste des projets dont vous êtes membre"
 
 msgid "Error while fetching the list of trackers of this project"
-msgstr "Erreur à la récupération de la liste des trackers de ce projet"
+msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet"
+
+msgid "Error while updating the cross tracker report"
+msgstr "Erreur lors de la mise à jour du rapport multi outil de suivi"
 
 #, php-format
 msgid "Group '%s' couldn't be added."
@@ -91,6 +97,9 @@ msgstr "Aucun élément sélectionné."
 
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
+
+msgid "No trackers selected"
+msgstr "Aucun élément sélectionné"
 
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"
@@ -113,8 +122,17 @@ msgstr "Projet"
 msgid "Renderer id"
 msgstr "Id du rendu"
 
+msgid "Report has been successfully saved"
+msgstr "Notification enregistrée avec succès"
+
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Save report"
+msgstr "Enregistrer le rapport"
+
+msgid "Search"
+msgstr "Rechercher"
 
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."

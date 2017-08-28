@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -17,21 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Tuleap\Tracker\CrossTracker;
 
-use PFUser;
+export default class ReadingCrossTrackerReport {
+    constructor(report_id) {
+        this.reading_mode    = true;
+        this.trackers_loaded = false;
+        this.report_id       = report_id;
+        this.trackers        = new Map();
+    }
 
-class CrossTrackerPresenter
-{
-    /** @var string */
-    public $language;
+    initTrackers(trackers) {
+        for (const {id, label, project} of trackers) {
+            const tracker = { id, label };
+            this.addTracker({ id: project.id, label: project.label }, tracker);
+        }
+    }
 
-    /** @var int */
-    public $user_id;
+    addTracker(project, tracker) {
+        this.trackers.set(tracker.id, {
+            project,
+            tracker
+        });
+    }
 
-    public function __construct(PFUser $user)
-    {
-        $this->language = $user->getShortLocale();
-        $this->user_id  = $user->getId();
+    clearTrackers() {
+        this.trackers.clear();
+    }
+
+    getTrackers() {
+        return this.trackers;
     }
 }
