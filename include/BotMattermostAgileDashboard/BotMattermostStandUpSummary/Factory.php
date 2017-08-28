@@ -129,7 +129,7 @@ class Factory
             }
 
             if (empty($bots_mattermost_stand_up_summary)) {
-                $this->logger->warn('No Bots found');
+                $this->logger->debug('No Bots found');
             }
         }
 

@@ -89,7 +89,7 @@ class StandUpNotificationSender
         }
 
         if (empty($projects_ids)) {
-            $this->logger->warn('No project found');
+            $this->logger->debug('No project found');
         }
 
         return $projects_ids;
