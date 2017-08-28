@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
+use ProjectUGroup;
 use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
@@ -29,7 +30,6 @@ use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
 use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\Repository;
 use TuleapTestCase;
-use User_UGroup;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -40,11 +40,11 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
      */
     private $ugroup_manager;
     /**
-     * @var User_UGroup
+     * @var ProjectUGroup
      */
-    private $user_group_102;
+    private $user_group_project_member;
     /**
-     * @var User_UGroup
+     * @var ProjectUGroup
      */
     private $user_group_101;
     /**
@@ -101,8 +101,8 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             new NotificationsEmailsBuilder()
         );
 
-        $this->user_manager                    = mock('\UserManager');
-        $this->ugroup_manager                        = mock('\UGroupManager');
+        $this->user_manager   = mock('\UserManager');
+        $this->ugroup_manager = mock('\UGroupManager');
         $this->emails_to_be_notified_retriever = new EmailsToBeNotifiedRetriever(
             $mail_notification_manager,
             $this->user_to_notify_dao,
@@ -119,10 +119,10 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
         $this->user_102 = aUser()->withId(102)->build();
         $this->user_103 = aUser()->withId(103)->build();
 
-        $this->user_group_101 = mock('User_UGroup');
+        $this->user_group_101 = mock('ProjectUGroup');
         stub($this->user_group_101)->getId()->returns(101);
-        $this->user_group_102 = mock('User_UGroup');
-        stub($this->user_group_102)->getId()->returns(102);
+        $this->user_group_project_member = mock('ProjectUGroup');
+        stub($this->user_group_project_member)->getId()->returns(ProjectUGroup::PROJECT_MEMBERS);
 
         $this->repository = mock('Tuleap\Svn\Repository\Repository');
         stub($this->repository)->getProject()->returns(aMockProject()->withId(101)->build());
@@ -350,6 +350,41 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
         );
         stub($this->user_manager)->getUserById(103)->returns($this->user_103);
         stub($this->user_manager)->getUserById(102)->returns($this->user_102);
+
+        $this->assertFalse(
+            $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
+        );
+    }
+
+    public function itReturnsFalseWhenUserGroupsAreIdentical()
+    {
+        $new_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array(),
+                array(),
+                array($this->user_group_101, $this->user_group_project_member)
+            )
+        );
+
+        $old_notifications = array(
+            'id'           => 1,
+            'mailing_list' => "",
+            'svn_path'     => "/tags"
+        );
+
+        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
+        stub($this->mail_notification_dao)->searchByPathStrictlyEqual()->returnsDar($old_notifications);
+        stub($this->mail_notification_dao)->searchByPath()->returnsDar($old_notifications);
+        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(
+            array("ugroup_id" => 101),
+            array("ugroup_id" => 3)
+        );
+        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(null);
+        stub($this->ugroup_manager)->getById(101)->returns($this->user_group_101);
+        stub($this->ugroup_manager)->getById(3)->returns($this->user_group_project_member);
 
         $this->assertFalse(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
