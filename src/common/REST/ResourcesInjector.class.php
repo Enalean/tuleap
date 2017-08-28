@@ -21,7 +21,7 @@ namespace Tuleap\REST;
 
 use Luracast\Restler\Restler;
 use Tuleap\JWT\REST\JWTRepresentation;
-use Tuleap\Project\REST\HeartbeatsRepresentation;
+use Tuleap\Label\REST\LabelRepresentation;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
@@ -53,6 +53,7 @@ class ResourcesInjector {
         $this->declareProjectUserGroupResource($resources, $project);
         $this->declarePhpWikiResource($resources, $project);
         $this->declareHeartbeatResource($resources, $project);
+        $this->declareLabelsResource($resources, $project);
     }
 
     private function declareHeartbeatResource(array &$resources, Project $project) {
@@ -72,6 +73,13 @@ class ResourcesInjector {
     private function declarePhpWikiResource(array &$resources, Project $project) {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, PhpWikiPageRepresentation::ROUTE);
+
+        $resources[] = $resource_reference;
+    }
+
+    private function declareLabelsResource(array &$resources, Project $project) {
+        $resource_reference = new ProjectResourceReference();
+        $resource_reference->build($project, LabelRepresentation::ROUTE);
 
         $resources[] = $resource_reference;
     }

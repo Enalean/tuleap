@@ -117,6 +117,14 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['resources']
         );
 
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
+                'type' => 'labels',
+            ),
+            $json_projects[0]['resources']
+        );
+
         $this->assertArrayHasKey('id', $json_projects[0]);
         $this->assertEquals($this->project_private_member_id, $json_projects[0]['id']);
 
@@ -269,6 +277,14 @@ class ProjectTest extends ProjectBase
             array(
                 'uri' => 'projects/'.$this->project_private_member_id.'/user_groups',
                 'type' => 'user_groups',
+            ),
+            $json_project['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.$this->project_private_member_id.'/labels',
+                'type' => 'labels',
             ),
             $json_project['resources']
         );
@@ -562,6 +578,20 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($third_backlog_item['label'], "Epic epoc");
         $this->assertEquals($third_backlog_item['status'], "Open");
         $this->assertEquals($third_backlog_item['artifact'], array('id' => $this->epic_artifact_ids[7], 'uri' => 'artifacts/'.$this->epic_artifact_ids[7], 'tracker' => array('id' => $this->epic_tracker_id, 'uri' => 'trackers/'.$this->epic_tracker_id, 'label' => 'Epics')));
+    }
+
+    public function testOPTIONSLabels()
+    {
+        $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/labels'));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETLabels()
+    {
+        $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/labels'));
+
+        $this->assertEquals(array('labels' => array()), $response->json());
     }
 
     public function testOPTIONSUserGroups() {
