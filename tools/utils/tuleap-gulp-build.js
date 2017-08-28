@@ -7,11 +7,10 @@ var gulp        = require('gulp'),
     rev         = require('gulp-rev'),
     del         = require('del'),
     fs          = require('fs'),
-    path        = require('path'),
-    scss_lint   = require('gulp-scss-lint'),
-    sass        = require('gulp-sass');
+    path        = require('path');
 
 var component_builder = require('./component-builder.js');
+var sass_builder      = require('./sass-builder.js');
 
 function get_all_plugins_from_manifests() {
     var plugins_path = './plugins';
@@ -56,7 +55,8 @@ function declare_plugin_tasks(asset_dir) {
         clean_tasks      = [],
         sass_tasks       = [],
         scss_lint_tasks  = [],
-        plugins_tasks    = [];
+        plugins_tasks    = [],
+        components_tasks = [];
 
     get_all_plugins_from_manifests().forEach(function (plugin) {
         var name = plugin['name'],
@@ -81,41 +81,24 @@ function declare_plugin_tasks(asset_dir) {
             clean_tasks.push('clean-' + task_name);
         }
 
+        var sass_dependencies = [];
         if ('components' in plugin) {
             task_name = 'components-' + name;
 
             component_builder.installAndBuildNpmComponents(plugin['components'], task_name, ['clean-js-' + name]);
-            javascript_tasks.push(task_name);
+            components_tasks.push(task_name);
+            sass_dependencies.push(task_name);
         }
 
         if ('themes' in plugin) {
+            sass_builder.lintSass('scss-lint-' + name, base_dir, plugin);
+            scss_lint_tasks.push('scss-lint-' + name);
+
             task_name = 'sass-' + name;
-
-            gulp.task('scss-lint-' + name, function() {
-                Object.keys(plugin['themes']).forEach(function (theme) {
-                    return gulp.src(plugin['themes'][theme]['files'], { cwd: base_dir })
-                        .pipe(scss_lint({
-                            config : '.scss-lint.yml'
-                        }));
-                });
-            });
-
-            gulp.task('clean-' + task_name, function () {
-                Object.keys(plugin['themes']).forEach(function (theme) {
-                    sass_clean(base_dir, plugin['themes'][theme]['files']);
-                });
-            });
-
-            gulp.task(task_name, ['clean-' + task_name], function () {
-                Object.keys(plugin['themes']).forEach(function (theme) {
-                    sass_build(base_dir, plugin['themes'][theme]);
-                });
-            });
+            sass_builder.cleanAndBuildSass(task_name, base_dir, plugin, sass_dependencies);
 
             plugin_tasks.push(task_name);
             sass_tasks.push(task_name);
-            scss_lint_tasks.push('scss-lint-' + name);
-            clean_tasks.push('clean-' + task_name);
         }
 
         gulp.task('build-plugin-' + name, plugin_tasks);
@@ -123,6 +106,7 @@ function declare_plugin_tasks(asset_dir) {
         plugins_tasks.push('build-plugin-' + name);
     });
 
+    gulp.task('components-plugins', components_tasks);
     gulp.task('js-plugins', javascript_tasks);
     gulp.task('sass-plugins', sass_tasks);
     gulp.task('scss-lint-plugins', scss_lint_tasks);
@@ -140,26 +124,6 @@ function concat_files_plugin(base_dir, name, files, asset_dir) {
             merge: true
         }))
         .pipe(gulp.dest(path.join(base_dir, asset_dir)));
-}
-
-function sass_build(base_dir, scss_hash) {
-    var sass_options = { outputStyle: 'compressed' };
-    if ('includes' in scss_hash) {
-        sass_options['includePaths'] = scss_hash['includes'].map(function (p) { return path.join(base_dir, p);});
-    }
-
-    return gulp.src(scss_hash.files, {cwd: base_dir})
-        .pipe(sass(sass_options).on('error', sass.logError))
-        .pipe(gulp.dest(path.join(base_dir, scss_hash.target_dir)));
-}
-
-function sass_clean(base_dir, scss_files) {
-    var css_files = scss_files.map(function(file) {
-        var filename = path.basename(file, path.extname(file)) + '.css',
-            css_path = path.join(base_dir, path.dirname(file), filename);
-        return css_path;
-    });
-    del(css_files);
 }
 
 function watch_plugins() {
@@ -194,8 +158,6 @@ function watch_plugins() {
 }
 
 module.exports = {
-    sass_clean             : sass_clean,
-    sass_build             : sass_build,
     watch_plugins          : watch_plugins,
     concat_core_js         : concat_core_js,
     declare_plugin_tasks   : declare_plugin_tasks
