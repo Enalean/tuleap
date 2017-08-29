@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -1336,15 +1336,18 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
     if (count($error) === 0) {
         $GLOBALS['Response']->addFeedback('info', $info_success);
-        $GLOBALS['Response']->redirect('/file/?group_id=' . $group_id);
+        http_build_query(array('group_id' => $group_id));
+        $GLOBALS['Response']->redirect('/file/showfiles.php?' . http_build_query(
+                array('group_id'   => $group_id, 'show_release_id' => $release_id)
+            )
+        );
     } else {
         foreach($error as $error_message) {
             $GLOBALS['Response']->addFeedback('error', $error_message);
         }
 
-        $GLOBALS['Response']->redirect('/file/?group_id=' . $group_id);
+        $GLOBALS['Response']->redirect('/file/showfiles.php?group_id=' . urlencode($group_id));
     }
-    frs_display_release_form($is_update, $release, $group_id, $title, $url);
 }
 
 function detectSpecialCharactersInName($name, $type) {
