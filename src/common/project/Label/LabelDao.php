@@ -21,6 +21,7 @@
 namespace Tuleap\Project\Label;
 
 use DataAccessObject;
+use Tuleap\Label\UnknownLabelException;
 
 class LabelDao extends DataAccessObject
 {
@@ -39,5 +40,46 @@ class LabelDao extends DataAccessObject
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
+    }
+
+    public function createIfNeededInTransaction($project_id, $name)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $name       = $this->da->quoteSmart($name);
+
+        $sql = "SELECT id
+                FROM project_label
+                WHERE project_id = $project_id AND name = $name";
+        $result = $this->retrieveFirstRow($sql);
+        if ($result) {
+            return $result['id'];
+        }
+
+        $sql = "INSERT INTO project_label (project_id, name) VALUES ($project_id, $name)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    public function checkThatAllLabelIdsExistInProjectInTransaction($project_id, array $array_of_label_ids)
+    {
+        if (empty($array_of_label_ids)) {
+            return;
+        }
+
+        $project_id = $this->da->escapeInt($project_id);
+
+        $nb_of_given_labels = count($array_of_label_ids);
+        sort($array_of_label_ids);
+        $array_of_label_ids = $this->da->escapeIntImplode($array_of_label_ids);
+
+        $sql = "SELECT COUNT(*) AS nb_of_project_labels
+                FROM project_label
+                WHERE id IN ($array_of_label_ids)
+                  AND project_id = $project_id";
+
+        $result = $this->retrieveFirstRow($sql);
+        if ($result['nb_of_project_labels'] != $nb_of_given_labels) {
+            throw new UnknownLabelException();
+        }
     }
 }

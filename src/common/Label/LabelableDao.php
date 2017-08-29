@@ -18,28 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label\REST;
+namespace Tuleap\Label;
 
-use Tuleap\Label\Label;
-use Tuleap\REST\JsonCast;
-
-class LabelRepresentation
+interface LabelableDao
 {
-    const ROUTE = 'labels';
+    /**
+     * @param int $item_id
+     * @param int[] $array_of_label_ids
+     * @throws UnknownLabelException
+     */
+    public function addLabelsInTransaction($item_id, array $array_of_label_ids);
 
     /**
-     * @var int {@required false}
+     * @param int $item_id
+     * @param int[] $array_of_label_ids
      */
-    public $id;
-
-    /**
-     * @var string {@required false}
-     */
-    public $label;
-
-    public function build(Label $label)
-    {
-        $this->id    = JsonCast::toInt($label->getId());
-        $this->label = $label->getName();
-    }
+    public function removeLabelsInTransaction($item_id, array $array_of_label_ids);
 }

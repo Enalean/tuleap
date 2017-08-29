@@ -20,26 +20,6 @@
 
 namespace Tuleap\Label\REST;
 
-use Tuleap\Label\Label;
-use Tuleap\REST\JsonCast;
-
-class LabelRepresentation
+class UnableToAddAndRemoveSameLabelException extends \Exception
 {
-    const ROUTE = 'labels';
-
-    /**
-     * @var int {@required false}
-     */
-    public $id;
-
-    /**
-     * @var string {@required false}
-     */
-    public $label;
-
-    public function build(Label $label)
-    {
-        $this->id    = JsonCast::toInt($label->getId());
-        $this->label = $label->getName();
-    }
 }

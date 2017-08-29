@@ -18,28 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label\REST;
+namespace Tuleap\Label;
 
-use Tuleap\Label\Label;
-use Tuleap\REST\JsonCast;
-
-class LabelRepresentation
+class UnknownLabelException extends \Exception
 {
-    const ROUTE = 'labels';
-
-    /**
-     * @var int {@required false}
-     */
-    public $id;
-
-    /**
-     * @var string {@required false}
-     */
-    public $label;
-
-    public function build(Label $label)
-    {
-        $this->id    = JsonCast::toInt($label->getId());
-        $this->label = $label->getName();
-    }
 }

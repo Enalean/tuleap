@@ -20,26 +20,15 @@
 
 namespace Tuleap\Label\REST;
 
-use Tuleap\Label\Label;
-use Tuleap\REST\JsonCast;
-
-class LabelRepresentation
+class LabelsPATCHRepresentation
 {
-    const ROUTE = 'labels';
+    /**
+     * @var array {@type \Tuleap\Label\REST\LabelRepresentation} {@required false} {@min 1}
+     */
+    public $add;
 
     /**
-     * @var int {@required false}
+     * @var array {@type \Tuleap\Label\REST\LabelRepresentation} {@required false} {@min 1}
      */
-    public $id;
-
-    /**
-     * @var string {@required false}
-     */
-    public $label;
-
-    public function build(Label $label)
-    {
-        $this->id    = JsonCast::toInt($label->getId());
-        $this->label = $label->getName();
-    }
+    public $remove;
 }
