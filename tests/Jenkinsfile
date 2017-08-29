@@ -144,6 +144,14 @@ pipeline {
                     """
                     junit 'results/api-soap/soap_tests.xml'
                 },
+                'Whole platform integration': {
+                    dir ('sources') {
+                        sh """
+                        tests/selenium/wrap.sh "$WORKSPACE/results/distlp-integration"
+                        """
+                    }
+                    junit 'results/distlp-integration/Tuleap-Tests-*.xml'
+                },
                 failFast: false
             }
             post {
