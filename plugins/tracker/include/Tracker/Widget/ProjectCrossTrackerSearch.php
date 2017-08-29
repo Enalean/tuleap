@@ -21,7 +21,9 @@
 
 namespace Tuleap\Tracker\Widget;
 
+use ForgeConfig;
 use TemplateRendererFactory;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\CrossTracker\CrossTrackerPresenter;
 use Widget;
 
@@ -73,5 +75,17 @@ class ProjectCrossTrackerSearch extends Widget
     public function isUnique()
     {
         return false;
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $cross_tracker_include_assets = new IncludeAssets(
+            TRACKER_BASE_DIR . '/../www/assets',
+            TRACKER_BASE_URL . '/assets'
+        );
+
+        return array(
+            array('file' => $cross_tracker_include_assets->getFileURL('cross-tracker.js'))
+        );
     }
 }

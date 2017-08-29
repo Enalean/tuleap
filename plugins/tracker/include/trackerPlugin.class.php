@@ -19,11 +19,9 @@
 
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\CollectionOfWidgetsThatNeedJavascriptDependencies;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\NoArchive;
@@ -175,7 +173,6 @@ class trackerPlugin extends Plugin {
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
 
         $this->addHook(HeartbeatsEntryCollection::NAME);
-        $this->addHook(CollectionOfWidgetsThatNeedJavascriptDependencies::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1506,17 +1503,5 @@ class trackerPlugin extends Plugin {
         $current_page = new CurrentPage();
 
         return $current_page->isDashboard();
-    }
-
-    public function getWidgetsThatNeedJavascriptDependencies(
-        CollectionOfWidgetsThatNeedJavascriptDependencies $collection
-    ) {
-        $cross_tracker_include_assets = new IncludeAssets(
-            ForgeConfig::get('tuleap_dir') . $this->getPluginPath() . '/www/assets',
-            $this->getPluginPath() . '/assets'
-        );
-        $javascript[] = array('file' => $cross_tracker_include_assets->getFileURL('cross-tracker.js'));
-
-        $collection->add(ProjectCrossTrackerSearch::NAME, $javascript);
     }
 }

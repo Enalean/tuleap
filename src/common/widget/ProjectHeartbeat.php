@@ -23,6 +23,7 @@ namespace Tuleap\Widget;
 use ForgeConfig;
 use HTTPRequest;
 use TemplateRendererFactory;
+use Tuleap\Layout\IncludeAssets;
 use Widget;
 
 class ProjectHeartbeat extends Widget
@@ -63,6 +64,15 @@ class ProjectHeartbeat extends Widget
                 $request->getProject(),
                 $request->getCurrentUser()
             )
+        );
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $include_assets = new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets');
+
+        return array(
+            array('file' => $include_assets->getFileURL('widget-project-heartbeat.js'))
         );
     }
 }

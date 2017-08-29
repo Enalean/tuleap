@@ -41,6 +41,7 @@ class DashboardWidgetPresenter
     public $has_actions;
     public $has_icon;
     public $icon;
+    public $javascript_dependencies;
 
     public function __construct(
         Dashboard $dashboard,
@@ -58,6 +59,8 @@ class DashboardWidgetPresenter
         $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
         $this->icon        = $widget->getIcon();
         $this->has_icon    = (bool) $this->icon;
+
+        $this->javascript_dependencies = $widget->getJavascriptDependencies();
 
         $this->has_actions = $this->has_rss || $can_update_dashboards;
 
