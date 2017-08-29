@@ -3,7 +3,8 @@ version: "2"
 services:
   firefox:
     container_name: ${BUILD_TAG}tuleap_runtests_firefox
-    image: selenium/standalone-firefox
+    image: selenium/standalone-firefox:3.4.0-francium
+    shm_size: 2g
     networks:
       - tuleap
 
