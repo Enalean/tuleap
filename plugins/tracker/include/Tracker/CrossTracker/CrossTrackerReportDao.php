@@ -64,6 +64,31 @@ class CrossTrackerReportDao extends DataAccessObject
     }
 
     /**
+     * @param int $report_id
+     * @param \Tracker[] $trackers
+     */
+    public function updateReport($report_id, array $trackers)
+    {
+        $this->da->startTransaction();
+
+        $report_id = $this->da->escapeInt($report_id);
+
+        try {
+            $sql = "DELETE FROM plugin_tracker_cross_tracker_report_tracker WHERE report_id = $report_id";
+            $this->update($sql);
+
+            $this->addTrackersToReport($trackers, $report_id);
+        } catch (DataAccessQueryException $e) {
+            $this->rollBack();
+
+            return;
+        }
+
+        $this->da->commit();
+    }
+
+
+    /**
      * @param array $trackers
      * @param       $report_id
      */

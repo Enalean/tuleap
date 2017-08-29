@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1\CrossTracker;
 
+use REST_TestDataBuilder;
 use RestBase;
 
 class CrossTrackerTest extends RestBase
@@ -43,9 +44,36 @@ class CrossTrackerTest extends RestBase
             "uri"      => "cross_tracker_reports/1",
             "trackers" => array(
                 array(
-                    "id"    => 7,
-                    "uri"   => "trackers/7",
-                    "label" => "Kanban Tasks"
+                    "id"    => $this->kanban_tracker_id,
+                    "uri"   => "trackers/" . $this->kanban_tracker_id,
+                    "label" => REST_TestDataBuilder::KANBAN_TRACKER_LABEL
+                )
+            )
+        );
+
+        $this->assertEquals(
+            $response->json(),
+            $expected_cross_tracker
+        );
+    }
+
+    public function testPut()
+    {
+        $params   = array(
+            "trackers_id" => array($this->epic_tracker_id)
+        );
+        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $expected_cross_tracker = array(
+            "id"       => 1,
+            "uri"      => "cross_tracker_reports/1",
+            "trackers" => array(
+                array(
+                    "id"    => $this->epic_tracker_id,
+                    "uri"   => "trackers/" . $this->epic_tracker_id,
+                    "label" => REST_TestDataBuilder::EPICS_TRACKER_LABEL
                 )
             )
         );
