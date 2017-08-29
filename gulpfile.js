@@ -265,12 +265,12 @@ gulp.task('watch', function() {
     );
 
     gulp.watch(
-        common_scss.files
-            .concat(select2_scss.files)
-            .concat(theme_flamingparrot_scss.files)
-            .concat(theme_flamingparrot_scss.watched_includes)
-            .concat(theme_burningparrot_scss.files)
-            .concat(theme_burningparrot_scss.watched_includes),
+        common_scss.themes.common.files
+            .concat(select2_scss.themes.common.files)
+            .concat(core_scss.themes.FlamingParrot.files)
+            .concat(core_scss.themes.FlamingParrot.watched_includes)
+            .concat(core_scss.themes.BurningParrot.files)
+            .concat(core_scss.themes.BurningParrot.watched_includes),
         ['sass-core']
     );
 
