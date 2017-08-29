@@ -25,6 +25,8 @@ use ForgeConfig;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\CrossTracker\CrossTrackerPresenter;
+use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
+use Tuleap\Tracker\CrossTracker\CrossTrackerSaver;
 use Widget;
 
 class ProjectCrossTrackerSearch extends Widget
@@ -77,6 +79,13 @@ class ProjectCrossTrackerSearch extends Widget
         return false;
     }
 
+    public function create(&$request)
+    {
+        $content_id = $this->getDao()->create();
+
+        return $content_id;
+    }
+
     public function getJavascriptDependencies()
     {
         $cross_tracker_include_assets = new IncludeAssets(
@@ -87,5 +96,13 @@ class ProjectCrossTrackerSearch extends Widget
         return array(
             array('file' => $cross_tracker_include_assets->getFileURL('cross-tracker.js'))
         );
+    }
+
+    /**
+     * @return CrossTrackerReportDao
+     */
+    private function getDao()
+    {
+        return new CrossTrackerReportDao();
     }
 }

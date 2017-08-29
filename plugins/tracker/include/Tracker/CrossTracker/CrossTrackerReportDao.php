@@ -55,33 +55,19 @@ class CrossTrackerReportDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    /**
-     * @param \Tracker[] $trackers
-     */
-    public function save(array $trackers)
+    public function create()
     {
-        $this->da->startTransaction();
-
-        try {
-            $sql = "INSERT INTO plugin_tracker_cross_tracker_report(id)
+        $sql = "INSERT INTO plugin_tracker_cross_tracker_report(id)
             VALUES (null)";
 
-            $report_id = $this->updateAndGetLastId($sql);
-            $this->addTrackersToReport($trackers, $report_id);
-        } catch (DataAccessQueryException $e) {
-            $this->rollBack();
-
-            return false;
-        }
-
-        $this->da->commit();
+        return $this->updateAndGetLastId($sql);
     }
 
     /**
      * @param array $trackers
      * @param       $report_id
      */
-    private function addTrackersToReport(array $trackers, $report_id)
+    public function addTrackersToReport(array $trackers, $report_id)
     {
         $report_id = $this->da->escapeInt($report_id);
 
