@@ -140,3 +140,4 @@ project_admin_utils	svn_multi_repository_access_file_update	Fichier de contrôle
 project_admin_utils	svn_multi_repository_access_file_use_version	Utilisation d'une version pour le fichier contrôle d'accès
 project_admin_utils	svn_multi_repository_notification_create	Notification créée pour le chemin
 project_admin_utils	svn_multi_repository_notification_update	Notification modifiée pour le chemin
+project_admin_utils	svn_multi_repository_notification_delete	Notification supprimée pour le chemin

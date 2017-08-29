@@ -20,10 +20,10 @@
 
 require_once 'constants.php';
 
-use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\Service\ServiceCreator;
@@ -60,6 +60,7 @@ use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Logs\QueryBuilder;
 use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
+use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\NotificationsForProjectMemberCleaner;
@@ -290,7 +291,7 @@ class SvnPlugin extends Plugin
                 $params['dependencies'] = array(
                     $this->getAccessFileHistoryCreator(),
                     $this->getRepositoryManager(),
-                    UserManager::instance(),
+                    $this->getUserManager(),
                     $this->getBackendSVN(),
                     $this->getBackendSystem()
                 );
@@ -372,10 +373,11 @@ class SvnPlugin extends Plugin
         if (empty($this->mail_notification_manager)) {
             $this->mail_notification_manager = new MailNotificationManager(
                 $this->getMailNotificationDao(),
-                new UsersToNotifyDao(),
-                new UgroupsToNotifyDao(),
+                $this->getUserNotifyDao(),
+                $this->getUGroupNotifyDao(),
                 $this->getProjectHistoryDao(),
-                $this->getNotificationEmailsBuilder()
+                $this->getNotificationEmailsBuilder(),
+                $this->getUGroupManager()
             );
         }
         return $this->mail_notification_manager;
@@ -516,7 +518,7 @@ class SvnPlugin extends Plugin
         $project         = $params['project'];
         $logger          = $params['logger'];
 
-        $user_manager    = UserManager::instance();
+        $user_manager    = $this->getUserManager();
 
         $svn = new XMLImporter(
             $xml,
@@ -571,11 +573,11 @@ class SvnPlugin extends Plugin
                 new SvnLogger(),
                 new NotificationListBuilder(
                     new UGroupDao(),
-                    new CollectionOfUserToBeNotifiedPresenterBuilder(new UsersToNotifyDao()),
-                    new CollectionOfUgroupToBeNotifiedPresenterBuilder(new UgroupsToNotifyDao())
+                    new CollectionOfUserToBeNotifiedPresenterBuilder($this->getUserNotifyDao()),
+                    new CollectionOfUgroupToBeNotifiedPresenterBuilder($this->getUGroupNotifyDao())
                 ),
                 $this->getNotificationEmailsBuilder(),
-                UserManager::instance(),
+                $this->getUserManager(),
                 new UGroupManager(),
                 $hook_config_updator,
                 $this->getHookConfigRetriever(),
@@ -760,7 +762,7 @@ class SvnPlugin extends Plugin
      */
     private function getUgroupToNotifyUpdater()
     {
-        return new UgroupsToNotifyUpdater(new UgroupsToNotifyDao());
+        return new UgroupsToNotifyUpdater($this->getUGroupNotifyDao());
     }
 
     public function project_admin_remove_user(array $params)
@@ -769,10 +771,10 @@ class SvnPlugin extends Plugin
         $user_id    = $params['user_id'];
 
         $project = ProjectManager::instance()->getProject($project_id);
-        $user    = UserManager::instance()->getUserById($user_id);
+        $user    = $this->getUserManager()->getUserById($user_id);
 
         $notifications_for_project_member_cleaner = new NotificationsForProjectMemberCleaner(
-            new UsersToNotifyDao(),
+            $this->getUserNotifyDao(),
             $this->getMailNotificationDao()
         );
         $notifications_for_project_member_cleaner->cleanNotificationsAfterUserRemoval($project, $user);
@@ -783,7 +785,7 @@ class SvnPlugin extends Plugin
         $project_id = $params['group_id'];
         $ugroup     = $params['ugroup'];
 
-        $ugroups_to_notify_dao = new UgroupsToNotifyDao();
+        $ugroups_to_notify_dao = $this->getUGroupNotifyDao();
         $ugroups_to_notify_dao->deleteByUgroupId($project_id, $ugroup->getId());
         $this->getMailNotificationDao()->deleteEmptyNotificationsInProject($project_id);
     }
@@ -1024,5 +1026,29 @@ class SvnPlugin extends Plugin
     private function getNotificationEmailsBuilder()
     {
         return new NotificationsEmailsBuilder();
+    }
+
+    /**
+     * @return UserManager
+     */
+    private function getUserManager()
+    {
+        return UserManager::instance();
+    }
+
+    /**
+     * @return UsersToNotifyDao
+     */
+    private function getUserNotifyDao()
+    {
+        return new UsersToNotifyDao();
+    }
+
+    /**
+     * @return UgroupsToNotifyDao
+     */
+    private function getUGroupNotifyDao()
+    {
+        return new UgroupsToNotifyDao();
     }
 }

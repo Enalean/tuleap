@@ -25,6 +25,7 @@ use Tuleap\Svn\Admin\MailNotification;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Repository\Repository;
 use UGroupManager;
+use UserManager;
 
 class EmailsToBeNotifiedRetriever
 {
@@ -45,7 +46,7 @@ class EmailsToBeNotifiedRetriever
      */
     private $ugroup_manager;
     /**
-     * @var \UserManager
+     * @var UserManager
      */
     private $user_manager;
 
@@ -54,7 +55,7 @@ class EmailsToBeNotifiedRetriever
         UsersToNotifyDao $user_dao,
         UgroupsToNotifyDao $ugroup_dao,
         UGroupManager $ugroup_manager,
-        \UserManager $user_manager
+        UserManager $user_manager
     ) {
         $this->notification_manager = $notification_manager;
         $this->user_dao             = $user_dao;

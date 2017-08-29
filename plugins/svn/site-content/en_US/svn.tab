@@ -140,3 +140,4 @@ project_admin_utils	svn_multi_repository_access_file_update	Access file updated
 project_admin_utils	svn_multi_repository_access_file_use_version	Use a version for access control file
 project_admin_utils	svn_multi_repository_notification_create	Notification created on path
 project_admin_utils	svn_multi_repository_notification_update	Notification updated on path
+project_admin_utils	svn_multi_repository_notification_delete	Notification deleted on path

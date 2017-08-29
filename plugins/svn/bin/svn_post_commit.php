@@ -77,7 +77,8 @@ try {
                 new UsersToNotifyDao(),
                 new UgroupsToNotifyDao(),
                 new ProjectHistoryDao(),
-                new NotificationsEmailsBuilder()
+                new NotificationsEmailsBuilder(),
+                new UGroupManager()
             ),
             new UsersToNotifyDao(),
             new UgroupsToNotifyDao(),

@@ -68,7 +68,7 @@ class MailNotification
 
     public function getNotifiedMailsAsString()
     {
-        return implode(',', $this->notified_mails);
+        return implode(', ', $this->notified_mails);
     }
 
     public function getPath()
@@ -101,7 +101,7 @@ class MailNotification
             $users[] = $user->getUserName();
         }
 
-        return implode(',', $users);
+        return implode(', ', $users);
     }
 
     /**
@@ -138,7 +138,6 @@ class MailNotification
             $user_groups[] = $ugroup->getNormalizedName();
         }
 
-        return implode(',', $user_groups);
+        return implode(', ', $user_groups);
     }
-
 }

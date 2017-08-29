@@ -327,17 +327,23 @@ class AdminController
         $this->redirectOnDisplayNotification($request);
     }
 
-    public function deleteMailingList(HTTPRequest $request) {
+    public function deleteMailingList(HTTPRequest $request)
+    {
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
 
         $token = $this->generateToken($request->getProject(), $repository);
         $token->check();
 
         $valid_notification_remove_id = new Valid_Int('notification_remove_id');
-        if($request->valid($valid_notification_remove_id)) {
+        if ($request->valid($valid_notification_remove_id)) {
             $notification_remove_id = $request->get('notification_remove_id');
             try {
-                $this->mail_notification_manager->removeByNotificationId($notification_remove_id);
+                $notification = $this->mail_notification_manager->getByIdAndRepository(
+                    $repository,
+                    $notification_remove_id
+                );
+
+                $this->mail_notification_manager->removeByPathWithHistory($notification);
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
                     dgettext(
@@ -346,7 +352,10 @@ class AdminController
                     )
                 );
             } catch (CannotDeleteMailNotificationException $e) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn_admin_notification','delete_error'));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'delete_error')
+                );
             }
         }
 
