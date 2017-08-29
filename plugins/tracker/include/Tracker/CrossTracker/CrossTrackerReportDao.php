@@ -118,4 +118,17 @@ class CrossTrackerReportDao extends DataAccessObject
 
         $this->update($sql);
     }
+
+    public function delete($report_id)
+    {
+        $report_id = $this->da->escapeInt($report_id);
+
+        $sql = "DELETE report.*, tracker_report.*
+                FROM plugin_tracker_cross_tracker_report AS report
+                  LEFT JOIN plugin_tracker_cross_tracker_report_tracker AS tracker_report
+                    ON (report.id = tracker_report.report_id)
+                  WHERE report.id = $report_id;";
+
+        $this->update($sql);
+    }
 }
