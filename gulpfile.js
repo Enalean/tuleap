@@ -1,11 +1,11 @@
 'use strict';
 
-var gulp      = require('gulp'),
-    path      = require('path'),
-    del       = require('del'),
-    scss_lint = require('gulp-scss-lint'),
-    tuleap    = require('./tools/utils/tuleap-gulp-build');
+var gulp        = require('gulp');
+var path        = require('path');
+var del         = require('del');
+var runSequence = require('run-sequence');
 
+var tuleap            = require('./tools/utils/tuleap-gulp-build');
 var component_builder = require('./tools/utils/component-builder.js');
 var sass_builder      = require('./tools/utils/sass-builder.js');
 
@@ -199,12 +199,12 @@ var fat_combined_files = [
     asset_dir = 'www/assets';
 
 tuleap.declare_plugin_tasks(asset_dir);
-component_builder.installAndBuildNpmComponents(components_paths, 'components', ['clean-js-core']);
+component_builder.installAndBuildNpmComponents(components_paths, 'components-core', ['clean-js-core']);
 component_builder.installAndBuildNpmComponents(angular_app_paths, 'angular-apps');
 var base_dir = '.'
 sass_builder.cleanAndBuildSass('sass-core-common', base_dir, common_scss);
 sass_builder.cleanAndBuildSass('sass-core-select2', base_dir, select2_scss);
-sass_builder.cleanAndBuildSass('sass-core', base_dir, core_scss);
+sass_builder.cleanAndBuildSass('sass-core-themes', base_dir, core_scss);
 sass_builder.lintSass('scss-lint-core-common', base_dir, common_scss);
 sass_builder.lintSass('scss-lint-core-select2', base_dir, select2_scss);
 sass_builder.lintSass('scss-lint-core', base_dir, core_scss);
@@ -214,7 +214,7 @@ sass_builder.lintSass('scss-lint-core', base_dir, core_scss);
  */
 
 gulp.task('clean-js-core', function() {
-    del('src/' + asset_dir + '/*');
+    return del('src/' + asset_dir + '/*');
 });
 
 gulp.task('js-core', function() {
@@ -232,10 +232,6 @@ gulp.task('js-core', function() {
 
 gulp.task('js', ['js-core', 'js-plugins']);
 
-/**
- * Sass
- */
-
 gulp.task('scss-lint', [
     'scss-lint-core-common',
     'scss-lint-core-select2',
@@ -243,12 +239,15 @@ gulp.task('scss-lint', [
     'scss-lint-plugins'
 ]);
 
-gulp.task('sass', [
+gulp.task('sass-core', [
     'sass-core-common',
     'sass-core-select2',
-    'sass-core',
-    'sass-plugins'
+    'sass-core-themes',
 ]);
+
+gulp.task('sass', ['sass-core', 'sass-plugins']);
+
+gulp.task('components', ['components-core', 'components-plugins']);
 
 /**
  * Global
@@ -277,14 +276,10 @@ gulp.task('watch', function() {
     tuleap.watch_plugins();
 });
 
-gulp.task('clean-core', ['clean-js-core']);
+gulp.task('core', ['js-core', 'sass-core']);
 
-gulp.task('clean', ['clean-core', 'clean-plugins']);
-
-gulp.task('core', ['js', 'sass']);
-
-gulp.task('build', ['components', 'angular-apps'], function() {
-    return gulp.start('core');
+gulp.task('build', ['components-core', 'angular-apps'], function(callback) {
+    runSequence('core', 'plugins', callback);
 });
 
 gulp.task('default', ['build']);
