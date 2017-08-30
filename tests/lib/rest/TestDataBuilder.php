@@ -271,8 +271,9 @@ class REST_TestDataBuilder extends TestDataBuilder
     {
         echo "Generate Cross Tracker\n";
 
-        $cross_tracker_saver = new CrossTrackerSaver(new CrossTrackerReportDao());
-        $cross_tracker_saver->save(array($this->getKanbanTracker()));
+        $cross_tracker_saver = new CrossTrackerReportDao();
+        $report_id = $cross_tracker_saver->create();
+        $cross_tracker_saver->addTrackersToReport(array($this->getKanbanTracker()), $report_id);
 
         return $this;
     }
