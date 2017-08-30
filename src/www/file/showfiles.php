@@ -58,8 +58,10 @@ $frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
 
-$packages = array();
-$num_packages = 0;
+$packages        = array();
+$num_packages    = 0;
+$show_release_id = $request->getValidated('show_release_id', 'uint', false);
+
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
 foreach ($res as $package) {
@@ -73,7 +75,18 @@ foreach ($res as $package) {
             }
         }
         if (!$request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
-            $packages[$package->getPackageID()] = $package;
+            $is_collapsed = true;
+
+            if ($show_release_id !== false) {
+                foreach ($package->getReleases() as $release) {
+                    if ($release->getReleaseID() == $show_release_id) {
+                        $is_collapsed = false;
+                        break;
+                    }
+                }
+            }
+
+            $packages[$package->getPackageID()] = array('package' => $package, 'is_collapsed' => $is_collapsed);
             $num_packages++;
         }
     }
@@ -136,7 +149,9 @@ $package_permission_manager = new PackagePermissionManager($permission_manager, 
 $release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
 
 // Iterate and show the packages
-while (list ($package_id, $package) = each($packages)) {
+foreach ($packages as $package_id => $package_for_display) {
+    $package = $package_for_display['package'];
+
     $can_see_package = false;
 
     if ($package->isActive()) {
@@ -152,7 +167,8 @@ while (list ($package_id, $package) = each($packages)) {
         $html .= '<fieldset class="package">';
         $html .= '<legend>';
         if (!$pv) {
-            $html .= '<a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>&nbsp;';
+            $frs_icon = $package_for_display['is_collapsed'] ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
+            $html    .= '<a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'. $frs_icon .'" id="img_p_'.$package_id.'" /></a>&nbsp;';
         }
         $html .= " <$emphasis>". $hp->purify(util_unconvert_htmlspecialchars($package->getName())) ."</$emphasis>";
         if (!$pv) {
@@ -183,7 +199,7 @@ while (list ($package_id, $package) = each($packages)) {
         // get the releases of the package
         // Order by release_date and release_id in case two releases
         // are published the same day
-        $res_release = $frsrf->getFRSReleasesFromDb($package_id);
+        $res_release  = $package->getReleases();
         $num_releases = count($res_release);
 
         if (!isset ($proj_stats['releases']))
@@ -191,7 +207,8 @@ while (list ($package_id, $package) = each($packages)) {
         $proj_stats['releases'] += $num_releases;
 
         $javascript_releases_array = array();
-        $html .= '<div id="p_'.$package_id.'">';
+        $package_class_collapsed   = $package_for_display['is_collapsed'] ? 'frs_collapsed' : '';
+        $html .= '<div class="' . $package_class_collapsed . '" id="p_'.$package_id.'">';
         if (!$pv && $permission_manager->isAdmin($project, $user)) {
             $html .= '<p><a href="admin/release.php?func=add&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'add_releases') .']</a></p>';
         }
@@ -228,11 +245,15 @@ while (list ($package_id, $package) = each($packages)) {
                     } else {
                         $bgcolor = 'boxitem';
                     }
+
+                    $is_release_collapsed = $package_release->getReleaseID() != $show_release_id;
+
                     $html .= '<table width="100%" class="release">';
                     $html .= ' <TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'">';
                     $html .= '  <TD>';
                     if (!$pv) {
-                        $html .= '<a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
+                        $frs_icon = $is_release_collapsed ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
+                        $html .= '<a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'. $frs_icon .'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
                     }
                     $html .= "     <$emphasis>". $hp->purify($package_release->getName()) . "</$emphasis>";
                     if (!$pv) {
@@ -265,9 +286,10 @@ while (list ($package_id, $package) = each($packages)) {
                         $proj_stats['files'] = 0;
                     $proj_stats['files'] += $num_files;
 
-                    $javascript_files_array = array();
+                    $javascript_files_array  = array();
+                    $release_class_collapsed = $is_release_collapsed ? 'frs_collapsed' : '';
                     if (!$res_file || $num_files < 1) {
-                        $html .= '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
+                        $html .= '<span class="' . $release_class_collapsed . '" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
                         $javascript_files_array[] = "'f_0'";
                     } else {
                         $javascript_files_array[] = "'f_0'";
@@ -284,7 +306,7 @@ while (list ($package_id, $package) = each($packages)) {
                             $processor[$resrow['processor_id']] = $resrow['name'];
                         }
 
-                        $html .= '<span class="files" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0">';
+                        $html .= '<span class="' . $release_class_collapsed . '" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0">';
 
                         $title_arr = array ();
                         $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
@@ -386,14 +408,22 @@ function download(group_id,file_id,filename) {
 }
 
 function toggle_package(package_id) {
-    Element.toggle(package_id);
+    var element = document.getElementById(package_id);
+    if(element === null) {
+        return;
+    }
+    element.classList.toggle('frs_collapsed');
     toggle_image(package_id);
 }
 
 function toggle_release(package_id, release_id) {
     $A(packages[package_id][release_id]).each(function(file_id) {
         // toggle the content of the release (the files)
-        Element.toggle(package_id + release_id + file_id);
+        var element = document.getElementById(package_id + release_id + file_id);
+        if(element === null) {
+            return;
+        }
+        element.classList.toggle('frs_collapsed');
     });
     toggle_image(package_id + release_id);
 }
@@ -417,25 +447,6 @@ if (!$pv) {
     $javascript_array .= implode(",", $javascript_packages_array);
     $javascript_array .= '}';
     print '<script language="javascript">'.$javascript_array.'</script>';
-
-    ?>
-
-    <script language="javascript">
-    // at page loading, we only expand the first release of the package, and collapse the others
-    var cpt_release;
-    $H(packages).keys().each(function(package_id) {
-        cpt_release = 0;
-        $H(packages[package_id]).keys().each(function(release_id) {
-            if (cpt_release > 0) {
-                //Element.toggle(package_id + release_id);
-                toggle_release(package_id, release_id);
-            }
-            cpt_release++;
-        });
-    });
-    </script>
-
-    <?php
 }
 // project totals (statistics)
 if (isset ($proj_stats['size'])) {
