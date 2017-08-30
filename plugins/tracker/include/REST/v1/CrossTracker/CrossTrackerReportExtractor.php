@@ -39,7 +39,7 @@ class CrossTrackerReportExtractor
         $list            = array();
         foreach ($trackers_id as $tracker_id) {
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
-            if ($tracker && $tracker->userCanView() && ! $tracker->isDeleted()) {
+            if ($tracker && $tracker->userCanView() && ! $tracker->isDeleted() && $tracker->getProject()->isActive()) {
                 $list[] = $tracker;
             } else if (! $tracker) {
                 $invalid_tracker[] = $tracker_id;

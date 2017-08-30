@@ -27,6 +27,10 @@ class CrossTrackerReportExtractorTest extends \TuleapTestCase
 {
     private $tracker_id_1;
     /**
+     * @var \Project
+     */
+    private $project;
+    /**
      * @var \Tracker
      */
     private $tracker_1;
@@ -46,8 +50,9 @@ class CrossTrackerReportExtractorTest extends \TuleapTestCase
         $this->tracker_factory = mock('TrackerFactory');
         $this->extractor       = new CrossTrackerReportExtractor($this->tracker_factory);
 
+        $this->project      = mock('Project');
         $this->tracker_id_1 = 1;
-        $this->tracker_1    = aMockTracker()->withId($this->tracker_id_1)->build();
+        $this->tracker_1    = aMockTracker()->withId($this->tracker_id_1)->withProject($this->project)->build();
     }
 
     public function itDoesNotExtractTrackerUserCanNotView()
@@ -75,6 +80,20 @@ class CrossTrackerReportExtractorTest extends \TuleapTestCase
         );
     }
 
+    public function itDoesNotExtractTrackerOfNonActiveProjects()
+    {
+        stub($this->tracker_factory)->getTrackerById($this->tracker_id_1)->returns($this->tracker_1);
+        stub($this->tracker_1)->userCanView()->returns(true);
+        stub($this->tracker_1)->isDeleted()->returns(false);
+        stub($this->project)->isActive()->returns(false);
+
+        $expected_result = array();
+        $this->assertEqual(
+            $expected_result,
+            $this->extractor->extractTrackers(array($this->tracker_id_1))
+        );
+    }
+
     public function itThrowAnExceptionWhenTrackerIsNotFound()
     {
         stub($this->tracker_factory)->getTrackerById($this->tracker_id_1)->returns(null);
@@ -88,6 +107,7 @@ class CrossTrackerReportExtractorTest extends \TuleapTestCase
         stub($this->tracker_factory)->getTrackerById($this->tracker_id_1)->returns($this->tracker_1);
         stub($this->tracker_1)->userCanView()->returns(true);
         stub($this->tracker_1)->isDeleted()->returns(false);
+        stub($this->project)->isActive()->returns(true);
 
         $expected_result = array($this->tracker_1);
         $this->assertEqual(
