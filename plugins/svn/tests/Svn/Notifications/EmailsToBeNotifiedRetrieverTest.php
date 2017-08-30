@@ -22,14 +22,41 @@ namespace Tuleap\Svn\Notifications;
 
 use PFUser;
 use Tuleap\Svn\Admin\MailNotification;
+use Tuleap\Svn\Admin\MailNotificationManager;
+use Tuleap\Svn\Repository\Repository;
 use TuleapTestCase;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
 class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 {
+    /**
+     * @var PFUser
+     */
+    private $user_suspended;
+    /**
+     * @var PFUser
+     */
+    private $user_jdoe;
+    /**
+     * @var PFUser
+     */
+    private $user_charles;
+    /**
+     * @var PFUser
+     */
+    private $user_jsmith;
+    /**
+     * @var UsersToNotifyDao
+     */
     private $user_dao;
+    /**
+     * @var Repository
+     */
     private $repository;
+    /**
+     * @var MailNotificationManager
+     */
     private $notification_manager;
 
     /**
@@ -49,32 +76,21 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
         stub($this->repository)->getProject()->returns($project);
 
         $notified_ugroups_dao = mock('Tuleap\Svn\Notifications\UgroupsToNotifyDao');
-        stub($notified_ugroups_dao)->searchUgroupsByNotificationId(1)->returnsEmptyDar();
-        stub($notified_ugroups_dao)->searchUgroupsByNotificationId(2)->returnsEmptyDar();
-        stub($notified_ugroups_dao)
-            ->searchUgroupsByNotificationId(101)
-            ->returnsDar(
-                array('ugroup_id' => 104, 'name' => 'Developers')
-            );
+        $ugroup_manager       = mock('UGroupManager');
 
-        $developers = aMockUGroup()
-            ->withMembers(
-                array(
-                    aUser()->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
-                    aUser()->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail(
-                        'charles@example.com'
-                    )->build(),
-                    aUser()->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail(
-                        'suspended@example.com'
-                    )->build()
-                )
-            )
-            ->build();
+        $this->user_jsmith = aUser()->withEmail('jsmith@example.com')->build();
 
-        $ugroup_manager = mock('UGroupManager');
-        stub($ugroup_manager)
-            ->getUGroup($project, 104)
-            ->returns($developers);
+        $this->user_charles = mock('PFUser');
+        stub($this->user_charles)->getEmail()->returns('charles@example.com');
+        stub($this->user_charles)->isAlive()->returns(true);
+
+        $this->user_jdoe = mock('PFUser');
+        stub($this->user_jdoe)->getEmail()->returns('jdoe@example.com');
+        stub($this->user_jdoe)->isAlive()->returns(true);
+
+        $this->user_suspended = mock('PFUser');
+        stub($this->user_suspended)->getEmail()->returns('suspended@example.com');
+        stub($this->user_suspended)->isAlive()->returns(false);
 
         $this->retriever = new EmailsToBeNotifiedRetriever(
             $this->notification_manager,
@@ -99,7 +115,6 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
@@ -130,7 +145,6 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
@@ -148,13 +162,11 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     $this->repository,
                     '/path',
                     array(),
-                    array(),
+                    array($this->user_jsmith),
                     array()
                 )
             )
         );
-        stub($this->user_dao)->searchUsersByNotificationId(1)->returnsDar(array('email' => 'jsmith@example.com'));
-
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
         $expected = array('jsmith@example.com');
@@ -164,6 +176,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itReturnsEmailsOfUgroupMembersForNotification()
     {
+        $user_group = aMockUGroup()->withMembers(array($this->user_charles, $this->user_jdoe))->build();
         stub($this->notification_manager)->getByPath()->returns(
             array(
                 new MailNotification(
@@ -172,11 +185,10 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     '/path',
                     array('jsmith@example.com'),
                     array(),
-                    array()
+                    array($user_group)
                 ),
             )
         );
-        stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
@@ -186,6 +198,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itRemovesGroupMembersThatAreNotAlive()
     {
+        $user_group = aMockUGroup()->withMembers(array($this->user_suspended))->build();
         stub($this->notification_manager)->getByPath()->returns(
             array(
                 new MailNotification(
@@ -194,12 +207,10 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     '/path',
                     array('jsmith@example.com'),
                     array(),
-                    array()
+                    array($user_group)
                 ),
             )
         );
-        stub($this->user_dao)->searchUsersByNotificationId()->returnsEmptyDar();
-
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
         $this->assertTrue(! in_array('suspended@example.com', $emails));
@@ -207,6 +218,7 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
 
     public function itRemovesDuplicates()
     {
+        $user_group = aMockUGroup()->withMembers(array($this->user_jsmith))->build();
         stub($this->notification_manager)->getByPath()->returns(
             array(
                 new MailNotification(
@@ -214,8 +226,8 @@ class EmailsToBeNotifiedRetrieverTest extends TuleapTestCase
                     $this->repository,
                     '/path',
                     array('jsmith@example.com'),
-                    array(),
-                    array()
+                    array($this->user_jsmith),
+                    array($user_group)
                 ),
             )
         );

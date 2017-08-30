@@ -22,12 +22,8 @@ namespace Tuleap\SVN\REST\v1;
 
 use ProjectUGroup;
 use Tuleap\Svn\Admin\MailNotification;
-use Tuleap\Svn\Admin\MailNotificationDao;
 use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
-use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
-use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
-use Tuleap\Svn\Notifications\UsersToNotifyDao;
 use Tuleap\Svn\Repository\Repository;
 use TuleapTestCase;
 
@@ -36,29 +32,17 @@ require_once __DIR__ . '/../bootstrap.php';
 class NotificationUpdateCheckerTest extends TuleapTestCase
 {
     /**
-     * @var \UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var ProjectUGroup
+     * @var \ProjectUGroup
      */
     private $user_group_project_member;
     /**
-     * @var ProjectUGroup
+     * @var \ProjectUGroup
      */
     private $user_group_101;
     /**
-     * @var \UserManager
+     * @var MailNotificationManager
      */
-    private $user_manager;
-    /**
-     * @var UsersToNotifyDao
-     */
-    private $user_to_notify_dao;
-    /**
-     * @var UgroupsToNotifyDao
-     */
-    private $ugroup_to_notify_dao;
+    private $mail_notification_manager;
     /**
      * @var \PFUser
      */
@@ -81,45 +65,20 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
      */
     private $notification_update_checker;
 
-    /**
-     * @var MailNotificationDao
-     */
-    private $mail_notification_dao;
-
     public function setUp()
     {
         parent::setUp();
 
-        $this->ugroup_manager = mock('\UGroupManager');
-
-        $this->mail_notification_dao = mock('Tuleap\Svn\Admin\MailNotificationDao');
-        $this->user_to_notify_dao    = mock('Tuleap\Svn\Notifications\UsersToNotifyDao');
-        $this->ugroup_to_notify_dao  = mock('Tuleap\Svn\Notifications\UgroupsToNotifyDao');
-        $mail_notification_manager   = new MailNotificationManager(
-            $this->mail_notification_dao,
-            $this->user_to_notify_dao,
-            $this->ugroup_to_notify_dao,
-            mock('\ProjectHistoryDao'),
-            new NotificationsEmailsBuilder(),
-            $this->ugroup_manager
-        );
-
-        $this->user_manager   = mock('\UserManager');
-        $this->emails_to_be_notified_retriever = new EmailsToBeNotifiedRetriever(
-            $mail_notification_manager,
-            $this->user_to_notify_dao,
-            $this->ugroup_to_notify_dao,
-            $this->ugroup_manager,
-            $this->user_manager
-        );
+        $this->mail_notification_manager       = mock('Tuleap\Svn\Admin\MailNotificationManager');
+        $this->emails_to_be_notified_retriever = mock('Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever');
 
         $this->notification_update_checker = new NotificationUpdateChecker(
-            $mail_notification_manager,
+            $this->mail_notification_manager,
             $this->emails_to_be_notified_retriever
         );
 
-        $this->user_102 = aUser()->withId(102)->build();
-        $this->user_103 = aUser()->withId(103)->build();
+        $this->user_102 = aUser()->withId(102)->withLang('en_US')->build();
+        $this->user_103 = aUser()->withId(103)->withLang('en_US')->build();
 
         $this->user_group_101 = mock('ProjectUGroup');
         stub($this->user_group_101)->getId()->returns(101);
@@ -133,16 +92,18 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
     public function itReturnsTrueWhenAPathIsRemoved()
     {
         $new_notifications = array();
-
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "foo@example.com,bar@example.com,test@example.com",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array("foo@example.com", "bar@example.com"),
+                array(),
+                array()
+            )
         );
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(null);
+        stub($this->mail_notification_manager)->getByRepository()->returnsDar($all_old_notifications);
 
         $this->assertTrue(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
@@ -161,12 +122,9 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 array()
             )
         );
+        $all_old_notifications = null;
 
-        $old_notifications = null;
-
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(null);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
 
         $this->assertTrue(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
@@ -194,15 +152,18 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             )
         );
 
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "foo@example.com,bar@example.com,test@example.com",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array("foo@example.com", "bar@example.com"),
+                array(),
+                array()
+            )
         );
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(null);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
 
         $this->assertTrue(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
@@ -222,17 +183,21 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             )
         );
 
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "foo@example.com,bar@example.com,test@example.com",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array("foo@example.com"),
+                array(),
+                array()
+            )
         );
+        $old_notifications = $all_old_notifications;
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPathStrictlyEqual()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPath()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(null);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
+        stub($this->emails_to_be_notified_retriever)->getNotificationsForPath($this->repository, "/tags")->returns($old_notifications);
+        stub($this->mail_notification_manager)->isAnExistingPath($this->repository, 0, "/tags")->returns(true);
 
         $this->assertTrue(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
@@ -252,23 +217,26 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             )
         );
 
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "foo@example.com,bar@example.com",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array("foo@example.com", "bar@example.com"),
+                array(),
+                array()
+            )
         );
+        $old_notifications = $all_old_notifications;
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPathStrictlyEqual()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPath()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(null);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
+        stub($this->emails_to_be_notified_retriever)->getNotificationsForPath($this->repository, "/tags")->returns($old_notifications);
+        stub($this->mail_notification_manager)->isAnExistingPath($this->repository, 0, "/tags")->returns(true);
 
         $this->assertFalse(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
         );
     }
-
 
     public function itReturnsTrueWhenAtLeastOneUserIsProvided()
     {
@@ -283,18 +251,21 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
             )
         );
 
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array(),
+                array(),
+                array()
+            )
         );
+        $old_notifications = $all_old_notifications;
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPathStrictlyEqual()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPath()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(array("user_id" => 103));
-        stub($this->user_manager)->getUserById(103)->returns($this->user_102, $this->user_103);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
+        stub($this->emails_to_be_notified_retriever)->getNotificationsForPath($this->repository, "/tags")->returns($old_notifications);
+        stub($this->mail_notification_manager)->isAnExistingPath($this->repository, 0, "/tags")->returns(true);
 
         $this->assertTrue(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
@@ -309,23 +280,26 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 $this->repository,
                 "/tags",
                 array(),
-                array(),
-                array($this->user_102, $this->user_103)
+                array($this->user_102, $this->user_103),
+                array()
             )
         );
 
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array(),
+                array($this->user_102),
+                array()
+            )
         );
+        $old_notifications = $all_old_notifications;
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPathStrictlyEqual()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPath()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(array("user_id" => 103));
-        stub($this->user_manager)->getUserById(103)->returns($this->user_103);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
+        stub($this->emails_to_be_notified_retriever)->getNotificationsForPath($this->repository, "/tags")->returns($old_notifications);
+        stub($this->mail_notification_manager)->isAnExistingPath($this->repository, 0, "/tags")->returns(true);
 
         $this->assertTrue(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
@@ -340,29 +314,62 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 $this->repository,
                 "/tags",
                 array(),
-                array($this->user_103, $this->user_102),
+                array($this->user_102, $this->user_103),
                 array()
             )
         );
 
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array(),
+                array($this->user_102, $this->user_103),
+                array()
+            )
         );
+        $old_notifications = $all_old_notifications;
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPathStrictlyEqual()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPath()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(null);
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(
-            array("user_id" => 103),
-            array("user_id" => 102)
-        );
-        stub($this->user_manager)->getUserById(103)->returns($this->user_103);
-        stub($this->user_manager)->getUserById(102)->returns($this->user_102);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
+        stub($this->emails_to_be_notified_retriever)->getNotificationsForPath($this->repository, "/tags")->returns($old_notifications);
+        stub($this->mail_notification_manager)->isAnExistingPath($this->repository, 0, "/tags")->returns(true);
 
         $this->assertFalse(
+            $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
+        );
+    }
+
+    public function itReturnsTrueWhenUserGroupsAreAdded()
+    {
+        $new_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array(),
+                array(),
+                array($this->user_group_project_member, $this->user_group_101)
+            )
+        );
+
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array(),
+                array(),
+                array($this->user_group_project_member)
+            )
+        );
+        $old_notifications = $all_old_notifications;
+
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
+        stub($this->emails_to_be_notified_retriever)->getNotificationsForPath($this->repository, "/tags")->returns($old_notifications);
+        stub($this->mail_notification_manager)->isAnExistingPath($this->repository, 0, "/tags")->returns(true);
+
+        $this->assertTrue(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
         );
     }
@@ -376,26 +383,25 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 "/tags",
                 array(),
                 array(),
-                array($this->user_group_101, $this->user_group_project_member)
+                array($this->user_group_project_member, $this->user_group_101)
             )
         );
 
-        $old_notifications = array(
-            'id'           => 1,
-            'mailing_list' => "",
-            'svn_path'     => "/tags"
+        $all_old_notifications = array(
+            new MailNotification(
+                1,
+                $this->repository,
+                "/tags",
+                array(),
+                array(),
+                array($this->user_group_project_member, $this->user_group_101)
+            )
         );
+        $old_notifications = $all_old_notifications;
 
-        stub($this->mail_notification_dao)->searchByRepositoryId()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPathStrictlyEqual()->returnsDar($old_notifications);
-        stub($this->mail_notification_dao)->searchByPath()->returnsDar($old_notifications);
-        stub($this->ugroup_to_notify_dao)->searchUgroupsByNotificationId()->returnsDar(
-            array("ugroup_id" => 101),
-            array("ugroup_id" => 3)
-        );
-        stub($this->user_to_notify_dao)->searchUsersByNotificationId()->returnsDar(null);
-        stub($this->ugroup_manager)->getById(101)->returns($this->user_group_101);
-        stub($this->ugroup_manager)->getById(3)->returns($this->user_group_project_member);
+        stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
+        stub($this->emails_to_be_notified_retriever)->getNotificationsForPath($this->repository, "/tags")->returns($old_notifications);
+        stub($this->mail_notification_manager)->isAnExistingPath($this->repository, 0, "/tags")->returns(true);
 
         $this->assertFalse(
             $this->notification_update_checker->hasNotificationChanged($this->repository, $new_notifications)
