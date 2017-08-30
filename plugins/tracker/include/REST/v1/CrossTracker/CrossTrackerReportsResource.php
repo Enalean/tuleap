@@ -32,6 +32,14 @@ use UserManager;
 class CrossTrackerReportsResource extends AuthenticatedResource
 {
     /**
+     * @var CrossTrackerReportExtractor
+     */
+    private $cross_tracker_extractor;
+    /**
+     * @var CrossTrackerReportDao
+     */
+    private $cross_tracker_dao;
+    /**
      * @var CrossTrackerReportFactory
      */
     private $report_factory;
@@ -47,6 +55,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new CrossTrackerReportDao(),
             TrackerFactory::instance()
         );
+
+        $this->cross_tracker_dao       = new CrossTrackerReportDao();
+        $this->cross_tracker_extractor = new CrossTrackerReportExtractor(TrackerFactory::instance());
     }
 
     /**
@@ -56,7 +67,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      */
     public function optionsId($id)
     {
-        Header::allowOptionsGet();
+        $this->sendAllowHeaders();
     }
 
     /**
@@ -79,13 +90,74 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $current_user   = $this->user_manager->getCurrentUser();
             $report         = $this->report_factory->getById($id, $current_user);
-            $representation = new CrossTrackerReportRepresentation();
-            $representation->build($report);
+            $representation = $this->getReportRepresentation($report);
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         }
 
-        Header::allowOptionsGet();
+        $this->sendAllowHeaders();
+
+        return $representation;
+    }
+
+    /**
+     * Update a cross tracker report
+     *
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"trackers_id": [1, 2, 3]<br>
+     * }<br>
+     * </pre>
+     *
+     * @url PUT {id}
+     *
+     * @param int $id Id of the report
+     * @param array {@max 10}  $trackers_id  Tracker id to link to report
+     *
+     * @status 201
+     * @access hybrid
+     *
+     * @return CrossTrackerReportRepresentation
+     *
+     * @throws 400
+     * @throws 404
+     */
+    protected function put($id, array $trackers_id)
+    {
+        $this->sendAllowHeaders();
+
+        try {
+            $current_user = $this->user_manager->getCurrentUser();
+            $trackers     = $this->cross_tracker_extractor->extractTrackers($trackers_id);
+
+            $this->cross_tracker_dao->updateReport($id, $trackers);
+            $report = $this->report_factory->getById($id, $current_user);
+        } catch (CrossTrackerReportNotFoundException $exception) {
+            throw new RestException(404, "Report $id not found");
+        } catch (TrackerNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (TrackerDuplicateException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        return $this->getReportRepresentation($report);
+    }
+
+    private function sendAllowHeaders()
+    {
+        Header::allowOptionsGetPut();
+    }
+
+    /**
+     * @param $report
+     *
+     * @return CrossTrackerReportRepresentation
+     */
+    private function getReportRepresentation($report)
+    {
+        $representation = new CrossTrackerReportRepresentation();
+        $representation->build($report);
 
         return $representation;
     }

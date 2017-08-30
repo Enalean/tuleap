@@ -41,4 +41,66 @@ class CrossTrackerNonRegressionTrackerTest extends RestBase
 
         $this->assertEquals($response->getStatusCode(), 404);
     }
+
+    public function testItThrowsAnExceptionWhenMoreThan10Trackers()
+    {
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $params   = array(
+            "trackers_id" => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+        );
+        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testItThrowsAnExceptionWhenATrackerIsNotFoundOnePlatform()
+    {
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $params   = array(
+            "trackers_id" => array(1001)
+        );
+        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+
+        $this->assertEquals($response->getStatusCode(), 404);
+    }
+
+    public function testItThrowsAnExceptionWhenTrackerIsDuplicateInList()
+    {
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $params   = array(
+            "trackers_id" => array($this->epic_tracker_id, $this->epic_tracker_id)
+        );
+        $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testItDoesNotAddTrackersUserCantView()
+    {
+        $params   = array(
+            "trackers_id" => array($this->epic_tracker_id, $this->kanban_tracker_id)
+        );
+        $response = $this->getResponseForNonProjectMember($this->client->put('cross_tracker_reports/1', null, $params));
+
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $expected_cross_tracker = array(
+            "id"       => 1,
+            "uri"      => "cross_tracker_reports/1",
+            "trackers" => null
+        );
+
+        $this->assertEquals(
+            $response->json(),
+            $expected_cross_tracker
+        );
+    }
+
+    private function getResponseForNonProjectMember($request)
+    {
+        return $this->getResponseByToken(
+            $this->getTokenForUserName(\REST_TestDataBuilder::TEST_USER_5_NAME),
+            $request
+        );
+    }
 }
