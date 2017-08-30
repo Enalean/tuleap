@@ -9,6 +9,11 @@ set -ex
 MAX_TEST_EXECUTION_TIME='30m'
 DOCKERCOMPOSE="docker-compose -f docker-compose-distlp-tests.yml -p distlp-tests-${BUILD_TAG}"
 
+test_results_folder='./test_results'
+if [ -n "$1" ]; then
+    test_results_folder="$1"
+fi
+
 clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
 }
@@ -19,16 +24,16 @@ wait_until_tests_are_executed() {
         echo 'Tests take to much time to execute. End of execution will not be waited for!'
 }
 
-mkdir -p test_results || true
-rm -rf test_results/* || true
+mkdir -p "$test_results_folder" || true
+rm -rf "$test_results_folder/*" || true
 clean_env
 
-$DOCKERCOMPOSE up -d --build
+TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
 
 wait_until_tests_are_executed
 
-$DOCKERCOMPOSE logs backend-web > test_results/backend-web.log
-$DOCKERCOMPOSE logs backend-svn > test_results/backend-svn.log
-$DOCKERCOMPOSE logs test > test_results/test.log
+$DOCKERCOMPOSE logs backend-web > "$test_results_folder/backend-web.log"
+$DOCKERCOMPOSE logs backend-svn > "$test_results_folder/backend-svn.log"
+$DOCKERCOMPOSE logs test > "$test_results_folder/test.log"
 
 clean_env

@@ -16,7 +16,7 @@ services:
     command: /tuleap/tests/selenium/run.sh
     volumes:
       - .:/tuleap
-      - ./test_results/:/output
+      - ${TEST_RESULT_OUTPUT}:/output
     depends_on:
       - reverse-proxy
     networks:
