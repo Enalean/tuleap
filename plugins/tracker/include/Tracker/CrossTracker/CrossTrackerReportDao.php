@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\CrossTracker;
 
 use DataAccessObject;
-use DataAccessQueryException;
+use Tracker;
 
 class CrossTrackerReportDao extends DataAccessObject
 {
@@ -104,6 +104,17 @@ class CrossTrackerReportDao extends DataAccessObject
 
         $sql = "INSERT INTO plugin_tracker_cross_tracker_report_tracker(report_id, tracker_id) VALUES " .
             implode(',', $sql_value);
+
+        $this->update($sql);
+    }
+
+    public function deleteTrackersByGroupId($group_id)
+    {
+        $group_id = $this->da->escapeInt($group_id);
+
+        $sql = "DELETE report.* FROM plugin_tracker_cross_tracker_report_tracker report
+                  INNER JOIN tracker ON report.tracker_id = tracker.id
+                WHERE tracker.group_id = $group_id";
 
         $this->update($sql);
     }

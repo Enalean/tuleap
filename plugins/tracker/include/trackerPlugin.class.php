@@ -17,18 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Project\Admin\TemplatePresenter;
+use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Request\CurrentPage;
+use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
@@ -39,6 +41,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
+use Tuleap\Tracker\Legacy\Inheritor;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -47,12 +50,10 @@ use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyUpdater;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
-use Tuleap\Tracker\Legacy\Inheritor;
-use Tuleap\Tracker\Service\ServiceActivator;
-use Tuleap\Service\ServiceCreator;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -816,12 +817,14 @@ class trackerPlugin extends Plugin {
      *
      * @return void
      */
-    function project_is_deleted($params) {
-        $groupId = $params['group_id'];
-        if ($groupId) {
-            include_once 'Tracker/TrackerManager.class.php';
-            $trackerManager = new TrackerManager();
-            $trackerManager->deleteProjectTrackers($groupId);
+    public function project_is_deleted($params)
+    {
+        $group_id = $params['group_id'];
+        if ($group_id) {
+            $this->getCrossTrackerDao()->deleteTrackersByGroupId($group_id);
+
+            $tracker_manager = new TrackerManager();
+            $tracker_manager->deleteProjectTrackers($group_id);
         }
     }
 
@@ -1503,5 +1506,13 @@ class trackerPlugin extends Plugin {
         $current_page = new CurrentPage();
 
         return $current_page->isDashboard();
+    }
+
+    /**
+     * @return CrossTrackerReportDao
+     */
+    private function getCrossTrackerDao()
+    {
+        return new CrossTrackerReportDao();
     }
 }
