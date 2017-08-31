@@ -278,6 +278,8 @@ class REST_TestDataBuilder extends TestDataBuilder
         $report_id = $cross_tracker_saver->create();
         $cross_tracker_saver->addTrackersToReport(array($this->getKanbanTracker()), $report_id);
 
+        $cross_tracker_saver->create();
+
         return $this;
     }
 }

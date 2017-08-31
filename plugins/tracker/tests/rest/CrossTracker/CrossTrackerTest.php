@@ -23,8 +23,17 @@ namespace Tuleap\Tracker\REST\v1\CrossTracker;
 use REST_TestDataBuilder;
 use RestBase;
 
+require_once dirname(__FILE__) . '/../bootstrap.php';
+
 class CrossTrackerTest extends RestBase
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->getEpicArtifactIds();
+    }
+
     private function getResponse($request)
     {
         return $this->getResponseByToken(
@@ -81,6 +90,38 @@ class CrossTrackerTest extends RestBase
         $this->assertEquals(
             $response->json(),
             $expected_cross_tracker
+        );
+    }
+
+    public function testGetContentId()
+    {
+        $response = $this->getResponse($this->client->get('cross_tracker_reports/1/content?limit=50&offset=0'));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $cross_tracker_artifacts = $response->json();
+
+        $this->assertEquals(
+            count($cross_tracker_artifacts['artifacts']),
+            5
+        );
+
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][0]['id'], $this->epic_artifact_ids[7]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][1]['id'], $this->epic_artifact_ids[6]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][2]['id'], $this->epic_artifact_ids[5]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][3]['id'], $this->epic_artifact_ids[4]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][4]['id'], $this->epic_artifact_ids[1]);
+    }
+
+    public function testGetReportWithoutArtifacts()
+    {
+        $response = $this->getResponse($this->client->get('cross_tracker_reports/2/content?limit=50&offset=0'));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $cross_tracker_artifacts = $response->json();
+
+        $this->assertEquals(
+            $cross_tracker_artifacts['artifacts'],
+            array()
         );
     }
 }

@@ -24,6 +24,7 @@ use Luracast\Restler\RestException;
 use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportNotFoundException;
@@ -31,6 +32,12 @@ use UserManager;
 
 class CrossTrackerReportsResource extends AuthenticatedResource
 {
+    const MAX_LIMIT = 50;
+
+    /**
+     * @var CrossTrackerArtifactReportFactory
+     */
+    private $cross_tracker_artifact_factory;
     /**
      * @var CrossTrackerReportExtractor
      */
@@ -56,8 +63,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             TrackerFactory::instance()
         );
 
-        $this->cross_tracker_dao       = new CrossTrackerReportDao();
-        $this->cross_tracker_extractor = new CrossTrackerReportExtractor(TrackerFactory::instance());
+        $this->cross_tracker_dao              = new CrossTrackerReportDao();
+        $this->cross_tracker_extractor        = new CrossTrackerReportExtractor(TrackerFactory::instance());
+        $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
+            new CrossTrackerArtifactReportDao(),
+            \Tracker_ArtifactFactory::instance()
+        );
     }
 
     /**
@@ -101,6 +112,50 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     }
 
     /**
+     * Get cross artifacts linked to tracker report
+     *
+     * /!\ route under construction
+     * Get open artifacts linked to given trackers.
+     *
+     * @url GET {id}/content
+     *
+     * @param int $id Id of the report
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return CrossTrackerArtifactReportRepresentation[]
+     *
+     * @throws 404
+     */
+    protected function getIdContent($id, $limit = self::MAX_LIMIT, $offset = 0)
+    {
+        $this->checkAccess();
+        Header::allowOptionsGet();
+
+        try {
+            $current_user = $this->user_manager->getCurrentUser();
+            $report       = $this->report_factory->getById($id, $current_user);
+
+            $artifacts = $this->cross_tracker_artifact_factory->getArtifactsFromTrackerFromTrackers(
+                $report,
+                $current_user,
+                $limit,
+                $offset
+            );
+        } catch (CrossTrackerReportNotFoundException $exception) {
+            throw new RestException(404, "Report not found");
+        } catch (TrackerNotFoundException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (TrackerDuplicateException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
+
+        return array("artifacts" => $artifacts->getArtifacts());
+    }
+
+    /**
      * Update a cross tracker report
      *
      * <br>
@@ -136,7 +191,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         } catch (TrackerNotFoundException $exception) {
-            throw new RestException(404, $exception->getMessage());
+            throw new RestException(400, $exception->getMessage());
         } catch (TrackerDuplicateException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
@@ -160,5 +215,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $representation->build($report);
 
         return $representation;
+    }
+
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
+        Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 }
