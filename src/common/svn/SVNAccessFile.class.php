@@ -71,13 +71,26 @@ class SVNAccessFile {
     public function isGroupDefined($groups, $line, $verbose = false) {
         preg_match($this->getGroupMatcher(self::GROUPNAME_PATTERN), $line, $matches);
         if (!empty($matches)) {
-            $match = strtolower($matches[1]);
+            $match = $matches[1];
             if ($match == 'members') {
                 return true;
             } else {
                 foreach ($groups as $group => $value) {
                     if ($group == $match) {
                         return true;
+                    }
+
+                    if (strtolower($group) === strtolower($match)) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::WARN,
+                            $GLOBALS['Language']->getText(
+                                'svn_admin_access_control',
+                                'ugroup_name_case_sensitivity',
+                                array($match, $group)
+                            )
+                        );
+
+                        return false;
                     }
                 }
                 if ($verbose) {
@@ -119,21 +132,21 @@ class SVNAccessFile {
      *
      * @return String
      */
-    public function renameGroup($groups, $line) {
-        $line = strtolower($line);
-        $renamable = true;
+    public function renameGroup($groups, $line)
+    {
         foreach ($groups as $group => $value) {
             //Only groups defined in the default section and not have been redefined in the extra one should be renamed
-            if ($group == $this->ugroupOldName) {
-                if ($value == self::UGROUP_REDEFINED) {
-                    $renamable = false;
-                    return $line;
-                }
+            if ($group == $this->ugroupOldName && $value == self::UGROUP_REDEFINED) {
+                return $line;
             }
         }
-        if ($renamable) {
-            return str_replace($this->ugroupOldName, $this->ugroupNewName, $line);
+
+        $ugroup_name_to_rename = $this->ugroupOldName;
+        if (strpos($line, strtolower($this->ugroupOldName)) !== false) {
+            $ugroup_name_to_rename = strtolower($this->ugroupOldName);
         }
+
+        return str_replace($ugroup_name_to_rename, $this->ugroupNewName, $line);
     }
 
     /**
@@ -212,7 +225,7 @@ class SVNAccessFile {
      * @return Array
      */
     public function accumulateDefinedGroups($groups, $line, $defaultSection = false) {
-        $trimmedLine = ltrim(strtolower($line));
+        $trimmedLine = ltrim($line);
         if ($trimmedLine != '') {
             preg_match('/^'.self::GROUPNAME_PATTERN.'\s*=/', $trimmedLine, $matches);
             if (!empty($matches)) {
@@ -235,8 +248,8 @@ class SVNAccessFile {
      * @return String
      */
     public function getCurrentSection($line, $currentSection) {
-        $trimmedLine = ltrim(strtolower($line));
-        if (substr($trimmedLine, 0, 8) == '[groups]') {
+        $trimmedLine = ltrim($line);
+        if (strcasecmp(substr($trimmedLine, 0, 8), '[groups]') === 0) {
             $currentSection = 'groups';
         } elseif (substr($trimmedLine, 0, 1) == '[') {
             $currentSection = -1;
@@ -253,8 +266,8 @@ class SVNAccessFile {
      * @return void
      */
     public function setRenamedGroup($ugroupNewName, $ugroupOldName) {
-        $this->ugroupNewName = strtolower($ugroupNewName);
-        $this->ugroupOldName = strtolower($ugroupOldName);
+        $this->ugroupNewName = $ugroupNewName;
+        $this->ugroupOldName = $ugroupOldName;
     }
 
     /**
@@ -265,7 +278,7 @@ class SVNAccessFile {
      * @return String
      */
     protected function getGroupMatcher($groupPattern) {
-        return '/^@'.$groupPattern.'\s*=/';
+        return '/^@'.$groupPattern.'\s*=/i';
     }
 
     /**
@@ -291,5 +304,3 @@ class SVNAccessFile {
         $this->platformBlock = $block;
     }
 }
-
-?>
