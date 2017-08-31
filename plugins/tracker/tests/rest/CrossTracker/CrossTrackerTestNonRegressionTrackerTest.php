@@ -24,7 +24,7 @@ use RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-class CrossTrackerNonRegressionTrackerTest extends RestBase
+class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 {
     private function getResponse($request)
     {
