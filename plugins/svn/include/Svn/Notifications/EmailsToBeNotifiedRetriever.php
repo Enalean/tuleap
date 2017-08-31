@@ -86,19 +86,15 @@ class EmailsToBeNotifiedRetriever
 
     private function addUsers(MailNotification $notification, array &$emails)
     {
-        foreach ($this->user_dao->searchUsersByNotificationId($notification->getId()) as $row) {
-            $emails[] = $row['email'];
+        foreach ($notification->getNotifiedUsers() as $user) {
+            $emails[] = $user->getEmail();
         }
     }
 
     private function addUgroups(MailNotification $notification, array &$emails)
     {
-        $project = $notification->getRepository()->getProject();
-        foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
-            $ugroup = $this->ugroup_manager->getUGroup($project, $row['ugroup_id']);
-            if ($ugroup) {
-                $this->addUgroupMembers($ugroup, $emails);
-            }
+        foreach ($notification->getNotifiedUgroups() as $ugroup) {
+            $this->addUgroupMembers($ugroup, $emails);
         }
     }
 
@@ -113,39 +109,6 @@ class EmailsToBeNotifiedRetriever
 
     public function getNotificationsForPath(Repository $repository, $path)
     {
-        $notifications = $this->notification_manager->getByPathStrictlyEqual($repository, $path);
-        foreach ($notifications as $notification) {
-            $this->addUser($notification);
-            $this->addUgroup($notification);
-        }
-
-        return $notifications;
-    }
-
-    private function addUser(MailNotification $notification)
-    {
-        $users = array();
-
-        foreach ($this->user_dao->searchUsersByNotificationId($notification->getId()) as $row) {
-            $users[] = $this->user_manager->getUserById($row['user_id']);
-        }
-
-        $notification->setUsers($users);
-    }
-
-    private function addUgroup(MailNotification $notification)
-    {
-        $user_groups = array();
-
-        foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
-            $user_group = $this->ugroup_manager->getById($row['ugroup_id']);
-
-            $user_group->setProjectId($notification->getRepository()->getProject()->getID());
-            $user_group->setProject($notification->getRepository()->getProject());
-
-            $user_groups[] = $user_group;
-        }
-
-        $notification->setUserGroups($user_groups);
+        return $this->notification_manager->getByPathStrictlyEqual($repository, $path);
     }
 }
