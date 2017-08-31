@@ -336,7 +336,8 @@ foreach ($packages as $package_id => $package_for_display) {
                             $filename = $file_release['filename'];
                             $list = explode('/', $filename);
                             $fname = $list[sizeof($list) - 1];
-                            $html .= "\t\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_'.$file_release['file_id'].'" class="' . $bgcolor . '"><TD><B>';
+                            $class = $bgcolor . ' ' . $release_class_collapsed;
+                            $html .= "\t\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_'.$file_release['file_id'].'" class="' . $class . '"><TD><B>';
 
                             $javascript_files_array[] = "'f_".$file_release['file_id']."'";
 
