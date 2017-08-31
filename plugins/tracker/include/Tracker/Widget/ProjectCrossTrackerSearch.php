@@ -86,6 +86,11 @@ class ProjectCrossTrackerSearch extends Widget
         return $content_id;
     }
 
+    public function destroy($content_id)
+    {
+        $this->getDao()->delete($content_id);
+    }
+
     public function getJavascriptDependencies()
     {
         $cross_tracker_include_assets = new IncludeAssets(
