@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\CrossTracker;
 
 use DataAccessObject;
-use Tracker;
+use DataAccessQueryException;
 
 class CrossTrackerReportDao extends DataAccessObject
 {
