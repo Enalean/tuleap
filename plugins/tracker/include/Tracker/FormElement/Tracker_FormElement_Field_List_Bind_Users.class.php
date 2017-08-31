@@ -223,12 +223,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                     default:
                         if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
                             $ugroup_data = db_fetch_array(ugroup_db_get_ugroup($matches[1]));
-                            $user_group = new ProjectUGroup($ugroup_data);
+                            if ($ugroup_data) {
+                                $user_group = new ProjectUGroup($ugroup_data);
 
-                            $ugroups[] = array(
-                                self::SOAP_BINDING_LIST_ID    => $matches[1],
-                                self::SOAP_BINDING_LIST_LABEL => $user_group->getNormalizedName(),//util_translate_name_ugroup(ugroup_get_name_from_id($matches[1]))
-                            );
+                                $ugroups[] = array(
+                                    self::SOAP_BINDING_LIST_ID    => $matches[1],
+                                    self::SOAP_BINDING_LIST_LABEL => $user_group->getNormalizedName(),
+                                );
+                            }
                         }
                         break;
                 }
