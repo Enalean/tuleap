@@ -1,5 +1,4 @@
 var gulp        = require('gulp');
-var runSequence = require('run-sequence');
 var scss_lint   = require('gulp-scss-lint');
 var sass        = require('gulp-sass');
 var path        = require('path');
