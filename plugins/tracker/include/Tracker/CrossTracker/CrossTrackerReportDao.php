@@ -102,10 +102,12 @@ class CrossTrackerReportDao extends DataAccessObject
             $sql_value[] = "($report_id, $tracker_id)";
         }
 
-        $sql = "INSERT INTO plugin_tracker_cross_tracker_report_tracker(report_id, tracker_id) VALUES " .
-            implode(',', $sql_value);
+        if (count($sql_value) > 0) {
+            $sql = "INSERT INTO plugin_tracker_cross_tracker_report_tracker(report_id, tracker_id) VALUES " .
+                implode(',', $sql_value);
 
-        $this->update($sql);
+            $this->update($sql);
+        }
     }
 
     public function deleteTrackersByGroupId($group_id)
