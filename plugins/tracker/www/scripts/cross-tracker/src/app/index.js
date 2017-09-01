@@ -24,6 +24,7 @@ import ProjectSelector from './writing-mode/project-selector.js';
 import TrackerSelector from './writing-mode/tracker-selector.js';
 import TrackerSelection from './writing-mode/tracker-selection.js';
 import TrackerSelectionController from './writing-mode/tracker-selection-controller.js';
+import TrackerQueryLoaderController from './tracker-query-loader-controller.js';
 import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
 import SuccessDisplayer from './rest-success-displayer.js';
@@ -89,6 +90,12 @@ document.addEventListener('DOMContentLoaded', function () {
             reading_cross_tracker_report,
             error_displayer,
             tracker_selector
+        );
+        new TrackerQueryLoaderController(
+            widget_element,
+            reading_cross_tracker_report,
+            loader_displayer,
+            error_displayer
         );
     }
 });

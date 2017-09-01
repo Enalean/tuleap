@@ -50,6 +50,9 @@ msgstr ""
 "adresses e-mail qui recevront systématiquement les notifications de "
 "soumission (et éventuellement de modification) d'artefacts."
 
+msgid "Assigned to"
+msgstr "Assigné à"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -83,6 +86,9 @@ msgstr "Erreur à la récupération de la liste des projets dont vous êtes memb
 msgid "Error while fetching the list of trackers of this project"
 msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet"
 
+msgid "Error while fetching the query result"
+msgstr "Erreur à la récupération du résultat de la requête"
+
 msgid "Error while updating the cross tracker report"
 msgstr "Erreur lors de la mise à jour du rapport multi outil de suivi"
 
@@ -92,8 +98,17 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] "Le groupe '%s' n'a pas pu être ajouté"
 msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 
+msgid "ID"
+msgstr "ID"
+
+msgid "Last update date"
+msgstr "Date de dernière mise à jour"
+
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
+
+msgid "No matching artifacts found"
+msgstr "Aucun artefact correspondant trouvé"
 
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
@@ -112,6 +127,9 @@ msgstr "Personnes notifiées"
 
 msgid "On all updates?"
 msgstr "À chaque modification ?"
+
+msgid "Only the first 30 results are shown"
+msgstr "Seuls les 30 premiers résultats sont affichés"
 
 msgid "Please choose..."
 msgstr "Veuillez choisir..."
@@ -136,6 +154,15 @@ msgstr "Rechercher"
 
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
+
+msgid "Status"
+msgstr "État"
+
+msgid "Submitted by"
+msgstr "Auteur de l'artefact"
+
+msgid "Summary"
+msgstr "Résumé"
 
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
