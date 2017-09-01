@@ -1,13 +1,6 @@
 import './vendor-i18n/fr_FR/flatpickr.l10n.fr.js';
 
-export {
-    modal,
-    dropdown,
-    filterInlineTable,
-    datePicker,
-    get,
-    put
-} from './js/index.js';
+export * from './js/index.js';
 
 import '../node_modules/select2/dist/js/i18n/fr.js';
 

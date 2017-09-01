@@ -1,5 +1,6 @@
 /* eslint-disable */
 var path                        = require('path');
+var webpack                     = require('webpack');
 var WebpackAssetsManifest       = require('webpack-assets-manifest');
 var BabelPresetEnv              = require('babel-preset-env');
 var BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
@@ -67,6 +68,7 @@ module.exports = {
                     value: value
                 }
             }
-        })
+        }),
+        new webpack.optimize.ModuleConcatenationPlugin()
     ]
 };
