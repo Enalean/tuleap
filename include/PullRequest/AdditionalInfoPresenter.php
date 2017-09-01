@@ -28,11 +28,11 @@ class AdditionalInfoPresenter
     /** @var GitRepository */
     private $repository;
 
-    /** @var int */
+    /** @var PullRequestCount */
     private $nb_pull_requests;
 
 
-    public function __construct(GitRepository $repository, $nb_pull_requests)
+    public function __construct(GitRepository $repository, PullRequestCount $nb_pull_requests)
     {
         $this->repository       = $repository;
         $this->nb_pull_requests = $nb_pull_requests;
@@ -50,15 +50,16 @@ class AdditionalInfoPresenter
 
     public function nb_pull_request_badge()
     {
-        if ($this->nb_pull_requests <= 1) {
-            return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge', array($this->nb_pull_requests));
+        $nb_open = $this->nb_pull_requests->getNbOpen();
+        if ($nb_open <= 1) {
+            return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge', array($nb_open));
         }
 
-        return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array($this->nb_pull_requests));
+        return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array($nb_open));
     }
 
     public function is_there_at_least_one_pull_request()
     {
-        return $this->nb_pull_requests > 0;
+        return $this->nb_pull_requests->isThereAtLeastOnePullRequest();
     }
 }

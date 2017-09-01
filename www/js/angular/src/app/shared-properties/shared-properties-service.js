@@ -6,27 +6,27 @@ SharedPropertiesService.$inject = [];
 
 function SharedPropertiesService() {
     var property = {
-        readyPromise         : null,
-        repository_id        : null,
-        pull_request         : null,
-        user_id              : null,
-        nb_pull_request_badge: null,
-        nb_pull_requests     : null
+        readyPromise                      : null,
+        repository_id                     : null,
+        pull_request                      : null,
+        user_id                           : null,
+        nb_pull_request_badge             : null,
+        is_there_at_least_one_pull_request: null
     };
 
     return {
-        whenReady            : whenReady,
-        setReadyPromise      : setReadyPromise,
-        getRepositoryId      : getRepositoryId,
-        setRepositoryId      : setRepositoryId,
-        getPullRequest       : getPullRequest,
-        setPullRequest       : setPullRequest,
-        getUserId            : getUserId,
-        setUserId            : setUserId,
-        getNbPullRequestBadge: getNbPullRequestBadge,
-        setNbPullRequestBadge: setNbPullRequestBadge,
-        getNbPullRequest     : getNbPullRequest,
-        setNbPullRequest     : setNbPullRequest
+        whenReady                      : whenReady,
+        setReadyPromise                : setReadyPromise,
+        getRepositoryId                : getRepositoryId,
+        setRepositoryId                : setRepositoryId,
+        getPullRequest                 : getPullRequest,
+        setPullRequest                 : setPullRequest,
+        getUserId                      : getUserId,
+        setUserId                      : setUserId,
+        getNbPullRequestBadge          : getNbPullRequestBadge,
+        setNbPullRequestBadge          : setNbPullRequestBadge,
+        isThereAtLeastOnePullRequest   : isThereAtLeastOnePullRequest,
+        setIsThereAtLeastOnePullRequest: setIsThereAtLeastOnePullRequest
     };
 
     function whenReady() {
@@ -69,11 +69,11 @@ function SharedPropertiesService() {
         property.nb_pull_request_badge = nb_pull_request_badge;
     }
 
-    function getNbPullRequest() {
-        return property.nb_pull_requests;
+    function isThereAtLeastOnePullRequest() {
+        return property.is_there_at_least_one_pull_request;
     }
 
-    function setNbPullRequest(nb_pull_requests) {
-        property.nb_pull_requests = parseInt(nb_pull_requests, 10);
+    function setIsThereAtLeastOnePullRequest(is_there_at_least_one_pull_request) {
+        property.is_there_at_least_one_pull_request = Boolean(is_there_at_least_one_pull_request);
     }
 }

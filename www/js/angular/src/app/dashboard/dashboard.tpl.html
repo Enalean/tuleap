@@ -13,7 +13,12 @@
     </ul>
     <div
         class="no-pull-requests"
-        ng-if="! dashboard_controller.isThereAtLeastOneOpenpullRequest() && dashboard_controller.areOpenPullRequestsFullyLoaded()">
+        ng-if="! dashboard_controller.isThereAtLeastOneOpenpullRequest()
+            && dashboard_controller.areOpenPullRequestsFullyLoaded()
+            && (
+                ! dashboard_controller.isThereAtLeastOneClosedPullRequest()
+                || dashboard_controller.areClosedPullRequestsHidden()
+            )">
         <span translate>There are no open pull requests</span>
     </div>
     <div
