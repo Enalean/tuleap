@@ -1,0 +1,10 @@
+{{# trovecats }}
+    {{# has_categories }}
+        <div class="dashboard-widget-project-classification-trovecat">
+            <i class="fa fa-tags dashboard-widget-project-classification-trovecat-icon"></i>
+            {{# categories }}
+                {{ name }}{{^ is_last }}, {{/ is_last }}
+            {{/ categories }}
+        </div>
+    {{/ has_categories }}
+{{/ trovecats }}

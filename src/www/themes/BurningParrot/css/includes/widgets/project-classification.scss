@@ -1,4 +1,4 @@
-/**
+/*!
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,39 +18,11 @@
  *
  */
 
-#softwaremap-list {
-    display: flex;
-
-    align-items: flex-start;
-}
-
-#softwaremap-list-filter {
-    width: 400px;
-    margin: 0 $tlp-spacing 0 0;
-}
-
-.softwaremap-list-filter-nb {
-    margin: 0 0 0 ($tlp-spacing / 2);
-}
-
-.softwaremap-list-selected {
-    font-weight: bold;
-}
-
-#softwaremap-list-results {
-    width: 100%;
-}
-
-.softwaremap-list-results-trovecat {
+.dashboard-widget-project-classification-trovecat {
     color: $tlp-ui-dimmed;
 }
 
-.softwaremap-list-results-trovecat-icon {
+.dashboard-widget-project-classification-trovecat-icon {
     margin: 0 3px 0 0;
     color: $tlp-theme-color;
-}
-
-.softwaremap-list-results-trovecat-not-categorized {
-    color: $tlp-ui-dimmed;
-    font-style: italic;
 }

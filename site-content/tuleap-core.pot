@@ -179,6 +179,9 @@ msgstr ""
 msgid "News"
 msgstr ""
 
+msgid "Not categorized"
+msgstr ""
+
 msgid "Open \"Help\" dropdown"
 msgstr ""
 

@@ -193,15 +193,15 @@ $res_count = db_query('SELECT FOUND_ROWS() as nb');
 $row_count = db_fetch_array($res_count);
 $total_nb_projects = $row_count['nb'];
 
+$collection_retriever = new \Tuleap\Trove\TroveCatCollectionRetriever($trove_cat_dao);
+
 $projects = array();
 while ($row = db_fetch_array($res_grp)) {
-    $cat = trove_getcatlisting($row['group_id'], 1);
-
     $projects[]= array(
         'longname'    => $row['group_name'],
         'shortname'   => strtolower($row['unix_group_name']),
         'description' => $row['short_description'],
-        'categories'  => $cat,
+        'trovecats'   => $collection_retriever->getCollection($row['group_id']),
         'date'        => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['register_time']),
     );
 }

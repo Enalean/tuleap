@@ -156,49 +156,6 @@ function trove_get_html_allcat_selectfull($group_id) {
     return $html;
 }
 
-
-// ###############################################################
-// gets discriminator listing for a group
-
-function trove_getcatlisting($group_id, $a_cats)
-{
-    $res_trovecat = db_query('SELECT trove_cat.fullpath AS fullpath,'
-        . 'trove_cat.fullpath_ids AS fullpath_ids,'
-        . 'trove_cat.trove_cat_id AS trove_cat_id '
-        . 'FROM trove_cat,trove_group_link WHERE trove_cat.trove_cat_id='
-        . 'trove_group_link.trove_cat_id AND trove_group_link.group_id='
-        . db_ei($group_id) . ' '
-        . 'ORDER BY trove_cat.fullpath');
-
-    if (db_numrows($res_trovecat) < 1) {
-        return $GLOBALS['Language']->getText('include_trove', 'not_categorized_yet',
-            array('/softwaremap/trove_list.php', "/project/admin/group_trove.php?group_id=$group_id"));
-    }
-
-    // first unset the vars were using here
-    $purifier = Codendi_HTMLPurifier::instance();
-
-    $html = '<ul>';
-    while ($row_trovecat = db_fetch_array($res_trovecat)) {
-        $folders = explode(" :: ", $row_trovecat['fullpath']);
-        $folders_ids = explode(" :: ", $row_trovecat['fullpath_ids']);
-        $folders_len = count($folders);
-        $html .= '<li> ' . $purifier->purify($folders[0]) . ': ';
-
-        if ($a_cats) {
-            $html .= '<a href="/softwaremap/trove_list.php?form_cat='
-                . $folders_ids[$folders_len - 1] . '">';
-        }
-        $html .= $purifier->purify($folders[$folders_len - 1]);
-        if ($a_cats) {
-            $html .= '</a>';
-        }
-        $html .= '</li>';
-    }
-    $html .= '</ul>';
-    return $html;
-}
-
 // returns a full path for a trove category
 function trove_getfullpath($node) {
 	$currentcat = $node;

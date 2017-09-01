@@ -40,6 +40,7 @@ class SoftwareMapPresenter
     public $empty_state_project_list;
     public $pagination;
     public $projects_in_category;
+    public $not_categorized;
 
     public function __construct($current_category_name, $sub_categories, $root_categories, $projects, PaginationPresenter $pagination)
     {
@@ -52,6 +53,7 @@ class SoftwareMapPresenter
         $this->title_cat                = _("Categories");
         $this->empty_state_project_list = _("There are no projects in this category");
         $this->projects_in_category     = _("Projects in category");
+        $this->not_categorized          = _("Not categorized");
 
         $this->current_category = $current_category_name;
         $this->subcategories    = $sub_categories;

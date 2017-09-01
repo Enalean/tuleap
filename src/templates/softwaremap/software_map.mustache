@@ -58,7 +58,22 @@
                             <tr>
                                 <td><a href="/projects/{{shortname}}">{{ longname }}</a></td>
                                 <td>{{ description }}</td>
-                                <td>{{{ categories }}}</td>
+                                <td>
+                                    {{# trovecats }}
+                                        {{^ has_categories }}
+                                            <div class="softwaremap-list-results-trovecat-not-categorized">{{ not_categorized }}</div>
+                                        {{/ has_categories }}
+
+                                        {{# has_categories }}
+                                            <div class="softwaremap-list-results-trovecat">
+                                                <i class="fa fa-tags softwaremap-list-results-trovecat-icon"></i>
+                                                {{# categories }}
+                                                    <a href="/softwaremap/trove_list.php?form_cat={{ id }}">{{ name }}</a>{{^ is_last }}, {{/ is_last }}
+                                                {{/ categories }}
+                                            </div>
+                                        {{/ has_categories }}
+                                    {{/ trovecats }}
+                                </td>
                                 <td>{{ date }}</td>
                             </tr>
                         {{/ project_list }}
