@@ -200,10 +200,6 @@ msgstr ""
 msgid "Too many external links."
 msgstr ""
 
-#: ../lib/editpage.php:380
-msgid "SpamAssassin reports: "
-msgstr ""
-
 #: ../lib/editpage.php:397
 msgid "External links contain blocked domains:"
 msgstr ""

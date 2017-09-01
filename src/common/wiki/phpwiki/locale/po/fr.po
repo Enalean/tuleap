@@ -210,10 +210,6 @@ msgstr "Enregistrée : %s"
 msgid "Too many external links."
 msgstr "Trop de liens exterieurs."
 
-#: ../lib/editpage.php:380
-msgid "SpamAssassin reports: "
-msgstr ""
-
 #: ../lib/editpage.php:397
 msgid "External links contain blocked domains:"
 msgstr ""

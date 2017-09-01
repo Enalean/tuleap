@@ -378,12 +378,6 @@ new boolean_define_commented_optional
  array('true'  => "Enabled",
        'false' => "Disabled"));
 
-$properties["ENABLE_SPAMASSASSIN"] =
-new boolean_define_commented_optional
-('ENABLE_SPAMASSASSIN', 
- array('true'  => "Enabled",
-       'false' => "Disabled"));
-
 $properties["GOOGLE_LINKS_NOFOLLOW"] =
 new boolean_define_commented_optional
 ('GOOGLE_LINKS_NOFOLLOW', 
@@ -1640,9 +1634,6 @@ $properties["DBADMIN_PASSWD"] =
 ");
 $properties["USE_EXTERNAL_HTML2PDF"] =
   new _define_commented_optional('USE_EXTERNAL_HTML2PDF', "htmldoc --quiet --format pdf14 --no-toc --no-title %s", "
-");
-$properties["BABYCART_PATH"] =
-  new _define_commented_optional('BABYCART_PATH', "/usr/local/bin/babycart", "
 ");
 
 $properties["Part Seven A"] =
