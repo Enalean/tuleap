@@ -369,5 +369,3 @@ document.observe('dom:loaded', function () {
     window.onbeforeunload = codendi.tracker.artifact.editor.warnOnPageLeave;
 
 });
-
-codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');

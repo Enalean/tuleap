@@ -116,7 +116,7 @@ var codendi = codendi || { };
         }
     };
 
-    codendi.Tooltip.selectors = ['a.cross-reference'];
+    codendi.Tooltip.selectors = ['a.cross-reference', 'a[class^=direct-link-to]'];
 
     codendi.Tooltip.load = function (element, at_cursor_position) {
         var sparkline_hrefs = {};

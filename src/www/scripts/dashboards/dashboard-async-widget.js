@@ -32,6 +32,7 @@ function init() {
             .then(function (html) {
                 widget.innerHTML = sanitize(html);
                 widget.classList.remove('dashboard-widget-asynchronous-loading');
+                window.codendi.Tooltip.load(widget);
                 togglerInit(widget);
             });
     });

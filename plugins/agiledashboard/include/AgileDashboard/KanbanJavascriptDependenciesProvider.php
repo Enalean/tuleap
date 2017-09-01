@@ -36,8 +36,6 @@ class KanbanJavascriptDependenciesProvider
             array('file' => $kanban_include_assets->getFileURL('angular.js'), 'unique-name' => 'angular'),
             array('snippet' => 'window.CKEDITOR_BASEPATH = "' . $ckeditor_path . '";'),
             array('file' => $ckeditor_path . 'ckeditor.js'),
-            array('file' => '/scripts/codendi/Tooltip.js'),
-            array('file' => '/scripts/codendi/Tooltip-loader.js'),
             array('file' => $kanban_include_assets->getFileURL('kanban.js')),
         );
     }
