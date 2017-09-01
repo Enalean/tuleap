@@ -74,7 +74,7 @@ class LabelsUpdater
             return $label_representation->id;
         }
 
-        return $this->project_label_dao->createIfNeededInTransaction($project_id, $label_representation->label);
+        return $this->project_label_dao->createIfNeededInTransaction($project_id, trim($label_representation->label));
     }
 
     private function getLabelIdsToRemove(LabelsPATCHRepresentation $body)
@@ -90,8 +90,35 @@ class LabelsUpdater
         $labels_to_add = $body->add ?: array();
         $project_ids   = $labels_to_add ? array_fill(0, count($labels_to_add), $project_id) : array();
 
+        $this->checkThatUserDoesNotTryToAddEmptyLabels($labels_to_add);
+
         $array_of_label_ids_to_add = array_map(array($this, 'getOrCreateLabelId'), $labels_to_add, $project_ids);
 
         return $array_of_label_ids_to_add;
+    }
+
+    private function checkThatUserDoesNotTryToAddEmptyLabels($labels_to_add)
+    {
+        $has_empty_label = array_reduce(
+            $labels_to_add,
+            function ($has_empty_label, LabelRepresentation $label_representation) {
+                if ($has_empty_label) {
+                    return true;
+                }
+
+                if ($label_representation->id) {
+                    return false;
+                }
+
+                $name = trim($label_representation->label);
+
+                return empty($name);
+            },
+            false
+        );
+
+        if ($has_empty_label) {
+            throw new UnableToAddEmptyLabelException();
+        }
     }
 }

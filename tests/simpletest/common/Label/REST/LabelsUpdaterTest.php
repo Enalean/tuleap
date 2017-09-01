@@ -172,6 +172,34 @@ class LabelsUpdaterTest extends TuleapTestCase
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
+    public function itTrimsLabelToAdd()
+    {
+        $body = new LabelsPATCHRepresentation();
+        $body->add = array(
+            $this->buildLabelToCreateRepresentation('  Emergency Fix  ')
+        );
+
+        expect($this->project_label_dao)->createIfNeededInTransaction(66, 'Emergency Fix')->once();
+
+        $this->updater->update($this->project_id, $this->item, $body);
+    }
+
+    public function itDoesNotAddEmptyLabels()
+    {
+
+        $body = new LabelsPATCHRepresentation();
+        $body->add = array(
+            $this->buildLabelRepresentation(1),
+            $this->buildLabelToCreateRepresentation(' ')
+        );
+
+        $this->expectException('Tuleap\Label\REST\UnableToAddEmptyLabelException');
+        expect($this->project_label_dao)->createIfNeededInTransaction()->never();
+        expect($this->item_label_dao)->addLabelsInTransaction()->never();
+
+        $this->updater->update($this->project_id, $this->item, $body);
+    }
+
     private function buildLabelRepresentation($id)
     {
         $label = new LabelRepresentation();
