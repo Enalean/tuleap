@@ -1,35 +1,128 @@
 import '../polyphills/promise-polyfill.js';
-import { get } from 'tlp-fetch';
+import { get, patch } from 'tlp-fetch';
 import { sanitize } from 'dompurify';
+import jQuery from 'jquery';
 
-export function create(element, labels_endpoint) {
-    buildLabelsRecursively(element, labels_endpoint, 0);
+export async function create(container, labels_endpoint, available_labels_endpoint, is_update_allowed) {
+    const existing_labels = await getRecursively(labels_endpoint, [], 0);
+
+    initiateSelect2(container, existing_labels, labels_endpoint, available_labels_endpoint, is_update_allowed);
 }
 
-async function buildLabelsRecursively(element, labels_endpoint, offset) {
+async function getRecursively(labels_endpoint, labels, offset) {
     const limit = 50;
+    offset = encodeURIComponent(offset);
 
-    try {
-        const response = await get(`${labels_endpoint}/?limit=${limit}&offset=${offset}`);
-        const json     = await response.json();
-        json.labels.forEach(
-            label => element.appendChild(buildLabelElement(label))
-        );
+    const response = await get(`${labels_endpoint}/?&limit=${limit}&offset=${offset}`);
+    const json     = await response.json();
+    json.labels.forEach(
+        item => labels.push(convertLabelToSelect2Entry(item))
+    );
 
-        const is_recursion_needed = offset + limit < response.headers.get('X-PAGINATION-SIZE');
-        if (is_recursion_needed) {
-            buildLabelsRecursively(element, labels_endpoint, offset + limit)
-        }
-    } catch (e) {
-        // silently ignore errors
+    const is_recursion_needed = offset + limit < parseInt(response.headers.get('X-PAGINATION-SIZE'), 10);
+    if (is_recursion_needed) {
+        labels = await getRecursively(labels_endpoint, labels, offset + limit)
     }
+
+    return labels;
 }
 
-function buildLabelElement(label) {
-    return sanitize(
-        `<span class="item-label badge tlp-badge-primary tlp-badge-outline">
-            <i class="icon-tags fa fa-tags"></i> ${label.label}
-        </span>`,
-        { RETURN_DOM_FRAGMENT: true }
+const convertLabelToSelect2Entry = ({ id, label }) => ({ id, text: label });
+
+function initiateSelect2(container, existing_labels, labels_endpoint, available_labels_endpoint, is_update_allowed) {
+    const input = createHiddenInput(container, existing_labels);
+    jQuery(input).select2({
+        tags: true,
+        multiple: true,
+        tokenSeparators: [",", "\t"],
+        containerCssClass: 'item-labels-box-select2',
+        dropdownCssClass: 'item-labels-box-select2-results',
+        searchInputPlaceholder: 'Add labels',
+        ajax: {
+            url: available_labels_endpoint,
+            dataType: 'json',
+            quietMillis: 250,
+            cache: true,
+            data: term => ({ query: term }),
+            results: data => ({ results: data.labels.map(convertLabelToSelect2Entry) })
+        },
+        initSelection: (element, callback) => callback(existing_labels),
+        createSearchChoice: (term, data) => {
+            const data_that_matches_term = jQuery(data).filter(function() {
+                return this.text === term;
+            });
+
+            if (data_that_matches_term.length === 0) {
+                return {
+                    id: term,
+                    text: term
+                };
+            }
+        }
+    })
+    .select2('enable', is_update_allowed)
+    .on("change", (event) => {
+        if (event.removed) {
+            removeLabel(labels_endpoint, event.removed);
+        }
+        if (event.added) {
+            addLabel(labels_endpoint, event.added);
+        }
+    })
+    .on("select2-close", closeInput);
+}
+
+async function removeLabel(labels_endpoint, { id }) {
+    const label_id = parseInt(id);
+
+    if (! label_id) {
+        return;
+    }
+
+    const label = { id: label_id };
+
+    await patch(
+        labels_endpoint,
+        {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ remove: [label] })
+        }
     );
+    closeInput();
+}
+
+async function addLabel(labels_endpoint, { id, text }) {
+    const label_id = parseInt(id);
+    const label    = label_id ? { id: label_id } : { label: text };
+
+    await patch(
+        labels_endpoint,
+        {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ add: [label] })
+        }
+    );
+    closeInput();
+}
+
+function closeInput() {
+    setTimeout(function() {
+        const input_focused = document.querySelector('.select2-focused');
+
+        if (input_focused) {
+            input_focused.blur();
+        }
+    }, 5);
+}
+
+function createHiddenInput(container, existing_labels) {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'hidden');
+    if (existing_labels.length > 0) {
+        input.setAttribute('value', JSON.stringify(existing_labels));
+    }
+
+    container.appendChild(input);
+
+    return input;
 }

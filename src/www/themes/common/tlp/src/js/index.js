@@ -20,7 +20,8 @@
 export {
     get,
     recursiveGet,
-    put
+    put,
+    patch
 } from './fetch-wrapper.js';
 
 export {

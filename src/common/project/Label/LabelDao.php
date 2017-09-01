@@ -66,6 +66,8 @@ class LabelDao extends DataAccessObject
             return;
         }
 
+        $array_of_label_ids = array_unique($array_of_label_ids);
+
         $project_id = $this->da->escapeInt($project_id);
 
         $nb_of_given_labels = count($array_of_label_ids);
