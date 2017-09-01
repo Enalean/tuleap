@@ -492,6 +492,8 @@ class AgileDashboardPlugin extends Plugin {
     {
         if ($this->isKanbanURL()) {
             $provider = new KanbanJavascriptDependenciesProvider();
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
+            $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
             foreach ($provider->getDependencies() as $javascript) {
                 if (isset($javascript['snippet'])) {
                     $GLOBALS['HTML']->includeFooterJavascriptSnippet($javascript['snippet']);

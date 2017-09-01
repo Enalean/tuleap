@@ -51,6 +51,7 @@ function displayActivities(widget_content, entries) {
     const rendered_activities = render(template, getGroupedEntries(widget_content, entries));
     insertRenderedActivitiesInDOM(rendered_activities, activities);
 
+    window.codendi.Tooltip.load(activities);
     activities.classList.add('shown');
 }
 
