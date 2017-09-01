@@ -202,12 +202,12 @@ $history-dropdown-item-text-color: #333333;
     &:hover > .history-item-content-project-name {
         text-decoration: underline;
     }
-}
 
-.history-item-content-project-icon {
-    flex: 0 0 auto;
-    margin: 0 5px 0 0;
-    fill: $history-dropdown-ui-dimmed;
+    > .tuleap-svg-project-small {
+        flex: 0 0 auto;
+        margin: 0 5px 0 0;
+        fill: $history-dropdown-ui-dimmed;
+    }
 }
 
 .history-item-content-project-name {

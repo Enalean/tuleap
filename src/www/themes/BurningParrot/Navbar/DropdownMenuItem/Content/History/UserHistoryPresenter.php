@@ -21,6 +21,7 @@
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History;
 
 use PFUser;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 
 class UserHistoryPresenter extends Presenter
@@ -31,10 +32,12 @@ class UserHistoryPresenter extends Presenter
     public $empty_history;
     public $error_fetch;
     public $error_clear;
+    public $project_icon;
 
     public function __construct(
         $id,
-        PFUser $current_user
+        PFUser $current_user,
+        GlyphFinder $glyph_finder
     ) {
         parent::__construct($id);
 
@@ -43,5 +46,6 @@ class UserHistoryPresenter extends Presenter
         $this->clear_history   = _('Clear history');
         $this->error_fetch     = _('An error occurred while fetching the content of your history');
         $this->error_clear     = _('An error occurred while clearing the content of your history');
+        $this->project_icon    = $glyph_finder->get('project-small')->getInlineString();
     }
 }
