@@ -29,6 +29,7 @@ use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\Label\REST\LabelsPATCHRepresentation;
 use Tuleap\Label\REST\LabelsUpdater;
 use Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException;
+use Tuleap\Label\REST\UnableToAddEmptyLabelException;
 use Tuleap\Label\UnknownLabelException;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
@@ -360,6 +361,8 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(400, "Label is unknown in the project");
         } catch (UnableToAddAndRemoveSameLabelException $exception) {
             throw new RestException(400, "Unable to add and remove the same label");
+        } catch (UnableToAddEmptyLabelException $exception) {
+            throw new RestException(400, "Unable to add an empty label");
         } catch (\Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
