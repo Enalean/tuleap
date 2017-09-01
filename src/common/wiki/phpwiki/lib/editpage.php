@@ -353,11 +353,9 @@ class PageEditor
      * (plugin WikiAccessRestrictions) and some static blacklist.
      * DONE: 
      *   Always: More then 20 new external links
-     *   ENABLE_SPAMASSASSIN:  content patterns by babycart (only php >= 4.3 for now)
      */
     function isSpam () {
         $current = &$this->current;
-        $request = &$this->request;
 
         $oldtext = $current->getPackedContent();
         $newtext =& $this->_content;
@@ -373,21 +371,6 @@ class PageEditor
                 $this->tokens['PAGE_LOCKED_MESSAGE'] = 
                     HTML($this->getSpamMessage(),
                          HTML::p(HTML::strong(_("Too many external links."))));
-                return true;
-            }
-        }
-        // 2. external babycart (SpamAssassin) check
-        // This will probably prevent from discussing sex or viagra related topics. So beware.
-        if (ENABLE_SPAMASSASSIN) {
-            include_once("lib/spam_babycart.php");
-            if ($babycart = check_babycart($newtext, $request->get("REMOTE_ADDR"), 
-                                           $this->user->getId())) {
-                // TODO: mail the admin
-                if (is_array($babycart))
-                    $this->tokens['PAGE_LOCKED_MESSAGE'] = 
-                        HTML($this->getSpamMessage(),
-                             HTML::p(HTML::em(_("SpamAssassin reports: "), 
-                                                join("\n", $babycart))));
                 return true;
             }
         }

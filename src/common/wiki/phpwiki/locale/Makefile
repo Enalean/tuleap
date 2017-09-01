@@ -212,7 +212,6 @@ ${POT_FILE}: ../lib/RSSWriter091.php
 ${POT_FILE}: ../lib/RssWriter2.php
 ${POT_FILE}: ../lib/RssWriter.php
 ${POT_FILE}: ../lib/SemanticWeb.php
-${POT_FILE}: ../lib/spam_babycart.php
 ${POT_FILE}: ../lib/stdlib.php
 ${POT_FILE}: ../lib/Template.php
 ${POT_FILE}: ../lib/TextSearchQuery.php
