@@ -13,6 +13,17 @@ def runRESTTests(String version) {
     junit "results/api-$version/rest_tests.xml"
 }
 
+def runKarmaTests(String name, String path) {
+    sh """
+    cid="\$(docker create -v \$WORKSPACE/sources:/sources:ro --security-opt seccomp=\$WORKSPACE/sources/tests/karma/seccomp_chrome.json \$DOCKER_REGISTRY/enalean/tuleap-test-karma:chromium --path $path)"
+    docker start --attach "\$cid" || true
+    mkdir -p 'results/karma'
+    docker cp "\$cid":/output/test-results.xml results/karma/test-$name-results.xml
+    docker rm -fv "\$cid"
+    """
+    junit "results/karma/test-$name-results.xml"
+}
+
 pipeline {
     agent {
         label 'docker'
@@ -94,42 +105,10 @@ pipeline {
                     """
                     junit 'results/ut-simpletest-php-56/unit_tests_report.xml'
                 },
-                'Karma AgileDashboard PlanningV2': {
-                    withCredentials(npm_credentials) {
-                        sh """
-                        cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro -e NPM_REGISTRY="\$NPM_REGISTRY" -e NPM_USER="\$NPM_USER" -e NPM_PASSWORD="\$NPM_PASSWORD" -e NPM_EMAIL="\$NPM_EMAIL" \$DOCKER_REGISTRY/enalean/tuleap-test-karma --path plugins/agiledashboard/www/js/planning-v2 --output-dir /output)"
-                        docker start --attach "\$cid" || true
-                        mkdir -p 'results/karma'
-                        docker cp "\$cid":/output/test-results.xml results/karma/test-planning-results.xml
-                        docker rm -fv "\$cid"
-                        """
-                        junit 'results/karma/test-planning-results.xml'
-                    }
-                },
-                'Karma AgileDashboard Kanban': {
-                    withCredentials(npm_credentials) {
-                        sh """
-                        cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro -e NPM_REGISTRY="\$NPM_REGISTRY" -e NPM_USER="\$NPM_USER" -e NPM_PASSWORD="\$NPM_PASSWORD" -e NPM_EMAIL="\$NPM_EMAIL" \$DOCKER_REGISTRY/enalean/tuleap-test-karma --path plugins/agiledashboard/www/js/kanban --output-dir /output)"
-                        docker start --attach "\$cid" || true
-                        mkdir -p 'results/karma'
-                        docker cp "\$cid":/output/test-results.xml results/karma/test-kanban-results.xml
-                        docker rm -fv "\$cid"
-                        """
-                        junit 'results/karma/test-kanban-results.xml'
-                    }
-                },
-                'Karma FRS plugin': {
-                    withCredentials(npm_credentials) {
-                        sh """
-                        cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro -e NPM_REGISTRY="\$NPM_REGISTRY" -e NPM_USER="\$NPM_USER" -e NPM_PASSWORD="\$NPM_PASSWORD" -e NPM_EMAIL="\$NPM_EMAIL" \$DOCKER_REGISTRY/enalean/tuleap-test-karma --path plugins/frs/www/js/angular --output-dir /output)"
-                        docker start --attach "\$cid" || true
-                        mkdir -p 'results/karma'
-                        docker cp "\$cid":/output/test-results.xml results/karma/test-frs-results.xml
-                        docker rm -fv "\$cid"
-                        """
-                        junit 'results/karma/test-frs-results.xml'
-                    }
-                },
+                'Karma AgileDashboard PlanningV2': { runKarmaTests('planning', 'plugins/agiledashboard/www/js/planning-v2') },
+                'Karma AgileDashboard Kanban': { runKarmaTests('kanban', 'plugins/agiledashboard/www/js/kanban') },
+                'Karma Tracker Artifact Modal': { runKarmaTests('artifact-modal', 'plugins/tracker/www/scripts/angular-artifact-modal') },
+                'Karma FRS plugin': { runKarmaTests('frs', 'plugins/frs/www/js/angular') },
                 'REST CentOS 6 PHP 5.3 Apache 2.2 MySQL 5.1': { runRESTTests('c6-php53-httpd22-mysql51') },
                 'REST CentOS 6 PHP 5.6 Apache 2.4 MySQL 5.6': { runRESTTests('c6-php56-httpd24-mysql56') },
                 'SOAP': {

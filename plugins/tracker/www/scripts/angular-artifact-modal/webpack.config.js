@@ -7,9 +7,9 @@ module.exports = {
     // No output, this is only there to make 'npm run test' work !
     resolve: {
         modules: [
+            'node_modules',
             // This ensures that dependencies resolve their imported modules in angular-artifact-modal's node_modules
-            path.resolve(__dirname, 'node_modules'),
-            'node_modules'
+            path.resolve(__dirname, 'node_modules')
         ],
         alias: {
             'angular-tlp': path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp/index.js'),
