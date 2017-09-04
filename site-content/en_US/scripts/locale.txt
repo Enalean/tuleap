@@ -28,3 +28,7 @@ codendi.locales['account'] = {
 codendi.locales['register'] = {
     did_you_mean: 'Did you mean <a class="suggested-email">#{full}</a>?'
 };
+
+codendi.locales['labels-box'] = {
+    'Add labels': 'Add labels'
+}

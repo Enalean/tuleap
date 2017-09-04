@@ -37,7 +37,7 @@ function initiateSelect2(container, existing_labels, labels_endpoint, available_
         tokenSeparators: [",", "\t"],
         containerCssClass: 'item-labels-box-select2',
         dropdownCssClass: 'item-labels-box-select2-results',
-        searchInputPlaceholder: 'Add labels',
+        searchInputPlaceholder: window.codendi.getText('labels-box', 'Add labels'),
         ajax: {
             url: available_labels_endpoint,
             dataType: 'json',
