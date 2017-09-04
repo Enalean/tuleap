@@ -62,6 +62,11 @@ $packages        = array();
 $num_packages    = 0;
 $show_release_id = $request->getValidated('show_release_id', 'uint', false);
 
+$pv = false;
+if ($request->valid(new Valid_Pv('pv'))) {
+    $pv = $request->get('pv');
+}
+
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
 foreach ($res as $package) {
@@ -75,9 +80,9 @@ foreach ($res as $package) {
             }
         }
         if (!$request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
-            $is_collapsed = true;
+            $is_collapsed = ! $pv;
 
-            if ($show_release_id !== false) {
+            if ($show_release_id !== false && $is_collapsed) {
                 foreach ($package->getReleases() as $release) {
                     if ($release->getReleaseID() == $show_release_id) {
                         $is_collapsed = false;
@@ -90,13 +95,6 @@ foreach ($res as $package) {
             $num_packages++;
         }
     }
-}
-
-
-if ($request->valid(new Valid_Pv('pv'))) {
-    $pv = $request->get('pv');
-} else {
-    $pv = false;
 }
 
 $hp = Codendi_HTMLPurifier::instance();
@@ -287,7 +285,7 @@ foreach ($packages as $package_id => $package_for_display) {
                     $proj_stats['files'] += $num_files;
 
                     $javascript_files_array  = array();
-                    $release_class_collapsed = $is_release_collapsed ? 'frs_collapsed' : '';
+                    $release_class_collapsed = $is_release_collapsed && ! $pv ? 'frs_collapsed' : '';
                     if (!$res_file || $num_files < 1) {
                         $html .= '<span class="' . $release_class_collapsed . '" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
                         $javascript_files_array[] = "'f_0'";
