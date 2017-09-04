@@ -78,17 +78,15 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function countOpenPullRequestsOfRepository($repository_id)
+    public function searchNbOfPullRequestsByStatusForRepositoryId($repository_id)
     {
         $repository_id = $this->da->escapeInt($repository_id);
-        $status_review = $this->da->quoteSmart(PullRequest::STATUS_REVIEW);
 
-        $sql = "SELECT COUNT(*) as nb_open_pull_requests
+        $sql = "SELECT status, COUNT(*) as nb
                 FROM plugin_pullrequest_review
-                WHERE status = $status_review
-                AND (
-                    repository_id = $repository_id OR repo_dest_id = $repository_id
-                )";
+                WHERE repository_id = $repository_id
+                   OR repo_dest_id = $repository_id
+                GROUP BY status";
 
         return $this->retrieve($sql);
     }

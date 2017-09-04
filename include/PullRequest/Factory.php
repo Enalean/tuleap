@@ -75,11 +75,22 @@ class Factory
         return $this->getInstancesFromRows($res);
     }
 
-    public function countOpenPullRequestsOfRepository(GitRepository $repository)
+    public function getPullRequestCount(GitRepository $repository)
     {
-        $row = $this->dao->countOpenPullRequestsOfRepository($repository->getId())->getRow();
+        $nb_open   = 0;
+        $nb_closed = 0;
+        foreach ($this->dao->searchNbOfPullRequestsByStatusForRepositoryId($repository->getId()) as $row) {
+            switch ($row['status']) {
+                case PullRequest::STATUS_ABANDONED:
+                case PullRequest::STATUS_MERGED:
+                    $nb_closed += $row['nb'];
+                    break;
+                default:
+                    $nb_open += $row['nb'];
+            }
+        }
 
-        return (int)$row['nb_open_pull_requests'];
+        return new PullRequestCount($nb_open, $nb_closed);
     }
 
     /**

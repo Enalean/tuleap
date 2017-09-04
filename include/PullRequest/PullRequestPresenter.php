@@ -22,8 +22,8 @@ namespace Tuleap\PullRequest;
 
 class PullRequestPresenter
 {
-    /** @var int */
-    public $nb_pull_requests;
+    /** @var PullRequestCount */
+    private $nb_pull_requests;
 
     /** @var int */
     public $repository_id;
@@ -34,13 +34,17 @@ class PullRequestPresenter
     /** @var string */
     public $language;
 
+    /** @var bool */
+    public $is_there_at_least_one_pull_request;
 
-    public function __construct($repository_id, $user_id, $language, $nb_pull_requests)
+
+    public function __construct($repository_id, $user_id, $language, PullRequestCount $nb_pull_requests)
     {
-        $this->repository_id         = $repository_id;
-        $this->user_id               = $user_id;
-        $this->language              = $language;
-        $this->nb_pull_requests      = $nb_pull_requests;
+        $this->repository_id                      = $repository_id;
+        $this->user_id                            = $user_id;
+        $this->language                           = $language;
+        $this->nb_pull_requests                   = $nb_pull_requests;
+        $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
     }
 
     public function getTemplateName()
@@ -50,10 +54,11 @@ class PullRequestPresenter
 
     public function nb_pull_request_badge()
     {
-        if ($this->nb_pull_requests <= 1) {
-            return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge', array($this->nb_pull_requests));
+        $nb_open = $this->nb_pull_requests->getNbOpen();
+        if ($nb_open <= 1) {
+            return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge', array($nb_open));
         }
 
-        return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array($this->nb_pull_requests));
+        return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array($nb_open));
     }
 }

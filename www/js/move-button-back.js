@@ -18,6 +18,11 @@
 (function () {
     function moveButtonBack() {
         var plugin_git_reference       = document.getElementById('plugin_git_reference');
+
+        if (! plugin_git_reference) {
+            return;
+        }
+
         var plugin_git_reference_title = plugin_git_reference.getElementsByTagName('h1')[0];
         var button_back                = document.getElementsByClassName('pull-request-button-back')[0];
 
