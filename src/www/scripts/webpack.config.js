@@ -65,6 +65,7 @@ var webpack_config_for_navbar_history = {
     entry: {
         'navbar-history'              : './navbar-history/index-burningparrot.js',
         'navbar-history-flamingparrot': [
+            'regenerator-runtime/runtime', // for async/await
             'whatwg-fetch',
             './navbar-history/index-flamingparrot.js'
         ]
