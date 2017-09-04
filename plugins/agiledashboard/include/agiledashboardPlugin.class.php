@@ -287,7 +287,10 @@ class AgileDashboardPlugin extends Plugin {
                                 $this->getKanbanFactory(),
                                 $this->getTrackerFactory()
                             );
-        $params['tracker_ids_list'] = $hierarchyChecker->getADTrackerIdsByProjectId($params['project_id']);
+        $params['tracker_ids_list'] = array_merge(
+            $params['tracker_ids_list'],
+            $hierarchyChecker->getADTrackerIdsByProjectId($params['project_id'])
+        );
     }
 
     public function tracker_event_trackers_duplicated($params) {
