@@ -216,12 +216,11 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
+        $pull_request    = $this->getReadablePullRequest($id);
         $user            = $this->user_manager->getCurrentUser();
-        $pull_request    = $this->getPullRequest($id);
         $repository_src  = $this->getRepository($pull_request->getRepositoryId());
         $repository_dest = $this->getRepository($pull_request->getRepoDestId());
 
-        $this->checkUserCanReadRepository($user, $repository_src);
 
         $executor                  = $this->getExecutor($repository_src);
         $pr_representation_factory = new PullRequestRepresentationFactory($executor, $this->access_control_verifier);
@@ -264,11 +263,7 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForLabels();
 
-        $user            = $this->user_manager->getCurrentUser();
-        $pull_request    = $this->getPullRequest($id);
-        $repository_src  = $this->getRepository($pull_request->getRepositoryId());
-
-        $this->checkUserCanReadRepository($user, $repository_src);
+        $pull_request = $this->getReadablePullRequest($id);
 
         $collection = $this->labels_retriever->getPaginatedLabelsForPullRequest($pull_request, $limit, $offset);
         $labels_representation = array_map(
@@ -349,14 +344,11 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForLabels();
 
-        $user            = $this->user_manager->getCurrentUser();
-        $pull_request    = $this->getPullRequest($id);
-        $repository_src  = $this->getRepository($pull_request->getRepositoryId());
-
-        $this->checkUserCanWrite($user, $repository_src, $pull_request->getBranchDest());
+        $pull_request    = $this->getWriteablePullRequest($id);
+        $repository_dest = $this->getRepository($pull_request->getRepoDestId());
 
         try {
-            $this->labels_updater->update($repository_src->getProjectId(), $pull_request, $body);
+            $this->labels_updater->update($repository_dest->getProjectId(), $pull_request, $body);
         } catch (UnknownLabelException $exception) {
             throw new RestException(400, "Label is unknown in the project");
         } catch (UnableToAddAndRemoveSameLabelException $exception) {
@@ -394,12 +386,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
-        $user           = $this->user_manager->getCurrentUser();
-        $pull_request   = $this->getPullRequest($id);
+        $pull_request   = $this->getReadablePullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
         $executor       = $this->getExecutor($git_repository);
-
-        $this->checkUserCanReadRepository($user, $git_repository);
 
         $file_representation_factory = new PullRequestFileRepresentationFactory($executor);
 
@@ -440,11 +429,8 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForPullRequests();
 
-        $user           = $this->user_manager->getCurrentUser();
-        $pull_request   = $this->getPullRequest($id);
+        $pull_request   = $this->getReadablePullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
-
-        $this->checkUserCanReadRepository($user, $git_repository);
 
         $executor     = $this->getExecutor($git_repository);
         $dest_content = $this->getDestinationContent($pull_request, $executor, $path);
@@ -498,11 +484,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkAccess();
         $this->sendAllowHeadersForInlineComments();
 
-        $pull_request   = $this->getPullRequest($id);
+        $pull_request   = $this->getReadablePullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
         $user           = $this->user_manager->getCurrentUser();
-
-        $this->checkUserCanReadRepository($user, $git_repository);
 
         $executor     = $this->getExecutor($git_repository);
         $dest_content = $this->getDestinationContent($pull_request, $executor, $comment_data->file_path);
@@ -695,12 +679,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->sendAllowHeadersForPullRequests();
 
         $user            = $this->user_manager->getCurrentUser();
-        $pull_request    = $this->getPullRequest($id);
+        $pull_request    = $this->getWriteablePullRequest($id);
         $repository_src  = $this->getRepository($pull_request->getRepositoryId());
         $repository_dest = $this->getRepository($pull_request->getRepoDestId());
-
-        $this->checkUserCanWrite($user, $repository_dest, $pull_request->getBranchDest());
-        $this->checkUserCanReadRepository($user, $repository_src);
 
         $status = $body->status;
         if ($status !== null) {
@@ -809,12 +790,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkLimit($limit);
         $this->sendAllowHeadersForTimeline();
 
-        $user           = $this->user_manager->getCurrentUser();
-        $pull_request   = $this->getPullRequest($id);
+        $pull_request   = $this->getReadablePullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
         $project_id     = $git_repository->getProjectId();
-
-        $this->checkUserCanReadRepository($user, $git_repository);
 
         $paginated_timeline_representation = $this->paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
             $id,
@@ -863,12 +841,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->checkLimit($limit);
         $this->sendAllowHeadersForComments();
 
-        $user           = $this->user_manager->getCurrentUser();
-        $pull_request   = $this->getPullRequest($id);
+        $pull_request   = $this->getReadablePullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
         $project_id     = $git_repository->getProjectId();
-
-        $this->checkUserCanReadRepository($user, $git_repository);
 
         $paginated_comments_representations = $this->paginated_comments_representations_builder->getPaginatedCommentsRepresentations(
             $id,
@@ -908,11 +883,9 @@ class PullRequestsResource extends AuthenticatedResource
         $this->sendAllowHeadersForComments();
 
         $user           = $this->user_manager->getCurrentUser();
-        $pull_request   = $this->getPullRequest($id);
+        $pull_request   = $this->getReadablePullRequest($id);
         $git_repository = $this->getRepository($pull_request->getRepositoryId());
         $project_id     = $git_repository->getProjectId();
-
-        $this->checkUserCanReadRepository($user, $git_repository);
 
         $current_time   = time();
         $comment        = new Comment(0, $id, $user->getId(), $current_time, $comment_data->content);
@@ -932,6 +905,36 @@ class PullRequestsResource extends AuthenticatedResource
         if ($limit > self::MAX_LIMIT) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
+    }
+
+    /**
+     * @param $id
+     * @return PullRequest
+     */
+    private function getWriteablePullRequest($id)
+    {
+        $pull_request = $this->getReadablePullRequest($id);
+
+        $current_user    = $this->user_manager->getCurrentUser();
+        $repository_dest = $this->getRepository($pull_request->getRepoDestId());
+        $this->checkUserCanWrite($current_user, $repository_dest, $pull_request->getBranchDest());
+
+        return $pull_request;
+    }
+
+    /**
+     * @param $id
+     * @return PullRequest
+     */
+    private function getReadablePullRequest($id)
+    {
+        $pull_request = $this->getPullRequest($id);
+
+        $current_user = $this->user_manager->getCurrentUser();
+        $repository   = $this->getRepository($pull_request->getRepositoryId());
+        $this->checkUserCanReadRepository($current_user, $repository);
+
+        return $pull_request;
     }
 
     private function getPullRequest($pull_request_id)

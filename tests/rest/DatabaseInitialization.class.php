@@ -33,9 +33,9 @@ class DatabaseInitialization extends \DatabaseInitialization {
     private function insertPullRequest() {
         echo "Create PullRequest \n";
 
-        $sql = "INSERT INTO plugin_pullrequest_review (repository_id, user_id, creation_date, branch_src, sha1_src, branch_dest, sha1_dest)
-                VALUES (1, 102, UNIX_TIMESTAMP(), 'dev', 'fake_sha1_srcaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'master', 'fake_sha1_destaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-                       (1, 102, UNIX_TIMESTAMP(), 'feature_a', 'fake_sha1_srcbbbbbbbbbbbbbbbbbbbbbbbbbbb', 'master', 'fake_sha1_destbbbbbbbbbbbbbbbbbbbbbbbbbb')";
+        $sql = "INSERT INTO plugin_pullrequest_review (repository_id, user_id, creation_date, branch_src, sha1_src, repo_dest_id, branch_dest, sha1_dest)
+                VALUES (1, 102, UNIX_TIMESTAMP(), 'dev', 'fake_sha1_srcaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1, 'master', 'fake_sha1_destaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+                       (1, 102, UNIX_TIMESTAMP(), 'feature_a', 'fake_sha1_srcbbbbbbbbbbbbbbbbbbbbbbbbbbb', 1, 'master', 'fake_sha1_destbbbbbbbbbbbbbbbbbbbbbbbbbb')";
 
         $this->mysqli->real_query($sql);
     }
