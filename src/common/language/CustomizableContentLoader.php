@@ -24,6 +24,7 @@ namespace Tuleap\Language;
 use PFUser;
 use ForgeConfig;
 use BaseLanguage;
+use Tuleap\URI\URIModifier;
 
 class CustomizableContentLoader
 {
@@ -37,7 +38,8 @@ class CustomizableContentLoader
         );
 
         foreach ($possible_locations as $location) {
-            if ($location === realpath($location)) {
+            $location = URIModifier::removeEmptySegments($location);
+            if ($location === URIModifier::removeDotSegments($location) && is_file($location)) {
                 return file_get_contents($location);
             }
         }
