@@ -49,7 +49,6 @@ class AdminScrumPresenter {
     private $root_planning_name;
     private $planning_hierarchy = array();
     private $can_create_planning;
-    private $additional_panes;
     private $additional_content;
 
     public function __construct(
@@ -61,7 +60,6 @@ class AdminScrumPresenter {
         array $hierarchy,
         $scrum_activated,
         $scrum_title,
-        array $additional_panes,
         $can_scrum_mono_milestone_be_enabled,
         $use_mono_milestone,
         $does_configuration_allows_planning_creation,
@@ -74,7 +72,6 @@ class AdminScrumPresenter {
         $this->root_planning_name                          = $root_planning_name;
         $this->scrum_activated                             = $scrum_activated;
         $this->scrum_title                                 = $scrum_title;
-        $this->additional_panes                            = $additional_panes;
         $this->can_scrum_mono_milestone_be_enabled         = $can_scrum_mono_milestone_be_enabled;
         $this->use_mono_milestone                          = $use_mono_milestone;
         $this->does_configuration_allows_planning_creation = $does_configuration_allows_planning_creation;
@@ -202,11 +199,6 @@ class AdminScrumPresenter {
     public function token() {
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         return $token->fetchHTMLInput();
-    }
-
-    public function additional_panes()
-    {
-        return array_values($this->additional_panes);
     }
 
     public function activate_scrum_mono_milestone_label()
