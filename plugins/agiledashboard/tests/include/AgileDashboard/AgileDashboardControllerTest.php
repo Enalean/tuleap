@@ -35,6 +35,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         $this->config_manager   = mock('AgileDashboard_ConfigurationManager');
         $this->tracker_factory  = mock('TrackerFactory');
         $this->kanban_factory   = mock('AgileDashboard_KanbanFactory');
+        $this->event_manager    = mock('EventManager');
 
         UserManager::setInstance($this->user_manager);
     }
@@ -63,7 +64,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->tracker_factory,
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            $this->event_manager
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -93,7 +95,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->tracker_factory,
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            $this->event_manager
         );
 
         expect($this->kanban_manager)->createKanban()->never();
@@ -123,7 +126,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->tracker_factory,
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
-            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            $this->event_manager
         );
 
         expect($this->kanban_manager)->createKanban()->never();

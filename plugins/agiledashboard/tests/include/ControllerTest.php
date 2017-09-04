@@ -66,7 +66,10 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $this->scrum_planning_filter
         );
 
+
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
+        $this->event_manager   = mock('EventManager');
+
         stub($configuration_manager)->getScrumTitle()->returns('Scrum');
         stub($configuration_manager)->getKanbanTitle()->returns('Kanban');
         stub($configuration_manager)->scrumIsActivatedForProject()->returns(true);
@@ -82,7 +85,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('AgileDashboard_PermissionsManager'),
             mock('AgileDashboard_HierarchyChecker'),
             $this->mono_milestone_checker,
-            $this->scrum_planning_filter
+            $this->event_manager
         );
 
         stub($this->mono_milestone_checker)->isMonoMilestoneEnabled()->returns(false);
