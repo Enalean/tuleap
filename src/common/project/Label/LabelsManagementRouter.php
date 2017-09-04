@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
-@import '../../common/css/utils/tooltip';
+namespace Tuleap\Project\Label;
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/fonts';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/dashboard';
-@import 'includes/homepage';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
+use HTTPRequest;
+
+class LabelsManagementRouter
+{
+    /**
+     * @var IndexController
+     */
+    private $index_controller;
+
+    public function __construct(IndexController $index_controller)
+    {
+        $this->index_controller = $index_controller;
+    }
+
+    public function process(HTTPRequest $request)
+    {
+        $this->index_controller->display($request);
+    }
+}

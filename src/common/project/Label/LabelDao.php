@@ -84,4 +84,13 @@ class LabelDao extends DataAccessObject
             throw new UnknownLabelException();
         }
     }
+
+    public function searchLabelsUsedByProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT * FROM project_label WHERE project_id = $project_id ORDER BY id";
+
+        return $this->retrieve($sql);
+    }
 }

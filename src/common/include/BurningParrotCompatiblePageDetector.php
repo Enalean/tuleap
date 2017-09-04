@@ -52,10 +52,16 @@ class BurningParrotCompatiblePageDetector
         return $this->isInCoreServicesSiteAdmin($current_user)
             || $this->current_page->isDashboard()
             || $this->isInHomepage()
+            || $this->isManagingLabels()
             || $this->isInContact()
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
             || $this->isSoftwareMap();
+    }
+
+    private function isManagingLabels()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/labels.php') === 0;
     }
 
     private function isInCoreServicesSiteAdmin(PFUser $current_user)

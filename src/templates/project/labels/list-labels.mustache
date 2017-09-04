@@ -1,0 +1,66 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-tags"></i> {{ title }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                {{# has_labels }}
+                    <div class="tlp-table-actions">
+                        <div class="tlp-table-actions-spacer"></div>
+                        <div class="tlp-form-element tlp-table-actions-element">
+                            <input type="search"
+                                   class="tlp-search"
+                                   id="project-labels-table-filter"
+                                   data-target-table-id="project-labels-table"
+                                   autocomplete="off"
+                                   placeholder="{{ filter_placeholder }}">
+                        </div>
+                    </div>
+                {{/ has_labels }}
+                <table class="tlp-table" id="project-labels-table">
+                    <thead>
+                        <tr>
+                            <th class="tlp-table-cell-filterable project-labels-table-name">{{ name_label }}</th>
+                            <th class="project-labels-table-is-used">{{ is_used_label }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{^ has_labels }}
+                            <tr>
+                                <td colspan="2" class="tlp-table-cell-empty">
+                                    {{ empty_state }}
+                                </td>
+                            </tr>
+                        {{/ has_labels }}
+                        {{# has_labels }}
+                            <tr class="tlp-table-empty-filter">
+                                <td colspan="2" class="tlp-table-cell-empty">
+                                    {{ empty_filter }}
+                                </td>
+                            </tr>
+                            {{# labels }}
+                                <tr>
+                                    <td class="tlp-table-cell-filterable">
+                                        <span class="tlp-badge-primary tlp-badge-outline">
+                                            {{ name }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{# is_used }}
+                                            <span class="tlp-tooltip tlp-tooltip-bottom project-labels-table-is-used-help"
+                                                  data-tlp-tooltip="{{ this_label_is_used }}"
+                                            >
+                                                <i class="fa fa-check"></i>
+                                            </span>
+                                        {{/ is_used }}
+                                    </td>
+                                </tr>
+                            {{/ labels }}
+                        {{/ has_labels }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>

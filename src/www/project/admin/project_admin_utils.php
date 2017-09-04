@@ -43,14 +43,15 @@ function project_admin_header($params) {
     $project                        = ProjectManager::instance()->getProject($group_id);
 
     echo '
-    <P><TABLE width="100%"><TR>';
+    <table width="100%" class="project-admin-3-levels-navigation"><tr>';
     echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
     <A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> | ';
     if ($user_configuration_permissions->canUserConfigureSomething($user, $project)) {
         echo '<A HREF="/project/admin/project_visibility.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_project_visibility').'</A> | ';
     }
     echo '<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> | ';
-    echo '<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
+    echo '<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A> | ';
+    echo '<a HREF="/project/admin/labels.php?group_id='.$group_id.'">' . _('Labels') .'</a>';
 
     $em = EventManager::instance();
     $em->processEvent('admin_toolbar_configuration', array('group_id' => $group_id));

@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
-@import '../../common/css/utils/tooltip';
+use Tuleap\Project\Label\IndexController;
+use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\Label\LabelsManagementRouter;
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/fonts';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/dashboard';
-@import 'includes/homepage';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
+require_once('pre.php');
+
+$request = HTTPRequest::instance();
+session_require(array('group' => $request->get('group_id'), 'admin_flags' => 'A'));
+
+$router = new LabelsManagementRouter(
+    new IndexController(new LabelDao(), EventManager::instance())
+);
+$router->process($request);
