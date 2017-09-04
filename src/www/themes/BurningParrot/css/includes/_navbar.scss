@@ -199,13 +199,15 @@
 }
 
 .current-project-name {
-    display: flex;
-    align-items: baseline;
+    max-width: 250px;
+    overflow: hidden;
     color: $tlp-theme-color;
-    font-size: 18px;
-    letter-spacing: 1.1px;
+    font-size: 16px;
+    letter-spacing: .5px;
     text-decoration: none;
+    text-overflow: ellipsis;
     text-transform: uppercase;
+    white-space: nowrap;
 
     &:hover {
         text-decoration: none;
@@ -213,7 +215,7 @@
 }
 
 .current-project-icon {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 5px 0 0;
     color: $tlp-theme-color;
     font-size: 16px;
 }

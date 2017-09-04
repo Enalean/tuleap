@@ -204,15 +204,19 @@
             border-right: 1px solid #e3e5ed;
 
             > a {
-                padding: 0;
-                height: auto;
-                background-color: $white;
-                text-align: left;
                 box-sizing: border-box;
+                max-width: 250px;
+                height: auto;
+                padding: 0;
+                overflow: hidden;
+                background-color: $white;
                 color: $navbar-color;
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: normal;
-                letter-spacing: 1.1px;
+                letter-spacing: .5px;
+                text-align: left;
+                text-overflow: ellipsis;
+                white-space: nowrap;
 
                 > i {
                     margin-right: 5px;
