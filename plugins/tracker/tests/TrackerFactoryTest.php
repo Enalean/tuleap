@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
 Mock::generate('Tracker_HierarchyFactory');
@@ -181,7 +182,16 @@ class TrackerFactoryTest extends TuleapTestCase {
 }
 
 class TrackerFactoryDuplicationTest extends TuleapTestCase {
-    
+
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    /**
+     * @var Tuleap\Tracker\CrossTracker\CrossTrackerReportDao
+     */
+    private $cross_tracker_report_dao;
+
     public function setUp() {
         parent::setUp();
         $this->tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
@@ -189,21 +199,26 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
                             'getTrackersByGroupId',
                             'getHierarchyFactory',
                             'getFormElementFactory',
-                            'getTriggerRulesManager'
+                            'getTriggerRulesManager',
+                            'getCrossTrackerReportDao'
                       ));
         $this->hierarchy_factory     = new MockTracker_HierarchyFactory();
         $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
         $this->formelement_factory   = mock('Tracker_FormElementFactory');
+        $this->cross_tracker_report_dao    = mock('Tuleap\\Tracker\\CrossTracker\\CrossTrackerReportDao');
 
         $this->tracker_factory->setReturnValue('getHierarchyFactory', $this->hierarchy_factory);
         $this->tracker_factory->setReturnValue('getFormElementFactory', $this->formelement_factory);
         $this->tracker_factory->setReturnValue('getTriggerRulesManager', $this->trigger_rules_manager);
+        $this->tracker_factory->setReturnValue('getCrossTrackerReportDao', $this->cross_tracker_report_dao);
         
     }
     
     
-    public function testDuplicate_duplicatesAllTrackers_withHierarchy() {
-        
+    public function testDuplicate_duplicatesAllTrackers_withHierarchy()
+    {
+        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
+
         $t1 = $this->GivenADuplicatableTracker(1234);
         stub($t1)->getName()->returns('Bugs');
         stub($t1)->getDescription()->returns('Bug Tracker');
@@ -223,7 +238,9 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $this->tracker_factory->duplicate(100, 999, null);
     }
     
-    public function testDuplicate_duplicatesSharedFields() {
+    public function testDuplicate_duplicatesSharedFields()
+    {
+        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
 
         $t1 = $this->GivenADuplicatableTracker(123);
         $t2 = $this->GivenADuplicatableTracker(567);
@@ -252,7 +269,10 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);
     }
     
-    public function testDuplicate_ignoresNonDuplicatableTrackers() {
+    public function testDuplicate_ignoresNonDuplicatableTrackers()
+    {
+        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
+
         $t1 = new MockTracker();
         $t1->setReturnValue('mustBeInstantiatedForNewProjects', false);
         $t1->setReturnValue('getId', 5678);
@@ -271,7 +291,9 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         return $t1;
     }
 
-    public function testDuplicate_duplicatesAllTriggerRules() {
+    public function testDuplicate_duplicatesAllTriggerRules()
+    {
+        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
 
         $t1 = $this->GivenADuplicatableTracker(1234);
         stub($t1)->getName()->returns('Bugs');
@@ -286,6 +308,32 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
 
         $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
+
+        $this->trigger_rules_manager->expectOnce('duplicate');
+
+        $this->tracker_factory->duplicate(100, 999, null);
+    }
+
+    public function itDuplicatesTrackersUsedInCrossTrackerReports()
+    {
+        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(
+            TestHelper::arrayToDar(array('id' => '1234'))
+        );
+
+        $tracker = new MockTracker();
+        stub($tracker)->getId()->returns(1234);
+        stub($tracker)->mustBeInstantiatedForNewProjects()->returns(false);
+        stub($tracker)->getName()->returns('CrossTracker');
+        stub($tracker)->getDescription()->returns('Cross Tracker Report');
+        stub($tracker)->getItemname()->returns('crt');
+
+        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array($tracker), array(100));
+
+        $tracker_in_new_project = stub('Tracker')->getId()->returns(555);
+
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $tracker_in_new_project, 'field_mapping' => array())) ;
+
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'CrossTracker', 'Cross Tracker Report', 'crt', null));
 
         $this->trigger_rules_manager->expectOnce('duplicate');
 

@@ -121,6 +121,18 @@ class CrossTrackerReportDao extends DataAccessObject
         $this->update($sql);
     }
 
+    public function searchTrackersIdUsedByCrossTrackerByProjectId($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT tracker.id
+                FROM plugin_tracker_cross_tracker_report_tracker AS report
+                INNER JOIN tracker ON report.tracker_id = tracker.id
+                WHERE tracker.group_id = $project_id";
+
+        return $this->retrieve($sql);
+    }
+
     public function delete($report_id)
     {
         $report_id = $this->da->escapeInt($report_id);

@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
+
 class TrackerFactory {
 
     const LEGACY_SUFFIX = '_from_tv3';
@@ -184,6 +186,14 @@ class TrackerFactory {
             $this->dao = new TrackerDao();
         }
         return $this->dao;
+    }
+
+    /**
+     * @return CrossTrackerReportDao
+     */
+    protected function getCrossTrackerReportDao()
+    {
+        return new CrossTrackerReportDao();
     }
 
     /**
@@ -560,9 +570,15 @@ class TrackerFactory {
         $tracker_mapping        = array();
         $field_mapping          = array();
         $trackers_from_template = array();
-        $tracker_ids_list = array();
+
+        $cross_tracker_report_dao = $this->getCrossTrackerReportDao();
+        $tracker_ids_list         = array();
+        foreach ($cross_tracker_report_dao->searchTrackersIdUsedByCrossTrackerByProjectId($from_project_id) as $row) {
+            $tracker_ids_list[] = $row['id'];
+        }
         $params = array('project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list);
         EventManager::instance()->processEvent(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
+        $tracker_ids_list = array_unique($tracker_ids_list);
         foreach($this->getTrackersByGroupId($from_project_id) as $tracker) {
             if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
                 $trackers_from_template[] = $tracker;
