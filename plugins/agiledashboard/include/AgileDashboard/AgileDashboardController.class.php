@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\AdminAdditionalPanePresenter;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
@@ -121,17 +120,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         );
     }
 
-    public function adminAdditionalPane()
-    {
-        return $this->renderToString(
-            'admin-additional-pane',
-            $this->getAdminAdditionalPanePresenterByName(
-                $this->group_id,
-                $this->request->get('pane')
-            )
-        );
-    }
-
     private function getAdminScrumPresenter(PFUser $user, $group_id)
     {
         $can_create_planning         = true;
@@ -157,7 +145,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $potential_planning_trackers,
             $scrum_activated,
             $this->config_manager->getScrumTitle($group_id),
-            $this->getAdditionalPanesAdmin(),
             $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
             $this->isScrumMonoMilestoneEnable($group_id),
             $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
@@ -187,38 +174,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $project_id,
             $this->config_manager->kanbanIsActivatedForProject($project_id),
             $this->config_manager->getKanbanTitle($project_id),
-            $has_kanban,
-            $this->getAdditionalPanesAdmin()
+            $has_kanban
         );
-    }
-
-    private function getAdminAdditionalPanePresenterByName($project_id, $name)
-    {
-        $panes = $this->getAdditionalPanesAdmin();
-
-        foreach ($panes as &$pane) {
-            $pane['activated'] = $pane['name'] === $name;
-        }
-
-        return new AdminAdditionalPanePresenter(
-            $project_id,
-            $panes[$name]['title'],
-            $panes[$name]['output'],
-            $panes
-        );
-    }
-
-    public function getAdditionalPanesAdmin()
-    {
-        $panes = array();
-        EventManager::instance()->processEvent(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ADMIN, array(
-            'additional_panes' => &$panes
-        ));
-        foreach ($panes as $pane_name => &$pane) {
-            $pane['name'] = $pane_name;
-        }
-
-        return $panes;
     }
 
     public function getAdditionalContent()

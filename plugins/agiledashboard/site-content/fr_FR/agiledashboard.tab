@@ -7,7 +7,6 @@ plugin_agiledashboard	service_desc_key	Dashboard agile
 plugin_agiledashboard	Admin	Administration du dashboard agile
 plugin_agiledashboard	AdminScrum	Administration Scrum du dashboard agile
 plugin_agiledashboard	AdminKanban	Administration Kanban du dashboard agile
-plugin_agiledashboard	AdminAdditionalPane	Administration du dashboard agile
 plugin_agiledashboard	cannot_create_planning	Vous ne pouvez plus créer de planning soit:
 plugin_agiledashboard	cannot_create_planning_no_trackers	parce qu'il n'y a pas de trackers
 plugin_agiledashboard	cannot_create_planning_in_scrum_v2	Vous ne pouvez pas créer plus d'un planning en utilisant scrum V2.
