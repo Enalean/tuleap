@@ -29,8 +29,7 @@
     "karma-jasmine": "^0.3.6",
     "karma-junit-reporter": "^0.4.1",
     "karma-notify-reporter": "^0.1.1",
-    "karma-phantomjs-launcher": "^1.0.0",
-    "phantomjs-prebuilt": "^2.1.7",
+    "karma-chrome-launcher": "^2.2.0",
     "time-grunt": "^1.2.2"
   },
   "scripts": {

@@ -21,7 +21,7 @@ module.exports = {
         ],
         alias: {
             // Our own components and their dependencies
-            'angular-artifact-modal'  : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal'),
+            'angular-artifact-modal'  : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
             'cumulative-flow-diagram' : path.resolve(__dirname, '../cumulative-flow-diagram/index.js'),
             'angular-tlp'             : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
         }
@@ -80,7 +80,7 @@ module.exports = {
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
-            merge: false,
+            merge: true,
             writeToDisk: true
         }),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !

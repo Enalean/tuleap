@@ -43,10 +43,9 @@
     "karma-coverage-istanbul-reporter": "^1.2.0",
     "karma-jasmine": "^0.3.6",
     "karma-junit-reporter": "^0.4.1",
-    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-webpack": "^2.0.3",
     "ng-cache-loader": "^0.0.23",
-    "phantomjs-prebuilt": "^2.1.7",
     "run-sequence": "^2.0.0",
     "webpack": "^3.0.0",
     "webpack-assets-manifest": "^0.7.0"
@@ -54,8 +53,6 @@
   "scripts": {
     "build": "gulp build && webpack --optimize-minimize --bail && webpack --config externalize-angular-webpack.config.js --optimize-minimize --bail",
     "coverage": "gulp coverage && http-server -os -a 0.0.0.0 -p 9000 coverage/",
-    "install-angular-modal": "cd ../../../../tracker/www/scripts/angular-artifact-modal/ && npm install --production",
-    "pretest": "npm run install-angular-modal",
     "test": "gulp test",
     "watch": "concurrently --raw --kill-others 'webpack --watch' 'gulp watch'"
   }
