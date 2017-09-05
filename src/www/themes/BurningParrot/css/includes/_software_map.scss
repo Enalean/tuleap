@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,21 +15,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-@import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
-@import '../../common/css/utils/tooltip';
+#softwaremap-list {
+    display: flex;
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/fonts';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/dashboard';
-@import 'includes/homepage';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/software_map';
+    align-items: flex-start;
+}
+
+#softwaremap-list-filter {
+    width: 400px;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.softwaremap-list-filter-nb {
+    margin: 0 0 0 ($tlp-spacing / 2);
+}
+
+.softwaremap-list-selected {
+    font-weight: bold;
+}
+
+#softwaremap-list-results {
+    width: 100%;
+}

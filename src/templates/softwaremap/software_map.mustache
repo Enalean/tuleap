@@ -1,0 +1,82 @@
+<h1>{{ title }}</h1>
+
+<div id="softwaremap-list">
+
+    <section class="tlp-pane" id="softwaremap-list-filter">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ browse_by }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                <ul>
+                    {{# root_categories }}
+                        <li>
+                            <a href="trove_list.php?form_cat={{ id }}"{{# selected }} class="softwaremap-list-selected"{{/ selected }}>{{ name }}</a>
+                        </li>
+                    {{/root_categories}}
+                </ul>
+            </section>
+
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="fa fa-search tlp-pane-title-icon"></i> {{ current_category }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                <ul>
+                    {{# subcategories }}
+                        <li>
+                            <a href="trove_list.php?form_cat={{ id }}{{# none }}&amp;special_cat=none{{/none}}" {{# selected }}class="softwaremap-list-selected"{{/ selected }}>{{ name }}</a>
+                            <span class="tlp-badge-secondary tlp-badge-outline softwaremap-list-filter-nb">{{ count }} {{ projects }}</span>
+                        </li>
+                    {{/ subcategories }}
+                </ul>
+            </section>
+        </div>
+    </section>
+
+    <section class="tlp-pane" id="softwaremap-list-results">
+        <div class="tlp-pane-container">
+
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{ projects_in_category }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                <table class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th>{{ title_name }}</th>
+                        <th>{{ title_desc }}</th>
+                        <th>{{ title_cat }}</th>
+                        <th>{{ title_date }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# has_results }}
+                        {{# project_list }}
+                            <tr>
+                                <td><a href="/projects/{{shortname}}">{{ longname }}</a></td>
+                                <td>{{ description }}</td>
+                                <td>{{{ categories }}}</td>
+                                <td>{{ date }}</td>
+                            </tr>
+                        {{/ project_list }}
+                    {{/ has_results }}
+                    {{^ has_results }}
+                        <tr>
+                            <td colspan="4" class="tlp-table-cell-empty">
+                                {{ empty_state_project_list }}
+                            </td>
+                        </tr>
+                    {{/ has_results }}
+                    </tbody>
+                </table>
+
+                {{# pagination }}
+                    {{> pagination }}
+                {{/ pagination }}
+            </section>
+        </div>
+    </section>
+</div>

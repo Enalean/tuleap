@@ -54,7 +54,8 @@ class BurningParrotCompatiblePageDetector
             || $this->isInHomepage()
             || $this->isInContact()
             || $this->isInHelp()
-            || $this->isInBurningParrotCompatiblePage();
+            || $this->isInBurningParrotCompatiblePage()
+            || $this->isSoftwareMap();
     }
 
     private function isInCoreServicesSiteAdmin(PFUser $current_user)
@@ -84,6 +85,11 @@ class BurningParrotCompatiblePageDetector
     private function isInHelp()
     {
         return strpos($_SERVER['REQUEST_URI'], '/help/') === 0;
+    }
+
+    private function isSoftwareMap()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/softwaremap/') === 0;
     }
 
     private function isInBurningParrotCompatiblePage()
