@@ -91,6 +91,55 @@ class ProjectCrossTrackerSearch extends Widget
         $this->getDao()->delete($content_id);
     }
 
+    public function cloneContent($id, $new_project_id, $owner_type)
+    {
+        $content_id      = $this->getDao()->create();
+        $tracker_factory = $this->getTrackerFactory();
+
+        $trackers_existing_widget = $this->getTrackers($id);
+        $trackers_new_widget      = array();
+
+        foreach ($trackers_existing_widget as $tracker) {
+            if ($this->owner_id == $tracker->getGroupId()) {
+                $trackers_new_widget[] = $tracker_factory->getTrackerByShortnameAndProjectId(
+                    $tracker->getItemName(),
+                    $new_project_id
+                );
+            } else {
+                $trackers_new_widget[] = $tracker;
+            }
+        }
+
+        $this->getDao()->addTrackersToReport($trackers_new_widget, $content_id);
+
+        return $content_id;
+    }
+
+    /**
+     * @return \Tracker[]
+     */
+    private function getTrackers($report_id)
+    {
+        $tracker_factory = $this->getTrackerFactory();
+        $tracker_rows    = $this->getDao()->searchReportTrackersById($report_id);
+        $trackers        = array();
+        foreach ($tracker_rows as $row) {
+            $tracker = $tracker_factory->getTrackerById($row['tracker_id']);
+            if ($tracker !== null) {
+                $trackers[] = $tracker;
+            }
+        }
+        return $trackers;
+    }
+
+    /**
+     * @return \TrackerFactory
+     */
+    private function getTrackerFactory()
+    {
+        return \TrackerFactory::instance();
+    }
+
     public function getJavascriptDependencies()
     {
         $cross_tracker_include_assets = new IncludeAssets(
