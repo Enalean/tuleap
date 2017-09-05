@@ -22,6 +22,8 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Label\CollectionOfLabelPresenter;
+use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\REST\ResourcesInjector;
@@ -64,6 +66,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook('ajax_reference_tooltip');
+        $this->addHook(CollectionOfLabelPresenter::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -485,6 +488,14 @@ class pullrequestPlugin extends Plugin
                 $pull_request_creation_date
             );
             echo $renderer->renderToString($presenter->getTemplateName(), $presenter);
+        }
+    }
+
+    public function collectionOfLabelPresenter(CollectionOfLabelPresenter $collection)
+    {
+        $dao = new PullRequestLabelDao();
+        foreach ($dao->searchLabelsUsedInProject($collection->getProject()->getID()) as $row) {
+            $collection->switchToUsed($row['id']);
         }
     }
 }

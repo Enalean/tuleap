@@ -101,4 +101,18 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
 
         $this->update($sql);
     }
+
+    public function searchLabelsUsedInProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT project_label.*
+                FROM plugin_pullrequest_label
+                    INNER JOIN project_label ON (
+                        plugin_pullrequest_label.label_id = project_label.id
+                        AND project_label.project_id = $project_id
+                    )";
+
+        return $this->retrieve($sql);
+    }
 }
