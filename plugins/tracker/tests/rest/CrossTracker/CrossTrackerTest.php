@@ -122,6 +122,33 @@ class CrossTrackerTest extends RestBase
         $this->assertEquals($cross_tracker_artifacts['artifacts'][4]['id'], $this->epic_artifact_ids[1]);
     }
 
+    public function testGetContentIdWithQuery()
+    {
+        $query    = json_encode(
+            array(
+                "trackers_id" => array(1)
+            )
+        );
+        $response = $this->getResponse(
+            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $cross_tracker_artifacts = $response->json();
+
+        $this->assertEquals(
+            count($cross_tracker_artifacts['artifacts']),
+            5
+        );
+
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][0]['id'], $this->epic_artifact_ids[7]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][1]['id'], $this->epic_artifact_ids[6]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][2]['id'], $this->epic_artifact_ids[5]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][3]['id'], $this->epic_artifact_ids[4]);
+        $this->assertEquals($cross_tracker_artifacts['artifacts'][4]['id'], $this->epic_artifact_ids[1]);
+    }
+
+
     public function testGetReportWithoutArtifacts()
     {
         $response = $this->getResponse($this->client->get('cross_tracker_reports/2/content?limit=50&offset=0'));

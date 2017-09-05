@@ -24,7 +24,9 @@ use Luracast\Restler\RestException;
 use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
 use Tuleap\Tracker\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\Tracker\CrossTracker\CrossTrackerReport;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportNotFoundException;
@@ -33,7 +35,10 @@ use UserManager;
 class CrossTrackerReportsResource extends AuthenticatedResource
 {
     const MAX_LIMIT = 50;
-
+    /**
+     * @var JsonDecoder
+     */
+    private $json_decoder;
     /**
      * @var CrossTrackerArtifactReportFactory
      */
@@ -57,6 +62,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
     public function __construct()
     {
+        $this->json_decoder   = new JsonDecoder();
         $this->user_manager   = UserManager::instance();
         $this->report_factory = new CrossTrackerReportFactory(
             new CrossTrackerReportDao(),
@@ -116,18 +122,26 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * /!\ route under construction
      * Get open artifacts linked to given trackers.
-     *
+     * <br>
+     * <br>
+     * ?query is optional. When filled, it is a json object:
+     * <ul>
+     *   <li>With a property "trackers_id" to search artifacts presents in given trackers.
+     *     Example: <pre>{"trackers_id": [1,2,3]}</pre>
+     *   </li>
+     * </ul>
      * @url GET {id}/content
      *
-     * @param int $id Id of the report
-     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
-     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param int    $id Id of the report
+     * @param string $query With a property "trackers_id" to search artifacts presents in given trackers. {@required false}
+     * @param int    $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return CrossTrackerArtifactReportRepresentation[]
      *
      * @throws 404
      */
-    protected function getIdContent($id, $limit = self::MAX_LIMIT, $offset = 0)
+    protected function getIdContent($id, $query, $limit = self::MAX_LIMIT, $offset = 0)
     {
         $this->checkAccess();
         Header::allowOptionsGet();
@@ -136,8 +150,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $current_user = $this->user_manager->getCurrentUser();
             $report       = $this->report_factory->getById($id, $current_user);
 
-            $artifacts = $this->cross_tracker_artifact_factory->getArtifactsFromTrackerFromTrackers(
-                $report,
+            $artifacts = $this->cross_tracker_artifact_factory->getArtifactsFromGivenTrackers(
+                $this->getTrackersFromRoute($query, $report),
                 $current_user,
                 $limit,
                 $offset
@@ -220,5 +234,35 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     private function sendPaginationHeaders($limit, $offset, $size)
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
+    }
+
+    /**
+     * @param                    $query
+     * @param CrossTrackerReport $report
+     *
+     * @return array
+     */
+    private function getTrackersFromRoute($query, CrossTrackerReport $report)
+    {
+        $query      = trim($query);
+        $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
+        if (count($json_query) === 0) {
+            return $report->getTrackers();
+        }
+
+        if (! isset($json_query['trackers_id'])) {
+            throw new RestException(400, "Missing trackers_id entry in query parameter");
+        }
+
+        if (! is_array($json_query['trackers_id'])) {
+            throw new RestException(400, "trackers_id must be an array of int.");
+        }
+
+        $only_numeric_trackers = array_filter($json_query['trackers_id'], 'is_int');
+        if ($only_numeric_trackers !== $json_query['trackers_id']) {
+            throw new RestException(400, "trackers_id must be an array of int.");
+        }
+
+        return $this->cross_tracker_extractor->extractTrackers($json_query['trackers_id']);
     }
 }
