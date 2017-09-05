@@ -11,8 +11,7 @@ ENV CI true
 # Install base node modules
 RUN npm config set progress false \
     && npm install --global \
-    bower \
-    phantomjs-prebuilt
+    bower
 
 WORKDIR /tuleap/plugins/pullrequest
 VOLUME ["/tulap/plugins/pullrequest"]
