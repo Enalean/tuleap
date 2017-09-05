@@ -299,7 +299,6 @@ class ProjectCreator {
             $report_mapping  = array();
         }
         $this->initWikiModuleFromTemplate($group_id, $template_id);
-        $this->initLayoutFromTemplate($group, $template_group);
 
         //Create project specific references if template is not default site template
         if (!$template_group->isSystem()) {
@@ -318,6 +317,8 @@ class ProjectCreator {
             'project_creation_data' => $data,
             'legacy_service_usage'  => $legacy,
         ));
+
+        $this->initLayoutFromTemplate($group, $template_group);
 
         $this->autoActivateProject($group);
 
