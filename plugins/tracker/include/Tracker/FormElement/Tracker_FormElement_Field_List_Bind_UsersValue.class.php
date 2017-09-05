@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     protected function getLink() {
         $display_name = $this->getLabel();
 
-        return '<a class="direct-link-to-user" href="'. $this->getUserUrl() .'">'.
+        return '<a class="link-to-user" href="'. $this->getUserUrl() .'">'.
                $this->hp->purify($display_name, CODENDI_PURIFIER_CONVERT_HTML) .
                '</a>';
     }
