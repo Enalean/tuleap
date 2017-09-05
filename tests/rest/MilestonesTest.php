@@ -59,7 +59,12 @@ class MilestonesTest extends MilestoneBase
                         array(
                             'id'  => $this->sprints_tracker_id,
                             'uri' => "trackers/$this->sprints_tracker_id",
-                            'label' => 'Sprints'
+                            'label' => 'Sprints',
+                            'project' => array(
+                                'id'    => $this->project_private_member_id,
+                                'uri'   => 'projects/' . $this->project_private_member_id,
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                            )
                         )
                     )
                 ),
@@ -84,7 +89,12 @@ class MilestonesTest extends MilestoneBase
                         array(
                             'id'  => $this->user_stories_tracker_id,
                             'uri' => 'trackers/'.$this->user_stories_tracker_id,
-                            'label' => 'User Stories'
+                            'label' => 'User Stories',
+                            'project' => array(
+                                'id'    => $this->project_private_member_id,
+                                'uri'   => 'projects/' . $this->project_private_member_id,
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                            )
                         )
                     )
                 ),
@@ -106,7 +116,12 @@ class MilestonesTest extends MilestoneBase
                         array(
                             'id'  => $this->epic_tracker_id,
                             'uri' => 'trackers/'.$this->epic_tracker_id,
-                            'label' => 'Epics'
+                            'label' => 'Epics',
+                            'project' => array(
+                                'id'    => $this->project_private_member_id,
+                                'uri'   => 'projects/' . $this->project_private_member_id,
+                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                            )
                         )
                     )
                 ),

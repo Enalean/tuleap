@@ -88,6 +88,7 @@ class TestDataBuilder {
     const ADMIN_PROJECT_ID = 100;
 
     const PROJECT_PRIVATE_MEMBER_SHORTNAME = 'private-member';
+    const PROJECT_PRIVATE_MEMBER_LABEL     = 'Private member';
     const PROJECT_PRIVATE_SHORTNAME        = 'private';
     const PROJECT_PUBLIC_SHORTNAME         = 'public';
     const PROJECT_PUBLIC_MEMBER_SHORTNAME  = 'public-member';

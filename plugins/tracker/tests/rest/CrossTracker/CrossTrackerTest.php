@@ -53,9 +53,14 @@ class CrossTrackerTest extends RestBase
             "uri"      => "cross_tracker_reports/1",
             "trackers" => array(
                 array(
-                    "id"    => $this->kanban_tracker_id,
-                    "uri"   => "trackers/" . $this->kanban_tracker_id,
-                    "label" => REST_TestDataBuilder::KANBAN_TRACKER_LABEL
+                    "id"      => $this->kanban_tracker_id,
+                    "uri"     => "trackers/" . $this->kanban_tracker_id,
+                    "label"   => REST_TestDataBuilder::KANBAN_TRACKER_LABEL,
+                    "project" => array(
+                        "id"    => $this->project_private_member_id,
+                        'uri'   => 'projects/' . $this->project_private_member_id,
+                        'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                    )
                 )
             )
         );
@@ -82,7 +87,12 @@ class CrossTrackerTest extends RestBase
                 array(
                     "id"    => $this->epic_tracker_id,
                     "uri"   => "trackers/" . $this->epic_tracker_id,
-                    "label" => REST_TestDataBuilder::EPICS_TRACKER_LABEL
+                    "label" => REST_TestDataBuilder::EPICS_TRACKER_LABEL,
+                    "project" => array(
+                        "id"    => $this->project_private_member_id,
+                        'uri'   => 'projects/' . $this->project_private_member_id,
+                        'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
+                    )
                 )
             )
         );
