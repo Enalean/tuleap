@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,7 @@ class DefinitionsTest extends BaseTest {
     public function testGetDefinition() {
         $first_definition = $this->getFirstDefinition();
 
-        $definition_request = $this->client->get('trafficlights_definitions/' . $first_definition['id']);
+        $definition_request = $this->client->get('testmanagement_definitions/' . $first_definition['id']);
         $definition         = $this->getResponse($definition_request)->json();
 
         $this->assertEquals($definition, $first_definition);
@@ -47,14 +47,14 @@ class DefinitionsTest extends BaseTest {
     }
 
     private function getFirstCampaign() {
-        $campaigns_request  = $this->client->get("projects/$this->project_id/trafficlights_campaigns");
+        $campaigns_request  = $this->client->get("projects/$this->project_id/testmanagement_campaigns");
         $campaigns          = $this->getResponse($campaigns_request)->json();
 
         return $campaigns[0];
     }
 
     private function getFirstExecution($campaign_id) {
-        $executions_request = $this->client->get('trafficlights_campaigns/'.$campaign_id.'/trafficlights_executions');
+        $executions_request = $this->client->get('testmanagement_campaigns/'.$campaign_id.'/testmanagement_executions');
         $executions         = $this->getResponse($executions_request)->json();
 
         return $executions[0];

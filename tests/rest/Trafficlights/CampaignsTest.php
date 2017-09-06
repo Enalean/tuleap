@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ class CampaignsTest extends BaseTest {
     public function testGetCampaign() {
         $expected_campaign = $this->getValid73Campaign();
 
-        $response  = $this->getResponse($this->client->get('trafficlights_campaigns/'. $expected_campaign['id']));
+        $response  = $this->getResponse($this->client->get('testmanagement_campaigns/'. $expected_campaign['id']));
         $campaign = $response->json();
 
         $this->assertEquals($expected_campaign, $campaign);
@@ -39,7 +39,7 @@ class CampaignsTest extends BaseTest {
     public function testGetExecutions() {
         $campaign = $this->getValid73Campaign();
 
-        $all_executions_request  = $this->client->get('trafficlights_campaigns/'. $campaign['id'] .'/trafficlights_executions');
+        $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] .'/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
 
         $executions = $all_executions_response->json();

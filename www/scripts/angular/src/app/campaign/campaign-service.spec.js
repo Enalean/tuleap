@@ -42,7 +42,7 @@ describe ('CampaignService - ', function () {
         ];
 
         mockBackend
-            .expectGET('/api/v1/projects/101/trafficlights_campaigns?limit=10&offset=0&query=%7B%22status%22:%22open%22,%22milestone_id%22:0%7D')
+            .expectGET('/api/v1/projects/101/testmanagement_campaigns?limit=10&offset=0&query=%7B%22status%22:%22open%22,%22milestone_id%22:0%7D')
             .respond(JSON.stringify(campaigns));
 
         var promise = CampaignService.getCampaigns(101, 0, "open", 10, 0);
@@ -72,7 +72,7 @@ describe ('CampaignService - ', function () {
             uri: "artifacts/17"
         };
         var expected_request =
-            '/api/v1/trafficlights_campaigns' +
+            '/api/v1/testmanagement_campaigns' +
                 '?milestone_id=' + milestone_id +
                 '&report_id=' + report_id +
                 '&test_selector=' + test_selector;
@@ -101,7 +101,7 @@ describe ('CampaignService - ', function () {
         ];
 
         mockBackend
-            .expectPATCH('/api/v1/trafficlights_campaigns/17')
+            .expectPATCH('/api/v1/testmanagement_campaigns/17')
             .respond(executions);
 
         var promise = CampaignService.patchCampaign(17, [4]);
@@ -133,7 +133,7 @@ describe ('CampaignService - ', function () {
 
         mockBackend
             .expectPATCH(
-                '/api/v1/trafficlights_campaigns/17/trafficlights_executions',
+                '/api/v1/testmanagement_campaigns/17/testmanagement_executions',
                 {
                     uuid: userUUID,
                     definition_ids_to_add: definition_ids,

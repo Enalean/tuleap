@@ -35,8 +35,8 @@ function ExecutionRestService(
     }
 
     function getRemoteExecutions(campaign_id, limit, offset) {
-        return rest.one('trafficlights_campaigns', campaign_id)
-            .all('trafficlights_executions')
+        return rest.one('testmanagement_campaigns', campaign_id)
+            .all('testmanagement_executions')
             .getList({
                 limit: limit,
                 offset: offset
@@ -52,7 +52,7 @@ function ExecutionRestService(
     }
 
     function postTestExecution(tracker_id, definition_id, status) {
-        return rest.all('trafficlights_executions')
+        return rest.all('testmanagement_executions')
             .post({
                 tracker      : {id: tracker_id},
                 definition_id: definition_id,
@@ -65,7 +65,7 @@ function ExecutionRestService(
 
     function putTestExecution(execution_id, new_status, time, results) {
         return rest
-            .one('trafficlights_executions', execution_id)
+            .one('testmanagement_executions', execution_id)
             .put({
                 status: new_status,
                 time: time,
@@ -78,7 +78,7 @@ function ExecutionRestService(
 
     function changePresenceOnTestExecution(execution_id, old_execution_id) {
         return rest
-            .one('trafficlights_executions', execution_id)
+            .one('testmanagement_executions', execution_id)
             .all('presences')
             .patch({
                 uuid: SharedPropertiesService.getUUID(),
@@ -105,7 +105,7 @@ function ExecutionRestService(
             + '<blockquote>' + test_execution.definition.description + '</blockquote>';
 
         return rest
-            .one('trafficlights_executions', test_execution.id)
+            .one('testmanagement_executions', test_execution.id)
             .all('issues')
             .patch({
                 issue_id: issue_id,

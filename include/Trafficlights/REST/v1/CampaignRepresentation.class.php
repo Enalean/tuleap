@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,8 +27,8 @@ use PFUser;
 
 class CampaignRepresentation {
 
-    const ROUTE           = 'trafficlights_campaigns';
-    const ASSIGNEES_ROUTE = 'trafficlights_assignees';
+    const ROUTE           = 'testmanagement_campaigns';
+    const ASSIGNEES_ROUTE = 'testmanagement_assignees';
 
     const FIELD_NAME           = "label";
     const FIELD_ARTIFACT_LINKS = "artifact_links";

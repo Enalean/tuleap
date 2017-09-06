@@ -28,7 +28,7 @@ describe('ArtifactLinksModelService', function() {
             "links": [
                 {
                     "id": 9,
-                    "uri": "trafficlights_nodes/9",
+                    "uri": "testmanagement_nodes/9",
                     "ref_name": "request",
                     "ref_label": "Request",
                     "color": "fiesta_red",
@@ -42,7 +42,7 @@ describe('ArtifactLinksModelService', function() {
             "reverse_links": [
                 {
                     "id": 6,
-                    "uri": "trafficlights_nodes/6",
+                    "uri": "testmanagement_nodes/6",
                     "ref_name": "campaign",
                     "ref_label": "Validation Campaign",
                     "color": "deep_blue",
@@ -54,7 +54,7 @@ describe('ArtifactLinksModelService', function() {
                 }
             ],
             "id": 1,
-            "uri": "trafficlights_nodes/1",
+            "uri": "testmanagement_nodes/1",
             "ref_name": "test_def",
             "ref_label": "Validation Test Definition",
             "color": "sherwood_green",
@@ -83,7 +83,7 @@ describe('ArtifactLinksModelService', function() {
                 nodes: [
                     {
                         "id": 1,
-                        "uri": "trafficlights_nodes/1",
+                        "uri": "testmanagement_nodes/1",
                         "ref_name": "test_def",
                         "ref_label": "Validation Test Definition",
                         "color": "sherwood_green",
@@ -95,7 +95,7 @@ describe('ArtifactLinksModelService', function() {
                     },
                     {
                         "id": 9,
-                        "uri": "trafficlights_nodes/9",
+                        "uri": "testmanagement_nodes/9",
                         "ref_name": "request",
                         "ref_label": "Request",
                         "color": "fiesta_red",
@@ -107,7 +107,7 @@ describe('ArtifactLinksModelService', function() {
                     },
                     {
                         "id": 6,
-                        "uri": "trafficlights_nodes/6",
+                        "uri": "testmanagement_nodes/6",
                         "ref_name": "campaign",
                         "ref_label": "Validation Campaign",
                         "color": "deep_blue",
@@ -132,7 +132,7 @@ describe('ArtifactLinksModelService', function() {
             "links": [],
             "reverse_links": [],
             "id": 1,
-            "uri": "trafficlights_nodes/1",
+            "uri": "testmanagement_nodes/1",
             "ref_name": "test_def",
             "ref_label": "Validation Test Definition",
             "color": "sherwood_green",
@@ -150,7 +150,7 @@ describe('ArtifactLinksModelService', function() {
                 nodes: [
                     {
                         "id": 1,
-                        "uri": "trafficlights_nodes/1",
+                        "uri": "testmanagement_nodes/1",
                         "ref_name": "test_def",
                         "ref_label": "Validation Test Definition",
                         "color": "sherwood_green",

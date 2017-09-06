@@ -30,7 +30,7 @@ describe ('ExecutionService - ', function () {
                 id: "6",
                 label: "Release 1",
                 status: "Open",
-                uri: "trafficlights_campaigns/6"
+                uri: "testmanagement_campaigns/6"
             };
 
             var categories_results = {
@@ -44,7 +44,7 @@ describe ('ExecutionService - ', function () {
                                 description: "test",
                                 id: 3,
                                 summary: "My first test",
-                                uri: "trafficlights_definitions/3"
+                                uri: "testmanagement_definitions/3"
                             }
                         }
                     ]
@@ -59,7 +59,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     }
                 }
             };
@@ -77,7 +77,7 @@ describe ('ExecutionService - ', function () {
                             description: "test",
                             id: 3,
                             summary: "My first test",
-                            uri: "trafficlights_definitions/3"
+                            uri: "testmanagement_definitions/3"
                         }
                     }
                 ],
@@ -109,7 +109,7 @@ describe ('ExecutionService - ', function () {
                 id: "6",
                 label: "Release 1",
                 status: "Open",
-                uri: "trafficlights_campaigns/6"
+                uri: "testmanagement_campaigns/6"
             };
 
             var remote_executions_count = 2;
@@ -123,7 +123,7 @@ describe ('ExecutionService - ', function () {
                             description: "test",
                             id: 3,
                             summary: "My first test",
-                            uri: "trafficlights_definitions/3"
+                            uri: "testmanagement_definitions/3"
                         }
                     }
                 ],
@@ -251,7 +251,7 @@ describe ('ExecutionService - ', function () {
                                 description: "test",
                                 id: 3,
                                 summary: "My first test",
-                                uri: "trafficlights_definitions/3"
+                                uri: "testmanagement_definitions/3"
                             }
                         }
                     ],
@@ -267,7 +267,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     }
                 }
             ];
@@ -466,14 +466,14 @@ describe ('ExecutionService - ', function () {
                 id: "6",
                 label: "Release 1",
                 status: "Open",
-                uri: "trafficlights_campaigns/6"
+                uri: "testmanagement_campaigns/6"
             };
 
             var campaign_updated = {
                 id: "5",
                 label: "Release 2",
                 status: "Open",
-                uri: "trafficlights_campaigns/6"
+                uri: "testmanagement_campaigns/6"
             };
 
             ExecutionService.campaign = campaign;
@@ -493,7 +493,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     }
                 }
             };
@@ -540,7 +540,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one]
                 }
@@ -579,7 +579,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one]
                 }
@@ -618,7 +618,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one, user_two]
                 }
@@ -657,7 +657,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one, user_two]
                 },
@@ -668,7 +668,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one, user_two]
                 }
@@ -709,7 +709,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one, user_two]
                 },
@@ -720,7 +720,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one, user_two]
                 }
@@ -833,7 +833,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one]
                 }
@@ -897,7 +897,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     }
                 },
                 5: {
@@ -907,7 +907,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     }
                 }
             };
@@ -920,7 +920,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one]
                 },
@@ -931,7 +931,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_two]
                 }
@@ -971,7 +971,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     }
                 }
             };
@@ -986,7 +986,7 @@ describe ('ExecutionService - ', function () {
                         description: "test",
                         id: 3,
                         summary: "My first test",
-                        uri: "trafficlights_definitions/3"
+                        uri: "testmanagement_definitions/3"
                     },
                     viewed_by: [user_one, user_two]
                 }

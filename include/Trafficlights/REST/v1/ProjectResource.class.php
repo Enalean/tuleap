@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -102,7 +102,7 @@ class ProjectResource {
     }
 
     /**
-     * @url OPTIONS {id}/trafficlights_campaigns
+     * @url OPTIONS {id}/testmanagement_campaigns
      */
     public function optionsCampaigns($id) {
         Header::allowOptionsGet();
@@ -113,7 +113,7 @@ class ProjectResource {
      *
      * Get testing campaigns for a given project
      *
-     * @url GET {id}/trafficlights_campaigns
+     * @url GET {id}/testmanagement_campaigns
      *
      * @param int $id Id of the project
      * @param string $query JSON object of search criteria properties {@from path}
@@ -167,7 +167,7 @@ class ProjectResource {
     }
 
     /**
-     * @url OPTIONS {id}/trafficlights_definitions
+     * @url OPTIONS {id}/testmanagement_definitions
      */
     public function optionsDefinitions($id) {
         Header::allowOptionsGet();
@@ -178,7 +178,7 @@ class ProjectResource {
      *
      * Get all test projects for a given project
      *
-     * @url GET {id}/trafficlights_definitions
+     * @url GET {id}/testmanagement_definitions
      *
      * @param int $id Id of the project
      * @param int $limit  Number of elements displayed per page {@from path}

@@ -31,7 +31,7 @@ class ProjectTest extends BaseTest {
 
     public function testGetCampaigns() {
 
-        $response  = $this->getResponse($this->client->get("projects/$this->project_id/trafficlights_campaigns"));
+        $response  = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_campaigns"));
         $campaigns = $response->json();
 
         $this->assertCount(3, $campaigns);
@@ -54,7 +54,7 @@ class ProjectTest extends BaseTest {
 
     public function testStatusOfExecutionsAreCorrect() {
 
-        $response  = $this->getResponse($this->client->get("projects/$this->project_id/trafficlights_campaigns"));
+        $response  = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_campaigns"));
         $campaigns = $response->json();
 
         $first_campaign = $campaigns[0];
@@ -73,7 +73,7 @@ class ProjectTest extends BaseTest {
 
     public function testGetDefinitions() {
 
-        $response    = $this->getResponse($this->client->get("projects/$this->project_id/trafficlights_definitions"));
+        $response    = $this->getResponse($this->client->get("projects/$this->project_id/testmanagement_definitions"));
         $definitions = $response->json();
 
         $this->assertEquals(sizeof($definitions), 3);
