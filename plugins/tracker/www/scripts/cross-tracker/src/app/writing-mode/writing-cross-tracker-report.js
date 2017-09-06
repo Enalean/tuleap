@@ -19,9 +19,10 @@
 
 import ExtendableError from 'extendable-error';
 
-export default class CrossTrackerReport {
+export default class WritingCrossTrackerReport {
     constructor() {
-        this.trackers = new Map();
+        this.trackers          = new Map();
+        this.number_of_tracker = 0;
     }
 
     addTracker(project, tracker) {
@@ -36,14 +37,30 @@ export default class CrossTrackerReport {
             project,
             tracker
         });
+        this.number_of_tracker = this.getNumberOfTrackers();
+    }
+
+    clearTrackers() {
+        this.trackers.clear();
+        this.number_of_tracker = this.getNumberOfTrackers();
     }
 
     removeTracker(tracker_id) {
         this.trackers.delete(tracker_id);
+        this.number_of_tracker = this.getNumberOfTrackers();
+    }
+
+    duplicateFromReadingReport(reading_report) {
+        this.trackers = new Map(reading_report.getTrackers());
+        this.number_of_tracker = this.getNumberOfTrackers();
     }
 
     hasTrackerWithId(tracker_id) {
         return this.trackers.has(tracker_id);
+    }
+
+    getNumberOfTrackers() {
+        return this.trackers.size;
     }
 }
 

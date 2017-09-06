@@ -20,25 +20,28 @@
 
 namespace Tuleap\Tracker\Widget;
 
-use Tuleap\Tracker\CrossTracker\CrossTrackerPresenter;
-
 class ProjectCrossTrackerSearchPresenter
 {
-    /**
-     * @var CrossTrackerPresenter
-     */
-    public $cross_tracker_presenter;
+    /** @var  int */
+    public $report_id;
     public $too_many_trackers_selected_error;
     public $could_not_fetch_list_of_trackers_error;
     public $could_not_fetch_list_of_projects_error;
+    public $put_report_error;
+    public $put_report_success;
+    public $fetch_report_error;
     public $project_label;
     public $tracker_label;
     public $add_button_label;
     public $please_choose_label;
+    public $cancel;
+    public $save_report;
+    public $search;
+    public $trackers_empty;
 
-    public function __construct(CrossTrackerPresenter $cross_tracker_presenter)
+    public function __construct($report_id)
     {
-        $this->cross_tracker_presenter = $cross_tracker_presenter;
+        $this->report_id = $report_id;
 
         $this->too_many_trackers_selected_error       = dgettext(
             'tuleap-tracker',
@@ -52,9 +55,25 @@ class ProjectCrossTrackerSearchPresenter
             'tuleap-tracker',
             'Error while fetching the list of projects you are member of'
         );
+        $this->fetch_report_error                     = dgettext(
+            'tuleap-tracker',
+            'Error while fetching the cross tracker report'
+        );
+        $this->put_report_error                       = dgettext(
+            'tuleap-tracker',
+            'Error while updating the cross tracker report'
+        );
+        $this->put_report_success                     = dgettext(
+            'tuleap-tracker',
+            'Report has been successfully saved'
+        );
         $this->project_label                          = dgettext('tuleap-tracker', 'Project');
         $this->tracker_label                          = dgettext('tuleap-tracker', 'Tracker');
         $this->add_button_label                       = dgettext('tuleap-tracker', 'Add');
         $this->please_choose_label                    = dgettext('tuleap-tracker', 'Please choose...');
+        $this->cancel                                 = dgettext('tuleap-tracker', 'Cancel');
+        $this->save_report                            = dgettext('tuleap-tracker', 'Save report');
+        $this->search                                 = dgettext('tuleap-tracker', 'Search');
+        $this->trackers_empty                         = dgettext('tuleap-tracker', 'No trackers selected');
     }
 }

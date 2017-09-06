@@ -25,24 +25,25 @@ export default class TrackerSelector {
     constructor(
         widget_content,
         tracker_selection,
-        cross_tracker_report,
+        writing_cross_tracker_report,
         error_displayer,
         loader_displayer
     ) {
-        this.widget_content           = widget_content;
-        this.tracker_selection        = tracker_selection;
-        this.cross_tracker_report     = cross_tracker_report;
-        this.error_displayer          = error_displayer;
-        this.loader_displayer         = loader_displayer;
-        this.form_trackers            = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers');
-        this.trackers_input           = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-input');
-        this.trackers                 = new Map();
+        this.widget_content               = widget_content;
+        this.tracker_selection            = tracker_selection;
+        this.writing_cross_tracker_report = writing_cross_tracker_report;
+        this.error_displayer              = error_displayer;
+        this.loader_displayer             = loader_displayer;
+        this.form_trackers                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers');
+        this.trackers_input               = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-input');
+        this.trackers                     = new Map();
         this.translated_too_many_trackers_message = this.widget_content.querySelector('.tracker-selector-error').textContent;
 
         this.disableSelect();
         this.listenProjectChange();
         this.listenTrackerChange();
         this.listenInputChange();
+        this.listenTrackersUpdated();
     }
 
     async loadTrackers(project_id) {
@@ -54,7 +55,7 @@ export default class TrackerSelector {
                 }
             });
             for (const {id, label} of json) {
-                const is_already_selected = this.cross_tracker_report.hasTrackerWithId(id);
+                const is_already_selected = this.writing_cross_tracker_report.hasTrackerWithId(id);
                 this.trackers.set(id, {
                     id,
                     label,
@@ -64,23 +65,14 @@ export default class TrackerSelector {
         } catch (error) {
             this.error_displayer.displayError(this.translated_too_many_trackers_message);
         }
-
-        this.displayTrackers();
-        this.enableSelect();
-
-        this.loader_displayer.hide();
-    }
-
-    disableOption(tracker_to_disable) {
-        const tracker    = this.trackers.get(tracker_to_disable.id);
-        tracker.disabled = true;
-        this.displayTrackers();
     }
 
     enableOption(tracker_id_to_enable) {
         const tracker    = this.trackers.get(tracker_id_to_enable);
-        tracker.disabled = false;
-        this.displayTrackers();
+        if (tracker) {
+            tracker.disabled = false;
+        }
+        this.displayOptions();
     }
 
     disableSelect() {
@@ -93,7 +85,7 @@ export default class TrackerSelector {
         this.form_trackers.classList.remove('tlp-form-element-disabled');
     }
 
-    displayTrackers() {
+    displayOptions() {
         const trackers = [...this.trackers.values()];
         const template = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-placeholder').textContent;
 
@@ -105,11 +97,26 @@ export default class TrackerSelector {
         [...this.trackers_input.children].forEach((child) => child.remove());
     }
 
+    updateOptions() {
+        this.clearOptions();
+
+        for (const tracker of this.trackers.values()) {
+            tracker.disabled = this.writing_cross_tracker_report.hasTrackerWithId(tracker.id);
+        }
+
+        this.displayOptions();
+    }
+
     listenProjectChange() {
         const projectChanged = (property_name, old_value, new_value) => {
-            this.trackers.clear();
             this.tracker_selection.clearTrackerSelection();
-            this.loadTrackers(new_value.id);
+            this.trackers.clear();
+
+            this.loadTrackers(new_value.id).then(() => {
+                this.updateOptions();
+                this.enableSelect();
+                this.loader_displayer.hide();
+            });
         };
 
         watch(this.tracker_selection, 'selected_project', projectChanged);
@@ -135,5 +142,12 @@ export default class TrackerSelector {
         };
 
         watch(this.trackers_input, 'value', inputChanged);
+    }
+
+    listenTrackersUpdated() {
+        const watcher = () => {
+            this.updateOptions();
+        };
+        watch(this.writing_cross_tracker_report, 'number_of_tracker', watcher);
     }
 }

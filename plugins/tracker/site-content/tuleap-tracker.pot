@@ -57,10 +57,16 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
+msgid "Error while fetching the cross tracker report"
+msgstr ""
+
 msgid "Error while fetching the list of projects you are member of"
 msgstr ""
 
 msgid "Error while fetching the list of trackers of this project"
+msgstr ""
+
+msgid "Error while updating the cross tracker report"
 msgstr ""
 
 #, php-format
@@ -73,6 +79,9 @@ msgid "No element selected."
 msgstr ""
 
 msgid "No notification set"
+msgstr ""
+
+msgid "No trackers selected"
 msgstr ""
 
 msgid "Notification successfully deleted."
@@ -96,7 +105,16 @@ msgstr ""
 msgid "Renderer id"
 msgstr ""
 
+msgid "Report has been successfully saved"
+msgstr ""
+
 msgid "Save"
+msgstr ""
+
+msgid "Save report"
+msgstr ""
+
+msgid "Search"
 msgstr ""
 
 msgid "Search into multiple trackers and multiple projects."

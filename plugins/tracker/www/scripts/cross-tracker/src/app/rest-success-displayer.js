@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class RestErrorDisplayer {
+export default class RestSuccessDisplayer {
     constructor(widget_content) {
-        this.error_element = widget_content.querySelector('.dashboard-widget-content-cross-tracker-error');
-        this.tlp_alert     = this.error_element.children[0];
+        this.success_element = widget_content.querySelector('.dashboard-widget-content-cross-tracker-success');
+        this.tlp_alert       = this.success_element.children[0];
     }
 
-    displayError(error_message) {
-        this.tlp_alert.textContent = error_message;
-        this.error_element.classList.add('shown');
+    displaySuccess(success_message) {
+        this.tlp_alert.textContent = success_message;
+        this.success_element.classList.add('shown');
     }
 
-    hideError() {
-        this.error_element.classList.remove('shown');
+    hideSuccess() {
+        this.success_element.classList.remove('shown');
     }
 }
