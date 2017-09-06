@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights;
+namespace Tuleap\TestManagement;
 
 use Plugin;
 use Codendi_Request;
@@ -137,7 +137,7 @@ class Router {
      *
      * @param Codendi_Request $request
      *
-     * @return Service
+     * @return \Service
      */
     private function getService(Codendi_Request $request) {
         if ($this->service == null) {

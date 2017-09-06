@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
@@ -30,7 +30,7 @@ use Tracker_ChangesetNotCreatedException;
 use Tracker_CommentNotStoredException;
 use Tracker_AfterSaveException;
 use Tracker_ChangesetCommitException;
-use Tuleap\Trafficlights\LabelFieldNotFoundException;
+use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_URLVerification;
@@ -43,14 +43,14 @@ use Tracker_FormElementFactory;
 use ProjectManager;
 use Tuleap\User\REST\UserRepresentation;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\Trafficlights\ArtifactDao;
-use Tuleap\Trafficlights\ArtifactFactory;
-use Tuleap\Trafficlights\TrafficlightsArtifactRightsPresenter;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\TrafficlightsArtifactRightsPresenter;
 use UserManager;
 use PFUser;
-use Tuleap\Trafficlights\ConfigConformanceValidator;
-use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\Dao;
+use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\Dao;
 use Tracker_Artifact;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityManager;
@@ -219,7 +219,7 @@ class CampaignsResource {
      *
      * @param int $id Id of the campaign
      *
-     * @return Tuleap\Trafficlights\REST\v1\CampaignRepresentation
+     * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
      */
     protected function getId($id) {
         $this->optionsId($id);
@@ -248,7 +248,7 @@ class CampaignsResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\Trafficlights\REST\v1\ExecutionRepresentation}
+     * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
      */
     protected function getExecutions($id, $limit = 10, $offset = 0) {
         $this->optionsExecutions($id);
@@ -280,7 +280,7 @@ class CampaignsResource {
      * @param array   $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
      * @param array   $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
      *
-     * @return array {@type Tuleap\Trafficlights\REST\v1\ExecutionRepresentation}
+     * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
      */
     protected function patchExecutions($id, $uuid, $definition_ids_to_add, $execution_ids_to_remove)
     {
@@ -446,7 +446,7 @@ class CampaignsResource {
      * @param int     $id     Id of the campaign
      * @param string  $label  New label of the campaign {@from body}
      *
-     * @return Tuleap\Trafficlights\REST\v1\CampaignRepresentation
+     * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
      *
      * @throws 400
      * @throws 403

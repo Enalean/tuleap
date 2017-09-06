@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_Artifact;
 use Tracker_FormElementFactory;
-use Tuleap\Trafficlights\REST\v1\ExecutionRepresentation;
 use PFUser;
 
 class CampaignRepresentation {

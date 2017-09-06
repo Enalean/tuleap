@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights;
+namespace Tuleap\TestManagement;
 
 use PFUser;
-use Codendi_HTMLPurifier;
 use Tuleap\User\REST\UserRepresentation;
-use Tuleap\Trafficlights\REST\v1\MilestoneRepresentation;
-use Planning_Milestone;
+use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use stdClass;
 use ForgeConfig as TuleapConfig;
 

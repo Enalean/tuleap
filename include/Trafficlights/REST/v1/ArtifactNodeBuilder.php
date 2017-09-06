@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_Artifact;
 use PFUser;

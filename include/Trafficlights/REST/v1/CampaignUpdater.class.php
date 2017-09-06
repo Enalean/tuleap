@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
@@ -28,7 +28,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Trafficlights\LabelFieldNotFoundException;
+use Tuleap\TestManagement\LabelFieldNotFoundException;
 
 class CampaignUpdater
 {
@@ -54,14 +54,14 @@ class CampaignUpdater
      *
      * @return Tracker_Artifact_Changeset
      *
-     * @throws Tracker_Exception
-     * @throws Tracker_NoChangeException
-     * @throws Tracker_FormElement_InvalidFieldException
-     * @throws Tracker_FormElement_InvalidFieldValueException
-     * @throws Tracker_ChangesetNotCreatedException
-     * @throws Tracker_CommentNotStoredException
-     * @throws Tracker_AfterSaveException
-     * @throws Tracker_ChangesetCommitException
+     * @throws \Tracker_Exception
+     * @throws \Tracker_NoChangeException
+     * @throws \Tracker_FormElement_InvalidFieldException
+     * @throws \Tracker_FormElement_InvalidFieldValueException
+     * @throws \Tracker_ChangesetNotCreatedException
+     * @throws \Tracker_CommentNotStoredException
+     * @throws \Tracker_AfterSaveException
+     * @throws \Tracker_ChangesetCommitException
      * @throws LabelFieldNotFoundException
      */
     public function updateCampaign(PFUser $user, Tracker_Artifact $campaign, $label)

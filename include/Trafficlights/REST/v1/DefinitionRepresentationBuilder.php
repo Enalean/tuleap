@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
-use Tuleap\Trafficlights\ConfigConformanceValidator;
+use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tracker_Artifact;
 use PFUser;
 use Tracker_FormElementFactory;

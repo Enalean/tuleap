@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+
 require_once 'common/autoload.php';
 
-use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\Dao;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\Dao;
 
 class TrafficlightsDataBuilder extends REST_TestDataBuilder
 {

@@ -18,16 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
-use Trafficlights_Tracker_ArtifactFactory;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
-use Tuleap\Trafficlights\ArtifactDao;
-use Tuleap\Trafficlights\ArtifactFactory;
-use Tuleap\Trafficlights\MalformedQueryParameterException;
-use Tuleap\Trafficlights\QueryToCriterionConverter;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\MalformedQueryParameterException;
+use Tuleap\TestManagement\QueryToCriterionConverter;
 use UserManager;
 use TrackerFactory;
 use Tracker_ArtifactFactory;
@@ -35,10 +34,10 @@ use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use Tracker_URLVerification;
 use PFUser;
-use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\ConfigConformanceValidator;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\ConfigConformanceValidator;
 use ProjectManager;
-use Tuleap\Trafficlights\Dao;
+use Tuleap\TestManagement\Dao;
 
 class ProjectResource {
 
@@ -218,7 +217,7 @@ class ProjectResource {
         return $result['definitions'];
     }
 
-    /** @return Tracker_Report */
+    /** @return \Tracker_Report */
     private function getReportById(PFUser $user, $id) {
         $store_in_session = false;
         $report = Tracker_ReportFactory::instance()->getReportById(

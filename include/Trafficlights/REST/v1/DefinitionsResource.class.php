@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tuleap\REST\Header;
-use Tuleap\Trafficlights\ArtifactDao;
-use Tuleap\Trafficlights\ArtifactFactory;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
 use UserManager;
 use Tracker_FormElementFactory;
-use Tuleap\Trafficlights\ConfigConformanceValidator;
-use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\Dao;
+use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\Dao;
 
 class DefinitionsResource {
 
@@ -81,7 +81,7 @@ class DefinitionsResource {
      *
      * @param int $id Id of the definition
      *
-     * @return {@type Tuleap\Trafficlights\REST\v1\DefinitionRepresentation}
+     * @return {@type Tuleap\TestManagement\REST\v1\DefinitionRepresentation}
      */
     protected function getId($id) {
         $user       = $this->user_manager->getCurrentUser();
