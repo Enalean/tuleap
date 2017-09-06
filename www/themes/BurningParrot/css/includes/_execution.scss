@@ -3,7 +3,10 @@
     flex-direction: column;
     height: calc(100vh - #{$navbar-height} - 75px);
     overflow: hidden;
-    padding-top: 0;
+}
+
+.breadcrumb + #trafficlights-app .test-campaign {
+    padding: 0 $tlp-spacing $tlp-spacing;
 }
 
 .test-campaign-header {
