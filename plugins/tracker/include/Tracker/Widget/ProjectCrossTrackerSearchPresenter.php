@@ -41,7 +41,7 @@ class ProjectCrossTrackerSearchPresenter
     public $save_report;
     public $search;
     public $trackers_empty;
-    public $artifact_id_label;
+    public $artifact_label;
     public $summary_label;
     public $status_label;
     public $last_update_label;
@@ -92,8 +92,7 @@ class ProjectCrossTrackerSearchPresenter
         $this->save_report                            = dgettext('tuleap-tracker', 'Save report');
         $this->search                                 = dgettext('tuleap-tracker', 'Search');
         $this->trackers_empty                         = dgettext('tuleap-tracker', 'No trackers selected');
-        $this->artifact_id_label                      = dgettext('tuleap-tracker', 'ID');
-        $this->summary_label                          = dgettext('tuleap-tracker', 'Summary');
+        $this->artifact_label                         = dgettext('tuleap-tracker', 'Artifact');
         $this->status_label                           = dgettext('tuleap-tracker', 'Status');
         $this->last_update_label                      = dgettext('tuleap-tracker', 'Last update date');
         $this->submitted_by_label                     = dgettext('tuleap-tracker', 'Submitted by');
