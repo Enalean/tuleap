@@ -165,7 +165,8 @@ class Group {
             return $this->data_array['unix_group_name'];
         }
 
-	function getPublicName() {
+    /** @deprecated */
+    public function getPublicName() {
 	  return $this->data_array['group_name'];
 	}
 

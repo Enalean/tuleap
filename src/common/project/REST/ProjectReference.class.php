@@ -42,7 +42,7 @@ class ProjectReference
     {
         if ($project instanceof Project) {
             $this->id    = (int) $project->getId();
-            $this->label = (string) $project->getPublicName();
+            $this->label = (string) $project->getUnconvertedPublicName();
         } else {
             $this->id = (int)$project;
         }
