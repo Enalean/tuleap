@@ -18,15 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 namespace Tuleap\Tracker\Widget;
 
-use ForgeConfig;
+use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Tracker\CrossTracker\CrossTrackerPresenter;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
-use Tuleap\Tracker\CrossTracker\CrossTrackerSaver;
 use Widget;
 
 class ProjectCrossTrackerSearch extends Widget
@@ -49,9 +46,14 @@ class ProjectCrossTrackerSearch extends Widget
             TRACKER_TEMPLATE_DIR . '/widgets'
         );
 
+        $request = HTTPRequest::instance();
+
         return $renderer->renderToString(
             'project-cross-tracker-search',
-            new ProjectCrossTrackerSearchPresenter($this->content_id)
+            new ProjectCrossTrackerSearchPresenter(
+                $this->content_id,
+                $request->getCurrentUser()
+            )
         );
     }
 

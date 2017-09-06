@@ -9,6 +9,7 @@
     "extendable-error": "^0.1.5",
     "moment": "^2.18.1",
     "mustache": "^2.3.0",
+    "phptomoment": "0.0.2",
     "wrist": "0.0.3"
   },
   "devDependencies": {
