@@ -11,10 +11,10 @@
             </td>
             <td>{{ status }}</td>
             <td>{{ formatted_last_update_date }}</td>
-            <td>{{ submitted_by.display_name }}</td>
+            <td><a href="{{ submitted_by.user_url }}">{{ submitted_by.display_name }}</a></td>
             <td>
                 {{# assigned_to }}
-                    {{ display_name }}
+                    <a href="{{ user_url }}">{{ display_name }}</a>
                 {{/ assigned_to }}
             </td>
         </tr>
