@@ -20,6 +20,17 @@
  */
 class TroveCatDao extends DataAccessObject
 {
+    public function getProjectCategories($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT trove_cat.trove_cat_id, fullpath, fullpath_ids
+                FROM trove_cat
+                  JOIN trove_group_link ON (trove_group_link.trove_cat_id = trove_cat.trove_cat_id)
+                WHERE trove_group_link.group_id = $project_id
+                ORDER BY trove_cat.fullpath";
+        return $this->retrieve($sql);
+    }
     public function getMandatoryParentCategoriesUnderRoot()
     {
         $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);

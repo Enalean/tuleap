@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -18,39 +19,23 @@
  *
  */
 
-#softwaremap-list {
-    display: flex;
+namespace Tuleap\Trove;
 
-    align-items: flex-start;
-}
+class TroveCatPresenter
+{
 
-#softwaremap-list-filter {
-    width: 400px;
-    margin: 0 $tlp-spacing 0 0;
-}
+    public $id;
+    public $name;
+    public $is_last = false;
 
-.softwaremap-list-filter-nb {
-    margin: 0 0 0 ($tlp-spacing / 2);
-}
+    public function __construct($id, $name)
+    {
+        $this->id = $id;
+        $this->name = $name;
+    }
 
-.softwaremap-list-selected {
-    font-weight: bold;
-}
-
-#softwaremap-list-results {
-    width: 100%;
-}
-
-.softwaremap-list-results-trovecat {
-    color: $tlp-ui-dimmed;
-}
-
-.softwaremap-list-results-trovecat-icon {
-    margin: 0 3px 0 0;
-    color: $tlp-theme-color;
-}
-
-.softwaremap-list-results-trovecat-not-categorized {
-    color: $tlp-ui-dimmed;
-    font-style: italic;
+    public function toggleLast()
+    {
+        $this->is_last = true;
+    }
 }

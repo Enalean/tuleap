@@ -198,6 +198,9 @@ msgstr "Barre de menu"
 msgid "News"
 msgstr "Annonces"
 
+msgid "Not categorized"
+msgstr "Non catégorisé"
+
 msgid "Open \"Help\" dropdown"
 msgstr "Affiche l'onglet \"Aide\""
 
