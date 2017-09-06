@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -231,7 +231,7 @@ class CampaignsResource {
     }
 
     /**
-     * @url OPTIONS {id}/trafficlights_executions
+     * @url OPTIONS {id}/testmanagement_executions
      */
     public function optionsExecutions($id) {
         Header::allowOptionsGet();
@@ -242,7 +242,7 @@ class CampaignsResource {
      *
      * Get executions of a given campaign
      *
-     * @url GET {id}/trafficlights_executions
+     * @url GET {id}/testmanagement_executions
      *
      * @param int $id Id of the campaign
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -273,7 +273,7 @@ class CampaignsResource {
      *
      * Create new test executions and unlink some test executions for a campaign
      *
-     * @url PATCH {id}/trafficlights_executions
+     * @url PATCH {id}/testmanagement_executions
      *
      * @param int     $id                      Id of the campaign
      * @param string  $uuid                    UUID of current user {@from body}

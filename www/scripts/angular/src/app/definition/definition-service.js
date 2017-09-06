@@ -33,7 +33,7 @@ function DefinitionService(
         var data = $q.defer();
 
         rest.one('projects', project_id)
-            .all('trafficlights_definitions')
+            .all('testmanagement_definitions')
             .getList({
                 limit: limit,
                 offset: offset,
@@ -84,7 +84,7 @@ function DefinitionService(
 
     function getDefinitionById(artifact_id) {
         return rest
-            .one('trafficlights_definitions', artifact_id)
+            .one('testmanagement_definitions', artifact_id)
             .get()
             .then(function(response) {
                 return response.data;

@@ -14,7 +14,7 @@ function ArtifactLinksGraphRestService(Restangular) {
 
     function getArtifactGraph(artifact_id) {
         return rest
-            .one('trafficlights_nodes', artifact_id)
+            .one('testmanagement_nodes', artifact_id)
             .get()
             .then(function(response) {
                 return response.data;

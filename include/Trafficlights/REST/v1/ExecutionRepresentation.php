@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use Tuleap\REST\JsonCast;
 
 class ExecutionRepresentation {
 
-    const ROUTE = 'trafficlights_executions';
+    const ROUTE = 'testmanagement_executions';
 
     const FIELD_RESULTS        = 'results';
     const FIELD_ASSIGNED_TO    = 'assigned_to';

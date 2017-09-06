@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,10 +30,10 @@ class Trafficlights_REST_ResourcesInjector {
 
     public function populate(Luracast\Restler\Restler $restler) {
         $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\ProjectResource', 'projects');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\CampaignsResource', 'trafficlights_campaigns');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\DefinitionsResource', 'trafficlights_definitions');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\ExecutionsResource', 'trafficlights_executions');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\NodeResource', 'trafficlights_nodes');
+        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\CampaignsResource', 'testmanagement_campaigns');
+        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\DefinitionsResource', 'testmanagement_definitions');
+        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\ExecutionsResource', 'testmanagement_executions');
+        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\NodeResource', 'testmanagement_nodes');
     }
 
     public function declareProjectResource(array &$resources, Project $project) {

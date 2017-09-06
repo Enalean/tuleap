@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class ExecutionsTest extends BaseTest {
         $execution = $this->getLastExecutionForValid73Campaign();
         $this->assertEquals($initial_value, $execution['status']);
 
-        $response = $this->getResponse($this->client->put('trafficlights_executions/'. $execution['id'], null, json_encode(array(
+        $response = $this->getResponse($this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
             'status' => $new_value,
             'time'   => 0
         ))));
@@ -45,7 +45,7 @@ class ExecutionsTest extends BaseTest {
         $updated_execution = $this->getLastExecutionForValid73Campaign();
         $this->assertEquals($new_value, $updated_execution['status']);
 
-        $this->getResponse($this->client->put('trafficlights_executions/'. $execution['id'], null, json_encode(array(
+        $this->getResponse($this->client->put('testmanagement_executions/'. $execution['id'], null, json_encode(array(
             'status' => $initial_value,
             'time'   => 0
         ))));
@@ -60,7 +60,7 @@ class ExecutionsTest extends BaseTest {
 
         $execution = $this->getLastExecutionForValid73Campaign();
         $response  = $this->getResponse($this->client->patch(
-            'trafficlights_executions/'. $execution['id'] . '/issues',
+            'testmanagement_executions/'. $execution['id'] . '/issues',
             null,
             json_encode(array(
                 'issue_id' => $issue_id,
@@ -86,7 +86,7 @@ class ExecutionsTest extends BaseTest {
     {
         $campaign = $this->getValid73Campaign();
 
-        $all_executions_request  = $this->client->get('trafficlights_campaigns/'. $campaign['id'] . '/trafficlights_executions');
+        $all_executions_request  = $this->client->get('testmanagement_campaigns/'. $campaign['id'] . '/testmanagement_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
 
         $executions     = $all_executions_response->json();

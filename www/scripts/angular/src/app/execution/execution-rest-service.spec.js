@@ -36,7 +36,7 @@ describe ('ExecutionRestService - ', function () {
         ];
 
         mockBackend
-            .expectGET('/api/v1/trafficlights_campaigns/1/trafficlights_executions?limit=10&offset=0')
+            .expectGET('/api/v1/testmanagement_campaigns/1/testmanagement_executions?limit=10&offset=0')
             .respond (JSON.stringify(response));
 
         var promise = ExecutionRestService.getRemoteExecutions(1, 10, 0);
@@ -55,7 +55,7 @@ describe ('ExecutionRestService - ', function () {
         };
 
         mockBackend
-            .expectPOST('/api/v1/trafficlights_executions')
+            .expectPOST('/api/v1/testmanagement_executions')
             .respond(execution);
 
         var promise = ExecutionRestService.postTestExecution("notrun", "CentOS 5 - PHP 5.1");
@@ -78,7 +78,7 @@ describe ('ExecutionRestService - ', function () {
         };
 
         mockBackend
-            .expectPUT('/api/v1/trafficlights_executions/4?results=nothing&status=passed&time=1')
+            .expectPUT('/api/v1/testmanagement_executions/4?results=nothing&status=passed&time=1')
             .respond(execution);
 
         var promise = ExecutionRestService.putTestExecution(4, 'passed', 1, 'nothing');
@@ -92,7 +92,7 @@ describe ('ExecutionRestService - ', function () {
 
     it("changePresenceOnTestExecution() - ", function() {
         mockBackend
-            .expectPATCH('/api/v1/trafficlights_executions/9/presences')
+            .expectPATCH('/api/v1/testmanagement_executions/9/presences')
             .respond();
 
         var promise = ExecutionRestService.changePresenceOnTestExecution(9, 4);
@@ -134,7 +134,7 @@ describe ('ExecutionRestService - ', function () {
             }
         };
         mockBackend
-            .expectPATCH('/api/v1/trafficlights_executions/100/issues', matchPayload)
+            .expectPATCH('/api/v1/testmanagement_executions/100/issues', matchPayload)
             .respond();
 
         var promise = ExecutionRestService.linkIssue(issueId, execution);

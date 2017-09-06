@@ -57,7 +57,7 @@ abstract class BaseTest extends RestBase {
     }
 
     protected function getValid73Campaign() {
-        $all_campaigns_request  = $this->client->get("projects/$this->project_id/trafficlights_campaigns");
+        $all_campaigns_request  = $this->client->get("projects/$this->project_id/testmanagement_campaigns");
         $all_campaigns_response = $this->getResponse($all_campaigns_request);
         $campaigns = $all_campaigns_response->json();
 

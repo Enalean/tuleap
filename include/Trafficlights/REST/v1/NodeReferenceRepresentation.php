@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ use Tuleap\REST\JsonCast;
 
 class NodeReferenceRepresentation {
 
-    const ROUTE = 'trafficlights_nodes';
+    const ROUTE = 'testmanagement_nodes';
 
     const NATURE_ARTIFACT = 'artifact';
 
