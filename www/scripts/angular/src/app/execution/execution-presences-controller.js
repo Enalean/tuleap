@@ -11,6 +11,7 @@ function ExecutionPresencesCtrl(
 ) {
 
     modal_model.presences.forEach(function(presence) {
+        presence.score = presence.score || 0;
         presence.scoreView = Math.max(presence.score, 0);
     });
     var ranking = _.sortBy(modal_model.presences, 'score').reverse();
