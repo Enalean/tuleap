@@ -1,10 +1,24 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 require_once('pre.php');
 require_once('../admin/project_admin_utils.php');
 require_once('./project_export_utils.php');
@@ -99,31 +113,36 @@ switch ($export) {
      require('./user_groups_export.php');
      site_project_footer( array() );
      break;
-     
- case 'project_db':
-        if ($project->usesTracker()) {
-            project_admin_header(array('title' => $pg_title));
-            if ($project->usesTracker()) {
-                require('./artifact_export.php');
-                require('./artifact_history_export.php');
-                require('./artifact_deps_export.php');
-            }
 
-            echo '<p>' . $Language->getText('project_export_index', 'proj_db_success') . '</p>';
-            display_db_params();
-            site_project_footer(array());
-        } else {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_export_index', 'proj_db_no_data'), CODENDI_PURIFIER_DISABLED);
-            $GLOBALS['Response']->redirect('index.php?group_id='.$group_id);
-        }
-        break;
+ case 'project_db':
+     if (ForgeConfig::get('sys_enable_deprecated_feature_database_export')) {
+         if ($project->usesTracker()) {
+             project_admin_header(array('title' => $pg_title));
+             if ($project->usesTracker()) {
+                 require('./artifact_export.php');
+                 require('./artifact_history_export.php');
+                 require('./artifact_deps_export.php');
+             }
+
+             echo '<p>' . $Language->getText('project_export_index', 'proj_db_success') . '</p>';
+             display_db_params();
+             site_project_footer(array());
+         } else {
+             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_export_index', 'proj_db_no_data'),
+                 CODENDI_PURIFIER_DISABLED);
+             $GLOBALS['Response']->redirect('index.php?group_id=' . $group_id);
+         }
+     } else {
+         exit_permission_denied();
+     }
+    break;
 
     default:
      project_admin_header(array('title'=>$pg_title, 'help' => 'project-admin.html#project-data-export'));
      // Display the welcome screen
-
-     echo '
-<p> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('project-admin.html#project-data-export',false,$Language->getText('project_export_index','online_help')))).'</p>';
+     if (ForgeConfig::get('sys_enable_deprecated_feature_database_export')) {
+         echo '<p> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('project-admin.html#project-data-export',false,$Language->getText('project_export_index','online_help')))).'</p>';
+     }
 
      echo '
 <h3> '.$Language->getText('project_export_index','export_to_csv_hdr',array(help_button('project-admin.html#text-file-export'))).'</h3>';
@@ -241,26 +260,30 @@ switch ($export) {
         }
         echo ' </td>';
         echo '</tr>';
-        $iu ++;   
+        $iu ++;
     }
-    
+
 
     echo '</TABLE>';
-    echo '
+    if (ForgeConfig::get('sys_enable_deprecated_feature_database_export')) {
+        echo '
 <br>
-<h3>'.$Language->getText('project_export_index','direct_db_access').' '.help_button('project-admin.html#direct-database-access').'</h3>';
+<h3>' . $Language->getText('project_export_index',
+                'direct_db_access') . ' ' . help_button('project-admin.html#direct-database-access') . '</h3>';
 
-    if ($project->usesTracker()) {
-        echo '<ol>';
+        if ($project->usesTracker()) {
+            echo '<ol>';
 
-        echo '<li><b><a href="?group_id='.$group_id.'&export=project_db">'.$Language->getText('project_export_index','generate_full_db')."\n";
-        echo '<li>'.$Language->getText('project_export_index','db_connection_params').' ';
+            echo '<li><b><a href="?group_id=' . $group_id . '&export=project_db">' . $Language->getText('project_export_index',
+                    'generate_full_db') . "\n";
+            echo '<li>' . $Language->getText('project_export_index', 'db_connection_params') . ' ';
 
-        echo '</ol>';
+            echo '</ol>';
 
-        display_db_params ();
-    } else {
-        echo '<p>'.$Language->getText('project_export_index', 'proj_db_no_data').'</p>';
+            display_db_params();
+        } else {
+            echo '<p>' . $Language->getText('project_export_index', 'proj_db_no_data') . '</p>';
+        }
     }
 
     site_project_footer( array() );
