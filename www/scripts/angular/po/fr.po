@@ -9,8 +9,20 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "1 test will be added"
+msgid_plural "{{ $count }} tests will be added"
+msgstr[0] "1 test sera ajouté"
+msgstr[1] "{{ $count }} tests seront ajoutés"
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "1 test will be removed"
+msgid_plural "{{ $count }} tests will be removed"
+msgstr[0] "1 test sera supprimé"
+msgstr[1] "{{ $count }} tests seront supprimés"
 
 #: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
@@ -256,25 +268,6 @@ msgstr "par"
 msgid "has been successfully linked to this test."
 msgstr "a bien été lié au test."
 
-#: src/app/campaign/campaign-edit.tpl.html
-msgid ""
-"{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} "
-"will be added"
-msgstr ""
-"{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} "
-"seront ajoutés"
-
 #: src/app/execution/execution-presences.tpl.html
 msgid "{{ modal.title }} test campaign scores"
 msgstr "Scores pour la campagne de tests {{ modal.title }}"
-
-#: src/app/campaign/campaign-edit.tpl.html
-msgid ""
-"{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} "
-"will be removed"
-msgstr ""
-"{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} "
-"seront supprimés"
-
-#~ msgid "Invalid artifact id."
-#~ msgstr "Id artefact invalide."

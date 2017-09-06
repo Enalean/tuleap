@@ -97,11 +97,21 @@
 
     <div class="tlp-modal-footer">
         <div class="edit-campaign-tests-diff">
-            <div class="tlp-badge-success tlp-badge-outline" ng-if="addedTests().length > 0" translate>
-                {{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} will be added
+            <div class="tlp-badge-success tlp-badge-outline"
+                ng-if="addedTests().length > 0"
+                translate
+                translate-n="addedTests().length"
+                translate-plural="{{ $count }} tests will be added"
+            >
+                1 test will be added
             </div>
-            <div class="tlp-badge-danger tlp-badge-outline" ng-if="removedTests().length > 0" translate>
-                {{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} will be removed
+            <div class="tlp-badge-danger tlp-badge-outline"
+                ng-if="removedTests().length > 0"
+                translate
+                translate-n="removedTests().length"
+                translate-plural="{{ $count }} tests will be removed"
+            >
+                1 test will be removed
             </div>
         </div>
         <button type="button"

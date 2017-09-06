@@ -5,6 +5,18 @@ msgstr ""
 "Project-Id-Version: \n"
 
 #: src/app/campaign/campaign-edit.tpl.html
+msgid "1 test will be added"
+msgid_plural "{{ $count }} tests will be added"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/app/campaign/campaign-edit.tpl.html
+msgid "1 test will be removed"
+msgid_plural "{{ $count }} tests will be removed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/app/campaign/campaign-edit.tpl.html
 #: src/app/campaign/campaign-new.tpl.html
 msgid "A campaign label is required"
 msgstr ""
@@ -243,14 +255,6 @@ msgstr ""
 msgid "has been successfully linked to this test."
 msgstr ""
 
-#: src/app/campaign/campaign-edit.tpl.html
-msgid "{{ addedTests().length }} test{{ addedTests().length !== 1 ? 's' : '' }} will be added"
-msgstr ""
-
 #: src/app/execution/execution-presences.tpl.html
 msgid "{{ modal.title }} test campaign scores"
-msgstr ""
-
-#: src/app/campaign/campaign-edit.tpl.html
-msgid "{{ removedTests().length }} test{{ removedTests().length !== 1 ? 's' : '' }} will be removed"
 msgstr ""
