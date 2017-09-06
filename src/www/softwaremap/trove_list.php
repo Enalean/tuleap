@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('trove.php');
 
 if ($GLOBALS['sys_use_trove'] == 0) {
@@ -198,7 +198,7 @@ while ($row = db_fetch_array($res_grp)) {
     $cat = trove_getcatlisting($row['group_id'], 1);
 
     $projects[]= array(
-        'longname'    => $row['group_name'],
+        'longname'    => util_unconvert_htmlspecialchars($row['group_name']),
         'shortname'   => strtolower($row['unix_group_name']),
         'description' => $row['short_description'],
         'categories'  => $cat,
