@@ -145,4 +145,27 @@ class CrossTrackerReportDao extends DataAccessObject
 
         $this->update($sql);
     }
+
+
+    public function searchCrossTrackerWidgetByCrossTrackerReportId($content_id)
+    {
+        $content_id = $this->da->escapeInt($content_id);
+
+        $sql = "SELECT dashboard_id, dashboard_type, user_id, project_dashboards.project_id
+                  FROM plugin_tracker_cross_tracker_report
+                INNER JOIN dashboards_lines_columns_widgets AS widget
+                    ON plugin_tracker_cross_tracker_report.id = widget.content_id
+                INNER JOIN dashboards_lines_columns
+                    ON widget.column_id = dashboards_lines_columns.id
+                INNER JOIN dashboards_lines
+                    ON dashboards_lines_columns.line_id = dashboards_lines.id
+                LEFT JOIN user_dashboards
+                    ON user_dashboards.id = dashboards_lines.dashboard_id
+                LEFT JOIN project_dashboards
+                    ON project_dashboards.id = dashboards_lines.dashboard_id
+                WHERE plugin_tracker_cross_tracker_report.id = $content_id
+                  AND widget.name = 'crosstrackersearch';";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }
