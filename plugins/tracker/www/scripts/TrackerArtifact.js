@@ -1,6 +1,6 @@
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
-* Copyright (c) Enalean, 2016. All Rights Reserved.
+* Copyright (c) Enalean, 2016-2017. All Rights Reserved.
 *
 * Originally written by Nicolas Terray, 2008
 *
@@ -59,7 +59,7 @@ document.observe('dom:loaded', function () {
             new codendi.Tooltip(
                 div.up()
                    .previous()
-                   .down('a.direct-link-to-tracker'),
+                   .down('a.link-to-tracker'),
                 '')
            .createTooltip(
                div.remove()

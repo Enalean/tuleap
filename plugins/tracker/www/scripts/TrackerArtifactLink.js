@@ -1,23 +1,23 @@
 /*
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2008
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *
@@ -579,7 +579,7 @@ document.observe('dom:loaded', function () {
         //links to artifacts load in a new browser tab/window
         $$('#tracker-link-artifact-slow-way-content a.cross-reference',
             '#tracker-link-artifact-slow-way-content a.direct-link-to-artifact',
-            '#tracker-link-artifact-slow-way-content a.direct-link-to-user').each(function (a) {
+            '#tracker-link-artifact-slow-way-content a.link-to-user').each(function (a) {
             a.target = '_blank';
             a.rel = 'noreferrer';
         });
@@ -874,7 +874,7 @@ document.observe('dom:loaded', function () {
                     //links to artifacts load in a new browser tab/window
                     $$('#tracker-link-artifact-fast-ways a.cross-reference',
                         '#tracker-link-artifact-fast-ways a.direct-link-to-artifact',
-                        '#tracker-link-artifact-fast-ways a.direct-link-to-user').each(function (a) {
+                        '#tracker-link-artifact-fast-ways a.link-to-user').each(function (a) {
                         a.target = '_blank';
                         a.rel = 'noreferrer';
                     });
