@@ -155,11 +155,11 @@
 
                 &:hover {
                     text-decoration: none;
-
-                    &::after {
-                        content: '\f057'; // cross
-                    }
                 }
+            }
+
+            &:hover > .select2-search-choice-close::after {
+                content: '\f057'; // cross
             }
         }
     }
