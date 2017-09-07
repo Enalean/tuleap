@@ -47,6 +47,7 @@ export default class TrackerQueryLoaderController {
 
     displayArtifacts(artifacts) {
         this.table_results.insertAdjacentHTML('beforeEnd', render(query_result_rows_template, artifacts));
+        window.codendi.Tooltip.load(this.table_results);
     }
 
     clearResultRows() {
@@ -83,6 +84,7 @@ export default class TrackerQueryLoaderController {
             this.updateArtifacts(formatted_artifacts);
         } catch (error) {
             this.error_displayer.displayError(this.translated_get_artifacts_query_message_error);
+            throw error;
         } finally {
             this.loader_displayer.hide();
         }
