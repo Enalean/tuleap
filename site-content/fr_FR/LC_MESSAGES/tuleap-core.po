@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #, php-format
 msgid "%d member"
@@ -174,6 +174,12 @@ msgstr "Création de la structure initiale"
 msgid "Instant messaging"
 msgstr "Messagerie Instantanée"
 
+msgid "Is used?"
+msgstr "Utilisé ?"
+
+msgid "Labels"
+msgstr "Labels"
+
 msgid "Lists"
 msgstr "Listes"
 
@@ -200,6 +206,12 @@ msgstr "Annonces"
 
 msgid "Not categorized"
 msgstr "Non catégorisé"
+
+msgid "No labels defined in this project"
+msgstr "Il n'y a pas de label défini dans ce projet"
+
+msgid "No matching labels"
+msgstr "Il n'y a aucun label correspondant"
 
 msgid "Open \"Help\" dropdown"
 msgstr "Affiche l'onglet \"Aide\""
@@ -308,7 +320,10 @@ msgid "There isn't <br> any activity yet"
 msgstr "Il n'y a pas <br> encore d'activité"
 
 msgid "There isn't any matching widgets"
-msgstr "Il n’y aucun widget qui correspond"
+msgstr "Il n'y a aucun widget correspondant"
+
+msgid "This label is used in the project"
+msgstr "Ce label est utilisé dans le projet"
 
 msgid ""
 "This permission grants the right to manage platform administration users. "

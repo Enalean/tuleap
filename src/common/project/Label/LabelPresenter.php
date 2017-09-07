@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
-@import '../../common/css/utils/tooltip';
+namespace Tuleap\Project\Label;
 
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/fonts';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/dashboard';
-@import 'includes/homepage';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
+class LabelPresenter
+{
+    /** @var int */
+    public $id;
+
+    /** @var string */
+    public $name;
+
+    /** @var bool */
+    public $is_used;
+
+    public function __construct($id, $name, $is_used)
+    {
+        $this->id      = $id;
+        $this->name    = $name;
+        $this->is_used = $is_used;
+    }
+
+    public function switchToUsed()
+    {
+        $this->is_used = true;
+    }
+}

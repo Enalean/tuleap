@@ -155,6 +155,12 @@ msgstr ""
 msgid "Instant messaging"
 msgstr ""
 
+msgid "Is used?"
+msgstr ""
+
+msgid "Labels"
+msgstr ""
+
 msgid "Lists"
 msgstr ""
 
@@ -177,6 +183,12 @@ msgid "Navebar"
 msgstr ""
 
 msgid "News"
+msgstr ""
+
+msgid "No labels defined in this project"
+msgstr ""
+
+msgid "No matching labels"
 msgstr ""
 
 msgid "Not categorized"
@@ -289,6 +301,9 @@ msgid "There isn't <br> any activity yet"
 msgstr ""
 
 msgid "There isn't any matching widgets"
+msgstr ""
+
+msgid "This label is used in the project"
 msgstr ""
 
 msgid ""

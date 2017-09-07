@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../vendor/smooth-scrollbar/smooth-scrollbar.min';
-@import '../../common/css/utils/tooltip';
-
-@import 'includes/global-variables';
-@import 'includes/smooth-scrollbar-overrides';
-@import 'includes/fonts';
-@import 'includes/structure';
-@import 'includes/siteadmin';
-@import 'includes/resource_restrictor';
-@import 'includes/autocomplete';
-@import 'includes/dashboard';
-@import 'includes/homepage';
-@import 'includes/toggler';
-@import 'includes/modals';
-@import 'includes/breadcrumb';
-@import 'includes/project-admin';
-@import 'includes/software_map';
+document.addEventListener('DOMContentLoaded', function () {
+    var filter = document.getElementById('project-labels-table-filter');
+    if (filter) {
+        tlp.filterInlineTable(filter);
+    }
+});
