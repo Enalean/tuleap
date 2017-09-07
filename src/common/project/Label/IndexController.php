@@ -20,6 +20,7 @@
 
 namespace Tuleap\Project\Label;
 
+use CSRFSynchronizerToken;
 use EventManager;
 use ForgeConfig;
 use HTTPRequest;
@@ -36,34 +37,43 @@ class IndexController
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var LabelsManagementURLBuilder
+     */
+    private $url_builder;
 
-    public function __construct(LabelDao $dao, EventManager $event_manager)
+    public function __construct(LabelsManagementURLBuilder $url_builder, LabelDao $dao, EventManager $event_manager)
     {
+        $this->url_builder   = $url_builder;
         $this->dao           = $dao;
         $this->event_manager = $event_manager;
     }
 
     public function display(HTTPRequest $request)
     {
+        $project = $request->getProject();
 
         $title = _('Labels');
 
-        $this->displayHeader($title);
+        $this->displayHeader($title . ' - ' . $project->getUnconvertedPublicName());
 
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/labels/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
         $renderer->renderToPage(
             'list-labels',
-            new IndexPresenter($title, $this->getCollectionOfLabelPresenter($request))
+            new IndexPresenter(
+                $title,
+                $project,
+                $this->getCollectionOfLabelPresenter($project),
+                new CSRFSynchronizerToken($this->url_builder->getURL($project))
+            )
         );
 
         $this->displayFooter();
     }
 
-    private function getCollectionOfLabelPresenter(HTTPRequest $request)
+    private function getCollectionOfLabelPresenter(Project $project)
     {
-        $project = $request->getProject();
-
         $collection = new CollectionOfLabelPresenter($project);
         foreach ($this->dao->searchLabelsUsedByProject($project->getID()) as $row) {
             $is_used = false;

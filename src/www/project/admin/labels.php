@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Label\LabelsManagementURLBuilder;
+use Tuleap\Project\Label\DeleteController;
 use Tuleap\Project\Label\IndexController;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsManagementRouter;
@@ -27,7 +29,12 @@ require_once('pre.php');
 $request = HTTPRequest::instance();
 session_require(array('group' => $request->get('group_id'), 'admin_flags' => 'A'));
 
+$url_builder   = new LabelsManagementURLBuilder();
+$dao           = new LabelDao();
+$event_manager = EventManager::instance();
+
 $router = new LabelsManagementRouter(
-    new IndexController(new LabelDao(), EventManager::instance())
+    new IndexController($url_builder, $dao, $event_manager),
+    new DeleteController($url_builder, $dao, $event_manager)
 );
 $router->process($request);

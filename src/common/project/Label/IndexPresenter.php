@@ -20,6 +20,9 @@
 
 namespace Tuleap\Project\Label;
 
+use CSRFSynchronizerToken;
+use Project;
+
 class IndexPresenter
 {
     /**
@@ -34,13 +37,22 @@ class IndexPresenter
     public $empty_filter;
     public $is_used_label;
     public $this_label_is_used;
+    public $delete_button;
+    public $project_id;
+    public $csrf_token;
+    public $cancel;
 
-    public function __construct($title, CollectionOfLabelPresenter $collection)
-    {
-        $this->labels = $collection->getPresenters();
-        $this->title  = $title;
-
+    public function __construct(
+        $title,
+        Project $project,
+        CollectionOfLabelPresenter $collection,
+        CSRFSynchronizerToken $csrf_token
+    ) {
+        $this->labels     = $collection->getPresenters();
+        $this->title      = $title;
+        $this->project_id = $project->getID();
         $this->has_labels = count($this->labels) > 0;
+        $this->csrf_token = $csrf_token;
 
         $this->name_label         = _('Name');
         $this->is_used_label      = _('Is used?');
@@ -48,5 +60,7 @@ class IndexPresenter
         $this->empty_state        = _("No labels defined in this project");
         $this->empty_filter       = _("No matching labels");
         $this->filter_placeholder = _('Name');
+        $this->delete_button      = _('Delete');
+        $this->cancel             = _('Cancel');
     }
 }

@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -17,21 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
-    var filter = document.getElementById('project-labels-table-filter');
-    if (filter) {
-        tlp.filterInlineTable(filter);
+namespace Tuleap\Project\Label;
+
+use Project;
+
+class LabelsManagementURLBuilder
+{
+    public function getURL(Project $project)
+    {
+        return '/project/admin/labels.php?' . http_build_query(
+            array(
+                'group_id' => $project->getID()
+            )
+        );
     }
-
-    [].forEach.call(document.querySelectorAll('.project-labels-table-delete-button'), function (button) {
-        var modal_element = document.getElementById(button.dataset.modalId);
-
-        if (modal_element) {
-            var modal = tlp.modal(modal_element);
-
-            button.addEventListener('click', function () {
-                modal.toggle();
-            });
-        }
-    });
-});
+}
