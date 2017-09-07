@@ -22,6 +22,7 @@ import { render } from 'mustache';
 import { watch } from 'wrist';
 import reading_trackers_template from './reading-trackers.mustache';
 import ReadingModeController from './reading-mode-controller.js';
+import TrackerQueryLoaderController from '../tracker-query-loader-controller.js';
 
 export default class TrackerLoaderController {
     constructor(
@@ -31,7 +32,8 @@ export default class TrackerLoaderController {
         reading_cross_tracker_report,
         loader_displayer,
         success_displayer,
-        error_displayer
+        error_displayer,
+        query_loader_controller
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
@@ -40,6 +42,7 @@ export default class TrackerLoaderController {
         this.loader_displayer             = loader_displayer;
         this.success_displayer            = success_displayer;
         this.error_displayer              = error_displayer;
+        this.query_loader_controller      = query_loader_controller;
 
         this.reading_mode_trackers       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-trackers');
         this.reading_mode_trackers_empty = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-trackers-empty');
@@ -166,6 +169,7 @@ export default class TrackerLoaderController {
                 this.initTrackers(trackers);
             }
             this.updateTrackersReading();
+            this.query_loader_controller.loadTrackersQuery();
             this.success_displayer.displaySuccess(this.translated_put_cross_tracker_report_message_success);
             this.reading_mode_actions.classList.add('cross-tracker-hide');
         } catch (error) {
