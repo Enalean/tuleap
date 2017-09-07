@@ -29,6 +29,7 @@ use Tracker_URLVerification;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\MilestoneItemsArtifactFactory;
 
 class DefinitionSelector
 {
@@ -49,8 +50,11 @@ class DefinitionSelector
     /** @var ProjectAuthorization */
     private $project_authorization;
 
-    /** Tracker_ArtifactFactory */
+    /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
+
+    /** @var MilestoneItemsArtifactFactory */
+    private $milestone_items_artifact_factory;
 
     /** @var Tracker_ReportFactory */
     private $tracker_report_factory;
@@ -60,13 +64,15 @@ class DefinitionSelector
         ArtifactFactory $artifact_factory,
         ProjectAuthorization $project_authorization,
         Tracker_ArtifactFactory $tracker_artifact_factory,
+        MilestoneItemsArtifactFactory $milestone_items_artifact_factory,
         Tracker_ReportFactory $tracker_report_factory
     ) {
-        $this->config                   = $config;
-        $this->artifact_factory         = $artifact_factory;
-        $this->project_authorization    = $project_authorization;
-        $this->tracker_artifact_factory = $tracker_artifact_factory;
-        $this->tracker_report_factory   = $tracker_report_factory;
+        $this->config                           = $config;
+        $this->artifact_factory                 = $artifact_factory;
+        $this->project_authorization            = $project_authorization;
+        $this->tracker_artifact_factory         = $tracker_artifact_factory;
+        $this->milestone_items_artifact_factory = $milestone_items_artifact_factory;
+        $this->tracker_report_factory           = $tracker_report_factory;
     }
 
     public function selectDefinitionIds(PFUser $user, Project $project, $selector, $milestone_id = 0, $report_id = 0)
@@ -108,7 +114,7 @@ class DefinitionSelector
 
     public function selectDefinitionIdsFromMilestone(PFUser $user, Project $project, $milestone_id)
     {
-        $cover_definitions = $this->artifact_factory->getCoverTestDefinitionsUserCanViewForMilestone(
+        $cover_definitions = $this->milestone_items_artifact_factory->getCoverTestDefinitionsUserCanViewForMilestone(
             $user,
             $project,
             $milestone_id

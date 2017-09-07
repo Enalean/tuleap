@@ -20,12 +20,10 @@
 
 namespace Tuleap\TestManagement;
 
-use Project;
 use PFUser;
 use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
-use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 
 class ArtifactFactory
 {
@@ -177,27 +175,5 @@ class ArtifactFactory
         }
 
         return null;
-    }
-
-    public function getCoverTestDefinitionsUserCanViewForMilestone(PFUser $user, Project $project, $milestone_id)
-    {
-        $artifacts            = array();
-        $test_def_tracker_id  = $this->config->getTestDefinitionTrackerId($project);
-
-        $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
-            $milestone_id,
-            NatureCoveredByPresenter::NATURE_COVERED_BY,
-            $test_def_tracker_id,
-            PHP_INT_MAX,
-            0
-        );
-
-        foreach ($results as $row) {
-            $artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
-            if ($artifact->userCanView($user)) {
-                $artifacts[] = $artifact;
-            }
-        }
-        return $artifacts;
     }
 }

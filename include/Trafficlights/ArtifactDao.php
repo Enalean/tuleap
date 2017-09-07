@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -118,22 +118,27 @@ class ArtifactDao extends DataAccessObject
                ) ON (milestone_artlink.changeset_value_id = milestone_cv.id AND milestone_artlink.artifact_id = $milestone_id)";
     }
 
-    public function searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId($artifact_id, $nature, $target_tracker_id, $limit, $offset)
-    {
-        $artifact_id       = $this->da->escapeInt($artifact_id);
+    public function searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
+        array $artifacts_ids,
+        $nature,
+        $target_tracker_id,
+        $limit,
+        $offset
+    ) {
+        $artifact_id_list  = $this->da->escapeIntImplode($artifacts_ids);
         $target_tracker_id = $this->da->escapeInt($target_tracker_id);
         $limit             = $this->da->escapeInt($limit);
         $offset            = $this->da->escapeInt($offset);
         $nature            = $this->da->quoteSmart($nature);
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS linked_art.*
+        $sql = "SELECT DISTINCT SQL_CALC_FOUND_ROWS linked_art.*
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_field                        AS f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
                     INNER JOIN tracker_changeset_value              AS cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink AS artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (linked_art.tracker_id = t.id AND t.id = $target_tracker_id)
-                WHERE parent_art.id  = $artifact_id
+                WHERE parent_art.id IN ($artifact_id_list)
                     AND IFNULL(artlink.nature, '') = $nature
                 LIMIT $limit
                 OFFSET $offset";
