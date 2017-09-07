@@ -1,10 +1,8 @@
-{{^ is_properly_configured }}
-    <div class="alert alert-info"><strong>{{ misconfigured_title }}</strong> {{ misconfigured_message }}</div>
-    <img src="yuno.jpg" />
-{{/ is_properly_configured }}
-{{# is_properly_configured }}
-    <div id="testmanagement-app" ng-app="testmanagement" ng-controller="TestManagementCtrl" ng-init="init('{{ nodejs_server }}', {{ project_id }}, {{ tracker_ids }}, {{ issue_tracker_config }}, '{{ lang }}', {{ current_user }}, {{ current_milestone }})">
-        <div ncy-breadcrumb></div>
-        <ui-view></ui-view>
-    </div>
-{{/ is_properly_configured }}
+<div id="testmanagement-app"
+     ng-app="testmanagement"
+     ng-controller="TestManagementCtrl"
+     ng-init="init('{{ nodejs_server }}', {{ project_id }}, {{ tracker_ids }}, {{ issue_tracker_config }}, '{{ lang }}', {{ current_user }}, {{ current_milestone }})"
+>
+    <div ncy-breadcrumb></div>
+    <ui-view></ui-view>
+</div>

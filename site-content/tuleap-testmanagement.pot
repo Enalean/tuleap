@@ -1,0 +1,15 @@
+msgid "Configuration incomplete"
+msgstr ""
+
+msgid "Start TestManagement"
+msgstr ""
+
+msgid "TestManagement config is not fully set up,"
+msgstr ""
+
+msgid "come back later."
+msgstr ""
+
+msgid ""
+"go in the admin section to set manually the trackers or let us do it for you."
+msgstr ""

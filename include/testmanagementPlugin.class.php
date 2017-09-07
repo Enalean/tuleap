@@ -42,6 +42,8 @@ class testmanagementPlugin extends Plugin
         parent::__construct($id);
         $this->filesystem_path = TESTMANAGEMENT_BASE_DIR;
         $this->setScope(self::SCOPE_PROJECT);
+
+        bindtextdomain('tuleap-testmanagement', TESTMANAGEMENT_GETTEXT_DIR);
     }
 
     public function getHooksAndCallbacks()
@@ -52,7 +54,6 @@ class testmanagementPlugin extends Plugin
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
-        $this->addHook(Event::SERVICE_IS_USED);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
@@ -100,36 +101,6 @@ class testmanagementPlugin extends Plugin
         if ($params['project_creation_data']->projectShouldInheritFromTemplate() && $this->isUsedByProject($template)) {
             $this->allowProjectToUseNature($project_manager, $template, $project);
         }
-    }
-
-    /**
-     * Configure project's TrafficLights service
-     *
-     * @param array $params The project id and service usage
-     *
-     */
-    public function service_is_used($params)
-    {
-        if ($params['shortname'] !== $this->getServiceShortname()) {
-            return;
-        }
-
-        if (! $params['is_used']) {
-            return;
-        }
-
-        $project_manager = ProjectManager::instance();
-        $config          = new Config(new Dao());
-        $project         = $project_manager->getProject($params['group_id']);
-
-        $config_creator = new FirstConfigCreator(
-            $config,
-            TrackerFactory::instance(),
-            TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
-            new BackendLogger()
-        );
-        $config_creator->createConfigForProjectFromXML($project);
-        $this->allowProjectToUseNature($project_manager, $project, $project);
     }
 
     private function allowProjectToUseNature(ProjectManager $project_manager, Project $template, Project $project)
@@ -301,7 +272,17 @@ class testmanagementPlugin extends Plugin
     public function process(Codendi_Request $request) {
         $config          = new Config(new Dao());
         $tracker_factory = TrackerFactory::instance();
-        $router = new Tuleap\TestManagement\Router($this, $config, $tracker_factory);
+        $project_manager = ProjectManager::instance();
+        $user_manager    = UserManager::instance();
+
+        $router = new Tuleap\TestManagement\Router(
+            $this,
+            $config,
+            $tracker_factory,
+            $project_manager,
+            $user_manager
+        );
+
         $router->route($request);
     }
 

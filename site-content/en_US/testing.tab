@@ -15,9 +15,6 @@ plugin_testmanagement	admin_issue_tracker	Issue Tracker
 plugin_testmanagement	admin_tracker_placeholder	Enter the tracker id…
 plugin_testmanagement	invalid_tracker_id_for_project	Invalid tracker id $1 for this project
 
-plugin_testmanagement	misconfigured_title	Great Scott!
-plugin_testmanagement	misconfigured_message	You should configure things before being able to use this service.
-
 plugin_testmanagement	references_graph_title	Graph
 plugin_testmanagement	references_graph_url	See graph of dependencies
 

@@ -27,9 +27,6 @@ class Config {
     /** @var Dao */
     private $dao;
 
-    /** @var array */
-    private $cache_properties = array();
-
     public function __construct(Dao $dao) {
         $this->dao = $dao;
     }
@@ -60,6 +57,14 @@ class Config {
         return $this->getProperty($project, 'issue_tracker_id');
     }
 
+    public function isConfigNeeded(Project $project)
+    {
+        return (! $this->getCampaignTrackerId($project)) ||
+            (! $this->getTestDefinitionTrackerId($project)) ||
+            (! $this->getTestExecutionTrackerId($project)) ||
+            (! $this->getIssueTrackerId($project));
+    }
+
     private function getProperty(Project $project, $key) {
         $properties = $this->getPropertiesForProject($project);
 
@@ -71,10 +76,6 @@ class Config {
     }
 
     private function getPropertiesForProject(Project $project) {
-        if (! array_key_exists($project->getID(), $this->cache_properties)) {
-            $this->cache_properties[$project->getID()] = $this->dao->searchByProjectId($project->getId())->getRow();
-        }
-
-        return $this->cache_properties[$project->getID()];
+        return $this->dao->searchByProjectId($project->getId())->getRow();
     }
 }
