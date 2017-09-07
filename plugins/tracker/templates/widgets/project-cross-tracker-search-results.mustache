@@ -1,0 +1,27 @@
+<div class="dashboard-widget-content-cross-tracker-search">
+    <table class="tlp-table dashboard-widget-content-cross-tracker-search-results">
+        <thead>
+            <tr>
+                <th class="tlp-table-cell-numeric">{{ artifact_id_label }}</th>
+                <th>{{ summary_label }}</th>
+                <th>{{ status_label }}</th>
+                <th>{{ last_update_label }}</th>
+                <th>{{ submitted_by_label }}</th>
+                <th>{{ assigned_to_label }}</th>
+            </tr>
+        </thead>
+        <tbody class="dashboard-widget-content-cross-tracker-search-artifacts cross-tracker-hide">
+        </tbody>
+        <tbody class="dashboard-widget-content-cross-tracker-search-empty">
+            <tr>
+                <td colspan="6" class="tlp-table-cell-empty">
+                    {{ artifacts_empty }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="dashboard-widget-content-cross-tracker-search-footer cross-tracker-hide">
+        {{ limited_results_label }}
+    </p>
+    <span class="query-fetch-error dashboard-widget-content-cross-tracker-errormessage">{{ fetch_query_error }}</span>
+</div>

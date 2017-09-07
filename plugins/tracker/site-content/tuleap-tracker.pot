@@ -33,6 +33,9 @@ msgid ""
 "Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
 
+msgid "Assigned to"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
@@ -66,6 +69,9 @@ msgstr ""
 msgid "Error while fetching the list of trackers of this project"
 msgstr ""
 
+msgid "Error while fetching the query result"
+msgstr ""
+
 msgid "Error while updating the cross tracker report"
 msgstr ""
 
@@ -75,7 +81,16 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "ID"
+msgstr ""
+
+msgid "Last update date"
+msgstr ""
+
 msgid "No element selected."
+msgstr ""
+
+msgid "No matching artifacts found"
 msgstr ""
 
 msgid "No notification set"
@@ -94,6 +109,9 @@ msgid "Notified people"
 msgstr ""
 
 msgid "On all updates?"
+msgstr ""
+
+msgid "Only the first 30 results are shown"
 msgstr ""
 
 msgid "Please choose..."
@@ -118,6 +136,15 @@ msgid "Search"
 msgstr ""
 
 msgid "Search into multiple trackers and multiple projects."
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Submitted by"
+msgstr ""
+
+msgid "Summary"
 msgstr ""
 
 #, php-format

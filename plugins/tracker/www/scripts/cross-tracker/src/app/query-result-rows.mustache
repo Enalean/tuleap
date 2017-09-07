@@ -1,0 +1,16 @@
+{{# artifacts.length }}
+    {{# artifacts }}
+        <tr>
+            <td class="tlp-table-cell-numeric">{{ id }}</td>
+            <td>{{ title }}</td>
+            <td>{{ status }}</td>
+            <td>{{ last_update_date }}</td>
+            <td>{{ submitted_by.display_name }}</td>
+            <td>
+                {{# assigned_to }}
+                    {{ display_name }}
+                {{/ assigned_to }}
+            </td>
+        </tr>
+    {{/ artifacts }}
+{{/ artifacts.length }}

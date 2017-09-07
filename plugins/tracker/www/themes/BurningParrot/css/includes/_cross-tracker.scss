@@ -121,6 +121,17 @@
     font-weight: 400;
 }
 
+.dashboard-widget-content-cross-tracker-search {
+    margin: 0 $tlp-spacing;
+}
+
+.dashboard-widget-content-cross-tracker-search-footer {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+    font-style: italic;
+    text-align: center;
+}
+
 .dashboard-widget-content-cross-tracker-writing-mode-actions {
     display: flex;
     justify-content: flex-end;
