@@ -19,7 +19,7 @@
 
 import moment from 'moment';
 import { render } from 'mustache';
-import { getReportContent } from './query-result-loader.js';
+import { getReportContent } from './rest-querier.js';
 import query_result_rows_template from './query-result-rows.mustache';
 
 export default class TrackerQueryLoaderController {

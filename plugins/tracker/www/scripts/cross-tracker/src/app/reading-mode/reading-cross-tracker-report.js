@@ -26,7 +26,7 @@ export default class ReadingCrossTrackerReport {
     }
 
     initTrackers(trackers) {
-        for (const {id, label, project} of trackers) {
+        for (const { id, label, project } of trackers) {
             const tracker = { id, label };
             this.addTracker({ id: project.id, label: project.label }, tracker);
         }
