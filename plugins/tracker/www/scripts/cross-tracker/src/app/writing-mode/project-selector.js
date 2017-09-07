@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getSortedProjectsIAmMemberOf } from '../rest-querier.js';
 import { render } from 'mustache';
 import { watch } from 'wrist';
 import project_option_template from './project-option.mustache';
@@ -26,13 +25,15 @@ export default class ProjectSelector {
     constructor(
         widget_content,
         tracker_selection,
-        error_displayer,
-        loader_displayer
+        report_mode,
+        rest_querier,
+        error_displayer
     ) {
         this.widget_content    = widget_content;
         this.tracker_selection = tracker_selection;
+        this.report_mode       = report_mode;
+        this.rest_querier      = rest_querier;
         this.error_displayer   = error_displayer;
-        this.loader_displayer  = loader_displayer;
         this.form_projects     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
         this.projects_input    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
         this.projects          = new Map();
@@ -41,7 +42,17 @@ export default class ProjectSelector {
         this.translated_fetch_error_message = this.widget_content.querySelector('.project-selector-error').textContent;
 
         this.listenSelectElementChange();
+        this.listenChangeMode();
         this.setDisabled();
+    }
+
+    listenChangeMode() {
+        const watcher = (property_name, old_value, new_value) => {
+            if (! new_value) {
+                this.loadProjectsOnce();
+            }
+        };
+        watch(this.report_mode, 'reading_mode', watcher);
     }
 
     loadProjectsOnce() {
@@ -53,8 +64,7 @@ export default class ProjectSelector {
 
     async loadProjects() {
         try {
-            this.loader_displayer.show();
-            const sorted_projects = await getSortedProjectsIAmMemberOf();
+            const sorted_projects = await this.rest_querier.getSortedProjectsIAmMemberOf();
 
             for (const { id, label } of sorted_projects) {
                 this.projects.set(id.toString(), { id, label });
@@ -67,8 +77,6 @@ export default class ProjectSelector {
         } catch (error) {
             this.error_displayer.displayError(this.translated_fetch_error_message);
             throw error;
-        } finally {
-            this.loader_displayer.hide();
         }
     }
 

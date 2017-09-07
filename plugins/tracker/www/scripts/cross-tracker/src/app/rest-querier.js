@@ -19,61 +19,82 @@
 
 import { get, put, recursiveGet } from 'tlp';
 
-export {
-    getReport,
-    getReportContent,
-    updateReport,
-    getSortedProjectsIAmMemberOf,
-    getTrackersOfProject
-};
-
 const MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED = 30;
 
-async function getReport(report_id) {
-    const response = await get('/api/v1/cross_tracker_reports/' + report_id);
-    return await response.json();
-}
+export default class RestQuerier {
+    constructor(loader_displayer) {
+        this.loader_displayer = loader_displayer;
+    }
 
-async function getReportContent(report_id) {
-    const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
-        params: {
-            limit: MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED
+    async getReport(report_id) {
+        try {
+            this.loader_displayer.show();
+            const response = await get('/api/v1/cross_tracker_reports/' + report_id);
+            return await response.json();
+        } finally {
+            this.loader_displayer.hide();
         }
-    });
-    const { artifacts } = await response.json();
+    }
 
-    return artifacts;
-}
+    async getReportContent(report_id) {
+        try {
+            this.loader_displayer.show();
+            const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
+                params: {
+                    limit: MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED
+                }
+            });
+            const { artifacts } = await response.json();
 
-async function updateReport(report_id, trackers_id) {
-    const response = await put('/api/v1/cross_tracker_reports/' + report_id, {
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ trackers_id })
-    });
-    const { trackers } = await response.json();
-
-    return trackers;
-}
-
-async function getSortedProjectsIAmMemberOf() {
-    const json = await recursiveGet('/api/v1/projects/', {
-        params: {
-            limit: 50,
-            query: {'is_member_of': true }
+            return artifacts;
+        } finally {
+            this.loader_displayer.hide();
         }
-    });
+    }
 
-    return json.sort(
-        ({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b)
-    );
-}
-
-async function getTrackersOfProject(project_id) {
-    return await recursiveGet('/api/v1/projects/' + project_id + '/trackers', {
-        params: {
-            limit: 50
+    async updateReport(report_id, trackers_id) {
+        try {
+            this.loader_displayer.show();
+            const response = await put('/api/v1/cross_tracker_reports/' + report_id, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ trackers_id })
+            });
+            return await response.json();
+        } finally {
+            this.loader_displayer.hide();
         }
-    });
+    }
+
+    async getSortedProjectsIAmMemberOf() {
+        try {
+            this.loader_displayer.show();
+            const json = await recursiveGet('/api/v1/projects/', {
+                params: {
+                    limit: 50,
+                    query: {'is_member_of': true }
+                }
+            });
+
+            return json.sort(
+                ({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b)
+            );
+        } finally {
+            this.loader_displayer.hide();
+        }
+    }
+
+    async getTrackersOfProject(project_id) {
+        try {
+            this.loader_displayer.show();
+            return await recursiveGet('/api/v1/projects/' + project_id + '/trackers', {
+                params: {
+                    limit: 50
+                }
+            });
+        } finally {
+            this.loader_displayer.hide();
+        }
+    }
 }

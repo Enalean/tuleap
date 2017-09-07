@@ -17,46 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { watch } from 'wrist';
-
 export default class WritingModeController {
     constructor(
         widget_content,
+        report_mode,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
-        project_selector,
+        query_result_controller,
         tracker_selection,
-        success_displayer,
-        error_displayer
+        rest_querier,
+        error_displayer,
+        translated_fetch_artifacts_error_message
     ) {
         this.widget_content               = widget_content;
+        this.report_mode                  = report_mode;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
-        this.project_selector             = project_selector;
+        this.query_result_controller      = query_result_controller;
+
         this.tracker_selection            = tracker_selection;
-        this.success_displayer            = success_displayer;
+        this.rest_querier                 = rest_querier;
         this.error_displayer              = error_displayer;
 
-        this.reading_mode        = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode');
-        this.writing_mode        = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode');
+        this.translated_fetch_artifacts_error_message = translated_fetch_artifacts_error_message;
+
         this.writing_mode_cancel = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel');
         this.writing_mode_search = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-search');
 
         this.listenCancel();
         this.listenSearch();
-        this.listenChangeMode();
-    }
-
-    listenChangeMode() {
-        const updateMode = (property_name, old_value, new_value) => {
-            if (! new_value) {
-                this.reading_mode.classList.add('cross-tracker-hide');
-                this.writing_mode.classList.remove('cross-tracker-hide');
-                this.project_selector.loadProjectsOnce();
-            }
-        };
-
-        watch(this.reading_cross_tracker_report, 'reading_mode', updateMode);
     }
 
     listenCancel() {
@@ -74,8 +63,6 @@ export default class WritingModeController {
     }
 
     changeMode() {
-        this.reading_cross_tracker_report.reading_mode = true;
-        this.success_displayer.hideSuccess();
-        this.error_displayer.hideError();
+        this.report_mode.switchToReadingMode();
     }
 }

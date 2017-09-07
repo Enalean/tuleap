@@ -19,25 +19,26 @@
 
 import { render } from 'mustache';
 import { watch } from 'wrist';
-import { getTrackersOfProject } from '../rest-querier.js';
 
 export default class TrackerSelector {
     constructor(
         widget_content,
         tracker_selection,
         writing_cross_tracker_report,
-        error_displayer,
-        loader_displayer
+        rest_querier,
+        error_displayer
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
+        this.rest_querier                 = rest_querier;
         this.error_displayer              = error_displayer;
-        this.loader_displayer             = loader_displayer;
-        this.form_trackers                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers');
-        this.trackers_input               = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-input');
-        this.trackers                     = new Map();
+
+        this.form_trackers                  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers');
+        this.trackers_input                 = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-input');
         this.translated_fetch_error_message = this.widget_content.querySelector('.tracker-selector-error').textContent;
+
+        this.trackers = new Map();
 
         this.disableSelect();
         this.listenProjectChange();
@@ -48,8 +49,7 @@ export default class TrackerSelector {
 
     async loadTrackers(project_id) {
         try {
-            this.loader_displayer.show();
-            const trackers = await getTrackersOfProject(project_id);
+            const trackers = await this.rest_querier.getTrackersOfProject(project_id);
             for (const {id, label} of trackers) {
                 const is_already_selected = this.writing_cross_tracker_report.hasTrackerWithId(id);
                 this.trackers.set(id, {
@@ -112,7 +112,6 @@ export default class TrackerSelector {
             this.loadTrackers(new_value.id).then(() => {
                 this.updateOptions();
                 this.enableSelect();
-                this.loader_displayer.hide();
             });
         };
 

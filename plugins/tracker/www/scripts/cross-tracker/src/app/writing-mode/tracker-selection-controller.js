@@ -28,14 +28,12 @@ export default class TrackerSelectionController {
         tracker_selection,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
-        error_displayer,
         tracker_selector
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
-        this.error_displayer              = error_displayer;
         this.tracker_selector             = tracker_selector;
         this.form_trackers_selected       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-selected');
         this.add_tracker_button           = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
@@ -43,7 +41,7 @@ export default class TrackerSelectionController {
         this.writing_mode_cancel          = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel');
 
 
-        this.listenTrackersReadingLoaded();
+        this.listenReportLoaded();
         this.setDisabled();
         this.listenTrackerAdd();
         this.listenTrackerChange();
@@ -74,7 +72,7 @@ export default class TrackerSelectionController {
         this.removeTrackersSelected();
 
         const trackers = { selected_trackers: [] };
-        for (const { tracker, project } of this.writing_cross_tracker_report.trackers.values()) {
+        for (const { tracker, project } of this.writing_cross_tracker_report.getTrackers()) {
             trackers.selected_trackers.push(
                 {
                     tracker_id   : tracker.id,
@@ -86,12 +84,12 @@ export default class TrackerSelectionController {
         this.displaySelectedTrackers(trackers);
     }
 
-    listenTrackersReadingLoaded() {
+    listenReportLoaded() {
         const watcher = () => {
             this.updateTrackersSelected();
         };
 
-        watch(this.reading_cross_tracker_report, 'trackers_loaded', watcher);
+        watch(this.reading_cross_tracker_report, 'loaded', watcher);
     }
 
     listenTrackerChange() {
