@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\Nature;
+namespace Tuleap\TestManagement\Nature;
 
 use Project;
 use Tracker_Artifact;
-use Tuleap\Trafficlights\Config;
+use Tuleap\TestManagement\Config;
 
 class NatureCoveredByOverrider
 {

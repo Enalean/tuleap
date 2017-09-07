@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,11 +23,11 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\Dao;
-use Tuleap\Trafficlights\FirstConfigCreator;
-use Tuleap\Trafficlights\Nature\NatureCoveredByOverrider;
-use Tuleap\Trafficlights\Nature\NatureCoveredByPresenter;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\Dao;
+use Tuleap\TestManagement\FirstConfigCreator;
+use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
+use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 
 require_once 'constants.php';
 
@@ -87,7 +87,7 @@ class TrafficlightsPlugin extends Plugin
     }
 
     public function service_classnames($params) {
-        $params['classnames'][$this->getServiceShortname()] = 'Trafficlights\\Service';
+        $params['classnames'][$this->getServiceShortname()] = 'Tuleap\\TestManagement\\Service';
     }
 
     public function register_project_creation($params)
@@ -253,7 +253,7 @@ class TrafficlightsPlugin extends Plugin
     public function agiledashboard_event_additional_panes_on_milestone($params)
     {
         $milestone = $params['milestone'];
-        $params['panes'][] = new Tuleap\Trafficlights\AgileDashboardPaneInfo($milestone);
+        $params['panes'][] = new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone);
     }
 
     /**
@@ -300,7 +300,7 @@ class TrafficlightsPlugin extends Plugin
     public function process(Codendi_Request $request) {
         $config          = new Config(new Dao());
         $tracker_factory = TrackerFactory::instance();
-        $router = new Tuleap\Trafficlights\Router($this, $config, $tracker_factory);
+        $router = new Tuleap\TestManagement\Router($this, $config, $tracker_factory);
         $router->route($request);
     }
 

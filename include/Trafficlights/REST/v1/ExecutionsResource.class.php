@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_REST_Artifact_ArtifactCreator;
@@ -28,8 +28,8 @@ use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
 use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\Trafficlights\ArtifactDao;
-use Tuleap\Trafficlights\ArtifactFactory;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
 use UserManager;
 use PFUser;
 use Tracker_FormElementFactory;
@@ -47,10 +47,10 @@ use Tuleap\RealTime\NodeJSClient;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
-use Tuleap\Trafficlights\TrafficlightsArtifactRightsPresenter;
-use Tuleap\Trafficlights\ConfigConformanceValidator;
-use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\Dao;
+use Tuleap\TestManagement\TrafficlightsArtifactRightsPresenter;
+use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\Dao;
 use Tuleap\User\REST\UserRepresentation;
 
 class ExecutionsResource {

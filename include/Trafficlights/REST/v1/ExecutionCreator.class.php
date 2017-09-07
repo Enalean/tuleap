@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tracker_FormElementFactory;
 use ProjectManager;
 use PFUser;
-use Tuleap\Trafficlights\Config;
+use Tuleap\TestManagement\Config;
 use TrackerFactory;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -109,7 +109,7 @@ class ExecutionCreator {
         return array($status_value, $link_value);
     }
 
-    /** @return Tracker_FormElement_Field_List */
+    /** @return \Tracker_FormElement_Field_List */
     private function getStatusField(
         TrackerReference $tracker_reference,
         PFUser $user
@@ -121,7 +121,7 @@ class ExecutionCreator {
         );
     }
 
-    /** @return Tracker_FormElement_Field_ArtifactLink */
+    /** @return \Tracker_FormElement_Field_ArtifactLink */
     private function getArtifactLinksField(
         TrackerReference $tracker_reference,
         PFUser $user

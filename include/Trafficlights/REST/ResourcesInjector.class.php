@@ -19,9 +19,9 @@
  */
 
 use Tuleap\Project\REST\ProjectResourceReference;
-use Tuleap\Trafficlights\REST\v1\CampaignRepresentation;
-use Tuleap\Trafficlights\REST\v1\DefinitionRepresentation;
-use Tuleap\Trafficlights\REST\v1\NodeReferenceRepresentation;
+use Tuleap\TestManagement\REST\v1\CampaignRepresentation;
+use Tuleap\TestManagement\REST\v1\DefinitionRepresentation;
+use Tuleap\TestManagement\REST\v1\NodeReferenceRepresentation;
 
 /**
  * Inject resource into restler
@@ -29,11 +29,11 @@ use Tuleap\Trafficlights\REST\v1\NodeReferenceRepresentation;
 class Trafficlights_REST_ResourcesInjector {
 
     public function populate(Luracast\Restler\Restler $restler) {
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\ProjectResource', 'projects');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\CampaignsResource', 'testmanagement_campaigns');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\DefinitionsResource', 'testmanagement_definitions');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\ExecutionsResource', 'testmanagement_executions');
-        $restler->addAPIClass('\\Tuleap\\Trafficlights\\REST\\v1\\NodeResource', 'testmanagement_nodes');
+        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\ProjectResource', 'projects');
+        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\CampaignsResource', 'testmanagement_campaigns');
+        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\DefinitionsResource', 'testmanagement_definitions');
+        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\ExecutionsResource', 'testmanagement_executions');
+        $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\NodeResource', 'testmanagement_nodes');
     }
 
     public function declareProjectResource(array &$resources, Project $project) {

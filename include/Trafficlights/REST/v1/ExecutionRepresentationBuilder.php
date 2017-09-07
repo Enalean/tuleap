@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
-use Tuleap\Trafficlights\ConfigConformanceValidator;
+use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\User\REST\UserRepresentation;
 use Tracker_Artifact;
 use Tracker_Artifact_PaginatedArtifacts;
@@ -63,7 +63,7 @@ class ExecutionRepresentationBuilder {
     }
 
     /**
-     * @return \Tuleap\Trafficlights\REST\v1\ExecutionRepresentation
+     * @return ExecutionRepresentation[]
      */
     public function getAllExecutionsRepresentationsForCampaign(PFUser $user, Tracker_Artifact $artifact) {
         $executions = $this->getExecutionsForCampaign($user, $artifact);
@@ -72,7 +72,7 @@ class ExecutionRepresentationBuilder {
     }
 
     /**
-     * @return \Tuleap\Trafficlights\REST\v1\SlicedExecutionRepresentations
+     * @return \Tuleap\TestManagement\REST\v1\SlicedExecutionRepresentations
      */
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,
@@ -87,7 +87,7 @@ class ExecutionRepresentationBuilder {
     }
 
     /**
-     * @return \Tuleap\Trafficlights\REST\v1\ExecutionRepresentation
+     * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
      */
     public function getExecutionRepresentation(
         PFUser $user,

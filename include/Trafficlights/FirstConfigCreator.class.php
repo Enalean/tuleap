@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights;
+namespace Tuleap\TestManagement;
 
 use Project;
 use TrackerFactory;
@@ -160,7 +160,7 @@ class FirstConfigCreator
         );
     }
 
-    /** @return Tracker */
+    /** @return \Tracker */
     private function createTrackerFromXML(Project $project, $tracker_itemname)
     {
         $template_path = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_'.$tracker_itemname.'.xml';
@@ -174,12 +174,12 @@ class FirstConfigCreator
         return $tracker;
     }
 
-    /** @return Tracker */
+    /** @return \Tracker */
     private function importTrackerStructure(Project $project, $template_path)
     {
         try {
             return $this->xml_import->createFromXMLFile($project, $template_path);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logger->error('Unable to create trafficligts config for '. $project->getId() .': '. $exception->getMessage());
             return;
         }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Tuleap\REST\JsonCast;
 
@@ -59,17 +59,17 @@ class ExecutionRepresentation {
     public $last_update_date;
 
     /**
-     * @var UserRepresentation
+     * @var \UserRepresentation
      */
     public $assigned_to;
 
     /**
-     * @var Tuleap\Trafficlights\REST\v1\PreviousResultRepresentation
+     * @var PreviousResultRepresentation
      */
     public $previous_result;
 
     /**
-     * @var Tuleap\Trafficlights\REST\v1\DefinitionRepresentation
+     * @var DefinitionRepresentation
      */
     public $definition;
 

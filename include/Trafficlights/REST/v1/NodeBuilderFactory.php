@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
 use Tracker_ArtifactFactory;
 use Tracker_ResourceDoesntExistException;
@@ -27,11 +27,11 @@ use Tracker_Artifact;
 use Tracker_URLVerification;
 use Tracker_ArtifactDao;
 use PFUser;
-use Tuleap\Trafficlights\ArtifactDao;
-use Tuleap\Trafficlights\ArtifactFactory;
-use Tuleap\Trafficlights\Config;
-use Tuleap\Trafficlights\ConfigConformanceValidator;
-use Tuleap\Trafficlights\Dao as TrafficlightsDao;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\Config;
+use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\TestManagement\Dao as TrafficlightsDao;
 
 class NodeBuilderFactory {
 

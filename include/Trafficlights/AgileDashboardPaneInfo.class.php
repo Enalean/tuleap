@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights;
+namespace Tuleap\TestManagement;
 
 use Planning_Milestone;
 use AgileDashboard_PaneInfo;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\REST\v1;
+namespace Tuleap\TestManagement\REST\v1;
 
-use PaginatedCampaignsRepresentations;
 use Tracker_Artifact;
 use PFUser;
 use Tracker_FormElementFactory;
-use Tuleap\Trafficlights\ArtifactFactory;
+use Tuleap\TestManagement\ArtifactFactory;
+use Tuleap\TestManagement\PaginatedCampaignsRepresentations;
 use UserManager;
-use Tuleap\Trafficlights\Criterion\ISearchOnStatus;
-use Tuleap\Trafficlights\Criterion\ISearchOnMilestone;
+use Tuleap\TestManagement\Criterion\ISearchOnStatus;
+use Tuleap\TestManagement\Criterion\ISearchOnMilestone;
 
 class CampaignRepresentationBuilder {
 

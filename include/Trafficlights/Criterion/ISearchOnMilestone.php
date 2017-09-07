@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Trafficlights\Criterion;
-
-use PFUser;
+namespace Tuleap\TestManagement\Criterion;
 
 interface ISearchOnMilestone {
     public function getMilestoneId();
