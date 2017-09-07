@@ -66,10 +66,10 @@ class FirstConfigCreatorTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->campaign_tracker_xml_path   = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_campaign.xml';
-        $this->definition_tracker_xml_path = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_test_def.xml';
-        $this->execution_tracker_xml_path  = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_test_exec.xml';
-        $this->issue_tracker_xml_path      = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_bugs.xml';
+        $this->campaign_tracker_xml_path   = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_campaign.xml';
+        $this->definition_tracker_xml_path = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_test_def.xml';
+        $this->execution_tracker_xml_path  = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_test_exec.xml';
+        $this->issue_tracker_xml_path      = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_bugs.xml';
 
         $this->template = stub('Project')->getId()->returns($this->template_id);
         $this->project = stub('Project')->getId()->returns($this->project_id);

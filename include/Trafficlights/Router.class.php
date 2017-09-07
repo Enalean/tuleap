@@ -175,7 +175,7 @@ class Router {
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => TRAFFICLIGHTS_BASE_URL .'/?'. http_build_query(array(
+                'url'   => TESTMANAGEMENT_BASE_URL .'/?'. http_build_query(array(
                     'group_id' => $request->get('group_id'),
                     'action'   => 'admin',
                 ))

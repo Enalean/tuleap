@@ -69,7 +69,7 @@ abstract class TrafficlightsController extends MVC2_PluginController {
     }
 
     protected function getTemplatesDir() {
-        return TRAFFICLIGHTS_BASE_DIR.'/templates';
+        return TESTMANAGEMENT_BASE_DIR.'/templates';
     }
 
     /**

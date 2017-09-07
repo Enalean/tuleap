@@ -39,7 +39,7 @@ class TrafficlightsPlugin extends Plugin
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->filesystem_path = TRAFFICLIGHTS_BASE_DIR;
+        $this->filesystem_path = TESTMANAGEMENT_BASE_DIR;
         $this->setScope(self::SCOPE_PROJECT);
     }
 

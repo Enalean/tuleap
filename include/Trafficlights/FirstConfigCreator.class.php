@@ -163,7 +163,7 @@ class FirstConfigCreator
     /** @return \Tracker */
     private function createTrackerFromXML(Project $project, $tracker_itemname)
     {
-        $template_path = TRAFFICLIGHTS_RESOURCE_DIR .'/Tracker_'.$tracker_itemname.'.xml';
+        $template_path = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_'.$tracker_itemname.'.xml';
 
         $tracker = $this->importTrackerStructure($project, $template_path);
         if (! $tracker) {
