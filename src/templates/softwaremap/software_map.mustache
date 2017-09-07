@@ -23,11 +23,22 @@
             </div>
 
             <section class="tlp-pane-section">
+                {{# has_parent }}
+                    <div id="softwaremap-list-filter-go-up">
+                        <a href="?form_cat={{ parent_id }}"><i class="fa fa-level-up softwaremap-list-filter-go-up-icon"></i>{{ go_up }}</a>
+                    </div>
+                {{/ has_parent }}
+
                 <ul>
                     {{# subcategories }}
                         <li>
-                            <a href="trove_list.php?form_cat={{ id }}{{# none }}&amp;special_cat=none{{/none}}" {{# selected }}class="softwaremap-list-selected"{{/ selected }}>{{ name }}</a>
-                            <span class="tlp-badge-secondary tlp-badge-outline softwaremap-list-filter-nb">{{ count }} {{ projects }}</span>
+                            {{# has_projects }}
+                                <a href="trove_list.php?form_cat={{ id }}{{# none }}&amp;special_cat=none{{/none}}" {{# selected }}class="softwaremap-list-selected"{{/ selected }}>{{ name }}</a>
+                                <span class="tlp-badge-secondary tlp-badge-outline softwaremap-list-filter-nb">{{ count }} {{ projects }}</span>
+                            {{/ has_projects }}
+                            {{^ has_projects }}
+                                {{ name }}
+                            {{/has_projects}}
                         </li>
                     {{/ subcategories }}
                 </ul>

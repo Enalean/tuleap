@@ -41,8 +41,10 @@ class SoftwareMapPresenter
     public $pagination;
     public $projects_in_category;
     public $not_categorized;
+    public $has_parent;
+    public $parent_id;
 
-    public function __construct($current_category_name, $sub_categories, $root_categories, $projects, PaginationPresenter $pagination)
+    public function __construct($current_category_name, $parent_id, $sub_categories, $root_categories, $projects, PaginationPresenter $pagination)
     {
         $this->title                    = $GLOBALS['Language']->getText('softwaremap_trove_list', 'map');
         $this->projects                 = $GLOBALS['Language']->getText('softwaremap_trove_list', 'projs');
@@ -54,13 +56,16 @@ class SoftwareMapPresenter
         $this->empty_state_project_list = _("There are no projects in this category");
         $this->projects_in_category     = _("Projects in category");
         $this->not_categorized          = _("Not categorized");
+        $this->go_up                    = _("Go up");
 
         $this->current_category = $current_category_name;
+        $this->parent_id        = $parent_id;
         $this->subcategories    = $sub_categories;
         $this->root_categories  = $root_categories;
         $this->project_list     = $projects;
         $this->pagination       = $pagination;
 
+        $this->has_parent       = $parent_id !== null;
         $this->has_results      = count($this->project_list) > 0;
     }
 }

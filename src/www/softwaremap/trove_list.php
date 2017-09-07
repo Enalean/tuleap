@@ -61,6 +61,11 @@ $folders = explode(" :: ",$row_trove_cat['fullpath']);
 $folders_ids = explode(" :: ",$row_trove_cat['fullpath_ids']);
 $folders_len = count($folders);
 
+$parent_id = null;
+if ($folders_len > 1) {
+    $parent_id = $folders_ids[$folders_len - 2];
+}
+
 $sub_categories = array();
 
 $sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects 
@@ -81,12 +86,11 @@ GROUP BY t.trove_cat_id
 ORDER BY fullname";
 $res_sub = db_query($sql);
 while ($row_sub = db_fetch_array($res_sub)) {
-    $sub_categories[] = array(
-        'id'       => $row_sub['trove_cat_id'],
-        'count'    => (int) $row_sub['subprojects'],
-        'name'     => $row_sub['fullname'],
-        'none'     => false,
-        'selected' => $row_sub['trove_cat_id'] == $form_cat,
+    $sub_categories[] = new Tuleap\Trove\TroveCatCategoryPresenter(
+        $row_sub['trove_cat_id'],
+        $row_sub['fullname'],
+        (int) $row_sub['subprojects'],
+        $row_sub['trove_cat_id'] == $form_cat
     );
 }
 
@@ -107,12 +111,10 @@ AND trove_cat_root = ". $form_cat;
     $row_total = db_fetch_array($res_total);
     $nb_not_cat=$row_total['count']-$row_nb['count'];
 
-    $sub_categories[]= array(
-        'id'       => $form_cat,
-        'count'    => $nb_not_cat,
-        'name'     => $Language->getText('softwaremap_trove_list','not_categorized'),
-        'none'     => true,
-        'selected' => $special_cat == 'none',
+    $sub_categories[] = new Tuleap\Trove\TroveCatCategoryNonePresenter(
+        $form_cat,
+        $nb_not_cat,
+        $special_cat == 'none'
     );
 }
 
@@ -221,6 +223,7 @@ $renderer->renderToPage(
     'software_map',
     new \Tuleap\Trove\SoftwareMapPresenter(
         $current_category_name,
+        $parent_id,
         $sub_categories,
         $root_categories,
         $projects,

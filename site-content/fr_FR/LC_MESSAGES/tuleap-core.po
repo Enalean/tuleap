@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%d member"
@@ -156,6 +156,9 @@ msgstr "Forums"
 msgid "Git"
 msgstr "Git"
 
+msgid "Go up"
+msgstr "Niveau supérieur"
+
 msgid "Heartbeat"
 msgstr "Activité"
 
@@ -204,14 +207,14 @@ msgstr "Barre de menu"
 msgid "News"
 msgstr "Annonces"
 
-msgid "Not categorized"
-msgstr "Non catégorisé"
-
 msgid "No labels defined in this project"
 msgstr "Il n'y a pas de label défini dans ce projet"
 
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
+
+msgid "Not categorized"
+msgstr "Non catégorisé"
 
 msgid "Open \"Help\" dropdown"
 msgstr "Affiche l'onglet \"Aide\""
