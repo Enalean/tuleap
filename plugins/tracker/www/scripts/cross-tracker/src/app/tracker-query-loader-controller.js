@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import moment from 'moment';
 import { render } from 'mustache';
 import { getReportContent } from './query-result-loader.js';
 import query_result_rows_template from './query-result-rows.mustache';
@@ -25,13 +26,15 @@ export default class TrackerQueryLoaderController {
     constructor(
         widget_content,
         cross_tracker_report,
+        user_locale_store,
         loader_displayer,
         error_displayer
     ) {
-        this.widget_content       = widget_content;
-        this.cross_tracker_report = cross_tracker_report;
-        this.loader_displayer     = loader_displayer;
-        this.error_displayer      = error_displayer;
+        this.widget_content        = widget_content;
+        this.cross_tracker_report  = cross_tracker_report;
+        this.localized_date_format = user_locale_store.getDateFormat();
+        this.loader_displayer      = loader_displayer;
+        this.error_displayer       = error_displayer;
 
         this.table_results     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
         this.table_empty_state = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-empty');
@@ -75,12 +78,21 @@ export default class TrackerQueryLoaderController {
     async loadTrackersQuery() {
         try {
             this.loader_displayer.show();
-            const artifacts = await getReportContent(this.cross_tracker_report.report_id);
-            this.updateArtifacts(artifacts);
+            const artifacts           = await getReportContent(this.cross_tracker_report.report_id);
+            const formatted_artifacts = this.formatArtifacts(artifacts);
+            this.updateArtifacts(formatted_artifacts);
         } catch (error) {
             this.error_displayer.displayError(this.translated_get_artifacts_query_message_error);
         } finally {
             this.loader_displayer.hide();
         }
+    }
+
+    formatArtifacts(artifacts) {
+        return artifacts.map((artifact) => {
+           artifact.formatted_last_update_date = moment(artifact.last_update_date).format(this.localized_date_format);
+
+           return artifact;
+        });
     }
 }

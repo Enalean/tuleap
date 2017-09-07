@@ -24,6 +24,8 @@ class ProjectCrossTrackerSearchPresenter
 {
     /** @var  int */
     public $report_id;
+    public $locale;
+    public $date_format;
     public $too_many_trackers_selected_error;
     public $could_not_fetch_list_of_trackers_error;
     public $could_not_fetch_list_of_projects_error;
@@ -48,9 +50,11 @@ class ProjectCrossTrackerSearchPresenter
     public $artifacts_empty;
     public $limited_results_label;
 
-    public function __construct($report_id)
+    public function __construct($report_id, \PFUser $user)
     {
-        $this->report_id = $report_id;
+        $this->report_id   = $report_id;
+        $this->locale      = $user->getShortLocale();
+        $this->date_format = $GLOBALS['Language']->getText('system', 'datefmt_short');
 
         $this->too_many_trackers_selected_error       = dgettext(
             'tuleap-tracker',

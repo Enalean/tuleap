@@ -27,6 +27,7 @@ import TrackerSelectionController from './writing-mode/tracker-selection-control
 import TrackerQueryLoaderController from './tracker-query-loader-controller.js';
 import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
+import UserLocaleStore from './user-locale-store.js';
 import SuccessDisplayer from './rest-success-displayer.js';
 import ErrorDisplayer from './rest-error-displayer.js';
 import LoaderDisplayer from './loader-displayer.js';
@@ -36,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     for (const widget_element of widget_cross_tracker_elements) {
         const report_id = widget_element.dataset.reportId;
+        const locale    = widget_element.dataset.locale;
+        const localized_php_date_format = widget_element.dataset.dateFormat;
 
         const tracker_selection            = new TrackerSelection();
         const reading_cross_tracker_report = new ReadingCrossTrackerReport(report_id);
@@ -43,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const success_displayer            = new SuccessDisplayer(widget_element);
         const error_displayer              = new ErrorDisplayer(widget_element);
         const loader_displayer             = new LoaderDisplayer(widget_element);
+        const user_locale_store            = new UserLocaleStore(locale, localized_php_date_format);
 
         new TrackerLoaderController(
             widget_element,
@@ -94,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
         new TrackerQueryLoaderController(
             widget_element,
             reading_cross_tracker_report,
+            user_locale_store,
             loader_displayer,
             error_displayer
         );
