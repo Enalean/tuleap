@@ -47,7 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const error_displayer              = new ErrorDisplayer(widget_element);
         const loader_displayer             = new LoaderDisplayer(widget_element);
         const user_locale_store            = new UserLocaleStore(locale, localized_php_date_format);
-
+        const query_loader_controller      = new TrackerQueryLoaderController(
+            widget_element,
+            reading_cross_tracker_report,
+            user_locale_store,
+            loader_displayer,
+            error_displayer
+        );
         new TrackerLoaderController(
             widget_element,
             tracker_selection,
@@ -55,7 +61,8 @@ document.addEventListener('DOMContentLoaded', function () {
             reading_cross_tracker_report,
             loader_displayer,
             success_displayer,
-            error_displayer
+            error_displayer,
+            query_loader_controller
         );
         new ReadingModeController(
             widget_element,
@@ -94,13 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
             reading_cross_tracker_report,
             error_displayer,
             tracker_selector
-        );
-        new TrackerQueryLoaderController(
-            widget_element,
-            reading_cross_tracker_report,
-            user_locale_store,
-            loader_displayer,
-            error_displayer
         );
     }
 });
