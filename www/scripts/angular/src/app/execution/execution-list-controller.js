@@ -36,7 +36,8 @@ function ExecutionListCtrl(
         viewTestExecution          : viewTestExecution,
         showPresencesModal         : showPresencesModal,
         canCategoryBeDisplayed     : canCategoryBeDisplayed,
-        positiveScore              : positiveScore
+        positiveScore              : positiveScore,
+        isRealtimeEnabled          : isRealtimeEnabled
     });
 
     function checkActiveClassOnExecution(execution) {
@@ -214,6 +215,10 @@ function ExecutionListCtrl(
 
     function positiveScore(score) {
         return score ? Math.max(score, 0) : '-';
+    }
+
+    function isRealtimeEnabled() {
+        return SharedPropertiesService.getNodeServerAddress();
     }
 }
 
