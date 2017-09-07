@@ -42,11 +42,19 @@ class ContactSupportController
 
     public function displayModalContent(HTTPRequest $request)
     {
+
         $modal_presenter = new ModalPresenter(
             ForgeConfig::get('sys_email_admin'),
             $this->getHelpPageContent()
         );
-        echo $this->renderer->renderToString('modal', $modal_presenter);
+
+        $is_burning_parrot_compatible = (bool) $request->get('is-burning-parrot-compatible');
+        $mustache_template            = 'modal-flaming-parrot';
+        if ($is_burning_parrot_compatible) {
+            $mustache_template = 'modal-burning-parrot';
+        }
+
+        echo $this->renderer->renderToString($mustache_template, $modal_presenter);
     }
 
     private function getHelpPageContent()

@@ -25,83 +25,17 @@
         event.preventDefault();
 
         if (! contact_support_modal) {
-            $.get('/plugins/mytuleap_contact_support/index.php?action=get-modal-content').then(function(data) {
+            $.get('/plugins/mytuleap_contact_support/index.php?action=get-modal-content&is-burning-parrot-compatible=1').then(function(data) {
                 var modal_container = document.createElement('div');
                 modal_container.innerHTML = data;
                 document.body.appendChild(modal_container.querySelector('.tlp-modal'));
 
                 contact_support_modal = tlp.modal(document.body.querySelector('.contact-support-modal'));
-                contact_support_modal.addEventListener('tlp-modal-shown', contactSupportModalShown);
+                contact_support_modal.addEventListener('tlp-modal-shown', tuleap.contact_support_modal_shown);
                 contact_support_modal.show();
             });
         } else {
             contact_support_modal.show();
         }
     });
-
-    function contactSupportModalShown() {
-        var contact_support_modal_form            = document.getElementById('contact-support-modal-form'),
-            contact_support_modal_submit          = document.getElementById('contact-support-modal-submit'),
-            contact_support_modal_success_message = document.getElementById('contact-support-modal-success-message'),
-            contact_support_modal_error_message   = document.getElementById('contact-support-modal-error-message');
-
-        contact_support_modal_form.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            switchSubmitButtonToSendingState();
-
-            $.post(
-                contact_support_modal_form.getAttribute('action'),
-                $(contact_support_modal_form).serialize()
-
-            ).success(function(data) {
-                hideErrorMessage();
-                switchSubmitButtonToThankYouState();
-                showSuccessMessage();
-
-                setTimeout(function() {
-                    contact_support_modal_form.reset();
-                    switchSubmitButtonToNormalState();
-                    hideSuccessMessage();
-                }, 5000);
-
-            }).error(function(data) {
-                switchSubmitButtonToNormalState();
-                showErrorMessage();
-            });
-        });
-
-        function switchSubmitButtonToSendingState() {
-            contact_support_modal_submit.disabled = true;
-            contact_support_modal_submit.classList.remove('thank-you');
-            contact_support_modal_submit.classList.add('sending');
-        }
-
-        function switchSubmitButtonToThankYouState() {
-            contact_support_modal_submit.disabled = true;
-            contact_support_modal_submit.classList.remove('sending');
-            contact_support_modal_submit.classList.add('thank-you');
-        }
-
-        function switchSubmitButtonToNormalState() {
-            contact_support_modal_submit.disabled = false;
-            contact_support_modal_submit.classList.remove('sending', 'thank-you');
-        }
-
-        function showErrorMessage() {
-            contact_support_modal_error_message.classList.add('shown');
-        }
-
-        function hideErrorMessage() {
-            contact_support_modal_error_message.classList.remove('shown');
-        }
-
-        function showSuccessMessage() {
-            contact_support_modal_success_message.classList.add('shown');
-        }
-
-        function hideSuccessMessage() {
-            contact_support_modal_success_message.classList.remove('shown');
-        }
-    }
 })(jQuery);

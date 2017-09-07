@@ -1,0 +1,101 @@
+@import "../../default/css/style";
+
+@mixin definitions($main, $main-background, $ui-color-success, $ui-color-danger) {
+    .contact-support-modal {
+        > .modal-body {
+            background: $main-background;
+
+            h1 {
+                color: #747474;
+            }
+
+            .tlp-pane-subtitle {
+                color: $main;
+            }
+        }
+
+    }
+
+    #contact-support-modal-submit.thank-you {
+        border-color: $ui-color-success;
+        background: $ui-color-success;
+    }
+
+    #contact-support-modal-form .icon-asterisk {
+        color: $ui-color-danger;
+    }
+}
+
+body {
+    &.FlamingParrot_Orange {
+        @import "variables-orange";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_Blue {
+        @import "variables-blue";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_Green {
+        @import "variables-green";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import "variables-bluegrey";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_Purple {
+        @import "variables-purple";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_Red {
+        @import "variables-red";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_DarkOrange {
+        @import "variables-darkorange";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_DarkBlue {
+        @import "variables-darkblue";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_DarkGreen {
+        @import "variables-darkgreen";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_DarkBlueGrey {
+        @import "variables-darkbluegrey";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_DarkPurple {
+        @import "variables-darkpurple";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+
+    &.FlamingParrot_DarkRed {
+        @import "variables-darkred";
+
+        @include definitions($main, $main-background, $ui-color-success, $ui-color-danger);
+    }
+}
