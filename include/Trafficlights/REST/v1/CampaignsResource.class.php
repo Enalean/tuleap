@@ -106,9 +106,6 @@ class CampaignsResource {
     /** @var ExecutionRepresentationBuilder */
     private $execution_representation_builder;
 
-    /** @var AssignedToRepresentationBuilder */
-    private $assigned_to_representation_builder;
-
     /** @var CampaignRepresentationBuilder */
     private $campaign_representation_builder;
 
@@ -194,7 +191,7 @@ class CampaignsResource {
             new Tracker_ArtifactDao()
         );
 
-        $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
+        $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
             $this->formelement_factory,
             $this->user_manager
         );
@@ -202,7 +199,7 @@ class CampaignsResource {
             $this->user_manager,
             $this->formelement_factory,
             $this->conformance_validator,
-            $this->assigned_to_representation_builder
+            $assigned_to_representation_builder
         );
         $this->campaign_representation_builder    = new CampaignRepresentationBuilder(
             $this->user_manager,
@@ -439,40 +436,6 @@ class CampaignsResource {
     }
 
     /**
-     * @url OPTIONS {id}/trafficlights_assignees
-     */
-    public function optionsAssignees($id) {
-        Header::allowOptionsGet();
-    }
-
-    /**
-     * Get assignees
-     *
-     * Get all users that are assigned to at least one test execution of the
-     * given campaign
-     *
-     * @url GET {id}/trafficlights_assignees
-     *
-     * @param int $id Id of the campaign
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
-     *
-     * @return array {@type UserRepresentation}
-     */
-    protected function getAssignees($id, $limit = 10, $offset = 0) {
-        $this->optionsAssignees($id);
-
-        $user     = $this->user_manager->getCurrentUser();
-        $campaign = $this->getCampaignFromId($id, $user);
-
-        $assignees = $this->getAssigneesForCampaign($user, $campaign);
-
-        $this->sendPaginationHeaders($limit, $offset, count($assignees));
-
-        return array_slice($assignees, $offset, $limit);
-    }
-
-    /**
      * @url OPTIONS
      */
     public function options() {
@@ -576,27 +539,6 @@ class CampaignsResource {
         $this->sendAllowHeadersForCampaign($campaign);
 
         return $campaign_representation;
-    }
-
-    private function getAssigneesForCampaign(PFUser $user, Tracker_Artifact $campaign) {
-        $assignees = array();
-
-        $executions = $this->execution_representation_builder->getExecutionsForCampaign($user, $campaign);
-        foreach ($executions as $execution) {
-            $assigned_to_representation = $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution);
-
-            if (! $assigned_to_representation) {
-                continue;
-            }
-
-            if (isset($assignees[$assigned_to_representation->id])) {
-                continue;
-            }
-
-            $assignees[$assigned_to_representation->id] = $assigned_to_representation;
-        }
-
-        return $assignees;
     }
 
     private function getCampaignFromId($id, PFUser $user) {

@@ -27,7 +27,6 @@ use PFUser;
 class CampaignRepresentation {
 
     const ROUTE           = 'testmanagement_campaigns';
-    const ASSIGNEES_ROUTE = 'testmanagement_assignees';
 
     const FIELD_NAME           = "label";
     const FIELD_ARTIFACT_LINKS = "artifact_links";
@@ -100,10 +99,6 @@ class CampaignRepresentation {
             array(
                 'type' => ExecutionRepresentation::ROUTE,
                 'uri'  => self::ROUTE . '/' . $this->id . '/' . ExecutionRepresentation::ROUTE
-            ),
-            array(
-                'type' => self::ASSIGNEES_ROUTE,
-                'uri'  => self::ROUTE . '/' . $this->id . '/' . self::ASSIGNEES_ROUTE
             )
         );
     }
