@@ -23,6 +23,7 @@ require_once 'constants.php';
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\CollectionOfLabelPresenter;
+use Tuleap\Project\Label\DeleteProjectLabelInTransaction;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\PullRequestCreator;
@@ -67,6 +68,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook('ajax_reference_tooltip');
         $this->addHook(CollectionOfLabelPresenter::NAME);
+        $this->addHook(DeleteProjectLabelInTransaction::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -497,5 +499,11 @@ class pullrequestPlugin extends Plugin
         foreach ($dao->searchLabelsUsedInProject($collection->getProject()->getID()) as $row) {
             $collection->switchToUsed($row['id']);
         }
+    }
+
+    public function deleteLabelInProject(DeleteProjectLabelInTransaction $event)
+    {
+        $dao = new PullRequestLabelDao();
+        $dao->deleteInTransaction($event->getProject()->getID(), $event->getLabelToDeleteId());
     }
 }
