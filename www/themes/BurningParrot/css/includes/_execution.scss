@@ -244,6 +244,7 @@
 
 .current-test {
     display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
     margin: 0;
     overflow: hidden;

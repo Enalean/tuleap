@@ -7,8 +7,8 @@
     {{ "Bug" | translate }} <a ng-href="/plugins/tracker/?aid={{ linkedIssueId }}">#{{ linkedIssueId }}</a> {{ "has been successfully linked to this test." | translate }}
     </span>
     <button type="button"
-        class="linked-issue-alert-close tlp-button-success tlp-button-outline tlp-button-mini"
-        ng-click="closeLinkedIssueAlert()"
+            class="linked-issue-alert-close tlp-button-success tlp-button-outline tlp-button-mini"
+            ng-click="closeLinkedIssueAlert()"
     >
         <i class="fa fa-times-circle" aria-hidden="true"></i>
     </button>
@@ -33,7 +33,7 @@
                     </span>
                 </div>
                 <div class="current-test-header-comment" ng-if="execution.previous_result.result">
-                    <ng-bind-html ng-bind-html="sanitizeHtml(execution.previous_result.result)"></ng-bind-html>
+                    <div ng-bind-html="sanitizeHtml(execution.previous_result.result)"></div>
                 </div>
             </div>
 
@@ -97,4 +97,4 @@
             </div>
         </section>
     </div>
-</div>
+</section>
