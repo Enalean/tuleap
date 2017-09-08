@@ -24,14 +24,14 @@ import query_result_rows_template from './query-result-rows.mustache';
 export default class QueryResultController {
     constructor(
         widget_content,
-        reading_cross_tracker_report,
+        backend_cross_tracker_report,
         user_locale_store,
         rest_querier,
         error_displayer,
         translated_fetch_artifacts_error_message
     ) {
         this.widget_content               = widget_content;
-        this.reading_cross_tracker_report = reading_cross_tracker_report;
+        this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.rest_querier                 = rest_querier;
         this.localized_date_format        = user_locale_store.getDateFormat();
         this.error_displayer              = error_displayer;
@@ -78,7 +78,7 @@ export default class QueryResultController {
 
     async loadReportContent() {
         try {
-            const artifacts           = await this.rest_querier.getReportContent(this.reading_cross_tracker_report.report_id);
+            const artifacts           = await this.rest_querier.getReportContent(this.backend_cross_tracker_report.report_id);
             const formatted_artifacts = this.formatArtifacts(artifacts);
             this.updateArtifacts(formatted_artifacts);
         } catch (error) {

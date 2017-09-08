@@ -34,6 +34,7 @@ import LoaderDisplayer from './loader-displayer.js';
 import RestQuerier from './rest-querier.js';
 import ModeChangeController from './mode-change-controller.js';
 import ReportMode from './report-mode.js';
+import BackendCrossTrackerReport from './backend-cross-tracker-report.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const widget_cross_tracker_elements = document.getElementsByClassName('dashboard-widget-content-cross-tracker');
@@ -45,7 +46,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const tracker_selection            = new TrackerSelection();
         const report_mode                  = new ReportMode();
-        const reading_cross_tracker_report = new ReadingCrossTrackerReport(report_id);
+        const backend_cross_tracker_report = new BackendCrossTrackerReport(report_id);
+        const reading_cross_tracker_report = new ReadingCrossTrackerReport();
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
         const success_displayer            = new SuccessDisplayer(widget_element);
         const error_displayer              = new ErrorDisplayer(widget_element);
@@ -57,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const query_result_controller = new QueryResultController(
             widget_element,
-            reading_cross_tracker_report,
+            backend_cross_tracker_report,
             user_locale_store,
             rest_querier,
             error_displayer,
@@ -68,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
             widget_element,
             tracker_selection,
             report_mode,
-            writing_cross_tracker_report,
+            backend_cross_tracker_report,
             reading_cross_tracker_report
         );
 
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
         new ReadingModeController(
             widget_element,
             report_mode,
+            backend_cross_tracker_report,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
             rest_querier,
@@ -94,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
         new WritingModeController(
             widget_element,
             report_mode,
+            backend_cross_tracker_report,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
             query_result_controller,
@@ -123,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
             widget_element,
             tracker_selection,
             writing_cross_tracker_report,
-            reading_cross_tracker_report,
+            backend_cross_tracker_report,
             tracker_selector
         );
     }

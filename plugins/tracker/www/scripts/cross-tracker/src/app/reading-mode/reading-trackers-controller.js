@@ -20,20 +20,19 @@
 import { render } from 'mustache';
 import { watch } from 'wrist';
 import reading_trackers_template from './reading-trackers.mustache';
-import ReadingModeController from './reading-mode-controller.js';
 
 export default class ReadingTrackersController {
     constructor(
         widget_content,
         tracker_selection,
         report_mode,
-        writing_cross_tracker_report,
+        backend_cross_tracker_report,
         reading_cross_tracker_report
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
         this.report_mode                  = report_mode;
-        this.writing_cross_tracker_report = writing_cross_tracker_report;
+        this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
 
         this.reading_mode_trackers       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode-trackers');
@@ -48,8 +47,7 @@ export default class ReadingTrackersController {
         const watcher = (property_name, old_value, new_value) => {
             if (
                 new_value
-                && this.reading_cross_tracker_report.loaded === true
-                && ReadingModeController.areDifferentMap(this.reading_cross_tracker_report.trackers, this.writing_cross_tracker_report.trackers)
+                && this.backend_cross_tracker_report.loaded === true
             ) {
                 this.updateTrackersReading();
             }
@@ -68,7 +66,7 @@ export default class ReadingTrackersController {
             }
         };
 
-        watch(this.reading_cross_tracker_report, 'loaded', watcher);
+        watch(this.backend_cross_tracker_report, 'loaded', watcher);
     }
 
     displayReadingTrackers(trackers) {
@@ -82,7 +80,7 @@ export default class ReadingTrackersController {
     }
 
     updateTrackersReading() {
-        if (this.writing_cross_tracker_report.areTrackersEmpty()) {
+        if (this.reading_cross_tracker_report.areTrackersEmpty()) {
             this.reading_mode_trackers_empty.classList.remove('cross-tracker-hide');
         } else {
             this.reading_mode_trackers_empty.classList.add('cross-tracker-hide');
@@ -91,7 +89,7 @@ export default class ReadingTrackersController {
         this.removeTrackersReading();
 
         const trackers = { selected_trackers: []};
-        for (const { tracker, project } of this.writing_cross_tracker_report.getTrackers()) {
+        for (const { tracker, project } of this.reading_cross_tracker_report.getTrackers()) {
             trackers.selected_trackers.push(
                 {
                     tracker_id   : tracker.id,
