@@ -23,6 +23,7 @@ namespace Tuleap\Dashboard\User;
 use EventManager;
 use PFUser;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Widget\MyWelcomeMessage;
 use Tuleap\Widget\WidgetFactory;
 
 class AtUserCreationDefaultWidgetsCreator
@@ -51,7 +52,10 @@ class AtUserCreationDefaultWidgetsCreator
 
     public function createDefaultDashboard(PFUser $user)
     {
-        $widgets = array('myprojects');
+        $widgets = array(
+            MyWelcomeMessage::NAME,
+            'myprojects',
+        );
 
         $this->event_manager->processEvent(self::DEFAULT_WIDGETS_FOR_NEW_USER, array('widgets' => &$widgets));
 
