@@ -82,8 +82,8 @@ class IndexPresenter {
     ) {
         $this->lang                   = $this->getLanguageAbbreviation($current_user);
         $this->project_id             = $project_id;
-        $this->misconfigured_title    = $GLOBALS['Language']->getText('plugin_trafficlights', 'misconfigured_title');
-        $this->misconfigured_message  = $GLOBALS['Language']->getText('plugin_trafficlights', 'misconfigured_message');
+        $this->misconfigured_title    = $GLOBALS['Language']->getText('plugin_testmanagement', 'misconfigured_title');
+        $this->misconfigured_message  = $GLOBALS['Language']->getText('plugin_testmanagement', 'misconfigured_message');
         $this->is_properly_configured = $campaign_tracker_id && $test_definition_tracker_id && $test_execution_tracker_id;
 
         $user_representation = new UserRepresentation();

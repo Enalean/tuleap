@@ -74,7 +74,7 @@ class TrafficlightsPlugin extends Plugin
     }
 
     public function getServiceShortname() {
-        return 'plugin_trafficlights';
+        return 'plugin_testmanagement';
     }
 
     public function isUsedByProject(Project $project)
@@ -179,14 +179,14 @@ class TrafficlightsPlugin extends Plugin
         $plugin_trafficlights_is_used = $project->usesService($this->getServiceShortname());
         if ($plugin_trafficlights_is_used) {
             $reference_information = array(
-                'title' => $GLOBALS['Language']->getText('plugin_trafficlights', 'references_graph_title'),
+                'title' => $GLOBALS['Language']->getText('plugin_testmanagement', 'references_graph_title'),
                 'links' => array()
             );
 
             $link = array(
                 'icon' => $this->getPluginPath() . '/themes/BurningParrot/images/artifact-link-graph.svg',
                 'link' => $this->getPluginPath() . '/?group_id=' . $tracker->getGroupId() . '#/graph/' . $params['artifact']->getId(),
-                'label'=> $GLOBALS['Language']->getText('plugin_trafficlights', 'references_graph_url')
+                'label'=> $GLOBALS['Language']->getText('plugin_testmanagement', 'references_graph_url')
             );
 
             $reference_information['links'][] = $link;

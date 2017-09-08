@@ -1,26 +1,26 @@
-plugin_trafficlights	descriptor_description	Test management tool
-plugin_trafficlights	descriptor_name	Trafficlights
+plugin_testmanagement	descriptor_description	Test management tool
+plugin_testmanagement	descriptor_name	Test Management
 
-plugin_trafficlights	title	Trafficlights
-plugin_trafficlights	service_lbl_key	Trafficlights
-plugin_trafficlights	plugin_tab_title	Test Campaigns
+plugin_testmanagement	title	Test Management
+plugin_testmanagement	service_lbl_key	Test Management
+plugin_testmanagement	plugin_tab_title	Test Campaigns
 
-plugin_trafficlights	_covered_by_forward	Covered by
-plugin_trafficlights	_covered_by_reverse	Covers
+plugin_testmanagement	_covered_by_forward	Covered by
+plugin_testmanagement	_covered_by_reverse	Covers
 
-plugin_trafficlights	admin_campaign_tracker	Test Campaigns Tracker
-plugin_trafficlights	admin_definition_tracker	Test Definitions Tracker
-plugin_trafficlights	admin_execution_tracker	Test Executions Tracker
-plugin_trafficlights	admin_issue_tracker	Issue Tracker
-plugin_trafficlights	admin_tracker_placeholder	Enter the tracker id…
-plugin_trafficlights	invalid_tracker_id_for_project	Invalid tracker id $1 for this project
+plugin_testmanagement	admin_campaign_tracker	Test Campaigns Tracker
+plugin_testmanagement	admin_definition_tracker	Test Definitions Tracker
+plugin_testmanagement	admin_execution_tracker	Test Executions Tracker
+plugin_testmanagement	admin_issue_tracker	Issue Tracker
+plugin_testmanagement	admin_tracker_placeholder	Enter the tracker id…
+plugin_testmanagement	invalid_tracker_id_for_project	Invalid tracker id $1 for this project
 
-plugin_trafficlights	misconfigured_title	Great Scott!
-plugin_trafficlights	misconfigured_message	You should configure things before being able to use this service.
+plugin_testmanagement	misconfigured_title	Great Scott!
+plugin_testmanagement	misconfigured_message	You should configure things before being able to use this service.
 
-plugin_trafficlights	references_graph_title	Graph
-plugin_trafficlights	references_graph_url	See graph of dependencies
+plugin_testmanagement	references_graph_title	Graph
+plugin_testmanagement	references_graph_url	See graph of dependencies
 
-plugin_trafficlights_first_config	tracker_engine_version_error	We tried to configure TrafficLights for you but an existing tracker ($1) is using Tracker Engine v3 and prevented it.
-plugin_trafficlights_first_config	internal_error	We tried to configure TrafficLights for you but an internal error prevented it.
-plugin_trafficlights_first_config	created	We configured TrafficLights for you. Enjoy!
+plugin_testmanagement_first_config	tracker_engine_version_error	We tried to configure Test Management for you but an existing tracker ($1) is using Tracker Engine v3 and prevented it.
+plugin_testmanagement_first_config	internal_error	We tried to configure Test Management for you but an internal error prevented it.
+plugin_testmanagement_first_config	created	We configured Test Management for you. Enjoy!

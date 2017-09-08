@@ -49,7 +49,7 @@ class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
     /** @see AgileDashboard_PaneInfo::getTitle */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_trafficlights', 'plugin_tab_title')
+        return $GLOBALS['Language']->getText('plugin_testmanagement', 'plugin_tab_title')
             . ' <i class="icon-external-link"></i>';
     }
 

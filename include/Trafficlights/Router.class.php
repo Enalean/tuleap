@@ -125,7 +125,7 @@ class Router {
      */
     private function getHeaderTitle($action_name) {
         $header_title = array(
-            'index' => $GLOBALS['Language']->getText('plugin_trafficlights', 'service_lbl_key'),
+            'index' => $GLOBALS['Language']->getText('plugin_testmanagement', 'service_lbl_key'),
             'admin' => $GLOBALS['Language']->getText('global', 'Admin')
         );
 
@@ -142,7 +142,7 @@ class Router {
     private function getService(Codendi_Request $request) {
         if ($this->service == null) {
             $project = $request->getProject();
-            $this->service = $project->getService('plugin_trafficlights');
+            $this->service = $project->getService('plugin_testmanagement');
         }
         return $this->service;
     }
@@ -166,7 +166,7 @@ class Router {
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_trafficlights', 'service_lbl_key'))
+                    $GLOBALS['Language']->getText('plugin_testmanagement', 'service_lbl_key'))
             );
         }
 

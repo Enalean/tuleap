@@ -68,11 +68,11 @@ class AdminPresenter
         $this->issue_tracker_id           = $issue_tracker_id;
 
         $this->title       = $GLOBALS['Language']->getText('global', 'Administration');
-        $this->campaigns   = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_campaign_tracker');
-        $this->definitions = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_definition_tracker');
-        $this->executions  = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_execution_tracker');
-        $this->issues      = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_issue_tracker');
+        $this->campaigns   = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_campaign_tracker');
+        $this->definitions = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_definition_tracker');
+        $this->executions  = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_execution_tracker');
+        $this->issues      = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_issue_tracker');
         $this->submit      = $GLOBALS['Language']->getText('global', 'btn_submit');
-        $this->placeholder = $GLOBALS['Language']->getText('plugin_trafficlights', 'admin_tracker_placeholder');
+        $this->placeholder = $GLOBALS['Language']->getText('plugin_testmanagement', 'admin_tracker_placeholder');
     }
 }

@@ -21,7 +21,7 @@
 class TrafficlightsPluginDescriptor extends PluginDescriptor {
 
     function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_trafficlights', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_trafficlights', 'descriptor_description'));
+        parent::__construct($GLOBALS['Language']->getText('plugin_testmanagement', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_testmanagement', 'descriptor_description'));
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

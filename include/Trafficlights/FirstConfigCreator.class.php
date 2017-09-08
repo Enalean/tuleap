@@ -143,7 +143,7 @@ class FirstConfigCreator
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
             $GLOBALS['Language']->getText(
-                'plugin_trafficlights_first_config',
+                'plugin_testmanagement_first_config',
                 'created'
             )
         );
@@ -154,7 +154,7 @@ class FirstConfigCreator
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
             $GLOBALS['Language']->getText(
-                'plugin_trafficlights_first_config',
+                'plugin_testmanagement_first_config',
                 $message
             )
         );
