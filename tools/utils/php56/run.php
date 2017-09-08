@@ -1,3 +1,4 @@
+#!/opt/rh/rh-php56/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
@@ -29,8 +30,5 @@ $loader = new Zend\Loader\StandardAutoloader(
 );
 $loader->register();
 
-$fpm   = new Tuleap\Configuration\FPM\TuleapWeb('codendiadm');
-$ngnix = new \Tuleap\Configuration\Nginx\TuleapWeb('/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'tuleap-web.tuleap-aio-dev.docker');
-
-$fpm->configure();
-$ngnix->configure();
+$php56centos6 = new \Tuleap\Configuration\Setup\PHP56Centos6(new Tuleap\Configuration\Logger\Console());
+$php56centos6->main();

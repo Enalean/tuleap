@@ -20,39 +20,65 @@
 
 namespace Tuleap\Configuration\FPM;
 
+use Tuleap\Configuration\Logger\LoggerInterface;
+use Tuleap\Configuration\Logger\Wrapper;
+
 class TuleapWeb
 {
 
     private $application_user;
+    private $logger;
+    private $development;
 
-    public function __construct($application_user)
+    public function __construct(LoggerInterface $logger, $application_user, $development)
     {
+        $this->logger           = new Wrapper($logger, 'fpm');
         $this->application_user = $application_user;
+        $this->development      = $development;
     }
 
     public function configure()
     {
+        $this->logger->info("Start configuration in /etc/opt/rh/rh-php56/php-fpm.d/");
         if (file_exists('/etc/opt/rh/rh-php56/php-fpm.d/www.conf')) {
+            $this->logger->info("Backup /etc/opt/rh/rh-php56/php-fpm.d/www.conf");
             rename('/etc/opt/rh/rh-php56/php-fpm.d/www.conf', '/etc/opt/rh/rh-php56/php-fpm.d/www.conf.orig');
         }
-        if (file_exists('/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf')) {
-            unlink('/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf');
-        }
-        $this->replacePlaceHolderInto(
-            '/usr/share/tuleap/src/etc/fpm56/tuleap.conf',
-            '/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf',
-            array(
-                '%application_user%'
-            ),
-            array(
-                $this->application_user
-            )
-        );
+        if (! file_exists('/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf')) {
+            $this->logger->info("Deploy /etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf");
 
-        $this->createDirectoryForAppUser('/var/tmp/tuleap_cache');
-        $this->createDirectoryForAppUser('/var/tmp/tuleap_cache/php');
-        $this->createDirectoryForAppUser('/var/tmp/tuleap_cache/php/session');
-        $this->createDirectoryForAppUser('/var/tmp/tuleap_cache/php/wsdlcache');
+            $variables = array(
+                '%application_user%',
+            );
+            $replacement = array(
+                $this->application_user,
+            );
+
+            if ($this->development) {
+                $variables[]   = ';php_flag[display_errors] = on';
+                $replacement[] = 'php_flag[display_errors] = on';
+
+                $variables[]   = ';php_flag[html_errors] = on';
+                $replacement[] = 'php_flag[html_errors] = on';
+            }
+
+            $this->replacePlaceHolderInto(
+                '/usr/share/tuleap/src/etc/fpm56/tuleap.conf',
+                '/etc/opt/rh/rh-php56/php-fpm.d/tuleap.conf',
+                $variables,
+                $replacement
+            );
+        }
+
+        if (! is_dir('/var/tmp/tuleap_cache/php/session') || ! is_dir('/var/tmp/tuleap_cache/php/wsdlcache')) {
+            $this->logger->info("Create temporary directories");
+            $this->createDirectoryForAppUser('/var/tmp/tuleap_cache');
+            $this->createDirectoryForAppUser('/var/tmp/tuleap_cache/php');
+            $this->createDirectoryForAppUser('/var/tmp/tuleap_cache/php/session');
+            $this->createDirectoryForAppUser('/var/tmp/tuleap_cache/php/wsdlcache');
+        }
+
+        $this->logger->info("Configuration done!");
     }
 
     private function createDirectoryForAppUser($path)

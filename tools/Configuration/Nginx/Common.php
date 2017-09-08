@@ -22,14 +22,20 @@ namespace Tuleap\Configuration\Nginx;
 
 use DirectoryIterator;
 use Tuleap\Configuration\Common\Exec;
+use Tuleap\Configuration\Logger\LoggerInterface;
 
 class Common
 {
     private $tuleap_base_dir;
     private $nginx_base_dir;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct($tuleap_base_dir, $nginx_base_dir)
+    public function __construct(LoggerInterface $logger, $tuleap_base_dir, $nginx_base_dir)
     {
+        $this->logger          = $logger;
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
     }
@@ -37,6 +43,7 @@ class Common
     public function generateSSLCertificate($server_name, $cert_filepath, $key_filepath)
     {
         if (! file_exists($cert_filepath)) {
+            $this->logger->info("Generate self-signed certificate in $cert_filepath");
             $exec = new Exec();
             $exec->command('openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout '.$key_filepath.' -out '.$cert_filepath.' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN='.$server_name.'" 2>/dev/null');
         }
@@ -44,12 +51,14 @@ class Common
 
     public function deployConfigurationChunks()
     {
+        $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}");
         $this->copyTuleapDotD();
         $this->copyTuleapPlugins();
     }
 
     private function copyTuleapDotD()
     {
+        $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}/conf.d/tuleap.d");
         $tuleap_d_dir       = $this->nginx_base_dir.'/conf.d/tuleap.d';
         $tuleap_d_base_dir  = $this->tuleap_base_dir.'/src/etc/nginx18/tuleap.d';
 
@@ -63,6 +72,7 @@ class Common
 
     private function copyTuleapPlugins()
     {
+        $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}/conf.d/tuleap-plugins");
         $tuleap_plugins_dir = $this->nginx_base_dir.'/conf.d/tuleap-plugins';
 
         $this->createDirectoryIfNotExists($tuleap_plugins_dir);

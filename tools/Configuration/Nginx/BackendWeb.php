@@ -20,19 +20,26 @@
 
 namespace Tuleap\Configuration\Nginx;
 
+use Tuleap\Configuration\Logger\LoggerInterface;
+
 class BackendWeb
 {
     private $tuleap_base_dir;
     private $nginx_base_dir;
     private $server_name;
     private $common;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct($tuleap_base_dir, $nginx_base_dir, $server_name)
+    public function __construct(LoggerInterface $logger, $tuleap_base_dir, $nginx_base_dir, $server_name)
     {
+        $this->logger          = $logger;
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
-        $this->common          = new Common($tuleap_base_dir, $nginx_base_dir, $server_name);
+        $this->common          = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir, $server_name);
     }
 
     public function configure()

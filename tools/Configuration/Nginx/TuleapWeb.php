@@ -20,51 +20,67 @@
 
 namespace Tuleap\Configuration\Nginx;
 
+use Tuleap\Configuration\Logger\LoggerInterface;
+use Tuleap\Configuration\Logger\Wrapper;
+
 class TuleapWeb
 {
     const SSL_CERT_KEY_PATH  = '/etc/pki/tls/private/localhost.key.pem';
     const SSL_CERT_CERT_PATH = '/etc/pki/tls/certs/localhost.cert.pem';
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
     private $tuleap_base_dir;
     private $nginx_base_dir;
     private $server_name;
+    private $common;
+    private $for_development;
 
-    public function __construct($tuleap_base_dir, $nginx_base_dir, $server_name)
+    public function __construct(LoggerInterface $logger, $tuleap_base_dir, $nginx_base_dir, $server_name, $for_development)
     {
+        $this->logger          = new Wrapper($logger, 'nginx');
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
+        $this->for_development = $for_development;
 
-        $this->common = new Common($tuleap_base_dir, $nginx_base_dir, $server_name);
+        $this->common = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir, $server_name);
     }
 
     public function configure()
     {
+        $this->logger->info("Start configuration");
+
         $this->common->deployConfigurationChunks();
-        $this->common->deployMainNginxConf();
 
-        $this->common->replacePlaceHolderInto(
-            $this->tuleap_base_dir.'/src/etc/nginx18/tuleap.conf.dist',
-            $this->nginx_base_dir.'/conf.d/tuleap.conf',
-            array(
-                '%ssl_certificate_key_path%',
-                '%ssl_certificate_path%',
-                '%sys_default_domain%',
-            ),
-            array(
-                self::SSL_CERT_KEY_PATH,
-                self::SSL_CERT_CERT_PATH,
-                $this->server_name,
-            )
-        );
-
-        $this->generateSSLCertificate();
-    }
-
-    private function generateSSLCertificate()
-    {
-        if (! file_exists(self::SSL_CERT_KEY_PATH)) {
-            exec('openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout '.self::SSL_CERT_KEY_PATH.' -out '.self::SSL_CERT_CERT_PATH.' -days 365 -subj "/C=XX/ST=SomeState/L=SomeCity/O=SomeOrganization/OU=SomeDepartment/CN='.$this->server_name.'" 2>/dev/null');
+        if (! file_exists($this->nginx_base_dir.'/conf.d/tuleap.conf')) {
+            $this->logger->info("Generate tuleap.conf");
+            $this->common->replacePlaceHolderInto(
+                $this->tuleap_base_dir.'/src/etc/nginx18/tuleap.conf.dist',
+                $this->nginx_base_dir.'/conf.d/tuleap.conf',
+                array(
+                    '%ssl_certificate_key_path%',
+                    '%ssl_certificate_path%',
+                    '%sys_default_domain%',
+                ),
+                array(
+                    self::SSL_CERT_KEY_PATH,
+                    self::SSL_CERT_CERT_PATH,
+                    $this->server_name,
+                )
+            );
         }
+
+        if ($this->for_development && ! file_exists(self::SSL_CERT_CERT_PATH)) {
+            $this->common->generateSSLCertificate(
+                $this->server_name,
+                self::SSL_CERT_CERT_PATH,
+                self::SSL_CERT_KEY_PATH
+            );
+        }
+
+        $this->logger->info("Configuration done!");
     }
 }
