@@ -20,6 +20,8 @@
 
 namespace Tuleap\Project\Label;
 
+use Codendi_HTMLPurifier;
+
 class LabelPresenter
 {
     /** @var int */
@@ -31,11 +33,30 @@ class LabelPresenter
     /** @var bool */
     public $is_used;
 
+    /** @var string */
+    public $delete_title;
+
+    /** @var string */
+    public $purified_delete_message;
+
     public function __construct($id, $name, $is_used)
     {
         $this->id      = $id;
         $this->name    = $name;
         $this->is_used = $is_used;
+
+        $this->delete_title = sprintf(
+            _('Delete %s'),
+            $this->name
+        );
+
+        $this->purified_delete_message = Codendi_HTMLPurifier::instance()->purify(
+            sprintf(
+                _("Wow, wait a minute. You're about to delete the label <b>%s</b>. Please confirm your action."),
+                $this->name
+            ),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 
     public function switchToUsed()

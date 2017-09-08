@@ -1,0 +1,27 @@
+<div class="tlp-modal tlp-modal-danger" id="project-label-delete-{{ id }}" role="dialog">
+
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i> {{ delete_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel }}">×</div>
+    </div>
+    <form action="/project/admin/labels.php?group_id={{ project_id }}" method="POST">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <div class="tlp-modal-body">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="{{ id }}">
+            <p>{{{ purified_delete_message }}} </p>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-danger tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal">{{ cancel }}
+            </button>
+            <button type="submit"
+                    class="tlp-button-primary tlp-button-danger tlp-modal-action">{{ delete_button }}</button>
+        </div>
+    </form>
+
+</div>

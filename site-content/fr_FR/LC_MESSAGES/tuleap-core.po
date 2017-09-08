@@ -30,6 +30,9 @@ msgstr "Agile Dashboard"
 msgid "Already used"
 msgstr "Déjà utilisé"
 
+msgid "An error occured while trying to remove the label."
+msgstr "Une erreur est survenue lors de la suppression du label."
+
 msgid ""
 "An error occured with your upload. Please try again or choose another image."
 msgstr ""
@@ -118,6 +121,10 @@ msgstr "Dashboard du projet"
 msgid "Delete"
 msgstr "Supprimer"
 
+#, php-format
+msgid "Delete %s"
+msgstr "Supprimer %s"
+
 msgid "Delete dashboard"
 msgstr "Supprimer le tableau de bord"
 
@@ -177,6 +184,9 @@ msgstr "Messagerie Instantanée"
 msgid "Is used?"
 msgstr "Utilisé ?"
 
+msgid "Label has been deleted from the project."
+msgstr "Le label a été supprimé du projet."
+
 msgid "Labels"
 msgstr "Labels"
 
@@ -204,14 +214,14 @@ msgstr "Barre de menu"
 msgid "News"
 msgstr "Annonces"
 
-msgid "Not categorized"
-msgstr "Non catégorisé"
-
 msgid "No labels defined in this project"
 msgstr "Il n'y a pas de label défini dans ce projet"
 
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
+
+msgid "Not categorized"
+msgstr "Non catégorisé"
 
 msgid "Open \"Help\" dropdown"
 msgstr "Affiche l'onglet \"Aide\""
@@ -388,6 +398,14 @@ msgstr "Widgets"
 
 msgid "Wiki"
 msgstr "Wiki"
+
+#, php-format
+msgid ""
+"Wow, wait a minute. You're about to delete the label <b>%s</b>. Please "
+"confirm your action."
+msgstr ""
+"Wow, attendez une minute. Vous êtes sur le point de supprimer le label <b>"
+"%s</b>. Merci de confirmer votre action."
 
 msgid "Yesterday"
 msgstr "Hier"

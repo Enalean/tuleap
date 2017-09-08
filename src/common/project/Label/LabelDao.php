@@ -93,4 +93,14 @@ class LabelDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function deleteInTransaction($project_id, $label_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $label_id   = $this->da->escapeInt($label_id);
+
+        $sql = "DELETE FROM project_label WHERE project_id = $project_id AND id = $label_id";
+
+        return $this->update($sql);
+    }
 }

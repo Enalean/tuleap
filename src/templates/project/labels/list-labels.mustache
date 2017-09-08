@@ -23,19 +23,20 @@
                         <tr>
                             <th class="tlp-table-cell-filterable project-labels-table-name">{{ name_label }}</th>
                             <th class="project-labels-table-is-used">{{ is_used_label }}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {{^ has_labels }}
                             <tr>
-                                <td colspan="2" class="tlp-table-cell-empty">
+                                <td colspan="3" class="tlp-table-cell-empty">
                                     {{ empty_state }}
                                 </td>
                             </tr>
                         {{/ has_labels }}
                         {{# has_labels }}
                             <tr class="tlp-table-empty-filter">
-                                <td colspan="2" class="tlp-table-cell-empty">
+                                <td colspan="3" class="tlp-table-cell-empty">
                                     {{ empty_filter }}
                                 </td>
                             </tr>
@@ -54,6 +55,15 @@
                                                 <i class="fa fa-check"></i>
                                             </span>
                                         {{/ is_used }}
+                                    </td>
+                                    <td class="tlp-table-cell-actions">
+                                        <button
+                                            class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline project-labels-table-delete-button"
+                                            data-modal-id="project-label-delete-{{ id }}"
+                                        >
+                                            <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_button }}
+                                        </button>
+                                        {{> label-modal-delete }}
                                     </td>
                                 </tr>
                             {{/ labels }}

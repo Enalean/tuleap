@@ -20,35 +20,46 @@
 
 namespace Tuleap\Project\Label;
 
-use HTTPRequest;
+use Project;
+use Tuleap\Event\Dispatchable;
 
-class LabelsManagementRouter
+class DeleteProjectLabelInTransaction implements Dispatchable
 {
-    /**
-     * @var IndexController
-     */
-    private $index_controller;
-    /**
-     * @var DeleteController
-     */
-    private $delete_controller;
+    const NAME = 'deleteLabelInProject';
 
-    public function __construct(
-        IndexController $index_controller,
-        DeleteController $delete_controller
-    ) {
-        $this->index_controller  = $index_controller;
-        $this->delete_controller = $delete_controller;
+    /**
+     * @var Project
+     */
+    private $project;
+
+    /**
+     * @var int
+     */
+    private $label_to_delete_id;
+
+    /**
+     * @param Project $project
+     * @param int $label_to_delete_id
+     */
+    public function __construct(Project $project, $label_to_delete_id)
+    {
+        $this->project            = $project;
+        $this->label_to_delete_id = $label_to_delete_id;
     }
 
-    public function process(HTTPRequest $request)
+    /**
+     * @return Project
+     */
+    public function getProject()
     {
-        switch ($request->get('action')) {
-            case 'delete':
-                $this->delete_controller->delete($request);
-                break;
-            default:
-                $this->index_controller->display($request);
-        }
+        return $this->project;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLabelToDeleteId()
+    {
+        return $this->label_to_delete_id;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -86,7 +86,7 @@ class DataAccessObject {
     /**
      * For SELECT queries
      *
-     * @param $sql the query string
+     * @param string $sql the query string
      * @throws DataAccessQueryException
      *
      * @return DataAccessResult|false
@@ -138,7 +138,7 @@ class DataAccessObject {
     /**
      * For INSERT, UPDATE and DELETE queries
      *
-     * @param $sql the query string
+     * @param string $sql the query string
      * @throws DataAccessQueryException
      *
      * @return boolean true if success

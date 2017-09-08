@@ -16,6 +16,9 @@ msgstr ""
 msgid "Already used"
 msgstr ""
 
+msgid "An error occured while trying to remove the label."
+msgstr ""
+
 msgid ""
 "An error occured with your upload. Please try again or choose another image."
 msgstr ""
@@ -101,6 +104,10 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#, php-format
+msgid "Delete %s"
+msgstr ""
+
 msgid "Delete dashboard"
 msgstr ""
 
@@ -156,6 +163,9 @@ msgid "Instant messaging"
 msgstr ""
 
 msgid "Is used?"
+msgstr ""
+
+msgid "Label has been deleted from the project."
 msgstr ""
 
 msgid "Labels"
@@ -364,6 +374,12 @@ msgid "Widgets"
 msgstr ""
 
 msgid "Wiki"
+msgstr ""
+
+#, php-format
+msgid ""
+"Wow, wait a minute. You're about to delete the label <b>%s</b>. Please "
+"confirm your action."
 msgstr ""
 
 msgid "Yesterday"
