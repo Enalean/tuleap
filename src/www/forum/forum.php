@@ -35,8 +35,9 @@ function forum_show_a_nested_message ($result,$row=0) {
 	  $g_id = db_result($gr,0,'group_id');
 	}
 
-	$poster = UserManager::instance()->getUserByUserName(db_result($result, $row, 'user_name'));
-	$ret_val = '
+	$purifier = Codendi_HTMLPurifier::instance();
+	$poster   = UserManager::instance()->getUserByUserName(db_result($result, $row, 'user_name'));
+	$ret_val  = '
 		<TABLE BORDER="0" WIDTH="100%">
 			<TR>                  
               <TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': '.UserHelper::instance()->getLinkOnUser($poster).
@@ -50,7 +51,7 @@ function forum_show_a_nested_message ($result,$row=0) {
 			</TR>
 			<TR>
 				<TD>
-					'. util_make_links(nl2br(db_result($result,$row,'body')), $g_id ) .'
+					'. $purifier->purify(db_result($result,$row,'body'), CODENDI_PURIFIER_BASIC, $g_id) .'
 				</TD>
 			</TR>';
     

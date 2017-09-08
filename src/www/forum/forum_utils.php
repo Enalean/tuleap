@@ -246,11 +246,6 @@ function forum_create_forum($group_id,$forum_name,$is_public=1,$create_default_m
 	}
 }
 
-function make_links ($data="") {
-	//moved make links to /include/utils.php
-	util_make_links($data);
-}
-
 function get_forum_name($id) {
   global $Language;
 	/*

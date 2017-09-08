@@ -1,24 +1,24 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
@@ -33,10 +33,6 @@ require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 
 
-// Need a TestVersion to by pass 'makeLinks' method.
-// Need to create this testversion by hand because with Mock object there is no
-// way to tell them "return the parameter as is".
-// This method to be used only when mandatory (when the is a utils_make_links call).
 class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
     private static $Codendi_HTMLPurifier_testversion_instance;
     // Need to redfine this method too because the parent one return a
@@ -51,9 +47,6 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
             self::$Codendi_HTMLPurifier_testversion_instance = new $c;
         }
         return self::$Codendi_HTMLPurifier_testversion_instance;
-    }
-    function makeLinks($str) {
-        return $str;
     }
 }
 
@@ -165,26 +158,22 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual("a\nb", $p->purify("a\nb", CODENDI_PURIFIER_BASIC_NOBR));
     }
 
-    function testMakeLinks() {
+    function testMakeLinks()
+    {
         $p = new Codendi_HTMLPurifierTestVersion2($this);
-        $this->assertEqual('', $p->makeLinks());
-        $this->assertEqual('<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>', $p->makeLinks('http://www.example.com'));
-        $this->assertEqual('"<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>"', $p->makeLinks('"http://www.example.com"'));
-        $this->assertEqual('\'<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>\'', $p->makeLinks('\'http://www.example.com\''));
-        $this->assertEqual('<<a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>>', $p->makeLinks('<http://www.example.com>'));
-        $this->assertEqual(' <a href="http://www.example.com" target="_blank" rel="noreferrer">http://www.example.com</a>', $p->makeLinks(' www.example.com'));
-        $this->assertEqual('<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>', $p->makeLinks('john.doe@example.com'));
-        $this->assertEqual('"<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>"', $p->makeLinks('"john.doe@example.com"'));
-        $this->assertEqual('\'<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>\'', $p->makeLinks('\'john.doe@example.com\''));
-        $this->assertEqual('<<a href="mailto:john.doe@example.com" target="_blank" rel="noreferrer">john.doe@example.com</a>>', $p->makeLinks('<john.doe@example.com>'));
-        $this->assertEqual(
-            '<a href="ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git" target="_blank" rel="noreferrer">ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git</a>',
-            $p->makeLinks('ssh://gitolite@crampons.cro.enalean.com/tuleap/stable.git')
-        );
-
+        $this->assertEqual('', $p->purify('', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('<a href="https://www.example.com">https://www.example.com</a>', $p->purify('https://www.example.com', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('"<a href="https://www.example.com">https://www.example.com</a>"', $p->purify('"https://www.example.com"', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('\'<a href="https://www.example.com">https://www.example.com</a>\'', $p->purify('\'https://www.example.com\'', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('&lt;<a href="https://www.example.com">https://www.example.com</a>&gt;', $p->purify('<https://www.example.com>', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('<a href="mailto:john.doe@example.com">john.doe@example.com</a>', $p->purify('john.doe@example.com', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('"<a href="mailto:john.doe@example.com">john.doe@example.com</a>"', $p->purify('"john.doe@example.com"', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('\'<a href="mailto:john.doe@example.com">john.doe@example.com</a>\'', $p->purify('\'john.doe@example.com\'', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('&lt;<a href="mailto:john.doe@example.com">john.doe@example.com</a>&gt;', $p->purify('<john.doe@example.com>', CODENDI_PURIFIER_BASIC));
+        $this->assertEqual('<a href="ssh://gitolite@example.com/tuleap/stable.git">ssh://gitolite@example.com/tuleap/stable.git</a>', $p->purify('ssh://gitolite@example.com/tuleap/stable.git', CODENDI_PURIFIER_BASIC));
         $rm = new ReferenceManagerTestMakeLinks();
         $p->setReturnValue('getReferenceManager', $rm);
-        $this->assertPattern('/link-to-art-1/', $p->makeLinks('art #1', 1));
+        $this->assertPattern('/link-to-art-1/', $p->purify('art #1', CODENDI_PURIFIER_BASIC, 1));
     }
 
     function testPurifierLight() {
@@ -204,4 +193,3 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual($expected, $p->purifyHTMLWithReferences($html, 123));
     }
 }
-?>
