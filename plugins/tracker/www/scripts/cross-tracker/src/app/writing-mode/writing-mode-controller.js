@@ -59,10 +59,24 @@ export default class WritingModeController {
     listenSearch() {
         this.writing_mode_search.addEventListener('click', () => {
             this.changeMode();
+            this.updateQueryResults();
         });
     }
 
     changeMode() {
         this.report_mode.switchToReadingMode();
+    }
+
+    async updateQueryResults() {
+        try {
+            const artifacts = await this.rest_querier.getQueryResult(
+                this.reading_cross_tracker_report.report_id,
+                this.writing_cross_tracker_report.getTrackerIds()
+            );
+            this.query_result_controller.updateArtifacts(artifacts);
+        } catch(error) {
+            this.error_displayer.displayError(this.translated_fetch_artifacts_error_message);
+            throw error;
+        }
     }
 }

@@ -52,6 +52,23 @@ export default class RestQuerier {
         }
     }
 
+    async getQueryResult(report_id, trackers_id) {
+        try {
+            this.loader_displayer.show();
+            const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
+                params: {
+                    limit: MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED,
+                    query: { trackers_id }
+                }
+            });
+            const { artifacts } = await response.json();
+
+            return artifacts;
+        } finally {
+            this.loader_displayer.hide();
+        }
+    }
+
     async updateReport(report_id, trackers_id) {
         try {
             this.loader_displayer.show();
