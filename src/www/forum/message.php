@@ -73,12 +73,13 @@ if ($request->valid($vMsg)) {
 
 	echo html_build_list_table_top ($title_arr);
 
-	$poster = UserManager::instance()->getUserByUserName(db_result($result, 0, "user_name"));
+	$purifier = Codendi_HTMLPurifier::instance();
+	$poster   = UserManager::instance()->getUserByUserName(db_result($result, 0, "user_name"));
 	echo "<TR><TD class=\"threadmsg\">\n";
 	echo $Language->getText('forum_message','by').": ".UserHelper::instance()->getLinkOnUser($poster)."<BR>";
 	echo $Language->getText('forum_message','date').": ".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,0, "date"))."<BR>";
 	echo $Language->getText('forum_message','subject').": ". db_result($result,0, "subject")."<P>";
-	echo util_make_links(nl2br(db_result($result,0, 'body')), $group_id);
+    echo $purifier->purify(db_result($result,0, 'body'), CODENDI_PURIFIER_BASIC, $group_id);
 	echo "</TD></TR>";
 	
     $crossref_fact= new CrossReferenceFactory($msg_id, ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $group_id);

@@ -415,10 +415,12 @@ function util_line_wrap ($text, $wrap = 80, $break = "\n") {
 	return implode($break, $result);
 }
 
+/**
+ * @deprecated
+ */
 function util_make_links ($data='',$group_id = 0) {
-    // creation of links has moved to Codendi_HTMLPurifier::makeLinks()
     $hp = Codendi_HTMLPurifier::instance();
-    return $hp->makeLinks($data, $group_id);
+    return $hp->purify($data, CODENDI_PURIFIER_BASIC_NOBR, $group_id);
 }
 
 function util_make_reference_links ($data,$group_id) {

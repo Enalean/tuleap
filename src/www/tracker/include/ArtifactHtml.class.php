@@ -1168,7 +1168,7 @@ class ArtifactHtml extends Artifact {
             }
             $rss->addItem(array(
                 'title'       => '<![CDATA['.$GLOBALS['Language']->getText('tracker_include_artifact','add_flup_comment') .' #'.$comment_id.']]>',
-                'description' => '<![CDATA['.$comment_type . util_make_links(nl2br(db_result($result, $i, 'new_value')),$group->getGroupId(),$this->ArtifactType->getID()).']]>',
+                'description' => '<![CDATA['.$comment_type . $hp->purify(db_result($result, $i, 'new_value'), CODENDI_PURIFIER_BASIC, $group->getGroupId()).']]>',
                 'pubDate'     => gmdate('D, d M Y h:i:s',db_result($orig_date, 0, 'date')).' GMT',
                 'dc:creator'  => $hp->purify($uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by'))),
                 'link'        => '<![CDATA['.get_server_url() .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>',

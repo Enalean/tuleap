@@ -39,6 +39,16 @@
 require_once('common/constants.php');
 
 class Codendi_HTMLPurifier {
+    private static $allowed_schemes = array(
+        'http'   => true,
+        'https'  => true,
+        'mailto' => true,
+        'ftp'    => true,
+        'nntp'   => true,
+        'news'   => true,
+        'tel'    => true
+    );
+
     /**
      * Hold an instance of the class
      */
@@ -79,6 +89,7 @@ class Codendi_HTMLPurifier {
         $config = HTMLPurifier_Config::createDefault();
         $this->setConfigAttribute($config, 'Core', 'Encoding', 'UTF-8');
         $this->setConfigAttribute($config, 'Cache', 'SerializerPath', $GLOBALS['codendi_cache_dir']);
+        $this->setConfigAttribute($config, 'URI', 'AllowedSchemes', self::$allowed_schemes);
         return $config;
     }
 
@@ -91,6 +102,10 @@ class Codendi_HTMLPurifier {
         $config = $this->getCodendiConfig();
         $this->setConfigAttribute($config, 'HTML', 'Allowed', $this->getLightConfigMarkups());
         $this->setConfigAttribute($config, 'AutoFormat', 'Linkify', true);
+        HTMLPurifier_URISchemeRegistry::instance()->register('ssh', new \Tuleap\HTMLPurifierSSHScheme());
+        $allowed_schemes        = self::$allowed_schemes;
+        $allowed_schemes['ssh'] = true;
+        $this->setConfigAttribute($config, 'URI', 'AllowedSchemes', $allowed_schemes);
         return $config;
     }
 
@@ -147,15 +162,10 @@ class Codendi_HTMLPurifier {
     }
 
     /**
-     * Transform links and emails from text to html links
-     *
-     * @param String $data
-     *
-     * @return String
+     * @return string
      */
-    function makeLinks($data = '', $group_id = 0) {
-        if(empty($data)) { return $data; }
-
+    private function linkifyMails($data)
+    {
         // john.doe@yahoo.com => <a href="mailto:...">...</a>
         $mailto_pattern = '
           (?<=\W|^)  # email must be at the beginning of the string or be preceded by a non word
@@ -163,27 +173,23 @@ class Codendi_HTMLPurifier {
           (
             ([a-z0-9_]|\-|\.)+@([^[:space:]<&>]*)([[:alnum:]-])   # really basic email pattern
           )';
-        $data = preg_replace("`$mailto_pattern`ix", "<a href=\"mailto:\\1\" target=\"_blank\" rel=\"noreferrer\">\\1</a>", $data);
+        return preg_replace("`$mailto_pattern`ix", "<a href=\"mailto:\\1\">\\1</a>", $data);
+    }
 
-        // www.yahoo.com => http://www.yahoo.com
-        $data = preg_replace("/([ \t\n])www\./i","\\1http://www.",$data);
-
-        // http://www.yahoo.com => <a href="...">...</a>
-
+    /**
+     * @return string
+     */
+    private function dealWithSpecialCasesWithFramingURLCharacters($data)
+    {
         // Special case for urls between brackets or double quotes
-        // e.g. <http://www.google.com> or "http://www.google.com"
+        // e.g. <https://www.example.com> or "https://www.example.com"
         // In some places (e.g. tracker follow-ups) the text is already encoded, so the brackets are replaced by &lt; and &gt; See SR #652.
         $url_pattern = '([[:alnum:]]+)://([^[:space:]<]*)([[:alnum:]#?/&=])';
         $matching    = '\1://\2\3';
+
         $data = preg_replace("`$url_pattern&quot;`i", "$matching\"", $data);
         $data = preg_replace("`$url_pattern&#039;`i", "$matching'",  $data);
-        $data = preg_replace("`$url_pattern&gt;`i",   "$matching>",  $data);
-        // Now, replace
-        $data = preg_replace("`$url_pattern`i", "<a href=\"$matching\" target=\"_blank\" rel=\"noreferrer\">$matching</a>", $data);
-
-        $this->insertReferences($data, $group_id);
-
-        return $data;
+        return preg_replace("`$url_pattern&gt;`i",   "$matching>",  $data);
     }
 
     /**
@@ -241,12 +247,15 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_BASIC:
-            $clean = nl2br($this->makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId));
+            $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
+            $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
+            $clean = $this->purify(nl2br($data), CODENDI_PURIFIER_LIGHT, $groupId);
             break;
         case CODENDI_PURIFIER_BASIC_NOBR:
-            $clean = $this->makeLinks(htmlentities($html, ENT_QUOTES, 'UTF-8'), $groupId);
+            $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
+            $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
+            $clean = $this->purify($data, CODENDI_PURIFIER_LIGHT, $groupId);
             break;
-
         case CODENDI_PURIFIER_JS_QUOTE:
             $clean = $this->js_string_purifier($html, JSON_HEX_APOS);
             break;
