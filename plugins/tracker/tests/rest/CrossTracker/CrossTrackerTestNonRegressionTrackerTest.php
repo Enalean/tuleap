@@ -96,6 +96,53 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         );
     }
 
+    public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArray()
+    {
+        $query = json_encode(
+            array(
+                "trackers_id" => "toto"
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse(
+            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArrayOfInt()
+    {
+        $query = json_encode(
+            array(
+                "trackers_id" => array("toto")
+            )
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse(
+            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotSent()
+    {
+        $query = json_encode(
+            array("toto")
+        );
+
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponse(
+            $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
+        );
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+
     private function getResponseForNonProjectMember($request)
     {
         return $this->getResponseByToken(

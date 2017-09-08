@@ -21,8 +21,9 @@
 
 namespace Tuleap\Tracker\REST\v1\CrossTracker;
 
+use PFUser;
+use Tracker;
 use Tuleap\Tracker\CrossTracker\CrossTrackerArtifactReportDao;
-use Tuleap\Tracker\CrossTracker\CrossTrackerReport;
 
 class CrossTrackerArtifactReportFactory
 {
@@ -44,15 +45,22 @@ class CrossTrackerArtifactReportFactory
     }
 
     /**
+     * @param Tracker[] $trackers
+     * @param PFUser    $current_user
+     * @param           $limit
+     * @param           $offset
+     *
      * @return PaginatedCollectionOfCrossTrackerArtifacts
      */
-    public function getArtifactsFromTrackerFromTrackers(CrossTrackerReport $report, \PFUser $user, $limit, $offset)
+    public function getArtifactsFromGivenTrackers(array $trackers, PFUser $current_user, $limit, $offset)
     {
-        $artifacts  = array();
-        $trackers_id   = $this->getTrackersId($report->getTrackers());
-        if (count($trackers_id) === 0) {
+        $artifacts = array();
+
+        if (count($trackers) === 0) {
             return new PaginatedCollectionOfCrossTrackerArtifacts($artifacts, 0);
         }
+
+        $trackers_id = $this->getTrackersId($trackers);
 
         $result     = $this->artifact_report_dao->searchArtifactsFromTracker($trackers_id, $limit, $offset);
         $total_size = $this->artifact_report_dao->foundRows();
@@ -60,7 +68,7 @@ class CrossTrackerArtifactReportFactory
             $artifact = $this->artifact_factory->getArtifactById($artifact['id']);
             if ($artifact->userCanView()) {
                 $artifact_representation = new CrossTrackerArtifactReportRepresentation();
-                $artifact_representation->build($artifact, $user);
+                $artifact_representation->build($artifact, $current_user);
                 $artifacts[] = $artifact_representation;
             }
         }
