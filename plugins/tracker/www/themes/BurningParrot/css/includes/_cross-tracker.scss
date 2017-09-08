@@ -79,7 +79,7 @@
 }
 
 .dashboard-widget-content-cross-tracker-project-icon {
-    margin: 0 5px;
+    margin: 0 5px 0 0;
     fill: $tlp-theme-color;
 }
 
@@ -117,7 +117,9 @@
 }
 
 .dashboard-widget-content-cross-tracker-reading-mode-tracker-project-name {
+    margin: 2px 0 0;
     color: $tlp-ui-dimmed;
+    font-size: 14px;
     font-weight: 400;
 }
 
