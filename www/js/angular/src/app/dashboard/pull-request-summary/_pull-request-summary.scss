@@ -2,18 +2,18 @@
     $border-color: #e6e6e6;
     $border-hover-color: #cccccc;
     $creation-date-color: #888888;
-    $margin-between-items: 15px;
+    $margin-between-items: 20px;
 
     min-height: 50px;
     display: flex;
     flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     align-content: center;
     border-radius: 3px;
     border: 1px solid $border-color;
     cursor: pointer;
-    padding: 0 $margin-between-items;
+    padding: $margin-between-items;
 
     &:hover {
         transition: border-color 100ms linear;
@@ -30,37 +30,45 @@
     }
 
     .refs {
-        margin-left: $margin-between-items;
+        margin: 0 0 0 $margin-between-items;
         white-space: nowrap;
     }
 
     .creation-date {
         color: $creation-date-color;
-        margin-left: $margin-between-items;
+        margin: 0 0 0 $margin-between-items;
         white-space: nowrap;
     }
 
-    .expander {
-        flex: 1 1 auto;
-        min-width: $margin-between-items;
+    .icon-calendar {
+        margin: 0 3px 0 0;
     }
 
     .status {
-        margin-left: $margin-between-items;
+        margin: 0 0 0 $margin-between-items;
         white-space: nowrap;
     }
 
     .author {
-        margin-left: $margin-between-items;
         font-size: 12px;
         white-space: nowrap;
     }
 
-    .actions {
-        margin-left: $margin-between-items;
+    .item-labels-box-select2.select2-container-disabled > .select2-choices {
+        padding: 0;
 
-        > .btn {
-            width: 45px;
+        > .select2-search-choice {
+            margin: 0 0 6px 5px;
         }
     }
+}
+
+.pull-request-summary-details {
+    flex: 0 0 auto;
+}
+
+.pull-request-summary-metadata {
+    margin: 10px 0 0;
+    display: flex;
+    align-items: center;
 }
