@@ -24,6 +24,7 @@ export default class WritingModeController {
         widget_content,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
+        project_selector,
         tracker_selection,
         success_displayer,
         error_displayer
@@ -31,6 +32,7 @@ export default class WritingModeController {
         this.widget_content               = widget_content;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
+        this.project_selector             = project_selector;
         this.tracker_selection            = tracker_selection;
         this.success_displayer            = success_displayer;
         this.error_displayer              = error_displayer;
@@ -50,6 +52,7 @@ export default class WritingModeController {
             if (! new_value) {
                 this.reading_mode.classList.add('cross-tracker-hide');
                 this.writing_mode.classList.remove('cross-tracker-hide');
+                this.project_selector.loadProjectsOnce();
             }
         };
 

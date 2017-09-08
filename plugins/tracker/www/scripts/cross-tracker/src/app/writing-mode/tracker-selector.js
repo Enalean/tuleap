@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from 'tlp';
 import { render } from 'mustache';
 import { watch } from 'wrist';
+import { getTrackersOfProject } from '../rest-querier.js';
 
 export default class TrackerSelector {
     constructor(
@@ -37,7 +37,7 @@ export default class TrackerSelector {
         this.form_trackers                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers');
         this.trackers_input               = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-input');
         this.trackers                     = new Map();
-        this.translated_too_many_trackers_message = this.widget_content.querySelector('.tracker-selector-error').textContent;
+        this.translated_fetch_error_message = this.widget_content.querySelector('.tracker-selector-error').textContent;
 
         this.disableSelect();
         this.listenProjectChange();
@@ -49,12 +49,8 @@ export default class TrackerSelector {
     async loadTrackers(project_id) {
         try {
             this.loader_displayer.show();
-            const json = await recursiveGet('/api/v1/projects/' + project_id + '/trackers', {
-                params: {
-                    limit: 50
-                }
-            });
-            for (const {id, label} of json) {
+            const trackers = await getTrackersOfProject(project_id);
+            for (const {id, label} of trackers) {
                 const is_already_selected = this.writing_cross_tracker_report.hasTrackerWithId(id);
                 this.trackers.set(id, {
                     id,
@@ -63,7 +59,8 @@ export default class TrackerSelector {
                 });
             }
         } catch (error) {
-            this.error_displayer.displayError(this.translated_too_many_trackers_message);
+            this.error_displayer.displayError(this.translated_fetch_error_message);
+            throw error;
         }
     }
 

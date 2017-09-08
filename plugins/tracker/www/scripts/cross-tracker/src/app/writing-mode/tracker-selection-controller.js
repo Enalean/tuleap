@@ -74,14 +74,14 @@ export default class TrackerSelectionController {
         this.removeTrackersSelected();
 
         const trackers = { selected_trackers: [] };
-        for (const {tracker, project} of this.writing_cross_tracker_report.trackers.values()) {
+        for (const { tracker, project } of this.writing_cross_tracker_report.trackers.values()) {
             trackers.selected_trackers.push(
                 {
                     tracker_id   : tracker.id,
                     tracker_label: tracker.label,
                     project_label: project.label
                 }
-            )
+            );
         }
         this.displaySelectedTrackers(trackers);
     }
@@ -114,6 +114,8 @@ export default class TrackerSelectionController {
             } catch (error) {
                 if (error instanceof TooManyTrackersSelectedError) {
                     this.too_many_trackers_error.classList.add('shown');
+                } else {
+                    throw error;
                 }
             }
         });

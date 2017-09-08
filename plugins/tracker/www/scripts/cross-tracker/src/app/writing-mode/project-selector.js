@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from 'tlp';
+import { getSortedProjectsIAmMemberOf } from '../rest-querier.js';
 import { render } from 'mustache';
 import { watch } from 'wrist';
 import project_option_template from './project-option.mustache';
@@ -25,41 +25,36 @@ import project_option_template from './project-option.mustache';
 export default class ProjectSelector {
     constructor(
         widget_content,
-        reading_cross_tracker_report,
         tracker_selection,
         error_displayer,
         loader_displayer
     ) {
-        this.reading_cross_tracker_report = reading_cross_tracker_report;
-        this.widget_content               = widget_content;
-        this.tracker_selection            = tracker_selection;
-        this.error_displayer              = error_displayer;
-        this.loader_displayer             = loader_displayer;
-        this.form_projects                = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
-        this.projects_input               = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
-        this.projects                     = new Map();
-        this.projects_loaded              = false;
+        this.widget_content    = widget_content;
+        this.tracker_selection = tracker_selection;
+        this.error_displayer   = error_displayer;
+        this.loader_displayer  = loader_displayer;
+        this.form_projects     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
+        this.projects_input    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
+        this.projects          = new Map();
+        this.projects_loaded   = false;
 
-        this.translated_too_many_trackers_message = this.widget_content.querySelector('.project-selector-error').textContent;
+        this.translated_fetch_error_message = this.widget_content.querySelector('.project-selector-error').textContent;
 
         this.listenSelectElementChange();
-        this.listenChangeMode();
         this.setDisabled();
+    }
+
+    loadProjectsOnce() {
+        if (! this.projects_loaded) {
+            this.loadProjects();
+        }
+        this.projects_loaded = true;
     }
 
     async loadProjects() {
         try {
             this.loader_displayer.show();
-            const json = await recursiveGet('/api/v1/projects/', {
-                params: {
-                    limit: 50,
-                    query: {'is_member_of': true }
-                }
-            });
-
-            const sorted_projects = json.sort(
-                ({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b)
-            );
+            const sorted_projects = await getSortedProjectsIAmMemberOf();
 
             for (const { id, label } of sorted_projects) {
                 this.projects.set(id.toString(), { id, label });
@@ -70,9 +65,11 @@ export default class ProjectSelector {
             this.setEnabled();
             this.tracker_selection.selected_project = projects_array[0];
         } catch (error) {
-            this.error_displayer.displayError(this.translated_too_many_trackers_message);
+            this.error_displayer.displayError(this.translated_fetch_error_message);
+            throw error;
+        } finally {
+            this.loader_displayer.hide();
         }
-        this.loader_displayer.hide();
     }
 
     setDisabled() {
@@ -95,18 +92,5 @@ export default class ProjectSelector {
         };
 
         watch(this.projects_input, 'value', inputChanged);
-    }
-
-    listenChangeMode() {
-        const updateMode = (property_name, old_value, new_value) => {
-            if (! new_value) {
-                if (! this.projects_loaded) {
-                    this.loadProjects();
-                }
-                this.projects_loaded = true;
-            }
-        };
-
-        watch(this.reading_cross_tracker_report, 'reading_mode', updateMode);
     }
 }

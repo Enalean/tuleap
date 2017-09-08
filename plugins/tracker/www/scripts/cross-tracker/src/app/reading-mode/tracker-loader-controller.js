@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put } from 'tlp';
+import { getReport, updateReport } from '../rest-querier.js';
 import { render } from 'mustache';
 import { watch } from 'wrist';
 import reading_trackers_template from './reading-trackers.mustache';
 import ReadingModeController from './reading-mode-controller.js';
-import TrackerQueryLoaderController from '../tracker-query-loader-controller.js';
 
 export default class TrackerLoaderController {
     constructor(
@@ -140,8 +139,7 @@ export default class TrackerLoaderController {
     async loadTrackersReport() {
         try {
             this.loader_displayer.show();
-            const response     = await get('/api/v1/cross_tracker_reports/' + this.reading_cross_tracker_report.report_id);
-            const { trackers } = await response.json();
+            const { trackers } = await getReport(this.reading_cross_tracker_report.report_id);
             this.resetAllListsOfTrackers();
             if (trackers) {
                 this.initTrackers(trackers);
@@ -150,6 +148,7 @@ export default class TrackerLoaderController {
         } catch (error) {
             this.setDisabled();
             this.error_displayer.displayError(this.translated_fetch_cross_tracker_report_message);
+            throw error;
         } finally {
             this.loader_displayer.hide();
         }
@@ -157,13 +156,9 @@ export default class TrackerLoaderController {
 
     async updateReport() {
         try {
-            const response = await put('/api/v1/cross_tracker_reports/' + this.reading_cross_tracker_report.report_id, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({trackers_id: [...this.writing_cross_tracker_report.trackers.keys()]})
-            });
-            const { trackers } = await response.json();
+            const tracker_ids = [...this.writing_cross_tracker_report.trackers.keys()];
+            const trackers    = await updateReport(this.reading_cross_tracker_report.report_id, tracker_ids);
+
             this.resetAllListsOfTrackers();
             if (trackers) {
                 this.initTrackers(trackers);
