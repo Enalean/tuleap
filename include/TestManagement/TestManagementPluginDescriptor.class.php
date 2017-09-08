@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrafficlightsPluginInfo extends PluginInfo {
+namespace Tuleap\TestManagement;
 
-    function __construct($plugin) {
-        parent::__construct($plugin);
-        $this->setPluginDescriptor(new TrafficlightsPluginDescriptor());
+class TestManagementPluginDescriptor extends \PluginDescriptor
+{
+    public function __construct()
+    {
+        parent::__construct($GLOBALS['Language']->getText('plugin_testmanagement', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_testmanagement', 'descriptor_description'));
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

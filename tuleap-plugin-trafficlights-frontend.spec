@@ -34,8 +34,8 @@ Test and tracability plugin
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights/www/scripts/angular
-%{__cp} -ar www/scripts/angular/bin $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights/www/scripts/angular
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/testmanagement/www/scripts/angular
+%{__cp} -ar www/scripts/angular/bin $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/testmanagement/www/scripts/angular
 
 %pre
 if [ "$1" -eq "1" ]; then
@@ -55,7 +55,7 @@ fi
 #
 %files
 %defattr(-,root,root,-)
-%{_datadir}/%{APP_NAME}/plugins/trafficlights/www/scripts/angular
+%{_datadir}/%{APP_NAME}/plugins/testmanagement/www/scripts/angular
 
 %changelog
 * Mon Sep 15 2014 Manuel VACELET <manuel.vacelet@enalean.com> -

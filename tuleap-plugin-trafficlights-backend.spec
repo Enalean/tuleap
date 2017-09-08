@@ -40,9 +40,9 @@ find www/themes -name '*.scss' | xargs rm -f
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/testmanagement
 
-%{__cp} -ar www include db templates site-content README VERSION ChangeLog resources $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/trafficlights
+%{__cp} -ar www include db templates site-content README VERSION ChangeLog resources $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/testmanagement
 
 %pre
 if [ "$1" -eq "1" ]; then
@@ -61,7 +61,7 @@ fi
 #
 %files
 %defattr(-,root,root,-)
-%{_datadir}/%{APP_NAME}/plugins/trafficlights
+%{_datadir}/%{APP_NAME}/plugins/testmanagement
 
 %changelog
 * Wed Jul 2 2014 Manuel VACELET <manuel.vacelet@enalean.com> -

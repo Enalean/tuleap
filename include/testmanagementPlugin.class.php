@@ -20,6 +20,7 @@
 
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -31,7 +32,7 @@ use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 
 require_once 'constants.php';
 
-class TrafficlightsPlugin extends Plugin
+class testmanagementPlugin extends Plugin
 {
     /**
      * Plugin constructor
@@ -257,11 +258,11 @@ class TrafficlightsPlugin extends Plugin
     }
 
     /**
-     * @return TrafficlightsPluginInfo
+     * @return TestManagementPluginInfo
      */
     public function getPluginInfo() {
         if (!$this->pluginInfo) {
-            $this->pluginInfo = new TrafficlightsPluginInfo($this);
+            $this->pluginInfo = new TestManagementPluginInfo($this);
         }
         return $this->pluginInfo;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,9 @@
 require_once 'pre.php';
 
 $plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('trafficlights');
+$p = $plugin_manager->getPluginByName('testmanagement');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->process($request);
 } else {
-    header('Location: '.get_server_url());
+    header('Location: /');
 }

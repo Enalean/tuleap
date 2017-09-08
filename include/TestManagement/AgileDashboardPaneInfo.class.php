@@ -67,7 +67,7 @@ class AgileDashboardPaneInfo extends AgileDashboard_PaneInfo
 
     public function getUri()
     {
-        $uri = '/plugins/trafficlights/?group_id=' . (int)$this->project_id
+        $uri = TESTMANAGEMENT_BASE_URL . '/?group_id=' . (int)$this->project_id
              . '&milestone_id=' . (int)$this->milestone_id;
         return $uri;
     }

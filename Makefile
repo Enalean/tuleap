@@ -85,7 +85,7 @@ docker-run:
 	useradd -d /build -m build
 	mkdir /build/sources
 	cp -R /tuleap /build/sources
-	cp -R /trafficlights /build/sources/tuleap/plugins
+	cp -R /testmanagement /build/sources/tuleap/plugins
 	chown build -R /build/sources
-	su --login --command "make -C /build/sources/tuleap/plugins/trafficlights all RELEASE=$(RELEASE)" build
+	su --login --command "make -C /build/sources/tuleap/plugins/testmanagement all RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TESTMANAGEMENT_BASE_URL', '/plugins/trafficlights');
+define('TESTMANAGEMENT_BASE_URL', '/plugins/testmanagement');
 define('TESTMANAGEMENT_BASE_DIR', realpath(__DIR__.'/..'));
 define('TESTMANAGEMENT_RESOURCE_DIR', TESTMANAGEMENT_BASE_DIR.'/resources');
 define('CAMPAIGN_TRACKER_SHORTNAME', 'campaign');
