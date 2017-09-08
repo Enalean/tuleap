@@ -129,7 +129,7 @@ class PageEditor
             $unresolved = $diff->ConflictingBlocks;
             $tokens['CONCURRENT_UPDATE_MESSAGE'] 
                 = $this->getConflictMessage($unresolved);
-        } elseif ($saveFailed && !$this->_isSpam) {
+        } elseif ($saveFailed) {
             $tokens['CONCURRENT_UPDATE_MESSAGE'] = 
                 HTML(HTML::h2(_("Some internal editing error")),
             	     HTML::p(_("Your are probably trying to edit/create an invalid version of this page.")),
@@ -221,21 +221,6 @@ class PageEditor
             $request->setArg('version', false);
             displayPage($request, 'nochanges');
             return true;
-        }
-
-        if (!$this->user->isAdmin() and $this->isSpam()) {
-            $this->_isSpam = true;
-            return false;
-            /*
-            // Save failed. No changes made.
-            $this->_redirectToBrowsePage();
-            // user will probably not see the rest of this...
-            include_once('lib/display.php');
-            // force browse of current version:
-            $request->setArg('version', false);
-            displayPage($request, 'nochanges');
-            return true;
-            */
         }
 
         $page = &$this->page;
@@ -345,54 +330,6 @@ class PageEditor
             return false;
 
         return $this->_content == $current->getPackedContent();
-    }
-
-    /** 
-     * Handle AntiSpam here. How? http://wikiblacklist.blogspot.com/
-     * Need to check dynamically some blacklist wikipage settings 
-     * (plugin WikiAccessRestrictions) and some static blacklist.
-     * DONE: 
-     *   Always: More then 20 new external links
-     */
-    function isSpam () {
-        $current = &$this->current;
-
-        $oldtext = $current->getPackedContent();
-        $newtext =& $this->_content;
-
-        // FIXME: in longer texts the NUM_SPAM_LINKS number should be increased.
-        //        better use a certain text : link ratio.
-
-        // 1. Not more then 20 new external links
-        if (defined("NUM_SPAM_LINKS")) {
-            if ($this->numLinks($newtext) - $this->numLinks($oldtext) >= NUM_SPAM_LINKS) {
-                // Allow strictly authenticated users?
-                // TODO: mail the admin?
-                $this->tokens['PAGE_LOCKED_MESSAGE'] = 
-                    HTML($this->getSpamMessage(),
-                         HTML::p(HTML::strong(_("Too many external links."))));
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /** Number of external links in the wikitext
-     */
-    function numLinks(&$text) {
-        return substr_count($text, "http://") + substr_count($text, "https://");
-    }
-
-    /** Header of the Anti Spam message 
-     */
-    function getSpamMessage () {
-        return
-            HTML(HTML::h2(_("Spam Prevention")),
-                 HTML::p(_("This page edit seems to contain spam and was therefore not saved."),
-                         HTML::br(),
-                         _("Sorry for the inconvenience.")),
-                 HTML::p(""));
     }
 
     function getPreview () {

@@ -209,14 +209,6 @@ msgstr ""
 msgid "%s is listed at %s"
 msgstr ""
 
-#: ../lib/editpage.php:419
-msgid "Spam Prevention"
-msgstr ""
-
-#: ../lib/editpage.php:420
-msgid "This page edit seems to contain spam and was therefore not saved."
-msgstr ""
-
 #: ../lib/editpage.php:422 ../lib/editpage.php:456
 msgid "Sorry for the inconvenience."
 msgstr ""
