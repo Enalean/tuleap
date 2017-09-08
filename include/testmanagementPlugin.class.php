@@ -278,13 +278,15 @@ class testmanagementPlugin extends Plugin
         $tracker_factory = TrackerFactory::instance();
         $project_manager = ProjectManager::instance();
         $user_manager    = UserManager::instance();
+        $event_manager   = EventManager::instance();
 
         $router = new Tuleap\TestManagement\Router(
             $this,
             $config,
             $tracker_factory,
             $project_manager,
-            $user_manager
+            $user_manager,
+            $event_manager
         );
 
         $router->route($request);

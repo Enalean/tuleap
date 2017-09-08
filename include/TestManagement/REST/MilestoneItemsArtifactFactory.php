@@ -20,14 +20,10 @@
 
 namespace Tuleap\TestManagement;
 
-use AgileDashboard_Milestone_Backlog_BacklogItem;
+use EventManager;
 use Project;
 use PFUser;
-use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Planning_MilestoneFactory;
-use AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 
 class MilestoneItemsArtifactFactory
@@ -40,66 +36,34 @@ class MilestoneItemsArtifactFactory
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
 
-    /** @var Planning_MilestoneFactory */
-    private $milestone_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
-    private $backlog_strategy_factory;
-
-    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
-    private $backlog_item_collection_factory;
-
     /** @var ArtifactDao */
     private $dao;
 
-    /**
-     * @var Tracker_ArtifactDao
-     */
-    private $tracker_artifact_dao;
+    /** @var EventManager */
+    private $event_manager;
 
     public function __construct(
         Config $config,
         ArtifactDao $dao,
         Tracker_ArtifactFactory $tracker_artifact_factory,
-        Planning_MilestoneFactory $milestone_factory,
-        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $backlog_strategy_factory,
-        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
-        Tracker_ArtifactDao $tracker_artifact_dao
+        EventManager $event_manager
     ) {
-        $this->config                          = $config;
-        $this->dao                             = $dao;
-        $this->tracker_artifact_factory        = $tracker_artifact_factory;
-        $this->milestone_factory               = $milestone_factory;
-        $this->backlog_strategy_factory        = $backlog_strategy_factory;
-        $this->backlog_item_collection_factory = $backlog_item_collection_factory;
-        $this->tracker_artifact_dao            = $tracker_artifact_dao;
+        $this->config                   = $config;
+        $this->dao                      = $dao;
+        $this->tracker_artifact_factory = $tracker_artifact_factory;
+        $this->event_manager            = $event_manager;
     }
 
     public function getCoverTestDefinitionsUserCanViewForMilestone(PFUser $user, Project $project, $milestone_id)
     {
         $test_def_tracker_id = $this->config->getTestDefinitionTrackerId($project);
         $test_definitions    = array();
-        $items_ids           = array();
 
-        $milestone     = $this->milestone_factory->getValidatedBareMilestoneByArtifactId($user, $milestone_id);
-        $strategy      = $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone);
-        $backlog_items = $this->backlog_item_collection_factory->getAllCollection(
-            $user,
-            $milestone,
-            $strategy,
-            ''
-        );
-
-        foreach ($backlog_items as $item) {
-            $items_ids[] = $item->id();
-
-            if ($item->hasChildren()) {
-                $this->parseChildrenElements($item, $user, $items_ids);
-            }
-        }
+        $event = new \Tuleap\TestManagement\Event\GetItemsFromMilestone($user, $milestone_id);
+        $this->event_manager->processEvent($event);
 
         $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
-            array_unique($items_ids),
+            $event->getItemsIds(),
             NatureCoveredByPresenter::NATURE_COVERED_BY,
             $test_def_tracker_id,
             PHP_INT_MAX,
@@ -113,17 +77,5 @@ class MilestoneItemsArtifactFactory
             }
         }
         return $test_definitions;
-    }
-
-    private function parseChildrenElements(AgileDashboard_Milestone_Backlog_BacklogItem $item, PFUser $user, array &$item_ids)
-    {
-        $children = $this->tracker_artifact_dao->getChildren($item->getArtifact()->getId())
-            ->instanciateWith(array($this->tracker_artifact_factory, 'getInstanceFromRow'));
-
-        foreach ($children as $child) {
-            if ($child->userCanView($user)) {
-                $item_ids[] = $child->getId();
-            }
-        }
     }
 }

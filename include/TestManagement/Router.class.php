@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use BackendLogger;
+use EventManager;
 use Plugin;
 use Codendi_Request;
 use MVC2_Controller;
@@ -62,28 +63,35 @@ class Router {
      */
     private $user_manager;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         Plugin $plugin,
         Config $config,
         TrackerFactory $tracker_factory,
         ProjectManager $project_manager,
-        UserManager $user_manager
+        UserManager $user_manager,
+        EventManager $event_manager
     ) {
         $this->config          = $config;
         $this->plugin          = $plugin;
         $this->tracker_factory = $tracker_factory;
         $this->project_manager = $project_manager;
         $this->user_manager    = $user_manager;
+        $this->event_manager   = $event_manager;
     }
 
     public function route(Codendi_Request $request) {
         switch ($request->get('action')) {
             case 'admin':
-                $controller = new AdminController($request, $this->config, $this->tracker_factory);
+                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager);
                 $this->renderAction($controller, 'admin', $request);
                 break;
             case 'admin-update':
-                $controller = new AdminController($request, $this->config, $this->tracker_factory);
+                $controller = new AdminController($request, $this->config, $this->tracker_factory, $this->event_manager);
                 $this->executeAction($controller, 'update');
                 $this->renderIndex($request);
                 break;
@@ -130,7 +138,7 @@ class Router {
     }
 
     private function renderIndex(Codendi_Request $request) {
-        $controller = new IndexController($request, $this->config, $this->tracker_factory);
+        $controller = new IndexController($request, $this->config, $this->tracker_factory, $this->event_manager);
         $this->renderAction($controller, 'index', $request);
     }
 

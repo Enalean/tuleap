@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
+use EventManager;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use Tracker_Exception;
@@ -62,20 +63,6 @@ use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_ReportFactory;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
-use Tracker_ArtifactDao;
-use PlanningFactory;
-use Planning_MilestoneFactory;
-use PlanningPermissionsManager;
-use AgileDashboard_BacklogItemDao;
-use AgileDashboard_Milestone_MilestoneDao;
-use AgileDashboard_Milestone_MilestoneStatusCounter;
-use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
-use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 
 class CampaignsResource {
 
@@ -134,60 +121,18 @@ class CampaignsResource {
             $this->config
         );
         $artifact_dao                         = new ArtifactDao();
+
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             $this->artifact_factory,
             $artifact_dao
         );
 
-        $planning_factory                 = PlanningFactory::build();
-        $status_counter                   = new AgileDashboard_Milestone_MilestoneStatusCounter(
-            new AgileDashboard_BacklogItemDao(),
-            new Tracker_ArtifactDao(),
-            $this->artifact_factory
-        );
-        $scrum_for_mono_milestone_checker = new ScrumForMonoMilestoneChecker(
-            new ScrumForMonoMilestoneDao(),
-            $planning_factory
-        );
-        $milestone_factory                = new Planning_MilestoneFactory(
-            $planning_factory,
-            $this->artifact_factory,
-            $this->formelement_factory,
-            $this->tracker_factory,
-            $status_counter,
-            new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
-            $scrum_for_mono_milestone_checker
-        );
-        $mono_milestone_items_finder      = new MonoMilestoneItemsFinder(
-            new MonoMilestoneBacklogItemDao(),
-            $this->artifact_factory
-        );
-        $backlog_strategy_factory         = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
-            new AgileDashboard_BacklogItemDao(),
-            $this->artifact_factory,
-            $planning_factory,
-            $scrum_for_mono_milestone_checker,
-            $mono_milestone_items_finder
-        );
-        $backlog_item_collection_factory  = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
-            $this->artifact_factory,
-            $this->formelement_factory,
-            $milestone_factory,
-            $planning_factory,
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
-        );
-
         $milestone_items_artifact_factory = new MilestoneItemsArtifactFactory(
             $this->config,
             $artifact_dao,
             $this->artifact_factory,
-            $milestone_factory,
-            $backlog_strategy_factory,
-            $backlog_item_collection_factory,
-            new Tracker_ArtifactDao()
+            EventManager::instance()
         );
 
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
@@ -258,6 +203,7 @@ class CampaignsResource {
             $this->user_manager,
             $this->artifact_factory
         );
+
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
 
         $this->node_js_client         = new NodeJSClient();
