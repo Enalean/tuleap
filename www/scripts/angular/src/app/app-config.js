@@ -1,10 +1,10 @@
 import './breadcrumb.tpl.html';
 
-export default TrafficlightsConfig;
+export default TestManagementConfig;
 
-TrafficlightsConfig.$inject = ['$urlRouterProvider', '$breadcrumbProvider'];
+TestManagementConfig.$inject = ['$urlRouterProvider', '$breadcrumbProvider'];
 
-function TrafficlightsConfig($urlRouterProvider, $breadcrumbProvider) {
+function TestManagementConfig($urlRouterProvider, $breadcrumbProvider) {
     $urlRouterProvider.otherwise('/campaigns');
     $breadcrumbProvider.setOptions({
         prefixStateName: 'campaigns.milestone',

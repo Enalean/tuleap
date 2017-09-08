@@ -1,4 +1,4 @@
-import trafficlights_module from '../app.js';
+import testmanagement_module from '../app.js';
 import angular from 'angular';
 import 'angular-mocks';
 
@@ -6,7 +6,7 @@ describe ('ExecutionRestService - ', function () {
     var mockBackend, ExecutionRestService, SharedPropertiesService;
 
     beforeEach(function() {
-        angular.mock.module(trafficlights_module);
+        angular.mock.module(testmanagement_module);
 
         angular.mock.inject(function(
             _ExecutionRestService_,

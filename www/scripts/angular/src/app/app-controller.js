@@ -1,6 +1,6 @@
-export default TrafficlightsCtrl;
+export default TestManagementCtrl;
 
-TrafficlightsCtrl.$inject = [
+TestManagementCtrl.$inject = [
     '$scope',
     'amMoment',
     'gettextCatalog',
@@ -8,7 +8,7 @@ TrafficlightsCtrl.$inject = [
     'UUIDGeneratorService'
 ];
 
-function TrafficlightsCtrl(
+function TestManagementCtrl(
     $scope,
     amMoment,
     gettextCatalog,

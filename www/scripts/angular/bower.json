@@ -1,5 +1,5 @@
 {
-  "name": "trafficlights",
+  "name": "testmanagement",
   "version": "0.0.1",
   "dependencies": {
     "angular-ui-utils": "bower-unique",

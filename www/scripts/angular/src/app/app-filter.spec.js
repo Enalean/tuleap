@@ -1,11 +1,11 @@
-import trafficlights_module from './app.js';
+import testmanagement_module from './app.js';
 import angular from 'angular';
 import 'angular-mocks';
 
 describe('InPropertiesFilter', function() {
     var ngFilter;
 
-    beforeEach(angular.mock.module(trafficlights_module));
+    beforeEach(angular.mock.module(testmanagement_module));
     beforeEach(angular.mock.inject(function($filter) {
         ngFilter = $filter;
     }));

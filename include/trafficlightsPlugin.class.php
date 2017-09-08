@@ -291,7 +291,7 @@ class TrafficlightsPlugin extends Plugin
             $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
             $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
 
-            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/trafficlights.js';
+            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/testmanagement.js';
             $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/socket.io.js';
             $params['javascript_files'][] = $this->getPluginPath() . '/scripts/move-breadcrumb.js';
         }

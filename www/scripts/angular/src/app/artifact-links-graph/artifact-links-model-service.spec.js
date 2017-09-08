@@ -1,4 +1,4 @@
-import trafficlights_module from '../app.js';
+import testmanagement_module from '../app.js';
 import angular from 'angular';
 import 'angular-mocks';
 
@@ -12,7 +12,7 @@ describe('ArtifactLinksModelService', function() {
             'setStrings'
         ]);
 
-        angular.mock.module(trafficlights_module, function($provide) {
+        angular.mock.module(testmanagement_module, function($provide) {
             $provide.value('gettextCatalog', gettextCatalog);
         });
 

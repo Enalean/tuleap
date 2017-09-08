@@ -1,16 +1,16 @@
 import angular from 'angular';
 import 'angular-mocks';
-import trafficlights_module from './app.js';
+import testmanagement_module from './app.js';
 
-describe('TrafficlightsCtrl', function() {
-  var TrafficlightsCtrl, $location, $scope;
+describe('TestManagementCtrl', function() {
+  var TestManagementCtrl, $location, $scope;
 
   beforeEach(function() {
-      angular.mock.module(trafficlights_module);
+      angular.mock.module(testmanagement_module);
       angular.mock.inject(function($controller, _$location_, $rootScope) {
         $location   = _$location_;
         $scope      = $rootScope.$new();
-        TrafficlightsCtrl = $controller('TrafficlightsCtrl', {$location: $location, $scope: $scope});
+        TestManagementCtrl = $controller('TestManagementCtrl', {$location: $location, $scope: $scope});
       });
   });
 

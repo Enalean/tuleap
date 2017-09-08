@@ -19,14 +19,14 @@ import definition from './definition/definition.js';
 import graph from './graph/graph.js';
 import artifact_links_graph from './artifact-links-graph/artifact-links-graph.js';
 
-import TrafficlightsConfig from './app-config.js';
+import TestManagementConfig from './app-config.js';
 import AutoFocusDirective from './app-directive.js';
 import InPropertiesFilter from './app-filter.js';
-import TrafficlightsCtrl from './app-controller.js';
+import TestManagementCtrl from './app-controller.js';
 import EnableTlpTableFilterDirective from './enable-tlp-table-filter-directive.js';
 import OpenTlpDropdownDirective from './open-tlp-dropdown-directive.js';
 
-export default angular.module('trafficlights', [
+export default angular.module('testmanagement', [
     ngSanitize,
     ui_router,
     angular_artifact_modal,
@@ -44,11 +44,11 @@ export default angular.module('trafficlights', [
     graph,
     artifact_links_graph
 ])
-.config(TrafficlightsConfig)
+.config(TestManagementConfig)
 .directive('autoFocus', AutoFocusDirective)
 .directive('enableTlpTableFilter', EnableTlpTableFilterDirective)
 .directive('openTlpDropdown', OpenTlpDropdownDirective)
 .filter('InPropertiesFilter', InPropertiesFilter)
-.controller('TrafficlightsCtrl', TrafficlightsCtrl)
+.controller('TestManagementCtrl', TestManagementCtrl)
 .name;
 

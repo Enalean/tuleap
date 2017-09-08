@@ -5,7 +5,7 @@ var webpack               = require('webpack');
 var assets_dir_path = path.resolve(__dirname, './bin/assets');
 module.exports = {
     entry : {
-        trafficlights: './src/app/app.js',
+        testmanagement: './src/app/app.js',
     },
     output: {
         path    : assets_dir_path,

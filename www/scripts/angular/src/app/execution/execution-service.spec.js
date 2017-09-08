@@ -1,4 +1,4 @@
-import trafficlights_module from '../app.js';
+import testmanagement_module from '../app.js';
 import angular from 'angular';
 import 'angular-mocks';
 
@@ -9,7 +9,7 @@ describe ('ExecutionService - ', function () {
         ExecutionService;
 
     beforeEach(function() {
-        angular.mock.module(trafficlights_module);
+        angular.mock.module(testmanagement_module);
 
         angular.mock.inject(function(
             _$q_,
