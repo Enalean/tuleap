@@ -17,36 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class ReadingCrossTrackerReport {
-    constructor(report_id) {
-        this.loaded          = false;
-        this.report_id       = report_id;
-        this.trackers        = new Map();
+export default class ReportMode {
+    constructor() {
+        this.reading_mode = true;
     }
 
-    initTrackers(trackers) {
-        for (const { id, label, project } of trackers) {
-            const tracker = { id, label };
-            this.addTracker({ id: project.id, label: project.label }, tracker);
-        }
+    switchToReadingMode() {
+        this.reading_mode = true;
     }
 
-    addTracker(project, tracker) {
-        this.trackers.set(tracker.id, {
-            project,
-            tracker
-        });
-    }
-
-    clearTrackers() {
-        this.trackers.clear();
-    }
-
-    getTrackers() {
-        return this.trackers.values();
-    }
-
-    getNumberOfTrackers() {
-        return this.trackers.size;
+    switchToWritingMode() {
+        this.reading_mode = false;
     }
 }

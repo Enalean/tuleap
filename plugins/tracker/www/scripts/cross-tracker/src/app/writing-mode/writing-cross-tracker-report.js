@@ -37,30 +37,38 @@ export default class WritingCrossTrackerReport {
             project,
             tracker
         });
-        this.number_of_tracker = this.getNumberOfTrackers();
+        this.number_of_tracker = this.trackers.size;
     }
 
     clearTrackers() {
         this.trackers.clear();
-        this.number_of_tracker = this.getNumberOfTrackers();
+        this.number_of_tracker = this.trackers.size;
     }
 
     removeTracker(tracker_id) {
         this.trackers.delete(tracker_id);
-        this.number_of_tracker = this.getNumberOfTrackers();
+        this.number_of_tracker = this.trackers.size;
     }
 
     duplicateFromReadingReport(reading_report) {
-        this.trackers = new Map(reading_report.getTrackers());
-        this.number_of_tracker = this.getNumberOfTrackers();
+        this.trackers = new Map(reading_report.trackers);
+        this.number_of_tracker = this.trackers.size;
     }
 
     hasTrackerWithId(tracker_id) {
         return this.trackers.has(tracker_id);
     }
 
-    getNumberOfTrackers() {
-        return this.trackers.size;
+    areTrackersEmpty() {
+        return this.trackers.size <= 0;
+    }
+
+    getTrackerIds() {
+        return [...this.trackers.keys()];
+    }
+
+    getTrackers() {
+        return this.trackers.values();
     }
 }
 

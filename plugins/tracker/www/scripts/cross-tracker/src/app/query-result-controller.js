@@ -19,30 +19,30 @@
 
 import moment from 'moment';
 import { render } from 'mustache';
-import { getReportContent } from './rest-querier.js';
 import query_result_rows_template from './query-result-rows.mustache';
 
-export default class TrackerQueryLoaderController {
+export default class QueryResultController {
     constructor(
         widget_content,
-        cross_tracker_report,
+        reading_cross_tracker_report,
         user_locale_store,
-        loader_displayer,
-        error_displayer
+        rest_querier,
+        error_displayer,
+        translated_fetch_artifacts_error_message
     ) {
-        this.widget_content        = widget_content;
-        this.cross_tracker_report  = cross_tracker_report;
-        this.localized_date_format = user_locale_store.getDateFormat();
-        this.loader_displayer      = loader_displayer;
-        this.error_displayer       = error_displayer;
+        this.widget_content               = widget_content;
+        this.reading_cross_tracker_report = reading_cross_tracker_report;
+        this.rest_querier                 = rest_querier;
+        this.localized_date_format        = user_locale_store.getDateFormat();
+        this.error_displayer              = error_displayer;
+
+        this.translated_fetch_artifacts_error_message = translated_fetch_artifacts_error_message;
 
         this.table_results     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
         this.table_empty_state = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-empty');
         this.table_footer      = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-footer');
 
-        this.translated_get_artifacts_query_message_error = this.widget_content.querySelector('.query-fetch-error').textContent;
-
-        this.loadTrackersQuery();
+        this.loadReportContent();
     }
 
     displayArtifacts(artifacts) {
@@ -76,17 +76,14 @@ export default class TrackerQueryLoaderController {
         }
     }
 
-    async loadTrackersQuery() {
+    async loadReportContent() {
         try {
-            this.loader_displayer.show();
-            const artifacts           = await getReportContent(this.cross_tracker_report.report_id);
+            const artifacts           = await this.rest_querier.getReportContent(this.reading_cross_tracker_report.report_id);
             const formatted_artifacts = this.formatArtifacts(artifacts);
             this.updateArtifacts(formatted_artifacts);
         } catch (error) {
-            this.error_displayer.displayError(this.translated_get_artifacts_query_message_error);
+            this.error_displayer.displayError(this.translated_fetch_artifacts_error_message);
             throw error;
-        } finally {
-            this.loader_displayer.hide();
         }
     }
 
