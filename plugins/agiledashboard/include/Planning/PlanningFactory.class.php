@@ -548,7 +548,10 @@ class PlanningFactory {
         $rows             = $this->dao->searchBacklogTrackersById($planning_id);
 
         foreach ($rows as $row) {
-            $backlog_trackers[] = $this->tracker_factory->getTrackerById($row['tracker_id']);
+            $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
+            if ($tracker !== null) {
+                $backlog_trackers[] = $tracker;
+            }
         }
 
         return $backlog_trackers;
