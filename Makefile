@@ -37,9 +37,6 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 .PHONY: npm-build
 npm-build:
-	cd $(BASE_DIR) &&\
-		npm install &&\
-		npm run build &&\
 	cd $(BASE_DIR)/www/scripts/angular &&\
 		npm install &&\
 		bower install --allow-root --config.interactive=false &&\
