@@ -81,11 +81,11 @@ class CampaignCreatorTest extends TuleapTestCase
 
         $this->project_manager     = mock('ProjectManager');
         $this->tracker_factory     = mock('TrackerFactory');
-        $this->definition_selector = mock('Tuleap\\Trafficlights\\REST\\v1\\DefinitionSelector');
+        $this->definition_selector = mock('Tuleap\\TestManagement\\REST\\v1\\DefinitionSelector');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->artifact_creator    = mock('Tracker_REST_Artifact_ArtifactCreator');
-        $this->config              = mock('Tuleap\\Trafficlights\\Config');
-        $this->execution_creator   = mock('Tuleap\\Trafficlights\\REST\\v1\\ExecutionCreator');
+        $this->config              = mock('Tuleap\\TestManagement\\Config');
+        $this->execution_creator   = mock('Tuleap\\TestManagement\\REST\\v1\\ExecutionCreator');
 
         $this->campaign_creator = new CampaignCreator(
             $this->config,

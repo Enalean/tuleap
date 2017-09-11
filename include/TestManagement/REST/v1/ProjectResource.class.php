@@ -56,7 +56,7 @@ class ProjectResource {
     private $tracker_factory;
 
     /** @var ArtifactFactory */
-    private $trafficlights_artifact_factory;
+    private $testmanagement_artifact_factory;
 
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;
@@ -71,11 +71,11 @@ class ProjectResource {
     private $campaign_representation_builder;
 
     public function __construct() {
-        $this->config                            = new Config(new Dao());
-        $conformance_validator                   = new ConfigConformanceValidator($this->config);
-        $this->project_manager                   = ProjectManager::instance();
-        $this->tracker_factory                   = TrackerFactory::instance();
-        $this->trafficlights_artifact_factory    = new ArtifactFactory(
+        $this->config                          = new Config(new Dao());
+        $conformance_validator                 = new ConfigConformanceValidator($this->config);
+        $this->project_manager                 = ProjectManager::instance();
+        $this->tracker_factory                 = TrackerFactory::instance();
+        $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             $conformance_validator,
             Tracker_ArtifactFactory::instance(),
@@ -92,7 +92,7 @@ class ProjectResource {
         $this->campaign_representation_builder   = new CampaignRepresentationBuilder(
             $this->user_manager,
             $this->tracker_form_element_factory,
-            $this->trafficlights_artifact_factory
+            $this->testmanagement_artifact_factory
         );
         $this->query_to_criterion_converter      = new QueryToCriterionConverter(
             $conformance_validator,
@@ -249,7 +249,7 @@ class ProjectResource {
             $matching_artifact_ids = explode(',', $matching_ids['id']);
             $artifacts_count       = count($matching_artifact_ids);
             $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
-            $artifacts             = $this->trafficlights_artifact_factory
+            $artifacts             = $this->testmanagement_artifact_factory
                                           ->getArtifactsByIdListUserCanView($this->user, $slice_matching_ids);
         }
 
@@ -262,7 +262,7 @@ class ProjectResource {
     /** @return array {Tracker_Artifact} */
     private function getDefinitionsSliceFromTracker($tracker_id, $limit, $offset) {
         $paginated_artifacts =
-            $this->trafficlights_artifact_factory
+            $this->testmanagement_artifact_factory
                  ->getPaginatedArtifactsByTrackerIdUserCanView(
                      $this->user,
                      $tracker_id,

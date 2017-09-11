@@ -148,8 +148,8 @@ class testmanagementPlugin extends Plugin
         $tracker = $params['artifact']->getTracker();
         $project = $tracker->getProject();
 
-        $plugin_trafficlights_is_used = $project->usesService($this->getServiceShortname());
-        if ($plugin_trafficlights_is_used) {
+        $plugin_testmanagement_is_used = $project->usesService($this->getServiceShortname());
+        if ($plugin_testmanagement_is_used) {
             $reference_information = array(
                 'title' => $GLOBALS['Language']->getText('plugin_testmanagement', 'references_graph_title'),
                 'links' => array()
@@ -177,8 +177,8 @@ class testmanagementPlugin extends Plugin
         $config = new Config(new Dao());
         $project = ProjectManager::instance()->getProject($params['project_id']);
 
-        $plugin_trafficlights_is_used = $project->usesService($this->getServiceShortname());
-        if (! $plugin_trafficlights_is_used) {
+        $plugin_testmanagement_is_used = $project->usesService($this->getServiceShortname());
+        if (! $plugin_testmanagement_is_used) {
             return;
         }
 
@@ -204,8 +204,8 @@ class testmanagementPlugin extends Plugin
         $from_project = ProjectManager::instance()->getProject($params['source_project_id']);
         $to_project = ProjectManager::instance()->getProject($params['group_id']);
 
-        $plugin_trafficlights_is_used = $to_project->usesService($this->getServiceShortname());
-        if (! $plugin_trafficlights_is_used) {
+        $plugin_testmanagement_is_used = $to_project->usesService($this->getServiceShortname());
+        if (! $plugin_testmanagement_is_used) {
             return;
         }
 
