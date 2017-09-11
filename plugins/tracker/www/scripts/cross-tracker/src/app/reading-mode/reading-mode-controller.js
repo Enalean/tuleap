@@ -90,7 +90,9 @@ export default class ReadingModeController {
         this.reading_mode_cancel_report.addEventListener('click', () => {
             this.hideReportActions();
             this.writing_cross_tracker_report.duplicateFromReadingReport(this.reading_cross_tracker_report);
+
             this.reading_trackers_controller.updateTrackersReading();
+            this.query_result_controller.loadReportContent();
         });
     }
 
