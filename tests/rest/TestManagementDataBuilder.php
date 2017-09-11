@@ -31,7 +31,7 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
     const ISSUE_TRACKER_SHORTNAME     = 'bugs';
 
-    const USER_TESTER_NAME   = 'rest_api_ttl_1';
+    const USER_TESTER_NAME   = 'rest_api_ttm_1';
     const USER_TESTER_PASS   = 'welcome0';
     const USER_TESTER_STATUS = 'A';
 
@@ -44,12 +44,12 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
 
     public function setUp()
     {
+        echo 'Setup TestManagement REST tests configuration';
+
         $this->installPlugin();
         $this->activatePlugin('testmanagement');
 
-        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_MGMT_SHORTNAME);
-        $this->importTestManagementTemplate($project);
-
+        $project  = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_MGMT_SHORTNAME);
         $trackers = $this->tracker_factory->getTrackersByGroupId($project->getID());
 
         foreach ($trackers as $tracker) {
@@ -87,14 +87,5 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
     private function installPlugin() {
         $dbtables = new DBTablesDAO();
         $dbtables->updateFromFile(dirname(__FILE__).'/../../db/install.sql');
-    }
-
-    public function importTestManagementTemplate(Project $project)
-    {
-        echo "Import TestManagement XML Template into project";
-
-        $this->importTemplateInProject($project->getId(), 'tuleap_testmgmt_template.xml');
-
-        return $this;
     }
 }
