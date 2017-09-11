@@ -80,11 +80,8 @@ class IndexPresenter {
         PFUser $current_user,
         $current_milestone
     ) {
-        $this->lang                   = $this->getLanguageAbbreviation($current_user);
-        $this->project_id             = $project_id;
-        $this->misconfigured_title    = $GLOBALS['Language']->getText('plugin_testmanagement', 'misconfigured_title');
-        $this->misconfigured_message  = $GLOBALS['Language']->getText('plugin_testmanagement', 'misconfigured_message');
-        $this->is_properly_configured = $campaign_tracker_id && $test_definition_tracker_id && $test_execution_tracker_id;
+        $this->lang       = $this->getLanguageAbbreviation($current_user);
+        $this->project_id = $project_id;
 
         $user_representation = new UserRepresentation();
         $user_representation->build($current_user);

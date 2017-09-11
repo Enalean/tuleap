@@ -87,14 +87,6 @@ class FirstConfigCreator
         );
     }
 
-    private function isConfigNeeded(Project $project)
-    {
-        return (! $this->config->getCampaignTrackerId($project)) ||
-               (! $this->config->getTestDefinitionTrackerId($project)) ||
-               (! $this->config->getTestExecutionTrackerId($project)) ||
-               (! $this->config->getIssueTrackerId($project));
-    }
-
     public function createConfigForProjectFromXML(Project $project)
     {
         $tracker_ids       = array();
@@ -105,7 +97,7 @@ class FirstConfigCreator
             ISSUE_TRACKER_SHORTNAME
         );
 
-        if (! $this->isConfigNeeded($project)) {
+        if (! $this->config->isConfigNeeded($project)) {
             return;
         }
 

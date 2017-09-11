@@ -6,6 +6,7 @@ www/scripts/angular/node_modules/
 www/scripts/angular/vendor/
 *.css
 *.mo
+*.po~
 node_modules/
 /nbproject/
 .sass-cache/

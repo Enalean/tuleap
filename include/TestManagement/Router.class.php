@@ -20,10 +20,17 @@
 
 namespace Tuleap\TestManagement;
 
+use BackendLogger;
 use Plugin;
 use Codendi_Request;
 use MVC2_Controller;
+use ProjectManager;
 use TrackerFactory;
+use TrackerXmlImport;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+use UserManager;
+use XMLImportHelper;
 
 class Router {
 
@@ -45,14 +52,28 @@ class Router {
      */
     private $service;
 
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var ProjectManager
+     */
+    private $user_manager;
+
     public function __construct(
         Plugin $plugin,
         Config $config,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        ProjectManager $project_manager,
+        UserManager $user_manager
     ) {
         $this->config          = $config;
         $this->plugin          = $plugin;
         $this->tracker_factory = $tracker_factory;
+        $this->project_manager = $project_manager;
+        $this->user_manager    = $user_manager;
     }
 
     public function route(Codendi_Request $request) {
@@ -66,7 +87,44 @@ class Router {
                 $this->executeAction($controller, 'update');
                 $this->renderIndex($request);
                 break;
+            case 'create-config':
+                $controller = new StartTestManagementController(
+                    $this->tracker_factory,
+                    new BackendLogger(),
+                    TrackerXmlImport::build(
+                        new XMLImportHelper(UserManager::instance())
+                    ),
+                    new AllowedProjectsConfig(
+                        $this->project_manager,
+                        new AllowedProjectsDao()
+                    )
+                );
+                $this->executeAction($controller, 'createConfig', array($request));
+                $this->renderIndex($request);
+                break;
             default:
+                if ($this->config->isConfigNeeded($request->getProject())) {
+                    $controller = new StartTestManagementController(
+                        $this->tracker_factory,
+                        new BackendLogger(),
+                        TrackerXmlImport::build(
+                            new XMLImportHelper(UserManager::instance())
+                        ),
+                        new AllowedProjectsConfig(
+                            $this->project_manager,
+                            new AllowedProjectsDao()
+                        )
+                    );
+
+                    $this->renderAction(
+                        $controller,
+                        'misconfiguration',
+                        $request,
+                        array($request)
+                    );
+                    return;
+                }
+
                 $this->renderIndex($request);
         }
     }
@@ -79,13 +137,13 @@ class Router {
     /**
      * Renders the given controller action, with page header/footer.
      *
-     * @param MVC2_Controller $controller  The controller instance.
+     * @param mixed           $controller  The controller instance.
      * @param string          $action_name The controller action name (e.g. index, show...).
      * @param Codendi_Request $request     The request
      * @param array           $args        Arguments to pass to the controller action method.
      */
     private function renderAction(
-        MVC2_Controller $controller,
+        $controller,
         $action_name,
         Codendi_Request $request,
         array $args = array()
@@ -101,12 +159,12 @@ class Router {
      * Executes the given controller action, without rendering page header/footer.
      * Useful for actions ending with a redirection instead of page rendering.
      *
-     * @param MVC2_Controller $controller  The controller instance.
+     * @param mixed           $controller  The controller instance.
      * @param string          $action_name The controller action name (e.g. index, show...).
      * @param array           $args        Arguments to pass to the controller action method.
      */
     private function executeAction(
-        MVC2_Controller $controller,
+        $controller,
         $action_name,
         array $args = array()
     ) {
@@ -126,7 +184,11 @@ class Router {
     private function getHeaderTitle($action_name) {
         $header_title = array(
             'index' => $GLOBALS['Language']->getText('plugin_testmanagement', 'service_lbl_key'),
-            'admin' => $GLOBALS['Language']->getText('global', 'Admin')
+            'admin' => $GLOBALS['Language']->getText('global', 'Admin'),
+            'misconfiguration' => dgettext(
+                'tuleap-testmanagement',
+                'Configuration incomplete'
+            )
         );
 
         return $header_title[$action_name];
@@ -150,12 +212,12 @@ class Router {
     /**
      * Renders the top banner + navigation for all pages.
      *
-     * @param MVC2_Controller $controller The controller instance
+     * @param mixed           $controller The controller instance
      * @param Codendi_Request $request    The request
      * @param string          $title      The page title
      */
     private function displayHeader(
-        MVC2_Controller $controller,
+        $controller,
         Codendi_Request $request,
         $title
     ) {
