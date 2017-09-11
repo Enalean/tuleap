@@ -10,7 +10,7 @@ function SocketFactory(
     SharedPropertiesService
 ) {
     if (SharedPropertiesService.getNodeServerAddress()) {
-        var io_socket = io.connect('https://' + SharedPropertiesService.getNodeServerAddress() + '/trafficlights',
+        var io_socket = io.connect('https://' + SharedPropertiesService.getNodeServerAddress() + '/testmanagement',
             {
                 secure: true,
                 path: '/socket.io'

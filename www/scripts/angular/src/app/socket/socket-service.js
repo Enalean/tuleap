@@ -74,7 +74,7 @@ function SocketService(
         SocketFactory.emit('subscription', {
             nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
             token                : locker.get('token'),
-            room_id              : 'trafficlights_' + SharedPropertiesService.getCampaignId(),
+            room_id              : 'testmanagement_' + SharedPropertiesService.getCampaignId(),
             uuid                 : SharedPropertiesService.getUUID()
         });
     }
@@ -131,7 +131,7 @@ function SocketService(
     }
 
     function listenToExecutionViewed() {
-        SocketFactory.on('trafficlights_user:presence', function(data) {
+        SocketFactory.on('testmanagement_user:presence', function(data) {
             if (_.has(data, 'execution_to_remove')) {
                 ExecutionService.displayPresencesByExecution(data.execution_to_remove, data.execution_presences_to_remove);
             }
@@ -149,13 +149,13 @@ function SocketService(
     }
 
     function listenToExecutionCreated() {
-        SocketFactory.on('trafficlights_execution:create', function(data) {
+        SocketFactory.on('testmanagement_execution:create', function(data) {
             ExecutionService.addTestExecution(data.artifact);
         });
     }
 
     function listenToExecutionUpdated() {
-        SocketFactory.on('trafficlights_execution:update', function(data) {
+        SocketFactory.on('testmanagement_execution:update', function(data) {
             ExecutionService.updateTestExecution(data.artifact);
             ExecutionService.updatePresenceOnCampaign(data.user);
 
@@ -166,14 +166,14 @@ function SocketService(
     }
 
     function listenToExecutionDeleted(callback) {
-        SocketFactory.on('trafficlights_execution:delete', function(data) {
+        SocketFactory.on('testmanagement_execution:delete', function(data) {
             ExecutionService.removeTestExecution(data.artifact);
             callback(data.artifact);
         });
     }
 
     function listenToCampaignUpdated(callback) {
-        SocketFactory.on('trafficlights_campaign:update', function(data) {
+        SocketFactory.on('testmanagement_campaign:update', function(data) {
             callback(data.artifact);
         });
     }

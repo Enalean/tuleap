@@ -247,9 +247,9 @@ class ExecutionsResource {
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
-                'trafficlights_' . $campaign->getId(),
+                'testmanagement_' . $campaign->getId(),
                 $rights,
-                'trafficlights_execution:update',
+                'testmanagement_execution:update',
                 $data
             );
 
@@ -296,9 +296,9 @@ class ExecutionsResource {
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
-                'trafficlights_' . $campaign->getId(),
+                'testmanagement_' . $campaign->getId(),
                 $rights,
-                'trafficlights_user:presence',
+                'testmanagement_user:presence',
                 $data
             );
 

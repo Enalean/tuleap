@@ -388,9 +388,9 @@ class CampaignsResource {
                 $message = new MessageDataPresenter(
                     $user->getId(),
                     $_SERVER[self::HTTP_CLIENT_UUID],
-                    'trafficlights_' . $campaign->getId(),
+                    'testmanagement_' . $campaign->getId(),
                     $rights,
-                    'trafficlights_execution:delete',
+                    'testmanagement_execution:delete',
                     $data
                 );
 
@@ -409,9 +409,9 @@ class CampaignsResource {
                 $message = new MessageDataPresenter(
                     $user->getId(),
                     $_SERVER[self::HTTP_CLIENT_UUID],
-                    'trafficlights_' . $campaign->getId(),
+                    'testmanagement_' . $campaign->getId(),
                     $rights,
-                    'trafficlights_execution:create',
+                    'testmanagement_execution:create',
                     $data
                 );
 
@@ -527,9 +527,9 @@ class CampaignsResource {
             $message = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
-                'trafficlights_' . $campaign->getId(),
+                'testmanagement_' . $campaign->getId(),
                 $rights,
-                'trafficlights_campaign:update',
+                'testmanagement_campaign:update',
                 $data
             );
 
