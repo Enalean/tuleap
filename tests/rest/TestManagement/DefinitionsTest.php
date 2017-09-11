@@ -17,16 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-namespace Tuleap\TestManagement;
 
-use TrafficlightsDataBuilder;
-use TrafficlightsCampaignBuilder;
-use BackendLogger;
+namespace Tuleap\TestManagement;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
- * @group TrafficlightsTest
+ * @group TestManagementTest
  */
 class DefinitionsTest extends BaseTest {
 

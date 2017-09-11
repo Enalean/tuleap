@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ use Test\Rest\Tracker\TrackerFactory;
 use \Guzzle\Http\Client;
 use \Test\Rest\RequestWrapper;
 
-class TrafficlightsCampaignBuilder {
+class TestManagementCampaignBuilder {
 
     private $campaigns_data = array(
         array('label' => 'Tuleap 7.1', 'status' => 'Closed', 'executions' => array()),
@@ -50,7 +50,7 @@ class TrafficlightsCampaignBuilder {
             $client,
             $rest_request,
             $project_id,
-            TrafficlightsDataBuilder::USER_TESTER_NAME
+            TestManagementDataBuilder::USER_TESTER_NAME
         );
     }
 

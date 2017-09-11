@@ -80,7 +80,7 @@ class FirstConfigCreatorTest extends TuleapTestCase
             $this->issue_tracker_id => $this->new_issue_tracker_id
         );
 
-        $this->config = mock('Tuleap\\Trafficlights\\Config');
+        $this->config = mock('Tuleap\\TestManagement\\Config');
         $this->tracker_factory = mock('TrackerFactory');
 
         $this->xml_import = mock('TrackerXmlImport');

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
@@ -17,13 +16,14 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 namespace Tuleap\TestManagement;
 
 use Tuleap\RealTime\MessageRightsPresenter;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Artifact;
 
-class TrafficlightsArtifactRightsPresenter implements MessageRightsPresenter
+class ArtifactRightsPresenter implements MessageRightsPresenter
 {
     public $submitter_id;
     public $submitter_can_view;

@@ -20,6 +20,7 @@
 
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
@@ -167,7 +168,7 @@ class testmanagementPlugin extends Plugin
     }
 
     /**
-     * List TrafficLights trackers to duplicate
+     * List TestManagement trackers to duplicate
      *
      * @param array $params The project duplication parameters (source project id, tracker ids list)
      *
@@ -193,7 +194,7 @@ class testmanagementPlugin extends Plugin
     }
 
     /**
-     * Configure new project's TrafficLights trackers
+     * Configure new project's TestManagement trackers
      *
      * @param mixed array $params The duplication params (tracker_mapping array, field_mapping array)
      *
@@ -219,7 +220,7 @@ class testmanagementPlugin extends Plugin
     }
 
     /**
-     * Add tab in Agile Dashboard Planning view to redirect to Trafficlights
+     * Add tab in Agile Dashboard Planning view to redirect to TestManagement
      * @param mixed array $params
      */
     public function agiledashboard_event_additional_panes_on_milestone($params)
@@ -290,7 +291,7 @@ class testmanagementPlugin extends Plugin
      * @see REST_RESOURCES
      */
     public function rest_resources(array $params) {
-        $injector = new Trafficlights_REST_ResourcesInjector();
+        $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
@@ -298,7 +299,7 @@ class testmanagementPlugin extends Plugin
      * @see REST_PROJECT_RESOURCES
      */
     public function rest_project_resources(array $params) {
-        $injector = new Trafficlights_REST_ResourcesInjector();
+        $injector = new ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 

@@ -20,14 +20,14 @@
 
 namespace Tuleap\TestManagement;
 
-use TrafficlightsCampaignBuilder;
-use TrafficlightsDataBuilder;
+use TestManagementCampaignBuilder;
+use TestManagementDataBuilder;
 use RestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
- * @group TrafficlightsTest
+ * @group TestManagementTest
  */
 abstract class BaseTest extends RestBase {
 
@@ -35,7 +35,7 @@ abstract class BaseTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TrafficlightsDataBuilder::USER_TESTER_NAME),
+            $this->getTokenForUserName(TestManagementDataBuilder::USER_TESTER_NAME),
             $request
         );
     }
@@ -44,10 +44,10 @@ abstract class BaseTest extends RestBase {
         parent::setUp();
 
         if ($this->project_id === null) {
-            $this->project_id = $this->getProjectId(TrafficlightsDataBuilder::PROJECT_TEST_MGMT_SHORTNAME);
+            $this->project_id = $this->getProjectId(TestManagementDataBuilder::PROJECT_TEST_MGMT_SHORTNAME);
         }
 
-        $campaign_builder = new TrafficlightsCampaignBuilder(
+        $campaign_builder = new TestManagementCampaignBuilder(
             $this->client,
             $this->rest_request,
             $this->project_id

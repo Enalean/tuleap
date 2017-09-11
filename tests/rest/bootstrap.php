@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,6 @@
  */
 
 require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/TrafficlightsDataBuilder.php';
-require_once dirname(__FILE__).'/TrafficlightsCampaignBuilder.php';
-require_once dirname(__FILE__).'/Trafficlights/BaseTest.php';
+require_once dirname(__FILE__).'/TestManagementDataBuilder.php';
+require_once dirname(__FILE__).'/TestManagementCampaignBuilder.php';
+require_once dirname(__FILE__).'/TestManagement/BaseTest.php';

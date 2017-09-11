@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement;
 
 use Tracker_FormElementFactory;
 
-class IndexController extends TrafficlightsController
+class IndexController extends TestManagementController
 {
 
     public function index()

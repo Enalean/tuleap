@@ -17,14 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
 namespace Tuleap\TestManagement;
 
-use TrafficlightsDataBuilder;
+use TestManagementDataBuilder;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
- * @group TrafficlightsTest
+ * @group TestManagementTest
  */
 class ExecutionsTest extends BaseTest {
 
@@ -53,7 +54,7 @@ class ExecutionsTest extends BaseTest {
 
     public function testPatchIssueLinkExecutions()
     {
-        $issue_tracker_id = $this->tracker_ids[$this->project_id][TrafficlightsDataBuilder::ISSUE_TRACKER_SHORTNAME];
+        $issue_tracker_id = $this->tracker_ids[$this->project_id][TestManagementDataBuilder::ISSUE_TRACKER_SHORTNAME];
 
         $issue    = $this->getLastArtifactFromTracker($issue_tracker_id);
         $issue_id = $issue['id'];

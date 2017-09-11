@@ -48,7 +48,7 @@ class NatureCoveredByOverriderTest extends TuleapTestCase
         parent::setUp();
 
         $this->artifact  = stub('Tracker_Artifact')->getId()->returns($this->artifact_id);
-        $this->config    = mock('Tuleap\\Trafficlights\\Config');
+        $this->config    = mock('Tuleap\\TestManagement\\Config');
         $this->project   = mock('Project');
         $this->overrider = new NatureCoveredByOverrider($this->config);
 

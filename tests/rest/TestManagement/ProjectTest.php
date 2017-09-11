@@ -20,12 +20,10 @@
 
 namespace Tuleap\TestManagement;
 
-use TrafficlightsDataBuilder;
-
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
- * @group TrafficlightsTest
+ * @group TestManagementTest
  */
 class ProjectTest extends BaseTest {
 

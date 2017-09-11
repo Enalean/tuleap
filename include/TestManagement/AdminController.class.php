@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement;
 
 use Feedback;
 
-class AdminController extends TrafficlightsController
+class AdminController extends TestManagementController
 {
 
     public function admin()
@@ -80,7 +80,7 @@ class AdminController extends TrafficlightsController
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 $GLOBALS['Language']->getText(
-                    'plugin_trafficlights',
+                    'plugin_testmanagement',
                     'invalid_tracker_id_for_project',
                     $submitted_id
                 )

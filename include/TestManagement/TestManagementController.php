@@ -26,9 +26,9 @@ use Planning_Milestone;
 use PFUser;
 use TrackerFactory;
 
-abstract class TrafficlightsController extends MVC2_PluginController {
+abstract class TestManagementController extends MVC2_PluginController {
 
-    const NAME = 'trafficlights';
+    const NAME = 'testmanagement';
 
     /**
      * @var Config

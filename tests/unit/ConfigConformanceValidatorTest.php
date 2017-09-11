@@ -77,7 +77,7 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
             ->withProject($another_project)
             ->build();
 
-        $config = mock('Tuleap\\Trafficlights\\Config');
+        $config = mock('Tuleap\\TestManagement\\Config');
         stub($config)
             ->getCampaignTrackerId($project)
             ->returns($campaign_tracker->getId());

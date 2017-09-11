@@ -46,7 +46,7 @@ use Tuleap\User\REST\UserRepresentation;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
-use Tuleap\TestManagement\TrafficlightsArtifactRightsPresenter;
+use Tuleap\TestManagement\ArtifactRightsPresenter;
 use UserManager;
 use PFUser;
 use Tuleap\TestManagement\ConfigConformanceValidator;
@@ -384,7 +384,7 @@ class CampaignsResource {
                     'user'     => $user_representation,
                 );
 
-                $rights  = new TrafficlightsArtifactRightsPresenter($execution, $this->permissions_serializer);
+                $rights  = new ArtifactRightsPresenter($execution, $this->permissions_serializer);
                 $message = new MessageDataPresenter(
                     $user->getId(),
                     $_SERVER[self::HTTP_CLIENT_UUID],
@@ -405,7 +405,7 @@ class CampaignsResource {
                     'user'     => $user_representation,
                 );
 
-                $rights  = new TrafficlightsArtifactRightsPresenter($execution, $this->permissions_serializer);
+                $rights  = new ArtifactRightsPresenter($execution, $this->permissions_serializer);
                 $message = new MessageDataPresenter(
                     $user->getId(),
                     $_SERVER[self::HTTP_CLIENT_UUID],
@@ -523,7 +523,7 @@ class CampaignsResource {
                 'artifact' => $campaign_representation,
                 'user'     => $user_representation,
             );
-            $rights  = new TrafficlightsArtifactRightsPresenter($campaign, $this->permissions_serializer);
+            $rights  = new ArtifactRightsPresenter($campaign, $this->permissions_serializer);
             $message = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],

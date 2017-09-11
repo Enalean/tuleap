@@ -243,7 +243,7 @@ class Router {
                 ))
             );
         }
-        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar, array('body_class' => array('trafficlights')));
+        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar, array('body_class' => array('testmanagement')));
     }
 
     private function userIsAdmin(Codendi_Request $request) {

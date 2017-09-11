@@ -47,7 +47,7 @@ use Tuleap\RealTime\NodeJSClient;
 use Tracker_Permission_PermissionsSerializer;
 use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
-use Tuleap\TestManagement\TrafficlightsArtifactRightsPresenter;
+use Tuleap\TestManagement\ArtifactRightsPresenter;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
@@ -242,7 +242,7 @@ class ExecutionsResource {
                 'user'            => $user_representation,
                 'previous_user'   => $previous_user
             );
-            $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $rights   = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
             $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($user, $artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),
@@ -291,7 +291,7 @@ class ExecutionsResource {
                     'user'         => $user_representation
                 )
             );
-            $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
+            $rights   = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
             $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($user, $artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),

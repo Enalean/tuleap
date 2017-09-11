@@ -24,7 +24,7 @@ require_once 'common/autoload.php';
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 
-class TrafficlightsDataBuilder extends REST_TestDataBuilder
+class TestManagementDataBuilder extends REST_TestDataBuilder
 {
     private $tracker_factory;
 
@@ -45,10 +45,10 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
     public function setUp()
     {
         $this->installPlugin();
-        $this->activatePlugin('trafficlights');
+        $this->activatePlugin('testmanagement');
 
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_MGMT_SHORTNAME);
-        $this->importTrafficlightsTemplate($project);
+        $this->importTestManagementTemplate($project);
 
         $trackers = $this->tracker_factory->getTrackersByGroupId($project->getID());
 
@@ -64,7 +64,7 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
             }
         }
 
-        $this->configureTrafficlightsPluginForProject(
+        $this->configureTestManagementPluginForProject(
             $project,
             $campaign_tracker_id,
             $test_def_tracker_id,
@@ -73,7 +73,7 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
         );
     }
 
-    private function configureTrafficlightsPluginForProject(
+    private function configureTestManagementPluginForProject(
         Project $project,
         $campaign_tracker_id,
         $test_def_tracker_id,
@@ -89,9 +89,9 @@ class TrafficlightsDataBuilder extends REST_TestDataBuilder
         $dbtables->updateFromFile(dirname(__FILE__).'/../../db/install.sql');
     }
 
-    public function importTrafficlightsTemplate(Project $project)
+    public function importTestManagementTemplate(Project $project)
     {
-        echo "Import Trafficlights XML Template into project";
+        echo "Import TestManagement XML Template into project";
 
         $this->importTemplateInProject($project->getId(), 'tuleap_testmgmt_template.xml');
 

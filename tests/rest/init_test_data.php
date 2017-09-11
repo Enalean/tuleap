@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once dirname(__FILE__).'/TrafficlightsDataBuilder.php';
+require_once dirname(__FILE__).'/TestManagementDataBuilder.php';
 
-$data_builder = new TrafficlightsDataBuilder();
+$data_builder = new TestManagementDataBuilder();
 $data_builder->setUp();

@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\TestManagement\REST;
+
+use Project;
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\TestManagement\REST\v1\CampaignRepresentation;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentation;
@@ -26,9 +29,9 @@ use Tuleap\TestManagement\REST\v1\NodeReferenceRepresentation;
 /**
  * Inject resource into restler
  */
-class Trafficlights_REST_ResourcesInjector {
+class ResourcesInjector {
 
-    public function populate(Luracast\Restler\Restler $restler) {
+    public function populate(\Luracast\Restler\Restler $restler) {
         $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\ProjectResource', 'projects');
         $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\CampaignsResource', 'testmanagement_campaigns');
         $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\DefinitionsResource', 'testmanagement_definitions');

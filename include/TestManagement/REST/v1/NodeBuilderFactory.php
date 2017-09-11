@@ -31,11 +31,11 @@ use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
-use Tuleap\TestManagement\Dao as TrafficlightsDao;
+use Tuleap\TestManagement\Dao as TestManagementDao;
 
 class NodeBuilderFactory {
 
-    /** @var TrafficlightsDao */
+    /** @var TestManagementDao */
     private $dao;
 
     /** @var ArtifactFactory */
@@ -45,7 +45,7 @@ class NodeBuilderFactory {
     private $artifact_builder;
 
     public function __construct() {
-        $this->dao = new TrafficlightsDao();
+        $this->dao = new TestManagementDao();
         $config    = new Config($this->dao);
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
