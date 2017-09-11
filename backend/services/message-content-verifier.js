@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -66,7 +66,7 @@ define([
      * @returns {boolean}
      */
     function isExecutionDeleted(message) {
-        return message.cmd === 'trafficlights_execution:delete'
+        return message.cmd === 'testmanagement_execution:delete'
             && _.has(message.data, 'artifact.id');
     }
 

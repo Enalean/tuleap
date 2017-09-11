@@ -148,7 +148,7 @@ describe("Module Rooms", function() {
                 data: {
                     artifact: {
                         id: 39,
-                        uri: 'trafficlights_executions/39',
+                        uri: 'testmanagement_executions/39',
                         results: '',
                         status: 'passed'
                     },
@@ -165,7 +165,7 @@ describe("Module Rooms", function() {
             var expect_data = {
                 artifact: {
                     id: 39,
-                    uri: 'trafficlights_executions/39',
+                    uri: 'testmanagement_executions/39',
                     results: '',
                     status: 'passed'
                 },

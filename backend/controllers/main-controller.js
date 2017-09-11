@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,7 @@ define([
         var scoresService        = new ScoresService(rooms.scores);
 
         /**
-         * Connection Websocket on namespace trafficlights
+         * Connection Websocket on namespace testmanagement
          *
          * To do a subscription we need to have:
          *      - string    version : To connect Client version to Tuleap-realtime server version
@@ -55,7 +55,7 @@ define([
          *      - string    uuid    : To distinguish each client with the same user id
          *      - string    room_id : Id to broadcast at a specific room
          */
-        io.of('trafficlights').on('connection', function (socket) {
+        io.of('testmanagement').on('connection', function (socket) {
             socket.auth = false;
 
             socket.on('subscription', function (data) {
