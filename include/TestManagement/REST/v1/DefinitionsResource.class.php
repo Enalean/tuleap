@@ -37,7 +37,7 @@ class DefinitionsResource {
     private $user_manager;
 
     /** @var ArtifactFactory */
-    private $trafficlights_artifact_factory;
+    private $testmanagement_artifact_factory;
 
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;
@@ -49,8 +49,8 @@ class DefinitionsResource {
         $config = new Config(new Dao());
         $conformance_validator = new ConfigConformanceValidator($config);
 
-        $this->user_manager                      = UserManager::instance();
-        $this->trafficlights_artifact_factory    = new ArtifactFactory(
+        $this->user_manager                    = UserManager::instance();
+        $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,
             $conformance_validator,
             Tracker_ArtifactFactory::instance(),
@@ -62,7 +62,6 @@ class DefinitionsResource {
             $this->tracker_form_element_factory,
             $conformance_validator
         );
-
     }
 
     /**
@@ -85,7 +84,7 @@ class DefinitionsResource {
      */
     protected function getId($id) {
         $user       = $this->user_manager->getCurrentUser();
-        $definition = $this->trafficlights_artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $definition = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
 
         if (! $definition) {
             throw new RestException(404, 'The test definition does not exist or is not visible');

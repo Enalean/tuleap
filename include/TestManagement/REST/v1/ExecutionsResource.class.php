@@ -66,7 +66,7 @@ class ExecutionsResource {
     private $artifact_factory;
 
     /** @var ArtifactFactory */
-    private $trafficlights_artifact_factory;
+    private $testmanagement_artifact_factory;
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -87,14 +87,14 @@ class ExecutionsResource {
     private $permissions_serializer;
 
     public function __construct() {
-        $this->config                = new Config(new Dao());
-        $conformance_validator       = new ConfigConformanceValidator($this->config);
+        $this->config          = new Config(new Dao());
+        $conformance_validator = new ConfigConformanceValidator($this->config);
 
-        $this->user_manager          = UserManager::instance();
-        $this->tracker_factory       = TrackerFactory::instance();
-        $this->formelement_factory   = Tracker_FormElementFactory::instance();
-        $this->artifact_factory      = Tracker_ArtifactFactory::instance();
-        $this->trafficlights_artifact_factory = new ArtifactFactory(
+        $this->user_manager                    = UserManager::instance();
+        $this->tracker_factory                 = TrackerFactory::instance();
+        $this->formelement_factory             = Tracker_FormElementFactory::instance();
+        $this->artifact_factory                = Tracker_ArtifactFactory::instance();
+        $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             $conformance_validator,
             $this->artifact_factory,
@@ -243,7 +243,7 @@ class ExecutionsResource {
                 'previous_user'   => $previous_user
             );
             $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $campaign = $this->trafficlights_artifact_factory->getCampaignForExecution($user, $artifact);
+            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($user, $artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
@@ -292,7 +292,7 @@ class ExecutionsResource {
                 )
             );
             $rights   = new TrafficlightsArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $campaign = $this->trafficlights_artifact_factory->getCampaignForExecution($user, $artifact);
+            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($user, $artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
@@ -492,7 +492,7 @@ class ExecutionsResource {
      * @return Tracker_Artifact
      */
     private function getArtifactById(PFUser $user, $id) {
-        $artifact = $this->trafficlights_artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $artifact = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
             ProjectAuthorization::userCanAccessProject(
                 $user,

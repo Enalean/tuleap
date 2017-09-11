@@ -39,7 +39,7 @@ class NodeBuilderFactory {
     private $dao;
 
     /** @var ArtifactFactory */
-    private $trafficlights_artifact_factory;
+    private $testmanagement_artifact_factory;
 
     /** @var ArtifactNodeBuilder */
     private $artifact_builder;
@@ -48,12 +48,13 @@ class NodeBuilderFactory {
         $this->dao = new TrafficlightsDao();
         $config    = new Config($this->dao);
 
-        $this->trafficlights_artifact_factory = new ArtifactFactory(
+        $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,
             new ConfigConformanceValidator($config),
             Tracker_ArtifactFactory::instance(),
             new ArtifactDao()
         );
+
         $this->artifact_builder = new ArtifactNodeBuilder(
             new Tracker_ArtifactDao(),
             new ArtifactNodeDao(),
@@ -72,7 +73,7 @@ class NodeBuilderFactory {
      * @return Tracker_Artifact
      */
     public function getArtifactById(PFUser $user, $id) {
-        $artifact = $this->trafficlights_artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $artifact = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
             ProjectAuthorization::userCanAccessProject(
                 $user,

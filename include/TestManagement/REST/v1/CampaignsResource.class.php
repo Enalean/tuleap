@@ -92,7 +92,7 @@ class CampaignsResource {
     private $artifact_factory;
 
     /** @var ArtifactFactory */
-    private $trafficlights_artifact_factory;
+    private $testmanagement_artifact_factory;
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -134,7 +134,7 @@ class CampaignsResource {
             $this->config
         );
         $artifact_dao                         = new ArtifactDao();
-        $this->trafficlights_artifact_factory = new ArtifactFactory(
+        $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             $this->conformance_validator,
             $this->artifact_factory,
@@ -204,7 +204,7 @@ class CampaignsResource {
         $this->campaign_representation_builder    = new CampaignRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
-            $this->trafficlights_artifact_factory
+            $this->testmanagement_artifact_factory
         );
 
         $artifact_validator = new Tracker_REST_Artifact_ArtifactValidator(
@@ -227,7 +227,7 @@ class CampaignsResource {
 
         $definition_selector = new DefinitionSelector(
             $this->config,
-            $this->trafficlights_artifact_factory,
+            $this->testmanagement_artifact_factory,
             new ProjectAuthorization(),
             $this->artifact_factory,
             $milestone_items_artifact_factory,
@@ -542,7 +542,7 @@ class CampaignsResource {
     }
 
     private function getCampaignFromId($id, PFUser $user) {
-        $campaign = $this->trafficlights_artifact_factory->getArtifactById($id);
+        $campaign = $this->testmanagement_artifact_factory->getArtifactById($id);
 
         if (! $this->isACampaign($campaign)) {
             throw new RestException(404, 'The campaign does not exist');
@@ -595,7 +595,7 @@ class CampaignsResource {
      */
     private function getArtifactById(PFUser $user, $id)
     {
-        $artifact = $this->trafficlights_artifact_factory->getArtifactById($id);
+        $artifact = $this->testmanagement_artifact_factory->getArtifactById($id);
         if ($artifact) {
             if (! $artifact->userCanView($user)) {
                 throw new RestException(403);
