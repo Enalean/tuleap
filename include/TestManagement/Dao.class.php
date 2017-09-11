@@ -27,7 +27,7 @@ class Dao extends DataAccessObject {
     public function searchByProjectId($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "SELECT * FROM plugin_trafficlights WHERE project_id = $project_id";
+        $sql = "SELECT * FROM plugin_testmanagement WHERE project_id = $project_id";
 
         return $this->retrieve($sql);
     }
@@ -45,7 +45,7 @@ class Dao extends DataAccessObject {
         $test_execution_tracker_id  = $this->da->escapeInt($test_execution_tracker_id);
         $issue_tracker_id           = $this->da->escapeInt($issue_tracker_id);
 
-        $sql = "REPLACE INTO plugin_trafficlights (project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id, issue_tracker_id)
+        $sql = "REPLACE INTO plugin_testmanagement (project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id, issue_tracker_id)
                 VALUES ($project_id, $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id, $issue_tracker_id)";
 
         return $this->update($sql);
