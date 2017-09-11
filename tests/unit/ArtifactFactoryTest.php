@@ -102,7 +102,7 @@ class ArtifactFactoryTest extends TuleapTestCase
             ->getLinkedArtifacts($this->user)
             ->returns(array());
 
-        $config = mock('Tuleap\\Trafficlights\\Config');
+        $config = mock('Tuleap\\TestManagement\\Config');
         stub($config)
             ->getCampaignTrackerId($project)
             ->returns($campaign_tracker->getId());
@@ -115,7 +115,7 @@ class ArtifactFactoryTest extends TuleapTestCase
             ->getArtifactsByTrackerId($this->campaign_tracker_id)
             ->returns(array($another_campaign, $this->campaign));
         Tracker_ArtifactFactory::setInstance($tracker_artifact_factory);
-        $artifact_dao = mock('Tuleap\\Trafficlights\\ArtifactDao');
+        $artifact_dao = mock('Tuleap\\TestManagement\\ArtifactDao');
 
         $this->factory = new ArtifactFactory(
             $config,
