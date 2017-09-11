@@ -172,7 +172,7 @@ class FirstConfigCreator
         try {
             return $this->xml_import->createFromXMLFile($project, $template_path);
         } catch (\Exception $exception) {
-            $this->logger->error('Unable to create trafficligts config for '. $project->getId() .': '. $exception->getMessage());
+            $this->logger->error('Unable to create testmanagement config for '. $project->getId() .': '. $exception->getMessage());
             return;
         }
     }
