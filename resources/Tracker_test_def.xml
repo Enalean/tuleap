@@ -85,7 +85,6 @@
                   <item ID="V11397" label="Agile Dasbhoard" is_hidden="0"/>
                   <item ID="V18514" label="Authentication / OpenID Connect" is_hidden="0"/>
                   <item ID="V11424" label="CLI" is_hidden="0"/>
-                  <item ID="V11398" label="Codex To Remedy" is_hidden="0"/>
                   <item ID="V11399" label="Continuous integration" is_hidden="0"/>
                   <item ID="V11400" label="Document manager" is_hidden="0"/>
                   <item ID="V11401" label="Document manager / Basic operations" is_hidden="0"/>
@@ -120,7 +119,6 @@
                   <item ID="V11429" label="Trackers v5 / Soap" is_hidden="0"/>
                   <item ID="V11430" label="Trackers v5 / Workflow" is_hidden="0"/>
                   <item ID="V11431" label="Trackers v5 / Workflow / Rule" is_hidden="0"/>
-                  <item ID="V18972" label="Trafficlights" is_hidden="0"/>
                   <item ID="V11432" label="WebDAV" is_hidden="0"/>
                   <item ID="V11433" label="WebDAV / WebDAV Document manager" is_hidden="0"/>
                   <item ID="V11434" label="WebDAV / WebDAV FRS" is_hidden="0"/>
