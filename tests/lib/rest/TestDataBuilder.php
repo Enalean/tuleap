@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerSaver;
+use Tuleap\Widget\WidgetFactory;
 
 class REST_TestDataBuilder extends TestDataBuilder
 {
@@ -275,10 +277,21 @@ class REST_TestDataBuilder extends TestDataBuilder
         echo "Generate Cross Tracker\n";
 
         $cross_tracker_saver = new CrossTrackerReportDao();
-        $report_id = $cross_tracker_saver->create();
+        $report_id           = $cross_tracker_saver->create();
         $cross_tracker_saver->addTrackersToReport(array($this->getKanbanTracker()), $report_id);
 
-        $cross_tracker_saver->create();
+        $widget_dao = new DashboardWidgetDao(
+            new WidgetFactory(
+                UserManager::instance(),
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance()
+            )
+        );
+
+        $user_report_id  = $cross_tracker_saver->create();
+        $widget_dao->create(REST_TestDataBuilder::TEST_USER_1_ID, 'u', 2, 'crosstrackersearch', $user_report_id);
+        $project_report_id  = $cross_tracker_saver->create();
+        $widget_dao->create(REST_TestDataBuilder::TEST_USER_1_ID, 'g', 3, 'crosstrackersearch', $project_report_id);
 
         return $this;
     }

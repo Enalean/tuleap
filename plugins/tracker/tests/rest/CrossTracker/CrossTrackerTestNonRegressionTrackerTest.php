@@ -142,6 +142,21 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    public function testYouCantAccessPersonalReportOfAnOtherUser()
+    {
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponseForNonProjectMember($this->client->get('cross_tracker_reports/2'));
+
+        $this->assertEquals($response->getStatusCode(), 403);
+    }
+
+    public function testYouCantAccessProjectReportOfProjectYouCantSee()
+    {
+        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
+        $response = $this->getResponseForNonProjectMember($this->client->get('cross_tracker_reports/3'));
+
+        $this->assertEquals($response->getStatusCode(), 403);
+    }
 
     private function getResponseForNonProjectMember($request)
     {

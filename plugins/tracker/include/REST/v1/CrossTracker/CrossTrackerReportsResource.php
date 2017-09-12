@@ -21,15 +21,19 @@
 namespace Tuleap\Tracker\REST\v1\CrossTracker;
 
 use Luracast\Restler\RestException;
+use PFUser;
+use ProjectManager;
 use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Tracker\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReport;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportNotFoundException;
+use URLVerification;
 use UserManager;
 
 class CrossTrackerReportsResource extends AuthenticatedResource
@@ -39,6 +43,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @var JsonDecoder
      */
     private $json_decoder;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
     /**
      * @var CrossTrackerArtifactReportFactory
      */
@@ -63,8 +71,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     public function __construct()
     {
         $this->json_decoder   = new JsonDecoder();
-        $this->user_manager   = UserManager::instance();
-        $this->report_factory = new CrossTrackerReportFactory(
+        $this->project_manager = ProjectManager::instance();
+        $this->user_manager    = UserManager::instance();
+        $this->report_factory  = new CrossTrackerReportFactory(
             new CrossTrackerReportDao(),
             TrackerFactory::instance()
         );
@@ -105,8 +114,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     {
         $this->checkAccess();
         try {
-            $current_user   = $this->user_manager->getCurrentUser();
-            $report         = $this->report_factory->getById($id, $current_user);
+            $report         = $this->getReport($id);
             $representation = $this->getReportRepresentation($report);
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
@@ -148,7 +156,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
         try {
             $current_user = $this->user_manager->getCurrentUser();
-            $report       = $this->report_factory->getById($id, $current_user);
+            $report       = $this->getReport($id);
 
             $artifacts = $this->cross_tracker_artifact_factory->getArtifactsFromGivenTrackers(
                 $this->getTrackersFromRoute($query, $report),
@@ -197,11 +205,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->sendAllowHeaders();
 
         try {
-            $current_user = $this->user_manager->getCurrentUser();
-            $trackers     = $this->cross_tracker_extractor->extractTrackers($trackers_id);
-
+            $this->getReport($id);
+            $trackers = $this->cross_tracker_extractor->extractTrackers($trackers_id);
             $this->cross_tracker_dao->updateReport($id, $trackers);
-            $report = $this->report_factory->getById($id, $current_user);
+
+            $report = $this->getReport($id);
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         } catch (TrackerNotFoundException $exception) {
@@ -264,5 +272,32 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         }
 
         return $this->cross_tracker_extractor->extractTrackers($json_query['trackers_id']);
+    }
+
+    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)
+    {
+        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
+        if ($widget['dashboard_type'] === 'user' && $widget['user_id'] !== $user->getId()) {
+            throw new RestException(403);
+        }
+
+        if ($widget['dashboard_type'] === 'project') {
+            $project = $this->project_manager->getProject($widget['project_id']);
+            ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
+        }
+    }
+
+    /**
+     * @param $id
+     *
+     * @return \Tuleap\Tracker\CrossTracker\CrossTrackerReport
+     */
+    protected function getReport($id)
+    {
+        $current_user = $this->user_manager->getCurrentUser();
+        $report       = $this->report_factory->getById($id, $current_user);
+        $this->checkUserIsAllowedToSeeReport($current_user, $report);
+
+        return $report;
     }
 }
