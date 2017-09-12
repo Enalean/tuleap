@@ -64,6 +64,7 @@ gulp.task('test', function(done) {
         singleRun    : true,
         reporters    : ['dots', 'junit'],
         junitReporter: {
+            outputDir     : process.env.REPORT_OUTPUT_FOLDER || '',
             outputFile    : 'test-results.xml',
             useBrowserName: false
         }
