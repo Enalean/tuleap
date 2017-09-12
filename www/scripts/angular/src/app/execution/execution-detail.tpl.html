@@ -53,6 +53,14 @@
                     </div>
                 </div>
 
+                <a class="current-test-header-action"
+                   ng-if="! linkMenuIsVisible && canCreateIssue"
+                   ng-click="showLinkToNewBugModal()"
+                   title="{{ 'Link to a new bug' | translate }}"
+                >
+                    <i class="fa fa-fw fa-bug"></i>
+                </a>
+
                 <a href="/plugins/tracker/?aid={{ execution.definition.id }}" class="current-test-header-action">
                     <i class="fa fa-fw fa-pencil"
                        ng-click="showEditArtifactModal($event, execution.definition)"

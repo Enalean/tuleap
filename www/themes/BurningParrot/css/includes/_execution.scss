@@ -325,17 +325,20 @@
 .current-test-header-actions {
     font-size: 20px;
     display: flex;
-    flex: 0 0 100px;
+    flex: 0 0 auto;
     justify-content: space-between;
 }
 
 .current-test-header-action {
-    display: inline-block;
-    vertical-align: middle;
+    margin: 0 0 0 $tlp-spacing;
     width: 27px;
     font-size: 27px;
     cursor: pointer;
     color: $tlp-ui-white;
+
+    &:first-child {
+        margin: 0;
+    }
 }
 
 .notrun .current-test-header-action {

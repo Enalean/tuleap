@@ -20,6 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
+use PFUser;
 use Tracker_FormElementFactory;
 
 class IndexController extends TestManagementController
@@ -43,7 +44,7 @@ class IndexController extends TestManagementController
         );
     }
 
-    public function getIssueTrackerConfig($current_user)
+    private function getIssueTrackerConfig(PFUser $current_user)
     {
         $issue_tracker_id = $this->config->getIssueTrackerId($this->project);
         $issue_tracker    = $this->tracker_factory->getTrackerById($issue_tracker_id);
