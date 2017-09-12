@@ -144,6 +144,9 @@ msgstr ""
 msgid "Git"
 msgstr ""
 
+msgid "Go up"
+msgstr ""
+
 msgid "Heartbeat"
 msgstr ""
 

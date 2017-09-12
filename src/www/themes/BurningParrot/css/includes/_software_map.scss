@@ -30,7 +30,7 @@
 }
 
 .softwaremap-list-filter-nb {
-    margin: 0 0 0 ($tlp-spacing / 2);
+    margin: 0 0 0 5px;
 }
 
 .softwaremap-list-selected {
@@ -53,4 +53,13 @@
 .softwaremap-list-results-trovecat-not-categorized {
     color: $tlp-ui-dimmed;
     font-style: italic;
+}
+
+#softwaremap-list-filter-go-up {
+    margin: 0 0 $tlp-spacing;
+}
+
+.softwaremap-list-filter-go-up-icon {
+    margin: 0 9px 0 12px;
+    color: $tlp-theme-color;
 }

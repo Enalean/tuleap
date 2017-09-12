@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%d member"
@@ -162,6 +162,9 @@ msgstr "Forums"
 
 msgid "Git"
 msgstr "Git"
+
+msgid "Go up"
+msgstr "Niveau supérieur"
 
 msgid "Heartbeat"
 msgstr "Activité"
