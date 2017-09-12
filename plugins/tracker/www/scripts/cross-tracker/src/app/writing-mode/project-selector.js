@@ -27,6 +27,7 @@ export default class ProjectSelector {
         tracker_selection,
         report_mode,
         rest_querier,
+        user,
         error_displayer
     ) {
         this.widget_content    = widget_content;
@@ -34,6 +35,7 @@ export default class ProjectSelector {
         this.report_mode       = report_mode;
         this.rest_querier      = rest_querier;
         this.error_displayer   = error_displayer;
+        this.is_user_anonymous = user.isAnonymous();
         this.form_projects     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
         this.projects_input    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
         this.projects          = new Map();
@@ -48,7 +50,7 @@ export default class ProjectSelector {
 
     listenChangeMode() {
         const watcher = (property_name, old_value, new_value) => {
-            if (! new_value) {
+            if (! new_value && ! this.is_user_anonymous) {
                 this.loadProjectsOnce();
             }
         };

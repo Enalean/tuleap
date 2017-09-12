@@ -93,7 +93,7 @@
     color: $tlp-theme-color;
     font-size: 15px;
 
-    &:hover {
+    &:hover:not(.disabled) {
         margin: 0;
         background-color: transparentize($tlp-theme-color, .9);
         cursor: pointer;

@@ -25,7 +25,7 @@ export default class QueryResultController {
     constructor(
         widget_content,
         backend_cross_tracker_report,
-        user_locale_store,
+        user,
         rest_querier,
         error_displayer,
         translated_fetch_artifacts_error_message
@@ -33,7 +33,7 @@ export default class QueryResultController {
         this.widget_content               = widget_content;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.rest_querier                 = rest_querier;
-        this.localized_date_format        = user_locale_store.getDateFormat();
+        this.localized_date_format        = user.getUserPreferredDateFormat();
         this.error_displayer              = error_displayer;
 
         this.translated_fetch_artifacts_error_message = translated_fetch_artifacts_error_message;

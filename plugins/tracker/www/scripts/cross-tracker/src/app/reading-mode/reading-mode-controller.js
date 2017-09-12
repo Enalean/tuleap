@@ -29,6 +29,7 @@ export default class ReadingModeController {
         rest_querier,
         reading_trackers_controller,
         query_resut_controller,
+        user,
         success_displayer,
         error_displayer
     ) {
@@ -55,9 +56,13 @@ export default class ReadingModeController {
         this.translated_put_cross_tracker_report_message_error   = this.widget_content.querySelector('.reading-mode-put-error').textContent;
 
         this.loadBackendReport().then(() => {
+            if (user.isAnonymous()) {
+                this.disableEditMode();
+                return;
+            }
+            this.listenSaveReport();
             this.listenEditClick();
             this.listenChangeMode();
-            this.listenSaveReport();
             this.listenCancelReport();
         });
     }
@@ -145,5 +150,14 @@ export default class ReadingModeController {
             this.error_displayer.displayError(this.translated_fetch_cross_tracker_report_message);
             throw error;
         }
+    }
+
+    disableSaveReport() {
+        this.reading_mode_save_report.disabled = true;
+    }
+
+    disableEditMode() {
+        this.disableSaveReport();
+        this.reading_mode_fields.classList.add('disabled');
     }
 }

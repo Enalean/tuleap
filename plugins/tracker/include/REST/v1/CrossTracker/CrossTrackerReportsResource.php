@@ -101,7 +101,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws 404
      */
-    protected function getId($id)
+    public function getId($id)
     {
         $this->checkAccess();
         try {
@@ -131,6 +131,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *   </li>
      * </ul>
      * @url GET {id}/content
+     * @access hybrid
      *
      * @param int    $id Id of the report
      * @param string $query With a property "trackers_id" to search artifacts presents in given trackers. {@required false}
@@ -141,7 +142,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws 404
      */
-    protected function getIdContent($id, $query, $limit = self::MAX_LIMIT, $offset = 0)
+    public function getIdContent($id, $query, $limit = self::MAX_LIMIT, $offset = 0)
     {
         $this->checkAccess();
         Header::allowOptionsGet();
