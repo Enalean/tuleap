@@ -135,9 +135,6 @@ class WidgetFactory
             case ProjectHeartbeat::NAME:
                 $widget = new ProjectHeartbeat();
                 break;
-            case 'projectclassification':
-                $widget = new Widget_ProjectClassification();
-                break;
             case 'projectmembers':
                 $widget = new Widget_ProjectMembers();
                 break;
