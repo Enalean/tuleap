@@ -18,17 +18,8 @@
  */
 
 export default class ReadingCrossTrackerReport {
-    constructor(report_id) {
-        this.loaded          = false;
-        this.report_id       = report_id;
-        this.trackers        = new Map();
-    }
-
-    initTrackers(trackers) {
-        for (const { id, label, project } of trackers) {
-            const tracker = { id, label };
-            this.addTracker({ id: project.id, label: project.label }, tracker);
-        }
+    constructor() {
+        this.trackers = new Map();
     }
 
     addTracker(project, tracker) {
@@ -38,15 +29,19 @@ export default class ReadingCrossTrackerReport {
         });
     }
 
-    clearTrackers() {
-        this.trackers.clear();
-    }
-
     getTrackers() {
         return this.trackers.values();
     }
 
-    getNumberOfTrackers() {
-        return this.trackers.size;
+    getTrackerIds() {
+        return [...this.trackers.keys()];
+    }
+
+    areTrackersEmpty() {
+        return this.trackers.size <= 0;
+    }
+
+    duplicateFromReport(report) {
+        this.trackers = new Map(report.trackers);
     }
 }

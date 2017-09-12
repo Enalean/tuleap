@@ -21,6 +21,7 @@ export default class WritingModeController {
     constructor(
         widget_content,
         report_mode,
+        backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
         query_result_controller,
@@ -31,8 +32,9 @@ export default class WritingModeController {
     ) {
         this.widget_content               = widget_content;
         this.report_mode                  = report_mode;
-        this.reading_cross_tracker_report = reading_cross_tracker_report;
+        this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
+        this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.query_result_controller      = query_result_controller;
 
         this.tracker_selection            = tracker_selection;
@@ -50,14 +52,14 @@ export default class WritingModeController {
 
     listenCancel() {
         this.writing_mode_cancel.addEventListener('click', () => {
-            this.writing_cross_tracker_report.clearTrackers();
-            this.writing_cross_tracker_report.duplicateFromReadingReport(this.reading_cross_tracker_report);
+            this.writing_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
             this.changeMode();
         });
     }
 
     listenSearch() {
         this.writing_mode_search.addEventListener('click', () => {
+            this.reading_cross_tracker_report.duplicateFromReport(this.writing_cross_tracker_report);
             this.changeMode();
             this.updateQueryResults();
         });
@@ -70,7 +72,7 @@ export default class WritingModeController {
     async updateQueryResults() {
         try {
             const artifacts = await this.rest_querier.getQueryResult(
-                this.reading_cross_tracker_report.report_id,
+                this.backend_cross_tracker_report.report_id,
                 this.writing_cross_tracker_report.getTrackerIds()
             );
             this.query_result_controller.updateArtifacts(artifacts);

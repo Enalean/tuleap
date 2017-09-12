@@ -23,6 +23,7 @@ export default class ReadingModeController {
     constructor(
         widget_content,
         report_mode,
+        backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
         rest_querier,
@@ -33,6 +34,7 @@ export default class ReadingModeController {
     ) {
         this.widget_content               = widget_content;
         this.report_mode                  = report_mode;
+        this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.rest_querier                 = rest_querier;
@@ -62,6 +64,7 @@ export default class ReadingModeController {
 
     listenEditClick() {
         this.reading_mode_fields.addEventListener('click', () => {
+            this.writing_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
             this.report_mode.switchToWritingMode();
         });
     }
@@ -69,7 +72,7 @@ export default class ReadingModeController {
     listenChangeMode() {
         const watcher = (property_name, old_value, new_value) => {
             if (new_value) {
-                if (ReadingModeController.areDifferentMap(this.reading_cross_tracker_report.trackers, this.writing_cross_tracker_report.trackers)) {
+                if (this.backend_cross_tracker_report.isDifferentFromReadingReport(this.reading_cross_tracker_report)) {
                     this.showReportActions();
                 } else {
                     this.hideReportActions();
@@ -89,38 +92,26 @@ export default class ReadingModeController {
     listenCancelReport() {
         this.reading_mode_cancel_report.addEventListener('click', () => {
             this.hideReportActions();
-            this.writing_cross_tracker_report.duplicateFromReadingReport(this.reading_cross_tracker_report);
+            this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
 
             this.reading_trackers_controller.updateTrackersReading();
             this.query_result_controller.loadReportContent();
         });
     }
 
-    static areDifferentMap(first_map, second_map) {
-        if (first_map.size !== second_map.size) {
-            return true;
-        }
-        for (const first_map_key of first_map.keys()) {
-            if (! second_map.has(first_map_key)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     async updateReport() {
-        this.reading_cross_tracker_report.loaded = false;
+        this.backend_cross_tracker_report.loaded = false;
         try {
-            const tracker_ids  = [...this.writing_cross_tracker_report.trackers.keys()];
-            const { trackers } = await this.rest_querier.updateReport(this.reading_cross_tracker_report.report_id, tracker_ids);
+            this.backend_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
+            const tracker_ids  = this.backend_cross_tracker_report.getTrackerIds();
+            const { trackers } = await this.rest_querier.updateReport(this.backend_cross_tracker_report.report_id, tracker_ids);
 
-            this.resetAllListsOfTrackers();
             if (trackers) {
                 this.initTrackers(trackers);
             }
             this.success_displayer.displaySuccess(this.translated_put_cross_tracker_report_message_success);
             this.hideReportActions();
-            this.reading_cross_tracker_report.loaded = true;
+            this.backend_cross_tracker_report.loaded = true;
         } catch (error) {
             this.error_displayer.displayError(this.translated_put_cross_tracker_report_message_error);
             throw error;
@@ -135,26 +126,22 @@ export default class ReadingModeController {
         this.reading_mode_actions.classList.add('cross-tracker-hide');
     }
 
-    resetAllListsOfTrackers() {
-        this.reading_cross_tracker_report.clearTrackers();
-        this.writing_cross_tracker_report.clearTrackers();
-    }
-
     initTrackers(trackers) {
-        this.reading_cross_tracker_report.initTrackers(trackers);
-        this.writing_cross_tracker_report.duplicateFromReadingReport(this.reading_cross_tracker_report);
+        this.backend_cross_tracker_report.initTrackers(trackers);
+        this.reading_cross_tracker_report.duplicateFromReport(this.backend_cross_tracker_report);
+        this.writing_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
     }
 
     async loadBackendReport() {
-        this.reading_cross_tracker_report.loaded = false;
+        this.backend_cross_tracker_report.loaded = false;
         try {
-            const { trackers } = await this.rest_querier.getReport(this.reading_cross_tracker_report.report_id);
-            this.resetAllListsOfTrackers();
+            const { trackers } = await this.rest_querier.getReport(this.backend_cross_tracker_report.report_id);
             if (trackers) {
                 this.initTrackers(trackers);
             }
-            this.reading_cross_tracker_report.loaded = true;
+            this.backend_cross_tracker_report.loaded = true;
         } catch (error) {
+            this.reading_trackers_controller.setDisabled();
             this.error_displayer.displayError(this.translated_fetch_cross_tracker_report_message);
             throw error;
         }

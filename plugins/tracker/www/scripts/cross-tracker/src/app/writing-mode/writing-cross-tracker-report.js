@@ -40,27 +40,18 @@ export default class WritingCrossTrackerReport {
         this.number_of_tracker = this.trackers.size;
     }
 
-    clearTrackers() {
-        this.trackers.clear();
-        this.number_of_tracker = this.trackers.size;
-    }
-
     removeTracker(tracker_id) {
         this.trackers.delete(tracker_id);
         this.number_of_tracker = this.trackers.size;
     }
 
-    duplicateFromReadingReport(reading_report) {
-        this.trackers = new Map(reading_report.trackers);
+    duplicateFromReport(report) {
+        this.trackers = new Map(report.trackers);
         this.number_of_tracker = this.trackers.size;
     }
 
     hasTrackerWithId(tracker_id) {
         return this.trackers.has(tracker_id);
-    }
-
-    areTrackersEmpty() {
-        return this.trackers.size <= 0;
     }
 
     getTrackerIds() {

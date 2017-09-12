@@ -27,13 +27,13 @@ export default class TrackerSelectionController {
         widget_content,
         tracker_selection,
         writing_cross_tracker_report,
-        reading_cross_tracker_report,
+        backend_cross_tracker_report,
         tracker_selector
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
-        this.reading_cross_tracker_report = reading_cross_tracker_report;
+        this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.tracker_selector             = tracker_selector;
         this.form_trackers_selected       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-selected');
         this.add_tracker_button           = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
@@ -89,7 +89,7 @@ export default class TrackerSelectionController {
             this.updateTrackersSelected();
         };
 
-        watch(this.reading_cross_tracker_report, 'loaded', watcher);
+        watch(this.backend_cross_tracker_report, 'loaded', watcher);
     }
 
     listenTrackerChange() {
