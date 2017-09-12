@@ -79,7 +79,7 @@
 }
 
 .dashboard-widget-content-cross-tracker-project-icon {
-    margin: 0 5px 0 0;
+    margin: 0 3px 0 8px;
     fill: $tlp-theme-color;
 }
 
@@ -121,6 +121,10 @@
     color: $tlp-ui-dimmed;
     font-size: 14px;
     font-weight: 400;
+
+    > .dashboard-widget-content-cross-tracker-project-icon {
+        margin: 0 5px 0 0;
+    }
 }
 
 .dashboard-widget-content-cross-tracker-search {
