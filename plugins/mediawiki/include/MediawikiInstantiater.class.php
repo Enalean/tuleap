@@ -79,8 +79,8 @@ class MediaWikiInstantiater {
         $this->project             = $project;
         $this->project_name        = $project->getUnixName();
         $this->project_id          = $project->getID();
-        $this->dao                 = new MediawikiDao();
         $this->mediawiki_manager   = $mediawiki_manager;
+        $this->dao                 = $mediawiki_manager->getDao();
         $this->language_manager    = $language_manager;
         $this->version_manager     = $version_manager;
         $this->mleb_manager        = $mleb_manager;
@@ -270,7 +270,7 @@ class MediaWikiInstantiater {
 
     private function seedUGroupMappingFromTemplate(array $ugroup_mapping) {
         $template         = ProjectManager::instance()->getProject($this->project->getTemplate());
-        $mapper           = new MediawikiUserGroupsMapper(new MediawikiDao(), new User_ForgeUserGroupPermissionsDao());
+        $mapper           = new MediawikiUserGroupsMapper($this->dao, new User_ForgeUserGroupPermissionsDao());
         $template_mapping = $mapper->getCurrentUserGroupMapping($template);
         $new_mapping      = array();
         foreach ($template_mapping as $mw_group => $tuleap_groups) {

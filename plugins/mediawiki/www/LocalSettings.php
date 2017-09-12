@@ -23,6 +23,7 @@
  *  Mediawiki plugin of Tuleap.
  */
 
+
 /* C style inclusion guard. Yes, I know. Don’t comment on it. */
 if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 $fusionforge_plugin_mediawiki_LocalSettings_included = true;
@@ -45,7 +46,14 @@ require_once 'pre.php';
  */
 require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
-$manager                = new MediawikiManager(new MediawikiDao());
+$plugin_manager = PluginManager::instance();
+/** @var $mw_plugin mediawikiPlugin */
+$mw_plugin = $plugin_manager->getPluginByName('mediawiki');
+if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
+    die('Mediawiki plugin not available');
+}
+$manager                = $mw_plugin->getMediawikiManager();
+$GLOBALS['mediawiki_dao'] = $manager->getDao();
 $language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
 $project_name_retriever = new MediawikiFusionForgeProjectNameRetriever();
 $project_manager        = ProjectManager::instance();
@@ -130,14 +138,15 @@ $wgDBserver         = forge_get_config('database_host') ;
 
 if (forge_get_config('mw_dbtype', 'mediawiki') == 'mysql') {
     // At the time writing schema in mysql is synonym for database
-    $dao      = new MediawikiDao();
-    $wgDBname = $dao->getMediawikiDatabaseName($group, false);
+    $wgDBname = $manager->getWgDBname($group);
     if (! $wgDBname) {
         exit_error (sprintf(_('Mediawiki for project %s cannot be found, please contact your system admininistrators.'), $fusionforgeproject.':'.$project_dir)) ;
     }
-    $wgDBprefix = 'mw';
+    $wgDBprefix = $manager->getWgDBprefix($group);
 } else {
-    $wgDBname = forge_get_config('database_name');
+    $wgDBname      = forge_get_config('database_name');
+    $wgDBmwschema  = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
+    $wgDBts2schema = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
 }
 
 $wgDBuser           = forge_get_config('database_user') ;
@@ -145,8 +154,6 @@ $wgDBpassword       = forge_get_config('database_password') ;
 $wgDBadminuser      = forge_get_config('database_user') ;
 $wgDBadminpassword  = forge_get_config('database_password') ;
 $wgDBport           = forge_get_config('database_port') ;
-$wgDBmwschema       = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
-$wgDBts2schema      = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproject") ;
 $wgMainCacheType    = CACHE_NONE;
 $wgMemCachedServers = array();
 $wgEnableParserCache = false;
@@ -243,7 +250,7 @@ function TuleapMediawikiAuthentication($user, &$result) {
  * upon the groups to which the user belongs.
  */
 function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user, Group $group) {
-    $groups_mapper    = new MediawikiUserGroupsMapper(new MediawikiDao(), new User_ForgeUserGroupPermissionsDao());
+    $groups_mapper    = new MediawikiUserGroupsMapper($GLOBALS['mediawiki_dao'], new User_ForgeUserGroupPermissionsDao());
     $mediawiki_groups = $groups_mapper->defineUserMediawikiGroups($tuleap_user, $group);
 
     foreach ($mediawiki_groups['removed'] as $group_to_remove) {

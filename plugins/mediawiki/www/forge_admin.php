@@ -24,6 +24,13 @@ require_once 'pre.php';
 require_once dirname(__FILE__) .'/../include/MediawikiAdminController.class.php';
 require_once dirname(__FILE__) .'/../include/MediawikiSiteAdminController.class.php';
 
+$plugin_manager = PluginManager::instance();
+$mw_plugin = $plugin_manager->getPluginByName('mediawiki');
+if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
+    $GLOBALS['Response']->redirect('/');
+    exit;
+}
+
 /**
  * HACK
  */
@@ -38,7 +45,7 @@ switch ($action) {
     case 'save_language':
     case 'save_permissions':
         $service = $request->getProject()->getService('plugin_mediawiki');
-        $controller = new MediawikiAdminController();
+        $controller = new MediawikiAdminController($mw_plugin->getMediawikiManager());
         $controller->$action($service, $request);
         break;
     case 'site_index':
