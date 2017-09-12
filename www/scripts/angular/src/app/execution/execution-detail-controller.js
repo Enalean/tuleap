@@ -45,7 +45,7 @@ function ExecutionDetailCtrl(
     $scope.notrun                      = notrun;
     $scope.sanitizeHtml                = sanitizeHtml;
     $scope.getStatusLabel              = getStatusLabel;
-    $scope.linkMenuIsVisible           = issue_config.permissions.create || issue_config.permissions.link;
+    $scope.linkMenuIsVisible           = issue_config.permissions.create && issue_config.permissions.link;
     $scope.canCreateIssue              = issue_config.permissions.create;
     $scope.canLinkIssue                = issue_config.permissions.link;
     $scope.showLinkToNewBugModal       = showLinkToNewBugModal;
