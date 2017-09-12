@@ -25,6 +25,6 @@ class TestManagementPluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct($GLOBALS['Language']->getText('plugin_testmanagement', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_testmanagement', 'descriptor_description'));
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
+        $this->setVersionFromFile(__DIR__ .'/../../VERSION');
     }
 }
