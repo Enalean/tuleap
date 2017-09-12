@@ -17,23 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default class LoaderDisplayer {
+export default class WidgetLoaderDisplayer {
     constructor(widget_content) {
-        this.loader        = widget_content.querySelector('.dashboard-widget-content-cross-tracker-loading');
-        this.ongoing_loads = [];
+        this.widget = widget_content;
     }
 
     show() {
-        if (this.ongoing_loads.length === 0) {
-            this.loader.classList.add('shown');
-        }
-        this.ongoing_loads.push('ongoing');
+        this.widget.classList.add('cross-tracker-loading');
     }
 
     hide() {
-        this.ongoing_loads.pop();
-        if (this.ongoing_loads.length === 0) {
-            this.loader.classList.remove('shown');
-        }
+        this.widget.classList.remove('cross-tracker-loading');
     }
 }

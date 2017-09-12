@@ -18,21 +18,31 @@
  */
 
 .dashboard-widget-content-crosstrackersearch {
-    margin: $tlp-spacing 0;
+    margin: 0;
 }
 
-.dashboard-widget-content.dashboard-widget-content-cross-tracker {
-    margin: 0 $tlp-spacing $tlp-spacing;
+.dashboard-widget-content-cross-tracker {
+    margin: 0 0 $tlp-spacing;
+
+    &.cross-tracker-loading {
+        > .dashboard-widget-content-cross-tracker-loader {
+            display: block;
+        }
+
+        > .dashboard-widget-content-cross-tracker-search {
+            display: none;
+        }
+
+        > .dashboard-widget-content-cross-tracker-reading-mode {
+            display: none;
+        }
+    }
 }
 
-.dashboard-widget-content-cross-tracker-loading {
+.dashboard-widget-content-cross-tracker-loader {
     display: none;
     height: 100px;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
-
-    &.shown {
-        display: block;
-    }
 }
 
 .dashboard-widget-content-cross-tracker-success,
@@ -57,6 +67,27 @@
     }
 }
 
+.dashboard-widget-content-cross-tracker-form-projects-input,
+.dashboard-widget-content-cross-tracker-form-trackers-input {
+    min-width: 200px;
+}
+
+.dashboard-widget-content-cross-tracker-form-trackers-add {
+    > .cross-tracker-loader {
+        display: none;
+    }
+
+    &.cross-tracker-loading {
+        > .cross-tracker-loader {
+            display: inline-block;
+        }
+
+        > .cross-tracker-add-icon {
+            display: none;
+        }
+    }
+}
+
 .dashboard-widget-content-cross-tracker-successmessage,
 .dashboard-widget-content-cross-tracker-errormessage,
 .dashboard-widget-content-cross-tracker-error-hidden {
@@ -64,7 +95,7 @@
 }
 
 .dashboard-widget-content-cross-tracker-selected-tracker {
-    margin: 0 15px 10px 0;
+    margin: 0 10px 10px 0;
     border: 0;
     background: $tlp-theme-background-color;
     color: $tlp-theme-color;
@@ -113,11 +144,11 @@
 .dashboard-widget-content-cross-tracker-reading-mode-tracker {
     display: flex;
     flex-direction: column;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 $tlp-spacing 0 0;
 }
 
 .dashboard-widget-content-cross-tracker-reading-mode-tracker-project-name {
-    margin: 2px 0 0;
+    margin: 7px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 14px;
     font-weight: 400;
@@ -128,14 +159,54 @@
 }
 
 .dashboard-widget-content-cross-tracker-search {
-    margin: 0 $tlp-spacing;
+    margin: $tlp-spacing $tlp-spacing 0;
+}
+
+.dashboard-widget-content-cross-tracker-search-results {
+
+    > .dashboard-widget-content-cross-tracker-search-empty,
+    > .dashboard-widget-content-cross-tracker-search-loading {
+        display: none;
+    }
+
+    &.cross-tracker-empty {
+        > .dashboard-widget-content-cross-tracker-search-artifacts,
+        > .dashboard-widget-content-cross-tracker-search-loading {
+            display: none;
+        }
+
+        > .dashboard-widget-content-cross-tracker-search-empty {
+            display: table-row-group;
+        }
+    }
+
+    &.cross-tracker-loading {
+        > .dashboard-widget-content-cross-tracker-search-artifacts,
+        > .dashboard-widget-content-cross-tracker-search-empty {
+            display: none;
+        }
+
+        .dashboard-widget-content-cross-tracker-search-loading {
+            display: table-row-group;
+
+            > tr > .cross-tracker-loader {
+                height: 75px;
+                background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+            }
+        }
+    }
 }
 
 .dashboard-widget-content-cross-tracker-search-footer {
+    margin: $tlp-spacing 0 0;
     color: $tlp-ui-dimmed;
     font-size: 14px;
     font-style: italic;
     text-align: center;
+}
+
+.dashboard-widget-content-cross-tracker-form-trackers-selected {
+    margin: 0 0 $tlp-spacing;
 }
 
 .dashboard-widget-content-cross-tracker-writing-mode-actions {
@@ -145,12 +216,23 @@
 
 .dashboard-widget-content-cross-tracker-writing-mode-actions-cancel,
 .dashboard-widget-content-cross-tracker-reading-mode-actions-cancel {
-    margin: 0 $tlp-spacing / 2 0 0;
+    margin: 0 $tlp-half-spacing 0 0;
 }
 
 .dashboard-widget-content-cross-tracker-reading-mode-actions {
     display: flex;
-    margin: $tlp-spacing / 2 $tlp-spacing;
+    justify-content: flex-end;
+    margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+}
+
+.dashboard-widget-content-cross-tracker-reading-mode-actions-save {
+    > .cross-tracker-loader {
+        display: none;
+    }
+
+    &.cross-tracker-loading >.cross-tracker-loader {
+        display: inline-block;
+    }
 }
 
 .dashboard-widget-content-cross-tracker-reading-mode-trackers-empty {

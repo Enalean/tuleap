@@ -81,9 +81,9 @@ export default class ReadingTrackersController {
 
     updateTrackersReading() {
         if (this.reading_cross_tracker_report.areTrackersEmpty()) {
-            this.reading_mode_trackers_empty.classList.remove('cross-tracker-hide');
+            this.showEmptyState();
         } else {
-            this.reading_mode_trackers_empty.classList.add('cross-tracker-hide');
+            this.hideEmptyState();
         }
 
         this.removeTrackersReading();
@@ -106,7 +106,14 @@ export default class ReadingTrackersController {
     }
 
     setDisabled() {
-        this.reading_mode_trackers_empty.classList.remove('cross-tracker-hide');
         this.reading_mode_fields.classList.add('reading-mode-disabled');
+    }
+
+    showEmptyState() {
+        this.reading_mode_trackers_empty.classList.remove('cross-tracker-hide');
+    }
+
+    hideEmptyState() {
+        this.reading_mode_trackers_empty.classList.add('cross-tracker-hide');
     }
 }

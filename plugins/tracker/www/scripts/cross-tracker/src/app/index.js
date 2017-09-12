@@ -24,14 +24,14 @@ import ProjectSelector from './writing-mode/project-selector.js';
 import TrackerSelector from './writing-mode/tracker-selector.js';
 import TrackerSelection from './writing-mode/tracker-selection.js';
 import TrackerSelectionController from './writing-mode/tracker-selection-controller.js';
+import TrackerSelectionLoaderDisplayer from './writing-mode/tracker-selection-loader-displayer.js';
 import QueryResultController from './query-result-controller.js';
 import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
 import User from './user.js';
 import SuccessDisplayer from './rest-success-displayer.js';
 import ErrorDisplayer from './rest-error-displayer.js';
-import LoaderDisplayer from './loader-displayer.js';
-import RestQuerier from './rest-querier.js';
+import WidgetLoaderDisplayer from './widget-loader-displayer.js';
 import ModeChangeController from './mode-change-controller.js';
 import ReportMode from './report-mode.js';
 import BackendCrossTrackerReport from './backend-cross-tracker-report.js';
@@ -45,16 +45,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const localized_php_date_format = widget_element.dataset.dateFormat;
         const is_anonymous              = (widget_element.dataset.isAnonymous == 'true');
 
-        const tracker_selection            = new TrackerSelection();
-        const report_mode                  = new ReportMode();
-        const backend_cross_tracker_report = new BackendCrossTrackerReport(report_id);
-        const reading_cross_tracker_report = new ReadingCrossTrackerReport();
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
-        const success_displayer            = new SuccessDisplayer(widget_element);
-        const error_displayer              = new ErrorDisplayer(widget_element);
-        const loader_displayer             = new LoaderDisplayer(widget_element);
-        const rest_querier                 = new RestQuerier(loader_displayer);
-        const user                         = new User(
+        const tracker_selection                  = new TrackerSelection();
+        const report_mode                        = new ReportMode();
+        const backend_cross_tracker_report       = new BackendCrossTrackerReport(report_id);
+        const reading_cross_tracker_report       = new ReadingCrossTrackerReport();
+        const writing_cross_tracker_report       = new WritingCrossTrackerReport();
+        const success_displayer                  = new SuccessDisplayer(widget_element);
+        const error_displayer                    = new ErrorDisplayer(widget_element);
+        const widget_loader_displayer            = new WidgetLoaderDisplayer(widget_element);
+        const tracker_selection_loader_displayer = new TrackerSelectionLoaderDisplayer(widget_element);
+        const user                               = new User(
             locale,
             localized_php_date_format,
             is_anonymous
@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
             widget_element,
             backend_cross_tracker_report,
             user,
-            rest_querier,
             error_displayer,
             translated_fetch_artifacts_error_message
         );
@@ -92,10 +91,10 @@ document.addEventListener('DOMContentLoaded', function () {
             backend_cross_tracker_report,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
-            rest_querier,
             reading_trackers_controller,
             query_result_controller,
             user,
+            widget_loader_displayer,
             success_displayer,
             error_displayer
         );
@@ -103,31 +102,26 @@ document.addEventListener('DOMContentLoaded', function () {
         new WritingModeController(
             widget_element,
             report_mode,
-            backend_cross_tracker_report,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
-            query_result_controller,
-            tracker_selection,
-            rest_querier,
-            error_displayer,
-            translated_fetch_artifacts_error_message
+            query_result_controller
         );
 
         new ProjectSelector(
             widget_element,
             tracker_selection,
             report_mode,
-            rest_querier,
             user,
-            error_displayer
+            error_displayer,
+            tracker_selection_loader_displayer
         );
 
         const tracker_selector = new TrackerSelector(
             widget_element,
             tracker_selection,
             writing_cross_tracker_report,
-            rest_querier,
-            error_displayer
+            error_displayer,
+            tracker_selection_loader_displayer
         );
 
         new TrackerSelectionController(

@@ -1,5 +1,5 @@
 <div class="dashboard-widget-content-cross-tracker-search">
-    <table class="tlp-table dashboard-widget-content-cross-tracker-search-results">
+    <table class="tlp-table dashboard-widget-content-cross-tracker-search-results cross-tracker-empty">
         <thead>
             <tr>
                 <th>{{ artifact_label }}</th>
@@ -9,13 +9,18 @@
                 <th>{{ assigned_to_label }}</th>
             </tr>
         </thead>
-        <tbody class="dashboard-widget-content-cross-tracker-search-artifacts cross-tracker-hide">
+        <tbody class="dashboard-widget-content-cross-tracker-search-artifacts">
         </tbody>
         <tbody class="dashboard-widget-content-cross-tracker-search-empty">
             <tr>
                 <td colspan="6" class="tlp-table-cell-empty">
                     {{ artifacts_empty }}
                 </td>
+            </tr>
+        </tbody>
+        <tbody class="dashboard-widget-content-cross-tracker-search-loading">
+            <tr>
+                <td colspan="6" class="cross-tracker-loader"></td>
             </tr>
         </tbody>
     </table>
