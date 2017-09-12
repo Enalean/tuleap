@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Chart\ColorsForCharts;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 require_once('common/dao/SvnCommitsDao.class.php');
