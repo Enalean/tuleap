@@ -1,35 +1,35 @@
 <?php
 /* 
+ * Copyright (c) cjt Systemsoftware AG, 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
 require_once('GraphOnTrackersV5_Chart.class.php');
 require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Chart_GanttDataBuilder.class.php');
 require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Gantt.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_SelectboxesV5.class.php');
+require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5.class.php');
 require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_DatesV5.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Numerics.class.php');
 require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5.class.php');
 require_once('common/html/HTML_Element_Input_Date.class.php');
 require_once('common/html/HTML_Element_Selectbox_Scale.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_TextsV5.class.php');
 require_once('GraphOnTrackersV5_Chart_GanttDao.class.php');
 
 class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
@@ -150,7 +150,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
                     new HTML_Element_Selectbox_TrackerFields_DatesV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_finish'), 'chart[field_finish]', $this->getField_finish())
                 ),
                 new HTML_Element_Columns(
-                    new HTML_Element_Selectbox_TrackerFields_TextsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_summary'), 'chart[summary]', $this->getSummary()),
+                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_summary'), 'chart[summary]', $this->getSummary()),
 
                     new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_percentage'), 'chart[field_percentage]', $this->getField_percentage(), true),
                     new HTML_Element_Selectbox_Scale($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_scale'), 'chart[scale]', $this->getScale())
@@ -159,7 +159,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
 
                 new HTML_Element_Columns(
                     new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_as_of_date'), 'chart[as_of_date]', strtotime($this->getAs_of_date())),
-                    new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
+                    new HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_gantt_property','gantt_field_righttext'), 'chart[field_righttext]', $this->getField_righttext(), true)
                     
                 ),
         ));
