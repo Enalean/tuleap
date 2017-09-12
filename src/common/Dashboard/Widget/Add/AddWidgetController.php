@@ -304,9 +304,6 @@ class AddWidgetController
                     'projectlatestsvncommits', 'projectlatestcvscommits', 'projectsvnstats',
                     'projectrss', 'projectimageviewer', 'projectcontacts'
                 );
-                if ($GLOBALS['sys_use_trove'] != 0) {
-                    $widgets[] = 'projectclassification';
-                }
                 break;
             default:
                 $widgets = array();
