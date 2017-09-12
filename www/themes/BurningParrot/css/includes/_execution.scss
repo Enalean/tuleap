@@ -344,10 +344,6 @@ $toolbar-height: 46px;
     font-size: 27px;
     cursor: pointer;
     color: $tlp-ui-white;
-
-    &:first-child {
-        margin: 0;
-    }
 }
 
 .notrun .current-test-header-action {

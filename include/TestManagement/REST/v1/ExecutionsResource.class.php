@@ -335,7 +335,7 @@ class ExecutionsResource {
             throw new RestException(400, 'The given artifact does not belong to issue tracker');
         }
 
-        $is_linked = $issue_artifact->linkArtifact($execution_artifact->getId(), $user);
+        $is_linked = $execution_artifact->linkArtifact($issue_artifact->getId(), $user);
         if (! $is_linked) {
             throw new RestException(400, 'Could not link the issue artifact to the test execution');
         }

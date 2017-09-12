@@ -26,7 +26,8 @@ function ExecutionRestService(
         changePresenceOnTestExecution: changePresenceOnTestExecution,
         leaveTestExecution           : leaveTestExecution,
         getArtifactById              : getArtifactById,
-        linkIssue                    : linkIssue
+        linkIssue                    : linkIssue,
+        linkIssueWithoutComment      : linkIssueWithoutComment
     });
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -100,19 +101,32 @@ function ExecutionRestService(
     }
 
     function linkIssue(issue_id, test_execution) {
-        var comment = '<p>' + test_execution.previous_result.result + '</p>'
-            + ' <em>' + test_execution.definition.summary + '</em><br/>'
-            + '<blockquote>' + test_execution.definition.description + '</blockquote>';
+        var comment = {
+            body: '<p>' + test_execution.previous_result.result + '</p>'
+                + ' <em>' + test_execution.definition.summary + '</em><br/>'
+                + '<blockquote>' + test_execution.definition.description + '</blockquote>',
+            format: 'html'
+        };
 
+        return linkExecutionToIssue(issue_id, test_execution, comment);
+    }
+
+    function linkIssueWithoutComment(issue_id, test_execution) {
+        var comment = {
+            body: '',
+            format: 'text'
+        };
+
+        return linkExecutionToIssue(issue_id, test_execution, comment);
+    }
+
+    function linkExecutionToIssue(issue_id, test_execution, comment) {
         return rest
             .one('testmanagement_executions', test_execution.id)
             .all('issues')
             .patch({
                 issue_id: issue_id,
-                comment : {
-                    body  : comment,
-                    format: 'html'
-                }
+                comment: comment
             })
             .catch(function (response) {
                 return Promise.reject(response.data.error);

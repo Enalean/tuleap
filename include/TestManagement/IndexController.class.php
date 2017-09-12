@@ -57,8 +57,11 @@ class IndexController extends TestManagementController
             );
         }
 
+        $execution_tracker_id = $this->config->getTestExecutionTrackerId($this->project);
+        $execution_tracker    = $this->tracker_factory->getTrackerById($execution_tracker_id);
+
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $link_field           = $form_element_factory->getAnArtifactLinkField($current_user, $issue_tracker);
+        $link_field           = $form_element_factory->getAnArtifactLinkField($current_user, $execution_tracker);
         return array(
             "permissions" => array(
                 "create" => $issue_tracker->userCanSubmitArtifact($current_user),

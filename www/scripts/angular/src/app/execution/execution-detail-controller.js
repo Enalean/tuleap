@@ -96,8 +96,12 @@ function ExecutionDetailCtrl(
 
     function showLinkToNewBugModal() {
         function callback(artifact_id) {
-            $scope.linkedIssueId           = artifact_id;
-            $scope.linkedIssueAlertVisible = true;
+            ExecutionRestService
+                .linkIssueWithoutComment(artifact_id, $scope.execution)
+                .then(function () {
+                    $scope.linkedIssueId           = artifact_id;
+                    $scope.linkedIssueAlertVisible = true;
+                });
         }
 
         var current_definition = $scope.execution.definition;
@@ -111,13 +115,9 @@ function ExecutionDetailCtrl(
         }
 
         var prefill_values = [{
-            name: 'details',
-            value: issue_details,
+            name  : 'details',
+            value : issue_details,
             format: 'html'
-        }, {
-            name: 'links',
-            links: [],
-            unformatted_links: $scope.execution.id.toString()
         }];
 
         NewTuleapArtifactModalService.showCreation(

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <tracker instantiate_for_new_projects="0">
   <name>Bugs</name>
   <item_name>bugs</item_name>
@@ -243,9 +243,9 @@
           <label>Cross references</label>
           <description>List of items referenced by or referencing this item.</description>
         </formElement>
-        <formElement type="art_link" ID="F29" rank="1" use_it="0">
-          <name>references</name>
-          <label>References</label>
+        <formElement type="art_link" ID="F29" rank="1" use_it="1">
+          <name>artifact_link</name>
+          <label>Artifact Links</label>
           <properties size="30"/>
         </formElement>
       </formElements>

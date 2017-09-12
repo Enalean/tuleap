@@ -74,12 +74,10 @@ class ExecutionsTest extends BaseTest {
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $issue_links = $this->getArtifactData($issue_id, '/linked_artifacts?direction=forward');
-
-        $this->assertEquals($execution['id'], $issue_links['collection'][0]['id']);
+        $links = $this->getArtifactData($execution['id'], '/linked_artifacts?direction=forward');
+        $this->assertEquals($issue_id, $links['collection'][0]['id']);
 
         $comments = $this->getArtifactData($issue_id, '/changesets?fields=comments');
-
         $this->assertEquals('test result', $comments[0]['last_comment']['body']);
     }
 
