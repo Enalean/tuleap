@@ -12,18 +12,18 @@ if [ ! -d "$WORKSPACE" ]; then
     exit 1
 fi
 
-DOCKERIMAGE=build-plugin-trafficlights-rpm
+DOCKERIMAGE=build-plugin-testmanagement-rpm
 
-PACKAGE_VERSION=$(cat VERSION | tr -d '[[:space:]]')
+PACKAGE_VERSION="$(cat VERSION | tr -d '[[:space:]]')"
 
 RELEASE=1
-LAST_TAG=$(git describe --abbrev=0 --tags)
-if [ $LAST_TAG == $PACKAGE_VERSION ]; then
-    NB_COMMITS=$(git log --oneline $LAST_TAG..HEAD | wc -l)
+LAST_TAG="$(git describe --abbrev=0 --tags)"
+if [ "$LAST_TAG" == "$PACKAGE_VERSION" ]; then
+    NB_COMMITS=$(git log --oneline "$LAST_TAG"..HEAD | wc -l)
     if [ $NB_COMMITS -gt 0 ]; then
-	RELEASE=$(($NB_COMMITS + 1))
+	    RELEASE=$(($NB_COMMITS + 1))
     fi
 fi
 
 docker build -t $DOCKERIMAGE rpm
-docker run --rm -v $TULEAP_PATH:/tuleap:ro -v $PWD:/testmanagement:ro -v $WORKSPACE:/output -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE $DOCKERIMAGE
+docker run --rm -v "$TULEAP_PATH":/tuleap:ro -v $PWD:/plugin:ro -v "$WORKSPACE":/output -e UID=`id -u` -e GID=`id -g` -e RELEASE="$RELEASE" $DOCKERIMAGE
