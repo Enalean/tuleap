@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="hierarchy-tests" full-name="Hierarchy tests" description="hierarchy-tests" access="public">
+  <long-description></long-description>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T997" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[Epic]]></name>
+      <item_name>epic</item_name>
+      <description><![CDATA[epic]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="aid" ID="F22230" rank="1">
+          <name>id</name>
+          <label><![CDATA[id]]></label>
+        </formElement>
+        <formElement type="string" ID="F22231" rank="2">
+          <name>title</name>
+          <label><![CDATA[title]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="art_link" ID="F22232" rank="58963">
+          <name>links</name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+        <formElement type="perm" ID="F22233" rank="58965" required="1">
+          <name>permissions</name>
+          <label><![CDATA[Permissions]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname>title</shortname>
+          <label>Title</label>
+          <description>Define the title of an artifact</description>
+          <field REF="F22231"/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F22230" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22231" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22231" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F22231" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F22232" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22232" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F22232" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F22233" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22233" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F22233" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="3693">
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-10-10T13:42:08+02:00</submitted_on>
+            <comments/>
+            <field_change field_name="title" type="string">
+              <value><![CDATA[foo]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+            <field_change field_name="permissions" type="permissions_on_artifact" use_perm="1">
+              <ugroup ugroup_name="ugroup_registered_users_name_key"/>
+            </field_change>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-10-10T13:42:55+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2017-10-10T13:42:55+02:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+          <changeset>
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2017-10-10T13:50:59+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2017-10-10T13:50:59+02:00</submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T998" parent_id="T997" instantiate_for_new_projects="1">
+      <name><![CDATA[Stories]]></name>
+      <item_name>story</item_name>
+      <description><![CDATA[stories]]></description>
+      <color>inca_silver</color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="aid" ID="F22234" rank="1">
+          <name>id</name>
+          <label><![CDATA[id]]></label>
+        </formElement>
+        <formElement type="string" ID="F22235" rank="2">
+          <name>title</name>
+          <label><![CDATA[title]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="art_link" ID="F22236" rank="58963">
+          <name>links</name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name>Default</name>
+          <description>The system default artifact report</description>
+          <criterias/>
+          <renderers>
+            <renderer type="table" rank="0" chunksz="15">
+              <name>Results</name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F22234" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22235" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22235" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F22235" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F22236" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F22236" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F22236" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts/>
+    </tracker>
+    <triggers/>
+  </trackers>
+  <natures>
+    <nature>_is_child</nature>
+  </natures>
+</project>
