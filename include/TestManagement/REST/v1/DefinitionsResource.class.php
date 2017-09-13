@@ -52,7 +52,6 @@ class DefinitionsResource {
         $this->user_manager                    = UserManager::instance();
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,
-            $conformance_validator,
             Tracker_ArtifactFactory::instance(),
             new ArtifactDao()
         );

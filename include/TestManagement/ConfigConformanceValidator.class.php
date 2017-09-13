@@ -69,21 +69,6 @@ class ConfigConformanceValidator {
 
         return $definition_tracker_id === $tracker->getId();
     }
-    
-    /**
-     * @return boolean
-     */
-    public function isArtifactAnExecutionOfCampaign(PFUser $user, Tracker_Artifact $execution, Tracker_Artifact $campaign) {
-        if (! $this->isArtifactACampaign($campaign)) {
-            return false;
-        }
-
-        if (! $this->isArtifactAnExecution($execution)) {
-            return false;
-        }
-
-        return $this->areExecutionAndCampaignLinked($user, $execution, $campaign);
-    }
 
     /**
      * @return boolean
@@ -101,25 +86,5 @@ class ConfigConformanceValidator {
         $execution_project  = $execution->getTracker()->getProject();
 
         return $definition_project == $execution_project;
-    }
-
-    /**
-     * @return boolean
-     */
-    private function areExecutionAndCampaignLinked(PFUser $user, Tracker_Artifact $execution, Tracker_Artifact $campaign)
-    {
-        foreach ($campaign->getLinkedArtifacts($user) as $linked_artifact) {
-            if ($linked_artifact === $execution) {
-                return true;
-            }
-        }
-
-        foreach ($execution->getLinkedArtifacts($user) as $linked_artifact) {
-            if ($linked_artifact === $campaign) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
