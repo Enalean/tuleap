@@ -21,27 +21,15 @@ export default class WritingModeController {
     constructor(
         widget_content,
         report_mode,
-        backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
-        query_result_controller,
-        tracker_selection,
-        rest_querier,
-        error_displayer,
-        translated_fetch_artifacts_error_message
+        query_result_controller
     ) {
         this.widget_content               = widget_content;
         this.report_mode                  = report_mode;
-        this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.query_result_controller      = query_result_controller;
-
-        this.tracker_selection            = tracker_selection;
-        this.rest_querier                 = rest_querier;
-        this.error_displayer              = error_displayer;
-
-        this.translated_fetch_artifacts_error_message = translated_fetch_artifacts_error_message;
 
         this.writing_mode_cancel = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel');
         this.writing_mode_search = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-search');
@@ -61,24 +49,11 @@ export default class WritingModeController {
         this.writing_mode_search.addEventListener('click', () => {
             this.reading_cross_tracker_report.duplicateFromReport(this.writing_cross_tracker_report);
             this.changeMode();
-            this.updateQueryResults();
+            this.query_result_controller.updateQueryResults(this.writing_cross_tracker_report.getTrackerIds());
         });
     }
 
     changeMode() {
         this.report_mode.switchToReadingMode();
-    }
-
-    async updateQueryResults() {
-        try {
-            const artifacts = await this.rest_querier.getQueryResult(
-                this.backend_cross_tracker_report.report_id,
-                this.writing_cross_tracker_report.getTrackerIds()
-            );
-            this.query_result_controller.updateArtifacts(artifacts);
-        } catch(error) {
-            this.error_displayer.displayError(this.translated_fetch_artifacts_error_message);
-            throw error;
-        }
     }
 }

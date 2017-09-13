@@ -2,9 +2,6 @@
 >
     <div class="dashboard-widget-content-cross-tracker-reading-mode-fields">
         <div class="dashboard-widget-content-cross-tracker-reading-mode-trackers-list">
-            <span>
-                <i class="fa fa-list-ul"></i>
-            </span>
             <div class="dashboard-widget-content-cross-tracker-reading-mode-trackers">
             </div>
             <div class="dashboard-widget-content-cross-tracker-reading-mode-trackers-empty cross-tracker-hide">
@@ -14,7 +11,10 @@
     </div>
     <div class="dashboard-widget-content-cross-tracker-reading-mode-actions cross-tracker-hide">
         <button class="tlp-button-primary tlp-button-small tlp-button-outline dashboard-widget-content-cross-tracker-reading-mode-actions-cancel">{{ cancel }}</button>
-        <button class="tlp-button-primary tlp-button-small dashboard-widget-content-cross-tracker-reading-mode-actions-save">{{ save_report }}</button>
+        <button class="tlp-button-primary tlp-button-small dashboard-widget-content-cross-tracker-reading-mode-actions-save">
+            <span class="cross-tracker-loader"><i class="tlp-button-icon fa fa-spinner fa-spin"></i></span>
+            {{ save_report }}
+        </button>
     </div>
     <span class="reading-mode-fetch-error dashboard-widget-content-cross-tracker-errormessage">{{ fetch_report_error }}</span>
     <span class="reading-mode-put-success dashboard-widget-content-cross-tracker-successmessage">{{ put_report_success }}</span>

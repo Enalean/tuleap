@@ -18,6 +18,7 @@
  */
 
 import { watch } from 'wrist';
+import { updateReport, getReport } from '../rest-querier.js';
 
 export default class ReadingModeController {
     constructor(
@@ -26,10 +27,10 @@ export default class ReadingModeController {
         backend_cross_tracker_report,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
-        rest_querier,
         reading_trackers_controller,
         query_resut_controller,
         user,
+        widget_loader_displayer,
         success_displayer,
         error_displayer
     ) {
@@ -38,9 +39,9 @@ export default class ReadingModeController {
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
-        this.rest_querier                 = rest_querier;
         this.reading_trackers_controller  = reading_trackers_controller;
         this.query_result_controller      = query_resut_controller;
+        this.widget_loader_displayer      = widget_loader_displayer;
         this.success_displayer            = success_displayer;
         this.error_displayer              = error_displayer;
 
@@ -106,10 +107,11 @@ export default class ReadingModeController {
 
     async updateReport() {
         this.backend_cross_tracker_report.loaded = false;
+        this.showSaveReportLoading();
         try {
             this.backend_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
             const tracker_ids  = this.backend_cross_tracker_report.getTrackerIds();
-            const { trackers } = await this.rest_querier.updateReport(this.backend_cross_tracker_report.report_id, tracker_ids);
+            const { trackers } = await updateReport(this.backend_cross_tracker_report.report_id, tracker_ids);
 
             if (trackers) {
                 this.initTrackers(trackers);
@@ -120,6 +122,8 @@ export default class ReadingModeController {
         } catch (error) {
             this.error_displayer.displayError(this.translated_put_cross_tracker_report_message_error);
             throw error;
+        } finally {
+            this.hideSaveReportLoading();
         }
     }
 
@@ -138,9 +142,10 @@ export default class ReadingModeController {
     }
 
     async loadBackendReport() {
+        this.widget_loader_displayer.show();
         this.backend_cross_tracker_report.loaded = false;
         try {
-            const { trackers } = await this.rest_querier.getReport(this.backend_cross_tracker_report.report_id);
+            const { trackers } = await getReport(this.backend_cross_tracker_report.report_id);
             if (trackers) {
                 this.initTrackers(trackers);
             }
@@ -149,6 +154,8 @@ export default class ReadingModeController {
             this.reading_trackers_controller.setDisabled();
             this.error_displayer.displayError(this.translated_fetch_cross_tracker_report_message);
             throw error;
+        } finally {
+            this.widget_loader_displayer.hide();
         }
     }
 
@@ -159,5 +166,13 @@ export default class ReadingModeController {
     disableEditMode() {
         this.disableSaveReport();
         this.reading_mode_fields.classList.add('disabled');
+    }
+
+    showSaveReportLoading() {
+        this.reading_mode_save_report.classList.add('cross-tracker-loading');
+    }
+
+    hideSaveReportLoading() {
+        this.reading_mode_save_report.classList.remove('cross-tracker-loading');
     }
 }

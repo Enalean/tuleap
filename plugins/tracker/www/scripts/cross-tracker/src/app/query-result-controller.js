@@ -20,27 +20,26 @@
 import moment from 'moment';
 import { render } from 'mustache';
 import query_result_rows_template from './query-result-rows.mustache';
+import { getReportContent, getQueryResult } from './rest-querier.js';
 
 export default class QueryResultController {
     constructor(
         widget_content,
         backend_cross_tracker_report,
         user,
-        rest_querier,
         error_displayer,
         translated_fetch_artifacts_error_message
     ) {
         this.widget_content               = widget_content;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
-        this.rest_querier                 = rest_querier;
         this.localized_date_format        = user.getUserPreferredDateFormat();
         this.error_displayer              = error_displayer;
 
         this.translated_fetch_artifacts_error_message = translated_fetch_artifacts_error_message;
 
-        this.table_results     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
-        this.table_empty_state = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-empty');
-        this.table_footer      = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-footer');
+        this.table_element = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-results');
+        this.table_results = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-artifacts');
+        this.table_footer  = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-search-footer');
 
         this.loadReportContent();
     }
@@ -54,15 +53,23 @@ export default class QueryResultController {
         [...this.table_results.children].forEach((child) => child.remove());
     }
 
+    showLoadingState() {
+        this.table_element.classList.add('cross-tracker-loading');
+        this.table_element.classList.remove('cross-tracker-empty');
+        this.table_footer.classList.add('cross-tracker-hide');
+    }
+
+    hideLoadingState() {
+        this.table_element.classList.remove('cross-tracker-loading');
+    }
+
     showEmptyState() {
-        this.table_results.classList.add('cross-tracker-hide');
-        this.table_empty_state.classList.remove('cross-tracker-hide');
+        this.table_element.classList.add('cross-tracker-empty');
         this.table_footer.classList.add('cross-tracker-hide');
     }
 
     hideEmptyState() {
-        this.table_results.classList.remove('cross-tracker-hide');
-        this.table_empty_state.classList.add('cross-tracker-hide');
+        this.table_element.classList.remove('cross-tracker-empty');
         this.table_footer.classList.remove('cross-tracker-hide');
     }
 
@@ -78,12 +85,15 @@ export default class QueryResultController {
 
     async loadReportContent() {
         try {
-            const artifacts           = await this.rest_querier.getReportContent(this.backend_cross_tracker_report.report_id);
+            this.showLoadingState();
+            const artifacts           = await getReportContent(this.backend_cross_tracker_report.report_id);
             const formatted_artifacts = this.formatArtifacts(artifacts);
             this.updateArtifacts(formatted_artifacts);
         } catch (error) {
             this.error_displayer.displayError(this.translated_fetch_artifacts_error_message);
             throw error;
+        } finally {
+            this.hideLoadingState();
         }
     }
 
@@ -93,5 +103,22 @@ export default class QueryResultController {
 
            return artifact;
         });
+    }
+
+    async updateQueryResults(artifact_ids) {
+        try {
+            this.showLoadingState();
+            const artifacts = await getQueryResult(
+                this.backend_cross_tracker_report.report_id,
+                artifact_ids
+            );
+            const formatted_artifacts = this.formatArtifacts(artifacts);
+            this.updateArtifacts(formatted_artifacts);
+        } catch(error) {
+            this.error_displayer.displayError(this.translated_fetch_artifacts_error_message);
+            throw error;
+        } finally {
+            this.hideLoadingState();
+        }
     }
 }
