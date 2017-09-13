@@ -9,6 +9,11 @@
     padding: 0 $tlp-spacing $tlp-spacing;
 }
 
+$toolbar-height: 46px;
+.toolbar + #testmanagement-app .test-campaign {
+    height: calc(100vh - #{$navbar-height} - 75px - #{$toolbar-height});
+}
+
 .test-campaign-header {
     display: flex;
     align-items: flex-end;
@@ -102,6 +107,7 @@
 .test-campaign-tests {
     display: flex;
     flex: 1 1 auto;
+    overflow-y: auto;
 }
 
 .tests-pane {
@@ -144,6 +150,7 @@
     > .tlp-search {
         margin-right: 20px;
         flex: 1;
+        min-width: 75px;
     }
 }
 
