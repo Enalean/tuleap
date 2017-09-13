@@ -20,14 +20,23 @@
 import moment from 'moment';
 import phptomoment from 'phptomoment';
 
-export default class UserLocaleStore {
-    constructor(locale, localized_php_date_format) {
+export default class User {
+    constructor(
+        locale,
+        localized_php_date_format,
+        is_anonymous
+    ) {
         this.locale      = locale;
         this.date_format = phptomoment(localized_php_date_format);
         moment.locale(locale);
+        this.is_anonymous = is_anonymous;
     }
 
-    getDateFormat() {
+    getUserPreferredDateFormat() {
         return this.date_format;
+    }
+
+    isAnonymous() {
+        return this.is_anonymous;
     }
 }

@@ -27,7 +27,7 @@ import TrackerSelectionController from './writing-mode/tracker-selection-control
 import QueryResultController from './query-result-controller.js';
 import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
 import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
-import UserLocaleStore from './user-locale-store.js';
+import User from './user.js';
 import SuccessDisplayer from './rest-success-displayer.js';
 import ErrorDisplayer from './rest-error-displayer.js';
 import LoaderDisplayer from './loader-displayer.js';
@@ -40,9 +40,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const widget_cross_tracker_elements = document.getElementsByClassName('dashboard-widget-content-cross-tracker');
 
     for (const widget_element of widget_cross_tracker_elements) {
-        const report_id = widget_element.dataset.reportId;
-        const locale    = widget_element.dataset.locale;
+        const report_id                 = widget_element.dataset.reportId;
+        const locale                    = widget_element.dataset.locale;
         const localized_php_date_format = widget_element.dataset.dateFormat;
+        const is_anonymous              = (widget_element.dataset.isAnonymous == 'true');
 
         const tracker_selection            = new TrackerSelection();
         const report_mode                  = new ReportMode();
@@ -52,15 +53,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const success_displayer            = new SuccessDisplayer(widget_element);
         const error_displayer              = new ErrorDisplayer(widget_element);
         const loader_displayer             = new LoaderDisplayer(widget_element);
-        const user_locale_store            = new UserLocaleStore(locale, localized_php_date_format);
         const rest_querier                 = new RestQuerier(loader_displayer);
+        const user                         = new User(
+            locale,
+            localized_php_date_format,
+            is_anonymous
+        );
 
         const translated_fetch_artifacts_error_message = widget_element.querySelector('.query-fetch-error').textContent;
 
         const query_result_controller = new QueryResultController(
             widget_element,
             backend_cross_tracker_report,
-            user_locale_store,
+            user,
             rest_querier,
             error_displayer,
             translated_fetch_artifacts_error_message
@@ -90,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
             rest_querier,
             reading_trackers_controller,
             query_result_controller,
+            user,
             success_displayer,
             error_displayer
         );
@@ -112,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tracker_selection,
             report_mode,
             rest_querier,
+            user,
             error_displayer
         );
 
