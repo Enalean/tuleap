@@ -139,12 +139,16 @@ class CampaignsResource {
             $this->formelement_factory,
             $this->user_manager
         );
+
         $this->execution_representation_builder   = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
             $this->conformance_validator,
-            $assigned_to_representation_builder
+            $assigned_to_representation_builder,
+            $artifact_dao,
+            $this->artifact_factory
         );
+
         $this->campaign_representation_builder    = new CampaignRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
@@ -268,6 +272,7 @@ class CampaignsResource {
         $execution_representations = $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
             $user,
             $campaign,
+            $this->config->getTestExecutionTrackerId($campaign->getTracker()->getProject()),
             $limit,
             $offset
         );
@@ -295,7 +300,8 @@ class CampaignsResource {
     {
         $user                 = $this->user_manager->getCurrentUser();
         $campaign             = $this->getCampaignFromId($id, $user);
-        $project_id           = $campaign->getTracker()->getProject()->getId();
+        $project              = $campaign->getTracker()->getProject();
+        $project_id           = $project->getID();
         $new_execution_ids    = array();
         $executions_to_add    = array();
         $executions_to_remove = array();
@@ -371,6 +377,7 @@ class CampaignsResource {
         $execution_representations = $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
             $user,
             $campaign,
+            $this->config->getTestExecutionTrackerId($project),
             $limit,
             $offset
         );
