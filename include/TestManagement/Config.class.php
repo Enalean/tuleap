@@ -43,6 +43,8 @@ class Config {
         $test_execution_tracker_id,
         $issue_tracker_id
     ) {
+        unset($this->properties[$project->getID()]);
+
         return $this->dao->saveProjectConfig(
             $project->getId(),
             $campaign_tracker_id,
