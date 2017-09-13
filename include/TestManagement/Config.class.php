@@ -76,16 +76,19 @@ class Config {
             (! $this->getIssueTrackerId($project));
     }
 
-    private function getProperty(Project $project, $key) {
-        if ($this->properties === array()) {
-            $this->properties = $this->getPropertiesForProject($project);
+    private function getProperty(Project $project, $key)
+    {
+        $project_id = $project->getID();
+
+        if (! isset($this->properties[$project_id])) {
+            $this->properties[$project_id] = $this->getPropertiesForProject($project);
         }
 
-        if (! isset($this->properties[$key])) {
+        if (! isset($this->properties[$project_id][$key])) {
             return false;
         }
 
-        return $this->properties[$key];
+        return $this->properties[$project_id][$key];
     }
 
     private function getPropertiesForProject(Project $project) {
