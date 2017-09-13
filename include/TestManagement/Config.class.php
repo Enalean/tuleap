@@ -27,6 +27,11 @@ class Config {
     /** @var Dao */
     private $dao;
 
+    /**
+     * @var array
+     */
+    private $properties = array();
+
     public function __construct(Dao $dao) {
         $this->dao = $dao;
     }
@@ -38,7 +43,13 @@ class Config {
         $test_execution_tracker_id,
         $issue_tracker_id
     ) {
-        return $this->dao->saveProjectConfig($project->getId(), $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id, $issue_tracker_id);
+        return $this->dao->saveProjectConfig(
+            $project->getId(),
+            $campaign_tracker_id,
+            $test_definition_tracker_id,
+            $test_execution_tracker_id,
+            $issue_tracker_id
+        );
     }
 
     public function getCampaignTrackerId(Project $project) {
@@ -66,13 +77,15 @@ class Config {
     }
 
     private function getProperty(Project $project, $key) {
-        $properties = $this->getPropertiesForProject($project);
+        if ($this->properties === array()) {
+            $this->properties = $this->getPropertiesForProject($project);
+        }
 
-        if (! isset($properties[$key])) {
+        if (! isset($this->properties[$key])) {
             return false;
         }
 
-        return $properties[$key];
+        return $this->properties[$key];
     }
 
     private function getPropertiesForProject(Project $project) {
