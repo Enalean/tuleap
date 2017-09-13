@@ -85,7 +85,7 @@ function CampaignEditCtrl(
 
     function loadDefinitions(options) {
         var options     = options || {},
-            limit       = options.limit || 10,
+            limit       = options.limit || 100,
             offset      = options.offset || 0,
             report_id   = options.report_id,
             definitions = options.definitions || [];

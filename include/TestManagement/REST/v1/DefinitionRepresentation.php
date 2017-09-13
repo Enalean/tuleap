@@ -25,89 +25,19 @@ use \Tracker_Artifact;
 use \Tracker_FormElementFactory;
 use \PFUser;
 
-
-class DefinitionRepresentation {
-
-    const ROUTE = 'testmanagement_definitions';
-
-    const FIELD_SUMMARY     = 'summary';
+class DefinitionRepresentation extends MinimalDefinitionRepresentation
+{
     const FIELD_DESCRIPTION = 'details';
-    const FIELD_CATEGORY    = 'category';
-
-    /**
-     * @var int ID of the artifact
-     */
-    public $id;
-
-    /**
-     * @var String
-     */
-    public $uri;
-
-    /**
-     * @var String
-     */
-    public $summary;
 
     /**
      * @var String
      */
     public $description;
 
-    /**
-     * @var String
-     */
-    public $category;
+    public function build(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, PFUser $user)
+    {
+        parent::build($artifact, $form_element_factory, $user);
 
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var int
-     */
-    private $tracker_id;
-
-    /**
-     * @var Tracker_Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var PFUser
-     */
-    private $user;
-
-
-    public function build(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, PFUser $user) {
-        $this->form_element_factory = $form_element_factory;
-        $this->artifact             = $artifact;
-        $this->tracker_id           = $artifact->getTrackerId();
-        $this->user                 = $user;
-
-        $this->id                   = JsonCast::toInt($artifact->getId());
-        $this->uri                  = self::ROUTE . '/' . $this->id;
-        $this->summary              = $this->getFieldValue(self::FIELD_SUMMARY)->getText();
-        $this->description          = $this->getFieldValue(self::FIELD_DESCRIPTION)->getValue();
-        $this->category             = $this->getCategory();
-    }
-
-    private function getFieldValue($field_shortname) {
-        $field = $this->form_element_factory->getUsedFieldByNameForUser($this->tracker_id, $field_shortname, $this->user);
-
-        return $this->artifact->getValue($field);
-    }
-
-    private function getCategory() {
-        $field_status = $this->form_element_factory->getUsedFieldByNameForUser($this->tracker_id, self::FIELD_CATEGORY, $this->user);
-
-        if (! $field_status) {
-            return null;
-        }
-
-        $last_changeset = $this->artifact->getLastChangeset();
-
-        return $field_status->getFirstValueFor($last_changeset);
+        $this->description = $this->getFieldValue(self::FIELD_DESCRIPTION)->getText();
     }
 }

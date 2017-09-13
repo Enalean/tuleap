@@ -270,6 +270,7 @@ class ProjectResource {
                      $offset,
                      false
                  );
+
         $artifacts = $paginated_artifacts->getArtifacts();
         $artifacts_count = $paginated_artifacts->getTotalSize();
 
@@ -286,7 +287,7 @@ class ProjectResource {
         foreach ($artifacts as $artifact) {
             $definition_representation =
                 $this->definition_representation_builder
-                     ->getDefinitionRepresentation($this->user, $artifact);
+                     ->getMinimalRepresentation($this->user, $artifact);
 
             if ($definition_representation) {
                 $definition_representations[] = $definition_representation;
