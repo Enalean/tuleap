@@ -96,7 +96,6 @@ class ExecutionsResource {
         $this->artifact_factory                = Tracker_ArtifactFactory::instance();
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
-            $conformance_validator,
             $this->artifact_factory,
             new ArtifactDao()
         );
@@ -243,7 +242,7 @@ class ExecutionsResource {
                 'previous_user'   => $previous_user
             );
             $rights   = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($user, $artifact);
+            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],
@@ -292,7 +291,7 @@ class ExecutionsResource {
                 )
             );
             $rights   = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($user, $artifact);
+            $campaign = $this->testmanagement_artifact_factory->getCampaignForExecution($artifact);
             $message  = new MessageDataPresenter(
                 $user->getId(),
                 $_SERVER[self::HTTP_CLIENT_UUID],

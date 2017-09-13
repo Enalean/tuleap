@@ -50,7 +50,6 @@ class NodeBuilderFactory {
 
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,
-            new ConfigConformanceValidator($config),
             Tracker_ArtifactFactory::instance(),
             new ArtifactDao()
         );

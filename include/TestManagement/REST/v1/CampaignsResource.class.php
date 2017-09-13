@@ -136,7 +136,6 @@ class CampaignsResource {
         $artifact_dao                         = new ArtifactDao();
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
-            $this->conformance_validator,
             $this->artifact_factory,
             $artifact_dao
         );

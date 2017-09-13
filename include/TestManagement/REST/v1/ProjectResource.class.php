@@ -77,7 +77,6 @@ class ProjectResource {
         $this->tracker_factory                 = TrackerFactory::instance();
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
-            $conformance_validator,
             Tracker_ArtifactFactory::instance(),
             new ArtifactDao()
         );

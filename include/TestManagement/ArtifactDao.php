@@ -145,4 +145,21 @@ class ArtifactDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function searchCampaignArtifactForExecution($execution_artifact_id, $campaign_tracker_id)
+    {
+        $execution_artifact_id = $this->da->escapeInt($execution_artifact_id);
+        $campaign_tracker_id   = $this->da->escapeInt($campaign_tracker_id);
+
+        $sql = "SELECT linked_art.*
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                WHERE parent_art.tracker_id = $campaign_tracker_id
+                  AND linked_art.id = $execution_artifact_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
 }
