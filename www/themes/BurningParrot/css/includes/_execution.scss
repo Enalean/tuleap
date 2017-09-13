@@ -13,6 +13,7 @@
     display: flex;
     align-items: flex-end;
     margin: 0 0 $tlp-spacing;
+    flex: 0 0 auto;
 }
 
 .test-campaign-header-title {
@@ -138,6 +139,7 @@
 .tests-list-filters {
     display: flex;
     align-items: flex-end;
+    flex: 0 0 auto;
 
     > .tlp-search {
         margin-right: 20px;
