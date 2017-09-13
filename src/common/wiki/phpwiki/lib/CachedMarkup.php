@@ -123,8 +123,8 @@ class CacheableMarkup extends XmlContent {
 		$this->_append($subitem);
 	}
 	elseif (!is_object($item)) {
-	    $purifier   = Codendi_HTMLPurifier::instance();
-	    $this->_buf = $purifier->purify((string) $item, CODENDI_PURIFIER_BASIC_NOBR, GROUP_ID);
+	    $purifier    = Codendi_HTMLPurifier::instance();
+	    $this->_buf .= $purifier->purify((string) $item, CODENDI_PURIFIER_BASIC_NOBR, GROUP_ID);
 	}
 	elseif (isa($item, 'Cached_DynamicContent')) {
 	    if ($this->_buf) {
