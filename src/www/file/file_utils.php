@@ -415,6 +415,9 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
 
         $ugroups_name = array();
         foreach ($dar as $row) {
+            if (! isset($row['ugroup_id'], $project_names[$row['ugroup_id']])) {
+                continue;
+            }
             $ugroups_name[] = $hp->purify($project_names[$row['ugroup_id']], CODENDI_PURIFIER_JS_QUOTE);
         }
         echo "var ugroups_name = ' " . implode(", ", $ugroups_name) . " ';";
