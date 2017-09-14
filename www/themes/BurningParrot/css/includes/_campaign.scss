@@ -24,13 +24,17 @@
     flex: 0 0 25%;
 }
 
-.tlp-pane-container.test-campaign-title-container {
-    flex: 0 0 25%;
-    justify-content: center;
+.tlp-pane-container {
+    overflow-y: auto;
 
-    .test-campaign-title {
-        margin: 0;
-        font-size: 22px;
+    &.test-campaign-title-container {
+        flex: 0 0 25%;
+        justify-content: center;
+
+        .test-campaign-title {
+            margin: 0;
+            font-size: 22px;
+        }
     }
 }
 
