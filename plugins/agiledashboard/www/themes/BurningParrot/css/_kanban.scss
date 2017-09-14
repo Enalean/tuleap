@@ -114,7 +114,7 @@ $kanban-column-footer-height: 50px;
 
     &.kanban-column-open {
         flex: 1 1 100%;
-        min-width: 180px;
+        min-width: 260px;
 
         > .kanban-column-label {
             display: none;
