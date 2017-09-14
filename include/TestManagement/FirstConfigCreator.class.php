@@ -57,7 +57,7 @@ class FirstConfigCreator
         Project $template,
         array $tracker_mapping
     ) {
-        if (! $this->isConfigNeeded($project)) {
+        if (! $this->config->isConfigNeeded($project)) {
             return;
         }
 
