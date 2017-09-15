@@ -33,6 +33,7 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 .PHONY: build
 build:
+	cd /build/src && npm install && npm run build && \
 	cd /build/src/plugins/testmanagement/www/scripts/angular && npm install && bower install && npm run build
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
