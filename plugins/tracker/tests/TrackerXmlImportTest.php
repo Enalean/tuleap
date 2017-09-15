@@ -230,12 +230,13 @@ class TrackerXmlImportTest extends TuleapTestCase {
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array(
-                'project_id'          => $this->group_id,
+                'project'             => $this->project,
                 'xml_content'         => $this->xml_input,
                 'mapping'             => $this->mapping,
                 'field_mapping'       => array(),
                 'mappings_registery'  => $this->mapping_registery,
                 'artifact_id_mapping' => new Tracker_XML_Importer_ArtifactImportedMapping(),
+                'extraction_path'     => $this->extraction_path,
             )
         )->once();
 

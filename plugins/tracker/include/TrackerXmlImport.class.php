@@ -254,12 +254,13 @@ class TrackerXmlImport
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array(
-                'project_id'          => $project->getId(),
+                'project'             => $project,
                 'xml_content'         => $xml_input,
                 'mapping'             => $created_trackers_mapping,
                 'field_mapping'       => $this->xmlFieldsMapping,
                 'mappings_registery'  => $registery,
                 'artifact_id_mapping' => $artifacts_id_mapping,
+                'extraction_path'     => $extraction_path,
             )
         );
 

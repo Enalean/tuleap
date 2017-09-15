@@ -558,12 +558,13 @@ class Event {
      * Event launched while importing a project from a xml content
      *
      * Parameters:
-     *   'project_id'          => The id of the project where trackers, cardwall and AD must be created
+     *   'project'             => Project where trackers are being created
      *   'xml_content'         => The SimpleXMLElement to check in
      *   'mapping'             => An array with a mapping between xml ids and new ids for trackers
      *   'field_mapping'       => An array with a mapping between xml ids and new objects
      *   'mappings_registery'  => The XML mappings
      *   'artifact_id_mapping' => A mapping between xml ids and new ids for artifacts
+     *   'extraction_path'     => Path where archive has been extracted
      *
      * Expected Results:
      *   The various plugins create objects from the xml content
