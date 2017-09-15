@@ -110,10 +110,21 @@ class FirstConfigCreator
 
                 if (! $tracker) {
                     # Tracker using this shortname is from TrackerEngine v3
-                    $this->warn('tracker_engine_version_error', $tracker->getId());
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::WARN,
+                        $GLOBALS['Language']->getText(
+                            'plugin_testmanagement_first_config',
+                            'tracker_engine_version_error',
+                            $tracker_itemname
+                        )
+                    );
                 }
             } else {
                 $tracker = $this->createTrackerFromXML($project, $tracker_itemname);
+            }
+
+            if (! $tracker) {
+                $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode($project->getID()));
             }
 
             $tracker_ids[$tracker_itemname] = $tracker->getId();
@@ -141,26 +152,20 @@ class FirstConfigCreator
         );
     }
 
-    private function warn($message)
-    {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::WARN,
-            $GLOBALS['Language']->getText(
-                'plugin_testmanagement_first_config',
-                $message
-            )
-        );
-    }
-
-    /** @return \Tracker */
+    /** @return \Tracker|null */
     private function createTrackerFromXML(Project $project, $tracker_itemname)
     {
         $template_path = TESTMANAGEMENT_RESOURCE_DIR .'/Tracker_'.$tracker_itemname.'.xml';
 
         $tracker = $this->importTrackerStructure($project, $template_path);
         if (! $tracker) {
-            $this->warn('internal_error');
-           return;
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                $GLOBALS['Language']->getText(
+                    'plugin_testmanagement_first_config',
+                    'internal_error'
+                )
+            );
         }
 
         return $tracker;
