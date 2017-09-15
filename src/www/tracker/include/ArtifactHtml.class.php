@@ -471,8 +471,7 @@ class ArtifactHtml extends Artifact {
                 } else if ($field->getName() == 'last_update_date') {
                 	$value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);    
                 } else {
-                    $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
-                    if ($read_only) $value = util_make_links($value,$group_id, $group_artifact_id);
+                    $value = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $read_only, false, false, 0, false, 0, false, 0, false, $this->ArtifactType->getGroupID());
                 }
                 
                 $html = array('label' => $label, 'value' => $value);

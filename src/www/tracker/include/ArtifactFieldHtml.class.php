@@ -420,7 +420,9 @@ class ArtifactFieldHtml extends ArtifactField {
 				   $show_none=false, $text_none=0,
 				   $show_any=false, $text_any=0,
 				   $show_unchanged=false,$text_unchanged=0,
-                   $htmlEmail = true) {
+                   $htmlEmail = true,
+				   $project_id = 0
+	) {
 	    global $Language;
         $hp = Codendi_HTMLPurifier::instance();
         //Use url parameters to populate fields
@@ -456,7 +458,7 @@ class ArtifactFieldHtml extends ArtifactField {
                 else {
                     $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i]));
                     if (!$ascii) {
-                        $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_CONVERT_HTML);
+                        $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_BASIC_NOBR, $project_id);
                     }
                 }
 		    }
@@ -507,7 +509,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				else  {
                     $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id,$arr[$i]));
                     if (!$ascii) {
-                        $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_CONVERT_HTML);
+                        $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_BASIC_NOBR, $project_id);
                     }
                 }
 		    }
