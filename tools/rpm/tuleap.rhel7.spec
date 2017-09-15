@@ -40,7 +40,6 @@ Requires: %{php_base}-process  %{php_base}-opcache
 
 Requires: highlight
 
-Requires: htmlpurifier >= 4.5
 Requires: php-ZendFramework2-Loader
 Requires: rh-php56-php-fpm
 
