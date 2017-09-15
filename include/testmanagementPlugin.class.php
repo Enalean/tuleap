@@ -226,7 +226,10 @@ class testmanagementPlugin extends Plugin
     public function agiledashboard_event_additional_panes_on_milestone($params)
     {
         $milestone = $params['milestone'];
-        $params['panes'][] = new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone);
+        $project   = $milestone->getProject();
+        if ($project->usesService($this->getServiceShortname())) {
+            $params['panes'][] = new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone);
+        }
     }
 
     /**
