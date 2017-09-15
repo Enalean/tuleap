@@ -1,0 +1,12 @@
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+    start = element testmanagement {
+        element configuration {
+            element issues { xsd:string },
+            element campaigns { xsd:string },
+            element definitions { xsd:string },
+            element executions { xsd:string }
+        }
+    }
+}

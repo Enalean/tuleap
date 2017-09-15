@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
+use Tuleap\TestManagement\XMLImport;
 use Tuleap\TestManagement\FirstConfigCreator;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
@@ -71,6 +72,8 @@ class testmanagementPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
+
+            $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
         }
 
         return parent::getHooksAndCallbacks();
@@ -311,5 +314,11 @@ class testmanagementPlugin extends Plugin
     public function tracker_add_system_natures($params)
     {
         $params['natures'][] = NatureCoveredByPresenter::NATURE_COVERED_BY;
+    }
+
+    public function import_xml_project_tracker_done(array $params)
+    {
+        $importer = new XMLImport(new Config(new Dao()));
+        $importer->import($params['project'], $params['extraction_path'], $params['mapping']);
     }
 }

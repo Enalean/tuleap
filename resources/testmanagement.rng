@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="testmanagement">
+      <element name="configuration">
+        <element name="issues">
+          <data type="string"/>
+        </element>
+        <element name="campaigns">
+          <data type="string"/>
+        </element>
+        <element name="definitions">
+          <data type="string"/>
+        </element>
+        <element name="executions">
+          <data type="string"/>
+        </element>
+      </element>
+    </element>
+  </start>
+</grammar>
