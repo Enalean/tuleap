@@ -8,7 +8,8 @@
   "require": {
     "paragonie/random_compat": "^2.0",
     "mustache/mustache": "dev-feature/strict-variables",
-    "ezyang/htmlpurifier": "^4.9.3"
+    "ezyang/htmlpurifier": "^4.9.3",
+    "firebase/php-jwt": "^5.0.0"
   },
   "config": {
     "platform": {
