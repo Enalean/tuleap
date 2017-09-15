@@ -51,10 +51,6 @@ class Router
 
     public function route(HTTPRequest $request)
     {
-        if (! $request->getCurrentUser()->isLoggedIn()) {
-            return;
-        }
-
         $action = $request->get('action');
 
         switch ($action) {
