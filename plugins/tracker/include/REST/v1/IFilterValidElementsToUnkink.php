@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\Tracker\REST\v1;
 
 use PFUser;
 
-interface IFilterValidElementsToUnkink {
+interface IFilterValidElementsToUnkink
+{
     public function filter(PFUser $user, array $artifact_ids_to_be_removed);
 }

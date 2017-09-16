@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use PFUser;
@@ -33,7 +34,6 @@ use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
 use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Tracker_ArtifactDao;
-use IdsFromBodyAreNotUniqueException;
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
@@ -48,6 +48,7 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use PlanningPermissionsManager;
 use AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder;
 use AgileDashboard_Milestone_MilestoneDao;
+use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 /**
  * Wrapper for backlog related REST methods

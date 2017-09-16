@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,8 +24,10 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Planning_MilestoneFactory;
 use Planning_Milestone;
 use PFUser;
+use Tuleap\Tracker\REST\v1\IFilterValidElementsToUnkink;
 
-class FilterValidSubmilestones implements IFilterValidElementsToUnkink {
+class FilterValidSubmilestones implements IFilterValidElementsToUnkink
+{
 
     /**
      * @var Planning_MilestoneFactory
@@ -37,12 +39,14 @@ class FilterValidSubmilestones implements IFilterValidElementsToUnkink {
      */
     private $milestone;
 
-    public function __construct(Planning_MilestoneFactory $milestone_factory, Planning_Milestone $milestone) {
+    public function __construct(Planning_MilestoneFactory $milestone_factory, Planning_Milestone $milestone)
+    {
         $this->milestone_factory = $milestone_factory;
         $this->milestone         = $milestone;
     }
 
-    public function filter(PFUser $user, array $artifact_ids_to_be_removed) {
+    public function filter(PFUser $user, array $artifact_ids_to_be_removed)
+    {
         $submilestones = array();
 
         foreach ($artifact_ids_to_be_removed as $artifact_to_be_removed) {

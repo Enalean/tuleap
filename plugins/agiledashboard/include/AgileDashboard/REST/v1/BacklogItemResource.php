@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tuleap\REST\Header;
@@ -36,10 +37,10 @@ use Tracker_Artifact;
 use TrackerFactory;
 use Tracker_SemanticManager;
 use Tracker_SemanticCollection;
-use Tracker_FormElementFactory;
 use Tracker_Semantic_Title;
 use Tracker_Semantic_Status;
 use AgileDashBoard_Semantic_InitialEffort;
+use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 /**
  * Wrapper for Backlog_Items related REST methods

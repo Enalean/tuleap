@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use BacklogItemReference;
@@ -57,6 +58,7 @@ use AgileDashboard_Milestone_MilestoneDao;
 use MilestoneParentLinker;
 use Tuleap\AgileDashboard\REST\QueryToCriterionConverter;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
+use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 /**
  * Wrapper for milestone related REST methods
