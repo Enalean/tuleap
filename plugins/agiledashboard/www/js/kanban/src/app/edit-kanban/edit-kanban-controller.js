@@ -126,7 +126,10 @@ function EditKanbanCtrl(
             self.deleting = true;
 
             KanbanService.deleteKanban(self.kanban.id)
-                .then(function (response) {
+                .then(function() {
+                    KanbanService.removeKanban();
+                })
+                .catch(function (response) {
                     modal_instance.tlp_modal.hide();
                     RestErrorService.reload(response);
                 });
