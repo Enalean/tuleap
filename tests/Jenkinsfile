@@ -15,7 +15,7 @@ def runRESTTests(String version) {
 
 def runKarmaTests(String name, String path) {
     sh """
-    cid="\$(docker create -v \$WORKSPACE/sources:/sources:ro --security-opt seccomp=\$WORKSPACE/sources/tests/karma/seccomp_chrome.json \$DOCKER_REGISTRY/enalean/tuleap-test-karma:chromium --path $path)"
+    cid="\$(docker create -v \$WORKSPACE/sources:/sources:ro --security-opt seccomp=\$WORKSPACE/sources/tests/karma/seccomp_chrome.json \$DOCKER_REGISTRY/enalean/tuleap-test-karma:chromium-without-full-copy --path $path)"
     docker start --attach "\$cid" || true
     mkdir -p 'results/karma'
     docker cp "\$cid":/output/test-results.xml results/karma/test-$name-results.xml

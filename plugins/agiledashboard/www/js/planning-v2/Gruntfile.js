@@ -17,6 +17,8 @@ module.exports = function(grunt) {
      */
     var userConfig = require('./build.config.js');
 
+    var karmaConf = require('./karma.config.js');
+
     /**
      * This is the configuration object Grunt uses to give each plugin its
      * instructions.
@@ -249,9 +251,7 @@ module.exports = function(grunt) {
          * The Karma configurations.
          */
         karma: {
-            options: {
-                configFile: '<%= build_dir %>/karma-unit.js'
-            },
+            options: karmaConf,
             unit: {
                 runnerPort: 9101,
                 background: true
@@ -264,6 +264,7 @@ module.exports = function(grunt) {
                 singleRun    : true,
                 reporters    : ['dots', 'junit'],
                 junitReporter: {
+                    outputDir     : process.env.REPORT_OUTPUT_FOLDER || '',
                     outputFile    : 'test-results.xml',
                     useBrowserName: false
                 }
@@ -332,7 +333,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= app_files.js %>'
                 ],
-                tasks: ['eslint:src', 'nggettext_extract', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
+                tasks: ['eslint:src', 'nggettext_extract', 'karmaconfig', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
             },
 
             /**
@@ -417,7 +418,6 @@ module.exports = function(grunt) {
     grunt.registerTask('watch', [
         'prepare',
         'soft-compile',
-        'karmaconfig',
         'delta'
     ]);
 
@@ -470,7 +470,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', 'Run unit tests and generate a junit report for the Continuous Integration', function() {
         return grunt.task.run([
             'eslint:src', // TODO: 'eslint' when tests are fixed
-            'html2js',
             'karmaconfig',
             'karma:continuous'
         ]);
@@ -497,20 +496,9 @@ module.exports = function(grunt) {
 
     /**
      * In order to avoid having to specify manually the files needed for karma to
-     * run, we use grunt to manage the list for us. The `karma/*` files are
-     * compiled as grunt templates for use by Karma. Yay!
+     * run, we use grunt to manage the list for us.
      */
-    grunt.registerMultiTask('karmaconfig', 'Process karma config templates', function() {
-        var jsFiles = filterForJS(this.filesSrc);
-
-        grunt.file.copy('karma/karma-unit.tpl.js', grunt.config('build_dir') + '/karma-unit.js', {
-            process: function(contents) {
-                return grunt.template.process(contents, {
-                    data: {
-                        scripts: jsFiles
-                    }
-                });
-            }
-        });
+    grunt.registerMultiTask('karmaconfig', 'Retrieve the files needed by karma', function() {
+        karmaConf.files = filterForJS(this.filesSrc);
     });
 };
