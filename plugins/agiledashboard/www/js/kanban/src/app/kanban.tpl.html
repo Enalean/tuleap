@@ -79,7 +79,12 @@
             >
                 <i class="fa fa-inbox"></i>
             </span>
-            <span ng-if="kanban.backlog.is_open" class="kanban-column-header-label">{{ kanban.backlog.label }}</span>
+            <span ng-if="kanban.backlog.is_open"
+                  class="kanban-column-header-label"
+                  title="{{ kanban.backlog.label }}"
+            >
+                {{ kanban.backlog.label }}
+            </span>
             <div ng-if="kanban.backlog.is_open" class="kanban-column-header-wip">
                 <span
                         ng-if="kanban.backlog.loading_items || kanban.backlog.fully_loaded"
@@ -131,7 +136,12 @@
             >
                 <i class="fa fa-exclamation-triangle"></i>
             </span>
-            <span ng-if="column.is_open" class="kanban-column-header-label">{{ column.label }}</span>
+            <span ng-if="column.is_open"
+                  class="kanban-column-header-label"
+                  title="{{ column.label }}"
+            >
+                {{ column.label }}
+            </span>
             <div ng-if="column.is_open" class="kanban-column-header-wip">
                 <span
                         ng-if="! column.loading_items && ! column.fully_loaded"
@@ -194,7 +204,12 @@
             >
                 <i class="fa fa-archive"></i>
             </span>
-            <span ng-if="kanban.archive.is_open" class="kanban-column-header-label">{{ kanban.archive.label }}</span>
+            <span ng-if="kanban.archive.is_open"
+                  class="kanban-column-header-label"
+                  title="{{ kanban.archive.label }}"
+            >
+                {{ kanban.archive.label }}
+            </span>
             <div ng-if="kanban.archive.is_open" class="kanban-column-header-wip">
                 <span
                         ng-if="! kanban.archive.loading_items && ! kanban.archive.fully_loaded"
