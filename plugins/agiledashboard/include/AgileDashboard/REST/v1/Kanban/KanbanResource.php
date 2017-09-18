@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,6 @@ use Tracker_Semantic_Status;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
-use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use AgileDashboard_KanbanUserPreferences;
 use Kanban_SemanticStatusNotDefinedException;
@@ -61,7 +60,6 @@ use Kanban_SemanticStatusBasedOnASharedFieldException;
 use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
 use Kanban_SemanticStatusColumnIdsNotInOpenSemanticException;
 use AgileDashboard_KanbanColumnManager;
-use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tuleap\RealTime\NodeJSClient;
@@ -71,9 +69,9 @@ use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
-use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
+use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 class KanbanResource extends AuthenticatedResource {
 

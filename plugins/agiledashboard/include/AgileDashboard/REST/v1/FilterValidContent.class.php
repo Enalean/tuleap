@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,9 +24,10 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use \Tracker_ArtifactFactory;
 use \Planning_Milestone;
 use \PFUser;
+use Tuleap\Tracker\REST\v1\IFilterValidElementsToUnkink;
 
-class FilterValidContent implements IFilterValidElementsToUnkink {
-
+class FilterValidContent implements IFilterValidElementsToUnkink
+{
     /**
      * @var Tracker_ArtifactFactory
      */
@@ -34,16 +35,18 @@ class FilterValidContent implements IFilterValidElementsToUnkink {
 
     private $indexed_backlog_trackers;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, Planning_Milestone $milestone) {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, Planning_Milestone $milestone)
+    {
         $this->artifact_factory = $artifact_factory;
         foreach ($milestone->getPlanning()->getBacklogTrackersIds() as $tracker_id) {
             $this->indexed_backlog_trackers[$tracker_id] = true;
         }
     }
 
-    public function filter(PFUser $user, array $artifact_ids_to_be_removed) {
+    public function filter(PFUser $user, array $artifact_ids_to_be_removed)
+    {
         $valid_artifact_ids = array();
-        foreach ($artifact_ids_to_be_removed as $id)  {
+        foreach ($artifact_ids_to_be_removed as $id) {
             $artifact = $this->artifact_factory->getArtifactById($id);
             if (isset($this->indexed_backlog_trackers[$artifact->getTrackerId()])) {
                 $valid_artifact_ids[] = $id;

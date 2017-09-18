@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,13 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use PFUser;
+use Tuleap\Tracker\REST\v1\IFilterValidElementsToUnkink;
 
-class FilterValidBacklogItems implements IFilterValidElementsToUnkink {
+class FilterValidBacklogItems implements IFilterValidElementsToUnkink
+{
 
-    public function filter(PFUser $user, array $artifact_ids_to_be_removed) {
+    public function filter(PFUser $user, array $artifact_ids_to_be_removed)
+    {
         // No filter, was already done in PatchAddBacklogItemsValidator
         return $artifact_ids_to_be_removed;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\Tracker\REST\v1;
 
 use PFUser;
 use Tracker_Artifact;
@@ -30,26 +30,27 @@ use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
 use Exception;
 
-class ArtifactLinkUpdater {
-
+class ArtifactLinkUpdater
+{
     /**
      * @var Tracker_Artifact_PriorityManager
      */
     private $priority_manager;
 
-    public function __construct(Tracker_Artifact_PriorityManager $priority_manager) {
+    public function __construct(Tracker_Artifact_PriorityManager $priority_manager)
+    {
         $this->priority_manager = $priority_manager;
     }
 
     public function update(
-        array $new_backlogitems_ids,
+        array $new_linked_artifact_ids,
         Tracker_Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
         $type
     ) {
         $artlink_field = $artifact->getAnArtifactLinkField($current_user);
-        if (! $artlink_field) {
+        if (!$artlink_field) {
             return;
         }
 
@@ -58,11 +59,11 @@ class ArtifactLinkUpdater {
             $artifact,
             $current_user,
             $filter,
-            $new_backlogitems_ids,
+            $new_linked_artifact_ids,
             $type
         );
 
-        $this->unlinkAndLinkElements($artifact, $fields_data, $current_user, $new_backlogitems_ids);
+        $this->unlinkAndLinkElements($artifact, $fields_data, $current_user, $new_linked_artifact_ids);
     }
 
     private function getFieldsDataForNewChangeset(
@@ -70,7 +71,7 @@ class ArtifactLinkUpdater {
         Tracker_Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
-        array $new_submilestones_ids,
+        array $new_linked_artifact_ids,
         $type
     ) {
         $artifact_ids_already_linked = $this->getElementsAlreadyLinkedToArtifact($artifact, $current_user);
@@ -79,34 +80,38 @@ class ArtifactLinkUpdater {
             $current_user,
             $filter,
             $artifact_ids_already_linked,
-            $new_submilestones_ids
+            $new_linked_artifact_ids
         );
 
         $artifact_ids_to_be_linked = $this->getElementsToLink(
             $artifact_ids_already_linked,
-            $new_submilestones_ids
+            $new_linked_artifact_ids
         );
 
         return $this->formatFieldDatas($artlink_field, $artifact_ids_to_be_linked, $artifact_ids_to_be_unlinked, $type);
     }
 
-    private function getAllArtifactsToBeRemoved(PFUser $user, IFilterValidElementsToUnkink $filter, array $elements_already_linked, array $new_ids) {
+    private function getAllArtifactsToBeRemoved(PFUser $user, IFilterValidElementsToUnkink $filter, array $elements_already_linked, array $new_ids)
+    {
         $artifacts_to_be_removed = $this->getAllLinkedArtifactsThatShouldBeRemoved($elements_already_linked, $new_ids);
 
         return $filter->filter($user, $artifacts_to_be_removed);
     }
 
-    private function getAllLinkedArtifactsThatShouldBeRemoved(array $elements_already_linked, array $new_ids) {
+    private function getAllLinkedArtifactsThatShouldBeRemoved(array $elements_already_linked, array $new_ids)
+    {
         return array_diff($elements_already_linked, $new_ids);
     }
 
-    public function getElementsToLink(array $elements_already_linked, array $new_submilestones_ids) {
-        return array_diff($new_submilestones_ids, $elements_already_linked);
+    private function getElementsToLink(array $elements_already_linked, array $new_linked_artifact_ids)
+    {
+        return array_diff($new_linked_artifact_ids, $elements_already_linked);
     }
 
-    public function updateArtifactLinks(PFUser $user, Tracker_Artifact $artifact, array $to_add, array $to_remove, $type) {
-        if (! $artifact->getAnArtifactLinkField($user)) {
-            throw new Tracker_NoArtifactLinkFieldException('Missing artifact link field for milestone');
+    public function updateArtifactLinks(PFUser $user, Tracker_Artifact $artifact, array $to_add, array $to_remove, $type)
+    {
+        if (!$artifact->getAnArtifactLinkField($user)) {
+            throw new Tracker_NoArtifactLinkFieldException('Missing artifact link field');
         }
 
         try {
@@ -116,7 +121,8 @@ class ArtifactLinkUpdater {
         }
     }
 
-    public function unlinkAndLinkElements(Tracker_Artifact $artifact, array $fields_data, PFUser $current_user, array $linked_artifact_ids) {
+    private function unlinkAndLinkElements(Tracker_Artifact $artifact, array $fields_data, PFUser $current_user, array $linked_artifact_ids)
+    {
         try {
             $artifact->createNewChangeset($fields_data, '', $current_user, '');
         } catch (Tracker_NoChangeException $exception) {
@@ -128,7 +134,8 @@ class ArtifactLinkUpdater {
         $this->setOrderWithoutHistoryChangeLogging($linked_artifact_ids);
     }
 
-    public function getElementsAlreadyLinkedToArtifact(Tracker_Artifact $artifact, PFUser $user) {
+    public function getElementsAlreadyLinkedToArtifact(Tracker_Artifact $artifact, PFUser $user)
+    {
         return array_map(
             function (Tracker_Artifact $artifact) {
                 return $artifact->getId();
@@ -137,14 +144,14 @@ class ArtifactLinkUpdater {
         );
     }
 
-    private function setOrderWithoutHistoryChangeLogging(array $linked_artifact_ids) {
+    private function setOrderWithoutHistoryChangeLogging(array $linked_artifact_ids)
+    {
         $predecessor = null;
 
         foreach ($linked_artifact_ids as $linked_artifact_id) {
             if (isset($predecessor)) {
                 try {
                     $this->priority_manager->moveArtifactAfter($linked_artifact_id, $predecessor);
-
                 } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
                     throw new ItemListedTwiceException($linked_artifact_id);
                 }
@@ -153,14 +160,14 @@ class ArtifactLinkUpdater {
         }
     }
 
-    public function setOrderWithHistoryChangeLogging(array $linked_artifact_ids, $context_id, $project_id) {
+    public function setOrderWithHistoryChangeLogging(array $linked_artifact_ids, $context_id, $project_id)
+    {
         $predecessor = null;
 
         foreach ($linked_artifact_ids as $linked_artifact_id) {
             if (isset($predecessor)) {
                 try {
                     $this->priority_manager->moveArtifactAfterWithHistoryChangeLogging($linked_artifact_id, $predecessor, $context_id, $project_id);
-
                 } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
                     throw new ItemListedTwiceException($linked_artifact_id);
                 }
@@ -169,7 +176,7 @@ class ArtifactLinkUpdater {
         }
     }
 
-    public function formatFieldDatas(
+    private function formatFieldDatas(
         Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
         array $elements_to_be_linked,
         array $elements_to_be_unlinked,
@@ -191,7 +198,7 @@ class ArtifactLinkUpdater {
         array &$field_datas,
         $type
     ) {
-        if (! $artifactlink_field->getTracker()->isProjectAllowedToUseNature()) {
+        if (!$artifactlink_field->getTracker()->isProjectAllowedToUseNature()) {
             return;
         }
 
@@ -200,11 +207,13 @@ class ArtifactLinkUpdater {
         }
     }
 
-    private function formatLinkedElementForNewChangeset(array $linked_elements) {
+    private function formatLinkedElementForNewChangeset(array $linked_elements)
+    {
         return implode(',', $linked_elements);
     }
 
-    private function formatElementsToBeUnlinkedForNewChangeset(array $elements_to_be_unlinked) {
+    private function formatElementsToBeUnlinkedForNewChangeset(array $elements_to_be_unlinked)
+    {
         $formated_elements = array();
 
         foreach ($elements_to_be_unlinked as $element_to_be_unlinked) {
