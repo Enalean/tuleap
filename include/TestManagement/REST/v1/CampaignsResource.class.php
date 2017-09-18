@@ -61,7 +61,7 @@ use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactUpdater;
 use Tracker_REST_Artifact_ArtifactValidator;
 use Tracker_ReportFactory;
-use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use Tracker_ArtifactDao;
 use PlanningFactory;
 use Planning_MilestoneFactory;
