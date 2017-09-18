@@ -124,6 +124,28 @@ var webpack_config_for_labels = {
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
+            assets: manifest_data
+        })
+    ]
+};
+
+var webpack_config_for_project_admin_labels = {
+    entry: {
+        'project-admin-labels' : './labels/project-admin/project-admin-labels.js'
+    },
+    output: {
+        path: assets_dir_path,
+        filename: '[name]-[chunkhash].js'
+    },
+    externals: {
+        tlp: 'tlp'
+    },
+    module: {
+        rules: [babel_rule]
+    },
+    plugins: [
+        new WebpackAssetsManifest({
+            output: 'manifest.json',
             assets: manifest_data,
             merge: true,
             writeToDisk: true
@@ -135,4 +157,5 @@ module.exports = [
     webpack_config_for_navbar_history,
     webpack_config_for_dashboards,
     webpack_config_for_labels,
+    webpack_config_for_project_admin_labels,
 ];

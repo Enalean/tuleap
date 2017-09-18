@@ -10,7 +10,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#, php-format
+msgid ""
+"\"%s\" label already exists. If you save your modifications, both labels "
+"will be merged."
+msgstr ""
+"Le label \"%s\" existe déjà. Si vous sauvegardez vos modifications, alors "
+"les labels seront fusionnés."
 
 #, php-format
 msgid "%d member"
@@ -29,6 +37,9 @@ msgstr "Agile Dashboard"
 
 msgid "Already used"
 msgstr "Déjà utilisé"
+
+msgid "An error occured while trying to edit the label."
+msgstr "Une erreur est survenue lors de l'édition du label."
 
 msgid "An error occured while trying to remove the label."
 msgstr "Une erreur est survenue lors de la suppression du label."
@@ -145,6 +156,10 @@ msgstr ""
 msgid "Edit"
 msgstr "Éditer"
 
+#, php-format
+msgid "Edit %s"
+msgstr "Éditer %s"
+
 msgid "Edit dashboard"
 msgstr "Éditer le tableau de bord"
 
@@ -189,6 +204,12 @@ msgstr "Utilisé ?"
 
 msgid "Label has been deleted from the project."
 msgstr "Le label a été supprimé du projet."
+
+msgid "Label has been edited."
+msgstr "Le label a été édité."
+
+msgid "Label has not been edited."
+msgstr "Le label n'a pas été édité."
 
 msgid "Labels"
 msgstr "Labels"
@@ -368,6 +389,9 @@ msgstr "Now unix"
 
 msgid "Update"
 msgstr "Mettre à jour"
+
+msgid "Update label"
+msgstr "Mettre à jour le label"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"

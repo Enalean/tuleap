@@ -61,6 +61,20 @@ class IndexPresenter
         $this->empty_filter       = _("No matching labels");
         $this->filter_placeholder = _('Name');
         $this->delete_button      = _('Delete');
+        $this->edit_button        = _('Edit');
         $this->cancel             = _('Cancel');
+        $this->save               = _('Update label');
+
+        $this->json_encoded_label_names = json_encode($this->getLabelsNames());
+    }
+
+    private function getLabelsNames()
+    {
+        return array_map(
+            function (LabelPresenter $label_presenter) {
+                return $label_presenter->name;
+            },
+            $this->labels
+        );
     }
 }

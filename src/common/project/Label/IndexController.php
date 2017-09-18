@@ -26,6 +26,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Layout\IncludeAssets;
 
 class IndexController
 {
@@ -41,12 +42,21 @@ class IndexController
      * @var LabelsManagementURLBuilder
      */
     private $url_builder;
+    /**
+     * @var IncludeAssets
+     */
+    private $assets;
 
-    public function __construct(LabelsManagementURLBuilder $url_builder, LabelDao $dao, EventManager $event_manager)
-    {
+    public function __construct(
+        LabelsManagementURLBuilder $url_builder,
+        LabelDao $dao,
+        EventManager $event_manager,
+        IncludeAssets $assets
+    ) {
         $this->url_builder   = $url_builder;
         $this->dao           = $dao;
         $this->event_manager = $event_manager;
+        $this->assets        = $assets;
     }
 
     public function display(HTTPRequest $request)
@@ -86,7 +96,7 @@ class IndexController
 
     private function displayHeader($title)
     {
-        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/project-admin-labels.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile($this->assets->getFileURL('project-admin-labels.js'));
         project_admin_header(array('title' => $title));
     }
 

@@ -1,4 +1,10 @@
 #, php-format
+msgid ""
+"\"%s\" label already exists. If you save your modifications, both labels "
+"will be merged."
+msgstr ""
+
+#, php-format
 msgid "%d member"
 msgid_plural "%d members"
 msgstr[0] ""
@@ -14,6 +20,9 @@ msgid "Agile Dashboard"
 msgstr ""
 
 msgid "Already used"
+msgstr ""
+
+msgid "An error occured while trying to edit the label."
 msgstr ""
 
 msgid "An error occured while trying to remove the label."
@@ -126,6 +135,10 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
 msgid "Edit dashboard"
 msgstr ""
 
@@ -169,6 +182,12 @@ msgid "Is used?"
 msgstr ""
 
 msgid "Label has been deleted from the project."
+msgstr ""
+
+msgid "Label has been edited."
+msgstr ""
+
+msgid "Label has not been edited."
 msgstr ""
 
 msgid "Labels"
@@ -346,6 +365,9 @@ msgid "Unix name"
 msgstr ""
 
 msgid "Update"
+msgstr ""
+
+msgid "Update label"
 msgstr ""
 
 msgid "Update successful"
