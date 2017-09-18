@@ -101,6 +101,9 @@ msgstr ""
 msgid "Dashboard of the project"
 msgstr ""
 
+msgid "Date"
+msgstr ""
+
 msgid "Delete"
 msgstr ""
 
@@ -174,6 +177,9 @@ msgstr ""
 msgid "Labels"
 msgstr ""
 
+msgid "Link"
+msgstr ""
+
 msgid "Lists"
 msgstr ""
 
@@ -223,6 +229,9 @@ msgid "Open/Close the shortcut window"
 msgstr ""
 
 msgid "Open/Collapse the sidebar"
+msgstr ""
+
+msgid "Owner"
 msgstr ""
 
 msgid "Platform administration"
