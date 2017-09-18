@@ -11,6 +11,7 @@ CORE_REST_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/api/VERSION)
 
 PLUGIN_FORUMML_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/forumml/VERSION)
 PLUGIN_GIT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/git/VERSION)
+PLUGIN_PULLREQUEST_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/pullrequest/VERSION)
 PLUGIN_LDAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/ldap/VERSION)
 PLUGIN_IM_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/IM/VERSION)
 PLUGIN_HUDSON_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/hudson/VERSION)
@@ -41,7 +42,7 @@ PLUGIN_BUGZILLA_REFERENCE_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/bugzill
 THEME_FLAMINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/FlamingParrot/VERSION)
 THEME_BURNINGPARROT_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BurningParrot/VERSION)
 
-ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/frs/www/js/angular
+ANGULAR_APPS_TO_BUILD=plugins/agiledashboard/www/js/planning-v2 plugins/frs/www/js/angular plugins/pullrequest/www/js/angular
 
 ifdef GIT_BRANCH
 TAG_RELEASE = $(subst -, ,$(GIT_BRANCH))
@@ -147,11 +148,13 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/src -o\
 				-path $(PKG_NAME)-$(version)/src/www/themes/common/tlp/angular-tlp -o\
 				-path $(PKG_NAME)-$(version)/plugins/tests -o\
+				-path $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular -o\
 				-path $(PKG_NAME)-$(version)/plugins/frs/www/js/angular -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2 -o\
 				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban \)\
 				-prune -o -print \
 			&& \
+			find $(PKG_NAME)-$(version)/plugins/pullrequest/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/frs/www/js/angular/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/bin; \
 			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/dist; \
@@ -181,6 +184,7 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@CORE_REST_VERSION@@/$(CORE_REST_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FORUMML_VERSION@@/$(PLUGIN_FORUMML_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_GIT_VERSION@@/$(PLUGIN_GIT_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_PULLREQUEST_VERSION@@/$(PLUGIN_PULLREQUEST_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_LDAP_VERSION@@/$(PLUGIN_LDAP_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_IM_VERSION@@/$(PLUGIN_IM_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_HUDSON_VERSION@@/$(PLUGIN_HUDSON_VERSION)/g' |\

@@ -1,0 +1,43 @@
+{
+  "author": "Enalean Team",
+  "name": "tuleap-pullrequest",
+  "version": "0.0.1",
+  "homepage": "https://www.enalean.com",
+  "licenses": {
+    "type": "GNU General Public License v2"
+  },
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^2.7.0",
+    "eslint-plugin-angular": "1.3.0",
+    "grunt": "1.0.1",
+    "grunt-angular-gettext": "^0.2.15",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-connect": "1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^18.0.0",
+    "grunt-html2js": "^0.3.5",
+    "grunt-karma": "^0.12.2",
+    "grunt-ng-annotate": "^2.0.1",
+    "jasmine-core": "^2.4.1",
+    "jit-grunt": "^0.10.0",
+    "karma": "^0.13.22",
+    "karma-coverage": "^0.5.5",
+    "karma-jasmine": "^0.3.8",
+    "karma-junit-reporter": "^0.4.2",
+    "karma-notify-reporter": "^0.1.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "time-grunt": "^1.3.0"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/grunt build",
+    "coverage": "node_modules/.bin/grunt coverage",
+    "test": "node_modules/.bin/grunt test",
+    "watch": "node_modules/.bin/grunt watch"
+  }
+}

@@ -1,0 +1,34 @@
+#pull-request {
+    .nav {
+        margin: 0 0 20px;
+        padding: 0 20px;
+    }
+
+    #pull-request-content {
+        margin: 25px 0;
+    }
+}
+
+.pull-request-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px 10px 20px;
+
+    > h2 {
+        flex: 0 0 auto;
+    }
+
+    > labels {
+        display: flex;
+        margin: 0 0 0 20px;
+
+        > .select2-container {
+            width: 100%;
+        }
+
+        :empty {
+            margin: 0;
+        }
+    }
+}

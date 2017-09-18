@@ -1,0 +1,11 @@
+div.tuleap-username {
+    display: flex;
+    align-items: center;
+
+    > div.avatar {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        margin: 0 5px 0 0;
+    }
+}

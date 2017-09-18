@@ -1,0 +1,11 @@
+<div ng-if="diff.is_loading" class="loading"></div>
+
+<div ng-if="diff.isBinaryFile" class="binary-file">
+    <i class="icon-file-alt"></i><br>{{ 'Binary file' | translate }}
+</div>
+
+<div
+    ng-if="! diff.isBinaryFile"
+    id="code-mirror-area"
+    resize
+></div>

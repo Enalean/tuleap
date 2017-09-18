@@ -208,6 +208,15 @@ Integration of git distributed software configuration management tool together
 with Tuleap.
 This package is integrated with gitolite v3 (new version)
 
+%package plugin-pullrequest
+Summary: Pullrequest management for Tuleap
+Version: @@PLUGIN_PULLREQUEST_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git
+Group: Development/Tools
+%description plugin-pullrequest
+%{summary}.
+
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
@@ -635,6 +644,11 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 #codendiadm > gitolite sudo
 %{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
+
+# Plugin PullRequest
+%{__install} -D plugins/pullrequest/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
+%{__install} plugins/pullrequest/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
 
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
@@ -1136,6 +1150,12 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
+
+%files plugin-pullrequest
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/pullrequest
+%config(noreplace) /etc/logrotate.d/tuleap_pullrequest
+%attr(00440,root,root) /etc/sudoers.d/gitolite-access-command
 
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)

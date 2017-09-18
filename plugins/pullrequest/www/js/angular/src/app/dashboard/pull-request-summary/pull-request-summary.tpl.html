@@ -1,0 +1,42 @@
+<div
+    class="pull-request-summary"
+    ng-click="::summary_controller.goToOverview()"
+>
+    <div class="pull-request-summary-details">
+        <div class="pull-request-summary-title">
+            <span
+                class="title"
+                ng-bind-html="::summary_controller.pull_request.title"
+                ng-click="$event.stopPropagation()"
+            ></span>
+            <pull-request-refs
+                class="refs"
+                pull-request-data="::summary_controller.pull_request"
+            ></pull-request-refs>
+        </div>
+        <div class="pull-request-summary-metadata">
+            <tuleap-username
+                    class="author"
+                    username="summary_controller.author"
+            ></tuleap-username>
+            <small class="creation-date">
+                <i class="icon-calendar"></i>
+                {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+            </small>
+            <span
+                ng-if="::summary_controller.isAbandoned()"
+                class="status label"
+                translate
+            >Abandoned</span>
+            <span
+                ng-if="::summary_controller.isMerged()"
+                class="status label label-success"
+                translate
+            >Merged</span>
+        </div>
+    </div>
+    <labels class="item-labels-box"
+            pull-request-id="{{ ::summary_controller.pull_request.id }}"
+            project-id="{{ ::summary_controller.pull_request.repository_dest.project.id }}"
+    ></labels>
+</div>
