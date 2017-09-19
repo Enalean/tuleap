@@ -2,14 +2,14 @@
  * This file/module contains all configuration for the build process.
  */
 module.exports = {
+
     /**
      * The `build_dir` folder is where our projects are compiled during
      * development and the `compile_dir` folder is where our app resides once it's
      * completely built.
      */
-    build_dir: 'build',
+    build_dir  : 'build',
     compile_dir: 'bin',
-    vendor_dir: 'bower_components',
 
     /**
      * This is a collection of file patterns that refer to our app code (the
@@ -46,7 +46,6 @@ module.exports = {
 
         atpl: ['src/app/**/*.tpl.html'],
 
-        html: ['src/index.html'],
         scss: 'src/app/main.scss'
     },
 
@@ -60,9 +59,6 @@ module.exports = {
      *
      * The `vendor_files.js` property holds files to be automatically
      * concatenated and minified with our project source files.
-     *
-     * The `vendor_files.css` property holds any CSS files to be automatically
-     * included in our app.
      */
     vendor_files: {
         js: [
@@ -79,10 +75,6 @@ module.exports = {
             'bower_components/codemirror/lib/codemirror.js',
             'bower_components/codemirror/addon/mode/simple.js',
             'bower_components/codemirror/mode/**/*.js'
-        ],
-        css: [
-            'bower_components/ui-select/dist/select.min.css',
-            'bower_components/codemirror/lib/codemirror.css'
         ],
         assets: [
         ]
