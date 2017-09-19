@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,8 @@ use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\REST\ResourcesInjector;
 use Tuleap\FRS\ReleasePresenter;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksRetriever;
 
 class frsPlugin extends \Plugin
 {
@@ -179,7 +181,7 @@ class frsPlugin extends \Plugin
 
         $renderer       = $this->getTemplateRenderer();
         $representation = new ReleaseRepresentation();
-        $representation->build($release, $this->getLinkRetriever(), $user);
+        $representation->build($release, $this->getLinkRetriever(), $user, $this->getUploadedLinkRetriever());
         $presenter = new ReleasePresenter(
             $representation,
             $user->getShortLocale()
@@ -265,5 +267,10 @@ class frsPlugin extends \Plugin
         if ($release_id) {
             $params['panes'][] = new Tuleap\FRS\AgileDashboardPaneInfo($milestone, $release_id);
         }
+    }
+
+    private function getUploadedLinkRetriever()
+    {
+        return new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
     }
 }
