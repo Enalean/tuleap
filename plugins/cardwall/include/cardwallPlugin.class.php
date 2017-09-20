@@ -435,7 +435,7 @@ class cardwallPlugin extends Plugin {
      */
     public function import_xml_project_tracker_done($params) {
         $cardwall_ontop_import = new CardwallConfigXmlImport(
-            $params['project_id'],
+            $params['project']->getId(),
             $params['mapping'],
             $params['field_mapping'],
             new Cardwall_OnTop_Dao,
