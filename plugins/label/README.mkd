@@ -1,0 +1,5 @@
+Label plugin
+===============
+
+Adds a widget available for project dashboards. You can configure it to show all items that have a given label.
+For example you can search all Pull Requests labeled "Emergency" and "v3.0"

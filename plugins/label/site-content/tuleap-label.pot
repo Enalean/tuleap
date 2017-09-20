@@ -1,0 +1,16 @@
+msgid "Adds a project widget to search for labeled items"
+msgstr ""
+
+msgid ""
+"Displays items with configured labels in the project. For example you can "
+"search all Pull Requests labeled \"Emergency\" and \"v3.0\""
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Labeled Items"
+msgstr ""
+
+msgid "No items to display"
+msgstr ""
