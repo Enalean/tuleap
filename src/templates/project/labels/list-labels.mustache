@@ -72,14 +72,16 @@
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_button }}
                                         </button>
-                                        {{> label-modal-edit }}
-                                        {{> label-modal-delete }}
                                     </td>
                                 </tr>
                             {{/ labels }}
                         {{/ has_labels }}
                     </tbody>
                 </table>
+                {{# labels }}
+                    {{> label-modal-edit }}
+                    {{> label-modal-delete }}
+                {{/ labels }}
             </section>
         </div>
     </section>

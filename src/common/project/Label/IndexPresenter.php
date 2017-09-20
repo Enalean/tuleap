@@ -41,6 +41,13 @@ class IndexPresenter
     public $project_id;
     public $csrf_token;
     public $cancel;
+    public $color_label;
+    public $save;
+    public $edit_button;
+    public $json_encoded_label_names;
+    public $style_label;
+    public $plain;
+    public $outline;
 
     public function __construct(
         $title,
@@ -55,6 +62,8 @@ class IndexPresenter
         $this->csrf_token = $csrf_token;
 
         $this->name_label         = _('Name');
+        $this->color_label        = _('Color');
+        $this->style_label        = _('Style');
         $this->is_used_label      = _('Is used?');
         $this->this_label_is_used = _('This label is used in the project');
         $this->empty_state        = _("No labels defined in this project");
@@ -64,6 +73,8 @@ class IndexPresenter
         $this->edit_button        = _('Edit');
         $this->cancel             = _('Cancel');
         $this->save               = _('Update label');
+        $this->plain              = _('Filled');
+        $this->outline            = _('Outline');
 
         $this->json_encoded_label_names = json_encode($this->getLabelsNames());
     }

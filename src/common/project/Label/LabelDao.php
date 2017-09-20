@@ -108,14 +108,18 @@ class LabelDao extends DataAccessObject
     /**
      * @return int The number of affected label (0 if there is no change)
      */
-    public function editInTransaction($project_id, $label_id, $new_name)
+    public function editInTransaction($project_id, $label_id, $new_name, $new_color, $new_is_outline)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $label_id   = $this->da->escapeInt($label_id);
-        $new_name   = $this->da->quoteSmart($new_name);
+        $project_id     = $this->da->escapeInt($project_id);
+        $label_id       = $this->da->escapeInt($label_id);
+        $new_name       = $this->da->quoteSmart($new_name);
+        $new_color      = $this->da->quoteSmart($new_color);
+        $new_is_outline = $new_is_outline ? 1 : 0;
 
         $sql = "UPDATE project_label
-                SET name = $new_name
+                SET name = $new_name,
+                    color = $new_color,
+                    is_outline = $new_is_outline
                 WHERE project_id = $project_id
                   AND id = $label_id";
 

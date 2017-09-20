@@ -17,6 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+%color-area {
+    display: block;
+    height: 25px;
+    border-radius: 3px;
+
+    @for $i from 1 through length($tlp-swatch-color-names) {
+        &.#{nth($tlp-swatch-color-names, $i)} {
+            border-color: nth($tlp-swatch-color-primaries, $i);
+            background: nth($tlp-swatch-color-primaries, $i);
+
+            &:hover:not(:disabled):not(.disabled):not(:active) {
+                border-color: darken(nth($tlp-swatch-color-primaries, $i), 5%);
+                background: darken(nth($tlp-swatch-color-primaries, $i), 5%);
+            }
+        }
+    }
+}
+
 .project-labels-table-name,
 .project-labels-table-is-used {
     width: 50%;
@@ -32,4 +50,37 @@
     &.shown {
         display: block;
     }
+}
+
+.project-label-color-selector {
+    width: 80px;
+}
+
+.project-label-edit-options {
+    display: flex;
+}
+
+.tlp-form-element.project-label-edit-style {
+    margin: 0 0 $tlp-spacing $tlp-double-spacing;
+}
+
+.project-label-edit-style-options {
+    display: flex;
+    align-items: center;
+    padding: 8px 0 0;
+}
+
+.project-label-edit-style-option-outline {
+    margin: 0 0 $tlp-half-spacing $tlp-spacing;
+}
+
+.project-label-color-results,
+.project-label-color-container {
+    span {
+        @extend %color-area;
+    }
+}
+
+.project-label-color-results {
+    height: 250px;
 }
