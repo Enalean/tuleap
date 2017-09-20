@@ -37,8 +37,7 @@ $loader = new Zend\Loader\StandardAutoloader(
     array(
         'autoregister_zf' => true,
         'namespaces' => array(
-            'Firebase\JWT' => '/usr/share/php-jwt/',
-            'Michelf'      => get_markdown_path()
+            'Michelf' => get_markdown_path()
         )
     )
 );
