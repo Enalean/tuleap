@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 {{/ has_labels }}
-                <table class="tlp-table" id="project-labels-table">
+                <table class="tlp-table" id="project-labels-table" data-existing-labels-names="{{ json_encoded_label_names }}">
                     <thead>
                         <tr>
                             <th class="tlp-table-cell-filterable project-labels-table-name">{{ name_label }}</th>
@@ -58,11 +58,18 @@
                                     </td>
                                     <td class="tlp-table-cell-actions">
                                         <button
+                                            class="tlp-table-cell-actions-button tlp-button-primary tlp-button-small tlp-button-outline project-labels-table-edit-button"
+                                            data-modal-id="project-label-edit-{{ id }}"
+                                        >
+                                            <i class="fa fa-pencil tlp-button-icon"></i> {{ edit_button }}
+                                        </button>
+                                        <button
                                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline project-labels-table-delete-button"
                                             data-modal-id="project-label-delete-{{ id }}"
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_button }}
                                         </button>
+                                        {{> label-modal-edit }}
                                         {{> label-modal-delete }}
                                     </td>
                                 </tr>

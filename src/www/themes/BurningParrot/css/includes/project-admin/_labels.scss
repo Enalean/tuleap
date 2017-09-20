@@ -25,3 +25,11 @@
 .project-labels-table-is-used-help {
     cursor: help;
 }
+
+.project-label-edit-warning {
+    display: none;
+
+    &.shown {
+        display: block;
+    }
+}

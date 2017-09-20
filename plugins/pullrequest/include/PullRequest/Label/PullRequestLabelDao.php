@@ -129,6 +129,36 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
                         AND project_label.project_id = $project_id
                     )";
 
-        return $this->update($sql);
+        $this->update($sql);
+    }
+
+    public function mergeLabelsInTransaction($project_id, $label_id, array $label_ids_to_merge)
+    {
+        if (count($label_ids_to_merge) === 0) {
+            return;
+        }
+
+        $project_id         = $this->da->escapeInt($project_id);
+        $label_id           = $this->da->escapeInt($label_id);
+        $label_ids_to_merge = $this->da->escapeIntImplode($label_ids_to_merge);
+
+        $sql = "UPDATE IGNORE plugin_pullrequest_label
+                    INNER JOIN project_label ON (plugin_pullrequest_label.label_id = project_label.id)
+                SET plugin_pullrequest_label.label_id = $label_id
+                WHERE plugin_pullrequest_label.label_id IN ($label_ids_to_merge)
+                    AND project_label.project_id = $project_id
+                ";
+
+        $this->update($sql);
+
+        $sql = "DELETE plugin_pullrequest_label.*
+                FROM plugin_pullrequest_label
+                    INNER JOIN project_label ON (
+                        plugin_pullrequest_label.label_id = project_label.id
+                        AND project_label.id IN ($label_ids_to_merge)
+                        AND project_label.project_id = $project_id
+                    )";
+
+        $this->update($sql);
     }
 }

@@ -1,0 +1,52 @@
+<form action="/project/admin/labels.php?group_id={{ project_id }}"
+      method="POST"
+      class="tlp-modal"
+      id="project-label-edit-{{ id }}"
+      role="dialog"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title">
+            <i class="fa fa-pencil tlp-modal-title-icon"></i> {{ edit_title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel }}">×</div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" value="{{ id }}">
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="name-{{ id }}">{{ name_label }} <i class="fa fa-asterisk"></i></label>
+            <input type="text"
+                   class="tlp-input project-label-edit-name"
+                   id="name-{{ id }}"
+                   name="name"
+                   placeholder="Emergency"
+                   value="{{ name }}"
+                   data-original-value="{{ name }}"
+                   data-target-warning-id="project-label-edit-warning-{{ id }}"
+                   data-target-cancel-id="project-label-edit-footer-cancel-{{ id }}"
+                   data-target-save-id="project-label-edit-footer-save-{{ id }}"
+                   data-warning-message="{{ warning_message }}"
+                   required>
+        </div>
+        <div class="tlp-alert-warning project-label-edit-warning" id="project-label-edit-warning-{{ id }}">
+        </div>
+    </div>
+    <div class="tlp-modal-footer project-label-edit-footer">
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                id="project-label-edit-footer-cancel-{{ id }}"
+                data-dismiss="modal"
+        >
+            {{ cancel }}
+        </button>
+        <button type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                id="project-label-edit-footer-save-{{ id }}"
+        >
+            <i class="fa fa-save tlp-button-icon"></i> {{ save }}
+        </button>
+    </div>
+</form>

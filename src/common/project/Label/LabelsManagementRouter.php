@@ -32,13 +32,19 @@ class LabelsManagementRouter
      * @var DeleteController
      */
     private $delete_controller;
+    /**
+     * @var EditController
+     */
+    private $edit_controller;
 
     public function __construct(
         IndexController $index_controller,
-        DeleteController $delete_controller
+        DeleteController $delete_controller,
+        EditController $edit_controller
     ) {
         $this->index_controller  = $index_controller;
         $this->delete_controller = $delete_controller;
+        $this->edit_controller   = $edit_controller;
     }
 
     public function process(HTTPRequest $request)
@@ -46,6 +52,9 @@ class LabelsManagementRouter
         switch ($request->get('action')) {
             case 'delete':
                 $this->delete_controller->delete($request);
+                break;
+            case 'edit':
+                $this->edit_controller->edit($request);
                 break;
             default:
                 $this->index_controller->display($request);

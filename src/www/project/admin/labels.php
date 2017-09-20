@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Label\EditController;
 use Tuleap\Project\Label\LabelsManagementURLBuilder;
 use Tuleap\Project\Label\DeleteController;
 use Tuleap\Project\Label\IndexController;
@@ -32,9 +34,11 @@ session_require(array('group' => $request->get('group_id'), 'admin_flags' => 'A'
 $url_builder   = new LabelsManagementURLBuilder();
 $dao           = new LabelDao();
 $event_manager = EventManager::instance();
+$assets        = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
 
 $router = new LabelsManagementRouter(
-    new IndexController($url_builder, $dao, $event_manager),
-    new DeleteController($url_builder, $dao, $event_manager)
+    new IndexController($url_builder, $dao, $event_manager, $assets),
+    new DeleteController($url_builder, $dao, $event_manager),
+    new EditController($url_builder, $dao, $event_manager)
 );
 $router->process($request);

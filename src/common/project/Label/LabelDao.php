@@ -101,6 +101,59 @@ class LabelDao extends DataAccessObject
 
         $sql = "DELETE FROM project_label WHERE project_id = $project_id AND id = $label_id";
 
-        return $this->update($sql);
+        $this->update($sql);
+    }
+
+    /**
+     * @return int The number of affected label (0 if there is no change)
+     */
+    public function editInTransaction($project_id, $label_id, $new_name)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $label_id   = $this->da->escapeInt($label_id);
+        $new_name   = $this->da->quoteSmart($new_name);
+
+        $sql = "UPDATE project_label
+                SET name = $new_name
+                WHERE project_id = $project_id
+                  AND id = $label_id";
+
+        $this->update($sql);
+
+        return $this->da->affectedRows();
+    }
+
+    public function searchProjectLabelsThatHaveSameName($project_id, $label_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $label_id   = $this->da->escapeInt($label_id);
+
+        $sql = "SELECT other.id
+                FROM project_label AS reference
+                    INNER JOIN project_label AS other
+                    ON (
+                        reference.project_id = other.project_id
+                        AND reference.name = other.name
+                        AND reference.id != other.id
+                        AND reference.id = $label_id
+                        AND reference.project_id = $project_id
+                    )
+                ORDER BY id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function deleteAllLabelsInTransaction($project_id, array $label_ids)
+    {
+        if (count($label_ids) === 0) {
+            return;
+        }
+
+        $project_id = $this->da->escapeInt($project_id);
+        $label_ids  = $this->da->escapeIntImplode($label_ids);
+
+        $sql = "DELETE FROM project_label WHERE project_id = $project_id AND id IN ($label_ids)";
+
+        $this->update($sql);
     }
 }

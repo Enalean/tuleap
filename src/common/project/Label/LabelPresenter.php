@@ -37,6 +37,12 @@ class LabelPresenter
     public $delete_title;
 
     /** @var string */
+    public $edit_title;
+
+    /** @var string */
+    public $warning_message;
+
+    /** @var string */
     public $purified_delete_message;
 
     public function __construct($id, $name, $is_used)
@@ -49,6 +55,10 @@ class LabelPresenter
             _('Delete %s'),
             $this->name
         );
+        $this->edit_title = sprintf(
+            _('Edit %s'),
+            $this->name
+        );
 
         $this->purified_delete_message = Codendi_HTMLPurifier::instance()->purify(
             sprintf(
@@ -57,6 +67,8 @@ class LabelPresenter
             ),
             CODENDI_PURIFIER_LIGHT
         );
+
+        $this->warning_message = _('"%s" label already exists. If you save your modifications, both labels will be merged.');
     }
 
     public function switchToUsed()
