@@ -55,7 +55,8 @@ class LabelDao extends DataAccessObject
             return $result['id'];
         }
 
-        $sql = "INSERT INTO project_label (project_id, name) VALUES ($project_id, $name)";
+        $sql = "INSERT INTO project_label (project_id, name, is_outline, color)
+                VALUES ($project_id, $name, 1, 'chrome-silver')";
 
         return $this->updateAndGetLastId($sql);
     }

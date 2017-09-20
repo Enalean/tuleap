@@ -24,15 +24,21 @@ class Label
 {
     private $id;
     private $name;
+    private $is_outline;
+    private $color;
 
     /**
-     * @param int    $id
+     * @param int $id
      * @param string $name
+     * @param bool $is_outline
+     * @param string $color
      */
-    public function __construct($id, $name)
+    public function __construct($id, $name, $is_outline, $color)
     {
-        $this->id   = $id;
-        $this->name = $name;
+        $this->id         = $id;
+        $this->name       = $name;
+        $this->is_outline = $is_outline;
+        $this->color      = $color;
     }
 
     /**
@@ -49,5 +55,21 @@ class Label
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOutline()
+    {
+        return $this->is_outline;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
     }
 }

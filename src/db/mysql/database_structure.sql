@@ -1645,6 +1645,8 @@ CREATE TABLE project_label (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     project_id INT(11) NOT NULL,
     name VARCHAR(255) NOT NULL,
+    is_outline TINYINT(1) NOT NULL DEFAULT 1,
+    color VARCHAR(255) NOT NULL DEFAULT 'chrome-silver',
     INDEX project_idx(project_id)
 );
 
