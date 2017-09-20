@@ -239,7 +239,6 @@ class Codendi_HTMLPurifier {
             $this->insertReferences($html, $groupId);
         case CODENDI_PURIFIER_STRIP_HTML:
         case CODENDI_PURIFIER_FULL:
-            require_once('HTMLPurifier.auto.php');
             $hp = HTMLPurifier::getInstance();
 
             $config = $this->getHPConfig($level);
