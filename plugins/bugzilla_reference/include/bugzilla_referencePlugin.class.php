@@ -155,13 +155,12 @@ class bugzilla_referencePlugin extends Plugin
             return;
         }
 
-        $this->getCrossReferenceCreator()->create($cross_reference);
-        $this->getRESTReferenceCreator()->create($cross_reference, $bugzilla);
+        $this->getCrossReferenceCreator()->create($cross_reference, $bugzilla);
     }
 
     private function getCrossReferenceCreator()
     {
-        return new CrossReferenceCreator(new CrossReferenceDao());
+        return new CrossReferenceCreator(new CrossReferenceDao(), $this->getRESTReferenceCreator());
     }
 
     private function getRESTReferenceCreator()
