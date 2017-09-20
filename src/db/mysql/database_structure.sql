@@ -285,6 +285,16 @@ CREATE TABLE frs_file_deleted (
   INDEX idx_purge_date (purge_date)
 );
 
+CREATE TABLE frs_uploaded_links (
+  id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  release_id int(11) NOT NULL,
+  release_time int(11) UNSIGNED NULL,
+  name VARCHAR(255) NOT NULL,
+  link text NOT NULL,
+  owner_id int(11) NOT NULL,
+  INDEX release_idx (release_id)
+);
+
 #
 # Table structure for table 'frs_filetype'
 #

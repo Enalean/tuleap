@@ -1,0 +1,14 @@
+<table width="100%" class="files_table">
+    <tr>
+        <td>{{ link_label }}</td>
+        <td>{{ date_label }}</td>
+        <td>{{ owner_label }}</td>
+    </tr>
+    {{# links_list}}
+        <tr>
+            <td class="frs-uploaded-link"><a href="{{ link }}">{{ displayed_link }}</a></td>
+            <td>{{ release_time }}</td>
+            <td>{{ owner }}</td>
+        </tr>
+    {{/ links_list }}
+</table>

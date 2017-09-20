@@ -25,11 +25,15 @@ require_once ('www/file/file_utils.php');
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
-use Tuleap\FRS\PackagePermissionManager;
+use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\ReleasePermissionManager;
+use Tuleap\FRS\UploadedLinkPresentersBuilder;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\FRS\UploadedLinksTablePresenter;
 
 $authorized_user = false;
 
@@ -47,9 +51,10 @@ $permission_manager = new FRSPermissionManager(
     new FRSPermissionFactory(new FRSPermissionDao())
 );
 
+$user_manager    = UserManager::instance();
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
-$user            = UserManager::instance()->getCurrentUser();
+$user            = $user_manager->getCurrentUser();
 if ($permission_manager->isAdmin($project, $user) || $permission_manager->userCanRead($project, $user)) {
     $authorized_user = true;
 }
@@ -61,6 +66,13 @@ $frsff = new FRSFileFactory();
 $packages        = array();
 $num_packages    = 0;
 $show_release_id = $request->getValidated('show_release_id', 'uint', false);
+
+$renderer = TemplateRendererFactory::build()->getRenderer(
+    ForgeConfig::get('codendi_dir') . '/src/templates/frs/'
+);
+
+$uploaded_links_retriever         = new UploadedLinksRetriever(new UploadedLinksDao(), $user_manager);
+$uploaded_link_presenters_builder = new UploadedLinkPresentersBuilder();
 
 $pv = false;
 if ($request->valid(new Valid_Pv('pv'))) {
@@ -279,6 +291,7 @@ foreach ($packages as $package_id => $package_for_display) {
                     // get the files in this release....
                     $res_file = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
                     $num_files = count($res_file);
+                    $uploaded_links  = $uploaded_links_retriever->getLinksForRelease($package_release);
 
                     if (!isset ($proj_stats['files']))
                         $proj_stats['files'] = 0;
@@ -286,7 +299,7 @@ foreach ($packages as $package_id => $package_for_display) {
 
                     $javascript_files_array  = array();
                     $release_class_collapsed = $is_release_collapsed && ! $pv ? 'frs_collapsed' : '';
-                    if (!$res_file || $num_files < 1) {
+                    if ((!$res_file && !$uploaded_links)|| ($num_files < 1 && count($uploaded_links) < 1)) {
                         $html .= '<span class="' . $release_class_collapsed . '" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
                         $javascript_files_array[] = "'f_0'";
                     } else {
@@ -306,71 +319,105 @@ foreach ($packages as $package_id => $package_for_display) {
 
                         $html .= '<span class="' . $release_class_collapsed . '" id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_0">';
 
-                        $title_arr = array ();
-                        $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
-                        $title_arr[] = $Language->getText('file_showfiles', 'size');
-                        $title_arr[] = $Language->getText('file_showfiles', 'd_l');
-                        $title_arr[] = $Language->getText('file_showfiles', 'arch');
-                        $title_arr[] = $Language->getText('file_showfiles', 'type');
-                        $title_arr[] = $Language->getText('file_showfiles', 'date');
-                        $title_arr[] = $Language->getText('file_showfiles', 'md5sum');
-                        $title_arr[] = $Language->getText('file_showfiles', 'user');
-                        $html .= html_build_list_table_top($title_arr, false, false, true, null, "files_table") . "\n";
+                        if ($res_file) {
+                            $title_arr = array();
+                            $title_arr[] = $Language->getText('file_admin_editreleases', 'filename');
+                            $title_arr[] = $Language->getText('file_showfiles', 'size');
+                            $title_arr[] = $Language->getText('file_showfiles', 'd_l');
+                            $title_arr[] = $Language->getText('file_showfiles', 'arch');
+                            $title_arr[] = $Language->getText('file_showfiles', 'type');
+                            $title_arr[] = $Language->getText('file_showfiles', 'date');
+                            $title_arr[] = $Language->getText('file_showfiles', 'md5sum');
+                            $title_arr[] = $Language->getText('file_showfiles', 'user');
+                            $html .= html_build_list_table_top(
+                                    $title_arr, false, false, true, null, "files_table"
+                                ) . "\n";
 
-                        // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
-                        $html .= '<colgroup>';
-                        $html .= ' <col class="frs_filename_col">';
-                        $html .= ' <col class="frs_size_col">';
-                        $html .= ' <col class="frs_downloads_col">';
-                        $html .= ' <col class="frs_architecture_col">';
-                        $html .= ' <col class="frs_filetype_col">';
-                        $html .= ' <col class="frs_date_col">';
-                        $html .= ' <col class="frs_md5sum_col">';
-                        $html .= ' <col class="frs_user_col">';
-                        $html .= '</colgroup>';
+                            // colgroup is used here in order to avoid table resizing when expand or collapse files, with CSS properties.
+                            $html .= '<colgroup>';
+                            $html .= ' <col class="frs_filename_col">';
+                            $html .= ' <col class="frs_size_col">';
+                            $html .= ' <col class="frs_downloads_col">';
+                            $html .= ' <col class="frs_architecture_col">';
+                            $html .= ' <col class="frs_filetype_col">';
+                            $html .= ' <col class="frs_date_col">';
+                            $html .= ' <col class="frs_md5sum_col">';
+                            $html .= ' <col class="frs_user_col">';
+                            $html .= '</colgroup>';
 
                             // now iterate and show the files in this release....
-                        foreach($res_file as $file_release) {
-                            $filename = $file_release['filename'];
-                            $list = explode('/', $filename);
-                            $fname = $list[sizeof($list) - 1];
-                            $class = $bgcolor . ' ' . $release_class_collapsed;
-                            $html .= "\t\t" . '<TR id="p_'.$package_id.'r_'.$package_release->getReleaseID().'f_'.$file_release['file_id'].'" class="' . $class . '"><TD><B>';
+                            foreach ($res_file as $file_release) {
+                                $filename = $file_release['filename'];
+                                $list     = explode('/', $filename);
+                                $fname    = $list[sizeof($list) - 1];
+                                $class    = $bgcolor . ' ' . $release_class_collapsed;
+                                $html     .= "\t\t" . '<TR id="p_' . $package_id . 'r_' . $package_release->getReleaseID(
+                                    ) . 'f_' . $file_release['file_id'] . '" class="' . $class . '"><TD><B>';
 
-                            $javascript_files_array[] = "'f_".$file_release['file_id']."'";
+                                $javascript_files_array[] = "'f_" . $file_release['file_id'] . "'";
 
-                            if (($package->getApproveLicense() == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory'])) {
-                                // Allow direct download
-                                $html .= '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify($file_release['filename']) . '" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
-                            } else {
-                                // Display popup
-                                $html .= '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ')" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
-                            }
-                            $size_precision = 0;
-                            if ($file_release['file_size'] < 1024) {
-                                $size_precision = 2;
-                            }
-                            $owner = UserManager::instance()->getUserById($file_release['user_id']);
-                            $html .= '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes($file_release['file_size'], $size_precision) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
-                            $html .= '<TD>' . (isset ($processor[$file_release['processor']]) ?  $hp->purify($processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML) : "") . '</TD>';
-                            $html .= '<TD>' . (isset ($file_type[$file_release['type']]) ? $hp->purify($file_type[$file_release['type']]) : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>'.
-                                  '<TD>' . (isset ($file_release['computed_md5'])? $hp->purify($file_release['computed_md5']): ""). '</TD>' .
-                                  '<TD>' . (isset ($file_release['user_id'])? $hp->purify($owner->getRealName()): ""). '</TD>'
-                            .'</TR>
+                                if (($package->getApproveLicense(
+                                        ) == 0) && (isset ($GLOBALS['sys_frs_license_mandatory']) && ! $GLOBALS['sys_frs_license_mandatory'])) {
+                                    // Allow direct download
+                                    $html .= '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify(
+                                            $file_release['filename']
+                                        ) . '" title="' . $file_release['file_id'] . " - " . $hp->purify(
+                                            $fname
+                                        ) . '">' . $hp->purify($fname) . '</A>';
+                                } else {
+                                    // Display popup
+                                    $html .= '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ')" title="' . $file_release['file_id'] . " - " . $hp->purify(
+                                            $fname
+                                        ) . '">' . $hp->purify($fname) . '</A>';
+                                }
+                                $size_precision = 0;
+                                if ($file_release['file_size'] < 1024) {
+                                    $size_precision = 2;
+                                }
+                                $owner = UserManager::instance()->getUserById($file_release['user_id']);
+                                $html  .= '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes(
+                                        $file_release['file_size'], $size_precision
+                                    ) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
+                                $html  .= '<TD>' . (isset ($processor[$file_release['processor']]) ? $hp->purify(
+                                        $processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML
+                                    ) : "") . '</TD>';
+                                $html  .= '<TD>' . (isset ($file_type[$file_release['type']]) ? $hp->purify(
+                                        $file_type[$file_release['type']]
+                                    ) : "") . '</TD>' . '<TD>' . format_date(
+                                        "Y-m-d", $file_release['release_time']
+                                    ) . '</TD>' .
+                                    '<TD>' . (isset ($file_release['computed_md5']) ? $hp->purify(
+                                        $file_release['computed_md5']
+                                    ) : "") . '</TD>' .
+                                    '<TD>' . (isset ($file_release['user_id']) ? $hp->purify(
+                                        $owner->getRealName()
+                                    ) : "") . '</TD>'
+                                    . '</TR>
                              <TR>
                                 <TD class="frs_comment">
-                                    <p class="help-block">'.
-                                        $hp->purify($file_release['comment'], CODENDI_PURIFIER_BASIC, $group_id).'
+                                    <p class="help-block">' .
+                                    $hp->purify($file_release['comment'], CODENDI_PURIFIER_BASIC, $group_id) . '
                                     </p>
                                 </TD>
                             </TR>';
-                                 if (!isset ($proj_stats['size']))
-                                $proj_stats['size'] = 0;
-                            $proj_stats['size'] += $file_release['file_size'];
-                            if (!isset ($proj_stats['downloads']))
-                                $proj_stats['downloads'] = 0;
-                            $proj_stats['downloads'] += $file_release['downloads'];
+                                if (! isset ($proj_stats['size'])) {
+                                    $proj_stats['size'] = 0;
+                                }
+                                $proj_stats['size'] += $file_release['file_size'];
+                                if (! isset ($proj_stats['downloads'])) {
+                                    $proj_stats['downloads'] = 0;
+                                }
+                                $proj_stats['downloads'] += $file_release['downloads'];
+                            }
                         }
+
+                        if (count($uploaded_links) > 0) {
+                            $link_presenters = $uploaded_link_presenters_builder->build($uploaded_links);
+
+                            $uploaded_links_presenter = new UploadedLinksTablePresenter($link_presenters);
+                            $html .= $renderer->renderToString('uploaded-links', $uploaded_links_presenter);
+                        }
+
                         $html .= '</table>';
                         $html .= '</span>';
                     }
