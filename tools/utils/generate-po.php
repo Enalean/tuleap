@@ -34,8 +34,8 @@ function warning($message)
 info("[core] Generating .pot file");
 $core_src = escapeshellarg("$basedir/src");
 $template = escapeshellarg("$basedir/site-content/tuleap-core.pot");
-exec("find $core_src -name ''*.php'' \
-    | grep -v -E '(common/wiki/phpwiki|common/include/lib)' \
+exec("find $core_src -name '*.php' \
+    | grep -v -E '(common/wiki/phpwiki|common/include/lib|vendor)' \
     | xargs xgettext \
         --default-domain=core \
         --from-code=UTF-8 \
