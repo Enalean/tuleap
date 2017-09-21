@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,30 @@
 
 namespace Tuleap\FRS\REST\v1;
 
-use Tuleap\REST\AuthenticatedResource;
-use Tuleap\REST\Header;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
-use UserManager;
-use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Dao;
+use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
+use UserManager;
 
 class ReleaseResource extends AuthenticatedResource
 {
+    /**
+     * @var UploadedLinksRetriever
+     */
+    private $uploaded_link_retriever;
     private $frs_release_factory;
     private $retriever;
 
     public function __construct()
     {
-        $this->frs_release_factory = FRSReleaseFactory::instance();
-        $this->retriever           = new Retriever(new Dao());
+        $this->frs_release_factory     = FRSReleaseFactory::instance();
+        $this->retriever               = new Retriever(new Dao());
+        $this->uploaded_link_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
     }
     /**
      * Get FRS release
@@ -65,11 +72,11 @@ class ReleaseResource extends AuthenticatedResource
         }
 
         if ($package->isActive()) {
-            $release_representation->build($release, $this->retriever, $user);
+            $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
         } else if ($package->isHidden()
             && $this->frs_release_factory->userCanAdmin($user, $package->getGroupID())
         ) {
-            $release_representation->build($release, $this->retriever, $user);
+            $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
         } else {
             throw new RestException(403, "Access to package denied");
         }

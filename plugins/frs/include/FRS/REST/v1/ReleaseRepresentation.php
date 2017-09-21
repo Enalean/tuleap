@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\FRS\REST\v1;
 
+use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\JsonCast;
 use FRSRelease;
 use PFUser;
@@ -56,6 +57,11 @@ class ReleaseRepresentation
     public $files = array();
 
     /**
+     * @var $links {@type array}
+     */
+    public $links = array();
+
+    /**
      * @var $changelog {@type string}
      */
     public $changelog;
@@ -90,7 +96,7 @@ class ReleaseRepresentation
      */
     public $package;
 
-    public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user)
+    public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user, UploadedLinksRetriever $uploaded_links_retriever)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
         $this->uri          = self::ROUTE ."/". urlencode($release->getReleaseID());
@@ -113,6 +119,12 @@ class ReleaseRepresentation
             $file_representation = new FileRepresentation();
             $file_representation->build($file);
             $this->files[] = $file_representation;
+        }
+
+        foreach ($uploaded_links_retriever->getLinksForRelease($release) as $link) {
+            $link_representation = new UploadedLinkRepresentation();
+            $link_representation->build($link);
+            $this->links[] = $link_representation;
         }
 
         $this->license_approval = $this->getLicenseApprovalState($release);

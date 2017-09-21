@@ -59,4 +59,9 @@ class UploadedLink
     {
         return $this->release_time;
     }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

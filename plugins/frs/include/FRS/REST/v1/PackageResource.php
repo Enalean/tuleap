@@ -20,15 +20,17 @@
 
 namespace Tuleap\FRS\REST\v1;
 
+use FRSPackageFactory;
 use FRSReleaseFactory;
+use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Luracast\Restler\RestException;
 use UserManager;
-use FRSPackageFactory;
 
 class PackageResource extends AuthenticatedResource
 {
@@ -36,6 +38,7 @@ class PackageResource extends AuthenticatedResource
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
 
+    private $uploaded_link_retriever;
     private $package_factory;
     private $project_manager;
     private $retriever;
@@ -43,11 +46,12 @@ class PackageResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->package_factory = FRSPackageFactory::instance();
-        $this->release_factory = FRSReleaseFactory::instance();
-        $this->project_manager = ProjectManager::instance();
-        $this->retriever       = new Retriever(new Dao());
-        $this->user_manager    = UserManager::instance();
+        $this->package_factory         = FRSPackageFactory::instance();
+        $this->release_factory         = FRSReleaseFactory::instance();
+        $this->project_manager         = ProjectManager::instance();
+        $this->retriever               = new Retriever(new Dao());
+        $this->user_manager            = UserManager::instance();
+        $this->uploaded_link_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), $this->user_manager);
     }
 
     /**
@@ -82,7 +86,7 @@ class PackageResource extends AuthenticatedResource
             throw new RestException(409, "Package with the same label already exists in this project");
         }
 
-        $package_array = array(
+        $package_array  = array(
             'group_id'        => $project->getID(),
             'name'            => $label,
             'status_id'       => \FRSPackage::STATUS_ACTIVE,
@@ -163,12 +167,12 @@ class PackageResource extends AuthenticatedResource
             $limit,
             $offset
         );
-        $total_size = $paginated_releases->getTotalSize();
+        $total_size         = $paginated_releases->getTotalSize();
 
         $releases = array();
         foreach ($paginated_releases->getReleases() as $release) {
             $representation = new ReleaseRepresentation();
-            $representation->build($release, $this->retriever, $current_user);
+            $representation->build($release, $this->retriever, $current_user, $this->uploaded_link_retriever);
 
             $releases[] = $representation;
         }
