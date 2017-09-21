@@ -199,10 +199,14 @@ function exportDiskUsageForDate(Statistics_Services_UsageFormatter $csv_exporter
     $cvs_retriever   = new CVSRetriever($disk_usage_dao);
     $cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
 
-    return new Statistics_DiskUsageManager(
+    $disk_usage_manager = new Statistics_DiskUsageManager(
         $disk_usage_dao,
         $svn_collector,
         $cvs_collector,
         EventManager::instance()
     );
+
+    $disk_usage = $disk_usage_manager->returnTotalSizeOfProjects($date);
+    $disk_usage = $csv_exporter->formatSizeInMegaBytes($disk_usage);
+    $csv_exporter->buildDatas($disk_usage, $column_name);
 }
