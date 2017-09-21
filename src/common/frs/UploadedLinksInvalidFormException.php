@@ -20,30 +20,6 @@
 
 namespace Tuleap\FRS;
 
-class UploadedLinkUpdateTablePresenter
+class UploadedLinksInvalidFormException extends \Exception
 {
-    public $link_label;
-    public $name_label;
-    public $uploaded_links_label;
-    public $add_link_label;
-    public $has_existing_links;
-
-    /**
-     * @var UploadedLinkPresenter[]
-     */
-    public $existing_links;
-
-    /**
-     * @param UploadedLinkPresenter[] $existing_links
-     */
-    public function __construct(array $existing_links)
-    {
-        $this->uploaded_links_label = _('Links');
-        $this->link_label           = _('Link');
-        $this->name_label           = _('Name');
-        $this->add_link_label       = _('Add link');
-
-        $this->existing_links     = $existing_links;
-        $this->has_existing_links = count($existing_links) > 0;
-    }
 }

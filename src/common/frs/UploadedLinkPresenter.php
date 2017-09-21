@@ -21,7 +21,9 @@
 
 namespace Tuleap\FRS;
 
+use Tuleap\Sanitizer\FTPSanitizer;
 use Tuleap\Sanitizer\URISanitizer;
+use Valid_FTPURI;
 use Valid_LocalURI;
 
 class UploadedLinkPresenter
@@ -34,8 +36,7 @@ class UploadedLinkPresenter
 
     public function __construct(UploadedLink $uploaded_link)
     {
-        $uri_sanitizer        = new URISanitizer(new Valid_LocalURI());
-        $this->link           = $uri_sanitizer->sanitizeForHTMLAttribute($uploaded_link->getLink());
+        $this->extractLink($uploaded_link);
         $this->owner          = $uploaded_link->getOwner()->getRealName();
         $this->name           = $uploaded_link->getName();
         $this->release_time   = date("Y-m-d", $uploaded_link->getReleaseTime());
@@ -52,5 +53,14 @@ class UploadedLinkPresenter
         }
 
         return substr($this->link, 0, 23) . '...' . substr($this->link, -23);
+    }
+
+    /**
+     * @param UploadedLink $uploaded_link
+     */
+    protected function extractLink(UploadedLink $uploaded_link)
+    {
+        $uri_sanitizer = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
+        $this->link    = $uri_sanitizer->sanitizeForHTMLAttribute($uploaded_link->getLink());
     }
 }

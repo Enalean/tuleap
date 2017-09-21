@@ -18,32 +18,34 @@
  *   along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 namespace Tuleap\FRS;
 
-class UploadedLinkUpdateTablePresenter
+use FRSRelease;
+use PFUser;
+
+class UploadedLinksUpdater
 {
-    public $link_label;
-    public $name_label;
-    public $uploaded_links_label;
-    public $add_link_label;
-    public $has_existing_links;
-
     /**
-     * @var UploadedLinkPresenter[]
+     * @var UploadedLinksDao
      */
-    public $existing_links;
+    private $dao;
 
-    /**
-     * @param UploadedLinkPresenter[] $existing_links
-     */
-    public function __construct(array $existing_links)
+    public function __construct(UploadedLinksDao $dao)
     {
-        $this->uploaded_links_label = _('Links');
-        $this->link_label           = _('Link');
-        $this->name_label           = _('Name');
-        $this->add_link_label       = _('Add link');
+        $this->dao = $dao;
+    }
 
-        $this->existing_links     = $existing_links;
-        $this->has_existing_links = count($existing_links) > 0;
+    public function update(array $release_links, PFUser $user, FRSRelease $release)
+    {
+        foreach ($release_links as $link) {
+            $this->dao->create(
+                $link['name'],
+                $link['link'],
+                $user->getId(),
+                $release->getReleaseID(),
+                $release->getReleaseDate()
+            );
+        }
     }
 }

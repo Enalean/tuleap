@@ -32,6 +32,7 @@ use Response;
 use Toggler;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
+use Valid_FTPURI;
 use Valid_LocalURI;
 use Widget_Static;
 
@@ -85,7 +86,7 @@ abstract class BaseLayout extends Response
         $this->toolbar     = array();
 
         $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
-        $this->uri_sanitizer = new URISanitizer(new Valid_LocalURI());
+        $this->uri_sanitizer = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
     }
 
     abstract public function header(array $params);
@@ -506,7 +507,6 @@ abstract class BaseLayout extends Response
             } else {
                 $privacy .= '_wo_anon';
             }
-
         } else {
             $privacy = 'private';
         }

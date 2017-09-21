@@ -1,18 +1,35 @@
 <fieldset>
     <legend>{{ uploaded_links_label }}</legend>
 
-    <table class="frs-uploaded-link-update" id="frs-uploaded-link-update">
+    {{# has_existing_links }}
+        <table class="frs-uploaded-link-update" id="frs-uploaded-link-update">
+            <thead>
+            <tr class="boxtable">
+                <td>{{ link_label }}</td>
+            </tr>
+            </thead>
+            <tbody id="files_body">
+            {{# existing_links }}
+                <tr>
+                    <td><a href="{{ link }}">{{ displayed_link }}</a> </td>
+                </tr>
+            {{/ existing_links }}
+            </tbody>
+        </table>
+    {{/ has_existing_links }}
+
+    <table class="frs-uploaded-link-creation" id="frs-uploaded-link-creation">
         <thead>
         <tr class="boxtable">
             <td>{{ link_label }}</td>
+            <td>{{ name_label }}</td>
         </tr>
         </thead>
         <tbody id="files_body">
-        {{# existing_links }}
-            <tr>
-                <td><a href="{{ link }}">{{ displayed_link }}</a> </td>
-            </tr>
-        {{/ existing_links }}
+
         </tbody>
     </table>
+    <p>
+        <a href="#" onclick="add_new_link(event)">{{ add_link_label }}</a>
+    </p>
 </fieldset>

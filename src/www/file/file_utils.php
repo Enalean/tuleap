@@ -21,7 +21,10 @@
 
 use Tuleap\FRS\FRSPackageController;
 use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksInvalidFormException;
+use Tuleap\FRS\UploadedLinksRequestFormatter;
 use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
 
 require_once('www/news/news_utils.php');
@@ -1175,6 +1178,15 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             }
                     }
                     $index ++;
+                }
+
+                $uploaded_links_updater   = new UploadedLinksUpdater(new UploadedLinksDao());
+                $uploaded_links_formatter = new UploadedLinksRequestFormatter();
+                try {
+                    $release_links = $uploaded_links_formatter->formatFromRequest($request);
+                    $uploaded_links_updater->update($release_links, $user, $rel);
+                } catch(UploadedLinksInvalidFormException $e) {
+                    $error[] = _('An error occurred in form submission, links are invalid. Please retry.');
                 }
             }
 
