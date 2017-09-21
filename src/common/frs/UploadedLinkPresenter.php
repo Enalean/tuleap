@@ -34,12 +34,23 @@ class UploadedLinkPresenter
 
     public function __construct(UploadedLink $uploaded_link)
     {
-        $uri_sanitizer      = new URISanitizer(new Valid_LocalURI());
-        $this->link         = $uri_sanitizer->sanitizeForHTMLAttribute($uploaded_link->getLink());
-        $this->owner        = $uploaded_link->getOwner()->getRealName();
-        $this->name         = $uploaded_link->getName();
-        $this->release_time = date("Y-m-d", $uploaded_link->getReleaseTime());
+        $uri_sanitizer        = new URISanitizer(new Valid_LocalURI());
+        $this->link           = $uri_sanitizer->sanitizeForHTMLAttribute($uploaded_link->getLink());
+        $this->owner          = $uploaded_link->getOwner()->getRealName();
+        $this->name           = $uploaded_link->getName();
+        $this->release_time   = date("Y-m-d", $uploaded_link->getReleaseTime());
+        $this->displayed_link = ($this->name) ? $this->name : $this->getDisplayedLink();
+    }
 
-        $this->displayed_link = ($this->name)? $this->name: $this->link;
+    /**
+     * @return string
+     */
+    protected function getDisplayedLink()
+    {
+        if (strlen($this->link) < 50) {
+            return $this->link;
+        }
+
+        return substr($this->link, 0, 23) . '...' . substr($this->link, -23);
     }
 }
