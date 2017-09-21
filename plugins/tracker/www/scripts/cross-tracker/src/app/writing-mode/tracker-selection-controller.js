@@ -28,16 +28,19 @@ export default class TrackerSelectionController {
         tracker_selection,
         writing_cross_tracker_report,
         backend_cross_tracker_report,
-        tracker_selector
+        tracker_selector,
+        error_displayer,
+        gettext_provider
     ) {
         this.widget_content               = widget_content;
         this.tracker_selection            = tracker_selection;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.backend_cross_tracker_report = backend_cross_tracker_report;
         this.tracker_selector             = tracker_selector;
+        this.error_displayer              = error_displayer;
+        this.gettext_provider             = gettext_provider;
         this.form_trackers_selected       = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-selected');
         this.add_tracker_button           = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-trackers-add');
-        this.too_many_trackers_error      = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-too-many-selected-error');
         this.writing_mode_cancel          = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel');
 
 
@@ -111,7 +114,7 @@ export default class TrackerSelectionController {
                 this.writing_cross_tracker_report.addTracker(selected_project, selected_tracker);
             } catch (error) {
                 if (error instanceof TooManyTrackersSelectedError) {
-                    this.too_many_trackers_error.classList.add('shown');
+                    this.error_displayer.displayError(this.gettext_provider.gettext('Tracker selection is limited to 10 trackers'));
                 } else {
                     throw error;
                 }
@@ -134,7 +137,7 @@ export default class TrackerSelectionController {
                 const tracker_id   = parseInt(icon_clicked.dataset.trackerId, 10);
                 this.writing_cross_tracker_report.removeTracker(tracker_id);
                 icon_clicked.closest('.dashboard-widget-content-cross-tracker-selected-tracker').remove();
-                this.too_many_trackers_error.classList.remove('shown');
+                this.error_displayer.hideError();
                 this.tracker_selector.enableOption(tracker_id);
                 return false;
             });

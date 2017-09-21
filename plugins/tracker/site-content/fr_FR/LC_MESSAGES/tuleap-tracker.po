@@ -80,21 +80,6 @@ msgstr "Éditer"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
-msgid "Error while fetching the cross tracker report"
-msgstr "Erreur à la récupération du rapport multi outil de suivi"
-
-msgid "Error while fetching the list of projects you are member of"
-msgstr "Erreur à la récupération de la liste des projets dont vous êtes membre"
-
-msgid "Error while fetching the list of trackers of this project"
-msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet"
-
-msgid "Error while fetching the query result"
-msgstr "Erreur à la récupération du résultat de la requête"
-
-msgid "Error while updating the cross tracker report"
-msgstr "Erreur lors de la mise à jour du rapport multi outil de suivi"
-
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -131,17 +116,11 @@ msgstr "À chaque modification ?"
 msgid "Only the first 30 results are shown"
 msgstr "Seuls les 30 premiers résultats sont affichés"
 
-msgid "Please choose..."
-msgstr "Veuillez choisir..."
-
 msgid "Project"
 msgstr "Projet"
 
 msgid "Renderer id"
 msgstr "Id du rendu"
-
-msgid "Report has been successfully saved"
-msgstr "Rapport enregistré avec succès"
 
 msgid "Save"
 msgstr "Sauvegarder"
@@ -388,9 +367,6 @@ msgstr "Outil de suivi"
 
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
-
-msgid "Tracker selection is limited to 10 trackers"
-msgstr "Vous ne pouvez pas sélectionner plus de 10 outils de suivi"
 
 #, php-format
 msgid "User '%s' couldn't be added."

@@ -29,20 +29,21 @@ export default class ProjectSelector {
         report_mode,
         user,
         error_displayer,
-        tracker_selection_loader_displayer
+        tracker_selection_loader_displayer,
+        gettext_provider
     ) {
         this.widget_content    = widget_content;
         this.tracker_selection = tracker_selection;
         this.report_mode       = report_mode;
         this.error_displayer   = error_displayer;
         this.loader_displayer  = tracker_selection_loader_displayer;
+        this.gettext_provider  = gettext_provider;
+
         this.is_user_anonymous = user.isAnonymous();
         this.form_projects     = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects');
         this.projects_input    = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-form-projects-input');
         this.projects          = new Map();
         this.projects_loaded   = false;
-
-        this.translated_fetch_error_message = this.widget_content.querySelector('.project-selector-error').textContent;
 
         this.listenSelectElementChange();
         this.listenChangeMode();
@@ -79,7 +80,7 @@ export default class ProjectSelector {
             this.setEnabled();
             this.tracker_selection.selected_project = projects_array[0];
         } catch (error) {
-            this.error_displayer.displayError(this.translated_fetch_error_message);
+            this.error_displayer.displayError(this.gettext_provider.gettext('Error while fetching the list of projects you are member of'));
             throw error;
         } finally {
             this.loader_displayer.hide();

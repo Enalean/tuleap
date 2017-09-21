@@ -139,7 +139,7 @@ post-checkout: composer generate-mo dev-clear-cache dev-forgeupgrade ## Clear ca
 	@$(DOCKER) exec tuleap-web service httpd restart
 
 generate-po: ## Generate translatable strings
-	@tools/utils/generate-po.sh `pwd`
+	@tools/utils/generate-po.php `pwd`
 
 generate-mo: ## Compile tranlated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`

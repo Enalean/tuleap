@@ -63,21 +63,6 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
-msgid "Error while fetching the cross tracker report"
-msgstr ""
-
-msgid "Error while fetching the list of projects you are member of"
-msgstr ""
-
-msgid "Error while fetching the list of trackers of this project"
-msgstr ""
-
-msgid "Error while fetching the query result"
-msgstr ""
-
-msgid "Error while updating the cross tracker report"
-msgstr ""
-
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -114,16 +99,10 @@ msgstr ""
 msgid "Only the first 30 results are shown"
 msgstr ""
 
-msgid "Please choose..."
-msgstr ""
-
 msgid "Project"
 msgstr ""
 
 msgid "Renderer id"
-msgstr ""
-
-msgid "Report has been successfully saved"
 msgstr ""
 
 msgid "Save"
@@ -329,9 +308,6 @@ msgid "Tracker"
 msgstr ""
 
 msgid "Tracker renderer"
-msgstr ""
-
-msgid "Tracker selection is limited to 10 trackers"
 msgstr ""
 
 #, php-format
