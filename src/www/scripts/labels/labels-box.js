@@ -27,7 +27,7 @@ async function getRecursively(labels_endpoint, labels, offset) {
     return labels;
 }
 
-const convertLabelToSelect2Entry = ({ id, label }) => ({ id, text: label });
+const convertLabelToSelect2Entry = ({ id, label, is_outline, color }) => ({ id, text: label, is_outline, color });
 
 function initiateSelect2(container, existing_labels, labels_endpoint, available_labels_endpoint, is_update_allowed) {
     const input = createHiddenInput(container, existing_labels);
@@ -58,6 +58,25 @@ function initiateSelect2(container, existing_labels, labels_endpoint, available_
                     text: term
                 };
             }
+        },
+        formatSelection: ({ is_outline, color, text }, container, escapeMarkup) => {
+            container.prevObject[0].classList.add(`select-item-label-color-${color}`);
+            if (is_outline) {
+                container.prevObject[0].classList.add('select-item-label-outline');
+            }
+
+            return escapeMarkup(text);
+        },
+        formatResult: ({ is_outline, text }, container, query, escapeMarkup) => {
+            const bullet_class = is_outline ? 'icon-circle-blank' : 'icon-circle';
+            const escaped_text  = escapeMarkup(text);
+
+            return `<span class="select-item-label-title">
+                    <i class="select-item-label-bullet ${bullet_class}"></i>${escaped_text}
+                </span>`;
+        },
+        formatResultCssClass: ({ color }) => {
+            return `select-item-label-color-${color}`;
         }
     })
     .select2('enable', is_update_allowed)

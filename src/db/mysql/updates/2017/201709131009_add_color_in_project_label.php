@@ -18,40 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label\REST;
-
-use Tuleap\Label\Label;
-use Tuleap\REST\JsonCast;
-
-class LabelRepresentation
+class b201709131009_add_color_in_project_label extends ForgeUpgrade_Bucket
 {
-    const ROUTE = 'labels';
-
-    /**
-     * @var int {@required false}
-     */
-    public $id;
-
-    /**
-     * @var string {@required false}
-     */
-    public $label;
-
-    /**
-     * @var bool {@required false}
-     */
-    public $is_outline;
-
-    /**
-     * @var string {@required false}
-     */
-    public $color;
-
-    public function build(Label $label)
+    public function description()
     {
-        $this->id         = JsonCast::toInt($label->getId());
-        $this->label      = $label->getName();
-        $this->is_outline = JsonCast::toBoolean($label->isOutline());
-        $this->color      = $label->getColor();
+        return 'Add color in project_label table';
+    }
+
+    public function preUp()
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
+
+    public function up()
+    {
+        $sql = "ALTER TABLE project_label
+                ADD is_outline TINYINT(1) NOT NULL DEFAULT 1,
+                ADD color VARCHAR(255) NOT NULL DEFAULT 'chrome-silver'";
+
+        if ($this->db->dbh->exec($sql) === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
+                'An error occurred while updating project_label table'
+            );
+        }
     }
 }

@@ -43,7 +43,7 @@ class LabelsCurlyCoatedRetriever
 
         $labels = array();
         foreach ($result as $row) {
-            $labels[] = new Label($row['id'], $row['name']);
+            $labels[] = new Label($row['id'], $row['name'], $row['is_outline'], $row['color']);
         }
 
         return new PaginatedCollectionsOfLabels($labels, $total_size);

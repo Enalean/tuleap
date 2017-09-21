@@ -87,7 +87,7 @@ class IndexController
         $collection = new CollectionOfLabelPresenter($project);
         foreach ($this->dao->searchLabelsUsedByProject($project->getID()) as $row) {
             $is_used = false;
-            $collection->add(new LabelPresenter($row['id'], $row['name'], $is_used));
+            $collection->add(new LabelPresenter($row['id'], $row['name'], $row['is_outline'], $row['color'], $is_used));
         }
         $this->event_manager->processEvent($collection);
 

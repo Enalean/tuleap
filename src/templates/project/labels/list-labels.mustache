@@ -43,7 +43,10 @@
                             {{# labels }}
                                 <tr>
                                     <td class="tlp-table-cell-filterable">
-                                        <span class="tlp-badge-primary tlp-badge-outline">
+                                        <span class="tlp-badge-primary
+                                                {{# is_outline }}tlp-badge-outline{{/ is_outline }}
+                                                tlp-badge-{{ color }}"
+                                        >
                                             {{ name }}
                                         </span>
                                     </td>

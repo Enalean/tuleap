@@ -45,11 +45,19 @@ class LabelPresenter
     /** @var string */
     public $purified_delete_message;
 
-    public function __construct($id, $name, $is_used)
+    /** @var bool */
+    public $is_outline;
+
+    /** @var string */
+    public $color;
+
+    public function __construct($id, $name, $is_outline, $color, $is_used)
     {
-        $this->id      = $id;
-        $this->name    = $name;
-        $this->is_used = $is_used;
+        $this->id         = $id;
+        $this->name       = $name;
+        $this->is_outline = $is_outline;
+        $this->color      = $color;
+        $this->is_used    = $is_used;
 
         $this->delete_title = sprintf(
             _('Delete %s'),
