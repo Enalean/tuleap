@@ -26,6 +26,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Label\AllowedColorsCollection;
 use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 
@@ -82,6 +83,7 @@ class IndexController
                 $title,
                 $project,
                 $this->getCollectionOfLabelPresenter($project),
+                new NewLabelPresenter($this->color_factory),
                 new CSRFSynchronizerToken($this->url_builder->getURL($project))
             )
         );

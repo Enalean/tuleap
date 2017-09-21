@@ -161,4 +161,33 @@ class LabelDao extends DataAccessObject
 
         $this->update($sql);
     }
+
+    public function addUniqueLabel($project_id, $name, $color, $is_outline)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $name       = $this->da->quoteSmart($name);
+        $color      = $this->da->quoteSmart($color);
+        $is_outline = $is_outline ? 1 : 0;
+
+        $this->startTransaction();
+        try {
+            $sql = "SELECT NULL
+                    FROM project_label
+                    WHERE project_id = $project_id
+                      AND name = $name
+                    LIMIT 1";
+            if (count($this->retrieve($sql)) > 0) {
+                throw new LabelWithSameNameAlreadyExistException();
+            }
+
+            $sql = "INSERT INTO project_label (project_id, name, is_outline, color)
+                    VALUES ($project_id, $name, $is_outline, $color)";
+            $this->update($sql);
+
+            $this->commit();
+        } catch (\Exception $exception) {
+            $this->rollBack();
+            throw $exception;
+        }
+    }
 }

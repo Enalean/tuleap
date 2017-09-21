@@ -5,8 +5,13 @@
                 <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-tags"></i> {{ title }}</h1>
             </div>
             <section class="tlp-pane-section">
-                {{# has_labels }}
-                    <div class="tlp-table-actions">
+                <div class="tlp-table-actions">
+                    <button type="button"
+                            class="tlp-button-primary tlp-table-actions-element project-labels-table-add-button"
+                            data-modal-id="project-label-add">
+                        <i class="fa fa-plus tlp-button-icon"></i> {{ add_label }}
+                    </button>
+                    {{# has_labels }}
                         <div class="tlp-table-actions-spacer"></div>
                         <div class="tlp-form-element tlp-table-actions-element">
                             <input type="search"
@@ -16,8 +21,8 @@
                                    autocomplete="off"
                                    placeholder="{{ filter_placeholder }}">
                         </div>
-                    </div>
-                {{/ has_labels }}
+                    {{/ has_labels }}
+                </div>
                 <table class="tlp-table" id="project-labels-table" data-existing-labels-names="{{ json_encoded_label_names }}">
                     <thead>
                         <tr>
@@ -78,6 +83,9 @@
                         {{/ has_labels }}
                     </tbody>
                 </table>
+                {{# default_label }}
+                    {{> label-modal-add }}
+                {{/ default_label }}
                 {{# labels }}
                     {{> label-modal-edit }}
                     {{> label-modal-delete }}

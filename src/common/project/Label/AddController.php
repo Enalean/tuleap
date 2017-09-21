@@ -21,21 +21,16 @@
 namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
-use EventManager;
 use Exception;
 use HTTPRequest;
 use Tuleap\Label\AllowedColorsCollection;
 
-class EditController
+class AddController
 {
     /**
      * @var LabelDao
      */
     private $dao;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
     /**
      * @var LabelsManagementURLBuilder
      */
@@ -48,63 +43,41 @@ class EditController
     public function __construct(
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
-        EventManager $event_manager,
         AllowedColorsCollection $allowed_colors
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;
-        $this->event_manager  = $event_manager;
         $this->allowed_colors = $allowed_colors;
     }
 
-    public function edit(HTTPRequest $request)
+    public function add(HTTPRequest $request)
     {
         $project = $request->getProject();
         $url     = $this->url_builder->getURL($project);
         $token   = new CSRFSynchronizerToken($url);
         $token->check();
 
-        $label_to_edit_id = $request->get('id');
-        $new_name         = $request->get('name');
-        $new_color        = $request->get('color');
-        $new_is_outline   = $request->get('is_outline');
+        $name       = $request->get('name');
+        $color      = $request->get('color');
+        $is_outline = $request->get('is_outline');
 
-
-        $this->dao->startTransaction();
         try {
-            $this->checkColor($new_color);
+            $this->checkColor($color);
 
-            if ($this->dao->editInTransaction($project->getID(), $label_to_edit_id, $new_name, $new_color, $new_is_outline)) {
-                $this->mergeLabels($project, $label_to_edit_id);
-                $this->dao->commit();
-                $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has been edited.'));
-            } else {
-                $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has not been edited.'));
-            }
+            $this->dao->addUniqueLabel($project->getID(), $name, $color, $is_outline);
+            $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has been added.'));
+        } catch (LabelWithSameNameAlreadyExistException $exception) {
+            $GLOBALS['HTML']->addFeedback(
+                \Feedback::ERROR,
+                sprintf(
+                    _('Cannot create the label "%s" because another one already exists with same name.'),
+                    $name
+                )
+            );
         } catch (Exception $exception) {
-            $this->dao->rollBack();
-            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('An error occurred while trying to edit the label.'));
+            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('An error occurred while trying to add the label.'));
         }
         $GLOBALS['HTML']->redirect($url);
-    }
-
-    private function mergeLabels($project, $label_to_edit_id)
-    {
-        $other_labels = $this->dao->searchProjectLabelsThatHaveSameName($project->getID(), $label_to_edit_id);
-        if (count($other_labels) === 0) {
-            return;
-        }
-
-        $label_ids_to_merge = array();
-        foreach ($other_labels as $row) {
-            $label_ids_to_merge[] = $row['id'];
-        }
-
-        $this->event_manager->processEvent(
-            new MergeProjectLabelInTransaction($project, $label_to_edit_id, $label_ids_to_merge)
-        );
-
-        $this->dao->deleteAllLabelsInTransaction($project->getID(), $label_ids_to_merge);
     }
 
     private function checkColor($new_color)

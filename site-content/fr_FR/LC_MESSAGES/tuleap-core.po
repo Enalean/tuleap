@@ -21,6 +21,10 @@ msgstr ""
 "les labels seront fusionnés."
 
 #, php-format
+msgid "\"%s\" label already exists. Please choose another one."
+msgstr "Le label \"%s\" label exist déjà. Merci de choisir un autre nom."
+
+#, php-format
 msgid "%d member"
 msgid_plural "%d members"
 msgstr[0] "%d membre"
@@ -28,6 +32,9 @@ msgstr[1] "%d membres"
 
 msgid "Add dashboard"
 msgstr "Ajouter un tableau de bord"
+
+msgid "Add label"
+msgstr "Ajouter un label"
 
 msgid "Add widget"
 msgstr "Ajouter un widget"
@@ -37,12 +44,6 @@ msgstr "Agile Dashboard"
 
 msgid "Already used"
 msgstr "Déjà utilisé"
-
-msgid "An error occured while trying to edit the label."
-msgstr "Une erreur est survenue lors de l'édition du label."
-
-msgid "An error occured while trying to remove the label."
-msgstr "Une erreur est survenue lors de la suppression du label."
 
 msgid ""
 "An error occured with your upload. Please try again or choose another image."
@@ -56,9 +57,18 @@ msgstr "Une erreur est survenue lors de la suppression de votre historique"
 msgid "An error occurred while fetching the content of your history"
 msgstr "Une erreur est survenue lors de la récupération de votre historique"
 
+msgid "An error occurred while trying to add the label."
+msgstr "Une erreur est survenue lors de l'ajout du label."
+
 msgid "An error occurred while trying to add the widget to the dashboard"
 msgstr ""
 "Une erreur est survenue lors de l'ajout du widget sur le tableau de bord"
+
+msgid "An error occurred while trying to edit the label."
+msgstr "Une erreur est survenue lors de l'édition du label."
+
+msgid "An error occurred while trying to remove the label."
+msgstr "Une erreur est survenue lors de la suppression du label."
 
 msgid "And more..."
 msgstr "Et plus ..."
@@ -71,6 +81,14 @@ msgstr "CVS"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+#, php-format
+msgid ""
+"Cannot create the label \"%s\" because another one already exists with same "
+"name."
+msgstr ""
+"Impossible de créer le label  \"%s\" car il existe un autre label avec le "
+"même nom."
 
 msgid "Cannot delete the requested dashboard."
 msgstr "Impossible de supprimer le tableau de bord demandé."
@@ -113,6 +131,9 @@ msgstr "Impossible d'accèder au fichier de contrôle d'accès du dépôt SVN"
 
 msgid "Could not update hooks of the SVN repository"
 msgstr "Impossible de mettre à jour les hooks du dépôt SVN"
+
+msgid "Create label"
+msgstr "Créer le label"
 
 msgid "Dashboard creation failed."
 msgstr "La création du tableau de bord a échouée."
@@ -172,6 +193,9 @@ msgstr "Éditer le tableau de bord"
 msgid "Edit widget"
 msgstr "Éditer le widget"
 
+msgid "Emergency"
+msgstr "Urgent"
+
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
 
@@ -210,6 +234,9 @@ msgstr "Messagerie Instantanée"
 
 msgid "Is used?"
 msgstr "Utilisé ?"
+
+msgid "Label has been added."
+msgstr "Le label a été ajouté."
 
 msgid "Label has been deleted from the project."
 msgstr "Le label a été supprimé du projet."

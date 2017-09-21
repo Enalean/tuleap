@@ -36,15 +36,21 @@ class LabelsManagementRouter
      * @var EditController
      */
     private $edit_controller;
+    /**
+     * @var AddController
+     */
+    private $add_controller;
 
     public function __construct(
         IndexController $index_controller,
         DeleteController $delete_controller,
-        EditController $edit_controller
+        EditController $edit_controller,
+        AddController $add_controller
     ) {
         $this->index_controller  = $index_controller;
         $this->delete_controller = $delete_controller;
         $this->edit_controller   = $edit_controller;
+        $this->add_controller    = $add_controller;
     }
 
     public function process(HTTPRequest $request)
@@ -55,6 +61,9 @@ class LabelsManagementRouter
                 break;
             case 'edit':
                 $this->edit_controller->edit($request);
+                break;
+            case 'add':
+                $this->add_controller->add($request);
                 break;
             default:
                 $this->index_controller->display($request);
