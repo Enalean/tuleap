@@ -220,6 +220,9 @@ msgstr "Labels"
 msgid "Link"
 msgstr "Lien"
 
+msgid "Links"
+msgstr "Liens"
+
 msgid "Lists"
 msgstr "Listes"
 
