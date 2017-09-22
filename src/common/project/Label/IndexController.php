@@ -26,6 +26,7 @@ use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 
 class IndexController
@@ -46,17 +47,23 @@ class IndexController
      * @var IncludeAssets
      */
     private $assets;
+    /**
+     * @var ColorPresenterFactory
+     */
+    private $color_factory;
 
     public function __construct(
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
         EventManager $event_manager,
-        IncludeAssets $assets
+        IncludeAssets $assets,
+        ColorPresenterFactory $color_factory
     ) {
         $this->url_builder   = $url_builder;
         $this->dao           = $dao;
         $this->event_manager = $event_manager;
         $this->assets        = $assets;
+        $this->color_factory = $color_factory;
     }
 
     public function display(HTTPRequest $request)
@@ -86,8 +93,19 @@ class IndexController
     {
         $collection = new CollectionOfLabelPresenter($project);
         foreach ($this->dao->searchLabelsUsedByProject($project->getID()) as $row) {
-            $is_used = false;
-            $collection->add(new LabelPresenter($row['id'], $row['name'], $row['is_outline'], $row['color'], $is_used));
+            $is_used           = false;
+            $colors_presenters = $this->color_factory->getColorsPresenters($row['color']);
+
+            $collection->add(
+                new LabelPresenter(
+                    $row['id'],
+                    $row['name'],
+                    $row['is_outline'],
+                    $row['color'],
+                    $is_used,
+                    $colors_presenters
+                )
+            );
         }
         $this->event_manager->processEvent($collection);
 

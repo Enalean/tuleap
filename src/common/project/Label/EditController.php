@@ -24,6 +24,7 @@ use CSRFSynchronizerToken;
 use EventManager;
 use Exception;
 use HTTPRequest;
+use Tuleap\Label\AllowedColorsCollection;
 
 class EditController
 {
@@ -39,12 +40,21 @@ class EditController
      * @var LabelsManagementURLBuilder
      */
     private $url_builder;
+    /**
+     * @var AllowedColorsCollection
+     */
+    private $allowed_colors;
 
-    public function __construct(LabelsManagementURLBuilder $url_builder, LabelDao $dao, EventManager $event_manager)
-    {
-        $this->url_builder   = $url_builder;
-        $this->dao           = $dao;
-        $this->event_manager = $event_manager;
+    public function __construct(
+        LabelsManagementURLBuilder $url_builder,
+        LabelDao $dao,
+        EventManager $event_manager,
+        AllowedColorsCollection $allowed_colors
+    ) {
+        $this->url_builder    = $url_builder;
+        $this->dao            = $dao;
+        $this->event_manager  = $event_manager;
+        $this->allowed_colors = $allowed_colors;
     }
 
     public function edit(HTTPRequest $request)
@@ -56,10 +66,15 @@ class EditController
 
         $label_to_edit_id = $request->get('id');
         $new_name         = $request->get('name');
+        $new_color        = $request->get('color');
+        $new_is_outline   = $request->get('is_outline');
+
 
         $this->dao->startTransaction();
         try {
-            if ($this->dao->editInTransaction($project->getID(), $label_to_edit_id, $new_name)) {
+            $this->checkColor($new_color);
+
+            if ($this->dao->editInTransaction($project->getID(), $label_to_edit_id, $new_name, $new_color, $new_is_outline)) {
                 $this->mergeLabels($project, $label_to_edit_id);
                 $this->dao->commit();
                 $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has been edited.'));
@@ -68,7 +83,7 @@ class EditController
             }
         } catch (Exception $exception) {
             $this->dao->rollBack();
-            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('An error occured while trying to edit the label.'). $exception->getMessage().db_error());
+            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('An error occured while trying to edit the label.'));
         }
         $GLOBALS['HTML']->redirect($url);
     }
@@ -90,5 +105,12 @@ class EditController
         );
 
         $this->dao->deleteAllLabelsInTransaction($project->getID(), $label_ids_to_merge);
+    }
+
+    private function checkColor($new_color)
+    {
+        if (! $this->allowed_colors->isColorAllowed($new_color)) {
+            throw new InvalidColorException();
+        }
     }
 }

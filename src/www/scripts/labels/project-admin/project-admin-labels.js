@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { modal, filterInlineTable } from 'tlp';
+import { modal, filterInlineTable, select2 } from 'tlp';
 import { sprintf } from 'sprintf-js';
 import { sanitize } from 'dompurify';
 
@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (! labels_table) {
         return;
     }
+
+    initColorSelectors();
 
     const filter = document.getElementById('project-labels-table-filter');
     if (filter) {
@@ -36,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
-            const la_modal = modal(modal_element);
+            const la_modal        = modal(modal_element);
+            const edit_name_input = modal_element.querySelector('.project-label-edit-name');
 
             button.addEventListener('click', () => {
-                const edit_name_input = modal_element.querySelector('.project-label-edit-name');
                 if (edit_name_input) {
                     hideWarning(edit_name_input);
                     edit_name_input.value = edit_name_input.dataset.originalValue;
@@ -47,6 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 la_modal.toggle();
             });
+
+            if (edit_name_input) {
+                la_modal.addEventListener('tlp-modal-hidden', () => {
+                    modal_element.reset();
+                    // force select2 to display the current color
+                    modal_element.querySelector('.project-label-color-selector').dispatchEvent(new Event('change'))
+                });
+            }
         }
     }
 
@@ -83,5 +93,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const warning = document.getElementById(input.dataset.targetWarningId);
         warning.classList.add('shown');
         warning.innerHTML = sanitize(sprintf(input.dataset.warningMessage, input.value));
+    }
+
+    function formatOptionColor({ id }) {
+        const element = document.createElement('span');
+        element.classList.add(id);
+
+        return element;
+    }
+
+    function initColorSelectors() {
+        for (const color_selector of document.querySelectorAll('.project-label-color-selector')) {
+            select2(color_selector, {
+                containerCssClass      : 'project-label-color-container',
+                dropdownCssClass       : 'project-label-color-results',
+                minimumResultsForSearch: Infinity,
+                templateResult         : formatOptionColor,
+                templateSelection      : formatOptionColor
+            });
+        }
     }
 });

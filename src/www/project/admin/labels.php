@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\EditController;
 use Tuleap\Project\Label\LabelsManagementURLBuilder;
@@ -35,10 +37,12 @@ $url_builder   = new LabelsManagementURLBuilder();
 $dao           = new LabelDao();
 $event_manager = EventManager::instance();
 $assets        = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
+$colors        = new AllowedColorsCollection();
+$color_factory = new ColorPresenterFactory($colors);
 
 $router = new LabelsManagementRouter(
-    new IndexController($url_builder, $dao, $event_manager, $assets),
+    new IndexController($url_builder, $dao, $event_manager, $assets, $color_factory),
     new DeleteController($url_builder, $dao, $event_manager),
-    new EditController($url_builder, $dao, $event_manager)
+    new EditController($url_builder, $dao, $event_manager, $colors)
 );
 $router->process($request);

@@ -31,11 +31,39 @@
                    data-warning-message="{{ warning_message }}"
                    required>
         </div>
+
+        <div class="project-label-edit-options">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="color-{{ id }}">{{ color_label }} <i class="fa fa-asterisk"></i></label>
+                <select
+                    class="tlp-select project-label-color-selector"
+                    id="color-{{ id }}"
+                    name="color"
+                >
+                    {{# colors_presenters }}
+                        <option value="{{ color }}" {{# is_selected }}selected{{/ is_selected }}></option>
+                    {{/ colors_presenters }}
+                </select>
+            </div>
+
+            <div class="tlp-form-element project-label-edit-style">
+                <label class="tlp-label" for="color-{{ id }}">{{ style_label }} <i class="fa fa-asterisk"></i></label>
+                <div class="tlp-form-element project-label-edit-style-options">
+                    <label class="tlp-label tlp-radio">
+                        <input type="radio" name="is_outline" value="0" {{^ is_outline }}checked{{/ is_outline }}> {{ plain }}
+                    </label>
+                    <label class="tlp-label tlp-radio project-label-edit-style-option-outline">
+                        <input type="radio" name="is_outline" value="1" {{# is_outline }}checked{{/ is_outline }}> {{ outline }}
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <div class="tlp-alert-warning project-label-edit-warning" id="project-label-edit-warning-{{ id }}">
         </div>
     </div>
     <div class="tlp-modal-footer project-label-edit-footer">
-        <button type="button"
+        <button type="reset"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 id="project-label-edit-footer-cancel-{{ id }}"
                 data-dismiss="modal"

@@ -21,6 +21,7 @@
 namespace Tuleap\Project\Label;
 
 use Codendi_HTMLPurifier;
+use Tuleap\Label\ColorPresenter;
 
 class LabelPresenter
 {
@@ -51,13 +52,17 @@ class LabelPresenter
     /** @var string */
     public $color;
 
-    public function __construct($id, $name, $is_outline, $color, $is_used)
+    /** @var ColorPresenter[] */
+    public $colors_presenters;
+
+    public function __construct($id, $name, $is_outline, $color, $is_used, array $colors_presenters)
     {
-        $this->id         = $id;
-        $this->name       = $name;
-        $this->is_outline = $is_outline;
-        $this->color      = $color;
-        $this->is_used    = $is_used;
+        $this->id                = $id;
+        $this->name              = $name;
+        $this->is_outline        = $is_outline;
+        $this->color             = $color;
+        $this->is_used           = $is_used;
+        $this->colors_presenters = $colors_presenters;
 
         $this->delete_title = sprintf(
             _('Delete %s'),
