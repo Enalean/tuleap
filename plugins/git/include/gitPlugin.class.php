@@ -407,7 +407,8 @@ class GitPlugin extends Plugin {
                     $this->getLogger(),
                     $this->getGitSystemEventManager(),
                     $this->getUgroupsToNotifyDao(),
-                    $this->getUsersToNotifyDao()
+                    $this->getUsersToNotifyDao(),
+                    EventManager::instance()
                 );
                 break;
             case SystemEvent_GIT_LEGACY_REPO_DELETE::NAME:
