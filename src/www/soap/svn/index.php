@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,11 +23,10 @@ require_once 'pre.php';
 require_once 'common/svn/SVN_SOAPServer.class.php';
 
 // Check if we the server is in secure mode or not.
-$request = HTTPRequest::instance();
-if ($request->isSecure() || ForgeConfig::get('sys_force_ssl') == 1) {
-    $protocol = "https";
-} else {
-    $protocol = "http";
+$request  = HTTPRequest::instance();
+$protocol = 'http';
+if ($request->isSecure() || ForgeConfig::get('sys_https_host')) {
+    $protocol = 'https';
 }
 $default_domain = ForgeConfig::get('sys_default_domain');
 

@@ -1232,7 +1232,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         $output = '+============== '.'['.$art->getTracker()->getItemName() .' #'. $art->getId().'] '.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).' ==============+';
         $output .= PHP_EOL;
         $output .= PHP_EOL;
-        $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+        $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
         $output .= PHP_EOL;
         $output .= $language->getText('plugin_tracker_include_artifact', 'last_edited');

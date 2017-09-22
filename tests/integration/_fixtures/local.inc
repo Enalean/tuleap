@@ -258,15 +258,6 @@ $sys_themedefault = 'FlamingParrot';
 // Default theme for old browsers (currently netscape 4)
 $sys_themedefault_old = 'savannah';
 
-// If set to 1 (one) it forces the server to operate
-// HTTPS (SSL connection). HTTP request are redirected
-// to HTTPS requests.
-//
-// /!\ If you switch from 1 to 0 while users have exisiting sessions
-//     they may encounter strange behaviors like infinite redirections.
-//     You will have to purge sessions in site admin > all users.
-$sys_force_ssl = 0;
-
 // If set to 1 (one) the user registration must be approved by site
 // admin. If 0 user can register by themselves
 $sys_user_approval = 0;

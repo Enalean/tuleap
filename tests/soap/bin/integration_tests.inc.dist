@@ -28,17 +28,17 @@ if (! is_dir($sys_data_dir.'/gitolite')) {
     mkdir($sys_data_dir.'/gitolite/admin', 0777, true);
 }
 
+$sys_https_host = '';
+
 $sys_cookie_prefix = 'TLP';
 $sys_lang = 'en_US';
 $sys_supported_languages = 'en_US';
 $sys_themedefault = 'Tuleap';
 $sys_themeroot = $codendi_dir . '/src/www/themes';
-$sys_force_ssl  = 0;
 $sys_custompluginsroot = $sys_custom_dir . '/plugins/';
 
 $sys_password_lifetime = 10000000000000;
 $sys_default_domain = 'localhost';
-$sys_force_ssl = 0;
 $sys_name = 'Tuleap Tests';
 $sys_noreply = 'noreply@localhost';
 

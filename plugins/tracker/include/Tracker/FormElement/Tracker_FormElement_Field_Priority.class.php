@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -158,7 +158,6 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         $output = '';
         switch ($format) {
             case 'html':
-                $proto    = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
                 $output  .= '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
                 break;
             default:

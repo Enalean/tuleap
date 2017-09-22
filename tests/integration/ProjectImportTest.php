@@ -67,7 +67,6 @@ class ProjectImportTest extends TuleapDbTestCase
         $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
         $GLOBALS['sys_default_domain'] = '';
         $GLOBALS['sys_cookie_prefix'] = '';
-        $GLOBALS['sys_force_ssl'] = 0;
         ForgeConfig::store();
         $this->old_sys_pluginsroot = $GLOBALS['sys_pluginsroot'];
         $this->old_sys_custompluginsroot = $GLOBALS['sys_custompluginsroot'];
@@ -118,7 +117,6 @@ class ProjectImportTest extends TuleapDbTestCase
         unset($GLOBALS['ftp_anon_dir_prefix']);
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_cookie_prefix']);
-        unset($GLOBALS['sys_force_ssl']);
         $GLOBALS['sys_pluginsroot'] = $this->old_sys_pluginsroot;
         $GLOBALS['sys_custompluginsroot'] = $this->old_sys_custompluginsroot;
         EventManager::clearInstance();

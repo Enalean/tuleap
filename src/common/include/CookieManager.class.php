@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@
 class CookieManager {
 
     public function setHTTPOnlyCookie($name, $value, $expire = 0) {
-        $secure    = (bool)ForgeConfig::get('sys_force_ssl');
+        $secure    = (bool) ForgeConfig::get('sys_https_host');
         $http_only = true;
 
         return $this->phpsetcookie(
@@ -42,7 +42,7 @@ class CookieManager {
     }
 
     public function setGlobalCookie($name, $value, $expire = 0) {
-        $secure    = (bool)ForgeConfig::get('sys_force_ssl');
+        $secure    = (bool) ForgeConfig::get('sys_https_host');
         $http_only = false;
 
         return $this->phpsetcookie(
@@ -61,7 +61,7 @@ class CookieManager {
         $lifetime  = 0;
         $path      = '/';
         $domain    = $this->getCookieHost();
-        $secure    = (bool) ForgeConfig::get('sys_force_ssl');
+        $secure    = (bool) ForgeConfig::get('sys_https_host');
         $http_only = true;
         session_set_cookie_params($lifetime, $path, $domain, $secure, $http_only);
     }

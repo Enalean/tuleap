@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2015. All Rights Reserved.
+// Copyright (c) Enalean, 2015-2017. All Rights Reserved.
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
@@ -22,12 +22,6 @@ if ($request->get('confirm_hash')) {
 }
 
 $em =& EventManager::instance();
-
-if (! $request->isSecure() && isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
-    //force use of SSL for login
-    util_return_to('https://'.$GLOBALS['sys_https_host'].'/account/login.php');
-    exit;
-}
 
 //
 // Validate input

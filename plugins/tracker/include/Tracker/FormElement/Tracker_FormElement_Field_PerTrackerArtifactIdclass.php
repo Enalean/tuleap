@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean 2017. All rights reserved
  * Copyright (c) Tuleap, 2013. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2013. Jtekt Europe.
@@ -86,7 +87,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         $output = '';
         switch ($format) {
             case 'html':
-                $proto        = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+                $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
                 $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. $artifact->getPerTrackerArtifactId() .'</a>';
                 break;
             default:

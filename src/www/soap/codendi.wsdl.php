@@ -10,10 +10,9 @@ define('NUSOAP', 1);
 
 // Check if we the server is in secure mode or not.
 $request = HTTPRequest::instance();
-if ($request->isSecure() || ForgeConfig::get('sys_force_ssl') == 1) {
-    $protocol = "https";
-} else {
-    $protocol = "http";
+$protocol = 'http';
+if ($request->isSecure() || ForgeConfig::get('sys_https_host')) {
+    $protocol = 'https';
 }
 
 $default_domain = ForgeConfig::get('sys_default_domain');

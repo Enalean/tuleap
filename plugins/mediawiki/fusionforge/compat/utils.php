@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,7 @@ function util_url_prefix($prefix = '') {
 		return $prefix . '://';
 	}
 	else {
-		if (forge_get_config('use_ssl')) {
+		if (ForgeConfig::get('sys_https_host')) {
 			return "https://";
 		} else {
 			return "http://";
