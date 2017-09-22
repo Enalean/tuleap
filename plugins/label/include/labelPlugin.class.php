@@ -19,7 +19,9 @@
  */
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Label\REST\ResourcesInjector;
 use Tuleap\Label\Widget\ProjectLabeledItems;
+use Tuleap\Project\REST\v1\LabelRESTEndpoint;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -38,6 +40,8 @@ class labelPlugin extends Plugin
     {
         $this->addHook('widgets');
         $this->addHook('widget_instance');
+        $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -53,7 +57,7 @@ class labelPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function widgets($params)
+    public function widgets(array $params)
     {
         switch ($params['owner_type']) {
             case ProjectDashboardController::LEGACY_DASHBOARD_TYPE:
@@ -62,12 +66,30 @@ class labelPlugin extends Plugin
         }
     }
 
-    public function widgetInstance($params)
+    public function widgetInstance(array $params)
     {
         switch ($params['widget']) {
             case ProjectLabeledItems::NAME:
                 $params['instance'] = new ProjectLabeledItems();
                 break;
         }
+    }
+
+    /**
+     * @see Event::REST_RESOURCES
+     */
+    public function restResources(array $params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see Event::REST_PROJECT_RESOURCES
+     */
+    public function restProjectResources(array $params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->declareProjectResource($params['resources'], $params['project']);
     }
 }
