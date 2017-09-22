@@ -42,24 +42,27 @@ class IndexPresenter
     public $csrf_token;
     public $cancel;
     public $color_label;
-    public $save;
     public $edit_button;
     public $json_encoded_label_names;
     public $style_label;
     public $plain;
     public $outline;
+    public $add_label;
+    public $default_label;
 
     public function __construct(
         $title,
         Project $project,
         CollectionOfLabelPresenter $collection,
+        LabelPresenter $default_label,
         CSRFSynchronizerToken $csrf_token
     ) {
-        $this->labels     = $collection->getPresenters();
-        $this->title      = $title;
-        $this->project_id = $project->getID();
-        $this->has_labels = count($this->labels) > 0;
-        $this->csrf_token = $csrf_token;
+        $this->labels        = $collection->getPresenters();
+        $this->title         = $title;
+        $this->project_id    = $project->getID();
+        $this->has_labels    = count($this->labels) > 0;
+        $this->csrf_token    = $csrf_token;
+        $this->default_label = $default_label;
 
         $this->name_label         = _('Name');
         $this->color_label        = _('Color');
@@ -72,9 +75,10 @@ class IndexPresenter
         $this->delete_button      = _('Delete');
         $this->edit_button        = _('Edit');
         $this->cancel             = _('Cancel');
-        $this->save               = _('Update label');
         $this->plain              = _('Filled');
         $this->outline            = _('Outline');
+        $this->add_label          = _('Add label');
+        $this->placeholder        = _('Emergency');
 
         $this->json_encoded_label_names = json_encode($this->getLabelsNames());
     }

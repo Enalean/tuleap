@@ -21,6 +21,7 @@
 use Tuleap\Label\AllowedColorsCollection;
 use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Label\AddController;
 use Tuleap\Project\Label\EditController;
 use Tuleap\Project\Label\LabelsManagementURLBuilder;
 use Tuleap\Project\Label\DeleteController;
@@ -43,6 +44,7 @@ $color_factory = new ColorPresenterFactory($colors);
 $router = new LabelsManagementRouter(
     new IndexController($url_builder, $dao, $event_manager, $assets, $color_factory),
     new DeleteController($url_builder, $dao, $event_manager),
-    new EditController($url_builder, $dao, $event_manager, $colors)
+    new EditController($url_builder, $dao, $event_manager, $colors),
+    new AddController($url_builder, $dao, $colors)
 );
 $router->process($request);

@@ -1,17 +1,16 @@
 <form action="/project/admin/labels.php?group_id={{ project_id }}"
       method="POST"
       class="tlp-modal"
-      id="project-label-edit-{{ id }}"
+      id="project-label-add"
       role="dialog"
 >
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
-    <input type="hidden" name="action" value="edit">
-    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="action" value="add">
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title">
-            <i class="fa fa-pencil tlp-modal-title-icon"></i> {{ edit_title }}
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_label }}
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ cancel }}">×</div>
     </div>

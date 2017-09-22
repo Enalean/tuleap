@@ -5,12 +5,19 @@ msgid ""
 msgstr ""
 
 #, php-format
+msgid "\"%s\" label already exists. Please choose another one."
+msgstr ""
+
+#, php-format
 msgid "%d member"
 msgid_plural "%d members"
 msgstr[0] ""
 msgstr[1] ""
 
 msgid "Add dashboard"
+msgstr ""
+
+msgid "Add label"
 msgstr ""
 
 msgid "Add widget"
@@ -20,12 +27,6 @@ msgid "Agile Dashboard"
 msgstr ""
 
 msgid "Already used"
-msgstr ""
-
-msgid "An error occured while trying to edit the label."
-msgstr ""
-
-msgid "An error occured while trying to remove the label."
 msgstr ""
 
 msgid ""
@@ -38,7 +39,16 @@ msgstr ""
 msgid "An error occurred while fetching the content of your history"
 msgstr ""
 
+msgid "An error occurred while trying to add the label."
+msgstr ""
+
 msgid "An error occurred while trying to add the widget to the dashboard"
+msgstr ""
+
+msgid "An error occurred while trying to edit the label."
+msgstr ""
+
+msgid "An error occurred while trying to remove the label."
 msgstr ""
 
 msgid "And more..."
@@ -51,6 +61,12 @@ msgid "CVS"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+#, php-format
+msgid ""
+"Cannot create the label \"%s\" because another one already exists with same "
+"name."
 msgstr ""
 
 msgid "Cannot delete the requested dashboard."
@@ -93,6 +109,9 @@ msgid "Could not the access file of the SVN repository"
 msgstr ""
 
 msgid "Could not update hooks of the SVN repository"
+msgstr ""
+
+msgid "Create label"
 msgstr ""
 
 msgid "Dashboard creation failed."
@@ -151,6 +170,9 @@ msgstr ""
 msgid "Edit widget"
 msgstr ""
 
+msgid "Emergency"
+msgstr ""
+
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr ""
 
@@ -188,6 +210,9 @@ msgid "Instant messaging"
 msgstr ""
 
 msgid "Is used?"
+msgstr ""
+
+msgid "Label has been added."
 msgstr ""
 
 msgid "Label has been deleted from the project."

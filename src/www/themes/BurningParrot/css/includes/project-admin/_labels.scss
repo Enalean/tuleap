@@ -44,7 +44,7 @@
     cursor: help;
 }
 
-.project-label-edit-warning {
+.project-label-name-warning {
     display: none;
 
     &.shown {
@@ -56,21 +56,21 @@
     width: 80px;
 }
 
-.project-label-edit-options {
+.project-label-options {
     display: flex;
 }
 
-.tlp-form-element.project-label-edit-style {
+.tlp-form-element.project-label-style {
     margin: 0 0 $tlp-spacing $tlp-double-spacing;
 }
 
-.project-label-edit-style-options {
+.project-label-style-options {
     display: flex;
     align-items: center;
     padding: 8px 0 0;
 }
 
-.project-label-edit-style-option-outline {
+.project-label-style-option-outline {
     margin: 0 0 $tlp-half-spacing $tlp-spacing;
 }
 

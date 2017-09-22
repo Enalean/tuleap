@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { modal, filterInlineTable, select2 } from 'tlp';
 import { sprintf } from 'sprintf-js';
-import { sanitize } from 'dompurify';
 
 document.addEventListener('DOMContentLoaded', () => {
     const labels_table = document.getElementById('project-labels-table');
@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
         filterInlineTable(filter);
     }
 
-    const buttons = document.querySelectorAll('.project-labels-table-delete-button, .project-labels-table-edit-button');
+    const buttons = document.querySelectorAll(
+        '.project-labels-table-delete-button, .project-labels-table-edit-button, .project-labels-table-add-button'
+    );
     for (const button of buttons) {
         const modal_element = document.getElementById(button.dataset.modalId);
 
@@ -60,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const existing_labels = JSON.parse(labels_table.dataset.existingLabelsNames);
+    const existing_labels = JSON.parse(labels_table.dataset.existingLabelsNames).map(label => label.toLowerCase());
     for (const input of document.querySelectorAll('.project-label-edit-name')) {
         input.addEventListener('input', onLabelChange);
     }
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         timer = setTimeout(() => {
-            if (existing_labels.indexOf(this.value) === -1) {
+            if (existing_labels.indexOf(this.value.toLowerCase()) === -1) {
                 hideWarning(this);
             } else if (this.value !== this.dataset.originalValue) {
                 showWarning(this);
@@ -82,17 +84,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hideWarning(input) {
         document.getElementById(input.dataset.targetCancelId).classList.remove('tlp-button-warning');
-        document.getElementById(input.dataset.targetSaveId).classList.remove('tlp-button-warning');
         document.getElementById(input.dataset.targetWarningId).classList.remove('shown');
+
+        const save = document.getElementById(input.dataset.targetSaveId);
+        save.classList.remove('tlp-button-warning');
+        save.disabled = false;
     }
 
     function showWarning(input) {
         document.getElementById(input.dataset.targetCancelId).classList.add('tlp-button-warning');
-        document.getElementById(input.dataset.targetSaveId).classList.add('tlp-button-warning');
+
+        const save = document.getElementById(input.dataset.targetSaveId);
+        save.classList.add('tlp-button-warning');
+        if (! JSON.parse(input.dataset.isSaveAllowedOnDuplicate)) {
+            save.disabled = true;
+        }
 
         const warning = document.getElementById(input.dataset.targetWarningId);
         warning.classList.add('shown');
-        warning.innerHTML = sanitize(sprintf(input.dataset.warningMessage, input.value));
+        warning.textContent = sprintf(input.dataset.warningMessage, input.value);
     }
 
     function formatOptionColor({ id }) {

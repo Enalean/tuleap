@@ -64,7 +64,7 @@ class DeleteController
             $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has been deleted from the project.'));
         } catch (Exception $exception) {
             $this->dao->rollBack();
-            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('An error occured while trying to remove the label.'));
+            $GLOBALS['HTML']->addFeedback(\Feedback::ERROR, _('An error occurred while trying to remove the label.'));
         }
         $GLOBALS['HTML']->redirect($url);
     }

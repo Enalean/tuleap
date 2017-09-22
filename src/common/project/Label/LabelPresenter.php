@@ -55,6 +55,12 @@ class LabelPresenter
     /** @var ColorPresenter[] */
     public $colors_presenters;
 
+    /** @var string */
+    public $save;
+
+    /** @var bool */
+    public $is_save_allowed_on_duplicate;
+
     public function __construct($id, $name, $is_outline, $color, $is_used, array $colors_presenters)
     {
         $this->id                = $id;
@@ -64,6 +70,7 @@ class LabelPresenter
         $this->is_used           = $is_used;
         $this->colors_presenters = $colors_presenters;
 
+        $this->save         = _('Update label');
         $this->delete_title = sprintf(
             _('Delete %s'),
             $this->name
@@ -73,15 +80,18 @@ class LabelPresenter
             $this->name
         );
 
-        $this->purified_delete_message = Codendi_HTMLPurifier::instance()->purify(
+        $purifier = Codendi_HTMLPurifier::instance();
+        $this->purified_delete_message = $purifier->purify(
             sprintf(
                 _("Wow, wait a minute. You're about to delete the label <b>%s</b>. Please confirm your action."),
-                $this->name
+                $purifier->purify($this->name)
             ),
-            CODENDI_PURIFIER_LIGHT
+            CODENDI_PURIFIER_FULL
         );
 
         $this->warning_message = _('"%s" label already exists. If you save your modifications, both labels will be merged.');
+
+        $this->is_save_allowed_on_duplicate = true;
     }
 
     public function switchToUsed()
