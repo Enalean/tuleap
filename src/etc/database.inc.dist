@@ -1,38 +1,39 @@
 <?php
+// Copyright (c) Enalean, 2012-2017. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
-// This file is a part of Codendi.
+// This file is a part of Tuleap.
 //
-// Codendi is free software; you can redistribute it and/or modify
+// Tuleap is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
 //
-// Codendi is distributed in the hope that it will be useful,
+// Tuleap is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+// along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 //
 
 // Please specify your database details here:
-$sys_dbhost="localhost";
-$sys_dbname="%sys_dbname%";
-$sys_dbuser="%sys_dbuser%";
-$sys_dbpasswd="%sys_dbpasswd%";
+$sys_dbhost='localhost';
+$sys_dbname='%sys_dbname%';
+$sys_dbuser='%sys_dbuser%';
+$sys_dbpasswd='%sys_dbpasswd%';
 
 // If set to 1 (one) connexions to DB are made through SSL.
 // Note: Mysql server must be properly configured to accept SSL
 // connexions (GRANT ... REQUIRE SSL). This is the only way to
 // guaranty that communications are encrypted.
-$sys_enablessl="0";
+$sys_enablessl='0';
 
 // for phpWiki
-$sys_server="mysql";
+$sys_server='mysql';
 //The value should be 20 due to mysql max join limit
-$sys_server_join="20";
+$sys_server_join='20';
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
