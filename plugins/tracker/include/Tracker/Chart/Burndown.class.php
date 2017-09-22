@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,17 @@
 
 
 /**
- * I'm responsible of 
+ * I'm responsible of
  * - displaying a Burndown chart
  * - prepare data for display
  */
-class Tracker_Chart_Burndown {
-
-    const SECONDS_IN_A_DAY = 86400;
-
+class Tracker_Chart_Burndown
+{
     /**
      * @var Tracker_Chart_Data_IProvideDataForBurndownChart
      */
     private $burndown_data;
-    
+
     private $start_date;
     private $duration = 10;
     protected $title = '';
@@ -43,16 +41,16 @@ class Tracker_Chart_Burndown {
     private $graph_data_ideal_burndown   = array();
     private $graph_data_human_dates      = array();
     private $graph_data_remaining_effort = array();
-    
+
     public function __construct(Tracker_Chart_Data_IProvideDataForBurndownChart $burndown_data) {
         $this->burndown_data = $burndown_data;
-        $this->start_date    = $_SERVER['REQUEST_TIME'] / self::SECONDS_IN_A_DAY - $this->duration ;
+        $this->start_date    = $burndown_data->getTimePeriod()->getStartDate();
     }
 
     public function setStartDate($start_date) {
-        $this->start_date = round($start_date / self::SECONDS_IN_A_DAY);
+        $this->start_date = round($start_date);
     }
-    
+
     public function setStartDateInDays($start_date) {
         $this->start_date = $start_date;
     }
@@ -89,34 +87,56 @@ class Tracker_Chart_Burndown {
         return $this->graph_data_ideal_burndown;
     }
 
-    public function getComputedData() {
-        $dbdata       = $this->burndown_data->getRemainingEffort();
-        $artifact_ids = $this->burndown_data->getArtifactIds();
-        $minday       = $this->burndown_data->getMinDay();
-        $maxday       = $this->burndown_data->getMaxDay();
-        $num_days     = $maxday > $this->start_date ? $maxday - $this->start_date : 1;
-        $data         = array_fill($this->start_date, $num_days, array());
+    public function getComputedData()
+    {
+        $remaining_effort = $this->burndown_data->getRemainingEffort();
 
-        // We assume here that SQL returns effort value order by changeset_id ASC
-        // so we only keep the last value (possible to change effort several times a day)
+        $date           = new DateTime();
+        $date->setTimestamp($this->burndown_data->getTimePeriod()->getStartDate());
 
-        foreach ($artifact_ids as $aid) {
-            for ($day = $minday; $day <= $maxday; $day++) {
-                $dbdata_of_the_day = isset($dbdata[$day][$aid]) ? $dbdata[$day][$aid] : 0;
-                if ($day <= $this->start_date) {
-                    $current_day = $this->start_date;   
+        $data                  = array();
+        $last_remaining_effort = null;
+
+        foreach($remaining_effort as $day => $effort) {
+            if ($day < $date->format("Ymd")) {
+                if ($last_remaining_effort !== null) {
+                    $last_remaining_effort = array_merge($effort, $last_remaining_effort);
                 } else {
-                    $current_day = $day;
-                    if ($dbdata_of_the_day === 0 && isset($data[$day - 1][$aid])) {
-                        $dbdata_of_the_day = $data[$day - 1][$aid];
-                    }
+                    $last_remaining_effort = $effort;
                 }
-                $data[$current_day][$aid] = floatval($dbdata_of_the_day);
             }
         }
+
+        foreach ($this->burndown_data->getTimePeriod()->getDayOffsets() as $day) {
+            if ($date->getTimestamp() <= time()) {
+                if (isset($remaining_effort[$date->format('Ymd')])) {
+                    foreach ($remaining_effort[$date->format('Ymd')] as $artifact => $value) {
+                        if (isset($last_remaining_effort[$artifact])) {
+                            unset($last_remaining_effort[$artifact]);
+                        }
+
+                        $last_remaining_effort[$artifact] = $value;
+                    }
+
+                    $data[$date->format('D d')] = array(array_sum($last_remaining_effort));
+                } else {
+                    if ($last_remaining_effort) {
+                        $data[$date->format('D d')] = array(array_sum($last_remaining_effort));
+                        $last_remaining_effort[$date->format('Ymd')] = array(array_sum($last_remaining_effort));
+                    } else {
+                        $data[$date->format('D d')] = null;
+                    }
+                }
+            } else {
+                $data[$date->format('D d')] = null;
+            }
+
+            $date->add(new DateInterval('P1D'));
+        }
+
         return $data;
     }
-    
+
     protected function getFirstEffortNotNull( array $remaining_effort) {
         foreach($remaining_effort as $effort) {
             if (is_array($effort) && ($sum_of_effort = floatval(array_sum($effort))) > 0) {
@@ -125,44 +145,33 @@ class Tracker_Chart_Burndown {
         }
         return 0;
     }
-    
-    public function prepareDataForGraph(array $remaining_effort) {
-        // order this->data by date asc
-        ksort($remaining_effort);
 
-        // Ideal burndown line:  a * x + b
-        // where b is the sum of effort for the first day
-        //       x is the number of days (starting from 0 to duration
-        //       a is the slope of the line equals -b/duration (burn down goes down)
-        // 
-        // Final formula: slope * day_num + first_day_effort
-        // 
-        // Build data for initial estimation
-        list($start_of_sprint, $efforts) = each($remaining_effort);
-        $start_effort       = $this->getFirstEffortNotNull($remaining_effort);
-        $start_effort_found = false;
-        $slope              = - $start_effort / $this->duration;
-        $previous_effort    = $start_effort; // init with sum of effort for the first day
-        
-        // for each day
-        for ($day_num = 0; $day_num <= $this->duration; ++$day_num) {
-            $effort = null;
-            $current_day = $start_of_sprint + $day_num;
-            
-            $this->graph_data_ideal_burndown[] = floatval($slope * $day_num + $start_effort);
-            $this->graph_data_human_dates[]    = date('M-d', $current_day * self::SECONDS_IN_A_DAY);
-            
-            if (isset($remaining_effort[$current_day])) {
-                $effort = array_sum($remaining_effort[$current_day]);
-                if ($start_effort_found == false) {
-                    $start_effort_found = ($effort == $start_effort);
-                    $effort = $start_effort;
-                }
-            } elseif ($day_num < count($remaining_effort)) {
-                $effort = $previous_effort;
+    /**
+     * Ideal burndown line:  a * x + b
+     * where b is the sum of effort for the first day
+     *       x is the number of days (starting from 0 to duration
+     *       a is the slope of the line equals -b/duration (burn down goes down)
+     *
+     * Final formula: slope * day_num + first_day_effort
+     *
+     * Build data for initial estimation
+     */
+    public function prepareDataForGraph(array $remaining_effort)
+    {
+        $start_effort = $this->getFirstEffortNotNull($remaining_effort);
+        $slope        = -$start_effort / $this->duration;
+
+        $day_num = 0;
+        foreach ($remaining_effort as $day => $effort) {
+            $this->graph_data_ideal_burndown[]   = floatval($slope * $day_num + $start_effort);
+            $this->graph_data_human_dates[]      = $day;
+            if (is_array($effort)) {
+                $this->graph_data_remaining_effort[] = array_sum($effort);
+            } else {
+                $this->graph_data_remaining_effort[] = null;
             }
-            $this->graph_data_remaining_effort[] = $effort;
-            $previous_effort = $effort;
+
+            $day_num++;
         }
     }
 
@@ -171,7 +180,7 @@ class Tracker_Chart_Burndown {
      */
     public function buildGraph() {
         $this->prepareDataForGraph($this->getComputedData());
- 
+
         $graph = new Chart($this->width, $this->height);
         $graph->SetScale("datlin");
 
@@ -181,7 +190,7 @@ class Tracker_Chart_Burndown {
         $colors = $graph->getThemedColors();
 
         $graph->xaxis->SetTickLabels($this->graph_data_human_dates);
-        
+
         $remaining_effort = new LinePlot($this->graph_data_remaining_effort);
         $remaining_effort->SetColor($colors[1] . ':0.7');
         $remaining_effort->SetWeight(2);
@@ -199,11 +208,17 @@ class Tracker_Chart_Burndown {
 
         return $graph;
     }
-    
+
     public function display() {
         $this->buildGraph()->stroke();
     }
 
-}
+    protected function setLastValueWhenRemainingEffortIsBeforeStartDate(DateTime $date, array $remaining_effort)
+    {
+        if (key($remaining_effort) < $date->format("Ymd") && isset($remaining_effort[key($remaining_effort)])) {
+            return $remaining_effort[key($remaining_effort)];
+        }
 
-?>
+        return null;
+    }
+}
