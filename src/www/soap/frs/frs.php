@@ -1,4 +1,8 @@
 <?php
+
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksRetriever;
+
 require_once ('pre.php');
 require_once ('session.php');
 require_once('common/frs/FRSPackage.class.php');
@@ -1480,11 +1484,13 @@ function deleteEmptyRelease($sessionKey, $group_id, $package_id, $release_id, $c
             // retrieve all the releases
             $releases = $releaseFactory->getFRSReleasesFromDb($package_id);
         }
-        $deleted = array();
+        $deleted                  = array();
+        $fileFactory              = new FRSFileFactory();
+        $uploaded_links_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
         foreach ($releases as $release) {
-            $fileFactory = new FRSFileFactory();
-            $files = $fileFactory->getFRSFilesFromDb($release->getReleaseID());
-            if (empty($files)) {
+            $files          = $fileFactory->getFRSFilesFromDb($release->getReleaseID());
+            $uploaded_links = $uploaded_links_retriever->getLinksForRelease($release);
+            if (empty($files) && empty($uploaded_links)) {
                 if ($releaseFactory->userCanUpdate($group_id, $release->getReleaseID())) {
                     if ($releaseFactory->delete_release($group_id, $release->getReleaseID())) {
                         $deleted[] = release_to_soap($release);
