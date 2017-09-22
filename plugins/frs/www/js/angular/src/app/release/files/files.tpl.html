@@ -38,6 +38,28 @@
     </table>
 </div>
 
+<div class="links-list" ng-if="$ctrl.release.links.length > 0">
+    <h2 translate>Links</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th translate>Link</th>
+            <th translate>Date</th>
+            <th translate>Owner</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="link in $ctrl.release.links">
+            <td><a href="{{ link.link }}">{{ link.displayed_link }}</a></td>
+            <td>{{ link.release_time | date:'yyyy-MM-dd' }}</td>
+            <td>
+                <a ng-href="/users/{{ link.owner.username }}">{{ link.owner.display_name }}</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 <div
     class="release-note"
     ng-if="$ctrl.release.release_note"
