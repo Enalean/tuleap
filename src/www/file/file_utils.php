@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,9 @@
  */
 
 use Tuleap\FRS\FRSPackageController;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
-use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
 
 require_once('www/news/news_utils.php');
 require_once('common/autoload.php');
@@ -608,6 +608,19 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
 
         include ($GLOBALS['Language']->getContent('file/qrs_attach_file'));
         echo '</span></div>';
+
+                $renderer = TemplateRendererFactory::build()->getRenderer(
+                    ForgeConfig::get('codendi_dir') . '/src/templates/frs/'
+                );
+
+                $uploaded_links_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
+                $existing_links = $uploaded_links_retriever->getLinksForRelease($release);
+
+                $uploaded_link_spresenter_builder = new \Tuleap\FRS\UploadedLinkPresentersBuilder();
+                $existing_links_presenter = $uploaded_link_spresenter_builder->build($existing_links);
+                $uploaded_links_create_presenter = new UploadedLinkUpdateTablePresenter($existing_links_presenter);
+
+                echo $renderer->renderToString('uploaded-links-form', $uploaded_links_create_presenter);
     ?>
             </FIELDSET>
             </TD></TR>

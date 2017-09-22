@@ -38,6 +38,11 @@ class UploadedLinksRetriever
         $this->user_manager = $user_manager;
     }
 
+    /**
+     * @param \FRSRelease $release
+     *
+     * @return UploadedLink[]
+     */
     public function getLinksForRelease(\FRSRelease $release)
     {
         $links = array();
