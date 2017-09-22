@@ -114,6 +114,11 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,'cardwall_event_use_standard_javascript');
         }
 
+        if (defined('TESTMANAGEMENT_BASE_URL')) {
+            $this->addHook(\Tuleap\TestManagement\Event\GetMilestone::NAME);
+            $this->addHook(\Tuleap\TestManagement\Event\GetItemsFromMilestone::NAME);
+        }
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -1076,5 +1081,50 @@ class AgileDashboardPlugin extends Plugin {
             new MonoMilestoneBacklogItemDao(),
             $this->getArtifactFactory()
         );
+    }
+
+    public function testmanagementGetMilestone(\Tuleap\TestManagement\Event\GetMilestone $event)
+    {
+        $milestone_factory = $this->getMilestoneFactory();
+        $milestone         = $milestone_factory->getBareMilestoneByArtifactId($event->getUser(), $event->getMilestoneId());
+        $event->setMilestone($milestone);
+    }
+
+    public function testmanagementGetItemsFromMilestone(\Tuleap\TestManagement\Event\GetItemsFromMilestone $event)
+    {
+        $milestone_factory               = $this->getMilestoneFactory();
+        $backlog_strategy_factory        = $this->getBacklogStrategyFactory();
+        $backlog_item_collection_factory = $this->getBacklogItemCollectionFactory();
+
+        $user          = $event->getUser();
+        $milestone_id  = $event->getMilestoneId();
+        $milestone     = $milestone_factory->getValidatedBareMilestoneByArtifactId($user, $milestone_id);
+        $strategy      = $backlog_strategy_factory->getSelfBacklogStrategy($milestone);
+        $backlog_items = $backlog_item_collection_factory->getAllCollection($user, $milestone, $strategy, '');
+        $items_ids     = array();
+
+        foreach ($backlog_items as $item) {
+            $items_ids[] = $item->id();
+
+            if ($item->hasChildren()) {
+                $this->parseChildrenElements($item, $user, $items_ids);
+            }
+        }
+
+        $event->setItemsIds(array_unique($items_ids));
+    }
+
+    private function parseChildrenElements(AgileDashboard_Milestone_Backlog_BacklogItem $item, PFUser $user, array &$item_ids)
+    {
+        $tracker_artifact_dao = new Tracker_ArtifactDao();
+
+        $children = $tracker_artifact_dao->getChildren($item->getArtifact()->getId())
+            ->instanciateWith(array($this->getArtifactFactory(), 'getInstanceFromRow'));
+
+        foreach ($children as $child) {
+            if ($child->userCanView($user)) {
+                $item_ids[] = $child->getId();
+            }
+        }
     }
 }
