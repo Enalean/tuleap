@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\AddController;
@@ -41,10 +42,13 @@ $assets        = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/ass
 $colors        = new AllowedColorsCollection();
 $color_factory = new ColorPresenterFactory($colors);
 
+$labelable_daos = new CollectionOfLabelableDao();
+$event_manager->processEvent($labelable_daos);
+
 $router = new LabelsManagementRouter(
-    new IndexController($url_builder, $dao, $event_manager, $assets, $color_factory),
-    new DeleteController($url_builder, $dao, $event_manager),
-    new EditController($url_builder, $dao, $event_manager, $colors),
+    new IndexController($url_builder, $dao, $labelable_daos, $assets, $color_factory),
+    new DeleteController($url_builder, $dao, $labelable_daos),
+    new EditController($url_builder, $dao, $labelable_daos, $colors),
     new AddController($url_builder, $dao, $colors)
 );
 $router->process($request);

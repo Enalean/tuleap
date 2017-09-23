@@ -34,4 +34,23 @@ interface LabelableDao
      * @param int[] $array_of_label_ids
      */
     public function removeLabelsInTransaction($item_id, array $array_of_label_ids);
+
+    /**
+     * @param int $project_id
+     * @return \DataAccessResult
+     */
+    public function searchLabelsUsedInProject($project_id);
+
+    /**
+     * @param int $project_id
+     * @param int $label_id
+     */
+    public function deleteInTransaction($project_id, $label_id);
+
+    /**
+     * @param int array $project_id
+     * @param int $label_id
+     * @param int[] $label_ids_to_merge
+     */
+    public function mergeLabelsInTransaction($project_id, $label_id, array $label_ids_to_merge);
 }

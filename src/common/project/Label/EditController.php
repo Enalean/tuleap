@@ -21,10 +21,11 @@
 namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
-use EventManager;
 use Exception;
 use HTTPRequest;
+use Project;
 use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Label\CollectionOfLabelableDao;
 
 class EditController
 {
@@ -33,10 +34,6 @@ class EditController
      */
     private $dao;
     /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
      * @var LabelsManagementURLBuilder
      */
     private $url_builder;
@@ -44,17 +41,21 @@ class EditController
      * @var AllowedColorsCollection
      */
     private $allowed_colors;
+    /**
+     * @var CollectionOfLabelableDao
+     */
+    private $labelable_daos;
 
     public function __construct(
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
-        EventManager $event_manager,
+        CollectionOfLabelableDao $labelable_daos,
         AllowedColorsCollection $allowed_colors
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;
-        $this->event_manager  = $event_manager;
         $this->allowed_colors = $allowed_colors;
+        $this->labelable_daos = $labelable_daos;
     }
 
     public function edit(HTTPRequest $request)
@@ -88,7 +89,7 @@ class EditController
         $GLOBALS['HTML']->redirect($url);
     }
 
-    private function mergeLabels($project, $label_to_edit_id)
+    private function mergeLabels(Project $project, $label_to_edit_id)
     {
         $other_labels = $this->dao->searchProjectLabelsThatHaveSameName($project->getID(), $label_to_edit_id);
         if (count($other_labels) === 0) {
@@ -100,9 +101,9 @@ class EditController
             $label_ids_to_merge[] = $row['id'];
         }
 
-        $this->event_manager->processEvent(
-            new MergeProjectLabelInTransaction($project, $label_to_edit_id, $label_ids_to_merge)
-        );
+        foreach ($this->labelable_daos->getAll() as $dao) {
+            $dao->mergeLabelsInTransaction($project->getID(), $label_to_edit_id, $label_ids_to_merge);
+        }
 
         $this->dao->deleteAllLabelsInTransaction($project->getID(), $label_ids_to_merge);
     }

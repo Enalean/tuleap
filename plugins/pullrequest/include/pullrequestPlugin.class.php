@@ -21,10 +21,8 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Label\CollectionOfLabelPresenter;
-use Tuleap\Project\Label\DeleteProjectLabelInTransaction;
-use Tuleap\Project\Label\MergeProjectLabelInTransaction;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\PullRequestCreator;
@@ -68,9 +66,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES);
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook('ajax_reference_tooltip');
-        $this->addHook(CollectionOfLabelPresenter::NAME);
-        $this->addHook(DeleteProjectLabelInTransaction::NAME);
-        $this->addHook(MergeProjectLabelInTransaction::NAME);
+        $this->addHook(CollectionOfLabelableDao::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -495,27 +491,8 @@ class pullrequestPlugin extends Plugin
         }
     }
 
-    public function collectionOfLabelPresenter(CollectionOfLabelPresenter $collection)
+    public function collectionOfLabelableDao(CollectionOfLabelableDao $event)
     {
-        $dao = new PullRequestLabelDao();
-        foreach ($dao->searchLabelsUsedInProject($collection->getProject()->getID()) as $row) {
-            $collection->switchToUsed($row['id']);
-        }
-    }
-
-    public function deleteLabelInProject(DeleteProjectLabelInTransaction $event)
-    {
-        $dao = new PullRequestLabelDao();
-        $dao->deleteInTransaction($event->getProject()->getID(), $event->getLabelToDeleteId());
-    }
-
-    public function mergeLabelInProject(MergeProjectLabelInTransaction $event)
-    {
-        $dao = new PullRequestLabelDao();
-        $dao->mergeLabelsInTransaction(
-            $event->getProject()->getID(),
-            $event->getLabelToEditId(),
-            $event->getLabelIdsToMerge()
-        );
+        $event->add(new PullRequestLabelDao());
     }
 }
