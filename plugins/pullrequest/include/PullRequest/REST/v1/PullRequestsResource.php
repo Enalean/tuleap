@@ -25,6 +25,7 @@ use Luracast\Restler\RestException;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Label\Label;
+use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\Label\REST\LabelsPATCHRepresentation;
 use Tuleap\Label\REST\LabelsUpdater;
@@ -120,6 +121,12 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var Tuleap\PullRequest\Timeline\TimelineEventCreator */
     private $timeline_event_creator;
 
+    /** @var EventManager */
+    private $event_manager;
+
+    /** @var BackendLogger */
+    private $logger;
+
     /**
      * @var InlineCommentCreator
      */
@@ -178,7 +185,10 @@ class PullRequestsResource extends AuthenticatedResource
             new \System_Command()
         );
 
-        $this->labels_retriever = new LabelsCurlyCoatedRetriever(new PullRequestLabelDao());
+        $this->labels_retriever = new LabelsCurlyCoatedRetriever(
+            new PaginatedCollectionsOfLabelsBuilder(),
+            new PullRequestLabelDao()
+        );
         $this->labels_updater   = new LabelsUpdater(new LabelDao(), new PullRequestLabelDao);
     }
 
@@ -600,7 +610,7 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         } catch (PullRequestAnonymousUserException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 

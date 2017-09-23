@@ -23,6 +23,7 @@ namespace Tuleap\Project\Label;
 use Project;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabels;
+use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 
 class LabelsCurlyCoatedRetriever
 {
@@ -30,10 +31,15 @@ class LabelsCurlyCoatedRetriever
      * @var LabelDao
      */
     private $dao;
+    /**
+     * @var PaginatedCollectionsOfLabelsBuilder
+     */
+    private $builder;
 
-    public function __construct(LabelDao $dao)
+    public function __construct(PaginatedCollectionsOfLabelsBuilder $builder, LabelDao $dao)
     {
-        $this->dao = $dao;
+        $this->dao     = $dao;
+        $this->builder = $builder;
     }
 
     public function getPaginatedMatchingLabelsForProject(Project $project, $keyword, $limit, $offset)
@@ -41,11 +47,6 @@ class LabelsCurlyCoatedRetriever
         $result     = $this->dao->searchLabelsLikeKeywordByProjectId($project->getId(), $keyword, $limit, $offset);
         $total_size = $this->dao->foundRows();
 
-        $labels = array();
-        foreach ($result as $row) {
-            $labels[] = new Label($row['id'], $row['name'], $row['is_outline'], $row['color']);
-        }
-
-        return new PaginatedCollectionsOfLabels($labels, $total_size);
+        return $this->builder->build($result, $total_size);
     }
 }

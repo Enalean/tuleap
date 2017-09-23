@@ -20,8 +20,8 @@
 
 namespace Tuleap\PullRequest\Label;
 
-use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabels;
+use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\PullRequest\PullRequest;
 
 class LabelsCurlyCoatedRetriever
@@ -30,22 +30,25 @@ class LabelsCurlyCoatedRetriever
      * @var PullRequestLabelDao
      */
     private $dao;
+    /**
+     * @var PaginatedCollectionsOfLabelsBuilder
+     */
+    private $builder;
 
-    public function __construct(PullRequestLabelDao $dao)
+    public function __construct(PaginatedCollectionsOfLabelsBuilder $builder, PullRequestLabelDao $dao)
     {
-        $this->dao = $dao;
+        $this->dao     = $dao;
+        $this->builder = $builder;
     }
 
+    /**
+     * @return PaginatedCollectionsOfLabels
+     */
     public function getPaginatedLabelsForPullRequest(PullRequest $pull_request, $limit, $offset)
     {
         $result     = $this->dao->searchLabelByPullRequestId($pull_request->getId(), $limit, $offset);
         $total_size = $this->dao->foundRows();
 
-        $labels = array();
-        foreach ($result as $row) {
-            $labels[] = new Label($row['id'], $row['name'], $row['is_outline'], $row['color']);
-        }
-
-        return new PaginatedCollectionsOfLabels($labels, $total_size);
+        return $this->builder->build($result, $total_size);
     }
 }
