@@ -55,7 +55,9 @@ function initiateSelect2(container, existing_labels, labels_endpoint, available_
             if (data_that_matches_term.length === 0) {
                 return {
                     id: term,
-                    text: term
+                    text: term,
+                    is_outline: true,
+                    color: 'chrome-silver'
                 };
             }
         },
