@@ -48,9 +48,9 @@ function initiateSelect2(container, existing_labels, labels_endpoint, available_
         },
         initSelection: (element, callback) => callback(existing_labels),
         createSearchChoice: (term, data) => {
-            const data_that_matches_term = jQuery(data).filter(function() {
-                return this.text === term;
-            });
+            const data_that_matches_term = data.filter(
+                ({ text }) => text.localeCompare(term, undefined, { sensitivity: 'accent'}) === 0
+            );
 
             if (data_that_matches_term.length === 0) {
                 return {
