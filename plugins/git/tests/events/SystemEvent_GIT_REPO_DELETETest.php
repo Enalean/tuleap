@@ -47,6 +47,7 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         $this->system_event_manager  = mock('Git_SystemEventManager');
         $this->ugroups_to_notify_dao = mock('Tuleap\Git\Notifications\UgroupsToNotifyDao');
         $this->users_to_notify_dao   = mock('Tuleap\Git\Notifications\UsersToNotifyDao');
+        $this->event_manager         = mock('EventManager');
 
         $this->event = partial_mock('SystemEvent_GIT_REPO_DELETE', array('done', 'warning', 'error', 'getId'));
         $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
@@ -55,7 +56,8 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
             mock('Logger'),
             $this->system_event_manager,
             $this->ugroups_to_notify_dao,
-            $this->users_to_notify_dao
+            $this->users_to_notify_dao,
+            $this->event_manager
         );
     }
 
@@ -75,6 +77,15 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
 
     public function itAsksToDeleteRepositoryFromManifestFiles() {
         expect($this->system_event_manager)->queueGrokMirrorManifestRepoDelete($this->repository->getPath())->once();
+
+        $this->event->process();
+    }
+
+    public function itLaunchesAnEventToLetOthersDeleteStuffLinkedToTheRepository()
+    {
+        expect($this->event_manager)
+            ->processEvent(new IsAExpectation('Tuleap\Git\GitRepositoryDeletionEvent'))
+            ->once();
 
         $this->event->process();
     }

@@ -177,8 +177,7 @@ class Dao extends DataAccessObject
         ISearchOnStatus $criterion,
         $limit,
         $offset
-    )
-    {
+    ) {
         $repository_id          = $this->da->escapeInt($repository_id);
         $limit                  = $this->da->escapeInt($limit);
         $offset                 = $this->da->escapeInt($offset);
@@ -194,7 +193,8 @@ class Dao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    private function getStatusStatements(ISearchOnStatus $criterion) {
+    private function getStatusStatements(ISearchOnStatus $criterion)
+    {
         $where_status_statement = '1';
 
         if ($criterion->shouldRetrieveOpenPullRequests() && $criterion->shouldRetrieveClosedPullRequests()) {
@@ -263,4 +263,26 @@ class Dao extends DataAccessObject
         return $this->update($sql);
     }
 
+    public function deleteAllPullRequestsOfRepository($repository_id)
+    {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "DELETE pr, label, comments, inline, event
+                FROM plugin_pullrequest_review AS pr
+                    LEFT JOIN plugin_pullrequest_label AS label ON (
+                        pr.id = label.pull_request_id
+                    )
+                    LEFT JOIN plugin_pullrequest_comments AS comments ON (
+                        pr.id = comments.pull_request_id
+                    )
+                    LEFT JOIN plugin_pullrequest_inline_comments AS inline ON (
+                        pr.id = inline.pull_request_id
+                    )
+                    LEFT JOIN plugin_pullrequest_timeline_event AS event ON (
+                        pr.id = event.pull_request_id
+                    )
+                WHERE pr.repository_id = $repository_id";
+
+        $this->update($sql);
+    }
 }

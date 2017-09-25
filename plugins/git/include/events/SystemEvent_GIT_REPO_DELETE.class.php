@@ -17,6 +17,8 @@
   * You should have received a copy of the GNU General Public License
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
+
+use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 
@@ -28,6 +30,9 @@ require_once('common/system_event/SystemEvent.class.php');
  */
 class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
     const NAME = 'GIT_REPO_DELETE';
+
+    /** @var EventManager */
+    private $event_manager;
 
     /** @var GitRepositoryFactory */
     private $repository_factory;
@@ -49,13 +54,15 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         Logger $logger,
         Git_SystemEventManager $system_event_manager,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
-        UsersToNotifyDao $users_to_notify_dao
+        UsersToNotifyDao $users_to_notify_dao,
+        EventManager $event_manager
     ) {
         $this->repository_factory    = $repository_factory;
         $this->logger                = $logger;
         $this->system_event_manager  = $system_event_manager;
         $this->ugroups_to_notify_dao = $ugroups_to_notify_dao;
         $this->users_to_notify_dao   = $users_to_notify_dao;
+        $this->event_manager         = $event_manager;
     }
 
     public function process() {
@@ -94,6 +101,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
             $this->users_to_notify_dao->deleteByRepositoryId($repository->getId());
             $this->ugroups_to_notify_dao->deleteByRepositoryId($repository->getId());
             $this->system_event_manager->queueGrokMirrorManifestRepoDelete($path);
+            $this->event_manager->processEvent(new GitRepositoryDeletionEvent($repository));
             $repository->delete();
         } catch (Exception $e) {
             $this->error($e->getMessage());

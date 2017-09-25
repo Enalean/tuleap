@@ -22,6 +22,7 @@ require_once 'autoload.php';
 require_once 'constants.php';
 
 use Tuleap\Label\CollectionOfLabelableDao;
+use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Router;
@@ -82,6 +83,7 @@ class pullrequestPlugin extends Plugin
             $this->addHook(GIT_VIEW);
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
             $this->addHook(REST_GIT_BUILD_STATUS, 'gitRestBuildStatus');
+            $this->addHook(GitRepositoryDeletionEvent::NAME);
         }
     }
 
@@ -494,5 +496,11 @@ class pullrequestPlugin extends Plugin
     public function collectionOfLabelableDao(CollectionOfLabelableDao $event)
     {
         $event->add(new PullRequestLabelDao());
+    }
+
+    public function gitRepositoryDeletion(GitRepositoryDeletionEvent $event)
+    {
+        $dao = new Dao();
+        $dao->deleteAllPullRequestsOfRepository($event->getRepository()->getId());
     }
 }
