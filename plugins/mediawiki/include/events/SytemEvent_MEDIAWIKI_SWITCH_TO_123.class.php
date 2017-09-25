@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__)."/../Migration/MediawikiMigrator.php";
-require_once dirname(__FILE__)."/../MediawikiVersionManager.php";
-
 class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
     const NAME = 'MEDIAWIKI_SWITCH_TO_123';
+
+    const ALL = 'all';
 
     /** @var Mediawiki_Migration_MediawikiMigrator **/
     private $mediawiki_migrator;
@@ -35,6 +34,9 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
 
     /** @var MediawikiMLEBExtensionManager */
     private $mleb_manager;
+
+    /** @var MediawikiSiteAdminResourceRestrictor */
+    private $resource_restrictor;
 
     public function injectDependencies(
         Mediawiki_Migration_MediawikiMigrator $mediawiki_migrator,
@@ -49,13 +51,11 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
     }
 
     public function process() {
-        $project = $this->getProjectFromParameters();
 
         try {
-            $this->mediawiki_migrator->migrateProjectTo123($project);
-            $this->version_manager->saveVersionForProject($project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
-            if ($this->mleb_manager->isMLEBExtensionInstalled()) {
-                $this->mleb_manager->saveMLEBActivationForProject($project);
+            $projects = $this->getProjectsFromParameters();
+            foreach ($projects as $project) {
+                $this->migrateProject($project);
             }
 
             $this->done();
@@ -64,17 +64,42 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
         }
     }
 
-    private function getProjectFromParameters() {
+    private function migrateProject(Project $project)
+    {
+        $this->mediawiki_migrator->migrateProjectTo123($project);
+        $this->version_manager->saveVersionForProject($project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
+        if ($this->mleb_manager->isMLEBExtensionInstalled()) {
+            $this->mleb_manager->saveMLEBActivationForProject($project);
+        }
+    }
+
+    private function getProjectsFromParameters() {
+        if ($this->areAllProjectsMigrated()) {
+            $projects = array();
+            foreach ($this->version_manager->getAllProjectsToMigrateTo123() as $project_id) {
+                $projects[] = $this->project_manager->getProject($project_id);
+            }
+            return $projects;
+        }
         $project_id = $this->getProjectIdFromParameters();
-        return $this->project_manager->getProject($project_id);
+        return array($this->project_manager->getProject($project_id));
+    }
+
+    private function areAllProjectsMigrated()
+    {
+        $parameters = $this->getParametersAsArray();
+        return isset($parameters[0]) && $parameters[0] === self::ALL;
     }
 
     private function getProjectIdFromParameters() {
         $parameters = $this->getParametersAsArray();
-        return intval($parameters[0]);
+        return (int) $parameters[0];
     }
 
     public function verbalizeParameters($with_link) {
-       return 'Project: '. $this->getProjectIdFromParameters();
+        if ($this->areAllProjectsMigrated()) {
+            return 'All projects';
+        }
+        return 'Project: '. $this->getProjectIdFromParameters();
     }
 }

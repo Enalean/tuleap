@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,8 @@ class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao {
         $sql = "SELECT groups.*
                 FROM groups
                   JOIN plugin_mediawiki_site_restricted_features mwf ON (mwf.project_id = groups.group_id)
-                WHERE mwf.feature = $resource_id";
+                WHERE mwf.feature = $resource_id
+                  AND status IN ('A', 's')";
         return $this->retrieve($sql);
     }
 
@@ -60,5 +61,28 @@ class MediawikiSiteAdminResourceRestrictorDao extends RestrictedResourceDao {
                 WHERE mwf.feature = $resource_id
                   AND g.unix_group_name = $wikiname";
         return $this->retrieve($sql)->count() > 0;
+    }
+
+    public function getRemainingMediawikiToConvert()
+    {
+        $sql = "SELECT groups.* ".$this->getRemainingMediawikiToConvertQuery();
+        return $this->retrieve($sql);
+    }
+
+    public function countRemainingMediawikiToConvert()
+    {
+        $sql = "SELECT count(1) as nb ".$this->getRemainingMediawikiToConvertQuery();
+        $row = $this->retrieveFirstRow($sql);
+        return $row['nb'];
+    }
+
+    private function getRemainingMediawikiToConvertQuery()
+    {
+        return "FROM plugin_mediawiki_version version
+                  JOIN groups ON (groups.group_id = version.project_id)
+                  LEFT JOIN plugin_mediawiki_site_restricted_features restricted USING (project_id)
+                WHERE groups.status in ('A', 's')
+                AND version.mw_version = '1.20'
+                AND restricted.project_id IS NULL";
     }
 }

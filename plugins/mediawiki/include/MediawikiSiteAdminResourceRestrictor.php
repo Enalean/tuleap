@@ -47,4 +47,17 @@ class MediawikiSiteAdminResourceRestrictor {
             return $project_manager->getProjectFromDbRow($row);
         });
     }
+
+    public function searchProjectsToAllow()
+    {
+        $project_manager = $this->project_manager;
+        return $this->dao->getRemainingMediawikiToConvert()->instanciateWith(function ($row) use ($project_manager) {
+            return $project_manager->getProjectFromDbRow($row);
+        });
+    }
+
+    public function countProjectsToAllow()
+    {
+        return $this->dao->countRemainingMediawikiToConvert();
+    }
 }

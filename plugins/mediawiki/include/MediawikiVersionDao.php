@@ -40,4 +40,15 @@
 
         return $this->retrieveFirstRow($sql);
     }
- }
+
+    public function getAllMediawikiToMigrate($from_version)
+    {
+        $from_version = $this->da->quoteSmart($from_version);
+        $sql = "SELECT groups.group_id
+                FROM groups
+                INNER JOIN plugin_mediawiki_version mw_version ON (mw_version.project_id = groups.group_id)
+                WHERE mw_version = $from_version
+                AND groups.status IN ('A', 's')";
+        return $this->retrieve($sql);
+    }
+}

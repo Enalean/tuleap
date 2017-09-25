@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014, 2015. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ require_once dirname(__FILE__) .'/../include/MediawikiSiteAdminController.class.
  */
 require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
-$vWhiteList = new Valid_WhiteList('action', array('save_permissions', 'save_language', 'index', 'site_index', 'site_update_allowed_project_list'));
+$vWhiteList = new Valid_WhiteList('action', array('save_permissions', 'save_language', 'index', 'site_index', 'site_update_allowed_project_list', 'site_update_allow_all_projects'));
 $vWhiteList->required();
 
 $action = $request->getValidated('action', $vWhiteList, 'index');
@@ -43,6 +43,7 @@ switch ($action) {
         break;
     case 'site_index':
     case 'site_update_allowed_project_list':
+    case 'site_update_allow_all_projects':
         $controller = new MediawikiSiteAdminController(new AdminPageRenderer());
         $controller->$action($request);
         break;
