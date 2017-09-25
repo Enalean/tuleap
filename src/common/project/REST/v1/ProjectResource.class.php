@@ -20,6 +20,7 @@
 namespace Tuleap\Project\REST\v1;
 
 use Tuleap\Label\Label;
+use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
@@ -96,6 +97,12 @@ class ProjectResource extends AuthenticatedResource {
     /** @var ProjectCreator*/
     private $project_creator;
 
+    /** @var ReferenceManager */
+    private $reference_manager;
+
+    /** @var EventManager */
+    private $event_manager;
+
     /**
      * @var UgroupDuplicator
      */
@@ -151,7 +158,10 @@ class ProjectResource extends AuthenticatedResource {
             $force_activation
         );
 
-        $this->labels_retriever = new LabelsCurlyCoatedRetriever(new LabelDao());
+        $this->labels_retriever = new LabelsCurlyCoatedRetriever(
+            new PaginatedCollectionsOfLabelsBuilder(),
+            new LabelDao()
+        );
     }
 
     /**
