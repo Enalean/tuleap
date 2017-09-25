@@ -44,7 +44,7 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
                         plugin_pullrequest_label.label_id = project_label.id
                         AND plugin_pullrequest_label.pull_request_id = $pull_request_id
                     )
-                ORDER BY project_label.id
+                ORDER BY project_label.is_outline, project_label.name
                 LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
