@@ -21,12 +21,11 @@
 namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
-use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
-use Tuleap\Label\AllowedColorsCollection;
+use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
 
@@ -36,10 +35,6 @@ class IndexController
      * @var LabelDao
      */
     private $dao;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
     /**
      * @var LabelsManagementURLBuilder
      */
@@ -52,19 +47,23 @@ class IndexController
      * @var ColorPresenterFactory
      */
     private $color_factory;
+    /**
+     * @var CollectionOfLabelableDao
+     */
+    private $labelable_daos;
 
     public function __construct(
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
-        EventManager $event_manager,
+        CollectionOfLabelableDao $labelable_daos,
         IncludeAssets $assets,
         ColorPresenterFactory $color_factory
     ) {
-        $this->url_builder   = $url_builder;
-        $this->dao           = $dao;
-        $this->event_manager = $event_manager;
-        $this->assets        = $assets;
-        $this->color_factory = $color_factory;
+        $this->url_builder    = $url_builder;
+        $this->dao            = $dao;
+        $this->labelable_daos = $labelable_daos;
+        $this->assets         = $assets;
+        $this->color_factory  = $color_factory;
     }
 
     public function display(HTTPRequest $request)
@@ -93,7 +92,7 @@ class IndexController
 
     private function getCollectionOfLabelPresenter(Project $project)
     {
-        $collection = new CollectionOfLabelPresenter($project);
+        $collection = new CollectionOfLabelPresenter();
         foreach ($this->dao->searchLabelsUsedByProject($project->getID()) as $row) {
             $is_used           = false;
             $colors_presenters = $this->color_factory->getColorsPresenters($row['color']);
@@ -109,7 +108,11 @@ class IndexController
                 )
             );
         }
-        $this->event_manager->processEvent($collection);
+        foreach ($this->labelable_daos->getAll() as $dao) {
+            foreach ($dao->searchLabelsUsedInProject($project->getID()) as $row) {
+                $collection->switchToUsed($row['id']);
+            }
+        }
 
         return $collection;
     }

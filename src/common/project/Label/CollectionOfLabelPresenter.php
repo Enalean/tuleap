@@ -23,34 +23,14 @@ namespace Tuleap\Project\Label;
 use Project;
 use Tuleap\Event\Dispatchable;
 
-class CollectionOfLabelPresenter implements Dispatchable
+class CollectionOfLabelPresenter
 {
-    const NAME = 'collection_of_label_presenter';
-
     /** @var LabelPresenter[] */
     private $labels_presenter = array();
-
-    /**
-     * @var Project
-     */
-    private $project;
-
-    public function __construct(Project $project)
-    {
-        $this->project = $project;
-    }
 
     public function add(LabelPresenter $presenter)
     {
         $this->labels_presenter[$presenter->id] = $presenter;
-    }
-
-    /**
-     * @return Project
-     */
-    public function getProject()
-    {
-        return $this->project;
     }
 
     public function switchToUsed($label_id)

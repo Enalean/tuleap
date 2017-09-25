@@ -21,9 +21,9 @@
 namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
-use EventManager;
 use Exception;
 use HTTPRequest;
+use Tuleap\Label\CollectionOfLabelableDao;
 
 class DeleteController
 {
@@ -32,19 +32,19 @@ class DeleteController
      */
     private $dao;
     /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
      * @var LabelsManagementURLBuilder
      */
     private $url_builder;
+    /**
+     * @var CollectionOfLabelableDao
+     */
+    private $labelable_daos;
 
-    public function __construct(LabelsManagementURLBuilder $url_builder, LabelDao $dao, EventManager $event_manager)
+    public function __construct(LabelsManagementURLBuilder $url_builder, LabelDao $dao, CollectionOfLabelableDao $labelable_daos)
     {
         $this->url_builder   = $url_builder;
         $this->dao           = $dao;
-        $this->event_manager = $event_manager;
+        $this->labelable_daos = $labelable_daos;
     }
 
     public function delete(HTTPRequest $request)
@@ -58,7 +58,9 @@ class DeleteController
 
         $this->dao->startTransaction();
         try {
-            $this->event_manager->processEvent(new DeleteProjectLabelInTransaction($project, $label_to_delete_id));
+            foreach ($this->labelable_daos->getAll() as $dao) {
+                $dao->deleteInTransaction($project->getID(), $label_to_delete_id);
+            }
             $this->dao->deleteInTransaction($project->getID(), $label_to_delete_id);
             $this->dao->commit();
             $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has been deleted from the project.'));

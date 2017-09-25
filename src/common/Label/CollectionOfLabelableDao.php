@@ -18,48 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Label;
+namespace Tuleap\Label;
 
-use Project;
 use Tuleap\Event\Dispatchable;
 
-class DeleteProjectLabelInTransaction implements Dispatchable
+class CollectionOfLabelableDao implements Dispatchable
 {
-    const NAME = 'deleteLabelInProject';
+    const NAME = 'collectionOfLabelableDao';
 
-    /**
-     * @var Project
-     */
-    private $project;
+    /** @var LabelableDao[] */
+    private $daos = array();
 
-    /**
-     * @var int
-     */
-    private $label_to_delete_id;
-
-    /**
-     * @param Project $project
-     * @param int $label_to_delete_id
-     */
-    public function __construct(Project $project, $label_to_delete_id)
+    public function add(LabelableDao $dao)
     {
-        $this->project            = $project;
-        $this->label_to_delete_id = $label_to_delete_id;
+        $this->daos[] = $dao;
     }
 
     /**
-     * @return Project
+     * @return LabelableDao[]
      */
-    public function getProject()
+    public function getAll()
     {
-        return $this->project;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLabelToDeleteId()
-    {
-        return $this->label_to_delete_id;
+        return $this->daos;
     }
 }
