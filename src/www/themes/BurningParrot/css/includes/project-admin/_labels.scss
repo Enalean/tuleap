@@ -40,6 +40,16 @@
     width: 50%;
 }
 
+.project-labels-table-name-icon {
+    margin: 0 5px 0 0;
+
+    @for $i from 1 through length($tlp-swatch-color-names) {
+        &.project-labels-table-name-icon-#{nth($tlp-swatch-color-names, $i)} {
+            color: nth($tlp-swatch-color-primaries, $i);
+        }
+    }
+}
+
 .project-labels-table-is-used-help {
     cursor: help;
 }

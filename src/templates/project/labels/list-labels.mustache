@@ -48,12 +48,12 @@
                             {{# labels }}
                                 <tr>
                                     <td class="tlp-table-cell-filterable">
-                                        <span class="tlp-badge-primary
-                                                {{# is_outline }}tlp-badge-outline{{/ is_outline }}
-                                                tlp-badge-{{ color }}"
-                                        >
-                                            {{ name }}
-                                        </span>
+                                        <i class="fa
+                                            {{# is_outline }}fa-circle-o{{/is_outline}}
+                                            {{^ is_outline }}fa-circle{{/is_outline}}
+                                            project-labels-table-name-icon
+                                            project-labels-table-name-icon-{{ color }}
+                                        "></i> {{ name }}
                                     </td>
                                     <td>
                                         {{# is_used }}
