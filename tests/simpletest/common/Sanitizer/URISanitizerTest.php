@@ -27,9 +27,27 @@ class URISanitizerTest extends \TuleapTestCase
         $validator_local_uri = mock('Valid_LocalURI');
         stub($validator_local_uri)->validate()->returns(true);
 
-        $uri_sanitizer = new URISanitizer($validator_local_uri);
+        $validator_ftp_uri = mock('Valid_FTPURI');
+        stub($validator_ftp_uri)->validate()->returns(false);
+
+        $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
 
         $uri = '/valid_uri';
+
+        $this->assertEqual($uri_sanitizer->sanitizeForHTMLAttribute($uri), $uri);
+    }
+
+    public function itDoesNotTouchValidFTPURI()
+    {
+        $validator_local_uri = mock('Valid_LocalURI');
+        stub($validator_local_uri)->validate()->returns(false);
+
+        $validator_ftp_uri = mock('Valid_FTPURI');
+        stub($validator_ftp_uri)->validate()->returns(true);
+
+        $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
+
+        $uri = 'ftp://example.com';
 
         $this->assertEqual($uri_sanitizer->sanitizeForHTMLAttribute($uri), $uri);
     }
@@ -39,7 +57,10 @@ class URISanitizerTest extends \TuleapTestCase
         $validator_local_uri = mock('Valid_LocalURI');
         stub($validator_local_uri)->validate()->returns(false);
 
-        $uri_sanitizer = new URISanitizer($validator_local_uri);
+        $validator_ftp_uri = mock('Valid_FTPURI');
+        stub($validator_ftp_uri)->validate()->returns(false);
+
+        $uri_sanitizer = new URISanitizer($validator_local_uri, $validator_ftp_uri);
 
         $uri = 'invalid_uri';
 

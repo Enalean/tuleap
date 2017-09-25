@@ -31,4 +31,18 @@ class UploadedLinksDao extends \DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function create($name, $link, $user_id, $release_id, $release_time)
+    {
+        $release_id   = $this->da->escapeInt($release_id);
+        $user_id      = $this->da->escapeInt($user_id);
+        $release_time = $this->da->escapeInt($release_time);
+        $name         = $this->da->quoteSmart($name);
+        $link         = $this->da->quoteSmart($link);
+
+        $sql = "INSERT INTO frs_uploaded_links (name, link, owner_id, release_id, release_time)
+                  VALUES ($name, $link, $user_id, $release_id, $release_time)";
+
+        return $this->update($sql);
+    }
 }

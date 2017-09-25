@@ -85,7 +85,7 @@ extends WikiPlugin
             return $this->error(_("Bad url in src: remove all of <, >, \""));
         }
 
-        $uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_LocalURI());
+        $uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
         $sanitized_src = $uri_sanitizer->sanitizeForHTMLAttribute($src);
 
         $params = array('title' => _("Transcluded page"),

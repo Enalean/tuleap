@@ -26,15 +26,20 @@ class URISanitizer
      * @var \Valid_LocalURI
      */
     private $validator_local_uri;
+    /**
+     * @var \Valid_FTPURI
+     */
+    private $validator_ftp_uri;
 
-    public function __construct(\Valid_LocalURI $validator_local_uri)
+    public function __construct(\Valid_LocalURI $validator_local_uri, \Valid_FTPURI $validator_ftp_uri)
     {
         $this->validator_local_uri = $validator_local_uri;
+        $this->validator_ftp_uri   = $validator_ftp_uri;
     }
 
     public function sanitizeForHTMLAttribute($uri)
     {
-        if (! $this->validator_local_uri->validate($uri)) {
+        if (! $this->validator_local_uri->validate($uri) && ! $this->validator_ftp_uri->validate($uri)) {
             return '';
         }
 

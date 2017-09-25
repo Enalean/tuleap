@@ -3,7 +3,7 @@ function replace(expr,a,b) {
 	while (i!=-1) {
 		i=expr.indexOf(a,i);
 		if (i>=0) {
-			expr=expr.substring(0,i)+b+expr.substring(i+a.length);	    
+			expr=expr.substring(0,i)+b+expr.substring(i+a.length);
 			i+=b.length;
 		}
 	}
@@ -12,14 +12,14 @@ function replace(expr,a,b) {
 
 function update_news() {
 	var rel_name = $('release_name');
-	var subject = $('release_news_subject');      
+	var subject = $('release_news_subject');
 	var details = $('release_news_details');
 
 	var a = this.relname;
 	var b = rel_name.value;
 	var expr1 = subject.value;
 	var expr2 = details.value;
-    
+
 	new_subject = replace(expr1,a,b);
 	new_details = replace(expr2,a,b);
 	subject.value = new_subject;
@@ -40,13 +40,13 @@ function build_select_file(number) {
         selects[number].removeChild(selects[number].lastChild);
     }
     /**/
-    
+
     //remove all ftp files aldready selected in the avalaible ftp file list (result in the non_used_ftp_files)
     var non_used_ftp_files = available_ftp_files;
     used_ftp_files.each(function(num){
         non_used_ftp_files = non_used_ftp_files.without(num);
     });
-    
+
     //for each non used ftp files, add a corresponding option ligne (used in the select files)
     var builder_node_files = [];
     non_used_ftp_files.each(function(num){
@@ -56,9 +56,9 @@ function build_select_file(number) {
     });
     var opts = [
         Builder.node('option', {value:'-1'}, choose),
-        Builder.node('optgroup', {label:local_file}, 
+        Builder.node('optgroup', {label:local_file},
             [Builder.node('option', {value:'-2'}, browse)]),
-        Builder.node('optgroup', {label:scp_ftp_files}, 
+        Builder.node('optgroup', {label:scp_ftp_files},
             builder_node_files)
     ];
     opts.each(function (opt) {
@@ -71,76 +71,76 @@ function build_select_file(number) {
 function add_new_file() {
 	nb_files ++;
 	var id = nb_rows++;
-	
+
 	var builder_node_processor = [];
 	var builder_node_type = [];
 
-			
-	//TR tag construction		 	
+
+	//TR tag construction
 	var row = Builder.node('tr', {id:'row_'+id});
-	
+
 	//TD tag constuction, add the trash image this tag (used to remove the line)
 	var cell_trash = Builder.node('td');
 	var image = Builder.node('img', {src:'./../images/delete.png', onclick:'delete_file(\'row_'+id+'\','+id+')', style:'cursor:pointer'});
-			
+
 	row.appendChild(cell_trash);
-			
+
 	//TD tag constuction, add the select file boxe to this tag (used to choose the file)
 	var cell = Builder.node('td', {id:'td_file_'+id});
 	var select = Builder.node('select', {name:'ftp_file_list'});
     selects[current_select_number] = select;
     build_select_file(current_select_number);
-			
+
 	//add the onchange event on the select boxe
 	Event.observe(select, 'change', (function (evt, current_select_number, id, cell_trash, image) {
         onselectchange(this, current_select_number, id, cell_trash, image);
 	}).bindAsEventListener(select, current_select_number, id, cell_trash, image), true);
 	cell.appendChild(select);
-    
+
 	//Browse file field creation
 	var file = Builder.node('input', {'type':'file', id:'file_'+id, name:'file[]'});
 	Element.hide(file);
 	cell.appendChild(file);
-		
+
 	//ftp file field creation
 	var ftp_file = Builder.node('input', {'type':'hidden', id:'ftp_file_'+id, name:'ftp_file[]'});
 	Element.hide(ftp_file);
 	cell.appendChild(ftp_file);
 
 	row.appendChild(cell);
-			
-			
-	//for each processor, add a corresponding option ligne 			
+
+
+	//for each processor, add a corresponding option ligne
 	builder_node_processor.push(Builder.node('option', {value:'100'}, choose));
 	processor_id.each(function(id, item){
 	 		builder_node_processor.push(Builder.node('option', {value:id}, processor_name[item]));
 		 	});
-			
+
 	//TD tag constuction, add the select processor type boxe to this tag (used to choose the processor)
 	cell = Builder.node('td');
 	var select = Builder.node('select', {id:'processor_'+id}, builder_node_processor);
 	select.options[0].selected = 'selected';
 	cell.appendChild(select);
 	row.appendChild(cell);
-	
-	//for each type, add a corresponding option ligne 			
+
+	//for each type, add a corresponding option ligne
 	builder_node_type.push(Builder.node('option', {value:'100'}, choose));
 	type_id.each(function(id, item){
 		 		builder_node_type.push(Builder.node('option', {value:id}, type_name[item]));
 			 	});
-			
+
 	//TD tag constuction, add the select file type boxe to this tag (used to choose the type)
 	cell = Builder.node('td');
 	var select = Builder.node('select', {id:'type_'+id}, builder_node_type);
 	select.options[0].selected = 'selected';
 	cell.appendChild(select);
 	row.appendChild(cell);
-	
+
 
 	//Add field for reference checksum
 	cell = Builder.node('td');
 	var md5sum = Builder.node('input', {'type':'text', id:'reference_md5_'+id, size: 36, name:'reference_md5'});
-	cell.appendChild(md5sum);	
+	cell.appendChild(md5sum);
 	row.appendChild(cell);
 
     cell = Builder.node('td');
@@ -150,6 +150,33 @@ function add_new_file() {
 
 	$('files_body').appendChild(row);
     current_select_number++;
+}
+
+function add_new_link(event) {
+    event.preventDefault();
+    var table = document.getElementById('frs-uploaded-link-creation');
+
+    table.removeClassName('frs-uploaded-link-creation');
+
+    var row = table.insertRow(-1);
+    var last_insert_row_id = table.getElementsByTagName("tr").length;
+
+    var cell_name = row.insertCell(0);
+    var cell_link = row.insertCell(1);
+
+    cell_name.innerHTML = '<input type="text"' +
+        ' name="uploaded-link-name[' + last_insert_row_id + ']" ' +
+        ' id="uploaded-link-name[' + last_insert_row_id + ']" ' +
+        '/>';
+
+    cell_link.innerHTML = '<input type="text" ' +
+        'name="uploaded-link[' + last_insert_row_id + ']" ' +
+        'id="uploaded-link[' + last_insert_row_id + ']" ' +
+        'size="60"' +
+        'placeholder="https://example.com"' +
+        'pattern="(https?|ftps?)://.+"' +
+        'required ' +
+        '/>';
 }
 
 function onselectchange(select, number, id, cell_trash, image) {
@@ -192,7 +219,7 @@ function onselectchange(select, number, id, cell_trash, image) {
         $('reference_md5_'+id).name = 'ftp_reference_md5[]';
         cell_trash.appendChild(image);
         $('td_file_'+id).innerHTML += select.options[select.selectedIndex].value;
-        
+
         //remove entry from other select boxes
         $H(selects).keys().each(function (number) {
                 build_select_file(number);
@@ -217,7 +244,7 @@ function delete_file(row_id, id){
 }
 
 function show_upload_change_log(){
-	Element.hide('cl_upload_link'); 
+	Element.hide('cl_upload_link');
 	Element.hide('change_log_area');
 	Element.show('upload_change_log');
 	Element.show('cancel_change_log');
@@ -233,7 +260,7 @@ function cancel_update_change_log(){
 	Element.insert('uploaded_change_log', {after:'<input type="button" id="cancel_change_log" name="cancel_change_log"  size="30" value="cancel" onclick="cancel_update_change_log(); return false;">'});
 	Element.hide('cancel_change_log');
 }
-		
+
 function add_change_log(){
 	Element.hide('add_change_log');
 	Element.show('change_log_title');
@@ -243,7 +270,7 @@ function add_change_log(){
 }
 
 function show_upload_notes(){
-	Element.show('upload_notes'); 
+	Element.show('upload_notes');
 	Element.hide('rn_upload_link');
 	Element.insert('uploaded_notes', {after:'<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">'});
 	Element.hide('release_notes_area');
@@ -259,10 +286,10 @@ function cancel_update_notes(){
 	Element.insert('uploaded_notes', {after:'<input type="button" id="cancel_notes" name="cancel_notes"  size="30" value="cancel" onclick="cancel_update_notes(); return false;">'});
 	Element.hide('cancel_notes');
 }
-		
+
 function view_change_permissions(){
 	Element.hide('default_permissions');
-	Element.show('permissions'); 
+	Element.show('permissions');
 }
 
 function refresh_file_list(){
@@ -277,10 +304,10 @@ function refresh_file_list(){
                     $H(selects).keys().each(function (number) {
                             build_select_file(number);
                     });
-        	   }).bind(this) 
+				}).bind(this)
 			  });
 }
-		
+
 Event.observe(window, 'load', function() {
 	//Add new file part
 	//Element.hide('row_0');
@@ -291,14 +318,14 @@ Event.observe(window, 'load', function() {
 	Element.insert('files_help', {after:'<br/><a href="#refresh_file_list" onclick="refresh_file_list(); return false;">'+refresh_files_list+'<a>'});
 	Element.insert('files', {after:'<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>'});
 	Element.insert('files', {after:'<a href="#add_new_file" onclick="add_new_file(); return false;">'+add_file_text+'<a>'});
-	
+
 	//Upload files help
 	Element.hide('files_help');
-			
+
 	//Release Notes
 	Element.hide('upload_notes');
 	Element.insert('release_notes', {after:'<a id="rn_upload_link" href="#upload_release_notes" onclick="show_upload_notes();return false;">'+upload_text+'</a>'});
-		
+
 	//Change Log
 	if((release_mode == 'edition' && $('text_area_change_log').value=='') || release_mode == 'creation'){
 		Element.hide('change_log_title');
@@ -310,13 +337,13 @@ Event.observe(window, 'load', function() {
 		Element.hide('cancel_change_log');
 		Element.hide('upload_change_log');
 		Element.insert('change_log', {after:'<a id="cl_upload_link" href="#upload_change_log" onclick="show_upload_change_log(); return false;">'+upload_text+'</a>'});
-	}		
+	}
 	//News
 	Element.hide('tr_subject');
 	Element.hide('tr_details');
 	Element.hide('tr_public');
 	Element.hide('tr_private');
-			
+
 	if($('submit_news')!=null){
 		Event.observe($('submit_news'), 'click', function(){
 			if($('submit_news').checked){
@@ -332,15 +359,15 @@ Event.observe(window, 'load', function() {
 			}
 		});
 	}
-			
+
 	//Permissions
 	if($('package_id')!=null){
 		Event.observe($('package_id'), 'change', function(){
 			if(release_mode == 'creation'){
 				new Ajax.Updater('permissions_list', 'frsajax.php?group_id='+group_id +'&action=permissions_frs_package&package_id=' + $('package_id').value,{ method:'get' });
-			}		
-				
-			
+			}
+
+
 		});
 	}
 	Element.hide('permissions');
@@ -349,8 +376,8 @@ Event.observe(window, 'load', function() {
 											'<TD>'+default_permissions_text+
     '<a href="#change_permissions" onclick="view_change_permissions(); return false;">'+view_change_text+'</a></TD></TR>'});
 
-		
-	
+
+
 });
 
 document.observe('dom:loaded', function () {
