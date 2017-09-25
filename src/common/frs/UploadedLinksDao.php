@@ -45,4 +45,13 @@ class UploadedLinksDao extends \DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function deleteByReleaseId($release_id)
+    {
+        $release_id = $this->da->escapeInt($release_id);
+
+        $sql = "DELETE FROM frs_uploaded_links WHERE release_id = $release_id";
+
+        $this->update($sql);
+    }
 }
