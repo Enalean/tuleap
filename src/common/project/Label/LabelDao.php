@@ -42,10 +42,10 @@ class LabelDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function createIfNeededInTransaction($project_id, $name)
+    public function createIfNeededInTransaction($project_id, $new_name, array &$new_labels)
     {
         $project_id = $this->da->escapeInt($project_id);
-        $name       = $this->da->quoteSmart($name);
+        $name       = $this->da->quoteSmart($new_name);
 
         $sql = "SELECT id
                 FROM project_label
@@ -57,6 +57,7 @@ class LabelDao extends DataAccessObject
 
         $sql = "INSERT INTO project_label (project_id, name, is_outline, color)
                 VALUES ($project_id, $name, 1, 'chrome-silver')";
+        $new_labels[] = $new_name;
 
         return $this->updateAndGetLastId($sql);
     }
@@ -189,5 +190,14 @@ class LabelDao extends DataAccessObject
             $this->rollBack();
             throw $exception;
         }
+    }
+
+    public function getLabelById($id)
+    {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "SELECT * FROM project_label WHERE id = $id";
+
+        return $this->retrieveFirstRow($sql);
     }
 }

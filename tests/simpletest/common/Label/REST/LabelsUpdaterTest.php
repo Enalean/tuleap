@@ -40,6 +40,9 @@ class LabelsUpdaterTest extends TuleapTestCase
     /** @var LabelableDao */
     private $item_label_dao;
 
+    /** @var ProjectHistoryDao */
+    private $history_dao;
+
     /** @var Labelable */
     private $item;
 
@@ -50,7 +53,8 @@ class LabelsUpdaterTest extends TuleapTestCase
         $this->item              = stub('Tuleap\Label\Labelable')->getId()->returns(101);
         $this->item_label_dao    = mock('Tuleap\Label\LabelableDao');
         $this->project_label_dao = mock('Tuleap\Project\Label\LabelDao');
-        $this->updater           = new LabelsUpdater($this->project_label_dao, $this->item_label_dao);
+        $this->history_dao       = mock('ProjectHistoryDao');
+        $this->updater           = new LabelsUpdater($this->project_label_dao, $this->item_label_dao, $this->history_dao);
         $this->project_id        = 66;
     }
 
@@ -158,7 +162,7 @@ class LabelsUpdaterTest extends TuleapTestCase
 
     public function itCreatesLabelToAdd()
     {
-        stub($this->project_label_dao)->createIfNeededInTransaction(66, 'Emergency Fix')->returns(10);
+        stub($this->project_label_dao)->createIfNeededInTransaction(66, 'Emergency Fix', '*')->returns(10);
 
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -179,7 +183,7 @@ class LabelsUpdaterTest extends TuleapTestCase
             $this->buildLabelToCreateRepresentation('  Emergency Fix  ')
         );
 
-        expect($this->project_label_dao)->createIfNeededInTransaction(66, 'Emergency Fix')->once();
+        expect($this->project_label_dao)->createIfNeededInTransaction(66, 'Emergency Fix', '*')->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }

@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use EventManager;
 use Luracast\Restler\RestException;
+use ProjectHistoryDao;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Label\Label;
@@ -189,7 +190,7 @@ class PullRequestsResource extends AuthenticatedResource
             new PaginatedCollectionsOfLabelsBuilder(),
             new PullRequestLabelDao()
         );
-        $this->labels_updater   = new LabelsUpdater(new LabelDao(), new PullRequestLabelDao);
+        $this->labels_updater   = new LabelsUpdater(new LabelDao(), new PullRequestLabelDao(), new ProjectHistoryDao());
     }
 
     /**

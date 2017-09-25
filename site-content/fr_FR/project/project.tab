@@ -489,7 +489,9 @@ project_admin_utils	frs_add_monitor_package	Ajout du suivi de paquet
 project_admin_utils	frs_stop_monitor_package	Arrêt du suivi de paquet
 project_admin_utils	ugroup_binding	Liens
 project_admin_utils	truncated_emails	Utilisation des courriels tronqués
-#... end of values
+project_admin_utils	label_created	Création du label
+project_admin_utils	label_deleted	Suppression du label
+project_admin_utils	label_renamed	Renommage du label
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/servicebar.php
