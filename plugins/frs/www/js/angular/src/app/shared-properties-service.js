@@ -27,6 +27,7 @@ function SharedPropertiesService() {
     }
 
     function getRelease() {
+        formatLinks();
         return property.release;
     }
 
@@ -40,5 +41,21 @@ function SharedPropertiesService() {
 
     function getPlatformLicenseInfo() {
         return property.platform_license_info;
+    }
+
+    function formatLinks() {
+        property.release.links.forEach(function(link) {
+            if (link.name) {
+                link.displayed_link = link.name;
+                return;
+            }
+
+            if (link.link.length < 50) {
+                link.displayed_link = link.link;
+                return;
+            }
+
+            link.displayed_link = link.link.substr(0, 23) + '...' + link.link.substr(-23);
+        });
     }
 }

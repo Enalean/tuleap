@@ -53,8 +53,16 @@ msgstr ""
 msgid "I decline"
 msgstr ""
 
+#: src/app/release/files/files.tpl.html
+msgid "Link"
+msgstr ""
+
 #: src/app/release/release.tpl.html
 msgid "Linked Artifacts"
+msgstr ""
+
+#: src/app/release/files/files.tpl.html
+msgid "Links"
 msgstr ""
 
 #: src/app/release/files/files.tpl.html

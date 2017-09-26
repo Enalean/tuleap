@@ -92,6 +92,10 @@ msgid "Linked Artifacts"
 msgstr "Artéfacts liés"
 
 #: src/app/release/files/files.tpl.html
+msgid "Link"
+msgstr "Lien"
+
+#: src/app/release/files/files.tpl.html
 msgid "MD5Sum"
 msgstr "MD5Sum"
 

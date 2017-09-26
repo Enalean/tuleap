@@ -47,11 +47,17 @@ class UploadedLinkRepresentation
      */
     public $name;
 
+    /**
+     * @param $release_time {@type string}
+     */
+    public $release_time;
+
     public function build(UploadedLink $link)
     {
-        $this->id   = JsonCast::toInt($link->getId());
-        $this->link = $link->getLink();
-        $this->name = $link->getName();
+        $this->id             = JsonCast::toInt($link->getId());
+        $this->link           = $link->getLink();
+        $this->name           = $link->getName();
+        $this->release_time   = JsonCast::toDate($link->getReleaseTime());
 
         $owner_representation = new UserRepresentation();
         $owner_representation->build($link->getOwner());
