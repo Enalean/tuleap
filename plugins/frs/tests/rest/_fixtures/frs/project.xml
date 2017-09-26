@@ -26,6 +26,12 @@
               <read-access>
                 <ugroup>project_members</ugroup>
               </read-access>
+              <link
+                      name="test"
+                      url="http://example.fr"
+                      release-time="2015-12-08T16:55:00">
+                  <user format="username">rest_api_tester_1</user>
+              </link>
           </release>
       </package>
   </frs>
