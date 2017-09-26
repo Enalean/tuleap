@@ -1194,7 +1194,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             $uploaded_links_formatter = new UploadedLinksRequestFormatter();
             try {
                 $release_links = $uploaded_links_formatter->formatFromRequest($request);
-                $uploaded_links_updater->update($release_links, $user, $rel);
+                $uploaded_links_updater->update($release_links, $user, $rel, $rel->getReleaseDate());
             } catch(UploadedLinksInvalidFormException $e) {
                 $error[] = _('An error occurred in form submission, a link is not valid. Please retry.');
             }

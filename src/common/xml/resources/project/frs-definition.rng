@@ -135,6 +135,32 @@
                       </interleave>
                     </element>
                   </zeroOrMore>
+                  <zeroOrMore>
+                    <element name="link">
+                      <interleave>
+                        <optional>
+                          <attribute name="name">
+                            <data type="string"/>
+                          </attribute>
+                        </optional>
+                        <optional>
+                          <attribute name="url">
+                            <data type="string"/>
+                          </attribute>
+                        </optional>
+                        <optional>
+                          <attribute name="release-time">
+                            <data type="dateTime"/>
+                          </attribute>
+                        </optional>
+                        <optional>
+                          <element name="user">
+                            <ref name="user_content"/>
+                          </element>
+                        </optional>
+                      </interleave>
+                    </element>
+                  </zeroOrMore>
                 </interleave>
               </element>
             </zeroOrMore>

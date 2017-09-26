@@ -33,6 +33,12 @@ frs =
                   attribute filetype { xsd:string }? &
                   element description { xsd:string }? &
                   element user { user_content }?
+            }* &
+            element link {
+                  attribute name { xsd:string }? &
+                  attribute url { xsd:string }? &
+                  attribute release-time { xsd:dateTime }? &
+                  element user { user_content }?
             }*
         }*
     }* &

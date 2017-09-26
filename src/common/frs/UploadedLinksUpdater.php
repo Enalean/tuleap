@@ -41,7 +41,7 @@ class UploadedLinksUpdater
         $this->frs_log = $frs_log;
     }
 
-    public function update(array $release_links, PFUser $user, FRSRelease $release)
+    public function update(array $release_links, PFUser $user, FRSRelease $release, $release_time)
     {
         foreach ($release_links as $link) {
             $id = $this->dao->create(
@@ -49,7 +49,7 @@ class UploadedLinksUpdater
                 $link['link'],
                 $user->getId(),
                 $release->getReleaseID(),
-                $release->getReleaseDate()
+                $release_time
             );
             $this->frs_log->addLog($user->getId(), $release->getProject()->getID(), $id, UploadedLink::EVENT_CREATE);
         }

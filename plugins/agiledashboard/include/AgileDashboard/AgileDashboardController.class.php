@@ -25,6 +25,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FrsPermissionDao;
@@ -310,7 +312,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                             new ProjectHistoryDao(),
                             new UGroupManager()
                         ),
-                        $project_creator
+                        $project_creator,
+                        new UploadedLinksUpdater(new UploadedLinksDao())
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),

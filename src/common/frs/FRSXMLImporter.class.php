@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermission;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Project\XML\Import\ImportConfig;
 
 class FRSXMLImporter {
 
@@ -58,6 +59,10 @@ class FRSXMLImporter {
 
     /** @var FRSPermissionCreator */
     private $permission_creator;
+    /**
+     * @var UploadedLinksUpdater
+     */
+    private $links_updater;
 
     public function __construct(
         Logger $logger,
@@ -69,22 +74,24 @@ class FRSXMLImporter {
         UGroupManager $ugroup_manager,
         XMLImportHelper $xml_import_helper,
         FRSPermissionCreator $permission_creator,
+        UploadedLinksUpdater $links_updater,
         FRSProcessorDao $processor_dao = null,
         FRSFileTypeDao $filetype_dao = null,
-        PermissionsManager $permission_manager = null)
-    {
-        $this->logger = new WrapperLogger($logger, "FRSXMLImporter");
-        $this->xml_validator = $xml_validator;
-        $this->package_factory = $package_factory;
-        $this->release_factory = $release_factory;
-        $this->file_factory = $file_factory;
-        $this->user_finder = $user_finder;
-        $this->filetype_dao = $filetype_dao;
-        $this->processor_dao = $processor_dao;
+        PermissionsManager $permission_manager = null
+    ) {
+        $this->logger             = new WrapperLogger($logger, "FRSXMLImporter");
+        $this->xml_validator      = $xml_validator;
+        $this->package_factory    = $package_factory;
+        $this->release_factory    = $release_factory;
+        $this->file_factory       = $file_factory;
+        $this->user_finder        = $user_finder;
+        $this->filetype_dao       = $filetype_dao;
+        $this->processor_dao      = $processor_dao;
         $this->permission_manager = $permission_manager;
-        $this->ugroup_manager = $ugroup_manager;
-        $this->xml_import_helper = $xml_import_helper;
+        $this->ugroup_manager     = $ugroup_manager;
+        $this->xml_import_helper  = $xml_import_helper;
         $this->permission_creator = $permission_creator;
+        $this->links_updater      = $links_updater;
     }
 
     private function getFileTypeDao(){
@@ -272,6 +279,10 @@ class FRSXMLImporter {
             $this->importFile($project, $release, $user, $xml_file, $extraction_path);
         }
 
+        foreach ($xml_rel->{'link'} as $xml_link) {
+            $this->importLink($release, $user, $xml_link);
+        }
+
         if($id != null) {
             if(isset($created_id_map['release'][$id])) {
                 $this->logger->error("You already referenced a release with the id $id.");
@@ -351,5 +362,22 @@ class FRSXMLImporter {
         $this->file_factory->createFile($newFile);
 
         $this->logger->debug('Import of file '.$name.' completed');
+    }
+
+    private function importLink(FRSRelease $release, PFUser $user, SimpleXMLElement $xml_link)
+    {
+        $this->logger->debug('Start import of link');
+        $attrs = $xml_link->attributes();
+
+        $user = empty($xml_link->user) ? $user : $this->user_finder->getUser($xml_link->user);
+
+        $release_links = array(
+            array(
+                'link' => (string) $attrs['url'],
+                'name' => (string) $attrs['name']
+            )
+        );
+
+        $this->links_updater->update($release_links, $user, $release, strtotime($attrs['release-time']));
     }
 }

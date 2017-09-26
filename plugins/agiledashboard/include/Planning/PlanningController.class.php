@@ -24,6 +24,8 @@ use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UserRemover;
@@ -456,7 +458,8 @@ class Planning_Controller extends MVC2_PluginController {
                 new ProjectHistoryDao(),
                 new UGroupManager()
             ),
-            $project_creator
+            $project_creator,
+            new UploadedLinksUpdater(new UploadedLinksDao())
         );
 
         try {

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\FRS\FRSPermission;
+use Tuleap\FRS\UploadedLinksUpdater;
 
 class FRSPackageFactoryMock extends FRSPackageFactory {
     // bypass it for the tests as it calls global functions which access to the db
@@ -39,6 +40,10 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory {
 class FRSXMLImporterTest_BootStrap extends TuleapTestCase
 {
 
+    /**
+     * @var \Tuleap\FRS\UploadedLinksDao
+     */
+    protected $link_dao;
     protected $frs_permission_creator;
 
     public function setUp() {
@@ -76,6 +81,9 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase
         $this->xml_import_helper = mock('XMLImportHelper');
         $this->frs_permission_creator = mock('Tuleap\FRS\FRSPermissionCreator');
 
+        $this->link_dao = mock('Tuleap\FRS\UploadedLinksDao');
+        $links_updater  = new UploadedLinksUpdater($this->link_dao, mock('FRSLog'));
+
         $this->frs_importer = new FRSXMLImporter(
             mock('Logger'),
             new XML_RNGValidator(),
@@ -86,6 +94,7 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase
             new UGroupManager($this->ugroup_dao),
             $this->xml_import_helper,
             $this->frs_permission_creator,
+            $links_updater,
             $this->processor_dao,
             $this->filetype_dao);
 
@@ -353,6 +362,81 @@ XML;
         $expected_file_array_with_id = $expected_file_array;
         $expected_file_array_with_id['id'] = $file_id;
         stub($this->file_dao)->searchById($file_id)->returnsDar($expected_file_array_with_id);
+
+        $release = mock('FRSRelease');
+        stub($release)->getGroupID()->returns(123);
+        stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
+
+        $frs_mapping = array();
+        $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
+    }
+
+    public function itShouldImportReleaseWithLinks()
+    {
+        $extraction_path = sys_get_temp_dir();
+        $project_manager = ProjectManager::instance();
+        $project = $project_manager->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
+        $xml = <<<XML
+        <project>
+            <frs>
+                <package name="package">
+                    <read-access><ugroup>project_members</ugroup></read-access>
+                    <release name="release" time="2015-12-03T14:55:00" preformatted="false">
+                        <read-access><ugroup>project_members</ugroup></read-access>
+                        <notes>some notes</notes>
+                        <changes>some changes</changes>
+                        <user format="username">toto</user>
+                        <link
+                          name="test"
+                          url="http://example.com"
+                          release-time="2016-07-19T10:38:19+01:00">
+                          <user format="username">goupix</user>
+                        </link>
+                    </release>
+                </package>
+            </frs>
+        </project>
+XML;
+        $xml_element = new SimpleXMLElement($xml);
+
+        $user_id = 42;
+        stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
+
+        $package_id = 1337;
+        $package_array_with_id = array(
+            'package_id' => $package_id,
+            'group_id'   => 123,
+            'name'       => "package",
+            'status_id'  => FRSPackage::STATUS_ACTIVE,
+            'rank'       => 0,
+            'approve_license' => true
+        );
+
+        $expected_package_array = $this->getDefaultPackage('package');
+        $this->package_dao->expectAt(0, 'createFromArray', array($expected_package_array));
+        $this->package_dao->expectCallCount('createFromArray', 1);
+        stub($this->package_dao)->createFromArray()->returns($package_id);
+        stub($this->package_dao)->searchById($package_id, FRSPackageDao::INCLUDE_DELETED)->returnsDar($package_array_with_id);
+
+        $release_id=8665;
+        $expected_release_array = array(
+            'release_id' => null,
+            'package_id' => $package_id,
+            'name' => 'release',
+            'notes' => 'some notes',
+            'changes' => 'some changes',
+            'status_id' => FRSRelease::STATUS_ACTIVE,
+            'preformatted' => false,
+            'release_date' => strtotime('2015-12-03T14:55:00'),
+            'released_by' => $user_id);
+        $this->release_dao->expectAt(0, 'createFromArray', array($expected_release_array));
+        $this->release_dao->expectCallCount('createFromArray', 1);
+        stub($this->release_dao)->createFromArray()->returns($release_id);
+
+        $release_array_with_group = $expected_release_array;
+        $release_array_with_group['group_id'] = 123;
+
+        stub($this->link_dao)->create()->returns(true);
 
         $release = mock('FRSRelease');
         stub($release)->getGroupID()->returns(123);

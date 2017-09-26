@@ -200,7 +200,8 @@ class ProjectImportTest extends TuleapDbTestCase
                 mock('ProjectHistoryDao'),
                 mock('UGroupManager')
             ),
-            $project_creator
+            $project_creator,
+            mock('Tuleap\FRS\UploadedLinksUpdater')
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');
@@ -303,7 +304,8 @@ class ProjectImportTest extends TuleapDbTestCase
                 mock('ProjectHistoryDao'),
                 mock('UGroupManager')
             ),
-            $project_creator
+            $project_creator,
+            mock('Tuleap\FRS\UploadedLinksUpdater')
         );
 
         $system_event_runner = mock('ProjectImportTest_SystemEventRunner');

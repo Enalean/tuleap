@@ -21,6 +21,8 @@
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
@@ -206,7 +208,8 @@ class REST_TestDataBuilder extends TestDataBuilder
                 new ProjectHistoryDao(),
                 new UGroupManager()
             ),
-            $this->project_creator
+            $this->project_creator,
+            new UploadedLinksUpdater(new UploadedLinksDao())
         );
 
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
