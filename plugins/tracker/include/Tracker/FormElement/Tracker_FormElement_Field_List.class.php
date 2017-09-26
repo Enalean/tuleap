@@ -591,6 +591,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             return $this->getNoValueLabel();
         }
 
+        if (count($selected_values) === 1 && isset($selected_values[Tracker_FormElement_Field_List_Bind::NONE_VALUE])) {
+            return $this->getNoValueLabel();
+        }
+
         foreach ($selected_values as $id => $selected) {
             $tablo[] = $this->getBind()->formatArtifactValue($id);
         }
@@ -848,11 +852,15 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html     = '';
         $multiple = '';
         $size     = '';
+        $required = '';
         if ($this->isMultiple()) {
             $multiple = 'multiple="multiple"';
             $size     = 'size="'. min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) .'"';
         }
-        $html .= "<select $id $name $multiple $size>";
+        if ($this->isRequired()) {
+            $required = 'required';
+        }
+        $html .= "<select $id $name $multiple $size $required>";
         return $html;
     }
 

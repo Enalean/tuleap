@@ -30,6 +30,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     var init = function() {
         bindClickOnEditableFields();
         bindClickOnAutocomputeInMassChange();
+        observeRequiredElements();
         if ($("#artifact_informations").size() > 0) {
             bindSubmissionBarToFollowups();
             disableWarnBeforeUnloadOnSubmitForm();
@@ -48,6 +49,17 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         }
     };
 
+    var observeRequiredElements = function () {
+        [].forEach.call(document.querySelectorAll('.tracker_artifact_field'), function(field) {
+            if (! JSON.parse(field.dataset.isRequired)) {
+                return;
+            }
+
+            observeRequiredCheckboxesElement(field);
+            observeRequiredSelectElement(field);
+        });
+    };
+
     var toggleEmptyMandatoryFields = function () {
         $('.editable').each(function() {
             var field = $(this);
@@ -60,6 +72,53 @@ tuleap.tracker.artifact.editionSwitcher = function() {
                 $(field).removeClass('editable');
             }
         });
+    };
+
+    var observeRequiredCheckboxesElement = function (field) {
+        var selector   = 'input[type=checkbox][name="artifact[' + field.dataset.fieldId +'][]"]';
+        var checkboxes = field.querySelectorAll(selector);
+        if (checkboxes.length === 0) {
+            return;
+        }
+
+        [].forEach.call(checkboxes, function (checkbox) {
+            checkbox.addEventListener('change', checkValidityOfRequiredCheckboxesElement);
+        });
+        checkValidityOfRequiredCheckboxesElement();
+
+        function checkValidityOfRequiredCheckboxesElement() {
+            if (field.querySelectorAll(selector + ':checked').length === 0) {
+                [].forEach.call(checkboxes, function (checkbox) {
+                    checkbox.setCustomValidity(codendi.getText('tracker_artifact', 'please_select_at_least_one'));
+                });
+            } else {
+                [].forEach.call(checkboxes, function (checkbox) {
+                    checkbox.setCustomValidity('');
+                });
+            }
+        }
+    };
+
+    var observeRequiredSelectElement = function (field) {
+        var field_element = document.getElementById('tracker_field_' + field.dataset.fieldId);
+        if (! field_element) {
+            return;
+        }
+
+        if (field_element.tagName.toLowerCase() !== 'select') {
+            return;
+        }
+
+        field_element.addEventListener('change', checkValidityOfRequiredSelectElement);
+        checkValidityOfRequiredSelectElement.bind(field_element)();
+    };
+
+    var checkValidityOfRequiredSelectElement = function () {
+        if (this.value === '100') {
+            this.setCustomValidity(codendi.getText('tracker_artifact', 'please_fill_out'));
+        } else {
+            this.setCustomValidity('');
+        }
     };
 
     var disableWarnBeforeUnloadOnSubmitForm = function() {

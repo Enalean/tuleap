@@ -41,13 +41,14 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
             $name= 'name="admin"';
         }
 
-        $id      = $value->getId();
-        $html    = '';
-        $checked = $is_selected ? 'checked="checked"' : '';
+        $id       = $value->getId();
+        $html     = '';
+        $checked  = $is_selected ? 'checked="checked"' : '';
+        $required = $this->isRequired() ? 'required' : '';
 
         $html .= '<div class="val_'. $id.'">';
         $html .= '    <label class="radio" for="rb_'. $id .'" >';
-        $html .= '        <input type="radio" '. $name .' value="'. $id .'" id=rb_'. $id .' '. $checked .' valign="middle" />';
+        $html .= '        <input type="radio" '. $name .' value="'. $id .'" id=rb_'. $id .' '. $checked .' '. $required .' valign="middle" />';
         $html .= '    '. $label . '</label>';
         $html .= '</div>';
 
