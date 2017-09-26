@@ -35,6 +35,7 @@ plugin_mediawiki	allowed_project_back_link_title	Back to site admin
 plugin_mediawiki	allowed_project_title	MediaWiki
 plugin_mediawiki	allowed_project_subtitle	Projects that use Mediawiki 1.23 (LTS)
 plugin_mediawiki	allowed_project_information	Please note that upgrading to Mediawiki 1.23 is a one-way process there is no way to revert this process. This progressive migration was meant to mitigate the risks of errors during upgrade process. Please ask the upgraded projects if they noticed any troubles and to report related issues.
+plugin_mediawiki	allowed_project_information_done	All projects where upgraded to Mediawiki 1.23. This is a one-way process so it's not possible downgrade.
 plugin_mediawiki	allowed_project_list	List of allowed projects
 plugin_mediawiki	allowed_project_list_allow_placeholder	Project name
 plugin_mediawiki	allowed_project_list_allow_project	Migrate
@@ -44,6 +45,9 @@ plugin_mediawiki	allowed_project_list_name	Name
 plugin_mediawiki	allowed_project_list_empty	Currently, there are no projects that uses Mediawiki 1.23.
 plugin_mediawiki	allowed_project_allow_project	Submitted project will be converted to Mediawiki 1.23 shortly (check System Events).
 plugin_mediawiki	allowed_project_update_project_list_error	Something went wrong during the update.
+plugin_mediawiki	allowed_project_allow_all	Migrate all projects to Mediawiki 1.23
+plugin_mediawiki	allowed_project_list_allowed_projects	List of migrated projects
+
 plugin_mediawiki	permissions_label	Permissions
 plugin_mediawiki	language_label	Language
 plugin_mediawiki	save_label	Save changes

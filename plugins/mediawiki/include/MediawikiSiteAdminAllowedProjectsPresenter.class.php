@@ -27,8 +27,11 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
      */
     public $allowed_projects;
 
-    public function __construct($allowed_projects) {
-        $this->allowed_projects = $allowed_projects;
+    private $count_project_to_migrate;
+
+    public function __construct($allowed_projects, $count_projects_to_migrate) {
+        $this->allowed_projects       = $allowed_projects;
+        $this->count_project_to_migrate = $count_projects_to_migrate;
     }
 
     public function there_is_no_project() {
@@ -40,8 +43,7 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
     }
 
     public function update_allowed_projects_action_csrf() {
-        $csrf = new CSRFSynchronizerToken($this->update_allowed_projects_action());
-        return $csrf->fetchHTMLInput();
+        return new CSRFSynchronizerToken($this->update_allowed_projects_action());
     }
 
     public function resource_allowed_project_title() {
@@ -53,7 +55,11 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
     }
 
     public function information() {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_information');
+        if ($this->is_resource_restricted()) {
+            return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_information');
+        } else {
+            return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_information_done');
+        }
     }
 
     public function resource_allowed_project_list_allow_placeholder() {
@@ -89,5 +95,40 @@ class MediawikiSiteAdminAllowedProjectsPresenter {
     public function resource_allowed_project_filter_empty()
     {
         return $GLOBALS['Language']->getText('admin', 'allowed_projects_filter_empty');
+    }
+
+    public function allow_all_enabled()
+    {
+        return true;
+    }
+
+    public function restricted_resource_action()
+    {
+        return '/plugins/mediawiki/forge_admin.php?action=site_update_allow_all_projects';
+    }
+
+    public function restricted_resource_action_csrf()
+    {
+        return new CSRFSynchronizerToken($this->restricted_resource_action());
+    }
+
+    public function is_resource_restricted()
+    {
+        return $this->count_project_to_migrate > 0;
+    }
+
+    public function can_be_unrestricited()
+    {
+        return ! $this->is_resource_restricted();
+    }
+
+    public function resource_allowed_project_allow_all()
+    {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_allow_all');
+    }
+
+    public function resource_allowed_project_list()
+    {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_list_allowed_projects');
     }
 }

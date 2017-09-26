@@ -46,7 +46,8 @@ class MediawikiSiteAdminController {
         $this->assertSiteAdmin($request);
 
         $presenter = new MediawikiSiteAdminAllowedProjectsPresenter(
-            $this->resource_restrictor->searchAllowedProjects()
+            $this->resource_restrictor->searchAllowedProjects(),
+            $this->resource_restrictor->countProjectsToAllow()
         );
 
         $this->admin_page_renderer->renderAPresenter(
@@ -55,6 +56,18 @@ class MediawikiSiteAdminController {
             $presenter::TEMPLATE,
             $presenter
         );
+    }
+
+    public function site_update_allow_all_projects(HTTPRequest $request)
+    {
+        $this->assertSiteAdmin($request);
+
+        $token = new CSRFSynchronizerToken('/plugins/mediawiki/forge_admin.php?action=site_update_allow_all_projects');
+        $token->check();
+
+        $this->allowAllProjects();
+
+        $GLOBALS['Response']->redirect('/plugins/mediawiki/forge_admin.php?action=site_index');
     }
 
     public function site_update_allowed_project_list(HTTPRequest $request) {
@@ -69,6 +82,24 @@ class MediawikiSiteAdminController {
         }
 
         $GLOBALS['Response']->redirect('/plugins/mediawiki/forge_admin.php?action=site_index');
+    }
+
+    private function allowAllProjects()
+    {
+        foreach ($this->resource_restrictor->searchProjectsToAllow() as $project) {
+            $this->resource_restrictor->allowProject($project);
+        }
+
+        $this->system_event_manager->createEvent(
+            SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
+            SystemEvent_MEDIAWIKI_SWITCH_TO_123::ALL,
+            SystemEvent::PRIORITY_HIGH
+        );
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            $GLOBALS['Language']->getText('plugin_mediawiki', 'allowed_project_allow_project')
+        );
     }
 
     private function allowProject($project_to_add) {
