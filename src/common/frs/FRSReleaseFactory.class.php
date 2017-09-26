@@ -304,6 +304,9 @@ class FRSReleaseFactory {
                 $frsff->delete_file($group_id, $file->getFileID());
             }
 
+            $uploaded_links_dao = new \Tuleap\FRS\UploadedLinksDao();
+            $uploaded_links_dao->deleteByReleaseId($release_id);
+
             //delete the release from the database
             $this->_delete($release_id);
             return true;
