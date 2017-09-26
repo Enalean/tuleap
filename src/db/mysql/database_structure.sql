@@ -1431,8 +1431,9 @@ CREATE TABLE IF NOT EXISTS cross_references (
   target_keyword VARCHAR( 32 ) NOT NULL ,
   target_id VARCHAR( 255 )  NOT NULL DEFAULT '0',
   target_gid INT(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (id)
-
+  PRIMARY KEY (id),
+  INDEX source_idx(source_id(10), source_type(10)),
+  INDEX target_idx(target_id(10), target_type(10))
 );
 
 
