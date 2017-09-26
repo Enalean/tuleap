@@ -21,8 +21,9 @@
 namespace Tuleap\FRS;
 
 use HTTPRequest;
+use Rule_Regexp;
 use Valid_FTPURI;
-use Valid_HTTPURI;
+use Valid_LocalURI;
 use Valid_String;
 
 class UploadedLinksRequestFormatter
@@ -35,28 +36,24 @@ class UploadedLinksRequestFormatter
             $release_links_name = array();
         }
 
-        if (! $request->validArray(new Valid_HTTPURI('uploaded-link'))
-            && ! $request->validArray(new Valid_FTPURI('uploaded-link'))
-        ) {
-            $release_links = array();
-        } else {
-            $release_links = $request->get('uploaded-link');
-        }
-
-        if (count($release_links_name) != count($release_links)) {
-            throw new UploadedLinksInvalidFormException();
-        }
-
         $uploaded_links = array();
-        foreach ($release_links as $key => $link) {
-            if ($link) {
-                $uploaded_links[] = array(
-                    "link" => $release_links[$key],
-                    "name" => $release_links_name[$key]
-                );
-            }
-        }
+        $valid_http     = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
+        $valid_ftp      = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
 
+        foreach ($request->get('uploaded-link') as $key => $link) {
+            if (! $valid_ftp->isValid($link) && ! $valid_http->isValid($link)) {
+                throw new UploadedLinksInvalidFormException();
+            }
+
+            if (! isset($release_links_name[$key])) {
+                throw new UploadedLinksInvalidFormException();
+            }
+
+            $uploaded_links[] = array(
+                "link" => $link,
+                "name" => $release_links_name[$key]
+            );
+        }
         return $uploaded_links;
     }
 }

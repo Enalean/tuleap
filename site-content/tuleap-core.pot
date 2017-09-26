@@ -36,7 +36,8 @@ msgid ""
 "An error occured with your upload. Please try again or choose another image."
 msgstr ""
 
-msgid "An error occurred in form submission, links are invalid. Please retry."
+msgid ""
+"An error occurred in form submission, a link is not valid. Please retry."
 msgstr ""
 
 msgid "An error occurred while clearing the content of your history"
