@@ -1068,6 +1068,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             } else {
                 //release added - now show the detail page for this new release
                 $release_id   = $res;
+                $rel          = $release_factory->getFRSReleaseFromDb($release_id);
                 $info_success = $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_added');
             }
         }
@@ -1095,7 +1096,6 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
 
             // Send notification
             if ($notification) {
-                $rel = $release_factory->getFRSReleaseFromDb($release_id);
                 $count = $release_factory->emailNotification($rel);
                 if ($count === false) {
                     $error[] =  $GLOBALS['Language']->getText('global', 'mail_failed', array (
@@ -1179,15 +1179,15 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                     }
                     $index ++;
                 }
+            }
 
-                $uploaded_links_updater   = new UploadedLinksUpdater(new UploadedLinksDao());
-                $uploaded_links_formatter = new UploadedLinksRequestFormatter();
-                try {
-                    $release_links = $uploaded_links_formatter->formatFromRequest($request);
-                    $uploaded_links_updater->update($release_links, $user, $rel);
-                } catch(UploadedLinksInvalidFormException $e) {
-                    $error[] = _('An error occurred in form submission, links are invalid. Please retry.');
-                }
+            $uploaded_links_updater   = new UploadedLinksUpdater(new UploadedLinksDao());
+            $uploaded_links_formatter = new UploadedLinksRequestFormatter();
+            try {
+                $release_links = $uploaded_links_formatter->formatFromRequest($request);
+                $uploaded_links_updater->update($release_links, $user, $rel);
+            } catch(UploadedLinksInvalidFormException $e) {
+                $error[] = _('An error occurred in form submission, links are invalid. Please retry.');
             }
 
             $http_files_processor_type_list = array ();
