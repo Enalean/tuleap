@@ -427,7 +427,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      *
      * @return void
      */
-    public function process($params, $no_redirect = false, $redirect = false) {
+    public function process($params, $no_redirect = false) {
         $value_dao = $this->getValueDao();
         foreach ($params as $key => $param_value) {
             switch ($key) {
@@ -449,7 +449,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                     break;
             }
         }
-        return parent::process($params, $no_redirect, $redirect);
+        return parent::process($params, $no_redirect);
     }
 
     private function hideUnwantedValues(array $wanted_ugroup_ids) {

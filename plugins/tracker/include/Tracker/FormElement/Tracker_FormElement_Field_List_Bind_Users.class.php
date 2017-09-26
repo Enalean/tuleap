@@ -619,7 +619,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return void
      */
-    public function process($params, $no_redirect = false, $redirect = false) {
+    public function process($params, $no_redirect = false) {
         foreach ($params as $key => $value) {
             switch ($key) {
                 case 'value_function':
@@ -627,7 +627,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                         if ($this->getDao()->save($this->field->getId(), $value)) {
                             $this->value_function = $value;
                             if (!$no_redirect) {
-                                $redirect = true;
                                 $GLOBALS['Response']->addFeedback('info', 'Values updated');
                             }
                         }
@@ -637,7 +636,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                     break;
             }
         }
-        return parent::process($params, $no_redirect, $redirect);
+        return parent::process($params, $no_redirect);
     }
 
     /**
