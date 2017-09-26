@@ -23,6 +23,7 @@ namespace Tuleap\Project\Label;
 use CSRFSynchronizerToken;
 use Exception;
 use HTTPRequest;
+use ProjectHistoryDao;
 use Tuleap\Label\AllowedColorsCollection;
 
 class AddController
@@ -39,14 +40,20 @@ class AddController
      * @var AllowedColorsCollection
      */
     private $allowed_colors;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $history_dao;
 
     public function __construct(
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
+        ProjectHistoryDao $history_dao,
         AllowedColorsCollection $allowed_colors
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;
+        $this->history_dao    = $history_dao;
         $this->allowed_colors = $allowed_colors;
     }
 
@@ -65,6 +72,7 @@ class AddController
             $this->checkColor($color);
 
             $this->dao->addUniqueLabel($project->getID(), $name, $color, $is_outline);
+            $this->history_dao->groupAddHistory('label_created', $name, $project->getID());
             $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has been added.'));
         } catch (LabelWithSameNameAlreadyExistException $exception) {
             $GLOBALS['HTML']->addFeedback(

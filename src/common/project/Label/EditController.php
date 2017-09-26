@@ -24,6 +24,7 @@ use CSRFSynchronizerToken;
 use Exception;
 use HTTPRequest;
 use Project;
+use ProjectHistoryDao;
 use Tuleap\Label\AllowedColorsCollection;
 use Tuleap\Label\CollectionOfLabelableDao;
 
@@ -45,15 +46,21 @@ class EditController
      * @var CollectionOfLabelableDao
      */
     private $labelable_daos;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $history_dao;
 
     public function __construct(
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
+        ProjectHistoryDao $history_dao,
         CollectionOfLabelableDao $labelable_daos,
         AllowedColorsCollection $allowed_colors
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;
+        $this->history_dao    = $history_dao;
         $this->allowed_colors = $allowed_colors;
         $this->labelable_daos = $labelable_daos;
     }
@@ -74,10 +81,19 @@ class EditController
         $this->dao->startTransaction();
         try {
             $this->checkColor($new_color);
+            $label = $this->dao->getLabelById($label_to_edit_id);
+            $previous_name = $label['name'];
 
             if ($this->dao->editInTransaction($project->getID(), $label_to_edit_id, $new_name, $new_color, $new_is_outline)) {
                 $this->mergeLabels($project, $label_to_edit_id);
                 $this->dao->commit();
+                if ($previous_name !== $new_name) {
+                    $this->history_dao->groupAddHistory(
+                        'label_renamed',
+                        "$previous_name ⇒ $new_name",
+                        $project->getID()
+                    );
+                }
                 $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has been edited.'));
             } else {
                 $GLOBALS['HTML']->addFeedback(\Feedback::INFO, _('Label has not been edited.'));

@@ -37,6 +37,7 @@ session_require(array('group' => $request->get('group_id'), 'admin_flags' => 'A'
 
 $url_builder   = new LabelsManagementURLBuilder();
 $dao           = new LabelDao();
+$history_dao   = new ProjectHistoryDao();
 $event_manager = EventManager::instance();
 $assets        = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
 $colors        = new AllowedColorsCollection();
@@ -47,8 +48,8 @@ $event_manager->processEvent($labelable_daos);
 
 $router = new LabelsManagementRouter(
     new IndexController($url_builder, $dao, $labelable_daos, $assets, $color_factory),
-    new DeleteController($url_builder, $dao, $labelable_daos),
-    new EditController($url_builder, $dao, $labelable_daos, $colors),
-    new AddController($url_builder, $dao, $colors)
+    new DeleteController($url_builder, $dao, $history_dao, $labelable_daos),
+    new EditController($url_builder, $dao, $history_dao, $labelable_daos, $colors),
+    new AddController($url_builder, $dao, $history_dao, $colors)
 );
 $router->process($request);

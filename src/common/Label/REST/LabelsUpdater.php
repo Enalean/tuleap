@@ -20,6 +20,7 @@
 
 namespace Tuleap\Label\REST;
 
+use ProjectHistoryDao;
 use Tuleap\Label\Labelable;
 use Tuleap\Label\LabelableDao;
 use Tuleap\Project\Label\LabelDao;
@@ -36,14 +37,26 @@ class LabelsUpdater
      */
     private $project_label_dao;
 
-    public function __construct(LabelDao $project_label_dao, LabelableDao $item_label_dao)
-    {
+    /** @var string[] */
+    private $new_labels;
+    /**
+     * @var ProjectHistoryDao
+     */
+    private $history_dao;
+
+    public function __construct(
+        LabelDao $project_label_dao,
+        LabelableDao $item_label_dao,
+        ProjectHistoryDao $history_dao
+    ) {
         $this->item_label_dao    = $item_label_dao;
         $this->project_label_dao = $project_label_dao;
+        $this->history_dao       = $history_dao;
     }
 
     public function update($project_id, Labelable $item, LabelsPATCHRepresentation $body)
     {
+        $this->new_labels = array();
         $this->project_label_dao->startTransaction();
 
         try {
@@ -57,6 +70,9 @@ class LabelsUpdater
             $this->item_label_dao->addLabelsInTransaction($item->getId(), $array_of_label_ids_to_add);
             $this->item_label_dao->removeLabelsInTransaction($item->getId(), $array_of_label_ids_to_remove);
             $this->project_label_dao->commit();
+            foreach ($this->new_labels as $new_label) {
+                $this->history_dao->groupAddHistory('label_created', $new_label, $project_id);
+            }
         } catch (\Exception $exception) {
             $this->project_label_dao->rollBack();
             throw $exception;
@@ -74,7 +90,11 @@ class LabelsUpdater
             return $label_representation->id;
         }
 
-        return $this->project_label_dao->createIfNeededInTransaction($project_id, trim($label_representation->label));
+        return $this->project_label_dao->createIfNeededInTransaction(
+            $project_id,
+            trim($label_representation->label),
+            $this->new_labels
+        );
     }
 
     private function getLabelIdsToRemove(LabelsPATCHRepresentation $body)
