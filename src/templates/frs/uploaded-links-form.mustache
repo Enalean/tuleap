@@ -5,12 +5,14 @@
         <table class="frs-uploaded-link-update" id="frs-uploaded-link-update">
             <thead>
             <tr class="boxtable">
+                <td>{{ delete_label }}</td>
                 <td>{{ link_label }}</td>
             </tr>
             </thead>
             <tbody id="files_body">
             {{# existing_links }}
                 <tr>
+                    <td><input name="release_links_to_delete[]" value="{{ link_id }}" type="checkbox"></td>
                     <td><a href="{{ link }}">{{ displayed_link }}</a> </td>
                 </tr>
             {{/ existing_links }}
@@ -21,8 +23,8 @@
     <table class="frs-uploaded-link-creation" id="frs-uploaded-link-creation">
         <thead>
         <tr class="boxtable">
-            <td>{{ link_label }}</td>
             <td>{{ name_label }}</td>
+            <td>{{ link_label }}</td>
         </tr>
         </thead>
         <tbody id="files_body">

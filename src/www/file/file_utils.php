@@ -923,6 +923,10 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         } else {
             $release_files_to_delete = array();
         }
+        $release_links_to_delete = array();
+        if($request->validArray(new Valid_UInt('release_links_to_delete'))) {
+            $release_links_to_delete = $request->get('release_links_to_delete');
+        }
 
         if($request->validArray(new Valid_UInt('release_files'))) {
             $release_files = $request->get('release_files');
@@ -1179,6 +1183,11 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                     }
                     $index ++;
                 }
+            }
+
+            $uploaded_links_dao = new UploadedLinksDao();
+            if (! empty($release_links_to_delete)) {
+                $uploaded_links_dao->deleteByIdsAndReleaseId($release_links_to_delete, $rel->getReleaseID());
             }
 
             $uploaded_links_updater   = new UploadedLinksUpdater(new UploadedLinksDao());

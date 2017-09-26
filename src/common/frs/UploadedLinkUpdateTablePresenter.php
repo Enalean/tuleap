@@ -26,8 +26,9 @@ class UploadedLinkUpdateTablePresenter
     public $name_label;
     public $uploaded_links_label;
     public $add_link_label;
-    public $has_existing_links;
+    public $delete_label;
 
+    public $has_existing_links;
     /**
      * @var UploadedLinkPresenter[]
      */
@@ -42,6 +43,7 @@ class UploadedLinkUpdateTablePresenter
         $this->link_label           = _('Link');
         $this->name_label           = _('Name');
         $this->add_link_label       = _('Add link');
+        $this->delete_label         = _('Delete');
 
         $this->existing_links     = $existing_links;
         $this->has_existing_links = count($existing_links) > 0;
