@@ -36,6 +36,9 @@ msgstr "Ajouter un tableau de bord"
 msgid "Add label"
 msgstr "Ajouter un label"
 
+msgid "Add link"
+msgstr "Ajouter un lien"
+
 msgid "Add widget"
 msgstr "Ajouter un widget"
 
@@ -50,6 +53,9 @@ msgid ""
 msgstr ""
 "Une erreur est survenue lors de votre téléversement. Merci d'essayer à "
 "nouveau ou de choisir une autre image."
+
+msgid "An error occurred in form submission, links are invalid. Please retry."
+msgstr "Une erreur est survenue, les liens ne sont pas valides. Merci de réessayer."
 
 msgid "An error occurred while clearing the content of your history"
 msgstr "Une erreur est survenue lors de la suppression de votre historique"
