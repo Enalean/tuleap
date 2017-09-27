@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\Label;
 
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -43,6 +44,10 @@ class LabeledItemCollectorTest extends TuleapTestCase
      */
     private $pullrequest_permission_checker;
     /**
+     * @var GlyphFinder
+     */
+    private $glyph_finder;
+    /**
      * @var Factory
      */
     private $pullrequest_factory;
@@ -62,7 +67,11 @@ class LabeledItemCollectorTest extends TuleapTestCase
             'Tuleap\\PullRequest\\Authorization\\PullRequestPermissionChecker'
         );
         $this->label_dao           = mock('Tuleap\\PullRequest\\Label\\PullRequestLabelDao');
+        $this->glyph_finder        = mock('Tuleap\\Glyph\\GlyphFinder');
         $this->pullrequest_factory = mock('Tuleap\\PullRequest\\Factory');
+
+        $glyph = mock('Tuleap\\Glyph\\Glyph');
+        stub($this->glyph_finder)->get()->returns($glyph);
 
         $this->label_ids = array(19, 27);
 
@@ -169,7 +178,8 @@ class LabeledItemCollectorTest extends TuleapTestCase
         return new LabeledItemCollector(
             $this->label_dao,
             $this->pullrequest_factory,
-            $this->pullrequest_permission_checker
+            $this->pullrequest_permission_checker,
+            $this->glyph_finder
         );
     }
 }

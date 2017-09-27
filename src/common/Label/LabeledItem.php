@@ -20,17 +20,41 @@
 
 namespace Tuleap\Label;
 
+use Tuleap\Glyph\Glyph;
+
 class LabeledItem
 {
     /**
      * @var string
      */
     private $title;
+    /**
+     * @var Glyph
+     */
+    private $normal_icon;
+    /**
+     * @var Glyph
+     */
+    private $small_icon;
 
     public function __construct(
+        Glyph $normal_icon,
+        Glyph $small_icon,
         $title
     ) {
-        $this->title = $title;
+        $this->normal_icon = $normal_icon;
+        $this->small_icon  = $small_icon;
+        $this->title       = $title;
+    }
+
+    public function getNormalIcon()
+    {
+        return $this->normal_icon;
+    }
+
+    public function getSmallIcon()
+    {
+        return $this->small_icon;
     }
 
     public function getTitle()

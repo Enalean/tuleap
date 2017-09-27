@@ -29,8 +29,20 @@ class LabeledItemRepresentation
      */
     public $title;
 
+    /**
+     * @var string SVG icon associated with the item {@type string} {@required true}
+     */
+    public $icon;
+
+    /**
+     * @var string SVG icon (small size) associated with the item {@type string} {@required true}
+     */
+    public $small_icon;
+
     public function build(LabeledItem $item)
     {
-        $this->title = $item->getTitle();
+        $this->title      = $item->getTitle();
+        $this->icon       = $item->getNormalIcon()->getInlineString();
+        $this->small_icon = $item->getSmallIcon()->getInlineString();
     }
 }
