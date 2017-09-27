@@ -20,17 +20,22 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
+use Tuleap\Cryptography\ConcealedString;
+
 class Reference
 {
     private $are_followup_private;
     private $keyword;
     private $server;
     private $username;
+    /**
+     * @var ConcealedString
+     */
     private $api_key;
     private $id;
     private $rest_url;
 
-    public function __construct($id, $reference, $server, $username, $api_key, $are_followup_private, $rest_url)
+    public function __construct($id, $reference, $server, $username, ConcealedString $api_key, $are_followup_private, $rest_url)
     {
         $this->id                   = $id;
         $this->keyword              = $reference;
@@ -61,6 +66,9 @@ class Reference
         return $this->username;
     }
 
+    /**
+     * @return ConcealedString
+     */
     public function getAPIKey()
     {
         return $this->api_key;

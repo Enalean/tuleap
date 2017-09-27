@@ -30,18 +30,17 @@ class Dao extends \DataAccessObject
         $this->enableExceptionsOnError();
     }
 
-    public function save($keyword, $server, $username, $api_key, $encrypted_api_key, $are_followups_private, $rest_api_url)
+    public function save($keyword, $server, $username, $encrypted_api_key, $are_followups_private, $rest_api_url)
     {
         $keyword               = $this->da->quoteSmart($keyword);
         $server                = $this->da->quoteSmart($server);
         $rest_api_url          = $this->da->quoteSmart($rest_api_url);
         $username              = $this->da->quoteSmart($username);
-        $api_key               = $this->da->quoteSmart($api_key);
         $encrypted_api_key     = $this->da->quoteSmart($encrypted_api_key);
         $are_followups_private = $this->da->escapeInt($are_followups_private);
 
         $sql_save = "INSERT INTO plugin_bugzilla_reference(keyword, server, username, api_key, encrypted_api_key, are_followup_private, rest_url)
-                      VALUES ($keyword, $server, $username, $api_key, $encrypted_api_key, $are_followups_private, $rest_api_url)";
+                      VALUES ($keyword, $server, $username, '', $encrypted_api_key, $are_followups_private, $rest_api_url)";
 
         return $this->update($sql_save);
     }
@@ -62,16 +61,16 @@ class Dao extends \DataAccessObject
         return $this->retrieveFirstRow($sql);
     }
 
-    public function edit($id, $server, $username, $api_key, $encrypted_api_key, $are_followups_private, $rest_api_url)
+    public function edit($id, $server, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private, $rest_api_url)
     {
-        $id                    = $this->da->escapeInt($id);
-        $link                  = $this->da->quoteSmart($server . '/show_bug.cgi?id=$1');
-        $server                = $this->da->quoteSmart($server);
-        $rest_api_url          = $this->da->quoteSmart($rest_api_url);
-        $username              = $this->da->quoteSmart($username);
-        $api_key               = $this->da->quoteSmart($api_key);
-        $encrypted_api_key     = $this->da->quoteSmart($encrypted_api_key);
-        $are_followups_private = $this->da->escapeInt($are_followups_private);
+        $id                                = $this->da->escapeInt($id);
+        $link                              = $this->da->quoteSmart($server . '/show_bug.cgi?id=$1');
+        $server                            = $this->da->quoteSmart($server);
+        $rest_api_url                      = $this->da->quoteSmart($rest_api_url);
+        $username                          = $this->da->quoteSmart($username);
+        $encrypted_api_key                 = $this->da->quoteSmart($encrypted_api_key);
+        $has_api_key_always_been_encrypted = $this->da->escapeInt($has_api_key_always_been_encrypted);
+        $are_followups_private             = $this->da->escapeInt($are_followups_private);
 
         $this->da->startTransaction();
 
@@ -79,8 +78,9 @@ class Dao extends \DataAccessObject
                   server = $server,
                   rest_url = $rest_api_url,
                   username = $username,
-                  api_key = $api_key,
+                  api_key = '',
                   encrypted_api_key = $encrypted_api_key,
+                  has_api_key_always_been_encrypted = $has_api_key_always_been_encrypted,
                   are_followup_private = $are_followups_private
                 WHERE id = $id";
 

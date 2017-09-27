@@ -142,7 +142,7 @@ class bugzilla_referencePlugin extends Plugin
      */
     private function getReferenceRetriever()
     {
-        return new ReferenceRetriever(new Dao());
+        return new ReferenceRetriever(new Dao(), $this->getEncryptionKey());
     }
 
     /**
