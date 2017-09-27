@@ -18,50 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Cryptography;
+namespace Tuleap\Cryptography\Symmetric;
 
-use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
+use Tuleap\Cryptography\ConcealedString;
 
-class Key
+final class SymmetricCrypto
 {
-    /**
-     * @var string
-     */
-    private $key_material;
-
-    public function __construct(ConcealedString $key_data)
+    public function __construct()
     {
-        $this->key_material = $key_data->getString();
+        throw new \RuntimeException('Do not instantiate this class, invoke the static methods directly');
     }
 
     /**
      * @return string
      */
-    public function getRawKeyMaterial()
+    public static function encrypt(ConcealedString $plaintext, EncryptionKey $secret_key)
     {
-        return $this->key_material;
-    }
+        $nonce = sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return '';
-    }
-
-    public function __debugInfo()
-    {
-        return array('key_material' => '** protected value**');
-    }
-
-    public function __sleep()
-    {
-        throw new CannotSerializeKeyException();
-    }
-
-    public function __wakeup()
-    {
-        throw new CannotSerializeKeyException();
+        return $nonce . sodium_crypto_secretbox($plaintext->getString(), $nonce, $secret_key->getRawKeyMaterial());
     }
 }

@@ -20,26 +20,24 @@
 
 namespace Tuleap\Cryptography;
 
-use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
-
-class Key
+class ConcealedString
 {
     /**
      * @var string
      */
-    private $key_material;
+    private $value;
 
-    public function __construct(ConcealedString $key_data)
+    public function __construct($value)
     {
-        $this->key_material = $key_data->getString();
+        $this->value = $value;
     }
 
     /**
      * @return string
      */
-    public function getRawKeyMaterial()
+    public function getString()
     {
-        return $this->key_material;
+        return $this->value;
     }
 
     /**
@@ -47,21 +45,11 @@ class Key
      */
     public function __toString()
     {
-        return '';
+        return $this->value;
     }
 
     public function __debugInfo()
     {
-        return array('key_material' => '** protected value**');
-    }
-
-    public function __sleep()
-    {
-        throw new CannotSerializeKeyException();
-    }
-
-    public function __wakeup()
-    {
-        throw new CannotSerializeKeyException();
+        return array('value' => '** protected value, invoke getString instead of trying to dump it **');
     }
 }

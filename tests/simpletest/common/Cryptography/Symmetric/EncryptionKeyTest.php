@@ -20,11 +20,13 @@
 
 namespace Tuleap\Cryptography\Symmetric;
 
+use Tuleap\Cryptography\ConcealedString;
+
 class EncryptionKeyTest extends \TuleapTestCase
 {
     public function itConstructsEncryptionKey()
     {
-        $key = new EncryptionKey(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES));
+        $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
         $this->assertEqual(SODIUM_CRYPTO_SECRETBOX_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
     }
@@ -32,6 +34,6 @@ class EncryptionKeyTest extends \TuleapTestCase
     public function itDoesNotConstructAnEncryptionKeyWhenTheKeyMaterialIsWronglySized()
     {
         $this->expectException('Tuleap\\Cryptography\\Exception\\InvalidKeyException');
-        new EncryptionKey('wrongly_sized_key_material');
+        new EncryptionKey(new ConcealedString('wrongly_sized_key_material'));
     }
 }

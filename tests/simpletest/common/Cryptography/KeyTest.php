@@ -25,14 +25,14 @@ class KeyTest extends \TuleapTestCase
     public function itRetrievesRawKeyMaterial()
     {
         $key_material = 'key_material';
-        $key          = new Key($key_material);
+        $key          = new Key(new ConcealedString($key_material));
 
         $this->assertEqual($key_material, $key->getRawKeyMaterial());
     }
 
     public function itDoesNotSerialize()
     {
-        $key = new Key('key_material');
+        $key = new Key(new ConcealedString('key_material'));
 
         $this->expectException('Tuleap\\Cryptography\\Exception\\CannotSerializeKeyException');
         serialize($key);
@@ -46,7 +46,7 @@ class KeyTest extends \TuleapTestCase
 
     public function itIsNotTransformedToAString()
     {
-        $key = new Key('key_material');
+        $key = new Key(new ConcealedString('key_material'));
 
         $this->assertEqual('', (string) $key);
     }

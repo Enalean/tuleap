@@ -21,16 +21,25 @@
 namespace Tuleap\Cryptography\Symmetric;
 
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Exception\InvalidKeyException;
-use Tuleap\Cryptography\Key;
 
-class EncryptionKey extends Key
+class SymmetricCryptoTest extends \TuleapTestCase
 {
-    public function __construct(ConcealedString $key_data)
+    public function itCannotBeInstantiated()
     {
-        if (mb_strlen($key_data, '8bit') !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
-            throw new InvalidKeyException('Encryption key must be SODIUM_CRYPTO_SECRETBOX_KEYBYTES long');
-        }
-        parent::__construct($key_data);
+        $this->expectException('RuntimeException');
+        new SymmetricCrypto();
+    }
+
+    public function itDoesNotReuseNonces()
+    {
+        $key       = new EncryptionKey(
+            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+        );
+        $plaintext = new ConcealedString('plaintext');
+
+        $ciphertext_1 = SymmetricCrypto::encrypt($plaintext, $key);
+        $ciphertext_2 = SymmetricCrypto::encrypt($plaintext, $key);
+
+        $this->assertNotEqual($ciphertext_1, $ciphertext_2);
     }
 }

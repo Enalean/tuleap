@@ -84,6 +84,8 @@ class bugzilla_referencePlugin extends Plugin
 
     public function processAdmin(HTTPRequest $request)
     {
+        $encryption_key = $this->getEncryptionKey();
+
         $controller = new Controller(
             new AdminPageRenderer(),
             new ReferenceSaver(
@@ -93,7 +95,8 @@ class bugzilla_referencePlugin extends Plugin
                     new ReservedKeywordsRetriever(EventManager::instance())
                 ),
                 $this->getReferenceRetriever(),
-                ReferenceManager::instance()
+                ReferenceManager::instance(),
+                $encryption_key
             ),
             $this->getReferenceRetriever(),
             new ReferenceDestructor(new Dao())
@@ -139,10 +142,16 @@ class bugzilla_referencePlugin extends Plugin
      */
     private function getReferenceRetriever()
     {
-        $key_factory = new \Tuleap\Cryptography\KeyFactory();
-        $key_factory->getEncryptionKey();
-
         return new ReferenceRetriever(new Dao());
+    }
+
+    /**
+     * @return \Tuleap\Cryptography\Symmetric\EncryptionKey
+     */
+    private function getEncryptionKey()
+    {
+        $key_factory = new \Tuleap\Cryptography\KeyFactory();
+        return $key_factory->getEncryptionKey();
     }
 
     /** @see \Event::POST_REFERENCE_EXTRACTED */
