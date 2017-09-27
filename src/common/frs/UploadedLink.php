@@ -25,6 +25,9 @@ use PFUser;
 
 class UploadedLink
 {
+    const EVENT_CREATE = 401;
+    const EVENT_DELETE = 402;
+
     private $id;
     private $owner;
     private $link;

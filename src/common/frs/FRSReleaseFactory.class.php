@@ -20,6 +20,8 @@
  */
 
 use Tuleap\FRS\FRSReleasePaginatedCollection;
+use Tuleap\FRS\UploadedLinkDeletor;
+use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 
@@ -304,8 +306,8 @@ class FRSReleaseFactory {
                 $frsff->delete_file($group_id, $file->getFileID());
             }
 
-            $uploaded_links_dao = new \Tuleap\FRS\UploadedLinksDao();
-            $uploaded_links_dao->deleteByReleaseId($release_id);
+            $uploaded_link_deletor = new UploadedLinkDeletor(new UploadedLinksDao(), FRSLog::instance());
+            $uploaded_link_deletor->deleteByRelease($release, UserManager::instance()->getCurrentUser());
 
             //delete the release from the database
             $this->_delete($release_id);

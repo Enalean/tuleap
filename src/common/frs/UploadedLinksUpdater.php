@@ -30,22 +30,28 @@ class UploadedLinksUpdater
      * @var UploadedLinksDao
      */
     private $dao;
+    /**
+     * @var \FRSLog
+     */
+    private $frs_log;
 
-    public function __construct(UploadedLinksDao $dao)
+    public function __construct(UploadedLinksDao $dao, \FRSLog $frs_log)
     {
-        $this->dao = $dao;
+        $this->dao     = $dao;
+        $this->frs_log = $frs_log;
     }
 
     public function update(array $release_links, PFUser $user, FRSRelease $release)
     {
         foreach ($release_links as $link) {
-            $this->dao->create(
+            $id = $this->dao->create(
                 $link['name'],
                 $link['link'],
                 $user->getId(),
                 $release->getReleaseID(),
                 $release->getReleaseDate()
             );
+            $this->frs_log->addLog($user->getId(), $release->getProject()->getID(), $id, UploadedLink::EVENT_CREATE);
         }
     }
 }

@@ -1185,12 +1185,12 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 }
             }
 
-            $uploaded_links_dao = new UploadedLinksDao();
             if (! empty($release_links_to_delete)) {
-                $uploaded_links_dao->deleteByIdsAndReleaseId($release_links_to_delete, $rel->getReleaseID());
+                $uploaded_links_deletor = new \Tuleap\FRS\UploadedLinkDeletor(new UploadedLinksDao(), FRSLog::instance());
+                $uploaded_links_deletor->deleteByIDsAndRelease($release_links_to_delete, $rel, $user);
             }
 
-            $uploaded_links_updater   = new UploadedLinksUpdater(new UploadedLinksDao());
+            $uploaded_links_updater   = new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance());
             $uploaded_links_formatter = new UploadedLinksRequestFormatter();
             try {
                 $release_links = $uploaded_links_formatter->formatFromRequest($request);

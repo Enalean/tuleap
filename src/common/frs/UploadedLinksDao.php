@@ -27,7 +27,17 @@ class UploadedLinksDao extends \DataAccessObject
     {
         $release_id = $this->da->escapeInt($release_id);
 
-        $sql = "SELECT * FROM frs_uploaded_links WHERE release_id = $release_id";
+        $sql = "SELECT * FROM frs_uploaded_links WHERE release_id = $release_id AND is_deleted = FALSE";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchLinksByIdsAndReleaseId(array $links_id, $release_id)
+    {
+        $release_id        = $this->da->escapeInt($release_id);
+        $imploded_links_id = $this->da->escapeIntImplode($links_id);
+
+        $sql = "SELECT * FROM frs_uploaded_links WHERE release_id = $release_id AND id IN ($imploded_links_id)  AND is_deleted = FALSE";
 
         return $this->retrieve($sql);
     }
@@ -43,24 +53,24 @@ class UploadedLinksDao extends \DataAccessObject
         $sql = "INSERT INTO frs_uploaded_links (name, link, owner_id, release_id, release_time)
                   VALUES ($name, $link, $user_id, $release_id, $release_time)";
 
-        return $this->update($sql);
+        return $this->updateAndGetLastId($sql);
     }
 
-    public function deleteByIdsAndReleaseId(array $links_id, $release_id)
+    public function markAsDeletedByIdsAndReleaseId(array $links_id, $release_id)
     {
         $release_id        = $this->da->escapeInt($release_id);
         $imploded_links_id = $this->da->escapeIntImplode($links_id);
 
-        $sql = "DELETE FROM frs_uploaded_links WHERE release_id = $release_id AND id IN ($imploded_links_id)";
+        $sql = "UPDATE frs_uploaded_links SET is_deleted = TRUE WHERE release_id = $release_id AND id IN ($imploded_links_id)";
 
         $this->update($sql);
     }
 
-    public function deleteByReleaseId($release_id)
+    public function markAsDeletedByReleaseId($release_id)
     {
         $release_id = $this->da->escapeInt($release_id);
 
-        $sql = "DELETE FROM frs_uploaded_links WHERE release_id = $release_id";
+        $sql = "UPDATE frs_uploaded_links SET is_deleted = TRUE WHERE release_id = $release_id";
 
         $this->update($sql);
     }
