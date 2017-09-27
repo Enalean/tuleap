@@ -9,7 +9,8 @@
     "paragonie/random_compat": "^2.0",
     "mustache/mustache": "dev-feature/strict-variables",
     "ezyang/htmlpurifier": "^4.9.3",
-    "firebase/php-jwt": "^5.0.0"
+    "firebase/php-jwt": "^5.0.0",
+    "paragonie/sodium_compat": "^1.2"
   },
   "config": {
     "platform": {

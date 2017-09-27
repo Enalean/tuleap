@@ -146,7 +146,7 @@ $codendi_dir = '/usr/share/codendi';
 $tuleap_dir  = $codendi_dir;
 
 // Site specific settings are stored there:
-$sys_custom_dir = '/etc/codendi';
+$sys_custom_dir = '/etc/tuleap';
 
 // Tuleap binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
 $codendi_bin_prefix = '/usr/lib/codendi/bin';

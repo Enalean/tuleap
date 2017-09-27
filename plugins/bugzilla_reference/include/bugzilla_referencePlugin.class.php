@@ -139,9 +139,10 @@ class bugzilla_referencePlugin extends Plugin
      */
     private function getReferenceRetriever()
     {
-        $reference_retriever = new ReferenceRetriever(new Dao());
+        $key_factory = new \Tuleap\Cryptography\KeyFactory();
+        $key_factory->getEncryptionKey();
 
-        return $reference_retriever;
+        return new ReferenceRetriever(new Dao());
     }
 
     /** @see \Event::POST_REFERENCE_EXTRACTED */
