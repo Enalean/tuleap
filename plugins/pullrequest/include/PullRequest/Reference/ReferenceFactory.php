@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Reference\Reference;
 use GitRepositoryFactory;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
 class ReferenceFactory
 {
@@ -42,15 +43,21 @@ class ReferenceFactory
      * @var Factory
      */
     private $pull_request_factory;
+    /**
+     * @var HTMLURLBuilder
+     */
+    private $html_url_builder;
 
     public function __construct(
         Factory $pull_request_factory,
         GitRepositoryFactory $repository_factory,
-        ProjectReferenceRetriever $reference_retriever
+        ProjectReferenceRetriever $reference_retriever,
+        HTMLURLBuilder $html_url_builder
     ) {
         $this->pull_request_factory = $pull_request_factory;
         $this->repository_factory   = $repository_factory;
         $this->reference_retriever  = $reference_retriever;
+        $this->html_url_builder     = $html_url_builder;
     }
 
     public function getReferenceByPullRequestId($keyword, $pull_request_id)
@@ -70,8 +77,9 @@ class ReferenceFactory
                 return;
             }
 
-            return new Reference($keyword, $pull_request_id, $repository_id, $project_id);
+            $html_url = $this->html_url_builder->getPullRequestOverviewUrl($pull_request);
 
+            return new Reference($keyword, $html_url, $project_id);
         } catch (PullRequestNotFoundException $ex) {
             return;
         }

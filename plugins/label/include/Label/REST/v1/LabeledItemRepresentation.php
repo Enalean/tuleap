@@ -39,9 +39,15 @@ class LabeledItemRepresentation
      */
     public $small_icon;
 
+    /**
+     * @var string Link to the entry in the Web UI {@type string} {@required true}
+     */
+    public $html_url;
+
     public function build(LabeledItem $item)
     {
         $this->title      = $item->getTitle();
+        $this->html_url   = $item->getHtmlUrl();
         $this->icon       = $item->getNormalIcon()->getInlineString();
         $this->small_icon = $item->getSmallIcon()->getInlineString();
     }

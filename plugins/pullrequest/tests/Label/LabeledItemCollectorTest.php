@@ -32,6 +32,10 @@ require_once __DIR__.'/../bootstrap.php';
 class LabeledItemCollectorTest extends TuleapTestCase
 {
     /**
+     * @var \Tuleap\PullRequest\Reference\HTMLURLBuilder
+     */
+    private $html_url_builder;
+    /**
      * @var LabeledItemCollection
      */
     private $item_collection;
@@ -89,6 +93,8 @@ class LabeledItemCollectorTest extends TuleapTestCase
         stub($second_pullrequest)->getTitle()->returns('Second PR');
         stub($this->pullrequest_factory)->getPullRequestById(75)->returns($first_pullrequest);
         stub($this->pullrequest_factory)->getPullRequestById(66)->returns($second_pullrequest);
+
+        $this->html_url_builder = mock('Tuleap\PullRequest\Reference\HTMLURLBuilder');
     }
 
     public function itCollectsPullRequestsWithTheGivenLabel()
@@ -179,6 +185,7 @@ class LabeledItemCollectorTest extends TuleapTestCase
             $this->label_dao,
             $this->pullrequest_factory,
             $this->pullrequest_permission_checker,
+            $this->html_url_builder,
             $this->glyph_finder
         );
     }

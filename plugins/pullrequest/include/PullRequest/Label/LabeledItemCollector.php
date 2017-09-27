@@ -29,6 +29,7 @@ use Tuleap\Label\LabeledItemCollection;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
 class LabeledItemCollector
 {
@@ -57,10 +58,12 @@ class LabeledItemCollector
         PullRequestLabelDao $label_dao,
         Factory $pullrequest_factory,
         PullRequestPermissionChecker $pullrequest_permission_checker,
+        HTMLURLBuilder $html_url_builder,
         GlyphFinder $glyph_finder
     ) {
         $this->label_dao                      = $label_dao;
         $this->pullrequest_permission_checker = $pullrequest_permission_checker;
+        $this->html_url_builder               = $html_url_builder;
         $this->glyph_finder                   = $glyph_finder;
         $this->pullrequest_factory            = $pullrequest_factory;
     }
@@ -82,7 +85,8 @@ class LabeledItemCollector
                     new LabeledItem(
                         $this->glyph_finder->get('tuleap-pullrequest'),
                         $this->glyph_finder->get('tuleap-pullrequest-small'),
-                        $pull_request->getTitle()
+                        $pull_request->getTitle(),
+                        $this->html_url_builder->getPullRequestOverviewUrl($pull_request, $project_id)
                     )
                 );
             } catch (GitRepoNotFoundException $e) {

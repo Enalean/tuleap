@@ -27,15 +27,13 @@ class Reference extends \Reference
     /**
      * @return Reference
      */
-    public function __construct($keyword, $pull_request_id, $repository_id, $project_id)
+    public function __construct($keyword, $html_url, $project_id)
     {
         $base_id     = 0;
         $description = '';
         $visibility  = 'S';
         $is_used     = 1;
-        $url         = '/plugins/git/?action=pull-requests&repo_id='.
-                        urlencode($repository_id) . '&group_id=' . urlencode($project_id) .
-                        '#/pull-requests/' . urlencode($pull_request_id) . '/overview';
+        $url         = $html_url;
 
         parent::__construct(
             $base_id,

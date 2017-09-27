@@ -36,15 +36,29 @@ class LabeledItem
      * @var Glyph
      */
     private $small_icon;
+    /**
+     * @var string URL to access the item through the Web UI
+     */
+    private $html_url;
 
     public function __construct(
         Glyph $normal_icon,
         Glyph $small_icon,
-        $title
+        $title,
+        $html_url
     ) {
         $this->normal_icon = $normal_icon;
         $this->small_icon  = $small_icon;
         $this->title       = $title;
+        $this->html_url    = $html_url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHtmlUrl()
+    {
+        return $this->html_url;
     }
 
     public function getNormalIcon()
