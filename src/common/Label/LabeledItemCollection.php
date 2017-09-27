@@ -77,6 +77,11 @@ class LabeledItemCollection implements Dispatchable
         $this->are_there_items_user_cannot_see = false;
     }
 
+    public function add(LabeledItem $labeled_item)
+    {
+        $this->labeled_items[] = $labeled_item;
+    }
+
     /**
      * @return LabeledItem[]
      */
@@ -93,11 +98,64 @@ class LabeledItemCollection implements Dispatchable
         return $this->total_size;
     }
 
+    public function thereAreItemsUserCannotSee()
+    {
+        $this->are_there_items_user_cannot_see = true;
+    }
+
     /**
      * @return bool
      */
     public function areThereItemsUserCannotSee()
     {
         return $this->are_there_items_user_cannot_see;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLabelIds()
+    {
+        return $this->label_ids;
+    }
+
+    /**
+     * @return Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @param int $total_size
+     */
+    public function setTotalSize($total_size)
+    {
+        $this->total_size = $total_size;
     }
 }

@@ -23,7 +23,10 @@ require_once 'constants.php';
 
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Git\GitRepositoryDeletionEvent;
+use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\PullRequestCreator;
@@ -68,6 +71,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE);
         $this->addHook('ajax_reference_tooltip');
         $this->addHook(CollectionOfLabelableDao::NAME);
+        $this->addHook(LabeledItemCollection::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -502,5 +506,19 @@ class pullrequestPlugin extends Plugin
     {
         $dao = new Dao();
         $dao->deleteAllPullRequestsOfRepository($event->getRepository()->getId());
+    }
+
+    public function collectLabeledItems(LabeledItemCollection $event)
+    {
+        $labeled_item_collector = new LabeledItemCollector(
+            new PullRequestLabelDao(),
+            $this->getPullRequestFactory(),
+            new PullRequestPermissionChecker(
+                $this->getRepositoryFactory(),
+                new URLVerification()
+            )
+        );
+
+        $labeled_item_collector->collect($event);
     }
 }
