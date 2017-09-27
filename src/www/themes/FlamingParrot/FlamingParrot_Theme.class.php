@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Glyph\GlyphFinder;
+
 require_once 'common/templating/TemplateRenderer.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'HeaderPresenter.class.php';
@@ -212,9 +214,10 @@ class FlamingParrot_Theme extends Layout {
         list($search_options, $selected_entry, $hidden_fields) = $this->getSearchEntries();
 
         $project_id_from_params = $this->getProjectIdFromParams($params);
+        $event_manager          = EventManager::instance();
 
         $search_type = $selected_entry['value'];
-        EventManager::instance()->processEvent(
+        $event_manager->processEvent(
             Event::REDEFINE_SEARCH_TYPE,
             array(
                 'type'         => &$search_type,
@@ -237,7 +240,8 @@ class FlamingParrot_Theme extends Layout {
             $projects_presenters
         );
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
-        $url_redirect          = new URLRedirect(EventManager::instance());
+        $url_redirect          = new URLRedirect($event_manager);
+        $glyph_finder          = new GlyphFinder($event_manager);
 
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params);
 
@@ -257,7 +261,8 @@ class FlamingParrot_Theme extends Layout {
                 $navbar_items_builder->buildNavBarItemPresentersCollection(),
                 $this->getUserActions($current_user),
                 $csrf_logout_token,
-                $url_redirect
+                $url_redirect,
+                $glyph_finder
             )
         );
 

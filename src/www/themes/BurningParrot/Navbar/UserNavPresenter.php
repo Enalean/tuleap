@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 use HTTPRequest;
 use PFUser;
 use CSRFSynchronizerToken;
+use Tuleap\Glyph\GlyphFinder;
 use URLRedirect;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History\UserHistoryPresenter;
@@ -43,17 +44,23 @@ class UserNavPresenter
      * @var URLRedirect
      */
     private $url_redirect;
+    /**
+     * @var GlyphFinder
+     */
+    private $glyph_finder;
 
     public function __construct(
         HTTPRequest $request,
         PFUser $current_user,
         $display_new_user_menu_item,
-        URLRedirect $url_redirect
+        URLRedirect $url_redirect,
+        GlyphFinder $glyph_finder
     ) {
         $this->request                    = $request;
         $this->current_user               = $current_user;
         $this->display_new_user_menu_item = $display_new_user_menu_item;
         $this->url_redirect               = $url_redirect;
+        $this->glyph_finder               = $glyph_finder;
     }
 
     public function is_user_logged_in()
@@ -118,7 +125,8 @@ class UserNavPresenter
             'fa fa-history',
             new UserHistoryPresenter(
                 'user-history',
-                $this->current_user
+                $this->current_user,
+                $this->glyph_finder
             ),
             'only-icon without-carret nav-dropdown-right'
         );

@@ -20,6 +20,8 @@
 
 namespace Tuleap\Glyph;
 
+use Tuleap\URI\URIModifier;
+
 class GlyphFinder
 {
     /**
@@ -44,14 +46,16 @@ class GlyphFinder
             return $symbol_cache[$name];
         }
 
-        $glyph = null;
-        $this->event_manager->processEvent(
-            \Event::GET_GLYPH,
-            array(
-                'name'  => $name,
-                'glyph' => &$glyph
-            )
-        );
+        $glyph = $this->getCoreGlyph($name);
+        if ($glyph === null) {
+            $this->event_manager->processEvent(
+                \Event::GET_GLYPH,
+                array(
+                    'name'  => $name,
+                    'glyph' => &$glyph
+                )
+            );
+        }
 
         if ($glyph === null) {
             throw new GlyphNotFoundException();
@@ -59,5 +63,26 @@ class GlyphFinder
 
         $symbol_cache[$name] = $glyph;
         return $glyph;
+    }
+
+    /**
+     * @return null|Glyph
+     */
+    private function getCoreGlyph($name)
+    {
+        $core_glyphs_dir   = \ForgeConfig::get('codendi_dir') . '/src/glyphs/';
+        $svg_file_path     = $core_glyphs_dir . $name . '.svg';
+        $svg_purified_path = URIModifier::removeDotSegments(
+            URIModifier::removeEmptySegments($svg_file_path)
+        );
+        if ($svg_file_path !== $svg_purified_path || ! is_file($svg_purified_path)) {
+            return null;
+        }
+        $svg_content = file_get_contents($svg_purified_path);
+        if ($svg_content !== false) {
+            return new Glyph($svg_content);
+        }
+
+        return null;
     }
 }

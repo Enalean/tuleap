@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Glyph\GlyphFinder;
+
 class FlamingParrot_NavBarPresenter
 {
     public $search_label;
@@ -102,7 +104,8 @@ class FlamingParrot_NavBarPresenter
         FlamingParrot_NavBarItemPresentersCollection $navbar_items_collection,
         array $user_actions,
         CSRFSynchronizerToken $logout_csrf,
-        URLRedirect $url_redirect
+        URLRedirect $url_redirect,
+        GlyphFinder $glyph_finder
     ) {
         $this->imgroot                     = $imgroot;
         $this->user                        = $user;
@@ -133,6 +136,7 @@ class FlamingParrot_NavBarPresenter
         $this->error_fetch     = _('An error occurred while fetching the content of your history');
         $this->error_clear     = _('An error occurred while clearing the content of your history');
         $this->homepage_label  = _('Homepage');
+        $this->project_icon    = $glyph_finder->get('project-small')->getInlineString();
     }
 
     public function imgroot() {

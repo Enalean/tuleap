@@ -25,6 +25,7 @@ use HTTPRequest;
 use PFUser;
 use EventManager;
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
@@ -70,7 +71,8 @@ class PresenterBuilder
                 $this->request,
                 $this->current_user,
                 $this->displayNewAccountMenuItem(),
-                $url_redirect
+                $url_redirect,
+                new GlyphFinder(\EventManager::instance())
             ),
             new JoinCommunityPresenter()
         );

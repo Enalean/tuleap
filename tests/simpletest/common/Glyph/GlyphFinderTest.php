@@ -22,6 +22,22 @@ namespace Tuleap\Glyph;
 
 class GlyphFinderTest extends \TuleapTestCase
 {
+    private $tmp_tuleap_dir;
+
+    public function setUp()
+    {
+        parent::setUp();
+        \ForgeConfig::store();
+        $this->tmp_tuleap_dir = $this->getTmpDir();
+        \ForgeConfig::set('codendi_dir', $this->tmp_tuleap_dir);
+    }
+
+    public function tearDown()
+    {
+        \ForgeConfig::restore();
+        parent::tearDown();
+    }
+
     public function itThrowsAnExceptionWhenTheGlyphCanNotBeFound()
     {
         $glyph_finder = new GlyphFinder(mock('EventManager'));
@@ -29,5 +45,19 @@ class GlyphFinderTest extends \TuleapTestCase
         $this->expectException('Tuleap\\Glyph\\GlyphNotFoundException');
 
         $glyph_finder->get('does-not-exist');
+    }
+
+    public function itFindsAGlyphInCore()
+    {
+        mkdir($this->tmp_tuleap_dir . '/src/glyphs/', 0777, true);
+        file_put_contents($this->tmp_tuleap_dir . '/src/glyphs/test.svg', 'Glyph in core');
+
+        $event_manager = mock('EventManager');
+        $event_manager->expectNever('processEvent');
+
+        $glyph_finder = new GlyphFinder($event_manager);
+        $glyph = $glyph_finder->get('test');
+
+        $this->assertEqual($glyph->getInlineString(), 'Glyph in core');
     }
 }
