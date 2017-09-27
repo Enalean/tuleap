@@ -54,8 +54,10 @@ msgstr ""
 "Une erreur est survenue lors de votre téléversement. Merci d'essayer à "
 "nouveau ou de choisir une autre image."
 
-msgid "An error occurred in form submission, links are invalid. Please retry."
-msgstr "Une erreur est survenue, les liens ne sont pas valides. Merci de réessayer."
+msgid ""
+"An error occurred in form submission, a link is not valid. Please retry."
+msgstr ""
+"Une erreur est survenue, un lien n'est pas valide. Merci de recommencer."
 
 msgid "An error occurred while clearing the content of your history"
 msgstr "Une erreur est survenue lors de la suppression de votre historique"

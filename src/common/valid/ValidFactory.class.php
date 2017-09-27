@@ -130,10 +130,14 @@ class Valid_HTTPSURI extends Valid_String {
 /**
  * Check that value is a possible local URI
  */
-class Valid_LocalURI extends Valid_String {
+class Valid_LocalURI extends Valid_String
+{
+    const URI_REGEXP = '/^(http:\/\/|https:\/\/|#|\/|\?)/i';
+
     public function validate($value)
     {
-        $this->addRule(new Rule_Regexp('/^(http:\/\/|https:\/\/|#|\/|\?)/i'));
+        $this->addRule(new Rule_Regexp(self::URI_REGEXP));
+
         return parent::validate($value);
     }
 }
@@ -141,10 +145,14 @@ class Valid_LocalURI extends Valid_String {
 /**
  * Check that value is a possible FTP(S) URI
  */
-class Valid_FTPURI extends Valid_String {
+class Valid_FTPURI extends Valid_String
+{
+    const URI_REGEXP = '/^ftps?:\/\/.+/i';
+
     public function validate($value)
     {
-        $this->addRule(new Rule_Regexp('/^ftps?:\/\/.+/i'));
+        $this->addRule(new Rule_Regexp(self::URI_REGEXP));
+
         return parent::validate($value);
     }
 }

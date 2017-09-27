@@ -28,13 +28,13 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
     {
         $request = mock('HTTPRequest');
         stub($request)->get('uploaded-link-name')->returns(array('test', ''));
-        stub($request)->get('uploaded-link')->returns(array('http://example.com', 'https://example.com'));
+        stub($request)->get('uploaded-link')->returns(array('http://example.com', 'ftp://example.com'));
         stub($request)->validArray()->returns(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
         $expected_links = array(
             array('link' => 'http://example.com', 'name' => 'test'),
-            array('link' => 'https://example.com', 'name' => '')
+            array('link' => 'ftp://example.com', 'name' => '')
         );
 
         $this->assertEqual($expected_links, $formatter->formatFromRequest($request));
@@ -57,12 +57,12 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
         $request = mock('HTTPRequest');
         stub($request)->get('uploaded-link-name')->returns(array('invalid'));
         stub($request)->get('uploaded-link')->returns(array('example.com'));
-        stub($request)->validArray()->returns(false);
+        stub($request)->validArray()->returns(true);
 
-        $formatter      = new UploadedLinksRequestFormatter();
-        $expected_links = array();
+        $formatter = new UploadedLinksRequestFormatter();
 
-        $this->assertEqual($expected_links, $formatter->formatFromRequest($request));
+        $this->expectException('Tuleap\FRS\UploadedLinksInvalidFormException');
+        $formatter->formatFromRequest($request);
     }
 
     public function itDoesNotEmptyLinks()
