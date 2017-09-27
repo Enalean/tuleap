@@ -4,6 +4,7 @@ CREATE TABLE plugin_bugzilla_reference (
     server VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
     api_key VARCHAR(255) NOT NULL,
+    encrypted_api_key BLOB NOT NULL,
     are_followup_private TINYINT(1),
     rest_url VARCHAR(255),
     INDEX keyword_idx(keyword(5))

@@ -20,48 +20,14 @@
 
 namespace Tuleap\Cryptography;
 
-use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
-
-class Key
+class ConcealedStringTest extends \TuleapTestCase
 {
-    /**
-     * @var string
-     */
-    private $key_material;
-
-    public function __construct(ConcealedString $key_data)
+    public function itDoesNotAlterTheValue()
     {
-        $this->key_material = $key_data->getString();
-    }
+        $value_to_hide    = 'my_cleartext_credential';
+        $concealed_string = new ConcealedString($value_to_hide);
 
-    /**
-     * @return string
-     */
-    public function getRawKeyMaterial()
-    {
-        return $this->key_material;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return '';
-    }
-
-    public function __debugInfo()
-    {
-        return array('key_material' => '** protected value**');
-    }
-
-    public function __sleep()
-    {
-        throw new CannotSerializeKeyException();
-    }
-
-    public function __wakeup()
-    {
-        throw new CannotSerializeKeyException();
+        $this->assertEqual($value_to_hide, (string) $concealed_string);
+        $this->assertEqual($value_to_hide, $concealed_string->getString());
     }
 }

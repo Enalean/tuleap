@@ -43,7 +43,9 @@ class KeyFactory
             throw new CannotPerformIOOperationException("Cannot read the encryption key $encryption_key_file_path");
         }
 
-        return new EncryptionKey(sodium_hex2bin($file_data));
+        return new EncryptionKey(
+            new ConcealedString(sodium_hex2bin($file_data))
+        );
     }
 
     /**
@@ -52,7 +54,7 @@ class KeyFactory
     private function generateEncryptionKey()
     {
         return new EncryptionKey(
-            sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
+            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
     }
 
