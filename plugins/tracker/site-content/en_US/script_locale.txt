@@ -19,7 +19,9 @@ codendi.locales['tracker_artifact'] = {
     enable_notifications: 'Enable notifications',
     disable_notifications_alternate_text: 'Stop receiving notifications for this artifact',
     enable_notifications_alternate_text: 'Receive notifications for this artifact',
-    notification_update_error: 'An error occured while saving your notification settings'
+    notification_update_error: 'An error occured while saving your notification settings',
+    please_select_at_least_one: 'Please select at least one of these options',
+    please_fill_out: 'Please fill out this field'
 };
 
 codendi.locales['tracker_renderer'] = {

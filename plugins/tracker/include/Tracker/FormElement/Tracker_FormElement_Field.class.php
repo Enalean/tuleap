@@ -400,7 +400,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="'. $this->getClassNames($additional_classes) .'">';
+            $html .= '<div class="'. $this->getClassNames($additional_classes) .'"
+                data-field-id="'. $this->id .'"
+                data-is-required="'. ($this->required ? 'true' : 'false') .'">';
 
             if ($this->userCanUpdate()) {
                 $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
@@ -463,7 +465,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="'. $this->getClassNamesForSubmit() .'">';
+            $html .= '<div class="'. $this->getClassNamesForSubmit() .'"
+                data-field-id="'. $this->id .'"
+                data-is-required="'. ($this->required ? 'true' : 'false') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= $this->fetchSubmitValue($submitted_values);
