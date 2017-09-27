@@ -1,0 +1,8 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="project-labels">{{ label_title }} <i class="fa fa-asterisk"></i></label>
+    <select class="tlp-select" id="project-labels" name="project-labels[]" multiple>
+        {{# labels }}
+            <option value="{{ id }}">{{ name }}</option>
+        {{/ labels }}
+    </select>
+</div>

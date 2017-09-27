@@ -16,6 +16,9 @@ msgid "Adds a project widget to search for labeled items"
 msgstr ""
 "Ajoute un widget projet qui permet de rechercher les éléments avec labels"
 
+msgid "An exception occurred while saving data."
+msgstr "Une erreur est survenue lors de la sauvegarde des données"
+
 msgid ""
 "Displays items with configured labels in the project. For example you can "
 "search all Pull Requests labeled \"Emergency\" and \"v3.0\""
@@ -23,6 +26,15 @@ msgstr ""
 "Affiche les éléments du projet ayant les labels configurés. Par exemple vous "
 "pouvez rechercher toutes les Pull Requests ayant les labels \"Urgent\" et "
 "\"v3.0\""
+
+msgid "Error: label does not belong to project or does not exist."
+msgstr "Erreur : un des label n'appartient pas au projet ou n'existe pas"
+
+msgid "Error: one projects label is invalid."
+msgstr "Erreur : un des labels est invalide"
+
+msgid "Error: you should specify at least one project label."
+msgstr "Erreur : vous devez préciser au moins un label de projet"
 
 msgid "Label"
 msgstr "Label"
