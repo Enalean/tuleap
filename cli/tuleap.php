@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?php
 /**
- * Copyright 2005 GForge, LLC http://gforge.org/
+ * Copyright 2005 GForge, LLC https://gforgegroup.com/
  * Copyright Xerox Corporation, Codendi Team, 2009. All rights reserved
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *

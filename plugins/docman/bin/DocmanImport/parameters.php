@@ -5,7 +5,7 @@
  * extracted from GForge Command-line Interface
  * contained in GForge.
  * Copyright 2005 GForge, LLC
- * http://gforge.org/
+ * https://gforgegroup.com/
  *
  * Given an array of parameters passed by the command line, this function
  * searches the specified parameter in that array.

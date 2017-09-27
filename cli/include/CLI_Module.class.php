@@ -58,7 +58,7 @@ class CLI_Module {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * Given an array of parameters passed by the command line, this function
      * searches the specified parameter in that array.
@@ -157,7 +157,7 @@ class CLI_Module {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * @param string Text to show to the user
      * @param bool Specify if input shouldn't be shown (useful when asking for passwords)

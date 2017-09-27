@@ -5,7 +5,7 @@
  * Portion of this file is inspired from the  GForge Command-line Interface
  * contained in GForge.
  * Copyright 2005 GForge, LLC
- * http://gforge.org/
+ * https://gforgegroup.com/
  *
  */
 require_once(CODENDI_CLI_DIR.'/CLI_Module.class.php');
@@ -95,7 +95,7 @@ class CLI_Module_Tracker extends CLI_Module {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * As there are standard and custom fields, we assume that every parameter other than
      * 'tracker', 'group_id', 'project' is a field name.
@@ -144,7 +144,7 @@ class CLI_Module_Tracker extends CLI_Module {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * As there are standard and custom fields, we assume that every parameter other than
      * 'tracker', 'group_id', 'project' is a field name.

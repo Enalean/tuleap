@@ -149,7 +149,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * @param    array    Result of a SOAP call
      * @param    array    Titles to assign to each field (optional).
@@ -356,7 +356,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      */
     function show_scalar($result, $fieldnames = array()) {
@@ -380,7 +380,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      */
     function show_vector($result, $fieldnames = array()) {
@@ -424,7 +424,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      */
     function show_matrix($result, $fieldnames = array()) {
@@ -543,7 +543,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * @param    string
      * @param    int
@@ -562,7 +562,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * @param    string    UNIX name of the project
      */
@@ -593,7 +593,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * @param array An array of parameters to look for the defined group. If the group isn't in the parameters, looks in the session
      * @param bool Specify if we should abort the program if the group isn't found
@@ -621,7 +621,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * @param    string    Date
      * @return    string    String with the error (if any)
@@ -650,7 +650,7 @@ class CLI_Action {
      * extracted from GForge Command-line Interface
      * contained in GForge.
      * Copyright 2005 GForge, LLC
-     * http://gforge.org/
+     * https://gforgegroup.com/
      *
      * This function assumes the date has the correct format
      * @param    string    Date
