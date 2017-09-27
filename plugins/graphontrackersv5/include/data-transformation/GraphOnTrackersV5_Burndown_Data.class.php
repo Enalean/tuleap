@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,53 +18,55 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR.'/Tracker/Chart/Data/IProvideDataForBurndownChart.class.php';
 /**
  * this class build data required to build a burndown
- * 
+ *
  */
-class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Data_IProvideDataForBurndownChart {
+class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Data_IProvideDataForBurndownChart
+{
     private $artifact_ids     = array();
     private $remaining_effort = array();
     private $min_day = PHP_INT_MAX;
     private $max_day = 0;
- 
     /**
-     * Constructor
-     * 
-     * @param ressource $query_result result of a db_query
-     * @param array     $artifact_ids array of artifact_ids
+     * @var TimePeriodWithWeekEnd
      */
-    public function __construct($query_result, array $artifact_ids) {
+    private $time_period;
+
+    public function __construct($query_result, array $artifact_ids, TimePeriodWithWeekEnd $time_period)
+    {
         $this->artifact_ids = $artifact_ids;
-        
         while ($row = db_fetch_array($query_result)) {
-            $current_day = $row['day'];
-            $current_id  = $row['id'];
-            if (!isset($this->remaining_effort[$current_day])) {
-                $this->remaining_effort[$current_day] = array();
+            $day         = $row['day'];
+            $artifact_id = $row['id'];
+            if (! isset($this->remaining_effort[$day][$artifact_id])) {
+                $this->remaining_effort[$day][$artifact_id] = $row['value'];
             }
-            $this->remaining_effort[$current_day][$current_id] = $row['value'];
-            $this->max_day = max($this->max_day, $current_day);
-            $this->min_day = min($this->min_day, $current_day);
         }
+        $this->time_period = $time_period;
     }
-    
+
     public function getRemainingEffort() {
         return $this->remaining_effort;
     }
-    
+
     public function getMinDay() {
         return $this->min_day;
     }
-    
+
     public function getMaxDay() {
         return $this->max_day;
     }
-    
+
     public function getArtifactIds() {
         return $this->artifact_ids;
     }
-}
 
-?>
+    /**
+     * @return TimePeriodWithWeekEnd
+     */
+    public function getTimePeriod()
+    {
+        return $this->time_period;
+    }
+}

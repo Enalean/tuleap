@@ -36,35 +36,40 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $effort_field         = $form_element_factory->getFormElementById($this->chart->getFieldId());
         $type                 = $form_element_factory->getType($effort_field);
-        
+
         if ($this->isValidEffortField($effort_field, $type) && $this->isValidType($type)) {
-            $engine->data    = $this->getBurnDownData($effort_field->getId(), $type);
+            $time_period     = new TimePeriodWithWeekEnd($this->chart->getStartDate(), $this->chart->getDuration());
+            $engine->data    = $this->getBurnDownData($effort_field->getId(), $type, $time_period);
         }
-        
+
         $engine->legend      = null;
         $engine->start_date  = $this->chart->getStartDate();
         $engine->duration    = $this->chart->getDuration();
     }
-    
-    protected function getBurnDownData($effort_field_id, $type) {
+
+    protected function getBurnDownData($effort_field_id, $type, TimePeriodWithWeekEnd $time_period)
+    {
         $artifact_ids = explode(',', $this->artifacts['id']);
-        $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value
-                            FROM tracker_changeset AS c 
-                                 INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = ". $effort_field_id . ")";
-        
-        $sql .= " INNER JOIN tracker_changeset_value_$type AS cvi ON(cvi.changeset_value_id = cv.id)";
-        $sql .= " WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
-        
-        return new GraphOnTrackersV5_Burndown_Data(db_query($sql), $artifact_ids);
+
+        $sql          = "SELECT c.artifact_id AS id,
+                          DATE_FORMAT(FROM_UNIXTIME(c.submitted_on), '%Y%m%d') as day,
+                          cvi.value
+                        FROM tracker_changeset AS c
+                          INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = " . db_ei($effort_field_id) . ")
+                          INNER JOIN tracker_changeset_value_" . db_es($type) . " AS cvi ON(cvi.changeset_value_id = cv.id)
+                        WHERE c.artifact_id IN  (" . db_ei_implode($artifact_ids) . ")
+                        ORDER BY day, cvi.changeset_value_id DESC";
+
+        return new GraphOnTrackersV5_Burndown_Data(db_query($sql), $artifact_ids, $time_period);
     }
-    
+
     protected function isValidEffortField($effort_field, $type) {
         return $effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser());
     }
-    
+
     /**
      * Autorized types for effort field type
-     * 
+     *
      * @var array
      */
     protected function isValidType($type) {
