@@ -160,6 +160,20 @@ function frs_logs_extract($project,$span,$who) {
            "        JOIN frs_package using (package_id) ".
            "    WHERE log.action_id=".FRSFile::EVT_RESTORE.
            "        AND log.group_id=".$project->getGroupId().
+           " UNION".
+           "    SELECT log.log_id, log.time AS time, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(frs_package.name, '/', frs_release.name, '/ ', frs_uploaded_links.link),".
+           "        CASE ".
+           "        WHEN log.action_id = ".db_ei(\Tuleap\FRS\UploadedLink::EVENT_CREATE)." THEN '".db_es($GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_create_link'))."'".
+           "        WHEN log.action_id = ".db_ei(\Tuleap\FRS\UploadedLink::EVENT_DELETE)." THEN '".db_es($GLOBALS['Language']->getText('project_stats_source_code_access_utils','frs_delete_link'))."'".
+           "        END as type".
+           "    FROM frs_log AS log".
+           "        JOIN user USING (user_id)".
+           "        JOIN frs_uploaded_links ON log.item_id=frs_uploaded_links.id".
+           "        JOIN frs_release using (release_id) ".
+           "        JOIN frs_package using (package_id) ".
+           "    WHERE ".logs_cond($project, $span, $who).
+           "        AND (log.action_id=". db_ei(\Tuleap\FRS\UploadedLink::EVENT_CREATE) ." OR log.action_id=". db_ei(\Tuleap\FRS\UploadedLink::EVENT_DELETE) .")".
+           "        AND log.group_id=".$project->getGroupId().
            " ORDER BY log_id DESC";
     return $sql;
 }

@@ -292,6 +292,7 @@ CREATE TABLE frs_uploaded_links (
   name VARCHAR(255) NOT NULL,
   link text NOT NULL,
   owner_id int(11) NOT NULL,
+  is_deleted BOOLEAN DEFAULT FALSE,
   INDEX release_idx (release_id)
 );
 
