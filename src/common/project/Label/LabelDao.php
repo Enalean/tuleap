@@ -25,6 +25,12 @@ use Tuleap\Label\UnknownLabelException;
 
 class LabelDao extends DataAccessObject
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->enableExceptionsOnError();
+    }
+
     public function searchLabelsLikeKeywordByProjectId($project_id, $keyword, $limit, $offset)
     {
         $project_id = $this->da->escapeInt($project_id);
