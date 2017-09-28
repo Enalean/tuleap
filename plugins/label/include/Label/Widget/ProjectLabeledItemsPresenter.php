@@ -27,10 +27,13 @@ class ProjectLabeledItemsPresenter
     /** @var  int */
     public $project_id;
 
-    public function __construct(\Project $project, array $labels)
+    public $locale;
+
+    public function __construct(\Project $project, \PFUser $user, array $labels)
     {
         $formatter                = new ProjectLabelConfigurationLabelsFormatter();
         $this->selected_labels_id = json_encode($formatter->getLabelsIds($labels));
         $this->project_id         = $project->getID();
+        $this->locale             = $user->getLocale();
     }
 }

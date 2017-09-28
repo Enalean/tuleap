@@ -23,6 +23,7 @@ namespace Tuleap\Label\Widget;
 use Codendi_HTMLPurifier;
 use DataAccessException;
 use Feedback;
+use HTTPRequest;
 use ProjectManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
@@ -119,10 +120,11 @@ class ProjectLabeledItems extends Widget
     {
         $config_labels = $this->config_retriever->getLabelsConfig($this->content_id);
         $project       = $this->getProject();
+        $request       = HTTPRequest::instance();
 
         return $this->renderer->renderToString(
             'project-labeled-items',
-            new ProjectLabeledItemsPresenter($project, $config_labels)
+            new ProjectLabeledItemsPresenter($project, $request->getCurrentUser(), $config_labels)
         );
     }
 

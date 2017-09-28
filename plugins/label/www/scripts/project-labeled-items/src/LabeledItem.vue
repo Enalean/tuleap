@@ -6,7 +6,7 @@
         </div>
     </a>
 </template>
-<script>
+(<script>
     import { sanitize } from 'dompurify';
 
     export default {
@@ -20,4 +20,4 @@
             }
         }
     }
-</script>
+</script>)
