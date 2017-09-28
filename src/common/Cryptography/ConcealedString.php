@@ -29,6 +29,9 @@ class ConcealedString
 
     public function __construct($value)
     {
+        if (! is_string($value)) {
+            throw new \TypeError('Expected $value to be a string, got ' . gettype($value));
+        }
         $this->value = $value;
     }
 
