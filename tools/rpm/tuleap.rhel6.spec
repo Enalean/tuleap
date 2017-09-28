@@ -963,6 +963,7 @@ fi
 %{APP_DIR}/AUTHORS
 # Split src for src/www/themes
 %dir %{APP_DIR}/src
+%{APP_DIR}/src/glyphs
 %{APP_DIR}/src/common
 %{APP_DIR}/src/vendor
 %{APP_DIR}/src/COPYING
