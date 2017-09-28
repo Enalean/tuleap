@@ -23,6 +23,7 @@ namespace Tuleap\Label\Widget;
 use DataAccessException;
 use Feedback;
 use ProjectManager;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
 use Widget;
 
@@ -97,15 +98,18 @@ class ProjectLabeledItems extends Widget
 
     public function getContent()
     {
+        $config_labels = $this->config_retriever->getLabelConfig($this->content_id);
+        $project       = $this->getProject();
+
         return $this->renderer->renderToString(
             'project-labeled-items',
-            new ProjectLabeledItemsPresenter()
+            new ProjectLabeledItemsPresenter($project, $config_labels)
         );
     }
 
     public function getPreferences($widget_id)
     {
-        $labels = $this->getProjectLabelsPresenter($widget_id);
+        $labels = $this->getProjectLabelsPresenter();
 
         return $this->renderer->renderToString(
             'project-label-selector',
@@ -124,7 +128,7 @@ class ProjectLabeledItems extends Widget
     public function updatePreferences(&$request)
     {
         try {
-            $labels = $this->getProjectLabelsPresenter($request->get('widget-id'));
+            $labels = $this->getProjectLabelsPresenter();
             $this->project_data_validator->validateDataFromRequest($request, $labels);
             $this->dao->storeLabelsConfiguration($this->content_id, $request->get('project-labels'));
         } catch (ProjectLabelDoesNotBelongToProjectException $e) {
@@ -150,10 +154,9 @@ class ProjectLabeledItems extends Widget
         }
     }
 
-    protected function getProjectLabelsPresenter($widget_id)
+    private function getProjectLabelsPresenter()
     {
-        $project_id     = $this->dao->getProjectIdByWidgetAndContentId($widget_id, $this->content_id);
-        $project        = ProjectManager::instance()->getProject($project_id);
+        $project        = $this->getProject();
         $project_labels = $this->labels_retriever->getLabelsByProject($project);
         $config_label   = $this->config_retriever->getLabelConfig($this->content_id);
 
@@ -162,8 +165,32 @@ class ProjectLabeledItems extends Widget
         return $labels;
     }
 
+
     public function destroy($id)
     {
         $this->dao->removeLabelByContentId($id);
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $labeled_items_include_assets = new IncludeAssets(
+            LABEL_BASE_DIR . '/www/assets',
+            LABEL_BASE_URL . '/assets'
+        );
+
+        return array(
+            array('file' => $labeled_items_include_assets->getFileURL('widget-project-labeled-items.js'))
+        );
+    }
+
+    /**
+     * @return \Project
+     */
+    private function getProject()
+    {
+        $project_id = $this->dao->getProjectIdByWidgetNameAndContentId($this->getId(), $this->content_id);
+        $project    = ProjectManager::instance()->getProject($project_id);
+
+        return $project;
     }
 }

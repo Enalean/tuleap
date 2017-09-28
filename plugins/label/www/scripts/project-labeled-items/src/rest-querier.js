@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -18,5 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('LABEL_BASE_DIR', realpath(__DIR__.'/..'));
-define('LABEL_BASE_URL', '/plugins/label');
+import { get } from 'tlp';
+
+export {
+    getLabeledItems
+}
+
+async function getLabeledItems(project_id, labels_id) {
+    const response = await get(`/api/projects/${project_id}/labeled_items`, {
+        params: {
+            query: {
+                labels_id
+            }
+        }
+    });
+
+    return await response.json();
+}

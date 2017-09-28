@@ -1,0 +1,44 @@
+.dashboard-widget-content-projectlabeleditems {
+    margin: 0;
+}
+
+.labeled-items-list {
+    display: flex;
+    flex-direction: column;
+
+    > .labeled-items-error {
+        margin: 0 $tlp-spacing $tlp-spacing;
+    }
+}
+
+.labeled-items-loading {
+    width: 250px;
+    height: 200px;
+    margin: 0 auto;
+    background: url('../../../../../../themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
+.labeled-item {
+    display: flex;
+    flex: 1 0 auto;
+    align-items: center;
+    padding: $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+    color: $tlp-typo-default-text-color;
+    text-decoration: none;
+
+    &:hover {
+        background-color: transparentize($tlp-theme-color, .9);
+        text-decoration: none;
+        cursor: pointer;
+    }
+}
+
+.labeled-item-icon {
+    margin: 0 $tlp-half-spacing 0 0;
+    fill: transparentize($tlp-theme-color, .8);
+}
+
+.labeled-items-empty {
+    margin: 0 $tlp-spacing 60px;
+}

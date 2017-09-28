@@ -63,16 +63,16 @@ class Dao extends \DataAccessObject
         }
     }
 
-    public function getProjectIdByWidgetAndContentId($widget_id, $content_id)
+    public function getProjectIdByWidgetNameAndContentId($widget_name, $content_id)
     {
-        $widget_id    = $this->da->escapeInt($widget_id);
+        $widget_name  = $this->da->quoteSmart($widget_name);
         $content_id   = $this->da->escapeInt($content_id);
         $project_type = $this->da->quoteSmart(ProjectDashboardController::DASHBOARD_TYPE);
 
         $sql = "SELECT project_dashboards.project_id
                 FROM dashboards_lines_columns_widgets AS widget
                     INNER JOIN dashboards_lines_columns AS col ON(
-                        widget.id = $widget_id
+                        widget.name = $widget_name
                         AND widget.content_id = $content_id
                         AND col.id = widget.column_id
                     )

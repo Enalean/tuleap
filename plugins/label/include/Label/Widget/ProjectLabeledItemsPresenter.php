@@ -22,10 +22,14 @@ namespace Tuleap\Label\Widget;
 
 class ProjectLabeledItemsPresenter
 {
-    public $empty_state_no_items;
+    /** @var int[] */
+    public $selected_labels_id;
+    /** @var  int */
+    public $project_id;
 
-    public function __construct()
+    public function __construct(\Project $project, array $labels)
     {
-        $this->empty_state_no_items = dgettext('tuleap-label', 'No items to display');
+        $this->selected_labels_id = json_encode($labels);
+        $this->project_id         = $project->getID();
     }
 }
