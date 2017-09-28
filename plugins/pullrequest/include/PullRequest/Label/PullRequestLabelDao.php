@@ -116,6 +116,36 @@ class PullRequestLabelDao extends DataAccessObject implements LabelableDao
         return $this->retrieve($sql);
     }
 
+    public function searchPullRequestsByLabels(
+        $project_id,
+        array $label_ids,
+        $limit,
+        $offset
+    ) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS pr.id
+                FROM plugin_pullrequest_review AS pr
+                INNER JOIN plugin_git ON (
+                    plugin_git.repository_id = pr.repo_dest_id
+                    AND plugin_git.project_id = $project_id
+                )";
+
+        foreach ($label_ids as $i => $label_id) {
+            $label_id = $this->da->escapeInt($label_id);
+            $sql .= " INNER JOIN (
+                           SELECT pull_request_id
+                           FROM plugin_pullrequest_label
+                           WHERE label_id = $label_id
+                       ) AS R$i ON (R$i.pull_request_id = pr.id)";
+        }
+
+        $sql .= " ORDER BY pr.creation_date DESC
+                LIMIT $limit OFFSET $offset;";
+
+        return $this->retrieve($sql);
+    }
+
     public function deleteInTransaction($project_id, $label_id)
     {
         $project_id = $this->da->escapeInt($project_id);
