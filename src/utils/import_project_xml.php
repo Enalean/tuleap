@@ -21,6 +21,8 @@
 
 require_once 'pre.php';
 
+use Tuleap\FRS\UploadedLinksDao;
+use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\UgroupDuplicator;
@@ -284,7 +286,8 @@ try {
             new ProjectHistoryDao(),
             new UGroupManager()
         ),
-        $project_creator
+        $project_creator,
+        new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance())
     );
 
     try {

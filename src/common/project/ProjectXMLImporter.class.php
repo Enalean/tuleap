@@ -20,13 +20,14 @@
 
 require_once "account.php";
 
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UserRemover;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\XML\MappingsRegistry;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\Project\UserRemover;
 
 /**
  * This class import a project from a xml content
@@ -72,6 +73,10 @@ class ProjectXMLImporter {
      * @var UserRemover
      */
     private $user_remover;
+    /**
+     * @var UploadedLinksUpdater
+     */
+    private $uploaded_links_updater;
 
     public function __construct(
         EventManager $event_manager,
@@ -85,7 +90,8 @@ class ProjectXMLImporter {
         UgroupDuplicator $ugroup_duplicator,
         FRSPermissionCreator $frs_permissions_creator,
         UserRemover $user_remover,
-        ProjectCreator $project_creator
+        ProjectCreator $project_creator,
+        UploadedLinksUpdater $uploaded_links_updater
     ) {
         $this->event_manager           = $event_manager;
         $this->project_manager         = $project_manager;
@@ -99,6 +105,7 @@ class ProjectXMLImporter {
         $this->frs_permissions_creator = $frs_permissions_creator;
         $this->user_remover            = $user_remover;
         $this->project_creator         = $project_creator;
+        $this->uploaded_links_updater  = $uploaded_links_updater;
     }
 
     public function importNewFromArchive(
@@ -225,7 +232,8 @@ class ProjectXMLImporter {
 
         $this->importUgroups($project, $xml_element, $user_creator);
 
-        $frs = new FRSXMLImporter($this->logger,
+        $frs = new FRSXMLImporter(
+            $this->logger,
             $this->xml_validator,
             new FRSPackageFactory(),
             new FRSReleaseFactory(),
@@ -233,7 +241,8 @@ class ProjectXMLImporter {
             $this->user_finder,
             $this->ugroup_manager,
             new XMLImportHelper($this->user_manager),
-            $this->frs_permissions_creator
+            $this->frs_permissions_creator,
+            $this->uploaded_links_updater
         );
 
         $frs_release_mapping = array();
