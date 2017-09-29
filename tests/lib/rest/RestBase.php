@@ -67,12 +67,16 @@ class RestBase extends PHPUnit_Framework_TestCase
     protected $story_artifact_ids   = array();
     protected $sprint_artifact_ids  = array();
 
+    private $cache;
+
     public function __construct() {
         parent::__construct();
         if (isset($_ENV['TULEAP_HOST'])) {
             $this->base_url  = $_ENV['TULEAP_HOST'].'/api/v1';
             $this->setup_url = $_ENV['TULEAP_HOST'].'/api/v1';
         }
+
+        $this->cache = CacheIds::instance();
 
         $this->rest_request = new RequestWrapper();
 
@@ -90,14 +94,17 @@ class RestBase extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
+        $this->project_ids = $this->cache->getProjectIds();
         if (! $this->project_ids) {
             $this->initProjectIds();
         }
 
+        $this->tracker_ids = $this->cache->getTrackerIds();
         if (! $this->tracker_ids) {
             $this->initTrackerIds();
         }
 
+        $this->user_groups_ids = $this->cache->getUserGroupIds();
         if (! $this->user_groups_ids) {
             $this->initUserGroupsId();
         }
@@ -162,6 +169,7 @@ class RestBase extends PHPUnit_Framework_TestCase
 
             $this->project_ids[$project_name] = $project_id;
         }
+        $this->cache->setProjectIds($this->project_ids);
     }
 
     protected function getProjectId($project_short_name)
@@ -201,6 +209,7 @@ class RestBase extends PHPUnit_Framework_TestCase
         } while ($offset < $number_of_tracker);
 
         $this->tracker_ids[$project_id] = $tracker_ids;
+        $this->cache->setTrackerIds($this->tracker_ids);
     }
 
     private function addTrackerIdFromRequestData(array $trackers, array &$tracker_ids)
@@ -266,16 +275,21 @@ class RestBase extends PHPUnit_Framework_TestCase
             return $retrieved_artifact_ids;
         }
 
-        $query = http_build_query(
-            array('order' => 'asc')
-        );
+        $artifacts = $this->cache->getArtifacts($tracker_id);
+        if (! $artifacts) {
+            $query = http_build_query(
+                array('order' => 'asc')
+            );
 
-        $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
-        );
+            $response = $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
+            );
 
-        $artifacts = $response->json();
+            $artifacts = $response->json();
+            $this->cache->setArtifacts($tracker_id, $artifacts);
+        }
+
         $index     = 1;
         foreach ($artifacts as $artifact) {
             $retrieved_artifact_ids[$index] = $artifact['id'];
@@ -311,7 +325,70 @@ class RestBase extends PHPUnit_Framework_TestCase
             foreach($ugroups as $ugroup) {
                 $this->user_groups_ids[$project_id][$ugroup['short_name']] = $ugroup['id'];
             }
+            $this->cache->setUserGroupIds($this->user_groups_ids);
         } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
         }
+    }
+}
+
+class CacheIds
+{
+    private static $instance;
+
+    private $project_ids     = array();
+    private $tracker_ids     = array();
+    private $user_groups_ids = array();
+
+    private $artifacts = array();
+
+    public static function instance()
+    {
+        if (! isset(self::$instance)) {
+            self::$instance = new CacheIds();
+        }
+        return self::$instance;
+    }
+
+    public function setProjectIds($project_ids)
+    {
+        $this->project_ids = $project_ids;
+    }
+
+    public function getProjectIds()
+    {
+        return $this->project_ids;
+    }
+
+    public function setTrackerIds($tracker_ids)
+    {
+        $this->tracker_ids = $tracker_ids;
+    }
+
+    public function getTrackerIds()
+    {
+        return $this->tracker_ids;
+    }
+
+    public function setUserGroupIds($user_groups_ids)
+    {
+        $this->user_groups_ids = $user_groups_ids;
+    }
+
+    public function getUserGroupIds()
+    {
+        return $this->user_groups_ids;
+    }
+
+    public function setArtifacts($tracker_id, $artifacts)
+    {
+        $this->artifacts[$tracker_id] = $artifacts;
+    }
+
+    public function getArtifacts($tracker_id)
+    {
+        if (isset($this->artifacts[$tracker_id])) {
+            return $this->artifacts[$tracker_id];
+        }
+        return null;
     }
 }
