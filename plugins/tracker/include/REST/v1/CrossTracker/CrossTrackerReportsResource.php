@@ -293,7 +293,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @return \Tuleap\Tracker\CrossTracker\CrossTrackerReport
      */
-    protected function getReport($id)
+    private function getReport($id)
     {
         $current_user = $this->user_manager->getCurrentUser();
         $report       = $this->report_factory->getById($id, $current_user);
