@@ -31,6 +31,16 @@ class ProjectLabeledItems extends Widget
     const NAME = 'projectlabeleditems';
 
     /**
+     * @var ProjectLabelBuilder
+     */
+    private $labels_presenter_builder;
+
+    /**
+     * @var ProjectLabelConfigRetriever
+     */
+    private $config_retriever;
+
+    /**
      * @var ProjectLabelRequestDataValidator
      */
     private $project_data_validator;
@@ -58,9 +68,11 @@ class ProjectLabeledItems extends Widget
             LABEL_BASE_DIR . '/templates/widgets'
         );
 
-        $this->dao                    = new Dao();
-        $this->labels_retriever       = new ProjectLabelRetriever(new LabelDao());
-        $this->project_data_validator = new ProjectLabelRequestDataValidator();
+        $this->dao                      = new Dao();
+        $this->labels_retriever         = new ProjectLabelRetriever(new LabelDao());
+        $this->project_data_validator   = new ProjectLabelRequestDataValidator();
+        $this->config_retriever         = new ProjectLabelConfigRetriever(new ProjectLabelConfigDao());
+        $this->labels_presenter_builder = new ProjectLabelBuilder();
     }
 
     public function loadContent($id)
@@ -93,7 +105,7 @@ class ProjectLabeledItems extends Widget
 
     public function getPreferences($widget_id)
     {
-        $labels = $this->getProjectLabels($widget_id);
+        $labels = $this->getProjectLabelsPresenter($widget_id);
 
         return $this->renderer->renderToString(
             'project-label-selector',
@@ -112,7 +124,7 @@ class ProjectLabeledItems extends Widget
     public function updatePreferences(&$request)
     {
         try {
-            $labels = $this->getProjectLabels($request->get('widget-id'));
+            $labels = $this->getProjectLabelsPresenter($request->get('widget-id'));
             $this->project_data_validator->validateDataFromRequest($request, $labels);
             $this->dao->storeLabelsConfiguration($this->content_id, $request->get('project-labels'));
         } catch (ProjectLabelDoesNotBelongToProjectException $e) {
@@ -138,11 +150,14 @@ class ProjectLabeledItems extends Widget
         }
     }
 
-    protected function getProjectLabels($widget_id)
+    protected function getProjectLabelsPresenter($widget_id)
     {
-        $project_id = $this->dao->getProjectIdByWidgetAndContentId($widget_id, $this->content_id);
-        $project    = ProjectManager::instance()->getProject($project_id);
-        $labels     = $this->labels_retriever->getLabelsByProject($project);
+        $project_id     = $this->dao->getProjectIdByWidgetAndContentId($widget_id, $this->content_id);
+        $project        = ProjectManager::instance()->getProject($project_id);
+        $project_labels = $this->labels_retriever->getLabelsByProject($project);
+        $config_label   = $this->config_retriever->getLabelConfig($this->content_id);
+
+        $labels = $this->labels_presenter_builder->build($project_labels, $config_label);
 
         return $labels;
     }
