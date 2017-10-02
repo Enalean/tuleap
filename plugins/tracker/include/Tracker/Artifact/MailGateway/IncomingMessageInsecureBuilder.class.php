@@ -45,12 +45,17 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
         $subject        = isset($raw_mail['headers']['subject']) ? $raw_mail['headers']['subject'] : '';
         $body           = $raw_mail['body'];
         $user           = $this->getUserFromMailHeader($raw_mail['headers']['from']);
-        $is_a_followup  = $this->isAFollowUp($raw_mail['headers']['to']);
+        $to             = isset($raw_mail['headers']['to']) ? $raw_mail['headers']['to'] : '';
+        $cc             = isset($raw_mail['headers']['cc']) ? $raw_mail['headers']['cc'] : '';
+        $address_array  = array_merge($this->extractMailFromHeader($to), $this->extractMailFromHeader($cc));
+        $mail_receiver  = $this->searchRightMail($address_array);
+        $is_a_followup  = $this->isAFollowUp($mail_receiver);
+
         if ($is_a_followup) {
-            $artifact   = $this->getArtifactFromMailHeader($raw_mail['headers']['to']);
+            $artifact   = $this->getArtifactFromMailHeader($mail_receiver);
             $tracker    = $artifact->getTracker();
         } else {
-            $tracker    = $this->getTrackerFromMailHeader($raw_mail['headers']['to']);
+            $tracker    = $this->getTrackerFromMailHeader($mail_receiver);
             $artifact   = null;
         }
 
@@ -67,7 +72,11 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     }
 
     private function getUserFromMailHeader($mail_header) {
-        $user_mail = $this->extractMailFromHeader($mail_header);
+        $arr_user_mail = $this->extractMailFromHeader($mail_header);
+        if (!is_array($arr_user_mail) || count($arr_user_mail) < 1) {
+            throw new Tracker_Artifact_MailGateway_InvalidMailHeadersException();
+        }
+        $user_mail = $arr_user_mail[0]->mailbox . '@' . $arr_user_mail[0]->host;
         $users     = $this->user_manager->getAllUsersByEmail($user_mail);
 
         if (count($users) > 1) {
@@ -82,8 +91,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return Tracker
      */
-    private function getTrackerFromMailHeader($mail_header) {
-        $mail_userpart = $this->extractMailUserParts($mail_header);
+    private function getTrackerFromMailHeader($mail_receiver) {
+        $mail_userpart = $this->extractMailUserParts($mail_receiver);
 
         if (count($mail_userpart) !== 2) {
             throw new Tracker_Artifact_MailGateway_TrackerIdMissingException();
@@ -102,8 +111,8 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return Tracker_Artifact
      */
-    private function getArtifactFromMailHeader($mail_header) {
-        $mail_userpart = $this->extractMailUserParts($mail_header);
+    private function getArtifactFromMailHeader($mail_receiver) {
+        $mail_userpart = $this->extractMailUserParts($mail_receiver);
 
         if (count($mail_userpart) !== 2) {
             throw new Tracker_Artifact_MailGateway_ArtifactIdMissingException();
@@ -122,10 +131,9 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return array
      */
-    private function extractMailUserParts($mail_header) {
-        $mail_receiver = $this->extractMailFromHeader($mail_header);
-        $mail_splitted = explode('@', $mail_receiver);
-        $mail_userpart = explode('+', $mail_splitted[0]);
+    private function extractMailUserParts($mail_receiver) {
+            $mail_splitted = explode('@', $mail_receiver);
+            $mail_userpart = explode('+', $mail_splitted[0]);
 
         return $mail_userpart;
     }
@@ -139,11 +147,30 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
 
     private function extractMailFromHeader($mail_header) {
         $mail_addresses = imap_rfc822_parse_adrlist($mail_header, '');
-        if (!is_array($mail_addresses) || count($mail_addresses) !== 1) {
+
+        return $mail_addresses;
+    }
+
+    /**
+     * @return string
+     */
+    private function searchRightMail($address_array) {
+        $mail_address = '';
+        foreach ($address_array as $id => $value) {
+            if ((strpos($value->mailbox,
+                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE) !== false) ||
+                (strpos($value->mailbox,
+                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION)!== false)
+                ){
+                $mail_address = $value->mailbox . '@' . $value->host;
+                break;
+            }
+        }
+        if ($mail_address === '') {
             throw new Tracker_Artifact_MailGateway_InvalidMailHeadersException();
         }
 
-        return $mail_addresses[0]->mailbox . '@' . $mail_addresses[0]->host;
+        return $mail_address;
     }
 
 }
