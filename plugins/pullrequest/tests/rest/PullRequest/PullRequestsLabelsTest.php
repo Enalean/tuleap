@@ -30,15 +30,6 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class PullRequestsLabelsTest extends RestBase
 {
-
-    protected function getResponse($request)
-    {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('pull_requests/1/labels'));

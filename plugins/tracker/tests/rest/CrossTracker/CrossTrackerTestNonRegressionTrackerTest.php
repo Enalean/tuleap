@@ -26,14 +26,6 @@ require_once dirname(__FILE__) . '/../bootstrap.php';
 
 class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 {
-    private function getResponse($request)
-    {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(\REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testItThrowsAnExceptionWhenReportIsNotFound()
     {
         $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
@@ -160,9 +152,6 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     private function getResponseForNonProjectMember($request)
     {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(\REST_TestDataBuilder::TEST_USER_5_NAME),
-            $request
-        );
+        return $this->getResponse($request, \REST_TestDataBuilder::TEST_USER_5_NAME);
     }
 }

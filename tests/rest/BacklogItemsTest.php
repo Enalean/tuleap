@@ -50,13 +50,6 @@ class BacklogItemsTest extends RestBase {
         $this->createStoriesAndTasks();
     }
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOPTIONS() {
         $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0]));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());

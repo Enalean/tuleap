@@ -28,13 +28,6 @@ require_once dirname(__FILE__).'/bootstrap.php';
  */
 class KanbanTest extends TestBase {
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOPTIONSKanban() {
         $response = $this->getResponse($this->client->options('kanban'));
         $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());

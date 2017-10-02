@@ -118,6 +118,14 @@ class RestBase extends PHPUnit_Framework_TestCase
         $this->getTrackerIdsForProjectPrivateMember();
     }
 
+    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME)
+    {
+        return $this->getResponseByName(
+            $user_name,
+            $request
+        );
+    }
+
     protected function getResponseWithoutAuth($request) {
         return $this->rest_request->getResponseWithoutAuth($request);
     }
@@ -126,10 +134,16 @@ class RestBase extends PHPUnit_Framework_TestCase
         return $this->rest_request->getResponseByName($name, $request);
     }
 
+    /**
+     * @deprecated
+     */
     protected function getResponseByToken(Rest_Token $token, $request) {
         return $this->rest_request->getResponseByToken($token, $request);
     }
 
+    /**
+     * @deprecated
+     */
     protected function getTokenForUserName($user_name) {
         return $this->rest_request->getTokenForUserName($user_name);
     }

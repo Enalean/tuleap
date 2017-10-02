@@ -52,7 +52,11 @@ class AuthenticationTest extends RestBase {
     public function testGETWithBasicAuthAndWrongCredentialsThrowsAnException() {
         $exception_thrown = false;
         try {
-            $this->getUnauthorizedBasicAuthResponse($this->client->get('projects'));
+            $this->getResponseByBasicAuth(
+                REST_TestDataBuilder::TEST_USER_1_NAME,
+                'wrong_password',
+                $this->client->get('projects')
+            );
         } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
             $this->assertEquals(401, $e->getResponse()->getStatusCode());
             $exception_thrown = true;
@@ -63,31 +67,15 @@ class AuthenticationTest extends RestBase {
     public function testGETWithTokenAndWrongCredentialsThrowsAnException() {
         $exception_thrown = false;
         try {
-            $this->getUnauthorizedTokenResponse($this->client->get('projects'));
+            $request = $this->client->get('projects');
+            $request
+                ->setHeader('X-Auth-Token', 'wrong_token')
+                ->setHeader('X-Auth-UserId', REST_TestDataBuilder::TEST_USER_1_ID);
+            $request->send();
         } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
             $this->assertEquals(401, $e->getResponse()->getStatusCode());
             $exception_thrown = true;
         }
         $this->assertTrue($exception_thrown);
-    }
-
-    private function getUnauthorizedBasicAuthResponse($request) {
-        return $this->getResponseByBasicAuth(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
-            'wrong_password',
-            $request
-        );
-    }
-
-    private function getUnauthorizedTokenResponse($request) {
-        $token = new Rest_Token(
-            REST_TestDataBuilder::TEST_USER_1_ID,
-            'wrong_token'
-        );
-
-        return $this->getResponseByToken(
-            $token,
-            $request
-        );
     }
 }

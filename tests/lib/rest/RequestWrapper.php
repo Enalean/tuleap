@@ -54,12 +54,18 @@ class RequestWrapper {
         return $request->send();
     }
 
+    /**
+     * @deprecated
+     */
     public function getResponseByToken(Rest_Token $token, $request) {
         $request->setHeader('X-Auth-Token', $token->getTokenValue())
                 ->setHeader('X-Auth-UserId', $token->getUserId());
         return $request->send();
     }
 
+    /**
+     * @deprecated
+     */
     public function getTokenForUserName($user_name) {
         return $this->generateToken(
             $this->getUserByName($user_name)

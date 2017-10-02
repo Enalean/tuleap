@@ -27,14 +27,6 @@ use Tuleap\REST\MilestoneBase;
  */
 class MilestonesMilestonesTest extends MilestoneBase
 {
-
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testPUTRemoveSubMilestones() {
         $this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '['.$this->sprint_artifact_ids[1].']');
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/milestones', null, '[]'));

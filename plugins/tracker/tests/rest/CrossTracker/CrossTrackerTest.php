@@ -34,14 +34,6 @@ class CrossTrackerTest extends RestBase
         $this->getEpicArtifactIds();
     }
 
-    private function getResponse($request)
-    {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(\REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testGetId()
     {
         $response = $this->getResponse($this->client->get('cross_tracker_reports/1'));

@@ -28,9 +28,9 @@ class RepositoryTest extends TestBase
 {
     private function getResponseWithProjectMember($request)
     {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_3_NAME),
-            $request
+        return $this->getResponse(
+            $request,
+            REST_TestDataBuilder::TEST_USER_3_NAME
         );
     }
 
@@ -362,9 +362,9 @@ class RepositoryTest extends TestBase
 
     public function testOPTIONSId()
     {
-        $response = $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $this->client->options('svn')
+        $response = $this->getResponse(
+            $this->client->options('svn'),
+            REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());

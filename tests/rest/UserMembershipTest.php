@@ -27,10 +27,7 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 class UserMembershipsTest extends RestBase {
 
     protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::ADMIN_USER_NAME),
-            $request
-        );
+        return parent::getResponse($request, REST_TestDataBuilder::ADMIN_USER_NAME);
     }
 
     public function testGET() {

@@ -33,18 +33,8 @@ class ArtifactFilesTest extends ArtifactFileBase
     private $second_chunk = 'with more data';
     private $third_file;
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     protected function getResponseForDifferentUser($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
-            $request
-        );
+        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
     public function setUp() {

@@ -41,14 +41,6 @@ class PackagesTest extends RestBase
         $this->project_id = $this->getProjectId(self::PROJECT_NAME);
     }
 
-    protected function getResponse($request)
-    {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('frs_packages'));

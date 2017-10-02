@@ -119,12 +119,4 @@ class TestBase extends RestBase
             "key"        =>  self::UGROUP_NAME_2
         );
     }
-
-    protected function getResponse($request)
-    {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
 }

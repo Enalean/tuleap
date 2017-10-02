@@ -25,13 +25,6 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class PlanningTest extends RestBase {
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOptionsPlannings() {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/plannings'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
