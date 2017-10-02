@@ -40,6 +40,7 @@ class TestDataBuilder {
     const ADMIN_DISPLAY_NAME   = 'Site Administrator (admin)';
     const ADMIN_EMAIL          = 'codendi-admin@_DOMAIN_NAME_';
     const ADMIN_STATUS         = 'A';
+    const ADMIN_PASSWORD       = 'welcome0';
 
     const TEST_USER_1_ID          = 102;
     const TEST_USER_1_NAME        = 'rest_api_tester_1';
