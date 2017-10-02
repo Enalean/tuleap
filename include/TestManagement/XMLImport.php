@@ -50,7 +50,7 @@ class XMLImport
         if (file_exists($xml_path)) {
             $xml = simplexml_load_string(file_get_contents($xml_path));
             if (! $xml) {
-                throw new Exception("Cannot load XML from $xml_path");
+                throw new \Exception("Cannot load XML from $xml_path");
             }
 
             $xml_validator = new XML_RNGValidator();
