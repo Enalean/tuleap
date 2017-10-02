@@ -96,4 +96,13 @@ class Dao extends \DataAccessObject
 
         return $this->updateAndGetLastId($sql);
     }
+
+    public function removeLabelById($label_id)
+    {
+        $label_id = $this->da->escapeInt($label_id);
+        $sql      = "DELETE FROM plugin_label_widget_config
+                       WHERE label_id = $label_id";
+
+        return $this->update($sql);
+    }
 }

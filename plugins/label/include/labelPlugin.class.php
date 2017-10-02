@@ -21,7 +21,8 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Label\REST\ResourcesInjector;
 use Tuleap\Label\Widget\ProjectLabeledItems;
-use Tuleap\Project\REST\v1\LabelRESTEndpoint;
+use Tuleap\Label\Widget\Dao;
+use Tuleap\Project\Label\RemoveLabel;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -42,6 +43,7 @@ class labelPlugin extends Plugin
         $this->addHook('widget_instance');
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
+        $this->addHook(RemoveLabel::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -91,5 +93,18 @@ class labelPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
+    }
+
+    public function removeLabel(RemoveLabel $event)
+    {
+        $this->getDao()->removeLabelById($event->getLabelToDeleteId());
+    }
+
+    /**
+     * @return Dao
+     */
+    private function getDao()
+    {
+        return new Dao();
     }
 }
