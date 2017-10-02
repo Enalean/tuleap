@@ -88,7 +88,6 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
         $clean = '';
         switch($level) {        
             case CODENDI_PURIFIER_FORUMML:
-                require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
                 $hp = HTMLPurifier::getInstance();
                 $config = $this->getHPConfig($level);
                 $clean = util_make_links($hp->purify($html, $config), $groupId);        	

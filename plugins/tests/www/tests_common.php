@@ -36,9 +36,6 @@ if ( ! $local_inc ) {
 require($local_inc);
 
 // Fix path if needed
-if (isset($GLOBALS['htmlpurifier_dir'])) {
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['htmlpurifier_dir']);
-}
 if (isset($GLOBALS['jpgraph_dir'])) {
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['jpgraph_dir']);
 }

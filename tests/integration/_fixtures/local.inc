@@ -164,7 +164,6 @@ $sys_themeroot = $codendi_dir . "/src/www/themes/";
 $sys_custom_themeroot = $sys_custom_dir . "/themes";
 
 // 3rd Party libraries
-$htmlpurifier_dir = "/usr/share/htmlpurifier";
 $jpgraph_dir      = "/usr/share/jpgraph";
 $ckeditor_dir     = "/usr/share/ckeditor";
 
