@@ -273,10 +273,19 @@ class TuleapTemplate extends BaseTemplate {
      }
 
      private function isCompatibilityViewEnabled() {
-        $manager = new MediawikiManager(new MediawikiDao());
         $project = $GLOBALS['group'];
 
-        return $manager->isCompatibilityViewEnabled($project);
+        return $this->getMediawikiManager()->isCompatibilityViewEnabled($project);
+     }
+
+     private function getMediawikiManager()
+     {
+         $plugin_manager = PluginManager::instance();
+         $mw_plugin = $plugin_manager->getPluginByName('mediawiki');
+         if ($mw_plugin && $plugin_manager->isPluginAvailable($mw_plugin)) {
+             return $mw_plugin->getMediawikiManager();
+         }
+         throw new Exception('Mediawiki plugin not available');
      }
 
      private function addForgeBackLinksToSidebar() {

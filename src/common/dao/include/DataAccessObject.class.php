@@ -104,12 +104,24 @@ class DataAccessObject {
      * 
      * @param string $sql the query string
      * 
-     * @return mixed
+     * @return array|false
      */
     protected function retrieveFirstRow($sql) {
         return $this->retrieve($sql)->getRow();
     }
-    
+
+    /**
+     * Like retrieve, but returns only the number of matching rows
+     *
+     * @param string $sql
+     *
+     * @return int
+     */
+    protected function retrieveCount($sql)
+    {
+        return $this->retrieve($sql)->count();
+    }
+
     /**
      * Like retrieve, but returns only the ids.
      * 

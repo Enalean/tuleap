@@ -25,6 +25,8 @@
 
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
+use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
+use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
@@ -396,7 +398,7 @@ class MediaWikiPlugin extends Plugin {
     }
 
     public function plugin_statistics_service_usage($params) {
-        $dao             = new MediawikiDao();
+        $dao             = $this->getDao();
         $project_manager = ProjectManager::instance();
         $start_date      = $params['start_date'];
         $end_date        = $params['end_date'];
@@ -476,13 +478,18 @@ class MediaWikiPlugin extends Plugin {
     }
 
     private function getDao() {
-        return new MediawikiDao();
+        return new MediawikiDao($this->getCentralDatabaseNameProperty());
+    }
+
+    private function getCentralDatabaseNameProperty()
+    {
+        return trim($this->getPluginInfo()->getPropVal('central_database'));
     }
 
     /**
      * @return MediawikiManager
      */
-    private function getMediawikiManager() {
+    public function getMediawikiManager() {
         return new MediawikiManager($this->getDao());
     }
 
@@ -523,16 +530,11 @@ class MediaWikiPlugin extends Plugin {
     }
 
     private function clearMediawikiCache(Project $project) {
-        $schema = $this->getDao()->getMediawikiDatabaseName($project, false);
-        $logger = new BackendLogger();
+        $logger = $this->getBackendLogger();
 
-        if ($schema) {
-            $delete = $this->getDao()->clearPageCacheForSchema($schema);
-            if (! $delete) {
-                $logger->error('Project Clear cache: Can\'t delete mediawiki cache for schema: '.$schema);
-            }
-        } else  {
-            $logger->error('Project Clear cache: Can\'t find mediawiki db for project: '.$project->getID());
+        $delete = $this->getDao()->clearPageCacheForProject($project);
+        if (! $delete) {
+            $logger->error('Project Clear cache: Can\'t delete mediawiki cache for schema: '.$project->getID());
         }
     }
 
@@ -612,7 +614,8 @@ class MediaWikiPlugin extends Plugin {
 
     public function system_event_get_types_for_default_queue(array &$params) {
         $params['types'] = array_merge($params['types'], array(
-            SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME
+            SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
+            SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME
         ));
     }
 
@@ -627,6 +630,13 @@ class MediaWikiPlugin extends Plugin {
                     $this->getMediawikiMLEBExtensionManager()
                 );
                 break;
+            case SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME:
+                $params['class'] = 'Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB';
+                $params['dependencies'] = array(
+                    new MoveToCentralDbDao($this->getCentralDatabaseNameProperty()),
+                );
+                break;
+
             default:
                 break;
         }

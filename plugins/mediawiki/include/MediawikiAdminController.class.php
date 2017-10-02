@@ -35,14 +35,13 @@ class MediawikiAdminController {
     /** @var MediawikiLanguageManager */
     private $language_manager;
 
-    public function __construct() {
-        $dao = new MediawikiDao();
+    public function __construct(MediawikiManager $manager) {
+        $this->manager = $manager;
+
         $this->mapper = new MediawikiUserGroupsMapper(
-            $dao,
+            $this->manager->getDao(),
             new User_ForgeUserGroupPermissionsDao()
         );
-
-        $this->manager = new MediawikiManager($dao);
 
         $user_dao                     = new UserGroupDao();
         $this->user_group_factory     = new User_ForgeUserGroupFactory($user_dao);

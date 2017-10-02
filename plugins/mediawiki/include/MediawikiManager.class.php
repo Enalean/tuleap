@@ -32,6 +32,20 @@ class MediawikiManager {
         $this->dao = $dao;
     }
 
+    public function getWgDBname(Project $project)
+    {
+        return $this->dao->getMediawikiDatabaseName($project, false);
+    }
+
+    public function getWgDBprefix(Project $project)
+    {
+        return $this->dao->getMediawikiTableNamePrefix($project);
+    }
+
+    public function getDao()
+    {
+        return $this->dao;
+    }
     public function saveCompatibilityViewOption(Project $project, $compatibility_view_option) {
         $project_id                = $project->getID();
         $enable_compatibility_view = $compatibility_view_option ? $compatibility_view_option : 0;
