@@ -416,7 +416,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return bool true if we want to redirect
      */
-    public function process($params, $no_redirect = false, $redirect = false) {
+    public function process($params, $no_redirect = false) {
         if (isset($params['decorator'])) {
             foreach ($params['decorator'] as $value_id => $hexacolor) {
                 if ($hexacolor) {
@@ -425,22 +425,18 @@ abstract class Tracker_FormElement_Field_List_Bind implements
                     Tracker_FormElement_Field_List_BindDecorator::delete($this->field->getId(), $value_id);
                 }
             }
-            $redirect = true;
         }
 
-        if (isset($params['default'])) {
-            $default = $this->extractDefaultValues($params);
-            $this->getDefaultValueDao()->save($this->field->getId(), $default);
-            $redirect = true;
-        }
+        $default = $this->extractDefaultValues($params);
+        $this->getDefaultValueDao()->save($this->field->getId(), $default);
 
-        if (!$no_redirect && $redirect) {
+        if (!$no_redirect) {
             $GLOBALS['Response']->redirect('?'. http_build_query(array(
                     'tracker'            => $this->field->getTracker()->id,
                     'func'               => 'admin-formElements',
             )));
         }
-        return $redirect;
+        return true;
     }
 
     private function extractDefaultValues(array $params)

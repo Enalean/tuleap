@@ -599,7 +599,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      *
      * @return void
      */
-    public function process($params, $no_redirect = false, $redirect = false) {
+    public function process($params, $no_redirect = false) {
         $hp        = Codendi_HTMLPurifier::instance();
         $value_dao = $this->getValueDao();
         foreach ($params as $key => $value) {
@@ -614,7 +614,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 case 'delete':
                     if (($row = $value_dao->searchById((int)$value)->getRow()) && $value_dao->delete((int)$value)) {
                         $params['decorator'] = array((int)$value => null);
-                        $redirect = true;
                         $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .' deleted');
                     }
                     break;
@@ -659,7 +658,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     foreach (explode("\n", $value) as $new_value) {
                         $id = $this->addValue($new_value);
                         if ($id) {
-                            $redirect = true;
                             $this->values[$id] = $value_dao->searchById($id)->getRow();
                             $valueMapping[] = $id;
                         }
@@ -676,7 +674,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     break;
             }
         }
-        return parent::process($params, $no_redirect, $redirect);
+        return parent::process($params, $no_redirect);
     }
 
     /**
