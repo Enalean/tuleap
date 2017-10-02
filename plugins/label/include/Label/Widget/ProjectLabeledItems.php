@@ -20,15 +20,52 @@
 
 namespace Tuleap\Label\Widget;
 
+use DataAccessException;
+use Feedback;
+use ProjectManager;
+use Tuleap\Project\Label\LabelDao;
 use Widget;
 
 class ProjectLabeledItems extends Widget
 {
     const NAME = 'projectlabeleditems';
 
+    /**
+     * @var ProjectLabelRequestDataValidator
+     */
+    private $project_data_validator;
+
+    /**
+     * @var ProjectLabelRetriever
+     */
+    private $labels_retriever;
+
+    /**
+     * @var Dao
+     */
+    private $dao;
+
+    /**
+     * @var \TemplateRenderer
+     */
+    private $renderer;
+
     public function __construct()
     {
         parent::__construct(self::NAME);
+
+        $this->renderer = \TemplateRendererFactory::build()->getRenderer(
+            LABEL_BASE_DIR . '/templates/widgets'
+        );
+
+        $this->dao                    = new Dao();
+        $this->labels_retriever       = new ProjectLabelRetriever(new LabelDao());
+        $this->project_data_validator = new ProjectLabelRequestDataValidator();
+    }
+
+    public function loadContent($id)
+    {
+        $this->content_id = $id;
     }
 
     public function getTitle()
@@ -48,13 +85,65 @@ class ProjectLabeledItems extends Widget
 
     public function getContent()
     {
-        $renderer = \TemplateRendererFactory::build()->getRenderer(
-            LABEL_BASE_DIR . '/templates/widgets'
-        );
-
-        return $renderer->renderToString(
+        return $this->renderer->renderToString(
             'project-labeled-items',
             new ProjectLabeledItemsPresenter()
         );
+    }
+
+    public function getPreferences($widget_id)
+    {
+        $labels = $this->getProjectLabels($widget_id);
+
+        return $this->renderer->renderToString(
+            'project-label-selector',
+            new ProjectLabelSelectorPresenter($labels)
+        );
+    }
+
+    public function create(&$request)
+    {
+        $content_id = $this->dao->create();
+
+        return $content_id;
+    }
+
+
+    public function updatePreferences(&$request)
+    {
+        try {
+            $labels = $this->getProjectLabels($request->get('widget-id'));
+            $this->project_data_validator->validateDataFromRequest($request, $labels);
+            $this->dao->storeLabelsConfiguration($this->content_id, $request->get('project-labels'));
+        } catch (ProjectLabelDoesNotBelongToProjectException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-label', 'Error: label does not belong to project or does not exist.')
+            );
+        } catch (ProjectLabelAreNotValidException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-label', 'Error: one projects label is invalid.')
+            );
+        } catch (ProjectLabelAreMandatoryException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-label', 'Error: you should specify at least one project label.')
+            );
+        } catch (DataAccessException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-label', 'An exception occurred while saving data.')
+            );
+        }
+    }
+
+    protected function getProjectLabels($widget_id)
+    {
+        $project_id = $this->dao->getProjectIdByWidgetAndContentId($widget_id, $this->content_id);
+        $project    = ProjectManager::instance()->getProject($project_id);
+        $labels     = $this->labels_retriever->getLabelsByProject($project);
+
+        return $labels;
     }
 }
