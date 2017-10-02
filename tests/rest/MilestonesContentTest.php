@@ -27,14 +27,6 @@ use Tuleap\REST\MilestoneBase;
  */
 class MilestonesContentTest extends MilestoneBase
 {
-
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOPTIONSContent() {
         $response = $this->getResponse($this->client->options('milestones/'.$this->release_artifact_ids[1].'/content'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());

@@ -27,13 +27,6 @@ use Tuleap\REST\ArtifactBase;
  */
 class ArtifactsTest extends ArtifactBase
 {
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOptionsArtifactId() {
         $response = $this->getResponse($this->client->options('artifacts/9'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());

@@ -27,14 +27,6 @@ use Tuleap\REST\ProjectBase;
  */
 class ProjectTest extends ProjectBase
 {
-
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     private function getBasicAuthResponse($request) {
         return $this->getResponseByBasicAuth(
             REST_TestDataBuilder::TEST_USER_1_NAME,

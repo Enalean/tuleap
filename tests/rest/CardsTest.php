@@ -27,14 +27,6 @@ use Tuleap\REST\CardsBase;
  */
 class CardsTest extends CardsBase
 {
-
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOPTIONSCards() {
         $response = $this->getResponse($this->client->options('cards'));
         $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());

@@ -158,14 +158,6 @@ class TQLTest extends RestBase
         $this->assertTrue($exception_thrown);
     }
 
-    private function getResponse($request)
-    {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     private function getTrackerId()
     {
         $project_id = $this->getProjectId(self::PROJECT_NAME);

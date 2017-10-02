@@ -30,13 +30,6 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class ProjectTest extends TestBase {
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testGetGitRepositories() {
         $response  = $this->getResponse($this->client->get(
             'projects/'.$this->git_project_id.'/git'

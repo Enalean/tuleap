@@ -45,13 +45,6 @@ class MilestonesBacklogPatchTest extends MilestoneBase
     private $epic_fin;
     private $epic_sta;
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function setUp()
     {
         parent::setUp();

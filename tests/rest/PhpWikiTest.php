@@ -24,12 +24,6 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  * @group PhpWikiTests
  */
 class PhpWikiTest extends RestBase {
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
 
     public function testOPTIONSId() {
         $response = $this->getResponse($this->client->options('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID));

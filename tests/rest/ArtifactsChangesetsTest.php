@@ -124,13 +124,6 @@ class ArtifactsChangesetsTest extends RestBase {
         $this->assertEquals($pagination_size[0], 3);
     }
 
-    private function getResponse($request) {
-        return $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
-            $request
-        );
-    }
-
     private function createData()
     {
         if ($this->data_already_created) {

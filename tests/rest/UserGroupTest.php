@@ -26,18 +26,8 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class UserGroupTest extends RestBase {
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     private function getResponseWithUser2($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
-            $request
-        );
+        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
     public function testGETId() {
@@ -61,9 +51,9 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $this->getResponseByToken(
-                $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
-                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID)
+            $this->getResponse(
+                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_1_ID),
+                REST_TestDataBuilder::TEST_USER_2_NAME
             );
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
@@ -77,9 +67,9 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $this->getResponseByToken(
-                $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
-                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID)
+            $this->getResponse(
+                $this->client->get('user_groups/'.REST_TestDataBuilder::STATIC_UGROUP_2_ID),
+                REST_TestDataBuilder::TEST_USER_2_NAME
             );
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);

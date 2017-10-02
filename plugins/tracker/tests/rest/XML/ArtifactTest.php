@@ -47,13 +47,6 @@ class ArtifactTest extends RestBase {
      */
     private $xml_client;
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function __construct()
     {
         parent::__construct();

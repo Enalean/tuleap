@@ -31,18 +31,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class RepositoryTest extends TestBase {
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     protected function getResponseForNonMember($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
-            $request
-        );
+        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
     }
 
     public function testGetGitRepository() {

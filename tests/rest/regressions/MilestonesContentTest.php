@@ -115,11 +115,4 @@ class Regressions_MilestonesContentTest extends RestBase {
             )
         );
     }
-
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
 }

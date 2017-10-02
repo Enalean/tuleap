@@ -35,13 +35,6 @@ class ProjectBacklogV2Test extends RestBase {
         }
     }
 
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
     public function testOPTIONSBacklog() {
         $response = $this->getResponse($this->client->options("projects/$this->project_public_id/backlog"));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
