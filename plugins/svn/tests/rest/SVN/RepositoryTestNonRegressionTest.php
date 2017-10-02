@@ -20,12 +20,14 @@
 
 namespace Tuleap\SVN\REST;
 
-use ProjectUGroup;
-
-require_once dirname(__FILE__) . '/../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 class RepositoryTestNonRegressionTest extends TestBase
 {
+
+    const TULEAP_MAGIC_GROUP_ID_ANONYMOUS = 1;
+    const TULEAP_MAGIC_GROUP_ID_MEMBERS   = 3;
+
     public function testPOSTRepositoryWithMissingKey()
     {
         $params = json_encode(
@@ -244,7 +246,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             'users'       => array(),
-                            'user_groups' => array("110_".ProjectUGroup::PROJECT_MEMBERS)
+                            'user_groups' => array("110_".self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
                         )
                     )
                 )
@@ -271,7 +273,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             'users'       => array(),
-                            'user_groups' => array($this->svn_project_id."_".ProjectUGroup::ANONYMOUS)
+                            'user_groups' => array($this->svn_project_id."_".self::TULEAP_MAGIC_GROUP_ID_ANONYMOUS)
                         )
                     )
                 )
@@ -298,7 +300,7 @@ class RepositoryTestNonRegressionTest extends TestBase
                                 "project-devel@lists.example.com"
                             ),
                             'users'       => array(),
-                            'user_groups' => array($this->svn_project_id."_".ProjectUGroup::PROJECT_MEMBERS)
+                            'user_groups' => array($this->svn_project_id."_".self::TULEAP_MAGIC_GROUP_ID_MEMBERS)
                         )
                     )
                 )

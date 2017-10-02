@@ -26,7 +26,6 @@ $xml = simplexml_load_string(<<<XML
 <?xml version='1.0'?>
 <phpunit>
   <php>
-    <includePath>/usr/share/tuleap/src/www/include:/usr/share/tuleap/src</includePath>
     <ini name="date.timezone" value="Europe/Paris"/>
   </php>
   <logging>

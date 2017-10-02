@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'common/autoload.php';
 require_once __DIR__.'/DatabaseInitialization.php';
 
 use Tuleap\Git\Permissions\FineGrainedRegexpValidator;

@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'account.php';
-require_once 'www/project/admin/UserPermissionsDao.class.php';
-
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
@@ -139,11 +136,10 @@ class TestDataBuilder {
      */
     protected $ugroup_duplicator;
 
-    /** @var ConfigDao */
-    private $config_dao;
-
     public function __construct()
     {
+        include_once 'account.php';
+        include_once 'www/project/admin/UserPermissionsDao.class.php';
         $this->project_manager      = ProjectManager::instance();
         $this->user_manager         = UserManager::instance();
         $this->user_permissions_dao = new UserPermissionsDao();
@@ -193,25 +189,8 @@ class TestDataBuilder {
             $force_activation
         );
 
-        $this->config_dao = new ConfigDao();
-
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
         $GLOBALS['sys_lf'] = '\n';
-    }
-
-    public function setForgeToRestricted()
-    {
-        $this->config_dao->save(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-    }
-
-    public function setForgeToAnonymous()
-    {
-        $this->config_dao->save(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-    }
-
-    public function setForgeToRegular()
-    {
-        $this->config_dao->save(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
     }
 
     public function activateDebug() {

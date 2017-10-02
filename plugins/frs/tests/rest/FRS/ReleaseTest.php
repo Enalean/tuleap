@@ -42,8 +42,6 @@ class ReleaseTest extends RestBase
         $response = $this->getResponse($this->client->get('frs_release/1'));
         $release  = $response->json();
 
-        var_dump($release['links']);
-
         $this->assertEquals($release['id'], 1);
         $this->assertEquals($release['name'], 'release1');
         $this->assertEquals($release['links'][0]["link"], 'http://example.fr');
