@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,11 +25,17 @@ use Tuleap\REST\JsonCast;
 use GitRepository;
 use Codendi_HTMLPurifier;
 
-class PullRequestRepresentation
+class PullRequestRepresentation extends PullRequestMinimalRepresentation
 {
+    const ROUTE = parent::ROUTE;
 
-    const ROUTE          = 'pull_requests';
     const COMMENTS_ROUTE = 'comments';
+    const INLINE_ROUTE   = 'inline-comments';
+    const LABELS_ROUTE   = 'labels';
+    const FILES_ROUTE    = 'files';
+    const DIFF_ROUTE     = 'file_diff';
+    const TIMELINE_ROUTE = 'timeline';
+
     const STATUS_ABANDON = 'abandon';
     const STATUS_MERGE   = 'merge';
     const STATUS_REVIEW  = 'review';
@@ -45,44 +51,9 @@ class PullRequestRepresentation
     const BUILD_STATUS_FAIL    = 'fail';
 
     /**
-     * @var int {@type int}
-     */
-    public $id;
-
-    /**
-     * @var string {@type string}
-     */
-    public $title;
-
-    /**
      * @var string {@type string}
      */
     public $description;
-
-    /**
-     * @var string {@type string}
-     */
-    public $uri;
-
-    /**
-     * @var int {@type GitRepositoryReference}
-     */
-    public $repository;
-
-    /**
-     * @var int {@type GitRepositoryReference}
-     */
-    public $repository_dest;
-
-    /**
-     * @var int {@type int}
-     */
-    public $user_id;
-
-    /**
-     * @var string {@type string}
-     */
-    public $creation_date;
 
     /**
      * @var string {@type string}
@@ -92,17 +63,7 @@ class PullRequestRepresentation
     /**
      * @var string {@type string}
      */
-    public $branch_src;
-
-    /**
-     * @var string {@type string}
-     */
     public $reference_dest;
-
-    /**
-     * @var string {@type string}
-     */
-    public $branch_dest;
 
     /**
      * @var string {@type string}
@@ -168,39 +129,18 @@ class PullRequestRepresentation
         $user_can_update_labels,
         PullRequestShortStatRepresentation $pr_short_stat_representation
     ) {
-        $this->id  = JsonCast::toInt($pull_request->getId());
+        $this->buildMinimal($pull_request, $repository, $repository_dest);
 
         $project_id        = $repository->getProjectId();
         $purifier          = Codendi_HTMLPurifier::instance();
-        $this->title       = $purifier->purify($pull_request->getTitle(), CODENDI_PURIFIER_BASIC, $project_id);
         $this->description = $purifier->purify($pull_request->getDescription(), CODENDI_PURIFIER_BASIC, $project_id);
 
-        $this->uri = self::ROUTE . '/' . $this->id;
-
-        $repository_reference = new GitRepositoryReference();
-        $repository_reference->build($repository);
-        $this->repository = $repository_reference;
-
-        $repository_dest_reference = new GitRepositoryReference();
-        $repository_dest_reference->build($repository_dest);
-        $this->repository_dest = $repository_dest_reference;
-
-        $this->user_id        = JsonCast::toInt($pull_request->getUserId());
-        $this->creation_date  = JsonCast::toDate($pull_request->getCreationDate());
-        $this->branch_src     = $pull_request->getBranchSrc();
         $this->reference_src  = $pull_request->getSha1Src();
-        $this->branch_dest    = $pull_request->getBranchDest();
         $this->reference_dest = $pull_request->getSha1Dest();
         $this->status         = $this->expandStatusName($pull_request->getStatus());
 
         $this->last_build_status = $this->expandBuildStatusName($pull_request->getLastBuildStatus());
         $this->last_build_date   = JsonCast::toDate($pull_request->getLastBuildDate());
-
-        $this->resources = array(
-            'comments' => array(
-                'uri' => $this->uri . '/'. self::COMMENTS_ROUTE
-            )
-        );
 
         $this->user_can_update_labels = $user_can_update_labels;
         $this->user_can_merge         = $user_can_merge;
@@ -211,6 +151,27 @@ class PullRequestRepresentation
 
         $this->raw_title       = $pull_request->getTitle();
         $this->raw_description = $pull_request->getDescription();
+
+        $this->resources = array(
+            self::COMMENTS_ROUTE => array(
+                'uri' => $this->uri . '/'. self::COMMENTS_ROUTE
+            ),
+            self::INLINE_ROUTE => array(
+                'uri' => $this->uri . '/'. self::INLINE_ROUTE
+            ),
+            self::LABELS_ROUTE => array(
+                'uri' => $this->uri . '/'. self::LABELS_ROUTE
+            ),
+            self::FILES_ROUTE => array(
+                'uri' => $this->uri . '/'. self::FILES_ROUTE
+            ),
+            self::DIFF_ROUTE => array(
+                'uri' => $this->uri . '/'. self::DIFF_ROUTE
+            ),
+            self::TIMELINE_ROUTE => array(
+                'uri' => $this->uri . '/'. self::TIMELINE_ROUTE
+            ),
+        );
     }
 
     private function expandStatusName($status_acronym)
