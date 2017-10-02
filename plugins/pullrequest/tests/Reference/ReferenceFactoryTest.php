@@ -38,11 +38,13 @@ class ReferenceFactoryTest extends TuleapTestCase
         $this->pull_request_factory = mock('Tuleap\PullRequest\Factory');
         $this->repository_factory   = mock('GitRepositoryFactory');
         $this->reference_retriever  = mock('Tuleap\PullRequest\Reference\ProjectReferenceRetriever');
+        $this->html_url_builder     = mock('Tuleap\PullRequest\Reference\HTMLURLBuilder');
 
         $this->reference_factory = new ReferenceFactory(
             $this->pull_request_factory,
             $this->repository_factory,
-            $this->reference_retriever
+            $this->reference_retriever,
+            $this->html_url_builder
         );
 
         $this->pull_request = new PullRequest(1, '', '', 42, 101, '', '', '', '', '', '');

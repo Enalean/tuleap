@@ -29,6 +29,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\REST\ResourcesInjector;
@@ -454,7 +455,10 @@ class pullrequestPlugin extends Plugin
         return new ReferenceFactory(
             $this->getPullRequestFactory(),
             $this->getRepositoryFactory(),
-            new ProjectReferenceRetriever(new ReferenceDao())
+            new ProjectReferenceRetriever(new ReferenceDao()),
+            new HTMLURLBuilder(
+                $this->getRepositoryFactory()
+            )
         );
     }
 
@@ -531,6 +535,9 @@ class pullrequestPlugin extends Plugin
             new PullRequestPermissionChecker(
                 $this->getRepositoryFactory(),
                 new URLVerification()
+            ),
+            new HTMLURLBuilder(
+                $this->getRepositoryFactory()
             ),
             new GlyphFinder(
                 EventManager::instance()
