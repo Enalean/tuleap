@@ -18,16 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-
-require_once 'common/autoload.php';
-
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 
 class TestManagementDataBuilder extends REST_TestDataBuilder
 {
-    private $tracker_factory;
-
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
     const ISSUE_TRACKER_SHORTNAME     = 'bugs';
 
@@ -37,9 +32,9 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
 
     public function __construct() {
         parent::__construct();
+        $this->instanciateFactories();
 
         $this->template_path   = dirname(__FILE__).'/_fixtures/';
-        $this->tracker_factory = TrackerFactory::instance();
     }
 
     public function setUp()
@@ -48,6 +43,10 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
 
         $this->installPlugin();
         $this->activatePlugin('testmanagement');
+
+        $user = $this->user_manager->getUserByUserName(self::USER_TESTER_NAME);
+        $user->setPassword(self::USER_TESTER_PASS);
+        $this->user_manager->updateDb($user);
 
         $project  = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_MGMT_SHORTNAME);
         $trackers = $this->tracker_factory->getTrackersByGroupId($project->getID());

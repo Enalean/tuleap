@@ -34,10 +34,7 @@ abstract class BaseTest extends RestBase {
     protected $project_id;
 
     protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(TestManagementDataBuilder::USER_TESTER_NAME),
-            $request
-        );
+        return parent::getResponse($request, TestManagementDataBuilder::USER_TESTER_NAME);
     }
 
     public function setUp() {
