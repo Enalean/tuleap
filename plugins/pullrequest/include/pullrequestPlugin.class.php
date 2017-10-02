@@ -21,6 +21,7 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Label\LabeledItemCollection;
@@ -72,6 +73,7 @@ class pullrequestPlugin extends Plugin
         $this->addHook('ajax_reference_tooltip');
         $this->addHook(CollectionOfLabelableDao::NAME);
         $this->addHook(LabeledItemCollection::NAME);
+        $this->addHook(Event::GET_GLYPH);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -508,6 +510,19 @@ class pullrequestPlugin extends Plugin
         $dao->deleteAllPullRequestsOfRepository($event->getRepository()->getId());
     }
 
+    /**
+     * @see Event::GET_GLYPH
+     */
+    public function getGlyph(array $params)
+    {
+        if (strpos($params['name'], 'tuleap-pullrequest') === 0) {
+            $svg_content = file_get_contents(PULLREQUEST_BASE_DIR . '/glyphs/' . $params['name'] . '.svg');
+            if ($svg_content !== false) {
+                $params['glyph'] = new Tuleap\Glyph\Glyph($svg_content);
+            }
+        }
+    }
+
     public function collectLabeledItems(LabeledItemCollection $event)
     {
         $labeled_item_collector = new LabeledItemCollector(
@@ -516,6 +531,9 @@ class pullrequestPlugin extends Plugin
             new PullRequestPermissionChecker(
                 $this->getRepositoryFactory(),
                 new URLVerification()
+            ),
+            new GlyphFinder(
+                EventManager::instance()
             )
         );
 

@@ -23,6 +23,7 @@ namespace Tuleap\PullRequest\Label;
 use GitRepoNotFoundException;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\LabeledItem;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -40,6 +41,14 @@ class LabeledItemCollector
      */
     private $pullrequest_permission_checker;
     /**
+     * @var HTMLURLBuilder
+     */
+    private $html_url_builder;
+    /**
+     * @var GlyphFinder
+     */
+    private $glyph_finder;
+    /**
      * @var Factory
      */
     private $pullrequest_factory;
@@ -47,10 +56,12 @@ class LabeledItemCollector
     public function __construct(
         PullRequestLabelDao $label_dao,
         Factory $pullrequest_factory,
-        PullRequestPermissionChecker $pullrequest_permission_checker
+        PullRequestPermissionChecker $pullrequest_permission_checker,
+        GlyphFinder $glyph_finder
     ) {
         $this->label_dao                      = $label_dao;
         $this->pullrequest_permission_checker = $pullrequest_permission_checker;
+        $this->glyph_finder                   = $glyph_finder;
         $this->pullrequest_factory            = $pullrequest_factory;
     }
 
@@ -69,6 +80,8 @@ class LabeledItemCollector
 
                 $collection->add(
                     new LabeledItem(
+                        $this->glyph_finder->get('tuleap-pullrequest'),
+                        $this->glyph_finder->get('tuleap-pullrequest-small'),
                         $pull_request->getTitle()
                     )
                 );
