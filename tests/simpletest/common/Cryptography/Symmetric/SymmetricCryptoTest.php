@@ -42,4 +42,56 @@ class SymmetricCryptoTest extends \TuleapTestCase
 
         $this->assertNotEqual($ciphertext_1, $ciphertext_2);
     }
+
+    public function itCanDecryptACiphertext()
+    {
+        $key       = new EncryptionKey(
+            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+        );
+        $plaintext = new ConcealedString('The quick brown fox jumps over the lazy dog');
+
+        $ciphertext           = SymmetricCrypto::encrypt($plaintext, $key);
+        $decrypted_ciphertext = SymmetricCrypto::decrypt($ciphertext, $key);
+
+        $this->assertIsA($decrypted_ciphertext, 'Tuleap\\Cryptography\\ConcealedString');
+        $this->assertEqual($plaintext->getString(), $decrypted_ciphertext->getString());
+    }
+
+    public function itCannotDecryptACiphertextEncryptedWithADifferentKey()
+    {
+        $key_1     = new EncryptionKey(
+            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+        );
+        $key_2     = new EncryptionKey(
+            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+        );
+        $plaintext = new ConcealedString('The quick brown fox jumps over the lazy dog');
+
+        $ciphertext = SymmetricCrypto::encrypt($plaintext, $key_1);
+
+        $this->expectException('Tuleap\\Cryptography\\Exception\\InvalidCiphertextException');
+        SymmetricCrypto::decrypt($ciphertext, $key_2);
+    }
+
+    public function itCannotDecryptAWronglyFormattedCiphertext()
+    {
+        $key = new EncryptionKey(
+            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+        );
+
+        $this->expectException('Tuleap\\Cryptography\\Exception\\InvalidCiphertextException');
+        SymmetricCrypto::decrypt('wrongly_formatted_exception', $key);
+    }
+
+    public function itDecryptsAPreviouslyEncryptedValue()
+    {
+        $key = new EncryptionKey(new ConcealedString(base64_decode('8sgzyjKu2S90GmxShUuWcFOpum6nIZzlCAoxn3MZdwU=')));
+
+        $plaintext = SymmetricCrypto::decrypt(
+            base64_decode('MVlvotdhkOe0SkdxOqbpcCD0iB/o224T1REmpcm4sS7VRklvXL0z0HPHt90TNg=='),
+            $key
+        );
+
+        $this->assertEqual('Tuleap', $plaintext);
+    }
 }

@@ -70,7 +70,7 @@ class RESTReferenceCreator
             CURLOPT_POSTFIELDS  => json_encode(
                 array(
                     "Bugzilla_login"    => $login,
-                    "Bugzilla_api_key"  => $api_key,
+                    "Bugzilla_api_key"  => $api_key->getString(),
                     "id"                => $target_id,
                     "comment"           => $message,
                     "is_private"        => $are_follow_up_private,

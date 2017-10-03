@@ -85,7 +85,7 @@ class ReferenceSaver
 
         $encrypted_api_key = SymmetricCrypto::encrypt(new ConcealedString($api_key), $this->encryption_key);
 
-        $this->dao->save($keyword, $server, $username, $api_key, $encrypted_api_key, $are_followups_private, $rest_api_url);
+        $this->dao->save($keyword, $server, $username, $encrypted_api_key, $are_followups_private, $rest_api_url);
     }
 
     private function checkFieldsValidity($keyword, $server, $rest_api_url)
@@ -116,36 +116,49 @@ class ReferenceSaver
         }
     }
 
-    public function edit($request)
+    public function edit(\Codendi_Request $request)
     {
         $id                    = $request->get('id');
         $server                = trim($request->get('server'));
         $rest_api_url          = trim($request->get('rest_url'));
         $username              = $request->get('username');
-        $api_key               = $this->getAPIKeyToStore($id, $request->get('api_key'));
         $are_followups_private = $request->get('are_follow_up_private');
         $are_followups_private = isset($are_followups_private) ? $are_followups_private : false;
 
         $this->validateURLs($server, $rest_api_url);
 
-        if (empty($server) || empty($username) || empty($api_key)) {
+        if (empty($server) || empty($username)) {
             throw new RequiredFieldEmptyException();
         }
 
-        $encrypted_api_key = SymmetricCrypto::encrypt(new ConcealedString($api_key), $this->encryption_key);
+        list($encrypted_api_key, $has_api_key_always_been_encrypted) = $this->getAPIKeyToStoreWithEncryptionStatus(
+            $id,
+            $request->get('api_key')
+        );
 
-        $this->dao->edit($id, $server, $username, $api_key, $encrypted_api_key, $are_followups_private, $rest_api_url);
+        $this->dao->edit(
+            $id,
+            $server,
+            $username,
+            $encrypted_api_key,
+            $has_api_key_always_been_encrypted,
+            $are_followups_private,
+            $rest_api_url
+        );
     }
 
-    private function getAPIKeyToStore($id, $api_key)
+    private function getAPIKeyToStoreWithEncryptionStatus($id, $api_key)
     {
-        if ($api_key !== "") {
-            return $api_key;
+        if ($api_key !== '') {
+            return array(SymmetricCrypto::encrypt(new ConcealedString($api_key), $this->encryption_key), true);
         }
 
         $reference = $this->dao->getReferenceById($id);
+        if ($reference['api_key'] !== '') {
+            return array(SymmetricCrypto::encrypt(new ConcealedString($reference['api_key']), $this->encryption_key), false);
+        }
 
-        return $reference['api_key'];
+        return array($reference['encrypted_api_key'], $reference['has_api_key_always_been_encrypted']);
     }
 
     private function createReferenceForBugzillaServer($keyword, $server)
