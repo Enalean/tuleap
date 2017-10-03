@@ -32,6 +32,8 @@ class UsersTest extends RestBase {
     public function __construct()
     {
         parent::__construct();
+        new DBTestAccess();
+        db_connect();
         $this->data_builder = new REST_TestDataBuilder();
         $this->data_builder->setForgeToAnonymous();
     }

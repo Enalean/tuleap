@@ -70,7 +70,7 @@ class REST_TestDataBuilder extends TestDataBuilder
     private $tracker_formelement_factory;
 
     /** @var TrackerFactory */
-    private $tracker_factory;
+    protected $tracker_factory;
 
     /** @var AgileDashboard_HierarchyChecker */
     private $hierarchy_checker;
@@ -111,6 +111,10 @@ class REST_TestDataBuilder extends TestDataBuilder
 
     public function generateUsers()
     {
+        $admin_user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
+        $admin_user->setPassword(self::ADMIN_PASSWORD);
+        $this->user_manager->updateDb($admin_user);
+
         $user_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
         $user_1->setPassword(self::TEST_USER_1_PASS);
         $this->user_manager->updateDb($user_1);
@@ -124,9 +128,13 @@ class REST_TestDataBuilder extends TestDataBuilder
         $user_3->setPassword(self::TEST_USER_3_PASS);
         $this->user_manager->updateDb($user_3);
 
-        $user_4 = $this->user_manager->getUserByUserName(self::TEST_USER_3_NAME);
+        $user_4 = $this->user_manager->getUserByUserName(self::TEST_USER_4_NAME);
         $user_4->setPassword(self::TEST_USER_4_PASS);
         $this->user_manager->updateDb($user_4);
+
+        $user_5 = $this->user_manager->getUserByUserName(self::TEST_USER_5_NAME);
+        $user_5->setPassword(self::TEST_USER_5_PASS);
+        $this->user_manager->updateDb($user_5);
 
         return $this;
     }

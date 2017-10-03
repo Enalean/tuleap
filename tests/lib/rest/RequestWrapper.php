@@ -20,20 +20,23 @@
 
 namespace Test\Rest;
 
-use \UserManager;
-use \Rest_TokenDao;
-use \Rest_Token;
-use \DBTestAccess;
-use \PFUser;
+use Guzzle\Http\Client;
 
 class RequestWrapper {
 
-    private $user_manager;
-    private $db;
+    /**
+     * @var Client
+     */
+    private $client;
 
-    public function __construct() {
-        $this->setDbConnection();
-        $this->user_manager = UserManager::instance();
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    public function __construct(Client $client, Cache $cache) {
+        $this->client = $client;
+        $this->cache  = $cache;
     }
 
     public function getResponseWithoutAuth($request) {
@@ -41,12 +44,16 @@ class RequestWrapper {
     }
 
     public function getResponseByName($name, $request) {
-        return $this->getResponseByToken(
-            $this->generateToken(
-                $this->getUserByName($name)
-            ),
-            $request
-        );
+        $token = $this->cache->getTokenForUser($name);
+        if (! $token) {
+            $token = $this->getTokenForUser($name, 'welcome0');
+            $this->cache->setTokenForUser($name, $token);
+        }
+
+        return $request
+            ->setHeader('X-Auth-Token', $token['token'])
+            ->setHeader('X-Auth-UserId', $token['user_id'])
+            ->send();
     }
 
     public function getResponseByBasicAuth($username, $password, $request) {
@@ -54,50 +61,15 @@ class RequestWrapper {
         return $request->send();
     }
 
-    /**
-     * @deprecated
-     */
-    public function getResponseByToken(Rest_Token $token, $request) {
-        $request->setHeader('X-Auth-Token', $token->getTokenValue())
-                ->setHeader('X-Auth-UserId', $token->getUserId());
-        return $request->send();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getTokenForUserName($user_name) {
-        return $this->generateToken(
-            $this->getUserByName($user_name)
+    private function getTokenForUser($username, $password)
+    {
+        $payload = json_encode(
+            array(
+                'username' => $username,
+                'password' => $password,
+            )
         );
-    }
-
-    /**
-     * @param PFUser $user
-     * @return Rest_Token
-     */
-    private function generateToken(PFUser $user) {
-        $dao             = new Rest_TokenDao();
-        $generated_hash = 'hash_for_rest_tests';
-
-        $dao->addTokenForUserId($user->getId(), $generated_hash, time());
-
-        return new Rest_Token(
-            $user->getId(),
-            $generated_hash
-        );
-    }
-
-    /**
-     * @param string $user_name
-     * @return PFUser
-     */
-    private function getUserByName($user_name) {
-        return $this->user_manager->getUserByUserName($user_name);
-    }
-
-    private function setDbConnection() {
-        $this->db = new DBTestAccess();
-        db_connect();
+        $token = $this->client->post('tokens', null, $payload)->send()->json();
+        return $token;
     }
 }

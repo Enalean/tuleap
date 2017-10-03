@@ -23,6 +23,7 @@ require_once 'common/autoload.php';
 
 use Guzzle\Http\Client;
 use Test\Rest\RequestWrapper;
+use Test\Rest\Cache;
 
 class RestBase extends PHPUnit_Framework_TestCase
 {
@@ -76,9 +77,7 @@ class RestBase extends PHPUnit_Framework_TestCase
             $this->setup_url = $_ENV['TULEAP_HOST'].'/api/v1';
         }
 
-        $this->cache = CacheIds::instance();
-
-        $this->rest_request = new RequestWrapper();
+        $this->cache = Cache::instance();
 
         $this->client       = new Client($this->base_url, array('ssl.certificate_authority' => 'system'));
         $this->setup_client = new Client($this->setup_url, array('ssl.certificate_authority' => 'system'));
@@ -88,6 +87,8 @@ class RestBase extends PHPUnit_Framework_TestCase
 
         $this->setup_client->setDefaultOption('headers/Accept', 'application/json');
         $this->setup_client->setDefaultOption('headers/Content-Type', 'application/json');
+
+        $this->rest_request = new RequestWrapper($this->client, $this->cache);
     }
 
     public function setUp()
@@ -132,20 +133,6 @@ class RestBase extends PHPUnit_Framework_TestCase
 
     protected function getResponseByName($name, $request) {
         return $this->rest_request->getResponseByName($name, $request);
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function getResponseByToken(Rest_Token $token, $request) {
-        return $this->rest_request->getResponseByToken($token, $request);
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function getTokenForUserName($user_name) {
-        return $this->rest_request->getTokenForUserName($user_name);
     }
 
     protected function getResponseByBasicAuth($username, $password, $request) {
@@ -347,62 +334,5 @@ class RestBase extends PHPUnit_Framework_TestCase
 
 class CacheIds
 {
-    private static $instance;
 
-    private $project_ids     = array();
-    private $tracker_ids     = array();
-    private $user_groups_ids = array();
-
-    private $artifacts = array();
-
-    public static function instance()
-    {
-        if (! isset(self::$instance)) {
-            self::$instance = new CacheIds();
-        }
-        return self::$instance;
-    }
-
-    public function setProjectIds($project_ids)
-    {
-        $this->project_ids = $project_ids;
-    }
-
-    public function getProjectIds()
-    {
-        return $this->project_ids;
-    }
-
-    public function setTrackerIds($tracker_ids)
-    {
-        $this->tracker_ids = $tracker_ids;
-    }
-
-    public function getTrackerIds()
-    {
-        return $this->tracker_ids;
-    }
-
-    public function setUserGroupIds($user_groups_ids)
-    {
-        $this->user_groups_ids = $user_groups_ids;
-    }
-
-    public function getUserGroupIds()
-    {
-        return $this->user_groups_ids;
-    }
-
-    public function setArtifacts($tracker_id, $artifacts)
-    {
-        $this->artifacts[$tracker_id] = $artifacts;
-    }
-
-    public function getArtifacts($tracker_id)
-    {
-        if (isset($this->artifacts[$tracker_id])) {
-            return $this->artifacts[$tracker_id];
-        }
-        return null;
-    }
 }

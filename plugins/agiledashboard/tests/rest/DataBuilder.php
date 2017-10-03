@@ -38,10 +38,6 @@ class DataBuilder extends REST_TestDataBuilder
     const KANBAN_CUMULATIVE_FLOW_ID                = 2;
 
     /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
      * @var AgileDashboard_KanbanManager
      */
     private $kanban_manager;
@@ -49,8 +45,8 @@ class DataBuilder extends REST_TestDataBuilder
     public function __construct()
     {
         parent::__construct();
+        $this->instanciateFactories();
 
-        $this->tracker_factory = TrackerFactory::instance();
         $kanban_dao            = new AgileDashboard_KanbanDao();
         $kanban_factory        = new AgileDashboard_KanbanFactory($this->tracker_factory, $kanban_dao);
         $planning_factory      = PlanningFactory::build();
