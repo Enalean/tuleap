@@ -58,11 +58,7 @@ final class SymmetricCrypto
         }
         $encrypted = \mb_substr($ciphertext, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, $ciphertext_length, '8bit');
 
-        try {
-            $plaintext = \sodium_crypto_secretbox_open($encrypted, $nonce, $secret_key->getRawKeyMaterial());
-        } catch (\Error $er) {
-            throw new InvalidCiphertextException();
-        }
+        $plaintext = \sodium_crypto_secretbox_open($encrypted, $nonce, $secret_key->getRawKeyMaterial());
         if ($plaintext === false) {
             throw new InvalidCiphertextException();
         }

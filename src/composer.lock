@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "62208248bd44d18b865cb146336c6bc9",
+    "content-hash": "39166b5bc72710f3d4c9f91a89828560",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -197,16 +197,16 @@
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.2.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "110b1707f45e3b59311bb488b3af7251673de9b7"
+                "reference": "6b3a59ef127445564a00e261eb1e960b6292f494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/110b1707f45e3b59311bb488b3af7251673de9b7",
-                "reference": "110b1707f45e3b59311bb488b3af7251673de9b7",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/6b3a59ef127445564a00e261eb1e960b6292f494",
+                "reference": "6b3a59ef127445564a00e261eb1e960b6292f494",
                 "shasum": ""
             },
             "require": {
@@ -274,7 +274,7 @@
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
-            "time": "2017-09-01T01:19:04+00:00"
+            "time": "2017-09-29T21:27:52+00:00"
         }
     ],
     "packages-dev": [],
