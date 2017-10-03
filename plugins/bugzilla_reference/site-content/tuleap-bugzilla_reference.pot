@@ -109,6 +109,11 @@ msgstr ""
 msgid "There is nothing here, <br> start by adding a Bugzilla reference"
 msgstr ""
 
+msgid ""
+"This API key has been stored in cleartext in the database, it is recommended "
+"to change it"
+msgstr ""
+
 msgid "Unable to create corresponding system reference"
 msgstr ""
 

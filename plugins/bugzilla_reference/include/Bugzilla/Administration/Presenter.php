@@ -44,6 +44,7 @@ class Presenter
     public $bugzilla_add;
     public $bugzilla_edit;
     public $reference_pattern;
+    public $api_key_stored_plaintext_warning;
     public $allowed_reference_description;
     public $rest_url;
     public $bugzilla_title_delete;
@@ -83,6 +84,10 @@ class Presenter
         $this->edit                  = dgettext('tuleap-bugzilla_reference', 'Edit');
         $this->rest_url              = dgettext('tuleap-bugzilla_reference', 'REST API URL');
 
+        $this->api_key_stored_plaintext_warning = dgettext(
+            'tuleap-bugzilla_reference',
+            'This API key has been stored in cleartext in the database, it is recommended to change it'
+        );
 
         $this->allowed_reference_description = dgettext(
             'tuleap-bugzilla_reference',

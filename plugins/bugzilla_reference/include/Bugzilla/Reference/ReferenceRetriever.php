@@ -42,7 +42,7 @@ class ReferenceRetriever
     }
 
     /**
-     * @return array of Reference
+     * @return Reference[]
      */
     public function getAllReferences()
     {
@@ -69,7 +69,8 @@ class ReferenceRetriever
             $references['username'],
             $api_key,
             $references['are_followup_private'],
-            $references['rest_url']
+            $references['rest_url'],
+            (bool) $references['has_api_key_always_been_encrypted']
         );
     }
 
