@@ -3,7 +3,7 @@
 set -e
 
 setup_composer() {
-    (cd /usr/share/tuleap && scl enable git19 "/usr/local/bin/composer.phar --no-interaction install")
+    (cd /usr/share/tuleap && scl enable rh-git29 "/usr/local/bin/composer.phar --no-interaction install")
 }
 
 generate_testsuite() {
