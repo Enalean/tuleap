@@ -29,16 +29,21 @@ class ReferencePresenter
     private $api_key;
     private $id;
     private $rest_url;
+    /**
+     * @var bool
+     */
+    private $has_api_key_always_been_encrypted;
 
-    public function __construct($id, $reference, $server, $username, $api_key, $are_followup_private, $rest_url)
+    public function __construct($id, $reference, $server, $username, $api_key, $are_followup_private, $rest_url, $has_api_key_always_been_encrypted)
     {
-        $this->id                   = $id;
-        $this->keyword              = $reference;
-        $this->server               = $server;
-        $this->username             = $username;
-        $this->api_key              = $api_key;
-        $this->are_followup_private = $are_followup_private;
-        $this->rest_url             = $rest_url;
+        $this->id                                = $id;
+        $this->keyword                           = $reference;
+        $this->server                            = $server;
+        $this->username                          = $username;
+        $this->api_key                           = $api_key;
+        $this->are_followup_private              = $are_followup_private;
+        $this->rest_url                          = $rest_url;
+        $this->has_api_key_always_been_encrypted = $has_api_key_always_been_encrypted;
     }
 
     public function getKeyword()
@@ -83,5 +88,13 @@ class ReferencePresenter
     public function getRestUrl()
     {
         return $this->rest_url;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasApiKeyAlwaysBeenEncrypted()
+    {
+        return $this->has_api_key_always_been_encrypted;
     }
 }

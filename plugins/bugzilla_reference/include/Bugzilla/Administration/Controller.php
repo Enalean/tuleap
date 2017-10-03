@@ -95,7 +95,8 @@ class Controller
                 $reference->getUsername(),
                 $reference->getAPIKey(),
                 $reference->getAreFollowupPrivate(),
-                $reference->getRestUrl()
+                $reference->getRestUrl(),
+                $reference->hasApiKeyAlwaysBeenEncrypted()
             );
         }
 
