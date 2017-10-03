@@ -4,7 +4,8 @@ project_attributes =
     attribute unix-name { xsd:string { pattern = "[a-zA-Z0-9_\-]+" } },
     attribute full-name { xsd:string },
     attribute description { xsd:string },
-    attribute access { xsd:string { pattern = "(public|private|unrestricted)" } }
+    attribute access { xsd:string { pattern = "(public|private|unrestricted)" } },
+    attribute inherit-from-template { xsd:boolean }?
 
 project_tags =
     element long-description { xsd:string } &

@@ -23,7 +23,10 @@ $output_dir = $argv[2];
 
 $xml = simplexml_load_string(<<<XML
 <?xml version='1.0'?>
-<phpunit bootstrap="$run_dir/bootstrap.php">
+<phpunit>
+  <php>
+    <includePath>/usr/share/tuleap/src/www/include:/usr/share/tuleap/src</includePath>
+  </php>
   <testsuites>
     <testsuite name="Tuleap SOAP tests">
     </testsuite>
@@ -45,6 +48,3 @@ foreach (glob($src_dir.'/plugins/*/tests/soap') as $directory) {
 
 // Write the XML config
 $xml->asXML("$run_dir/suite.xml");
-
-// Write the bootstrap file
-file_put_contents("$run_dir/bootstrap.php", '<?php'.PHP_EOL.'require_once "'.$run_dir.'/vendor/autoload.php";');

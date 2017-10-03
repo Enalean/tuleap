@@ -17,6 +17,11 @@
         <param name="pattern">(public|private|unrestricted)</param>
       </data>
     </attribute>
+    <optional>
+      <attribute name="inherit-from-template">
+        <data type="boolean"/>
+      </attribute>
+    </optional>
   </define>
   <define name="project_tags">
     <interleave>
