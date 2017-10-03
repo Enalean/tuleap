@@ -30,4 +30,10 @@ class ConcealedStringTest extends \TuleapTestCase
         $this->assertEqual($value_to_hide, (string) $concealed_string);
         $this->assertEqual($value_to_hide, $concealed_string->getString());
     }
+
+    public function itCannotBeConstructedFromADifferentScalarThanAString()
+    {
+        $this->expectException('\TypeError');
+        new ConcealedString(true);
+    }
 }

@@ -94,4 +94,12 @@ class SymmetricCryptoTest extends \TuleapTestCase
 
         $this->assertEqual('Tuleap', $plaintext);
     }
+
+    public function itOnlyAllowsExpectedScalarType()
+    {
+        $key = mock('Tuleap\\Cryptography\\Symmetric\\EncryptionKey');
+
+        $this->expectException('\TypeError');
+        SymmetricCrypto::decrypt(true, $key);
+    }
 }

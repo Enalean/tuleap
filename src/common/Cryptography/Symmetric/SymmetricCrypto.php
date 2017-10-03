@@ -36,9 +36,9 @@ final class SymmetricCrypto
      */
     public static function encrypt(ConcealedString $plaintext, EncryptionKey $secret_key)
     {
-        $nonce = sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $nonce = \sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 
-        return $nonce . sodium_crypto_secretbox($plaintext->getString(), $nonce, $secret_key->getRawKeyMaterial());
+        return $nonce . \sodium_crypto_secretbox($plaintext->getString(), $nonce, $secret_key->getRawKeyMaterial());
     }
 
     /**
@@ -47,15 +47,19 @@ final class SymmetricCrypto
      */
     public static function decrypt($ciphertext, EncryptionKey $secret_key)
     {
-        $nonce             = mb_substr($ciphertext, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
-        $ciphertext_length = mb_strlen($ciphertext, '8bit');
+        if (! is_string($ciphertext)) {
+            throw new \TypeError('Expected $ciphertext to be a string, got ' . gettype($ciphertext));
+        }
+
+        $nonce             = \mb_substr($ciphertext, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+        $ciphertext_length = \mb_strlen($ciphertext, '8bit');
         if ($ciphertext_length === false) {
             throw new UnexpectedOperationFailureException('mb_strlen() failed unexpectedly');
         }
-        $encrypted = mb_substr($ciphertext, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, $ciphertext_length, '8bit');
+        $encrypted = \mb_substr($ciphertext, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, $ciphertext_length, '8bit');
 
         try {
-            $plaintext = sodium_crypto_secretbox_open($encrypted, $nonce, $secret_key->getRawKeyMaterial());
+            $plaintext = \sodium_crypto_secretbox_open($encrypted, $nonce, $secret_key->getRawKeyMaterial());
         } catch (\Error $er) {
             throw new InvalidCiphertextException();
         }

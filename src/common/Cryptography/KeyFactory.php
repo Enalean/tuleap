@@ -32,13 +32,13 @@ class KeyFactory
     public function getEncryptionKey()
     {
         $encryption_key_file_path = \ForgeConfig::get('sys_custom_dir') . '/conf/encryption_secret.key';
-        if (! file_exists($encryption_key_file_path)) {
+        if (! \file_exists($encryption_key_file_path)) {
             $encryption_key = $this->generateEncryptionKey();
             $this->saveKeyFile($encryption_key, $encryption_key_file_path);
             return $encryption_key;
         }
 
-        $file_data = file_get_contents($encryption_key_file_path);
+        $file_data = \file_get_contents($encryption_key_file_path);
         if ($file_data === false) {
             throw new CannotPerformIOOperationException("Cannot read the encryption key $encryption_key_file_path");
         }
@@ -60,26 +60,30 @@ class KeyFactory
 
     private function saveKeyFile(Key $key, $file_path)
     {
-        $is_success = touch($file_path);
+        if (! is_string($file_path)) {
+            throw new \TypeError('Expected $file_path to be a string, got ' . gettype($file_path));
+        }
+
+        $is_success = \touch($file_path);
         if (! $is_success) {
             throw new CannotPerformIOOperationException("Cannot create the key file $file_path");
         }
-        $is_success = chmod($file_path, 0600);
+        $is_success = \chmod($file_path, 0600);
         if (! $is_success) {
-            unlink($file_path);
+            \unlink($file_path);
             throw new CannotPerformIOOperationException("Cannot restrict rights of the key file $file_path to u:rw");
         }
-        $written_size = file_put_contents(
+        $written_size = \file_put_contents(
             $file_path,
-            sodium_bin2hex($key->getRawKeyMaterial())
+            \sodium_bin2hex($key->getRawKeyMaterial())
         );
         if ($written_size === false) {
-            unlink($file_path);
+            \unlink($file_path);
             throw new CannotPerformIOOperationException("Cannot write to the key file $file_path");
         }
-        $is_success = chmod($file_path, 0400);
+        $is_success = \chmod($file_path, 0400);
         if (! $is_success) {
-            unlink($file_path);
+            \unlink($file_path);
             throw new CannotPerformIOOperationException("Cannot restrict rights of the key file $file_path to u:r");
         }
     }
