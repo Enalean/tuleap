@@ -21,6 +21,9 @@
 
 class MediawikiDao extends DataAccessObject {
 
+    const DEDICATED_DATABASE_PREFIX = 'plugin_mediawiki_';
+    const DEDICATED_DATABASE_TABLE_PREFIX = 'mw';
+
     private $database_name = array();
     private $table_prefix = array();
 
@@ -367,7 +370,7 @@ class MediawikiDao extends DataAccessObject {
             if ($this->getMediawikiDatabaseName($project) == $this->central_database) {
                 $this->table_prefix[$project->getID()] = $this->getTableNamePrefixInCentralDb($project);
             } else {
-                $this->table_prefix[$project->getID()] = 'mw';
+                $this->table_prefix[$project->getID()] = self::DEDICATED_DATABASE_TABLE_PREFIX;
             }
         }
         return $this->table_prefix[$project->getID()];
@@ -389,13 +392,34 @@ class MediawikiDao extends DataAccessObject {
                 $this->database_name[$project->getID()] = $name['database_name'];
             } elseif ($return_default) {
                 //old behaviour
-                $this->database_name[$project->getID()] = str_replace ('-', '_', "plugin_mediawiki_". $project->getUnixName());
+                $this->database_name[$project->getID()] = str_replace ('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getUnixName());
             } else {
                 $this->database_name[$project->getID()] = false;
             }
         }
 
         return $this->database_name[$project->getID()];
+    }
+
+    public function getDatabaseNameForCreation(Project $project)
+    {
+        if ($this->central_database) {
+            return $this->central_database;
+        } else {
+            $db_name = self::DEDICATED_DATABASE_PREFIX.$project->getID();
+            if ($this->update('CREATE DATABASE '.$db_name)) {
+                return $db_name;
+            }
+            throw new Exception("Unable to create database $db_name");
+        }
+    }
+
+    public function getTablePrefixForCreation(Project $project)
+    {
+        if ($this->central_database) {
+            return $this->getTableNamePrefixInCentralDb($project);
+        }
+        return self::DEDICATED_DATABASE_TABLE_PREFIX;
     }
 
     public function addDatabase($schema, $project_id) {
@@ -433,8 +457,8 @@ class MediawikiDao extends DataAccessObject {
             return $this->central_database;
         }
 
-        $dbname_with_id   = str_replace ('-', '_', "plugin_mediawiki_". $project->getID());
-        $dbname_with_name = str_replace ('-', '_', "plugin_mediawiki_". $project->getUnixName());
+        $dbname_with_id   = str_replace ('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getID());
+        $dbname_with_name = str_replace ('-', '_', self::DEDICATED_DATABASE_PREFIX . $project->getUnixName());
 
         $dbname_with_id   = $this->da->quoteSmart($dbname_with_id);
         $dbname_with_name = $this->da->quoteSmart($dbname_with_name);

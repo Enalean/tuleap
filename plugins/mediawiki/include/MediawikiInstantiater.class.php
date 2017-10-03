@@ -221,20 +221,15 @@ class MediaWikiInstantiater {
     }
 
     private function createDatabase($mediawiki_path) {
-        $database   = strtr('plugin_mediawiki_' . $this->project_id, '-', '_');
-        $table_file = $mediawiki_path . '/maintenance/tables.sql';
-        $main_db    = ForgeConfig::get('sys_dbname');
-
         db_query('START TRANSACTION;');
 
         try {
-            $this->logger->info('Creating database ' . $database);
-            $create_db = db_query_params('CREATE DATABASE ' . $database, array());
-            if (!$create_db) {
-                throw new Exception('Error: Database Creation Failed: ' . db_error());
-            }
+            $this->logger->info('Creating database ');
+            $main_db      = ForgeConfig::get('sys_dbname');
+            $database     = $this->dao->getDatabaseNameForCreation($this->project);
 
             $this->logger->info('Updating mediawiki database.');
+            $table_file   = $mediawiki_path . '/maintenance/tables.sql';
             if (! file_exists($table_file)) {
                 throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
             }
@@ -245,8 +240,9 @@ class MediaWikiInstantiater {
                 throw new Exception('Error: DB Query Failed: ' . db_error());
             }
 
-            $this->logger->info('Running db_query_from_file(' . $table_file . ')');
-            $add_tables = $this->createTablesFromFile($table_file);
+            $this->logger->info('Creating tables from tables.sql');
+            $table_prefix = $this->dao->getTablePrefixForCreation($this->project);
+            $add_tables = $this->createTablesFromFile($table_file, $table_prefix);
             if (!$add_tables) {
                 throw new Exception('Error: Mediawiki Database Creation Failed: ' . db_error());
             }
@@ -271,13 +267,11 @@ class MediaWikiInstantiater {
     /**
      *  Query the database, from a file.
      *
-     *  @param string File that contains the SQL statements.
-     *  @param int How many rows do you want returned.
-     *  @param int Of matching rows, return only rows starting here.
-     *  @param int ability to spread load to multiple db servers.
+     *  @param string $file File that contains the SQL statements.
+     *  @param string $table_prefix Prefix for tables
      *  @return int result set handle.
      */
-    private function createTablesFromFile($file)
+    private function createTablesFromFile($file, $table_prefix)
     {
         // inspired from /usr/share/mediawiki115/includes/db/Database.php
         $fp = fopen( $file, 'r' );
@@ -321,7 +315,7 @@ class MediaWikiInstantiater {
             if ( $done ) {
                 $cmd = str_replace(';;', ";", $cmd);
                 // next 2 lines are for mediawiki subst
-                $cmd = preg_replace(":/\*_\*/:","mw",$cmd );
+                $cmd = preg_replace(":/\*_\*/:",$table_prefix,$cmd );
                 // TOCHECK WITH CHRISTIAN: Do not change indexes for mediawiki (doesn't seems well supported)
                 //$cmd = preg_replace(":/\*i\*/:","mw",$cmd );
                 $res = db_query( $cmd );
