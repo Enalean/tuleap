@@ -330,8 +330,3 @@ class RestBase extends PHPUnit_Framework_TestCase
         }
     }
 }
-
-class CacheIds
-{
-
-}

@@ -12,8 +12,8 @@ generate_testsuite() {
 
 run_testsuite() {
     PHPUNIT=/usr/share/tuleap/vendor/bin/phpunit
-    if [ -x /opt/rh/rh-php56/root/usr/bin/php ]; then
-        PHPUNIT="/opt/rh/rh-php56/root/usr/bin/php $PHPUNIT"
+    if [ -x /opt/rh/rh-php70/root/usr/bin/php ]; then
+        PHPUNIT="/opt/rh/rh-php70/root/usr/bin/php $PHPUNIT"
     fi
     $PHPUNIT --configuration /tmp/suite.xml
 }

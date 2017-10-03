@@ -110,11 +110,14 @@ class MilestonesContentTest extends MilestoneBase
         $this->assertEquals($second_backlog_item['artifact']['tracker']['id'], $this->epic_tracker_id);
     }
 
+    /**
+     * @depends testPUTContent
+     */
     public function testPUTContentWithSameValueAsPreviouslyReturns200() {
         $response_put = $this->getResponse($this->client->put('milestones/'.$this->release_artifact_ids[1].'/content', null, '['.$this->epic_artifact_ids[1].','.$this->epic_artifact_ids[4].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 200);
-        $this->assertEquals($response_put->json(), array());
+        $this->assertEquals($response_put->getBody(true), '');
     }
 
     /**
