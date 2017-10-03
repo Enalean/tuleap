@@ -22,6 +22,8 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use EventManager;
 use Luracast\Restler\RestException;
+use Project_AccessException;
+use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -35,9 +37,11 @@ use Tuleap\Label\REST\UnableToAddEmptyLabelException;
 use Tuleap\Label\UnknownLabelException;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
+use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
+use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
@@ -82,6 +86,9 @@ class PullRequestsResource extends AuthenticatedResource
 {
 
     const MAX_LIMIT = 50;
+
+    /** @var PullRequestPermissionChecker */
+    private $permission_checker;
 
     /** @var LabelsUpdater */
     private $labels_updater;
@@ -191,6 +198,11 @@ class PullRequestsResource extends AuthenticatedResource
             new PullRequestLabelDao()
         );
         $this->labels_updater   = new LabelsUpdater(new LabelDao(), new PullRequestLabelDao(), new ProjectHistoryDao());
+
+        $this->permission_checker = new PullRequestPermissionChecker(
+            $this->git_repository_factory,
+            new URLVerification()
+        );
     }
 
     /**
@@ -705,7 +717,7 @@ class PullRequestsResource extends AuthenticatedResource
                 $body
             );
         }
-        $updated_pull_request        = $this->getPullRequest($id);
+        $updated_pull_request = $this->pull_request_factory->getPullRequestById($id);
 
         $executor                  = $this->getExecutor($repository_src);
         $pr_representation_factory = new PullRequestRepresentationFactory($executor, $this->access_control_verifier);
@@ -939,22 +951,23 @@ class PullRequestsResource extends AuthenticatedResource
      */
     private function getReadablePullRequest($id)
     {
-        $pull_request = $this->getPullRequest($id);
-
-        $current_user = $this->user_manager->getCurrentUser();
-        $repository   = $this->getRepository($pull_request->getRepositoryId());
-        $this->checkUserCanReadRepository($current_user, $repository);
+        try {
+            $pull_request = $this->pull_request_factory->getPullRequestById($id);
+            $current_user = $this->user_manager->getCurrentUser();
+            $this->permission_checker->checkPullRequestIsReadableByUser($pull_request, $current_user);
+        } catch (PullRequestNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (\GitRepoNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (Project_AccessProjectNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (Project_AccessException $exception) {
+            throw new RestException(403, $exception->getMessage());
+        } catch (UserCannotReadGitRepositoryException $exception) {
+            throw new RestException(403, 'User is not able to READ the git repository');
+        }
 
         return $pull_request;
-    }
-
-    private function getPullRequest($pull_request_id)
-    {
-        try {
-            return $this->pull_request_factory->getPullRequestById($pull_request_id);
-        } catch (PullRequestNotFoundException $exception) {
-            throw new RestException(404, $exception->getMessage());
-        }
     }
 
     private function getRepository($repository_id)
