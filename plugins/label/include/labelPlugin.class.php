@@ -20,8 +20,9 @@
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Label\REST\ResourcesInjector;
-use Tuleap\Label\Widget\ProjectLabeledItems;
 use Tuleap\Label\Widget\Dao;
+use Tuleap\Label\Widget\ProjectLabeledItems;
+use Tuleap\Project\Label\MergeLabels;
 use Tuleap\Project\Label\RemoveLabel;
 
 require_once 'autoload.php';
@@ -44,6 +45,7 @@ class labelPlugin extends Plugin
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(RemoveLabel::NAME);
+        $this->addHook(MergeLabels::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -98,6 +100,14 @@ class labelPlugin extends Plugin
     public function removeLabel(RemoveLabel $event)
     {
         $this->getDao()->removeLabelById($event->getLabelToDeleteId());
+    }
+
+    public function mergeLabel(MergeLabels $merge_labels)
+    {
+        $this->getDao()->mergeLabelInTransaction(
+            $merge_labels->getLabelToEditId(),
+            $merge_labels->getLabelIdsToMerge()
+        );
     }
 
     /**

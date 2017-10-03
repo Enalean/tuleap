@@ -105,4 +105,18 @@ class Dao extends \DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function mergeLabelInTransaction($label_to_edit_id, array $label_ids_to_remove)
+    {
+        $label_to_edit_id    = $this->da->escapeInt($label_to_edit_id);
+        $label_ids_to_remove = $this->da->escapeIntImplode($label_ids_to_remove);
+        $sql                 = "UPDATE IGNORE plugin_label_widget_config
+                                  SET label_id = $label_to_edit_id
+                                  WHERE label_id IN ($label_ids_to_remove)";
+        $this->update($sql);
+
+        $sql = "DELETE FROM plugin_label_widget_config
+                  WHERE label_id IN ($label_ids_to_remove)";
+        $this->update($sql);
+    }
 }

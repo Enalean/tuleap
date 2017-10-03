@@ -21,6 +21,7 @@
 namespace Tuleap\Project\Label;
 
 use CSRFSynchronizerToken;
+use EventManager;
 use Exception;
 use HTTPRequest;
 use Project;
@@ -50,19 +51,25 @@ class EditController
      * @var ProjectHistoryDao
      */
     private $history_dao;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         LabelsManagementURLBuilder $url_builder,
         LabelDao $dao,
         ProjectHistoryDao $history_dao,
         CollectionOfLabelableDao $labelable_daos,
-        AllowedColorsCollection $allowed_colors
+        AllowedColorsCollection $allowed_colors,
+        EventManager $event_manager
     ) {
         $this->url_builder    = $url_builder;
         $this->dao            = $dao;
         $this->history_dao    = $history_dao;
         $this->allowed_colors = $allowed_colors;
         $this->labelable_daos = $labelable_daos;
+        $this->event_manager  = $event_manager;
     }
 
     public function edit(HTTPRequest $request)
@@ -122,6 +129,8 @@ class EditController
         }
 
         $this->dao->deleteAllLabelsInTransaction($project->getID(), $label_ids_to_merge);
+
+        $this->event_manager->processEvent(new MergeLabels($label_to_edit_id, $label_ids_to_merge));
     }
 
     private function checkColor($new_color)
