@@ -161,4 +161,9 @@ class ProjectLabeledItems extends Widget
 
         return $labels;
     }
+
+    public function destroy($id)
+    {
+        $this->dao->removeLabelByContentId($id);
+    }
 }
