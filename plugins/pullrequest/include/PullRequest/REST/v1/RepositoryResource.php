@@ -25,7 +25,6 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
-use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
 use Luracast\Restler\RestException;
@@ -33,12 +32,13 @@ use GitRepositoryFactory;
 use GitRepository;
 use ProjectManager;
 use UserManager;
-use Git_Command_Exception;
 use GitDao;
 use ReferenceManager;
 
 class RepositoryResource
 {
+    /** @var AccessControlVerifier */
+    private $access_control_verifier;
 
     /** @var Tuleap\PullRequest\Dao */
     private $pull_request_dao;
@@ -88,7 +88,6 @@ class RepositoryResource
         }
 
         $result     = $this->pull_request_dao->getPaginatedPullRequests($repository->getId(), $criterion, $limit, $offset);
-        $user       = $this->user_manager->getCurrentUser();
         $total_size = (int) $this->pull_request_dao->foundRows();
 
         $collection = array();
@@ -98,24 +97,13 @@ class RepositoryResource
             $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
 
-            $executor                  = new GitExec($repository_src->getFullPath(), $repository_src->getFullPath());
-            $pr_representation_factory = new PullRequestRepresentationFactory($executor, $this->access_control_verifier);
-
-            try {
-                $pull_request_representation = $pr_representation_factory->getPullRequestRepresentation(
-                    $pull_request,
-                    $repository_src,
-                    $repository_dest,
-                    $user
-                );
-
-                $collection[] = $pull_request_representation;
-            } catch (Git_Command_Exception $exception) {
-                $pull_request_id = $pull_request->getId();
-                $this->logger->warn("The pullrequest #$pull_request_id cannot be displayed because of a missing reference");
-
-                continue;
-            }
+            $pull_request_representation = new PullRequestMinimalRepresentation();
+            $pull_request_representation->buildMinimal(
+                $pull_request,
+                $repository_src,
+                $repository_dest
+            );
+            $collection[] = $pull_request_representation;
         }
 
         $representation = new RepositoryPullRequestRepresentation();
