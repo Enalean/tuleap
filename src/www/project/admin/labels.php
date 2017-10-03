@@ -49,7 +49,7 @@ $event_manager->processEvent($labelable_daos);
 $router = new LabelsManagementRouter(
     new IndexController($url_builder, $dao, $labelable_daos, $assets, $color_factory),
     new DeleteController($url_builder, $dao, $history_dao, $labelable_daos, $event_manager),
-    new EditController($url_builder, $dao, $history_dao, $labelable_daos, $colors),
+    new EditController($url_builder, $dao, $history_dao, $labelable_daos, $colors, $event_manager),
     new AddController($url_builder, $dao, $history_dao, $colors)
 );
 $router->process($request);
