@@ -20,8 +20,6 @@
 
 namespace Tuleap\AgileDashboard\REST;
 
-require_once 'common/autoload.php';
-
 use AgileDashboard_HierarchyChecker;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;

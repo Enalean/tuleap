@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'common/autoload.php';
-require_once dirname(__FILE__).'/DatabaseInitialization.class.php';
+require_once __DIR__.'/DatabaseInitialization.class.php';
 
 class PullRequestDataBuilder extends REST_TestDataBuilder {
 

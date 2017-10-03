@@ -97,6 +97,7 @@ setup_tuleap() {
 	     -e "s/%sys_dbname%/tuleap/" \
 	     -e "s/%sys_dbuser%/tuleapadm/" \
 	     -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
+    chgrp runner /etc/tuleap/conf/database.inc
 
     cat /usr/share/tuleap/src/etc/local.inc.dist | \
 	sed \
