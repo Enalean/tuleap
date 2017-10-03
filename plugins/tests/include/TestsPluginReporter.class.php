@@ -417,7 +417,6 @@ class TestsPluginReporterFactory {
             $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/tools', '.inc');
             $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/tools', '.txt');
             $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/tools', '.dist');
-            $filter->addDirectoryToBlacklist($GLOBALS['htmlpurifier_dir']);
             $filter->addDirectoryToBlacklist($GLOBALS['jpgraph_dir']);
             $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/src/www');
             return new PHP_CodeCoverage(null, $filter);

@@ -47,7 +47,6 @@ $sys_pluginsroot = $codendi_dir . '/plugins';
 $sys_pluginspath = '/plugins';
 $sys_custompluginspath = '/custom/plugins';
 
-$htmlpurifier_dir = '/usr/share/htmlpurifier';
 $jpgraph_dir = '/usr/share/jpgraph';
 
 $DEBUG_MODE = 1;
