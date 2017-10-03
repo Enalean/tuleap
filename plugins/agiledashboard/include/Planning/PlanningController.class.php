@@ -459,7 +459,7 @@ class Planning_Controller extends MVC2_PluginController {
                 new UGroupManager()
             ),
             $project_creator,
-            new UploadedLinksUpdater(new UploadedLinksDao())
+            new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance())
         );
 
         try {

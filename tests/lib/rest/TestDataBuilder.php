@@ -19,12 +19,6 @@
  */
 
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\UploadedLinksDao;
-use Tuleap\FRS\UploadedLinksUpdater;
-use Tuleap\Project\UserRemover;
-use Tuleap\Project\UserRemoverDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerSaver;
 use Tuleap\Widget\WidgetFactory;
@@ -181,39 +175,6 @@ class REST_TestDataBuilder extends TestDataBuilder
         $user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
 
         return $this;
-    }
-
-    protected function importTemplateInProject($project_id, $template)
-    {
-        $xml_importer = new ProjectXMLImporter(
-            EventManager::instance(),
-            $this->project_manager,
-            UserManager::instance(),
-            new XML_RNGValidator(),
-            new UGroupManager(),
-            new XMLImportHelper(UserManager::instance()),
-            ServiceManager::instance(),
-            new ProjectXMLImporterLogger(),
-            $this->ugroup_duplicator,
-            new FRSPermissionCreator(
-                new FRSPermissionDao(),
-                new UGroupDao()
-            ),
-            new UserRemover(
-                ProjectManager::instance(),
-                EventManager::instance(),
-                new ArtifactTypeFactory(false),
-                new UserRemoverDao(),
-                UserManager::instance(),
-                new ProjectHistoryDao(),
-                new UGroupManager()
-            ),
-            $this->project_creator,
-            new UploadedLinksUpdater(new UploadedLinksDao())
-        );
-
-        $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
-        $xml_importer->import(new \Tuleap\Project\XML\Import\ImportConfig(), $project_id, $this->template_path.$template);
     }
 
     public function deleteTracker()
