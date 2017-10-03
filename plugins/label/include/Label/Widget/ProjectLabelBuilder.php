@@ -34,4 +34,17 @@ class ProjectLabelBuilder
 
         return $labels;
     }
+
+    public function buildSelectedLabels(array $project_labels, array $config_label)
+    {
+        $selected_labels = array();
+
+        foreach ($project_labels as $project_label) {
+            if (in_array($project_label['id'], $config_label)) {
+                $selected_labels[] = $project_label;
+            }
+        }
+
+        return $selected_labels;
+    }
 }

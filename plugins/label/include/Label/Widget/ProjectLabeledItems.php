@@ -109,11 +109,12 @@ class ProjectLabeledItems extends Widget
 
     public function getPreferences($widget_id)
     {
-        $labels = $this->getProjectLabelsPresenter();
+        $selected_labels = $this->getProjectSelectedLabelsPresenter();
+        $project_id      = $this->dao->getProjectIdByWidgetNameAndContentId($this->getId(), $this->content_id);
 
         return $this->renderer->renderToString(
             'project-label-selector',
-            new ProjectLabelSelectorPresenter($labels)
+            new ProjectLabelSelectorPresenter($project_id, $selected_labels)
         );
     }
 
@@ -128,7 +129,7 @@ class ProjectLabeledItems extends Widget
     public function updatePreferences(&$request)
     {
         try {
-            $labels = $this->getProjectLabelsPresenter();
+            $labels = $this->getProjectAllLabelsPresenter();
             $this->project_data_validator->validateDataFromRequest($request, $labels);
             $this->dao->storeLabelsConfiguration($this->content_id, $request->get('project-labels'));
         } catch (ProjectLabelDoesNotBelongToProjectException $e) {
@@ -154,17 +155,38 @@ class ProjectLabeledItems extends Widget
         }
     }
 
-    private function getProjectLabelsPresenter()
+    private function getProjectSelectedLabelsPresenter()
     {
-        $project        = $this->getProject();
-        $project_labels = $this->labels_retriever->getLabelsByProject($project);
-        $config_label   = $this->config_retriever->getLabelConfig($this->content_id);
+        $project_labels = $this->getProjectLabels();
+        $config_label   = $this->getConfigLabels();
+
+        $labels = $this->labels_presenter_builder->buildSelectedLabels($project_labels, $config_label);
+
+        return $labels;
+    }
+
+    private function getProjectAllLabelsPresenter()
+    {
+        $project_labels = $this->getProjectLabels();
+        $config_label   = $this->getConfigLabels();
 
         $labels = $this->labels_presenter_builder->build($project_labels, $config_label);
 
         return $labels;
     }
 
+    private function getConfigLabels()
+    {
+        return $this->config_retriever->getLabelConfig($this->content_id);
+    }
+
+    private function getProjectLabels()
+    {
+        $project        = $this->getProject();
+        $project_labels = $this->labels_retriever->getLabelsByProject($project);
+
+        return $project_labels;
+    }
 
     public function destroy($id)
     {
