@@ -211,10 +211,14 @@ class GitXmlImporter
         $this->logger->debug("Importing {$repository_info['name']} using {$repository_info['bundle-path']}");
         $description = isset($repository_info['description']) ? (string) $repository_info['description'] : GitRepository::DEFAULT_DESCRIPTION;
         $repository = $this->repository_factory->buildRepository($project, $repository_info['name'], $creator, $this->gitolite_backend, $description);
-        $absolute_bundle_path = $extraction_path . '/' . $repository_info['bundle-path'];
-        $extraction_path_arg = escapeshellarg($extraction_path);
-        $this->system_command->exec("chmod 755 $extraction_path_arg");
-        $this->repository_manager->createFromBundle($repository, $this->gitolite_backend, $absolute_bundle_path);
+        if (trim($repository_info['bundle-path']) !== '') {
+            $absolute_bundle_path = $extraction_path . '/' . $repository_info['bundle-path'];
+            $extraction_path_arg = escapeshellarg($extraction_path);
+            $this->system_command->exec("chmod 755 $extraction_path_arg");
+            $this->repository_manager->createFromBundle($repository, $this->gitolite_backend, $absolute_bundle_path);
+        } else {
+            $this->repository_manager->create($repository, $this->gitolite_backend, array());
+        }
         if ($this->hasLegacyPermissions($repository_xmlnode)) {
             $this->importPermissions($project, $repository_xmlnode, $repository);
         } else {

@@ -24,6 +24,7 @@ use Guzzle\Http\Client;
 
 class RequestWrapper {
 
+    const MAX_RETRY = 3;
     /**
      * @var Client
      */
@@ -69,7 +70,18 @@ class RequestWrapper {
                 'password' => $password,
             )
         );
-        $token = $this->client->post('tokens', null, $payload)->send()->json();
-        return $token;
+
+        // Retry is there because in some circumstances (PHP 5.6 first REST call) restler shits bricks
+        $retry = self::MAX_RETRY;
+        do {
+            if ($retry !== self::MAX_RETRY) {
+                $wait_for = self::MAX_RETRY - $retry;
+                sleep($wait_for);
+            }
+            $retry--;
+            $response = $this->client->post('tokens', null, $payload)->send();
+        } while(substr($response->getBody(true), 0, 1) !== '{' && $retry > 0);
+
+        return $response->json();
     }
 }
