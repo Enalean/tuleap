@@ -64,7 +64,7 @@ const encodeParamToURI = ([key, value] = param) => {
 const recursiveGet = async (input, init = {}) => {
     const {
         params,
-        callback = function(){}
+        getCollectionCallback = (json) => [].concat(json)
     } = init;
 
     const {
@@ -81,8 +81,7 @@ const recursiveGet = async (input, init = {}) => {
         }
     });
     const json    = await response.json();
-    const results = [].concat(json);
-    callback(results);
+    const results = getCollectionCallback(json);
 
     const total      = Number.parseInt(response.headers.get('X-PAGINATION-SIZE'), 10);
     const new_offset = offset + limit;

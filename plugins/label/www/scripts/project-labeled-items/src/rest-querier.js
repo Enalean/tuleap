@@ -17,20 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'tlp';
+import { recursiveGet } from 'tlp';
 
 export {
     getLabeledItems
 }
 
 async function getLabeledItems(project_id, labels_id) {
-    const response = await get(`/api/projects/${project_id}/labeled_items`, {
+    const labeled_items = await recursiveGet(`/api/projects/${project_id}/labeled_items`, {
         params: {
-            query: {
-                labels_id
-            }
-        }
+            query: { labels_id },
+            limit: 50
+        },
+        getCollectionCallback: (json) => [].concat(json.labeled_items)
     });
 
-    return await response.json();
+    return labeled_items;
 }
