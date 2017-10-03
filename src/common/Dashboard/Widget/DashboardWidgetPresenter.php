@@ -42,6 +42,8 @@ class DashboardWidgetPresenter
     public $has_icon;
     public $icon;
     public $javascript_dependencies;
+    public $has_custom_title;
+    public $purified_custom_title;
 
     public function __construct(
         Dashboard $dashboard,
@@ -53,12 +55,17 @@ class DashboardWidgetPresenter
         $this->widget_name  = $dashboard_widget->getName();
         $this->is_minimized = $dashboard_widget->isMinimized();
 
-        $this->title       = $widget->getTitle();
-        $this->is_editable = strlen($widget->getPreferences($this->widget_id)) !== 0;
-        $this->has_rss     = $widget->hasRss();
-        $this->rss_url     = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
-        $this->icon        = $widget->getIcon();
-        $this->has_icon    = (bool) $this->icon;
+        $this->title            = $widget->getTitle();
+        $this->has_custom_title = $widget->hasCustomTitle();
+        if ($this->has_custom_title) {
+            $this->purified_custom_title = $widget->getPurifiedCustomTitle();
+        }
+
+        $this->is_editable    = strlen($widget->getPreferences($this->widget_id)) !== 0;
+        $this->has_rss        = $widget->hasRss();
+        $this->rss_url        = (string) $widget->getRssUrl($widget->owner_id, $widget->owner_type);
+        $this->icon           = $widget->getIcon();
+        $this->has_icon       = (bool) $this->icon;
 
         $this->javascript_dependencies = $widget->getJavascriptDependencies();
 
@@ -66,7 +73,7 @@ class DashboardWidgetPresenter
 
         $this->is_content_loaded_asynchronously = $widget->isAjax();
         if ($this->is_content_loaded_asynchronously) {
-            $this->content  = '';
+            $this->content = '';
             $this->ajax_url = $widget->getAjaxUrl($widget->owner_id, $widget->owner_type, $dashboard->getId());
         } else {
             $this->content  = $widget->getContent();

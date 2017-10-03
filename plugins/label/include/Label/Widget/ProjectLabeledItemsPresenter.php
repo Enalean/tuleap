@@ -29,7 +29,8 @@ class ProjectLabeledItemsPresenter
 
     public function __construct(\Project $project, array $labels)
     {
-        $this->selected_labels_id = json_encode($labels);
+        $formatter                = new ProjectLabelConfigurationLabelsFormatter();
+        $this->selected_labels_id = json_encode($formatter->getLabelsIds($labels));
         $this->project_id         = $project->getID();
     }
 }

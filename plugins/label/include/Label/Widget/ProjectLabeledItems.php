@@ -20,6 +20,7 @@
 
 namespace Tuleap\Label\Widget;
 
+use Codendi_HTMLPurifier;
 use DataAccessException;
 use Feedback;
 use ProjectManager;
@@ -69,7 +70,7 @@ class ProjectLabeledItems extends Widget
             LABEL_BASE_DIR . '/templates/widgets'
         );
 
-        $this->dao                      = new Dao();
+        $this->dao = new Dao();
         $this->labels_retriever         = new ProjectLabelRetriever(new LabelDao());
         $this->project_data_validator   = new ProjectLabelRequestDataValidator();
         $this->config_retriever         = new ProjectLabelConfigRetriever(new ProjectLabelConfigDao());
@@ -86,6 +87,24 @@ class ProjectLabeledItems extends Widget
         return dgettext('tuleap-label', 'Labeled Items');
     }
 
+    public function hasCustomTitle()
+    {
+        return $this->getPurifiedCustomTitle() !== "";
+    }
+
+    public function getPurifiedCustomTitle()
+    {
+        $config_labels = $this->config_retriever->getLabelsConfig($this->content_id);
+
+        return Codendi_HTMLPurifier::instance()->purify(
+            $this->renderer->renderToString(
+                'project-labeled-items-config',
+                array('labels' => $config_labels)
+            ),
+            CODENDI_PURIFIER_FULL
+        );
+    }
+
     public function getDescription()
     {
         return dgettext('tuleap-label', 'Displays items with configured labels in the project. For example you can search all Pull Requests labeled "Emergency" and "v3.0"');
@@ -98,7 +117,7 @@ class ProjectLabeledItems extends Widget
 
     public function getContent()
     {
-        $config_labels = $this->config_retriever->getLabelConfig($this->content_id);
+        $config_labels = $this->config_retriever->getLabelsConfig($this->content_id);
         $project       = $this->getProject();
 
         return $this->renderer->renderToString(
@@ -158,9 +177,9 @@ class ProjectLabeledItems extends Widget
     private function getProjectSelectedLabelsPresenter()
     {
         $project_labels = $this->getProjectLabels();
-        $config_label   = $this->getConfigLabels();
+        $config_labels  = $this->getConfigLabels();
 
-        $labels = $this->labels_presenter_builder->buildSelectedLabels($project_labels, $config_label);
+        $labels = $this->labels_presenter_builder->buildSelectedLabels($project_labels, $config_labels);
 
         return $labels;
     }
@@ -168,16 +187,16 @@ class ProjectLabeledItems extends Widget
     private function getProjectAllLabelsPresenter()
     {
         $project_labels = $this->getProjectLabels();
-        $config_label   = $this->getConfigLabels();
+        $config_labels  = $this->getConfigLabels();
 
-        $labels = $this->labels_presenter_builder->build($project_labels, $config_label);
+        $labels = $this->labels_presenter_builder->build($project_labels, $config_labels);
 
         return $labels;
     }
 
     private function getConfigLabels()
     {
-        return $this->config_retriever->getLabelConfig($this->content_id);
+        return $this->config_retriever->getLabelsConfig($this->content_id);
     }
 
     private function getProjectLabels()

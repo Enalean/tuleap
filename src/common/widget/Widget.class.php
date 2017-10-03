@@ -45,6 +45,16 @@ use Tuleap\Dashboard\User\UserDashboardController;
         return $this->id;
     }
 
+    public function hasCustomTitle()
+    {
+        return false;
+    }
+
+    public function getPurifiedCustomTitle()
+    {
+        return '';
+    }
+
     public function getTitle()
     {
         return '';

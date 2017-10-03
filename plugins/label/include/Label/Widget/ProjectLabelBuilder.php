@@ -35,12 +35,14 @@ class ProjectLabelBuilder
         return $labels;
     }
 
-    public function buildSelectedLabels(array $project_labels, array $config_label)
+    public function buildSelectedLabels(array $project_labels, array $config_labels)
     {
         $selected_labels = array();
 
+        $formatter     = new ProjectLabelConfigurationLabelsFormatter();
+        $config_labels = $formatter->getLabelsIds($config_labels);
         foreach ($project_labels as $project_label) {
-            if (in_array($project_label['id'], $config_label)) {
+            if (in_array($project_label['id'], $config_labels)) {
                 $selected_labels[] = $project_label;
             }
         }
