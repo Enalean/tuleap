@@ -3,23 +3,24 @@
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright Enalean (c) 2017. All rights reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
+use Tuleap\Tracker\Notifications\NotificationCustomisationSettingsPresenter;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\PaneNotificationListPresenter;
 use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
@@ -176,6 +177,7 @@ class Tracker_NotificationsManager {
         echo '<fieldset><form id="tracker-admin-notifications-form" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
 
         $this->displayAdminNotifications_Toggle();
+        $this->displayAdminNotificationAssignedToMeFlag();
         $this->displayAdminNotifications_Global($request);
 
         echo '</form></fieldset>';
@@ -200,6 +202,18 @@ class Tracker_NotificationsManager {
         echo '<input class="btn" type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"/>';
     }
 
+    private function displayAdminNotificationAssignedToMeFlag()
+    {
+        $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
+        $is_assigned_to_enabled          = $config_notification_assigned_to->isAssignedToSubjectEnabled($this->tracker->getGroupId());
+
+        $renderer = $this->getNotificationsRenderer();
+        $renderer->renderToPage(
+            'admin-subject-customisation',
+            new NotificationCustomisationSettingsPresenter($is_assigned_to_enabled)
+        );
+    }
+
     protected function displayAdminNotifications_Global(HTTPRequest $request) {
         echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','global_mail_notif').' '.
         help_button('tracker.html#e-mail-notification').'</h3>';
@@ -207,7 +221,7 @@ class Tracker_NotificationsManager {
         $notifs    = $this->getGlobalNotifications();
         $nb_notifs = count($notifs);
         if ($this->tracker->userIsAdmin()) {
-            $renderer = TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates/notifications');
+            $renderer = $this->getNotificationsRenderer();
             $renderer->renderToPage(
                 'notifications',
                 new PaneNotificationListPresenter(
@@ -237,6 +251,14 @@ class Tracker_NotificationsManager {
                 echo $GLOBALS['Language']->getText('plugin_tracker_include_type','admin_not_conf');
             }
         }
+    }
+
+    /**
+     * @return TemplateRenderer
+     */
+    private function getNotificationsRenderer()
+    {
+        return TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates/notifications');
     }
 
     /**

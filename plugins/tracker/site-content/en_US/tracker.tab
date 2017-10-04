@@ -583,6 +583,8 @@ plugin_tracker_include_type	notification_suspended	Email Notifications Suspended
 plugin_tracker_include_type	toggle_notif_note	As a tracker administrator, you can temporarily suspend all the e-mail notifications in this tracker, regardless of the notification settings below.
 plugin_tracker_include_type	toggle_notif_warn	The tracker administrator has temporarily suspended email notifications in this tracker. The notification settings below are now ignored.
 plugin_tracker_include_type	stop_notification	Suspend Email Notification
+plugin_tracker_include_type	notification_customisation_title	Email subject customisation
+plugin_tracker_include_type	assigned_to_me_description	Include [Assigned to me] flag in subject for people who are assigned to the artifact
 plugin_tracker_include_type	global_mail_notif	Global Email Notification
 plugin_tracker_include_type	admin_conf	<P>The tracker administrators have configured the following email addresses to receive notification of new artifact submission (and possibly updates).<P><u>Recipients</u>:
 plugin_tracker_include_type	send_all_or_not	(Send on all updates: $1)
