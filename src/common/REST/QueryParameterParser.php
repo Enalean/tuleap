@@ -18,16 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label;
+namespace Tuleap\REST;
 
-use Tuleap\Label\Exceptions\DuplicatedParameterValueException;
-use Tuleap\Label\Exceptions\EmptyParameterException;
-use Tuleap\Label\Exceptions\InvalidParameterTypeException;
-use Tuleap\Label\Exceptions\MissingMandatoryParameterException;
-use Tuleap\REST\JsonDecoder;
-use Luracast\Restler\RestException;
-
-class LabeledItemQueryParser
+/** I am useful to extract stuff in the 'query' parameter of a REST route */
+class QueryParameterParser
 {
     private $json_decoder;
 
@@ -38,39 +32,32 @@ class LabeledItemQueryParser
 
     /**
      * @param string $query
+     * @param string $parameter_name
      * @return int[]
-     * @throws DuplicatedParameterValueException
-     * @throws EmptyParameterException
-     * @throws InvalidParameterTypeException
-     * @throws MissingMandatoryParameterException
+     * @throws QueryParameterException
      */
-    public function getLabelIdsFromRoute($query)
+    public function getArrayOfInt($query, $parameter_name)
     {
         $query = trim($query);
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
 
-        if (! isset($json_query['labels_id'])) {
-            throw new MissingMandatoryParameterException();
+        if (! isset($json_query[$parameter_name])) {
+            throw new MissingMandatoryParameterException($parameter_name);
         }
 
-        if (! is_array($json_query['labels_id'])) {
-            throw new InvalidParameterTypeException();
-        }
-
-        $labels_id = $json_query['labels_id'];
-
-        if (count($labels_id) === 0) {
-            throw new EmptyParameterException();
+        $labels_id = $json_query[$parameter_name];
+        if (! is_array($labels_id)) {
+            throw new InvalidParameterTypeException($parameter_name);
         }
 
         $only_numeric_label_ids = array_filter($labels_id, 'is_int');
         if ($only_numeric_label_ids !== $labels_id) {
-            throw new InvalidParameterTypeException();
+            throw new InvalidParameterTypeException($parameter_name);
         }
 
         $duplicates = array_diff_key($labels_id, array_unique($labels_id));
         if (count($duplicates) > 0) {
-            throw new DuplicatedParameterValueException($duplicates);
+            throw new DuplicatedParameterValueException($parameter_name, $duplicates);
         }
 
         return $labels_id;

@@ -24,15 +24,12 @@ use EventManager;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
-use Tuleap\Label\Exceptions\DuplicatedParameterValueException;
-use Tuleap\Label\Exceptions\EmptyParameterException;
-use Tuleap\Label\Exceptions\InvalidParameterTypeException;
-use Tuleap\Label\Exceptions\MissingMandatoryParameterException;
 use Tuleap\Label\LabeledItemCollection;
-use Tuleap\Label\LabeledItemQueryParser;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\QueryParameterException;
+use Tuleap\REST\QueryParameterParser;
 use URLVerification;
 use UserManager;
 
@@ -49,8 +46,8 @@ class ProjectResource
     /** @var ProjectManager */
     private $project_manager;
 
-    /** @var LabeledItemQueryParser */
-    private $labeled_items_query_parser;
+    /** @var QueryParameterParser */
+    private $query_parser;
 
     public function __construct()
     {
@@ -58,7 +55,7 @@ class ProjectResource
         $this->project_manager = ProjectManager::instance();
         $this->event_manager   = EventManager::instance();
 
-        $this->labeled_items_query_parser = new LabeledItemQueryParser(
+        $this->query_parser = new QueryParameterParser(
             new JsonDecoder()
         );
     }
@@ -104,29 +101,39 @@ class ProjectResource
     {
         $this->checkLimitValueIsAcceptable($limit);
 
-        $project = $this->getProjectForUser($id);
-        $user    = $this->user_manager->getCurrentUser();
-        try {
-            $label_ids = $this->labeled_items_query_parser->getLabelIdsFromRoute($query);
-            $event     = new LabeledItemCollection($project, $user, $label_ids, $limit, $offset);
-            $this->event_manager->processEvent($event);
+        $project   = $this->getProjectForUser($id);
+        $user      = $this->user_manager->getCurrentUser();
+        $label_ids = $this->getLabelIdsFromQuery($query);
 
-            $labeled_items = new CollectionOfLabeledItemsRepresentation();
-            $labeled_items->build($event);
+        $collection = new LabeledItemCollection($project, $user, $label_ids, $limit, $offset);
+        $this->event_manager->processEvent($collection);
 
-            $this->sendAllowHeadersForLabeledItems();
-            Header::sendPaginationHeaders($limit, $offset, $event->getTotalSize(), self::MAX_LIMIT);
-        } catch (MissingMandatoryParameterException $e) {
-            throw new RestException(400, "Missing labels_id entry in the query parameter");
-        } catch (InvalidParameterTypeException $e) {
-            throw new RestException(400, "labels_id must be an array of int");
-        } catch (EmptyParameterException $e) {
-            throw new RestException(400, "labels_id must not be empty");
-        } catch (DuplicatedParameterValueException $e) {
-            throw new RestException(400, 'One label or more are duplicated: ' . implode(',', $e->getDuplicates()));
-        }
+        $labeled_items = new CollectionOfLabeledItemsRepresentation();
+        $labeled_items->build($collection);
+
+        $this->sendAllowHeadersForLabeledItems();
+        Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
 
         return $labeled_items;
+    }
+
+    /**
+     * @param $query
+     * @return int[]
+     */
+    private function getLabelIdsFromQuery($query)
+    {
+        try {
+            $label_ids = $this->query_parser->getArrayOfInt($query, 'labels_id');
+        } catch (QueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        if (count($label_ids) === 0) {
+            throw new RestException(400, "labels_id must not be empty");
+        }
+
+        return $label_ids;
     }
 
     private function sendAllowHeadersForLabeledItems()
