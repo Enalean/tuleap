@@ -46,11 +46,10 @@
                 }
 
                 try {
-                    const {labeled_items} = await getLabeledItems(
+                    this.items = await getLabeledItems(
                         this.dataProjectId,
                         labels_id
                     );
-                    this.items = labeled_items;
                 } catch (e) {
                     const {error} = await e.response.json();
                     this.error = error.code + ' ' + error.message;
