@@ -212,7 +212,7 @@ class ProjectCreationData {
 
         $this->markUsedServicesFromXML($xml, $template_id, $service_manager, $project_manager);
 
-        $this->inherit_from_template = false;
+        $this->inherit_from_template = isset($attrs['inherit-from-template']) && (bool) $attrs['inherit-from-template'] === true;
     }
 
     /**

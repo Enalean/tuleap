@@ -116,7 +116,7 @@ pipeline {
                     sh """
                     mkdir -p working_copy/api-soap
                     cp -R sources/* working_copy/api-soap/
-                    cid="\$(docker create -v \$WORKSPACE/working_copy/api-soap:/tuleap \$DOCKER_REGISTRY/enalean/tuleap-test-soap)"
+                    cid="\$(docker create -v \$WORKSPACE/working_copy/api-soap:/usr/share/tuleap \$DOCKER_REGISTRY/enalean/tuleap-test-soap:2)"
                     docker start --attach "\$cid" || true
                     mkdir -p 'results/api-soap'
                     docker cp "\$cid":/output/soap_tests.xml results/api-soap/ || true

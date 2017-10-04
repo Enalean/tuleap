@@ -7,26 +7,15 @@ TULEAP_INCLUDE_PATH=$(CURDIR)/src/www/include:$(CURDIR)/src:/usr/share/codendi/s
 PHP_INCLUDE_PATH=/usr/share/php:/usr/share/pear:$(TULEAP_INCLUDE_PATH):/usr/share/jpgraph:.
 PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d memory_limit=256M -d display_errors=On
 
-DOCKER_REST_TESTS_IMAGE=enalean/tuleap-test-rest
-DOCKER_REST_TESTS_IMGINIT=$(DOCKER_REST_TESTS_IMAGE)-init
-
 ifeq ($(BUILD_ENV),ci)
 OUTPUT_DIR=$(WORKSPACE)
 SIMPLETEST_OPTIONS=-x
-REST_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/rest_tests.xml
-SOAP_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/soap_tests.xml
 PHPUNIT_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/phpunit_tests.xml --coverage-html $(OUTPUT_DIR)/phpunit_coverage --coverage-clover $(OUTPUT_DIR)/phpunit_coverage/coverage.xml
 PHPUNIT_OPTIONS=
-TULEAP_LOCAL_INC=$(WORKSPACE)/etc/integration_tests.inc
-COMPOSER=/usr/local/bin/composer.phar
 else
 SIMPLETEST_OPTIONS=
-REST_TESTS_OPTIONS=
-SOAP_TESTS_OPTIONS=
 PHPUNIT_TESTS_OPTIONS=
 PHPUNIT_OPTIONS=--color
-TULEAP_LOCAL_INC=/etc/codendi/conf/integration_tests.inc
-COMPOSER=$(CURDIR)/composer.phar
 endif
 
 OS := $(shell uname)
@@ -39,9 +28,6 @@ endif
 SUDO=
 DOCKER=$(SUDO) docker
 DOCKER_COMPOSE=$(SUDO) docker-compose $(DOCKER_COMPOSE_FILE)
-
-# Export
-export TULEAP_LOCAL_INC
 
 PHPUNIT=$(PHP) vendor/phpunit/phpunit/phpunit.php $(PHPUNIT_OPTIONS)
 SIMPLETEST=$(PHP) tests/bin/simpletest $(SIMPLETEST_OPTIONS)
@@ -144,63 +130,6 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile tranlated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-composer_update:
-	cp tests/rest/bin/composer.json .
-	php $(COMPOSER) install
-
-soap_composer_update:
-	cp tests/soap/bin/composer.json .
-	php $(COMPOSER) install
-
-local_composer_install:
-	curl -k -sS https://getcomposer.org/installer | php
-
-api_test_setup: local_composer_install composer_update
-	cp tests/rest/bin/integration_tests.inc.dist /etc/codendi/conf/integration_tests.inc
-	cp tests/rest/bin/dbtest.inc.dist /etc/codendi/conf/dbtest.inc
-
-api_test_bootstrap:
-	php tests/lib/rest/init_db.php
-	$(PHP) tests/lib/rest/init_data.php
-
-soap_test_bootstrap:
-	php tests/lib/soap/init_db.php
-	$(PHP) tests/lib/soap/init_data.php
-
-soap_test: composer_update soap_test_bootstrap
-	$(PHPUNIT) $(SOAP_TESTS_OPTIONS) tests/soap
-
-api_test: composer_update api_test_bootstrap
-	$(PHPUNIT) $(REST_TESTS_OPTIONS) tests/rest
-	@for restpath in `\ls -d plugins/*/tests/rest`; do \
-		$(PHPUNIT) $(REST_TESTS_OPTIONS) "$$restpath"; \
-	done;
-
-ci_api_test_setup: composer_update
-	mkdir -p $(WORKSPACE)/etc
-	cat tests/rest/bin/integration_tests.inc.dist | perl -pe "s%/usr/share/codendi%$(CURDIR)%" > $(TULEAP_LOCAL_INC)
-	cp tests/rest/bin/dbtest.inc.dist $(WORKSPACE)/etc/dbtest.inc
-	mkdir -p /tmp/run
-	php tests/bin/generate-phpunit-testsuite.php /tmp/run $(OUTPUT_DIR)
-
-ci_soap_test_setup: soap_composer_update
-	mkdir -p $(WORKSPACE)/etc
-	cat tests/soap/bin/integration_tests.inc.dist | perl -pe "s%/usr/share/codendi%$(CURDIR)%" > $(TULEAP_LOCAL_INC)
-	cp tests/soap/bin/dbtest.inc.dist $(WORKSPACE)/etc/dbtest.inc
-	mkdir -p /tmp/run
-	php tests/bin/generate-phpunit-testsuite-soap.php /tmp/run $(OUTPUT_DIR)
-
-ci_api_test: ci_api_test_setup api_test
-
-docker_api_all:
-	$(PHP) /tmp/run/vendor/phpunit/phpunit/phpunit.php --configuration /tmp/run/suite.xml
-
-docker_api_partial:
-	$(PHP) /tmp/run/vendor/phpunit/phpunit/phpunit.php $(REST_TESTS_OPTIONS)
-
-tests_php51:
-	$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c5-php51
-
 tests_php53:
 	$(DOCKER) run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c6-php53
 
@@ -210,31 +139,8 @@ tests_phpunit:
 phpunit:
 	$(PHPUNIT) $(PHPUNIT_TESTS_OPTIONS) --bootstrap tests/phpunit_boostrap.php plugins/proftpd/phpunit
 
-ci_phpunit: composer_update phpunit
-
 simpletest:
 	$(SIMPLETEST) $(SIMPLETEST_OPTIONS) tests/simpletest plugins tests/integration
-
-ci_simpletest: simpletest
-
-test: simpletest phpunit api_test
-
-rest_docker_snapshot:
-	@$(DOCKER) run -ti --name=rest-init -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMAGE) --init
-	@$(DOCKER) commit rest-init $(DOCKER_REST_TESTS_IMGINIT)
-	@$(DOCKER) rm -f rest-init
-	@echo "Image ready: $(DOCKER_REST_TESTS_IMGINIT)"
-	@echo "You can use it like:"
-	@echo "# docker run --rm=true -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMGINIT) --run"
-	@echo "# docker run --rm=true -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMGINIT) --run tests/rest/ArtifactsTest.php"
-
-rest_docker_clean:
-	@$(DOCKER) rmi $(DOCKER_REST_TESTS_IMGINIT)
-
-rest_docker_snap_run:
-	@echo "Once inside the container, just run:"
-	@echo "# ./run.sh --run tests/rest/UsersTest.php"
-	@$(DOCKER) run -ti --rm=true -v $(CURDIR):/tuleap --entrypoint=/bin/bash $(DOCKER_REST_TESTS_IMGINIT) +x
 
 deploy-githooks:
 	@if [ -e .git/hooks/pre-commit ]; then\

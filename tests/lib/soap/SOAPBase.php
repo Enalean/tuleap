@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../autoload.php';
-require_once 'common/autoload.php';
+require_once __DIR__.'/../autoload.php';
 
 class SOAPBase extends PHPUnit_Framework_TestCase {
 
