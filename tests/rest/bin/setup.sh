@@ -139,7 +139,7 @@ setup_database() {
     MYSQL="mysql -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
     echo "Setup database $MYSQL_DAEMON"
-    service $MYSQL_DAEMON restart
+    service $MYSQL_DAEMON start
     mysql -e "GRANT ALL PRIVILEGES on *.* to '$MYSQL_USER'@'$MYSQL_HOST' identified by '$MYSQL_PASSWORD'"
     $MYSQL -e "DROP DATABASE IF EXISTS $MYSQL_DBNAME"
     $MYSQL -e "CREATE DATABASE $MYSQL_DBNAME CHARACTER SET utf8"
@@ -174,6 +174,7 @@ seed_data() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php agiledashboard" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php frs" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php svn" -l codendiadm
+    su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php git" -l codendiadm
 
     load_project /usr/share/tuleap/tests/rest/_fixtures/01-private-member
     load_project /usr/share/tuleap/tests/rest/_fixtures/02-private

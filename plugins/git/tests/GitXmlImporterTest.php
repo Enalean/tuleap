@@ -190,6 +190,30 @@ class GitXmlImporterTest extends TuleapTestCase {
         chdir($this->old_cwd);
     }
 
+    public function itShouldCreateOneEmptyRepository()
+    {
+        $xml = <<<XML
+            <project>
+                <git>
+                    <repository bundle-path="" name="empty"/>
+                </git>
+            </project>
+XML;
+        $xml_element = new SimpleXMLElement($xml);
+        $res = $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml_element, parent::getTmpDir());
+
+        $this->assertEqual($this->git_dao->last_saved_repository->getName(), 'empty');
+
+        $iterator = new DirectoryIterator($GLOBALS['sys_data_dir'].'/gitolite/repositories/test_project');
+        $empty_is_here = false;
+        foreach ($iterator as $it) {
+            if ($it->getFilename() == 'empty') {
+                $empty_is_here = true;
+            }
+        }
+        $this->assertFalse($empty_is_here);
+    }
+
     public function itShouldImportOneRepositoryWithOneCommit() {
         $xml = <<<XML
             <project>

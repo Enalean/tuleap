@@ -3,6 +3,7 @@
     unix-name="test-git" full-name="Git" description="For test" access="public">
     <long-description>A test project</long-description>
     <services>
+        <service shortname="plugin_git" enabled="true" />
     </services>
     <ugroups>
         <ugroup name="project_members" description="">
@@ -16,4 +17,17 @@
             </members>
         </ugroup>
     </ugroups>
+    <git>
+        <repository description="Git repository" bundle-path="" name="repo01">
+            <read>
+                <ugroup>project_members</ugroup>
+            </read>
+            <write>
+                <ugroup>project_admins</ugroup>
+            </write>
+            <wplus>
+                <ugroup>project_admins</ugroup>
+            </wplus>
+        </repository>
+    </git>
 </project>
