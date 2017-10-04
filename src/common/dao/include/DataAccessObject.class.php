@@ -74,9 +74,9 @@ class DataAccessObject {
     public function rollBack() {
         $this->da->rollback();
     }
-    
+
     /**
-     * 
+     *
      * @return DataAccess
      */
     public function getDa() {
@@ -98,12 +98,12 @@ class DataAccessObject {
         }
         return $result;
     }
-    
+
     /**
      * Like retrieve, but returns only the first row.
-     * 
+     *
      * @param string $sql the query string
-     * 
+     *
      * @return array|false
      */
     protected function retrieveFirstRow($sql) {
@@ -124,24 +124,24 @@ class DataAccessObject {
 
     /**
      * Like retrieve, but returns only the ids.
-     * 
+     *
      * @param string $sql the query string
      * @return array of string
      */
     protected function retrieveIds($sql) {
         return $this->extractIds($this->retrieve($sql));
     }
-    
+
     /**
      * Extracts ids from a DataAccessResult.
-     * 
+     *
      * @param DataAccessResult $dar
      * @return array of string
      */
     private function extractIds(DataAccessResult $dar) {
         $ids = array();
-        foreach ($dar as $row) { 
-            $ids[] = $row['id'];
+        foreach ($dar as $row) {
+            $ids[] = (int)$row['id'];
         }
         return $ids;
     }
@@ -184,7 +184,7 @@ class DataAccessObject {
      *
      * @param string $sql statement (INSERT INTO ...)
      *
-     * @return int the last insert id or false if there is an error 
+     * @return int the last insert id or false if there is an error
      */
     protected function updateAndGetLastId($sql) {
         if ($inserted = $this->update($sql)) {
@@ -192,10 +192,10 @@ class DataAccessObject {
         }
         return $inserted;
     }
-    
+
     /**
      * Prepare ranking of items.
-     * 
+     *
      * @param   int $id  The id of the item to rank. 0 if the item doesn't exist.
      * @param   int $parent_id   The id of the element used to group items
      * @param   mixed $rank    The rank asked for the items. Possible values are :
@@ -204,7 +204,7 @@ class DataAccessObject {
      *                       'end'       => to put item after each others
      *                       'up'        => to put item before previous sibling
      *                       'down'      => to put item after next sibling
-     *                       <int>       => to put item at a specific position. 
+     *                       <int>       => to put item at a specific position.
      *                   Please note that for a new item ($id = 0) you must not use
      *                   '--', 'up' or 'down' value
      * @param   string $primary_key the column name of the primary key. Default 'id'
@@ -217,7 +217,7 @@ class DataAccessObject {
      */
     protected function prepareRanking($id, $parent_id, $rank, $primary_key = 'id', $parent_key = 'parent_id', $rank_key = 'rank') {
         $newRank = null;
-        
+
         // First, check if there is already some items
         $sql = sprintf('SELECT NULL'.
                        ' FROM '. $this->table_name .

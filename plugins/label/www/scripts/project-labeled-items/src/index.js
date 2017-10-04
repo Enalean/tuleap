@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -18,5 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('LABEL_BASE_DIR', realpath(__DIR__.'/..'));
-define('LABEL_BASE_URL', '/plugins/label');
+import Vue from 'vue';
+import LabeledItemsList from './LabeledItemsList.vue';
+
+const widgets = document.getElementsByClassName("labeled-items-widget");
+
+for (const widget of widgets) {
+    new Vue({
+        el: widget,
+        components: {LabeledItemsList}
+    }).$mount();
+}

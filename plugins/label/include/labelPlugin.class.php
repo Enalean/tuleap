@@ -24,6 +24,7 @@ use Tuleap\Label\Widget\Dao;
 use Tuleap\Label\Widget\ProjectLabeledItems;
 use Tuleap\Project\Label\MergeLabels;
 use Tuleap\Project\Label\RemoveLabel;
+use Tuleap\Request\CurrentPage;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -46,6 +47,7 @@ class labelPlugin extends Plugin
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(RemoveLabel::NAME);
         $this->addHook(MergeLabels::NAME);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -116,5 +118,23 @@ class labelPlugin extends Plugin
     private function getDao()
     {
         return new Dao();
+    }
+
+    /**
+     * @see Event:BURNING_PARROT_GET_STYLESHEETS
+     */
+    public function burningParrotGetStylesheets(array $params)
+    {
+        if ($this->isInDashboard()) {
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    private function isInDashboard()
+    {
+        $current_page = new CurrentPage();
+
+        return $current_page->isDashboard();
     }
 }
