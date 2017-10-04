@@ -12,7 +12,7 @@
 (<script>
     import Gettext from 'node-gettext';
     import french_translations from '../po/fr.po';
-    import LabeledItem from './LabeledItem.vue';
+    import LabeledItem       from './LabeledItem.vue';
     import {getLabeledItems} from './rest-querier.js';
 
     const gettext_provider = new Gettext();
@@ -85,5 +85,5 @@
                 }
             }
         }
-    }
+    };
 </script>)
