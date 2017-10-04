@@ -102,10 +102,18 @@ function loadDynamicallyEditModalContent(modal, modal_content) {
         container = modal_content.querySelector('.edit-widget-modal-content'),
         button    = modal_content.querySelector('button[type=submit]');
 
+    if (! container.classList.contains('edit-widget-modal-content-loading')) {
+        container.innerHTML = '';
+        container.classList.add('edit-widget-modal-content-loading');
+    }
+
     get('/widgets/?widget-id=' + encodeURIComponent(widget_id) +'&action=get-edit-modal-content')
         .done(function (html) {
             button.disabled     = false;
             container.innerHTML = sanitize(html);
+
+            const event = new CustomEvent('edit-widget-modal-content-loaded');
+            modal_content.dispatchEvent(event);
         })
         .fail(function (data) {
             container.innerHTML = sanitize('<div class="tlp-alert-danger">' + data.responseJSON + '</div>');

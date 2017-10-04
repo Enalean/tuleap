@@ -22,15 +22,17 @@ namespace Tuleap\Label\Widget;
 
 class ProjectLabelSelectorPresenter
 {
+    public $project_id;
     /**
      * @var array
      */
-    public $labels;
+    public $selected_labels;
     public $label_title;
 
-    public function __construct(array $labels)
+    public function __construct($project_id, array $selected_labels)
     {
-        $this->label_title = dgettext('tuleap-label', 'Label');
-        $this->labels      = $labels;
+        $this->label_title     = dgettext('tuleap-label', 'Label');
+        $this->project_id      = $project_id;
+        $this->selected_labels = $selected_labels;
     }
 }
