@@ -26,13 +26,12 @@ setup_tuleap() {
     mkdir -p \
         /etc/tuleap/conf \
         /etc/tuleap/plugins \
-        /home/users \
         /var/log/tuleap \
         /var/tmp/codendi_cache
     touch /var/log/tuleap/codendi_syslog
     chgrp codendiadm /var/log/tuleap/codendi_syslog
     chmod g+w /var/log/tuleap/codendi_syslog
-    chown codendiadm:codendiadm /var/tmp/codendi_cache
+    chown -R codendiadm:codendiadm /var/tmp/codendi_cache /etc/tuleap/plugins
 
     cat /usr/share/tuleap/src/etc/database.inc.dist | \
         sed \
@@ -56,6 +55,9 @@ setup_tuleap() {
 	-e "s#%sys_org_name%#Tuleap#g" \
 	-e "s#%sys_long_org_name%#Tuleap#g" \
 	-e 's#\$sys_https_host =.*#\$sys_https_host = "";#' \
+	-e 's#/home/groups##' \
+	-e 's#/home/users##' \
+	-e 's#/var/lib/codendi/ftp/pub##' \
 	> /etc/tuleap/conf/local.inc
 }
 
@@ -75,7 +77,6 @@ setup_database() {
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_initvalues.sql"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
-    #$MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/plugins/docman/db/install.sql"
 
     mysql -e "FLUSH PRIVILEGES;"
 }
