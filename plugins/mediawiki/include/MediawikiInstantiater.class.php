@@ -195,21 +195,13 @@ class MediaWikiInstantiater {
      * @return boolean
      */
     private function doesDirectoryExist() {
-        $name_with_id        = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_id;
-        $name_with_shortname = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
+        $data_dir = new \Tuleap\Mediawiki\MediawikiDataDir();
+        $this->project_name_dir = $data_dir->getMediawikiDir($this->project);
 
-        if (is_dir($name_with_id) ) {
-            $this->project_name_dir = $name_with_id;
-            $dir_exists = true;
-        } elseif (is_dir($name_with_shortname) ) {
-            $this->project_name_dir = $name_with_shortname;
-            $dir_exists = true;
-        } else {
-            $this->project_name_dir = $name_with_id;
-            $dir_exists = false;
+        if (is_dir($this->project_name_dir)) {
+            return true;
         }
-
-        return $dir_exists;
+        return false;
     }
 
     private function createDirectory() {
