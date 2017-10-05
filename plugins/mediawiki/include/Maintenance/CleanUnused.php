@@ -74,6 +74,7 @@ class CleanUnused
         $this->logger->info("Start purge");
         $this->purgeDeletedProjects($dry_run);
         $this->purgeUnusedService($dry_run, $force);
+        $this->purgeUsedServicesEmptyWiki($dry_run, $force);
         $this->logger->info("Purge completed");
         $this->logger->info("{$this->dao->getDeletedDatabasesCount()} database(s) deleted");
         $this->logger->info("{$this->dao->getDeletedTablesCount()} table(s) deleted in central DB");
@@ -97,7 +98,7 @@ class CleanUnused
         $this->logger->info("Start purge of unused services");
         foreach ($this->dao->getMediawikiDatabaseInUnusedServices() as $row) {
             $project = $this->project_manager->getProject($row['project_id']);
-            if ($project && $this->isEmptyOrForced($project, $force)) {
+            if ($project && ($this->isEmpty($project) || $this->isForced($project, $force))) {
                 $this->purgeOneProject($project, $row, $dry_run);
             } else {
                 $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) has mediawiki content but service is desactivated. You should check with project admins");
@@ -106,10 +107,35 @@ class CleanUnused
         $this->logger->info("Purge of unused services completed");
     }
 
-    private function isEmptyOrForced(Project $project, array $force)
+    private function purgeUsedServicesEmptyWiki($dry_run, array $force)
     {
-        return $this->mediawiki_dao->getMediawikiPagesNumberOfAProject($project) === 0 ||
-            in_array((int) $project->getID(), $force, true);
+        $this->logger->info("Start purge of used but empty mediawiki");
+        foreach ($this->dao->getMediawikiDatabasesInUsedServices() as $row) {
+            $project = $this->project_manager->getProject($row['project_id']);
+            if ($project && $this->isEmpty($project)) {
+                if ($this->isForced($project, $force)) {
+                    $this->purgeOneProject($project, $row, $dry_run);
+                    $this->dao->desactivateService($project->getID(), $dry_run);
+                } else {
+                    $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) has service activated but no content. You should check with project admins");
+                }
+            }
+        }
+        $this->logger->info("End of purge of used but empty mediawiki");
+    }
+
+    private function isEmpty(Project $project)
+    {
+        $row = $this->mediawiki_dao->getMediawikiPagesNumberOfAProject($project);
+        if (isset($row['result'])) {
+            return (int) $row['result'] === 0;
+        }
+        throw new \Exception("Unable to get wiki page count in {$project->getID()}");
+    }
+
+    private function isForced(Project $project, array $force)
+    {
+         return in_array((int) $project->getID(), $force, true);
     }
 
     private function purgeOneProject(Project $project, array $row, $dry_run)
