@@ -50,24 +50,25 @@ class BackendSystemTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
-        $GLOBALS['homedir_prefix']            = $this->getTmpDir() . '/home/users';
-        $GLOBALS['grpdir_prefix']             = $this->getTmpDir() . '/home/groups';
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = $this->getTmpDir() . '/var/tmp';
         $GLOBALS['ftp_frs_dir_prefix']        = $this->getTmpDir() . '/var/lib/codendi/ftp/codendi';
-        $GLOBALS['ftp_anon_dir_prefix']       = $this->getTmpDir() . '/var/lib/codendi/ftp/pub';
         $GLOBALS['sys_file_deletion_delay']   = 5;
         $GLOBALS['sys_custom_incdir']         = $GLOBALS['tmp_dir'];
         $GLOBALS['sys_incdir']                = $GLOBALS['tmp_dir'];
         $GLOBALS['codendi_log']               = $GLOBALS['tmp_dir'];
         ForgeConfig::store();
         ForgeConfig::set('sys_project_backup_path', $GLOBALS['tmp_dir']);
+        ForgeConfig::set('homedir_prefix', $this->getTmpDir() . '/home/users');
+        ForgeConfig::set('grpdir_prefix', $this->getTmpDir() . '/home/groups');
+        ForgeConfig::set('ftp_anon_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/pub');
 
-        mkdir($GLOBALS['homedir_prefix'], 0770, true);
-        mkdir($GLOBALS['grpdir_prefix'], 0770, true);
+
+        mkdir(ForgeConfig::get('homedir_prefix'), 0770, true);
+        mkdir(ForgeConfig::get('grpdir_prefix'), 0770, true);
         mkdir($GLOBALS['tmp_dir'], 0770, true);
         mkdir($GLOBALS['ftp_frs_dir_prefix'], 0770, true);
-        mkdir($GLOBALS['ftp_anon_dir_prefix'], 0770, true);
+        mkdir(ForgeConfig::get('ftp_anon_dir_prefix'), 0770, true);
     }
 
 
@@ -90,13 +91,13 @@ class BackendSystemTest extends TuleapTestCase {
         $backend = new BackendTestVersion();
 
         $this->assertEqual($backend->createUserHome($user),True);
-        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
+        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should be created");
 
-        $this->assertTrue(is_file($GLOBALS['homedir_prefix']."/codendiadm/.profile"),"User files from /etc/codendi_skel should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('homedir_prefix')."/codendiadm/.profile"),"User files from /etc/codendi_skel should be created");
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['homedir_prefix']."/codendiadm");
-        rmdir($GLOBALS['homedir_prefix']."/codendiadm");
+        $backend->recurseDeleteInDir(ForgeConfig::get('homedir_prefix')."/codendiadm");
+        rmdir(ForgeConfig::get('homedir_prefix')."/codendiadm");
 
     }
 
@@ -113,8 +114,8 @@ class BackendSystemTest extends TuleapTestCase {
         $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
 
-        $projdir=$GLOBALS['grpdir_prefix']."/TestPrj";
-        $ftpdir = $GLOBALS['ftp_anon_dir_prefix']."/TestPrj";
+        $projdir=ForgeConfig::get('grpdir_prefix')."/TestPrj";
+        $ftpdir = ForgeConfig::get('ftp_anon_dir_prefix')."/TestPrj";
         $frsdir = $GLOBALS['ftp_frs_dir_prefix']."/TestPrj";
 
         $this->assertEqual($backend->createProjectHome(142),True);
@@ -127,7 +128,7 @@ class BackendSystemTest extends TuleapTestCase {
 
         // Cleanup
         $backend->recurseDeleteInDir($projdir);
-        unlink($GLOBALS['grpdir_prefix']."/testprj");
+        unlink(ForgeConfig::get('grpdir_prefix')."/testprj");
         rmdir($projdir);
 
         $backend->recurseDeleteInDir($ftpdir);
@@ -144,7 +145,7 @@ class BackendSystemTest extends TuleapTestCase {
         $backend = new BackendTestVersion();
 
         $backend->createUserHome($user);
-        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
+        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should be created");
 
         //
         // Run test
@@ -156,7 +157,7 @@ class BackendSystemTest extends TuleapTestCase {
         $backend->setReturnValue('getUserManager', $um);
 
         $this->assertEqual($backend->archiveUserHome(104),True);
-        $this->assertFalse(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be deleted");
+        $this->assertFalse(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should be deleted");
         $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz"),"Archive should be created");
 
         // Cleanup
@@ -175,8 +176,8 @@ class BackendSystemTest extends TuleapTestCase {
         $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getProjectManager', $pm);
 
-        $projdir=$GLOBALS['grpdir_prefix']."/TestProj";
-        $lcprojlnk=$GLOBALS['grpdir_prefix']."/testproj";
+        $projdir=ForgeConfig::get('grpdir_prefix')."/TestProj";
+        $lcprojlnk=ForgeConfig::get('grpdir_prefix')."/testproj";
 
         // Setup test data
         mkdir($projdir);
@@ -214,19 +215,19 @@ class BackendSystemTest extends TuleapTestCase {
 
         $this->assertEqual($backend->renameProjectHomeDirectory($project, "FooBar"), true);
 
-        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/TestProject"), "Old project home should no longer exists");
-        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/FooBar"), "Project home should be renamed");
+        $this->assertFalse(file_exists(ForgeConfig::get('grpdir_prefix')."/TestProject"), "Old project home should no longer exists");
+        $this->assertTrue(is_dir(ForgeConfig::get('grpdir_prefix')."/FooBar"), "Project home should be renamed");
 
-        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/testproject"), "Old project home lowercase version should no longer exists");
-        $this->assertTrue(is_link($GLOBALS['grpdir_prefix']."/foobar"), "Project home lowercase version should be renamed");
-        $this->assertEqual(readlink($GLOBALS['grpdir_prefix']."/foobar"), $GLOBALS['grpdir_prefix']."/FooBar", "Project home lowercase version should be link to the uppercase version");
+        $this->assertFalse(file_exists(ForgeConfig::get('grpdir_prefix')."/testproject"), "Old project home lowercase version should no longer exists");
+        $this->assertTrue(is_link(ForgeConfig::get('grpdir_prefix')."/foobar"), "Project home lowercase version should be renamed");
+        $this->assertEqual(readlink(ForgeConfig::get('grpdir_prefix')."/foobar"), ForgeConfig::get('grpdir_prefix')."/FooBar", "Project home lowercase version should be link to the uppercase version");
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/FooBar");
-        unlink($GLOBALS['grpdir_prefix']."/foobar");
-        rmdir($GLOBALS['grpdir_prefix']."/FooBar");
+        $backend->recurseDeleteInDir(ForgeConfig::get('grpdir_prefix')."/FooBar");
+        unlink(ForgeConfig::get('grpdir_prefix')."/foobar");
+        rmdir(ForgeConfig::get('grpdir_prefix')."/FooBar");
 
-        rmdir($GLOBALS['ftp_anon_dir_prefix']."/TestProject");
+        rmdir(ForgeConfig::get('ftp_anon_dir_prefix')."/TestProject");
         rmdir($GLOBALS['ftp_frs_dir_prefix']."/TestProject");
     }
 
@@ -251,14 +252,14 @@ class BackendSystemTest extends TuleapTestCase {
 
         $this->assertEqual($backend->renameProjectHomeDirectory($project, "testproject"), true);
 
-        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/TestProject"), "Old project home should no longer exists");
-        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/testproject"), "Project home should be renamed");
+        $this->assertFalse(file_exists(ForgeConfig::get('grpdir_prefix')."/TestProject"), "Old project home should no longer exists");
+        $this->assertTrue(is_dir(ForgeConfig::get('grpdir_prefix')."/testproject"), "Project home should be renamed");
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/testproject");
-        rmdir($GLOBALS['grpdir_prefix']."/testproject");
+        $backend->recurseDeleteInDir(ForgeConfig::get('grpdir_prefix')."/testproject");
+        rmdir(ForgeConfig::get('grpdir_prefix')."/testproject");
 
-        rmdir($GLOBALS['ftp_anon_dir_prefix']."/TestProject");
+        rmdir(ForgeConfig::get('ftp_anon_dir_prefix')."/TestProject");
         rmdir($GLOBALS['ftp_frs_dir_prefix']."/TestProject");
     }
 
@@ -285,17 +286,17 @@ class BackendSystemTest extends TuleapTestCase {
 
         // Not test possible with is_dir because is_dir resolve the link.
         // Testing lower case as a link is enough (see below).
-        //$this->assertFalse(is_dir($GLOBALS['grpdir_prefix']."/testproject"), "Old project home should no longer exists as directory (it's a link now)");
-        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/TestProject"), "Project home should be renamed");
-        $this->assertEqual(readlink($GLOBALS['grpdir_prefix'].'/testproject'),$GLOBALS['grpdir_prefix'].'/TestProject',"The lower case of project should be a link");
+        //$this->assertFalse(is_dir(ForgeConfig::get('grpdir_prefix')."/testproject"), "Old project home should no longer exists as directory (it's a link now)");
+        $this->assertTrue(is_dir(ForgeConfig::get('grpdir_prefix')."/TestProject"), "Project home should be renamed");
+        $this->assertEqual(readlink(ForgeConfig::get('grpdir_prefix').'/testproject'),ForgeConfig::get('grpdir_prefix').'/TestProject',"The lower case of project should be a link");
 
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/TestProject");
-        rmdir($GLOBALS['grpdir_prefix']."/TestProject");
-        unlink($GLOBALS['grpdir_prefix'].'/testproject');
+        $backend->recurseDeleteInDir(ForgeConfig::get('grpdir_prefix')."/TestProject");
+        rmdir(ForgeConfig::get('grpdir_prefix')."/TestProject");
+        unlink(ForgeConfig::get('grpdir_prefix').'/testproject');
 
-        rmdir($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+        rmdir(ForgeConfig::get('ftp_anon_dir_prefix')."/testproject");
         rmdir($GLOBALS['ftp_frs_dir_prefix']."/testproject");
     }
 
@@ -319,29 +320,29 @@ class BackendSystemTest extends TuleapTestCase {
 
         $this->assertEqual($backend->renameProjectHomeDirectory($project, "projecttest"), true);
 
-        $this->assertFalse(file_exists($GLOBALS['grpdir_prefix']."/testproject"), "Old project home should no longer exists");
-        $this->assertTrue(is_dir($GLOBALS['grpdir_prefix']."/projecttest"), "Project home should be renamed");
+        $this->assertFalse(file_exists(ForgeConfig::get('grpdir_prefix')."/testproject"), "Old project home should no longer exists");
+        $this->assertTrue(is_dir(ForgeConfig::get('grpdir_prefix')."/projecttest"), "Project home should be renamed");
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['grpdir_prefix']."/projecttest");
-        rmdir($GLOBALS['grpdir_prefix']."/projecttest");
+        $backend->recurseDeleteInDir(ForgeConfig::get('grpdir_prefix')."/projecttest");
+        rmdir(ForgeConfig::get('grpdir_prefix')."/projecttest");
 
-        rmdir($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+        rmdir(ForgeConfig::get('ftp_anon_dir_prefix')."/testproject");
         rmdir($GLOBALS['ftp_frs_dir_prefix']."/testproject");
     }
 
     public function testIsProjectNameAvailableWithExistingFileInProjectHome() {
-        touch($GLOBALS['grpdir_prefix']."/testproject");
+        touch(ForgeConfig::get('grpdir_prefix')."/testproject");
         $backend = new BackendTestVersion($this);
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in home/groups/');
-        unlink($GLOBALS['grpdir_prefix']."/testproject");
+        unlink(ForgeConfig::get('grpdir_prefix')."/testproject");
     }
 
     public function testIsProjectNameAvailableWithExistingFileInProjectHomeWithMixedCase() {
-        touch($GLOBALS['grpdir_prefix']."/testproject");
+        touch(ForgeConfig::get('grpdir_prefix')."/testproject");
         $backend = new BackendTestVersion($this);
         $this->assertFalse($backend->isProjectNameAvailable('TestProject'), 'A file with the same name in lowercase exists in home/groups/');
-        unlink($GLOBALS['grpdir_prefix']."/testproject");
+        unlink(ForgeConfig::get('grpdir_prefix')."/testproject");
     }
 
     public function testIsProjectNameAvailableWithExistingFileInFRS() {
@@ -352,10 +353,10 @@ class BackendSystemTest extends TuleapTestCase {
     }
 
     public function testIsProjectNameAvailableWithExistingFileInAnnoFtp() {
-        touch($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+        touch(ForgeConfig::get('ftp_anon_dir_prefix')."/testproject");
         $backend = new BackendTestVersion($this);
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/pub');
-        unlink($GLOBALS['ftp_anon_dir_prefix']."/testproject");
+        unlink(ForgeConfig::get('ftp_anon_dir_prefix')."/testproject");
     }
 
     public function testRenameUserHomeDirectory() {
@@ -366,13 +367,13 @@ class BackendSystemTest extends TuleapTestCase {
 
         $backend->createUserHome($user);
         $this->assertEqual($backend->renameUserHomeDirectory($user, 'toto'),True);
-        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/toto"),"Home dir should be created");
+        $this->assertTrue(is_dir(ForgeConfig::get('homedir_prefix')."/toto"),"Home dir should be created");
 
-        $this->assertFalse(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should no more exists");
+        $this->assertFalse(is_dir(ForgeConfig::get('homedir_prefix')."/codendiadm"),"Home dir should no more exists");
 
         // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['homedir_prefix']."/toto");
-        rmdir($GLOBALS['homedir_prefix']."/toto");
+        $backend->recurseDeleteInDir(ForgeConfig::get('homedir_prefix')."/toto");
+        rmdir(ForgeConfig::get('homedir_prefix')."/toto");
 
     }
 

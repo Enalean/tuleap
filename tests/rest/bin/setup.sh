@@ -10,52 +10,6 @@ if [ -z "$HTTPD_DAEMON" ]; then
     HTTPD_DAEMON=httpd
 fi
 
-setup_nss() {
-    echo "Installing NSS configuration files..."
-    cat /usr/share/tuleap/src/etc/libnss-mysql.cfg.dist | \
-	sed \
-            -e "s/%sys_dbhost%/localhost/" \
-            -e "s/%sys_dbname%/tuleap/" \
-            -e "s/%sys_dbuser%/tuleapadm/" \
-            -e "s/%sys_dbauth_passwd%/welcome0/" \
-        > /etc/libnss-mysql.cfg
-
-    cat /usr/share/tuleap/src/etc/libnss-mysql-root.cfg.dist | \
-	sed \
-            -e "s/%sys_dbauth_passwd%/welcome0/" \
-        > /etc/libnss-mysql-root.cfg
-
-
-    chown root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
-    chmod 644 /etc/libnss-mysql.cfg
-    chmod 600 /etc/libnss-mysql-root.cfg
-
-    # Update nsswitch.conf to use libnss-mysql
-    if [ -f "/etc/nsswitch.conf" ]; then
-	# passwd
-	grep ^passwd  /etc/nsswitch.conf | grep -q mysql
-	if [ $? -ne 0 ]; then
-	    perl -i'.orig' -p -e "s/^passwd(.*)/passwd\1 mysql/g" /etc/nsswitch.conf
-	fi
-
-	# shadow
-	grep ^shadow  /etc/nsswitch.conf | grep -q mysql
-	if [ $? -ne 0 ]; then
-	    perl -i -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
-	fi
-
-	# group
-	grep ^group  /etc/nsswitch.conf | grep -q mysql
-	if [ $? -ne 0 ]; then
-	    perl -i -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
-	fi
-    else
-	echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
-    fi
-
-    service nscd restart
-}
-
 setup_apache() {
     echo "Setup $HTTPD_DAEMON"
     case "$HTTPD_DAEMON" in
@@ -115,6 +69,9 @@ setup_tuleap() {
 	-e "s#%sys_long_org_name%#Tuleap#g" \
 	-e 's#\$sys_https_host =.*#\$sys_https_host = "";#' \
 	-e 's#\$sys_rest_api_over_http =.*#\$sys_rest_api_over_http = 1;#' \
+	-e 's#/home/groups##' \
+	-e 's#/home/users##' \
+	-e 's#/var/lib/codendi/ftp/pub##' \
 	> /etc/tuleap/conf/local.inc
 
 	cp /usr/share/tuleap/src/utils/svn/Tuleap.pm /usr/share/perl5/vendor_perl/Apache/Tuleap.pm
@@ -208,5 +165,4 @@ setup_tuleap
 setup_fpm
 setup_apache
 setup_database
-setup_nss
 seed_data

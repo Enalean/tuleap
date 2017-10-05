@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/user/User_SSHKeyDumper.class.php';
-
 class User_SSHKeyDumperTest extends TuleapTestCase {
     private $toto_name;
     private $toto_home;
@@ -31,12 +29,13 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $GLOBALS['homedir_prefix'] = $this->getTmpDir();
+        ForgeConfig::store();
+        ForgeConfig::set('homedir_prefix', $this->getTmpDir());
         $this->toto_name = 'toto';
-        $this->toto_home = $GLOBALS['homedir_prefix'].'/'.$this->toto_name;
+        $this->toto_home = ForgeConfig::get('homedir_prefix').'/'.$this->toto_name;
         mkdir($this->toto_home);
 
-        $this->foobar_home = $GLOBALS['homedir_prefix'].'/foobar';
+        $this->foobar_home = ForgeConfig::get('homedir_prefix').'/foobar';
         mkdir($this->foobar_home.'/.ssh', 0751, true);
         touch($this->foobar_home.'/.ssh/authorized_keys');
 
@@ -58,7 +57,7 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
 
     public function tearDown() {
         EventManager::clearInstance();
-        unset($GLOBALS['homedir_prefix']);
+        ForgeConfig::restore();
 
         parent::tearDown();
     }
@@ -137,4 +136,3 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
         return substr(sprintf('%o', fileperms($filename)), -4);
     }
 }
-?>

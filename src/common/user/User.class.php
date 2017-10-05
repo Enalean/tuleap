@@ -672,7 +672,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     function getUnixHomeDir() {
-        return $GLOBALS['homedir_prefix']."/".$this->getUserName();
+        return ForgeConfig::get('homedir_prefix')."/".$this->getUserName();
     }
 
     /**
