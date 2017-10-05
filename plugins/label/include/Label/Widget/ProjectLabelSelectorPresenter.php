@@ -28,11 +28,13 @@ class ProjectLabelSelectorPresenter
      */
     public $selected_labels;
     public $label_title;
+    public $label_placeholder;
 
     public function __construct($project_id, array $selected_labels)
     {
-        $this->label_title     = dgettext('tuleap-label', 'Label');
-        $this->project_id      = $project_id;
-        $this->selected_labels = $selected_labels;
+        $this->label_title       = dgettext('tuleap-label', 'Label');
+        $this->label_placeholder = dgettext('tuleap-label', 'Select labels');
+        $this->project_id        = $project_id;
+        $this->selected_labels   = $selected_labels;
     }
 }

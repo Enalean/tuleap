@@ -43,7 +43,8 @@ class ProjectLabelBuilder
         $config_labels = $formatter->getLabelsIds($config_labels);
         foreach ($project_labels as $project_label) {
             if (in_array($project_label['id'], $config_labels)) {
-                $selected_labels[] = $project_label;
+                $project_label['is_outline'] = $project_label['is_outline'] === '1' ? 'true' : 'false';
+                $selected_labels[]           = $project_label;
             }
         }
 
