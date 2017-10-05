@@ -770,10 +770,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     /**
      * @return bool
      */
-    protected function isNotificationAssignedToEnabled() {
+    protected function isNotificationAssignedToEnabled()
+    {
         $config_notification_assignedto = $this->getTrackerConfigNotificationAssignedTo();
-        $project                        = $this->getTracker()->getProject();
-        return $config_notification_assignedto->isAssignedToSubjectEnabled($project->getID());
+        return $config_notification_assignedto->isAssignedToSubjectEnabled($this->getTracker());
     }
 
     /**

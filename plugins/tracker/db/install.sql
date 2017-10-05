@@ -801,7 +801,7 @@ CREATE TABLE plugin_tracker_artifactlink_natures_allowed_projects (
 
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
 CREATE TABLE plugin_tracker_notification_assigned_to (
-    project_id INT(11) NOT NULL PRIMARY KEY
+    tracker_id INT(11) NOT NULL PRIMARY KEY
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS plugin_tracker_recently_visited;
