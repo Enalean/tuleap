@@ -575,6 +575,7 @@ plugin_tracker_include_type	toggle_notif_note	En tant qu'administrateur de l'out
 plugin_tracker_include_type	toggle_notif_warn	L'administrateur de l'outi de suivi a temporairement suspendu les notifications par e-mail de cet outil de suivi. Les paramètres ci-dessous ne sont donc pas pris en compte.
 plugin_tracker_include_type	stop_notification	Suspendre les notifications par e-mail
 plugin_tracker_include_type	notification_customisation_title	Personnalisation du sujet de l'email
+plugin_tracker_include_type	assigned_to_me	Assigné à moi même
 plugin_tracker_include_type	assigned_to_me_description	Inclure un marqueur [Assigné à moi même] dans le sujet pour les personnes étant assignées à l'artefact
 plugin_tracker_include_type	global_mail_notif	Notification e-mail globale
 plugin_tracker_include_type	admin_conf	<P>L'administrateur de l'outil de suivi a spécifié que les adresses e-mails suivantes reçoivent les notifications de soumissions (et éventuellement de modification) d'artefacts.<P><u>Destinataires</u>&nbsp;:

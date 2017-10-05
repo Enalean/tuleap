@@ -1389,7 +1389,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         if ($this->isNotificationAssignedToEnabled()) {
             $users = $this->getArtifact()->getAssignedTo($recipient);
             if (in_array($recipient, $users, true)) {
-                return '[Assigned to me] ';
+                return '[' . $recipient->getLanguage()->getText('plugin_tracker_include_type', 'assigned_to_me') . '] ';
             }
         }
         return '';
