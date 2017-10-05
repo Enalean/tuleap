@@ -96,7 +96,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/soap/_fixtures/01-project
 
     echo "Load initial data"
-    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/soap/init_data.php
+    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
 }
 
 
