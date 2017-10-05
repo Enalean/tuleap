@@ -26,13 +26,16 @@ export async function create(container, labels_endpoint, selected_labels) {
 
 const convertLabelToSelect2Entry = ({ id, label, is_outline, color }) => ({ id, text: label, is_outline, color });
 
-function initiateSelect2(container, selected_labels, labels_endpoint) {
+function initiateSelect2(container, selected_labels, labels_endpoint, placeholder) {
     const options = {
         multiple         : true,
         allowClear       : true,
+        placeholder      : placeholder,
         initSelection    : (container, callback) => callback(selected_labels),
+        containerCssClass: 'item-labels-box-select2',
+        dropdownCssClass : 'item-labels-box-select2-results',
         templateResult   : formatLabel,
-        templateSelection: formatLabelWhenSelected,
+        templateSelection: formatLabelSelected,
         escapeMarkup     : function (markup) { return markup; },
         ajax             : {
             url           : labels_endpoint,
@@ -46,13 +49,55 @@ function initiateSelect2(container, selected_labels, labels_endpoint) {
     select2(container, options);
 }
 
-function formatLabel(label) {
+function formatLabel(label, li_element) {
     const escaped_text = sanitize(label.text);
+    if (label.color) {
+        const bullet_class = label.is_outline ? 'fa fa-circle-o' : 'fa fa-circle';
+        li_element.classList.add(`select-item-label-color-${label.color}`);
+
+        return `<span class="select-item-label-title">
+                    <i class="select-item-label-bullet ${bullet_class}"></i>${escaped_text}
+            </span>`;
+    }
+
     return `<span class="select-item-label-title">
-                    <i class="select-item-label-bullet"></i>${escaped_text}
+                    ${escaped_text}
             </span>`;
 }
 
-function formatLabelWhenSelected(label) {
+function formatLabelSelected(label, li_elements) {
+    const color    = getColor(label),
+        is_outline = getIsOutline(label),
+        li_element = li_elements[0];
+
+    li_element.classList.add(`select-item-label-color-${color}`);
+
+    if (is_outline) {
+        li_element.classList.add('select-item-label-outline');
+    }
     return sanitize(label.text);
+}
+
+function getColor(label) {
+    let color = '';
+
+    if (label.color) {
+        color = label.color;
+    } else if (label.element) {
+        color = label.element.dataset.color;
+    }
+
+    return color;
+}
+
+function getIsOutline(label) {
+    let is_outline = false;
+
+    if (label.is_outline) {
+        is_outline = label.is_outline;
+    } else if (label.element && label.element.dataset && label.element.dataset.isOutline) {
+        is_outline = JSON.parse(label.element.dataset.isOutline);
+    }
+
+    return is_outline;
 }

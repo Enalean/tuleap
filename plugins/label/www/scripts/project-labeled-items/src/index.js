@@ -43,13 +43,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initEditModalContent(widget_container) {
-    const container     = widget_container.querySelector('.project-labels');
+    const container     = widget_container.querySelector('.project-labels'),
+        placeholder     = container.dataset.placeholder,
+        labels_endpoint = container.dataset.labelsEndpoint;
     let selected_labels = [];
 
     for (const option of container.options) {
         selected_labels.push({
-            id: option.value, text: option.dataset.name, is_outline: option.dataset.isOutline, color: option.dataset.color
+            id: option.value,
+            text: option.dataset.name,
+            is_outline: JSON.parse(option.dataset.isOutline),
+            color: option.dataset.color
         });
     }
-    create(container, container.dataset.labelsEndpoint, selected_labels);
+    create(container, labels_endpoint, selected_labels, placeholder);
 }

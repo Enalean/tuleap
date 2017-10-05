@@ -42,5 +42,5 @@ msgstr "Label"
 msgid "Labeled Items"
 msgstr "Éléments avec labels"
 
-msgid "No items to display"
-msgstr "Aucun élément à afficher"
+msgid "Select labels"
+msgstr "Sélectionner des labels"
