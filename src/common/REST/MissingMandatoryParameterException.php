@@ -18,29 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label\Exceptions;
+namespace Tuleap\REST;
 
-use Exception;
-use Throwable;
-
-class DuplicatedParameterValueException extends Exception
+class MissingMandatoryParameterException extends QueryParameterException
 {
-    /**
-     * @var array
-     */
-    private $duplicates;
-
-    public function __construct(array $duplicates)
+    public function __construct($parameter_name)
     {
-        parent::__construct();
-        $this->duplicates = $duplicates;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDuplicates()
-    {
-        return $this->duplicates;
+        parent::__construct("Missing $parameter_name entry in the query parameter");
     }
 }

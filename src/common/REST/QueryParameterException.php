@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label\Exceptions;
+namespace Tuleap\REST;
 
-use Exception;
-
-class EmptyParameterException extends Exception
+abstract class QueryParameterException extends \Exception
 {
 }

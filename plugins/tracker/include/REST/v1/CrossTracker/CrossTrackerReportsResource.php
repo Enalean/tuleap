@@ -28,6 +28,8 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\QueryParameterException;
+use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReport;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
@@ -39,6 +41,10 @@ use UserManager;
 class CrossTrackerReportsResource extends AuthenticatedResource
 {
     const MAX_LIMIT = 50;
+    /**
+     * @var QueryParameterParser
+     */
+    private $query_parser;
     /**
      * @var JsonDecoder
      */
@@ -84,6 +90,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new CrossTrackerArtifactReportDao(),
             \Tracker_ArtifactFactory::instance()
         );
+
+        $this->query_parser = new QueryParameterParser(new JsonDecoder());
     }
 
     /**
@@ -253,26 +261,18 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private function getTrackersFromRoute($query, CrossTrackerReport $report)
     {
-        $query      = trim($query);
-        $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-        if (count($json_query) === 0) {
+        $query = trim($query);
+        if (empty($query)) {
             return $report->getTrackers();
         }
 
-        if (! isset($json_query['trackers_id'])) {
-            throw new RestException(400, "Missing trackers_id entry in query parameter");
+        try {
+            $trackers_id = $this->query_parser->getArrayOfInt($query, 'trackers_id');
+        } catch (QueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
         }
 
-        if (! is_array($json_query['trackers_id'])) {
-            throw new RestException(400, "trackers_id must be an array of int.");
-        }
-
-        $only_numeric_trackers = array_filter($json_query['trackers_id'], 'is_int');
-        if ($only_numeric_trackers !== $json_query['trackers_id']) {
-            throw new RestException(400, "trackers_id must be an array of int.");
-        }
-
-        return $this->cross_tracker_extractor->extractTrackers($json_query['trackers_id']);
+        return $this->cross_tracker_extractor->extractTrackers($trackers_id);
     }
 
     private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)

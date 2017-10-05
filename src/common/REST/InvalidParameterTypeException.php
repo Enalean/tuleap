@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label\Exceptions;
+namespace Tuleap\REST;
 
-use Exception;
-
-class MissingMandatoryParameterException extends Exception
+class InvalidParameterTypeException extends QueryParameterException
 {
+    public function __construct($parameter_name)
+    {
+        parent::__construct("$parameter_name must be an array of int");
+    }
 }

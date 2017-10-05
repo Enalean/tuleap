@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Label\Exceptions;
+namespace Tuleap\REST;
 
-use Exception;
-
-class InvalidParameterTypeException extends Exception
+class DuplicatedParameterValueException extends QueryParameterException
 {
+    public function __construct($parameter_name, array $duplicates)
+    {
+        parent::__construct("One value or more are duplicated in $parameter_name: " . implode(',', $duplicates));
+    }
 }
