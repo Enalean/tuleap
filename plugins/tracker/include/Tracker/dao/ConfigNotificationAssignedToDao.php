@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ConfigNotificationAssignedToDao extends DataAccessObject {
-    public function searchConfigurationAssignedTo($project_id) {
-        $project_id = $this->getDa()->escapeInt($project_id);
+class ConfigNotificationAssignedToDao extends DataAccessObject
+{
+    public function searchConfigurationAssignedTo($tracker_id)
+    {
+        $tracker_id = $this->getDa()->escapeInt($tracker_id);
 
-        $sql = 'SELECT * FROM plugin_tracker_notification_assigned_to WHERE project_id = ' . $project_id;
+        $sql = 'SELECT * FROM plugin_tracker_notification_assigned_to WHERE tracker_id = ' . $tracker_id;
 
         return $this->retrieve($sql);
     }

@@ -205,7 +205,7 @@ class Tracker_NotificationsManager {
     private function displayAdminNotificationAssignedToMeFlag()
     {
         $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
-        $is_assigned_to_enabled          = $config_notification_assigned_to->isAssignedToSubjectEnabled($this->tracker->getGroupId());
+        $is_assigned_to_enabled          = $config_notification_assigned_to->isAssignedToSubjectEnabled($this->tracker);
 
         $renderer = $this->getNotificationsRenderer();
         $renderer->renderToPage(
