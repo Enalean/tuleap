@@ -741,7 +741,8 @@ class MediaWikiPlugin extends Plugin {
                 $this->getCentralDatabaseNameProperty()
             ),
             ProjectManager::instance(),
-            Backend::instance('System')
+            Backend::instance('System'),
+            $this->getDao()
         );
     }
 }
