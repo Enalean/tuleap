@@ -27,6 +27,8 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
 use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
+use Tuleap\Mediawiki\Maintenance\CleanUnused;
+use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
@@ -728,5 +730,18 @@ class MediaWikiPlugin extends Plugin {
         $permission = new MediawikiAdminAllProjects();
 
         $params['plugins_permission'][MediawikiAdminAllProjects::ID] = $permission;
+    }
+
+    public function getCleanUnused(Logger $logger)
+    {
+        return new CleanUnused(
+            $logger,
+            new CleanUnusedDao(
+                $logger,
+                $this->getCentralDatabaseNameProperty()
+            ),
+            ProjectManager::instance(),
+            Backend::instance('System')
+        );
     }
 }
