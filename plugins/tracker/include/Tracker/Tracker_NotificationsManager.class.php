@@ -75,7 +75,7 @@ class Tracker_NotificationsManager {
         $this->notification_list_builder     = $notification_list_builder;
     }
 
-    public function process(TrackerManager $tracker_manager, Codendi_Request $request, $current_user)
+    public function process(TrackerManager $tracker_manager, HTTPRequest $request, $current_user)
     {
         if ($request->exist('stop_notification')) {
             if ($this->tracker->stop_notification != $request->get('stop_notification')) {
@@ -84,6 +84,17 @@ class Tracker_NotificationsManager {
                 if ($dao->save($this->tracker)) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_notification', 'successfully_updated'));
                 }
+            }
+        }
+
+        if ($request->isPost())
+        {
+            $config_notification_assigned_to = new ConfigNotificationAssignedTo(new ConfigNotificationAssignedToDao());
+
+            if ($request->exist('enable-assigned-to-me')) {
+                $config_notification_assigned_to->enableAssignedToInSubject($this->tracker);
+            } else {
+                $config_notification_assigned_to->disableAssignedToInSubject($this->tracker);
             }
         }
 
