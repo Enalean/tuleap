@@ -42,3 +42,9 @@
 .labeled-items-empty {
     margin: 0 $tlp-spacing 60px;
 }
+
+.labeled-item-configuration-label {
+    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    white-space: normal;
+    cursor: default;
+}

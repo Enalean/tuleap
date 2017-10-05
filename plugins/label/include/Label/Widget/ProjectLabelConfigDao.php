@@ -22,13 +22,16 @@ namespace Tuleap\Label\Widget;
 
 class ProjectLabelConfigDao extends \DataAccessObject
 {
-
     public function searchByContentId($content_id)
     {
         $content_id = $this->da->escapeInt($content_id);
 
-        $sql = "SELECT label_id as id FROM plugin_label_widget_config WHERE content_id = $content_id";
+        $sql = "SELECT *
+                  FROM plugin_label_widget_config
+                  INNER JOIN project_label
+                    ON plugin_label_widget_config.label_id = project_label.id
+                  WHERE content_id = $content_id";
 
-        return $this->retrieveIds($sql);
+        return $this->retrieve($sql);
     }
 }

@@ -32,7 +32,7 @@ class ProjectLabelConfigRetriever
         $this->dao = $dao;
     }
 
-    public function getLabelConfig($content_id)
+    public function getLabelsConfig($content_id)
     {
         $labels = array();
         foreach ($this->dao->searchByContentId($content_id) as $label) {
