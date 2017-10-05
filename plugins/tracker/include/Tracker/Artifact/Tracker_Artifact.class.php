@@ -263,17 +263,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     </table>';
                     $output .= $content;
                 }
-                // Commented as of 9.10, shall be removed in 3 releases if no complains.
-                /*$output .=
-                '<table style="width:100%">'.
-                        $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
-                '</table>';*/
                 break;
             default:
                 $output .= PHP_EOL;
                 $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
-                // Commented as of 9.10, shall be removed in 3 releases if no complains.
-                //$output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 break;
         }
         return $output;
@@ -314,64 +307,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
-    /**
-     * Returns the artifact followup for mail rendering
-     *
-     * @param array  $recipient
-     * @param string $format, the mail format text or html
-     * @param bool   $ignore_perms, indicates if we ignore various permissions
-     *
-     * @return String
-     */
-    public function fetchMailFollowUp($recipient, $format, $ignore_perms=false) {
-        $uh = UserHelper::instance();
-        $um = UserManager::instance();
-        $cs = $this->getChangesets();
-        $hp = Codendi_HTMLPurifier::instance();
-        $output = '';
-
-        if($format == 'html'){
-            $output .=
-            '<tr>
-                <td colspan="3" align="left">
-                    <h2>'.
-                        $GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'
-                    </h2>
-                </td>
-            </tr>';
-        }
-
-        foreach ( $cs as $changeset ) {
-            $comment = $changeset->getComment();
-            /* @var $comment Tracker_Artifact_Changeset_Comment */
-            if (empty($comment) || $comment->hasEmptyBody()) {
-                //do not display empty comment
-                continue;
-            }
-            switch ($format) {
-                case 'html':
-                    $followup = $comment->fetchMailFollowUp($format);
-                    $output .=  $followup;
-                    break;
-                case 'text':
-                    $user = $um->getUserById($comment->submitted_by);
-                    $output .= PHP_EOL;
-                    $output .= '----------------------------- ';
-                    $output .= PHP_EOL;
-                    $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
-                    $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
-                    $output .= PHP_EOL;
-                    $output .= $comment->getPurifiedBodyForText();
-                    $output .= PHP_EOL;
-                    $output .= PHP_EOL;
-                    break;
-                default:
-                    $output .= '<!-- TODO -->';
-                    break;
-            }
-        }
-        return $output;
-    }
     /**
      * Fetch the tooltip displayed on an artifact reference
      *
