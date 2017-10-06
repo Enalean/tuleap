@@ -2,7 +2,7 @@
     <div class="labeled-items-list">
         <div v-if="loading" class="labeled-items-loading"></div>
         <div v-if="error" class="tlp-alert-danger labeled-items-error">{{ error }}</div>
-        <div class="empty-pane-text" v-if="empty && ! error">{{ empty_message }}</div>
+        <div class="empty-pane-text" v-if="empty && ! loading && ! error">{{ empty_message }}</div>
         <LabeledItem v-for="item in items"
                      v-bind:item="item"
                      v-bind:key="item.html_url"
@@ -30,7 +30,8 @@
             return {
                 items: [],
                 loading: true,
-                error: false
+                error: false,
+                are_there_items_user_cannot_see: false
             };
         },
         computed: {
@@ -41,6 +42,9 @@
                 return this.items.length === 0;
             },
             empty_message: function() {
+                if (this.are_there_items_user_cannot_see) {
+                    return gettext_provider.gettext("There are no items you can see");
+                }
                 return gettext_provider.ngettext(
                     "There isn't any item corresponding to label",
                     "There isn't any item corresponding to labels",
@@ -63,10 +67,16 @@
                 }
 
                 try {
-                    this.items = await getLabeledItems(
+                    const {
+                        labeled_items,
+                        are_there_items_user_cannot_see
+                    } = await getLabeledItems(
                         this.dataProjectId,
                         this.labels_id
                     );
+
+                    this.items = labeled_items;
+                    this.are_there_items_user_cannot_see = are_there_items_user_cannot_see;
                 } catch (e) {
                     const {error} = await e.response.json();
                     this.error = error.code + ' ' + error.message;

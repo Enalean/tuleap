@@ -1,6 +1,9 @@
 msgid "Please select one or more labels by editing this widget"
 msgstr ""
 
+msgid "There are no items you can see"
+msgstr ""
+
 msgid "There isn't any item corresponding to label"
 msgid_plural "There isn't any item corresponding to labels"
 msgstr[0] ""

@@ -24,13 +24,18 @@ export {
 }
 
 async function getLabeledItems(project_id, labels_id) {
+    let are_there_items_user_cannot_see = false;
+
     const labeled_items = await recursiveGet('/api/projects/' + project_id + '/labeled_items', {
         params: {
             query: { labels_id },
             limit: 50
         },
-        getCollectionCallback: (json) => [].concat(json.labeled_items)
+        getCollectionCallback: (json) => {
+            are_there_items_user_cannot_see = json.are_there_items_user_cannot_see;
+            return [].concat(json.labeled_items);
+        }
     });
 
-    return labeled_items;
+    return { labeled_items, are_there_items_user_cannot_see };
 }
