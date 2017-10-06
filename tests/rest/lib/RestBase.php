@@ -66,7 +66,7 @@ class RestBase extends PHPUnit_Framework_TestCase
     protected $story_artifact_ids   = array();
     protected $sprint_artifact_ids  = array();
 
-    private $cache;
+    protected $cache;
 
     public function __construct() {
         parent::__construct();
@@ -276,16 +276,7 @@ class RestBase extends PHPUnit_Framework_TestCase
 
         $artifacts = $this->cache->getArtifacts($tracker_id);
         if (! $artifacts) {
-            $query = http_build_query(
-                array('order' => 'asc')
-            );
-
-            $response = $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
-            );
-
-            $artifacts = $response->json();
+            $artifacts = $this->getArtifacts($tracker_id);
             $this->cache->setArtifacts($tracker_id, $artifacts);
         }
 
@@ -294,6 +285,18 @@ class RestBase extends PHPUnit_Framework_TestCase
             $retrieved_artifact_ids[$index] = $artifact['id'];
             $index++;
         }
+    }
+
+    protected function getArtifacts($tracker_id)
+    {
+        $query = http_build_query(
+            array('order' => 'asc')
+        );
+
+        return $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
+        )->json();
     }
 
     public function getUserGroupsByProjectId($project_id)
@@ -327,5 +330,16 @@ class RestBase extends PHPUnit_Framework_TestCase
             $this->cache->setUserGroupIds($this->user_groups_ids);
         } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
         }
+    }
+
+    protected function getArtifactIdsIndexedByTitle(string $project_name, string $tracker_name) : array
+    {
+        $tracker_id = $this->cache->getTrackerInProject($project_name, $tracker_name);
+
+        $ids = [];
+        foreach ($this->getArtifacts($tracker_id) as $artifact) {
+            $ids[$artifact['title']] = $artifact['id'];
+        }
+        return $ids;
     }
 }
