@@ -30,23 +30,16 @@ for (const widget of widgets) {
     }).$mount();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    for (const element of document.querySelectorAll('.dashboard-widget-content-projectlabeleditems')) {
-        const widget_container = element.parentNode,
-            edit_button      = widget_container.querySelector('.edit-widget-button'),
-            modal_edit       = widget_container.querySelector(`#${edit_button.dataset.targetModalId}`);
+document.addEventListener('dashboard-edit-widget-modal-content-loaded', (event) => initLabelsBox(event.detail.target));
+document.addEventListener('dashboard-add-widget-settings-loaded', (event) => initLabelsBox(event.detail.target));
 
-        modal_edit.addEventListener('edit-widget-modal-content-loaded', () => {
-            initEditModalContent(widget_container);
-        });
+function initLabelsBox(widget_container) {
+    const container = widget_container.querySelector('.project-labels');
+    if (! container) {
+        return;
     }
-});
 
-function initEditModalContent(widget_container) {
-    const container     = widget_container.querySelector('.project-labels'),
-        placeholder     = container.dataset.placeholder,
-        labels_endpoint = container.dataset.labelsEndpoint;
-    let selected_labels = [];
+    let selected_labels   = [];
 
     for (const option of container.options) {
         selected_labels.push({
@@ -56,5 +49,5 @@ function initEditModalContent(widget_container) {
             color: option.dataset.color
         });
     }
-    create(container, labels_endpoint, selected_labels, placeholder);
+    create(container, container.dataset.labelsEndpoint, selected_labels, container.dataset.placeholder);
 }

@@ -112,8 +112,9 @@ function loadDynamicallyEditModalContent(modal, modal_content) {
             button.disabled     = false;
             container.innerHTML = sanitize(html);
 
-            const event = new CustomEvent('edit-widget-modal-content-loaded');
-            modal_content.dispatchEvent(event);
+            document.dispatchEvent(
+                new CustomEvent('dashboard-edit-widget-modal-content-loaded', {detail: {target: container}})
+            );
         })
         .fail(function (data) {
             container.innerHTML = sanitize('<div class="tlp-alert-danger">' + data.responseJSON + '</div>');
@@ -175,7 +176,12 @@ function displayWidgetSettings(table, widget_element, data_widgets) {
         return widget.id === widget_element.dataset.widgetId;
     });
     if (widget_data) {
-        document.getElementById('dashboard-add-widget-settings').innerHTML = sanitize(render(widget_settings_template, widget_data));
+        const settings = document.getElementById('dashboard-add-widget-settings');
+
+        settings.innerHTML = sanitize(render(widget_settings_template, widget_data));
+        document.dispatchEvent(
+            new CustomEvent('dashboard-add-widget-settings-loaded', {detail: {target: settings}})
+        );
 
         var already_selected_widget = table.querySelector('.dashboard-add-widget-list-table-widget-selected');
         if (already_selected_widget) {
