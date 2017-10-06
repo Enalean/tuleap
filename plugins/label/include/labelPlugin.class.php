@@ -22,6 +22,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Label\REST\ResourcesInjector;
 use Tuleap\Label\Widget\Dao;
 use Tuleap\Label\Widget\ProjectLabeledItems;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\MergeLabels;
 use Tuleap\Project\Label\RemoveLabel;
 use Tuleap\Request\CurrentPage;
@@ -48,6 +49,7 @@ class labelPlugin extends Plugin
         $this->addHook(RemoveLabel::NAME);
         $this->addHook(MergeLabels::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -128,6 +130,18 @@ class labelPlugin extends Plugin
         if ($this->isInDashboard()) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+        }
+    }
+
+    /**
+     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
+     */
+    public function burningParrotGetJavascriptFiles(array $params)
+    {
+        if ($this->isInDashboard()) {
+            $assets = new IncludeAssets(LABEL_BASE_DIR . '/www/assets', LABEL_BASE_URL . '/assets');
+
+            $params['javascript_files'][] = $assets->getFileURL('configure-widget.js');
         }
     }
 

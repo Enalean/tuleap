@@ -1,11 +1,59 @@
 /* eslint-disable */
-var path                  = require('path');
-var webpack               = require('webpack');
-var WebpackAssetsManifest = require('webpack-assets-manifest');
+var path                        = require('path');
+var webpack                     = require('webpack');
+var WebpackAssetsManifest       = require('webpack-assets-manifest');
+var BabelPresetEnv              = require('babel-preset-env');
+var BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
 
+var manifest_data   = Object.create(null);
 var assets_dir_path = path.resolve(__dirname, '../assets');
 
-module.exports = {
+var webpack_config_for_configure = {
+    entry: {
+        'configure-widget': './configure-widget/index.js'
+    },
+    output: {
+        path    : assets_dir_path,
+        filename: '[name]-[chunkhash].js',
+    },
+    externals: {
+        tlp: 'tlp'
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
+                                [BabelPresetEnv, {
+                                    targets: {
+                                        ie: 11
+                                    },
+                                    modules: false
+                                }]
+                            ],
+                            plugins: [
+                                BabelPluginObjectRestSpread
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    plugins: [
+        new WebpackAssetsManifest({
+            output: 'manifest.json',
+            assets: manifest_data,
+        })
+    ]
+};
+
+var webpack_config_for_widget = {
     entry : {
         'widget-project-labeled-items': './project-labeled-items/src/index.js',
     },
@@ -47,6 +95,7 @@ module.exports = {
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
+            assets: manifest_data,
             merge: true,
             writeToDisk: true
         }),
@@ -56,12 +105,17 @@ module.exports = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-    module.exports.plugins = (module.exports.plugins || []).concat([
+    webpack_config_for_widget.plugins = webpack_config_for_widget.plugins.concat([
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
             }
         }),
         new webpack.optimize.ModuleConcatenationPlugin()
-    ])
+    ]);
 }
+
+module.exports = [
+    webpack_config_for_configure,
+    webpack_config_for_widget
+];

@@ -19,7 +19,6 @@
 
 import Vue from 'vue';
 import LabeledItemsList from './LabeledItemsList.vue';
-import { create } from './labels-box';
 
 const widgets = document.getElementsByClassName("labeled-items-widget");
 
@@ -28,26 +27,4 @@ for (const widget of widgets) {
         el: widget,
         components: {LabeledItemsList}
     }).$mount();
-}
-
-document.addEventListener('dashboard-edit-widget-modal-content-loaded', (event) => initLabelsBox(event.detail.target));
-document.addEventListener('dashboard-add-widget-settings-loaded', (event) => initLabelsBox(event.detail.target));
-
-function initLabelsBox(widget_container) {
-    const container = widget_container.querySelector('.project-labels');
-    if (! container) {
-        return;
-    }
-
-    let selected_labels   = [];
-
-    for (const option of container.options) {
-        selected_labels.push({
-            id: option.value,
-            text: option.dataset.name,
-            is_outline: JSON.parse(option.dataset.isOutline),
-            color: option.dataset.color
-        });
-    }
-    create(container, container.dataset.labelsEndpoint, selected_labels, container.dataset.placeholder);
 }
