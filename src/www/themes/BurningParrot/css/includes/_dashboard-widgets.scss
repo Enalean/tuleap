@@ -41,7 +41,6 @@
 
 .dashboard-widget-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
 
     &.dashboard-widget-movable {
@@ -51,6 +50,7 @@
 
 .dashboard-widget-icons {
     display: flex;
+    margin: 3px 0 0;
     cursor: default;
 }
 
