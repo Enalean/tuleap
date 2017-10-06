@@ -23,7 +23,8 @@
     "webpack-assets-manifest": "^1.0.0"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --optimize-minimize --bail",
-    "watch": "webpack --watch"
+    "build": "rm -r ../assets/* && NODE_ENV=production webpack --optimize-minimize --bail",
+    "watch": "webpack --watch",
+    "test": "NODE_ENV=test gulp test"
   }
 }
