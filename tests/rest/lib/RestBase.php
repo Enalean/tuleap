@@ -274,11 +274,7 @@ class RestBase extends PHPUnit_Framework_TestCase
             return $retrieved_artifact_ids;
         }
 
-        $artifacts = $this->cache->getArtifacts($tracker_id);
-        if (! $artifacts) {
-            $artifacts = $this->getArtifacts($tracker_id);
-            $this->cache->setArtifacts($tracker_id, $artifacts);
-        }
+        $artifacts = $this->getArtifacts($tracker_id);
 
         $index     = 1;
         foreach ($artifacts as $artifact) {
@@ -287,16 +283,22 @@ class RestBase extends PHPUnit_Framework_TestCase
         }
     }
 
-    protected function getArtifacts($tracker_id)
+    protected function getArtifacts($tracker_id) : array
     {
-        $query = http_build_query(
-            array('order' => 'asc')
-        );
+        $artifacts = $this->cache->getArtifacts($tracker_id);
+        if (! $artifacts) {
+            $query = http_build_query(
+                array('order' => 'asc')
+            );
 
-        return $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
-        )->json();
+            $artifacts = $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->setup_client->get("trackers/$tracker_id/artifacts?$query")
+            )->json();
+
+            $this->cache->setArtifacts($tracker_id, $artifacts);
+        }
+        return $artifacts;
     }
 
     public function getUserGroupsByProjectId($project_id)

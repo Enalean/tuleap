@@ -1484,6 +1484,156 @@
                         </field_change>
                     </changeset>
                 </artifact>
+                <artifact id="83">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary_1" type="string">
+                            <value><![CDATA[Implement the feature]]></value>
+                        </field_change>
+                        <field_change field_name="description" type="text">
+                            <value format="text"><![CDATA[]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">None</value>
+                        </field_change>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">176</value>
+                        </field_change>
+                        <field_change field_name="type" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                        <field_change field_name="impediment" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="84">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary_1" type="string">
+                            <value><![CDATA[Write tests]]></value>
+                        </field_change>
+                        <field_change field_name="description" type="text">
+                            <value format="text"><![CDATA[]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">None</value>
+                        </field_change>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">174</value>
+                        </field_change>
+                        <field_change field_name="type" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                        <field_change field_name="impediment" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="87">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary_1" type="string">
+                            <value><![CDATA[End of tests 1]]></value>
+                        </field_change>
+                        <field_change field_name="description" type="text">
+                            <value format="text"><![CDATA[]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">None</value>
+                        </field_change>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">174</value>
+                        </field_change>
+                        <field_change field_name="type" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                        <field_change field_name="impediment" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="88">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary_1" type="string">
+                            <value><![CDATA[End of tests 2]]></value>
+                        </field_change>
+                        <field_change field_name="description" type="text">
+                            <value format="text"><![CDATA[]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">None</value>
+                        </field_change>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">174</value>
+                        </field_change>
+                        <field_change field_name="type" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                        <field_change field_name="impediment" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="89">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary_1" type="string">
+                            <value><![CDATA[Bla bla bla]]></value>
+                        </field_change>
+                        <field_change field_name="description" type="text">
+                            <value format="text"><![CDATA[]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">None</value>
+                        </field_change>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">174</value>
+                        </field_change>
+                        <field_change field_name="type" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                        <field_change field_name="impediment" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                    </changeset>
+                </artifact>
+                <artifact id="91">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="summary_1" type="string">
+                            <value><![CDATA[My loneliness is killing me]]></value>
+                        </field_change>
+                        <field_change field_name="description" type="text">
+                            <value format="text"><![CDATA[]]></value>
+                        </field_change>
+                        <field_change field_name="assigned_to" type="list" bind="users">
+                            <value format="username">None</value>
+                        </field_change>
+                        <field_change field_name="status" type="list" bind="static">
+                            <value format="id">174</value>
+                        </field_change>
+                        <field_change field_name="type" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                        <field_change field_name="impediment" type="list" bind="static">
+                            <value/>
+                        </field_change>
+                    </changeset>
+                </artifact>
             </artifacts>
         </tracker>
         <tracker id="T219" parent_id="T215" instantiate_for_new_projects="1">
@@ -1915,6 +2065,94 @@
                     </field_change>
                     <field_change field_name="so_that" type="text">
                         <value format="text"><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="status" type="list" bind="static">
+                        <value format="id">205</value>
+                    </field_change>
+                </changeset>
+            </artifact>
+            <artifact id="82">
+                <changeset>
+                    <submitted_by format="username">rest_api_tester_1</submitted_by>
+                    <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                    <comments/>
+                    <field_change field_name="as_a" type="string">
+                        <value><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="i_want_to" type="string">
+                        <value><![CDATA[build a new interface]]></value>
+                    </field_change>
+                    <field_change field_name="so_that" type="text">
+                        <value format="text"><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="content" type="art_link"/>
+                    <field_change field_name="status" type="list" bind="static">
+                        <value format="id">205</value>
+                    </field_change>
+                </changeset>
+            </artifact>
+            <artifact id="85">
+                <changeset>
+                    <submitted_by format="username">rest_api_tester_1</submitted_by>
+                    <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                    <comments/>
+                    <field_change field_name="as_a" type="string">
+                        <value><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="i_want_to" type="string">
+                        <value><![CDATA[finish the story]]></value>
+                    </field_change>
+                    <field_change field_name="so_that" type="text">
+                        <value format="text"><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="content" type="art_link">
+                        <value nature="_is_child">83</value>
+                        <value nature="_is_child">84</value>
+                    </field_change>
+                    <field_change field_name="status" type="list" bind="static">
+                        <value format="id">205</value>
+                    </field_change>
+                </changeset>
+            </artifact>
+            <artifact id="86">
+                <changeset>
+                    <submitted_by format="username">rest_api_tester_1</submitted_by>
+                    <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                    <comments/>
+                    <field_change field_name="as_a" type="string">
+                        <value><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="i_want_to" type="string">
+                        <value><![CDATA[end of the story]]></value>
+                    </field_change>
+                    <field_change field_name="so_that" type="text">
+                        <value format="text"><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="content" type="art_link">
+                        <value nature="_is_child">87</value>
+                        <value nature="_is_child">88</value>
+                    </field_change>
+                    <field_change field_name="status" type="list" bind="static">
+                        <value format="id">205</value>
+                    </field_change>
+                </changeset>
+            </artifact>
+            <artifact id="90">
+                <changeset>
+                    <submitted_by format="username">rest_api_tester_1</submitted_by>
+                    <submitted_on format="ISO8601">2017-10-06T14:02:16+02:00</submitted_on>
+                    <comments/>
+                    <field_change field_name="as_a" type="string">
+                        <value><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="i_want_to" type="string">
+                        <value><![CDATA[Another story]]></value>
+                    </field_change>
+                    <field_change field_name="so_that" type="text">
+                        <value format="text"><![CDATA[]]></value>
+                    </field_change>
+                    <field_change field_name="content" type="art_link">
+                        <value nature="_is_child">89</value>
                     </field_change>
                     <field_change field_name="status" type="list" bind="static">
                         <value format="id">205</value>
