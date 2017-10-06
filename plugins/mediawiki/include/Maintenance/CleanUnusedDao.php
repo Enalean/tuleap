@@ -85,11 +85,22 @@ class CleanUnusedDao extends DataAccessObject
 
     public function getMediawikiDatabaseInUnusedServices()
     {
+        return $this->getServicesQuery(0);
+    }
+
+    public function getMediawikiDatabasesInUsedServices()
+    {
+        return $this->getServicesQuery(1);
+    }
+
+    private function getServicesQuery($is_used)
+    {
+        $is_used = $this->da->escapeInt($is_used);
         $sql = "SELECT plugin_mediawiki_database.*
                 FROM service
                   JOIN plugin_mediawiki_database ON (project_id = group_id)
                 WHERE short_name = 'plugin_mediawiki'
-                  AND is_used = 0";
+                  AND is_used = $is_used";
         return $this->retrieve($sql);
     }
 
@@ -103,16 +114,10 @@ class CleanUnusedDao extends DataAccessObject
                 $sql = "DROP TABLE $fullname";
                 $this->logger->info("$sql");
                 if (! $dry_run) {
-                    if ($this->update($sql)) {
-                        $this->tables_deleted++;
-                        $this->logger->info("$fullname dropped successfully");
-                    } else {
-                        $this->logger->error("DROP failed");
-                        throw new \Exception("An error occured while dropping table $fullname: ".$this->da->getErrorMessage());
-                    }
-                } else {
-                    $this->tables_deleted++;
+                    $this->update($sql);
+                    $this->logger->info("$fullname dropped successfully");
                 }
+                $this->tables_deleted++;
             }
         }
     }
@@ -138,16 +143,10 @@ class CleanUnusedDao extends DataAccessObject
                 $sql = 'DROP DATABASE '.$database;
                 $this->logger->info($sql);
                 if (! $dry_run) {
-                    if ($this->update($sql)) {
-                        $this->db_deleted++;
-                        $this->logger->info("DROP completed with success");
-                    } else {
-                        $this->logger->info("DROP failed");
-                        throw new \Exception("DROP on $database failed: ".$this->da->getErrorMessage());
-                    }
-                } else {
-                    $this->db_deleted++;
+                    $this->update($sql);
+                    $this->logger->info("DROP completed with success");
                 }
+                $this->db_deleted++;
             }
         }
         $this->logger->info("End of $database drop");
@@ -168,12 +167,43 @@ class CleanUnusedDao extends DataAccessObject
         $project_id = (int) $project_id;
         if (! $dry_run) {
             $sql = "DELETE FROM plugin_mediawiki_database WHERE project_id = $project_id";
-            if ($this->update($sql)) {
-                $this->logger->info("Database no longer referenced");
-            } else {
-                $this->logger->error("Delete failed");
-                throw new \Exception("An error occured while de-referencing project $project_id: ".$this->da->getErrorMessage());
-            }
+            $this->update($sql);
+            $this->logger->info("plugin_mediawiki_database purged");
+
+            $sql = "DELETE FROM plugin_mediawiki_admin_options WHERE project_id = $project_id";
+            $this->update($sql);
+            $this->logger->info("plugin_mediawiki_admin_options purged");
+
+            $sql = "DELETE FROM plugin_mediawiki_ugroup_mapping WHERE group_id = $project_id";
+            $this->update($sql);
+            $this->logger->info("plugin_mediawiki_ugroup_mapping purged");
+
+            $sql = "DELETE FROM plugin_mediawiki_site_restricted_features WHERE project_id = $project_id";
+            $this->update($sql);
+            $this->logger->info("plugin_mediawiki_site_restricted_features purged");
+
+            $sql = "DELETE FROM plugin_mediawiki_access_control WHERE project_id = $project_id";
+            $this->update($sql);
+            $this->logger->info("plugin_mediawiki_access_control purged");
+
+            $sql = "DELETE FROM plugin_mediawiki_version WHERE project_id = $project_id";
+            $this->update($sql);
+            $this->logger->info("plugin_mediawiki_version purged");
+
+            $sql = "DELETE FROM plugin_mediawiki_extension WHERE project_id = $project_id";
+            $this->update($sql);
+            $this->logger->info("plugin_mediawiki_extension purged");
+        }
+    }
+
+    public function desactivateService($project_id, $dry_run)
+    {
+        $this->logger->info("Desactivate service in project");
+        $project_id = $this->da->escapeInt($project_id);
+        $sql = "UPDATE service SET is_used = 0 WHERE group_id = $project_id AND short_name = 'plugin_mediawiki'";
+        if (! $dry_run) {
+            $this->update($sql);
+            $this->logger->info("Service desactivated");
         }
     }
 
