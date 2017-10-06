@@ -3,15 +3,15 @@
 set -e
 
 setup_composer() {
-    (cd /usr/share/tuleap && scl enable rh-git29 "/usr/local/bin/composer.phar --no-interaction install")
+    (cd /usr/share/tuleap/tests/rest && scl enable rh-git29 "/usr/local/bin/composer.phar --no-interaction install")
 }
 
 generate_testsuite() {
-    php /usr/share/tuleap/tests/bin/generate-phpunit-testsuite.php /tmp /output noboostrap
+    php /usr/share/tuleap/tests/rest/bin/generate-testsuite.php /tmp /output
 }
 
 run_testsuite() {
-    PHPUNIT=/usr/share/tuleap/vendor/bin/phpunit
+    PHPUNIT=/usr/share/tuleap/tests/rest/vendor/bin/phpunit
     if [ -x /opt/rh/rh-php70/root/usr/bin/php ]; then
         PHPUNIT="/opt/rh/rh-php70/root/usr/bin/php $PHPUNIT"
     fi

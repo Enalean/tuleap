@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,17 +11,20 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Tracker\CrossTracker\CrossTrackerSaver;
 use Tuleap\Widget\WidgetFactory;
+
+require_once __DIR__.'/../../lib/autoload.php';
 
 class REST_TestDataBuilder extends TestDataBuilder
 {
@@ -85,7 +88,7 @@ class REST_TestDataBuilder extends TestDataBuilder
     {
         parent::__construct();
 
-        $this->template_path = dirname(__FILE__).'/../../rest/_fixtures/';
+        $this->template_path = __DIR__.'/../../rest/_fixtures/';
     }
 
     public function instanciateFactories()
@@ -104,7 +107,7 @@ class REST_TestDataBuilder extends TestDataBuilder
 
     public function initPlugins()
     {
-        foreach (glob(dirname(__FILE__).'/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
+        foreach (glob(__DIR__.'/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
             require_once $init_file;
         }
     }

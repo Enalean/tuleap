@@ -56,6 +56,8 @@ autoload:
         done;
 	@echo "Generate tests"
 	@(cd tests/lib; phpab  -q --compat -o autoload.php .)
+	@(cd tests/soap/lib; phpab  -q --compat -o autoload.php .)
+	@(cd tests/rest/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		echo "Generate plugin $$path"; \
 		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .) \
@@ -66,6 +68,8 @@ autoload-with-userid:
 	@(cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .;chown $(USER_ID):$(USER_ID) autoload.php)
 	@echo "Generate tests"
 	@(cd tests/lib; phpab  -q --compat -o autoload.php .;chown $(USER_ID):$(USER_ID) autoload.php)
+	@(cd tests/soap/lib; phpab  -q --compat -o autoload.php .)
+	@(cd tests/rest/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		echo "Generate plugin $$path"; \
 		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php $$(cat phpab-options.txt 2> /dev/null) .; chown $(USER_ID):$(USER_ID) autoload.php) \

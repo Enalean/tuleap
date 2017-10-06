@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
@@ -86,8 +87,8 @@ class PhpWikiTest extends RestBase {
         $this->assertArrayHasKey('wiki_content', $content);
         $this->assertArrayHasKey('formatted_content', $content);
 
-        $formatted_content = file_get_contents(dirname(__FILE__).'/_fixtures/phpwiki/formatted-content-version-4.txt');
-        $wiki_content      = file_get_contents(dirname(__FILE__).'/_fixtures/phpwiki/wiki-content-version-4.txt');
+        $formatted_content = file_get_contents(__DIR__.'/../_fixtures/phpwiki/formatted-content-version-4.txt');
+        $wiki_content      = file_get_contents(__DIR__.'/../_fixtures/phpwiki/wiki-content-version-4.txt');
 
         $this->assertEquals(4, $content['version_id']);
         $this->assertEquals($wiki_content, $content['wiki_content']);

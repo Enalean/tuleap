@@ -41,8 +41,6 @@ plugins/maillog
 !tools/plugins/datagenerator/*.css
 !tools/plugins/languages/*.css
 !tools/plugins/plugincreationwizard/*.css
-vendor/*
-/composer.*
 src/vendor/
 src/www/api/explorer
 /.idea/
@@ -59,3 +57,5 @@ src/www/themes/BurningParrot/css/vendor/*.scss
 tests/selenium/vendor
 tests/selenium/logs
 test_results/*
+tests/soap/vendor
+tests/rest/vendor
