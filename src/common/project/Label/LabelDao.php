@@ -97,7 +97,7 @@ class LabelDao extends DataAccessObject
     {
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "SELECT * FROM project_label WHERE project_id = $project_id ORDER BY name";
+        $sql = "SELECT * FROM project_label WHERE project_id = $project_id ORDER BY is_outline, name";
 
         return $this->retrieve($sql);
     }

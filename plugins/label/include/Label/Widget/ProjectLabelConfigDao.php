@@ -30,7 +30,8 @@ class ProjectLabelConfigDao extends \DataAccessObject
                   FROM plugin_label_widget_config
                   INNER JOIN project_label
                     ON plugin_label_widget_config.label_id = project_label.id
-                  WHERE content_id = $content_id";
+                  WHERE content_id = $content_id
+                  ORDER BY is_outline, name";
 
         return $this->retrieve($sql);
     }
