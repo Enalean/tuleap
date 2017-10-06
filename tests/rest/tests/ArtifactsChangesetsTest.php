@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../lib/autoload.php';
+require_once __DIR__.'/../lib/autoload.php';
 
 /**
  * @group ArtifactsChangesets
@@ -26,23 +26,14 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 class ArtifactsChangesetsTest extends RestBase {
 
     private $artifact_resource;
-    private $data_already_created = false;
-
-    /** @var Test_Rest_TrackerFactory */
-    private $tracker_test_helper;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
-            $this->client,
-            $this->rest_request,
-            $this->project_private_member_id,
-            REST_TestDataBuilder::TEST_USER_1_NAME
-        );
-
-        $this->createData();
+        $artifacts  = $this->getArtifactIdsIndexedByTitle('private-member', 'task');
+        $artifact_id = $artifacts['A task to do'];
+        $this->artifact_resource['uri'] = 'artifacts/'.$artifact_id;
     }
 
     /**
@@ -122,23 +113,5 @@ class ArtifactsChangesetsTest extends RestBase {
 
         $pagination_size = $response->getHeader('X-PAGINATION-SIZE')->normalize()->toArray();
         $this->assertEquals($pagination_size[0], 3);
-    }
-
-    private function createData()
-    {
-        if ($this->data_already_created) {
-            return;
-        }
-
-        $tracker = $this->tracker_test_helper->getTrackerRest('task');
-        $this->artifact_resource = $tracker->createArtifact(array(
-            $tracker->getSubmitTextValue('Summary', 'A task to do'),
-            $tracker->getSubmitListValue('Status', 'To be done')
-        ));
-
-        $tracker->addCommentToArtifact($this->artifact_resource, "I do some changes");
-        $tracker->addCommentToArtifact($this->artifact_resource, "Awesome changes");
-
-        $this->data_already_created = true;
     }
 }
