@@ -34,6 +34,13 @@ module.exports = {
                 use: [
                     { loader: 'vue-loader' }
                 ]
+            }, {
+                test: /\.po$/,
+                exclude: /node_modules/,
+                use: [
+                    { loader: 'json-loader' },
+                    { loader: 'po-gettext-loader' }
+                ]
             }
         ]
     },

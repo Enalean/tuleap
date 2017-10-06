@@ -24,5 +24,11 @@
             ],
             "target_dir": "www/themes/BurningParrot/css"
         }
+    },
+    "gettext-js": {
+        "labeled-items": {
+            "src": "www/scripts/project-labeled-items/src",
+            "po": "www/scripts/project-labeled-items/po"
+        }
     }
 }

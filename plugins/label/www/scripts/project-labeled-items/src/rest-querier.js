@@ -24,7 +24,7 @@ export {
 }
 
 async function getLabeledItems(project_id, labels_id) {
-    const labeled_items = await recursiveGet(`/api/projects/${project_id}/labeled_items`, {
+    const labeled_items = await recursiveGet('/api/projects/' + project_id + '/labeled_items', {
         params: {
             query: { labels_id },
             limit: 50

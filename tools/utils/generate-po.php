@@ -129,8 +129,10 @@ EOS;
                 $src      = escapeshellarg("$path/${gettext['src']}");
                 $po       = escapeshellarg("$path/${gettext['po']}");
                 $template = escapeshellarg("$path/${gettext['po']}/template.pot");
-                exec("find $src -name '*.js' \
+                exec("find $src \
+                        \( -name '*.js' -o -name '*.vue' \) \
                     | xargs xgettext \
+                        --language=JavaScript \
                         --default-domain=core \
                         --from-code=UTF-8 \
                         --no-location \
