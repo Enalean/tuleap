@@ -19,6 +19,7 @@
 
 import { get, patch, select2 } from 'tlp';
 import { sanitize } from 'dompurify';
+import { render } from 'mustache';
 
 export async function create(container, labels_endpoint, selected_labels) {
     initiateSelect2(container, selected_labels, labels_endpoint);
@@ -50,19 +51,17 @@ function initiateSelect2(container, selected_labels, labels_endpoint, placeholde
 }
 
 function formatLabel(label, li_element) {
-    const escaped_text = sanitize(label.text);
     if (label.color) {
         const bullet_class = label.is_outline ? 'fa fa-circle-o' : 'fa fa-circle';
         li_element.classList.add(`select-item-label-color-${label.color}`);
 
-        return `<span class="select-item-label-title">
-                    <i class="select-item-label-bullet ${bullet_class}"></i>${escaped_text}
-            </span>`;
+        return render(
+            '<span class="select-item-label-title"><i class="select-item-label-bullet {{ bullet_class }}"></i>{{ label }}</span>',
+            {bullet_class: bullet_class, label: label.text}
+        );
     }
 
-    return `<span class="select-item-label-title">
-                    ${escaped_text}
-            </span>`;
+    return render('<span class="select-item-label-title">{{ label }}</span>', {label: label.text});
 }
 
 function formatLabelSelected(label, li_elements) {
