@@ -31,10 +31,42 @@ function warning($message)
     echo "\033[33m$message\033[0m\n";
 }
 
+function error($message)
+{
+    echo "\033[31m$message\033[0m\n";
+}
+
+function executeCommandAndExitIfStderrNotEmpty($command)
+{
+    $descriptorspec = array(
+        0 => STDIN,
+        1 => STDOUT,
+        2 => array('pipe', 'wb')
+    );
+
+    $process = proc_open($command, $descriptorspec, $pipes);
+    if (! is_resource($process)) {
+        error("Can't execute command $command");
+        exit(1);
+    }
+
+    $stderr       = stream_get_contents($pipes[2]);
+    $return_value = proc_close($process);
+
+    if (! empty($stderr)) {
+        error($stderr);
+        exit(1);
+    }
+
+    if ($return_value !== 0) {
+        exit($return_value);
+    }
+}
+
 info("[core] Generating .pot file");
 $core_src = escapeshellarg("$basedir/src");
 $template = escapeshellarg("$basedir/site-content/tuleap-core.pot");
-exec("find $core_src -name '*.php' \
+executeCommandAndExitIfStderrNotEmpty("find $core_src -name '*.php' \
     | grep -v -E '(common/wiki/phpwiki|common/include/lib|vendor)' \
     | xargs xgettext \
         --default-domain=core \
@@ -62,7 +94,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
     $template = escapeshellarg("$path/site-content/tuleap-$translated_plugin.pot");
     $default  = escapeshellarg("$path/site-content/tuleap-$translated_plugin-default.pot");
     $plural   = escapeshellarg("$path/site-content/tuleap-$translated_plugin-plural.pot");
-    exec("find $src -name '*.php' \
+    executeCommandAndExitIfStderrNotEmpty("find $src -name '*.php' \
         | xargs xgettext \
             --keyword='dgettext:1c,2' \
             --default-domain=$translated_plugin \
@@ -77,7 +109,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
         > $default");
 
     info("[$translated_plugin] Generating plural .pot file");
-    exec("find $src -name '*.php' \
+    executeCommandAndExitIfStderrNotEmpty("find $src -name '*.php' \
         | xargs xgettext \
             --keyword='dngettext:1c,2,3' \
             --default-domain=$translated_plugin \
@@ -129,7 +161,7 @@ EOS;
                 $src      = escapeshellarg("$path/${gettext['src']}");
                 $po       = escapeshellarg("$path/${gettext['po']}");
                 $template = escapeshellarg("$path/${gettext['po']}/template.pot");
-                exec("find $src \
+                executeCommandAndExitIfStderrNotEmpty("find $src \
                         \( -name '*.js' -o -name '*.vue' \) \
                     | xargs xgettext \
                         --language=JavaScript \
