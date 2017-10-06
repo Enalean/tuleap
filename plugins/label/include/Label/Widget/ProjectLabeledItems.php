@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 use DataAccessException;
 use Feedback;
 use HTTPRequest;
-use ProjectManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
 use Widget;
@@ -131,7 +130,18 @@ class ProjectLabeledItems extends Widget
     public function getPreferences($widget_id)
     {
         $selected_labels = $this->getProjectSelectedLabelsPresenter();
-        $project_id      = $this->dao->getProjectIdByWidgetNameAndContentId($this->getId(), $this->content_id);
+        $project_id      = $this->getProject()->getID();
+
+        return $this->renderer->renderToString(
+            'project-label-selector',
+            new ProjectLabelSelectorPresenter($project_id, $selected_labels)
+        );
+    }
+
+    public function getInstallPreferences()
+    {
+        $selected_labels = array();
+        $project_id      = $this->getProject()->getID();
 
         return $this->renderer->renderToString(
             'project-label-selector',
@@ -141,17 +151,25 @@ class ProjectLabeledItems extends Widget
 
     public function create(&$request)
     {
-        $content_id = $this->dao->create();
+        $this->content_id = $this->dao->create();
 
-        return $content_id;
+        $project_labels = $this->getProjectLabels();
+        $this->storeLabelsConfiguration($request, $project_labels);
+
+        return $this->content_id;
     }
 
 
     public function updatePreferences(&$request)
     {
+        $project_labels = $this->getProjectAllLabelsPresenter();
+        $this->storeLabelsConfiguration($request, $project_labels);
+    }
+
+    private function storeLabelsConfiguration(HTTPRequest $request, $project_labels)
+    {
         try {
-            $labels = $this->getProjectAllLabelsPresenter();
-            $this->project_data_validator->validateDataFromRequest($request, $labels);
+            $this->project_data_validator->validateDataFromRequest($request, $project_labels);
             $this->dao->storeLabelsConfiguration($this->content_id, $request->get('project-labels'));
         } catch (ProjectLabelDoesNotBelongToProjectException $e) {
             $GLOBALS['Response']->addFeedback(
@@ -231,9 +249,6 @@ class ProjectLabeledItems extends Widget
      */
     private function getProject()
     {
-        $project_id = $this->dao->getProjectIdByWidgetNameAndContentId($this->getId(), $this->content_id);
-        $project    = ProjectManager::instance()->getProject($project_id);
-
-        return $project;
+        return HTTPRequest::instance()->getProject();
     }
 }
