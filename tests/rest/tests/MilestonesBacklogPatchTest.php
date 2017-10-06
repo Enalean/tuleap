@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../lib/autoload.php';
+require_once __DIR__.'/../lib/autoload.php';
 
 use Tuleap\REST\MilestoneBase;
 
@@ -27,10 +27,6 @@ use Tuleap\REST\MilestoneBase;
  */
 class MilestonesBacklogPatchTest extends MilestoneBase
 {
-
-    /** @var Test_Rest_TrackerFactory */
-    private $tracker_test_helper;
-
     /** @var Test\Rest\Tracker\Tracker */
     private $release;
     private $story_add;
@@ -44,21 +40,35 @@ class MilestonesBacklogPatchTest extends MilestoneBase
     private $epic_exp;
     private $epic_fin;
     private $epic_sta;
+    private $stories;
+    private $epics;
+    private $releases;
+    private $sprints;
 
     public function setUp()
     {
         parent::setUp();
 
-        $project = $this->getProject(REST_TestDataBuilder::PROJECT_BACKLOG_DND);
+        $this->stories = $this->getArtifactIdsIndexedByTitle('dragndrop', 'story');
+        $this->story_add['id'] = $this->stories["add two integers"];
+        $this->story_sub['id'] = $this->stories["sub two integers"];
+        $this->story_mul['id'] = $this->stories["mul two integers"];
+        $this->story_div['id'] = $this->stories["div two integers"];
 
-        $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
-            $this->client,
-            $this->rest_request,
-            $project['id'],
-            REST_TestDataBuilder::TEST_USER_1_NAME
-        );
+        $this->epics = $this->getArtifactIdsIndexedByTitle('dragndrop', 'epic');
+        $this->epic_basic['id'] = $this->epics['Basic calculator'];
+        $this->epic_adv['id']   = $this->epics['Advanced calculator'];
+        $this->epic_log['id']   = $this->epics['Logarithm calculator'];
+        $this->epic_exp['id']   = $this->epics['Expo calculator'];
+        $this->epic_fin['id']   = $this->epics['Finance calculator'];
+        $this->epic_sta['id']   = $this->epics['Stats calculator'];
 
-        $this->createReleaseAndBacklog();
+        $this->releases = $this->getArtifactIdsIndexedByTitle('dragndrop', 'rel');
+        $this->release['id'] = $this->releases['Release 2014 12 02'];
+
+        $this->sprints = $this->getArtifactIdsIndexedByTitle('dragndrop', 'sprint');
+
+        $this->uri     = 'milestones/'.$this->release['id'].'/backlog';
     }
 
     public function testPatchBacklogAfter() {
@@ -223,8 +233,8 @@ class MilestonesBacklogPatchTest extends MilestoneBase
     public function testPatchContentReMove() {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
-        $another_release = $this->createRelease("Another release", "Current", array());
-        $another_release_uri = 'milestones/'.$another_release['id'].'/content';
+        $another_release_id = $this->releases['Another release'];
+        $another_release_uri = 'milestones/'.$another_release_id.'/content';
 
         $response = $this->getResponse($this->client->patch($another_release_uri, null, json_encode(array(
             'add' => array(
@@ -255,12 +265,15 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         $this->assertContains($this->epic_adv['id'], $another_release_content);
     }
 
+    /**
+     * @depends testPatchContentReMove
+     */
     public function testPatchAddAndOrder() {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order'  => array(
-                'ids'         => array($this->epic_adv['id'], $this->epic_sta['id']),
+                'ids'         => array($this->epic_fin['id'], $this->epic_sta['id']),
                 'direction'   => 'after',
                 'compared_to' => $this->epic_basic['id']
             ),
@@ -275,23 +288,22 @@ class MilestonesBacklogPatchTest extends MilestoneBase
         $this->assertEquals(
             array(
                 $this->epic_basic['id'],
-                $this->epic_adv['id'],
-                $this->epic_sta['id'],
-                $this->epic_log['id'],
-                $this->epic_exp['id'],
                 $this->epic_fin['id'],
+                $this->epic_sta['id'],
+                $this->epic_exp['id'],
             ),
             $this->getIdsOrderedByPriority($uri)
         );
     }
 
+    /**
+     * @depends testPatchBacklogBefore
+     */
     public function testPatchBacklogAddAndOrder() {
-        $uri = 'milestones/'.$this->release['id'].'/backlog';
+        $inconsistent_story['id'] = $this->stories['Created in sprint'];
+        $sprint_id = $this->sprints['Sprint 9001'];
 
-        $inconsistent_story = $this->createStory("Created in sprint");
-        $sprint_id = $this->createSprint("Sprint 9001", array($inconsistent_story['id']));
-
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
             'order'  => array(
                 'ids'         => array($inconsistent_story['id'], $this->story_div['id'], $this->story_sub['id']),
                 'direction'   => 'after',
@@ -308,13 +320,13 @@ class MilestonesBacklogPatchTest extends MilestoneBase
 
         $this->assertEquals(
             array(
-                $this->story_add['id'],
                 $this->story_mul['id'],
                 $inconsistent_story['id'],
                 $this->story_div['id'],
                 $this->story_sub['id'],
+                $this->story_add['id'],
             ),
-            $this->getIdsOrderedByPriority($uri)
+            $this->getIdsOrderedByPriority($this->uri)
         );
 
         $this->assertCount(0, $this->getResponse($this->client->get('milestones/'.$sprint_id.'/backlog'))->json());
@@ -327,98 +339,5 @@ class MilestonesBacklogPatchTest extends MilestoneBase
             $actual_order[] = $backlog_element['id'];
         }
         return $actual_order;
-    }
-
-    private function getProject($shortname) {
-        foreach ($this->getResponse($this->client->get('projects'))->json() as $project) {
-            if ($project['shortname'] == $shortname) {
-                return $project;
-            }
-        }
-        throw new Exception("Project $shortname not found");
-    }
-
-    private function createReleaseAndBacklog() {
-        $this->release = $this->createRelease(
-            "Release 2014 12 02",
-            "Current",
-            array_merge($this->createReleaseBacklog(), array($this->createSprint("Sprint 10")))
-        );
-        $this->uri     = 'milestones/'.$this->release['id'].'/backlog';
-    }
-
-    private function createRelease($name, $status, array $links) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('rel');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Name', $name),
-                $tracker->getSubmitListValue('Status', $status),
-                $tracker->getSubmitArtifactLinkValue($links)
-            )
-        );
-    }
-
-    private function createReleaseBacklog() {
-        $this->story_add = $this->createStory("add two integers");
-        $this->story_sub = $this->createStory("sub two integers");
-        $this->story_mul = $this->createStory("mul two integers");
-        $this->story_div = $this->createStory("div two integers");
-
-        $this->epic_basic = $this->createEpic(
-            'Basic calculator',
-            array(
-                $this->story_add['id'],
-                $this->story_sub['id'],
-                $this->story_mul['id'],
-                $this->story_div['id']
-            )
-        );
-
-        $this->epic_adv = $this->createEpic('Advanced calculator', array());
-        $this->epic_log = $this->createEpic('Logarithm calculator', array());
-        $this->epic_exp = $this->createEpic('Expo calculator', array());
-        $this->epic_fin = $this->createEpic('Finance calculator', array());
-        $this->epic_sta = $this->createEpic('Stats calculator', array());
-
-        return array(
-            $this->epic_basic['id'],
-            $this->epic_adv['id'],
-            $this->epic_log['id'],
-            $this->epic_exp['id'],
-            $this->epic_fin['id'],
-        );
-    }
-
-    private function createStory($i_want_to) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('story');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('I want to', $i_want_to),
-                $tracker->getSubmitListValue('Status', 'To be done')
-            )
-        );
-    }
-
-    private function createEpic($name, array $stories) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('epic');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Summary', $name),
-                $tracker->getSubmitListValue('Status', 'Open'),
-                $tracker->getSubmitArtifactLinkValue($stories)
-            )
-        );
-    }
-
-    private function createSprint($name, array $links = array()) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('sprint');
-        $sprint  = $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Name', $name),
-                $tracker->getSubmitListValue('Status', 'Current'),
-                $tracker->getSubmitArtifactLinkValue($links)
-            )
-        );
-        return $sprint['id'];
     }
 }
