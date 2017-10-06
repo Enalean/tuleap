@@ -6,7 +6,6 @@ def runRESTTests(String version) {
     sh """
     mkdir -p working_copy/api-$version
     cp -R sources/* working_copy/api-$version/
-    cp working_copy/api-$version/tests/rest/bin/composer.json working_copy/api-$version/composer.json
     mkdir -p results/api-$version
     docker run --rm -v \$WORKSPACE/working_copy/api-$version/:/usr/share/tuleap -v \$WORKSPACE/results/api-$version:/output \$DOCKER_REGISTRY/enalean/tuleap-test-rest:$version
     """

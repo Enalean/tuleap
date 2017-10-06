@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,15 +16,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 $run_dir     = $argv[1];
 $output_dir  = $argv[2];
-$bootstrap = ! isset($argv[3]); // temporary to make new & old test pass
 
 $xml = simplexml_load_string(<<<XML
 <?xml version='1.0'?>
-<phpunit>
+<phpunit bootstrap="/usr/share/tuleap/tests/rest/vendor/autoload.php">
   <php>
     <ini name="date.timezone" value="Europe/Paris"/>
   </php>
@@ -39,16 +39,9 @@ $xml = simplexml_load_string(<<<XML
 XML
 );
 
-if ($bootstrap) {
-    $xml->addAttribute("bootstrap", $run_dir.'/bootstrap.php');
-    $env = $xml->php->addChild('env');
-    $env->addAttribute('name', 'TULEAP_HOST');
-    $env->addAttribute('value', 'http://localhost:8089');
-}
+$src_dir = __DIR__.'/../../../';
 
-$src_dir = realpath(dirname(__FILE__).'/../..');
-
-$xml->testsuites[0]->testsuite[0]->addChild('directory', $src_dir."/tests/rest");
+$xml->testsuites[0]->testsuite[0]->addChild('directory', $src_dir."/tests/rest/tests");
 
 foreach (glob($src_dir.'/plugins/*/tests/rest') as $directory) {
     $xml->testsuites[0]->testsuite[0]->addChild('directory', $directory);
@@ -56,7 +49,3 @@ foreach (glob($src_dir.'/plugins/*/tests/rest') as $directory) {
 
 // Write the XML config
 $xml->asXML("$run_dir/suite.xml");
-
-if ($bootstrap) {
-    file_put_contents("$run_dir/bootstrap.php", '<?php'.PHP_EOL.'require_once "'.$run_dir.'/vendor/autoload.php";');
-}

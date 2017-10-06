@@ -144,7 +144,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/09-burndown-cache-generation
 
     echo "Load initial data"
-    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data.php ng
+    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php
 
     seed_plugin_data
 }
@@ -158,7 +158,7 @@ seed_plugin_data() {
     done
 
     echo "Load plugins initial data"
-    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/lib/rest/init_data_plugins.php ng
+    php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data_plugins.php
 }
 
 setup_tuleap
