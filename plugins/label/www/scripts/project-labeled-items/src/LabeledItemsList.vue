@@ -2,7 +2,7 @@
     <div class="labeled-items-list">
         <div v-if="loading" class="labeled-items-loading"></div>
         <div v-if="error" class="tlp-alert-danger labeled-items-error">{{ error }}</div>
-        <div class="empty-pane-text" v-if="empty">{{ empty_message }}</div>
+        <div class="empty-pane-text" v-if="empty && ! error">{{ empty_message }}</div>
         <LabeledItem v-for="item in items"
                      v-bind:item="item"
                      v-bind:key="item.html_url"
