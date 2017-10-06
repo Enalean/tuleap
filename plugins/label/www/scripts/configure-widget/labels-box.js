@@ -18,7 +18,6 @@
  */
 
 import { get, patch, select2 } from 'tlp';
-import { sanitize } from 'dompurify';
 import { render } from 'mustache';
 
 export async function create(container, labels_endpoint, selected_labels) {
@@ -74,7 +73,7 @@ function formatLabelSelected(label, li_elements) {
     if (is_outline) {
         li_element.classList.add('select-item-label-outline');
     }
-    return sanitize(label.text);
+    return render('<span>{{ label }}</span>', { label: label.text });
 }
 
 function getColor(label) {
