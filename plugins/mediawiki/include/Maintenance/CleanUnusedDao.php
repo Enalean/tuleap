@@ -83,6 +83,16 @@ class CleanUnusedDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function getMediawikiDatabaseInUnusedServices()
+    {
+        $sql = "SELECT plugin_mediawiki_database.*
+                FROM service
+                  JOIN plugin_mediawiki_database ON (project_id = group_id)
+                WHERE short_name = 'plugin_mediawiki'
+                  AND is_used = 0";
+        return $this->retrieve($sql);
+    }
+
     private function dropTablesInCentralDatabase($project_id, $dry_run)
     {
         $this->logger->info("Attempt to purge tables in central database for $project_id");

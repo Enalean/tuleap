@@ -26,6 +26,7 @@ use Backend;
 use ProjectManager;
 use Logger;
 use WrapperLogger;
+use MediawikiDao;
 use Tuleap\Mediawiki\MediawikiDataDir;
 
 class CleanUnused
@@ -52,33 +53,70 @@ class CleanUnused
      * @var int
      */
     private $dir_deleted = 0;
+    /**
+     * @var MediawikiDao
+     */
+    private $mediawiki_dao;
 
-    public function __construct(Logger $logger, CleanUnusedDao $dao, ProjectManager $project_manager, Backend $backend)
+    public function __construct(Logger $logger, CleanUnusedDao $dao, ProjectManager $project_manager, Backend $backend, MediawikiDao $mediawiki_dao)
     {
         $this->logger          = new WrapperLogger($logger, 'MW Purge');
         $this->dao             = $dao;
         $this->project_manager = $project_manager;
         $this->backend         = $backend;
+        $this->mediawiki_dao   = $mediawiki_dao;
 
         $this->dao->setLogger($this->logger);
     }
 
-    public function purge($dry_run = true)
+    public function purge($dry_run, array $force)
     {
-        $this->logger->info("Start process");
-        foreach ($this->dao->getDeletionCandidates() as $row) {
-            $this->logger->info("Found candidate ".$row['database_name']);
-            $this->dao->purge($row, $dry_run);
-
-            $project = $this->project_manager->getProject($row['project_id']);
-            if ($project) {
-                $this->deleteDirectory($project, $dry_run);
-            }
-        }
+        $this->logger->info("Start purge");
+        $this->purgeDeletedProjects($dry_run);
+        $this->purgeUnusedService($dry_run, $force);
         $this->logger->info("Purge completed");
         $this->logger->info("{$this->dao->getDeletedDatabasesCount()} database(s) deleted");
         $this->logger->info("{$this->dao->getDeletedTablesCount()} table(s) deleted in central DB");
         $this->logger->info("{$this->dir_deleted} directories deleted");
+    }
+
+    private function purgeDeletedProjects($dry_run)
+    {
+        $this->logger->info("Start purge of deleted projects");
+        foreach ($this->dao->getDeletionCandidates() as $row) {
+            $project = $this->project_manager->getProject($row['project_id']);
+            if ($project) {
+                $this->purgeOneProject($project, $row, $dry_run);
+            }
+        }
+        $this->logger->info("Purge of deleted projects completed");
+    }
+
+    private function purgeUnusedService($dry_run, array $force)
+    {
+        $this->logger->info("Start purge of unused services");
+        foreach ($this->dao->getMediawikiDatabaseInUnusedServices() as $row) {
+            $project = $this->project_manager->getProject($row['project_id']);
+            if ($project && $this->isEmptyOrForced($project, $force)) {
+                $this->purgeOneProject($project, $row, $dry_run);
+            } else {
+                $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) has mediawiki content but service is desactivated. You should check with project admins");
+            }
+        }
+        $this->logger->info("Purge of unused services completed");
+    }
+
+    private function isEmptyOrForced(Project $project, array $force)
+    {
+        return $this->mediawiki_dao->getMediawikiPagesNumberOfAProject($project) === 0 ||
+            in_array((int) $project->getID(), $force, true);
+    }
+
+    private function purgeOneProject(Project $project, array $row, $dry_run)
+    {
+        $this->logger->info("Found candidate ".$row['database_name']);
+        $this->dao->purge($row, $dry_run);
+        $this->deleteDirectory($project, $dry_run);
     }
 
     private function deleteDirectory(Project $project, $dry_run)
