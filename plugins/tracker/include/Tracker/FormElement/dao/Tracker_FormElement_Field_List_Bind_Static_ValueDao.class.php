@@ -289,7 +289,10 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
 
-    public function reorder($ids_in_right_order) {
+    public function reorder($ids_in_right_order)
+    {
+        $this->startTransaction();
+
         $ids_in_right_order = array_filter($ids_in_right_order);
         $ids = $this->da->escapeIntImplode($ids_in_right_order);
 
@@ -297,9 +300,25 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         foreach ($ids_in_right_order as $rank => $id) {
             $when_conditions .= " WHEN $id THEN $rank ";
         }
+
         $sql = "UPDATE tracker_field_list_bind_static_value
                 SET rank = CASE id $when_conditions END
                 WHERE id IN ($ids)";
+
+        if (! $this->update($sql) || ! $this->reorderChildren($ids)) {
+            $this->rollBack();
+            return false;
+        }
+
+        return $this->commit();
+    }
+
+    private function reorderChildren($ids)
+    {
+        $sql = "UPDATE tracker_field_list_bind_static_value AS children_values, tracker_field_list_bind_static_value AS parent_values
+                SET children_values.rank = parent_values.rank
+                WHERE parent_values.id IN ($ids)
+                    AND children_values.original_value_id = parent_values.id";
 
         return $this->update($sql);
     }
@@ -315,4 +334,3 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 }
-?>
