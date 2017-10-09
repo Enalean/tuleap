@@ -25,94 +25,37 @@ require_once dirname(__FILE__).'/../../lib/autoload.php';
  *
  * @group Regressions
  */
-class Regressions_MilestonesContentTest extends RestBase {
+class Regressions_MilestonesContentTest extends RestBase
+{
+    public function testItCanMoveBackFromReleaseBacklogToProductBacklog()
+    {
+        $releases = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'releases');
+        $epics    = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'epic');
+        $products = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'product');
 
-    /** @var Test_Rest_TrackerFactory */
-    private $tracker_test_helper;
+        $this->getResponse($this->client->put('milestones/'.$releases['1.0'].'/content', null, json_encode([$epics['One Epic']])));
 
-    private $one_epic;
-    private $another_epic;
-    private $product;
-    private $release;
-
-    public function testItCanMoveBackFromReleaseBacklogToProductBacklog() {
-        $this->getResponse($this->client->put('milestones/'.$this->release['id'].'/content', null, json_encode(array($this->one_epic['id']))));
-
-        $this->assertEquals($this->getMilestoneContentIds($this->release['id']), array($this->one_epic['id']));
-        $this->assertEquals($this->getMilestoneContentIds($this->product['id']), array($this->one_epic['id'], $this->another_epic['id']));
-        $this->assertEquals($this->getMilestoneBacklogIds($this->product['id']), array($this->another_epic['id']));
+        $this->assertEquals($this->getMilestoneContentIds($releases['1.0']), [$epics['One Epic']]);
+        $this->assertEquals($this->getMilestoneContentIds($products['Widget 2']), [$epics['One Epic'], $epics['Another Epic']]);
+        $this->assertEquals($this->getMilestoneBacklogIds($products['Widget 2']), [$epics['Another Epic']]);
     }
 
-    private function getMilestoneBacklogIds($id) {
+    private function getMilestoneBacklogIds($id)
+    {
         return $this->getIds("milestones/$id/backlog");
     }
 
-    private function getMilestoneContentIds($id) {
+    private function getMilestoneContentIds($id)
+    {
         return $this->getIds("milestones/$id/content");
     }
 
-    private function getIds($route) {
+    private function getIds($route)
+    {
         $ids = array();
         foreach ($this->getResponse($this->client->get($route))->json() as $item) {
             $ids[] = $item['id'];
         }
         return $ids;
-    }
-
-    public function setUp() {
-        parent::setUp();
-        $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
-            $this->client,
-            $this->rest_request,
-            $this->project_pbi_id,
-            REST_TestDataBuilder::TEST_USER_1_NAME
-        );
-        $this->createBacklog();
-        $this->createProductAndRelease();
-        $this->assignEpicsToProductAndRelease();
-    }
-
-    private function createBacklog() {
-        $this->one_epic     = $this->createEpic('One Epic');
-        $this->another_epic = $this->createEpic('Another Epic');
-    }
-
-    private function createProductAndRelease() {
-        $this->product = $this->createProduct("Widget");
-        $this->release = $this->createRelease("1.0");
-        $this->getResponse($this->client->put('milestones/'.$this->product['id'].'/milestones', null, json_encode(array($this->release['id']))));
-    }
-
-    private function assignEpicsToProductAndRelease() {
-        $this->getResponse($this->client->put('milestones/'.$this->product['id'].'/content', null, json_encode(array($this->one_epic['id'], $this->another_epic['id']))));
-        $this->getResponse($this->client->put('milestones/'.$this->release['id'].'/content', null, json_encode(array($this->one_epic['id'], $this->another_epic['id']))));
-    }
-
-    private function createEpic($summary) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('epic');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Title', $summary),
-                $tracker->getSubmitListValue('Status', 'Not Started'),
-            )
-        );
-    }
-
-    private function createProduct($name) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('product');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Name', $name)
-            )
-        );
-    }
-
-    private function createRelease($release) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('releases');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Version Number', $release)
-            )
-        );
     }
 }

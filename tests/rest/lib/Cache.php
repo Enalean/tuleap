@@ -40,6 +40,23 @@ class Cache
         return self::$instance;
     }
 
+    public function getTrackerInProject($project_name, $tracker_name)
+    {
+        $project_id = $this->getProjectId($project_name);
+        if (isset($this->tracker_ids[$project_id][$tracker_name])) {
+            return $this->tracker_ids[$project_id][$tracker_name];
+        }
+        throw new \Exception('Tracker name does not exist in cache');
+    }
+
+    public function getProjectId($project_name)
+    {
+        if (isset($this->project_ids[$project_name])) {
+            return $this->project_ids[$project_name];
+        }
+        throw new \Exception('Project name not in cache');
+    }
+
     public function setProjectIds($project_ids)
     {
         $this->project_ids = $project_ids;

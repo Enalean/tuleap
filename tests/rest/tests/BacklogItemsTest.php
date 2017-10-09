@@ -18,36 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../lib/autoload.php';
+require_once __DIR__.'/../lib/autoload.php';
 
 /**
  * @group BacklogItemsTest
  */
 class BacklogItemsTest extends RestBase {
 
-    /** @var Test_Rest_TrackerFactory */
-    private $tracker_test_helper;
-
-    private $backlog_items_datas = array(
-        array('I want to' => 'build a new interface', 'Status' => 'To be done', 'Content' => array()),
-        array('I want to' => 'finish the story', 'Status' => 'To be done', 'Content' => array(
-            array('Summary' => 'Implement the feature', 'Status'=> 'Done'),
-            array('Summary' => 'Write tests', 'Status' => 'On going')
-        )),
-    );
+    private $tasks;
+    private $stories;
 
     private $stories_ids = array();
 
     public function setUp() {
         parent::setUp();
-        $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
-            $this->client,
-            $this->rest_request,
-            $this->project_private_member_id,
-            REST_TestDataBuilder::TEST_USER_1_NAME
-        );
+        $this->tasks   = $this->getArtifactIdsIndexedByTitle('private-member', 'task');
+        $this->stories = $this->getArtifactIdsIndexedByTitle('private-member', 'story');
 
-        $this->createStoriesAndTasks();
+        $this->stories_ids = [
+            $this->stories['build a new interface'],
+            $this->stories['finish the story'],
+            $this->stories['end of the story'],
+        ];
     }
 
     public function testOPTIONS() {
@@ -191,9 +183,10 @@ class BacklogItemsTest extends RestBase {
         $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
+        $this->assertCount(2, $backlog_items);
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
-        $third_id  = $this->createTask("Bla bla bla", "On going");
+        $third_id  = $this->tasks['My loneliness is killing me'];
 
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order' => array(
@@ -220,14 +213,14 @@ class BacklogItemsTest extends RestBase {
     }
 
     public function testPatchChildrenMove() {
-        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $uri = 'backlog_items/'.$this->stories_ids[2].'/children';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
         $first_id  = $backlog_items[0]['id'];
         $second_id = $backlog_items[1]['id'];
 
-        $task_in_another_story_id = $this->createTask("Bla bla bla", "On going");
-        $another_story_id = $this->createStory("Another story", "To be done", array($task_in_another_story_id));
+        $task_in_another_story_id = $this->tasks['Bla bla bla'];
+        $another_story_id = $this->stories['Another story'];
 
         try {
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
@@ -259,6 +252,7 @@ class BacklogItemsTest extends RestBase {
 
         $this->assertCount(0, $this->getResponse($this->client->get('backlog_items/'.$another_story_id.'/children'))->json());
     }
+
     private function getIdsOrderedByPriority($uri) {
         $response = $this->getResponse($this->client->get($uri));
         $actual_order = array();
@@ -266,47 +260,5 @@ class BacklogItemsTest extends RestBase {
             $actual_order[] = $backlog_element['id'];
         }
         return $actual_order;
-    }
-
-    private function createStoriesAndTasks() {
-        foreach ($this->backlog_items_datas as $backlog_item_data) {
-            $this->stories_ids[] = $this->createStory(
-                $backlog_item_data['I want to'],
-                $backlog_item_data['Status'],
-                $this->createTasksForStory($backlog_item_data)
-            );
-        }
-    }
-
-    private function createTasksForStory($story) {
-        $created_tasks = array();
-        foreach ($story['Content'] as $task) {
-            $created_tasks[] = $this->createTask($task['Summary'], $task['Status']);
-        }
-
-        return $created_tasks;
-    }
-
-    private function createTask($name, $status) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('task');
-        $task = $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Summary', $name),
-                $tracker->getSubmitListValue('Status', $status)
-            )
-        );
-        return $task['id'];
-    }
-
-    private function createStory($iWantTo, $status, $tasks) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('story');
-        $story   = $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('I want to', $iWantTo),
-                $tracker->getSubmitListValue('Status', $status),
-                $tracker->getSubmitArtifactLinkValue($tasks)
-            )
-        );
-        return $story['id'];
     }
 }
