@@ -25,6 +25,7 @@ function EditKanbanCtrl(
     var self = this;
     self.kanban             = SharedPropertiesService.getKanban();
     self.saving             = false;
+    self.saved              = false;
     self.deleting           = false;
     self.confirm_delete     = false;
     self.saving_new_column  = false;
@@ -34,10 +35,12 @@ function EditKanbanCtrl(
     self.new_column_label   = '';
     self.title_tracker_link = "<a class='edit-kanban-title-tracker-link' href='/plugins/tracker/?tracker=" + self.kanban.tracker.id + "'>" + self.kanban.tracker.label + "</a>";
     self.info_tracker_link  = "<a href='/plugins/tracker/?tracker=" + self.kanban.tracker.id + "'>" + self.kanban.tracker.label + "</a>";
+    self.old_kanban_label   = self.kanban.label;
 
     self.$onInit                     = init;
     self.initModalValues             = initModalValues;
     self.initDragular                = initDragular;
+    self.initListenModal             = initListenModal;
     self.dragularOptionsForEditModal = dragularOptionsForEditModal;
     self.processing                  = processing;
     self.deleteKanban                = deleteKanban;
@@ -51,10 +54,12 @@ function EditKanbanCtrl(
     self.cancelEditColumn            = cancelEditColumn;
     self.editColumn                  = editColumn;
     self.columnsCanBeManaged         = columnsCanBeManaged;
+    self.updateWidgetTitle           = updateWidgetTitle;
 
     function init() {
         self.initModalValues();
         self.initDragular();
+        self.initListenModal();
     }
 
     function updateKanbanName(label) {
@@ -70,6 +75,16 @@ function EditKanbanCtrl(
 
     function initDragular() {
         $scope.$on('dragulardrop', dragularDrop);
+    }
+
+    function initListenModal() {
+        modal_instance.tlp_modal.addEventListener('tlp-modal-hidden', function() {
+            if (! self.saved) {
+                self.kanban.label = self.old_kanban_label;
+                updateWidgetTitle(self.old_kanban_label);
+                $scope.$apply();
+            }
+        });
     }
 
     function dragularOptionsForEditModal() {
@@ -114,6 +129,7 @@ function EditKanbanCtrl(
         self.saving = true;
         KanbanService.updateKanbanLabel(self.kanban.id, self.kanban.label).then(function () {
             self.saving = false;
+            self.saved  = true;
             updateKanbanName(self.kanban.label);
         }, function (response) {
             modal_instance.tlp_modal.hide();
@@ -219,5 +235,13 @@ function EditKanbanCtrl(
 
     function columnsCanBeManaged() {
         return self.kanban.user_can_reorder_columns && self.kanban.user_can_add_columns;
+    }
+
+    function updateWidgetTitle(label) {
+        if (SharedPropertiesService.getUserIsOnWidget()) {
+            var kanban_widget           = element('.dashboard-widget[data-widget-id="' + SharedPropertiesService.getWidgetId() + '"]');
+            var kanban_title            = kanban_widget.find('.dashboard-widget-header-title');
+            kanban_title[0].textContent = label;
+        }
     }
 }

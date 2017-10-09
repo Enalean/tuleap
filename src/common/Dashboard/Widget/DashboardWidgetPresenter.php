@@ -55,6 +55,8 @@ class DashboardWidgetPresenter
         $this->widget_name  = $dashboard_widget->getName();
         $this->is_minimized = $dashboard_widget->isMinimized();
 
+        $widget->setDashboardWidgetId($dashboard_widget->getId());
+
         $this->title            = $widget->getTitle();
         $this->has_custom_title = $widget->hasCustomTitle();
         if ($this->has_custom_title) {

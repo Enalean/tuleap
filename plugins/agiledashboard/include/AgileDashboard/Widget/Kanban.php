@@ -107,7 +107,8 @@ abstract class Kanban extends Widget
         if ($widget) {
             $this->content_id   = $id;
             $this->kanban_id    = $widget['kanban_id'];
-            $this->kanban_title = $widget['title'];
+            $kanban             = $this->kanban_factory->getKanban($this->getCurrentUser(), $this->kanban_id);
+            $this->kanban_title = $kanban->getName();
         }
     }
 
@@ -133,7 +134,7 @@ abstract class Kanban extends Widget
                 $user_is_kanban_admin,
                 $this->getCurrentUser()->getShortLocale(),
                 $project_id,
-                true
+                $this->dashboard_widget_id
             );
             $widget_kanban_presenter = new WidgetKanbanPresenter(
                 $is_empty,

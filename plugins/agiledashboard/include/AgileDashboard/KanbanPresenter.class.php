@@ -52,8 +52,8 @@ class KanbanPresenter {
     /** @var string */
     public $nodejs_server;
 
-    /** @var boolean */
-    public $is_widget;
+    /** @var int */
+    public $widget_id;
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
@@ -61,7 +61,7 @@ class KanbanPresenter {
         $user_is_kanban_admin,
         $language,
         $project_id,
-        $is_widget
+        $dashboard_widget_id
     ) {
         $user_preferences              = new AgileDashboard_KanbanUserPreferences();
         $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
@@ -91,7 +91,7 @@ class KanbanPresenter {
         );
         $project_manager = ProjectManager::instance();
 
-        $this->is_widget                         = (int) $is_widget;
+        $this->widget_id                         = $dashboard_widget_id;
         $this->kanban_representation             = json_encode($kanban_representation_builder->build($kanban, $user));
         $this->dashboard_dropdown_representation = json_encode($widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)));
         $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;

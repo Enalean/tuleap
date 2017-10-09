@@ -22,7 +22,7 @@ function MainCtrl(
         dashboard_dropdown,
         user_id,
         user_is_admin,
-        is_widget,
+        widget_id,
         lang,
         project_id,
         view_mode,
@@ -33,7 +33,7 @@ function MainCtrl(
         SharedPropertiesService.setKanban(kanban);
         SharedPropertiesService.setDashboardDropdown(dashboard_dropdown);
         SharedPropertiesService.setUserIsAdmin(user_is_admin);
-        SharedPropertiesService.setUserIsOnWidget(is_widget);
+        SharedPropertiesService.setWidgetId(widget_id);
         SharedPropertiesService.setProjectId(project_id);
         SharedPropertiesService.setViewMode(view_mode);
         SharedPropertiesService.setKanbanUrl(kanban_url);

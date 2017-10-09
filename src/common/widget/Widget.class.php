@@ -32,6 +32,9 @@ use Tuleap\Dashboard\User\UserDashboardController;
     var $owner_id;
     var $owner_type;
 
+    /** @var  int */
+    protected $dashboard_widget_id;
+
     /**
     * Constructor
     */
@@ -207,5 +210,10 @@ use Tuleap\Dashboard\User\UserDashboardController;
     public function getJavascriptDependencies()
     {
         return array();
+    }
+
+    public function setDashboardWidgetId($dashboard_widget_id)
+    {
+        $this->dashboard_widget_id = $dashboard_widget_id;
     }
 }
