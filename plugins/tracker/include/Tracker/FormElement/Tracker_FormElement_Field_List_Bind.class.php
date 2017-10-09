@@ -89,6 +89,21 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public abstract function getAllValues();
 
     /**
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    public function getAllVisibleValues()
+    {
+        $values = $this->getAllValues();
+        foreach ($values as $key => $value) {
+            if ($value->isHidden()) {
+                unset($values[$key]);
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * @return bool
      */
     public function isExistingValue($value_id)
@@ -428,7 +443,10 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         }
 
         $default = $this->extractDefaultValues($params);
-        $this->getDefaultValueDao()->save($this->field->getId(), $default);
+
+        if (count($default) > 0) {
+            $this->getDefaultValueDao()->save($this->field->getId(), $default);
+        }
 
         if (!$no_redirect) {
             $GLOBALS['Response']->redirect('?'. http_build_query(array(
@@ -446,6 +464,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
             if (isset($params['default'][0])) {
                 $bind_default = str_replace('b', '', $params['default'][0]);
                 $bind_default = explode(',', $bind_default);
+                $bind_default = $this->filterDefaultValues($bind_default);
 
                 return $bind_default;
             }
@@ -454,6 +473,14 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         }
 
         return $default;
+    }
+
+    /**
+     * @return array
+     */
+    protected function filterDefaultValues(array $bind_default)
+    {
+        return $bind_default;
     }
 
     /**

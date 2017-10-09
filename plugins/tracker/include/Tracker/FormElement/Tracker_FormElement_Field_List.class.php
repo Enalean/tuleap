@@ -747,21 +747,27 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
+     * @return array
+     */
+    private function getAllVisibleValues()
+    {
+        return $this->getBind()->getAllVisibleValues();
+    }
+
+    /**
      * @return array of BindValues that are not hidden + none value if any
      */
-    public function getVisibleValuesPlusNoneIfAny() {
-        $values = $this->getAllValues();
-        foreach ($values as $key => $value) {
-            if ($value->isHidden()) {
-                unset($values[$key]);
-            }
-        }
+    public function getVisibleValuesPlusNoneIfAny()
+    {
+        $values = $this->getAllVisibleValues();
+
         if ($values) {
             if (! $this->isRequired()) {
                 $none = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
                 $values = array($none->getId() => $none) + $values;
             }
         }
+
         return $values;
     }
 
@@ -1427,7 +1433,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '<p>';
         $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','select_default_value'). '</strong><br />';
         $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
-        foreach ($this->getAllValues() as $v) {
+        foreach ($this->getAllVisibleValues() as $v) {
             $selected = isset($default_values[$v->getId()]) ? 'selected="selected"' : '';
             $html .= '<option value="'. $v->getId() .'" '. $selected .'>'. $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
         }
