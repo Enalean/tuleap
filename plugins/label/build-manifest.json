@@ -30,5 +30,8 @@
             "src": "www/scripts/project-labeled-items/src",
             "po": "www/scripts/project-labeled-items/po"
         }
-    }
+    },
+    "components": [
+        "plugins/label/www/scripts/"
+    ]
 }
