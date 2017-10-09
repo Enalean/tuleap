@@ -53,6 +53,8 @@ class MediaWikiPlugin extends Plugin {
 
             $this->addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
             $this->addHook(Event::RENAME_PROJECT, 'rename_project');
+            $this->addHook('project_is_deleted');
+
             $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
             $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
 
@@ -744,5 +746,13 @@ class MediaWikiPlugin extends Plugin {
             Backend::instance('System'),
             $this->getDao()
         );
+    }
+
+    public function project_is_deleted(array $params)
+    {
+        if (! empty($params['group_id'])) {
+            $clean_unused = $this->getCleanUnused($this->getBackendLogger());
+            $clean_unused->purgeProject($params['group_id']);
+        }
     }
 }

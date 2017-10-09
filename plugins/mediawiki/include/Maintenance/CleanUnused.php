@@ -69,6 +69,24 @@ class CleanUnused
         $this->dao->setLogger($this->logger);
     }
 
+    public function purgeProject($project_id)
+    {
+        $this->logger->info("Purge $project_id");
+        $project = $this->project_manager->getProject($project_id);
+        if ($project) {
+            $database_name = $this->mediawiki_dao->getMediawikiDatabaseName($project);
+            $this->purgeOneProject(
+                $project,
+                array(
+                    'project_id'    => $project_id,
+                    'database_name' => $database_name,
+                ),
+                false
+            );
+        }
+        $this->logger->info("Purge Completed");
+    }
+
     public function purge($dry_run, array $force)
     {
         $this->logger->info("Start purge");
