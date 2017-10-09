@@ -1,3 +1,6 @@
+msgid "Load more"
+msgstr ""
+
 msgid "Please select one or more labels by editing this widget"
 msgstr ""
 

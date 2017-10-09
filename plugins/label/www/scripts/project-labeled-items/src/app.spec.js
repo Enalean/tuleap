@@ -20,3 +20,4 @@
 import 'regenerator-runtime/runtime';
 import './LabeledItemsList.spec.js';
 import './LabeledItem.spec.js';
+import './rest-querier.spec.js';

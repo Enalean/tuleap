@@ -40,7 +40,7 @@ describe('LabeledItemsList', () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 dataLabelsId: "[]",
-                projectLabelsId: 101
+                dataProjectId: 101
             }
         });
 
@@ -66,7 +66,7 @@ describe('LabeledItemsList', () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 dataLabelsId: "[1]",
-                projectLabelsId: 101
+                dataProjectId: 101
             }
         });
 
@@ -84,7 +84,7 @@ describe('LabeledItemsList', () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 dataLabelsId: "[1]",
-                projectLabelsId: 101
+                dataProjectId: 101
             }
         });
 
@@ -108,7 +108,7 @@ describe('LabeledItemsList', () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 dataLabelsId: "[3, 4]",
-                projectLabelsId: 101
+                dataProjectId: 101
             }
         });
 
@@ -119,5 +119,75 @@ describe('LabeledItemsList', () => {
             { title: 'test 1' },
             { title: 'test 2' }
         ]);
+    });
+
+    it('Displays a [load more] button, if there is more items to display', async () => {
+        getLabeledItems.and.returnValue(Promise.resolve({
+            labeled_items: [{title: 'test 1'}],
+            has_more: true
+        }));
+
+        const vm = new LabeledItemsListVueElement({
+            propsData: {
+                dataLabelsId: "[3, 4]",
+                dataProjectId: 101
+            }
+        });
+
+        vm.$mount();
+
+        await Vue.nextTick();
+        expect(vm.has_more_items).toEqual(true);
+    });
+
+    it('Does not display a [load more] button, if there is not more items to display', async () => {
+        getLabeledItems.and.returnValue(Promise.resolve({
+            labeled_items: [{title: 'test 1'}],
+            has_more: false
+        }));
+
+        const vm = new LabeledItemsListVueElement({
+            propsData: {
+                dataLabelsId: "[3, 4]",
+                dataProjectId: 101
+            }
+        });
+
+        vm.$mount();
+
+        await Vue.nextTick();
+        expect(vm.has_more_items).toEqual(false);
+    });
+
+    it('Loads the next page of items', async () => {
+        getLabeledItems.and.returnValues(
+            Promise.resolve({
+                labeled_items: [{title: 'test 1'}],
+                offset: 0,
+                has_more: true
+            }),
+            Promise.resolve({
+                labeled_items: [{title: 'test 2'}],
+                offset: 50,
+                has_more: false
+            })
+        );
+
+        const vm = new LabeledItemsListVueElement({
+            propsData: {
+                dataLabelsId: "[3, 4]",
+                dataProjectId: 101
+            }
+        });
+
+        vm.$mount();
+
+        await Vue.nextTick();
+        expect(getLabeledItems.calls.count()).toEqual(1);
+        expect(getLabeledItems.calls.argsFor(0)).toEqual([101, [3, 4], 0, 50]);
+
+        vm.loadMore();
+        expect(getLabeledItems.calls.count()).toEqual(2);
+        expect(getLabeledItems.calls.argsFor(1)).toEqual([101, [3, 4], 50, 50]);
     });
 });
