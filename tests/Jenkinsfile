@@ -108,6 +108,7 @@ pipeline {
                 'Karma AgileDashboard Kanban': { runKarmaTests('kanban', 'plugins/agiledashboard/www/js/kanban') },
                 'Karma Tracker Artifact Modal': { runKarmaTests('artifact-modal', 'plugins/tracker/www/scripts/angular-artifact-modal') },
                 'Karma FRS plugin': { runKarmaTests('frs', 'plugins/frs/www/js/angular') },
+                'Karma Label plugin': { runKarmaTests('label', 'plugins/label/www/scripts') },
                 'Karma PullRequest plugin': { runKarmaTests('pullrequest', 'plugins/pullrequest/www/js/angular') },
                 'REST CentOS 6 PHP 5.3 Apache 2.2 MySQL 5.1': { runRESTTests('c6-php53-httpd22-mysql51') },
                 'REST CentOS 6 PHP 5.6 Apache 2.4 MySQL 5.6': { runRESTTests('c6-php56-httpd24-mysql56') },

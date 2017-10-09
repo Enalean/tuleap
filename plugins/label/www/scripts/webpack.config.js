@@ -1,61 +1,43 @@
 /* eslint-disable */
-var path                        = require('path');
-var webpack                     = require('webpack');
-var WebpackAssetsManifest       = require('webpack-assets-manifest');
-var BabelPresetEnv              = require('babel-preset-env');
-var BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
+var path                  = require('path');
+var webpack               = require('webpack');
+var WebpackAssetsManifest = require('webpack-assets-manifest');
 
-var manifest_data   = Object.create(null);
 var assets_dir_path = path.resolve(__dirname, '../assets');
 
-var webpack_config_for_configure = {
-    entry: {
-        'configure-widget': './configure-widget/index.js'
-    },
-    output: {
-        path    : assets_dir_path,
-        filename: '[name]-[chunkhash].js',
-    },
-    externals: {
-        tlp: 'tlp'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [BabelPresetEnv, {
-                                    targets: {
-                                        ie: 11
-                                    },
-                                    modules: false
-                                }]
-                            ],
-                            plugins: [
-                                BabelPluginObjectRestSpread
-                            ]
-                        }
-                    }
-                ]
-            }
-        ]
-    },
+var babel_options = {
+    presets: [
+        ["babel-preset-env", {
+            targets: {
+                ie: 11
+            },
+            modules: false
+        }],
+    ],
     plugins: [
-        new WebpackAssetsManifest({
-            output: 'manifest.json',
-            assets: manifest_data,
-        })
-    ]
+        "babel-plugin-transform-object-rest-spread"
+    ],
+    env: {
+        test: {
+            plugins: [
+                "babel-plugin-rewire-exports"
+            ]
+        },
+        coverage: {
+            plugins: [
+                "babel-plugin-rewire-exports",
+                ["babel-plugin-istanbul", {
+                    exclude: [ "**/*.spec.js"]
+                }]
+            ]
+        }
+    }
 };
 
-var webpack_config_for_widget = {
+var webpack_config = {
     entry : {
         'widget-project-labeled-items': './project-labeled-items/src/index.js',
+        'configure-widget'            : './configure-widget/index.js'
     },
     output: {
         path    : assets_dir_path,
@@ -75,12 +57,22 @@ var webpack_config_for_widget = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: [
-                    { loader: 'babel-loader' }
+                    {
+                        loader: 'babel-loader',
+                        options: babel_options
+                    }
                 ]
             }, {
                 test: /\.vue$/,
                 use: [
-                    { loader: 'vue-loader' }
+                    {
+                        loader: 'vue-loader',
+                        options: {
+                            loaders: {
+                                js: 'babel-loader?' + JSON.stringify(babel_options)
+                            }
+                        }
+                    }
                 ]
             }, {
                 test: /\.po$/,
@@ -95,17 +87,14 @@ var webpack_config_for_widget = {
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
-            assets: manifest_data,
             merge: true,
             writeToDisk: true
-        }),
-        // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
+        })
     ]
 };
 
 if (process.env.NODE_ENV === 'production') {
-    webpack_config_for_widget.plugins = webpack_config_for_widget.plugins.concat([
+    webpack_config.plugins = webpack_config.plugins.concat([
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
@@ -115,7 +104,4 @@ if (process.env.NODE_ENV === 'production') {
     ]);
 }
 
-module.exports = [
-    webpack_config_for_configure,
-    webpack_config_for_widget
-];
+module.exports = webpack_config;
