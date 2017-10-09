@@ -50,3 +50,9 @@
     white-space: normal;
     cursor: default;
 }
+
+.labeled-items-list-more {
+    display: flex;
+    justify-content: center;
+    padding: $tlp-spacing;
+}

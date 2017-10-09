@@ -1,1 +1,1 @@
-window.tlp = {};
+window.tlp = { get: function () {} };
