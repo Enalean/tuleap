@@ -49,22 +49,56 @@ class MoveToCentralDbDao extends DataAccessObject
         return $this->retrieveCount('SHOW DATABASES LIKE '.$this->da->quoteSmart($this->central_database_name)) !== 0;
     }
 
+    public function moveAll()
+    {
+        foreach ($this->getAllProjectsWithDedicatedDb() as $row) {
+            $this->moveWithDatabaseName($row['project_id'], $row['database_name']);
+        }
+    }
+
+    private function getAllProjectsWithDedicatedDb()
+    {
+        $central_db_name = $this->da->quoteSmart($this->central_database_name);
+        $sql = "SELECT plugin_mediawiki_database.*
+                FROM plugin_mediawiki_database
+                  JOIN groups ON (group_id = project_id)
+                  JOIN service ON (service.group_id = groups.group_id AND short_name = 'plugin_mediawiki')
+                WHERE groups.status IN ('A', 's')
+                    AND is_used = 1
+                    AND database_name != $central_db_name";
+        return $this->retrieve($sql);
+    }
+
     public function move($project_id)
     {
         $project_id            = $this->da->escapeInt($project_id);
         $current_database_name = $this->getCurrentDatabase($project_id);
 
-        if ($current_database_name != $this->central_database_name) {
-            $this->moveTables($project_id, $current_database_name, $this->central_database_name);
-
-            $this->updateUsedDatabase($project_id, $this->central_database_name);
+        if ($current_database_name !== $this->central_database_name) {
+            $this->moveWithDatabaseName($project_id, $current_database_name);
         }
+    }
+
+    private function moveWithDatabaseName($project_id, $current_database_name)
+    {
+        $this->moveTables($project_id, $current_database_name, $this->central_database_name);
+        $this->updateUsedDatabase($project_id, $this->central_database_name);
+        $this->dropDatabase($current_database_name);
     }
 
     private function getCurrentDatabase($project_id)
     {
-        $sql = "SELECT * FROM plugin_mediawiki_database WHERE project_id = $project_id";
+        $sql = "SELECT plugin_mediawiki_database.*
+                FROM plugin_mediawiki_database
+                  JOIN groups ON (group_id = project_id)
+                  JOIN service ON (service.group_id = groups.group_id AND short_name = 'plugin_mediawiki')
+                WHERE project_id = $project_id
+                  AND groups.status IN ('A', 's')
+                  AND is_used = 1";
         $row = $this->retrieveFirstRow($sql);
+        if (! $row) {
+            throw new \Exception("Invalid project given, either project is deleted, doesn't exist at all or mediawiki is not used");
+        }
         return $row['database_name'];
     }
 
@@ -82,6 +116,14 @@ class MoveToCentralDbDao extends DataAccessObject
                 $new_table_name
             );
             $this->update($sql);
+        }
+    }
+
+    private function dropDatabase($database_name)
+    {
+        $dar = $this->retrieve("SHOW TABLES FROM $database_name");
+        if (count($dar) === 0) {
+            $this->update("DROP DATABASE $database_name");
         }
     }
 

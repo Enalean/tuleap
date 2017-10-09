@@ -45,22 +45,12 @@ class SystemEvent_MEDIAWIKI_TO_CENTRAL_DB extends SystemEvent
         if (! $this->move_to_central_db->testDatabaseAvailability()) {
             throw new Exception('No central database defined or central database not accessible by DB user');
         }
-        $projects = $this->getProjectsFromParameters();
-        foreach ($projects as $project_id) {
-            $this->move_to_central_db->move($project_id);
+        if ($this->areAllProjectsMigrated()) {
+            $this->move_to_central_db->moveAll();
+        } else {
+            $this->move_to_central_db->move($this->getProjectIdFromParameters());
         }
         $this->done();
-    }
-
-    private function getProjectsFromParameters()
-    {
-        if ($this->areAllProjectsMigrated()) {
-            $projects = array();
-            // TBD: get all projects
-            return $projects;
-        }
-        $project_id = $this->getProjectIdFromParameters();
-        return array($project_id);
     }
 
     private function areAllProjectsMigrated()

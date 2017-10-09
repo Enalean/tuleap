@@ -1,3 +1,4 @@
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
@@ -22,14 +23,19 @@
 require_once 'pre.php';
 
 if ($argc != 2) {
-    die("Usage: move_to_single_db.php project_id\n");
+    die("Usage: move_to_single_db.php [project_id|all]\n");
 }
 
-$system_event_manager = SystemEventManager::instance();
-$system_event_manager->createEvent(
-    Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME,
-    (int) $argv[1],
-    SystemEvent::PRIORITY_HIGH,
-    SystemEvent::OWNER_ROOT,
-    'Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB'
-);
+if (is_numeric($argv[1]) || $argv[1] == Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::ALL) {
+    $system_event_manager = SystemEventManager::instance();
+    $system_event_manager->createEvent(
+        Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME,
+        $argv[1],
+        SystemEvent::PRIORITY_HIGH,
+        SystemEvent::OWNER_ROOT,
+        'Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB'
+    );
+    exit(0);
+}
+
+die("Invalid argument");
