@@ -20,5 +20,4 @@
 
 require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
 require_once dirname(__FILE__).'/TestManagementDataBuilder.php';
-require_once dirname(__FILE__).'/TestManagementCampaignBuilder.php';
 require_once dirname(__FILE__).'/TestManagement/BaseTest.php';

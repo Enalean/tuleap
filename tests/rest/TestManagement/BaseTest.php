@@ -29,31 +29,26 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group TestManagementTest
  */
-abstract class BaseTest extends RestBase {
-
+abstract class BaseTest extends RestBase
+{
     protected $project_id;
 
-    protected function getResponse($request) {
-        return parent::getResponse($request, TestManagementDataBuilder::USER_TESTER_NAME);
+    protected function getResponse($request, $user_name = TestManagementDataBuilder::USER_TESTER_NAME)
+    {
+        return parent::getResponse($request, $user_name);
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         if ($this->project_id === null) {
             $this->project_id = $this->getProjectId(TestManagementDataBuilder::PROJECT_TEST_MGMT_SHORTNAME);
         }
-
-        $campaign_builder = new TestManagementCampaignBuilder(
-            $this->client,
-            $this->rest_request,
-            $this->project_id
-        );
-
-        $campaign_builder->setUp();
     }
 
-    protected function getValid73Campaign() {
+    protected function getValid73Campaign()
+    {
         $all_campaigns_request  = $this->client->get("projects/$this->project_id/testmanagement_campaigns");
         $all_campaigns_response = $this->getResponse($all_campaigns_request);
         $campaigns = $all_campaigns_response->json();
