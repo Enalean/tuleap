@@ -42,23 +42,34 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
         Mediawiki_Migration_MediawikiMigrator $mediawiki_migrator,
         ProjectManager                        $project_manager,
         MediawikiVersionManager               $version_manager,
-        MediawikiMLEBExtensionManager         $mleb_manager
+        MediawikiMLEBExtensionManager         $mleb_manager,
+        MediawikiSiteAdminResourceRestrictor  $resource_restrictor
     ) {
-        $this->project_manager    = $project_manager;
-        $this->mediawiki_migrator = $mediawiki_migrator;
-        $this->version_manager    = $version_manager;
-        $this->mleb_manager       = $mleb_manager;
+        $this->project_manager     = $project_manager;
+        $this->mediawiki_migrator  = $mediawiki_migrator;
+        $this->version_manager     = $version_manager;
+        $this->mleb_manager        = $mleb_manager;
+        $this->resource_restrictor = $resource_restrictor;
     }
 
     public function process() {
-
         try {
-            $projects = $this->getProjectsFromParameters();
+            $projects    = $this->getProjectsFromParameters();
+            $nb_projects = count($projects);
+            $count       = 0;
             foreach ($projects as $project) {
-                $this->migrateProject($project);
+                if (file_exists(ForgeConfig::get('codendi_cache_dir').'/STOP_SYSTEM_EVENT')) {
+                    break;
+                } else {
+                    $this->migrateProject($project);
+                    $count++;
+                }
             }
-
-            $this->done();
+            if ($count === $nb_projects) {
+                $this->done("$nb_projects migrated");
+            } else {
+                $this->warning("Only $count/$nb_projects were migrated.");
+            }
         } catch (System_Command_CommandException $exception) {
             $this->error($exception->getMessage());
         }
@@ -66,6 +77,7 @@ class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
 
     private function migrateProject(Project $project)
     {
+        $this->resource_restrictor->allowProject($project);
         $this->mediawiki_migrator->migrateProjectTo123($project);
         $this->version_manager->saveVersionForProject($project, MediawikiVersionManager::MEDIAWIKI_123_VERSION);
         if ($this->mleb_manager->isMLEBExtensionInstalled()) {

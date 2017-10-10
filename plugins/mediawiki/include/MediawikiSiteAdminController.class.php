@@ -29,6 +29,10 @@ class MediawikiSiteAdminController {
      * @var \Tuleap\Admin\AdminPageRenderer
      */
     private $admin_page_renderer;
+    /**
+     * @var MediawikiVersionManager
+     */
+    private $version_manager;
 
     public function __construct(AdminPageRenderer $admin_page_renderer)
     {
@@ -39,6 +43,7 @@ class MediawikiSiteAdminController {
         );
         $this->system_event_manager = SystemEventManager::instance();
         $this->admin_page_renderer  = $admin_page_renderer;
+        $this->version_manager      = new MediawikiVersionManager(new MediawikiVersionDao());
     }
 
     public function site_index(HTTPRequest $request)
@@ -47,7 +52,7 @@ class MediawikiSiteAdminController {
 
         $presenter = new MediawikiSiteAdminAllowedProjectsPresenter(
             $this->resource_restrictor->searchAllowedProjects(),
-            $this->resource_restrictor->countProjectsToAllow()
+            $this->version_manager->countProjectsToMigrateTo123()
         );
 
         $this->admin_page_renderer->renderAPresenter(
@@ -86,10 +91,6 @@ class MediawikiSiteAdminController {
 
     private function allowAllProjects()
     {
-        foreach ($this->resource_restrictor->searchProjectsToAllow() as $project) {
-            $this->resource_restrictor->allowProject($project);
-        }
-
         $this->system_event_manager->createEvent(
             SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
             SystemEvent_MEDIAWIKI_SWITCH_TO_123::ALL,
@@ -105,7 +106,7 @@ class MediawikiSiteAdminController {
     private function allowProject($project_to_add) {
         $project = $this->project_manager->getProjectFromAutocompleter($project_to_add);
 
-        if ($project && $this->resource_restrictor->allowProject($project)) {
+        if ($project && ($project->isActive() || $project->isSystem())) {
             $this->system_event_manager->createEvent(
                 SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
                 $project->getId(),

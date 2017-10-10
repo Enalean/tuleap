@@ -54,6 +54,11 @@ class MediawikiVersionManager {
         return $row['mw_version'];
     }
 
+    public function countProjectsToMigrateTo123()
+    {
+        return $this->version_dao->countMediawikiToMigrate(self::MEDIAWIKI_120_VERSION);
+    }
+
     public function getAllProjectsToMigrateTo123()
     {
         $project_ids = array();
