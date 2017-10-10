@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,6 @@
 
 
 class Planning_FormPresenter extends PlanningPresenter {
-    // Manage translation
-    public $__ = array(__CLASS__, '__trans');
 
     /**
      * @var PlanningPermissionsManager
@@ -58,6 +56,16 @@ class Planning_FormPresenter extends PlanningPresenter {
      */
     public $cardwall_admin;
 
+    /**
+     * @var String
+     */
+    public $planning_allows_assignment_intro;
+
+    /**
+     * @var String
+     */
+    public $planning_allows_assignment_to;
+
     public function __construct(
         PlanningPermissionsManager $planning_permissions_manager,
         Planning $planning,
@@ -73,6 +81,16 @@ class Planning_FormPresenter extends PlanningPresenter {
         $this->available_backlog_trackers   = $available_backlog_trackers;
         $this->available_planning_trackers  = $available_planning_trackers;
         $this->cardwall_admin               = $cardwall_admin;
+
+        $this->planning_allows_assignment_intro = $GLOBALS['Language']->getText(
+            'plugin_agiledashboard',
+            'planning-allows-assignment-intro'
+        );
+
+        $this->planning_allows_assignment_to = $GLOBALS['Language']->getText(
+            'plugin_agiledashboard',
+            'planning-allows-assignment-to'
+        );
     }
 
     public function adminTitle() {
@@ -109,11 +127,5 @@ class Planning_FormPresenter extends PlanningPresenter {
 
     public function btnSubmit() {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
-    }
-    
-    public function __trans($text) {
-        $args = explode('|', $text);
-        $secondary_key = array_shift($args);
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', $secondary_key, $args);
     }
 }

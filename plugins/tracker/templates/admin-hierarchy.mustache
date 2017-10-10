@@ -1,11 +1,11 @@
 <div id="tracker-admin-current-full-hierarchy">
-    <h3>{{#__}}current_full_hierarchy_title{{/__}}</h3>
+    <h3>{{ current_full_hierarchy_title }}</h3>
     {{#hierarchy}}
         <ul class="tracker-hierarchy">{{> tracker-node}}</ul>
     {{/hierarchy}}
 </div>
 <div class="tracker-admin-hierarchy-edit-form">
-    <h3>{{#__}}edit_children_title|{{tracker_name}}{{/__}}</h3>
+    <h3>{{ edit_children_title }}</h3>
     <form method="post"
         action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
         <select
@@ -25,7 +25,7 @@
 
     {{# has_trackers_not_in_hierarchy }}
     <div>
-        <p>{{#__}}cannot_be_used{{/__}}</p>
+        <p>{{ cannot_be_used }}</p>
         <ul>
             {{# trackers_not_in_hierarchy }}
             <li><a href="/plugins/tracker/?tracker={{ getId }}&amp;func=admin-hierarchy">{{ getName }}</a></li>
