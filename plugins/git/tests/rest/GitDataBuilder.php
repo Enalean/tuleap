@@ -25,7 +25,6 @@ use Tuleap\Git\RestrictedGerritServerDao;
 class GitDataBuilder extends REST_TestDataBuilder {
 
     const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
-    const PROJECT_TEST_GIT_ID        = 112;
     const REPOSITORY_GIT_ID          = 1;
 
     public function setUp() {

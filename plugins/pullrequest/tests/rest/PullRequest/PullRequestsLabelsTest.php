@@ -68,7 +68,8 @@ class PullRequestsLabelsTest extends RestBase
      */
     public function testNewLabelIsAddedToProject()
     {
-        $response = $this->getResponse($this->client->get('projects/112/labels'))->json();
+        $project_id = $this->getProjectId('test-git');
+        $response = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
@@ -100,7 +101,8 @@ class PullRequestsLabelsTest extends RestBase
      */
     public function testRemovedLabelsAreNotRemovedInProject()
     {
-        $response = $this->getResponse($this->client->get('projects/112/labels'))->json();
+        $project_id = $this->getProjectId('test-git');
+        $response = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
         $this->assertCount(1, $response['labels']);
         $this->assertEquals('Emergency Fix', $response['labels'][0]['label']);
     }
@@ -110,7 +112,8 @@ class PullRequestsLabelsTest extends RestBase
      */
     public function testPATCHAddProjectLabel()
     {
-        $response = $this->getResponse($this->client->get('projects/112/labels'))->json();
+        $project_id = $this->getProjectId('test-git');
+        $response = $this->getResponse($this->client->get("projects/$project_id/labels"))->json();
         $expected_label = $response['labels'][0];
 
         $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(
