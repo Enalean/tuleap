@@ -22,9 +22,8 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Tuleap\REST\JsonCast;
 
-
-class ExecutionRepresentation {
-
+class ExecutionRepresentation
+{
     const ROUTE = 'testmanagement_executions';
 
     const FIELD_RESULTS        = 'results';
@@ -74,6 +73,11 @@ class ExecutionRepresentation {
     public $definition;
 
     /**
+     * @var array {@type Tuleap\TestManagement\REST\v1\BugRepresentation}
+     */
+    public $linked_bugs;
+
+    /**
      * @var int
      */
     public $time;
@@ -86,9 +90,9 @@ class ExecutionRepresentation {
         $assigned_to,
         $previous_result,
         $definition,
+        array $linked_bug,
         $time
     ) {
-
         $this->id               = JsonCast::toInt($artifact_id);
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->results          = $results;
@@ -98,5 +102,6 @@ class ExecutionRepresentation {
         $this->previous_result  = $previous_result;
         $this->assigned_to      = $assigned_to;
         $this->time             = $time;
+        $this->linked_bugs      = $linked_bug;
     }
 }

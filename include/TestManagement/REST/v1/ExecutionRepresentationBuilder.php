@@ -20,17 +20,19 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tracker_ArtifactFactory;
-use Tuleap\TestManagement\ArtifactDao;
-use Tuleap\TestManagement\ConfigConformanceValidator;
-use Tuleap\User\REST\UserRepresentation;
+use PFUser;
 use Tracker_Artifact;
 use Tracker_Artifact_PaginatedArtifacts;
-use PFUser;
+use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\TestManagement\ArtifactDao;
+use Tuleap\TestManagement\ConfigConformanceValidator;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
-class ExecutionRepresentationBuilder {
+class ExecutionRepresentationBuilder
+{
 
     /**
      * @var UserManager
@@ -112,6 +114,7 @@ class ExecutionRepresentationBuilder {
             $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
             $previous_result_representation,
             $definition_representation,
+            $this->getLinkedBugsRepresentationForExecution($user, $execution),
             $this->getExecutionTime($user, $execution)
         );
 
@@ -122,21 +125,7 @@ class ExecutionRepresentationBuilder {
         $executions_representations = array();
 
         foreach($executions as $execution) {
-            $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
-            $definition_representation      = $this->getDefinitionRepresentationForExecution($user, $execution);
-            $execution_representation       = new ExecutionRepresentation();
-            $execution_representation->build(
-                $execution->getId(),
-                $execution->getStatus(),
-                $this->getExecutionResult($user, $execution),
-                $execution->getLastUpdateDate(),
-                $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
-                $previous_result_representation,
-                $definition_representation,
-                $this->getExecutionTime($user, $execution)
-            );
-
-            $executions_representations[] = $execution_representation;
+            $executions_representations[] = $this->getExecutionRepresentation($user, $execution);
         }
 
         return $executions_representations;
@@ -184,6 +173,28 @@ class ExecutionRepresentationBuilder {
         }
 
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    private function getLinkedBugsRepresentationForExecution(PFUser $user, Tracker_Artifact $execution)
+    {
+        $art_links           = $execution->getLinkedArtifacts($user);
+        $bug_representations = array();
+
+        foreach ($art_links as $art_link) {
+            if ($this->conformance_validator->isArtifactABug($art_link) && $art_link->userCanView($user)) {
+                $bug_tracker_representation = new MinimalTrackerRepresentation();
+                $bug_tracker_representation->build($art_link->getTracker());
+
+                $bug_representation = new BugRepresentation();
+                $bug_representation->build($art_link, $bug_tracker_representation);
+                $bug_representations[] = $bug_representation;
+            }
+        }
+
+        return $bug_representations;
     }
 
     private function getExecutionResult(PFUser $user, Tracker_Artifact $execution) {

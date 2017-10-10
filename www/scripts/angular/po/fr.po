@@ -172,6 +172,10 @@ msgstr "Lier \"{{ modal.test_summary }}\" à un bug existant"
 msgid "Link to an existing bug"
 msgstr "Lier à un bug existant"
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Linked bugs"
+msgstr "Bugs liés"
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"
 msgstr "Charger les campagnes fermées"

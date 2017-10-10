@@ -159,6 +159,10 @@ msgstr ""
 msgid "Link to an existing bug"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Linked bugs"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Load closed campaigns"
 msgstr ""

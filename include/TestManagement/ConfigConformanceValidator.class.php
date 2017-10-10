@@ -87,4 +87,17 @@ class ConfigConformanceValidator {
 
         return $definition_project == $execution_project;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isArtifactABug(Tracker_Artifact $artifact)
+    {
+        $tracker = $artifact->getTracker();
+        $project = $tracker->getProject();
+
+        $issue_tracker_id = $this->config->getIssueTrackerId($project);
+
+        return $issue_tracker_id === $tracker->getId();
+    }
 }
