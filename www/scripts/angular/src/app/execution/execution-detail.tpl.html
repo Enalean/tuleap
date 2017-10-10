@@ -44,7 +44,7 @@
                     <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
                         <a class="tlp-dropdown-menu-item" role="menuitem" ng-if="canCreateIssue" ng-click="showLinkToNewBugModal()">
                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-plus"></i>
-                            <span translate>Link to a new bug</span>
+                            <span translate>Create a new bug</span>
                         </a>
                         <a class="tlp-dropdown-menu-item" role="menuitem" ng-if="canLinkIssue" ng-click="showLinkToExistingBugModal()">
                             <i class="tlp-dropdown-menu-item-icon fa fa-fw fa-link"></i>
@@ -56,7 +56,7 @@
                 <a class="current-test-header-action"
                    ng-if="! linkMenuIsVisible && canCreateIssue"
                    ng-click="showLinkToNewBugModal()"
-                   title="{{ 'Link to a new bug' | translate }}"
+                   title="{{ 'Create a new bug' | translate }}"
                 >
                     <i class="fa fa-fw fa-bug"></i>
                 </a>

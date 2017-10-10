@@ -84,6 +84,10 @@ msgstr ""
 msgid "Create a campaign"
 msgstr ""
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Create a new bug"
+msgstr ""
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create campaign"
 msgstr ""
@@ -149,10 +153,6 @@ msgstr ""
 
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "Link \"{{ modal.test_summary }}\" to an existing bug"
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "Link to a new bug"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html

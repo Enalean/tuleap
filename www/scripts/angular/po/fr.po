@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/campaign/campaign-edit.tpl.html
@@ -92,6 +92,10 @@ msgstr "Commenter…"
 msgid "Create a campaign"
 msgstr "Créer une campagne"
 
+#: src/app/execution/execution-detail.tpl.html
+msgid "Create a new bug"
+msgstr "Créer un nouveau bug"
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create campaign"
 msgstr "Créer campagne"
@@ -163,10 +167,6 @@ msgstr "Lier"
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "Link \"{{ modal.test_summary }}\" to an existing bug"
 msgstr "Lier \"{{ modal.test_summary }}\" à un bug existant"
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "Link to a new bug"
-msgstr "Lier à un nouveau bug"
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Link to an existing bug"
