@@ -21,11 +21,17 @@
  */
 
 if (! isset($argv[1])) {
-    echo "you must specify a project name";
+    echo "you must specify a project name\n";
     exit(1);
 }
 
 $fusionforgeproject      = $argv[1];
 $is_tuleap_mediawiki_123 = true;
 $IS_RUNNING_UPDATE       = true;
-include('/usr/share/mediawiki-tuleap-123/maintenance/update.php');
+
+if (file_exists('/usr/share/mediawiki-tuleap-123/maintenance/update.php')) {
+    include('/usr/share/mediawiki-tuleap-123/maintenance/update.php');
+} else {
+    fwrite(STDERR, "Unable to find /usr/share/mediawiki-tuleap-123, did you install RPMs ?\n");
+    exit(1);
+}

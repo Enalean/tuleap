@@ -43,12 +43,23 @@
 
     public function getAllMediawikiToMigrate($from_version)
     {
+        $sql = "SELECT groups.group_id ".$this->getSearchVersionQuery($from_version);
+        return $this->retrieve($sql);
+    }
+
+    public function countMediawikiToMigrate($from_version)
+    {
+        $sql = "SELECT COUNT(*) as nb ".$this->getSearchVersionQuery($from_version);
+        $row = $this->retrieveFirstRow($sql);
+        return $row['nb'];
+    }
+
+    private function getSearchVersionQuery($from_version)
+    {
         $from_version = $this->da->quoteSmart($from_version);
-        $sql = "SELECT groups.group_id
-                FROM groups
+        return "FROM groups
                 INNER JOIN plugin_mediawiki_version mw_version ON (mw_version.project_id = groups.group_id)
                 WHERE mw_version = $from_version
                 AND groups.status IN ('A', 's')";
-        return $this->retrieve($sql);
     }
 }

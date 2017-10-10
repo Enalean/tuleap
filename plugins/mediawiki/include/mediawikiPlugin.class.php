@@ -631,7 +631,11 @@ class MediaWikiPlugin extends Plugin {
                     $this->getMediawikiMigrator(),
                     $this->getProjectManager(),
                     $this->getMediawikiVersionManager(),
-                    $this->getMediawikiMLEBExtensionManager()
+                    $this->getMediawikiMLEBExtensionManager(),
+                    new MediawikiSiteAdminResourceRestrictor(
+                        new MediawikiSiteAdminResourceRestrictorDao(),
+                        $this->getProjectManager()
+                    )
                 );
                 break;
             case SystemEvent_MEDIAWIKI_TO_CENTRAL_DB::NAME:
