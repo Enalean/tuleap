@@ -19,7 +19,6 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "concurrently": "^3.5.0",
-    "del-cli": "^1.1.0",
     "http-server": "^0.10.0",
     "jasmine-core": "^2.8.0",
     "json-loader": "^0.5.7",
@@ -37,8 +36,8 @@
     "webpack-assets-manifest": "^1.0.0"
   },
   "scripts": {
-    "build": "rm -r ../assets/* && NODE_ENV=production webpack --optimize-minimize --bail",
-    "coverage": "del ./coverage/* && NODE_ENV=coverage karma start ./karma.conf.js && http-server -os -a 0.0.0.0 -p 9000 coverage/",
+    "build": "rm -rf ../assets/* && NODE_ENV=production webpack --optimize-minimize --bail",
+    "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage karma start ./karma.conf.js && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test karma start ./karma.conf.js",
     "watch": "NODE_ENV=watch concurrently --raw --kill-others 'webpack --watch' 'karma start ./karma.conf.js'"
   }
