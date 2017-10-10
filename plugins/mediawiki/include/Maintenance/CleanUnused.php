@@ -93,6 +93,7 @@ class CleanUnused
         $this->purgeDeletedProjects($dry_run);
         $this->purgeUnusedService($dry_run, $force);
         $this->purgeUsedServicesEmptyWiki($dry_run, $force);
+        $this->purgeOrphanDatabases($dry_run);
         $this->logger->info("Purge completed");
         $this->logger->info("{$this->dao->getDeletedDatabasesCount()} database(s) deleted");
         $this->logger->info("{$this->dao->getDeletedTablesCount()} table(s) deleted in central DB");
@@ -177,5 +178,26 @@ class CleanUnused
             $this->dir_deleted++;
             $this->logger->info("Data dir removed");
         }
+    }
+
+    private function purgeOrphanDatabases($dry_run)
+    {
+        $this->logger->info("Start purge of orphan bases");
+        foreach ($this->dao->getAllMediawikiBasesNotReferenced() as $row) {
+            if ($this->dao->isDBEmpty($row['name'])) {
+                $this->dao->dropDatabase($row['name'], $dry_run);
+            } else {
+                if (! $this->dao->doesDatabaseHaveContent($row['name'])) {
+                    $this->dao->dropDatabase($row['name'], $dry_run);
+                } else {
+                    if (! $this->dao->doesDatabaseNameCorrespondToAnActiveProject($row['name'])) {
+                        $this->dao->dropDatabase($row['name'], $dry_run);
+                    } else {
+                        $this->logger->warn("Database {$row['name']} exists but cannot be associated to an active project. It's probably unused. Please check and delete it manually");
+                    }
+                }
+            }
+        }
+        $this->logger->info("End purge of orphan bases");
     }
 }

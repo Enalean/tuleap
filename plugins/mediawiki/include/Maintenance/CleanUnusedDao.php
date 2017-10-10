@@ -135,7 +135,7 @@ class CleanUnusedDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    private function dropDatabase($database, $dry_run)
+    public function dropDatabase($database, $dry_run)
     {
         $this->logger->info("Attempt to purge database ".$database);
         if (strpos($database, MediawikiDao::DEDICATED_DATABASE_PREFIX) !== false) {
@@ -215,5 +215,55 @@ class CleanUnusedDao extends DataAccessObject
     public function getDeletedTablesCount()
     {
         return $this->tables_deleted;
+    }
+
+    public function getAllMediawikiBasesNotReferenced()
+    {
+        $db_prefix = $this->da->quoteLikeValueSuffix(MediawikiDao::DEDICATED_DATABASE_PREFIX);
+        $sql = "SELECT SCHEMA_NAME AS 'name'
+                FROM INFORMATION_SCHEMA.SCHEMATA
+                  LEFT JOIN tuleap.plugin_mediawiki_database db ON (db.database_name = SCHEMA_NAME)
+                WHERE SCHEMA_NAME LIKE 'plugin_mediawiki_%'
+                  AND db.project_id IS NULL";
+        return $this->retrieve($sql);
+    }
+
+    public function isDBEmpty($database_name)
+    {
+        $database_name = $this->da->quoteSmart($database_name);
+        $sql = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = $database_name LIMIT 1";
+        return $this->retrieveCount($sql) === 0;
+    }
+
+    private function purgeIfOrphan($database_name, $dry_run)
+    {
+        if (! $this->doesDatabaseNameCorrespondToAnActiveProject($database_name)) {
+            $this->logger->warn("Project seems no longer referenced, please double check");
+        } else {
+            $this->logger->warn("Database $database_name cannot be associated to an active project, please check");
+        }
+    }
+
+    public function doesDatabaseNameCorrespondToAnActiveProject($database_name)
+    {
+        $identifier = substr($database_name, strlen(MediawikiDao::DEDICATED_DATABASE_PREFIX));
+        $where      = 'groups.unix_group_name = '.$this->da->quoteSmart($identifier);
+        if (is_int($identifier)) {
+            $where = 'groups.group_id = '.$this->da->escapeInt($identifier);
+        }
+        $sql = "SELECT 1
+                FROM groups
+                  JOIN service ON (service.group_id = groups.group_id AND service.short_name = 'plugin_mediawiki')
+                WHERE groups.status IN ('A', 's')
+                    AND service.is_used = 1
+                    AND $where";
+        return $this->retrieveCount($sql) !== 0;
+    }
+
+    public function doesDatabaseHaveContent($database_name)
+    {
+        $table_name = $database_name.'.'.MediawikiDao::DEDICATED_DATABASE_TABLE_PREFIX.'page';
+        $sql = "SELECT 1 FROM $table_name LIMIT 1";
+        $this->retrieveCount($sql) !== 0;
     }
 }
