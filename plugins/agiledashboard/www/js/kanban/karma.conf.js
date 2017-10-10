@@ -1,5 +1,5 @@
 /* eslint-disable */
-var webpack_config = require('./webpack.config.js');
+var webpack_config = require('./webpack.config.js')[0];
 
 webpack_config.module.rules.push({
     test: /\.js$/,
@@ -28,7 +28,6 @@ module.exports = function(config) {
         frameworks: ['jasmine'],
 
         // list of files / patterns to load in the browser
-        // This is filled by gulp
         files: [
             'node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
             'node_modules/jquery/dist/jquery.js',

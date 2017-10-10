@@ -8,15 +8,10 @@ var runSequence = require('run-sequence').use(gulp);
 var templates_with_translated_strings_glob  = 'src/app/**/*.tpl.html';
 var javascript_with_translated_strings_glob = 'src/app/**/*.js';
 var old_coverage_glob = './coverage/*';
-var build_dir         = path.resolve(__dirname, './dist');
 
 // Cleaning tasks
 gulp.task('clean-coverage', function() {
     return del(old_coverage_glob);
-});
-
-gulp.task('clean-assets', function () {
-    return del(build_dir);
 });
 
 gulp.task('watch', function(cb) {
@@ -26,8 +21,6 @@ gulp.task('watch', function(cb) {
     ], ['gettext-extract']);
     return runSequence('test-continuous', cb);
 });
-
-gulp.task('build', ['clean-assets']);
 
 gulp.task('gettext-extract', function() {
     return gulp.src([

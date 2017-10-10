@@ -40,18 +40,18 @@
     "jasmine-promise-matchers": "^2.3.0",
     "jquery": "^3.2.1",
     "karma": "^0.13.15",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-coverage-istanbul-reporter": "^1.2.0",
     "karma-jasmine": "^0.3.6",
     "karma-junit-reporter": "^0.4.1",
-    "karma-chrome-launcher": "^2.2.0",
     "karma-webpack": "^2.0.3",
     "ng-cache-loader": "^0.0.23",
     "run-sequence": "^2.0.0",
-    "webpack": "^3.0.0",
+    "webpack": "^3.6.0",
     "webpack-assets-manifest": "^0.7.0"
   },
   "scripts": {
-    "build": "gulp build && webpack --optimize-minimize --bail && webpack --config externalize-angular-webpack.config.js --optimize-minimize --bail",
+    "build": "rm -rf ./dist/* && NODE_ENV=production webpack --optimize-minimize --bail",
     "coverage": "gulp coverage && http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "gulp test",
     "watch": "concurrently --raw --kill-others 'webpack --watch' 'gulp watch'"
