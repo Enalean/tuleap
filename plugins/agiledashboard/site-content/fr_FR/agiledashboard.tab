@@ -24,7 +24,8 @@ plugin_agiledashboard	planning_name	Nom
 plugin_agiledashboard	planning_backlog_title	Titre du backlog
 plugin_agiledashboard	planning_priority_change_permission	Qui peut prioriser les éléments ?
 plugin_agiledashboard	planning_plan_title	Titre du plan
-plugin_agiledashboard	planning-allows-assignment	Ce planning permet l'association de $1 à $2
+plugin_agiledashboard	planning-allows-assignment-intro	Ce planning permet l'association de
+plugin_agiledashboard	planning-allows-assignment-to	à
 plugin_agiledashboard	planning_all_fields_mandatory	Le nom du planning, le tracker de backlog et le tracker de plan sont obligatoires.
 plugin_agiledashboard	planning_index	Plannings
 plugin_agiledashboard	planning_new	Nouveau Planning

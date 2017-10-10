@@ -165,9 +165,14 @@ class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest 
 
 class MockBaseLanguage_Planning_ControllerNewTest extends MockBaseLanguage {
     function getText($key1, $key2, $args = array()) {
-        if ($key1 == 'plugin_agiledashboard' && $key2 == 'planning-allows-assignment') {
-            return 'This planning allows assignment of '. $args[0] .' to '. $args[1];
+        if ($key1 == 'plugin_agiledashboard' && $key2 == 'planning-allows-assignment-intro') {
+            return 'This planning allows assignment of';
         }
+
+        if ($key1 == 'plugin_agiledashboard' && $key2 == 'planning-allows-assignment-to') {
+            return 'to';
+        }
+
         return parent::getText($key1, $key2, $args);
     }
 }

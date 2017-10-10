@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
-
 class Tracker_Hierarchy_Presenter {
-    
-    // Manage translation
-    public $__ = array(__CLASS__, '__trans');
-    
+
     /**
      * @var Tracker_Hierarchy_HierarchicalTracker
      */
@@ -39,11 +34,6 @@ class Tracker_Hierarchy_Presenter {
      * @var TreeNode
      */
     public $hierarchy;
-    
-    /**
-     * @var string
-     */
-    public $tracker_name;
 
     /**
      * @var array
@@ -60,6 +50,21 @@ class Tracker_Hierarchy_Presenter {
      */
     public $cannot_be_used_in_hierarchy;
 
+    /**
+     * @var String
+     */
+    public $current_full_hierarchy_title;
+
+    /**
+     * @var String
+     */
+    public $edit_children_title;
+
+    /**
+     * @var String
+     */
+    public $cannot_be_used;
+
     public function __construct(
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         array $possible_children,
@@ -67,7 +72,6 @@ class Tracker_Hierarchy_Presenter {
         array $trackers_not_in_hierarchy
     ) {
         $this->tracker           = $tracker;
-        $this->tracker_name      = $tracker->getUnhierarchizedTracker()->getName();
         $this->possible_children = array_values($possible_children);
         $this->hierarchy         = $hierarchy;
 
@@ -81,6 +85,22 @@ class Tracker_Hierarchy_Presenter {
         $visitor = new TreeNode_InjectPaddingInTreeNodeVisitor();
         $this->hierarchy->accept($visitor);
         usort($this->trackers_not_in_hierarchy, array($this, 'sortTrackerAlphabetically'));
+
+        $this->current_full_hierarchy_title = $GLOBALS['Language']->getText(
+            'plugin_tracker_admin_hierarchy',
+            'current_full_hierarchy_title'
+        );
+
+        $this->edit_children_title = $GLOBALS['Language']->getText(
+            'plugin_tracker_admin_hierarchy',
+            'edit_children_title',
+            $tracker->getUnhierarchizedTracker()->getName()
+        );
+
+        $this->cannot_be_used = $GLOBALS['Language']->getText(
+            'plugin_tracker_admin_hierarchy',
+            'cannot_be_used'
+        );
     }
 
     public function getTrackerUrl() {
@@ -117,12 +137,6 @@ class Tracker_Hierarchy_Presenter {
         if ($this->tracker->hasChild($possible_child)) {
             return 'selected="selected"';
         }
-    }
-    
-    public function __trans($text) {
-        $args = explode('|', $text);
-        $secondary_key = array_shift($args);
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_hierarchy', $secondary_key, $args);
     }
 
     private function sortTrackerAlphabetically(Tracker $a, Tracker $b) {

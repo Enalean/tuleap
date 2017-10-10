@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->dao                  = new MockTracker_Hierarchy_Dao();
         $this->factory              = new MockTracker_Hierarchy_HierarchicalTrackerFactory($this->tracker_factory, $this->dao);
         $this->redirect_url         = TRACKER_BASE_URL."/?tracker=$this->tracker_id&func=admin-hierarchy";
+
+        stub($GLOBALS['Language'])->getText()->returns('');
     }
 
     public function testEditListsAllChildren() {
@@ -164,5 +166,3 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $controller->updateFromXmlProjectImportProcess($mapping);
     }
 }
-
-?>
