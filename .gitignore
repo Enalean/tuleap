@@ -3,7 +3,6 @@ www/scripts/angular/*~
 www/scripts/angular/build/
 www/scripts/angular/bin/
 www/scripts/angular/node_modules/
-www/scripts/angular/vendor/
 *.css
 *.mo
 *.po~
