@@ -411,7 +411,7 @@ class MediaWikiPlugin extends Plugin {
         $number_of_page_between_two_dates = array();
         $number_of_page_since_a_date      = array();
         foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
-            if ($project->usesService('plugin_mediawiki')) {
+            if ($project->usesService('plugin_mediawiki') && $dao->hasDatabase($project)) {
                 $number_of_page[] = $dao->getMediawikiPagesNumberOfAProject($project);
                 $number_of_page_between_two_dates[] = $dao->getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate($project, $start_date, $end_date);
                 $number_of_page_since_a_date[] = $dao->getCreatedPagesNumberSinceStartDate($project, $start_date);
