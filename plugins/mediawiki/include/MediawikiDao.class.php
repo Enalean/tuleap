@@ -38,6 +38,11 @@ class MediawikiDao extends DataAccessObject {
         $this->central_database = $central_database;
     }
 
+    public function hasDatabase(Project $project)
+    {
+        return $this->getMediawikiDatabaseName($project, false) !== false;
+    }
+
     public function getMediawikiPagesNumberOfAProject(Project $project) {
         $group_id = $this->da->escapeInt($project->getID());
 
