@@ -20,16 +20,22 @@
 
 namespace Tuleap\PullRequest\Label;
 
+use Git_GitRepositoryUrlManager;
 use GitRepoNotFoundException;
+use GitRepositoryFactory;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
+use TemplateRenderer;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\LabeledItem;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
+use UserHelper;
+use UserManager;
 
 class LabeledItemCollector
 {
@@ -53,19 +59,50 @@ class LabeledItemCollector
      * @var Factory
      */
     private $pullrequest_factory;
+    /**
+     * @var GitRepositoryFactory
+     */
+    private $repository_factory;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
+    /**
+     * @var Git_GitRepositoryUrlManager
+     */
+    private $repository_url_manager;
+
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
 
     public function __construct(
         PullRequestLabelDao $label_dao,
         Factory $pullrequest_factory,
         PullRequestPermissionChecker $pullrequest_permission_checker,
         HTMLURLBuilder $html_url_builder,
-        GlyphFinder $glyph_finder
+        GlyphFinder $glyph_finder,
+        GitRepositoryFactory $repository_factory,
+        UserManager $user_manager,
+        UserHelper $user_helper,
+        Git_GitRepositoryUrlManager $repository_url_manager,
+        TemplateRenderer $template_renderer
     ) {
         $this->label_dao                      = $label_dao;
         $this->pullrequest_permission_checker = $pullrequest_permission_checker;
         $this->html_url_builder               = $html_url_builder;
         $this->glyph_finder                   = $glyph_finder;
         $this->pullrequest_factory            = $pullrequest_factory;
+        $this->repository_factory             = $repository_factory;
+        $this->user_manager                   = $user_manager;
+        $this->user_helper                    = $user_helper;
+        $this->repository_url_manager         = $repository_url_manager;
+        $this->template_renderer              = $template_renderer;
     }
 
     public function collect(LabeledItemCollection $collection)
@@ -85,7 +122,7 @@ class LabeledItemCollector
                     new LabeledItem(
                         $this->glyph_finder->get('tuleap-pullrequest'),
                         $this->glyph_finder->get('tuleap-pullrequest-small'),
-                        $pull_request->getTitle(),
+                        $this->getHTMLMessage($pull_request),
                         $this->html_url_builder->getPullRequestOverviewUrl($pull_request, $project_id)
                     )
                 );
@@ -99,5 +136,23 @@ class LabeledItemCollector
                 $collection->thereAreItemsUserCannotSee();
             }
         }
+    }
+
+    private function getHTMLMessage(PullRequest $pull_request)
+    {
+        $repository      = $this->repository_factory->getRepositoryById($pull_request->getRepoDestId());
+        $repository_link = $repository->getHTMLLink($this->repository_url_manager);
+
+        $user      = $this->user_manager->getUserById($pull_request->getUserId());
+        $user_link = $this->user_helper->getLinkOnUser($user);
+
+        return $this->template_renderer->renderToString(
+            "labeled-pull-request",
+            new LabeledPullRequestPresenter(
+                $pull_request,
+                $repository_link,
+                $user_link
+            )
+        );
     }
 }

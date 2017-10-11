@@ -529,6 +529,8 @@ class pullrequestPlugin extends Plugin
 
     public function collectLabeledItems(LabeledItemCollection $event)
     {
+        $git_plugin = PluginManager::instance()->getPluginByName('git');
+
         $labeled_item_collector = new LabeledItemCollector(
             new PullRequestLabelDao(),
             $this->getPullRequestFactory(),
@@ -541,7 +543,12 @@ class pullrequestPlugin extends Plugin
             ),
             new GlyphFinder(
                 EventManager::instance()
-            )
+            ),
+            new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
+            UserManager::instance(),
+            new UserHelper(),
+            new Git_GitRepositoryUrlManager($git_plugin),
+            $this->getTemplateRenderer()
         );
 
         $labeled_item_collector->collect($event);

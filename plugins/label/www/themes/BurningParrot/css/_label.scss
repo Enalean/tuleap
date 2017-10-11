@@ -23,7 +23,6 @@
 .labeled-item {
     display: flex;
     flex: 1 0 auto;
-    align-items: center;
     padding: $tlp-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
     color: $tlp-typo-default-text-color;
@@ -33,6 +32,10 @@
         background-color: transparentize($tlp-theme-color, .9);
         text-decoration: none;
         cursor: pointer;
+
+        .labeled-item-metadata {
+            display: flex;
+        }
     }
 }
 
@@ -55,4 +58,49 @@
     display: flex;
     justify-content: center;
     padding: $tlp-spacing;
+}
+
+.labeled-item-content {
+    flex: 1 1 auto;
+}
+
+.labeled-item-title {
+    margin: 0 0 10px;
+    line-height: 18px;
+}
+
+.labeled-item-metadata {
+    display: none;
+    margin: $tlp-half-spacing 0 0;
+}
+
+.labeled-item-metadata-icon {
+    margin: 0 5px 0 0;
+}
+
+.labeled-item-repository {
+    font-size: 12px;
+}
+
+.labeled-item-author,
+.labeled-item-creation-date {
+    @extend %small-dimmed;
+
+    display: flex;
+    align-items: baseline;
+    line-height: 14px;
+}
+
+.labeled-item-author > a {
+    @extend %small-dimmed;
+}
+
+.labeled-item-creation-date {
+    flex: 0 0 auto;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+%small-dimmed {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
 }

@@ -32,6 +32,14 @@ require_once __DIR__.'/../bootstrap.php';
 class LabeledItemCollectorTest extends TuleapTestCase
 {
     /**
+     * @var \UserManager
+     */
+    private $user_manager;
+    /**
+     * @var \GitRepositoryFactory
+     */
+    private $repository_factory;
+    /**
      * @var \Tuleap\PullRequest\Reference\HTMLURLBuilder
      */
     private $html_url_builder;
@@ -95,6 +103,17 @@ class LabeledItemCollectorTest extends TuleapTestCase
         stub($this->pullrequest_factory)->getPullRequestById(66)->returns($second_pullrequest);
 
         $this->html_url_builder = mock('Tuleap\PullRequest\Reference\HTMLURLBuilder');
+
+
+        $this->repository_factory = mock('GitRepositoryFactory');
+        $repository = mock('GitRepository');
+        stub($repository)->getName()->returns('repo001');
+        stub($this->repository_factory)->getRepositoryById()->returns($repository);
+
+        $this->user_manager = mock('UserManager');
+        $user = mock('PFUser');
+        stub($user)->getRealName()->returns('user1');
+        stub($this->user_manager)->getUserById()->returns($user);
     }
 
     public function itCollectsPullRequestsWithTheGivenLabel()
@@ -186,7 +205,12 @@ class LabeledItemCollectorTest extends TuleapTestCase
             $this->pullrequest_factory,
             $this->pullrequest_permission_checker,
             $this->html_url_builder,
-            $this->glyph_finder
+            $this->glyph_finder,
+            $this->repository_factory,
+            $this->user_manager,
+            mock('UserHelper'),
+            mock('Git_GitRepositoryUrlManager'),
+            mock('TemplateRenderer')
         );
     }
 }
