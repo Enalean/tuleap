@@ -101,7 +101,7 @@
                             ng-if="canCategoryBeDisplayed(category)">
                             {{ category.label }}
                         </li>
-                        <li class="tests-list-test {{ execution.status | dasherize }}"
+                        <li class="tests-list-test {{ execution.status }}"
                             ng-repeat-end=""
                             ng-repeat="execution in category.executions
                                 | toArray:false

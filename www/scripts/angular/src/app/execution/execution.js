@@ -1,7 +1,6 @@
 import angular from 'angular';
 
 import 'restangular';
-import 'angular-filter-pack';
 
 import ExecutionConfig from './execution-config.js';
 import ExecutionRestService from './execution-rest-service.js';
@@ -14,8 +13,7 @@ import ExecutionTimerDirective from './timer/execution-timer-directive.js';
 import ExecutionListFilter from './execution-list-filter.js';
 
 export default angular.module('execution', [
-    'restangular',
-    'angularFilterPack'
+    'restangular'
 ])
 .config(ExecutionConfig)
 .service('ExecutionRestService', ExecutionRestService)
