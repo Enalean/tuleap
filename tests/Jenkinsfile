@@ -41,7 +41,7 @@ pipeline {
                     deleteDir()
                 }
                 withCredentials(npm_credentials) {
-                    sh 'docker run --rm -e NPM_REGISTRY="$NPM_REGISTRY" -e NPM_USER="$NPM_USER" -e NPM_PASSWORD="$NPM_PASSWORD" -e NPM_EMAIL="$NPM_EMAIL" -v $WORKSPACE/sources/:/tuleap --tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only $DOCKER_REGISTRY/tuleap-generated-files-builder'
+                    sh 'docker run --rm -e NPM_REGISTRY="$NPM_REGISTRY" -e NPM_USER="$NPM_USER" -e NPM_PASSWORD="$NPM_PASSWORD" -e NPM_EMAIL="$NPM_EMAIL" -v "$WORKSPACE/sources/":/tuleap -v "$WORKSPACE/sources/":/output --tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only $DOCKER_REGISTRY/tuleap-generated-files-builder'
                 }
             }
         }
@@ -131,6 +131,25 @@ pipeline {
                         """
                     }
                     junit 'results/distlp-integration/Tuleap-Tests-*.xml'
+                },
+                'Build and run': {
+                    sh """#!/bin/bash
+                    UNIQUE_NAME="$JOB_NAME-$BUILD_NUMBER"
+
+                    function cleanup {
+                        docker rm "\$UNIQUE_NAME-rpm-builder" || true
+                        docker rm "\$UNIQUE_NAME-rpm-installer" || true
+                    }
+                    trap cleanup EXIT
+
+                    docker run -i --name "\$UNIQUE_NAME-rpm-builder" -v "$WORKSPACE/sources":/tuleap:ro $DOCKER_REGISTRY/enalean/tuleap-buildrpms:centos6-without-srpms --os rhel6
+                    docker run -i --name "\$UNIQUE_NAME-rpm-installer" --volumes-from "\$UNIQUE_NAME-rpm-builder" $DOCKER_REGISTRY/enalean/tuleap-installrpms:ci
+
+                    mkdir -p 'results/build-and-run'
+                    docker cp "\$UNIQUE_NAME-rpm-installer":/output/index.html results/build-and-run/
+
+                    grep "version \$(cat sources/VERSION)" results/build-and-run/index.html
+                    """
                 },
                 failFast: false
             }
