@@ -20,6 +20,7 @@
 
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
@@ -270,8 +271,12 @@ class testmanagementPlugin extends Plugin
             $params['javascript_files'][] = '/scripts/codendi/Tooltip.js';
             $params['javascript_files'][] = '/scripts/codendi/Tooltip-loader.js';
 
-            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/testmanagement.js';
-            $params['javascript_files'][] = $this->getPluginPath() . '/scripts/angular/bin/assets/socket.io.js';
+            $test_management_include_assets = new IncludeAssets(
+                TESTMANAGEMENT_BASE_DIR . '/www/scripts/angular/bin/assets',
+                TESTMANAGEMENT_BASE_URL . '/scripts/angular/bin/assets'
+            );
+
+            $params['javascript_files'][] = $test_management_include_assets->getFileURL('testmanagement.js');
             $params['javascript_files'][] = $this->getPluginPath() . '/scripts/move-breadcrumb.js';
         }
     }
