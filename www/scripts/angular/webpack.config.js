@@ -22,7 +22,6 @@ module.exports = {
             'angular-tlp'           : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
             // Bower only deps
             'angular-ui-utils'      : 'angular-ui-utils/unique.js',
-            'angular-filter-pack'   : 'angular-filter-pack/dist/angular-filter-pack.js',
         }
     },
     externals: {

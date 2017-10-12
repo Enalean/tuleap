@@ -1,14 +1,12 @@
 import execution_module from './execution.js';
 import angular from 'angular';
 import ui_router from 'angular-ui-router';
-import 'angular-filter-pack';
 import 'angular-mocks';
 
 describe('ExecutionListFilter', function() {
     var ngFilter;
 
     beforeEach(angular.mock.module(ui_router));
-    beforeEach(angular.mock.module('angularFilterPack'));
     beforeEach(angular.mock.module(execution_module));
     beforeEach(angular.mock.inject(function($filter) {
         ngFilter = $filter;

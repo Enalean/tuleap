@@ -68,7 +68,6 @@ module.exports = {
             'vendor/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
             'vendor/angular-ckeditor/angular-ckeditor.js',
             'vendor/angular-filter/dist/angular-filter.min.js',
-            'vendor/angular-filter-pack/dist/angular-filter-pack.min.js',
             'vendor/angular-moment/angular-moment.min.js',
             'vendor/angular-sanitize/angular-sanitize.min.js',
             'vendor/angular-ui-select/dist/select.js',

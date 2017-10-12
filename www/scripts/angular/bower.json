@@ -2,8 +2,7 @@
   "name": "testmanagement",
   "version": "0.0.1",
   "dependencies": {
-    "angular-ui-utils": "bower-unique",
-    "angular-filter-pack": "~0.2.0"
+    "angular-ui-utils": "bower-unique"
   },
   "resolutions": {
     "angular": "1.3.20",
