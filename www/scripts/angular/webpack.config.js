@@ -14,14 +14,11 @@ module.exports = {
     resolve: {
         modules: [
             path.resolve(__dirname, 'node_modules'),
-            'node_modules',
-            'vendor'
+            'node_modules'
         ],
         alias: {
             'angular-artifact-modal': path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal'),
             'angular-tlp'           : path.resolve(__dirname, '../../../../../src/www/themes/common/tlp/angular-tlp'),
-            // Bower only deps
-            'angular-ui-utils'      : 'angular-ui-utils/unique.js',
         }
     },
     externals: {

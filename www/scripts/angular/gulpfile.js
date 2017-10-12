@@ -8,10 +8,6 @@ var runSequence = require('run-sequence').use(gulp);
 var templates_with_translated_strings_glob  = 'src/app/**/*.tpl.html';
 var javascript_with_translated_strings_glob = 'src/app/**/*.js';
 var assets_glob                             = 'src/assets/*';
-var vendor_assets_files                     = [
-    'vendor/artifact-modal/dist/assets/artifact_attachment_default.png',
-    'vendor/artifact-modal/dist/assets/loader-mini.gif'
-];
 var old_coverage_glob = './coverage/*';
 var build_dir         = 'bin/assets/';
 
@@ -51,10 +47,7 @@ gulp.task('gettext-extract', function() {
 });
 
 gulp.task('copy-assets', ['clean-assets'], function() {
-    var assets = [].concat(vendor_assets_files);
-    assets.push(assets_glob);
-
-    return gulp.src(assets)
+    return gulp.src(assets_glob)
         .pipe(gulp.dest(build_dir));
 });
 

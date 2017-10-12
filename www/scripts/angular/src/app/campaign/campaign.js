@@ -3,7 +3,6 @@ import ui_router from 'angular-ui-router';
 
 import 'restangular';
 import 'angular-gettext';
-import 'angular-ui-utils';
 
 import CampaignConfig from './campaign-config.js';
 import CampaignService from './campaign-service.js';
@@ -16,8 +15,7 @@ import CurrentPageFilter from './campaign-new-filter.js';
 export default angular.module('campaign', [
     ui_router,
     'restangular',
-    'gettext',
-    'ui.unique'
+    'gettext'
 ])
 .config(CampaignConfig)
 .service('CampaignService', CampaignService)
