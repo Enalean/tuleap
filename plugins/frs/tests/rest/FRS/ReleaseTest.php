@@ -37,7 +37,13 @@ class ReleaseTest extends RestBase
         $this->project_id = $this->getProjectId(self::PROJECT_NAME);
     }
 
-    public function testGETPackage()
+    public function testOPTIONS()
+    {
+        $response = $this->getResponse($this->client->options('frs_release'));
+        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETRelease()
     {
         $response = $this->getResponse($this->client->get('frs_release/1'));
         $release  = $response->json();
@@ -46,5 +52,20 @@ class ReleaseTest extends RestBase
         $this->assertEquals($release['name'], 'release1');
         $this->assertEquals($release['links'][0]["link"], 'http://example.fr');
         $this->assertEquals($release['links'][0]["release_time"], '2015-12-08T16:55:00+01:00');
+    }
+
+    public function testPOSTRelease()
+    {
+        $post_resource = json_encode(array(
+            'package_id' => 1,
+            'name'       => 'Paleo Pumpkin Bread'
+        ));
+
+        $response = $this->getResponse($this->client->post('frs_release', null, $post_resource));
+        $release  = $response->json();
+
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(2, $release['id']);
+        $this->assertEquals('Paleo Pumpkin Bread', $release['name']);
     }
 }

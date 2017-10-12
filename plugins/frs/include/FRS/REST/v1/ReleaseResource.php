@@ -20,6 +20,8 @@
 
 namespace Tuleap\FRS\REST\v1;
 
+use FRSPackageFactory;
+use FRSRelease;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
 use Tuleap\FRS\Link\Dao;
@@ -33,48 +35,67 @@ use UserManager;
 class ReleaseResource extends AuthenticatedResource
 {
     /**
+     * @var FRSPackageFactory
+     */
+    private $package_factory;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
      * @var UploadedLinksRetriever
      */
     private $uploaded_link_retriever;
-    private $frs_release_factory;
+    /**
+     * @var FRSReleaseFactory
+     */
+    private $release_factory;
+    /**
+     * @var Retriever
+     */
     private $retriever;
 
     public function __construct()
     {
-        $this->frs_release_factory     = FRSReleaseFactory::instance();
+        $this->release_factory         = FRSReleaseFactory::instance();
         $this->retriever               = new Retriever(new Dao());
         $this->uploaded_link_retriever = new UploadedLinksRetriever(new UploadedLinksDao(), UserManager::instance());
+        $this->package_factory         = FRSPackageFactory::instance();
+        $this->user_manager            = UserManager::instance();
     }
+
     /**
      * Get FRS release
      *
      * @url GET {id}
      * @access hybrid
      *
-     * @param int    $id            ID of the release
+     * @param int $id ID of the release
      *
      * @return \Tuleap\FRS\REST\v1\ReleaseRepresentation
      */
     public function getId($id)
     {
-        $release = $this->frs_release_factory->getFRSReleaseFromDb($id);
+        $this->sendAllowOptions();
+
+        $release = $this->release_factory->getFRSReleaseFromDb($id);
 
         if (! $release) {
             throw new RestException(404, "Release not found");
         }
 
         $release_representation = new ReleaseRepresentation();
-        $user                   = UserManager::instance()->getCurrentUser();
+        $user                   = $this->user_manager->getCurrentUser();
         $package                = $release->getPackage();
 
-        if (! $this->frs_release_factory->userCanRead($package->getGroupID(), $package->getPackageID(), $release->getReleaseID(), $user->getId())) {
+        if (! $this->release_factory->userCanRead($package->getGroupID(), $package->getPackageID(), $release->getReleaseID(), $user->getId())) {
             throw new RestException(403, "Access to release denied");
         }
 
         if ($package->isActive()) {
             $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
         } else if ($package->isHidden()
-            && $this->frs_release_factory->userCanAdmin($user, $package->getGroupID())
+            && $this->release_factory->userCanAdmin($user, $package->getGroupID())
         ) {
             $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
         } else {
@@ -84,13 +105,77 @@ class ReleaseResource extends AuthenticatedResource
         return $release_representation;
     }
 
+    /**
+     * Create release
+     *
+     * Create a release in a given active package
+     *
+     * <p>Example of payload:</p>
+     * <pre>
+     * { "package_id": 42, "name": "Cajun Chicken Pasta 2.0" }
+     * </pre>
+     *
+     * @url POST
+     * @access hybrid
+     *
+     * @param ReleasePOSTRepresentation $body
+     *
+     * @return \Tuleap\FRS\REST\v1\ReleaseRepresentation
+     * @status 201
+     */
+    public function post(ReleasePOSTRepresentation $body)
+    {
+        $this->sendAllowOptions();
 
+        $user    = $this->user_manager->getCurrentUser();
+        $package = $this->package_factory->getFRSPackageFromDb($body->package_id);
+
+        if (! $package) {
+            throw new RestException(400, "Package not found");
+        }
+
+        if (! $package->isActive()) {
+            throw new RestException(403, "Package is not active");
+        }
+
+        if (! $this->package_factory->userCanUpdate($package->getGroupID(), $package->getPackageID(), $user->getId())) {
+            throw new RestException(403, "Write access to package denied");
+        }
+
+        if ($this->release_factory->isReleaseNameExist($body->name, $body->package_id)) {
+            throw new RestException(409, "Release name '{$body->name}' already exists in this package");
+        }
+
+        $release_array = array(
+            'package_id' => $body->package_id,
+            'name'       => $body->name,
+            'notes'      => '',
+            'changes'    => '',
+            'status_id'  => FRSRelease::STATUS_ACTIVE
+        );
+
+        $id = $this->release_factory->create($release_array);
+        if (! $id) {
+            throw new RestException(500, "An error occurred while creating the release");
+        }
+
+        $release = $this->release_factory->getFRSReleaseFromDb($id);
+        $release_representation = new ReleaseRepresentation();
+        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
+
+        return $release_representation;
+    }
 
     /**
      * @url OPTION {id}
      */
     public function options()
     {
-        Header::allowOptionsGet();
+        $this->sendAllowOptions();
+    }
+
+    private function sendAllowOptions()
+    {
+        Header::allowOptionsGetPost();
     }
 }
