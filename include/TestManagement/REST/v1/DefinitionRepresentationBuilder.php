@@ -26,7 +26,8 @@ use PFUser;
 use Tracker_FormElementFactory;
 use UserManager;
 
-class DefinitionRepresentationBuilder {
+class DefinitionRepresentationBuilder
+{
 
     /**
      * @var UserManager
@@ -58,7 +59,8 @@ class DefinitionRepresentationBuilder {
         $this->conformance_validator              = $conformance_validator;
     }
 
-    public function getDefinitionRepresentation(PFUser $user, Tracker_Artifact $artifact) {
+    public function getDefinitionRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    {
         if (! $this->conformance_validator->isArtifactADefinition($artifact)) {
             return null;
         }
@@ -67,6 +69,17 @@ class DefinitionRepresentationBuilder {
         $definition_representation->build($artifact, $this->tracker_form_element_factory, $user);
 
         return $definition_representation;
+    }
 
+    public function getMinimalRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    {
+        if (! $this->conformance_validator->isArtifactADefinition($artifact)) {
+            return null;
+        }
+
+        $definition_representation = new MinimalDefinitionRepresentation();
+        $definition_representation->build($artifact, $this->tracker_form_element_factory, $user);
+
+        return $definition_representation;
     }
 }
