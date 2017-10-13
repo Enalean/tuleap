@@ -24,6 +24,7 @@ use Codendi_Request;
 use Feedback;
 use TemplateRendererFactory;
 use TrackerFactory;
+use TrackerManager;
 
 class Router
 {
@@ -32,9 +33,17 @@ class Router
      */
     private $tracker_factory;
 
-    public function __construct(TrackerFactory $tracker_factory)
-    {
+    /**
+     * @var TrackerManager
+     */
+    private $tracker_manager;
+
+    public function __construct(
+        TrackerFactory $tracker_factory,
+        TrackerManager $tracker_manager
+    ) {
         $this->tracker_factory = $tracker_factory;
+        $this->tracker_manager = $tracker_manager;
     }
 
     public function route(Codendi_Request $request)
@@ -58,10 +67,17 @@ class Router
                 $renderer  = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
                 $presenter = new AdminPresenter();
 
+                $tracker->displayAdminItemHeader(
+                    $this->tracker_manager,
+                    'timesheeting'
+                );
+
                 $renderer->renderToPage(
                     'tracker-admin',
                     $presenter
                 );
+
+                $tracker->displayFooter($this->tracker_manager);
 
                 break;
             default:

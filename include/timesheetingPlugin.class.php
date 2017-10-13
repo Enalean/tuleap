@@ -77,7 +77,7 @@ class timesheetingPlugin extends Plugin
 
     public function process(Codendi_Request $request)
     {
-        $router = new Router(TrackerFactory::instance());
+        $router = new Router(TrackerFactory::instance(), new TrackerManager());
         $router->route($request);
     }
 }
