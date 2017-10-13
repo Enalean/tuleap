@@ -30,7 +30,7 @@
 // - variables start with a '$'
 // - lines end with ";"
 // - use at least one blank char before and after every equal sign (e.g. "$a = 1;" is valid, "$a=1;" is not)
-// - you can reuse one variable (not more) in a definition. 
+// - you can reuse one variable (not more) in a definition.
 // - You can concatenate two strings (not more) with a " . ".
 // - some definitions may not contain variables (whenever precised)
 // - strings can only be defined using single quotes with the exception of strings composed only of special chars
@@ -65,7 +65,7 @@
 // this is used where ever the "naked" form of the Tuleap domain
 // might be used.
 // This is also used as the default name for the Web server using
-// the standard http protocol (for https see below). You can also 
+// the standard http protocol (for https see below). You can also
 // define a specific port number (useful for test servers - default 80)
 //
 $sys_default_domain = '%sys_default_domain%';
@@ -76,7 +76,7 @@ $sys_default_domain = '%sys_default_domain%';
 // to indicate a specific port for the https traffic (default 443)
 $sys_https_host = '%sys_default_domain%';
 
-//This is used for cookie authentication. If you have distributed servers, 
+//This is used for cookie authentication. If you have distributed servers,
 //please use a generic domain to allow single sign on.
 //Examples:
 //- you have 1 server (s1.example.com)
@@ -84,7 +84,7 @@ $sys_https_host = '%sys_default_domain%';
 //- you have 2 servers (s1.example.com & s2.example.com)
 //   => cookie domain should be "example.com" for SSO
 $sys_cookie_domain = '%sys_default_domain%';
- 
+
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
 // /!\ Developers: if you need to change the default value, it will have an
@@ -100,7 +100,7 @@ $sys_lists_domain = $sys_lists_host;
 // Fully qualified name
 $sys_fullname = '%sys_fullname%';
 
-//This is used for cookie authentication. If you have distributed servers, 
+//This is used for cookie authentication. If you have distributed servers,
 //please use same cookie prefix for a "cluster"
 $sys_cookie_prefix = 'TULEAP';
 
@@ -163,14 +163,12 @@ $sys_data_dir = '/var/lib/codendi';
 // Place to put temporary data: deleted user's accounts, etc
 $tmp_dir = '/var/tmp';
 
-// Tuleap utils and documentation directories
+// Tuleap utils directory
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
 //    *wrong* $codendi_utils_prefix = $codendi_dir . 'codendi/utils' *wrong*
 // this is because those variables will be read by shell scripts.
 $codendi_utils_prefix         = '/usr/share/codendi/src/utils';
-$codendi_documentation_prefix = '/usr/share/codendi/documentation';
-$codendi_downloads_dir        = '/usr/share/codendi/downloads';// Tuleap extra files download directory (eg: CLI archive)
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . '/wiki';
@@ -270,7 +268,7 @@ $sys_dbauth_passwd = '%sys_dbauth_passwd%';
 //
 // Part III - GUI modifications (menu colors, etc.) and other parameters
 //
-// 
+//
 
 
 // Group id corresponding to Tuleap News group
@@ -336,17 +334,17 @@ $sys_themedefault = 'FlamingParrot';
 // Default theme for old browsers (currently netscape 4)
 $sys_themedefault_old = 'savannah';
 
-// If set to 1 (one) the user registration must be approved by site 
+// If set to 1 (one) the user registration must be approved by site
 // admin. If 0 user can register by themselves
 $sys_user_approval = 0;
 
-// Project default privacy status (1 is public, 0 is private) 
+// Project default privacy status (1 is public, 0 is private)
 $sys_is_project_public = 1;
 
 // if set to 0 (zero) then the project privacy radio buttons are hidden during the project registration
 $sys_user_can_choose_project_privacy = 1;
 
-// If set to 1 (one) new projects must be approved by site 
+// If set to 1 (one) new projects must be approved by site
 // admin. If 0 new projects are automatically approved
 $sys_project_approval = 1;
 
@@ -367,7 +365,7 @@ $sys_session_lifetime = 1209600;
 // Default value is 60 days
 $sys_pending_account_lifetime = 60;
 
-// Default password duration. User will be asked to change its password 
+// Default password duration. User will be asked to change its password
 // after 'sys_password_lifetime' days.
 // 0 = no duration
 $sys_password_lifetime = 0;

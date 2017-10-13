@@ -1,7 +1,5 @@
 # Platform variables
 %define CODENDI_PLATFORM @@PLATFORM@@
-%define SYS_DEFAULT_DOMAIN @@SYS_DEFAULT_DOMAIN@@
-%define SYS_HTTPS_HOST @@SYS_HTTPS_HOST@@
 
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
@@ -18,69 +16,31 @@ License: GPL
 Group: Development/Tools
 URL: http://tuleap.net
 Source0: %{PKG_NAME}-%{version}.tar.gz
-Source1: cli_ParametersLocal.dtd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: zip
-# SELinux policy tools
-Requires(post): policycoreutils-python
 
 %description
-This package provides the documentation, CLI package and themes modifications
+This package provides themes modifications
 that customize the Tuleap application for "@@PLATFORM@@" platform.
 
 %prep
 %setup -q -n %{PKG_NAME}-%{version}
 
-%build
-cat > local.inc <<EOF
-\$codendi_documentation_prefix = "$PWD/documentation";
-\$codendi_dir = "$PWD";
-\$tmp_dir = "$RPM_BUILD_ROOT";
-\$sys_default_domain = "%{SYS_DEFAULT_DOMAIN}";
-\$sys_https_host = "%{SYS_HTTPS_HOST}";
-\$codendi_downloads_dir = "$PWD/downloads";
-EOF
-
-%{__cp} %{SOURCE1} cli_ParametersLocal.dtd
-
-tools/rpm/build_release.sh
-
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
-
-# Doc: CLI
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
-%{__cp} -ar documentation/cli/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
-%{__cp} -ar documentation/cli/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
-
-# CLI package
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/downloads
-%{__cp} -ar downloads/* $RPM_BUILD_ROOT/%{APP_DIR}/downloads
 
 # Custom logo
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images
 
-%post
-/usr/sbin/semanage fcontext -a -t httpd_sys_content_t '%{APP_DIR}/documentation(/.*)?' || true
-/usr/sbin/semanage fcontext -a -t httpd_sys_content_t '%{APP_DIR}/downloads(/.*)?' || true
-/sbin/restorecon -R '%{APP_DIR}/documentation' || true
-/sbin/restorecon -R '%{APP_DIR}/downloads' || true
-
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
-
 %files
 %defattr(-,root,root,-)
-%{APP_DIR}/documentation
-%{APP_DIR}/downloads
 
 #%doc
 #%config
 
-
-
 %changelog
-* Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> - 
+* Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> - 
 - Initial build.
 
