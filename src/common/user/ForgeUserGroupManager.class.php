@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupManager {
+use Tuealp\user\GroupCannotRemoveLastAdministrationPermission;
+use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
+
+class User_ForgeUserGroupManager
+{
 
     /**
      * @var UserGroupDao
      */
     private $dao;
+    /**
+     * @var SiteAdministratorPermissionChecker
+     */
+    private $permission_checker;
 
-    public function __construct(UserGroupDao $dao) {
-        $this->dao = $dao;
+    public function __construct(UserGroupDao $dao, SiteAdministratorPermissionChecker $permission_checker)
+    {
+        $this->dao                = $dao;
+        $this->permission_checker = $permission_checker;
     }
 
     /**
      * @return bool
      */
     public function deleteForgeUserGroup(User_ForgeUGroup $user_group) {
+        if ($this->permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission($user_group)) {
+            throw new GroupCannotRemoveLastAdministrationPermission();
+        }
         return $this->dao->deleteForgeUGroup($user_group->getId());
     }
 

@@ -20,6 +20,7 @@
 
 namespace Tuleap\user\ForgeUserGroupPermission;
 
+use User_ForgeUGroup;
 use User_ForgeUserGroupPermissionsDao;
 
 class SiteAdministratorPermissionChecker
@@ -37,5 +38,13 @@ class SiteAdministratorPermissionChecker
     public function checkPlatformHasMoreThanOneSiteAdministrationPermission()
     {
         return $this->permissions_dao->isMoreThanOneUgroupUsingForgePermission(SiteAdministratorPermission::ID);
+    }
+
+    public function checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission(User_ForgeUGroup $user_group)
+    {
+        return ! $this->permissions_dao->isUGroupTheOnlyOneWithPlatformAdministrationPermission(
+            SiteAdministratorPermission::ID,
+            $user_group->getId()
+        );
     }
 }

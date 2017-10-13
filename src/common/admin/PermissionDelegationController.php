@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuealp\user\GroupCannotRemoveLastAdministrationPermission;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
 use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
+use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
 use Tuleap\user\UserCannotRemoveLastAdministrationPermission;
 
 class Admin_PermissionDelegationController {
@@ -86,6 +88,10 @@ class Admin_PermissionDelegationController {
      * @var PermissionPresenterBuilder
      */
     private $permission_builder;
+    /**
+     * @var User_ForgeUserGroupPermissionsDao
+     */
+    private $dao;
 
 
     public function __construct(
@@ -99,7 +105,8 @@ class Admin_PermissionDelegationController {
         User_ForgeUserGroupUsersManager $user_group_users_manager,
         UserManager $user_manager,
         SiteAdministratorPermissionChecker $site_admin_permission_checker,
-        PermissionPresenterBuilder $permission_builder
+        PermissionPresenterBuilder $permission_builder,
+        User_ForgeUserGroupPermissionsDao $dao
     ) {
         $this->request    = $request;
         $this->csrf_token = $csrf_token;
@@ -113,7 +120,8 @@ class Admin_PermissionDelegationController {
         $this->user_group_users_manager       = $user_group_users_manager;
         $this->user_manager                   = $user_manager;
         $this->permission_builder             = $permission_builder;
-        $this->site_admin_permission_checker = $site_admin_permission_checker;
+        $this->site_admin_permission_checker  = $site_admin_permission_checker;
+        $this->dao                            = $dao;
     }
 
     private function redirect($id = null) {
@@ -185,7 +193,8 @@ class Admin_PermissionDelegationController {
         $this->redirect($id);
     }
 
-    private function deleteGroup() {
+    private function deleteGroup()
+    {
         $id = $this->request->get('id');
 
         if ($id) {
@@ -193,8 +202,16 @@ class Admin_PermissionDelegationController {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($id);
                 $this->user_group_manager->deleteForgeUserGroup($user_group);
 
-            } catch(User_UserGroupNotFoundException $e) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
+            } catch (User_UserGroupNotFoundException $e) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found')
+                );
+            } catch (GroupCannotRemoveLastAdministrationPermission $e) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    _("You can't remove the last group containing site administrator permissions")
+                );
             }
         }
 
@@ -253,7 +270,12 @@ class Admin_PermissionDelegationController {
                     );
                     $users       = $this->user_group_users_factory->getAllUsersFromForgeUserGroup($user_group);
 
-                    return new Admin_PermissionDelegationGroupPresenter($user_group, $permissions, $users);
+                    $can_be_removed       = ! $this->site_admin_permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission(
+                        $user_group
+                    );
+                    $user_group_presenter = new UserForgeUGroupPresenter($user_group, $can_be_removed);
+
+                    return new Admin_PermissionDelegationGroupPresenter($user_group_presenter, $permissions, $users);
                 }
             } catch (User_ForgeUserGroupPermission_NotFoundException $e) {
                 return null;
@@ -324,8 +346,10 @@ class Admin_PermissionDelegationController {
                 foreach ($permission_ids as $permission_id) {
                     $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);
 
+                    $this->dao->startTransaction();
                     $this->checkPermissionCanBeRemoved($permission);
                     $this->user_group_permissions_manager->deletePermission($user_group, $permission);
+                    $this->dao->commit();
                 }
 
             } catch(User_UserGroupNotFoundException $e) {

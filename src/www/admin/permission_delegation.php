@@ -36,7 +36,7 @@ $site_admin_permission_checker  = new SiteAdministratorPermissionChecker($user_g
 
 $user_group_dao     = new UserGroupDao();
 $user_group_factory = new User_ForgeUserGroupFactory($user_group_dao);
-$user_group_manager = new User_ForgeUserGroupManager($user_group_dao);
+$user_group_manager = new User_ForgeUserGroupManager($user_group_dao, $site_admin_permission_checker);
 
 $user_group_users_dao     = new User_ForgeUserGroupUsersDao();
 $user_group_users_factory = new User_ForgeUserGroupUsersFactory($user_group_users_dao);
@@ -52,8 +52,9 @@ $controller = new Admin_PermissionDelegationController(
     $user_group_users_factory,
     $user_group_users_manager,
     UserManager::instance(),
-    new SiteAdministratorPermissionChecker($user_group_permissions_dao),
-    new PermissionPresenterBuilder()
+    $site_admin_permission_checker,
+    new PermissionPresenterBuilder(),
+    $user_group_permissions_dao
 );
 
 $controller->process();

@@ -20,6 +20,7 @@
 
 use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
+use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
 
 class User_ForgeUserGroupPermissionsFactory {
 
@@ -60,9 +61,9 @@ class User_ForgeUserGroupPermissionsFactory {
     /**
      * @return User_ForgeUserGroupPermission[]
      */
-    public function getAllUnusedForgePermissionsForForgeUserGroup(User_ForgeUGroup $user_group) {
+    public function getAllUnusedForgePermissionsForForgeUserGroup(UserForgeUGroupPresenter $user_group) {
         $unused_permissions    = array();
-        $group_permissions_ids = $this->extractPermissionIds($this->permissions_dao->getPermissionsForForgeUGroup($user_group->getId()));
+        $group_permissions_ids = $this->extractPermissionIds($this->permissions_dao->getPermissionsForForgeUGroup($user_group->id));
         $all_permissions_ids   = $this->getAllAvailableForgePermissionIds();
 
         $remaining_permission_ids = array_diff($all_permissions_ids, $group_permissions_ids);

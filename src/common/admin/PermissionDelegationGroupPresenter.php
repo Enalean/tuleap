@@ -1,4 +1,7 @@
 <?php
+
+use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
+
 /**
   * Copyright (c) Enalean, 2014. All rights reserved
   *
@@ -18,22 +21,12 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_PermissionDelegationGroupPresenter {
-
+class Admin_PermissionDelegationGroupPresenter
+{
     /**
      * @var int
      */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $description;
+    public $id;
 
     /**
      * @var boolean
@@ -41,7 +34,7 @@ class Admin_PermissionDelegationGroupPresenter {
     private $is_current;
 
     /**
-     * @var  Tuleap\admin\PermissionDelegationPermissionsForForgeUserGroupPresenter[]
+     * @var  Tuleap\admin\PermissionDelegation\PermissionPresenter[]
      */
     private $permissions;
 
@@ -55,11 +48,9 @@ class Admin_PermissionDelegationGroupPresenter {
      */
     private $group;
 
-    public function __construct(User_ForgeUGroup $group, array $permissions, $users)
+    public function __construct(UserForgeUGroupPresenter $group, array $permissions, $users)
     {
-        $this->id          = $group->getId();
-        $this->title       = $group->getName();
-        $this->description = $group->getDescription();
+        $this->id          = $group->id;
         $this->is_current  = false;
         $this->permissions = $permissions;
         $this->users       = $users;
@@ -71,24 +62,8 @@ class Admin_PermissionDelegationGroupPresenter {
         return $this->group;
     }
 
-    public function id() {
-        return $this->id;
-    }
-
-    public function title() {
-        return $this->title;
-    }
-
-    public function description() {
-        return $this->description;
-    }
-
     public function description_label() {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_description');
-    }
-
-    public function has_description() {
-        return $this->description !== '';
     }
 
     public function group_action_edit() {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014- 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupManager_BaseTest extends TuleapTestCase {
+class User_ForgeUserGroupManager_BaseTest extends TuleapTestCase
+{
 
     /**
      * @var User_ForgeUserGroupPermissionsDao
@@ -30,9 +31,13 @@ class User_ForgeUserGroupManager_BaseTest extends TuleapTestCase {
      */
     protected $factory;
 
-    public function setUp() {
-        $this->dao     = mock('UserGroupDao');
-        $this->manager = new User_ForgeUserGroupManager($this->dao);
+    public function setUp()
+    {
+        $this->dao = mock('UserGroupDao');
+        $this->manager = new User_ForgeUserGroupManager(
+            $this->dao,
+            mock('Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker')
+        );
     }
 }
 
@@ -92,5 +97,3 @@ class User_ForgeUserGroupFactory_UpdateUserGroupTest extends User_ForgeUserGroup
         $this->assertTrue($update);
     }
 }
-
-?>

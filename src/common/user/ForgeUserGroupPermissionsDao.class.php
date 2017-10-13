@@ -85,4 +85,18 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
 
         return $this->retrieve($sql)->count() > 1;
     }
+
+    public function isUGroupTheOnlyOneWithPlatformAdministrationPermission($permission_id, $ugroup_id)
+    {
+        $permission_id = $this->da->escapeInt($permission_id);
+        $ugroup_id     = $this->da->escapeInt($ugroup_id);
+
+        $sql = "SELECT *
+                FROM  ugroup
+                JOIN ugroup_forge_permission ON ugroup.ugroup_id = ugroup_forge_permission.ugroup_id
+                WHERE permission_id = $permission_id
+                AND ugroup.ugroup_id <> $ugroup_id";
+
+        return $this->retrieve($sql)->count() > 0;
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2014. All rights reserved
+  * Copyright (c) Enalean, 2014 - 2017. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -18,7 +18,10 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_PermissionDelegationGroupModalPresenter {
+use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
+
+class Admin_PermissionDelegationGroupModalPresenter
+{
 
     /**
      * @var int
@@ -41,13 +44,13 @@ class Admin_PermissionDelegationGroupModalPresenter {
     private $is_new;
 
 
-    public function __construct(User_ForgeUGroup $group = null) {
+    public function __construct(UserForgeUGroupPresenter $group = null) {
         $this->is_new = true;
 
         if ($group) {
-            $this->id          = $group->getId();
-            $this->name        = $group->getName();
-            $this->description = $group->getDescription();
+            $this->id          = $group->id;
+            $this->name        = $group->name;
+            $this->description = $group->description;
             $this->is_new            = false;
         }
     }
