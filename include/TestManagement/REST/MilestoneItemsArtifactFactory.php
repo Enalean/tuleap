@@ -24,7 +24,10 @@ use EventManager;
 use Project;
 use PFUser;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_ArtifactLink;
+use DataAccessResult;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
+use Tuleap\TestManagement\Event\GetItemsFromMilestone;
 
 class MilestoneItemsArtifactFactory
 {
@@ -56,26 +59,50 @@ class MilestoneItemsArtifactFactory
 
     public function getCoverTestDefinitionsUserCanViewForMilestone(PFUser $user, Project $project, $milestone_id)
     {
-        $test_def_tracker_id = $this->config->getTestDefinitionTrackerId($project);
-        $test_definitions    = array();
+        $test_definitions = array();
 
-        $event = new \Tuleap\TestManagement\Event\GetItemsFromMilestone($user, $milestone_id);
+        $event = new GetItemsFromMilestone($user, $milestone_id);
         $this->event_manager->processEvent($event);
 
+        $this->addCoveredBy($user, $test_definitions, $event, $project);
+        $this->addChildren($user, $test_definitions, $event, $project);
+
+        return $test_definitions;
+    }
+
+    private function addCoveredBy(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project)
+    {
         $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
             $event->getItemsIds(),
             NatureCoveredByPresenter::NATURE_COVERED_BY,
-            $test_def_tracker_id,
+            $this->config->getTestDefinitionTrackerId($project),
             PHP_INT_MAX,
             0
         );
 
+        $this->appendArtifactsUserCanView($user, $test_definitions, $results);
+    }
+
+    private function addChildren(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project)
+    {
+        $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
+            $event->getItemsIds(),
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            $this->config->getTestDefinitionTrackerId($project),
+            PHP_INT_MAX,
+            0
+        );
+
+        $this->appendArtifactsUserCanView($user, $test_definitions, $results);
+    }
+
+    private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, DataAccessResult $results)
+    {
         foreach ($results as $row) {
             $test_def_artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
             if ($test_def_artifact->userCanView($user)) {
                 $test_definitions[] = $test_def_artifact;
             }
         }
-        return $test_definitions;
     }
 }
