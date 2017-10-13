@@ -473,7 +473,12 @@ class AgileDashboardPlugin extends Plugin {
     public function cssfile($params)
     {
         if ($this->isAnAgiledashboardRequest() && ! $this->isKanbanURL()) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $theme_include_assets = new IncludeAssets(
+                AGILEDASHBOARD_BASE_DIR . '/../www/themes/FlamingParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
+            $css_file_url = $theme_include_assets->getFileURL('style.css');
+            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
 
             if ($this->isPlanningV2URL()) {
                 echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/planning-v2/dist/planning-v2.css" />';
@@ -499,9 +504,14 @@ class AgileDashboardPlugin extends Plugin {
 
     public function burning_parrot_get_stylesheets(array $params)
     {
+        $theme_include_assets = new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/themes/BurningParrot/assets',
+            $this->getThemePath() . '/assets'
+        );
+
         if ($this->isInDashboard() || $this->isKanbanURL()) {
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Layout\IncludeAssets;
 
 require_once 'common/templating/TemplateRenderer.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
@@ -125,8 +126,14 @@ class FlamingParrot_Theme extends Layout {
         echo $this->include_asset->getHTMLSnippet('tuleap_subset_flamingparrot.js');
     }
 
-    protected function displayCommonStylesheetElements($params) {
+    protected function displayCommonStylesheetElements($params)
+    {
         $this->displayFontAwesomeStylesheetElements();
+
+        $core_flaming_parrot_include_assets = new IncludeAssets(
+            ForgeConfig::get('tuleap_dir') . '/src/www/themes/FlamingParrot/assets',
+            '/themes/FlamingParrot/assets'
+        );
 
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
@@ -135,11 +142,14 @@ class FlamingParrot_Theme extends Layout {
         echo '<link rel="stylesheet" type="text/css" href="/scripts/vendor/at/css/atwho.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($this->getCSSThemeFile()) .'" />';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
+
+        $style_css_url = $core_flaming_parrot_include_assets->getFileURL($this->getCSSThemeFile());
+        echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
+        $print_css_url = $core_flaming_parrot_include_assets->getFileURL('print.css');
+        echo '<link rel="stylesheet" type="text/css" href="' . $print_css_url . '" media="print" />';
 
         $custom_dir = $GLOBALS['codendi_dir'].'/src/www'.$this->getStylesheetTheme('').'custom';
-        foreach(glob($custom_dir.'/*.css') as $custom_css_file) {
+        foreach (glob($custom_dir.'/*.css') as $custom_css_file) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('custom/'.basename($custom_css_file)) .'" />';
         }
 

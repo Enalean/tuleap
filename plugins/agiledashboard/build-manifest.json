@@ -14,7 +14,8 @@
             "includes": [
                 "../../src/www/themes/FlamingParrot/css/utils"
             ],
-            "target_dir": "www/themes/FlamingParrot/css"
+            "target_dir": "www/themes/FlamingParrot/assets",
+            "is_revisioned": true
         },
         "BurningParrot": {
             "files": [
@@ -41,7 +42,8 @@
                 "www/themes/BurningParrot/css/**/_*.scss",
                 "../tracker/www/scripts/angular-artifact-modal/src/**/*.scss"
             ],
-            "target_dir": "www/themes/BurningParrot/css"
+            "target_dir": "www/themes/BurningParrot/assets",
+            "is_revisioned": true
         }
     },
     "javascript": [
