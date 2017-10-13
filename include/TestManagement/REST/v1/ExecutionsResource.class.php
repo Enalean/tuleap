@@ -109,7 +109,9 @@ class ExecutionsResource {
             $this->user_manager,
             $this->formelement_factory,
             $conformance_validator,
-            $this->assigned_to_representation_builder
+            $this->assigned_to_representation_builder,
+            new ArtifactDao(),
+            $this->artifact_factory
         );
 
         $this->node_js_client         = new NodeJSClient();

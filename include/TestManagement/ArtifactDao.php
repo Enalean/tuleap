@@ -162,4 +162,29 @@ class ArtifactDao extends DataAccessObject
 
         return $this->retrieveFirstRow($sql);
     }
+
+    public function searchPaginatedExecutionArtifactsForCampaign(
+        $campaign_artifact_id,
+        $execution_tracker_id,
+        $limit,
+        $offset
+    ) {
+        $campaign_artifact_id = $this->da->escapeInt($campaign_artifact_id);
+        $execution_tracker_id = $this->da->escapeInt($execution_tracker_id);
+        $limit                = $this->da->escapeInt($limit);
+        $offset               = $this->da->escapeInt($offset);
+
+        $sql = "SELECT DISTINCT SQL_CALC_FOUND_ROWS linked_art.*
+                FROM tracker_artifact parent_art
+                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                    INNER JOIN tracker_artifact                     linked_art ON (linked_art.id = artlink.artifact_id)
+                WHERE parent_art.id = $campaign_artifact_id
+                  AND linked_art.tracker_id = $execution_tracker_id
+                LIMIT $limit
+                OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
 }
