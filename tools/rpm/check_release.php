@@ -51,7 +51,7 @@ foreach ($tags->list->entry as $entry) {
             $maxEntry = $entry;
         }
     } else {
-       $maxEntry = $entry; 
+       $maxEntry = $entry;
     }
 }
 
@@ -69,7 +69,6 @@ $plugins   = array();
 $themes    = array();
 $toCheck   = array();
 $soap      = false;
-$cli       = false;
 $diff = simplexml_load_string(shell_exec('svn diff --xml --summarize '.$tagUrl.' '.$rootSvnUrl));
 foreach ($diff->xpath('paths/path') as $path) {
     $fullURL = (string) $path;
@@ -82,9 +81,6 @@ foreach ($diff->xpath('paths/path') as $path) {
     $match = array();
     if (preg_match('%^(/plugins/[^/]+)/%', $p, $match)) {
         $plugins[$match[1]] = true;
-    }
-    if (preg_match('%^/cli/%', $p)) {
-        $cli = true;
     }
     if (preg_match('%^/src/www/soap/%', $p)) {
         $soap = true;
@@ -119,8 +115,4 @@ if (count($themes) > 0) {
 
 if ($soap) {
     echo "Soap path changed, please check (not automated yet)".PHP_EOL;
-}
-
-if ($cli) {
-    echo "CLI sources path changed, please check (not automated yet)".PHP_EOL;
 }
