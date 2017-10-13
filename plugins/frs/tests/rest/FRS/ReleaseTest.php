@@ -57,8 +57,10 @@ class ReleaseTest extends RestBase
     public function testPOSTRelease()
     {
         $post_resource = json_encode(array(
-            'package_id' => 1,
-            'name'       => 'Paleo Pumpkin Bread'
+            'package_id'   => 1,
+            'name'         => 'Paleo Pumpkin Bread',
+            'release_note' => 'Philophobia',
+            'changelog'    => 'Food & Dining'
         ));
 
         $response = $this->getResponse($this->client->post('frs_release', null, $post_resource));
@@ -67,5 +69,7 @@ class ReleaseTest extends RestBase
         $this->assertEquals(201, $response->getStatusCode());
         $this->assertEquals(2, $release['id']);
         $this->assertEquals('Paleo Pumpkin Bread', $release['name']);
+        $this->assertEquals('Philophobia', $release['release_note']);
+        $this->assertEquals('Food & Dining', $release['changelog']);
     }
 }

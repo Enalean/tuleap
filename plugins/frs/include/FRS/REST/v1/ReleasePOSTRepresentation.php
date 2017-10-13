@@ -31,4 +31,14 @@ class ReleasePOSTRepresentation
      * @var name {@type string} {@required true}
      */
     public $name;
+
+    /**
+     * @var release_note {@type string} {@required false}
+     */
+    public $release_note;
+
+    /**
+     * @var changelog {@type string} {@required false}
+     */
+    public $changelog;
 }
