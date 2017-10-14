@@ -21,8 +21,10 @@
 use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\AdminDao;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
+use Tuleap\Timesheeting\Fieldset\FieldsetPresenter;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
 use Tuleap\Timesheeting\Router;
+use Tuleap\Tracker\Artifact\Event\GetAdditionalContent;
 
 require_once 'autoload.php';
 require_once 'constants.php';
@@ -39,8 +41,11 @@ class timesheetingPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
+        $this->addHook('cssfile');
+
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook(TRACKER_EVENT_FETCH_ADMIN_BUTTONS);
+            $this->addHook(GetAdditionalContent::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -57,6 +62,20 @@ class timesheetingPlugin extends Plugin
     public function getDependencies()
     {
         return array('tracker');
+    }
+
+    public function cssfile($params)
+    {
+        $include_tracker_css_file = false;
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_INCLUDE_CSS_FILE,
+            array('include_tracker_css_file' => &$include_tracker_css_file)
+        );
+        // Only show the stylesheet if we're actually in the tracker pages.
+        // This stops styles inadvertently clashing with the main site.
+        if ($include_tracker_css_file) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
     }
 
     /**
@@ -107,5 +126,18 @@ class timesheetingPlugin extends Plugin
         );
 
         $GLOBALS['Response']->redirect('/');
+    }
+
+    public function tracker_view_get_additional_content(GetAdditionalContent $event)
+    {
+        $renderer  = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
+        $presenter = new FieldsetPresenter();
+
+        $content = $renderer->renderToString(
+            'fieldset',
+            $presenter
+        );
+
+        $event->setContent($content);
     }
 }

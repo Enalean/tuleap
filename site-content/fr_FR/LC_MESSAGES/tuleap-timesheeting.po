@@ -15,6 +15,9 @@ msgstr "Valider"
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."
 
+msgid "There is nothing here ... for now ..."
+msgstr "Cet espace est vide ... pour le moment ..."
+
 msgid "Timesheeting"
 msgstr "Timesheeting"
 

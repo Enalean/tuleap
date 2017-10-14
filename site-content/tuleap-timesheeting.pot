@@ -10,6 +10,9 @@ msgstr ""
 msgid "The request is not valid."
 msgstr ""
 
+msgid "There is nothing here ... for now ..."
+msgstr ""
+
 msgid "Timesheeting"
 msgstr ""
 
