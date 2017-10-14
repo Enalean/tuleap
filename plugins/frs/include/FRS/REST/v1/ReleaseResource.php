@@ -108,11 +108,17 @@ class ReleaseResource extends AuthenticatedResource
     /**
      * Create release
      *
-     * Create a release in a given active package
+     * Create an active release in a given active package
      *
      * <p>Example of payload:</p>
      * <pre>
      * { "package_id": 42, "name": "Cajun Chicken Pasta 2.0" }
+     * </pre>
+     *
+     * <br>
+     * <p>You can also add release notes and/or changelog (optional, default is empty string):</p>
+     * <pre>
+     * { "package_id": 42, "name": "Cajun Chicken Pasta 2.0", "release_note": "Important informations…" }
      * </pre>
      *
      * @url POST
@@ -149,8 +155,8 @@ class ReleaseResource extends AuthenticatedResource
         $release_array = array(
             'package_id' => $body->package_id,
             'name'       => $body->name,
-            'notes'      => '',
-            'changes'    => '',
+            'notes'      => $body->release_note,
+            'changes'    => $body->changelog,
             'status_id'  => FRSRelease::STATUS_ACTIVE
         );
 
