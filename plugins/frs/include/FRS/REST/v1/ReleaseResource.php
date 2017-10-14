@@ -76,7 +76,7 @@ class ReleaseResource extends AuthenticatedResource
      */
     public function getId($id)
     {
-        $this->sendAllowOptions();
+        $this->sendAllowOptionsForRelease();
 
         $release = $this->release_factory->getFRSReleaseFromDb($id);
 
@@ -180,7 +180,7 @@ class ReleaseResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTION {id}
+     * @url OPTIONS
      */
     public function options()
     {
@@ -189,7 +189,20 @@ class ReleaseResource extends AuthenticatedResource
 
     private function sendAllowOptions()
     {
-        Header::allowOptionsGetPost();
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsId()
+    {
+        $this->sendAllowOptionsForRelease();
+    }
+
+    private function sendAllowOptionsForRelease()
+    {
+        Header::allowOptionsGet();
     }
 
     /**
