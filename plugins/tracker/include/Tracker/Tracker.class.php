@@ -147,7 +147,21 @@ class Tracker implements Tracker_Dispatchable_Interface
      * @return string the url of the form to submit a new artifact
      */
     public function getSubmitUrl() {
-        return TRACKER_BASE_URL .'/?tracker='. $this->getId() .'&func=new-artifact';
+        return TRACKER_BASE_URL . '/?' . http_build_query(array(
+            'tracker' => $this->getId(),
+            'func'    => 'new-artifact'
+        ));
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdministrationUrl()
+    {
+        return TRACKER_BASE_URL . '/?' . http_build_query(array(
+            'tracker' => $this->getId(),
+            'func'    => 'admin'
+        ));
     }
 
     /**
@@ -817,7 +831,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     } else {
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_cancel_deleted'));
                     }
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId().'&func=admin');
+                    $GLOBALS['Response']->redirect($this->getAdministrationUrl());
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -1281,7 +1295,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($this->userIsAdmin()) {
             $toolbar[] = array(
                     'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
-                    'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin'
+                    'url'   => $this->getAdministrationUrl()
             );
         }
         $toolbar[] = array(
@@ -1402,7 +1416,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     array(
                         array(
                                 'title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration'),
-                                'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin',
+                                'url'   => $this->getAdministrationUrl(),
                         ),
                     ),
                     $breadcrumbs
