@@ -20,21 +20,31 @@
 
 namespace Tuleap\FRS\REST\v1;
 
-use Tuleap\FRS\UploadedLinksRetriever;
-use Tuleap\REST\JsonCast;
+use ForgeConfig;
 use FRSRelease;
 use PFUser;
-use ForgeConfig;
-use Tuleap\Project\REST\ProjectReference;
-use Tuleap\FRS\Link\Retriever;
-use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
-use Tracker_FormElementFactory;
 use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use Tuleap\FRS\Link\Retriever;
+use Tuleap\FRS\UploadedLinksRetriever;
+use Tuleap\Project\REST\ProjectReference;
+use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class ReleaseRepresentation
 {
     const ROUTE = 'frs_release';
+
+    const STATUS_ACTIVE  = 'active';
+    const STATUS_DELETED = 'deleted';
+    const STATUS_HIDDEN  = 'hidden';
+
+    public static $STATUS = array(
+        FRSRelease::STATUS_ACTIVE  => self::STATUS_ACTIVE,
+        FRSRelease::STATUS_DELETED => self::STATUS_DELETED,
+        FRSRelease::STATUS_HIDDEN  => self::STATUS_HIDDEN
+    );
 
     /**
      * @var id {@type int}
@@ -96,6 +106,11 @@ class ReleaseRepresentation
      */
     public $package;
 
+    /**
+     * @var $status {@type string}
+     */
+    public $status;
+
     public function build(FRSRelease $release, Retriever $link_retriever, PFUser $user, UploadedLinksRetriever $uploaded_links_retriever)
     {
         $this->id           = JsonCast::toInt($release->getReleaseID());
@@ -103,6 +118,7 @@ class ReleaseRepresentation
         $this->changelog    = $release->getChanges();
         $this->release_note = $release->getNotes();
         $this->name         = $release->getName();
+        $this->status       = self::$STATUS[$release->getStatusID()];
         $this->package      = new PackageMinimalRepresentation();
         $this->package->build($release->getPackage());
 

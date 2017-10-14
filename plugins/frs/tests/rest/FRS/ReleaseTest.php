@@ -60,7 +60,8 @@ class ReleaseTest extends RestBase
             'package_id'   => 1,
             'name'         => 'Paleo Pumpkin Bread',
             'release_note' => 'Philophobia',
-            'changelog'    => 'Food & Dining'
+            'changelog'    => 'Food & Dining',
+            'status'       => 'hidden'
         ));
 
         $response = $this->getResponse($this->client->post('frs_release', null, $post_resource));
@@ -71,5 +72,6 @@ class ReleaseTest extends RestBase
         $this->assertEquals('Paleo Pumpkin Bread', $release['name']);
         $this->assertEquals('Philophobia', $release['release_note']);
         $this->assertEquals('Food & Dining', $release['changelog']);
+        $this->assertEquals('hidden', $release['status']);
     }
 }

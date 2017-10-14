@@ -108,7 +108,7 @@ class ReleaseResource extends AuthenticatedResource
     /**
      * Create release
      *
-     * Create an active release in a given active package
+     * Create a release in a given active package
      *
      * <p>Example of payload:</p>
      * <pre>
@@ -119,6 +119,13 @@ class ReleaseResource extends AuthenticatedResource
      * <p>You can also add release notes and/or changelog (optional, default is empty string):</p>
      * <pre>
      * { "package_id": 42, "name": "Cajun Chicken Pasta 2.0", "release_note": "Important informations…" }
+     * </pre>
+     *
+     * <br>
+     * <p>By default the release is active. You can set the status to hidden instead
+     * (allowed values for status are "active" or "hidden"):</p>
+     * <pre>
+     * { "package_id": 42, "name": "Cajun Chicken Pasta 2.0", "status": "hidden" }
      * </pre>
      *
      * @url POST
@@ -157,7 +164,7 @@ class ReleaseResource extends AuthenticatedResource
             'name'       => $body->name,
             'notes'      => $body->release_note,
             'changes'    => $body->changelog,
-            'status_id'  => FRSRelease::STATUS_ACTIVE
+            'status_id'  => $this->getStatusIdFromLiteralStatus($body->status)
         );
 
         $id = $this->release_factory->create($release_array);
@@ -183,5 +190,17 @@ class ReleaseResource extends AuthenticatedResource
     private function sendAllowOptions()
     {
         Header::allowOptionsGetPost();
+    }
+
+    /**
+     * @return int
+     */
+    private function getStatusIdFromLiteralStatus($status)
+    {
+        if (! $status) {
+            return FRSRelease::STATUS_ACTIVE;
+        }
+
+        return array_search($status, ReleaseRepresentation::$STATUS);
     }
 }
