@@ -21,6 +21,7 @@
 namespace Tuleap\FRS\REST;
 
 use Project;
+use Tuleap\FRS\REST\v1\FileRepresentation;
 use Tuleap\FRS\REST\v1\PackageMinimalRepresentation;
 use Tuleap\FRS\REST\v1\ReleaseRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
@@ -31,6 +32,7 @@ class ResourcesInjector
     {
         $restler->addAPIClass('\\Tuleap\\FRS\\REST\\v1\\ReleaseResource', ReleaseRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\FRS\\REST\\v1\\PackageResource', PackageMinimalRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\FRS\\REST\\v1\\FileResource', FileRepresentation::ROUTE);
     }
 
     public function declareProjectResource(array &$resources, Project $project)

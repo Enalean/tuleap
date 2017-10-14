@@ -22,7 +22,6 @@ namespace Tuleap\FRS\REST\v1;
 
 use Tuleap\REST\JsonCast;
 use FRSFile;
-use Codendi_HTMLPurifier;
 use UserManager;
 use FRSProcessorDao;
 use FRSFileTypeDao;
@@ -31,10 +30,17 @@ use Tuleap\User\REST\UserRepresentation;
 
 class FileRepresentation
 {
+    const ROUTE = 'frs_files';
+
     /**
      * @var id {@type int}
      */
     public $id;
+
+    /**
+     * @var uri {@type string}
+     */
+    public $uri;
 
     /**
      * @var $name {@type string}
@@ -89,6 +95,7 @@ class FileRepresentation
     public function build(FRSFile $file)
     {
         $this->id            = JsonCast::toInt($file->getFileID());
+        $this->uri           = self::ROUTE . '/' . $this->id;
         $this->name          = $this->retrieveOnlyFileName($file);
         $this->download_url  = '/file/download.php/' . urlencode($file->getGroup()->getID()) . "/" .urlencode($this->id) . "/" . urlencode($this->name);
         $this->file_size     = JsonCast::toInt($file->getFileSize());
