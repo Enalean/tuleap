@@ -41,4 +41,9 @@ class ReleasePOSTRepresentation
      * @var changelog {@type string} {@required false}
      */
     public $changelog;
+
+    /**
+     * @var status {@type string} {@required false} {@choice active,hidden}
+     */
+    public $status;
 }
