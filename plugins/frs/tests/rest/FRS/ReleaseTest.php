@@ -46,7 +46,7 @@ class ReleaseTest extends RestBase
     public function testOPTIONSRelease()
     {
         $response = $this->getResponse($this->client->options('frs_release/1'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETRelease()
@@ -79,5 +79,22 @@ class ReleaseTest extends RestBase
         $this->assertEquals('Philophobia', $release['release_note']);
         $this->assertEquals('Food & Dining', $release['changelog']);
         $this->assertEquals('hidden', $release['status']);
+    }
+
+    public function testPATCHRelease()
+    {
+        $resource_uri = 'frs_release/1';
+
+        $release = $this->getResponse($this->client->get($resource_uri))->json();
+        $this->assertEquals($release['name'], 'release1');
+
+        $patch_resource = json_encode(array(
+            'name' => 'Release 1.1',
+        ));
+        $response = $this->getResponse($this->client->patch($resource_uri, null, $patch_resource));
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $release = $this->getResponse($this->client->get($resource_uri))->json();
+        $this->assertEquals($release['name'], 'Release 1.1');
     }
 }

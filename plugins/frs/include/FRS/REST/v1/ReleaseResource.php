@@ -78,11 +78,7 @@ class ReleaseResource extends AuthenticatedResource
     {
         $this->sendAllowOptionsForRelease();
 
-        $release = $this->release_factory->getFRSReleaseFromDb($id);
-
-        if (! $release) {
-            throw new RestException(404, "Release not found");
-        }
+        $release = $this->getRelease($id);
 
         $release_representation = new ReleaseRepresentation();
         $user                   = $this->user_manager->getCurrentUser();
@@ -180,6 +176,43 @@ class ReleaseResource extends AuthenticatedResource
     }
 
     /**
+     * Update release
+     *
+     * Update the metadata of a release. Only name, release_note, changelog and/or status can be changed for now.
+     *
+     * <p>Example to change the name:</p>
+     * <pre>
+     * { "name": "Cajun Chicken Pasta 2.1" }
+     * </pre>
+     *
+     * @url PATCH {id}
+     * @access hybrid
+     *
+     * @param int $id
+     * @param ReleasePATCHRepresentation $body
+     */
+    public function patchId($id, ReleasePATCHRepresentation $body)
+    {
+        $this->sendAllowOptionsForRelease();
+
+        $user    = $this->user_manager->getCurrentUser();
+        $release = $this->getRelease($id);
+
+        if (! $this->release_factory->userCanUpdate($release->getGroupID(), $release->getReleaseID(), $user->getId())) {
+            throw new RestException(403, "Write access to release denied");
+        }
+
+        $release_array = $this->getArrayForUpdateRelease($release, $body);
+
+        if (count($release_array) > 1) {
+            $is_success = $this->release_factory->update($release_array);
+            if (! $is_success) {
+                throw new RestException(500, "An error occurred while updating the release");
+            }
+        }
+    }
+
+    /**
      * @url OPTIONS
      */
     public function options()
@@ -202,7 +235,7 @@ class ReleaseResource extends AuthenticatedResource
 
     private function sendAllowOptionsForRelease()
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     /**
@@ -215,5 +248,58 @@ class ReleaseResource extends AuthenticatedResource
         }
 
         return array_search($status, ReleaseRepresentation::$STATUS);
+    }
+
+    /**
+     * @param $id
+     * @return FRSRelease
+     */
+    private function getRelease($id)
+    {
+        $release = $this->release_factory->getFRSReleaseFromDb($id);
+
+        if (! $release) {
+            throw new RestException(404);
+        }
+
+        return $release;
+    }
+
+    /**
+     * @param $release
+     * @param ReleasePATCHRepresentation $body
+     * @return array
+     */
+    private function getArrayForUpdateRelease($release, ReleasePATCHRepresentation $body)
+    {
+        $release_id = (int) $release->getReleaseID();
+        $package_id = (int) $release->getPackageID();
+
+        $release_array = array(
+            'release_id' => $release_id
+        );
+
+        if ($body->name) {
+            $with_same_name_release_id = (int) $this->release_factory->getReleaseIdByName($body->name, $package_id);
+            if ($with_same_name_release_id && $with_same_name_release_id !== $release_id) {
+                throw new RestException(409, "Release name '{$body->name}' already exists in this package");
+            }
+
+            $release_array['name'] = $body->name;
+        }
+
+        if ($body->release_note) {
+            $release_array['notes'] = $body->release_note;
+        }
+
+        if ($body->changelog) {
+            $release_array['changes'] = $body->changelog;
+        }
+
+        if ($body->status) {
+            $release_array['status_id'] = $this->getStatusIdFromLiteralStatus($body->status);
+        }
+
+        return $release_array;
     }
 }

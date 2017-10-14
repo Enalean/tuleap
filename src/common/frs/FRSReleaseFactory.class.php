@@ -201,9 +201,12 @@ class FRSReleaseFactory {
 		return $dar->valid();
 
 	}
-	
-    
-    function getReleaseIdByName($release_name, $package_id){
+
+
+    /**
+     * @return int|null
+     */
+    public function getReleaseIdByName($release_name, $package_id){
     	$_id = (int) $package_id;
         $dao =& $this->_getFRSReleaseDao();
         $dar = $dao->searchReleaseByName($release_name, $_id);
