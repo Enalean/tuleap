@@ -21,53 +21,30 @@
 namespace Tuleap\Timesheeting;
 
 use Codendi_Request;
-use CSRFSynchronizerToken;
 use Feedback;
-use TemplateRendererFactory;
+use Tracker;
 use TrackerFactory;
 use TrackerManager;
-use Tuleap\Timesheeting\Admin\AdminPresenter;
+use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
 
 class Router
 {
     /**
-     * @var TrackerFactory
+     * @var AdminController
      */
-    private $tracker_factory;
+    private $admin_controller;
 
-    /**
-     * @var TrackerManager
-     */
-    private $tracker_manager;
-
-    /**
-     * @var TimesheetingEnabler
-     */
-    private $enabler;
-
-    public function __construct(
-        TrackerFactory $tracker_factory,
-        TrackerManager $tracker_manager,
-        TimesheetingEnabler $enabler
-    ) {
-        $this->tracker_factory = $tracker_factory;
-        $this->tracker_manager = $tracker_manager;
-        $this->enabler         = $enabler;
+    public function __construct(AdminController $admin_controller)
+    {
+        $this->admin_controller = $admin_controller;
     }
 
-    public function route(Codendi_Request $request)
+    public function route(Codendi_Request $request, Tracker $tracker)
     {
-        $tracker_id = $request->get('tracker');
-        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
-
-        if (! $tracker) {
-            $this->redirectToTuleapHomepage();
-        }
-
-        $user   = $request->getCurrentUser();
-        $action = $request->get('action');
-        $csrf   = new CSRFSynchronizerToken($this->getTrackerAdminUrl($tracker_id));
+        $user       = $request->getCurrentUser();
+        $action     = $request->get('action');
+        $tracker_id = $tracker->getId();
 
         switch ($action) {
             case "admin-timesheeting":
@@ -75,24 +52,7 @@ class Router
                     $this->redirectToTrackerHomepage($tracker_id);
                 }
 
-                $renderer  = TemplateRendererFactory::build()->getRenderer(TIMESHEETING_TEMPLATE_DIR);
-                $presenter = new AdminPresenter(
-                    $tracker,
-                    $csrf,
-                    $this->enabler->isTimesheetingEnabledForTracker($tracker)
-                );
-
-                $tracker->displayAdminItemHeader(
-                    $this->tracker_manager,
-                    'timesheeting'
-                );
-
-                $renderer->renderToPage(
-                    'tracker-admin',
-                    $presenter
-                );
-
-                $tracker->displayFooter($this->tracker_manager);
+                $this->admin_controller->displayAdminForm($tracker);
 
                 break;
             case "edit-timesheeting":
@@ -100,23 +60,7 @@ class Router
                     $this->redirectToTrackerHomepage($tracker_id);
                 }
 
-                $csrf->check();
-
-                if ($request->get('enable_timesheeting') && ! $this->enabler->isTimesheetingEnabledForTracker($tracker)) {
-                    $this->enabler->enableTimesheetingForTracker($tracker);
-
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::INFO,
-                        dgettext('tuleap-timesheeting', 'Timesheeting is enabled for tracker.')
-                    );
-                } elseif (! $request->get('enable_timesheeting') && $this->enabler->isTimesheetingEnabledForTracker($tracker)) {
-                    $this->enabler->disableTimesheetingForTracker($tracker);
-
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::INFO,
-                        dgettext('tuleap-timesheeting', 'Timesheeting is disabled for tracker.')
-                    );
-                }
+                $this->admin_controller->editTimesheetingAdminSettings($tracker, $request);
 
                 $this->redirectToTimesheetingAdminPage($tracker_id);
                 break;
@@ -125,16 +69,6 @@ class Router
 
                 break;
         }
-    }
-
-    private function redirectToTuleapHomepage()
-    {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            dgettext('tuleap-timesheeting', 'The request is not valid.')
-        );
-
-        $GLOBALS['Response']->redirect('/');
     }
 
     private function redirectToTrackerHomepage($tracker_id)
@@ -151,16 +85,14 @@ class Router
         $GLOBALS['Response']->redirect($url);
     }
 
-    private function redirectToTrackerAdminPage($tracker_id)
+    private function redirectToTrackerAdminPage(Tracker $tracker)
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             dgettext('tuleap-timesheeting', 'The request is not valid.')
         );
 
-        $url = $this->getTrackerAdminUrl($tracker_id);
-
-        $GLOBALS['Response']->redirect($url);
+        $GLOBALS['Response']->redirect($tracker->getAdministrationUrl());
     }
 
     private function redirectToTimesheetingAdminPage($tracker_id)
@@ -168,17 +100,9 @@ class Router
         $url = TIMESHEETING_BASE_URL . '/?' . http_build_query(array(
                 'tracker' => $tracker_id,
                 'action' => 'admin-timesheeting'
-            ));
+        ));
 
         $GLOBALS['Response']->redirect($url);
 
-    }
-
-    private function getTrackerAdminUrl($tracker_id)
-    {
-        return  TRACKER_BASE_URL . '/?' . http_build_query(array(
-                'tracker' => $tracker_id,
-                'func' => 'admin'
-        ));
     }
 }

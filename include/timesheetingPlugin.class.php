@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Timesheeting\Admin\AdminController;
 use Tuleap\Timesheeting\Admin\AdminDao;
 use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
@@ -79,12 +80,32 @@ class timesheetingPlugin extends Plugin
 
     public function process(Codendi_Request $request)
     {
+        $tracker_factory = TrackerFactory::instance();
+        $tracker_id      = $request->get('tracker');
+        $tracker         = $tracker_factory->getTrackerById($tracker_id);
+
+        if (! $tracker) {
+            $this->redirectToTuleapHomepage();
+        }
+
         $router = new Router(
-            TrackerFactory::instance(),
-            new TrackerManager(),
-            new TimesheetingEnabler(new AdminDao())
+            new AdminController(
+                new TrackerManager(),
+                new TimesheetingEnabler(new AdminDao()),
+                new CSRFSynchronizerToken($tracker->getAdministrationUrl())
+            )
         );
 
-        $router->route($request);
+        $router->route($request, $tracker);
+    }
+
+    private function redirectToTuleapHomepage()
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            dgettext('tuleap-timesheeting', 'The request is not valid.')
+        );
+
+        $GLOBALS['Response']->redirect('/');
     }
 }
