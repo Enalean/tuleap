@@ -40,7 +40,13 @@ class ReleaseTest extends RestBase
     public function testOPTIONS()
     {
         $response = $this->getResponse($this->client->options('frs_release'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testOPTIONSRelease()
+    {
+        $response = $this->getResponse($this->client->options('frs_release/1'));
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETRelease()
