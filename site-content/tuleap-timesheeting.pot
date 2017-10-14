@@ -1,6 +1,12 @@
 msgid "Access denied. You don't have permissions to perform this action."
 msgstr ""
 
+msgid "Enable timesheeting for tracker"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
 msgid "The request is not valid."
 msgstr ""
 
@@ -8,4 +14,10 @@ msgid "Timesheeting"
 msgstr ""
 
 msgid "Timesheeting for Tuleap artifacts"
+msgstr ""
+
+msgid "Timesheeting is disabled for tracker."
+msgstr ""
+
+msgid "Timesheeting is enabled for tracker."
 msgstr ""

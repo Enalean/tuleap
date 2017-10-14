@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Timesheeting\Admin\AdminDao;
+use Tuleap\Timesheeting\Admin\TimesheetingEnabler;
 use Tuleap\Timesheeting\TimesheetingPluginInfo;
 use Tuleap\Timesheeting\Router;
 
@@ -77,7 +79,12 @@ class timesheetingPlugin extends Plugin
 
     public function process(Codendi_Request $request)
     {
-        $router = new Router(TrackerFactory::instance(), new TrackerManager());
+        $router = new Router(
+            TrackerFactory::instance(),
+            new TrackerManager(),
+            new TimesheetingEnabler(new AdminDao())
+        );
+
         $router->route($request);
     }
 }

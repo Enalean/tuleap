@@ -2,7 +2,15 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "Access denied. You don't have permissions to perform this action."
-msgstr "Accès refusé. Vous n'avez pas les droits suffisants pour effectuer cette action."
+msgstr ""
+"Accès refusé. Vous n'avez pas les droits suffisants pour effectuer cette "
+"action."
+
+msgid "Enable timesheeting for tracker"
+msgstr "Activer le timesheeting pour ce tracker"
+
+msgid "Submit"
+msgstr "Valider"
 
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."
@@ -12,3 +20,9 @@ msgstr "Timesheeting"
 
 msgid "Timesheeting for Tuleap artifacts"
 msgstr "Timesheeting pour les artefacts de Tuleap"
+
+msgid "Timesheeting is disabled for tracker."
+msgstr "Le timesheeting est désactivé pour ce tracker."
+
+msgid "Timesheeting is enabled for tracker."
+msgstr "Le timesheeting est activé pour ce tracker."

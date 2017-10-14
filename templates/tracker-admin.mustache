@@ -1,1 +1,15 @@
-<p>There is nothing for now here.</p>
+<form action="{{ form_url }}" method="POST">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+
+    <label class="checkbox" for="enable_timesheeting">
+        <input type="checkbox"
+               id="enable_timesheeting"
+               name="enable_timesheeting"
+               {{# is_timesheeting_enabled }} checked="checked" {{/ is_timesheeting_enabled }}
+        /> {{ enable_title }}
+    </label>
+
+    <button type="submit" class="btn btn-primary">{{ submit_label }}</button>
+</form>
