@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS tracker_field_burndown;
 DROP TABLE IF EXISTS tracker_field_computed_cache;
 DROP TABLE IF EXISTS tracker_changeset;
 DROP TABLE IF EXISTS tracker_changeset_comment;
+DROP TABLE IF EXISTS tracker_changeset_comment_fulltext;
 DROP TABLE IF EXISTS tracker_changeset_incomingmail;
 DROP TABLE IF EXISTS tracker_changeset_value;
 DROP TABLE IF EXISTS tracker_changeset_value_file;
