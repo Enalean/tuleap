@@ -205,7 +205,7 @@ class InvalidFieldsCollectorVisitor implements Visitor
         IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidFieldsCollectorParameters $parameters
     ) {
-        $field_name = $comparison->getField();
+        $field_name = $comparison->getField()->getName();
 
         $field = $this->formelement_factory->getUsedFormElementFieldByNameForUser(
             $parameters->getTracker()->getId(),

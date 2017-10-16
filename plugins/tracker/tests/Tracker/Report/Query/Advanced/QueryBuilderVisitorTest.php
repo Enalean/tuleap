@@ -35,6 +35,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
@@ -238,7 +239,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForTextInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new EqualComparison('field', new SimpleValueWrapper('value'));
+        $comparison = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
@@ -247,7 +248,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForIntegerFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new EqualComparison('int', new SimpleValueWrapper(1));
+        $comparison = new EqualComparison(new Field('int'), new SimpleValueWrapper(1));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
@@ -256,7 +257,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForFloatFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new EqualComparison('float', new SimpleValueWrapper(1.23));
+        $comparison = new EqualComparison(new Field('float'), new SimpleValueWrapper(1.23));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
@@ -265,7 +266,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForDateFieldInEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new EqualComparison('date', new SimpleValueWrapper('2017-01-17'));
+        $comparison = new EqualComparison(new Field('date'), new SimpleValueWrapper('2017-01-17'));
 
         $result = $this->query_builder->visitEqualComparison($comparison, $this->parameters);
 
@@ -274,7 +275,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForTextInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new NotEqualComparison('field', new SimpleValueWrapper('value'));
+        $comparison = new NotEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
@@ -283,7 +284,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForIntegerFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new NotEqualComparison('int', new SimpleValueWrapper(1));
+        $comparison = new NotEqualComparison(new Field('int'), new SimpleValueWrapper(1));
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
@@ -292,7 +293,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForFloatFieldInNotEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new NotEqualComparison('float', new SimpleValueWrapper(1.23));
+        $comparison = new NotEqualComparison(new Field('float'), new SimpleValueWrapper(1.23));
 
         $result = $this->query_builder->visitNotEqualComparison($comparison, $this->parameters);
 
@@ -301,7 +302,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForIntegerFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new LesserThanComparison('int', new SimpleValueWrapper(1));
+        $comparison = new LesserThanComparison(new Field('int'), new SimpleValueWrapper(1));
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
@@ -310,7 +311,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForFloatFieldInLesserThanComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new LesserThanComparison('float', new SimpleValueWrapper(1.23));
+        $comparison = new LesserThanComparison(new Field('float'), new SimpleValueWrapper(1.23));
 
         $result = $this->query_builder->visitLesserThanComparison($comparison, $this->parameters);
 
@@ -319,7 +320,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForIntegerFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new GreaterThanComparison('int', new SimpleValueWrapper(1));
+        $comparison = new GreaterThanComparison(new Field('int'), new SimpleValueWrapper(1));
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
@@ -328,7 +329,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForFloatFieldInGreaterThanComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new GreaterThanComparison('float', new SimpleValueWrapper(1.23));
+        $comparison = new GreaterThanComparison(new Field('float'), new SimpleValueWrapper(1.23));
 
         $result = $this->query_builder->visitGreaterThanComparison($comparison, $this->parameters);
 
@@ -337,7 +338,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForIntegerFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new LesserThanOrEqualComparison('int', new SimpleValueWrapper(1));
+        $comparison = new LesserThanOrEqualComparison(new Field('int'), new SimpleValueWrapper(1));
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
@@ -346,7 +347,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForFloatFieldInLesserThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new LesserThanOrEqualComparison('float', new SimpleValueWrapper(1.23));
+        $comparison = new LesserThanOrEqualComparison(new Field('float'), new SimpleValueWrapper(1.23));
 
         $result = $this->query_builder->visitLesserThanOrEqualComparison($comparison, $this->parameters);
 
@@ -355,7 +356,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForIntegerFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new GreaterThanOrEqualComparison('int', new SimpleValueWrapper(1));
+        $comparison = new GreaterThanOrEqualComparison(new Field('int'), new SimpleValueWrapper(1));
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
@@ -364,7 +365,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
     public function itRetrievesForFloatFieldInGreaterThanOrEqualComparisonTheExpertFromAndWhereClausesOfTheField()
     {
-        $comparison = new GreaterThanOrEqualComparison('float', new SimpleValueWrapper(1.23));
+        $comparison = new GreaterThanOrEqualComparison(new Field('float'), new SimpleValueWrapper(1.23));
 
         $result = $this->query_builder->visitGreaterThanOrEqualComparison($comparison, $this->parameters);
 
@@ -374,7 +375,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function itRetrievesForIntegerFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
     {
         $comparison = new BetweenComparison(
-            'int',
+            new Field('int'),
             new BetweenValueWrapper(
                 new SimpleValueWrapper(1),
                 new SimpleValueWrapper(2)
@@ -389,7 +390,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function itRetrievesForFloatFieldInBetweenComparisonTheExpertFromAndWhereClausesOfTheField()
     {
         $comparison = new BetweenComparison(
-            'float',
+            new Field('float'),
             new BetweenValueWrapper(
                 new SimpleValueWrapper(1.23),
                 new SimpleValueWrapper(2.56)

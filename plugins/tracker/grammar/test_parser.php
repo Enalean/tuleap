@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ or field2_int <= 2
 and field3_int between (1, 10)
 AND field4_list in ("open", "closed", "blocked")
 AND field5_list not in ("blocked", "archive",)
+AND @comment = ""
 
 EOS;
 
