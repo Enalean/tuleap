@@ -287,6 +287,13 @@ CREATE TABLE tracker_changeset_comment(
     INDEX changeset_idx(changeset_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_changeset_comment_fulltext;
+CREATE TABLE tracker_changeset_comment_fulltext(
+    comment_id INT(11) NOT NULL PRIMARY KEY,
+    stripped_body TEXT DEFAULT NULL,
+    FULLTEXT stripped_body_idx(stripped_body)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS tracker_changeset_incomingmail;
 CREATE TABLE tracker_changeset_incomingmail(
     changeset_id INT(11) NOT NULL PRIMARY KEY,

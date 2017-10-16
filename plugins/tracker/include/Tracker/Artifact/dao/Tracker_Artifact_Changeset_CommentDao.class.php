@@ -24,7 +24,7 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
         parent::__construct();
         $this->table_name = 'tracker_changeset_comment';
     }
-    
+
     public function searchLastVersion($changeset_id) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "SELECT * FROM $this->table_name
@@ -52,6 +52,13 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
     }
 
     public function createNewVersion($changeset_id, $body, $submitted_by, $submitted_on, $parent_id, $body_format) {
+        if ($body_format === Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
+            $stripped_body = Codendi_HTMLPurifier::instance()->purify($body, CODENDI_PURIFIER_STRIP_HTML);
+            $stripped_body = $this->da->quoteSmart($stripped_body);
+        } else {
+            $stripped_body = $this->da->quoteSmart($body);
+        }
+
         $changeset_id = $this->da->escapeInt($changeset_id);
         $body         = $this->da->quoteSmart($body);
         $submitted_by = $this->da->escapeInt($submitted_by);
@@ -61,9 +68,15 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
 
         $sql = "INSERT INTO $this->table_name (changeset_id, body, body_format, submitted_by, submitted_on, parent_id)
                 VALUES ($changeset_id, $body, $body_format, $submitted_by, $submitted_on, $parent_id)";
-        return $this->updateAndGetLastId($sql);
+        $id = $this->updateAndGetLastId($sql);
+
+        $sql = "INSERT INTO tracker_changeset_comment_fulltext (comment_id, stripped_body)
+                VALUES ($id, $stripped_body)";
+        $this->update($sql);
+
+        return $id;
     }
-    
+
     public function delete($changeset_id) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $sql = "DELETE
