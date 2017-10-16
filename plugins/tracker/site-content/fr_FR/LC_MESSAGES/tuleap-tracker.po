@@ -32,6 +32,9 @@ msgstr "%s a été mis à jour par %s"
 msgid "%s tracker"
 msgstr "Tracker %s"
 
+msgid "Activate artifact links types for all the trackers of this project?"
+msgstr "Activer les liens entre artéfacts typés pour l'ensemble des outils de suivi du projet ?"
+
 msgid "Add"
 msgstr "Ajouter"
 
@@ -44,6 +47,9 @@ msgstr "Ajouter une notification"
 
 msgid "Artifact"
 msgstr "Artefact"
+
+msgid "Artifact links types"
+msgstr "Liens entre artéfacts typés"
 
 msgid ""
 "As a tracker administrator, you can provide email addresses to which new "
@@ -364,6 +370,9 @@ msgstr "Ce patron n'utilise pas les trackers"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
+
+msgid "Tracker global admininistration"
+msgstr "Administration globale des outils de suivi"
 
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"

@@ -18,6 +18,9 @@ msgstr ""
 msgid "%s tracker"
 msgstr ""
 
+msgid "Activate artifact links types for all the trackers of this project?"
+msgstr ""
+
 msgid "Add"
 msgstr ""
 
@@ -29,6 +32,9 @@ msgid "Add notification"
 msgstr ""
 
 msgid "Artifact"
+msgstr ""
+
+msgid "Artifact links types"
 msgstr ""
 
 msgid ""
@@ -305,6 +311,9 @@ msgid "This template does not use trackers"
 msgstr ""
 
 msgid "Tracker"
+msgstr ""
+
+msgid "Tracker global admininistration"
 msgstr ""
 
 msgid "Tracker renderer"

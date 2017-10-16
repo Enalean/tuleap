@@ -232,7 +232,10 @@ class trackerPlugin extends Plugin {
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0 || $this->isInDashboard()) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0 ||
+            $this->isInDashboard() ||
+            $this->isInTrackerGlobalAdmin()
+        ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
@@ -262,7 +265,9 @@ class trackerPlugin extends Plugin {
 
         if ($include_tracker_css_file ||
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            $this->isInDashboard()) {
+            $this->isInDashboard() ||
+            $this->isInTrackerGlobalAdmin()
+        ) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
         }
@@ -1506,6 +1511,11 @@ class trackerPlugin extends Plugin {
         $current_page = new CurrentPage();
 
         return $current_page->isDashboard();
+    }
+
+    private function isInTrackerGlobalAdmin()
+    {
+        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=global-admin') === 0;
     }
 
     /**
