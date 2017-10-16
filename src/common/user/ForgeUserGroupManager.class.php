@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuealp\user\GroupCannotRemoveLastAdministrationPermission;
+use Tuleap\user\GroupCannotRemoveLastAdministrationPermission;
 use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 
 class User_ForgeUserGroupManager
