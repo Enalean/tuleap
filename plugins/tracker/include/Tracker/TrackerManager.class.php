@@ -236,7 +236,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
     }
 
-   /**
+    /**
      * Restore a deleted tracker.
      *
      * @param Integer $tracker_id ID of the tracker marked as deleted
@@ -350,7 +350,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 'url'   => TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create'
             )
         );
-        $toolbar = array();
+        $toolbar = $this->getServiceToolbar();
         $params  = array();
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
 
@@ -644,11 +644,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      */
     public function displayAllTrackers($project, $user)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp          = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
-        $toolbar = array();
-        $html = '';
-        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
+        $html        = '';
+        $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
+        $toolbar     = $this->getServiceToolbar();
 
         if (HTTPRequest::instance()->isAjax()) {
             $http_content = '';
@@ -1118,5 +1118,18 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
     private function getTrackerFormElementFactory() {
         return Tracker_FormElementFactory::instance();
+    }
+
+    /**
+     * @return array
+     */
+    private function getServiceToolbar()
+    {
+        return array(
+            array(
+                'title' => "Administration",
+                'url'   => "#"
+            )
+        );
     }
 }
