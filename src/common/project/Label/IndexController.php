@@ -28,6 +28,7 @@ use TemplateRendererFactory;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\ColorPresenterFactory;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 
 class IndexController
 {
@@ -72,7 +73,7 @@ class IndexController
 
         $title = _('Labels');
 
-        $this->displayHeader($title . ' - ' . $project->getUnconvertedPublicName());
+        $this->displayHeader($title, $project);
 
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/labels/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
@@ -117,10 +118,12 @@ class IndexController
         return $collection;
     }
 
-    private function displayHeader($title)
+    private function displayHeader($title, Project $project)
     {
         $GLOBALS['HTML']->includeFooterJavascriptFile($this->assets->getFileURL('project-admin-labels.js'));
-        project_admin_header(array('title' => $title));
+
+        $navigation_displayer = new HeaderNavigationDisplayer();
+        $navigation_displayer->displayBurningParrotNavigation($title, $project);
     }
 
     private function displayFooter()

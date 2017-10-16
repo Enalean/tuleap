@@ -14,6 +14,9 @@ msgid_plural "%d members"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Access Logs"
+msgstr ""
+
 msgid "Add dashboard"
 msgstr ""
 
@@ -297,6 +300,9 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
+msgid "Permission Request"
+msgstr ""
+
 msgid "Platform administration"
 msgstr ""
 
@@ -304,6 +310,15 @@ msgid "Please accept term of service"
 msgstr ""
 
 msgid "Please, enter a http:// or https:// link"
+msgstr ""
+
+msgid "Project Data Export"
+msgstr ""
+
+msgid "Project History"
+msgstr ""
+
+msgid "Project administration"
 msgstr ""
 
 msgid "Project name"
@@ -414,6 +429,9 @@ msgstr ""
 msgid "Tracker"
 msgstr ""
 
+msgid "Tracker Import"
+msgstr ""
+
 msgid "Unable to fetch the latest activities of the project"
 msgstr ""
 
@@ -427,6 +445,9 @@ msgid "Update label"
 msgstr ""
 
 msgid "Update successful"
+msgstr ""
+
+msgid "User Permissions"
 msgstr ""
 
 msgid "User avatar"
@@ -485,6 +506,10 @@ msgid ""
 "You can't remove the last group containing site administrator permissions"
 msgstr ""
 
+msgid ""
+"You can't remove the last group containing site administrator permissions."
+msgstr ""
+
 msgid "You can't remove the last platform administration permission."
 msgstr ""
 
@@ -502,4 +527,31 @@ msgid "Your history is empty"
 msgstr ""
 
 msgid "Your platform does not allow restricted users."
+msgstr ""
+
+msgid "categories"
+msgstr ""
+
+msgid "data"
+msgstr ""
+
+msgid "details"
+msgstr ""
+
+msgid "groups"
+msgstr ""
+
+msgid "labels"
+msgstr ""
+
+msgid "members"
+msgstr ""
+
+msgid "permissions"
+msgstr ""
+
+msgid "references"
+msgstr ""
+
+msgid "services"
 msgstr ""
