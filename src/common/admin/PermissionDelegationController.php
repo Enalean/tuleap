@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuealp\user\GroupCannotRemoveLastAdministrationPermission;
+use Tuleap\user\GroupCannotRemoveLastAdministrationPermission;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
 use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
