@@ -19,23 +19,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\FieldsAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollectorVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
-use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-use Tuleap\Tracker\Report\ExpertModePresenter;
+use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
@@ -142,7 +144,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new InvalidFields\GreaterThanOrEqualComparisonVisitor(),
             new InvalidFields\BetweenComparisonVisitor(),
             new InvalidFields\InComparisonVisitor(),
-            new InvalidFields\NotInComparisonVisitor()
+            new InvalidFields\NotInComparisonVisitor(),
+            new InvalidSearchableCollectorVisitor($this->getFormElementFactory())
         );
         $this->query_builder  = new QueryBuilderVisitor(
             $this->getFormElementFactory(),

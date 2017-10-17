@@ -19,31 +19,33 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
 use TuleapTestCase;
 
@@ -55,6 +57,10 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     private $tracker;
     private $field_text;
     private $int_field;
+
+    /**
+     * @var Tracker_FormElementFactory
+     */
     private $formelement_factory;
     /** @var InvalidFieldsCollectorVisitor */
     private $collector;
@@ -90,7 +96,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             new GreaterThanOrEqualComparisonVisitor(),
             new BetweenComparisonVisitor(),
             new InComparisonVisitor(),
-            new NotInComparisonVisitor()
+            new NotInComparisonVisitor(),
+            new InvalidSearchableCollectorVisitor($this->formelement_factory)
         );
     }
 
@@ -206,6 +213,26 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('field'));
         $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+    }
+
+    public function itCollectsNonExistentFieldsIfFieldIsAMetadataButUnknown()
+    {
+        $expr = new EqualComparison(new Metadata('summary'), new SimpleValueWrapper('value'));
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('@summary'));
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+    }
+
+    public function itCollectsUnsupportedFieldsIfFieldIsAKnownMetadataButUnknown()
+    {
+        $expr = new EqualComparison(new Metadata('comment'), new SimpleValueWrapper('value'));
+
+        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+
+        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array('@comment is not supported yet'));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotText()

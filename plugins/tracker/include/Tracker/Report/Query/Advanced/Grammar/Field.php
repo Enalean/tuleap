@@ -39,4 +39,9 @@ class Field implements Searchable
     {
         return $this->name;
     }
+
+    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitField($this, $parameters);
+    }
 }

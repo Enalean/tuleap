@@ -22,6 +22,8 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 class Metadata implements Searchable
 {
+    const PREFIX = '@';
+
     /**
      * @var string
      */
@@ -29,7 +31,7 @@ class Metadata implements Searchable
 
     public function __construct($name)
     {
-        $this->name = $name;
+        $this->name = self::PREFIX . $name;
     }
 
     /**
@@ -38,5 +40,10 @@ class Metadata implements Searchable
     public function getName()
     {
         return $this->name;
+    }
+
+    public function accept(Visitor $visitor, VisitorParameters $parameters)
+    {
+        return $visitor->visitMetadata($this, $parameters);
     }
 }
