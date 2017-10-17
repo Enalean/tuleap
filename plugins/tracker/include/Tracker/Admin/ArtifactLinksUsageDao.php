@@ -46,4 +46,14 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function deactivateForProject($project_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "DELETE FROM plugin_tracker_projects_use_artifactlink_types
+                WHERE project_id = $project_id";
+
+        return $this->update($sql);
+    }
 }

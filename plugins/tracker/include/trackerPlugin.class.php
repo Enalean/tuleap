@@ -290,6 +290,10 @@ class trackerPlugin extends Plugin {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
         }
+
+        if ($this->isInTrackerGlobalAdmin()) {
+            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/global-admin.js';
+        }
     }
 
     /**

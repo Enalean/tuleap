@@ -33,7 +33,9 @@ msgid "%s tracker"
 msgstr "Tracker %s"
 
 msgid "Activate artifact links types for all the trackers of this project?"
-msgstr "Activer les liens entre artéfacts typés pour l'ensemble des outils de suivi du projet ?"
+msgstr ""
+"Activer les liens entre artéfacts typés pour l'ensemble des outils de suivi "
+"du projet ?"
 
 msgid "Add"
 msgstr "Ajouter"
@@ -47,6 +49,12 @@ msgstr "Ajouter une notification"
 
 msgid "Artifact"
 msgstr "Artefact"
+
+msgid "Artifact link types has been disabled."
+msgstr "Les liens entre artéfacts typés ont été désactivés."
+
+msgid "Artifact link types has been enabled."
+msgstr "Les liens entre artéfacts typés ont été activés."
 
 msgid "Artifact links types"
 msgstr "Liens entre artéfacts typés"

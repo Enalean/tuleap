@@ -6,13 +6,28 @@
                 <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ table_title }}</h1>
             </div>
             <section class="tlp-pane-section">
-                <div class="tlp-form-element">
-                    <label class="tlp-label" for="toggle">{{ switch_label }}</label>
-                    <div class="tlp-switch">
-                        <input type="checkbox" id="toggle" class="tlp-switch-checkbox">
-                        <label for="toggle" class="tlp-switch-button" aria-hidden></label>
+                <form id="tracker-enable-artifact-link-type-form" action="{{ form_url }}" method="POST">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="tracker-enable-artifact-link-type-switch">{{ switch_label }}</label>
+                        <div class="tlp-switch">
+                            <input type="checkbox"
+                                   id="tracker-enable-artifact-link-type-switch"
+                                   class="tlp-switch-checkbox"
+                                   data-form-id="tracker-enable-artifact-link-type-form"
+                                   name="enable-artifact-link-types"
+                                   value="1"
+                                   {{# are_artifact_link_types_enabled }} checked="checked" {{/ are_artifact_link_types_enabled }}
+                            >
+                            <label for="tracker-enable-artifact-link-type-switch"
+                                   class="tlp-switch-button" aria-hidden
+                            >{{ switch_label }}</label>
+                        </div>
                     </div>
-                </div>
+                </form>
             </section>
         </div>
     </section>

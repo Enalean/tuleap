@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\Admin;
 
+use CSRFSynchronizerToken;
+use Project;
+
 class GlobalAdminPresenter
 {
     /**
@@ -37,10 +40,33 @@ class GlobalAdminPresenter
      */
     public $switch_label;
 
-    public function __construct()
+    /**
+     * @var string
+     */
+    public $form_url;
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
+    /**
+     * @var bool
+     */
+    public $are_artifact_link_types_enabled;
+
+    public function __construct(Project $project, CSRFSynchronizerToken $csrf_token, $are_artifact_link_types_enabled)
     {
         $this->title        = dgettext('tuleap-tracker', 'Tracker global admininistration');
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
         $this->switch_label = dgettext('tuleap-tracker', 'Activate artifact links types for all the trackers of this project?');
+
+        $this->form_url = TRACKER_BASE_URL . '/?' . http_build_query(array(
+            'func'     => 'edit-global-admin',
+            'group_id' => $project->getID()
+        ));
+
+        $this->csrf_token                      = $csrf_token;
+        $this->are_artifact_link_types_enabled = $are_artifact_link_types_enabled;
     }
 }
