@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Tracker\Admin\GlobalAdminPresenter;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
@@ -222,9 +223,16 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker', 'info_tracker_restored', $tracker_name));
                                     $GLOBALS['Response']->redirect(get_server_url().'/tracker/admin/restore.php');
                                 } else {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
+                                    $this->redirectToTrackerHomepage($group_id);
                                 }
+                                break;
+                            case 'global-admin':
+                                if ($this->userCanCreateTracker($group_id) || $this->userCanAdminAllProjectTrackers()) {
+                                    $this->displayGlobalAdministration($project);
+                                } else {
+                                    $this->redirectToTrackerHomepage($group_id);
+                                }
+
                                 break;
                             default:
                                 $this->displayAllTrackers($project, $user);
@@ -234,6 +242,20 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 }
             }
         }
+    }
+
+    private function redirectToTrackerHomepage($group_id)
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied')
+        );
+
+        $url = TRACKER_BASE_URL . '/?' . http_build_query(array(
+           'group_id' => $group_id
+        ));
+
+        $GLOBALS['Response']->redirect($url);
     }
 
     /**
@@ -350,7 +372,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 'url'   => TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create'
             )
         );
-        $toolbar = $this->getServiceToolbar();
+        $toolbar = $this->getServiceToolbar($project);
         $params  = array();
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
 
@@ -648,7 +670,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $breadcrumbs = array();
         $html        = '';
         $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
-        $toolbar     = $this->getServiceToolbar();
+        $toolbar     = $this->getServiceToolbar($project);
 
         if (HTTPRequest::instance()->isAjax()) {
             $http_content = '';
@@ -1123,13 +1145,35 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * @return array
      */
-    private function getServiceToolbar()
+    private function getServiceToolbar(Project $project)
     {
         return array(
             array(
                 'title' => "Administration",
-                'url'   => "#"
+                'url'   => TRACKER_BASE_URL . '/?' . http_build_query(array(
+                    'func'     => 'global-admin',
+                    'group_id' => $project->getID()
+                ))
             )
         );
+    }
+
+    private function displayGlobalAdministration(Project $project)
+    {
+        $toolbar     = $this->getServiceToolbar($project);
+        $params      = array();
+        $breadcrumbs = $this->getServiceToolbar($project);
+
+        $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
+
+        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+        $presenter = new GlobalAdminPresenter();
+
+        $renderer->renderToPage(
+            'global-admin',
+            $presenter
+        );
+
+        $this->displayFooter($project);
     }
 }
