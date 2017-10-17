@@ -25,6 +25,7 @@ use Codendi_Request;
 use Planning_Milestone;
 use TrackerFactory;
 use EventManager;
+use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 
 abstract class TestManagementController extends MVC2_PluginController {
 

@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use Feedback;
+use Tuleap\TestManagement\Breadcrumbs\AdmininistrationBreadcrumbs;
 
 class AdminController extends TestManagementController
 {
@@ -88,5 +89,9 @@ class AdminController extends TestManagementController
         }
 
         return $is_valid_project_tracker_id ? $submitted_id : $original_id;
+    }
+
+    public function getBreadcrumbs() {
+        return new AdmininistrationBreadcrumbs();
     }
 }

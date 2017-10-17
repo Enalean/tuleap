@@ -18,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\Breadcrumbs;
 
-class NoCrumb {
+use Project;
 
-    public function getCrumbs() {
+class NoCrumb implements Breadcrumbs {
+
+    /**
+     * @return array
+     */
+    public function getCrumbs(Project $project)
+    {
         return array();
     }
 }

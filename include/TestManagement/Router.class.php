@@ -240,8 +240,9 @@ class Router {
             );
         }
 
+        $project     = $request->getProject();
         $toolbar     = array();
-        $breadcrumbs = $controller->getBreadcrumbs($this->plugin->getPluginPath());
+        $breadcrumbs = $controller->getBreadcrumbs();
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
@@ -251,7 +252,8 @@ class Router {
                 ))
             );
         }
-        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar, array('body_class' => array('testmanagement')));
+
+        $service->displayHeader($title, $breadcrumbs->getCrumbs($project), $toolbar, array('body_class' => array('testmanagement')));
     }
 
     private function userIsAdmin(Codendi_Request $request) {
