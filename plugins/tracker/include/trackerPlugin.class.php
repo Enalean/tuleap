@@ -27,6 +27,8 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -429,6 +431,9 @@ class trackerPlugin extends Plugin {
 
                 $inheritor->inheritFromLegacy($this->getUserManager()->getCurrentUser(), $template, $project);
             }
+
+            $artifact_link_types_duplicator = new ArtifactLinksUsageDuplicator(new ArtifactLinksUsageDao());
+            $artifact_link_types_duplicator->duplicate($template, $project);
         }
     }
 

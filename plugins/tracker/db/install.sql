@@ -833,6 +833,11 @@ CREATE TABLE plugin_tracker_cross_tracker_report_tracker (
     INDEX idx_cross_tracker_report_id(report_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_projects_use_artifactlink_types;
+CREATE TABLE plugin_tracker_projects_use_artifactlink_types (
+    project_id INT(11) UNSIGNED PRIMARY KEY
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
@@ -911,4 +916,11 @@ INSERT INTO user_access SET
         user_id = 90,
         last_access_date = '0';
 
-INSERT INTO tracker_report_config (query_limit) VALUES (30)
+INSERT INTO tracker_report_config (query_limit) VALUES (30);
+
+INSERT INTO plugin_tracker_projects_use_artifactlink_types (project_id)
+SELECT groups.group_id
+FROM groups
+    INNER JOIN service USING (group_id)
+WHERE groups.status != 'D'
+      AND service.short_name = 'plugin_tracker';
