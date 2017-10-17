@@ -79,6 +79,16 @@ class HeaderPresenter
     /** @var string */
     public $motd;
 
+    /**
+     * @var array
+     */
+    public $breadcrumbs;
+
+    /**
+     * @var bool
+     */
+    public $has_breadcrumbs;
+
     public function __construct(
         $title,
         $imgroot,
@@ -92,6 +102,7 @@ class HeaderPresenter
         $current_project_navbar_info_presenter,
         $unicode_icons,
         array $toolbar,
+        array $breadcrumbs,
         $motd
     ) {
         $this->title                                 = html_entity_decode($title);
@@ -109,10 +120,12 @@ class HeaderPresenter
         $this->has_toolbar                           = count($toolbar) > 0;
         $this->motd                                  = $motd;
         $this->has_motd                              = ! empty($motd);
+        $this->breadcrumbs                           = $breadcrumbs;
 
         $this->buildFeedbacks($feedback_logs);
 
-        $this->has_feedbacks = count($this->feedbacks) > 0;
+        $this->has_feedbacks   = count($this->feedbacks) > 0;
+        $this->has_breadcrumbs = count($this->breadcrumbs) > 0;
     }
 
     private function buildFeedbacks($feedback_logs)

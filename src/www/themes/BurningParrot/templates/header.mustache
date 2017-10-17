@@ -58,6 +58,12 @@
             {{/ sidebar }}
 
             <main role="main" class="{{ main_classes }}">
+                {{# has_breadcrumbs }}
+                    <nav class="breadcrumb">
+                        {{# breadcrumbs }}{{{.}}}{{/ breadcrumbs }}
+                    </nav>
+                {{/ has_breadcrumbs }}
+
                 {{# has_toolbar }}
                     <nav class="toolbar">
                         {{# toolbar }}
