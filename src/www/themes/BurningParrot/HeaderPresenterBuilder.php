@@ -74,6 +74,7 @@ class HeaderPresenterBuilder
         $unicode_icons,
         URLRedirect $url_redirect,
         array $toolbar,
+        array $breadcrumbs,
         $motd
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
@@ -107,6 +108,7 @@ class HeaderPresenterBuilder
             $this->current_project_navbar_info_presenter,
             $this->buildUnicodeIcons($unicode_icons),
             $toolbar,
+            $breadcrumbs,
             $motd
         );
     }

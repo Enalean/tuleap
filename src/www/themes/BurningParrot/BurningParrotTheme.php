@@ -106,6 +106,7 @@ class BurningParrotTheme extends BaseLayout
             $this->getListOfIconUnicodes(),
             $url_redirect,
             $this->toolbar,
+            $this->breadcrumbs,
             $this->getMOTD()
         );
 
