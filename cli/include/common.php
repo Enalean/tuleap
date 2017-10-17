@@ -5,7 +5,7 @@
  * Portion of this file is inspired from the  GForge Command-line Interface
  * contained in GForge.
  * Copyright 2005 GForge, LLC
- * http://gforge.org/
+ * https://gforgegroup.com/
  *
  */
 
