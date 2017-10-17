@@ -622,7 +622,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         Tracker_Artifact_ChangesetValue $last_changeset_value = null,
         $is_submission = null
     ) {
-        if ($this->isRequired() == true && $this->isAtLeastOneUGroupSelected($submitted_value) === false) {
+        if ($last_changeset_value === null && $this->isRequired() == true && $this->isAtLeastOneUGroupSelected($submitted_value) === false) {
             $this->addRequiredError();
 
             return false;

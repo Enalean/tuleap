@@ -124,11 +124,14 @@ setup_database() {
 load_project() {
     base_dir=$1
 
+    user_mapping="-m $base_dir/user_map.csv"
+    if [ ! -f $base_dir/user_map.csv ]; then
+        user_mapping="--automap=no-email,create:A"
+    fi
     /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/import_project_xml.php \
         -u admin \
         -i $base_dir \
-        -m $base_dir/user_map.csv
-
+        $user_mapping
 }
 
 seed_data() {
@@ -148,6 +151,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/07-computedfield
     load_project /usr/share/tuleap/tests/rest/_fixtures/08-public-including-restricted
     load_project /usr/share/tuleap/tests/rest/_fixtures/09-burndown-cache-generation
+    load_project /usr/share/tuleap/tests/rest/_fixtures/10-permissions-on-artifacts
 
     echo "Load initial data"
     php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php

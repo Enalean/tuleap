@@ -23,14 +23,18 @@ namespace Test\Rest\Tracker;
 use \Guzzle\Http\Client;
 use \Test\Rest\RequestWrapper;
 
-class TrackerFactory {
+class TrackerFactory
+{
     private $client;
     private $project_trackers;
     private $user_name;
-    /** @var RequestWrapper */
+    /**
+ * @var RequestWrapper
+*/
     private $rest_request;
 
-    public function __construct(Client $client, RequestWrapper $rest_request, $project_id, $default_user_name) {
+    public function __construct(Client $client, RequestWrapper $rest_request, $project_id, $default_user_name)
+    {
         $this->client       = $client;
         $this->rest_request = $rest_request;
         $this->user_name    = $default_user_name;
@@ -39,9 +43,10 @@ class TrackerFactory {
 
     /**
      * @param string $tracker_name
-     * @return Test_Rest_Tracker
+     * @return Tracker
      */
-    public function getTrackerRest($tracker_name) {
+    public function getTrackerRest($tracker_name)
+    {
         return new Tracker(
             $this->client,
             $this->rest_request,
@@ -50,14 +55,16 @@ class TrackerFactory {
         );
     }
 
-    private function cacheProjectTrackers($project_id) {
+    private function cacheProjectTrackers($project_id)
+    {
         $project_trackers = $this->getResponse($this->client->get("projects/$project_id/trackers"))->json();
         foreach ($project_trackers as $tracker) {
             $this->project_trackers[strtolower($tracker['item_name'])] = $tracker;
         }
     }
 
-    private function getResponse($request) {
+    private function getResponse($request)
+    {
         return $this->rest_request->getResponseByName(
             $this->user_name,
             $request
