@@ -28,6 +28,7 @@ use MVC2_Controller;
 use ProjectManager;
 use TrackerFactory;
 use TrackerXmlImport;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use UserManager;
@@ -68,20 +69,27 @@ class Router {
      */
     private $event_manager;
 
+    /**
+     * @var ArtifactLinksUsageUpdater
+     */
+    private $artifact_links_usage_updater;
+
     public function __construct(
         Plugin $plugin,
         Config $config,
         TrackerFactory $tracker_factory,
         ProjectManager $project_manager,
         UserManager $user_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
+        ArtifactLinksUsageUpdater $artifact_links_usage_updater
     ) {
-        $this->config          = $config;
-        $this->plugin          = $plugin;
-        $this->tracker_factory = $tracker_factory;
-        $this->project_manager = $project_manager;
-        $this->user_manager    = $user_manager;
-        $this->event_manager   = $event_manager;
+        $this->config                       = $config;
+        $this->plugin                       = $plugin;
+        $this->tracker_factory              = $tracker_factory;
+        $this->project_manager              = $project_manager;
+        $this->user_manager                 = $user_manager;
+        $this->event_manager                = $event_manager;
+        $this->artifact_links_usage_updater = $artifact_links_usage_updater;
     }
 
     public function route(Codendi_Request $request) {
@@ -105,7 +113,8 @@ class Router {
                     new AllowedProjectsConfig(
                         $this->project_manager,
                         new AllowedProjectsDao()
-                    )
+                    ),
+                    $this->artifact_links_usage_updater
                 );
                 $this->executeAction($controller, 'createConfig', array($request));
                 $this->renderIndex($request);
@@ -121,7 +130,8 @@ class Router {
                         new AllowedProjectsConfig(
                             $this->project_manager,
                             new AllowedProjectsDao()
-                        )
+                        ),
+                        $this->artifact_links_usage_updater
                     );
 
                     $this->renderAction(

@@ -23,6 +23,8 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\TestManagementPluginInfo;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -118,6 +120,16 @@ class testmanagementPlugin extends Plugin
         if (! $config->isProjectAllowedToUseNature($template)) {
             $config->addProject($project);
         }
+
+        $this->getArtifactLinksUsageUpdater()->forceUsageOfArtifactLinkTypes($project);
+    }
+
+    /**
+     * @return ArtifactLinksUsageUpdater
+     */
+    private function getArtifactLinksUsageUpdater()
+    {
+        return new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
     }
 
     public function event_get_artifactlink_natures($params)
@@ -294,7 +306,8 @@ class testmanagementPlugin extends Plugin
             $tracker_factory,
             $project_manager,
             $user_manager,
-            $event_manager
+            $event_manager,
+            $this->getArtifactLinksUsageUpdater()
         );
 
         $router->route($request);
