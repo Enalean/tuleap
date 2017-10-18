@@ -37,8 +37,6 @@ use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
@@ -413,15 +411,6 @@ class trackerPlugin extends Plugin {
             $template        = $project_manager->getProject($params['template_id']);
             $project         = $project_manager->getProject($params['group_id']);
             $legacy_services = $params['legacy_service_usage'];
-
-            $config = new AllowedProjectsConfig(
-                $project_manager,
-                new AllowedProjectsDao()
-            );
-
-            if ($config->isProjectAllowedToUseNature($template)) {
-                $config->addProject($project);
-            }
 
             if (
                 ! $this->isRestricted() &&

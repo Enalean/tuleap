@@ -20,8 +20,6 @@
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
 
@@ -88,9 +86,6 @@ class TrackerXmlImport
     /** @var Logger */
     private $logger;
 
-    /** @var Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig */
-    private $nature_config;
-
     /**
      * @var ArtifactLinksUsageUpdater
      */
@@ -112,7 +107,6 @@ class TrackerXmlImport
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
         Logger $logger,
-        AllowedProjectsConfig $nature_config,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater
     ) {
         $this->tracker_factory              = $tracker_factory;
@@ -130,7 +124,6 @@ class TrackerXmlImport
         $this->user_finder                  = $user_finder;
         $this->ugroup_manager               = $ugroup_manager;
         $this->logger                       = $logger;
-        $this->nature_config                = $nature_config;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
     }
 
@@ -145,11 +138,6 @@ class TrackerXmlImport
         $tracker_factory = TrackerFactory::instance();
 
         $logger = $logger === null ? new Log_NoopLogger() : $logger;
-
-        $nature_config = new AllowedProjectsConfig(
-            ProjectManager::instance(),
-            new AllowedProjectsDao()
-        );
 
         $artifact_links_usage_updater = new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
 
@@ -173,7 +161,6 @@ class TrackerXmlImport
             $user_finder,
             new UGroupManager(),
             new WrapperLogger($logger, 'TrackerXMLImport'),
-            $nature_config,
             $artifact_links_usage_updater
         );
     }
@@ -337,17 +324,15 @@ class TrackerXmlImport
     private function activateArtlinkV2(Project $project, SimpleXMLElement $xml_element) {
         $use_natures = $xml_element{'use-natures'};
         if($use_natures == 'true') {
-            if($this->nature_config->isProjectAllowedToUseNature($project)) {
+            if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
                 $this->logger->info("This project already uses artifact links nature feature.");
             } else {
-                $this->nature_config->addProject($project);
                 $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);
                 $this->logger->info("Artifact links nature feature is now active.");
             }
 
         } else if($use_natures == 'false') {
-            if ($this->nature_config->isProjectAllowedToUseNature($project)) {
-                $this->nature_config->removeProject($project);
+            if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
                 $this->artifact_links_usage_updater->forceDeactivationOfArtifactLinkTypes($project);
                 $this->logger->warn("This project used artifact links nature. It is now deactivated!!!");
             } else{

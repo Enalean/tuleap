@@ -145,7 +145,6 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 $this->ugroup_manager,
                 mock('Logger'),
-                mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
                 mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
             )
         );
@@ -306,7 +305,6 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 $this->ugroup_manager,
                 mock('Logger'),
-                mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
                 mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
             )
         );
@@ -373,7 +371,6 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 $this->ugroup_manager,
                 mock('Logger'),
-                mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
                 mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
             )
         );
@@ -424,7 +421,6 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
             mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
         );
 
@@ -497,7 +493,6 @@ XML;
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
             mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
         );
 
@@ -715,7 +710,6 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
             mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
         );
 
@@ -783,7 +777,6 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             $this->ugroup_manager,
             mock('Logger'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
             mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
         );
 
@@ -861,7 +854,6 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->hierarchy_dao               = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
-        $this->nature_config               = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig');
         $this->artifact_link_usage_updater = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater');
 
         $this->tracker_xml_importer = new TrackerXmlImport(
@@ -880,7 +872,6 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            $this->nature_config,
             $this->artifact_link_usage_updater
         );
         $this->project = mock('Project');
@@ -891,57 +882,63 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
 
     public function itShouldDoNothingIfNoAttributeAndProjectUsesNature() {
         $xml_input = new SimpleXMLElement('<project><trackers /></project>');
-        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(true);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->never();
-        expect($this->nature_config)->addProject()->never();
-        expect($this->nature_config)->removeProject()->never();
+
+        stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(true);
+        expect($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->never();
         expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->never();
+        expect($this->artifact_link_usage_updater)->forceDeactivationOfArtifactLinkTypes()->never();
+
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldDoNothingIfNoAttributeAndProjectDoesNotUseNature() {
         $xml_input = new SimpleXMLElement('<project><trackers /></project>');
-        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->never();
-        expect($this->nature_config)->addProject()->never();
-        expect($this->nature_config)->removeProject()->never();
+
+        stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(false);
+        expect($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->never();
         expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->never();
+        expect($this->artifact_link_usage_updater)->forceDeactivationOfArtifactLinkTypes()->never();
+
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldNotActivateIfAttributeIsFalseAndProjectDoesNotUseNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="false"/></project>');
-        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
-        expect($this->nature_config)->addProject()->never();
+
+        stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(false);
+        expect($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->count(1);
         expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->never();
+
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
 
     }
 
     public function itShouldActivateIfAttributeIsTrueAndProjectDoesNotUseNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="true"/></project>');
-        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(false);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
-        expect($this->nature_config)->addProject()->once();
+
+        stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(false);
+        expect($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->count(1);
         expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->once();
+
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldDoNothingIfAttributeIsTrueAndProjectUsesNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="true"/></project>');
-        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(1);
-        expect($this->nature_config)->addProject()->never();
+
+        stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(true);
         expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->never();
+
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 
     public function itShouldDeactivateIfAttributeIsFalseAndProjectUsesNature() {
         $xml_input = new SimpleXMLElement('<project><trackers use-natures="false"/></project>');
-        stub($this->nature_config)->isProjectAllowedToUseNature()->returns(true);
-        expect($this->nature_config)->isProjectAllowedToUseNature()->count(1);
-        expect($this->nature_config)->removeProject()->once();
+
+        stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(true);
+        expect($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->count(1);
         expect($this->artifact_link_usage_updater)->forceDeactivationOfArtifactLinkTypes()->once();
+
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 }
@@ -981,7 +978,6 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 mock('UGroupManager'),
                 mock('Logger'),
-                mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig'),
                 mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
             )
         );

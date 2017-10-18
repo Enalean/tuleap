@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 use Tuleap\Tracker\Config\SectionsPresenter;
 use CSRFSynchronizerToken;
 
-class NatureConfigPresenter {
-
+class NatureConfigPresenter
+{
     public $csrf_token;
     public $desc;
     public $title;
@@ -47,15 +47,14 @@ class NatureConfigPresenter {
     public $has_natures;
     public $sections;
     public $available_natures;
-    public $allowed_projects;
-    public $allowed_projects_title;
     public $edit_icon_label;
     public $edit_system_nature_title;
     public $delete_modal_title;
     public $delete_modal_submit;
     public $delete_modal_content;
 
-    public function __construct($title, array $natures_usage, CSRFSynchronizerToken $csrf, $allowed_projects) {
+    public function __construct($title, array $natures_usage, CSRFSynchronizerToken $csrf)
+    {
         $this->desc                = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
         $this->available_natures   = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'available_natures');
         $this->shortname_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
@@ -68,8 +67,6 @@ class NatureConfigPresenter {
         $this->forward_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_help');
         $this->reverse_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label_help');
 
-        $this->allowed_projects_title    = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'list_of_allowed_projects');
-        $this->allowed_projects_desc     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'list_of_allowed_projects_desc');
         $this->shortname_placeholder     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_placeholder');
         $this->forward_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_placeholder');
         $this->reverse_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label_placeholder');
@@ -87,11 +84,10 @@ class NatureConfigPresenter {
 
         $this->sections = new SectionsPresenter();
 
-        $this->title            = $title;
-        $this->natures_usage    = $natures_usage;
-        $this->has_natures      = count($this->natures_usage) > 0;
-        $this->no_natures       = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'there_is_no_nature');
-        $this->csrf_token       = $csrf->fetchHTMLInput();
-        $this->allowed_projects = $allowed_projects;
+        $this->title         = $title;
+        $this->natures_usage = $natures_usage;
+        $this->has_natures   = count($this->natures_usage) > 0;
+        $this->no_natures    = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'there_is_no_nature');
+        $this->csrf_token    = $csrf->fetchHTMLInput();
     }
 }
