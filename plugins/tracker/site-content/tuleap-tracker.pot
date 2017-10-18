@@ -34,6 +34,12 @@ msgstr ""
 msgid "Artifact"
 msgstr ""
 
+msgid "Artifact link types has been disabled."
+msgstr ""
+
+msgid "Artifact link types has been enabled."
+msgstr ""
+
 msgid "Artifact links types"
 msgstr ""
 
