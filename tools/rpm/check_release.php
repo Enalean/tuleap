@@ -79,10 +79,6 @@ foreach ($diff->xpath('paths/path') as $path) {
         echo "\t$p".PHP_EOL;
     }
 
-    if (preg_match('%^/documentation/cli/%', $p)) {
-        $cli = true;
-    }
-
     $match = array();
     if (preg_match('%^(/plugins/[^/]+)/%', $p, $match)) {
         $plugins[$match[1]] = true;
@@ -126,5 +122,5 @@ if ($soap) {
 }
 
 if ($cli) {
-    echo "CLI sources or documentation path changed, please check (not automated yet)".PHP_EOL;
+    echo "CLI sources path changed, please check (not automated yet)".PHP_EOL;
 }

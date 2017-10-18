@@ -603,7 +603,6 @@ done
 %{__install} src/etc/tuleap-uploaded-images.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/
 %{__install} src/etc/00-common.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/00-common.conf
-%{__install} src/etc/01-download.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/01-download.conf
 %{__install} src/etc/02-themes.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/02-themes.conf
 %{__install} src/etc/03-plugins.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
 %{__install} src/etc/04-cgi.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
@@ -1062,7 +1061,6 @@ fi
 %attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
 %dir /etc/httpd/conf.d/tuleap-aliases
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/00-common.conf
-%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/01-download.conf
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/02-themes.conf
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/04-cgi.conf

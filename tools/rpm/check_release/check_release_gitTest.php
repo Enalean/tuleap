@@ -77,13 +77,13 @@ class GitChangeDetectorTest extends TuleapTestCase {
     public function itFindsOnlyChangedPaths() {
         $revision = 'refs/tags/4.0.29';
         $gitExec = new MockGitExec();
-        $gitExec->setReturnValue('hasChangedSince', true, array('documentation/cli', $revision));
+        $gitExec->setReturnValue('hasChangedSince', true, array('plugins/docman', $revision));
         $gitExec->setReturnValue('hasChangedSince', false, array('plugins/tracker', $revision));
-        
-        $candidate_paths = array('documentation/cli', 'plugins/tracker');
-        
+
+        $candidate_paths = array('plugins/docman', 'plugins/tracker');
+
         $release_checker = new ChangeDetector($gitExec, $candidate_paths);
-        $this->assertEqual(array('documentation/cli'), $release_checker->findPathsThatChangedSince($revision));
+        $this->assertEqual(array('plugins/docman'), $release_checker->findPathsThatChangedSince($revision));
     }
 }
 

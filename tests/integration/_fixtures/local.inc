@@ -95,14 +95,12 @@ $sys_data_dir = "/var/lib/codendi";
 // Place to put temporary data: deleted user's accounts, etc
 $tmp_dir = "/tmp";
 
-// Tuleap utils and documentation directories
+// Tuleap utils directory
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
 //    *wrong* $codendi_utils_prefix = $codendi_dir . "codendi/utils" *wrong*
 // this is because those variables will be read by shell scripts.
 $codendi_utils_prefix         = "/usr/share/codendi/src/utils";
-$codendi_documentation_prefix = "/usr/share/codendi/documentation";
-$codendi_downloads_dir        = "/usr/share/codendi/downloads";// Tuleap extra files download directory (eg: CLI archive)
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";

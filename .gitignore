@@ -4,7 +4,6 @@ src/utils/*.pyc
 src/utils/cvs1/*.pyc
 src/utils/svn/*.pyc
 tests/simpletest/common/include/_fixtures/big_file
-documentation/user_guide/html/*
 .vagrant
 *.box
 nbproject
@@ -18,7 +17,6 @@ plugins/maillog
 !plugins/IM/www/webmuc/*.css
 !plugins/mediawiki/mediawiki-skin/*css
 !plugins/mediawiki/www/skins/*css
-!plugins/pluginsadministration/www/documentation/*.css
 !plugins/tests/*.css
 !src/common/rss/libs/SimplePie/*.css
 !src/common/wiki/phpwiki/*.css

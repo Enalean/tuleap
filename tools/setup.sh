@@ -1146,9 +1146,6 @@ build_dir $TULEAP_CACHE_DIR $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/skel_$PROJECT_NAME root root 755
 build_dir /etc/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/conf $PROJECT_ADMIN $PROJECT_ADMIN 700
-build_dir /etc/$PROJECT_NAME/documentation $PROJECT_ADMIN $PROJECT_ADMIN 755
-build_dir /etc/$PROJECT_NAME/documentation/cli $PROJECT_ADMIN $PROJECT_ADMIN 755
-build_dir /etc/$PROJECT_NAME/documentation/cli/xml $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/site-content $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/site-content/en_US $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/site-content/en_US/others $PROJECT_ADMIN $PROJECT_ADMIN 755

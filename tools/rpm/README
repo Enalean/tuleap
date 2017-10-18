@@ -28,8 +28,7 @@ Just type 'make all', the packages will be generated into $RPM_TMP/RPMS
 
 It will generate 2 pacakges:
 * tuleap-VERSION.rpm: the tuleap code
-* tuleap-customization-tuleap-VERSION.rpm: the documentation, cli and
-  customization package
+* tuleap-customization-tuleap-VERSION.rpm: the customization package
 
 If you only care about the sources, 'make tuleap' will only generate the
 source package (much more quick).

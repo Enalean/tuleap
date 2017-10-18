@@ -231,7 +231,6 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
-	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES/
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
 	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/codendi-customization.spec
 
