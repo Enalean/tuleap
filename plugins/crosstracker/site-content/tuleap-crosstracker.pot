@@ -1,0 +1,5 @@
+msgid "Cross trackers search"
+msgstr ""
+
+msgid "Search artifacts that are in different trackers"
+msgstr ""

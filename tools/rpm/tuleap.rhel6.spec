@@ -526,6 +526,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 # Remove development tools and utility files
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
