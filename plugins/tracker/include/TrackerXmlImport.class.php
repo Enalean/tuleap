@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\XML\PHPCast;
 
 class TrackerXmlImport
 {
@@ -89,6 +91,11 @@ class TrackerXmlImport
     /** @var Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig */
     private $nature_config;
 
+    /**
+     * @var ArtifactLinksUsageUpdater
+     */
+    private $artifact_links_usage_updater;
+
     public function __construct(
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
@@ -105,24 +112,26 @@ class TrackerXmlImport
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
         Logger $logger,
-        AllowedProjectsConfig $nature_config
+        AllowedProjectsConfig $nature_config,
+        ArtifactLinksUsageUpdater $artifact_links_usage_updater
     ) {
-        $this->tracker_factory         = $tracker_factory;
-        $this->event_manager           = $event_manager;
-        $this->hierarchy_dao           = $hierarchy_dao;
-        $this->canned_response_factory = $canned_response_factory;
-        $this->formelement_factory     = $formelement_factory;
-        $this->semantic_factory        = $semantic_factory;
-        $this->rule_factory            = $rule_factory;
-        $this->report_factory          = $report_factory;
-        $this->workflow_factory        = $workflow_factory;
-        $this->rng_validator           = $rng_validator;
-        $this->trigger_rulesmanager    = $trigger_rulesmanager;
-        $this->xml_import              = $xml_import;
-        $this->user_finder             = $user_finder;
-        $this->ugroup_manager          = $ugroup_manager;
-        $this->logger                  = $logger;
-        $this->nature_config           = $nature_config;
+        $this->tracker_factory              = $tracker_factory;
+        $this->event_manager                = $event_manager;
+        $this->hierarchy_dao                = $hierarchy_dao;
+        $this->canned_response_factory      = $canned_response_factory;
+        $this->formelement_factory          = $formelement_factory;
+        $this->semantic_factory             = $semantic_factory;
+        $this->rule_factory                 = $rule_factory;
+        $this->report_factory               = $report_factory;
+        $this->workflow_factory             = $workflow_factory;
+        $this->rng_validator                = $rng_validator;
+        $this->trigger_rulesmanager         = $trigger_rulesmanager;
+        $this->xml_import                   = $xml_import;
+        $this->user_finder                  = $user_finder;
+        $this->ugroup_manager               = $ugroup_manager;
+        $this->logger                       = $logger;
+        $this->nature_config                = $nature_config;
+        $this->artifact_links_usage_updater = $artifact_links_usage_updater;
     }
 
     /**
@@ -141,6 +150,8 @@ class TrackerXmlImport
             ProjectManager::instance(),
             new AllowedProjectsDao()
         );
+
+        $artifact_links_usage_updater = new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
 
         return new TrackerXmlImport(
             $tracker_factory,
@@ -162,7 +173,8 @@ class TrackerXmlImport
             $user_finder,
             new UGroupManager(),
             new WrapperLogger($logger, 'TrackerXMLImport'),
-            $nature_config
+            $nature_config,
+            $artifact_links_usage_updater
         );
     }
 
@@ -329,12 +341,14 @@ class TrackerXmlImport
                 $this->logger->info("This project already uses artifact links nature feature.");
             } else {
                 $this->nature_config->addProject($project);
+                $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);
                 $this->logger->info("Artifact links nature feature is now active.");
             }
 
         } else if($use_natures == 'false') {
-            if($this->nature_config->isProjectAllowedToUseNature($project)) {
+            if ($this->nature_config->isProjectAllowedToUseNature($project)) {
                 $this->nature_config->removeProject($project);
+                $this->artifact_links_usage_updater->forceDeactivationOfArtifactLinkTypes($project);
                 $this->logger->warn("This project used artifact links nature. It is now deactivated!!!");
             } else{
                 $this->logger->warn("This project will not be able to use artifact links nature feature.");
@@ -342,9 +356,7 @@ class TrackerXmlImport
         } else {
             $this->logger->info("No attribute 'use-natures' found.");
         }
-
     }
-
 
     /**
      * @return array of created artifacts
