@@ -35,6 +35,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
@@ -97,7 +98,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
 
-        $expr = new EqualComparison('field', new SimpleValueWrapper('value'));
+        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->visitEqualComparison($expr, $this->parameters);
 
@@ -109,7 +110,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns(aMockDateWithoutTimeField()->build());
 
-        $expr = new EqualComparison('field', new SimpleValueWrapper('2017-01-17'));
+        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17'));
 
         $this->collector->visitEqualComparison($expr, $this->parameters);
 
@@ -121,7 +122,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns($this->field_text);
 
-        $expr = new NotEqualComparison('field', new SimpleValueWrapper('value'));
+        $expr = new NotEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->visitNotEqualComparison($expr, $this->parameters);
 
@@ -133,7 +134,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new LesserThanComparison('int', new SimpleValueWrapper(20));
+        $expr = new LesserThanComparison(new Field('int'), new SimpleValueWrapper(20));
 
         $this->collector->visitLesserThanComparison($expr, $this->parameters);
 
@@ -145,7 +146,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new GreaterThanComparison('int', new SimpleValueWrapper(20));
+        $expr = new GreaterThanComparison(new Field('int'), new SimpleValueWrapper(20));
 
         $this->collector->visitGreaterThanComparison($expr, $this->parameters);
 
@@ -157,7 +158,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new LesserThanOrEqualComparison('int', new SimpleValueWrapper(20));
+        $expr = new LesserThanOrEqualComparison(new Field('int'), new SimpleValueWrapper(20));
 
         $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
 
@@ -169,7 +170,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
-        $expr = new GreaterThanOrEqualComparison('int', new SimpleValueWrapper(20));
+        $expr = new GreaterThanOrEqualComparison(new Field('int'), new SimpleValueWrapper(20));
 
         $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
 
@@ -182,7 +183,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "int", $this->user)->returns($this->int_field);
 
         $expr = new BetweenComparison(
-            'int',
+            new Field('int'),
             new BetweenValueWrapper(
                 new SimpleValueWrapper(20),
                 new SimpleValueWrapper(30)
@@ -199,7 +200,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
     {
         stub($this->formelement_factory)->getUsedFormElementFieldByNameForUser(101, "field", $this->user)->returns(null);
 
-        $expr = new EqualComparison('field', new SimpleValueWrapper('value'));
+        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -213,7 +214,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
-        $expr = new EqualComparison('field', new SimpleValueWrapper('value'));
+        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -229,7 +230,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
-        $expr = new EqualComparison('field', new SimpleValueWrapper(20));
+        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper(20));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -245,7 +246,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
-        $expr = new EqualComparison('field', new SimpleValueWrapper('2017-01-17'));
+        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -261,7 +262,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(anOpenListField()->withName('openlist')->build());
 
-        $expr = new EqualComparison('field', new SimpleValueWrapper('planned'));
+        $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('planned'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -277,7 +278,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
-        $expr = new LesserThanComparison('field', new SimpleValueWrapper('value'));
+        $expr = new LesserThanComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -293,7 +294,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
-        $expr = new GreaterThanComparison('field', new SimpleValueWrapper('value'));
+        $expr = new GreaterThanComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -309,7 +310,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
-        $expr = new LesserThanOrEqualComparison('field', new SimpleValueWrapper('value'));
+        $expr = new LesserThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -325,7 +326,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->getUsedFormElementFieldByNameForUser(101, "field", $this->user)
             ->returns(aStringField()->withName('string')->build());
 
-        $expr = new GreaterThanOrEqualComparison('field', new SimpleValueWrapper('value'));
+        $expr = new GreaterThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
         $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
 
@@ -342,7 +343,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new BetweenComparison(
-            'field',
+            new Field('field'),
             new BetweenValueWrapper(
                 new SimpleValueWrapper('value1'),
                 new SimpleValueWrapper('value2')
@@ -364,7 +365,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new InComparison(
-            'field',
+            new Field('field'),
             new InValueWrapper(
                 array(
                     new SimpleValueWrapper('value1'),
@@ -388,7 +389,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             ->returns(aStringField()->withName('string')->build());
 
         $expr = new NotInComparison(
-            'field',
+            new Field('field'),
             new InValueWrapper(
                 array(
                     new SimpleValueWrapper('value3'),

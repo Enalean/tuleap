@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 class GreaterThanOrEqualComparison implements Term, Visitable, Comparison
 {
     /**
-     * @var string
+     * @var Searchable
      */
     private $field;
     /**
@@ -30,7 +30,7 @@ class GreaterThanOrEqualComparison implements Term, Visitable, Comparison
      */
     private $value_wrapper;
 
-    public function __construct($field, ValueWrapper $value_wrapper)
+    public function __construct(Searchable $field, ValueWrapper $value_wrapper)
     {
         $this->field         = $field;
         $this->value_wrapper = $value_wrapper;
@@ -42,7 +42,7 @@ class GreaterThanOrEqualComparison implements Term, Visitable, Comparison
     }
 
     /**
-     * @return string
+     * @return Searchable
      */
     public function getField()
     {

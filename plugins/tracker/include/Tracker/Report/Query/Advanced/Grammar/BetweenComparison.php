@@ -30,7 +30,7 @@ class BetweenComparison implements Term, Visitable, Comparison
      */
     private $value_wrapper;
 
-    public function __construct($field, BetweenValueWrapper $value_wrapper)
+    public function __construct(Searchable $field, BetweenValueWrapper $value_wrapper)
     {
         $this->field         = $field;
         $this->value_wrapper = $value_wrapper;
@@ -42,7 +42,7 @@ class BetweenComparison implements Term, Visitable, Comparison
     }
 
     /**
-     * @return string
+     * @return Searchable
      */
     public function getField()
     {

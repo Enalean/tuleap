@@ -69,47 +69,47 @@ term
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
 EqualComparison
-    = field:Field _ "=" _ value_wrapper:SimpleExpr {
+    = field:Searchable _ "=" _ value_wrapper:SimpleExpr {
         return new EqualComparison($field, $value_wrapper);
     }
 
 NotEqualComparison
-    = field:Field _ "!=" _ value_wrapper:SimpleExpr {
+    = field:Searchable _ "!=" _ value_wrapper:SimpleExpr {
         return new NotEqualComparison($field, $value_wrapper);
     }
 
 LesserThanComparison
-    = field:Field _ "<" _ value_wrapper:SimpleExpr {
+    = field:Searchable _ "<" _ value_wrapper:SimpleExpr {
         return new LesserThanComparison($field, $value_wrapper);
     }
 
 GreaterThanComparison
-    = field:Field _ ">" _ value_wrapper:SimpleExpr {
+    = field:Searchable _ ">" _ value_wrapper:SimpleExpr {
         return new GreaterThanComparison($field, $value_wrapper);
     }
 
 LesserThanOrEqualComparison
-    = field:Field _ "<=" _ value_wrapper:SimpleExpr {
+    = field:Searchable _ "<=" _ value_wrapper:SimpleExpr {
         return new LesserThanOrEqualComparison($field, $value_wrapper);
     }
 
 GreaterThanOrEqualComparison
-    = field:Field _ ">=" _ value_wrapper:SimpleExpr {
+    = field:Searchable _ ">=" _ value_wrapper:SimpleExpr {
         return new GreaterThanOrEqualComparison($field, $value_wrapper);
     }
 
 BetweenComparison
-    = field:Field _ "between"i _ "(" _ min_value_wrapper:SimpleExpr _ "," _ max_value_wrapper:SimpleExpr _ ")" {
+    = field:Searchable _ "between"i _ "(" _ min_value_wrapper:SimpleExpr _ "," _ max_value_wrapper:SimpleExpr _ ")" {
         return new BetweenComparison($field, new BetweenValueWrapper($min_value_wrapper, $max_value_wrapper));
     }
 
 NotInComparison
-    = field:Field _ "not in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
+    = field:Searchable _ "not in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
         return new NotInComparison($field, new InValueWrapper($list));
     }
 
 InComparison
-    = field:Field _ "in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
+    = field:Searchable _ "in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
         return new InComparison($field, new InValueWrapper($list));
     }
 
@@ -123,7 +123,17 @@ InComparisonValue
     = _ "," _ value_wrapper:ListValue { return $value_wrapper; }
 
 Field
-    = name:$[a-zA-Z0-9_]+ { return $name; }
+    = name:$[a-zA-Z0-9_]+ {
+        return new Field($name);
+    }
+
+Metadata
+    = '@' name:$[a-zA-Z0-9_]+ {
+        return new Metadata($name);
+    }
+
+Searchable
+    = Field / Metadata
 
 SimpleExpr
     = l:Literal { return $l; }
