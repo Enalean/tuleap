@@ -89,14 +89,8 @@ DROP TABLE IF EXISTS tracker_artifact_unsubscribe;
 DROP TABLE IF EXISTS plugin_tracker_config;
 DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures;
 DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures_allowed_projects;
-
-
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
-
 DROP TABLE IF EXISTS plugin_tracker_recently_visited;
-
-DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report;
-DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report_tracker;
 DROP TABLE IF EXISTS plugin_tracker_projects_use_artifactlink_types;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

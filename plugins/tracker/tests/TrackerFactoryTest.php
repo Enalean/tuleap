@@ -66,14 +66,14 @@ class TrackerFactoryTest extends TuleapTestCase {
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
-    
+
     public function tearDown()
     {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
         parent::tearDown();
     }
-    
+
     public function testImpossibleToCreateTrackerWhenProjectHasAReferenceEqualsShortname() {
         $tracker_factory = new TrackerFactoryTestVersion2();
         $dao = new MockTrackerDao();
@@ -91,18 +91,18 @@ class TrackerFactoryTest extends TuleapTestCase {
         $rm = new MockReferenceManager();
         $rm->setReturnValue('_isKeywordExists', true, array("existingreference", 123)); // shortname already exist as a reference in the project
         $tracker_factory->setReturnReference('getReferenceManager', $rm);
-        
-        // check that an error is returned if we try to create a tracker 
+
+        // check that an error is returned if we try to create a tracker
         // with a shortname already used as a reference in the project
-        $project_id = 123; 
-        $group_id_template = 456; 
+        $project_id = 123;
+        $group_id_template = 456;
         $id_template = 789;
         $name = 'My New Tracker';
         $description = 'My New Tracker to manage my brand new artifacts';
         $itemname = 'existingreference';
         $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
     }
-    
+
     public function testImpossibleToCreateTrackerWithAlreadyUsedName() {
         $tracker_factory = new TrackerFactoryTestVersion2();
         $dao = new MockTrackerDao();
@@ -113,7 +113,7 @@ class TrackerFactoryTest extends TuleapTestCase {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(456));
         $tracker_factory->setReturnReference('getProjectManager', $pm);
-        
+
         $rm = new MockReferenceManager();
         $rm->setReturnValue('_isKeywordExists', false, array("mynewtracker", 123)); // keyword is not alreay used
         $tracker_factory->setReturnReference('getReferenceManager', $rm);
@@ -121,17 +121,17 @@ class TrackerFactoryTest extends TuleapTestCase {
         $tracker_factory->setReturnReference('getTrackerById', $tracker, array(999));
         $tracker_factory->setReturnValue('isNameExists', true, array("My New Tracker With an existing name", 123)); // Name already exists
         $tracker_factory->setReturnValue('isShortNameExists', false, array("mynewtracker", 123));// shortname is  not already used
-        // check that an error is returned if we try to create a tracker 
+        // check that an error is returned if we try to create a tracker
         // with a name (not shortname) already used
-        $project_id = 123; 
-        $group_id_template = 456; 
+        $project_id = 123;
+        $group_id_template = 456;
         $id_template = 789;
         $name = 'My New Tracker With an existing name';
         $description = 'My New Tracker to manage my brand new artifacts';
         $itemname = 'mynewtracker';
         $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
     }
-    
+
     public function testImpossibleToCreateTrackerWithAlreadyUsedShortName() {
         $tracker_factory = new TrackerFactoryTestVersion2();
         $dao = new MockTrackerDao();
@@ -142,7 +142,7 @@ class TrackerFactoryTest extends TuleapTestCase {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(456));
         $tracker_factory->setReturnReference('getProjectManager', $pm);
-        
+
         $rm = new MockReferenceManager();
         $rm->setReturnValue('_isKeywordExists', false, array("MyNewTracker", 123)); // keyword is not alreay used
         $tracker_factory->setReturnReference('getReferenceManager', $rm);
@@ -150,10 +150,10 @@ class TrackerFactoryTest extends TuleapTestCase {
         $tracker_factory->setReturnReference('getTrackerById', $tracker, array(999));
         $tracker_factory->setReturnValue('isNameExists', false, array("My New Tracker", 123));// name is not already used
         $tracker_factory->setReturnValue('isShortNameExists', true, array("MyNewTracker", 123));// shortname is  already used
-        // check that an error is returned if we try to create a tracker 
+        // check that an error is returned if we try to create a tracker
         // with a name (not shortname) already used
-        $project_id = 123; 
-        $group_id_template = 456; 
+        $project_id = 123;
+        $group_id_template = 456;
         $id_template = 789;
         $name = 'My New Tracker';
         $description = 'My New Tracker to manage my brand new artifacts';
@@ -161,7 +161,7 @@ class TrackerFactoryTest extends TuleapTestCase {
         $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
     }
 
-    
+
     public function testGetPossibleChildrenShouldNotContainSelf() {
         $current_tracker   = aTracker()->withId(1)->withName('Stories')->build();
         $expected_children = array(
@@ -170,12 +170,12 @@ class TrackerFactoryTest extends TuleapTestCase {
         );
         $all_project_trackers      = $expected_children;
         $all_project_trackers['1'] = $current_tracker;
-        
+
         $tracker_factory   = TestHelper::getPartialMock('TrackerFactory', array('getTrackersByGroupId'));
         $tracker_factory->setReturnValue('getTrackersByGroupId', $all_project_trackers);
-        
+
         $possible_children = $tracker_factory->getPossibleChildren($current_tracker);
-        
+
         $this->assertEqual($possible_children, $expected_children);
     }
 
@@ -187,10 +187,6 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
      * @var TrackerFactory
      */
     private $tracker_factory;
-    /**
-     * @var Tuleap\Tracker\CrossTracker\CrossTrackerReportDao
-     */
-    private $cross_tracker_report_dao;
 
     public function setUp() {
         parent::setUp();
@@ -200,57 +196,50 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
                             'getHierarchyFactory',
                             'getFormElementFactory',
                             'getTriggerRulesManager',
-                            'getCrossTrackerReportDao'
                       ));
         $this->hierarchy_factory     = new MockTracker_HierarchyFactory();
         $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
         $this->formelement_factory   = mock('Tracker_FormElementFactory');
-        $this->cross_tracker_report_dao    = mock('Tuleap\\Tracker\\CrossTracker\\CrossTrackerReportDao');
 
         $this->tracker_factory->setReturnValue('getHierarchyFactory', $this->hierarchy_factory);
         $this->tracker_factory->setReturnValue('getFormElementFactory', $this->formelement_factory);
         $this->tracker_factory->setReturnValue('getTriggerRulesManager', $this->trigger_rules_manager);
-        $this->tracker_factory->setReturnValue('getCrossTrackerReportDao', $this->cross_tracker_report_dao);
-        
+
     }
-    
-    
+
+
     public function testDuplicate_duplicatesAllTrackers_withHierarchy()
     {
-        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
-
         $t1 = $this->GivenADuplicatableTracker(1234);
         stub($t1)->getName()->returns('Bugs');
         stub($t1)->getDescription()->returns('Bug Tracker');
         stub($t1)->getItemname()->returns('bug');
-        
+
         $trackers = array($t1);
         $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
 
-        $t_new = stub('Tracker')->getId()->returns(555); 
-        
+        $t_new = stub('Tracker')->getId()->returns(555);
+
         $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
-        
-        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); 
-        
+
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
+
         $this->hierarchy_factory->expectOnce('duplicate');
-        
+
         $this->tracker_factory->duplicate(100, 999, null);
     }
-    
+
     public function testDuplicate_duplicatesSharedFields()
     {
-        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
-
         $t1 = $this->GivenADuplicatableTracker(123);
         $t2 = $this->GivenADuplicatableTracker(567);
-       
+
         $trackers = array($t1, $t2);
         $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
-        
-        $t_new1 = stub('Tracker')->getId()->returns(1234);        
+
+        $t_new1 = stub('Tracker')->getId()->returns(1234);
         $t_new2 = stub('Tracker')->getId()->returns(5678);
-        
+
         $t_new1_field_mapping = array(array('from' => '11', 'to' => '111'),
                                       array('from' => '22', 'to' => '222'));
         $t_new2_field_mapping = array(array('from' => '33', 'to' => '333'),
@@ -258,32 +247,30 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $full_field_mapping = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
         $to_project_id   = 999;
         $from_project_id = 100;
-        $this->tracker_factory->setReturnValue('create', 
-                                                array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), 
+        $this->tracker_factory->setReturnValue('create',
+                                                array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping),
                                                 array($to_project_id, $from_project_id, 123, '*', '*', '*', null));
-        $this->tracker_factory->setReturnValue('create', 
-                                                array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), 
+        $this->tracker_factory->setReturnValue('create',
+                                                array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping),
                                                 array($to_project_id, $from_project_id, 567, '*', '*', '*', null)) ;
-        
+
         $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, $full_field_mapping));
         $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);
     }
-    
+
     public function testDuplicate_ignoresNonDuplicatableTrackers()
     {
-        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
-
         $t1 = new MockTracker();
         $t1->setReturnValue('mustBeInstantiatedForNewProjects', false);
         $t1->setReturnValue('getId', 5678);
         $trackers = array($t1);
         $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
-        
+
         $this->tracker_factory->expectNever('create');
-        
+
         $this->tracker_factory->duplicate(100, 999, null);
     }
-        
+
     private function GivenADuplicatableTracker($tracker_id) {
         $t1 = new MockTracker();
         $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
@@ -293,8 +280,6 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
 
     public function testDuplicate_duplicatesAllTriggerRules()
     {
-        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(array());
-
         $t1 = $this->GivenADuplicatableTracker(1234);
         stub($t1)->getName()->returns('Bugs');
         stub($t1)->getDescription()->returns('Bug Tracker');
@@ -313,33 +298,6 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
 
         $this->tracker_factory->duplicate(100, 999, null);
     }
-
-    public function itDuplicatesTrackersUsedInCrossTrackerReports()
-    {
-        stub($this->cross_tracker_report_dao)->searchTrackersIdUsedByCrossTrackerByProjectId()->returns(
-            TestHelper::arrayToDar(array('id' => '1234'))
-        );
-
-        $tracker = new MockTracker();
-        stub($tracker)->getId()->returns(1234);
-        stub($tracker)->mustBeInstantiatedForNewProjects()->returns(false);
-        stub($tracker)->getName()->returns('CrossTracker');
-        stub($tracker)->getDescription()->returns('Cross Tracker Report');
-        stub($tracker)->getItemname()->returns('crt');
-
-        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array($tracker), array(100));
-
-        $tracker_in_new_project = stub('Tracker')->getId()->returns(555);
-
-        $this->tracker_factory->setReturnValue('create', array('tracker' => $tracker_in_new_project, 'field_mapping' => array())) ;
-
-        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'CrossTracker', 'Cross Tracker Report', 'crt', null));
-
-        $this->trigger_rules_manager->expectOnce('duplicate');
-
-        $this->tracker_factory->duplicate(100, 999, null);
-    }
-
 }
 
 class TrackerFactoryCollectErrorWithoutImportingTest extends TuleapTestCase

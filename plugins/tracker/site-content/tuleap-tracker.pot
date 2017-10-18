@@ -21,17 +21,11 @@ msgstr ""
 msgid "Activate artifact links types for all the trackers of this project?"
 msgstr ""
 
-msgid "Add"
-msgstr ""
-
 #, php-format
 msgid "Add a new %s"
 msgstr ""
 
 msgid "Add notification"
-msgstr ""
-
-msgid "Artifact"
 msgstr ""
 
 msgid "Artifact link types has been disabled."
@@ -48,9 +42,6 @@ msgid ""
 "Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
 
-msgid "Assigned to"
-msgstr ""
-
 msgid "Cancel"
 msgstr ""
 
@@ -61,9 +52,6 @@ msgid "Configure trackers"
 msgstr ""
 
 msgid "Confirm deletion"
-msgstr ""
-
-msgid "Cross tracker search"
 msgstr ""
 
 msgid "Delete"
@@ -81,19 +69,10 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Last update date"
-msgstr ""
-
 msgid "No element selected."
 msgstr ""
 
-msgid "No matching artifacts found"
-msgstr ""
-
 msgid "No notification set"
-msgstr ""
-
-msgid "No trackers selected"
 msgstr ""
 
 msgid "Notification successfully deleted."
@@ -108,31 +87,10 @@ msgstr ""
 msgid "On all updates?"
 msgstr ""
 
-msgid "Only the first 30 results are shown"
-msgstr ""
-
-msgid "Project"
-msgstr ""
-
 msgid "Renderer id"
 msgstr ""
 
 msgid "Save"
-msgstr ""
-
-msgid "Save report"
-msgstr ""
-
-msgid "Search"
-msgstr ""
-
-msgid "Search into multiple trackers and multiple projects."
-msgstr ""
-
-msgid "Status"
-msgstr ""
-
-msgid "Submitted by"
 msgstr ""
 
 #, php-format
@@ -314,9 +272,6 @@ msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
 msgid "This template does not use trackers"
-msgstr ""
-
-msgid "Tracker"
 msgstr ""
 
 msgid "Tracker global admininistration"

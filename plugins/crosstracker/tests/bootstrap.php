@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('CROSSTRACKER_BASE_DIR', realpath(__DIR__.'/..'));
-define('CROSSTRACKER_BASE_URL', '/plugins/crosstracker');
+require_once __DIR__ . '/../include/autoload.php';
+require_once __DIR__ . '/../include/constants.php';
+require_once __DIR__ . '/../../tracker/tests/bootstrap.php';

@@ -815,19 +815,6 @@ CREATE TABLE plugin_tracker_recently_visited (
     INDEX idx_user_visit_time(user_id, created_on)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report;
-CREATE TABLE plugin_tracker_cross_tracker_report (
-    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS plugin_tracker_cross_tracker_report_tracker;
-CREATE TABLE plugin_tracker_cross_tracker_report_tracker (
-    report_id INT(11) NOT NULL,
-    tracker_id INT(11) NOT NULL,
-    PRIMARY KEY (report_id, tracker_id),
-    INDEX idx_cross_tracker_report_id(report_id)
-) ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS plugin_tracker_projects_use_artifactlink_types;
 CREATE TABLE plugin_tracker_projects_use_artifactlink_types (
     project_id INT(11) UNSIGNED PRIMARY KEY

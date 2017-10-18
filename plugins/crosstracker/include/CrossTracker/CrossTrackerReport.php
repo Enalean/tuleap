@@ -18,5 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('CROSSTRACKER_BASE_DIR', realpath(__DIR__.'/..'));
-define('CROSSTRACKER_BASE_URL', '/plugins/crosstracker');
+namespace Tuleap\CrossTracker;
+
+use Tracker;
+
+class CrossTrackerReport
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var Tracker[]
+     */
+    private $trackers;
+
+    public function __construct($id, array $trackers)
+    {
+        $this->id       = $id;
+        $this->trackers = $trackers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Tracker[]
+     */
+    public function getTrackers()
+    {
+        return $this->trackers;
+    }
+}

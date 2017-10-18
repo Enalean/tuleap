@@ -37,18 +37,12 @@ msgstr ""
 "Activer les liens entre artéfacts typés pour l'ensemble des outils de suivi "
 "du projet ?"
 
-msgid "Add"
-msgstr "Ajouter"
-
 #, php-format
 msgid "Add a new %s"
 msgstr "Ajouter un nouveau %s"
 
 msgid "Add notification"
 msgstr "Ajouter une notification"
-
-msgid "Artifact"
-msgstr "Artefact"
 
 msgid "Artifact link types has been disabled."
 msgstr "Les liens entre artéfacts typés ont été désactivés."
@@ -67,9 +61,6 @@ msgstr ""
 "adresses e-mail qui recevront systématiquement les notifications de "
 "soumission (et éventuellement de modification) d'artefacts."
 
-msgid "Assigned to"
-msgstr "Assigné à"
-
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -81,9 +72,6 @@ msgstr "Configurer les trackers"
 
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
-
-msgid "Cross tracker search"
-msgstr "Recherche multi outil de suivi"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -100,20 +88,11 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] "Le groupe '%s' n'a pas pu être ajouté"
 msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 
-msgid "Last update date"
-msgstr "Mis à jour le"
-
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
 
-msgid "No matching artifacts found"
-msgstr "Aucun artefact correspondant trouvé"
-
 msgid "No notification set"
 msgstr "Aucune notification n'a été définie"
-
-msgid "No trackers selected"
-msgstr "Aucun élément sélectionné"
 
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"
@@ -127,32 +106,11 @@ msgstr "Personnes notifiées"
 msgid "On all updates?"
 msgstr "À chaque modification ?"
 
-msgid "Only the first 30 results are shown"
-msgstr "Seuls les 30 premiers résultats sont affichés"
-
-msgid "Project"
-msgstr "Projet"
-
 msgid "Renderer id"
 msgstr "Id du rendu"
 
 msgid "Save"
 msgstr "Sauvegarder"
-
-msgid "Save report"
-msgstr "Enregistrer le rapport"
-
-msgid "Search"
-msgstr "Rechercher"
-
-msgid "Search into multiple trackers and multiple projects."
-msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
-
-msgid "Status"
-msgstr "État"
-
-msgid "Submitted by"
-msgstr "Auteur"
 
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."
@@ -375,9 +333,6 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
-
-msgid "Tracker"
-msgstr "Outil de suivi"
 
 msgid "Tracker global admininistration"
 msgstr "Administration globale des outils de suivi"

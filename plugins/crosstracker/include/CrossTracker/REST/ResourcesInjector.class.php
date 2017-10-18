@@ -18,5 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('CROSSTRACKER_BASE_DIR', realpath(__DIR__.'/..'));
-define('CROSSTRACKER_BASE_URL', '/plugins/crosstracker');
+namespace Tuleap\CrossTracker\REST;
+
+use Tuleap\CrossTracker\REST\v1\CrossTrackerReportRepresentation;
+
+/**
+  * Inject resource into restler
+  */
+class ResourcesInjector
+{
+
+    public function populate(\Luracast\Restler\Restler $restler)
+    {
+        $restler->addAPIClass(
+            '\\Tuleap\\CrossTracker\\REST\\v1\\CrossTrackerReportsResource',
+            CrossTrackerReportRepresentation::ROUTE
+        );
+    }
+}

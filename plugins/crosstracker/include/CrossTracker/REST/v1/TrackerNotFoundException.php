@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-define('CROSSTRACKER_BASE_DIR', realpath(__DIR__.'/..'));
-define('CROSSTRACKER_BASE_URL', '/plugins/crosstracker');
+namespace Tuleap\CrossTracker\REST\v1;
+
+class TrackerNotFoundException extends \Exception
+{
+}
