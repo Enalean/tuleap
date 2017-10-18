@@ -29,12 +29,14 @@ class NavigationItemPresenter implements NavigationItem
     public $label;
     public $html_url;
     public $is_active;
+    public $shortname;
 
     public function __construct($label, $html_url, $shortname, $current_pane_shortname)
     {
         $this->label     = $label;
         $this->html_url  = $html_url;
         $this->is_active = ($current_pane_shortname === $shortname);
+        $this->shortname = $shortname;
     }
 
     public function hasSubItems()

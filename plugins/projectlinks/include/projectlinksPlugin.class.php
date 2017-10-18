@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet & Dave Kibble, 2007
  *
@@ -22,10 +22,8 @@
  */
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\Widget\Add\AddWidgetController;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\WidgetCreator;
-use Tuleap\Widget\WidgetFactory;
+use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 
 require_once('common/plugin/Plugin.class.php');
 
@@ -34,13 +32,11 @@ class ProjectLinksPlugin extends Plugin {
     var $pluginInfo;
 
     //========================================================================
-    function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->pluginInfo = NULL;
-
-        $this->addHook('admin_toolbar_configuration',
-            'adminToolbarConfiguration', false);
 
         // add link - only visible when confirgured by a user from an allowed project
         $this->addHook('project_summary_title',
@@ -54,6 +50,7 @@ class ProjectLinksPlugin extends Plugin {
         $this->addHook('widget_instance', 'widget_instance', false);
         $this->addHook('widgets',         'widgets',         false);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(NavigationPresenter::NAME);
     }
 
     //========================================================================
@@ -63,20 +60,6 @@ class ProjectLinksPlugin extends Plugin {
             $this->pluginInfo = new ProjectLinksPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    //========================================================================
-    function adminToolbarConfiguration($params) {
-        $pM = PluginManager::instance();
-        if ($pM->isPluginAllowedForProject($this, $params['group_id'])) {
-            // only if allowed for this project...
-
-            $url = $this->_adminURI().'?group_id='.$params['group_id'];
-            $html = '<A HREF="'.$url.'">'.
-            $GLOBALS['Language']->getText('plugin_plinks',
-                'project_links_admin').'</A>';
-            print ' | '.$html."\n";
-        }
     }
 
     //========================================================================
@@ -1038,5 +1021,22 @@ class ProjectLinksPlugin extends Plugin {
     {
         return strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+    }
+
+    public function collectProjectAdminNavigationItems(NavigationPresenter $presenter)
+    {
+        $project_id = $presenter->getProjectId();
+        if (PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
+            $presenter->addItem(
+                new NavigationItemPresenter(
+                    $GLOBALS['Language']->getText('plugin_plinks', 'project_links_admin'),
+                    $this->_adminURI() . '?' . http_build_query(
+                        array('group_id' => $project_id, 'pane' => 'project_links')
+                    ),
+                    'project_links',
+                    $presenter->getCurrentPaneShortname()
+                )
+            );
+        }
     }
 }
