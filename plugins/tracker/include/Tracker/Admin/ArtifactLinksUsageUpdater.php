@@ -53,4 +53,9 @@ class ArtifactLinksUsageUpdater
 
         return $this->dao->activateForProject($project->getID());
     }
+
+    public function forceUsageOfArtifactLinkTypes(Project $project)
+    {
+        return $this->dao->activateForProject($project->getID());
+    }
 }
