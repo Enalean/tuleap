@@ -38,10 +38,10 @@
                                             <i class="tlp-pane-title-icon fa {{ icon }}"></i>
                                         {{/ has_icon }}
                                         {{# has_custom_title }}
-                                            {{{ purified_custom_title }}}
+                                            <span class="dashboard-widget-header-title">{{{ purified_custom_title }}}</span>
                                         {{/ has_custom_title }}
                                         {{^ has_custom_title }}
-                                            {{ title }}
+                                            <span class="dashboard-widget-header-title">{{ title }}</span>
                                         {{/ has_custom_title }}
                                     </h1>
                                     <div class="dashboard-widget-icons">
