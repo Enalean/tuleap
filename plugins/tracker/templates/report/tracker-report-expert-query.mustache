@@ -28,6 +28,7 @@
                         multiple
                         {{^ is_query_modifiable }}readonly{{/ is_query_modifiable }}
                 >
+                    <option class="tracker-report-expert-allowed-field" value="@comment">@comment</option>
                     {{# allowed_fields }}
                         <option class="tracker-report-expert-allowed-field" value="{{ name }}">{{ label }}</option>
                     {{/ allowed_fields }}

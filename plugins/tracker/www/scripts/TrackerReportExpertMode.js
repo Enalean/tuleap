@@ -138,7 +138,7 @@
                         token: "keyword"
                     },
                     {
-                        regex: /(?:now|between|in|not|myself)\b/i,
+                        regex: /(?:now|between|in|not|myself|@comment)\b/i,
                         token: "variable-2"
                     },
                     {
@@ -179,7 +179,8 @@
                         'NOW()',
                         'IN(',
                         'NOT',
-                        "MYSELF()"
+                        'MYSELF()',
+                        '@comment'
                     ].concat(allowed_fields);
 
                 CodeMirror.commands.autocomplete = autocomplete;
@@ -236,7 +237,7 @@
                 var cursor = editor.getCursor(),
                     line   = editor.getLine(cursor.line),
                     start  = cursor.ch,
-                    a_word = /\w+/;
+                    a_word = /[@\w]+/;
 
                 while (start && a_word.test(line.charAt(start - 1))) {
                     --start;
