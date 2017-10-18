@@ -27,7 +27,6 @@ use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
 
 class StartTestManagementController
 {
@@ -40,11 +39,6 @@ class StartTestManagementController
      * @var TrackerXmlImport
      */
     private $tracker_xml_import;
-
-    /**
-     * @var AllowedProjectsConfig
-     */
-    private $allowed_projects_config;
 
     /**
      * @var TrackerFactory
@@ -60,13 +54,11 @@ class StartTestManagementController
         TrackerFactory        $tracker_factory,
         BackendLogger         $backend_logger,
         TrackerXmlImport      $tracker_xml_import,
-        AllowedProjectsConfig $allowed_projects_config,
         ArtifactLinksUsageUpdater $artifact_link_usage_updater
     ) {
         $this->tracker_factory             = $tracker_factory;
         $this->tracker_xml_import          = $tracker_xml_import;
         $this->backend_logger              = $backend_logger;
-        $this->allowed_projects_config     = $allowed_projects_config;
         $this->artifact_link_usage_updater = $artifact_link_usage_updater;
     }
 
@@ -112,11 +104,9 @@ class StartTestManagementController
         Project $template,
         Project $project
     ) {
-        if (! $this->allowed_projects_config->isProjectAllowedToUseNature($template)) {
-            $this->allowed_projects_config->addProject($project);
+        if (! $this->artifact_link_usage_updater->isProjectAllowedToUseArtifactLinkTypes($template)) {
+            $this->artifact_link_usage_updater->forceUsageOfArtifactLinkTypes($project);
         }
-
-        $this->artifact_link_usage_updater->forceUsageOfArtifactLinkTypes($project);
     }
 
     private function getRenderer() {

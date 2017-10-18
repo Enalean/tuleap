@@ -25,8 +25,6 @@ use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
@@ -106,22 +104,15 @@ class testmanagementPlugin extends Plugin
         $project         = $project_manager->getProject($params['group_id']);
 
         if ($params['project_creation_data']->projectShouldInheritFromTemplate() && $this->isUsedByProject($template)) {
-            $this->allowProjectToUseNature($project_manager, $template, $project);
+            $this->allowProjectToUseNature($template, $project);
         }
     }
 
-    private function allowProjectToUseNature(ProjectManager $project_manager, Project $template, Project $project)
+    private function allowProjectToUseNature(Project $template, Project $project)
     {
-        $config  = new AllowedProjectsConfig(
-            $project_manager,
-            new AllowedProjectsDao()
-        );
-
-        if (! $config->isProjectAllowedToUseNature($template)) {
-            $config->addProject($project);
+        if (! $this->getArtifactLinksUsageUpdater()->isProjectAllowedToUseArtifactLinkTypes($template)) {
+            $this->getArtifactLinksUsageUpdater()->forceUsageOfArtifactLinkTypes($project);
         }
-
-        $this->getArtifactLinksUsageUpdater()->forceUsageOfArtifactLinkTypes($project);
     }
 
     /**

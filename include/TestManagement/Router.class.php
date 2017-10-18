@@ -24,13 +24,10 @@ use BackendLogger;
 use EventManager;
 use Plugin;
 use Codendi_Request;
-use MVC2_Controller;
 use ProjectManager;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use UserManager;
 use XMLImportHelper;
 
@@ -110,10 +107,6 @@ class Router {
                     TrackerXmlImport::build(
                         new XMLImportHelper(UserManager::instance())
                     ),
-                    new AllowedProjectsConfig(
-                        $this->project_manager,
-                        new AllowedProjectsDao()
-                    ),
                     $this->artifact_links_usage_updater
                 );
                 $this->executeAction($controller, 'createConfig', array($request));
@@ -126,10 +119,6 @@ class Router {
                         new BackendLogger(),
                         TrackerXmlImport::build(
                             new XMLImportHelper(UserManager::instance())
-                        ),
-                        new AllowedProjectsConfig(
-                            $this->project_manager,
-                            new AllowedProjectsDao()
                         ),
                         $this->artifact_links_usage_updater
                     );
