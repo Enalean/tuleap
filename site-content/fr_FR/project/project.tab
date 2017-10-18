@@ -6,28 +6,13 @@
 # Script: SF/www/project/admin/editgroupinfo.php
 #
 project_admin_editgroupinfo	upd_fail	La mise à jour a échoué ou aucune donnée n'a été modifiée ! $1
-project_admin_editgroupinfo	upd_success	Mis à jour avec succès
 project_admin_editgroupinfo	changed_public_info	Information publique modifiée
 project_admin_editgroupinfo	editing_g_info	Modification des informations du projet
-project_admin_editgroupinfo	editing_g_info_for	Modification des informations pour le projet&nbsp;: <B>$1</B>
-project_admin_editgroupinfo	descriptive_g_name	Nom descriptif du projet&nbsp;:
-project_admin_editgroupinfo	short_desc	Description courte (255 caractères max.)&nbsp;:
 project_admin_editgroupinfo	long_desc	Description longue&nbsp;:
 project_admin_editgroupinfo	patents	Brevets et propositions d'inventions
 project_admin_editgroupinfo	soft_required	Autre(s) logiciel(s) requis
 project_admin_editgroupinfo	comments	Autre commentaires&nbsp;:
-project_admin_editgroupinfo	info_missed	Information Manquante. SVP remplissez tous les champs requis.
-project_admin_editgroupinfo	parent_project	Projet parent :
-project_admin_editgroupinfo	sub_projects	Sous projets :
-project_admin_editgroupinfo	project_hierarchy_title	Hierarchie de projets
-project_admin_editgroupinfo	must_be_admin_of_parent_project	Le projet n'existe pas ou alors vous n'êtes pas administrateur.
-project_admin_editgroupinfo	project_hierarchy_desc_1	Cette fonctionnalité permettra, à terme, d'organiser vos projects les uns par rapport aux autres en terme de permissions, groupes d'utilisateurs et contrôle.
-project_admin_editgroupinfo	project_hierarchy_desc_2	Cependant, à l'heure actuelle, elle n'est exploitée que par Git/Gerrit pour les projets "parapluies" (si ces services sont activés/disponibles sur votre plate-forme).
-project_admin_editgroupinfo	project_hierarchy_desc_3	Veuillez noter que, plus tard, au cours de futurs développements, la définition d'une hierarchy pourra avoir un impact sur l'organisation des enfants (ex. les administrateurs d'un projet parent pourraient automatiquement avoir accès à l'administration des tous les enfants et petits enfants).
 project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto completé à la volée)
-project_admin_editgroupinfo	remove_parent_project	Supprimer le projet parent
-project_admin_editgroupinfo	self_exception	Un projet ne peut être son propre parent.
-project_admin_editgroupinfo	ancestor_exception	Un lien de parenté existe déjà entre ces projets.
 project_admin_editgroupinfo	visibility_section	Accès
 project_admin_editgroupinfo	private_label	privé
 project_admin_editgroupinfo	public_label	publique
@@ -75,7 +60,7 @@ project_admin_editservice	s_not_exist	Le service n'existe pas&nbsp;: $1
 project_admin_editservice	forbidden	Interdit
 project_admin_editservice	no_access_inactive_s	Vous ne pouvez accéder à un service inactif
 ## There must be a label and description value here for each service name (system or project wide) that should be localised
-## Naming rule for the key: 
+## Naming rule for the key:
 ## service_<service short name>_lbl_key for the service label
 ## service_<service short name>_desc_key for the service description
 project_admin_editservice	service_summary_lbl_key	Sommaire
@@ -150,26 +135,26 @@ project_admin_editugroup	document_group	Groupe de documents
 project_admin_editugroup	wiki	Wiki
 project_admin_editugroup	wiki_page	Page Wiki
 project_admin_editugroup	tracker	Outil de suivi
-project_admin_editugroup	tracker_field	Champs de l'outil de suivi 
+project_admin_editugroup	tracker_field	Champs de l'outil de suivi
 project_admin_editugroup	group_members	Membres du groupe
 project_admin_editugroup	nobody_yet	Personne
 project_admin_editugroup	go_back	Retourner à la liste des groupes d'utilisateurs
 project_admin_editugroup	add_user	Ajouter des utilisateurs à ce groupe
 project_admin_editugroup	members	Membres
 project_admin_editugroup	users	Utilisateurs
-project_admin_editugroup	search_in	Ou chercher dans 
+project_admin_editugroup	search_in	Ou chercher dans
 project_admin_editugroup	any_project	tous les projets
 project_admin_editugroup	this_project	ce projet
-project_admin_editugroup	name_contains	 les utilisateurs dont le nom ou l'adresse email contient 
-project_admin_editugroup	begins	ou commence par 
-project_admin_editugroup	show	Afficher 
+project_admin_editugroup	name_contains	 les utilisateurs dont le nom ou l'adresse email contient
+project_admin_editugroup	begins	ou commence par
+project_admin_editugroup	show	Afficher
 project_admin_editugroup	users_per_page	utilisateurs par page.
-project_admin_editugroup	add_users_to	Ajouter des utilisateurs à 
+project_admin_editugroup	add_users_to	Ajouter des utilisateurs à
 project_admin_editugroup	group_empty	le groupe est vide
 project_admin_editugroup	permissions_title	Gestion des permissions
 project_admin_editugroup	settings_title	Paramètres
 project_admin_editugroup	binding_title	Lier des groupes
-project_admin_editugroup	parent	Projet parent : 
+project_admin_editugroup	parent	Projet parent :
 project_admin_editugroup	no_parent	Ce projet n'a pas de parent
 project_admin_editugroup	go_to_hierarchy_admin	Administration de la hiérarchie de projets
 #
@@ -197,7 +182,7 @@ project_admin_index	not_get_atf	Impossible d'obtenir un ArtifactTypeFactory
 project_admin_index	del_tracker_perm_fail	L'annulation des permissions sur l'outil de suivi ($1) a échoué
 project_admin_index	del_user_from_ug_fail	Impossible d'enlever l'utilisateur des ugroups
 project_admin_index	user_removed	Utilisateur enlevé
-project_admin_index	self_user_remove	Vous n'êtes plus membre du projet 
+project_admin_index	self_user_remove	Vous n'êtes plus membre du projet
 project_admin_index	p_admin	Administration du projet&nbsp;: $1
 project_admin_index	p_edit	Information sur le projet&nbsp;: $1
 project_admin_index	short_desc	Description courte&nbsp;: $1
@@ -231,7 +216,7 @@ project_admin_index	member_request_delegation_ugroups_all_invalid	Les groupes d'
 project_admin_index	member_request_delegation_ugroups_some_invalid	Ces groupes d'utilisateurs ($1) ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
 project_admin_index	member_request_delegation_ugroups_non_admins	Certains groupes d'utilisateurs contiennent des utilisateurs non admins du projet ($1 non admin du projet en total, ils ne vont pas reçevoir les demandes de permission).
 project_admin_index	member_request_delegation_ugroups_msg	Le(s) groupe(s) d'utilisateur à  notifier pour la délégation d'opération d'admin ($1) ont été modifiés.
-project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message pertinent afin d'aider l'administateur. 
+project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message pertinent afin d'aider l'administateur.
 project_admin_index	member_request_delegation_msg_desc	Ci-dessous le message par défaut qui va être affiché aux utilisateurs qui requièrent l'accès à votre projet. Vous pouvez le personnaliser.
 project_admin_index	member_request_delegation_msg_info	Le message destiné aux utilisateurs a été modifié .
 project_admin_index	member_request_delegation_msg_error	Impossible de modifier le message destiné aux utilisateurs.
@@ -240,7 +225,7 @@ project_admin_index	changed_group_type	Type de projet modifié
 project_admin_index	group_type	Type de projet
 project_admin_index	built_from_template	Patron utilisé pour ce projet: $1
 project_admin_index	import_user	[Importer une liste d'utilisateurs]
-project_admin_index	show_projects	Projets créés à partir de ce patron 
+project_admin_index	show_projects	Projets créés à partir de ce patron
 project_admin_index	show_projects_hide	cacher
 project_admin_index	show_projects_show	afficher
 #
@@ -261,7 +246,7 @@ project_admin_permissions	tracker_assignee_access	Accès à tous les artefacts c
 project_admin_permissions	tracker_field_submit	Peut soumettre ce champ dans l'outil de suivi
 project_admin_permissions	tracker_field_read	Peut lire ce champ dans l'outil de suivi
 project_admin_permissions	tracker_field_update	Peut éditer ce champ dans l'outil de suivi
-# message key below must comply with values returned by 
+# message key below must comply with values returned by
 # the permission_get_object_type function
 project_admin_permissions	package	paquet $1
 project_admin_permissions	release	version $1
@@ -285,7 +270,7 @@ project_admin_permissions	g_id_missed	group_id manquant
 project_admin_permissions	all_users_added	Tous les utilisateurs ajoutés, y compris les utilisateurs anonymes
 project_admin_permissions	cant_add_ug_anonymous	$1 - ERREUR&nbsp;: Impossible d'ajouter le ugroup Anonyme
 project_admin_permissions	ignore_g	- les autres groupes spécifiés sont ignorés
-project_admin_permissions	all_registered_users_added	Tous les utilisateurs enregistrés ont été ajoutés 
+project_admin_permissions	all_registered_users_added	Tous les utilisateurs enregistrés ont été ajoutés
 project_admin_permissions	cant_add_ug_reg_users	$1 - ERREUR&nbsp;: le ugroup utilisateurs enregistrés n'a pu être ajouté
 project_admin_permissions	g_nobody_ignored	Groupe 'nobody' ignoré puisque d'autres groupes ont été sélectionnés.
 project_admin_permissions	nobody_has_no_access	Veuillez noter que 'nobody' n'a plus accès à cet objet !
@@ -347,7 +332,7 @@ project_reference	warning_del_r	*********** ATTENTION ***********  Voulez-vous d
 project_reference	extract_syntax	Paramètres :\n  group_id : projet qui définit les patrons de référence\n  text     : texte en entrée
 project_reference	insert_syntax	<p>Param&egrave;tres :<br>- group_id ou group_name : projet qui définit les patrons de référence<br>- text : texte en entr&eacute;e
 ## Description value here for each reference pattern name (system or project wide) that should be localised
-## Naming rule for the key: 
+## Naming rule for the key:
 ## reference_<reference keyword>_desc_key for the reference pattern description
 project_reference	reference_art_desc_key	Artefact
 project_reference	reference_cvs_desc_key	Détail de commit CVS
@@ -460,10 +445,10 @@ project_admin_utils	perm_granted_for_docgroup	Permission accordée pour le group
 project_admin_utils	perm_granted_for_wiki	Permission accordée pour le wiki $1
 project_admin_utils	perm_granted_for_wikipage	Permission accordée pour la page wiki $1
 project_admin_utils	perm_granted_for_wikiattachment	Permission accordée pour le fichier joint wiki $1
-project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1 
-project_admin_utils	menu_config	Configuration&nbsp;: 
-project_admin_utils	menu_permissions	Permissions&nbsp;: 
-project_admin_utils	menu_data	Données&nbsp;: 
+project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1
+project_admin_utils	menu_config	Configuration&nbsp;:
+project_admin_utils	menu_permissions	Permissions&nbsp;:
+project_admin_utils	menu_data	Données&nbsp;:
 project_admin_utils	group_type	Type de projet modifié
 project_admin_utils	action	Action
 project_admin_utils	event_permission	Permissions
@@ -554,7 +539,7 @@ project_admin_ugroup	permission_request	Demande de permission
 project_admin_ugroup_utils	ug__exist	Le groupe d'utilisateurs '$1' existe déjà pour ce projet. Veuillez choisir un autre nom.
 project_admin_ugroup_utils	cant_create_ug	ERREUR - Impossible de créer le groupe d'utilisateurs&nbsp;: $1
 project_admin_ugroup_utils	ug_create_success	Le groupe d'utilisateurs a été créé avec succès
-project_admin_ugroup_utils	ug_created_but_no_id	ERREUR - Le groupe d'utilisateurs a été créé mais impossible d'obtenir l'ID&nbsp;: 
+project_admin_ugroup_utils	ug_created_but_no_id	ERREUR - Le groupe d'utilisateurs a été créé mais impossible d'obtenir l'ID&nbsp;:
 project_admin_ugroup_utils	no_g_template	Aucun modèle de groupe sélectionné
 project_admin_ugroup_utils	cant_insert_u_in_g	ERREUR - Impossible d'insérer l'utilisateur $1 dans le groupe $2 : $3
 project_admin_ugroup_utils	user_already_exist	Utilisateur déja existant
@@ -730,7 +715,7 @@ project_export_index	export_x	Exporter $1
 project_export_index	support_request	Suivi de demandes de support
 project_export_index	access_logs	Journal des accès
 project_export_index	user_groups	Définition des groupes
-project_export_index	direct_db_access	Accès direct à la base de données 
+project_export_index	direct_db_access	Accès direct à la base de données
 project_export_index	generate_full_db	Générer la base de données du projet</a> </b> (<- Cliquer sur ce lien pour générer la base)
 project_export_index	db_connection_params	Paramètres de connexion à la base de données&nbsp;:
 #
@@ -751,7 +736,7 @@ project_export_utils	query_is	Requête ($1) : $2
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/support_request_export.php
-#	
+#
 project_export_support_request_export	support_id	ID support
 project_export_support_request_export	category	Catégorie
 project_export_support_request_export	summary	Résumé
@@ -781,7 +766,7 @@ project_export_access_logs_export	document	Document
 project_export_access_logs_export	doc	Doc
 project_export_access_logs_export	file	Fichier
 project_export_access_logs_export	attachment	Pièce jointe
-project_export_access_logs_export	access	Accès	
+project_export_access_logs_export	access	Accès
 project_export_access_logs_export	file_brows	Visualisation de fichiers
 project_export_access_logs_export	chk_upd	Checkout/Update
 project_export_access_logs_export	local_time	Heure locale
@@ -843,14 +828,14 @@ project_stats_index	cvs	CVS
 #
 project_stats_source_code_access	all_users	Tous les utilisateurs
 project_stats_source_code_access	non_proj_members	Utilisateurs non membres
-project_stats_source_code_access	access_log_from	Journal d'accès pour 
+project_stats_source_code_access	access_log_from	Journal d'accès pour
 project_stats_source_code_access	for_last	sur les derniers...
 project_stats_source_code_access	logs_export	Exporter le journal d'accès correspondant
 #
 #-----------------------------------------------
 # Script: SF/www/project/stats/source_code_access_utils.php
 #
-project_stats_source_code_access_utils	file_download	Téléchargements de fichiers 
+project_stats_source_code_access_utils	file_download	Téléchargements de fichiers
 project_stats_source_code_access_utils	frs_actions	Actions sur le service de fichiers
 project_stats_source_code_access_utils	frs_elements	Paquets/vesions/éléments
 project_stats_source_code_access_utils	files	Fichiers
@@ -867,7 +852,7 @@ project_stats_source_code_access_utils	frs_create_link	Création de lien
 project_stats_source_code_access_utils	frs_delete_link	Suppression de lien
 project_stats_source_code_access_utils	frs_restore	Réstauration de fichier
 project_stats_source_code_access_utils	frs_unknown_action	Action inconnue
-project_stats_source_code_access_utils	access_for_past_x_days	$1 sur les $2 derniers jours	
+project_stats_source_code_access_utils	access_for_past_x_days	$1 sur les $2 derniers jours
 project_stats_source_code_access_utils	in_total	$1 au total
 project_stats_source_code_access_utils	time	Heure locale
 project_stats_source_code_access_utils	no_access	Aucun pour cette période.
@@ -913,7 +898,7 @@ project_showdetails	back_main	[Retour au sommaire]
 project_showdetails	references	Patrons de référence
 #
 #-----------------------------------------------
-# Script: 
+# Script:
 #
 project_ugroup	ugroup_anonymous_users_desc_key	Anonymes
 project_ugroup	ugroup_registered_users_desc_key	Utilisateurs enregistrés
@@ -958,8 +943,8 @@ project_desc_name	other_comments	Autres Commentaires
 project_desc_name	req_soft	Logiciels Requis
 project_desc_name	int_prop	Propriété Intellectuelle
 
-project_desc_desc	full_desc	<b>*** REMARQUE IMPORTANTE ***</b> Veuillez fournir une description contenant tous les mots-clés qui permettront aux utilisateurs de trouver facilement votre projet lors d'une recherche. Une description trop courte ou incomplète ne fera que retarder l'approbation de votre projet. 
-project_desc_desc	other_comments	Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilise votre logiciel. S'il s'agit d'un produit commercial vous pouvez aussi fournir des informations de prix ou un contact commercial, etc. 
+project_desc_desc	full_desc	<b>*** REMARQUE IMPORTANTE ***</b> Veuillez fournir une description contenant tous les mots-clés qui permettront aux utilisateurs de trouver facilement votre projet lors d'une recherche. Une description trop courte ou incomplète ne fera que retarder l'approbation de votre projet.
+project_desc_desc	other_comments	Tout ce que vous souhaitez dire à propos de votre projet et qui n'a pas déjà été couvert plus haut. Vous pouvez par exemple mentionner les produits qui utilise votre logiciel. S'il s'agit d'un produit commercial vous pouvez aussi fournir des informations de prix ou un contact commercial, etc.
 project_desc_desc	req_soft	Si votre projet nécessite l'emploi d'autres composants logicielles internes ou externes pour fonctionner correctement, merci de les mentionner ici.
 project_desc_desc	int_prop	Brevets ou propositions d'invention relatifs à ce projet.
 #-----------------------------------------------

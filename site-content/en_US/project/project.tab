@@ -6,28 +6,13 @@
 # Script: SF/www/project/admin/editgroupinfo.php
 #
 project_admin_editgroupinfo	upd_fail	Update failed or no data changed! $1
-project_admin_editgroupinfo	upd_success	Update successful
 project_admin_editgroupinfo	changed_public_info	Changed Public Info
 project_admin_editgroupinfo	editing_g_info	Editing Group Info
-project_admin_editgroupinfo	editing_g_info_for	Editing group info for: <B>$1</B>
-project_admin_editgroupinfo	descriptive_g_name	Descriptive Group Name:
-project_admin_editgroupinfo	short_desc	Short Description (255 Character Max):
 project_admin_editgroupinfo	long_desc	Long Description:
 project_admin_editgroupinfo	patents	Patents and Invention Proposals (IPs)
 project_admin_editgroupinfo	soft_required	Other Software Required
 project_admin_editgroupinfo	comments	Other Comments:
-project_admin_editgroupinfo	info_missed	Missing Information. PLEASE fill in all required information.
-project_admin_editgroupinfo	parent_project	Parent Project:
-project_admin_editgroupinfo	sub_projects	Sub-Projects:
-project_admin_editgroupinfo	project_hierarchy_title	Project hierarchy
-project_admin_editgroupinfo	must_be_admin_of_parent_project	The given parent project does not exist or you are not its administrator.
-project_admin_editgroupinfo	project_hierarchy_desc_1	This feature aims to provide a way to structure projects organizations from a permissions, user groups and control point of view.
-project_admin_editgroupinfo	project_hierarchy_desc_2	As of today, it's only used by Git/ Gerrit for umbrella projects (if relevant to your platform/ project).
-project_admin_editgroupinfo	project_hierarchy_desc_3	However, setting a hierarchy between projects might have future impacts (e.g. members of the parent project could possibly have access to all sub-projects even without explicit permissions granted).
 project_admin_editgroupinfo	autocompleter_placeholder	Project name (search as you type)
-project_admin_editgroupinfo	remove_parent_project	Remove parent project
-project_admin_editgroupinfo	self_exception	A project cannot be its own parent.
-project_admin_editgroupinfo	ancestor_exception	These projects are already related.
 project_admin_editgroupinfo	visibility_section	Access
 project_admin_editgroupinfo	private_label	private
 project_admin_editgroupinfo	public_label	public
@@ -75,7 +60,7 @@ project_admin_editservice	s_not_exist	Service does not exist: $1
 project_admin_editservice	forbidden	Forbidden
 project_admin_editservice	no_access_inactive_s	You cannot access an inactive service
 ## There must be a label and description value here for each service name (system or project wide) that should be localized
-## Naming rule for the key: 
+## Naming rule for the key:
 ## service_<service short name>_lbl_key for the service label
 ## service_<service short name>_desc_key for the service description
 project_admin_editservice	service_summary_lbl_key	Summary
@@ -150,14 +135,14 @@ project_admin_editugroup	document_group	Document Group
 project_admin_editugroup	wiki	Wiki
 project_admin_editugroup	wiki_page	Wiki Page
 project_admin_editugroup	tracker	Tracker
-project_admin_editugroup	tracker_field	Fields from tracker 
+project_admin_editugroup	tracker_field	Fields from tracker
 project_admin_editugroup	group_members	Group Members
 project_admin_editugroup	nobody_yet	Nobody yet
 project_admin_editugroup	go_back	Go back to the user groups list
 project_admin_editugroup	add_user	Add users to this group
 project_admin_editugroup	members	Members
 project_admin_editugroup	users	Users
-project_admin_editugroup	search_in	Or search in 
+project_admin_editugroup	search_in	Or search in
 project_admin_editugroup	any_project	any project
 project_admin_editugroup	this_project	this project
 project_admin_editugroup	name_contains	 users whose name or email contains
@@ -169,7 +154,7 @@ project_admin_editugroup	group_empty	The group is empty
 project_admin_editugroup	permissions_title	Permissions
 project_admin_editugroup	settings_title	General settings
 project_admin_editugroup	binding_title	Groups binding
-project_admin_editugroup	parent	Parent project: 
+project_admin_editugroup	parent	Parent project:
 project_admin_editugroup	no_parent	This project has no parent
 project_admin_editugroup	go_to_hierarchy_admin	Go to project hierarchy administration
 #
@@ -206,7 +191,7 @@ project_admin_index	trove_cat_info	<B>Trove Categorization Info</B> - This proje
 project_admin_index	edit_trove_cat	[Edit Trove Categorization]
 project_admin_index	login_name	Login Name:
 project_admin_index	add_user	Add User
-project_admin_index	edit_member_perm	[Edit Member Permissions]	
+project_admin_index	edit_member_perm	[Edit Member Permissions]
 project_admin_index	s_admin	Services Administration
 project_admin_index	forum_admin	Forum Admin
 project_admin_index	bug_admin	Bug Admin
@@ -254,7 +239,7 @@ project_admin_permissions	doc_access	Document Access
 project_admin_permissions	docgroup_access	Document Group Access
 project_admin_permissions	wiki_access	Wiki Access
 project_admin_permissions	wiki_attachment_access	Wiki Attachment Access
-# message key below must comply with values returned by 
+# message key below must comply with values returned by
 # the permission_get_object_type function
 project_admin_permissions	package	package $1
 project_admin_permissions	release	release $1
@@ -286,7 +271,7 @@ project_admin_permissions	g_id_missed	group_id is missing
 project_admin_permissions	all_users_added	All users added, including anonymous ones
 project_admin_permissions	cant_add_ug_anonymous	$1 - ERROR: Cannot add ugroup Anonymous
 project_admin_permissions	ignore_g	- ignoring other specified groups
-project_admin_permissions	all_registered_users_added	All registered users added 
+project_admin_permissions	all_registered_users_added	All registered users added
 project_admin_permissions	cant_add_ug_reg_users	$1 - ERROR: Cannot add ugroup Registered Users
 project_admin_permissions	g_nobody_ignored	Group 'nobody' ignored since other groups where selected.
 project_admin_permissions	nobody_has_no_access	Please note that 'nobody' doesn't have access to this object any longer!
@@ -348,7 +333,7 @@ project_reference	warning_del_r	*********** WARNING ***********  Do you want to 
 project_reference	extract_syntax	Parameters:\n  group_id : project where reference patterns are defined\n  text     : input text
 project_reference	insert_syntax	<p>Parameters:<br>- group_id or group_name : project where reference patterns are defined<br>- text : input text
 ## Description value here for each reference pattern (system or project wide) that should be localized
-## Naming rule for the key: 
+## Naming rule for the key:
 ## reference_<reference keyword>_desc_key for the reference pattern description
 project_reference	reference_art_desc_key	Tracker Artifact
 project_reference	reference_cvs_desc_key	CVS commit detail
@@ -465,10 +450,10 @@ project_admin_utils	perm_granted_for_docgroup	Permission granted for document gr
 project_admin_utils	perm_granted_for_wiki	Permission granted for wiki  $1
 project_admin_utils	perm_granted_for_wikipage	Permission granted for wiki page  $1
 project_admin_utils	perm_granted_for_wikiattachment	Permission granted for wiki attachment $1
-project_admin_utils	perm_granted_for_object	Permission granted for object $1 
-project_admin_utils	menu_config	Configuration: 
-project_admin_utils	menu_permissions	Permissions: 
-project_admin_utils	menu_data	Data: 
+project_admin_utils	perm_granted_for_object	Permission granted for object $1
+project_admin_utils	menu_config	Configuration:
+project_admin_utils	menu_permissions	Permissions:
+project_admin_utils	menu_data	Data:
 project_admin_utils	group_type	Changed Project Type
 project_admin_utils	action	Action
 project_admin_utils	event_permission	Permissions
@@ -558,7 +543,7 @@ project_admin_ugroup	permission_request	Permission Request
 project_admin_ugroup_utils	ug__exist	User group '$1' already exists in this project. Please choose another name.
 project_admin_ugroup_utils	cant_create_ug	ERROR - Can not create user group: $1
 project_admin_ugroup_utils	ug_create_success	Successfully Created User Group
-project_admin_ugroup_utils	ug_created_but_no_id	ERROR - User group created but cannot get ID: 
+project_admin_ugroup_utils	ug_created_but_no_id	ERROR - User group created but cannot get ID:
 project_admin_ugroup_utils	no_g_template	No group template selected
 project_admin_ugroup_utils	cant_insert_u_in_g	ERROR - Can not insert user $1 in group $2: $3
 project_admin_ugroup_utils	user_already_exist	User already exist
@@ -734,7 +719,7 @@ project_export_index	export_x	Export $1
 project_export_index	support_request	Support Request
 project_export_index	access_logs	Project Access Logs
 project_export_index	user_groups	User groups definition
-project_export_index	direct_db_access	Direct Database Access 
+project_export_index	direct_db_access	Direct Database Access
 project_export_index	generate_full_db	Generate Full Project Database</a> </b> (<- Click to generate)
 project_export_index	db_connection_params	Database connection parameters:
 #
@@ -755,7 +740,7 @@ project_export_utils	query_is	Query is ($1): $2
 #
 #-----------------------------------------------
 # Script: SF/www/project/export/support_request_export.php
-#	
+#
 project_export_support_request_export	support_id	Support ID
 project_export_support_request_export	category	Category
 project_export_support_request_export	summary	Summary
@@ -785,7 +770,7 @@ project_export_access_logs_export	document	Document
 project_export_access_logs_export	doc	Doc
 project_export_access_logs_export	file	File
 project_export_access_logs_export	attachment	Attachment
-project_export_access_logs_export	access	Accesses	
+project_export_access_logs_export	access	Accesses
 project_export_access_logs_export	file_brows	File Browsing
 project_export_access_logs_export	chk_upd	Checkout/Update
 project_export_access_logs_export	local_time	Local Time
@@ -854,7 +839,7 @@ project_stats_source_code_access	logs_export	Export Matching Logs
 #-----------------------------------------------
 # Script: SF/www/project/stats/source_code_access_utils.php
 #
-project_stats_source_code_access_utils	file_download	File Download 
+project_stats_source_code_access_utils	file_download	File Download
 project_stats_source_code_access_utils	frs_actions	FRS actions
 project_stats_source_code_access_utils	frs_elements	Packages/releases/elements
 project_stats_source_code_access_utils	files	Files
@@ -871,7 +856,7 @@ project_stats_source_code_access_utils	frs_create_link	Create link
 project_stats_source_code_access_utils	frs_delete_link	Delete link
 project_stats_source_code_access_utils	frs_restore	Restore file
 project_stats_source_code_access_utils	frs_unknown_action	Unknown Action
-project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days	
+project_stats_source_code_access_utils	access_for_past_x_days	$1 for the past $2 days
 project_stats_source_code_access_utils	in_total	$1 in total
 project_stats_source_code_access_utils	time	Local Time
 project_stats_source_code_access_utils	no_access	None for this period.
@@ -917,7 +902,7 @@ project_showdetails	back_main	[Back to Main Page]
 project_showdetails	references	Reference patterns
 #
 #-----------------------------------------------
-# Script: 
+# Script:
 #
 project_ugroup	ugroup_anonymous_users_desc_key	Anonymous
 project_ugroup	ugroup_registered_users_desc_key	Registered users

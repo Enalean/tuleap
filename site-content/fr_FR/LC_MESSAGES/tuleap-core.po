@@ -30,6 +30,30 @@ msgid_plural "%d members"
 msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
+msgid ""
+"<p>This feature aims to provide a way to structure projects organizations "
+"from permissions, user groups and control point of view.</p>\n"
+"                <p>As of today, it's only used by Git/ Gerrit for umbrella "
+"projects (if relevant to your platform/ project).</p>\n"
+"                <p><strong>However, setting a hierarchy between projects "
+"might have future impacts (e.g. members of the parent project could possibly "
+"have access to all sub-projects even without explicit permissions granted).</"
+"strong></p>"
+msgstr ""
+"<p>Cette fonctionnalité permet d'organiser vos projects les uns par rapport "
+"aux autres en terme de permissions, groupes d'utilisateurs et de contrôle.</"
+"p>\n"
+"            <p>Cependant, à l'heure actuelle, elle n'est exploitée que par "
+"Git/Gerrit pour les projets \"parapluies\" (si ces services sont activés/"
+"disponibles sur votre plate-forme).</p>\n"
+"            <p><strong>Veuillez noter que la définition d'une hierarchie "
+"pourra avoir un impact sur l'organisation des enfants (ex. les "
+"administrateurs d'un projet parent peuvent avoir automatiquement accès à "
+"l'administration de tous les sous-projets).</strong></p>"
+
+msgid "A project cannot be its own parent."
+msgstr "Un projet ne peut être son propre parent."
+
 msgid "Access Logs"
 msgstr "Journal des accès"
 
@@ -180,6 +204,12 @@ msgstr "Supprimer le tableau de bord"
 msgid "Delete widget"
 msgstr "Supprimer le widget"
 
+msgid "Descriptive Group Name:"
+msgstr "Nom descriptif du projet :"
+
+msgid "Details"
+msgstr "Détails"
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
 
@@ -204,11 +234,24 @@ msgstr "Éditer le tableau de bord"
 msgid "Edit widget"
 msgstr "Éditer le widget"
 
+#, php-format
+msgid "Editing group info for: %s"
+msgstr "Modification des informations du projet pour : %s"
+
 msgid "Emergency"
 msgstr "Urgent"
 
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
+
+msgid "Failed to create project description."
+msgstr "Échec de la création de la description du projet."
+
+msgid "Failed to delete project description."
+msgstr "Échec de la suppression de la description du projet."
+
+msgid "Failed to update project description."
+msgstr "Échec de la mise à jour de la description du projet."
 
 msgid "Files"
 msgstr "Fichiers"
@@ -276,6 +319,9 @@ msgstr "Importer les utilisateurs"
 msgid "Mediawiki"
 msgstr "Mediawiki"
 
+msgid "Missing Information. PLEASE fill in all required information."
+msgstr "Information manquante. Veuillez saisir les informations demandées."
+
 msgid "My personnal page"
 msgstr "Ma page personnelle"
 
@@ -324,6 +370,9 @@ msgstr "Contour"
 msgid "Owner"
 msgstr "Propriétaire"
 
+msgid "Parent Project"
+msgstr "Projet Parent"
+
 msgid "Permission Request"
 msgstr "Demande de permission"
 
@@ -344,6 +393,9 @@ msgstr "Historique du projet"
 
 msgid "Project administration"
 msgstr "Administration du projet"
+
+msgid "Project hierarchy"
+msgstr "Hierarchie de projets"
 
 msgid "Project name"
 msgstr "Nom du projet"
@@ -366,8 +418,14 @@ msgstr "RSS"
 msgid "Recently"
 msgstr "Récemment"
 
+msgid "Remove parent project"
+msgstr "Supprimer le projet parent"
+
 msgid "SVN"
 msgstr "SVN"
+
+msgid "Short Description (255 Character Max):"
+msgstr "Description courte (255 caractères max.) :"
 
 msgid "Short description"
 msgstr "Description courte"
@@ -384,6 +442,9 @@ msgstr "Commencez par choisir un widget"
 msgid "Style"
 msgstr "Style"
 
+msgid "Sub-Projects:"
+msgstr "Sous projets :"
+
 #, php-format
 msgid "The dashboard \"%s\" already exists."
 msgstr "Le tableau de bord \"%s\" existe déjà."
@@ -399,6 +460,11 @@ msgstr "Le répertoire %s n'est valide"
 #, php-format
 msgid "The entered value '%s' is invalid."
 msgstr "La valeur saisie '%s' est invalide."
+
+msgid ""
+"The given parent project does not exist or you are not its administrator."
+msgstr ""
+"Le projet parent n'existe pas ou alors vous n'en êtes pas administrateur."
 
 msgid "The name is missing for creating a dashboard."
 msgstr "Il manque le nom pour créer un tableau de bord."
@@ -429,6 +495,9 @@ msgstr "Il n'y a pas <br> encore d'activité"
 
 msgid "There isn't any matching widgets"
 msgstr "Il n'y a aucun widget correspondant"
+
+msgid "These projects are already related."
+msgstr "Un lien de parenté existe déjà entre ces projets."
 
 msgid "This label is used in the project"
 msgstr "Ce label est utilisé dans le projet"
@@ -466,6 +535,9 @@ msgstr "Now unix"
 
 msgid "Update"
 msgstr "Mettre à jour"
+
+msgid "Update failed or no data changed!"
+msgstr "La mise à jour a échoué ou aucune donnée n'a été modifiée !"
 
 msgid "Update label"
 msgstr "Mettre à jour le label"
