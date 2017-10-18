@@ -30,6 +30,9 @@ msgid_plural "%d members"
 msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
+msgid "Access Logs"
+msgstr "Journal des accès"
+
 msgid "Add dashboard"
 msgstr "Ajouter un tableau de bord"
 
@@ -321,6 +324,9 @@ msgstr "Contour"
 msgid "Owner"
 msgstr "Propriétaire"
 
+msgid "Permission Request"
+msgstr "Demande de permission"
+
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
 
@@ -329,6 +335,15 @@ msgstr "Merci d'accepter les conditions d'utilisation"
 
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
+
+msgid "Project Data Export"
+msgstr "Export des données"
+
+msgid "Project History"
+msgstr "Historique du projet"
+
+msgid "Project administration"
+msgstr "Administration du projet"
 
 msgid "Project name"
 msgstr "Nom du projet"
@@ -440,6 +455,9 @@ msgstr "Aujourd'hui"
 msgid "Tracker"
 msgstr "Suivi"
 
+msgid "Tracker Import"
+msgstr "Import outils de suivi"
+
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"
 
@@ -454,6 +472,9 @@ msgstr "Mettre à jour le label"
 
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
+
+msgid "User Permissions"
+msgstr "Permissions utilisateurs"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
@@ -544,3 +565,30 @@ msgstr "Votre historique est vide"
 
 msgid "Your platform does not allow restricted users."
 msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"
+
+msgid "categories"
+msgstr "catégories"
+
+msgid "data"
+msgstr "données"
+
+msgid "details"
+msgstr "détails"
+
+msgid "groups"
+msgstr "groupes"
+
+msgid "labels"
+msgstr "labels"
+
+msgid "members"
+msgstr "membres"
+
+msgid "permissions"
+msgstr "permissions"
+
+msgid "references"
+msgstr "références"
+
+msgid "services"
+msgstr "services"
