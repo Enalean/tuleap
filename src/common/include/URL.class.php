@@ -111,13 +111,12 @@ class URL {
                 $dao = $this->getForumDao();
                 $row = $dao->getMessageProjectIdAndForumId($_REQUEST['msg_id']);
                 $group_id=$row['group_id'];
-
+                $forum_id=$row['group_forum_id'];
 
                 // News
                 if ($group_id == $GLOBALS['sys_news_group']) {
                     // Otherwise, get group_id of corresponding news
-                    $group_id = $this->getGroupIdForNewsFromForumId($_REQUEST['forum_id']);
-
+                    $group_id = $this->getGroupIdForNewsFromForumId($forum_id);
                 }
             }
         }
