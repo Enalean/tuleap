@@ -19,10 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
@@ -871,13 +871,13 @@ class Tracker implements Tracker_Dispatchable_Interface
         return false;
     }
 
+    /**
+     * @return boolean
+     */
     public function isProjectAllowedToUseNature() {
-        $config = new AllowedProjectsConfig(
-            ProjectManager::instance(),
-            new AllowedProjectsDao()
-        );
+        $artifact_links_usage_updater = new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
 
-        return $config->isProjectAllowedToUseNature($this->getProject());
+        return $artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($this->getProject());
     }
 
     private function getHierarchyController($request) {

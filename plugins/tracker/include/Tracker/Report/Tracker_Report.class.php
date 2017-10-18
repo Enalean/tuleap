@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
@@ -661,7 +661,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     private function fieldAllowsCustomColumnForTableReport(Tracker_FormElement_Field $field, $dropdown_type) {
-        return $this->getAllowedProjectsConfig()->isProjectAllowedToUseNature($this->getTracker()->getProject()) &&
+        return $this->getArtifactLinksUsageUpdater()->isProjectAllowedToUseArtifactLinkTypes($this->getTracker()->getProject()) &&
             $dropdown_type === self::TYPE_TABLE &&
             $this->getFormElementFactory()->getType($field) === Tracker_FormElement_Field_ArtifactLink::TYPE;
     }
@@ -670,11 +670,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return new NaturePresenterFactory(new NatureDao());
     }
 
-    private function getAllowedProjectsConfig() {
-        return new AllowedProjectsConfig(
-            ProjectManager::instance(),
-            new AllowedProjectsDao()
-        );
+    /**
+     * @return ArtifactLinksUsageUpdater
+     */
+    private function getArtifactLinksUsageUpdater()
+    {
+        return new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
     }
 
     public function getTemplateRenderer() {

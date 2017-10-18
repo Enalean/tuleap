@@ -19,8 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsConfig;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\AllowedProjectsDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
@@ -62,10 +60,6 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
         ),
         new NatureConfigController(
             $project_manager,
-            new AllowedProjectsConfig(
-                $project_manager,
-                new AllowedProjectsDao()
-            ),
             new NatureCreator(
                 $nature_dao,
                 $nature_validator
