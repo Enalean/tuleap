@@ -25,9 +25,3 @@ help_browse_tracker_query_field	at_not_created	ArtifactType could not be created
 help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory could not be created
 help_browse_tracker_query_field	af_not_created	ArtifactField could not be created
 help_browse_tracker_query_field	art_search_criteria	Artifact Search -  Selection Criteria
-#
-#-----------------------------------------------
-# Script: SF/www/help/show_help.php
-#
-help_show_help	page_not_found	$1 Help System - Error: page not found
-help_show_help	page_not_available	<h4>Sorry, the help page you have requested (section $1) is not available.<br> \nPlease inform the <a href="mailto:$2">$3 Site Administrator</a></h4>

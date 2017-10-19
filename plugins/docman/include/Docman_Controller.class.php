@@ -236,7 +236,10 @@ class Docman_Controller extends Controler {
         return Docman_PermissionsManager::instance($this->getGroupId());
     }
 
-    function &getUser() {
+    /**
+     * @return null|PFUser
+     */
+    function getUser() {
         if($this->user === null) {
             $um = UserManager::instance();
             $this->user = $um->getCurrentUser();

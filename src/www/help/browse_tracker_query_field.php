@@ -100,6 +100,6 @@ if ($field_info) {
     <HTML>
     <FRAMESET rows="30%,70%">
     <FRAME src="?helpid='.$helpid.'&field_info=1" frameborder="0">
-    <FRAME src="/help/show_help.php?section=ArtifactBrowsing.html#'.$cug_section.'" frameborder="0">
+    <FRAME src="/doc/'.$request->getCurrentUser()->getShortLocale().'/user-guide/ArtifactBrowsing.html#'.$cug_section.'" frameborder="0">
     </FRAMESET></HTML>';
 }

@@ -23,13 +23,24 @@
     var $dfltSortParams = array();
     var $dfltSearchParams = array();
 
+    /**
+     * @var Docman_Controller
+     */
     var $_controller;
+
+    /**
+     * @var string
+     */
     var $javascript;
+
+    /**
+     * @var Codendi_HTMLPurifier
+     */
     var $hp;
 
     function Docman_View_View(&$controller) {
         $this->_controller = $controller;
-        $this->hp =& Codendi_HTMLPurifier::instance();
+        $this->hp = Codendi_HTMLPurifier::instance();
         $this->javascript = "";
     }
     

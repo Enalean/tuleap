@@ -21,7 +21,8 @@ function help_button($type,$helpid=false,$prompt='[?]') {
     // Generic processing derives the script name from the help type
     if ($helpid == false) {
 	// $type is a static HTML page from the Codendi User Guide
-	$script = '/help/show_help.php?section='.$purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
+        $lang = HTTPRequest::instance()->getCurrentUser()->getShortLocale();
+	$script = '/doc/'.$lang.'/user-guide/'.$purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
     } else {
 	// $type is a php script - the invoker probably wants to customize 
 	// the help display somehow
