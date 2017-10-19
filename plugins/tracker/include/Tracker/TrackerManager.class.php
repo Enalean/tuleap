@@ -22,7 +22,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\Admin\GlobalAdminPresenter;
+use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
@@ -173,8 +173,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 $group_id = (int)$request->get('group_id');
                 if ($project = $this->getProject($group_id)) {
                     if ($this->checkServiceEnabled($project, $request)) {
-                        $global_admin_csrf = new CSRFSynchronizerToken($this->getTrackerHomepageURL($group_id));
-
+                        $golbal_admin_controller = $this->getGlobalAdminController($project);
                         switch($request->get('func')) {
                             case 'docreate':
                                 if ($this->userCanCreateTracker($group_id)) {
@@ -230,7 +229,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 break;
                             case 'global-admin':
                                 if ($this->userCanCreateTracker($group_id) || $this->userCanAdminAllProjectTrackers()) {
-                                    $this->displayGlobalAdministration($project, $global_admin_csrf);
+                                    $golbal_admin_controller->displayGlobalAdministration($project, $this);
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
@@ -238,9 +237,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 break;
                             case 'edit-global-admin':
                                 if ($this->userCanCreateTracker($group_id) || $this->userCanAdminAllProjectTrackers()) {
-                                    $global_admin_csrf->check();
-                                    $this->getArtifactLinksUsageUpdater()->update($project);
-                                    $GLOBALS['Response']->redirect($this->getTrackerGlobalAdministrationURL($project));
+                                    $golbal_admin_controller->updateGlobalAdministration($project);
+                                    $GLOBALS['Response']->redirect($golbal_admin_controller->getTrackerGlobalAdministrationURL($project));
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
@@ -687,7 +685,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $breadcrumbs = array();
         $html        = '';
         $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
-        $toolbar     = $this->getServiceToolbar($project);
+        $toolbar     = $this->getGlobalAdminController($project)->getToolbar($project);
 
         if (HTTPRequest::instance()->isAjax()) {
             $http_content = '';
@@ -1160,62 +1158,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     /**
-     * @return array
+     * @return GlobalAdminController
      */
-    private function getServiceToolbar(Project $project)
+    private function getGlobalAdminController(Project $project)
     {
-        return array(
-            array(
-                'title' => "Administration",
-                'url'   => $this->getTrackerGlobalAdministrationURL($project)
-            )
-        );
-    }
+        $global_admin_csrf = new CSRFSynchronizerToken($this->getTrackerHomepageURL($project->getID()));
+        $dao               = new ArtifactLinksUsageDao();
+        $updater           = new ArtifactLinksUsageUpdater($dao);
 
-    private function displayGlobalAdministration(Project $project, CSRFSynchronizerToken $global_admin_csrf)
-    {
-        $toolbar     = $this->getServiceToolbar($project);
-        $params      = array();
-        $breadcrumbs = $this->getServiceToolbar($project);
-
-        $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
-
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-        $presenter = new GlobalAdminPresenter(
-            $project,
-            $global_admin_csrf,
-            $this->getArtifactLinksUsageDao()->isProjectUsingArtifactLinkTypes($project->getID())
-        );
-
-        $renderer->renderToPage(
-            'global-admin',
-            $presenter
-        );
-
-        $this->displayFooter($project);
-    }
-
-    /**
-     * @return ArtifactLinksUsageUpdater
-     */
-    private function getArtifactLinksUsageUpdater()
-    {
-        return new ArtifactLinksUsageUpdater($this->getArtifactLinksUsageDao());
-    }
-
-    /**
-     * @return ArtifactLinksUsageDao
-     */
-    private function getArtifactLinksUsageDao()
-    {
-        return new ArtifactLinksUsageDao();
-    }
-
-    private function getTrackerGlobalAdministrationURL(Project $project)
-    {
-        return TRACKER_BASE_URL . '/?' . http_build_query(array(
-            'func'     => 'global-admin',
-            'group_id' => $project->getID()
-        ));
+        return new GlobalAdminController($dao, $updater, $global_admin_csrf);
     }
 }
