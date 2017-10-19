@@ -44,7 +44,12 @@
             if ($project) {
                 /** @var Tuleap\Docman\ServiceDocman $service */
                 $service = $project->getService($htmlParams['service_name']);
-                $service->displayHeader($htmlParams['title'], $this->getToolbar($params));
+                if ($service) {
+                    $service->displayHeader($htmlParams['title'], $this->getToolbar($params));
+                } else {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Service unavailable in project');
+                    $GLOBALS['Response']->redirect('/');
+                }
             } else {
                 $GLOBALS['HTML']->includeCalendarScripts();
                 site_header($htmlParams);
