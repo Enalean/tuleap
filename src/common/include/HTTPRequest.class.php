@@ -66,7 +66,7 @@ class HTTPRequest extends Codendi_Request {
     }
 
     public function getBrowser() {
-        if ($this->isBrowserInternetExplorerBefore11()) {
+        if ($this->hasUserAgent() && $this->isBrowserInternetExplorerBefore11()) {
             return new BrowserIEDeprecated($this->getCurrentUser());
         }
 
@@ -77,6 +77,11 @@ class HTTPRequest extends Codendi_Request {
         // MSIE string has been removed in IE11
         // see https://msdn.microsoft.com/en-us/library/bg182625(v=vs.85).aspx
         return strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false;
+    }
+
+    private function hasUserAgent()
+    {
+        return isset($_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
