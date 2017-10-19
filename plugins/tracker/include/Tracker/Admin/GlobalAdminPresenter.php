@@ -55,8 +55,22 @@ class GlobalAdminPresenter
      */
     public $are_artifact_link_types_enabled;
 
-    public function __construct(Project $project, CSRFSynchronizerToken $csrf_token, $are_artifact_link_types_enabled)
-    {
+    /**
+     * @var array
+     */
+    public $artifact_link_types;
+
+    /**
+     * @var string
+     */
+    public $switch_button_label;
+
+    public function __construct(
+        Project $project,
+        CSRFSynchronizerToken $csrf_token,
+        $are_artifact_link_types_enabled,
+        array $artifact_link_types
+    ) {
         $this->title        = dgettext('tuleap-tracker', 'Tracker global admininistration');
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
         $this->switch_label = dgettext('tuleap-tracker', 'Activate artifact links types for all the trackers of this project?');
@@ -68,5 +82,12 @@ class GlobalAdminPresenter
 
         $this->csrf_token                      = $csrf_token;
         $this->are_artifact_link_types_enabled = $are_artifact_link_types_enabled;
+
+        $this->available_types     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'available_natures');
+        $this->shortname_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
+        $this->forward_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label');
+        $this->reverse_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
+        $this->switch_button_label = dgettext('tuleap-tracker', 'Use');
+        $this->artifact_link_types = $artifact_link_types;
     }
 }

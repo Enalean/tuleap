@@ -385,6 +385,9 @@ msgstr "Administration globale des outils de suivi"
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
 
+msgid "Use"
+msgstr "Utiliser"
+
 #, php-format
 msgid "User '%s' couldn't be added."
 msgid_plural "Users '%s' couldn't be added."
