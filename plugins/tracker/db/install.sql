@@ -914,7 +914,7 @@ INSERT INTO user_access SET
 INSERT INTO tracker_report_config (query_limit) VALUES (30);
 
 INSERT INTO plugin_tracker_projects_use_artifactlink_types (project_id)
-SELECT groups.group_id
+SELECT DISTINCT groups.group_id
 FROM groups
     INNER JOIN service USING (group_id)
 WHERE groups.status != 'D'
