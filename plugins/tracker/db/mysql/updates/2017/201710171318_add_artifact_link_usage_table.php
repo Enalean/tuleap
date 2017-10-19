@@ -38,7 +38,7 @@ class b201710171318_add_artifact_link_usage_table extends ForgeUpgrade_Bucket
 
     private function createTable()
     {
-        $sql = "CREATE TABLE plugin_tracker_projects_use_artifactlink_types (
+        $sql = "CREATE TABLE IF NOT EXISTS plugin_tracker_projects_use_artifactlink_types (
             project_id INT(11) UNSIGNED PRIMARY KEY
         ) ENGINE=InnoDB";
 
@@ -51,8 +51,8 @@ class b201710171318_add_artifact_link_usage_table extends ForgeUpgrade_Bucket
 
     private function insertData()
     {
-        $sql = "INSERT INTO plugin_tracker_projects_use_artifactlink_types (project_id)
-                SELECT groups.group_id
+        $sql = "REPLACE INTO plugin_tracker_projects_use_artifactlink_types (project_id)
+                SELECT DISTINCT groups.group_id
                 FROM groups
                     INNER JOIN service USING (group_id)
                 WHERE groups.status != 'D'
