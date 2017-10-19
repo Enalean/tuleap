@@ -203,7 +203,7 @@ class ServiceFile extends Service
 
         $toolbar[] = array(
             'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
-            'url'   => "javascript:help_window('/help/show_help.php?section=frs.html')"
+            'url'   => "javascript:help_window('/doc/".$user->getShortLocale()."/user-guide/frs.html')"
         );
 
         $breadcrumbs = array();

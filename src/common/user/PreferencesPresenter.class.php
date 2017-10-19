@@ -70,6 +70,8 @@ class User_PreferencesPresenter {
      */
     public $default_formats;
 
+    public $user_language;
+
     public function __construct(
         PFUser $user,
         $can_change_real_name,
@@ -110,6 +112,8 @@ class User_PreferencesPresenter {
         $this->all_csv_dateformat      = $all_csv_dateformat;
         $this->last_svn_token          = $last_svn_token;
         $this->default_formats         = $default_formats;
+
+        $this->user_language = $user->getShortLocale();
     }
 
     public function generated_svn_token() {

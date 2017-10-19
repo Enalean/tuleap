@@ -18,9 +18,3 @@ help_browse_tracker_query_field	at_not_created	ArtifactType n'a pas pu être cr�
 help_browse_tracker_query_field	aff_not_created	ArtifactFieldFactory n'a pas pu être créé
 help_browse_tracker_query_field	af_not_created	ArtifactField n'a pas pu être créé
 help_browse_tracker_query_field	art_search_criteria	Recherche d'éléments -  Critère de sélection
-#
-#-----------------------------------------------
-# Script: SF/www/help/show_help.php
-#
-help_show_help	page_not_found	Système d'aide $1 - Erreur&nbsp;: page introuvable
-help_show_help	page_not_available	<h4>Désolé, la page d'aide que vous avez demandée (section $1) n'est pas disponible.<br> \nMerci d'informer <a href="mailto:$2">l'administrateur du site $3</a></h4>
