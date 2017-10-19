@@ -1,7 +1,7 @@
 <h1 class="tlp-framed-horizontally">{{ admin_section_title }}</h1>
 
 <nav class="tlp-tabs">
-    {{# entries }}
+    {{# getEntries }}
         {{# hasSubItems }}
             <div class="tlp-tab{{# is_active }} tlp-tab-active{{/ is_active }}">
                 {{ label }} <i class="fa fa-caret-down"></i>
@@ -15,5 +15,5 @@
         {{^ hasSubItems }}
             <a href="{{ html_url }}" class="tlp-tab{{# is_active }} tlp-tab-active{{/ is_active }}">{{ label }}</a>
         {{/ hasSubItems }}
-    {{/ entries }}
+    {{/ getEntries }}
 </nav>

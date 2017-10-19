@@ -24,6 +24,9 @@
 
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
@@ -36,14 +39,14 @@ require_once 'constants.php';
 
 class StatisticsPlugin extends Plugin {
 
-    function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
         $this->addHook('cssfile',                  'cssFile',                false);
         $this->addHook('site_admin_option_hook',   'site_admin_option_hook', false);
         $this->addHook('root_daily_start',         'root_daily_start',       false);
         $this->addHook('widget_instance',          'widget_instance',        false);
         $this->addHook('widgets',                  'widgets',                false);
-        $this->addHook('admin_toolbar_data',       'admin_toolbar_data',     false);
         $this->addHook('usergroup_data',           'usergroup_data',         false);
         $this->addHook('groupedit_data',           'groupedit_data',         false);
         $this->addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
@@ -61,6 +64,7 @@ class StatisticsPlugin extends Plugin {
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(NavigationPresenter::NAME);
     }
 
     /** @see Event::GET_SYSTEM_EVENT_CLASS */
@@ -152,18 +156,17 @@ class StatisticsPlugin extends Plugin {
         );
     }
 
-    /**
-     * Hook.
-     *
-     * @param $params
-     *
-     * @return void
-     */
-    function admin_toolbar_data($params) {
-        $groupId = $params['group_id'];
-        if ($groupId) {
-            echo ' | <A HREF="'.$this->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</A>';
-        }
+    public function collectProjectAdminNavigationItems(NavigationPresenter $presenter)
+    {
+        $presenter->addDropdownItem(
+            NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME,
+            new NavigationDropdownItemPresenter(
+                $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics'),
+                $this->getPluginPath() . '/project_stat.php?' . http_build_query(
+                    array('group_id' => $presenter->getProjectId())
+                )
+            )
+        );
     }
 
     /**

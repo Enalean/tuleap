@@ -24,18 +24,63 @@
 
 namespace Tuleap\Project\Admin\Navigation;
 
-class NavigationPresenter
+use Project;
+use Tuleap\Event\Dispatchable;
+
+class NavigationPresenter implements Dispatchable
 {
-    /**
-     * @var NavigationItem[]
-     */
-    public $entries;
+    const NAME = 'collect_project_admin_navigation_items';
 
     public $admin_section_title;
 
-    public function __construct(array $entries)
+    /**
+     * @var NavigationItem[]
+     */
+    private $entries;
+
+    /** @var Project */
+    private $project;
+
+    private $current_pane_shortname;
+
+    public function __construct(
+        array $entries,
+        Project $project,
+        $current_pane_shortname
+    ) {
+        $this->admin_section_title    = _("Project administration");
+        $this->entries                = $entries;
+        $this->project                = $project;
+        $this->current_pane_shortname = $current_pane_shortname;
+    }
+
+    public function addDropdownItem($entry_shortname, NavigationDropdownItemPresenter $dropdown_item)
     {
-        $this->admin_section_title = _("Project administration");
-        $this->entries             = $entries;
+        $dropdown_presenter = $this->entries[$entry_shortname];
+
+        $dropdown_presenter->menu_items[] = $dropdown_item;
+    }
+
+    public function addItem(NavigationItemPresenter $item)
+    {
+        $this->entries[$item->shortname] = $item;
+    }
+
+    /**
+     * @return NavigationItem[]
+     */
+    public function getEntries()
+    {
+        return array_values($this->entries);
+    }
+
+    public function getProjectId()
+    {
+        return $this->project->getID();
+    }
+
+    public function getCurrentPaneShortname()
+    {
+        return $this->current_pane_shortname;
     }
 }
