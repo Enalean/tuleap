@@ -25,60 +25,64 @@
 namespace Tuleap\Project\Admin\ProjectDetails;
 
 use Codendi_HTMLPurifier;
+use Project;
+use TemplateSingleton;
 
 class ProjectDetailsPresenter
 {
     public $group_id;
-
-    public $edit_group_info_for;
-
     public $group_name;
-
     public $project_short_description;
-
     public $short_description_label;
-
     public $project_hierarchy_title;
-
     public $purified_project_hierarchy_desc;
-
     public $parent_project;
-
     public $group_info;
-
     public $description_fields_representation;
-
     public $parent_project_info;
-
     public $remove_parent_project;
-
     public $project_children;
-
     public $sub_projects;
-
+    public $public_information_label;
+    public $project_name_label;
+    public $project_name_placeholder;
+    public $short_description_info;
+    public $update_button;
+    public $project_type_label;
+    public $project_type;
     public $descriptive_group_name;
-
     public $update;
 
     public function __construct(
-        $group_id,
+        Project $project,
         array $group_info,
         array $description_fields_representation,
         array $parent_project_info,
         array $project_children
     ) {
-        $this->group_id                          = $group_id;
+        $this->group_id                          = $project->getID();
         $this->group_info                        = $group_info;
         $this->description_fields_representation = $description_fields_representation;
         $this->group_name                        = $group_info['group_name'];
         $this->project_short_description         = $group_info['short_description'];
         $this->parent_project_info               = $parent_project_info;
         $this->project_children                  = $project_children;
+        $this->project_type                      = $this->getLocalizedType($project->getType());
 
-        $this->edit_group_info_for             = sprintf(_("Editing group info for: %s"), $this->group_name);
-        $this->descriptive_group_name          = _('Descriptive Group Name:');
-        $this->short_description_label         = _('Short Description (255 Character Max):');
-        $this->project_hierarchy_title         = _('Project hierarchy');
+        $this->public_information_label = _('Public information');
+        $this->project_name_label       = _('Project name');
+        $this->project_name_placeholder = _('Project name...');
+        $this->short_description_label  = _('Short description');
+        $this->short_description_info   = _("Short description shouldn't exceed 255 characters.");
+
+        $this->project_type_label = _('Project type');
+
+        $this->project_hierarchy_title  = _('Project hierarchy');
+        $this->parent_project           = _('Parent Project');
+        $this->remove_parent_project    = _('Remove parent project');
+        $this->update_button            = _('Save information');
+        $this->sub_projects             = _('Sub-Projects:');
+
         $this->purified_project_hierarchy_desc = Codendi_HTMLPurifier::instance()->purify(
             _(
                 "<p>This feature aims to provide a way to structure projects organizations from permissions, user groups and control point of view.</p>
@@ -87,9 +91,11 @@ class ProjectDetailsPresenter
             ),
             CODENDI_PURIFIER_LIGHT
         );
-        $this->parent_project            = _('Parent Project');
-        $this->remove_parent_project     = _('Remove parent project');
-        $this->update                    = _('Update');
-        $this->sub_projects              = _('Sub-Projects:');
+    }
+
+    private function getLocalizedType($project_type_id)
+    {
+        $localized_types = TemplateSingleton::instance()->getLocalizedTypes();
+        return $localized_types[$project_type_id];
     }
 }

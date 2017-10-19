@@ -172,9 +172,6 @@ msgstr ""
 msgid "Delete widget"
 msgstr ""
 
-msgid "Descriptive Group Name:"
-msgstr ""
-
 msgid "Details"
 msgstr ""
 
@@ -198,10 +195,6 @@ msgid "Edit dashboard"
 msgstr ""
 
 msgid "Edit widget"
-msgstr ""
-
-#, php-format
-msgid "Editing group info for: %s"
 msgstr ""
 
 msgid "Emergency"
@@ -366,16 +359,25 @@ msgstr ""
 msgid "Project name"
 msgstr ""
 
+msgid "Project name..."
+msgstr ""
+
 msgid "Project registration is disabled"
 msgstr ""
 
 msgid "Project templates"
 msgstr ""
 
+msgid "Project type"
+msgstr ""
+
 msgid "Project web site"
 msgstr ""
 
 msgid "Projects in category"
+msgstr ""
+
+msgid "Public information"
 msgstr ""
 
 msgid "RSS"
@@ -390,10 +392,13 @@ msgstr ""
 msgid "SVN"
 msgstr ""
 
-msgid "Short Description (255 Character Max):"
+msgid "Save information"
 msgstr ""
 
 msgid "Short description"
+msgstr ""
+
+msgid "Short description shouldn't exceed 255 characters."
 msgstr ""
 
 msgid "Shortcut list"

@@ -53,6 +53,7 @@ class BurningParrotCompatiblePageDetector
             || $this->current_page->isDashboard()
             || $this->isInHomepage()
             || $this->isManagingLabels()
+            || $this->isInProjectAdminDetails()
             || $this->isInContact()
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
@@ -62,6 +63,11 @@ class BurningParrotCompatiblePageDetector
     private function isManagingLabels()
     {
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/labels.php') === 0;
+    }
+
+    private function isInProjectAdminDetails()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/editgroupinfo.php') === 0;
     }
 
     private function isInCoreServicesSiteAdmin(PFUser $current_user)

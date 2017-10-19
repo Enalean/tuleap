@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #, php-format
 msgid ""
@@ -204,9 +204,6 @@ msgstr "Supprimer le tableau de bord"
 msgid "Delete widget"
 msgstr "Supprimer le widget"
 
-msgid "Descriptive Group Name:"
-msgstr "Nom descriptif du projet :"
-
 msgid "Details"
 msgstr "Détails"
 
@@ -233,10 +230,6 @@ msgstr "Éditer le tableau de bord"
 
 msgid "Edit widget"
 msgstr "Éditer le widget"
-
-#, php-format
-msgid "Editing group info for: %s"
-msgstr "Modification des informations du projet pour : %s"
 
 msgid "Emergency"
 msgstr "Urgent"
@@ -400,17 +393,26 @@ msgstr "Hierarchie de projets"
 msgid "Project name"
 msgstr "Nom du projet"
 
+msgid "Project name..."
+msgstr "Nom du projet..."
+
 msgid "Project registration is disabled"
 msgstr "L'enregistrement de project est désactivé"
 
 msgid "Project templates"
 msgstr "Patrons de projet"
 
+msgid "Project type"
+msgstr "Type du projet"
+
 msgid "Project web site"
 msgstr "Site web du projet"
 
 msgid "Projects in category"
 msgstr "Projets dans la catégorie selectionnée"
+
+msgid "Public information"
+msgstr "Informations publiques"
 
 msgid "RSS"
 msgstr "RSS"
@@ -424,11 +426,14 @@ msgstr "Supprimer le projet parent"
 msgid "SVN"
 msgstr "SVN"
 
-msgid "Short Description (255 Character Max):"
-msgstr "Description courte (255 caractères max.) :"
+msgid "Save information"
+msgstr "Enregistrer les informations"
 
 msgid "Short description"
 msgstr "Description courte"
+
+msgid "Short description shouldn't exceed 255 characters."
+msgstr "La description courte ne doit pas dépasser 255 caractères."
 
 msgid "Shortcut list"
 msgstr "Liste des raccourcis"
