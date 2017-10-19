@@ -79,7 +79,7 @@ class BurningParrotCompatiblePageDetector
 
     public function isInHomepage()
     {
-        return $_SERVER['REQUEST_URI'] === '/'
+        return ($_SERVER['REQUEST_URI'] === '/' || strpos($_SERVER['REQUEST_URI'], '/index.php') === 0)
             && $this->homepage_dao->isStandardHomepageUsed();
     }
 
