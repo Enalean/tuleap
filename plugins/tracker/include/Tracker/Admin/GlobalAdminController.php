@@ -24,6 +24,7 @@ use CSRFSynchronizerToken;
 use Project;
 use TemplateRendererFactory;
 use Tracker_IDisplayTrackerLayout;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 class GlobalAdminController
 {
@@ -43,14 +44,21 @@ class GlobalAdminController
      */
     private $updater;
 
+    /**
+     * @var NaturePresenterFactory
+     */
+    private $types_presenter_factory;
+
     public function __construct(
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
+        NaturePresenterFactory $types_presenter_factory,
         CSRFSynchronizerToken $global_admin_csrf
     ) {
         $this->dao     = $dao;
         $this->updater = $updater;
         $this->csrf    = $global_admin_csrf;
+        $this->types_presenter_factory = $types_presenter_factory;
     }
 
     public function displayGlobalAdministration(Project $project, Tracker_IDisplayTrackerLayout $layout)
@@ -71,7 +79,8 @@ class GlobalAdminController
         $presenter = new GlobalAdminPresenter(
             $project,
             $this->csrf,
-            $this->dao->isProjectUsingArtifactLinkTypes($project->getID())
+            $this->dao->isProjectUsingArtifactLinkTypes($project->getID()),
+            $this->types_presenter_factory->getAllNatures()
         );
 
         $renderer->renderToPage(

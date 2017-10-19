@@ -24,6 +24,8 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     const DELETED_TRACKERS_TEMPLATE_NAME = 'deleted_trackers';
@@ -1162,10 +1164,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      */
     private function getGlobalAdminController(Project $project)
     {
-        $global_admin_csrf = new CSRFSynchronizerToken($this->getTrackerHomepageURL($project->getID()));
-        $dao               = new ArtifactLinksUsageDao();
-        $updater           = new ArtifactLinksUsageUpdater($dao);
+        $global_admin_csrf       = new CSRFSynchronizerToken($this->getTrackerHomepageURL($project->getID()));
+        $dao                     = new ArtifactLinksUsageDao();
+        $updater                 = new ArtifactLinksUsageUpdater($dao);
+        $types_presenter_factory = new NaturePresenterFactory(new NatureDao());
 
-        return new GlobalAdminController($dao, $updater, $global_admin_csrf);
+        return new GlobalAdminController($dao, $updater, $types_presenter_factory, $global_admin_csrf);
     }
 }
