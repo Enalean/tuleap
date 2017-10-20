@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class InvalidSearchableCollectorVisitor implements Visitor
+class RealInvalidSearchableCollectorVisitor implements Visitor
 {
     const SUPPORTED_NAME = '@comment';
 
@@ -42,16 +42,16 @@ class InvalidSearchableCollectorVisitor implements Visitor
 
     public function visitField(
         Field $searchable_field,
-        InvalidSearchableCollectorParameters $parameters
+        RealInvalidSearchableCollectorParameters $parameters
     ) {
         $field = $this->form_element_factory->getUsedFormElementFieldByNameForUser(
-            $parameters->getInvalidFieldsCollectorParameters()->getTracker()->getId(),
+            $parameters->getInvalidSearchablesCollectorParameters()->getTracker()->getId(),
             $searchable_field->getName(),
-            $parameters->getInvalidFieldsCollectorParameters()->getUser()
+            $parameters->getInvalidSearchablesCollectorParameters()->getUser()
         );
 
         if (! $field) {
-            $parameters->getInvalidFieldsCollectorParameters()->getInvalidFieldsCollection()->addNonexistentField(
+            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
                 $searchable_field->getName()
             );
         } else {
@@ -60,7 +60,7 @@ class InvalidSearchableCollectorVisitor implements Visitor
                     ->getInvalidFieldChecker($field)
                     ->checkFieldIsValidForComparison($parameters->getComparison(), $field);
             } catch (InvalidFieldException $exception) {
-                $parameters->getInvalidFieldsCollectorParameters()->getInvalidFieldsCollection()->addInvalidFieldError(
+                $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
                     $exception->getMessage()
                 );
             }
@@ -69,17 +69,17 @@ class InvalidSearchableCollectorVisitor implements Visitor
 
     public function visitMetadata(
         Metadata $metadata,
-        InvalidSearchableCollectorParameters $parameters
+        RealInvalidSearchableCollectorParameters $parameters
     ) {
         if ($metadata->getName() !== self::SUPPORTED_NAME) {
-            $parameters->getInvalidFieldsCollectorParameters()->getInvalidFieldsCollection()->addNonexistentField(
+            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
                 $metadata->getName()
             );
 
             return;
         }
 
-        $parameters->getInvalidFieldsCollectorParameters()->getInvalidFieldsCollection()->addInvalidFieldError(
+        $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
             sprintf(
                 dgettext("tuleap-tracker", "%s is not supported yet"),
                 self::SUPPORTED_NAME

@@ -22,6 +22,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Exception;
 
-class FieldsDoNotExistException extends Exception
+class SearchablesDoNotExistException extends Exception
 {
 }

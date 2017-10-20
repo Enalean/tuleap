@@ -51,7 +51,7 @@ use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
+class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
 {
 
     private $tracker;
@@ -62,12 +62,12 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
-    /** @var InvalidFieldsCollectorVisitor */
+    /** @var InvalidSearchablesCollectorVisitor */
     private $collector;
     private $user;
     private $parameters;
-    /** @var InvalidFieldsCollection */
-    private $invalid_fields_collection;
+    /** @var InvalidSearchablesCollection */
+    private $invalid_searchables_collection;
 
     public function setUp()
     {
@@ -79,15 +79,14 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->user                = aUser()->build();
 
-        $this->invalid_fields_collection = new InvalidFieldsCollection();
-        $this->parameters                = new InvalidFieldsCollectorParameters(
+        $this->invalid_searchables_collection = new InvalidSearchablesCollection();
+        $this->parameters                     = new InvalidSearchablesCollectorParameters(
             $this->user,
             $this->tracker,
-            $this->invalid_fields_collection
+            $this->invalid_searchables_collection
         );
 
-        $this->collector = new InvalidFieldsCollectorVisitor(
-            $this->formelement_factory,
+        $this->collector = new InvalidSearchablesCollectorVisitor(
             new EqualComparisonVisitor(),
             new NotEqualComparisonVisitor(),
             new LesserThanComparisonVisitor(),
@@ -97,7 +96,7 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             new BetweenComparisonVisitor(),
             new InComparisonVisitor(),
             new NotInComparisonVisitor(),
-            new InvalidSearchableCollectorVisitor($this->formelement_factory)
+            new RealInvalidSearchableCollectorVisitor($this->formelement_factory)
         );
     }
 
@@ -109,8 +108,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitEqualComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfDateFieldIsUsedForEqualComparison()
@@ -121,8 +120,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitEqualComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForNotEqualComparison()
@@ -133,8 +132,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitNotEqualComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanComparison()
@@ -145,8 +144,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitLesserThanComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanComparison()
@@ -157,8 +156,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitGreaterThanComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForLesserThanOrEqualComparison()
@@ -169,8 +168,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitLesserThanOrEqualComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForGreaterThanOrEqualComparison()
@@ -181,8 +180,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitGreaterThanOrEqualComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itDoesNotCollectInvalidFieldsIfFieldIsUsedForBetweenComparison()
@@ -199,8 +198,8 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $this->collector->visitBetweenComparison($expr, $this->parameters);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itCollectsNonExistentFieldsIfFieldIsUnknown()
@@ -209,30 +208,30 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('field'));
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array('field'));
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itCollectsNonExistentFieldsIfFieldIsAMetadataButUnknown()
     {
         $expr = new EqualComparison(new Metadata('summary'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array('@summary'));
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array('@summary'));
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsAKnownMetadataButUnknown()
     {
         $expr = new EqualComparison(new Metadata('comment'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
-        $this->assertEqual($this->invalid_fields_collection->getInvalidFieldErrors(), array('@comment is not supported yet'));
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array('@comment is not supported yet'));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotText()
@@ -243,11 +242,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
     }
 
@@ -259,11 +258,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper(20));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
     }
 
@@ -275,11 +274,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('2017-01-17'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
     }
 
@@ -291,11 +290,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new EqualComparison(new Field('field'), new SimpleValueWrapper('planned'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'openlist' is not supported./", implode("\n", $errors));
     }
 
@@ -307,11 +306,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new LesserThanComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator <./", implode("\n", $errors));
     }
 
@@ -323,11 +322,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new GreaterThanComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator >./", implode("\n", $errors));
     }
 
@@ -339,11 +338,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new LesserThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator <=./", implode("\n", $errors));
     }
 
@@ -355,11 +354,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
 
         $expr = new GreaterThanOrEqualComparison(new Field('field'), new SimpleValueWrapper('value'));
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator >=./", implode("\n", $errors));
     }
 
@@ -377,11 +376,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             )
         );
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator between()./", implode("\n", $errors));
     }
 
@@ -401,11 +400,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             )
         );
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator in()./", implode("\n", $errors));
     }
 
@@ -425,11 +424,11 @@ class InvalidFieldsCollectorVisitorTest extends TuleapTestCase
             )
         );
 
-        $this->collector->collectErrorsFields($expr, $this->user, $this->tracker, $this->invalid_fields_collection);
+        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
-        $this->assertEqual($this->invalid_fields_collection->getNonexistentFields(), array());
+        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
 
-        $errors = $this->invalid_fields_collection->getInvalidFieldErrors();
+        $errors = $this->invalid_searchables_collection->getInvalidSearchableErrors();
         $this->assertPattern("/The field 'string' is not supported for the operator not in()./", implode("\n", $errors));
     }
 

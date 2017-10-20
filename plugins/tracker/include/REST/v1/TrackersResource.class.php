@@ -25,8 +25,8 @@ use Tuleap\REST\AuthenticatedResource;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use \Tuleap\Tracker\REST\ReportRepresentation;
@@ -335,12 +335,12 @@ class TrackersResource extends AuthenticatedResource {
     {
         try {
             $report->validateExpertQuery();
-        } catch (FieldsDoNotExistException $exception) {
+        } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(
                 400,
                 $exception->getMessage()
             );
-        } catch (FieldsAreInvalidException $exception) {
+        } catch (SearchablesAreInvalidException $exception) {
             throw new RestException(
                 400,
                 $exception->getMessage()

@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\IProvideTheInvalidFieldCheckerForAComparison;
 
-class InvalidSearchableCollectorParameters implements VisitorParameters
+class RealInvalidSearchableCollectorParameters implements VisitorParameters
 {
     /**
      * @var IProvideTheInvalidFieldCheckerForAComparison
@@ -35,18 +35,18 @@ class InvalidSearchableCollectorParameters implements VisitorParameters
      */
     private $comparison;
     /**
-     * @var InvalidFieldsCollectorParameters
+     * @var InvalidSearchablesCollectorParameters
      */
-    private $invalid_fields_collector_parameters;
+    private $invalid_searchables_collector_parameters;
 
     public function __construct(
-        InvalidFieldsCollectorParameters $invalid_fields_collector_parameters,
+        InvalidSearchablesCollectorParameters $invalid_searchables_collector_parameters,
         IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         Comparison $comparison
     ) {
-        $this->checker_provider                    = $checker_provider;
-        $this->comparison                          = $comparison;
-        $this->invalid_fields_collector_parameters = $invalid_fields_collector_parameters;
+        $this->checker_provider                         = $checker_provider;
+        $this->comparison                               = $comparison;
+        $this->invalid_searchables_collector_parameters = $invalid_searchables_collector_parameters;
     }
 
     /**
@@ -66,10 +66,10 @@ class InvalidSearchableCollectorParameters implements VisitorParameters
     }
 
     /**
-     * @return InvalidFieldsCollectorParameters
+     * @return InvalidSearchablesCollectorParameters
      */
-    public function getInvalidFieldsCollectorParameters()
+    public function getInvalidSearchablesCollectorParameters()
     {
-        return $this->invalid_fields_collector_parameters;
+        return $this->invalid_searchables_collector_parameters;
     }
 }

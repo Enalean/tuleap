@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use PFUser;
 use Tracker;
-use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -38,80 +37,65 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\BetweenComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\GreaterThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\IProvideTheInvalidFieldCheckerForAComparison;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-class InvalidFieldsCollectorVisitor implements Visitor
+class InvalidSearchablesCollectorVisitor implements Visitor
 {
     /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-    /**
-     * @var EqualComparisonVisitor
+     * @var InvalidFields\EqualComparisonVisitor
      */
     private $equal_comparison_visitor;
     /**
-     * @var NotEqualComparisonVisitor
+     * @var InvalidFields\NotEqualComparisonVisitor
      */
     private $not_equal_comparison_visitor;
     /**
-     * @var LesserThanComparisonVisitor
+     * @var InvalidFields\LesserThanComparisonVisitor
      */
     private $lesser_than_comparison_visitor;
     /**
-     * @var GreaterThanComparisonVisitor
+     * @var InvalidFields\GreaterThanComparisonVisitor
      */
     private $greater_than_comparison_visitor;
     /**
-     * @var LesserThanOrEqualComparisonVisitor
+     * @var InvalidFields\LesserThanOrEqualComparisonVisitor
      */
     private $lesser_than_or_equal_comparison_visitor;
     /**
-     * @var GreaterThanOrEqualComparisonVisitor
+     * @var InvalidFields\GreaterThanOrEqualComparisonVisitor
      */
     private $greater_than_or_equal_comparison_visitor;
     /**
-     * @var BetweenComparisonVisitor
+     * @var InvalidFields\BetweenComparisonVisitor
      */
     private $between_comparison_visitor;
 
     /**
-     * @var InComparisonVisitor
+     * @var InvalidFields\InComparisonVisitor
      */
     private $in_comparison_visitor;
 
     /**
-     * @var NotInComparisonVisitor
+     * @var InvalidFields\NotInComparisonVisitor
      */
     private $not_in_comparison_visitor;
     /**
-     * @var InvalidSearchableCollectorVisitor
+     * @var RealInvalidSearchableCollectorVisitor
      */
     private $invalid_searchable_collector_visitor;
 
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
-        EqualComparisonVisitor $equal_comparison_visitor,
-        NotEqualComparisonVisitor $not_equal_comparison_visitor,
-        LesserThanComparisonVisitor $lesser_than_comparison_visitor,
-        GreaterThanComparisonVisitor $greater_than_comparison_visitor,
-        LesserThanOrEqualComparisonVisitor $lesser_than_or_equal_comparison_visitor,
-        GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor,
-        BetweenComparisonVisitor $between_comparison_visitor,
-        InComparisonVisitor $in_comparison_visitor,
-        NotInComparisonVisitor $not_in_comparison_visitor,
-        InvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor
+        InvalidFields\EqualComparisonVisitor $equal_comparison_visitor,
+        InvalidFields\NotEqualComparisonVisitor $not_equal_comparison_visitor,
+        InvalidFields\LesserThanComparisonVisitor $lesser_than_comparison_visitor,
+        InvalidFields\GreaterThanComparisonVisitor $greater_than_comparison_visitor,
+        InvalidFields\LesserThanOrEqualComparisonVisitor $lesser_than_or_equal_comparison_visitor,
+        InvalidFields\GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor,
+        InvalidFields\BetweenComparisonVisitor $between_comparison_visitor,
+        InvalidFields\InComparisonVisitor $in_comparison_visitor,
+        InvalidFields\NotInComparisonVisitor $not_in_comparison_visitor,
+        RealInvalidSearchableCollectorVisitor $invalid_searchable_collector_visitor
     ) {
-        $this->formelement_factory                      = $formelement_factory;
         $this->equal_comparison_visitor                 = $equal_comparison_visitor;
         $this->not_equal_comparison_visitor             = $not_equal_comparison_visitor;
         $this->lesser_than_comparison_visitor           = $lesser_than_comparison_visitor;
@@ -124,81 +108,81 @@ class InvalidFieldsCollectorVisitor implements Visitor
         $this->invalid_searchable_collector_visitor     = $invalid_searchable_collector_visitor;
     }
 
-    public function collectErrorsFields(
+    public function collectErrors(
         Visitable $parsed_query,
         PFUser $user,
         Tracker $tracker,
-        InvalidFieldsCollection $invalid_fields_collection
+        InvalidSearchablesCollection $invalid_searchables_collection
     ) {
-        $parsed_query->accept($this, new InvalidFieldsCollectorParameters($user, $tracker, $invalid_fields_collection));
+        $parsed_query->accept($this, new InvalidSearchablesCollectorParameters($user, $tracker, $invalid_searchables_collection));
     }
 
-    public function visitEqualComparison(EqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitEqualComparison(EqualComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->equal_comparison_visitor, $parameters);
     }
 
-    public function visitNotEqualComparison(NotEqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitNotEqualComparison(NotEqualComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->not_equal_comparison_visitor, $parameters);
     }
 
-    public function visitLesserThanComparison(LesserThanComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitLesserThanComparison(LesserThanComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->lesser_than_comparison_visitor, $parameters);
     }
 
-    public function visitGreaterThanComparison(GreaterThanComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitGreaterThanComparison(GreaterThanComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->greater_than_comparison_visitor, $parameters);
     }
 
-    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->lesser_than_or_equal_comparison_visitor, $parameters);
     }
 
-    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->greater_than_or_equal_comparison_visitor, $parameters);
     }
 
-    public function visitBetweenComparison(BetweenComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitBetweenComparison(BetweenComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->between_comparison_visitor, $parameters);
     }
 
-    public function visitInComparison(InComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitInComparison(InComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->in_comparison_visitor, $parameters);
     }
 
-    public function visitNotInComparison(NotInComparison $comparison, InvalidFieldsCollectorParameters $parameters)
+    public function visitNotInComparison(NotInComparison $comparison, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitComparison($comparison, $this->not_in_comparison_visitor, $parameters);
     }
 
-    public function visitAndExpression(AndExpression $and_expression, InvalidFieldsCollectorParameters $parameters)
+    public function visitAndExpression(AndExpression $and_expression, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitExpression($and_expression, $parameters);
     }
 
-    public function visitOrExpression(OrExpression $or_expression, InvalidFieldsCollectorParameters $parameters)
+    public function visitOrExpression(OrExpression $or_expression, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitExpression($or_expression, $parameters);
     }
 
-    public function visitOrOperand(OrOperand $or_operand, InvalidFieldsCollectorParameters $parameters)
+    public function visitOrOperand(OrOperand $or_operand, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitOperand($or_operand, $parameters);
     }
 
-    public function visitAndOperand(AndOperand $and_operand, InvalidFieldsCollectorParameters $parameters)
+    public function visitAndOperand(AndOperand $and_operand, InvalidSearchablesCollectorParameters $parameters)
     {
         $this->visitOperand($and_operand, $parameters);
     }
 
-    private function visitTail($tail, InvalidFieldsCollectorParameters $parameters)
+    private function visitTail($tail, InvalidSearchablesCollectorParameters $parameters)
     {
         if ($tail) {
             $tail->accept($this, $parameters);
@@ -207,12 +191,12 @@ class InvalidFieldsCollectorVisitor implements Visitor
 
     private function visitComparison(
         Comparison $comparison,
-        IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
-        InvalidFieldsCollectorParameters $parameters
+        InvalidFields\IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
+        InvalidSearchablesCollectorParameters $parameters
     ) {
         $comparison->getField()->accept(
             $this->invalid_searchable_collector_visitor,
-            new InvalidSearchableCollectorParameters(
+            new RealInvalidSearchableCollectorParameters(
                 $parameters,
                 $checker_provider,
                 $comparison
@@ -220,13 +204,13 @@ class InvalidFieldsCollectorVisitor implements Visitor
         );
     }
 
-    private function visitExpression($expression, InvalidFieldsCollectorParameters $parameters)
+    private function visitExpression($expression, InvalidSearchablesCollectorParameters $parameters)
     {
         $expression->getExpression()->accept($this, $parameters);
         $this->visitTail($expression->getTail(), $parameters);
     }
 
-    private function visitOperand($operand, InvalidFieldsCollectorParameters $parameters)
+    private function visitOperand($operand, InvalidSearchablesCollectorParameters $parameters)
     {
         $operand->getOperand()->accept($this, $parameters);
         $this->visitTail($operand->getTail(), $parameters);
