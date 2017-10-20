@@ -517,7 +517,7 @@ BurningParrot, default theme starting Tuleap 10
 #
 # Install tuleap application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in tools cli plugins site-content src VERSION AUTHORS; do
+for i in tools plugins site-content src VERSION AUTHORS; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Hard-coded perl include that breaks packging
@@ -957,7 +957,6 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %dir %{APP_DIR}
 %{APP_DIR}/tools
-%{APP_DIR}/cli
 %{APP_DIR}/site-content
 %{APP_DIR}/VERSION
 %{APP_DIR}/AUTHORS

@@ -25,10 +25,9 @@ function getSystemOutput($cmd) {
 }
 
 function getCandidatePaths() {
-    echo "Please check cli manually".PHP_EOL;
     $plugins     = getSystemOutput('find plugins -mindepth 1 -maxdepth 1 -type d');
     $themes      = getSystemOutput('find src/www/themes -mindepth 1 -maxdepth 1 -type d ! -path *common');
-    $other_paths = array('cli', 'src/www/soap');
+    $other_paths = array('src/www/soap');
     return array_merge($other_paths, $plugins, $themes);
 }
 
