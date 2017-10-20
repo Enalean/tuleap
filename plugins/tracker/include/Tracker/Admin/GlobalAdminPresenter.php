@@ -65,6 +65,16 @@ class GlobalAdminPresenter
      */
     public $switch_button_label;
 
+    /**
+     * @var string
+     */
+    public $form_type_url;
+
+    /**
+     * @var string
+     */
+    public $warning_message;
+
     public function __construct(
         Project $project,
         CSRFSynchronizerToken $csrf_token,
@@ -89,5 +99,15 @@ class GlobalAdminPresenter
         $this->reverse_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
         $this->switch_button_label = dgettext('tuleap-tracker', 'Use');
         $this->artifact_link_types = $artifact_link_types;
+
+        $this->form_type_url = TRACKER_BASE_URL . '/?' . http_build_query(array(
+            'func'     => 'use-artifact-link-type',
+            'group_id' => $project->getID()
+        ));
+
+        $this->warning_message = dgettext(
+            'tuleap-tracker',
+            'For now, the disabled types are still usable.'
+        );
     }
 }

@@ -94,6 +94,9 @@ msgstr "Éditer"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
+msgid "For now, the disabled types are still usable."
+msgstr "Pour le moment, les liens typés désactivés restent utilisables."
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -153,6 +156,21 @@ msgstr "État"
 
 msgid "Submitted by"
 msgstr "Auteur"
+
+#, php-format
+msgid "The artifact link type \"%s\" cannot be disabled"
+msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."
+
+#, php-format
+msgid "The artifact link type \"%s\" is now disabled"
+msgstr "Le lien entre artéfacts typé \"%s\" a été désactivé."
+
+#, php-format
+msgid "The artifact link type \"%s\" is now enabled"
+msgstr "Le lien entre artéfacts typé \"%s\" a été activé."
+
+msgid "The artifact link type does not exist"
+msgstr "Le lien entre artéfacts typé n'existe pas."
 
 #, php-format
 msgid "The date field '%s' cannot be compared to MYSELF()."

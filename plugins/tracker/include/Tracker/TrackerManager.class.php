@@ -246,6 +246,17 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 }
 
                                 break;
+                            case 'use-artifact-link-type':
+                                $type_shortname = $request->get('type-shortname');
+
+                                if ($this->userCanCreateTracker($group_id) || $this->userCanAdminAllProjectTrackers()) {
+                                    $golbal_admin_controller->updateArtifactLinkUsage($project, $type_shortname);
+                                    $GLOBALS['Response']->redirect($golbal_admin_controller->getTrackerGlobalAdministrationURL($project));
+                                } else {
+                                    $this->redirectToTrackerHomepage($group_id);
+                                }
+
+                                break;
                             default:
                                 $this->displayAllTrackers($project, $user);
                                 break;
@@ -1166,9 +1177,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     {
         $global_admin_csrf       = new CSRFSynchronizerToken($this->getTrackerHomepageURL($project->getID()));
         $dao                     = new ArtifactLinksUsageDao();
+        $hierarchy_dao           = new Tracker_Hierarchy_Dao();
         $updater                 = new ArtifactLinksUsageUpdater($dao);
         $types_presenter_factory = new NaturePresenterFactory(new NatureDao());
 
-        return new GlobalAdminController($dao, $updater, $types_presenter_factory, $global_admin_csrf);
+        return new GlobalAdminController($dao, $updater, $types_presenter_factory, $hierarchy_dao, $global_admin_csrf);
     }
 }

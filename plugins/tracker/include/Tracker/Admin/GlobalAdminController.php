@@ -21,9 +21,15 @@
 namespace Tuleap\Tracker\Admin;
 
 use CSRFSynchronizerToken;
+use Feedback;
+use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tracker_FormElement_Field_ArtifactLink;
+use Tracker_Hierarchy_Dao;
 use Tracker_IDisplayTrackerLayout;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 class GlobalAdminController
@@ -49,16 +55,23 @@ class GlobalAdminController
      */
     private $types_presenter_factory;
 
+    /**
+     * @var Tracker_Hierarchy_Dao
+     */
+    private $hierarchy_dao;
+
     public function __construct(
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
         NaturePresenterFactory $types_presenter_factory,
+        Tracker_Hierarchy_Dao $hierarchy_dao,
         CSRFSynchronizerToken $global_admin_csrf
     ) {
-        $this->dao     = $dao;
-        $this->updater = $updater;
-        $this->csrf    = $global_admin_csrf;
+        $this->dao                     = $dao;
+        $this->updater                 = $updater;
+        $this->csrf                    = $global_admin_csrf;
         $this->types_presenter_factory = $types_presenter_factory;
+        $this->hierarchy_dao           = $hierarchy_dao;
     }
 
     public function displayGlobalAdministration(Project $project, Tracker_IDisplayTrackerLayout $layout)
@@ -80,7 +93,7 @@ class GlobalAdminController
             $project,
             $this->csrf,
             $this->dao->isProjectUsingArtifactLinkTypes($project->getID()),
-            $this->types_presenter_factory->getAllNatures()
+            $this->buildFormattedTypes($project)
         );
 
         $renderer->renderToPage(
@@ -95,6 +108,52 @@ class GlobalAdminController
     {
         $this->csrf->check();
         $this->updater->update($project);
+    }
+
+    public function updateArtifactLinkUsage(Project $project, $type_shortname)
+    {
+        $type_presenter = $this->types_presenter_factory->getFromShortname($type_shortname);
+
+        if (! $type_presenter) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-tracker', 'The artifact link type does not exist')
+            );
+
+            return;
+        }
+
+        if ($this->dao->isTypeDisabledInProject($project->getID(), $type_shortname)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                sprintf(
+                    dgettext('tuleap-tracker', 'The artifact link type "%s" is now enabled'),
+                    $type_shortname
+                )
+            );
+
+            return $this->dao->enableTypeInProject($project->getID(), $type_shortname);
+        }
+
+        if ($this->artifactLinkTypeCanBeUnused($project, $type_presenter)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                sprintf(
+                    dgettext('tuleap-tracker', 'The artifact link type "%s" is now disabled'),
+                    $type_shortname
+                )
+            );
+
+            return $this->dao->disableTypeInProject($project->getID(), $type_shortname);
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext('tuleap-tracker', 'The artifact link type "%s" cannot be disabled'),
+                    $type_shortname
+                )
+            );
+        }
     }
 
     /**
@@ -127,5 +186,50 @@ class GlobalAdminController
     private function getAdditionalBreadcrumbs(Project $project)
     {
         return $this->getToolbar($project);
+    }
+
+    /**
+     * @return array
+     */
+    private function buildFormattedTypes(Project $project)
+    {
+        $formatted_types = array();
+        foreach ($this->types_presenter_factory->getAllNatures() as $type) {
+            $formatted_type = array(
+                'shortname'     => $type->shortname,
+                'forward_label' => $type->forward_label,
+                'reverse_label' => $type->reverse_label,
+                'is_used'       => ! $this->isTypeDisabledInProject($project, $type),
+                'can_be_unused' => $this->artifactLinkTypeCanBeUnused($project, $type)
+            );
+
+            $formatted_types[] = $formatted_type;
+        }
+
+        return $formatted_types;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isTypeDisabledInProject(Project $project, NaturePresenter $type)
+    {
+        return $this->dao->isTypeDisabledInProject($project->getID(), $type->shortname);
+    }
+
+    /**
+     * @return bool
+     */
+    private function artifactLinkTypeCanBeUnused(Project $project, NaturePresenter $type)
+    {
+        if (! $type->is_system) {
+            return true;
+        }
+
+        if ($type->shortname === Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD) {
+            return ! $this->hierarchy_dao->isAHierarchySetInProject($project->getID());
+        }
+
+        return false;
     }
 }

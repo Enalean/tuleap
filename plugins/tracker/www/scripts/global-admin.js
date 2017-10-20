@@ -17,7 +17,7 @@
 
 !(function($) {
     $(document).ready(function() {
-        $('#tracker-enable-artifact-link-type-switch').on('change', function() {
+        $('#tracker-artifact-link-type-usages input[type="checkbox"]').on('change', function() {
             $('#' + $(this).attr('data-form-id')).submit();
         });
     });

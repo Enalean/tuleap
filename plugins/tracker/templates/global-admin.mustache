@@ -1,4 +1,4 @@
-<div class="tlp-framed">
+<div class="tlp-framed" id="tracker-artifact-link-type-usages">
     <h1>{{ title }}</h1>
     <section class="tlp-pane">
         <div class="tlp-pane-container">
@@ -39,6 +39,10 @@
                 <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ available_types }}</h1>
             </div>
             <section class="tlp-pane-section">
+                <div class="tlp-alert-warning">
+                    <i class="fa fa-warning tlp-alert-icon"></i>
+                    {{ warning_message }}
+                </div>
                 <table class="tlp-table tracker-natures-table">
                     <thead>
                     <tr>
@@ -55,19 +59,23 @@
                             <td>{{ forward_label }}</td>
                             <td>{{ reverse_label }}</td>
                             <td>
-                                <div class="tlp-form-element">
-                                    <div class="tlp-switch">
-                                        <input type="checkbox"
-                                               id="use-{{ shortname }}"
-                                               name="use-{{ shortname }}"
-                                               class="tlp-switch-checkbox"
-                                               value="1"
-                                               checked="checked"
-                                               disabled
-                                        >
-                                        <label for="use-{{ shortname }}" class="tlp-switch-button">{{ switch_button_label }} {{ shortname }}</label>
+                                <form id="use-{{ shortname }}-form" action="{{ form_type_url }}" method="POST">
+                                    <input type="hidden" name="type-shortname" value="{{ shortname }}">
+                                    <div class="tlp-form-element">
+                                        <div class="tlp-switch">
+                                            <input type="checkbox"
+                                                   id="use-{{ shortname }}"
+                                                   name="use-{{ shortname }}"
+                                                   class="tlp-switch-checkbox"
+                                                   data-form-id="use-{{ shortname }}-form"
+                                                   value="1"
+                                                   {{# is_used }} checked="checked" {{/ is_used }}
+                                                   {{^ can_be_unused }} disabled {{/ can_be_unused }}
+                                            >
+                                            <label for="use-{{ shortname }}" class="tlp-switch-button">{{ switch_button_label }} {{ shortname }}</label>
+                                        </div>
                                     </div>
-                                </div>
+                                </form>
                             </td>
                         </tr>
                         {{/artifact_link_types}}
