@@ -25,15 +25,15 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Report\ExpertModePresenter;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\FieldsDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollection;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFieldsCollectorVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\RealInvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
@@ -80,7 +80,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private $parser;
     /**
-     * @var InvalidFieldsCollectorVisitor
+     * @var InvalidSearchablesCollectorVisitor
      */
     private $collector;
     /**
@@ -134,8 +134,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_at          = $updated_at;
 
         $this->parser    = new Parser();
-        $this->collector = new InvalidFieldsCollectorVisitor(
-            $this->getFormElementFactory(),
+        $this->collector = new InvalidSearchablesCollectorVisitor(
             new InvalidFields\EqualComparisonVisitor(),
             new InvalidFields\NotEqualComparisonVisitor(),
             new InvalidFields\LesserThanComparisonVisitor(),
@@ -145,7 +144,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new InvalidFields\BetweenComparisonVisitor(),
             new InvalidFields\InComparisonVisitor(),
             new InvalidFields\NotInComparisonVisitor(),
-            new InvalidSearchableCollectorVisitor($this->getFormElementFactory())
+            new RealInvalidSearchableCollectorVisitor($this->getFormElementFactory())
         );
         $this->query_builder  = new QueryBuilderVisitor(
             $this->getFormElementFactory(),
@@ -1371,12 +1370,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $this->validateExpertQuery();
-                    } catch (FieldsDoNotExistException $exception) {
+                    } catch (SearchablesDoNotExistException $exception) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
                             $exception->getMessage()
                         );
-                    } catch (FieldsAreInvalidException $exception) {
+                    } catch (SearchablesAreInvalidException $exception) {
                         foreach ($exception->getErrorMessages() as $message) {
                             $GLOBALS['Response']->addFeedback(
                                 Feedback::ERROR,
@@ -1640,26 +1639,26 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $parsed_query = $this->parseExpertQuery();
         $this->getSizeValidator()->checkSizeOfTree($parsed_query);
 
-        $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
+        $invalid_searchables_collection = $this->getInvalidSearchablesInExpertQuery($parsed_query);
 
-        $nonexistent_fields    = $invalid_fields_collection->getNonexistentFields();
-        $nb_nonexistent_fields = count($nonexistent_fields);
-        if ($nb_nonexistent_fields > 0) {
+        $nonexistent_searchables    = $invalid_searchables_collection->getNonexistentSearchables();
+        $nb_nonexistent_searchables = count($nonexistent_searchables);
+        if ($nb_nonexistent_searchables > 0) {
             $message = sprintf(
                 dngettext(
                     'tuleap-tracker',
                     "The field '%s' doesn't exist",
                     "The fields '%s' don't exist",
-                    $nb_nonexistent_fields
+                    $nb_nonexistent_searchables
                 ),
-                implode("', '", $nonexistent_fields)
+                implode("', '", $nonexistent_searchables)
             );
-            throw new FieldsDoNotExistException($message);
+            throw new SearchablesDoNotExistException($message);
         }
 
-        $invalid_field_errors = $invalid_fields_collection->getInvalidFieldErrors();
-        if ($invalid_field_errors) {
-            throw new FieldsAreInvalidException($invalid_field_errors);
+        $invalid_searchable_errors = $invalid_searchables_collection->getInvalidSearchableErrors();
+        if ($invalid_searchable_errors) {
+            throw new SearchablesAreInvalidException($invalid_searchable_errors);
         }
     }
 
@@ -1886,24 +1885,24 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             return false;
         }
 
-        $invalid_fields_collection = $this->getInvalidFieldsInExpertQuery($parsed_query);
+        $invalid_searchables_collection = $this->getInvalidSearchablesInExpertQuery($parsed_query);
 
-        return ! $invalid_fields_collection->hasInvalidFields();
+        return ! $invalid_searchables_collection->hasInvalidSearchable();
     }
 
     /**
-     * @return InvalidFieldsCollection
+     * @return InvalidSearchablesCollection
      */
-    private function getInvalidFieldsInExpertQuery($parsed_query)
+    private function getInvalidSearchablesInExpertQuery($parsed_query)
     {
-        $invalid_fields_collection = new InvalidFieldsCollection();
-        $this->collector->collectErrorsFields(
+        $invalid_searchables_collection = new InvalidSearchablesCollection();
+        $this->collector->collectErrors(
             $parsed_query,
             $this->getCurrentUser(),
             $this->getTracker(),
-            $invalid_fields_collection
+            $invalid_searchables_collection
         );
 
-        return $invalid_fields_collection;
+        return $invalid_searchables_collection;
     }
 }

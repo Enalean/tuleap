@@ -23,7 +23,7 @@ use PFUser;
 use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class InvalidFieldsCollectorParameters implements VisitorParameters
+class InvalidSearchablesCollectorParameters implements VisitorParameters
 {
     /**
      * @var PFUser
@@ -36,15 +36,18 @@ class InvalidFieldsCollectorParameters implements VisitorParameters
     private $tracker;
 
     /**
-     * @var InvalidFieldsCollection
+     * @var InvalidSearchablesCollection
      */
-    private $invalid_fields_collection;
+    private $invalid_searchables_collection;
 
-    public function __construct(PFUser $user, Tracker $tracker, InvalidFieldsCollection $invalid_fields_collection)
-    {
-        $this->user                      = $user;
-        $this->tracker                   = $tracker;
-        $this->invalid_fields_collection = $invalid_fields_collection;
+    public function __construct(
+        PFUser $user,
+        Tracker $tracker,
+        InvalidSearchablesCollection $invalid_searchables_collection
+    ) {
+        $this->user                           = $user;
+        $this->tracker                        = $tracker;
+        $this->invalid_searchables_collection = $invalid_searchables_collection;
     }
 
     /**
@@ -64,10 +67,10 @@ class InvalidFieldsCollectorParameters implements VisitorParameters
     }
 
     /**
-     * @return InvalidFieldsCollection
+     * @return InvalidSearchablesCollection
      */
-    public function getInvalidFieldsCollection()
+    public function getInvalidSearchablesCollection()
     {
-        return $this->invalid_fields_collection;
+        return $this->invalid_searchables_collection;
     }
 }

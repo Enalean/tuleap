@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Exception;
 
-class FieldsAreInvalidException extends Exception
+class SearchablesAreInvalidException extends Exception
 {
     private $error_messages;
 

@@ -19,54 +19,54 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-class InvalidFieldsCollection
+class InvalidSearchablesCollection
 {
     /** @var array */
-    private $fields_not_exist;
+    private $searchables_not_exist;
 
     /** @var array */
-    private $invalid_field_errors;
+    private $invalid_searchable_errors;
 
     public function __construct()
     {
-        $this->fields_not_exist     = array();
-        $this->invalid_field_errors = array();
+        $this->searchables_not_exist     = array();
+        $this->invalid_searchable_errors = array();
     }
 
-    public function addNonexistentField($field_name)
+    public function addNonexistentSearchable($searchable_name)
     {
-        $this->fields_not_exist[] = $field_name;
+        $this->searchables_not_exist[] = $searchable_name;
     }
 
     /**
      * @return boolean
      */
-    public function hasInvalidFields()
+    public function hasInvalidSearchable()
     {
         return max(
-            count($this->fields_not_exist),
-            count($this->invalid_field_errors)
+            count($this->searchables_not_exist),
+            count($this->invalid_searchable_errors)
         ) > 0;
     }
 
     /**
      * @return array
      */
-    public function getNonexistentFields()
+    public function getNonexistentSearchables()
     {
-        return $this->fields_not_exist;
+        return $this->searchables_not_exist;
     }
 
     /**
      * @return array
      */
-    public function getInvalidFieldErrors()
+    public function getInvalidSearchableErrors()
     {
-        return $this->invalid_field_errors;
+        return $this->invalid_searchable_errors;
     }
 
-    public function addInvalidFieldError($error_message)
+    public function addInvalidSearchableError($error_message)
     {
-        $this->invalid_field_errors[] = $error_message;
+        $this->invalid_searchable_errors[] = $error_message;
     }
 }
