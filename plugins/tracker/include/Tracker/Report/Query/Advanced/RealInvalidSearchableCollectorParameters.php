@@ -38,13 +38,19 @@ class RealInvalidSearchableCollectorParameters implements VisitorParameters
      * @var InvalidSearchablesCollectorParameters
      */
     private $invalid_searchables_collector_parameters;
+    /**
+     * @var InvalidMetadata\ICheckMetadataForAComparison
+     */
+    private $metadata_checker;
 
     public function __construct(
         InvalidSearchablesCollectorParameters $invalid_searchables_collector_parameters,
         IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
+        InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
         Comparison $comparison
     ) {
         $this->checker_provider                         = $checker_provider;
+        $this->metadata_checker                         = $metadata_checker;
         $this->comparison                               = $comparison;
         $this->invalid_searchables_collector_parameters = $invalid_searchables_collector_parameters;
     }
@@ -71,5 +77,13 @@ class RealInvalidSearchableCollectorParameters implements VisitorParameters
     public function getInvalidSearchablesCollectorParameters()
     {
         return $this->invalid_searchables_collector_parameters;
+    }
+
+    /**
+     * @return InvalidMetadata\ICheckMetadataForAComparison
+     */
+    public function getMetadataChecker()
+    {
+        return $this->metadata_checker;
     }
 }
