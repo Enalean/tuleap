@@ -27,7 +27,7 @@ use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
 class ListFieldBindVisitor implements BindVisitor
 {
@@ -54,7 +54,7 @@ class ListFieldBindVisitor implements BindVisitor
         $this->ugroups_builder = $ugroups_builder;
     }
 
-    /** @return FromWhereBuilder */
+    /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field_List $field)
     {
         return $field->getBind()->accept($this, new BindParameters($field));

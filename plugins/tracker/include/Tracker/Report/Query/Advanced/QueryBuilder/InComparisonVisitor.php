@@ -46,7 +46,7 @@ use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use UserManager;
@@ -55,7 +55,7 @@ class InComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     ComparisonVisitor
 {
-    /** @return FromWhereBuilder */
+    /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
     {
         return $field->accept($this);
@@ -156,7 +156,7 @@ class InComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new ListReadOnlyFromWhereBuilder(
+        return new ListReadOnlyFieldFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new InComparison\ForSubmittedBy(
@@ -167,7 +167,7 @@ class InComparisonVisitor implements
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new ListReadOnlyFromWhereBuilder(
+        return new ListReadOnlyFieldFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new InComparison\ForLastUpdatedBy(

@@ -24,7 +24,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBindUgroupsBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereEmptyComparisonListFieldBuilder;
@@ -32,7 +32,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindUgroupsFromWhereBu
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class ForListBindUgroups implements FromWhereBuilder, ListBindUgroupsFromWhereBuilder
+class ForListBindUgroups implements FieldFromWhereBuilder, ListBindUgroupsFromWhereBuilder
 {
     /**
      * @var FromWhereEmptyComparisonListFieldBuilder

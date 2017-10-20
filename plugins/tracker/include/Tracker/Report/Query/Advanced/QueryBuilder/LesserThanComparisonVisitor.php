@@ -43,11 +43,11 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
 class LesserThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, ComparisonVisitor
 {
-    /** @return FromWhereBuilder */
+    /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
     {
         return $field->accept($this);
@@ -60,7 +60,7 @@ class LesserThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, C
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return new DateTimeFromWhereBuilder(
+        return new DateTimeFieldFromWhereBuilder(
             new FromWhereComparisonFieldBuilder(),
             new LesserThanComparison\ForDateTime(
                 new DateTimeValueRounder()
@@ -159,7 +159,7 @@ class LesserThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, C
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new DateTimeReadOnlyFromWhereBuilder(
+        return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new LesserThanComparison\ForLastUpdateDate(
                 new DateTimeValueRounder()
@@ -169,7 +169,7 @@ class LesserThanComparisonVisitor implements Tracker_FormElement_FieldVisitor, C
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new DateTimeReadOnlyFromWhereBuilder(
+        return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new LesserThanComparison\ForSubmittedOn(
                 new DateTimeValueRounder()
