@@ -20,8 +20,7 @@
  */
 
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Tracker\CrossTracker\CrossTrackerReportDao;
-use Tuleap\Tracker\CrossTracker\CrossTrackerSaver;
+use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__.'/../../lib/autoload.php';

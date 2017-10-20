@@ -81,13 +81,6 @@
     ],
     "components": [
         "plugins/tracker/",
-        "plugins/tracker/www/scripts/",
         "plugins/tracker/grammar/"
-    ],
-    "gettext-js": {
-        "cross-tracker": {
-            "src": "www/scripts/cross-tracker/src",
-            "po": "www/scripts/cross-tracker/po"
-        }
-    }
+    ]
 }

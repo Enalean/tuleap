@@ -19,3 +19,4 @@
  */
 
 define('CROSSTRACKER_BASE_DIR', realpath(__DIR__.'/..'));
+define('CROSSTRACKER_BASE_URL', '/plugins/crosstracker');
