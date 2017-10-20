@@ -29,5 +29,5 @@ interface Comparison extends Visitable
     /**
      * @return Searchable
      */
-    public function getField();
+    public function getSearchable();
 }

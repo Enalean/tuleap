@@ -44,7 +44,7 @@ class BetweenComparison implements Term, Visitable, Comparison
     /**
      * @return Searchable
      */
-    public function getField()
+    public function getSearchable()
     {
         return $this->field;
     }
