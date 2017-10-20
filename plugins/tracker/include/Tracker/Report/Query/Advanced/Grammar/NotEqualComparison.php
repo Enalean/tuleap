@@ -24,15 +24,15 @@ class NotEqualComparison implements Term, Visitable, Comparison
     /**
      * @var Searchable
      */
-    private $field;
+    private $searchable;
     /**
      * @var ValueWrapper
      */
     private $value_wrapper;
 
-    public function __construct(Searchable $field, ValueWrapper $value_wrapper)
+    public function __construct(Searchable $searchable, ValueWrapper $value_wrapper)
     {
-        $this->field         = $field;
+        $this->searchable    = $searchable;
         $this->value_wrapper = $value_wrapper;
     }
 
@@ -46,7 +46,7 @@ class NotEqualComparison implements Term, Visitable, Comparison
      */
     public function getSearchable()
     {
-        return $this->field;
+        return $this->searchable;
     }
 
     /**

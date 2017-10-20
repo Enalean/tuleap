@@ -69,48 +69,48 @@ term
 ParenthesisTerm = "(" _ e:or_expression _ ")" { return $e; }
 
 EqualComparison
-    = field:Searchable _ "=" _ value_wrapper:SimpleExpr {
-        return new EqualComparison($field, $value_wrapper);
+    = searchable:Searchable _ "=" _ value_wrapper:SimpleExpr {
+        return new EqualComparison($searchable, $value_wrapper);
     }
 
 NotEqualComparison
-    = field:Searchable _ "!=" _ value_wrapper:SimpleExpr {
-        return new NotEqualComparison($field, $value_wrapper);
+    = searchable:Searchable _ "!=" _ value_wrapper:SimpleExpr {
+        return new NotEqualComparison($searchable, $value_wrapper);
     }
 
 LesserThanComparison
-    = field:Searchable _ "<" _ value_wrapper:SimpleExpr {
-        return new LesserThanComparison($field, $value_wrapper);
+    = searchable:Searchable _ "<" _ value_wrapper:SimpleExpr {
+        return new LesserThanComparison($searchable, $value_wrapper);
     }
 
 GreaterThanComparison
-    = field:Searchable _ ">" _ value_wrapper:SimpleExpr {
-        return new GreaterThanComparison($field, $value_wrapper);
+    = searchable:Searchable _ ">" _ value_wrapper:SimpleExpr {
+        return new GreaterThanComparison($searchable, $value_wrapper);
     }
 
 LesserThanOrEqualComparison
-    = field:Searchable _ "<=" _ value_wrapper:SimpleExpr {
-        return new LesserThanOrEqualComparison($field, $value_wrapper);
+    = searchable:Searchable _ "<=" _ value_wrapper:SimpleExpr {
+        return new LesserThanOrEqualComparison($searchable, $value_wrapper);
     }
 
 GreaterThanOrEqualComparison
-    = field:Searchable _ ">=" _ value_wrapper:SimpleExpr {
-        return new GreaterThanOrEqualComparison($field, $value_wrapper);
+    = searchable:Searchable _ ">=" _ value_wrapper:SimpleExpr {
+        return new GreaterThanOrEqualComparison($searchable, $value_wrapper);
     }
 
 BetweenComparison
-    = field:Searchable _ "between"i _ "(" _ min_value_wrapper:SimpleExpr _ "," _ max_value_wrapper:SimpleExpr _ ")" {
-        return new BetweenComparison($field, new BetweenValueWrapper($min_value_wrapper, $max_value_wrapper));
+    = searchable:Searchable _ "between"i _ "(" _ min_value_wrapper:SimpleExpr _ "," _ max_value_wrapper:SimpleExpr _ ")" {
+        return new BetweenComparison($searchable, new BetweenValueWrapper($min_value_wrapper, $max_value_wrapper));
     }
 
 NotInComparison
-    = field:Searchable _ "not in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
-        return new NotInComparison($field, new InValueWrapper($list));
+    = searchable:Searchable _ "not in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
+        return new NotInComparison($searchable, new InValueWrapper($list));
     }
 
 InComparison
-    = field:Searchable _ "in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
-        return new InComparison($field, new InValueWrapper($list));
+    = searchable:Searchable _ "in"i _ "(" _ list:InComparisonValuesList _ "," ? _ ")" {
+        return new InComparison($searchable, new InValueWrapper($list));
     }
 
 InComparisonValuesList
