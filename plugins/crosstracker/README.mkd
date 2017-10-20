@@ -1,0 +1,4 @@
+Cross tracker plugin
+===============
+
+Adds a widget available for project dashboards. You can configure it to query multiple tracker from multiple project at once.
