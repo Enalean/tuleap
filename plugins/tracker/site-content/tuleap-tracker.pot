@@ -79,6 +79,9 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
+msgid "For now, the disabled types are still usable."
+msgstr ""
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -137,6 +140,21 @@ msgid "Status"
 msgstr ""
 
 msgid "Submitted by"
+msgstr ""
+
+#, php-format
+msgid "The artifact link type \"%s\" cannot be disabled"
+msgstr ""
+
+#, php-format
+msgid "The artifact link type \"%s\" is now disabled"
+msgstr ""
+
+#, php-format
+msgid "The artifact link type \"%s\" is now enabled"
+msgstr ""
+
+msgid "The artifact link type does not exist"
 msgstr ""
 
 #, php-format

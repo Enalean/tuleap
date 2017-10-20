@@ -263,6 +263,12 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function isAHierarchySetInProject($project_id)
+    {
+        $this->searchParentChildAssociations($project_id);
+        return $this->foundRows() > 0;
+    }
+
     public function deleteParentChildAssociationsForTracker($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "DELETE h.*

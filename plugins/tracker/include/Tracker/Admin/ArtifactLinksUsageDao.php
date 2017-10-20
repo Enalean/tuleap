@@ -56,4 +56,42 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function isTypeDisabledInProject($project_id, $type_shortname)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $type_shortname = $this->da->quoteSmart($type_shortname);
+
+        $sql = "SELECT NULL
+                FROM plugin_tracker_projects_unused_artifactlink_types
+                WHERE project_id = $project_id
+                  AND type_shortname = $type_shortname";
+
+        $this->retrieve($sql);
+
+        return $this->foundRows() > 0;
+    }
+
+    public function disableTypeInProject($project_id, $type_shortname)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $type_shortname = $this->da->quoteSmart($type_shortname);
+
+        $sql = "REPLACE INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
+                VALUES ($project_id, $type_shortname)";
+
+        return $this->update($sql);
+    }
+
+    public function enableTypeInProject($project_id, $type_shortname)
+    {
+        $project_id     = $this->da->escapeInt($project_id);
+        $type_shortname = $this->da->quoteSmart($type_shortname);
+
+        $sql = "DELETE FROM plugin_tracker_projects_unused_artifactlink_types
+                WHERE project_id = $project_id
+                  AND type_shortname = $type_shortname";
+
+        return $this->update($sql);
+    }
 }
