@@ -22,11 +22,17 @@ namespace Tuleap\Project\Admin\Navigation;
 
 use EventManager;
 use Project;
+use Service;
 
 class NavigationPresenterBuilder
 {
     const DATA_ENTRY_SHORTNAME        = 'data';
     const PERMISSIONS_ENTRY_SHORTNAME = 'permissions';
+
+    /**
+     * @var NavigationPresenter
+     */
+    private $presenter;
 
     public function build(Project $project, \HTTPRequest $request)
     {
@@ -100,10 +106,6 @@ class NavigationPresenterBuilder
                     '/project/export/index.php?' . http_build_query(array('group_id' => $project_id, 'pane' => self::DATA_ENTRY_SHORTNAME))
                 ),
                 new NavigationDropdownItemPresenter(
-                    _('Trackers v3 import'),
-                    '/tracker/import_admin.php?' . http_build_query(array('group_id' => $project_id, 'mode' => 'admin', 'pane' => self::DATA_ENTRY_SHORTNAME))
-                ),
-                new NavigationDropdownItemPresenter(
                     _('Project History'),
                     '/project/admin/history.php?' . http_build_query(array('group_id' => $project_id, 'pane' => self::DATA_ENTRY_SHORTNAME))
                 ),
@@ -120,10 +122,30 @@ class NavigationPresenterBuilder
             $current_pane_shortname
         );
 
-        $presenter = new NavigationPresenter($entries, $project, $current_pane_shortname);
+        $this->presenter = new NavigationPresenter($entries, $project, $current_pane_shortname);
 
-        EventManager::instance()->processEvent($presenter);
+        $this->addTrackerImportEntry($request);
 
-        return $presenter;
+        EventManager::instance()->processEvent($this->presenter);
+
+        return $this->presenter;
+    }
+
+    private function addTrackerImportEntry(\HTTPRequest $request)
+    {
+        $project = $request->getProject();
+        $service = $project->getService(Service::TRACKERV3);
+
+        if (! $service) {
+            return;
+        }
+
+        $this->presenter->addDropdownItem(
+            self::DATA_ENTRY_SHORTNAME,
+            new NavigationDropdownItemPresenter(
+                _('Tracker v3 import'),
+                '/tracker/import_admin.php?' . http_build_query(array('group_id' => $project->getID(), 'mode' => 'admin', 'pane' => self::DATA_ENTRY_SHORTNAME))
+            )
+        );
     }
 }
