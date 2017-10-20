@@ -100,7 +100,7 @@ class NavigationPresenterBuilder
                     '/project/export/index.php?' . http_build_query(array('group_id' => $project_id, 'pane' => self::DATA_ENTRY_SHORTNAME))
                 ),
                 new NavigationDropdownItemPresenter(
-                    _('Tracker Import'),
+                    _('Trackers v3 import'),
                     '/tracker/import_admin.php?' . http_build_query(array('group_id' => $project_id, 'mode' => 'admin', 'pane' => self::DATA_ENTRY_SHORTNAME))
                 ),
                 new NavigationDropdownItemPresenter(
