@@ -269,7 +269,7 @@ class QueryBuilderVisitor implements Visitor
     {
         $formelement = $this->formelement_factory->getUsedFieldByName(
             $parameters->getTracker()->getId(),
-            $comparison->getField()->getName()
+            $comparison->getSearchable()->getName()
         );
 
         return $formelement;

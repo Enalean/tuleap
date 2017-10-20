@@ -194,7 +194,7 @@ class InvalidSearchablesCollectorVisitor implements Visitor
         InvalidFields\IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidSearchablesCollectorParameters $parameters
     ) {
-        $comparison->getField()->accept(
+        $comparison->getSearchable()->accept(
             $this->invalid_searchable_collector_visitor,
             new RealInvalidSearchableCollectorParameters(
                 $parameters,
