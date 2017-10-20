@@ -15,11 +15,11 @@ msgid "%s has been updated by %s"
 msgstr ""
 
 #, php-format
-msgid "%s is not supported yet"
+msgid "%s tracker"
 msgstr ""
 
 #, php-format
-msgid "%s tracker"
+msgid "'%s' is not supported for the operator %s."
 msgstr ""
 
 msgid "Activate artifact links types for all the trackers of this project?"

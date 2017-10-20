@@ -31,6 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\RealInvalidSearchableCollectorVisitor;
@@ -144,6 +145,15 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new InvalidFields\BetweenComparisonVisitor(),
             new InvalidFields\InComparisonVisitor(),
             new InvalidFields\NotInComparisonVisitor(),
+            new InvalidMetadata\EqualComparisonChecker(),
+            new InvalidMetadata\NotEqualComparisonChecker(),
+            new InvalidMetadata\LesserThanComparisonChecker(),
+            new InvalidMetadata\GreaterThanComparisonChecker(),
+            new InvalidMetadata\LesserThanOrEqualComparisonChecker(),
+            new InvalidMetadata\GreaterThanOrEqualComparisonChecker(),
+            new InvalidMetadata\BetweenComparisonChecker(),
+            new InvalidMetadata\InComparisonChecker(),
+            new InvalidMetadata\NotInComparisonChecker(),
             new RealInvalidSearchableCollectorVisitor($this->getFormElementFactory())
         );
         $this->query_builder  = new QueryBuilderVisitor(

@@ -29,12 +29,12 @@ msgid "%s has been updated by %s"
 msgstr "%s a été mis à jour par %s"
 
 #, php-format
-msgid "%s is not supported yet"
-msgstr "%s n'est pas supporté pour l'instant"
-
-#, php-format
 msgid "%s tracker"
 msgstr "Tracker %s"
+
+#, php-format
+msgid "'%s' is not supported for the operator %s."
+msgstr "'%s' n'est pas supporté pour l'opérateur %s."
 
 msgid "Activate artifact links types for all the trackers of this project?"
 msgstr ""
