@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
-interface ComparisonVisitor
+interface FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field);

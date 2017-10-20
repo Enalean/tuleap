@@ -19,7 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use BaseLanguageFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -33,7 +32,6 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -45,15 +43,9 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
-use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
-use UserManager;
 
-class NotInComparisonVisitor implements
-    Tracker_FormElement_FieldVisitor,
-    ComparisonVisitor
+class LesserThanOrEqualFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
@@ -68,7 +60,12 @@ class NotInComparisonVisitor implements
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return null;
+        return new DateTimeFieldFromWhereBuilder(
+            new FromWhereComparisonFieldBuilder(),
+            new LesserThanOrEqualComparison\ForDateTime(
+                new DateTimeValueRounder()
+            )
+        );
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -78,12 +75,16 @@ class NotInComparisonVisitor implements
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return null;
+        return new LesserThanOrEqualComparison\ForFloat(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return null;
+        return new LesserThanOrEqualComparison\ForInteger(
+            new FromWhereComparisonFieldBuilder()
+        );
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
@@ -108,72 +109,32 @@ class NotInComparisonVisitor implements
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList($field);
+        return null;
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList($field);
+        return null;
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList($field);
+        return null;
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList($field);
-    }
-
-    private function visitList(Tracker_FormElement_Field_List $field)
-    {
-        $static_bind_builder = new NotInComparison\ForListBindStatic(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereNotEqualComparisonListFieldBuilder()
-        );
-        $users_bind_builder = new NotInComparison\ForListBindUsers(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereNotEqualComparisonListFieldBuilder()
-        );
-        $ugroups_bind_builder = new NotInComparison\ForListBindUgroups(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereNotEqualComparisonListFieldBindUgroupsBuilder(),
-            new UgroupLabelConverter(
-                new ListFieldBindValueNormalizer(),
-                new BaseLanguageFactory()
-            )
-        );
-
-        $bind_builder = new ListFieldBindVisitor(
-            $static_bind_builder,
-            $users_bind_builder,
-            $ugroups_bind_builder
-        );
-
-        return $bind_builder->getFromWhereBuilder($field);
+        return null;
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new ListReadOnlyFieldFromWhereBuilder(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder(),
-            new NotInComparison\ForSubmittedBy(
-                UserManager::instance()
-            )
-        );
+        return null;
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new ListReadOnlyFieldFromWhereBuilder(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder(),
-            new NotInComparison\ForLastUpdatedBy(
-                UserManager::instance()
-            )
-        );
+        return null;
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)
@@ -198,12 +159,22 @@ class NotInComparisonVisitor implements
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return null;
+        return new DateTimeReadOnlyFieldFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new LesserThanOrEqualComparison\ForLastUpdateDate(
+                new DateTimeValueRounder()
+            )
+        );
     }
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return null;
+        return new DateTimeReadOnlyFieldFromWhereBuilder(
+            new FromWhereComparisonFieldReadOnlyBuilder(),
+            new LesserThanOrEqualComparison\ForSubmittedOn(
+                new DateTimeValueRounder()
+            )
+        );
     }
 
     public function visitComputed(Tracker_FormElement_Field_Computed $field)
@@ -211,7 +182,7 @@ class NotInComparisonVisitor implements
         return null;
     }
 
-    public function visitExternalField(Tracker_FormElement_Field $element)
+    public function visitExternalField(Tracker_FormElement_Field $field)
     {
         return null;
     }
