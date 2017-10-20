@@ -429,7 +429,7 @@ msgstr ""
 msgid "Tracker"
 msgstr ""
 
-msgid "Tracker Import"
+msgid "Trackers v3 import"
 msgstr ""
 
 msgid "Unable to fetch the latest activities of the project"
