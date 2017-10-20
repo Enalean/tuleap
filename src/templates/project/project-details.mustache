@@ -1,0 +1,78 @@
+<form action="?group_id={{ group_id }}" method="post" id="project_info_form">
+    <h3>{{ edit_group_info_for }}</h3>
+    <p>{{ descriptive_group_name }}<font color="red">*</font></p>
+
+    <input type="text" size="50" maxlen="40" name="form_group_name" value="{{ group_name }}" />
+
+
+    <p>{{ short_description_label }}<font color="red">*</font>
+    <br>
+    <textarea cols="70" rows="3" wrap="virtual" name="form_shortdesc">{{ project_short_description }}</textarea>
+
+    {{# description_fields_representation }}
+        <p>
+            <u>
+                {{ field_label }}
+            </u>
+            {{# field_description_required }}
+                <font color='red'>*</font>
+            {{/ field_description_required }}
+            <br>
+            {{# is_field_line_typed }}
+                <input type='text'
+                       size='70'
+                       maxlen='70'
+                       name="{{ field_name }}"
+                       value="{{ field_value }}"
+                />
+            {{/ is_field_line_typed }}
+
+            {{# is_field_text_typed }}
+                <textarea name="{{ field_name }}"
+                          wrap="virtual"
+                          cols="70"
+                          rows="8"
+                >{{ field_value }}</textarea>
+            {{/ is_field_text_typed }}
+            <br>
+        </p>
+    {{/ description_fields_representation }}
+
+    <h3>{{ project_hierarchy_title }}</h3>
+    {{{ purified_project_hierarchy_desc }}}
+    <p>
+        <u>{{ parent_project }}</u>
+    </p>
+
+    {{# parent_project_info }}
+        <a href="{{ url }}">{{ parent_name }}</a>
+
+        <br>
+
+        <label>
+            <input type="checkbox" name="remove_parent_project" />
+            {{ remove_parent_project }}
+        </label>
+    {{/ parent_project_info }}
+    {{^ parent_project_info }}
+        <input type="text" name="parent_project" size ="50" id="parent_project" />
+        <br/>
+    {{/parent_project_info}}
+
+    <br/>
+
+    <u>{{ sub_projects }}</u>
+
+    <br>
+
+    {{# project_children }}
+        <a href="{{ child_url }}">{{ child_name }}</a>
+    {{/project_children}}
+
+    <input type="hidden" name="action" value="update"/>
+    <input type="hidden" name="pane" value="details"/>
+    <p>
+        <br>
+        <input type="submit" name="Update" value="{{ update }}">
+    </p>
+</form>

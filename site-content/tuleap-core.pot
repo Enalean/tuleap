@@ -14,6 +14,20 @@ msgid_plural "%d members"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid ""
+"<p>This feature aims to provide a way to structure projects organizations "
+"from permissions, user groups and control point of view.</p>\n"
+"                <p>As of today, it's only used by Git/ Gerrit for umbrella "
+"projects (if relevant to your platform/ project).</p>\n"
+"                <p><strong>However, setting a hierarchy between projects "
+"might have future impacts (e.g. members of the parent project could possibly "
+"have access to all sub-projects even without explicit permissions granted).</"
+"strong></p>"
+msgstr ""
+
+msgid "A project cannot be its own parent."
+msgstr ""
+
 msgid "Access Logs"
 msgstr ""
 
@@ -158,6 +172,12 @@ msgstr ""
 msgid "Delete widget"
 msgstr ""
 
+msgid "Descriptive Group Name:"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr ""
 
@@ -180,10 +200,23 @@ msgstr ""
 msgid "Edit widget"
 msgstr ""
 
+#, php-format
+msgid "Editing group info for: %s"
+msgstr ""
+
 msgid "Emergency"
 msgstr ""
 
 msgid "Escape from input/textarea, close dropdown or modal"
+msgstr ""
+
+msgid "Failed to create project description."
+msgstr ""
+
+msgid "Failed to delete project description."
+msgstr ""
+
+msgid "Failed to update project description."
 msgstr ""
 
 msgid "Files"
@@ -252,6 +285,9 @@ msgstr ""
 msgid "Mediawiki"
 msgstr ""
 
+msgid "Missing Information. PLEASE fill in all required information."
+msgstr ""
+
 msgid "My personnal page"
 msgstr ""
 
@@ -300,6 +336,9 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
+msgid "Parent Project"
+msgstr ""
+
 msgid "Permission Request"
 msgstr ""
 
@@ -319,6 +358,9 @@ msgid "Project History"
 msgstr ""
 
 msgid "Project administration"
+msgstr ""
+
+msgid "Project hierarchy"
 msgstr ""
 
 msgid "Project name"
@@ -342,7 +384,13 @@ msgstr ""
 msgid "Recently"
 msgstr ""
 
+msgid "Remove parent project"
+msgstr ""
+
 msgid "SVN"
+msgstr ""
+
+msgid "Short Description (255 Character Max):"
 msgstr ""
 
 msgid "Short description"
@@ -360,6 +408,9 @@ msgstr ""
 msgid "Style"
 msgstr ""
 
+msgid "Sub-Projects:"
+msgstr ""
+
 #, php-format
 msgid "The dashboard \"%s\" already exists."
 msgstr ""
@@ -374,6 +425,10 @@ msgstr ""
 
 #, php-format
 msgid "The entered value '%s' is invalid."
+msgstr ""
+
+msgid ""
+"The given parent project does not exist or you are not its administrator."
 msgstr ""
 
 msgid "The name is missing for creating a dashboard."
@@ -404,6 +459,9 @@ msgid "There isn't <br> any activity yet"
 msgstr ""
 
 msgid "There isn't any matching widgets"
+msgstr ""
+
+msgid "These projects are already related."
 msgstr ""
 
 msgid "This label is used in the project"
@@ -439,6 +497,9 @@ msgid "Unix name"
 msgstr ""
 
 msgid "Update"
+msgstr ""
+
+msgid "Update failed or no data changed!"
 msgstr ""
 
 msgid "Update label"
