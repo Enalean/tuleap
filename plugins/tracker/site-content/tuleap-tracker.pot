@@ -15,6 +15,10 @@ msgid "%s has been updated by %s"
 msgstr ""
 
 #, php-format
+msgid "%s is not supported yet"
+msgstr ""
+
+#, php-format
 msgid "%s tracker"
 msgstr ""
 

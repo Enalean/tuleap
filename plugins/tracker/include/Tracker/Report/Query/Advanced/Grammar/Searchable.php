@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Searchable
+interface Searchable extends Visitable
 {
     /**
      * @return string
