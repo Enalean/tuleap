@@ -25,6 +25,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataForComparisonException;
 
 class RealInvalidSearchableCollectorVisitor implements Visitor
 {
@@ -79,11 +80,12 @@ class RealInvalidSearchableCollectorVisitor implements Visitor
             return;
         }
 
-        $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
-            sprintf(
-                dgettext("tuleap-tracker", "%s is not supported yet"),
-                self::SUPPORTED_NAME
-            )
-        );
+        try {
+            $parameters->getMetadataChecker()->checkMetaDataIsValid($metadata);
+        } catch (InvalidMetadataForComparisonException $exception) {
+            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
+                $exception->getMessage()
+            );
+        }
     }
 }

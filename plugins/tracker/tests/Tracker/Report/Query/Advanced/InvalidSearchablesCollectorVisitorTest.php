@@ -47,6 +47,15 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanComparisonVisit
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\BetweenComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\EqualComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\GreaterThanComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\GreaterThanOrEqualComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\LesserThanOrEqualComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotEqualComparisonChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -96,6 +105,15 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
             new BetweenComparisonVisitor(),
             new InComparisonVisitor(),
             new NotInComparisonVisitor(),
+            new EqualComparisonChecker(),
+            new NotEqualComparisonChecker(),
+            new LesserThanComparisonChecker(),
+            new GreaterThanComparisonChecker(),
+            new LesserThanOrEqualComparisonChecker(),
+            new GreaterThanOrEqualComparisonChecker(),
+            new BetweenComparisonChecker(),
+            new InComparisonChecker(),
+            new NotInComparisonChecker(),
             new RealInvalidSearchableCollectorVisitor($this->formelement_factory)
         );
     }
@@ -224,14 +242,14 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
-    public function itCollectsUnsupportedFieldsIfFieldIsAKnownMetadataButUnknown()
+    public function itCollectsUnsupportedFieldsIfMetaIsInvalidForComarison()
     {
         $expr = new EqualComparison(new Metadata('comment'), new SimpleValueWrapper('value'));
 
         $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
 
         $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
-        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array('@comment is not supported yet'));
+        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array("'@comment' is not supported for the operator =."));
     }
 
     public function itCollectsUnsupportedFieldsIfFieldIsNotText()
