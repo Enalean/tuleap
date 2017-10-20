@@ -47,7 +47,7 @@ class ArtifactLinksUsageDuplicatorTest extends TuleapTestCase
     {
         stub($this->dao)->isProjectUsingArtifactLinkTypes(101)->returns(true);
 
-        expect($this->dao)->activateForProject(102)->once();
+        expect($this->dao)->duplicate(101, 102)->once();
 
         $this->duplicator->duplicate($this->template, $this->project);
     }
@@ -58,7 +58,7 @@ class ArtifactLinksUsageDuplicatorTest extends TuleapTestCase
         stub($this->template)->usesService('plugin_tracker')->returns(false);
         stub($this->project)->usesService('plugin_tracker')->returns(true);
 
-        expect($this->dao)->activateForProject(102)->once();
+        expect($this->dao)->duplicate(101, 102)->once();
 
         $this->duplicator->duplicate($this->template, $this->project);
     }
@@ -69,7 +69,7 @@ class ArtifactLinksUsageDuplicatorTest extends TuleapTestCase
         stub($this->template)->usesService('plugin_tracker')->returns(true);
         stub($this->project)->usesService('plugin_tracker')->returns(true);
 
-        expect($this->dao)->activateForProject(102)->never();
+        expect($this->dao)->duplicate(101, 102)->never();
 
         $this->duplicator->duplicate($this->template, $this->project);
     }
@@ -80,7 +80,7 @@ class ArtifactLinksUsageDuplicatorTest extends TuleapTestCase
         stub($this->template)->usesService('plugin_tracker')->returns(false);
         stub($this->project)->usesService('plugin_tracker')->returns(false);
 
-        expect($this->dao)->activateForProject(102)->never();
+        expect($this->dao)->duplicate(101, 102)->never();
 
         $this->duplicator->duplicate($this->template, $this->project);
     }
