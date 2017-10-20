@@ -22,14 +22,14 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 class InComparison implements Term, Visitable, Comparison
 {
     /** @var Searchable */
-    private $field;
+    private $searchable;
 
     /** @var InValueWrapper */
     private $value_wrapper;
 
-    public function __construct(Searchable $field, InValueWrapper $value_wrapper)
+    public function __construct(Searchable $searchable, InValueWrapper $value_wrapper)
     {
-        $this->field         = $field;
+        $this->searchable    = $searchable;
         $this->value_wrapper = $value_wrapper;
     }
 
@@ -43,7 +43,7 @@ class InComparison implements Term, Visitable, Comparison
      */
     public function getSearchable()
     {
-        return $this->field;
+        return $this->searchable;
     }
 
     /**
