@@ -87,17 +87,25 @@ class QueryBuilderVisitorTest extends TuleapTestCase
         stub($formelement_factory)->getUsedFieldByName(101, 'sb')->returns($this->selectbox_field);
 
         $this->query_builder = new QueryBuilderVisitor(
-            $formelement_factory,
-            new EqualFieldComparisonVisitor(),
-            new NotEqualFieldComparisonVisitor(),
-            new LesserThanFieldComparisonVisitor(),
-            new GreaterThanFieldComparisonVisitor(),
-            new LesserThanOrEqualFieldComparisonVisitor(),
-            new GreaterThanOrEqualFieldComparisonVisitor(),
-            new BetweenFieldComparisonVisitor(),
-            new InFieldComparisonVisitor(),
-            new NotInFieldComparisonVisitor(),
-            new SearchableVisitor($formelement_factory)
+            new QueryBuilder\EqualFieldComparisonVisitor(),
+            new QueryBuilder\NotEqualFieldComparisonVisitor(),
+            new QueryBuilder\LesserThanFieldComparisonVisitor(),
+            new QueryBuilder\GreaterThanFieldComparisonVisitor(),
+            new QueryBuilder\LesserThanOrEqualFieldComparisonVisitor(),
+            new QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor(),
+            new QueryBuilder\BetweenFieldComparisonVisitor(),
+            new QueryBuilder\InFieldComparisonVisitor,
+            new QueryBuilder\NotInFieldComparisonVisitor(),
+            new QueryBuilder\SearchableVisitor($formelement_factory),
+            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataLesserThanOrEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataGreaterThanOrEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataBetweenComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder()
         );
     }
 

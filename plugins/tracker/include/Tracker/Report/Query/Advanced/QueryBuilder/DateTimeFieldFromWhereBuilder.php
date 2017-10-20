@@ -27,6 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
@@ -59,7 +60,7 @@ class DateTimeFieldFromWhereBuilder implements FieldFromWhereBuilder, ValueWrapp
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         $suffix   = spl_object_hash($comparison);
-        $value    = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        $value    = $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
         $field_id = (int) $field->getId();
 
         $changeset_value_date_alias = "CVDate_{$field_id}_{$suffix}";

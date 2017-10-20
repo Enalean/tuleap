@@ -24,6 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
@@ -37,7 +38,7 @@ class TextFieldChecker implements InvalidFieldChecker, ValueWrapperVisitor
     public function checkFieldIsValidForComparison(Comparison $comparison, Tracker_FormElement_Field $field)
     {
         try {
-            $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+            $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
         } catch (NowIsNotSupportedException $exception) {
             throw new TextToNowComparisonException($field);
         } catch (MySelfIsNotSupportedException $exception) {

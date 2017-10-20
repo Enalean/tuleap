@@ -18,8 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-interface ValueWrapperParameters
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+
+class MetadataInComparisonFromWhereBuilder implements MetadataComparisonFromWhereBuilder
 {
+    public function getFromWhere(Comparison $comparison)
+    {
+        throw new \RuntimeException("Metadata is not supported here");
+    }
 }

@@ -20,6 +20,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface ValueWrapperParameters
+class MetadataValueWrapperParameters implements ValueWrapperParameters
 {
 }

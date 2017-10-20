@@ -20,7 +20,6 @@
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Tracker;
-use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -43,6 +42,15 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualFieldCom
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataBetweenComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataEqualComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataGreaterThanOrEqualComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataInComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataLesserThanOrEqualComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataNotInComparisonFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
@@ -50,10 +58,6 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameter
 
 class QueryBuilderVisitor implements Visitor
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
     /**
      * @var NotEqualFieldComparisonVisitor
      */
@@ -95,9 +99,44 @@ class QueryBuilderVisitor implements Visitor
      * @var SearchableVisitor
      */
     private $searchable_visitor;
+    /**
+     * @var MetadataEqualComparisonFromWhereBuilder
+     */
+    private $metadata_equal_comparison_from_where_builder;
+    /**
+     * @var MetadataNotEqualComparisonFromWhereBuilder
+     */
+    private $metadata_not_equal_comparison_from_where_builder;
+    /**
+     * @var MetadataLesserThanComparisonFromWhereBuilder
+     */
+    private $metadata_lesser_than_comparison_from_where_builder;
+    /**
+     * @var MetadataGreaterThanComparisonFromWhereBuilder
+     */
+    private $metadata_greater_than_comparison_from_where_builder;
+    /**
+     * @var MetadataLesserThanOrEqualComparisonFromWhereBuilder
+     */
+    private $metadata_lesser_than_or_equal_comparison_from_where_builder;
+    /**
+     * @var MetadataGreaterThanOrEqualComparisonFromWhereBuilder
+     */
+    private $metadata_greater_than_or_equal_comparison_from_where_builder;
+    /**
+     * @var MetadataBetweenComparisonFromWhereBuilder
+     */
+    private $metadata_between_comparison_from_where_builder;
+    /**
+     * @var MetadataInComparisonFromWhereBuilder
+     */
+    private $metadata_in_comparison_from_where_builder;
+    /**
+     * @var MetadataNotInComparisonFromWhereBuilder
+     */
+    private $metadata_not_in_comparison_from_where_builder;
 
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
         EqualFieldComparisonVisitor $equal_comparison_visitor,
         NotEqualFieldComparisonVisitor $not_equal_comparison_visitor,
         LesserThanFieldComparisonVisitor $lesser_than_comparison_visitor,
@@ -107,19 +146,36 @@ class QueryBuilderVisitor implements Visitor
         BetweenFieldComparisonVisitor $between_comparison_visitor,
         InFieldComparisonVisitor $in_comparison_visitor,
         NotInFieldComparisonVisitor $not_in_comparison_visitor,
-        SearchableVisitor $searchable_visitor
+        SearchableVisitor $searchable_visitor,
+        MetadataEqualComparisonFromWhereBuilder $metadata_equal_comparison_from_where_builder,
+        MetadataNotEqualComparisonFromWhereBuilder $metadata_not_equal_comparison_from_where_builder,
+        MetadataLesserThanComparisonFromWhereBuilder $metadata_lesser_than_comparison_from_where_builder,
+        MetadataGreaterThanComparisonFromWhereBuilder $metadata_greater_than_comparison_from_where_builder,
+        MetadataLesserThanOrEqualComparisonFromWhereBuilder $metadata_lesser_than_or_equal_comparison_from_where_builder,
+        MetadataGreaterThanOrEqualComparisonFromWhereBuilder $metadata_greater_than_or_equal_comparison_from_where_builder,
+        MetadataBetweenComparisonFromWhereBuilder $metadata_between_comparison_from_where_builder,
+        MetadataInComparisonFromWhereBuilder $metadata_in_comparison_from_where_builder,
+        MetadataNotInComparisonFromWhereBuilder $metadata_not_in_comparison_from_where_builder
     ) {
-        $this->formelement_factory                      = $formelement_factory;
-        $this->equal_comparison_visitor                 = $equal_comparison_visitor;
-        $this->not_equal_comparison_visitor             = $not_equal_comparison_visitor;
-        $this->lesser_than_comparison_visitor           = $lesser_than_comparison_visitor;
-        $this->greater_than_comparison_visitor          = $superior_comparison_visitor;
-        $this->lesser_than_or_equal_comparison_visitor  = $lesser_than_or_equal_comparison_visitor;
-        $this->greater_than_or_equal_comparison_visitor = $greater_than_or_equal_comparison_visitor;
-        $this->between_comparison_visitor               = $between_comparison_visitor;
-        $this->in_comparison_visitor                    = $in_comparison_visitor;
-        $this->not_in_comparison_visitor                = $not_in_comparison_visitor;
-        $this->searchable_visitor                       = $searchable_visitor;
+        $this->equal_comparison_visitor                                     = $equal_comparison_visitor;
+        $this->not_equal_comparison_visitor                                 = $not_equal_comparison_visitor;
+        $this->lesser_than_comparison_visitor                               = $lesser_than_comparison_visitor;
+        $this->greater_than_comparison_visitor                              = $superior_comparison_visitor;
+        $this->lesser_than_or_equal_comparison_visitor                      = $lesser_than_or_equal_comparison_visitor;
+        $this->greater_than_or_equal_comparison_visitor                     = $greater_than_or_equal_comparison_visitor;
+        $this->between_comparison_visitor                                   = $between_comparison_visitor;
+        $this->in_comparison_visitor                                        = $in_comparison_visitor;
+        $this->not_in_comparison_visitor                                    = $not_in_comparison_visitor;
+        $this->searchable_visitor                                           = $searchable_visitor;
+        $this->metadata_equal_comparison_from_where_builder                 = $metadata_equal_comparison_from_where_builder;
+        $this->metadata_not_equal_comparison_from_where_builder             = $metadata_not_equal_comparison_from_where_builder;
+        $this->metadata_lesser_than_comparison_from_where_builder           = $metadata_lesser_than_comparison_from_where_builder;
+        $this->metadata_greater_than_comparison_from_where_builder          = $metadata_greater_than_comparison_from_where_builder;
+        $this->metadata_lesser_than_or_equal_comparison_from_where_builder  = $metadata_lesser_than_or_equal_comparison_from_where_builder;
+        $this->metadata_greater_than_or_equal_comparison_from_where_builder = $metadata_greater_than_or_equal_comparison_from_where_builder;
+        $this->metadata_between_comparison_from_where_builder               = $metadata_between_comparison_from_where_builder;
+        $this->metadata_in_comparison_from_where_builder                    = $metadata_in_comparison_from_where_builder;
+        $this->metadata_not_in_comparison_from_where_builder                = $metadata_not_in_comparison_from_where_builder;
     }
 
     public function buildFromWhere(Visitable $parsed_query, Tracker $tracker)
@@ -134,7 +190,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->equal_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_equal_comparison_from_where_builder
             )
         );
     }
@@ -146,7 +203,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->not_equal_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_not_equal_comparison_from_where_builder
             )
         );
     }
@@ -158,7 +216,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->lesser_than_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_lesser_than_comparison_from_where_builder
             )
         );
     }
@@ -170,7 +229,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->greater_than_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_greater_than_comparison_from_where_builder
             )
         );
     }
@@ -182,7 +242,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->lesser_than_or_equal_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_lesser_than_or_equal_comparison_from_where_builder
             )
         );
     }
@@ -194,7 +255,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->greater_than_or_equal_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_greater_than_or_equal_comparison_from_where_builder
             )
         );
     }
@@ -206,7 +268,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->between_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_between_comparison_from_where_builder
             )
         );
     }
@@ -218,7 +281,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->in_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_in_comparison_from_where_builder
             )
         );
     }
@@ -230,7 +294,8 @@ class QueryBuilderVisitor implements Visitor
             new SearchableVisitorParameter(
                 $comparison,
                 $this->not_in_comparison_visitor,
-                $parameters->getTracker()
+                $parameters->getTracker(),
+                $this->metadata_not_in_comparison_from_where_builder
             )
         );
     }

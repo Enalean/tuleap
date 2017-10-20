@@ -23,6 +23,7 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
@@ -46,7 +47,7 @@ class CollectionOfDateValuesExtractor implements ValueWrapperVisitor
     public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field)
     {
         try {
-            return (array) $value_wrapper->accept($this, new ValueWrapperParameters($field));
+            return (array) $value_wrapper->accept($this, new FieldValueWrapperParameters($field));
         } catch (MySelfIsNotSupportedException $exception) {
             throw new DateToMySelfComparisonException($field);
         }

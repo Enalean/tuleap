@@ -27,6 +27,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FieldValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
@@ -58,7 +60,7 @@ class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder, Va
      */
     public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field)
     {
-        $value     = $comparison->getValueWrapper()->accept($this, new ValueWrapperParameters($field));
+        $value     = $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
         $condition = $this->condition_builder->getCondition($value);
 
         return $this->from_where_builder->getFromWhere($condition);
