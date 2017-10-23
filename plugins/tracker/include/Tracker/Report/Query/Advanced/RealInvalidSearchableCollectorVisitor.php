@@ -81,8 +81,12 @@ class RealInvalidSearchableCollectorVisitor implements Visitor
         }
 
         try {
-            $parameters->getMetadataChecker()->checkMetaDataIsValid($metadata);
+            $parameters->getMetadataChecker()->checkMetaDataIsValid($metadata, $parameters->getComparison());
         } catch (InvalidMetadataForComparisonException $exception) {
+            $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
+                $exception->getMessage()
+            );
+        } catch (InvalidFieldException $exception) {
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addInvalidSearchableError(
                 $exception->getMessage()
             );

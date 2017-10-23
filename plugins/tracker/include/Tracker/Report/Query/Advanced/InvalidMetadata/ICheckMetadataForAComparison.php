@@ -20,9 +20,10 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 interface ICheckMetadataForAComparison
 {
-    public function checkMetaDataIsValid(Metadata $metadata);
+    public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison);
 }

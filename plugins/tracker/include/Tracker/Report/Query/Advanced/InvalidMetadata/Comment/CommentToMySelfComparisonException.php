@@ -18,17 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
+namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
-class GreaterThanOrEqualComparisonChecker implements ICheckMetadataForAComparison
+class CommentToMySelfComparisonException extends InvalidFieldException
 {
-    const OPERATOR = '>=';
-
-    public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
+    public function __construct()
     {
-        throw new InvalidMetadataForComparisonException($metadata, self::OPERATOR);
+        $message = sprintf(
+            dgettext("tuleap-tracker", "The @comment metadata cannot be compared to MYSELF().")
+        );
+        parent::__construct($message);
     }
 }
