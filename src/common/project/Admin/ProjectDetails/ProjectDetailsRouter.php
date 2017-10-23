@@ -33,8 +33,9 @@ class ProjectDetailsRouter
      */
     private $project_details_controller;
 
-    public function __construct(ProjectDetailsController $project_details_controller)
-    {
+    public function __construct(
+        ProjectDetailsController $project_details_controller
+    ) {
         $this->project_details_controller = $project_details_controller;
     }
 
@@ -44,28 +45,18 @@ class ProjectDetailsRouter
 
         switch ($action) {
             case "update":
-                $this->updateProjectDescription($request);
-                $this->project_details_controller->display($request);
+                $this->project_details_controller->update($request);
+                $this->project_details_controller->updateVisibility($request);
                 break;
             default:
-                $this->project_details_controller->display($request);
                 break;
         }
+
+        $this->display($request);
     }
 
-    /**
-     * @param HTTPRequest $request
-     */
-    private function updateProjectDescription(HTTPRequest $request)
+    private function display(HTTPRequest $request)
     {
-        try {
-            $this->project_details_controller->update($request);
-        } catch (CannotCreateProjectDescriptionException $e) {
-            $GLOBALS['Response']->addFeedback(\Feedback::ERROR, _("Failed to create project description."));
-        } catch (CannotUpdateProjectDescriptionException $e) {
-            $GLOBALS['Response']->addFeedback(\Feedback::ERROR, _("Failed to update project description."));
-        } catch (CannotDeleteProjectDescriptionException $e) {
-            $GLOBALS['Response']->addFeedback(\Feedback::ERROR, _("Failed to delete project description."));
-        }
+        $this->project_details_controller->display($request);
     }
 }

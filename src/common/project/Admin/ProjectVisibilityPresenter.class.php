@@ -20,16 +20,6 @@
 class ProjectVisibilityPresenter {
 
     /**
-     * @var string
-     */
-    public $section_title;
-
-    /**
-     * @var string
-     */
-    public $choose_visbility;
-
-    /**
      * @var array
      */
     public $options;
@@ -59,18 +49,17 @@ class ProjectVisibilityPresenter {
      */
     private $language;
     public $can_configure_visibility;
+    public $project_visibility_label;
+    public $accept_tos_message;
 
     public function __construct(
         BaseLanguage $language,
         $platform_allows_restricted,
-        $project_visibility,
-        $can_configure_visibility
+        $project_visibility
     ) {
         $this->language = $language;
         $this->platform_allows_restricted = (bool) $platform_allows_restricted;
         $this->project_visibility         = $project_visibility;
-        $this->section_title              = $this->language->getText('project_admin_editgroupinfo', 'visibility_section');
-        $this->choose_visbility           = $this->language->getText('project_admin_editgroupinfo', 'choose_visbility');
         $this->restricted_warning_message = $this->language->getText('project_admin_editgroupinfo', 'restricted_warning');
         $this->general_warning_message    = $this->language->getText('project_admin_editgroupinfo', 'general_warning');
         $this->purified_term_of_service_message = Codendi_HTMLPurifier::instance()->purify(
@@ -78,7 +67,8 @@ class ProjectVisibilityPresenter {
             CODENDI_PURIFIER_LIGHT
         );
 
-        $this->can_configure_visibility   = $can_configure_visibility;
+        $this->project_visibility_label = _('Project visibility');
+        $this->accept_tos_message       = _("Please accept term of service");
 
         $this->generateVisibilityOptions();
     }

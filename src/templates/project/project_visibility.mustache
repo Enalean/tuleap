@@ -1,24 +1,34 @@
-<h3>{{ section_title }}</h3>
-<label for="project_visibility">{{ choose_visbility }}</label>
-<select name="project_visibility" id="project_visibility">
-    {{# options }}
-        <option value="{{ value }}" {{ selected }}>{{ label }}</option>
-    {{/ options }}
-</select>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="project_visibility">
+        {{ project_visibility_label }}
+        <i class="fa fa-asterisk"></i>
+    </label>
+    <select class="tlp-select" name="project_visibility" id="project_visibility">
+        {{# options }}
+            <option value="{{ value }}" {{ selected }}>{{ label }}</option>
+        {{/ options }}
+    </select>
+</div>
 <br>
 {{# platform_allows_restricted }}
-    <p class="alert alert-warning">
+    <p class="tlp-alert-warning">
         {{{ restricted_warning_message }}}
     </p>
 {{/ platform_allows_restricted }}
 {{^ platform_allows_restricted }}
-    <p class="alert alert-warning">
+    <p class="tlp-alert-warning">
         {{{ general_warning_message }}}
     </p>
 {{/ platform_allows_restricted }}
-
-<p id="term_of_service_usage" class="term-of-service-hidden">
-    <label class="checkbox" for="term_of_service">
-        <input type="checkbox" name="term_of_service" id="term_of_service"> {{{ purified_term_of_service_message }}}
+<div id="term-of-service-usage"
+    class="tlp-form-element">
+    <label class="tlp-label tlp-checkbox">
+        <input type="checkbox"
+               name="term_of_service"
+               id="term-of-service"
+               oninvalid='this.setCustomValidity("{{ accept_tos_message }}")'
+               onclick="this.setCustomValidity('')"
+        />
+         {{{ purified_term_of_service_message }}}
     </label>
-</p>
+</div>

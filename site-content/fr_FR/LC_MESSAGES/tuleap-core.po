@@ -33,6 +33,9 @@ msgstr[1] "%d membres"
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
+msgid "Access"
+msgstr "Accès"
+
 msgid "Access Logs"
 msgstr "Journal des accès"
 
@@ -389,6 +392,9 @@ msgstr "Patrons de projet"
 
 msgid "Project type"
 msgstr "Type du projet"
+
+msgid "Project visibility"
+msgstr "Visibilité du projet"
 
 msgid "Project web site"
 msgstr "Site web du projet"

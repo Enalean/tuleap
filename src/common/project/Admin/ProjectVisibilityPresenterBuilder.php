@@ -1,0 +1,84 @@
+<?php
+/**
+ * Copyright Enalean (c) 2017. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Project\Admin;
+
+use ForgeConfig;
+use HTTPRequest;
+use ProjectTruncatedEmailsPresenter;
+use ProjectVisibilityPresenter;
+use Tuleap\Project\ProjectAccessPresenter;
+
+class ProjectVisibilityPresenterBuilder
+{
+    /**
+     * @var ProjectVisibilityUserConfigurationPermissions
+     */
+    private $project_visibility_configuration;
+
+    /**
+     * @var ServicesUsingTruncatedMailRetriever
+     */
+    private $service_truncated_mails_retriever;
+
+    public function __construct(
+        ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
+        ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever
+    ) {
+        $this->project_visibility_configuration  = $project_visibility_configuration;
+        $this->service_truncated_mails_retriever = $service_truncated_mails_retriever;
+    }
+
+    public function build(HTTPRequest $request)
+    {
+        $project              = $request->getProject();
+        $current_user         = $request->getCurrentUser();
+        $visibility_presenter = new ProjectVisibilityPresenter(
+            $GLOBALS['Language'],
+            ForgeConfig::areRestrictedUsersAllowed(),
+            $project->getAccess()
+        );
+
+
+        $truncated_mails_impacted_services = $this->service_truncated_mails_retriever->getServicesImpactedByTruncatedEmails($project);
+        $truncated_presenter               = new ProjectTruncatedEmailsPresenter(
+            $project,
+            $truncated_mails_impacted_services,
+            $this->project_visibility_configuration->canUserConfigureTruncatedMail(
+                $current_user
+            )
+        );
+
+        $can_user_configure_something = $this->project_visibility_configuration->canUserConfigureSomething($current_user, $project);
+        $project_access_presenter     = new ProjectAccessPresenter($request->getProject()->getAccess());
+
+        return new ProjectGlobalVisibilityPresenter(
+            $project,
+            $visibility_presenter,
+            $truncated_presenter,
+            $project_access_presenter,
+            $can_user_configure_something
+        );
+    }
+}

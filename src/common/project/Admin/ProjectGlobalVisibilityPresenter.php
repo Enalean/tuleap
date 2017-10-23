@@ -27,6 +27,7 @@ namespace Tuleap\Project\Admin;
 use Project;
 use ProjectTruncatedEmailsPresenter;
 use ProjectVisibilityPresenter;
+use Tuleap\Project\ProjectAccessPresenter;
 
 class ProjectGlobalVisibilityPresenter
 {
@@ -42,14 +43,28 @@ class ProjectGlobalVisibilityPresenter
 
     public $label_submit;
 
+    public $can_configure_visibility;
+
+    /**
+     * @var ProjectAccessPresenter
+     */
+    public $project_access_presenter;
+
+    public $section_title;
+
     public function __construct(
         Project $project,
         ProjectVisibilityPresenter $project_visibility_presenter,
-        ProjectTruncatedEmailsPresenter $project_truncated_presenter
+        ProjectTruncatedEmailsPresenter $project_truncated_presenter,
+        ProjectAccessPresenter $project_access_presenter,
+        $can_configure_visibility
     ) {
         $this->project_visibility_presenter = $project_visibility_presenter;
         $this->project_truncated_presenter  = $project_truncated_presenter;
         $this->group_id                     = $project->getGroupId();
         $this->label_submit                 = _('Update');
+        $this->section_title                = _('Access');
+        $this->can_configure_visibility     = $can_configure_visibility;
+        $this->project_access_presenter     = $project_access_presenter;
     }
 }

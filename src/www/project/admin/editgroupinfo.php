@@ -29,6 +29,9 @@ require_once('www/project/admin/project_admin_utils.php');
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsController;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsRouter;
+use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
+use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
+use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
 
@@ -36,19 +39,38 @@ $group_id = $request->get('group_id');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-$currentproject             = new project($group_id);
-$fields_factory             = new DescriptionFieldsFactory(new DescriptionFieldsDao());
-$project_details_dao        = new ProjectDetailsDAO();
-$project_manager            = ProjectManager::instance();
-$event_manager              = EventManager::instance();
-$project_history_dao        = new ProjectHistoryDao();
+$currentproject                    = new project($group_id);
+$fields_factory                    = new DescriptionFieldsFactory(new DescriptionFieldsDao());
+$project_details_dao               = new ProjectDetailsDAO();
+$project_manager                   = ProjectManager::instance();
+$event_manager                     = EventManager::instance();
+$project_history_dao               = new ProjectHistoryDao();
+$project_visibility_configuration  = new ProjectVisibilityUserConfigurationPermissions();
+$service_truncated_mails_retriever = new ServicesUsingTruncatedMailRetriever(EventManager::instance());
+$ugroup_user_dao                   = new UGroupUserDao();
+$ugroup_manager                    = new UGroupManager();
+
+$ugroup_binding = new UGroupBinding(
+    $ugroup_user_dao,
+    $ugroup_manager
+);
+
+$project_visibility_presenter_builder = new ProjectVisibilityPresenterBuilder(
+    $project_visibility_configuration,
+    $service_truncated_mails_retriever
+);
+
 $project_details_controller = new ProjectDetailsController(
     $fields_factory,
     $currentproject,
     $project_details_dao,
     $project_manager,
     $event_manager,
-    $project_history_dao
+    $project_history_dao,
+    $project_visibility_presenter_builder,
+    $project_visibility_configuration,
+    $service_truncated_mails_retriever,
+    $ugroup_binding
 );
 
 $project_details_router = new ProjectDetailsRouter(

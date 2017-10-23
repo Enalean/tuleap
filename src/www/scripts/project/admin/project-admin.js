@@ -21,6 +21,7 @@ import { autocomplete_projects_for_select2 as autocomplete } from '../../tuleap/
 
 document.addEventListener('DOMContentLoaded', () => {
     initCheckboxTogglesDeleteButton();
+    initTOSCheckbox();
 
     const select_element = document.getElementById('project-admin-details-hierarchy-project-select');
     if (! select_element) {
@@ -40,5 +41,16 @@ function initCheckboxTogglesDeleteButton() {
 
     checkbox_element.addEventListener('change', (event) => {
         delete_button.disabled = ! event.target.checked;
+    });
+}
+
+function initTOSCheckbox() {
+    const select_element = document.getElementById('project_visibility');
+    if (! select_element) {
+        return;
+    }
+    select_element.addEventListener('change', () => {
+        document.getElementById("term-of-service").required = true;
+        document.getElementById("term-of-service-usage").style.display = 'block';
     });
 }

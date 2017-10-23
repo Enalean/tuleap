@@ -81,10 +81,18 @@
 
             <div class="project-admin-details-right-container">
                 <section class="tlp-pane project-admin-details-visibility">
+                    {{# project_global_visibility_presenter }}
+                        {{> project-visibility-pane }}
+                    {{/ project_global_visibility_presenter}}
                 </section>
+
                 {{# project_hierarchy_presenter }}
                     {{> project-hierarchy }}
                 {{/ project_hierarchy_presenter }}
+
+                {{# project_global_visibility_presenter }}
+                    {{> truncated_emails }}
+                {{/ project_global_visibility_presenter }}
             </div>
         </div>
         <input type="hidden" name="action" value="update"/>
