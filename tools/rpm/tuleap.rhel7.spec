@@ -456,7 +456,7 @@ done
 # Data dir
 #%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
 #%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
-#%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
+#%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
 
 # Install script
 #%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
