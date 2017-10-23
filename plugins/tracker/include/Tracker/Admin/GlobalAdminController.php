@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Admin;
 
 use CSRFSynchronizerToken;
+use EventManager;
 use Feedback;
 use HTTPRequest;
 use Project;
@@ -28,6 +29,7 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Hierarchy_Dao;
 use Tracker_IDisplayTrackerLayout;
+use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -60,18 +62,25 @@ class GlobalAdminController
      */
     private $hierarchy_dao;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         ArtifactLinksUsageDao $dao,
         ArtifactLinksUsageUpdater $updater,
         NaturePresenterFactory $types_presenter_factory,
         Tracker_Hierarchy_Dao $hierarchy_dao,
-        CSRFSynchronizerToken $global_admin_csrf
+        CSRFSynchronizerToken $global_admin_csrf,
+        EventManager $event_manager
     ) {
         $this->dao                     = $dao;
         $this->updater                 = $updater;
         $this->csrf                    = $global_admin_csrf;
         $this->types_presenter_factory = $types_presenter_factory;
         $this->hierarchy_dao           = $hierarchy_dao;
+        $this->event_manager           = $event_manager;
     }
 
     public function displayGlobalAdministration(Project $project, Tracker_IDisplayTrackerLayout $layout)
@@ -194,7 +203,7 @@ class GlobalAdminController
     private function buildFormattedTypes(Project $project)
     {
         $formatted_types = array();
-        foreach ($this->types_presenter_factory->getAllNatures() as $type) {
+        foreach ($this->types_presenter_factory->getAllTypesEditableInProject($project) as $type) {
             $formatted_type = array(
                 'shortname'     => $type->shortname,
                 'forward_label' => $type->forward_label,
@@ -222,6 +231,13 @@ class GlobalAdminController
      */
     private function artifactLinkTypeCanBeUnused(Project $project, NaturePresenter $type)
     {
+        $event = new ArtifactLinkTypeCanBeUnused($project, $type);
+        $this->event_manager->processEvent($event);
+
+        if ($event->doesPluginCheckedTheType()) {
+            return $event->canTypeBeUnused();
+        }
+
         if (! $type->is_system) {
             return true;
         }
