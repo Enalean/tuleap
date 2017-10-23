@@ -46,6 +46,9 @@ Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
 Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd, %{php_base}-intl
 Requires: %{php_base}-process
+Requires: rh-php56-php-mysqlnd, rh-php56-php-pdo, rh-php56-php-xml, rh-php56-php-mbstring, rh-php56-php-gd,
+Requires: rh-php56-php-soap, rh-php56-php-pear, rh-php56-php-intl, rh-php56-php-process, rh-php56-php-cli
+Requires: rh-php56-php-bcmath, rh-php56-php-fpm, rh-php56-php-opcache, rh-php56-php-pecl-jsonc
 Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fonts
 
 Requires: jpgraph-%{PKG_NAME}
@@ -68,7 +71,7 @@ Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tag
 # Automatic perl dependencies
 #perl(APR::Pool)  perl(APR::Table)  perl(Apache2::Access)  perl(Apache2::Const)  perl(Apache2::Module)  perl(Apache2::RequestRec)  perl(Apache2::RequestUtil)  perl(Apache2::ServerRec)  perl(Carp)  perl(Cwd)  perl(DBI)  perl(Digest::MD5)  perl(Encode)  perl(File::Basename)  perl(File::Copy)  perl(HTTP::Request::Common)  perl(LWP::UserAgent)  perl(Net::LDAP)  perl(POSIX)  perl(Time::Local)  perl(strict)  perl(subs)  perl(vars)  perl(warnings)
 # Apache
-Requires: httpd, mod_ssl, openssl
+Requires: httpd, mod_ssl, openssl, nginx
 # Mysql Client
 Requires: mysql
 # libnss-mysql (system authentication based on MySQL)
@@ -220,7 +223,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{php_base}-ldap, perl-LDAP, python-ldap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{php_base}-ldap, perl-LDAP, python-ldap, rh-php56-php-ldap
 Provides: tuleap-plugin-ldap = %{version}
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
@@ -281,7 +284,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, %{php_base}-imap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, %{php_base}-imap, rh-php56-php-imap
 %description plugin-tracker
 New tracker generation for Tuleap.
 
