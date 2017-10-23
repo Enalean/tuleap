@@ -46,7 +46,7 @@ use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
@@ -56,7 +56,7 @@ class NotEqualComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
     ComparisonVisitor
 {
-    /** @return FromWhereBuilder */
+    /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
     {
         return $field->accept($this);
@@ -69,7 +69,7 @@ class NotEqualComparisonVisitor implements
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        return new DateTimeFromWhereBuilder(
+        return new DateTimeFieldFromWhereBuilder(
             new FromWhereComparisonFieldBuilder(),
             new NotEqualComparison\ForDateTime(
                 new DateTimeValueRounder()
@@ -170,7 +170,7 @@ class NotEqualComparisonVisitor implements
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new ListReadOnlyFromWhereBuilder(
+        return new ListReadOnlyFieldFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new NotEqualComparison\ForSubmittedBy(
@@ -181,7 +181,7 @@ class NotEqualComparisonVisitor implements
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new ListReadOnlyFromWhereBuilder(
+        return new ListReadOnlyFieldFromWhereBuilder(
             new CollectionOfListValuesExtractor(),
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new NotEqualComparison\ForLastUpdatedBy(
@@ -212,7 +212,7 @@ class NotEqualComparisonVisitor implements
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
     {
-        return new DateTimeReadOnlyFromWhereBuilder(
+        return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new NotEqualComparison\ForLastUpdateDate(
                 new DateTimeValueRounder()
@@ -222,7 +222,7 @@ class NotEqualComparisonVisitor implements
 
     public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field)
     {
-        return new DateTimeReadOnlyFromWhereBuilder(
+        return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
             new NotEqualComparison\ForSubmittedOn(
                 new DateTimeValueRounder()

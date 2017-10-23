@@ -22,11 +22,11 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonFieldBuilder;
 
-class ForText implements FromWhereBuilder
+class ForText implements FieldFromWhereBuilder
 {
     /**
      * @var FromWhereComparisonFieldBuilder

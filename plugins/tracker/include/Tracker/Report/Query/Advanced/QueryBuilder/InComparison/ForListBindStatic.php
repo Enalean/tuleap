@@ -22,13 +22,13 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparison;
 use CodendiDataAccess;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhereBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ListBindStaticFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\QueryListFieldPresenter;
 
-class ForListBindStatic implements FromWhereBuilder, ListBindStaticFromWhereBuilder
+class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFromWhereBuilder
 {
     /**
      * @var FromWhereComparisonListFieldBuilder
