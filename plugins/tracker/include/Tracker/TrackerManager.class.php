@@ -400,7 +400,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 'url'   => TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create'
             )
         );
-        $toolbar = $this->getServiceToolbar($project);
+        $toolbar = $this->getGlobalAdminController($project)->getToolbar($project);
         $params  = array();
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
 
