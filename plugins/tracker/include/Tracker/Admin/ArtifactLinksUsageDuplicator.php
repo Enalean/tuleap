@@ -42,7 +42,7 @@ class ArtifactLinksUsageDuplicator
                 $project->usesService(trackerPlugin::SERVICE_SHORTNAME)
             )
         ) {
-            $this->dao->activateForProject($project->getID());
+            $this->dao->duplicate($template->getID(), $project->getID());
         }
     }
 }

@@ -94,4 +94,31 @@ class ArtifactLinksUsageDao extends DataAccessObject
 
         return $this->update($sql);
     }
+
+    public function duplicate($template_id, $project_id)
+    {
+        $this->startTransaction();
+
+        if (! $this->activateForProject($project_id) ||
+            ! $this->duplicateTypesUsageInProject($template_id, $project_id)
+        ) {
+            $this->rollBack();
+            return false;
+        }
+
+        return $this->commit();
+    }
+
+    private function duplicateTypesUsageInProject($template_id, $project_id)
+    {
+        $template_id = $this->da->escapeInt($template_id);
+        $project_id  = $this->da->escapeInt($project_id);
+
+        $sql = "INSERT INTO plugin_tracker_projects_unused_artifactlink_types (project_id, type_shortname)
+                SELECT $project_id, type_shortname
+                FROM plugin_tracker_projects_unused_artifactlink_types
+                WHERE project_id = $template_id";
+
+        return $this->update($sql);
+    }
 }

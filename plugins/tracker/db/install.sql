@@ -825,7 +825,8 @@ DROP TABLE IF EXISTS plugin_tracker_projects_unused_artifactlink_types;
 CREATE TABLE plugin_tracker_projects_unused_artifactlink_types (
     project_id INT(11) UNSIGNED,
     type_shortname VARCHAR(255) NOT NULL,
-    PRIMARY KEY (project_id, type_shortname)
+    PRIMARY KEY (project_id, type_shortname),
+    INDEX idx_artifactlink_types_unused_project_id(project_id)
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100
