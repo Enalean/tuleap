@@ -18,6 +18,12 @@ msgstr ""
 msgid "Configuration incomplete"
 msgstr "Configuration incomplète"
 
+#, php-format
+msgid ""
+"Service %s cannot be activated because the artifact link type \"%s\" is not "
+"activated"
+msgstr "Le service %s ne peut être activé car le lien entre artéfact typé \"%s\" n'est pas activé"
+
 msgid "Start TestManagement"
 msgstr "Démarrer TestManagement"
 

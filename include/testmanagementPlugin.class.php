@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\project\Event\ProjectServiceBeforeActivation;
 use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
+use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
@@ -62,6 +64,7 @@ class testmanagementPlugin extends Plugin
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(ProjectServiceBeforeActivation::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -75,6 +78,8 @@ class testmanagementPlugin extends Plugin
             $this->addHook(Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::TRACKER_ADD_SYSTEM_NATURES);
 
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
+            $this->addHook(GetEditableTypesInProject::NAME);
+            $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -329,5 +334,61 @@ class testmanagementPlugin extends Plugin
     {
         $importer = new XMLImport(new Config(new Dao()));
         $importer->import($params['project'], $params['extraction_path'], $params['mapping']);
+    }
+
+    public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event)
+    {
+        $project = $event->getProject();
+
+        if ($this->isAllowed($project->getId())) {
+            $event->addType(new NatureCoveredByPresenter());
+        }
+    }
+
+    public function tracker_artifact_link_can_be_unused(ArtifactLinkTypeCanBeUnused $event)
+    {
+        $type    = $event->getType();
+        $project = $event->getProject();
+
+        if ($type->shortname === NatureCoveredByPresenter::NATURE_COVERED_BY) {
+            $event->setTypeIsCheckedByPlugin();
+
+            if (! $project->usesService($this->getServiceShortname())) {
+                $event->setTypeIsUnusable();
+            }
+        }
+    }
+
+    public function project_service_before_activation(ProjectServiceBeforeActivation $event)
+    {
+        $service_short_name = $event->getServiceShortname();
+        $project            = $event->getProject();
+
+        if ($service_short_name !== $this->getServiceShortname()) {
+            return;
+        }
+
+        $event->pluginSetAValue();
+
+        $dao                          = new ArtifactLinksUsageDao();
+        $covered_by_type_is_activated = ! $dao->isTypeDisabledInProject(
+            $project->getID(),
+            NatureCoveredByPresenter::NATURE_COVERED_BY
+        );
+
+        if (! $project->usesService($this->getServiceShortname()) && $covered_by_type_is_activated) {
+            $event->serviceCanBeActivated();
+        } else {
+            $message = sprintf(
+                dgettext(
+                    'tuleap-testmanagement',
+                    'Service %s cannot be activated because the artifact link type "%s" is not activated'
+                ),
+                $service_short_name,
+                NatureCoveredByPresenter::NATURE_COVERED_BY
+            );
+
+            $event->setWarningMessage($message);
+        }
     }
 }
