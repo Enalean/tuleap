@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,8 @@ use Tuleap\ArtifactsFolders\Folder\PostSaveNewChangesetCommand;
 use Tuleap\ArtifactsFolders\Folder\Controller;
 use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
+use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
+use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -63,6 +65,8 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE);
             $this->addHook(Tracker_FormElement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST);
             $this->addHook(Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT);
+            $this->addHook(GetEditableTypesInProject::NAME);
+            $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -356,5 +360,23 @@ class ArtifactsFoldersPlugin extends Plugin
             ),
             CODENDI_PURIFIER_FULL
         );
+    }
+
+    public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event)
+    {
+        $project = $event->getProject();
+
+        if ($this->isAllowed($project->getId()) && $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($project)) {
+            $event->addType(new NatureInFolderPresenter());
+        }
+    }
+
+    public function tracker_artifact_link_can_be_unused(ArtifactLinkTypeCanBeUnused $event)
+    {
+        $type = $event->getType();
+
+        if ($type->shortname === NatureInFolderPresenter::NATURE_IN_FOLDER) {
+            $event->setTypeIsCheckedByPlugin();
+        }
     }
 }

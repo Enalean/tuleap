@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use EventManager;
 use Project;
+use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
 class NaturePresenterFactory
 {
@@ -41,6 +42,7 @@ class NaturePresenterFactory
      *  - nature: input nature shortname
      */
     const EVENT_GET_NATURE_PRESENTER = 'event_get_nature_presenter';
+
     /**
      * @var NatureDao
      */
@@ -57,6 +59,16 @@ class NaturePresenterFactory
         $natures = array_merge($natures, $this->getCustomNatures());
 
         return $natures;
+    }
+
+    /** @return NaturePresenter[] */
+    public function getAllTypesEditableInProject(Project $project)
+    {
+        $types = $this->getDefaultNatures();
+        $types = array_merge($types, $this->getPluginsTypesEditableInProject($project));
+        $types = array_merge($types, $this->getCustomNatures());
+
+        return $types;
     }
 
     public function getOnlyVisibleNatures()
@@ -88,6 +100,14 @@ class NaturePresenterFactory
         );
 
         return $natures;
+    }
+
+    private function getPluginsTypesEditableInProject(Project $project)
+    {
+        $event = new GetEditableTypesInProject($project);
+        EventManager::instance()->processEvent($event);
+
+        return $event->getTypes();
     }
 
     private function getCustomNatures()
