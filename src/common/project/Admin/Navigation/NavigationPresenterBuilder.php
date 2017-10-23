@@ -143,7 +143,7 @@ class NavigationPresenterBuilder
         $this->presenter->addDropdownItem(
             self::DATA_ENTRY_SHORTNAME,
             new NavigationDropdownItemPresenter(
-                _('Tracker v3 import'),
+                _('Trackers v3 import'),
                 '/tracker/import_admin.php?' . http_build_query(array('group_id' => $project->getID(), 'mode' => 'admin', 'pane' => self::DATA_ENTRY_SHORTNAME))
             )
         );

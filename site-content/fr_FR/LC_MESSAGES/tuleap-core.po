@@ -30,27 +30,6 @@ msgid_plural "%d members"
 msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
-msgid ""
-"<p>This feature aims to provide a way to structure projects organizations "
-"from permissions, user groups and control point of view.</p>\n"
-"                <p>As of today, it's only used by Git/ Gerrit for umbrella "
-"projects (if relevant to your platform/ project).</p>\n"
-"                <p><strong>However, setting a hierarchy between projects "
-"might have future impacts (e.g. members of the parent project could possibly "
-"have access to all sub-projects even without explicit permissions granted).</"
-"strong></p>"
-msgstr ""
-"<p>Cette fonctionnalité permet d'organiser vos projects les uns par rapport "
-"aux autres en terme de permissions, groupes d'utilisateurs et de contrôle.</"
-"p>\n"
-"            <p>Cependant, à l'heure actuelle, elle n'est exploitée que par "
-"Git/Gerrit pour les projets \"parapluies\" (si ces services sont activés/"
-"disponibles sur votre plate-forme).</p>\n"
-"            <p><strong>Veuillez noter que la définition d'une hierarchie "
-"pourra avoir un impact sur l'organisation des enfants (ex. les "
-"administrateurs d'un projet parent peuvent avoir automatiquement accès à "
-"l'administration de tous les sous-projets).</strong></p>"
-
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
@@ -65,6 +44,9 @@ msgstr "Ajouter un label"
 
 msgid "Add link"
 msgstr "Ajouter un lien"
+
+msgid "Add parent project"
+msgstr "Ajouter projet parent"
 
 msgid "Add widget"
 msgstr "Ajouter un widget"
@@ -142,6 +124,9 @@ msgstr "Impossible d'éditer le tableau de bord demandé."
 
 msgid "Categories"
 msgstr "Catégories"
+
+msgid "Child projects"
+msgstr "Projets enfants"
 
 msgid "Clear history"
 msgstr "Effacer l'historique"
@@ -330,6 +315,9 @@ msgstr "Barre de menu"
 msgid "News"
 msgstr "Annonces"
 
+msgid "No children projects"
+msgstr "Aucun projet enfant"
+
 msgid "No labels defined in this project"
 msgstr "Il n'y a pas de label défini dans ce projet"
 
@@ -362,9 +350,6 @@ msgstr "Contour"
 
 msgid "Owner"
 msgstr "Propriétaire"
-
-msgid "Parent Project"
-msgstr "Projet Parent"
 
 msgid "Permission Request"
 msgstr "Demande de permission"
@@ -420,9 +405,6 @@ msgstr "RSS"
 msgid "Recently"
 msgstr "Récemment"
 
-msgid "Remove parent project"
-msgstr "Supprimer le projet parent"
-
 msgid "SVN"
 msgstr "SVN"
 
@@ -446,9 +428,6 @@ msgstr "Commencez par choisir un widget"
 
 msgid "Style"
 msgstr "Style"
-
-msgid "Sub-Projects:"
-msgstr "Sous projets :"
 
 #, php-format
 msgid "The dashboard \"%s\" already exists."

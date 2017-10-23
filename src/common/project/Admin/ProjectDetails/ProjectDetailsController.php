@@ -26,18 +26,20 @@ namespace Tuleap\Project\Admin\ProjectDetails;
 
 require_once('www/project/admin/project_admin_utils.php');
 
+use Codendi_HTMLPurifier;
 use DataAccessException;
 use EventManager;
 use Feedback;
 use ForgeConfig;
 use HTTPRequest;
+use PFUser;
 use Project;
 use Project_HierarchyManagerAlreadyAncestorException;
 use Project_HierarchyManagerAncestorIsSelfException;
-use Project_HierarchyManagerNoChangeException;
 use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectFullName;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\DescriptionFieldsFactory;
 
@@ -91,24 +93,24 @@ class ProjectDetailsController
 
     public function display(HTTPRequest $request)
     {
-        $title   = _('Details');
-        $project = $request->getProject();
+        $title        = _('Details');
+        $project      = $request->getProject();
+        $current_user = $request->getCurrentUser();
 
         $this->displayHeader($title, $project);
 
-        $template_path = join(
-            '/',
-            array(
-                ForgeConfig::get('tuleap_dir'),
-                "src/templates/project"
-            )
-        );
+        $template_path = ForgeConfig::get('tuleap_dir') . '/src/templates/project';
 
-        $group_id                          = $project->getID();
-        $group_info                        = $this->project_details_dao->searchGroupInfo($group_id);
+        $project_id                        = $project->getID();
+        $group_info                        = $this->project_details_dao->searchGroupInfo($project_id);
         $description_field_representations = $this->getDescriptionFieldsRepresentation();
-        $parent_project_info               = $this->getParentProjectInfo($request);
-        $project_children                  = $this->getProjectChildren($request);
+        $parent_project_info               = $this->getParentProjectInfo($current_user, $project_id);
+        $purified_project_children         = $this->buildProjectChildren($current_user, $project_id);
+
+        $hierarchy_presenter = new ProjectHierarchyPresenter(
+            $parent_project_info,
+            $purified_project_children
+        );
 
         $renderer = \TemplateRendererFactory::build()->getRenderer($template_path);
         $renderer->renderToPage(
@@ -117,13 +119,9 @@ class ProjectDetailsController
                 $project,
                 $group_info,
                 $description_field_representations,
-                $parent_project_info,
-                $project_children
+                $hierarchy_presenter
             )
         );
-
-        $js = "new ProjectAutoCompleter('parent_project', '".util_get_dir_image_theme()."', false, {'allowNull' : true});";
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
     }
 
     /**
@@ -153,6 +151,11 @@ class ProjectDetailsController
 
     private function displayHeader($title, Project $project)
     {
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
+
         $header_displayer = new HeaderNavigationDisplayer();
         $header_displayer->displayBurningParrotNavigation($title, $project);
     }
@@ -326,11 +329,9 @@ class ProjectDetailsController
         );
     }
 
-    private function getParentProjectInfo(HTTPRequest $request)
+    private function getParentProjectInfo(PFUser $current_user, $project_id)
     {
-        $group_id     = $request->get('group_id');
-        $current_user = $request->getCurrentUser();
-        $parent       = $this->project_manager->getParentProject($group_id);
+        $parent = $this->project_manager->getParentProject($project_id);
 
         $parent_project_info = array();
 
@@ -338,7 +339,7 @@ class ProjectDetailsController
             return $parent_project_info;
         }
 
-        $parent_project_info['parent_name'] = $parent->getUnixName();
+        $parent_project_info['parent_name'] = $parent->getUnconvertedPublicName();
 
         if ($current_user->isMember($parent->getId(), 'A')) {
             $url = '?group_id=' . urlencode($parent->getID());
@@ -351,12 +352,12 @@ class ProjectDetailsController
         return $parent_project_info;
     }
 
-    private function getProjectChildren(HTTPRequest $request)
+    private function buildProjectChildren(PFUser $current_user, $project_id)
     {
-        $group_id              = $request->get('group_id');
-        $current_user          = $request->getCurrentUser();
-        $children              = $this->project_manager->getChildProjects($group_id);
-        $project_children_urls = array();
+        $children = $this->project_manager->getChildProjects($project_id);
+
+        $purifier          = Codendi_HTMLPurifier::instance();
+        $children_projects = array();
 
         foreach ($children as $child) {
             if ($current_user->isMember($child->getId(), 'A')) {
@@ -365,13 +366,12 @@ class ProjectDetailsController
                 $url = '/projects/' . urlencode($child->getUnixName());
             }
 
-            $project_children_urls[] = array(
-                'child_name' => $child->getUnixName(),
-                'child_url'  => $url
-            );
+            $purified_url  = $purifier->purify($url);
+            $purified_name = $purifier->purify($child->getUnconvertedPublicName());
+            $children_projects[] = '<a href="' . $purified_url . '">' . $purified_name . '</a>';
         }
 
-        return $project_children_urls;
+        return implode(', ', $children_projects);
     }
 
     private function reindexRowsByDescriptionId($rows)

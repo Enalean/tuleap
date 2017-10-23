@@ -34,15 +34,8 @@ class ProjectDetailsPresenter
     public $group_name;
     public $project_short_description;
     public $short_description_label;
-    public $project_hierarchy_title;
-    public $purified_project_hierarchy_desc;
-    public $parent_project;
     public $group_info;
     public $description_fields_representation;
-    public $parent_project_info;
-    public $remove_parent_project;
-    public $project_children;
-    public $sub_projects;
     public $public_information_label;
     public $project_name_label;
     public $project_name_placeholder;
@@ -50,23 +43,24 @@ class ProjectDetailsPresenter
     public $update_button;
     public $project_type_label;
     public $project_type;
-    public $descriptive_group_name;
-    public $update;
+    /**
+     * @var ProjectHierarchyPresenter
+     */
+    public $project_hierarchy_presenter;
 
     public function __construct(
         Project $project,
         array $group_info,
         array $description_fields_representation,
-        array $parent_project_info,
-        array $project_children
+        ProjectHierarchyPresenter $project_hierarchy_presenter
     ) {
         $this->group_id                          = $project->getID();
         $this->group_info                        = $group_info;
         $this->description_fields_representation = $description_fields_representation;
+        $this->project_hierarchy_presenter       = $project_hierarchy_presenter;
         $this->group_name                        = $group_info['group_name'];
         $this->project_short_description         = $group_info['short_description'];
-        $this->parent_project_info               = $parent_project_info;
-        $this->project_children                  = $project_children;
+
         $this->project_type                      = $this->getLocalizedType($project->getType());
 
         $this->public_information_label = _('Public information');
@@ -74,23 +68,8 @@ class ProjectDetailsPresenter
         $this->project_name_placeholder = _('Project name...');
         $this->short_description_label  = _('Short description');
         $this->short_description_info   = _("Short description shouldn't exceed 255 characters.");
-
-        $this->project_type_label = _('Project type');
-
-        $this->project_hierarchy_title  = _('Project hierarchy');
-        $this->parent_project           = _('Parent Project');
-        $this->remove_parent_project    = _('Remove parent project');
+        $this->project_type_label       = _('Project type');
         $this->update_button            = _('Save information');
-        $this->sub_projects             = _('Sub-Projects:');
-
-        $this->purified_project_hierarchy_desc = Codendi_HTMLPurifier::instance()->purify(
-            _(
-                "<p>This feature aims to provide a way to structure projects organizations from permissions, user groups and control point of view.</p>
-                <p>As of today, it's only used by Git/ Gerrit for umbrella projects (if relevant to your platform/ project).</p>
-                <p><strong>However, setting a hierarchy between projects might have future impacts (e.g. members of the parent project could possibly have access to all sub-projects even without explicit permissions granted).</strong></p>"
-            ),
-            CODENDI_PURIFIER_LIGHT
-        );
     }
 
     private function getLocalizedType($project_type_id)
