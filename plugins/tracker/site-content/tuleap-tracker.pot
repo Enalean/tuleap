@@ -76,6 +76,9 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Hierarchy"
+msgstr ""
+
 msgid "No element selected."
 msgstr ""
 
@@ -92,6 +95,11 @@ msgid "Notified people"
 msgstr ""
 
 msgid "On all updates?"
+msgstr ""
+
+msgid ""
+"Please reactivate the \"_is_child\" artifact link type to be able to define "
+"the tracker hierarchy."
 msgstr ""
 
 msgid "Renderer id"
@@ -287,6 +295,9 @@ msgstr ""
 
 #, php-format
 msgid "The text field '%s' cannot be compared to NOW()."
+msgstr ""
+
+msgid "The tracker hierarchy cannot be defined."
 msgstr ""
 
 #, php-format

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,21 +22,29 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generate('Tracker_Hierarchy_HierarchicalTracker');
 Mock::generate('Tracker');
 
-class Tracker_Hierarchy_PresenterTest extends TuleapTestCase {
-    
-    public function testGetPossibleChildrenReturnsAttributesForSelect() {
+class Tracker_Hierarchy_PresenterTest extends TuleapTestCase
+{
+
+    public function testGetPossibleChildrenReturnsAttributesForSelect()
+    {
         $possible_children = array(
             1 => aTracker()->withId(1)->withName('Stories')->build(),
             2 => aTracker()->withId(2)->withName('Tasks')->build()
         );
-        
+
         $tracker = new MockTracker_Hierarchy_HierarchicalTracker();
         $tracker->setReturnValue('getUnhierarchizedTracker', aTracker()->build());
         $tracker->setReturnValue('hasChild', false, array($possible_children[1]));
         $tracker->setReturnValue('hasChild', true,  array($possible_children[2]));
-        
-        $presenter = new Tracker_Hierarchy_Presenter($tracker, $possible_children, new TreeNode(), array());
-        
+
+        $presenter = new Tracker_Hierarchy_Presenter(
+            $tracker,
+            $possible_children,
+            new TreeNode(),
+            array(),
+            false
+        );
+
         $attributes = $presenter->getPossibleChildren();
         $this->assertEqual($attributes[0]['name'], 'Stories');
         $this->assertEqual($attributes[0]['id'], 1);
@@ -46,5 +54,3 @@ class Tracker_Hierarchy_PresenterTest extends TuleapTestCase {
         $this->assertEqual($attributes[1]['selected'], 'selected="selected"');
     }
 }
-
-?>

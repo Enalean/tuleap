@@ -775,7 +775,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
-                    $this->displayAdminItemHeader($layout, 'hierarchy');
+                    $this->displayAdminItemHeaderWithoutTitle($layout, 'hierarchy');
                     $this->getHierarchyController($request)->edit();
                     $this->displayFooter($layout);
                 } else {
@@ -880,15 +880,25 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($this->getProject());
     }
 
-    private function getHierarchyController($request) {
+    /**
+     * @return Tracker_Hierarchy_Controller
+     */
+    private function getHierarchyController($request)
+    {
         $dao                  = new Tracker_Hierarchy_Dao();
         $tracker_factory      = $this->getTrackerFactory();
         $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         $hierarchical_tracker = $factory->getWithChildren($this);
-        $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
+        $controller           = new Tracker_Hierarchy_Controller(
+            $request,
+            $hierarchical_tracker,
+            $factory,
+            $dao,
+            new ArtifactLinksUsageDao()
+        );
+
         return $controller;
     }
-
 
     public function createFormElement($type, $formElement_data, $user) {
         if ($type == 'shared') {
@@ -1488,16 +1498,26 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, $breadcrumbs = array(), $title = null) {
+        $this->displayAdminItemHeaderWithoutTitle($layout, $item, $breadcrumbs, $title);
+
+        echo '<h1>'. $title .'</h1>';
+    }
+
+    private function displayAdminItemHeaderWithoutTitle(
+        Tracker_IDisplayTrackerLayout $layout,
+        $item,
+        $breadcrumbs = array(),
+        $title = null
+    ) {
         $items = $this->getAdminItems();
         $title = $title ? $title : $items[$item]['title'];
         $breadcrumbs = array_merge(
-                array(
+            array(
                 $items[$item]
-                ),
-                $breadcrumbs
+            ),
+            $breadcrumbs
         );
         $this->displayAdminHeader($layout, $title, $breadcrumbs);
-        echo '<h1>'. $title .'</h1>';
     }
 
     public function getColor() {
