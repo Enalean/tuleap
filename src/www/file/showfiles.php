@@ -243,17 +243,14 @@ foreach ($packages as $package_id => $package_for_display) {
                     $permission_exists = $pm->isPermissionExist($package_release->getReleaseID(), 'RELEASE_READ');
 
                     // Highlight the release if one was chosen
+                    $bgcolor = 'boxitem';
                     if ($request->existAndNonEmpty('release_id')) {
                         if($request->valid(new Valid_UInt('release_id'))) {
             	            $release_id = $request->get('release_id');
             	            if ($release_id == $package_release->getReleaseID()) {
             	            	$bgcolor = 'boxitemalt';
             	            }
-                        } else {
-                            $bgcolor = 'boxitem';
                         }
-                    } else {
-                        $bgcolor = 'boxitem';
                     }
 
                     $is_release_collapsed = $package_release->getReleaseID() != $show_release_id;

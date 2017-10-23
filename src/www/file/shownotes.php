@@ -29,9 +29,8 @@ require_once('www/file/file_utils.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 
-if($request->valid(new Valid_UInt('release_id'))) {
-    $release_id = $request->get('release_id');
-} else {
+$release_id = (int)     $request->getValidated('release_id', 'uint', 0);
+if($release_id === 0) {
     exit_error($GLOBALS['Language']->getText('file_shownotes','not_found_err'),$GLOBALS['Language']->getText('file_shownotes','release_not_found'));
 }
 
