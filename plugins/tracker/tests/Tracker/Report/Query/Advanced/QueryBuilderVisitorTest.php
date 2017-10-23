@@ -47,6 +47,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualCompariso
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
@@ -95,7 +96,8 @@ class QueryBuilderVisitorTest extends TuleapTestCase
             new GreaterThanOrEqualComparisonVisitor(),
             new BetweenComparisonVisitor(),
             new InComparisonVisitor(),
-            new NotInComparisonVisitor()
+            new NotInComparisonVisitor(),
+            new SearchableVisitor($formelement_factory)
         );
     }
 

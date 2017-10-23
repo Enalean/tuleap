@@ -25,6 +25,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Report\ExpertModePresenter;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
@@ -166,7 +167,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new QueryBuilder\GreaterThanOrEqualComparisonVisitor(),
             new QueryBuilder\BetweenComparisonVisitor(),
             new QueryBuilder\InComparisonVisitor,
-            new QueryBuilder\NotInComparisonVisitor()
+            new QueryBuilder\NotInComparisonVisitor(),
+            new SearchableVisitor($this->getFormElementFactory())
         );
     }
 

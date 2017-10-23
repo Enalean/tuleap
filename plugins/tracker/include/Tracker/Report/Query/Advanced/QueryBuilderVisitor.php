@@ -24,8 +24,8 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\InComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanComparison;
@@ -34,18 +34,19 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameter;
 
 class QueryBuilderVisitor implements Visitor
 {
@@ -90,6 +91,10 @@ class QueryBuilderVisitor implements Visitor
      * @var NotInComparisonVisitor
      */
     private $not_in_comparison_visitor;
+    /**
+     * @var SearchableVisitor
+     */
+    private $searchable_visitor;
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
@@ -101,7 +106,8 @@ class QueryBuilderVisitor implements Visitor
         GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor,
         BetweenComparisonVisitor $between_comparison_visitor,
         InComparisonVisitor $in_comparison_visitor,
-        NotInComparisonVisitor $not_in_comparison_visitor
+        NotInComparisonVisitor $not_in_comparison_visitor,
+        SearchableVisitor $searchable_visitor
     ) {
         $this->formelement_factory                      = $formelement_factory;
         $this->equal_comparison_visitor                 = $equal_comparison_visitor;
@@ -113,6 +119,7 @@ class QueryBuilderVisitor implements Visitor
         $this->between_comparison_visitor               = $between_comparison_visitor;
         $this->in_comparison_visitor                    = $in_comparison_visitor;
         $this->not_in_comparison_visitor                = $not_in_comparison_visitor;
+        $this->searchable_visitor                       = $searchable_visitor;
     }
 
     public function buildFromWhere(Visitable $parsed_query, Tracker $tracker)
@@ -122,83 +129,110 @@ class QueryBuilderVisitor implements Visitor
 
     public function visitEqualComparison(EqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->equal_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->equal_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitNotEqualComparison(NotEqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->not_equal_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->not_equal_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitLesserThanComparison(LesserThanComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->lesser_than_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->lesser_than_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitGreaterThanComparison(GreaterThanComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->greater_than_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->greater_than_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitLesserThanOrEqualComparison(LesserThanOrEqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->lesser_than_or_equal_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->lesser_than_or_equal_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitGreaterThanOrEqualComparison(GreaterThanOrEqualComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->greater_than_or_equal_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->greater_than_or_equal_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitBetweenComparison(BetweenComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->between_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->between_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitInComparison(InComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->in_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->in_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitNotInComparison(NotInComparison $comparison, QueryBuilderParameters $parameters)
     {
-        $formelement = $this->getFormElementFromComparison($comparison, $parameters);
-
-        return $this->not_in_comparison_visitor
-            ->getFromWhereBuilder($formelement)
-            ->getFromWhere($comparison, $formelement);
+        return $comparison->getSearchable()->accept(
+            $this->searchable_visitor,
+            new SearchableVisitorParameter(
+                $comparison,
+                $this->not_in_comparison_visitor,
+                $parameters->getTracker()
+            )
+        );
     }
 
     public function visitAndExpression(AndExpression $and_expression, QueryBuilderParameters $parameters)
@@ -263,15 +297,5 @@ class QueryBuilderVisitor implements Visitor
             $from_where_expression->getFrom() . ' ' . $from_where_tail->getFrom(),
             '(' . $from_where_expression->getWhere() . ' OR ' . $from_where_tail->getWhere() . ')'
         );
-    }
-
-    private function getFormElementFromComparison(Comparison $comparison, QueryBuilderParameters $parameters)
-    {
-        $formelement = $this->formelement_factory->getUsedFieldByName(
-            $parameters->getTracker()->getId(),
-            $comparison->getSearchable()->getName()
-        );
-
-        return $formelement;
     }
 }
