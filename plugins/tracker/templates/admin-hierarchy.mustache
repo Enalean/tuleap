@@ -1,36 +1,46 @@
-<div id="tracker-admin-current-full-hierarchy">
-    <h3>{{ current_full_hierarchy_title }}</h3>
-    {{#hierarchy}}
-        <ul class="tracker-hierarchy">{{> tracker-node}}</ul>
-    {{/hierarchy}}
-</div>
-<div class="tracker-admin-hierarchy-edit-form">
-    <h3>{{ edit_children_title }}</h3>
-    <form method="post"
-        action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
-        <select
-            class="tracker-admin-hierarchy-edit-children"
-            name="children[]"
-            multiple="multiple"
-            {{# cannot_be_used_in_hierarchy }}disabled{{/ cannot_be_used_in_hierarchy }}
-        >
-            {{#getPossibleChildren}}
-            <option value="{{id}}"{{selected}}>{{name}}</option>
-            {{/getPossibleChildren}}
-        </select>
-        <p>
-            <input type="submit" class="btn" value="{{getSubmitLabel}}" {{# cannot_be_used_in_hierarchy }}disabled{{/ cannot_be_used_in_hierarchy }}>
-        </p>
-    </form>
-
-    {{# has_trackers_not_in_hierarchy }}
-    <div>
-        <p>{{ cannot_be_used }}</p>
-        <ul>
-            {{# trackers_not_in_hierarchy }}
-            <li><a href="/plugins/tracker/?tracker={{ getId }}&amp;func=admin-hierarchy">{{ getName }}</a></li>
-            {{/ trackers_not_in_hierarchy }}
-        </ul>
+{{# can_be_defined }}
+    <h1>{{ hierarchy_title }}</h1>
+    <div id="tracker-admin-current-full-hierarchy">
+        <h3>{{ current_full_hierarchy_title }}</h3>
+        {{# hierarchy }}
+            <ul class="tracker-hierarchy">{{> tracker-node}}</ul>
+        {{/ hierarchy }}
     </div>
-    {{/ has_trackers_not_in_hierarchy }}
-</div>
+    <div class="tracker-admin-hierarchy-edit-form">
+        <h3>{{ edit_children_title }}</h3>
+        <form method="post"
+              action="{{ getTrackerUrl }}/?tracker={{ getTrackerId }}&func=admin-hierarchy-update">
+            <select
+                    class="tracker-admin-hierarchy-edit-children"
+                    name="children[]"
+                    multiple="multiple"
+                    {{# cannot_be_used_in_hierarchy }}disabled{{/ cannot_be_used_in_hierarchy }}
+            >
+                {{# getPossibleChildren }}
+                    <option value="{{ id }}"{{ selected }}>{{ name }}</option>
+                {{/ getPossibleChildren }}
+            </select>
+            <p>
+                <input type="submit" class="btn" value="{{ getSubmitLabel }}" {{# cannot_be_used_in_hierarchy }}disabled{{/ cannot_be_used_in_hierarchy }}>
+            </p>
+        </form>
+
+        {{# has_trackers_not_in_hierarchy }}
+            <div>
+                <p>{{ cannot_be_used }}</p>
+                <ul>
+                    {{# trackers_not_in_hierarchy }}
+                        <li><a href="/plugins/tracker/?tracker={{ getId }}&amp;func=admin-hierarchy">{{ getName }}</a></li>
+                    {{/ trackers_not_in_hierarchy }}
+                </ul>
+            </div>
+        {{/ has_trackers_not_in_hierarchy }}
+    </div>
+{{/ can_be_defined }}
+
+{{^ can_be_defined }}
+    <div id="tracker-admin-hierarchy-disabled">
+        <p class="tracker-admin-hierarchy-content">{{ disabled_hierarchy_title }}</p>
+        <p class="tracker-admin-hierarchy-content tracker-admin-hierarchy-description">{{ disabled_hierarchy_description }}</p>
+    </div>
+{{/ can_be_defined }}

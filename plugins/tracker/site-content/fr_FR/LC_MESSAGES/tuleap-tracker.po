@@ -95,6 +95,9 @@ msgid_plural "Groups '%s' couldn't be added."
 msgstr[0] "Le groupe '%s' n'a pas pu être ajouté"
 msgstr[1] "Les groupes '%s' n'ont pas pu être ajoutés"
 
+msgid "Hierarchy"
+msgstr "Hiérarchie"
+
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
 
@@ -112,6 +115,13 @@ msgstr "Personnes notifiées"
 
 msgid "On all updates?"
 msgstr "À chaque modification ?"
+
+msgid ""
+"Please reactivate the \"_is_child\" artifact link type to be able to define "
+"the tracker hierarchy."
+msgstr ""
+"Merci d'activer le lien entre artéfacts \"_is_child\" afin de pouvoir "
+"définir une hiérarchie entre outils de suivi."
 
 msgid "Renderer id"
 msgstr "Id du rendu"
@@ -348,6 +358,9 @@ msgstr "Le champ texte '%s' ne peut pas être comparé à MYSELF()."
 #, php-format
 msgid "The text field '%s' cannot be compared to NOW()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à NOW()."
+
+msgid "The tracker hierarchy cannot be defined."
+msgstr "La hiérarchie entre outils de suivi ne peut être définie."
 
 #, php-format
 msgid "The value '%s' doesn't exist for the list field '%s'."

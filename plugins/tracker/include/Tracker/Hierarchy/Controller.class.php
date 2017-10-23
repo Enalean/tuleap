@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
@@ -42,13 +44,25 @@ class Tracker_Hierarchy_Controller {
      * @var Tracker_Hierarchy_Dao
      */
     private $dao;
-    
-    public function __construct(Codendi_Request $request, Tracker_Hierarchy_HierarchicalTracker $tracker, Tracker_Hierarchy_HierarchicalTrackerFactory $factory, Tracker_Hierarchy_Dao $dao) {
-        $this->request  = $request;
-        $this->tracker  = $tracker;
-        $this->factory  = $factory;
-        $this->dao      = $dao;
-        $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../../templates');
+
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $artifact_links_usage_dao;
+
+    public function __construct(
+        Codendi_Request $request,
+        Tracker_Hierarchy_HierarchicalTracker $tracker,
+        Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
+        Tracker_Hierarchy_Dao $dao,
+        ArtifactLinksUsageDao $artifact_links_usage_dao
+    ) {
+        $this->request                  = $request;
+        $this->tracker                  = $tracker;
+        $this->factory                  = $factory;
+        $this->dao                      = $dao;
+        $this->artifact_links_usage_dao = $artifact_links_usage_dao;
+        $this->renderer                 = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../../../templates');
     }
     
     public function edit() {
@@ -58,14 +72,42 @@ class Tracker_Hierarchy_Controller {
             $this->tracker,
             $this->getPossibleChildren($trackers_not_in_hierarchy),
             $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
-            $trackers_not_in_hierarchy
+            $trackers_not_in_hierarchy,
+            $this->isIsChildTypeDisabledForProject($this->tracker->getProject())
         );
+
         $this->render('admin-hierarchy', $presenter);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isIsChildTypeDisabledForProject(Project $project)
+    {
+        return $this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes($project->getID()) &&
+            $this->artifact_links_usage_dao->isTypeDisabledInProject(
+                $project->getID(),
+                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            );
     }
 
     public function update() {
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
+
+        if ($this->isIsChildTypeDisabledForProject($this->tracker->getProject())) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-tracker', 'The tracker hierarchy cannot be defined.')
+            );
+
+            return $this->redirect(
+                array(
+                    'tracker' => $this->tracker->getId(),
+                    'func'    => 'admin-hierarchy'
+                )
+            );
+        }
 
         if ($this->request->validArray($vChildren)) {
             $this->dao->updateChildren($this->tracker->getId(), $this->request->get('children'));
@@ -77,8 +119,12 @@ class Tracker_Hierarchy_Controller {
             }
         }
         
-        $this->redirect(array('tracker' => $this->tracker->getId(),
-                              'func'    => 'admin-hierarchy'));
+        $this->redirect(
+            array(
+                'tracker' => $this->tracker->getId(),
+                'func'    => 'admin-hierarchy'
+            )
+        );
     }
     
     private function redirect($query_parts) {

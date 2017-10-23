@@ -26,7 +26,7 @@ Mock::generate('Tracker_Hierarchy_Dao');
 
 class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     
-    function setUp() {
+    public function setUp() {
         parent::setUp();
 
         $this->tracker_id           = 3;
@@ -36,6 +36,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->request              = aRequest()->withUser(mock('PFUser'))->build();
         $this->tracker_factory      = new MockTrackerFactory();
         $this->dao                  = new MockTracker_Hierarchy_Dao();
+        $this->type_dao             = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao');
         $this->factory              = new MockTracker_Hierarchy_HierarchicalTrackerFactory($this->tracker_factory, $this->dao);
         $this->redirect_url         = TRACKER_BASE_URL."/?tracker=$this->tracker_id&func=admin-hierarchy";
 
@@ -108,7 +109,13 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     
     private function WhenICaptureTheOutputOfEditAction() {
         ob_start();
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+        $controller = new Tracker_Hierarchy_Controller(
+            $this->request,
+            $this->hierarchical_tracker,
+            $this->factory,
+            $this->dao,
+            $this->type_dao
+        );
         $controller->edit();
         $content = ob_get_clean();
         return $content;
@@ -121,8 +128,14 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->dao->expectOnce('updateChildren', array($this->tracker_id, $children_ids));
         
         $this->expectRedirectTo($this->redirect_url);
-        
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+
+        $controller = new Tracker_Hierarchy_Controller(
+            $this->request,
+            $this->hierarchical_tracker,
+            $this->factory,
+            $this->dao,
+            $this->type_dao
+        );
         $controller->update();
     }
     
@@ -135,7 +148,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
             $this->request,
             $this->hierarchical_tracker,
             $this->factory,
-            $this->dao
+            $this->dao,
+            $this->type_dao
         );
 
         $controller->update();
@@ -147,8 +161,14 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $this->expectFeedback('error', '*');
         $this->expectRedirectTo($this->redirect_url);
-        
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+
+        $controller = new Tracker_Hierarchy_Controller(
+            $this->request,
+            $this->hierarchical_tracker,
+            $this->factory,
+            $this->dao,
+            $this->type_dao
+        );
         $controller->update();
     }
     
@@ -160,9 +180,36 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
 
     public function itCreatesHierarchyFromXmlProjectImportProcess() {
         $mapping    = array(111,222,333,444);
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+        $controller = new Tracker_Hierarchy_Controller(
+            $this->request,
+            $this->hierarchical_tracker,
+            $this->factory,
+            $this->dao,
+            $this->type_dao
+        );
         $this->dao->expectCallCount('updateChildren',1);
 
         $controller->updateFromXmlProjectImportProcess($mapping);
+    }
+
+    public function itDoesNotUpdateHierarchyIfIsChildTypeIsDisabled()
+    {
+        stub($this->type_dao)->isProjectUsingArtifactLinkTypes()->returns(true);
+        stub($this->type_dao)->isTypeDisabledInProject()->returns(true);
+
+        expect($this->dao)->updateChildren()->never();
+        expect($this->dao)->deleteAllChildrenWithNature()->never();
+        $this->expectFeedback('error', '*');
+        $this->expectRedirectTo($this->redirect_url);
+
+        $controller = new Tracker_Hierarchy_Controller(
+            $this->request,
+            $this->hierarchical_tracker,
+            $this->factory,
+            $this->dao,
+            $this->type_dao
+        );
+
+        $controller->update();
     }
 }

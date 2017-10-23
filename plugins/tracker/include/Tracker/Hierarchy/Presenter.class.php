@@ -65,11 +65,32 @@ class Tracker_Hierarchy_Presenter {
      */
     public $cannot_be_used;
 
+    /**
+     * @var bool
+     */
+    public $can_be_defined;
+
+    /**
+     * @var string
+     */
+    public $disabled_hierarchy_title;
+
+    /**
+     * @var string
+     */
+    public $disabled_hierarchy_description;
+
+    /**
+     * @var String
+     */
+    public $hierarchy_title;
+
     public function __construct(
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         array $possible_children,
         TreeNode $hierarchy,
-        array $trackers_not_in_hierarchy
+        array $trackers_not_in_hierarchy,
+        $is_child_is_disabled
     ) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
@@ -101,6 +122,16 @@ class Tracker_Hierarchy_Presenter {
             'plugin_tracker_admin_hierarchy',
             'cannot_be_used'
         );
+
+        $this->can_be_defined = ! $is_child_is_disabled;
+
+        $this->disabled_hierarchy_title       = dgettext('tuleap-tracker', 'The tracker hierarchy cannot be defined.');
+        $this->disabled_hierarchy_description = dgettext(
+            'tuleap-tracker',
+            'Please reactivate the "_is_child" artifact link type to be able to define the tracker hierarchy.'
+        );
+
+        $this->hierarchy_title = dgettext('tuleap-tracker', 'Hierarchy');
     }
 
     public function getTrackerUrl() {

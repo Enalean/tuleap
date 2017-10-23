@@ -1893,6 +1893,28 @@ ul.plugin_tracker_my_artifacts_list {
     color: #0676B9;
 }
 
+#tracker-admin-hierarchy-disabled {
+    $muted-text-color: #676767;
+    text-align: center;
+    margin: 25vmin 0 0;
+
+    > .tracker-admin-hierarchy-content {
+        width: 550px;
+        margin: 0 auto 30px;
+        font-family: SourceSansPro, "Helvetica Neue", Arial, sans-serif;
+        font-size: 30px;
+        line-height: 42px;
+        font-weight: 300;
+        color: #2F2F2F;
+
+        &.tracker-admin-hierarchy-description {
+            font-size: 18px;
+            color: $muted-text-color;
+            line-height: 30px;
+        }
+    }
+}
+
 /** Tree Node **/
 
 .tree-view, .tree-view tr, .tree-view td, .tree-view tbody {
