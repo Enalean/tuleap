@@ -18,7 +18,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\REST\v1\CrossTracker;
+namespace Tuleap\CrossTracker\REST\v1;
 
 use RestBase;
 
