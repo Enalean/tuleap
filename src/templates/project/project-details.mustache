@@ -1,78 +1,128 @@
-<form action="?group_id={{ group_id }}" method="post" id="project_info_form">
-    <h3>{{ edit_group_info_for }}</h3>
-    <p>{{ descriptive_group_name }}<font color="red">*</font></p>
+<div class="tlp-framed-horizontally">
+    <form
+        action="?group_id={{ group_id }}"
+        method="post"
+        id="project_info_form"
+        class="project-admin-details-form"
+    >
+        <div class="project-admin-details-container">
+            <section class="tlp-pane project-admin-details-public-info">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h2 class="tlp-pane-title">{{ public_information_label }}</h2>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <div class="tlp-form-element">
+                            <label for="form_group_name" class="tlp-label">
+                                {{ project_name_label }} <i class="fa fa-asterisk"></i>
+                            </label>
+                            <input
+                                type="text"
+                                class="tlp-input"
+                                maxlength="50"
+                                id="form_group_name"
+                                name="form_group_name"
+                                required
+                                placeholder="{{ project_name_placeholder }}"
+                                value="{{ group_name }}"
+                            />
+                        </div>
 
-    <input type="text" size="50" maxlen="40" name="form_group_name" value="{{ group_name }}" />
+                        <div class="tlp-form-element">
+                            <label for="form_shortdesc" class="tlp-label">
+                                {{ short_description_label }} <i class="fa fa-asterisk"></i>
+                            </label>
+                            <textarea
+                                class="tlp-textarea"
+                                rows="3"
+                                maxlength="255"
+                                id="form_shortdesc"
+                                name="form_shortdesc"
+                                required
+                            >{{ project_short_description }}</textarea>
+                            <p class="tlp-text-info">{{ short_description_info }}</p>
+                        </div>
 
+                        {{# description_fields_representation }}
+                            <div class="tlp-form-element">
+                                <label for="{{ field_name }}" class="tlp-label">
+                                    {{ field_label }}{{# field_description_required }}<i class="fa fa-asterisk"></i>{{/field_description_required}}
+                                </label>
+                                {{# is_field_line_typed }}
+                                    <input
+                                        type="text"
+                                        class="tlp-input"
+                                        maxlength="70"
+                                        name="{{ field_name }}"
+                                        {{# field_description_required }}required{{/ field_description_required }}
+                                        value="{{ field_value }}"
+                                    />
+                                {{/ is_field_line_typed }}
+                                {{# is_field_text_typed }}
+                                    <textarea
+                                        class="tlp-textarea"
+                                        rows="8"
+                                        id="{{ field_name }}"
+                                        name="{{ field_name }}"
+                                        {{# field_description_required }}required{{/ field_description_required }}
+                                    >{{ field_value }}</textarea>
+                                {{/ is_field_text_typed }}
+                                <p class="tlp-text-info">{{ field_description }}</p>
+                            </div>
+                        {{/ description_fields_representation }}
 
-    <p>{{ short_description_label }}<font color="red">*</font>
-    <br>
-    <textarea cols="70" rows="3" wrap="virtual" name="form_shortdesc">{{ project_short_description }}</textarea>
+                        <div class="tlp-property">
+                            <label class="tlp-label">{{ project_type_label }}</label>
+                            <p>{{ project_type }}</p>
+                        </div>
+                    </section>
+                </div>
+            </section>
 
-    {{# description_fields_representation }}
-        <p>
-            <u>
-                {{ field_label }}
-            </u>
-            {{# field_description_required }}
-                <font color='red'>*</font>
-            {{/ field_description_required }}
-            <br>
-            {{# is_field_line_typed }}
-                <input type='text'
-                       size='70'
-                       maxlen='70'
-                       name="{{ field_name }}"
-                       value="{{ field_value }}"
-                />
-            {{/ is_field_line_typed }}
+            <div class="project-admin-details-right-container">
+                <section class="tlp-pane project-admin-details-visibility">
+                </section>
+                <section class="tlp-pane project-admin-details-hierarchy">
+                    <div class="tlp-pane-container">
+                        <section class="tlp-pane-section">
+                            <h3>{{ project_hierarchy_title }}</h3>
+                            {{{ purified_project_hierarchy_desc }}}
+                            <p>
+                                <u>{{ parent_project }}</u>
+                            </p>
 
-            {{# is_field_text_typed }}
-                <textarea name="{{ field_name }}"
-                          wrap="virtual"
-                          cols="70"
-                          rows="8"
-                >{{ field_value }}</textarea>
-            {{/ is_field_text_typed }}
-            <br>
-        </p>
-    {{/ description_fields_representation }}
+                            {{# parent_project_info }}
+                                <a href="{{ url }}">{{ parent_name }}</a>
 
-    <h3>{{ project_hierarchy_title }}</h3>
-    {{{ purified_project_hierarchy_desc }}}
-    <p>
-        <u>{{ parent_project }}</u>
-    </p>
+                                <label>
+                                    <input type="checkbox" name="remove_parent_project"/>
+                                    {{ remove_parent_project }}
+                                </label>
+                            {{/ parent_project_info }}
+                            {{^ parent_project_info }}
+                                <input type="text" name="parent_project" size="50" id="parent_project"/>
+                                <br/>
+                            {{/parent_project_info}}
 
-    {{# parent_project_info }}
-        <a href="{{ url }}">{{ parent_name }}</a>
+                            <br/>
 
-        <br>
+                            <u>{{ sub_projects }}</u>
 
-        <label>
-            <input type="checkbox" name="remove_parent_project" />
-            {{ remove_parent_project }}
-        </label>
-    {{/ parent_project_info }}
-    {{^ parent_project_info }}
-        <input type="text" name="parent_project" size ="50" id="parent_project" />
-        <br/>
-    {{/parent_project_info}}
+                            <br>
 
-    <br/>
-
-    <u>{{ sub_projects }}</u>
-
-    <br>
-
-    {{# project_children }}
-        <a href="{{ child_url }}">{{ child_name }}</a>
-    {{/project_children}}
-
-    <input type="hidden" name="action" value="update"/>
-    <input type="hidden" name="pane" value="details"/>
-    <p>
-        <br>
-        <input type="submit" name="Update" value="{{ update }}">
-    </p>
-</form>
+                            {{# project_children }}
+                                <a href="{{ child_url }}">{{ child_name }}</a>
+                            {{/project_children}}
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <input type="hidden" name="action" value="update"/>
+        <input type="hidden" name="pane" value="details"/>
+        <button
+            type="submit"
+            class="tlp-button-primary tlp-button-large project-admin-details-submit"
+        ><i class="fa fa-save tlp-button-icon"></i>{{ update_button }}</button>
+    </form>
+</div>

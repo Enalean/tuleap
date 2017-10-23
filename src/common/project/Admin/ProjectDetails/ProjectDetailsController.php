@@ -38,6 +38,7 @@ use Project_HierarchyManagerNoChangeException;
 use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectFullName;
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\DescriptionFieldsFactory;
 
 class ProjectDetailsController
@@ -103,7 +104,7 @@ class ProjectDetailsController
             )
         );
 
-        $group_id                          = $request->get('group_id');
+        $group_id                          = $project->getID();
         $group_info                        = $this->project_details_dao->searchGroupInfo($group_id);
         $description_field_representations = $this->getDescriptionFieldsRepresentation();
         $parent_project_info               = $this->getParentProjectInfo($request);
@@ -113,7 +114,7 @@ class ProjectDetailsController
         $renderer->renderToPage(
             'project-details',
             new ProjectDetailsPresenter(
-                $group_id,
+                $project,
                 $group_info,
                 $description_field_representations,
                 $parent_project_info,
@@ -152,11 +153,8 @@ class ProjectDetailsController
 
     private function displayHeader($title, Project $project)
     {
-        project_admin_header(array(
-            'title' => $title,
-            'group' => $project->getID(),
-            'help'  => 'project-admin.html#project-public-information'
-        ));
+        $header_displayer = new HeaderNavigationDisplayer();
+        $header_displayer->displayBurningParrotNavigation($title, $project);
     }
 
     private function validateFormData(HTTPRequest $request)
@@ -320,26 +318,28 @@ class ProjectDetailsController
                 $field_value = $description_fields_values[$description_field_id]['value'];
             }
 
-            $description_name = $description_field["desc_name"];
-
-            if (preg_match('/(.*):(.*)/', $description_name, $matches)) {
-                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                    $description_name = $GLOBALS['Language']->getText($matches[1], $matches[2]);
-                }
-            }
-
             $description_fields_representations[] = array(
                 'field_name'                 => "form_" . $description_field["group_desc_id"],
                 'field_value'                => $field_value,
-                'field_label'                => $description_name,
+                'field_label'                => $this->translateFieldProperty($description_field["desc_name"]),
                 'field_description_required' => $description_field["desc_required"],
                 'is_field_line_typed'        => $description_field["desc_type"] === 'line',
-                'is_field_text_typed'        => $description_field["desc_type"] === 'text'
+                'is_field_text_typed'        => $description_field["desc_type"] === 'text',
+                'field_description'          => $this->translateFieldProperty($description_field["desc_description"])
             );
         }
 
-
         return $description_fields_representations;
+    }
+
+    private function translateFieldProperty($field_property)
+    {
+        if (preg_match('/(.*):(.*)/', $field_property, $matches)
+            && $GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+            return $GLOBALS['Language']->getText($matches[1], $matches[2]);
+        }
+
+        return $field_property;
     }
 
     /**
