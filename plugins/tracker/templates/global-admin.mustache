@@ -39,10 +39,12 @@
                 <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{ available_types }}</h1>
             </div>
             <section class="tlp-pane-section">
-                <div class="tlp-alert-warning">
-                    <i class="fa fa-warning tlp-alert-icon"></i>
-                    {{ warning_message }}
-                </div>
+                {{# has_at_least_one_disabled_type }}
+                    <div class="tlp-alert-warning">
+                        <i class="fa fa-warning tlp-alert-icon"></i>
+                        {{ warning_message }}
+                    </div>
+                {{/has_at_least_one_disabled_type}}
                 <table class="tlp-table tracker-natures-table">
                     <thead>
                     <tr>

@@ -1816,9 +1816,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         }
     }
 
+    /**
+     * @return ArtifactLinkValidator
+     */
     private function getArtifactLinkValidator()
     {
-        return new ArtifactLinkValidator($this->getArtifactFactory(), $this->getNaturePresenterFactory());
+        return new ArtifactLinkValidator(
+            $this->getArtifactFactory(),
+            $this->getNaturePresenterFactory(),
+            new ArtifactLinksUsageDao()
+        );
     }
 
     private function getFieldDataBuilder()
