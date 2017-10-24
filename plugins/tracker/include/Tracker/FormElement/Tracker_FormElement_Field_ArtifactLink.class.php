@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\CSVOutputStrategy;
@@ -1621,7 +1622,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 ReferenceManager::instance(),
                 Tracker_ArtifactFactory::instance()
             ),
-            EventManager::instance()
+            EventManager::instance(),
+            new ArtifactLinksUsageDao()
         );
     }
 

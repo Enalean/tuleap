@@ -68,11 +68,16 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
         $this->dao               = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
 
+        $project = aMockProject()->withId(101)->build();
+
         $this->tracker       = stub('Tracker')->getId()->returns(102);
         $this->tracker_child = stub('Tracker')->getId()->returns(101);
 
         stub($this->tracker)->getChildren()->returns(array($this->tracker_child));
         stub($this->tracker_child)->getChildren()->returns(array());
+
+        stub($this->tracker)->getProject()->returns($project);
+        stub($this->tracker_child)->getProject()->returns($project);
 
         $this->initial_linked_artifact = mock('Tracker_Artifact');
         stub($this->initial_linked_artifact)->getId()->returns(36);
@@ -111,11 +116,14 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
 
         $this->user = aUser()->withId(101)->build();
 
+        $this->artifact_link_usage_dao = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao');
+
         $this->saver = new ArtifactLinkValueSaver(
             $this->artifact_factory,
             $this->dao,
             $this->reference_manager,
-            mock('EventManager')
+            mock('EventManager'),
+            $this->artifact_link_usage_dao
         );
 
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
@@ -266,6 +274,7 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
 
         stub($this->field)->getTracker()->returns($this->tracker);
+        stub($this->artifact_link_usage_dao)->isTypeDisabledInProject(101, '_is_child')->returns(false);
 
         expect($this->dao)->create('*', '_is_child', '*', '*', '*')->once();
 
@@ -290,6 +299,33 @@ class ArtifactLinkValueSaverTest extends TuleapTestCase {
         );
 
         stub($this->field)->getTracker()->returns($this->tracker);
+
+        expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
+
+        $this->saver->saveValue(
+            $this->field,
+            $this->user,
+            $artifact,
+            $this->changeset_value_id,
+            $value,
+            $this->previous_changesetvalue
+        );
+    }
+
+    public function itDoesNotUseIsChildArtifactLinkTypeIfTypeIsDisabled()
+    {
+        $artifact = mock('Tracker_Artifact');
+
+        $value = array(
+            'list_of_artifactlinkinfo' => array(
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, NULL),
+                Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, NULL)
+            ),
+            'removed_values' => array()
+        );
+
+        stub($this->field)->getTracker()->returns($this->tracker);
+        stub($this->artifact_link_usage_dao)->isTypeDisabledInProject(101, '_is_child')->returns(true);
 
         expect($this->dao)->create('*', NULL, '*', '*', '*')->once();
 
