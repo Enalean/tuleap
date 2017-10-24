@@ -680,8 +680,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $this->getFormElementFactory()->getType($field) === Tracker_FormElement_Field_ArtifactLink::TYPE;
     }
 
+    /**
+     * @return NaturePresenterFactory
+     */
     private function getNaturePresenterFactory() {
-        return new NaturePresenterFactory(new NatureDao());
+        return new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
     }
 
     /**

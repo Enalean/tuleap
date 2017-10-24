@@ -1179,7 +1179,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $dao                     = new ArtifactLinksUsageDao();
         $hierarchy_dao           = new Tracker_Hierarchy_Dao();
         $updater                 = new ArtifactLinksUsageUpdater($dao);
-        $types_presenter_factory = new NaturePresenterFactory(new NatureDao());
+        $types_presenter_factory = new NaturePresenterFactory(new NatureDao(), $dao);
         $event_manager           = EventManager::instance();
 
         return new GlobalAdminController(

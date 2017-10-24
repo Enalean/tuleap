@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -553,7 +553,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'"
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             if($artifact->getTracker()->isProjectAllowedToUseNature()) {
-                $natures        = $this->getNaturePresenterFactory()->getOnlyVisibleNatures();
+                $natures        = $this->getNaturePresenterFactory()->getAllUsableTypesInProject($artifact->getTracker()->getProject());
                 $natures_presenter = array();
                 foreach($natures as $nature) {
                     $natures_presenter[] = array(
@@ -1763,8 +1763,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return $visitor->visitArtifactLink($this);
     }
 
+    /**
+     * @return NaturePresenterFactory
+     */
     protected function getNaturePresenterFactory() {
-        return new NaturePresenterFactory(new NatureDao());
+        return new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
     }
 
     private function getTemplateRenderer() {

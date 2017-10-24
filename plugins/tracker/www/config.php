@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureConfigController;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureEditor;
@@ -41,12 +42,13 @@ require_once('pre.php');
 $plugin_manager = PluginManager::instance();
 $plugin = $plugin_manager->getPluginByName('tracker');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $project_manager     = ProjectManager::instance();
-    $request             = HTTPRequest::instance();
-    $current_user        = UserManager::instance()->getCurrentUser();
-    $nature_dao          = new NatureDao();
-    $nature_validator    = new NatureValidator($nature_dao);
-    $admin_page_renderer = new AdminPageRenderer();
+    $project_manager         = ProjectManager::instance();
+    $request                 = HTTPRequest::instance();
+    $current_user            = UserManager::instance()->getCurrentUser();
+    $nature_dao              = new NatureDao();
+    $nature_validator        = new NatureValidator($nature_dao);
+    $admin_page_renderer     = new AdminPageRenderer();
+    $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
     $router = new ConfigRouter(
         new CSRFSynchronizerToken($_SERVER['SCRIPT_NAME']),
@@ -73,7 +75,8 @@ if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
                 $nature_validator
             ),
             new NaturePresenterFactory(
-                $nature_dao
+                $nature_dao,
+                $artifact_link_usage_dao
             ),
             new NatureUsagePresenterFactory(
                 $nature_dao

@@ -21,6 +21,7 @@
 
 require_once('common/include/Codendi_HTTPPurifier.class.php');
 
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
@@ -854,7 +855,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $sort_columns = $this->getSort($store_in_session);
 
         $purifier                 = Codendi_HTMLPurifier::instance();
-        $nature_presenter_factory = new NaturePresenterFactory(new NatureDao());
+        $nature_presenter_factory = $this->getNaturePresenterFactory();
         foreach($columns as $key => $column) {
             if ($column['width']) {
                 $width = 'width="'.$column['width'].'%"';
@@ -1133,9 +1134,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $forward_label = Codendi_HTMLPurifier::instance()->purify($nature->forward_label);
                             $html .= "<td>$forward_label</td>";
                         } else {
-                            $nature_presenter_factory = new NaturePresenterFactory(new NatureDao());
+                            $nature_presenter_factory = $this->getNaturePresenterFactory();
                             $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
-                            $natures = $nature_presenter_factory->getOnlyVisibleNatures();
+                            $project = $this->report->getTracker()->getProject();
+                            $natures = $nature_presenter_factory->getAllUsableTypesInProject($project);
                             $natures_presenter = array();
                             $selected_nature = $nature->shortname;
                             if (isset($prefill_natures[$artifact_id])) {
@@ -1952,11 +1954,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $title;
     }
 
-    private function getNaturePresenterFactory()
-    {
-        return new NaturePresenterFactory(new NatureDao());;
-    }
-
     private function exportHeadReportColumn(array $column)
     {
         $head   = array();
@@ -2146,7 +2143,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             return;
         }
 
-        $nature_factory = new NaturePresenterFactory(new NatureDao());
+        $nature_factory = $this->getNaturePresenterFactory();
         $field_factory  = $this->getFieldFactory();
         foreach($columns as $key => $properties) {
             $field = $field_factory->getUsedFormElementById($properties['field_id']);
@@ -2417,5 +2414,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     private function columnsCanBeTechnicallySorted(array $queries)
     {
         return count($queries) <= 1;
+    }
+
+    /**
+     * @return NaturePresenterFactory
+     */
+    private function getNaturePresenterFactory()
+    {
+        $nature_dao              = new NatureDao();
+        $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+
+        return new NaturePresenterFactory($nature_dao, $artifact_link_usage_dao);
     }
 }

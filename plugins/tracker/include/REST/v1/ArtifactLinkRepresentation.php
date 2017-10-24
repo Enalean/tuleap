@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Tracker_Artifact;
 use Tracker_ArtifactLinkInfo;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
@@ -42,7 +43,7 @@ class ArtifactLinkRepresentation
     private function getForwardNatures(Tracker_Artifact $artifact)
     {
         $nature_dao     = new NatureDao();
-        $nature_factory = new NaturePresenterFactory($nature_dao);
+        $nature_factory = $this->getNaturePresenterFactory();
 
         foreach ($nature_dao->searchForwardNatureShortNamesForGivenArtifact($artifact->getId()) as $nature_row) {
             $nature          = $nature_factory->getFromShortname($nature_row['shortname']);
@@ -53,12 +54,23 @@ class ArtifactLinkRepresentation
     private function getReverseNatures(Tracker_Artifact $artifact)
     {
         $nature_dao     = new NatureDao();
-        $nature_factory = new NaturePresenterFactory($nature_dao);
+        $nature_factory = $this->getNaturePresenterFactory();
 
         foreach ($nature_dao->searchReverseNatureShortNamesForGivenArtifact($artifact->getId()) as $nature_row) {
             $nature          = $nature_factory->getFromShortname($nature_row['shortname']);
             $this->natures[] = $this->formatNature($nature, $artifact, NaturePresenter::REVERSE_LABEL);
         }
+    }
+
+    /**
+     * @return NaturePresenterFactory
+     */
+    private function getNaturePresenterFactory()
+    {
+        $nature_dao              = new NatureDao();
+        $artifact_link_usage_dao = new ArtifactLinksUsageDao();
+
+        return new NaturePresenterFactory($nature_dao, $artifact_link_usage_dao);
     }
 
     private function formatNature(NaturePresenter $nature, Tracker_Artifact $artifact, $direction)
