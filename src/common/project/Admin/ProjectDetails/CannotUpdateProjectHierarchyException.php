@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +22,6 @@ namespace Tuleap\Project\Admin\ProjectDetails;
 
 use Exception;
 
-class CannotUpdateProjectDescriptionException extends Exception
+class CannotUpdateProjectHierarchyException extends Exception
 {
 }

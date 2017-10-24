@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,8 +21,8 @@
 require_once('common/project/Hierarchy/HierarchyManager.class.php');
 require_once('common/project/ProjectManager.class.php');
 
-class Project_HierarchyManagerTest extends TuleapTestCase {
-
+class Project_HierarchyManagerTest extends TuleapTestCase
+{
     private $dao;
 
     /** @var Project_HierarchyManager */
@@ -36,23 +36,6 @@ class Project_HierarchyManagerTest extends TuleapTestCase {
         $this->hierarchy_manager = partial_mock('Project_HierarchyManager', array('getParentProject', 'getAllParents'), array($project_manager, $this->dao));
 
         stub($this->hierarchy_manager)->getAllParents()->returns(array());
-    }
-
-   public function testSetParentProjectThrowsExceptionIfParentMatches() {
-        $parent_project_already_saved = stub('Project')->getId()->returns(52);
-        stub($this->hierarchy_manager)->getParentProject()->returns($parent_project_already_saved);
-
-        $this->expectException('Project_HierarchyManagerNoChangeException');
-
-        $this->hierarchy_manager->setParentProject(185, 52);
-    }
-
-    public function testSetParentProjectThrowsExceptionIfNoParentPreviouslyAndNow() {
-        stub($this->hierarchy_manager)->getParentProject()->returns(null);
-
-        $this->expectException('Project_HierarchyManagerNoChangeException');
-
-        $this->hierarchy_manager->setParentProject(185, null);
     }
 
     public function testSetParentProjectReturnsTrueIfItAddsParent() {
@@ -182,4 +165,3 @@ class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
     }
 
 }
-?>

@@ -504,7 +504,7 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-msgid "Update failed or no data changed!"
+msgid "Update failed"
 msgstr ""
 
 msgid "Update label"
