@@ -38,8 +38,17 @@ Mock::generate('EventManager');
 
 class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
-    public function __construct($name = 'SystemEvent_PROJECT_RENAME test') {
-        parent::__construct($name);
+    public function setUp()
+    {
+        parent::setUp();
+        ForgeConfig::store();
+        ForgeConfig::set('grpdir_prefix', '/tmp');
+    }
+
+    function tearDown()
+    {
+        ForgeConfig::restore();
+        parent::tearDown();
     }
 
     /**

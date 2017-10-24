@@ -70,17 +70,22 @@ class SystemEvent_USER_RENAME extends SystemEvent {
         if (($user = $this->getUser($user_id))) {
             $old_user_name = $user->getUserName();
             //Rename home/users directory
-            $backendSystem = $this->getBackend('System');
-            if ($backendSystem->userHomeExists($user->getUserName())) {
-                if ($backendSystem->isUserNameAvailable($new_name)) {
-                    if (!$backendSystem->renameUserHomeDirectory($user, $new_name)) {
-                        $this->error("Could not rename user home");
+            if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+                $backendSystem = $this->getBackend('System');
+                if ($backendSystem->userHomeExists($user->getUserName())) {
+                    if ($backendSystem->isUserNameAvailable($new_name)) {
+                        if (!$backendSystem->renameUserHomeDirectory($user, $new_name)) {
+                            $this->error("Could not rename user home");
+                            $renameState = $renameState & false;
+                        }
+                    } else {
+                        $this->error('Could not rename user home: Name '.$new_name.' not available');
                         $renameState = $renameState & false;
                     }
-                } else {
-                    $this->error('Could not rename user home: Name '.$new_name.' not available');
-                    $renameState = $renameState & false;
                 }
+
+                $backendSystem->setNeedRefreshGroupCache();
+                $backendSystem->setNeedRefreshUserCache();
             }
 
             // Update DB
@@ -102,9 +107,6 @@ class SystemEvent_USER_RENAME extends SystemEvent {
                 $this->error('Could not update SVN access files for the user (id:'.$user->getId().')');
                 $renameState = $renameState & false;
             }
-
-            $backendSystem->setNeedRefreshGroupCache();
-            $backendSystem->setNeedRefreshUserCache();
 
             $params = array();
             $params['old_user_name'] = $old_user_name;

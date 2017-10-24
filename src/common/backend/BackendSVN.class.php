@@ -184,9 +184,7 @@ class BackendSVN extends Backend {
             }
             system($GLOBALS['svnadmin_cmd']." create ".escapeshellarg($system_path)." --fs-type fsfs");
 
-            $unix_group_name = $project->getUnixNameMixedCase(); // May contain upper-case letters
-            $no_filter_file_extension = array();
-            $this->recurseChownChgrp($system_path, $this->getHTTPUser(), $unix_group_name, $no_filter_file_extension);
+            $this->setUserAndGroup($project, $system_path);
             system("chmod g+rw ".escapeshellarg($system_path));
         }
 
@@ -318,7 +316,7 @@ class BackendSVN extends Backend {
 
                 $this->addBlock($filename, $command);
                 $this->chown($filename, $this->getHTTPUser());
-                $this->chgrp($filename, $unix_group_name);
+                $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
                 chmod("$filename", 0775);
             }
         } else {
@@ -363,7 +361,7 @@ class BackendSVN extends Backend {
             $command .= $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$hook_commit_path.'/'.$pre_commit_file.' "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
             $this->chown($filename, $this->getHTTPUser());
-            $this->chgrp($filename, $unix_group_name);
+            $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
             chmod("$filename", 0775);
         }
 
@@ -513,7 +511,7 @@ class BackendSVN extends Backend {
         // set group ownership, admin user as owner so that
         // PHP scripts can write to it directly
         $this->chown($svnaccess_file, $this->getHTTPUser());
-        $this->chgrp($svnaccess_file, $unix_group_name);
+        $this->chgrp($svnaccess_file, $this->getSvnFilesUnixGroupName($project));
         chmod("$svnaccess_file", 0775);
 
          return true;
@@ -780,7 +778,6 @@ class BackendSVN extends Backend {
      * @return boolean true if success
      */
     public function checkSVNMode(Project $project) {
-        $unix_group_name =  $project->getUnixNameMixedCase();
         $svnroot = $project->getSVNRootPath();
         $is_private = !$project->isPublic() || $project->isSVNPrivate();
         if ($is_private) {
@@ -799,22 +796,42 @@ class BackendSVN extends Backend {
             if (file_exists("$svnroot/$file")) {
                 $stat = stat("$svnroot/$file");
                 if ( ($stat['uid'] != $this->getHTTPUserUID())
-                     || ($stat['gid'] != $project->getUnixGID()) ) {
+                     || ($stat['gid'] != $this->getSvnFilesUnixGroupId($project)) ) {
                     $need_owner_update = true;
                 }
             }
         }
         if ($need_owner_update) {
             $this->log("Restoring ownership on SVN dir: $svnroot", Backend::LOG_INFO);
-            $no_filter_file_extension = array();
-            $this->recurseChownChgrp($svnroot, $this->getHTTPUser(), $unix_group_name, $no_filter_file_extension);
-            $this->chown($svnroot, $this->getHTTPUser());
-            $this->chgrp($svnroot, $unix_group_name);
+            $this->setUserAndGroup($project, $svnroot);
             system("chmod g+rw $svnroot");
         }
 
         return true;
     }
+
+    public function setUserAndGroup(Project $project, $svnroot)
+    {
+        $group = $this->getSvnFilesUnixGroupName($project);
+        $no_filter_file_extension = array();
+        $this->recurseChownChgrp($svnroot, $this->getHTTPUser(), $group, $no_filter_file_extension);
+        $this->chown($svnroot, $this->getHTTPUser());
+        $this->chgrp($svnroot, $group);
+    }
+
+    private function getSvnFilesUnixGroupName(Project $project)
+    {
+        return $this->getUnixGroupNameForProject($project);
+    }
+
+    private function getSvnFilesUnixGroupId(Project $project)
+    {
+        if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
+            return $project->getUnixGID();
+        }
+        return $this->getHTTPUserGID();
+    }
+
     /**
      * Check if given name is not used by a repository or a file or a link
      * 

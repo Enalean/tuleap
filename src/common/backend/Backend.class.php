@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -45,6 +45,8 @@ class Backend {
     protected $httpUser;
     // UID of apache user (codendiadm).
     protected $httpUserUID;
+    // GID of apache user
+    protected $httpUserGID;
 
     /**
      * Constructor
@@ -155,6 +157,14 @@ class Backend {
      */
     protected function getProjectManager() {
         return ProjectManager::instance();
+    }
+
+    protected function getUnixGroupNameForProject(Project $project)
+    {
+        if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
+            return $project->getUnixNameMixedCase();
+        }
+        return $this->getHTTPUser();
     }
 
     /** 
@@ -334,13 +344,24 @@ class Backend {
      * @return int unix user ID 
      */
     public function getHTTPUserUID() {
-        if (! $this->httpUserUID) {
-            $userinfo = posix_getpwnam($this->getHTTPUser());
-            $this->httpUserUID = $userinfo['uid'];
-        }
+        $this->initHTTPUserInfo();
         return $this->httpUserUID;
     }
 
+    protected function getHTTPUserGID()
+    {
+        $this->initHTTPUserInfo();
+        return $this->httpUserGID;
+    }
+
+    private function initHTTPUserInfo()
+    {
+        if ($this->httpUserUID === null) {
+            $userinfo = posix_getpwnam($this->getHTTPUser());
+            $this->httpUserUID = $userinfo['uid'];
+            $this->httpUserGID = $userinfo['gid'];
+        }
+    }
 
     /**
      * Recursive chown/chgrp function.
@@ -595,5 +616,3 @@ class Backend {
     }
 
 }
-
-?>

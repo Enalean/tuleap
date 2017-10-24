@@ -815,6 +815,7 @@ restart_httpd="y"
 error_mode=""
 passwd_file=/root/.tuleap_passwd
 enable_chkconfig="true"
+unix_users_and_groups="true"
 options_getopt=('auto,' 'disable-auto-passwd,' 'enable-bind-config,'
                 'mysql-host:,' 'mysql-port:,' 'mysql-user:,'
                 'mysql-user-password:,' 'mysql-httpd-host:,'
@@ -823,7 +824,8 @@ options_getopt=('auto,' 'disable-auto-passwd,' 'enable-bind-config,'
                 'enable-subdomains,' 'disable-httpd-restart,'
                 'disable-generate-ssl-certs,' 'mysql-server-package:,'
                 'disable-mysql-configuration,' 'disable-domain-name-check,'
-                'disable-selinux,' 'force', 'password-file:', 'disable-chkconfig')
+                'disable-selinux,' 'force', 'password-file:', 'disable-chkconfig',
+                'disable-unix-groups')
 
 options=$(getopt -o h -l $(printf "%s" ${options_getopt[@]}) -- "$@")
 
@@ -854,6 +856,8 @@ do
     --password-file)
         passwd_file="$2"
         shift 2 ;;
+    --disable-unix-groups)
+        unix_users_and_groups="false"; shift 1;;
     --disable-chkconfig)
         enable_chkconfig="false"; shift 1;;
     --disable-auto-passwd)
@@ -1190,7 +1194,15 @@ if [ "$generate_ssl_certificate" = "y" ]; then
 fi
 
 setup_apache
-setup_nss
+
+if [ "$unix_users_and_groups" = "true" ]; then
+    setup_nss
+else
+    sed -i \
+        -e 's/\/home\/users//' \
+        -e 's/\/home\/groups//' \
+        /etc/$PROJECT_NAME/conf/local.inc
+fi
 
 # Bind config
 if [ "$configure_bind" = "true" ]; then
@@ -1288,7 +1300,8 @@ todo "CHANGE DEFAULT CREDENTIALS BEFORE FIRST USAGE"
 # Create Tuleap profile script
 #
 
-# customize the global profile 
+# customize the global profile
+if [ "$unix_users_and_groups" = "true" ]; then
 $GREP profile_$PROJECT_NAME /etc/profile 1>/dev/null
 [ $? -ne 0 ] && \
     cat <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/" >>/etc/profile
@@ -1349,6 +1362,7 @@ and responsibilities.
 
 EOM
 EOF
+fi
 
 ##############################################
 # Make sure all major services are on
@@ -1368,8 +1382,10 @@ control_service $CROND_SERVICE restart
 
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss-mysql is used for authentication
-enable_service nscd
-control_service nscd restart
+if [ "$unix_users_and_groups" = "true" ]; then
+    enable_service nscd
+    control_service nscd restart
+fi
 
 if [ "$enable_munin" = "true" ]; then
     enable_service munin-node

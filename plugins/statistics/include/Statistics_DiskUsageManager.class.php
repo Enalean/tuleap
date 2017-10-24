@@ -505,7 +505,9 @@ class Statistics_DiskUsageManager {
 
             $this->storeForGroup($row['group_id'], self::FRS, $GLOBALS['ftp_frs_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
             $this->storeForGroup($row['group_id'], self::FTP, $GLOBALS['ftp_anon_dir_prefix']."/".$row['unix_group_name'], $time_to_collect);
-            $this->storeForGroup($row['group_id'], self::GRP_HOME, $GLOBALS['grpdir_prefix']."/".$row['unix_group_name'], $time_to_collect);
+            if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
+                $this->storeForGroup($row['group_id'], self::GRP_HOME, ForgeConfig::get('grpdir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
+            }
             $this->storeForGroup($row['group_id'], Service::WIKI, $GLOBALS['sys_wiki_attachment_data_dir']."/".$row['group_id'], $time_to_collect);
             // Fake plugin for webdav/subversion
             $this->storeForGroup($row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav'."/".$row['unix_group_name'], $time_to_collect);
@@ -610,13 +612,18 @@ class Statistics_DiskUsageManager {
     }
 
     public function collectUsers() {
-        $sql = db_query('START TRANSACTION');
-        $dao = $this->_getDao();
-        $dar = $dao->searchAllUsers();
-        foreach($dar as $row) {
-            $this->storeForUser($row['user_id'], self::USR_HOME, $GLOBALS['homedir_prefix']."/".$row['user_name']);
+        if (ForgeConfig::areUnixUsersAvailableOnSystem()) {
+            $sql = db_query('START TRANSACTION');
+            $dao = $this->_getDao();
+            $dar = $dao->searchAllUsers();
+            foreach ($dar as $row) {
+                $this->storeForUser(
+                    $row['user_id'], self::USR_HOME,
+                    ForgeConfig::get('homedir_prefix') . "/" . $row['user_name']
+                );
+            }
+            $sql = db_query('COMMIT');
         }
-        $sql = db_query('COMMIT');
     }
 
     // dfMYSQL, LOG, backup

@@ -46,7 +46,7 @@ class XMLRepositoryImporter
 {
     const SERVICE_NAME = 'svn';
     /**
-     * @var \Backend
+     * @var \BackendSVN
      */
     private $backend_svn;
     /**
@@ -201,12 +201,7 @@ class XMLRepositoryImporter
         }
 
         if (! $this->currentUserIsHTTPUser()) {
-            $this->backend_system->recurseChownChgrp(
-                $repo->getSystemPath(),
-                ForgeConfig::get('sys_http_user'),
-                $project->getUnixName(),
-                array()
-            );
+            $this->backend_svn->setUserAndGroup($project, $repo->getSystemPath());
         }
     }
 

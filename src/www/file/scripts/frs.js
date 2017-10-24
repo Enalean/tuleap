@@ -315,12 +315,14 @@ Event.observe(window, 'load', function() {
 	if(release_mode == 'creation' || (release_mode == 'edition' && $('nb_files').value==0)){
 		add_new_file();
 	}
-	Element.insert('files_help', {after:'<br/><a href="#refresh_file_list" onclick="refresh_file_list(); return false;">'+refresh_files_list+'<a>'});
-	Element.insert('files', {after:'<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>'});
-	Element.insert('files', {after:'<a href="#add_new_file" onclick="add_new_file(); return false;">'+add_file_text+'<a>'});
+	if (ftp_scp_upload_enabled) {
+        Element.insert('files_help', {after:'<br/><a href="#refresh_file_list" onclick="refresh_file_list(); return false;">'+refresh_files_list+'<a>'});
+        Element.insert('files', {after:'<a id="file_help_link" href="#help" onclick="Element.hide(\'file_help_link\');Element.show( \'files_help\'); return false;"> [?]</a>'});
+        //Upload files help
+        Element.hide('files_help');
+	}
 
-	//Upload files help
-	Element.hide('files_help');
+	Element.insert('files', {after:'<a href="#add_new_file" onclick="add_new_file(); return false;">'+add_file_text+'<a>'});
 
 	//Release Notes
 	Element.hide('upload_notes');

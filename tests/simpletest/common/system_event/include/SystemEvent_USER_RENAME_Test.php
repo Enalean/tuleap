@@ -40,7 +40,20 @@ Mock::generate('EventManager');
 
 
 class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
-    
+
+    public function setUp()
+    {
+        parent::setUp();
+        ForgeConfig::store();
+        ForgeConfig::set('homedir_prefix', '/tmp');
+    }
+
+    function tearDown()
+    {
+        ForgeConfig::restore();
+        parent::tearDown();
+    }
+
     /**
      * Rename user 142 'mickey' in 'tazmani'
      */
