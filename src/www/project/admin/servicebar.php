@@ -272,6 +272,11 @@ if ($func=='do_create') {
 }
 
 if ($func=='do_update') {
+
+    $redirect_url = '/project/admin/servicebar.php?' . http_build_query(array(
+        'group_id' => $group_id
+    ));
+
     $service_id = $request->getValidated('service_id', 'uint', 0);
     if (!$service_id) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','s_id_missed'));
@@ -293,6 +298,14 @@ if ($func=='do_update') {
         
     }
 
+    if (isset($short_name)) {
+        $updatable = $service_manager->checkServiceCanBeUpdated($project, $short_name, $is_used);
+
+        if (! $updatable) {
+            $GLOBALS['Response']->redirect($redirect_url);
+        }
+    }
+
     $sql = "UPDATE service SET label='".db_es($label)."', description='".db_es($description)."', link='".db_es($link)."' ". $admin_statement .
         ", rank='".db_ei($rank)."' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=".db_ei($service_id);
     $result=db_query($sql);
@@ -309,7 +322,7 @@ if ($func=='do_update') {
         $service_manager->toggleServiceUsage($project, $short_name, $is_used);
     }
 
-    $GLOBALS['Response']->redirect('/project/admin/servicebar.php?group_id='.$group_id);
+    $GLOBALS['Response']->redirect($redirect_url);
 }
 
 project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id,

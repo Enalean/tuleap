@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\project\Event\ProjectServiceBeforeActivation;
 
 class ServiceManager {
 
@@ -128,8 +130,7 @@ class ServiceManager {
 
     public function toggleServiceUsage(Project $project, $short_name, $is_used) {
         if ($this->isServiceAvailableAtSiteLevelByShortName($short_name) || $this->isServiceActiveInProject($project, $short_name)) {
-            $previous_is_used = $project->getService($short_name);
-            if ($previous_is_used != $is_used) {
+            if ($this->doesServiceUsageChange($project, $short_name, $is_used)) {
                 $this->updateServiceUsage($project, $short_name, $is_used);
             }
         }
@@ -151,5 +152,37 @@ class ServiceManager {
                 'group_id'  => $project->getID(),
             )
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkServiceCanBeUpdated(Project $project, $short_name, $is_used)
+    {
+        if ($this->doesServiceUsageChange($project, $short_name, $is_used) && $is_used) {
+            $event = new ProjectServiceBeforeActivation($project, $short_name);
+            EventManager::instance()->processEvent($event);
+
+            if ($event->doesPluginSetAValue() && ! $event->canServiceBeActivated()) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    $event->getWarningMessage()
+                );
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function doesServiceUsageChange(Project $project, $short_name, $is_used)
+    {
+        $previous_is_used = $project->getService($short_name);
+
+        return $previous_is_used != $is_used;
     }
 }
