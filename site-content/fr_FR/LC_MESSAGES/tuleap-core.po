@@ -541,8 +541,8 @@ msgstr "Now unix"
 msgid "Update"
 msgstr "Mettre à jour"
 
-msgid "Update failed or no data changed!"
-msgstr "La mise à jour a échoué ou aucune donnée n'a été modifiée !"
+msgid "Update failed"
+msgstr "La mise à jour a échoué"
 
 msgid "Update label"
 msgstr "Mettre à jour le label"

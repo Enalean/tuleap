@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Project_HierarchyManager {
-
+class Project_HierarchyManager
+{
     /**
      * @var ProjectHierarchyDao
      */
@@ -33,7 +33,8 @@ class Project_HierarchyManager {
     /**
      * @param ProjectManager $project_manager
      */
-    public function __construct(ProjectManager $project_manager, ProjectHierarchyDao $dao) {
+    public function __construct(ProjectManager $project_manager, ProjectHierarchyDao $dao)
+    {
         $this->project_manager = $project_manager;
         $this->dao             = $dao;
     }
@@ -42,14 +43,14 @@ class Project_HierarchyManager {
      * @param int $project_id
      * @param int $parent_project_id
      * @return Boolean
-     * @throws Project_HierarchyManagerNoChangeException
      * @throws Project_HierarchyManagerAlreadyAncestorException
      * @throws Project_HierarchyManagerAncestorIsSelfException
      */
-    public function setParentProject($project_id, $parent_project_id) {
+    public function setParentProject($project_id, $parent_project_id)
+    {
         $current_parent = $this->getParentProject($project_id);
 
-        $this->validateParent($project_id, $parent_project_id, $current_parent);
+        $this->validateParent($project_id, $parent_project_id);
 
         if (! $parent_project_id) {
             return $this->removeParentProject($project_id);
@@ -68,15 +69,8 @@ class Project_HierarchyManager {
      * @param Project|null $current_parent
      * @return boolean
      */
-    private function validateParent($project_id, $parent_project_id, $current_parent) {
-        if (! $current_parent && ! $parent_project_id) {
-            throw new Project_HierarchyManagerNoChangeException();
-        }
-
-        if ($current_parent && $current_parent->getID() === $parent_project_id) {
-            throw new Project_HierarchyManagerNoChangeException();
-        }
-
+    private function validateParent($project_id, $parent_project_id)
+    {
         $parents = $this->getAllParents($parent_project_id);
         if (in_array($project_id, $parents)) {
             throw new Project_HierarchyManagerAlreadyAncestorException();
@@ -167,5 +161,3 @@ class Project_HierarchyManager {
         return $this->dao;
     }
 }
-
-?>

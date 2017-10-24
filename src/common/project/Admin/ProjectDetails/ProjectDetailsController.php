@@ -135,20 +135,20 @@ class ProjectDetailsController
             return;
         }
 
-        $has_custom_fields_been_updated  = $this->updateCustomProjectFields($request);
-        $has_parent_project_been_updated = $this->updateParentProject($request);
-
-        $result = $this->updateGroup($request);
-
-        if (! $result
-            && ! $has_custom_fields_been_updated
-            && ! $has_parent_project_been_updated
-        ) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed or no data changed!"));
-            return;
+        try {
+            $this->updateCustomProjectFields($request);
+            $this->updateParentProject($request);
+            $this->updateGroup($request);
+            $this->validateChanges($request);
+        } catch (DataAccessException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed"));
+        } catch (CannotUpdateProjectHierarchyException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed"));
+        } catch (Project_HierarchyManagerAncestorIsSelfException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("A project cannot be its own parent."));
+        } catch (Project_HierarchyManagerAlreadyAncestorException $e) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("These projects are already related."));
         }
-
-        $this->validateChanges($request);
     }
 
     private function displayHeader($title, Project $project)
@@ -191,12 +191,6 @@ class ProjectDetailsController
         return true;
     }
 
-    /**
-     * @return int
-     * @throws CannotCreateProjectDescriptionException
-     * @throws CannotDeleteProjectDescriptionException
-     * @throws CannotUpdateProjectDescriptionException
-     */
     private function updateCustomProjectFields(HTTPRequest $request)
     {
         $group_id                  = $request->get('group_id');
@@ -208,8 +202,7 @@ class ProjectDetailsController
             $this->description_fields_factory->getAllDescriptionFields()
         );
 
-        $previous_values              = array();
-        $has_description_been_updated = 0;
+        $previous_values = array();
 
         foreach ($description_fields as $description_field_id => $description_field) {
             $current_form = trim($request->get("form_" . $description_field_id));
@@ -220,66 +213,42 @@ class ProjectDetailsController
 
             if ($current_form != '') {
                 if (isset($previous_values[$description_field_id]) && ($previous_values[$description_field_id] != $current_form)) {
-                    try {
-                        $this->project_details_dao->updateGroupDescription($group_id, $description_field_id, $current_form);
-
-                        $has_description_been_updated = 1;
-                    } catch (DataAccessException $e) {
-                        throw new CannotUpdateProjectDescriptionException($e);
-                    }
-                } else if (! isset($previous_values[$description_field_id])) {
-                    try {
-                        $this->project_details_dao->createGroupDescription($group_id, $description_field_id, $current_form);
-
-                        $has_description_been_updated = 1;
-                    } catch (DataAccessException $e) {
-                        throw new CannotCreateProjectDescriptionException($e);
-                    }
+                    $this->project_details_dao->updateGroupDescription($group_id, $description_field_id, $current_form);
+                } elseif (! isset($previous_values[$description_field_id])) {
+                    $this->project_details_dao->createGroupDescription($group_id, $description_field_id, $current_form);
                 }
-            } else {
-                if (isset($previous_values[$description_field_id])) {
-                    try {
-                        $this->project_details_dao->deleteDescriptionForGroup($group_id, $description_field_id);
-
-                        $has_description_been_updated = 1;
-                    } catch (DataAccessException $e) {
-                        throw new CannotDeleteProjectDescriptionException($e);
-                    }
-                }
+            } elseif (isset($previous_values[$description_field_id])) {
+                $this->project_details_dao->deleteDescriptionForGroup($group_id, $description_field_id);
             }
         }
-
-        return $has_description_been_updated;
     }
 
+    /**
+     * @throws CannotUpdateProjectHierarchyException
+     */
     private function updateParentProject(HTTPRequest $request)
     {
         $current_user = $request->getCurrentUser();
         $group_id     = $request->get('group_id');
 
-        $has_parent_project_been_modified = 0;
-
-        try {
-            if ($request->existAndNonEmpty('parent_project')) {
-                $parent_project = $this->project_manager->getProjectFromAutocompleter($request->get('parent_project'));
-                if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
-                    $has_parent_project_been_modified = $this->project_manager->setParentProject($group_id, $parent_project->getID());
-                } else {
-                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("The given parent project does not exist or you are not its administrator."));
+        if ($request->existAndNonEmpty('parent_project')) {
+            $parent_project = $this->project_manager->getProjectFromAutocompleter($request->get('parent_project'));
+            if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
+                $result = $this->project_manager->setParentProject($group_id, $parent_project->getID());
+                if (! $result) {
+                    throw new CannotUpdateProjectHierarchyException();
                 }
+            } else {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("The given parent project does not exist or you are not its administrator."));
+                throw new CannotUpdateProjectHierarchyException();
             }
-            if ($request->existAndNonEmpty('remove_parent_project')) {
-                $has_parent_project_been_modified = $this->project_manager->removeParentProject($group_id);
-            }
-        } catch (Project_HierarchyManagerNoChangeException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed or no data changed!"));
-        } catch (Project_HierarchyManagerAncestorIsSelfException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("A project cannot be its own parent."));
-        } catch (Project_HierarchyManagerAlreadyAncestorException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("These projects are already related."));
         }
-
-        return $has_parent_project_been_modified;
+        if ($request->existAndNonEmpty('remove_parent_project')) {
+            $result = $this->project_manager->removeParentProject($group_id);
+            if (! $result) {
+                throw new CannotUpdateProjectHierarchyException();
+            }
+        }
     }
 
     private function validateChanges(HTTPRequest $request)
@@ -342,10 +311,6 @@ class ProjectDetailsController
         return $field_property;
     }
 
-    /**
-     * @param HTTPRequest $request
-     * @return bool
-     */
     private function updateGroup(HTTPRequest $request)
     {
         $form_group_name = trim($request->get('form_group_name'));
@@ -354,9 +319,11 @@ class ProjectDetailsController
 
         // in the database, these all default to '1',
         // so we have to explicity set 0
-        $result = $this->project_details_dao->updateGroupNameAndDescription($form_group_name, $form_shortdesc, $group_id);
-
-        return $result > 0;
+        $this->project_details_dao->updateGroupNameAndDescription(
+            $form_group_name,
+            $form_shortdesc,
+            $group_id
+        );
     }
 
     private function getParentProjectInfo(HTTPRequest $request)

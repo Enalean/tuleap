@@ -89,9 +89,7 @@ class ProjectDetailsDAO extends DataAccessObject
                       short_description = $escaped_form_shortdesc
                 WHERE group_id          = $escaped_group_id";
 
-        $this->update($sql);
-
-        return $this->da->affectedRows();
+        return $this->update($sql);
     }
 
     public function deleteDescriptionForGroup($group_id, $group_desc_id)
