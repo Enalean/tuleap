@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker;
 use Feedback;
 use PFUser;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
 class ArtifactLinkValueSaver {
 
@@ -52,17 +53,23 @@ class ArtifactLinkValueSaver {
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $artifact_links_usage_dao;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElement_Field_Value_ArtifactLinkDao $dao,
         Tracker_ReferenceManager $reference_manager,
-        EventManager $event_manager
+        EventManager $event_manager,
+        ArtifactLinksUsageDao $artifact_links_usage_dao
     ) {
-        $this->artifact_factory  = $artifact_factory;
-        $this->dao               = $dao;
-        $this->reference_manager = $reference_manager;
-        $this->event_manager     = $event_manager;
+        $this->artifact_factory         = $artifact_factory;
+        $this->dao                      = $dao;
+        $this->reference_manager        = $reference_manager;
+        $this->event_manager            = $event_manager;
+        $this->artifact_links_usage_dao = $artifact_links_usage_dao;
     }
 
     /**
@@ -147,6 +154,14 @@ class ArtifactLinkValueSaver {
         $existing_nature
     ) {
         if (in_array($to_tracker, $from_tracker->getChildren())) {
+
+            if ($this->artifact_links_usage_dao->isTypeDisabledInProject(
+                $from_tracker->getProject()->getID(),
+                Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+            )) {
+                return Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
+            }
+
             $this->warnForceUsageOfChildType($artifactlinkinfo, $from_tracker, $existing_nature);
 
             return Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD;
