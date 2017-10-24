@@ -10,9 +10,6 @@ set -e
 [ -f /etc/my.cnf ]                && rm -f /etc/my.cnf
 [ -f /etc/nsswitch.conf ]         && rm -f /etc/nsswitch.conf
 [ -f /etc/crontab ]               && rm -f /etc/crontab
-[ -f /etc/passwd ]               && rm -f /etc/passwd
-[ -f /etc/shadow ]               && rm -f /etc/shadow
-[ -f /etc/group ]               && rm -f /etc/group
 [ -d /etc/tuleap ]                && rm -rf /etc/tuleap
 [ -d /etc/httpd/conf ]            && rm -rf /etc/httpd/conf
 [ -d /etc/httpd/conf.d ]          && rm -rf /etc/httpd/conf.d
@@ -44,9 +41,6 @@ ln -s /data/etc/libnss-mysql.cfg libnss-mysql.cfg
 ln -s /data/etc/my.cnf my.cnf
 ln -s /data/etc/nsswitch.conf nsswitch.conf
 ln -s /data/etc/crontab crontab
-ln -s /data/etc/passwd passwd
-ln -s /data/etc/shadow shadow
-ln -s /data/etc/group group
 
 cd /etc/pki/tls/private
 ln -s /data/etc/pki/tls/private/localhost.key localhost.key
@@ -70,3 +64,16 @@ cd /var/lib
 ln -s /data/lib/mysql mysql
 ln -s /data/lib/tuleap tuleap
 [ -d /data/lib/gitolite ] && ln -s /data/lib/gitolite gitolite
+
+if [ -d "/data/etc/nginx" ]; then
+rm -rf /etc/nginx
+ln -s /data/etc/nginx /etc/nginx
+fi
+
+if [ -d "/data/etc/opt/rh/rh-php56/php-fpm.d" ]; then
+rm -rf /etc/opt/rh/rh-php56/php-fpm.d
+ln -s /data/etc/opt/rh/rh-php56/php-fpm.d /etc/opt/rh/rh-php56/php-fpm.d
+fi
+
+mkdir -p /var/tmp/tuleap_cache/php/session /var/tmp/tuleap_cache/php/wsdlcache
+chown codendiadm:codendiadm /var/tmp/tuleap_cache/php/session /var/tmp/tuleap_cache/php/wsdlcache

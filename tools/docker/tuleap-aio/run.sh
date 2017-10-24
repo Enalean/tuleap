@@ -21,6 +21,9 @@ fi
 # Fix path
 ./boot-fixpath.sh
 
+# Align data ownership with images uids/gids
+./fix-owners.sh
+
 # Update php config
 sed -i \
     -e "s%^short_open_tag = Off%short_open_tag = On%" \
@@ -49,8 +52,6 @@ if [ "$TULEAP_INSTALL_TIME" == "false" ]; then
     # DB upgrade (after config as we might depends on it)
     ./boot-upgrade.sh
 fi
-
-/usr/share/tuleap/tools/utils/php56/run.php
 
 # Activate backend/crontab
 /etc/init.d/tuleap start
