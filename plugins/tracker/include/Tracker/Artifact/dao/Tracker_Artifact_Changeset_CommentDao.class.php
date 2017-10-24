@@ -51,28 +51,27 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
         return $result;
     }
 
-    public function createNewVersion($changeset_id, $body, $submitted_by, $submitted_on, $parent_id, $body_format) {
-        if ($body_format === Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
-            $stripped_body = Codendi_HTMLPurifier::instance()->purify($body, CODENDI_PURIFIER_STRIP_HTML);
-            $stripped_body = $this->da->quoteSmart($stripped_body);
-        } else {
-            $stripped_body = $this->da->quoteSmart($body);
-        }
+    public function createNewVersion($changeset_id, $body, $submitted_by, $submitted_on, $parent_id, $body_format)
+    {
+        $stripped_body = $this->extractStrippedBody($body, $body_format);
 
-        $changeset_id = $this->da->escapeInt($changeset_id);
-        $body         = $this->da->quoteSmart($body);
-        $submitted_by = $this->da->escapeInt($submitted_by);
-        $body_format  = $this->da->quoteSmart($body_format);
-        $submitted_on = $this->da->escapeInt($submitted_on);
-        $parent_id    = $this->da->escapeInt($parent_id);
+        $changeset_id          = $this->da->escapeInt($changeset_id);
+        $body                  = $this->da->quoteSmart($body);
+        $submitted_by          = $this->da->escapeInt($submitted_by);
+        $body_format           = $this->da->quoteSmart($body_format);
+        $submitted_on          = $this->da->escapeInt($submitted_on);
+        $parent_id             = $this->da->escapeInt($parent_id);
+        $escaped_stripped_body = $this->da->quoteSmart($stripped_body);
 
         $sql = "INSERT INTO $this->table_name (changeset_id, body, body_format, submitted_by, submitted_on, parent_id)
                 VALUES ($changeset_id, $body, $body_format, $submitted_by, $submitted_on, $parent_id)";
-        $id = $this->updateAndGetLastId($sql);
+        $id  = $this->updateAndGetLastId($sql);
 
-        $sql = "INSERT INTO tracker_changeset_comment_fulltext (comment_id, stripped_body)
-                VALUES ($id, $stripped_body)";
-        $this->update($sql);
+        if ($stripped_body !== "") {
+            $sql = "INSERT INTO tracker_changeset_comment_fulltext (comment_id, stripped_body)
+                VALUES ($id, $escaped_stripped_body)";
+            $this->update($sql);
+        }
 
         return $id;
     }
@@ -83,5 +82,20 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
                 FROM $this->table_name
                 WHERE changeset_id = $changeset_id";
         return $this->update($sql);
+    }
+
+    /**
+     * @param $body
+     * @param $body_format
+     *
+     * @return string
+     */
+    protected function extractStrippedBody($body, $body_format)
+    {
+        if ($body_format === Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
+            return Codendi_HTMLPurifier::instance()->purify($body, CODENDI_PURIFIER_STRIP_HTML);
+        }
+
+        return $body;
     }
 }
