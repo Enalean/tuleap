@@ -19,7 +19,6 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use BaseLanguageFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_ArtifactLink;
@@ -33,7 +32,6 @@ use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -45,16 +43,9 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
-use UserManager;
-use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
-class EqualComparisonVisitor implements
-    Tracker_FormElement_FieldVisitor,
-    ComparisonVisitor
+class LesserThanFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
@@ -71,7 +62,7 @@ class EqualComparisonVisitor implements
     {
         return new DateTimeFieldFromWhereBuilder(
             new FromWhereComparisonFieldBuilder(),
-            new EqualComparison\ForDateTime(
+            new LesserThanComparison\ForDateTime(
                 new DateTimeValueRounder()
             )
         );
@@ -84,14 +75,14 @@ class EqualComparisonVisitor implements
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new EqualComparison\ForFloat(
+        return new LesserThanComparison\ForFloat(
             new FromWhereComparisonFieldBuilder()
         );
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new EqualComparison\ForInteger(
+        return new LesserThanComparison\ForInteger(
             new FromWhereComparisonFieldBuilder()
         );
     }
@@ -108,86 +99,42 @@ class EqualComparisonVisitor implements
 
     public function visitString(Tracker_FormElement_Field_String $field)
     {
-        return $this->visitText($field);
+        return null;
     }
 
     public function visitText(Tracker_FormElement_Field_Text $field)
     {
-        return new EqualComparison\ForText(
-            new FromWhereComparisonFieldBuilder()
-        );
+        return null;
     }
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        return $this->visitList($field);
+        return null;
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
     {
-        return $this->visitList($field);
+        return null;
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
     {
-        return $this->visitList($field);
+        return null;
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        return $this->visitList($field);
-    }
-
-    private function visitList(Tracker_FormElement_Field_List $field)
-    {
-        $static_bind_builder = new EqualComparison\ForListBindStatic(
-            new FromWhereEmptyComparisonListFieldBuilder(),
-            new FromWhereComparisonListFieldBuilder()
-        );
-        $users_bind_builder = new EqualComparison\ForListBindUsers(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereEmptyComparisonListFieldBuilder(),
-            new FromWhereComparisonListFieldBuilder()
-        );
-        $ugroups_bind_builder = new EqualComparison\ForListBindUgroups(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereEmptyComparisonListFieldBuilder(),
-            new FromWhereComparisonListFieldBindUgroupsBuilder(),
-            new UgroupLabelConverter(
-                new ListFieldBindValueNormalizer(),
-                new BaseLanguageFactory()
-            )
-        );
-
-        $bind_builder = new ListFieldBindVisitor(
-            $static_bind_builder,
-            $users_bind_builder,
-            $ugroups_bind_builder
-        );
-
-        return $bind_builder->getFromWhereBuilder($field);
+        return null;
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)
     {
-        return new ListReadOnlyFieldFromWhereBuilder(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder(),
-            new EqualComparison\ForSubmittedBy(
-                UserManager::instance()
-            )
-        );
+        return null;
     }
 
     public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
     {
-        return new ListReadOnlyFieldFromWhereBuilder(
-            new CollectionOfListValuesExtractor(),
-            new FromWhereComparisonFieldReadOnlyBuilder(),
-            new EqualComparison\ForLastUpdatedBy(
-                UserManager::instance()
-            )
-        );
+        return null;
     }
 
     public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)
@@ -214,7 +161,7 @@ class EqualComparisonVisitor implements
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
-            new EqualComparison\ForLastUpdateDate(
+            new LesserThanComparison\ForLastUpdateDate(
                 new DateTimeValueRounder()
             )
         );
@@ -224,7 +171,7 @@ class EqualComparisonVisitor implements
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
-            new EqualComparison\ForSubmittedOn(
+            new LesserThanComparison\ForSubmittedOn(
                 new DateTimeValueRounder()
             )
         );

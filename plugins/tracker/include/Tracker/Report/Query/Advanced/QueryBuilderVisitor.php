@@ -36,15 +36,15 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameter;
 
@@ -55,40 +55,40 @@ class QueryBuilderVisitor implements Visitor
      */
     private $formelement_factory;
     /**
-     * @var NotEqualComparisonVisitor
+     * @var NotEqualFieldComparisonVisitor
      */
     private $not_equal_comparison_visitor;
     /**
-     * @var EqualComparisonVisitor
+     * @var EqualFieldComparisonVisitor
      */
     private $equal_comparison_visitor;
     /**
-     * @var LesserThanComparisonVisitor
+     * @var LesserThanFieldComparisonVisitor
      */
     private $lesser_than_comparison_visitor;
     /**
-     * @var GreaterThanComparisonVisitor
+     * @var GreaterThanFieldComparisonVisitor
      */
     private $greater_than_comparison_visitor;
     /**
-     * @var LesserThanOrEqualComparisonVisitor
+     * @var LesserThanOrEqualFieldComparisonVisitor
      */
     private $lesser_than_or_equal_comparison_visitor;
     /**
-     * @var GreaterThanOrEqualComparisonVisitor
+     * @var GreaterThanOrEqualFieldComparisonVisitor
      */
     private $greater_than_or_equal_comparison_visitor;
     /**
-     * @var BetweenComparisonVisitor
+     * @var BetweenFieldComparisonVisitor
      */
     private $between_comparison_visitor;
     /**
-     * @var InComparisonVisitor
+     * @var InFieldComparisonVisitor
      */
     private $in_comparison_visitor;
 
     /**
-     * @var NotInComparisonVisitor
+     * @var NotInFieldComparisonVisitor
      */
     private $not_in_comparison_visitor;
     /**
@@ -98,15 +98,15 @@ class QueryBuilderVisitor implements Visitor
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        EqualComparisonVisitor $equal_comparison_visitor,
-        NotEqualComparisonVisitor $not_equal_comparison_visitor,
-        LesserThanComparisonVisitor $lesser_than_comparison_visitor,
-        GreaterThanComparisonVisitor $superior_comparison_visitor,
-        LesserThanOrEqualComparisonVisitor $lesser_than_or_equal_comparison_visitor,
-        GreaterThanOrEqualComparisonVisitor $greater_than_or_equal_comparison_visitor,
-        BetweenComparisonVisitor $between_comparison_visitor,
-        InComparisonVisitor $in_comparison_visitor,
-        NotInComparisonVisitor $not_in_comparison_visitor,
+        EqualFieldComparisonVisitor $equal_comparison_visitor,
+        NotEqualFieldComparisonVisitor $not_equal_comparison_visitor,
+        LesserThanFieldComparisonVisitor $lesser_than_comparison_visitor,
+        GreaterThanFieldComparisonVisitor $superior_comparison_visitor,
+        LesserThanOrEqualFieldComparisonVisitor $lesser_than_or_equal_comparison_visitor,
+        GreaterThanOrEqualFieldComparisonVisitor $greater_than_or_equal_comparison_visitor,
+        BetweenFieldComparisonVisitor $between_comparison_visitor,
+        InFieldComparisonVisitor $in_comparison_visitor,
+        NotInFieldComparisonVisitor $not_in_comparison_visitor,
         SearchableVisitor $searchable_visitor
     ) {
         $this->formelement_factory                      = $formelement_factory;

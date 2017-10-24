@@ -42,7 +42,7 @@ class SearchableVisitor implements Visitor
     {
         $formelement = $this->getFormElementFromComparison($parameters->getComparison(), $parameters->getTracker());
 
-        return $parameters->getComparisonVisitor()
+        return $parameters->getFieldComparisonVisitor()
             ->getFromWhereBuilder($formelement)
             ->getFromWhere($parameters->getComparison(), $formelement);
     }

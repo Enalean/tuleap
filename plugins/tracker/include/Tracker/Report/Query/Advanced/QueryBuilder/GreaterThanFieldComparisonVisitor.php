@@ -45,7 +45,7 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
-class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, ComparisonVisitor
+class GreaterThanFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
@@ -62,7 +62,7 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, Comp
     {
         return new DateTimeFieldFromWhereBuilder(
             new FromWhereComparisonFieldBuilder(),
-            new BetweenComparison\ForDateTime(
+            new GreaterThanComparison\ForDateTime(
                 new DateTimeValueRounder()
             )
         );
@@ -75,14 +75,14 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, Comp
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new BetweenComparison\ForFloat(
+        return new GreaterThanComparison\ForFloat(
             new FromWhereComparisonFieldBuilder()
         );
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new BetweenComparison\ForInteger(
+        return new GreaterThanComparison\ForInteger(
             new FromWhereComparisonFieldBuilder()
         );
     }
@@ -161,7 +161,7 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, Comp
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
-            new BetweenComparison\ForLastUpdateDate(
+            new GreaterThanComparison\ForLastUpdateDate(
                 new DateTimeValueRounder()
             )
         );
@@ -171,7 +171,7 @@ class BetweenComparisonVisitor implements Tracker_FormElement_FieldVisitor, Comp
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
-            new BetweenComparison\ForSubmittedOn(
+            new GreaterThanComparison\ForSubmittedOn(
                 new DateTimeValueRounder()
             )
         );

@@ -36,17 +36,17 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereNotEqualComparisonListFieldBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparison\ForListBindStatic as NotInComparisonForListBindStatic;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\LesserThanOrEqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use TuleapTestCase;
 
@@ -88,15 +88,15 @@ class QueryBuilderVisitorTest extends TuleapTestCase
 
         $this->query_builder = new QueryBuilderVisitor(
             $formelement_factory,
-            new EqualComparisonVisitor(),
-            new NotEqualComparisonVisitor(),
-            new LesserThanComparisonVisitor(),
-            new GreaterThanComparisonVisitor(),
-            new LesserThanOrEqualComparisonVisitor(),
-            new GreaterThanOrEqualComparisonVisitor(),
-            new BetweenComparisonVisitor(),
-            new InComparisonVisitor(),
-            new NotInComparisonVisitor(),
+            new EqualFieldComparisonVisitor(),
+            new NotEqualFieldComparisonVisitor(),
+            new LesserThanFieldComparisonVisitor(),
+            new GreaterThanFieldComparisonVisitor(),
+            new LesserThanOrEqualFieldComparisonVisitor(),
+            new GreaterThanOrEqualFieldComparisonVisitor(),
+            new BetweenFieldComparisonVisitor(),
+            new InFieldComparisonVisitor(),
+            new NotInFieldComparisonVisitor(),
             new SearchableVisitor($formelement_factory)
         );
     }

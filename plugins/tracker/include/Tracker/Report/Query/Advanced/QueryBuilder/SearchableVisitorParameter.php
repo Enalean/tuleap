@@ -35,16 +35,19 @@ class SearchableVisitorParameter implements VisitorParameters
      */
     private $tracker;
     /**
-     * @var ComparisonVisitor
+     * @var FieldComparisonVisitor
      */
-    private $comparison_visitor;
+    private $field_comparison_visitor;
 
-    public function __construct(Comparison $comparison, ComparisonVisitor $comparison_visitor, Tracker $tracker)
-    {
+    public function __construct(
+        Comparison $comparison,
+        FieldComparisonVisitor $field_comparison_visitor,
+        Tracker $tracker
+    ) {
 
-        $this->comparison         = $comparison;
-        $this->tracker            = $tracker;
-        $this->comparison_visitor = $comparison_visitor;
+        $this->comparison = $comparison;
+        $this->tracker = $tracker;
+        $this->field_comparison_visitor = $field_comparison_visitor;
     }
 
     /**
@@ -64,10 +67,10 @@ class SearchableVisitorParameter implements VisitorParameters
     }
 
     /**
-     * @return ComparisonVisitor
+     * @return FieldComparisonVisitor
      */
-    public function getComparisonVisitor()
+    public function getFieldComparisonVisitor()
     {
-        return $this->comparison_visitor;
+        return $this->field_comparison_visitor;
     }
 }

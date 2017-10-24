@@ -45,7 +45,7 @@ use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
-class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVisitor, ComparisonVisitor
+class GreaterThanOrEqualFieldComparisonVisitor implements Tracker_FormElement_FieldVisitor, FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
@@ -62,7 +62,7 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
     {
         return new DateTimeFieldFromWhereBuilder(
             new FromWhereComparisonFieldBuilder(),
-            new LesserThanOrEqualComparison\ForDateTime(
+            new GreaterThanOrEqualComparison\ForDateTime(
                 new DateTimeValueRounder()
             )
         );
@@ -75,14 +75,14 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new LesserThanOrEqualComparison\ForFloat(
+        return new GreaterThanOrEqualComparison\ForFloat(
             new FromWhereComparisonFieldBuilder()
         );
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new LesserThanOrEqualComparison\ForInteger(
+        return new GreaterThanOrEqualComparison\ForInteger(
             new FromWhereComparisonFieldBuilder()
         );
     }
@@ -161,7 +161,7 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
-            new LesserThanOrEqualComparison\ForLastUpdateDate(
+            new GreaterThanOrEqualComparison\ForLastUpdateDate(
                 new DateTimeValueRounder()
             )
         );
@@ -171,7 +171,7 @@ class LesserThanOrEqualComparisonVisitor implements Tracker_FormElement_FieldVis
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),
-            new LesserThanOrEqualComparison\ForSubmittedOn(
+            new GreaterThanOrEqualComparison\ForSubmittedOn(
                 new DateTimeValueRounder()
             )
         );

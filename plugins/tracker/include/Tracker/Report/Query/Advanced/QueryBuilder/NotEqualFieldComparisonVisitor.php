@@ -52,9 +52,9 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use UserManager;
 
-class NotEqualComparisonVisitor implements
+class NotEqualFieldComparisonVisitor implements
     Tracker_FormElement_FieldVisitor,
-    ComparisonVisitor
+    FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
     public function getFromWhereBuilder(Tracker_FormElement_Field $field)
