@@ -492,7 +492,7 @@ msgstr ""
 msgid "Tracker"
 msgstr ""
 
-msgid "Trackers v3 import"
+msgid "Tracker v3 import"
 msgstr ""
 
 msgid "Unable to fetch the latest activities of the project"
@@ -595,6 +595,9 @@ msgstr ""
 msgid "Your platform does not allow restricted users."
 msgstr ""
 
+msgid "administration"
+msgstr ""
+
 msgid "categories"
 msgstr ""
 
@@ -608,9 +611,6 @@ msgid "groups"
 msgstr ""
 
 msgid "labels"
-msgstr ""
-
-msgid "members"
 msgstr ""
 
 msgid "permissions"

@@ -41,16 +41,16 @@ class NavigationPresenterBuilder
 
         $entries = array();
 
+        $entries['administration'] = new NavigationItemPresenter(
+            _('administration'),
+            '/project/admin/?' . http_build_query(array('group_id' => $project_id, 'pane' => 'administration')),
+            'administration',
+            $current_pane_shortname
+        );
         $entries['details'] = new NavigationItemPresenter(
             _('details'),
             '/project/admin/editgroupinfo.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'details')),
             'details',
-            $current_pane_shortname
-        );
-        $entries['members'] = new NavigationItemPresenter(
-            _('members'),
-            '/project/admin/?' . http_build_query(array('group_id' => $project_id, 'pane' => 'members')),
-            'members',
             $current_pane_shortname
         );
         $entries['groups'] = new NavigationItemPresenter(

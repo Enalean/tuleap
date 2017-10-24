@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #, php-format
 msgid ""
@@ -529,7 +529,7 @@ msgstr "Aujourd'hui"
 msgid "Tracker"
 msgstr "Suivi"
 
-msgid "Trackers v3 import"
+msgid "Tracker v3 import"
 msgstr "Import outils de suivi v3"
 
 msgid "Unable to fetch the latest activities of the project"
@@ -649,6 +649,9 @@ msgstr "Votre historique est vide"
 msgid "Your platform does not allow restricted users."
 msgstr "Votre plateforme n'authorise pas les utilisateurs restreints"
 
+msgid "administration"
+msgstr "administration"
+
 msgid "categories"
 msgstr "catégories"
 
@@ -663,9 +666,6 @@ msgstr "groupes"
 
 msgid "labels"
 msgstr "labels"
-
-msgid "members"
-msgstr "membres"
 
 msgid "permissions"
 msgstr "permissions"
