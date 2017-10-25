@@ -24,49 +24,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+
 require_once('common/dao/ProjectHistoryDao.class.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/html/HTML_Element_Selectbox.class.php');
 require_once('common/include/Toggler.class.php');
 
 function project_admin_header($params) {
-    global $group_id,$feedback,$Language;
+    global $group_id;
 
-    $params['toptab']='admin';
-    $params['group']=$group_id;
-    site_project_header($params);
+    $params['toptab'] ='admin';
+    $params['group']  = $group_id;
+    $title            = $params['title'];
 
-    echo '
-    <table width="100%" class="project-admin-3-levels-navigation"><tr>';
-    echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
-    <A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> | ';
-    echo '<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> | ';
-    echo '<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A> | ';
-    echo '<a HREF="/project/admin/labels.php?group_id='.$group_id.'">' . _('Labels') .'</a>';
-
-    $em = EventManager::instance();
-    $em->processEvent('admin_toolbar_configuration', array('group_id' => $group_id));
-
-    echo '</td><td>';
-    if (isset($params['help'])) {
-        echo help_button($params['help'],false,$Language->getText('global','help'));
-    }
-    echo '</td></tr>';
-    echo '</td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_permissions').'</b></td><td><b>
-    <A HREF="/project/admin/userperms.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','user_perms').'</A> |
-    <A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A> |
-    <A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_ugroup','permission_request').'</A>';
-    echo '</td><td></td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_data').'</b></td><td><b>
-    <A HREF="/project/export/index.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','project_data_export').'</A> |
-    <A HREF="/tracker/import_admin.php?group_id='.$group_id.'&mode=admin">'.$Language->getText('project_admin_utils','tracker_import').'</A> |
-    <A HREF="/project/admin/history.php?group_id='.$group_id.'">'.$Language->getText('project_admin_history','proj_history').'</A> |
-    <A HREF="/project/stats/source_code_access.php/?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','access_logs').'</A>';
-    //Call hook that can be displayed in this area
-    $em->processEvent('admin_toolbar_data', array('group_id' => $group_id));
-
-    echo '</td><td></td></tr></table>';
-    echo '</B>
-    <P>';
+    $navigation_displayer = new HeaderNavigationDisplayer();
+    $project              = ProjectManager::instance()->getProject($group_id);
+    $navigation_displayer->displayFlamingParrotNavigation($title, $project);
 }
 
 /*

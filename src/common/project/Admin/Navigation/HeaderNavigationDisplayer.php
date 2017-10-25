@@ -32,6 +32,16 @@ class HeaderNavigationDisplayer
 {
     public function displayBurningParrotNavigation($title, Project $project)
     {
+        $this->displayNavigation($title, $project, "navigation");
+    }
+
+    public function displayFlamingParrotNavigation($title, Project $project)
+    {
+        $this->displayNavigation($title, $project, "navigation_flaming_parrot");
+    }
+
+    private function displayNavigation($title, Project $project, $template_name)
+    {
         $params                 = array('title' => $title . ' - ' . $project->getUnconvertedPublicName());
         $params['toptab']       = 'admin';
         $params['group']        = $project->getID();
@@ -49,7 +59,7 @@ class HeaderNavigationDisplayer
         $navigation_presenter = $builder->build($project, $request);
 
         $renderer->renderToPage(
-            "navigation",
+            $template_name,
             $navigation_presenter
         );
     }
