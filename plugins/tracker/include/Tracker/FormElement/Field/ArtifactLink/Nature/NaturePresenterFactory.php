@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use EventManager;
 use Project;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
 class NaturePresenterFactory
@@ -47,9 +48,15 @@ class NaturePresenterFactory
      * @var NatureDao
      */
     private $dao;
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $artifact_links_usage_dao;
 
-    public function __construct(NatureDao $dao) {
-        $this->dao = $dao;
+    public function __construct(NatureDao $dao, ArtifactLinksUsageDao $artifact_links_usage_dao)
+    {
+        $this->dao                      = $dao;
+        $this->artifact_links_usage_dao = $artifact_links_usage_dao;
     }
 
     /** @return NaturePresenter[] */
@@ -67,6 +74,19 @@ class NaturePresenterFactory
         $types = $this->getDefaultNatures();
         $types = array_merge($types, $this->getPluginsTypesEditableInProject($project));
         $types = array_merge($types, $this->getCustomNatures());
+
+        return $types;
+    }
+
+    /** @return NaturePresenter[] */
+    public function getAllUsableTypesInProject(Project $project)
+    {
+        $types = $this->getAllTypesEditableInProject($project);
+        foreach ($types as $key => $type) {
+            if ($this->artifact_links_usage_dao->isTypeDisabledInProject($project->getID(), $type->shortname)) {
+                unset($types[$key]);
+            }
+        }
 
         return $types;
     }

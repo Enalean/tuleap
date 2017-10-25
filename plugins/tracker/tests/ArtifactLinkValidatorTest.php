@@ -83,10 +83,14 @@ class ArtifactLinkValidatorTest extends \TuleapTestCase
             'Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory'
         );
 
+        $project = aMockProject()->withId(101)->build();
+
         $this->tracker         = mock('Tracker');
         $this->artifact        = anArtifact()->withId(101)->withTracker($this->tracker)->build();
         $this->linked_artifact = anArtifact()->withId(105)->withTracker($this->tracker)->build();
         $this->field           = mock('\Tracker_FormElement_Field_ArtifactLink');
+
+        stub($this->tracker)->getProject()->returns($project);
 
         $this->artifact_link_validator = new ArtifactLinkValidator(
             $this->artifact_factory,
