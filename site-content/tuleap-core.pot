@@ -303,6 +303,9 @@ msgstr ""
 msgid "No matching labels"
 msgstr ""
 
+msgid "No project trove categories"
+msgstr ""
+
 msgid "Not categorized"
 msgstr ""
 
@@ -364,6 +367,9 @@ msgid "Project registration is disabled"
 msgstr ""
 
 msgid "Project templates"
+msgstr ""
+
+msgid "Project trove categories"
 msgstr ""
 
 msgid "Project type"
@@ -487,7 +493,7 @@ msgstr ""
 msgid "Tracker"
 msgstr ""
 
-msgid "Tracker v3 import"
+msgid "Trackers v3 import"
 msgstr ""
 
 msgid "Unable to fetch the latest activities of the project"
@@ -503,6 +509,9 @@ msgid "Update failed"
 msgstr ""
 
 msgid "Update label"
+msgstr ""
+
+msgid "Update parent project"
 msgstr ""
 
 msgid "Update successful"

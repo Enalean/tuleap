@@ -34,6 +34,7 @@ use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\TroveCat\TroveCatLinkDao;
 
 $group_id = $request->get('group_id');
 
@@ -45,6 +46,7 @@ $project_details_dao               = new ProjectDetailsDAO();
 $project_manager                   = ProjectManager::instance();
 $event_manager                     = EventManager::instance();
 $project_history_dao               = new ProjectHistoryDao();
+$trove_cat_link_dao                = new TroveCatLinkDao();
 $project_visibility_configuration  = new ProjectVisibilityUserConfigurationPermissions();
 $service_truncated_mails_retriever = new ServicesUsingTruncatedMailRetriever(EventManager::instance());
 $ugroup_user_dao                   = new UGroupUserDao();
@@ -70,7 +72,8 @@ $project_details_controller = new ProjectDetailsController(
     $project_visibility_presenter_builder,
     $project_visibility_configuration,
     $service_truncated_mails_retriever,
-    $ugroup_binding
+    $ugroup_binding,
+    $trove_cat_link_dao
 );
 
 $project_details_router = new ProjectDetailsRouter(
