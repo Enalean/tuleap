@@ -24,6 +24,7 @@ use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 
 class SearchableVisitor implements Visitor
@@ -57,7 +58,8 @@ class SearchableVisitor implements Visitor
         return $formelement;
     }
 
-    public function visitMetaData()
+    public function visitMetaData(Metadata $metadata, SearchableVisitorParameter $parameters)
     {
+        return $parameters->getMetadataComparisonFromWhereBuilder()->getFromWhere($parameters->getComparison());
     }
 }

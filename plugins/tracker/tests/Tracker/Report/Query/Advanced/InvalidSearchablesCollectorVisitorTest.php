@@ -242,16 +242,6 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
         $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array());
     }
 
-    public function itCollectsUnsupportedFieldsIfMetaIsInvalidForComarison()
-    {
-        $expr = new EqualComparison(new Metadata('comment'), new SimpleValueWrapper('value'));
-
-        $this->collector->collectErrors($expr, $this->user, $this->tracker, $this->invalid_searchables_collection);
-
-        $this->assertEqual($this->invalid_searchables_collection->getNonexistentSearchables(), array());
-        $this->assertEqual($this->invalid_searchables_collection->getInvalidSearchableErrors(), array("'@comment' is not supported for the operator =."));
-    }
-
     public function itCollectsUnsupportedFieldsIfFieldIsNotText()
     {
         stub($this->formelement_factory)

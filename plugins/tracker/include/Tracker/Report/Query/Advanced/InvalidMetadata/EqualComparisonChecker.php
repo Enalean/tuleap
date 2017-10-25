@@ -28,6 +28,5 @@ class EqualComparisonChecker implements ICheckMetadataForAComparison
 
     public function checkMetaDataIsValid(Metadata $metadata)
     {
-        throw new InvalidMetadataForComparisonException($metadata, self::OPERATOR);
     }
 }

@@ -18,8 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-interface ValueWrapperParameters
+use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
+
+interface MetadataComparisonFromWhereBuilder
 {
+    /**
+     * @return FromWhere
+     */
+    public function getFromWhere(Comparison $comparison);
 }

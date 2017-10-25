@@ -25,9 +25,6 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\Report\ExpertModePresenter;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
@@ -35,10 +32,12 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectorVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\RealInvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\RealInvalidSearchableCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
@@ -158,7 +157,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new RealInvalidSearchableCollectorVisitor($this->getFormElementFactory())
         );
         $this->query_builder  = new QueryBuilderVisitor(
-            $this->getFormElementFactory(),
             new QueryBuilder\EqualFieldComparisonVisitor(),
             new QueryBuilder\NotEqualFieldComparisonVisitor(),
             new QueryBuilder\LesserThanFieldComparisonVisitor(),
@@ -168,7 +166,16 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new QueryBuilder\BetweenFieldComparisonVisitor(),
             new QueryBuilder\InFieldComparisonVisitor,
             new QueryBuilder\NotInFieldComparisonVisitor(),
-            new SearchableVisitor($this->getFormElementFactory())
+            new QueryBuilder\SearchableVisitor($this->getFormElementFactory()),
+            new QueryBuilder\MetadataEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataNotEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataLesserThanComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataGreaterThanComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataLesserThanOrEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataGreaterThanOrEqualComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataBetweenComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataInComparisonFromWhereBuilder(),
+            new QueryBuilder\MetadataNotInComparisonFromWhereBuilder()
         );
     }
 
