@@ -24,8 +24,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\project\Admin\ProjectVisibilityUserConfigurationPermissions;
-
 require_once('common/dao/ProjectHistoryDao.class.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/html/HTML_Element_Selectbox.class.php');
@@ -38,17 +36,10 @@ function project_admin_header($params) {
     $params['group']=$group_id;
     site_project_header($params);
 
-    $user_configuration_permissions = new ProjectVisibilityUserConfigurationPermissions();
-    $user                           = UserManager::instance()->getCurrentUser();
-    $project                        = ProjectManager::instance()->getProject($group_id);
-
     echo '
     <table width="100%" class="project-admin-3-levels-navigation"><tr>';
     echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
     <A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> | ';
-    if ($user_configuration_permissions->canUserConfigureSomething($user, $project)) {
-        echo '<A HREF="/project/admin/project_visibility.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_project_visibility').'</A> | ';
-    }
     echo '<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> | ';
     echo '<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A> | ';
     echo '<a HREF="/project/admin/labels.php?group_id='.$group_id.'">' . _('Labels') .'</a>';

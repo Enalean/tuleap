@@ -17,6 +17,9 @@ msgstr[1] ""
 msgid "A project cannot be its own parent."
 msgstr ""
 
+msgid "Access"
+msgstr ""
+
 msgid "Access Logs"
 msgstr ""
 
@@ -364,6 +367,9 @@ msgid "Project templates"
 msgstr ""
 
 msgid "Project type"
+msgstr ""
+
+msgid "Project visibility"
 msgstr ""
 
 msgid "Project web site"

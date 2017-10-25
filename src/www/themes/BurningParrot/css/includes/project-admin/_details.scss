@@ -27,22 +27,21 @@
 }
 
 .project-admin-details-public-info {
-    flex: 0 1 auto;
     width: 100%;
     max-width: 40%;
     margin: 0 $tlp-spacing 0 0;
+    flex: 0 1 auto;
 }
 
 .project-admin-details-right-container {
     display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
     width: 100%;
     max-width: 60%;
+    flex: 1 1 auto;
+    flex-direction: column;
 }
 
 .project-admin-details-visibility {
-    display: none;
     margin: 0 0 $tlp-spacing;
 }
 
@@ -60,4 +59,28 @@
 
 .project-admin-details-submit {
     margin: $tlp-spacing auto;
+}
+
+.project-admin-details-info-access {
+    margin-bottom: $tlp-double-spacing;
+    text-align: center;
+}
+
+#project-admin-details-info-access-level {
+    margin: 0;
+    color: $tlp-theme-color;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+#project-admin-details-info-access-level-icon {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+#project-admin-details-info-access-level-badge {
+    margin: $tlp-spacing 0 0;
+}
+
+#term-of-service-usage {
+    display: none;
 }

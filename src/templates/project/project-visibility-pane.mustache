@@ -1,0 +1,18 @@
+<div class="tlp-pane-container">
+    <div class="tlp-pane-header">
+        <h2 class="tlp-pane-title">{{ section_title }}</h2>
+    </div>
+    <section class="tlp-pane-section">
+        {{# can_configure_visibility }}
+            {{# project_visibility_presenter }}
+                {{> project_visibility }}
+            {{/ project_visibility_presenter }}
+        {{/can_configure_visibility}}
+
+        {{^ can_configure_visibility }}
+            {{# project_access_presenter }}
+                {{> project_access }}
+            {{/ project_access_presenter }}
+        {{/can_configure_visibility}}
+    </section>
+</div>

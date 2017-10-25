@@ -16,7 +16,6 @@ project_admin_editgroupinfo	autocompleter_placeholder	Project name (search as yo
 project_admin_editgroupinfo	visibility_section	Access
 project_admin_editgroupinfo	private_label	private
 project_admin_editgroupinfo	public_label	public
-project_admin_editgroupinfo	choose_visbility	Choose the visibility of your project
 project_admin_editgroupinfo	use_truncated_emails	Use truncated emails
 project_admin_editgroupinfo	truncated_emails_title	Truncated Emails
 project_admin_editgroupinfo	truncated_emails_impacted_services_introduction	Truncated emails are emails that have their content cleared (confidentiality) and replaced by a link of the modified item.

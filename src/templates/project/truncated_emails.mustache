@@ -1,20 +1,32 @@
-<h3>{{ truncated_emails_title }}</h3>
+{{# project_truncated_presenter }}
+    {{# can_configure_truncated_mail }}
+        <section class="tlp-pane project-admin-details-truncated-emails">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h2 class="tlp-pane-title">{{ truncated_emails_title }}</h2>
+                </div>
+                <section id="truncated-emails" class="tlp-pane-section">
+                    <p>{{ truncated_emails_impacted_services_introduction }}</p>
 
-<section id="truncated-emails">
-    <p>{{ truncated_emails_impacted_services_introduction }}</p>
-
-    {{# has_impacted_services_enabled }}
-        <label class="checkbox">
-            <input type="checkbox"
-                   name="truncated_emails"
-                   {{# project_uses_truncated_emails }} checked="checked" {{/ project_uses_truncated_emails }}
-                   {{^ has_impacted_services_enabled }} disabled="disabled" {{/ has_impacted_services_enabled }}
-            /> {{ use_truncated_emails }}
-        </label>
-
-        <p class="has-services"><i class="icon-level-up icon-rotate-90"></i>{{ truncated_emails_impacted_services_impacted_services }} {{ impacted_services }}</p>
-    {{/ has_impacted_services_enabled }}
-    {{^ has_impacted_services_enabled }}
-        <p class="muted">{{ truncated_emails_impacted_services_no_available }}</p>
-    {{/ has_impacted_services_enabled }}
-</section>
+                    {{# has_impacted_services_enabled }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label tlp-checkbox">
+                                <input type="checkbox" name="truncated_emails"
+                                {{# project_uses_truncated_emails }} checked="checked" {{/ project_uses_truncated_emails }}
+                                {{^ has_impacted_services_enabled }} disabled="disabled" {{/ has_impacted_services_enabled }}
+                            />
+                                {{ use_truncated_emails }}
+                            </label>
+                            <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{ truncated_emails_impacted_services_impacted_services }}  {{ impacted_services }}</p>
+                        </div>
+                    {{/ has_impacted_services_enabled }}
+                    {{^ has_impacted_services_enabled }}
+                        <div class="tlp-alert-info">
+                            {{ truncated_emails_impacted_services_no_available }}
+                        </div>
+                    {{/ has_impacted_services_enabled }}
+                </section>
+            </div>
+        </section>
+    {{/can_configure_truncated_mail}}
+{{/ project_truncated_presenter }}

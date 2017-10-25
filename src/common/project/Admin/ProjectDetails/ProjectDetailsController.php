@@ -41,7 +41,11 @@ use ProjectManager;
 use Rule_ProjectFullName;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
+use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
+use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use UGroupBinding;
 
 class ProjectDetailsController
 {
@@ -75,20 +79,48 @@ class ProjectDetailsController
      */
     private $project_history_dao;
 
+    /**
+     * @var ProjectVisibilityUserConfigurationPermissions
+     */
+    private $project_visibility_configuration;
+
+    /**
+     * @var ServicesUsingTruncatedMailRetriever
+     */
+    private $service_truncated_mails_retriever;
+
+    /**
+     * @var UGroupBinding
+     */
+    private $ugroup_binding;
+
+    /**
+     * @var ProjectVisibilityPresenterBuilder
+     */
+    private $project_visibility_presenter_builder;
+
     public function __construct(
         DescriptionFieldsFactory $description_fields_factory,
         Project $current_project,
         ProjectDetailsDAO $project_details_dao,
         ProjectManager $project_manager,
         EventManager $event_manager,
-        ProjectHistoryDao $project_history_dao
+        ProjectHistoryDao $project_history_dao,
+        ProjectVisibilityPresenterBuilder $project_visibility_presenter_builder,
+        ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
+        ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
+        UGroupBinding $ugroup_binding
     ) {
-        $this->description_fields_factory = $description_fields_factory;
-        $this->current_project            = $current_project;
-        $this->project_details_dao        = $project_details_dao;
-        $this->project_manager            = $project_manager;
-        $this->event_manager              = $event_manager;
-        $this->project_history_dao        = $project_history_dao;
+        $this->description_fields_factory           = $description_fields_factory;
+        $this->current_project                      = $current_project;
+        $this->project_details_dao                  = $project_details_dao;
+        $this->project_manager                      = $project_manager;
+        $this->event_manager                        = $event_manager;
+        $this->project_history_dao                  = $project_history_dao;
+        $this->project_visibility_configuration     = $project_visibility_configuration;
+        $this->service_truncated_mails_retriever    = $service_truncated_mails_retriever;
+        $this->ugroup_binding                       = $ugroup_binding;
+        $this->project_visibility_presenter_builder = $project_visibility_presenter_builder;
     }
 
     public function display(HTTPRequest $request)
@@ -104,6 +136,7 @@ class ProjectDetailsController
         $project_id                        = $project->getID();
         $group_info                        = $this->project_details_dao->searchGroupInfo($project_id);
         $description_field_representations = $this->getDescriptionFieldsRepresentation();
+
         $parent_project_info               = $this->getParentProjectInfo($current_user, $project_id);
         $purified_project_children         = $this->buildProjectChildren($current_user, $project_id);
 
@@ -112,6 +145,8 @@ class ProjectDetailsController
             $purified_project_children
         );
 
+        $global_visibility_presenter = $this->project_visibility_presenter_builder->build($request);
+
         $renderer = \TemplateRendererFactory::build()->getRenderer($template_path);
         $renderer->renderToPage(
             'project-details',
@@ -119,7 +154,10 @@ class ProjectDetailsController
                 $project,
                 $group_info,
                 $description_field_representations,
-                $hierarchy_presenter
+                $hierarchy_presenter,
+                $parent_project_info,
+                $purified_project_children,
+                $global_visibility_presenter
             )
         );
     }
@@ -382,5 +420,40 @@ class ProjectDetailsController
         }
 
         return $result;
+    }
+
+    public function updateVisibility(HTTPRequest $request)
+    {
+        $project      = $request->getProject();
+        $current_user = $request->getCurrentUser();
+
+        $this->updateProjectVisibility($current_user, $project, $request);
+        $this->updateTruncatedMails($current_user, $project, $request);
+
+        $this->ugroup_binding->reloadUgroupBindingInProject($project);
+    }
+
+    private function updateTruncatedMails(PFUser $user, Project $project, HTTPRequest $request)
+    {
+        if ($this->project_visibility_configuration->canUserConfigureTruncatedMail($user)) {
+            $usage = (int) $request->exist('truncated_emails');
+            if ($project->getTruncatedEmailsUsage() != $usage) {
+                $this->project_manager->setTruncatedEmailsUsage($project, $usage);
+            }
+        }
+    }
+
+    private function updateProjectVisibility(PFUser $user, Project $project, HTTPRequest $request)
+    {
+        if ($this->project_visibility_configuration->canUserConfigureProjectVisibility($user, $project)) {
+            if ($project->getAccess() != $request->get('project_visibility')) {
+                if ($request->get('term_of_service')) {
+                    $this->project_manager->setAccess($project, $request->get('project_visibility'));
+                    $this->project_manager->clear($project->getID());
+                } else {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Please accept term of service"));
+                }
+            }
+        }
     }
 }
