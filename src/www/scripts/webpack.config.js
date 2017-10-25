@@ -55,7 +55,6 @@ var webpack_config_for_dashboards = {
         new webpack.optimize.CommonsChunkPlugin({
             name: 'dashboard'
         }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
@@ -129,9 +128,9 @@ var webpack_config_for_labels = {
     ]
 };
 
-var webpack_config_for_project_admin_labels = {
+var webpack_config_for_project_admin = {
     entry: {
-        'project-admin-labels' : './labels/project-admin/project-admin-labels.js'
+        'project-admin' : './project/admin/index.js'
     },
     output: {
         path: assets_dir_path,
@@ -153,9 +152,23 @@ var webpack_config_for_project_admin_labels = {
     ]
 };
 
+if (process.env.NODE_ENV === 'production') {
+    const optimized_configs = [
+        webpack_config_for_navbar_history,
+        webpack_config_for_dashboards,
+        webpack_config_for_labels,
+        webpack_config_for_project_admin
+    ];
+    optimized_configs.forEach(function (config) {
+        return config.plugins = config.plugins.concat([
+            new webpack.optimize.ModuleConcatenationPlugin()
+        ]);
+    });
+}
+
 module.exports = [
     webpack_config_for_navbar_history,
     webpack_config_for_dashboards,
     webpack_config_for_labels,
-    webpack_config_for_project_admin_labels,
+    webpack_config_for_project_admin,
 ];

@@ -120,7 +120,10 @@ class IndexController
 
     private function displayHeader($title, Project $project)
     {
-        $GLOBALS['HTML']->includeFooterJavascriptFile($this->assets->getFileURL('project-admin-labels.js'));
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
 
         $navigation_displayer = new HeaderNavigationDisplayer();
         $navigation_displayer->displayBurningParrotNavigation($title, $project);

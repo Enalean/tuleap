@@ -1,0 +1,67 @@
+<section class="tlp-pane project-admin-details-hierarchy">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h3 class="tlp-pane-title">{{ project_hierarchy_title }}</h3>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="project-admin-details-hierarchy-buttons">
+                <div class="tlp-form-element tlp-form-element-append">
+                    <select
+                        name="parent_project"
+                        id="project-admin-details-hierarchy-project-select"
+                        class="tlp-select tlp-select-adjusted"
+                        size="50"
+                        data-placeholder="{{ project_name_label }}"
+                    ></select>
+                    <button class="tlp-append tlp-button-primary tlp-button-outline">
+                        {{# parent_project_info }}
+                            <i class="fa fa-pencil tlp-button-icon"></i> {{ update_parent_button }}
+                        {{/ parent_project_info }}
+                        {{^ parent_project_info }}
+                            <i class="fa fa-plus tlp-button-icon"></i> {{ add_parent_button }}
+                        {{/ parent_project_info }}
+                    </button>
+                </div>
+
+                {{# parent_project_info }}
+                    <button
+                        type="submit"
+                        name="remove_parent_project"
+                        id="project-admin-details-hierarchy-delete-button"
+                        class="tlp-button tlp-button-danger tlp-button-outline"
+                        disabled
+                        value="1"
+                    >
+                        <i class="fa fa-trash tlp-button-icon"></i> {{ delete_button }}
+                    </button>
+                {{/ parent_project_info }}
+            </div>
+
+            {{# parent_project_info }}
+                <div class="tlp-form-element">
+                    <label class="tlp-label tlp-checkbox">
+                        <input
+                            type="checkbox"
+                            id="project-admin-details-hierarchy-remove-parent-checkbox"
+                        />
+                        <a href="{{ url }}">{{ parent_name }}</a>
+                    </label>
+                </div>
+            {{/ parent_project_info }}
+
+        </section>
+        <section class="tlp-pane-section">
+            <div class="tlp-property">
+                <label class="tlp-label">{{ child_projects_label }}</label>
+                <p class="tlp-text-muted">
+                    {{# purified_project_children }}
+                        {{{ purified_project_children }}}
+                    {{/ purified_project_children }}
+                    {{^ purified_project_children }}
+                        {{ empty_children_label }}
+                    {{/ purified_project_children }}
+                </p>
+            </div>
+        </section>
+    </div>
+</section>

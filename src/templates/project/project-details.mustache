@@ -9,7 +9,7 @@
             <section class="tlp-pane project-admin-details-public-info">
                 <div class="tlp-pane-container">
                     <div class="tlp-pane-header">
-                        <h2 class="tlp-pane-title">{{ public_information_label }}</h2>
+                        <h3 class="tlp-pane-title">{{ public_information_label }}</h3>
                     </div>
                     <section class="tlp-pane-section">
                         <div class="tlp-form-element">
@@ -82,40 +82,9 @@
             <div class="project-admin-details-right-container">
                 <section class="tlp-pane project-admin-details-visibility">
                 </section>
-                <section class="tlp-pane project-admin-details-hierarchy">
-                    <div class="tlp-pane-container">
-                        <section class="tlp-pane-section">
-                            <h3>{{ project_hierarchy_title }}</h3>
-                            {{{ purified_project_hierarchy_desc }}}
-                            <p>
-                                <u>{{ parent_project }}</u>
-                            </p>
-
-                            {{# parent_project_info }}
-                                <a href="{{ url }}">{{ parent_name }}</a>
-
-                                <label>
-                                    <input type="checkbox" name="remove_parent_project"/>
-                                    {{ remove_parent_project }}
-                                </label>
-                            {{/ parent_project_info }}
-                            {{^ parent_project_info }}
-                                <input type="text" name="parent_project" size="50" id="parent_project"/>
-                                <br/>
-                            {{/parent_project_info}}
-
-                            <br/>
-
-                            <u>{{ sub_projects }}</u>
-
-                            <br>
-
-                            {{# project_children }}
-                                <a href="{{ child_url }}">{{ child_name }}</a>
-                            {{/project_children}}
-                        </section>
-                    </div>
-                </section>
+                {{# project_hierarchy_presenter }}
+                    {{> project-hierarchy }}
+                {{/ project_hierarchy_presenter }}
             </div>
         </div>
         <input type="hidden" name="action" value="update"/>

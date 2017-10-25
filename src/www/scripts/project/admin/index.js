@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,27 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var escaper = {
-    entityMap: {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '/': '&#x2F;'
-    },
-    html: function (text) {
-        return String(text).replace(/[&<>"'\/]/g, function fromEntityMap(s) {
-            return escaper.entityMap[s];
-        });
-    }
-};
-
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    module.exports = {
-        escaper: escaper
-    };
-} else {
-    var tuleap = window.tuleap || {};
-    tuleap.escaper = escaper;
-}
+import '../../labels/project-admin/project-admin-labels.js';
+import './project-admin.js';

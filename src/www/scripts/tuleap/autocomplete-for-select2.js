@@ -17,9 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap  = tuleap || { };
+var select2;
+var escaper;
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    select2 = require('tlp').select2;
+    escaper = require('./escaper.js').escaper;
 
-tuleap.autocomplete_projects_for_select2 = function(element, options) {
+    module.exports = {
+        autocomplete_projects_for_select2: autocomplete_projects_for_select2,
+        autocomplete_users_for_select2   : autocomplete_users_for_select2
+    };
+} else {
+    var tuleap = window.tuleap || {};
+
+    select2 = window.tlp.select2;
+    escaper = tuleap.escaper;
+    tuleap.autocomplete_projects_for_select2 = autocomplete_projects_for_select2;
+    tuleap.autocomplete_users_for_select2    = autocomplete_users_for_select2;
+}
+
+function autocomplete_projects_for_select2(element, options) {
     options = options || {};
 
     options.include_private_projects = options.include_private_projects || 0;
@@ -41,10 +58,10 @@ tuleap.autocomplete_projects_for_select2 = function(element, options) {
         }
     };
 
-    tlp.select2(element, options);
-};
+    select2(element, options);
+}
 
-tuleap.autocomplete_users_for_select2 = function(element, options) {
+function autocomplete_users_for_select2(element, options) {
     options = options || {};
 
     options.internal_users_only = options.internal_users_only || 0;
@@ -68,24 +85,24 @@ tuleap.autocomplete_users_for_select2 = function(element, options) {
     options.templateResult = formatUser;
     options.templateSelection = formatUserWhenSelected;
 
-    tlp.select2(element, options);
+    select2(element, options);
 
     function formatUser(user) {
         if (user.loading) {
-            return tuleap.escaper.html(user.text);
+            return escaper.html(user.text);
         }
 
         var markup = '<div class="select2-result-user"> \
             <div class="tlp-avatar select2-result-user__avatar"> \
-                ' + (user.has_avatar ? '<img src="/users/' + tuleap.escaper.html(user.login) +'/avatar.png">' : '') +' \
+                ' + (user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : '') +' \
             </div> \
-            ' + tuleap.escaper.html(user.text) +' \
+            ' + escaper.html(user.text) +' \
         </div>';
 
         return markup;
     }
 
     function formatUserWhenSelected(user) {
-        return tuleap.escaper.html(user.text);
+        return escaper.html(user.text);
     }
-};
+}

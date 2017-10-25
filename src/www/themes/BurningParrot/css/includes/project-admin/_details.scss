@@ -46,6 +46,18 @@
     margin: 0 0 $tlp-spacing;
 }
 
+.project-admin-details-hierarchy-buttons {
+    display: flex;
+}
+
+#project-admin-details-hierarchy-delete-button {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+#project-admin-details-hierarchy-project-select {
+    width: 250px;
+}
+
 .project-admin-details-submit {
     margin: $tlp-spacing auto;
 }
