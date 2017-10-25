@@ -20,13 +20,14 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 class NotInComparisonChecker implements ICheckMetadataForAComparison
 {
     const OPERATOR = 'not in()';
 
-    public function checkMetaDataIsValid(Metadata $metadata)
+    public function checkMetaDataIsValid(Metadata $metadata, Comparison $comparison)
     {
         throw new InvalidMetadataForComparisonException($metadata, self::OPERATOR);
     }
