@@ -37,25 +37,12 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
     public function getFromWhere(Comparison $comparison)
     {
         $value = $comparison->getValueWrapper()->accept($this, new MetadataValueWrapperParameters());
-        $value = $this->quoteSmart($value);
-        $value = $this->surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value);
 
-        $suffix   = spl_object_hash($comparison);
+        if ($value === '') {
+            return $this->searchArtifactsWithoutComment($comparison);
+        }
 
-        $from = " LEFT JOIN (
-                    tracker_changeset_comment_fulltext AS TCCF_$suffix
-                    INNER JOIN tracker_changeset_comment AS TCC_$suffix
-                     ON (
-                        TCC_$suffix.id = TCCF_$suffix.comment_id
-                        AND TCC_$suffix.parent_id = 0
-                        AND match(TCCF_$suffix.stripped_body) against ($value IN BOOLEAN MODE)
-                     )
-                     INNER JOIN  tracker_changeset AS TC_$suffix  ON TC_$suffix.id = TCC_$suffix.changeset_id
-                 ) ON TC_$suffix.artifact_id = artifact.id";
-
-        $where = "TCC_$suffix.changeset_id IS NOT NULL";
-
-        return new FromWhere($from, $where);
+        return $this->searchComment($comparison, $value);
     }
 
     public function visitCurrentDateTimeValueWrapper(
@@ -106,5 +93,51 @@ class MetadataEqualComparisonFromWhereBuilder implements MetadataComparisonFromW
     protected function surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value)
     {
         return '\'"' . $value . '"\'';
+    }
+
+    /**
+     * @param Comparison $comparison
+     * @param            $value
+     *
+     * @return FromWhere
+     */
+    protected function searchComment(Comparison $comparison, $value)
+    {
+        $value = $this->quoteSmart($value);
+        $value = $this->surroundValueWithSimpleAndThenDoubleQuotesForFulltextMatching($value);
+
+        $suffix = spl_object_hash($comparison);
+
+        $from = " LEFT JOIN (
+                    tracker_changeset_comment_fulltext AS TCCF_$suffix
+                    INNER JOIN tracker_changeset_comment AS TCC_$suffix
+                     ON (
+                        TCC_$suffix.id = TCCF_$suffix.comment_id
+                        AND TCC_$suffix.parent_id = 0
+                        AND match(TCCF_$suffix.stripped_body) against ($value IN BOOLEAN MODE)
+                     )
+                     INNER JOIN  tracker_changeset AS TC_$suffix  ON TC_$suffix.id = TCC_$suffix.changeset_id
+                 ) ON TC_$suffix.artifact_id = artifact.id";
+
+        $where = "TCC_$suffix.changeset_id IS NOT NULL";
+
+        return new FromWhere($from, $where);
+    }
+
+    private function searchArtifactsWithoutComment(Comparison $comparison)
+    {
+        $suffix = spl_object_hash($comparison);
+
+        $from = " LEFT JOIN (
+                    tracker_changeset AS TC_$suffix
+                    JOIN tracker_changeset_comment AS TCC_$suffix
+                       ON TC_$suffix.id = TCC_$suffix.changeset_id
+                    JOIN tracker_changeset_comment_fulltext AS TCCF_$suffix
+                        ON TCC_$suffix.id = TCCF_$suffix.comment_id
+                    ) ON TC_$suffix.artifact_id = artifact.id";
+
+        $where = "TCCF_$suffix.comment_id IS NULL";
+
+        return new FromWhere($from, $where);
     }
 }
