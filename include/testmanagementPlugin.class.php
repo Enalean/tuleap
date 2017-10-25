@@ -148,7 +148,7 @@ class testmanagementPlugin extends Plugin
             $to_artifact             = $params['to_artifact'];
             $new_linked_artifact_ids = explode(',', $params['submitted_value']['new_values']);
 
-            $overrider        = new NatureCoveredByOverrider(new Config(new Dao()));
+            $overrider        = new NatureCoveredByOverrider(new Config(new Dao()), new ArtifactLinksUsageDao());
             $overridingNature = $overrider->getOverridingNature($project, $to_artifact, $new_linked_artifact_ids);
 
             if (! empty($overridingNature)) {
