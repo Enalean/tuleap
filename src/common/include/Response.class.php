@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,10 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('common/include/Feedback.class.php');
-require_once('common/dao/FeedbackDao.class.php');
-require_once('common/include/CookieManager.class.php');
 
 /**
  * Response
@@ -116,6 +112,11 @@ class Response {
 
     public function clearFeedback() {
         $this->_feedback = new Feedback();
+    }
+
+    public function clearFeedbackErrors()
+    {
+        return $this->_feedback->clearErrors();
     }
 
     private function getFeedbackDao() {
