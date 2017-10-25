@@ -153,9 +153,6 @@ project_admin_editugroup	group_empty	le groupe est vide
 project_admin_editugroup	permissions_title	Gestion des permissions
 project_admin_editugroup	settings_title	Paramètres
 project_admin_editugroup	binding_title	Lier des groupes
-project_admin_editugroup	parent	Projet parent :
-project_admin_editugroup	no_parent	Ce projet n'a pas de parent
-project_admin_editugroup	go_to_hierarchy_admin	Administration de la hiérarchie de projets
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -184,13 +181,8 @@ project_admin_index	user_removed	Utilisateur enlevé
 project_admin_index	self_user_remove	Vous n'êtes plus membre du projet
 project_admin_index	p_admin	Administration du projet&nbsp;: $1
 project_admin_index	p_edit	Information sur le projet&nbsp;: $1
-project_admin_index	short_desc	Description courte&nbsp;: $1
-project_admin_index	home_page_link	Lien site Web&nbsp;: $1
-project_admin_index	trove_cat_info	<B>Information de classification</B> - Le projet est classifié de la façon suivante&nbsp;:
-project_admin_index	edit_trove_cat	[Modifier la classification]
 project_admin_index	login_name	Nom de login&nbsp;:
 project_admin_index	add_user	Ajouter un utilisateur
-project_admin_index	edit_member_perm	[Editer les permissions des membres]
 project_admin_index	s_admin	Administration
 project_admin_index	forum_admin	Administration des forums
 project_admin_index	bug_admin	Administration du gestionnaire de bugs
@@ -221,12 +213,8 @@ project_admin_index	member_request_delegation_msg_info	Le message destiné aux u
 project_admin_index	member_request_delegation_msg_error	Impossible de modifier le message destiné aux utilisateurs.
 project_admin_index	or	ou
 project_admin_index	changed_group_type	Type de projet modifié
-project_admin_index	group_type	Type de projet
-project_admin_index	built_from_template	Patron utilisé pour ce projet: $1
 project_admin_index	import_user	[Importer une liste d'utilisateurs]
 project_admin_index	show_projects	Projets créés à partir de ce patron
-project_admin_index	show_projects_hide	cacher
-project_admin_index	show_projects_show	afficher
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php

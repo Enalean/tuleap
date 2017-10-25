@@ -153,9 +153,6 @@ project_admin_editugroup	group_empty	The group is empty
 project_admin_editugroup	permissions_title	Permissions
 project_admin_editugroup	settings_title	General settings
 project_admin_editugroup	binding_title	Groups binding
-project_admin_editugroup	parent	Parent project:
-project_admin_editugroup	no_parent	This project has no parent
-project_admin_editugroup	go_to_hierarchy_admin	Go to project hierarchy administration
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -184,13 +181,8 @@ project_admin_index	user_removed	Removed a User
 project_admin_index	self_user_remove	You are no longer a member of
 project_admin_index	p_admin	Project Admin: $1
 project_admin_index	p_edit	Project Info: $1
-project_admin_index	short_desc	Short Description: $1
-project_admin_index	home_page_link	Homepage Link: $1
-project_admin_index	trove_cat_info	<B>Trove Categorization Info</B> - This project is in the following Trove categories:
-project_admin_index	edit_trove_cat	[Edit Trove Categorization]
 project_admin_index	login_name	Login Name:
 project_admin_index	add_user	Add User
-project_admin_index	edit_member_perm	[Edit Member Permissions]
 project_admin_index	s_admin	Services Administration
 project_admin_index	forum_admin	Forum Admin
 project_admin_index	bug_admin	Bug Admin
@@ -221,12 +213,8 @@ project_admin_index	member_request_delegation_msg_info	The default message for r
 project_admin_index	member_request_delegation_msg_error	Can not update the default message for requester.
 project_admin_index	or	or
 project_admin_index	changed_group_type	Changed Project Type
-project_admin_index	group_type	Project Type
-project_admin_index	built_from_template	Template used for this Project: $1
 project_admin_index	import_user	[Import List Of Users]
 project_admin_index	show_projects	Projects created from this template
-project_admin_index	show_projects_hide	hide
-project_admin_index	show_projects_show	show
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/permissions.php
