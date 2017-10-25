@@ -45,7 +45,7 @@ class ReverseProxy
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
-        $this->common          = new Common($tuleap_base_dir, $nginx_base_dir);
+        $this->common          = new Common($logger, $tuleap_base_dir, $nginx_base_dir);
     }
 
     public function configure()

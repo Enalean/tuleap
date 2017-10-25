@@ -34,8 +34,10 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     die("$errno $errstr $errfile $errline");
 }, E_ALL | E_STRICT);
 
-$fpm   = new Tuleap\Configuration\FPM\TuleapWeb('codendiadm');
-$nginx = new \Tuleap\Configuration\Nginx\BackendWeb('/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'tuleap-web.tuleap-aio-dev.docker');
+$logger = new Tuleap\Configuration\Logger\Console();
+
+$fpm   = new Tuleap\Configuration\FPM\TuleapWeb($logger, 'codendiadm', true);
+$nginx = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'tuleap-web.tuleap-aio-dev.docker');
 $rabbitmq = new Tuleap\Configuration\RabbitMQ\BackendWeb('codendiadm');
 
 $fpm->configure();
