@@ -46,6 +46,7 @@ use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use UGroupBinding;
+use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDetailsController
 {
@@ -78,6 +79,10 @@ class ProjectDetailsController
      * @var ProjectHistoryDao
      */
     private $project_history_dao;
+    /**
+     * @var TroveCatLinkDao
+     */
+    private $trove_cat_link_dao;
 
     /**
      * @var ProjectVisibilityUserConfigurationPermissions
@@ -109,7 +114,8 @@ class ProjectDetailsController
         ProjectVisibilityPresenterBuilder $project_visibility_presenter_builder,
         ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
         ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
-        UGroupBinding $ugroup_binding
+        UGroupBinding $ugroup_binding,
+        TroveCatLinkDao $trove_cat_link_dao
     ) {
         $this->description_fields_factory           = $description_fields_factory;
         $this->current_project                      = $current_project;
@@ -121,6 +127,7 @@ class ProjectDetailsController
         $this->service_truncated_mails_retriever    = $service_truncated_mails_retriever;
         $this->ugroup_binding                       = $ugroup_binding;
         $this->project_visibility_presenter_builder = $project_visibility_presenter_builder;
+        $this->trove_cat_link_dao                   = $trove_cat_link_dao;
     }
 
     public function display(HTTPRequest $request)
@@ -136,9 +143,14 @@ class ProjectDetailsController
         $project_id                        = $project->getID();
         $group_info                        = $this->project_details_dao->searchGroupInfo($project_id);
         $description_field_representations = $this->getDescriptionFieldsRepresentation();
+        $parent_project_info               = $this->getParentProjectInfo($current_user, $project);
+        $purified_project_children         = $this->buildProjectChildren($current_user, $project);
 
-        $parent_project_info               = $this->getParentProjectInfo($current_user, $project_id);
-        $purified_project_children         = $this->buildProjectChildren($current_user, $project_id);
+        $project_trove_categories  = array();
+        $are_trove_categories_used = ($GLOBALS['sys_use_trove'] != 0);
+        if ($are_trove_categories_used) {
+            $project_trove_categories = $this->buildProjectTroveCategories($project);
+        }
 
         $hierarchy_presenter = new ProjectHierarchyPresenter(
             $parent_project_info,
@@ -155,16 +167,13 @@ class ProjectDetailsController
                 $group_info,
                 $description_field_representations,
                 $hierarchy_presenter,
-                $parent_project_info,
-                $purified_project_children,
-                $global_visibility_presenter
+                $global_visibility_presenter,
+                $are_trove_categories_used,
+                $project_trove_categories
             )
         );
     }
 
-    /**
-     * @throws CannotCreateProjectDescriptionException
-     */
     public function update(HTTPRequest $request)
     {
         if (! $this->validateFormData($request)) {
@@ -367,9 +376,9 @@ class ProjectDetailsController
         );
     }
 
-    private function getParentProjectInfo(PFUser $current_user, $project_id)
+    private function getParentProjectInfo(PFUser $current_user, Project $project)
     {
-        $parent = $this->project_manager->getParentProject($project_id);
+        $parent = $this->project_manager->getParentProject($project->getID());
 
         $parent_project_info = array();
 
@@ -390,9 +399,9 @@ class ProjectDetailsController
         return $parent_project_info;
     }
 
-    private function buildProjectChildren(PFUser $current_user, $project_id)
+    private function buildProjectChildren(PFUser $current_user, Project $project)
     {
-        $children = $this->project_manager->getChildProjects($project_id);
+        $children = $this->project_manager->getChildProjects($project->getID());
 
         $purifier          = Codendi_HTMLPurifier::instance();
         $children_projects = array();
@@ -455,5 +464,15 @@ class ProjectDetailsController
                 }
             }
         }
+    }
+
+    private function buildProjectTroveCategories(Project $project)
+    {
+        $project_trove_categories = array();
+        foreach ($this->trove_cat_link_dao->searchTroveCatForProject($project->getID()) as $row_trovecat) {
+            $project_trove_categories[] = array('trove_category_full_path' => $row_trovecat['fullpath']);
+        }
+
+        return $project_trove_categories;
     }
 }

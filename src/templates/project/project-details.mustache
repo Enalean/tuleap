@@ -75,6 +75,20 @@
                             <label class="tlp-label">{{ project_type_label }}</label>
                             <p>{{ project_type }}</p>
                         </div>
+
+                        {{# are_project_categories_used }}
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{ project_trove_category_label }}</label>
+                                {{^ project_trove_categories }}
+                                    <p class="tlp-text-muted">{{ empty_project_trove_categories }}</p>
+                                {{/ project_trove_categories }}
+                                <ul>
+                                    {{# project_trove_categories }}
+                                        <li>{{ trove_category_full_path }}</li>
+                                    {{/ project_trove_categories }}
+                                </ul>
+                            </div>
+                        {{/are_project_categories_used}}
                     </section>
                 </div>
             </section>
