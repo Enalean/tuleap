@@ -617,7 +617,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                 $criteria_advanced_options[] = new Templating_Presenter_ButtonDropdownsOptionSubmenu(
                     $id_prefix.'_'.$id,
                     $fields_for_criteria[$id]->getLabel(),
-                    $this->getOptionsForCustomColumn($id_prefix, $id, $used)
+                    $this->getOptionsForCustomColumn($id, $used)
                 );
             }
         }
@@ -638,9 +638,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return array_merge($criteria_options, $criteria_advanced_options);
     }
 
-    private function getOptionsForCustomColumn($id_prefix, $id, $used) {
+    private function getOptionsForCustomColumn($id, $used)
+    {
+        $project = $this->getTracker()->getProject();
         $options = array();
-        $natures = $this->getNaturePresenterFactory()->getOnlyVisibleNatures();
+        $types   = $this->getNaturePresenterFactory()->getAllTypesEditableInProject($project);
 
         $column_id = $id .'_';
         $option = new Templating_Presenter_ButtonDropdownsOption(
@@ -659,12 +661,20 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         );
         $options[] = $option;
 
-        foreach($natures as $nature) {
-            $column_id = $id .'_'. $nature->shortname;
+        foreach ($types as $type) {
+            $column_id    = $id .'_'. $type->shortname;
+            $type_is_used = isset($used[$column_id]);
+
+            if ($this->getArtifactLinksUsageDao()->isTypeDisabledInProject($project->getID(), $type->shortname) &&
+                ! $type_is_used
+            ) {
+                continue;
+            }
+
             $option = new Templating_Presenter_ButtonDropdownsOption(
                 $id,
-                $nature->forward_label,
-                isset($used[$column_id]),
+                $type->forward_label,
+                $type_is_used,
                 '#'
             );
             $option->setLiParameters(
@@ -672,13 +682,21 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                     'data-column-id'            => $column_id,
                     'data-field-id'             => $id,
                     'data-field-is-used'        => intval(isset($used[$column_id])),
-                    'data-field-artlink-nature' => $nature->shortname
+                    'data-field-artlink-nature' => $type->shortname
                 )
             );
             $options[] = $option;
         }
 
         return $options;
+    }
+
+    /**
+     * @return ArtifactLinksUsageDao
+     */
+    private function getArtifactLinksUsageDao()
+    {
+        return new ArtifactLinksUsageDao();
     }
 
     private function fieldAllowsCustomColumnForTableReport(Tracker_FormElement_Field $field, $dropdown_type) {
@@ -691,7 +709,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @return NaturePresenterFactory
      */
     private function getNaturePresenterFactory() {
-        return new NaturePresenterFactory(new NatureDao(), new ArtifactLinksUsageDao());
+        return new NaturePresenterFactory(new NatureDao(), $this->getArtifactLinksUsageDao());
     }
 
     /**
@@ -699,7 +717,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private function getArtifactLinksUsageUpdater()
     {
-        return new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
+        return new ArtifactLinksUsageUpdater($this->getArtifactLinksUsageDao());
     }
 
     public function getTemplateRenderer() {
