@@ -1,11 +1,22 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import drop_module from './drop.js';
+
 describe("DroppedService -", function() {
-    var $q, $scope, DroppedService, ProjectService, MilestoneService, BacklogItemService, RestErrorService,
+    var $q,
+        $scope,
+        DroppedService,
+        ProjectService,
+        MilestoneService,
+        BacklogItemService,
+        RestErrorService,
         rest_error;
 
     beforeEach(function() {
-        module('planning');
+        angular.mock.module(drop_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             $rootScope,
             _DroppedService_,

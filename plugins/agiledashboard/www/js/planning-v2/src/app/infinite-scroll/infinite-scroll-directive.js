@@ -23,9 +23,9 @@
  * THE SOFTWARE.
  */
 
-angular
-    .module('infinite-scroll')
-    .directive('infiniteScroll', infiniteScroll);
+import angular from 'angular';
+
+export default infiniteScroll;
 
 infiniteScroll.$inject = ['$window'];
 

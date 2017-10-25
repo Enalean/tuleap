@@ -1,6 +1,4 @@
-angular
-    .module('edit-item')
-    .service('EditItemService', EditItemService);
+export default EditItemService;
 
 EditItemService.$inject = [
     'BacklogItemCollectionService',
@@ -16,9 +14,7 @@ function EditItemService(
     SharedPropertiesService
 ) {
     var self = this;
-    _.extend(self, {
-        showEditModal: showEditModal
-    });
+    self.showEditModal = showEditModal;
 
     function showEditModal($event, backlog_item, milestone) {
         var when_left_mouse_click = 1;

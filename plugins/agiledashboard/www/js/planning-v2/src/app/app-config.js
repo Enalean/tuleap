@@ -1,17 +1,26 @@
-angular
-    .module('planning')
-    .config(PlanningConfig);
+import './planning.tpl.html';
+import PlanningController from './app-planning-controller.js';
 
-PlanningConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$animateProvider'];
+export default PlanningConfig;
 
-function PlanningConfig($stateProvider, $urlRouterProvider, $animateProvider) {
+PlanningConfig.$inject = [
+    '$stateProvider',
+    '$urlRouterProvider',
+    '$animateProvider'
+];
+
+function PlanningConfig(
+    $stateProvider,
+    $urlRouterProvider,
+    $animateProvider
+) {
     $urlRouterProvider.otherwise('/planning');
 
     $animateProvider.classNameFilter(/do-animate/);
 
     $stateProvider.state('planning', {
         url         : "/planning",
-        controller  : 'PlanningController',
+        controller  : PlanningController,
         controllerAs: 'planning',
         templateUrl : "planning.tpl.html"
     });

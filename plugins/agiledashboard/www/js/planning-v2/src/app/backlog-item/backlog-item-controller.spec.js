@@ -1,12 +1,28 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import item_module               from './backlog-item.js';
+import BaseBacklogItemController from './backlog-item-controller.js';
+
 describe("BacklogItemController -", function() {
-    var $q, $rootScope, $scope, $compile, $document, $element, BacklogItemController,
-        BacklogItemService, BacklogItemSelectedService, CardFieldsService, DroppedService, BacklogItemCollectionService,
+    var $q,
+        $rootScope,
+        $scope,
+        $compile,
+        $document,
+        $element,
+        BacklogItemController,
+        BacklogItemService,
+        BacklogItemSelectedService,
+        CardFieldsService,
+        DroppedService,
+        BacklogItemCollectionService,
         dragularService;
 
     beforeEach(function() {
-        module('backlog');
+        angular.mock.module(item_module);
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             _$rootScope_,
             $controller,
@@ -59,7 +75,7 @@ describe("BacklogItemController -", function() {
             spyOn(BacklogItemSelectedService, 'areThereMultipleSelectedBaklogItems');
             spyOn(BacklogItemSelectedService, 'getCompactedSelectedBacklogItem');
 
-            BacklogItemController = $controller('BacklogItemController', {
+            BacklogItemController = $controller(BaseBacklogItemController, {
                 $scope                      : $scope,
                 $element                    : $element,
                 $document                   : $document,

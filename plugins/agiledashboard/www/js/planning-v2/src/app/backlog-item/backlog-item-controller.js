@@ -1,6 +1,6 @@
-angular
-    .module('backlog-item')
-    .controller('BacklogItemController', BacklogItemController);
+import angular from 'angular';
+import _       from 'lodash';
+export default BacklogItemController;
 
 BacklogItemController.$inject = [
     '$scope',
@@ -468,7 +468,7 @@ function BacklogItemController(
         return (
             angular.element(handle_element)
                 .parentsUntil('.backlog-item-children')
-                .andSelf()
+                .addBack()
                 .filter('[data-nodrag="true"]')
                 .length > 0
         );

@@ -1,6 +1,6 @@
-angular
-    .module('planning')
-    .service('MilestoneCollectionService', MilestoneCollectionService);
+import _ from 'lodash';
+
+export default MilestoneCollectionService;
 
 MilestoneCollectionService.$inject = [
     'MilestoneService',

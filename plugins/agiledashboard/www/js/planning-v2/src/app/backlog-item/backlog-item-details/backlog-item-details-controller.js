@@ -1,6 +1,8 @@
-angular
-    .module('backlog-item-details')
-    .controller('BacklogItemDetailsController', BacklogItemDetailsController);
+import _ from 'lodash';
+
+import BacklogFilterValue from '../../backlog-filter-terms.js';
+
+export default BacklogItemDetailsController;
 
 BacklogItemDetailsController.$inject = [
     'gettextCatalog',
@@ -8,8 +10,7 @@ BacklogItemDetailsController.$inject = [
     'EditItemService',
     'BacklogItemService',
     'BacklogItemCollectionService',
-    'NewTuleapArtifactModalService',
-    'BacklogFilterValue'
+    'NewTuleapArtifactModalService'
 ];
 
 function BacklogItemDetailsController(
@@ -18,8 +19,7 @@ function BacklogItemDetailsController(
     EditItemService,
     BacklogItemService,
     BacklogItemCollectionService,
-    NewTuleapArtifactModalService,
-    BacklogFilterValue
+    NewTuleapArtifactModalService
 ) {
     var self = this;
 

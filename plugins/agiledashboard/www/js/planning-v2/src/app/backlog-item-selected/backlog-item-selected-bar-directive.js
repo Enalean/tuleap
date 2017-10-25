@@ -1,15 +1,13 @@
-angular
-    .module('backlog-item-selected')
-    .directive('backlogItemSelectedBar', BacklogItemSelectedBar);
+import './backlog-item-selected-bar.tpl.html';
+import BacklogItemSelectedBarController from './backlog-item-selected-bar-controller.js';
 
-BacklogItemSelectedBar.$inject = [];
-
-function BacklogItemSelectedBar() {
+export default function BacklogItemSelectedBar() {
     return {
         restrict        : 'A',
         scope           : false,
-        controller      : 'BacklogItemSelectedBarController as selected_bar_controller',
-        templateUrl     : 'backlog-item-selected/backlog-item-selected-bar.tpl.html',
-        bindToController: true
+        controller      : BacklogItemSelectedBarController,
+        controllerAs    : 'selected_bar_controller',
+        bindToController: true,
+        templateUrl     : 'backlog-item-selected-bar.tpl.html'
     };
 }

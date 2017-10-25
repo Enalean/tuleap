@@ -1,6 +1,6 @@
-angular
-    .module('backlog-item')
-    .factory('BacklogItemFactory', BacklogItemFactory);
+import _ from 'lodash';
+
+export default BacklogItemFactory;
 
 BacklogItemFactory.$inject = [];
 

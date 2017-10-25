@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CurrentPage;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -472,7 +473,7 @@ class AgileDashboardPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
 
             if ($this->isPlanningV2URL()) {
-                echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/planning-v2/bin/assets/planning-v2.css" />';
+                echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/js/planning-v2/dist/planning-v2.css" />';
             }
         }
     }
@@ -481,7 +482,12 @@ class AgileDashboardPlugin extends Plugin {
     {
         if ($this->isAnAgiledashboardRequest()) {
             if ($this->isPlanningV2URL()) {
-                echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>'."\n";
+                $planning_v2_include_assets = new IncludeAssets(
+                    AGILEDASHBOARD_BASE_DIR . '/../www/js/planning-v2/dist',
+                    AGILEDASHBOARD_BASE_URL . '/js/planning-v2/dist'
+                );
+
+                echo $planning_v2_include_assets->getHTMLSnippet('planning-v2.js') ."\n";
             } else {
                 echo $this->getMinifiedAssetHTML()."\n";
             }

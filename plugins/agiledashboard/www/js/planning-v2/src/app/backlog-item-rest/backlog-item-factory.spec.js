@@ -1,6 +1,12 @@
-describe('BacklogItemFactory', function() {
+import angular from 'angular';
+import 'angular-mocks';
 
-    beforeEach(module('backlog-item'));
+import rest_module from './backlog-item-rest.js';
+
+describe('BacklogItemFactory', function() {
+    beforeEach(function() {
+        angular.mock.module(rest_module);
+    });
 
     describe('augment', function() {
         var item = {

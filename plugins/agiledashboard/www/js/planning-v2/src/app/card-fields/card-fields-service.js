@@ -1,17 +1,16 @@
-angular
-    .module('card-fields')
-    .service('CardFieldsService', CardFieldsService);
+import _      from 'lodash';
+import moment from 'moment';
+
+export default CardFieldsService;
 
 CardFieldsService.$inject = [
     '$sce',
-    '$filter',
-    'moment'
+    '$filter'
 ];
 
 function CardFieldsService(
     $sce,
-    $filter,
-    moment
+    $filter
 ) {
     var highlight = $filter('tuleapHighlight');
 

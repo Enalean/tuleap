@@ -1,24 +1,26 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import milestone_rest_module from './milestone-rest.js';
+
 describe("MilestoneService", function() {
-    var $q, mockBackend, MilestoneService, deferred;
+    var mockBackend, MilestoneService, BacklogItemFactory;
 
     beforeEach(function() {
         BacklogItemFactory = jasmine.createSpyObj("BacklogItemFactory", [
             "augment"
         ]);
 
-        module('milestone', function($provide) {
+        angular.mock.module(milestone_rest_module, function($provide) {
             $provide.value('BacklogItemFactory', BacklogItemFactory);
         });
 
-        inject(function(_$q_, _MilestoneService_, $httpBackend) {
-            $q = _$q_;
+        angular.mock.inject(function(_MilestoneService_, $httpBackend) {
             MilestoneService = _MilestoneService_;
             mockBackend = $httpBackend;
         });
 
         installPromiseMatchers();
-
-        deferred = $q.defer();
     });
 
     afterEach(function() {

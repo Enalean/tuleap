@@ -1,6 +1,6 @@
-angular
-    .module('backlog')
-    .service('BacklogService', BacklogService);
+import _ from 'lodash';
+
+export default BacklogService;
 
 BacklogService.$inject = [
     '$filter',

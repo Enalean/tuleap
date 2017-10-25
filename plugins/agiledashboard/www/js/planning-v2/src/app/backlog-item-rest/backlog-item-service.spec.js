@@ -1,3 +1,8 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import rest_module from './backlog-item-rest.js';
+
 describe("BacklogItemService", function() {
     var $q, mockBackend, BacklogItemService, BacklogItemFactory, deferred;
 
@@ -7,11 +12,11 @@ describe("BacklogItemService", function() {
             'augment'
         ]);
 
-        module('backlog-item', function($provide) {
+        angular.mock.module(rest_module, function($provide) {
             $provide.value('BacklogItemFactory', BacklogItemFactory);
         });
 
-        inject(function(_$q_, _BacklogItemService_, $httpBackend) {
+        angular.mock.inject(function(_$q_, _BacklogItemService_, $httpBackend) {
             $q = _$q_;
             BacklogItemService = _BacklogItemService_;
             mockBackend = $httpBackend;

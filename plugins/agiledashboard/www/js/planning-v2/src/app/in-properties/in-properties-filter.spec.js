@@ -1,5 +1,10 @@
-describe('InPropertiesItemFilter', function() {
+import angular from 'angular';
+import 'angular-mocks';
+import moment  from 'moment';
 
+import filter_module from './in-properties.js';
+
+describe('InPropertiesItemFilter', function() {
     var in_properties_filter,
         list = [
             {
@@ -31,12 +36,20 @@ describe('InPropertiesItemFilter', function() {
             }
         ];
 
-    beforeEach(module('inproperties.filter'));
+    beforeEach(function() {
+        angular.mock.module(filter_module);
 
-    beforeEach(inject(function($filter, moment) {
+        var $filter;
+        angular.mock.inject(function(
+            _$filter_,
+            _moment_
+        ) {
+            $filter = _$filter_;
+        });
+
         in_properties_filter = $filter('InPropertiesFilter');
         (moment.locale || moment.lang)('en');
-    }));
+    });
 
     it('has a InPropertiesFilter filter', function() {
         expect(in_properties_filter).not.toBeNull();

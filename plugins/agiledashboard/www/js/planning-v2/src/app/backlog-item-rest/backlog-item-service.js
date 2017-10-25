@@ -1,6 +1,6 @@
-angular
-    .module('backlog-item')
-    .service('BacklogItemService', BacklogItemService);
+import _ from 'lodash';
+
+export default BacklogItemService;
 
 BacklogItemService.$inject = [
     'Restangular',

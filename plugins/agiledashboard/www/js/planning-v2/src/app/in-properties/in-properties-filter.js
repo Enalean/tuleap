@@ -1,17 +1,15 @@
-angular
-    .module('inproperties.filter', [
-        'angularMoment'
-    ])
-    .filter('InPropertiesFilter', InPropertiesFilter);
+import angular from 'angular';
+import _       from 'lodash';
+import moment  from 'moment';
+
+export default InPropertiesFilter;
 
 InPropertiesFilter.$inject = [
-    '$filter',
-    'moment'
+    '$filter'
 ];
 
 function InPropertiesFilter(
-    $filter,
-    moment
+    $filter
 ) {
     return function(list, terms) {
         if (! terms || terms === '') {

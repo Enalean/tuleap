@@ -1,11 +1,10 @@
-angular
-    .module('planning')
-    .controller('MainController', MainController);
+export default MainController;
 
 MainController.$inject = [
     '$scope',
     '$window',
     'SharedPropertiesService',
+    'amMoment',
     'gettextCatalog'
 ];
 
@@ -13,11 +12,10 @@ function MainController(
     $scope,
     $window,
     SharedPropertiesService,
+    amMoment,
     gettextCatalog
 ) {
-    _.extend($scope, {
-        init: init
-    });
+    $scope.init = init;
 
     function init(user_id, project_id, milestone_id, lang, view_mode, milestone, initial_backlog_items, initial_milestones) {
         SharedPropertiesService.setUserId(user_id);
@@ -33,6 +31,6 @@ function MainController(
 
     function initLocale(lang) {
         gettextCatalog.setCurrentLanguage(lang);
-        $window.moment.locale(lang);
+        amMoment.changeLocale(lang);
     }
 }

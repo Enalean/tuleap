@@ -1,8 +1,16 @@
+import angular from 'angular';
+import 'angular-mocks';
+
+import collection_module from './backlog-item-collection.js';
+
 describe("BacklogItemCollectionService -", function() {
-    var $q, $scope, BacklogItemCollectionService, BacklogItemService;
+    var $q,
+        $scope,
+        BacklogItemCollectionService,
+        BacklogItemService;
 
     beforeEach(function() {
-        module('backlog-item-collection', function($provide) {
+        angular.mock.module(collection_module, function($provide) {
             $provide.decorator('BacklogItemService', function($delegate) {
                 spyOn($delegate, "getBacklogItem");
 
@@ -10,7 +18,7 @@ describe("BacklogItemCollectionService -", function() {
             });
         });
 
-        inject(function(
+        angular.mock.inject(function(
             _$q_,
             _$rootScope_,
             _BacklogItemCollectionService_,

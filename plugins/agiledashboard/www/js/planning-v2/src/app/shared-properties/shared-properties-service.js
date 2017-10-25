@@ -1,8 +1,4 @@
-angular
-    .module('shared-properties')
-    .service('SharedPropertiesService', SharedPropertiesService);
-
-function SharedPropertiesService() {
+export default function SharedPropertiesService() {
     var property = {
         user_id              : undefined,
         view_mode            : undefined,

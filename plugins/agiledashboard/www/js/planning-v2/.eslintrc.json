@@ -7,7 +7,11 @@
         "eslint:recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": 5
+        "ecmaVersion": 2017,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
     },
     "env": {
         "browser": true,
