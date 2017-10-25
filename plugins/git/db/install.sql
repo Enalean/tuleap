@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS plugin_git_log_read_daily (
 
 CREATE TABLE plugin_git_file_logs_parse (
   file_name VARCHAR(255) NOT NULL,
-  end_line INT(11),
+  end_line BIGINT UNSIGNED,
   PRIMARY KEY (file_name)
 );
 
