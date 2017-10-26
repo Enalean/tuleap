@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,18 @@
 
 namespace Tuleap\PullRequest;
 
-use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
-use Tuleap\PullRequest\Exception\UnknownBranchNameException;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use Exception;
+use Feedback;
+use GitRepository;
+use GitRepositoryFactory;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
-use Codendi_Request;
-use Feedback;
-use GitRepositoryFactory;
-use GitRepository;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
+use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
+use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use UserManager;
-use CSRFSynchronizerToken;
 
 class Router
 {
@@ -68,7 +69,7 @@ class Router
         $repository = $this->git_repository_factory->getRepositoryById($repository_id);
 
         if ($repository->getProjectId() != $project_id) {
-            $this->redirectInRepositoryViewBecauseOfBadRequest($repository_id, $project_id);
+            $this->redirectInRepositoryViewBecauseOfBadRequest($repository);
         }
 
         switch ($request->get('action')) {
@@ -76,7 +77,7 @@ class Router
                 $this->generatePullRequest($request, $repository, $project_id);
                 break;
             default:
-                $this->redirectInRepositoryViewBecauseOfBadRequest($repository_id, $project_id);
+                $this->redirectInRepositoryViewBecauseOfBadRequest($repository);
                 break;
         }
     }
@@ -95,8 +96,7 @@ class Router
 
         if (! $repository_src->userCanRead($user)) {
             $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
+                $repository_src,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'user_cannot_read_repository')
             );
         }
@@ -113,38 +113,32 @@ class Router
             );
         } catch (UnknownBranchNameException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
+                $repository_src,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'generate_pull_request_branch_error')
             );
         } catch (PullRequestCannotBeCreatedException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
+                $repository_src,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'pull_request_cannot_be_created')
             );
         } catch (PullRequestAnonymousUserException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
+                $repository_src,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'generate_pull_request_error')
             );
         } catch (PullRequestAlreadyExistsException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
+                $repository_src,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'pull_request_already_exists')
             );
         } catch (PullRequestRepositoryMigratedOnGerritException $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
+                $repository_src,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'repository_migrated_on_gerrit')
             );
         } catch (Exception $exception) {
             $this->redirectInRepositoryViewWithErrorMessage(
-                $repository_id,
-                $project_id,
+                $repository_src,
                 $exception->getMessage()
             );
         }
@@ -152,7 +146,6 @@ class Router
         if (! $generated_pull_request) {
             $this->redirectInRepositoryViewWithErrorMessage(
                 $repository_id,
-                $project_id,
                 $GLOBALS['Language']->getText('plugin_pullrequest', 'generate_pull_request_error')
             );
         }
@@ -160,27 +153,34 @@ class Router
         $this->redirectToPullRequestViewIntoGitRepository($generated_pull_request, $project_id);
     }
 
-    private function redirectInRepositoryViewWithErrorMessage($repository_id, $project_id, $message)
+    private function redirectInRepositoryViewWithErrorMessage(GitRepository $repository, $message)
     {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
 
-        $this->redirectInRepositoryView($repository_id, $project_id);
+        $this->redirectInRepositoryView($repository);
     }
 
-    private function redirectInRepositoryViewBecauseOfBadRequest($repository_id, $project_id)
+    private function redirectInRepositoryViewBecauseOfBadRequest(GitRepository $repository)
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $GLOBALS['Language']->getText('plugin_pullrequest', 'invalid_request')
         );
 
-        $this->redirectInRepositoryView($repository_id, $project_id);
+        $this->redirectInRepositoryView($repository);
     }
 
-    private function redirectInRepositoryView($repository_id, $project_id)
+    private function redirectInRepositoryView(GitRepository $repository)
     {
         $GLOBALS['Response']->redirect(
-            "/plugins/git/?action=view&repo_id=$repository_id&group_id=$project_id"
+            "/plugins/git/".urlencode($repository->getProject()->getUnixNameLowerCase())."/".
+            urlencode($repository->getFullName())."?" . http_build_query(
+                array(
+                    'action'   => "view",
+                    'repo_id'  => $repository->getId(),
+                    'group_id' => $repository->getProjectId()
+                )
+            )
         );
     }
 
