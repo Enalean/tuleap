@@ -236,7 +236,10 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         if (! $this->fields_validator->validate($artifact, $fields_data)) {
-            throw new FieldValidationException($GLOBALS['Response']->getFeedbackErrors());
+            $errors_from_feedback = $GLOBALS['Response']->getFeedbackErrors();
+            $GLOBALS['Response']->clearFeedbackErrors();
+
+            throw new FieldValidationException($errors_from_feedback);
         }
 
         $last_changeset = $artifact->getLastChangeset();
