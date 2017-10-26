@@ -423,7 +423,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $html = '';
         if($values) {
             $purifier = Codendi_HTMLPurifier::instance();
-            $html    .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field">';
+            $html    .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field"
+                              data-field-id="'. $this->id .'"
+                              data-is-required="false">';
             $html    .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
             $html    .= '<ul>';
             foreach($values as $value) {
