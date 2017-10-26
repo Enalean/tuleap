@@ -138,7 +138,7 @@
                         token: "keyword"
                     },
                     {
-                        regex: /(?:now|between|in|not|myself|@comment)\b/i,
+                        regex: /(?:now|between|in|not|myself|@comments)\b/i,
                         token: "variable-2"
                     },
                     {
@@ -180,7 +180,7 @@
                         'IN(',
                         'NOT',
                         'MYSELF()',
-                        '@comment'
+                        '@comments'
                     ].concat(allowed_fields);
 
                 CodeMirror.commands.autocomplete = autocomplete;
