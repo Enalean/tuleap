@@ -57,3 +57,4 @@ tests/selenium/logs
 test_results/*
 tests/soap/vendor
 tests/rest/vendor
+src/www/themes/local

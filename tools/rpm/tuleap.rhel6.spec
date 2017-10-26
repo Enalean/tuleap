@@ -545,6 +545,10 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/tuleap-gulp-build.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/tlp/webpack.config.js
 
+# Link to local config for logo and themes images
+# Needed for nginx try_files
+%{__ln_s} /etc/%{APP_NAME}/themes/common/images $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/local
+
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
 %{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
@@ -1015,6 +1019,7 @@ fi
 %{APP_DIR}/src/www/themes/common/images
 %dir %{APP_DIR}/src/www/themes/common/tlp
 %{APP_DIR}/src/www/themes/common/tlp/dist
+%{APP_DIR}/src/www/themes/local
 %{APP_DIR}/src/www/tos
 %{APP_DIR}/src/www/tour
 %{APP_DIR}/src/www/tracker
