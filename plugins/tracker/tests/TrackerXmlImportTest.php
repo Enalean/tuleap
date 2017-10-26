@@ -145,7 +145,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 $this->ugroup_manager,
                 mock('Logger'),
-                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
             )
         );
 
@@ -305,7 +306,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 $this->ugroup_manager,
                 mock('Logger'),
-                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
             )
         );
 
@@ -315,6 +317,50 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $collected_errors = $tracker_xml_importer->collectErrorsWithoutImporting($this->project, $this->xml_input);
         $this->assertEqual($collected_errors, '');
+    }
+
+    public function itSouldNotImportHierarchyIfIsChildIsNotUsed()
+    {
+        $dao = stub('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')->isTypeDisabledInProject('*', '_is_child')->returns(true);
+
+        $tracker_xml_importer = partial_mock(
+            'TrackerXmlImportTestInstance',
+            array(
+                'createFromXML'
+            ),
+            array(
+                $this->tracker_factory,
+                $this->event_manager,
+                $this->hierarchy_dao,
+                mock('Tracker_CannedResponseFactory'),
+                mock('Tracker_FormElementFactory'),
+                mock('Tracker_SemanticFactory'),
+                mock('Tracker_RuleFactory'),
+                mock('Tracker_ReportFactory'),
+                mock('WorkflowFactory'),
+                mock('XML_RNGValidator'),
+                mock('Tracker_Workflow_Trigger_RulesManager'),
+                $this->xml_import,
+                mock('User\XML\Import\IFindUserFromXMLReference'),
+                $this->ugroup_manager,
+                mock('Logger'),
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+                $dao
+            )
+        );
+
+        stub($tracker_xml_importer)->createFromXML()->returns($this->tracker1);
+
+        expect($this->hierarchy_dao)->updateChildren()->never();
+
+        $tracker_xml_importer->import(
+            $this->configuration,
+            $this->project,
+            $this->xml_input,
+            $this->mapping_registery,
+            $this->extraction_path
+        );
+
     }
 }
 
@@ -371,7 +417,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 $this->ugroup_manager,
                 mock('Logger'),
-                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
             )
         );
 
@@ -421,7 +468,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
         );
 
         $this->xml_security = new XML_Security();
@@ -493,7 +541,8 @@ XML;
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
         );
 
         //create data passed
@@ -710,7 +759,8 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
         );
 
         $this->project = mock('Project');
@@ -777,7 +827,8 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             $this->ugroup_manager,
             mock('Logger'),
-            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+            mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
         );
 
         $this->group_id = 123;
@@ -855,6 +906,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         parent::setUp();
         $this->hierarchy_dao               = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
         $this->artifact_link_usage_updater = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater');
+        $this->artifact_link_usage_dao     = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao');
 
         $this->tracker_xml_importer = new TrackerXmlImport(
             mock('TrackerFactory'),
@@ -872,31 +924,33 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
             mock('User\XML\Import\IFindUserFromXMLReference'),
             mock('UGroupManager'),
             mock('Logger'),
-            $this->artifact_link_usage_updater
+            $this->artifact_link_usage_updater,
+            $this->artifact_link_usage_dao
         );
-        $this->project = mock('Project');
+
+        $this->project = aMockProject()->withId(201)->build();
 
         $this->mapping_registery = new MappingsRegistry();
         $this->configuration     = new ImportConfig();
     }
 
-    public function itShouldDoNothingIfNoAttributeAndProjectUsesNature() {
+    public function itShouldActivateIfNoAttributeAndProjectUsesNature() {
         $xml_input = new SimpleXMLElement('<project><trackers /></project>');
 
         stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(true);
         expect($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->never();
-        expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->never();
+        expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->once();
         expect($this->artifact_link_usage_updater)->forceDeactivationOfArtifactLinkTypes()->never();
 
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
 
-    public function itShouldDoNothingIfNoAttributeAndProjectDoesNotUseNature() {
+    public function itShouldActivateIfNoAttributeAndProjectDoesNotUseNature() {
         $xml_input = new SimpleXMLElement('<project><trackers /></project>');
 
         stub($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->returns(false);
         expect($this->artifact_link_usage_updater)->isProjectAllowedToUseArtifactLinkTypes()->never();
-        expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->never();
+        expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->once();
         expect($this->artifact_link_usage_updater)->forceDeactivationOfArtifactLinkTypes()->never();
 
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
@@ -941,6 +995,51 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
 
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
+
+    public function itShouldDeactivateATypeIfAttributeIsFalse() {
+        $xml_input = new SimpleXMLElement(
+            '<project>
+                <trackers/>
+                <natures>
+                    <nature is_used="0">type_name</nature>
+                </natures>
+            </project>'
+        );
+
+        expect($this->artifact_link_usage_dao)->disableTypeInProject(201, 'type_name')->once();
+
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+    }
+
+    public function itShouldActivateATypeIfAttributeIsTrue() {
+        $xml_input = new SimpleXMLElement(
+            '<project>
+                <trackers/>
+                <natures>
+                    <nature is_used="true">type_name</nature>
+                </natures>
+            </project>'
+        );
+
+        expect($this->artifact_link_usage_dao)->disableTypeInProject(201, 'type_name')->never();
+
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+    }
+
+    public function itShouldActivateATypeIfAttributeIsMissing() {
+        $xml_input = new SimpleXMLElement(
+            '<project>
+                <trackers/>
+                <natures>
+                    <nature>type_name</nature>
+                </natures>
+            </project>'
+        );
+
+        expect($this->artifact_link_usage_dao)->disableTypeInProject(201, 'type_name')->never();
+
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+    }
 }
 
 class TrackerXmlImport_Validator extends TuleapTestCase {
@@ -978,7 +1077,8 @@ class TrackerXmlImport_Validator extends TuleapTestCase {
                 mock('User\XML\Import\IFindUserFromXMLReference'),
                 mock('UGroupManager'),
                 mock('Logger'),
-                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater')
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater'),
+                mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao')
             )
         );
         stub($this->tracker_xml_importer)->createFromXML()->returns(mock('Tracker'));

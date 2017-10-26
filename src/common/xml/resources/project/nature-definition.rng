@@ -3,6 +3,11 @@
   <define name="natures">
     <zeroOrMore>
       <element name="nature">
+        <optional>
+          <attribute name="is_used">
+            <data type="boolean"/>
+          </attribute>
+        </optional>
         <data type="string">
           <param name="pattern">[a-zA-Z0-9_]+</param>
         </data>
