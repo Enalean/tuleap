@@ -20,8 +20,10 @@
 
 namespace Tuleap\Tracker\FormElement;
 
+use Feedback;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 class ArtifactLinkValidator
@@ -34,13 +36,19 @@ class ArtifactLinkValidator
      * @var NaturePresenterFactory
      */
     private $nature_presenter_factory;
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $dao;
 
     public function __construct(
         \Tracker_ArtifactFactory $artifact_factory,
-        NaturePresenterFactory $nature_presenter_factory
+        NaturePresenterFactory $nature_presenter_factory,
+        ArtifactLinksUsageDao $dao
     ) {
         $this->artifact_factory         = $artifact_factory;
         $this->nature_presenter_factory = $nature_presenter_factory;
+        $this->dao                      = $dao;
     }
 
     public function isValid($value, \Tracker_Artifact $artifact, Tracker_FormElement_Field_ArtifactLink $field)
@@ -75,7 +83,7 @@ class ArtifactLinkValidator
             }
         }
 
-        if ($this->areNaturesValid($artifact, $value) === false) {
+        if ($this->areTypesValid($artifact, $value) === false) {
             $is_valid = false;
         }
 
@@ -176,18 +184,37 @@ class ArtifactLinkValidator
      *
      * @return bool
      */
-    private function areNaturesValid(Tracker_Artifact $artifact, array $value)
+    private function areTypesValid(Tracker_Artifact $artifact, array $value)
     {
         if ($artifact->getTracker()->isProjectAllowedToUseNature() === true && isset($value['natures'])) {
-            foreach ($value['natures'] as $nature_shortname) {
+            foreach ($value['natures'] as $artifact_id => $nature_shortname) {
                 $nature = $this->nature_presenter_factory->getFromShortname($nature_shortname);
                 if (! $nature) {
                     $GLOBALS['Response']->addFeedback(
-                        'error',
+                        Feedback::ERROR,
                         $GLOBALS['Language']->getText(
                             'plugin_tracker_common_artifact',
                             'error_artifactlink_nature_missing',
                             array($artifact->getId())
+                        )
+                    );
+
+                    return false;
+                }
+
+                if ($this->dao->isTypeDisabledInProject(
+                    $artifact->getTracker()->getProject()->getID(),
+                    $nature_shortname
+                )) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        sprintf(
+                            dgettext(
+                                'tuleap-tracker',
+                                'The artifact link type "%s" is disabled and cannot be used to link artifact #%s'
+                            ),
+                            $nature_shortname,
+                            $artifact_id
                         )
                     );
 

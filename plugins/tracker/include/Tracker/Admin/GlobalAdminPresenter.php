@@ -75,11 +75,17 @@ class GlobalAdminPresenter
      */
     public $warning_message;
 
+    /**
+     * @var string
+     */
+    public $has_at_least_one_disabled_type;
+
     public function __construct(
         Project $project,
         CSRFSynchronizerToken $csrf_token,
         $are_artifact_link_types_enabled,
-        array $artifact_link_types
+        array $artifact_link_types,
+        $has_at_least_one_disabled_type
     ) {
         $this->title        = dgettext('tuleap-tracker', 'Tracker global admininistration');
         $this->table_title  = dgettext('tuleap-tracker', 'Artifact links types');
@@ -107,7 +113,9 @@ class GlobalAdminPresenter
 
         $this->warning_message = dgettext(
             'tuleap-tracker',
-            'For now, the disabled types are still usable.'
+            'After artifact edition, all the disabled types used will be cleared without removing the existing link.'
         );
+
+        $this->has_at_least_one_disabled_type = $has_at_least_one_disabled_type;
     }
 }

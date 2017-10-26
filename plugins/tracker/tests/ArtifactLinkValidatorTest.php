@@ -89,22 +89,19 @@ class ArtifactLinkValidatorTest extends \TuleapTestCase
         $this->artifact        = anArtifact()->withId(101)->withTracker($this->tracker)->build();
         $this->linked_artifact = anArtifact()->withId(105)->withTracker($this->tracker)->build();
         $this->field           = mock('\Tracker_FormElement_Field_ArtifactLink');
+        $this->dao             = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao');
 
         stub($this->tracker)->getProject()->returns($project);
 
         $this->artifact_link_validator = new ArtifactLinkValidator(
             $this->artifact_factory,
-            $this->nature_presenter_factory
+            $this->nature_presenter_factory,
+            $this->dao
         );
 
         $this->nature_is_child  = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter');
         $this->nature_fixed_in  = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter');
         $this->nature_no_nature = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter');
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
     }
 
     public function itReturnsTrueWhenNoNewValuesAreSent()
@@ -232,5 +229,21 @@ class ArtifactLinkValidatorTest extends \TuleapTestCase
         stub($this->nature_presenter_factory)->getFromShortname('')->returns($this->nature_no_nature);
 
         $this->assertTrue($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
+    }
+
+    public function itReturnsFalseWhenProjectCanUseTypesAndAtLeastOneTypeIsDisabled()
+    {
+        $value = array(
+            'new_values' => '1000',
+            'natures' => array('_is_child', 'fixed_in')
+        );
+
+        stub($this->artifact_factory)->getArtifactById()->returns($this->linked_artifact);
+        stub($this->tracker)->isProjectAllowedToUseNature()->returns(true);
+        stub($this->nature_presenter_factory)->getFromShortname('_is_child')->returns($this->nature_is_child);
+        stub($this->nature_presenter_factory)->getFromShortname('fixed_in')->returns($this->nature_fixed_in);
+        stub($this->dao)->isTypeDisabledInProject(101, 'fixed_in')->returns(true);
+
+        $this->assertFalse($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
     }
 }

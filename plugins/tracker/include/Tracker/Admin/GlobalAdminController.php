@@ -23,14 +23,12 @@ namespace Tuleap\Tracker\Admin;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Hierarchy_Dao;
 use Tracker_IDisplayTrackerLayout;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
@@ -97,12 +95,15 @@ class GlobalAdminController
             $params
         );
 
+        $formatted_types = $this->buildFormattedTypes($project);
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
         $presenter = new GlobalAdminPresenter(
             $project,
             $this->csrf,
             $this->dao->isProjectUsingArtifactLinkTypes($project->getID()),
-            $this->buildFormattedTypes($project)
+            $formatted_types,
+            $this->hasAtLeastOneDisabledType($formatted_types)
         );
 
         $renderer->renderToPage(
@@ -216,6 +217,20 @@ class GlobalAdminController
         }
 
         return $formatted_types;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasAtLeastOneDisabledType(array $formatted_types)
+    {
+        foreach ($formatted_types as $type) {
+            if (! $type['is_used']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

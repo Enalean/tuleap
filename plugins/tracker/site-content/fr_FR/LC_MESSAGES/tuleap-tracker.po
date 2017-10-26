@@ -48,6 +48,11 @@ msgstr "Ajouter un nouveau %s"
 msgid "Add notification"
 msgstr "Ajouter une notification"
 
+msgid ""
+"After artifact edition, all the disabled types used will be cleared without "
+"removing the existing link."
+msgstr "Suite à une mise à jour d'artéfact, les types de lien désactivés seront supprimés sans enlever les liens existants."
+
 msgid "Artifact link types has been disabled."
 msgstr "Les liens entre artéfacts typés ont été désactivés."
 
@@ -85,9 +90,6 @@ msgstr "Éditer"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
-
-msgid "For now, the disabled types are still usable."
-msgstr "Pour le moment, les liens typés désactivés restent utilisables."
 
 #, php-format
 msgid "Group '%s' couldn't be added."
@@ -132,6 +134,14 @@ msgstr "Sauvegarder"
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
 msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."
+
+#, php-format
+msgid ""
+"The artifact link type \"%s\" is disabled and cannot be used to link "
+"artifact #%s"
+msgstr ""
+"Le lien entre artéfacts typé \"%s\" est désactivé et ne peut être utilisé "
+"pour lier l'artéfact #%s."
 
 #, php-format
 msgid "The artifact link type \"%s\" is now disabled"

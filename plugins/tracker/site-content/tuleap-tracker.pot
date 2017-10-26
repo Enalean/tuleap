@@ -32,6 +32,11 @@ msgstr ""
 msgid "Add notification"
 msgstr ""
 
+msgid ""
+"After artifact edition, all the disabled types used will be cleared without "
+"removing the existing link."
+msgstr ""
+
 msgid "Artifact link types has been disabled."
 msgstr ""
 
@@ -65,9 +70,6 @@ msgid "Edit"
 msgstr ""
 
 msgid "Error during parsing expert query"
-msgstr ""
-
-msgid "For now, the disabled types are still usable."
 msgstr ""
 
 #, php-format
@@ -110,6 +112,12 @@ msgstr ""
 
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
+msgstr ""
+
+#, php-format
+msgid ""
+"The artifact link type \"%s\" is disabled and cannot be used to link "
+"artifact #%s"
 msgstr ""
 
 #, php-format
