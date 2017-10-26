@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,27 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'navbar';
-@import 'sidebar';
-@import 'content';
-@import 'feedback';
-@import 'footer';
-@import 'register';
-@import 'keyboard-modal';
-@import 'login';
-@import 'widget';
-@import 'avatar';
-@import 'search';
-@import 'tracker-v3';
-@import 'phpwiki';
-@import 'account-confirmation';
-@import 'admin';
-@import 'project-confirmation';
-@import 'trovecat';
-@import 'user-home';
-@import 'svn';
-@import 'project-admin';
-@import 'labels-box';
-
-@import 'bootstrap-overrides';
-@import 'jscrollpane-overrides';
+.navigation-dropdown-title {
+    margin: 10px 0 0;
+    padding: 20px 20px 10px;
+    border-top: 1px solid $light-grey;
+    color: $medium-grey;
+    line-height: 20px;
+}

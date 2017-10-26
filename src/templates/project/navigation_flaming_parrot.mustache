@@ -12,9 +12,14 @@
                 </a>
                 <ul class="dropdown-menu">
                     {{# menu_items }}
-                        <li>
-                            <a href="{{ html_url }}">{{ label }}</a>
-                        </li>
+                        {{# isMenuTitle }}
+                            <li class="navigation-dropdown-title">{{ title }}</li>
+                        {{/isMenuTitle}}
+                        {{^ isMenuTitle }}
+                            <li>
+                                <a href="{{ html_url }}">{{ label }}</a>
+                            </li>
+                        {{/ isMenuTitle}}
                     {{/ menu_items }}
                 </ul>
             </li>

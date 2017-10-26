@@ -153,7 +153,6 @@ print '<TABLE WIDTH="100%" BORDER="0">';
 $user_helper = new UserHelper();
 
 while ($row_memb = db_fetch_array($res_memb)) {
-
     $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
 
     $edit_settings = '';
@@ -209,9 +208,10 @@ $em->processEvent('project_admin_add_user_form', array('groupId' => $group_id));
 echo '
 <HR NoShade SIZE="1">
 <div align="center">
-<A href="/project/admin/userimport.php?group_id=' . urlencode($group_id) . '">' . $Language->getText(
-        'project_admin_index', 'import_user'
-    ) . '</A>
+<A href="/project/admin/userimport.php?group_id='. urlencode($group_id) . '">' . $Language->getText(
+    'project_admin_index',
+    'import_user'
+) . '</A>
 </div>
 
 </TD></TR>';
@@ -229,60 +229,6 @@ $HTML->box1_top(
     )
 );
 
-
-echo '
-<BR>';
-if ($group->usesForum()) {
-    echo '    <A HREF="/forum/admin/?group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'forum_admin') . '</A><BR>';
-}
-if ($group->usesMail()) {
-    echo '    <A HREF="/mail/admin/?group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'lists_admin') . '</A><BR>';
-}
-if ($group->usesWiki()) {
-    echo '    <A HREF="/wiki/admin/?group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'wiki_admin') . '</A><BR>';
-}
-if ($group->usesNews()) {
-    echo '    <A HREF="/news/admin/?group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'news_admin') . '</A><BR>';
-}
-if ($group->usesCVS()) {
-    echo '    <A HREF="/cvs/?func=admin&group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'cvs_admin') . '</A><BR>';
-}
-if ($group->usesSVN()) {
-    echo '    <A HREF="/svn/admin/?group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'svn_admin') . '</A><BR>';
-}
-if ($group->usesFile()) {
-    echo '    <A HREF="/file/admin/?group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'file_admin') . '</A><BR>';
-}
-if ($group->usesTracker()) {
-    echo '    <A HREF="/tracker/admin/?group_id=' . urlencode($group_id) . '">' .
-        $Language->getText('project_admin_index', 'tracker_admin') . '</A>';
-    $atf = new ArtifactTypeFactory($group);
-    if (! $group || ! is_object($group) || $group->isError()) {
-        exit_error($Language->getText('global', 'error'), 'Could Not Get ArtifactTypeFactory');
-    }
-
-    // Get the artfact type list
-    $at_arr = $atf->getArtifactTypes();
-
-    if (! $at_arr || count($at_arr) < 1) {
-        echo "<br><i>-&nbsp;" . $Language->getText('project_admin_index', 'no_tracker_found') . '</i>';
-    } else {
-        for ($j = 0; $j < count($at_arr); $j++) {
-            echo '<br><i>-&nbsp;
-<a href="/tracker/admin/?atid=' . urlencode($at_arr[$j]->getID()) .
-                '&group_id=' . urlencode($group_id) . '">' .
-                $at_arr[$j]->getName() . ' ' . $Language->getText('project_admin_index', 'admin') . '</a></i>';
-        }
-    }
-
-}
 // {{{ Plugins
 $admin_pages = array();
 $params      = array('project' => &$group, 'admin_pages' => &$admin_pages);

@@ -184,18 +184,11 @@ project_admin_index	p_edit	Information sur le projet&nbsp;: $1
 project_admin_index	login_name	Nom de login&nbsp;:
 project_admin_index	add_user	Ajouter un utilisateur
 project_admin_index	s_admin	Administration
-project_admin_index	forum_admin	Administration des forums
 project_admin_index	bug_admin	Administration du gestionnaire de bugs
 project_admin_index	support_admin	Administration du gestionnaire de demande de support
 project_admin_index	patch_admin	Administration du gestionnaire de corrections
-project_admin_index	lists_admin	Administration des listes de diffusion
 project_admin_index	task_admin	Administration gestionnaire de tâches
 project_admin_index	doc_admin	Administration de la documentation
-project_admin_index	wiki_admin	Administration du wiki
-project_admin_index	news_admin	Administration des annonces
-project_admin_index	cvs_admin	Administration de CVS
-project_admin_index	svn_admin	Administration de Subversion
-project_admin_index	file_admin	Administration du système de publication de fichiers
 project_admin_index	tracker_admin	Administrations des outils de suivi
 project_admin_index	no_tracker_found	Aucun outil de suivi n'est accessible
 project_admin_index	admin	Administration

@@ -7,7 +7,12 @@
                 {{ label }} <i class="fa fa-caret-down"></i>
                 <nav class="tlp-tab-menu">
                     {{# menu_items }}
-                        <a href="{{ html_url }}" class="tlp-tab-menu-item">{{ label }}</a>
+                        {{# isMenuTitle }}
+                            <span class="tlp-tab-menu-title">{{ title }}</span>
+                        {{/ isMenuTitle}}
+                        {{^ isMenuTitle }}
+                            <a href="{{ html_url }}" class="tlp-tab-menu-item">{{ label }}</a>
+                        {{/ isMenuTitle}}
                     {{/ menu_items }}
                 </nav>
             </div>

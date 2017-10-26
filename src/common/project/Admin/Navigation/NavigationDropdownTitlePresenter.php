@@ -1,5 +1,10 @@
+<?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright Enalean (c) 2017. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -17,27 +22,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'navbar';
-@import 'sidebar';
-@import 'content';
-@import 'feedback';
-@import 'footer';
-@import 'register';
-@import 'keyboard-modal';
-@import 'login';
-@import 'widget';
-@import 'avatar';
-@import 'search';
-@import 'tracker-v3';
-@import 'phpwiki';
-@import 'account-confirmation';
-@import 'admin';
-@import 'project-confirmation';
-@import 'trovecat';
-@import 'user-home';
-@import 'svn';
-@import 'project-admin';
-@import 'labels-box';
+namespace Tuleap\project\Admin\Navigation;
 
-@import 'bootstrap-overrides';
-@import 'jscrollpane-overrides';
+class NavigationDropdownTitlePresenter implements NavigationDropdownItemInterface
+{
+    public $title;
+
+    public function __construct($title)
+    {
+        $this->title = $title;
+    }
+
+    public function isMenuTitle()
+    {
+        return true;
+    }
+}

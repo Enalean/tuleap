@@ -212,10 +212,16 @@ msgstr ""
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr ""
 
+msgid "FRS"
+msgstr ""
+
 msgid "Files"
 msgstr ""
 
 msgid "Filled"
+msgstr ""
+
+msgid "Forum"
 msgstr ""
 
 msgid "Forums"
@@ -389,6 +395,9 @@ msgstr ""
 msgid "Public information"
 msgstr ""
 
+msgid "Quick access to service admin"
+msgstr ""
+
 msgid "RSS"
 msgstr ""
 
@@ -417,6 +426,9 @@ msgid "Start by choosing a widget"
 msgstr ""
 
 msgid "Style"
+msgstr ""
+
+msgid "Subversion"
 msgstr ""
 
 #, php-format
