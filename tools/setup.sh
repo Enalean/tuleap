@@ -232,8 +232,10 @@ control_service() {
 }
 
 enable_service() {
-    local service="$1"
-	$CHKCONFIG $service on
+    if [ "$enable_chkconfig" = "true" ]; then
+        local service="$1"
+        $CHKCONFIG $service on
+    fi
 }
 
 dns_check() {
@@ -812,6 +814,8 @@ mysql_user="root"
 rt_passwd=""
 restart_httpd="y"
 error_mode=""
+passwd_file=/root/.tuleap_passwd
+enable_chkconfig="true"
 options_getopt=('auto,' 'disable-auto-passwd,' 'enable-bind-config,'
                 'mysql-host:,' 'mysql-port:,' 'mysql-user:,'
                 'mysql-user-password:,' 'mysql-httpd-host:,'
@@ -820,7 +824,7 @@ options_getopt=('auto,' 'disable-auto-passwd,' 'enable-bind-config,'
                 'enable-subdomains,' 'disable-httpd-restart,'
                 'disable-generate-ssl-certs,' 'mysql-server-package:,'
                 'disable-mysql-configuration,' 'disable-domain-name-check,'
-                'disable-selinux,' 'force')
+                'disable-selinux,' 'force', 'password-file:', 'disable-chkconfig')
 
 options=$(getopt -o h -l $(printf "%s" ${options_getopt[@]}) -- "$@")
 
@@ -848,6 +852,11 @@ do
         MYSQL="$MYSQL -h$mysql_host"
         MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
         shift 1 ;;
+    --password-file)
+        passwd_file="$2"
+        shift 2 ;;
+    --disable-chkconfig)
+        enable_chkconfig="false"; shift 1;;
     --disable-auto-passwd)
         auto_passwd="false"; shift 1 ;;
     --enable-bind-config)
@@ -1058,7 +1067,6 @@ fi
 
 if [ "$auto_passwd" = "true" ]; then
     # Save in /root/.tuleap_passwd
-    passwd_file=/root/.tuleap_passwd
     $RM -f $passwd_file
     touch $passwd_file
     $CHMOD 0600 $passwd_file
@@ -1479,6 +1487,14 @@ if [ "$auto_passwd" = "true" ]; then
     todo "Auto generated passwords (mysql, application, etc) are stored in $passwd_file"
 fi
 
+################### Switch to PHP 5.6 + nginx
+control_service httpd stop
+$INSTALL_DIR/tools/utils/php56/run.php
+control_service httpd start
+enable_service nginx
+control_service nginx start
+enable_service rh-php56-php-fpm
+control_service rh-php56-php-fpm start
 
 ##############################################
 # End of installation

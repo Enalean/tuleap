@@ -13,6 +13,7 @@ mkdir -p /data/lib
 mkdir -p /data/etc/logrotate.d
 mkdir -p /data/etc/ssl/certs/
 mkdir -p /data/etc/pki/tls/private/
+mkdir -p /data/etc/opt/rh/rh-php56
 mkdir -p /data/root && chmod 700 /data/root
 
 pushd . > /dev/null
@@ -20,10 +21,6 @@ cd /var/lib
 mv /var/lib/mysql /data/lib && ln -s /data/lib/mysql mysql
 [ -d /var/lib/gitolite ] && mv /var/lib/gitolite /data/lib && ln -s /data/lib/gitolite gitolite
 popd > /dev/null
-
-# Do not activate services
-sed -i -e 's/\$CHKCONFIG \$service on/: #\$CHKCONFIG \$service on/g' /usr/share/tuleap/tools/setup.sh
-sed -i -e 's/are stored.*/are stored in \/data\/root\/\.tuleap_passwd"/g' /usr/share/tuleap/tools/setup.sh
 
 # Generate self signed certificate for Apache
 cat << EOF | openssl req -new -nodes -keyout /etc/pki/tls/private/localhost.key \
@@ -39,7 +36,13 @@ root@${VIRTUAL_HOST}
 EOF
 
 # Install Tuleap
-/usr/share/tuleap/tools/setup.sh --disable-domain-name-check --sys-default-domain=$VIRTUAL_HOST --sys-org-name=Tuleap --sys-long-org-name=Tuleap
+/usr/share/tuleap/tools/setup.sh \
+    --password-file=/data/root/.tuleap_passwd \
+    --disable-chkconfig \
+    --disable-domain-name-check \
+    --sys-default-domain=$VIRTUAL_HOST \
+    --sys-org-name=Tuleap \
+    --sys-long-org-name=Tuleap
 
 # Setting root password
 root_passwd=$(generate_passwd)
@@ -62,6 +65,8 @@ chmod 600 /var/lib/gitolite/.ssh/authorized_keys
 service mysqld stop
 service httpd stop
 service crond stop
+service nginx stop
+service rh-php56-php-fpm stop
 
 ### Move all generated files to persistant storage ###
 
@@ -78,10 +83,8 @@ mv /etc/libnss-mysql-root.cfg /data/etc
 mv /etc/my.cnf                /data/etc
 mv /etc/nsswitch.conf         /data/etc
 mv /etc/crontab               /data/etc
-mv /etc/passwd                /data/etc
-mv /etc/shadow                /data/etc
-mv /etc/group                 /data/etc
-mv /root/.tuleap_passwd       /data/root
+mv /etc/nginx                 /data/etc
+mv /etc/opt/rh/rh-php56/php-fpm.d /data/etc/opt/rh/rh-php56/
 mv /etc/ssh/ssh_host_*        /data/etc/ssh
 
 # Data
