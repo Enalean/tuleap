@@ -1,3 +1,6 @@
 namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
-natures = element nature { xsd:string { pattern = "[a-zA-Z0-9_]+" } }*
+natures = element nature {
+    attribute is_used { xsd:boolean }?,
+    xsd:string { pattern = "[a-zA-Z0-9_]+" }
+}*

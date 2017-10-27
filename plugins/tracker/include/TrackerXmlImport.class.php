@@ -22,6 +22,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\XML\PHPCast;
 
 class TrackerXmlImport
 {
@@ -91,6 +92,11 @@ class TrackerXmlImport
      */
     private $artifact_links_usage_updater;
 
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $artifact_links_usage_dao;
+
     public function __construct(
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
@@ -107,7 +113,8 @@ class TrackerXmlImport
         User\XML\Import\IFindUserFromXMLReference $user_finder,
         UGroupManager $ugroup_manager,
         Logger $logger,
-        ArtifactLinksUsageUpdater $artifact_links_usage_updater
+        ArtifactLinksUsageUpdater $artifact_links_usage_updater,
+        ArtifactLinksUsageDao $artifact_links_usage_dao
     ) {
         $this->tracker_factory              = $tracker_factory;
         $this->event_manager                = $event_manager;
@@ -125,6 +132,7 @@ class TrackerXmlImport
         $this->ugroup_manager               = $ugroup_manager;
         $this->logger                       = $logger;
         $this->artifact_links_usage_updater = $artifact_links_usage_updater;
+        $this->artifact_links_usage_dao     = $artifact_links_usage_dao;
     }
 
     /**
@@ -139,7 +147,8 @@ class TrackerXmlImport
 
         $logger = $logger === null ? new Log_NoopLogger() : $logger;
 
-        $artifact_links_usage_updater = new ArtifactLinksUsageUpdater(new ArtifactLinksUsageDao());
+        $artifact_links_usage_dao     = new ArtifactLinksUsageDao();
+        $artifact_links_usage_updater = new ArtifactLinksUsageUpdater($artifact_links_usage_dao);
 
         return new TrackerXmlImport(
             $tracker_factory,
@@ -161,7 +170,8 @@ class TrackerXmlImport
             $user_finder,
             new UGroupManager(),
             new WrapperLogger($logger, 'TrackerXMLImport'),
-            $artifact_links_usage_updater
+            $artifact_links_usage_updater,
+            $artifact_links_usage_dao
         );
     }
 
@@ -244,7 +254,19 @@ class TrackerXmlImport
             $artifacts_id_mapping,
             $created_artifacts);
 
-        $this->importHierarchy($xml_input, $created_trackers_mapping);
+        // Deal with artifact link types after changesets import to keep the history of types
+        if ($xml_input->natures) {
+            $this->activateArtifactLinkTypes($project, $xml_input->natures);
+        }
+
+        if ($this->artifact_links_usage_dao->isTypeDisabledInProject(
+            $project->getID(),
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+        )) {
+            $this->logger->warn('Artifact link type _is_child is disabled, skipping the hierarchy');
+        } else {
+            $this->importHierarchy($xml_input, $created_trackers_mapping);
+        }
 
         if (isset($xml_input->trackers->triggers)) {
             $this->trigger_rulesmanager->createFromXML($xml_input->trackers->triggers, $this->xmlFieldsMapping);
@@ -339,7 +361,22 @@ class TrackerXmlImport
                 $this->logger->warn("This project will not be able to use artifact links nature feature.");
             }
         } else {
-            $this->logger->info("No attribute 'use-natures' found.");
+            $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);
+            $this->logger->info("No attribute 'use-natures' found. By default, projects use the typed artifact links");
+        }
+    }
+
+    private function activateArtifactLinkTypes(Project $project, SimpleXMLElement $xml_types)
+    {
+        foreach ($xml_types->nature as $xml_type) {
+            $is_used = ! isset($xml_type['is_used']) || PHPCast::toBoolean($xml_type['is_used']) === true;
+
+            if (! $is_used) {
+                $type_name = (string) $xml_type;
+
+                $this->logger->info("Artifact link type $type_name will be deactivated.");
+                $this->artifact_links_usage_dao->disableTypeInProject($project->getID(), $type_name);
+            }
         }
     }
 
@@ -712,7 +749,8 @@ class TrackerXmlImport
      * @param array $mapper
      * @return array The hierarchy array with new elements added
      */
-    protected function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
+    protected function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper)
+    {
         $xml_parent_id = $this->getXmlTrackerAttribute($xml_tracker, 'parent_id');
 
         if ($xml_parent_id != self::XML_PARENT_ID_EMPTY) {
