@@ -29,6 +29,13 @@ use Luracast\Restler\Explorer;
 use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
 
+if (! headers_sent()) {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Allow-Headers: Accept, Accept-Charset, Authorization, Content-Type, Origin, X-Auth-UserId, X-Auth-Token, X-Client-Uuid');
+    header('Access-Control-Expose-Headers: X-PAGINATION-SIZE, X-PAGINATION-LIMIT-MAX, X-PAGINATION-LIMIT');
+}
+
 try {
     $gate_keeper = new GateKeeper();
     $gate_keeper->assertAccess(UserManager::instance()->getCurrentUser(), HTTPRequest::instance());
