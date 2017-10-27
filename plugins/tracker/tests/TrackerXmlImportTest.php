@@ -20,6 +20,7 @@
 
 require_once 'bootstrap.php';
 
+use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
 
@@ -907,10 +908,11 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         $this->hierarchy_dao               = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
         $this->artifact_link_usage_updater = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater');
         $this->artifact_link_usage_dao     = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao');
+        $this->event_manager               = mock('EventManager');
 
         $this->tracker_xml_importer = new TrackerXmlImport(
             mock('TrackerFactory'),
-            mock('EventManager'),
+            $this->event_manager,
             $this->hierarchy_dao,
             mock('Tracker_CannedResponseFactory'),
             new Tracker_FormElementFactoryForXMLTests(array()),
@@ -1037,6 +1039,24 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         );
 
         expect($this->artifact_link_usage_dao)->disableTypeInProject(201, 'type_name')->never();
+
+        $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
+    }
+
+    public function itThrowsAnEventToCheckIfTypeCanBeDisabled() {
+        $xml_input = new SimpleXMLElement(
+            '<project>
+                <trackers/>
+                <natures>
+                    <nature is_used="0">type_name</nature>
+                    <nature>type2</nature>
+                    <nature is_used="1">type3</nature>
+                </natures>
+            </project>'
+        );
+
+        $event = new XMLImportArtifactLinkTypeCanBeDisabled($this->project, 'type_name');
+        expect($this->event_manager)->processEvent($event)->at(0);
 
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
     }
