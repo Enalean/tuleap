@@ -27,6 +27,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
+use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
@@ -34,6 +35,7 @@ use Tuleap\TestManagement\XMLImport;
 use Tuleap\TestManagement\FirstConfigCreator;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
+use Tuleap\XML\PHPCast;
 
 require_once 'constants.php';
 
@@ -80,6 +82,7 @@ class testmanagementPlugin extends Plugin
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(GetEditableTypesInProject::NAME);
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
+            $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -389,6 +392,22 @@ class testmanagementPlugin extends Plugin
             );
 
             $event->setWarningMessage($message);
+        }
+    }
+
+    public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event)
+    {
+        if ($event->getTypeName() !== NatureCoveredByPresenter::NATURE_COVERED_BY) {
+            return;
+        }
+
+        $event->setTypeIsCheckedByPlugin();
+        $project = $event->getProject();
+
+        if (! $project->usesService($this->getServiceShortname())) {
+            $event->setTypeIsUnusable();
+        } else {
+            $event->setMessage(NatureCoveredByPresenter::NATURE_COVERED_BY . " type is forced because the service testmanagement is used.");
         }
     }
 }
