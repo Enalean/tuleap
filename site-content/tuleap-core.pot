@@ -14,6 +14,17 @@ msgid_plural "%d members"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid ""
+"<p>This feature aims to provide a way to structure projects organizations "
+"from permissions, user groups and control point of view.</p>\n"
+"                <p>As of today, it's only used by Git/ Gerrit for umbrella "
+"projects (if relevant to your platform/ project).</p>\n"
+"                <p><strong>However, setting a hierarchy between projects "
+"might have future impacts (e.g. members of the parent project could possibly "
+"have access to all sub-projects even without explicit permissions granted).</"
+"strong></p>"
+msgstr ""
+
 msgid "A project cannot be its own parent."
 msgstr ""
 
@@ -199,15 +210,6 @@ msgid "Emergency"
 msgstr ""
 
 msgid "Escape from input/textarea, close dropdown or modal"
-msgstr ""
-
-msgid "Failed to create project description."
-msgstr ""
-
-msgid "Failed to delete project description."
-msgstr ""
-
-msgid "Failed to update project description."
 msgstr ""
 
 msgid "Files"

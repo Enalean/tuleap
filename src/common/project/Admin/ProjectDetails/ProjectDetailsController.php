@@ -337,6 +337,9 @@ class ProjectDetailsController
                 $field_value = $description_fields_values[$description_field_id]['value'];
             }
 
+            $translated_field_description = $this->translateFieldProperty($description_field["desc_description"]);
+            $purified_field_description   = Codendi_HTMLPurifier::instance()->purify($translated_field_description, CODENDI_PURIFIER_LIGHT);
+
             $description_fields_representations[] = array(
                 'field_name'                 => "form_" . $description_field["group_desc_id"],
                 'field_value'                => $field_value,
@@ -344,7 +347,7 @@ class ProjectDetailsController
                 'field_description_required' => $description_field["desc_required"],
                 'is_field_line_typed'        => $description_field["desc_type"] === 'line',
                 'is_field_text_typed'        => $description_field["desc_type"] === 'text',
-                'field_description'          => $this->translateFieldProperty($description_field["desc_description"])
+                'purified_field_description' => $purified_field_description
             );
         }
 

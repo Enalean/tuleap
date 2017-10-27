@@ -27,18 +27,18 @@
 }
 
 .project-admin-details-public-info {
+    flex: 0 1 auto;
     width: 100%;
     max-width: 40%;
     margin: 0 $tlp-spacing 0 0;
-    flex: 0 1 auto;
 }
 
 .project-admin-details-right-container {
     display: flex;
-    width: 100%;
-    max-width: 60%;
     flex: 1 1 auto;
     flex-direction: column;
+    width: 100%;
+    max-width: 60%;
 }
 
 .project-admin-details-visibility {
@@ -55,6 +55,10 @@
 
 #project-admin-details-hierarchy-project-select {
     width: 250px;
+}
+
+.tlp-alert-info.project-admin-details-hierarchy-description {
+    margin: $tlp-spacing 0 0;
 }
 
 .project-admin-details-submit {

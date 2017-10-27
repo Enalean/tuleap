@@ -66,6 +66,12 @@ class NavigationPresenterBuilder
             'services',
             $current_pane_shortname
         );
+        $entries['labels'] = new NavigationItemPresenter(
+            _('labels'),
+            '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'labels')),
+            'labels',
+            $current_pane_shortname
+        );
         $entries['references'] = new NavigationItemPresenter(
             _('references'),
             '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'references')),
@@ -116,25 +122,18 @@ class NavigationPresenterBuilder
                 )
             )
         );
-        $entries['labels'] = new NavigationItemPresenter(
-            _('labels'),
-            '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'labels')),
-            'labels',
-            $current_pane_shortname
-        );
 
         $this->presenter = new NavigationPresenter($entries, $project, $current_pane_shortname);
 
-        $this->addTrackerImportEntry($request);
+        $this->addTrackerImportEntry($project);
 
         EventManager::instance()->processEvent($this->presenter);
 
         return $this->presenter;
     }
 
-    private function addTrackerImportEntry(\HTTPRequest $request)
+    private function addTrackerImportEntry(Project $project)
     {
-        $project = $request->getProject();
         $service = $project->getService(Service::TRACKERV3);
 
         if (! $service) {
@@ -145,7 +144,13 @@ class NavigationPresenterBuilder
             self::DATA_ENTRY_SHORTNAME,
             new NavigationDropdownItemPresenter(
                 _('Trackers v3 import'),
-                '/tracker/import_admin.php?' . http_build_query(array('group_id' => $project->getID(), 'mode' => 'admin', 'pane' => self::DATA_ENTRY_SHORTNAME))
+                '/tracker/import_admin.php?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID(),
+                        'mode' => 'admin',
+                        'pane' => self::DATA_ENTRY_SHORTNAME
+                    )
+                )
             )
         );
     }

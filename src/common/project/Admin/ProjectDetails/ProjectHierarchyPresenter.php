@@ -20,6 +20,8 @@
 
 namespace Tuleap\Project\Admin\ProjectDetails;
 
+use Codendi_HTMLPurifier;
+
 class ProjectHierarchyPresenter
 {
     public $parent_project_info;
@@ -31,6 +33,7 @@ class ProjectHierarchyPresenter
     public $empty_children_label;
     public $project_name_label;
     public $project_hierarchy_title;
+    public $purified_project_hierarchy_desc;
 
     public function __construct(
         array $parent_project_info,
@@ -46,5 +49,14 @@ class ProjectHierarchyPresenter
         $this->add_parent_button       = _('Add parent project');
         $this->update_parent_button    = _('Update parent project');
         $this->project_hierarchy_title = _('Project hierarchy');
+
+        $this->purified_project_hierarchy_desc = Codendi_HTMLPurifier::instance()->purify(
+            _(
+                "<p>This feature aims to provide a way to structure projects organizations from permissions, user groups and control point of view.</p>
+                <p>As of today, it's only used by Git/ Gerrit for umbrella projects (if relevant to your platform/ project).</p>
+                <p><strong>However, setting a hierarchy between projects might have future impacts (e.g. members of the parent project could possibly have access to all sub-projects even without explicit permissions granted).</strong></p>"
+            ),
+            CODENDI_PURIFIER_LIGHT
+        );
     }
 }
