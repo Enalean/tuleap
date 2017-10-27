@@ -30,6 +30,7 @@ use Tuleap\ArtifactsFolders\Folder\Router;
 use Tuleap\ArtifactsFolders\Nature\NatureInFolderPresenter;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
+use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
@@ -67,6 +68,7 @@ class ArtifactsFoldersPlugin extends Plugin
             $this->addHook(Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT);
             $this->addHook(GetEditableTypesInProject::NAME);
             $this->addHook(ArtifactLinkTypeCanBeUnused::NAME);
+            $this->addHook(XMLImportArtifactLinkTypeCanBeDisabled::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -377,6 +379,21 @@ class ArtifactsFoldersPlugin extends Plugin
 
         if ($type->shortname === NatureInFolderPresenter::NATURE_IN_FOLDER) {
             $event->setTypeIsCheckedByPlugin();
+        }
+    }
+
+    public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event)
+    {
+        if ($event->getTypeName() !== NatureInFolderPresenter::NATURE_IN_FOLDER) {
+            return;
+        }
+
+        $event->setTypeIsCheckedByPlugin();
+
+        if (! $this->getFolderUsageRetriever()->doesProjectHaveAFolderTracker($event->getProject())) {
+            $event->setTypeIsUnusable();
+        } else {
+            $event->setMessage(NatureInFolderPresenter::NATURE_IN_FOLDER . " type is forced because a tracker folder is defined.");
         }
     }
 }

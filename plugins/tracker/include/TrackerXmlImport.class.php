@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\PHPCast;
@@ -252,12 +253,11 @@ class TrackerXmlImport
             $extraction_path,
             $xml_mapping,
             $artifacts_id_mapping,
-            $created_artifacts);
+            $created_artifacts
+        );
 
         // Deal with artifact link types after changesets import to keep the history of types
-        if ($xml_input->natures) {
-            $this->activateArtifactLinkTypes($project, $xml_input->natures);
-        }
+        $this->disableArtifactLinkTypes($xml_input, $project);
 
         if ($this->artifact_links_usage_dao->isTypeDisabledInProject(
             $project->getID(),
@@ -299,6 +299,40 @@ class TrackerXmlImport
         );
 
         return $created_trackers_mapping;
+    }
+
+    private function disableArtifactLinkTypes(SimpleXMLElement $xml_input, Project $project)
+    {
+        if (! $xml_input->natures) {
+            return;
+        }
+
+        foreach ($xml_input->natures->nature as $xml_type) {
+            $is_used = ! isset($xml_type['is_used']) || PHPCast::toBoolean($xml_type['is_used']) === true;
+
+            if (! $is_used) {
+                $type_name = (string) $xml_type;
+
+                $event = new XMLImportArtifactLinkTypeCanBeDisabled($project, $type_name);
+                $this->event_manager->processEvent($event);
+
+                if ($this->typeCanBeDisabled($event)) {
+                    $this->logger->info("Artifact link type $type_name will be deactivated.");
+                    $this->artifact_links_usage_dao->disableTypeInProject($project->getID(), $type_name);
+                } else {
+                    $this->logger->warn($event->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function typeCanBeDisabled(XMLImportArtifactLinkTypeCanBeDisabled $event)
+    {
+        return ! $event->doesPluginCheckedTheType() ||
+            ($event->doesPluginCheckedTheType() && $event->canTypeBeUnused());
     }
 
     /**
@@ -343,7 +377,8 @@ class TrackerXmlImport
         return $errors;
     }
 
-    private function activateArtlinkV2(Project $project, SimpleXMLElement $xml_element) {
+    private function activateArtlinkV2(Project $project, SimpleXMLElement $xml_element)
+    {
         $use_natures = $xml_element{'use-natures'};
         if($use_natures == 'true') {
             if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
@@ -363,20 +398,6 @@ class TrackerXmlImport
         } else {
             $this->artifact_links_usage_updater->forceUsageOfArtifactLinkTypes($project);
             $this->logger->info("No attribute 'use-natures' found. By default, projects use the typed artifact links");
-        }
-    }
-
-    private function activateArtifactLinkTypes(Project $project, SimpleXMLElement $xml_types)
-    {
-        foreach ($xml_types->nature as $xml_type) {
-            $is_used = ! isset($xml_type['is_used']) || PHPCast::toBoolean($xml_type['is_used']) === true;
-
-            if (! $is_used) {
-                $type_name = (string) $xml_type;
-
-                $this->logger->info("Artifact link type $type_name will be deactivated.");
-                $this->artifact_links_usage_dao->disableTypeInProject($project->getID(), $type_name);
-            }
         }
     }
 
