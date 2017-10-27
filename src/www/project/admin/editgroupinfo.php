@@ -32,8 +32,8 @@ use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsRouter;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
-use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 $group_id = $request->get('group_id');

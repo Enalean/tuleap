@@ -40,13 +40,14 @@ use ProjectHistoryDao;
 use ProjectManager;
 use Rule_ProjectFullName;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
-use UGroupBinding;
 use Tuleap\TroveCat\TroveCatLinkDao;
+use UGroupBinding;
 
 class ProjectDetailsController
 {
@@ -152,9 +153,14 @@ class ProjectDetailsController
             $project_trove_categories = $this->buildProjectTroveCategories($project);
         }
 
+        $project_can_use_gerrit = new HierarchyDisplayer($project);
+        $this->event_manager->processEvent($project_can_use_gerrit);
+        $is_hierarchy_shown  = $project_can_use_gerrit->canProjectDisplayHierarchy();
+
         $hierarchy_presenter = new ProjectHierarchyPresenter(
             $parent_project_info,
-            $purified_project_children
+            $purified_project_children,
+            $is_hierarchy_shown
         );
 
         $global_visibility_presenter = $this->project_visibility_presenter_builder->build($request);

@@ -24,6 +24,7 @@ use EventManager;
 use Git_RemoteServer_GerritServerFactory;
 use GitRepository;
 use Git_RemoteServer_GerritServer;
+use Project;
 
 class GerritCanMigrateChecker
 {
@@ -47,7 +48,7 @@ class GerritCanMigrateChecker
     /**
      * @return bool
      */
-    public function canMigrate(GitRepository $repository)
+    public function canMigrate(Project $project)
     {
         $platform_can_use_gerrit = false;
 
@@ -58,7 +59,7 @@ class GerritCanMigrateChecker
             )
         );
 
-        $gerrit_servers = $this->gerrit_server_factory->getAvailableServersForProject($repository->getProject());
+        $gerrit_servers = $this->gerrit_server_factory->getAvailableServersForProject($project);
 
         return $platform_can_use_gerrit && count($gerrit_servers) > 0;
     }

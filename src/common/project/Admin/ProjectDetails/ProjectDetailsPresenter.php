@@ -76,7 +76,7 @@ class ProjectDetailsPresenter
         $this->group_name                          = $group_info['group_name'];
         $this->project_short_description           = $group_info['short_description'];
 
-        $this->project_type                      = $this->getLocalizedType($project->getType());
+        $this->project_type = $this->getLocalizedType($project->getType());
 
         $this->public_information_label       = _('Public information');
         $this->project_name_label             = _('Project name');

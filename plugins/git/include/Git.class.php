@@ -1004,7 +1004,7 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
-                if (! $this->gerrit_can_migrate_checker->canMigrate($repository)) {
+                if (! $this->gerrit_can_migrate_checker->canMigrate($repository->getProject())) {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                     break;
                 }

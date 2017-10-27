@@ -93,6 +93,7 @@ use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\HeartbeatsEntryCollection;
 
 require_once 'constants.php';
@@ -236,6 +237,7 @@ class GitPlugin extends Plugin {
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::GET_GLYPH, 'getGlyph');
         $this->addHook(HeartbeatsEntryCollection::NAME);
+        $this->addHook(HierarchyDisplayer::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2370,6 +2372,15 @@ class GitPlugin extends Plugin {
             UserHelper::instance()
         );
         $collector->collect($collection);
+    }
+
+    public function projectCanDisplayHierarchy(HierarchyDisplayer $hierarchy_displayer)
+    {
+        $shaker = new GerritCanMigrateChecker(EventManager::instance(), $this->getGerritServerFactory());
+
+        if ($shaker->canMigrate($hierarchy_displayer->getProject())) {
+            $hierarchy_displayer->projectCanDisplayHierarchy();
+        }
     }
 
     /**
