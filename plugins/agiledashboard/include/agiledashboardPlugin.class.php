@@ -33,6 +33,8 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Request\CurrentPage;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -45,6 +47,7 @@ require_once 'constants.php';
 class AgileDashboardPlugin extends Plugin {
 
     const PLUGIN_NAME = 'agiledashboard';
+    const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;
@@ -55,6 +58,7 @@ class AgileDashboardPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        bindTextDomain('tuleap-agiledashboard', AGILEDASHBOARD_BASE_DIR . '/../site-content');
     }
 
     public function getHooksAndCallbacks() {
@@ -109,6 +113,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook('widget_instance');
             $this->addHook('widgets');
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
+            $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -131,7 +136,7 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function getServiceShortname() {
-        return 'plugin_agiledashboard';
+        return self::PLUGIN_SHORTNAME;
     }
 
     public function service_icon($params) {
@@ -1132,5 +1137,29 @@ class AgileDashboardPlugin extends Plugin {
                 $item_ids[] = $child->getId();
             }
         }
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
+    {
+        $project = $quick_links_collector->getProject();
+
+        if (! $project->usesService(self::PLUGIN_SHORTNAME)) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                dgettext(
+                    "tuleap-agiledashboard",
+                    "Agile Dashboard"
+                ),
+                $this->getPluginPath() . '/?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID(),
+                        'action'   => 'admin'
+                    )
+                )
+            )
+        );
     }
 }

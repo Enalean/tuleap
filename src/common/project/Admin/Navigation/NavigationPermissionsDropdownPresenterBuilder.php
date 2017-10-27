@@ -24,6 +24,7 @@
 
 namespace Tuleap\project\Admin\Navigation;
 
+use EventManager;
 use Project;
 
 class NavigationPermissionsDropdownPresenterBuilder
@@ -49,7 +50,7 @@ class NavigationPermissionsDropdownPresenterBuilder
             )
         );
 
-        $services_quicklinks = $this->buildCoreServicesQuickLinks($project);
+        $services_quicklinks = $this->buildServicesQuickLinks($project);
 
         $all_permission_dropdown_items = array_merge($permission_links, $services_quicklinks);
 
@@ -63,7 +64,7 @@ class NavigationPermissionsDropdownPresenterBuilder
         return $presenter;
     }
 
-    private function buildCoreServicesQuickLinks(Project $project)
+    private function buildServicesQuickLinks(Project $project)
     {
         $core_services_quicklinks = array();
 
@@ -132,6 +133,13 @@ class NavigationPermissionsDropdownPresenterBuilder
                 ))
             );
         }
-        return $core_services_quicklinks;
+
+        $quick_links_collector = new NavigationDropdownQuickLinksCollector($project);
+
+        EventManager::instance()->processEvent($quick_links_collector);
+
+        $plugins_quick_links = $quick_links_collector->getQuickLinksList();
+
+        return array_merge($core_services_quicklinks, $plugins_quick_links);
     }
 }

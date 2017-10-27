@@ -49,6 +49,9 @@ msgstr ""
 msgid "Notification to update doesn't exist."
 msgstr ""
 
+msgid "SVN"
+msgstr ""
+
 msgid "Save"
 msgstr ""
 

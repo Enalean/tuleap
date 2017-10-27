@@ -1,3 +1,6 @@
+msgid "Document Manager"
+msgstr ""
+
 msgid "Notified people"
 msgstr ""
 

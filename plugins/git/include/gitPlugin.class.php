@@ -94,6 +94,8 @@ use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\HierarchyDisplayer;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\HeartbeatsEntryCollection;
 
 require_once 'constants.php';
@@ -238,6 +240,7 @@ class GitPlugin extends Plugin {
         $this->addHook(Event::GET_GLYPH, 'getGlyph');
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(HierarchyDisplayer::NAME);
+        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2389,5 +2392,26 @@ class GitPlugin extends Plugin {
     private function getCITokenManager()
     {
         return new CITokenManager(new CITokenDao());
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
+    {
+        $project = $quick_links_collector->getProject();
+
+        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                dgettext('tuleap-git', 'Git'),
+                $this->getPluginPath() . '/?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID(),
+                        'action'   => 'admin-git-admins'
+                    )
+                )
+            )
+        );
     }
 }
