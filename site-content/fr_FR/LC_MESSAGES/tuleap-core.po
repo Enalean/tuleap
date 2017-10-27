@@ -30,6 +30,27 @@ msgid_plural "%d members"
 msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
+msgid ""
+"<p>This feature aims to provide a way to structure projects organizations "
+"from permissions, user groups and control point of view.</p>\n"
+"                <p>As of today, it's only used by Git/ Gerrit for umbrella "
+"projects (if relevant to your platform/ project).</p>\n"
+"                <p><strong>However, setting a hierarchy between projects "
+"might have future impacts (e.g. members of the parent project could possibly "
+"have access to all sub-projects even without explicit permissions granted).</"
+"strong></p>"
+msgstr ""
+"<p>Cette fonctionnalité permet d'organiser vos projects les uns par rapport "
+"aux autres en termes de permissions, groupes d'utilisateurs et de contrôle.</"
+"p>\n"
+"            <p>Cependant, à l'heure actuelle, elle n'est exploitée que par "
+"Git/Gerrit pour les projets \"parapluies\" (si ces services sont activés/"
+"disponibles sur votre plate-forme).</p>\n"
+"            <p><strong>Veuillez noter que la définition d'une hierarchie "
+"pourra avoir un impact futur sur l'organisation des enfants (ex. les "
+"administrateurs d'un projet parent pourraient avoir automatiquement accès à "
+"l'administration de tous les sous-projets).</strong></p>"
+
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
@@ -224,15 +245,6 @@ msgstr "Urgent"
 
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
-
-msgid "Failed to create project description."
-msgstr "Échec de la création de la description du projet."
-
-msgid "Failed to delete project description."
-msgstr "Échec de la suppression de la description du projet."
-
-msgid "Failed to update project description."
-msgstr "Échec de la mise à jour de la description du projet."
 
 msgid "Files"
 msgstr "Fichiers"

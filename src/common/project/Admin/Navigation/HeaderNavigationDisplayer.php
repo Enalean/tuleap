@@ -45,7 +45,6 @@ class HeaderNavigationDisplayer
         $params                 = array('title' => $title . ' - ' . $project->getUnconvertedPublicName());
         $params['toptab']       = 'admin';
         $params['group']        = $project->getID();
-        $params['main_classes'] = array('tlp-framed-vertically');
 
         site_project_header($params);
 

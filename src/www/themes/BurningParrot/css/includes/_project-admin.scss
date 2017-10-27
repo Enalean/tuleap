@@ -19,3 +19,7 @@
 
 @import 'project-admin/labels';
 @import 'project-admin/details';
+
+.project-administration-title {
+    padding: $tlp-spacing $tlp-spacing 0;
+}
