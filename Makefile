@@ -50,7 +50,7 @@ doc: ## Build CLI documentation
 autoload:
 	@echo "Generate core"
 	@(cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
-	@for path in `ls src/www/themes | egrep -v "^Tuleap|^common|^FlamingParrot"`; do \
+	@for path in `ls src/www/themes | egrep -v "^Tuleap|^common|^FlamingParrot|^local"`; do \
 	     echo "Generate theme $$path"; \
 	     (cd "src/www/themes/$$path/"; phpab -q --compat -o autoload.php .) \
         done;
