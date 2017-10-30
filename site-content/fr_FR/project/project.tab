@@ -183,7 +183,6 @@ project_admin_index	p_admin	Administration du projet&nbsp;: $1
 project_admin_index	p_edit	Information sur le projet&nbsp;: $1
 project_admin_index	login_name	Nom de login&nbsp;:
 project_admin_index	add_user	Ajouter un utilisateur
-project_admin_index	s_admin	Administration
 project_admin_index	bug_admin	Administration du gestionnaire de bugs
 project_admin_index	support_admin	Administration du gestionnaire de demande de support
 project_admin_index	patch_admin	Administration du gestionnaire de corrections

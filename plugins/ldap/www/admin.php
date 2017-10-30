@@ -45,7 +45,7 @@ session_require(array('group' => $groupId, 'admin_flags' => 'A'));
 $pluginManager = PluginManager::instance();
 $ldapPlugin    = $pluginManager->getPluginByName('ldap');
 if (!$ldapPlugin || !$pluginManager->isPluginAvailable($ldapPlugin)) {
-    $GLOBALS['Response']->redirect('/project/admin/administration.php?group_id=' . urlencode($groupId) . '&pane=administration');
+    $GLOBALS['Response']->redirect('/project/admin/members.php?group_id=' . urlencode($groupId) . '&pane=members');
 }
 
 // Check if user have choosen the preserve members option.
@@ -74,20 +74,20 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
         // Remove link between Project Members and LDAP Group
         //
         $ldapGroupManager->unbindFromBindLdap();
-        $GLOBALS['Response']->redirect('/project/admin/administration.php?group_id=' . urlencode($groupId) . '&pane=administration');
+        $GLOBALS['Response']->redirect('/project/admin/members.php?group_id=' . urlencode($groupId) . '&pane=members');
 
     } elseif($request->existAndNonEmpty('update')) {
         //
         // Perform Project Members <-> LDAP Group synchro
         //
         $ldapGroupManager->bindWithLdap($bindOption, $synchro);
-        $GLOBALS['Response']->redirect('/project/admin/administration.php?group_id=' . urlencode($groupId) . '&pane=administration');
+        $GLOBALS['Response']->redirect('/project/admin/members.php?group_id=' . urlencode($groupId) . '&pane=members');
 
     } elseif($request->exist('cancel')) {
         //
         // Cancel operations
         //
-        $GLOBALS['Response']->redirect('/project/admin/administration.php?group_id=' . urlencode($groupId) . '&pane=administration');
+        $GLOBALS['Response']->redirect('/project/admin/members.php?group_id=' . urlencode($groupId) . '&pane=members');
 
     } else {
         //
@@ -156,9 +156,9 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
             project_admin_footer(array());
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'invalid_ldap_group_name'));
-            $GLOBALS['Response']->redirect('/project/admin/administration.php?group_id=' . urlencode($groupId) . '&pane=administration');
+            $GLOBALS['Response']->redirect('/project/admin/members.php?group_id=' . urlencode($groupId) . '&pane=members');
         }
     }
 } else {
-    $GLOBALS['Response']->redirect('/project/admin/administration.php?group_id=' . urlencode($groupId) . '&pane=administration');
+    $GLOBALS['Response']->redirect('/project/admin/members.php?group_id=' . urlencode($groupId) . '&pane=members');
 }

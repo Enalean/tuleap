@@ -106,6 +106,14 @@ if ($request->isPost() && $request->valid($vFunc)) {
             $ugroup_binding->reloadUgroupBindingInProject($group);
             break;
     }
+    $GLOBALS['Response']->redirect(
+        '/project/admin/members.php?' . http_build_query(
+            array(
+                'group_id' => $group_id,
+                'pane'     => 'members'
+            )
+        )
+    );
 }
 
 project_admin_header(
@@ -116,17 +124,7 @@ project_admin_header(
     )
 );
 
-/*
-Show top box listing trove and other info
-*/
-
-echo '<TABLE width=100% border=0>
-<TR valign=top>';
-
 $hp = Codendi_HTMLPurifier::instance();
-
-echo '<TD width=50%>';
-
 
 $HTML->box1_top(
     $Language->getText('project_admin_editugroup', 'proj_members') . "&nbsp;" .
@@ -208,7 +206,7 @@ $em->processEvent('project_admin_add_user_form', array('groupId' => $group_id));
 echo '
 <HR NoShade SIZE="1">
 <div align="center">
-<A href="/project/admin/userimport.php?group_id='. urlencode($group_id) . '">' . $Language->getText(
+<A href="/project/admin/userimport.php?group_id='. urlencode($group_id) . '&pane=members">' . $Language->getText(
     'project_admin_index',
     'import_user'
 ) . '</A>
@@ -217,36 +215,5 @@ echo '
 </TD></TR>';
 
 echo $HTML->box1_bottom();
-
-echo '<TD width=50%>';
-
-/*
-Links to Services administration pages
-*/
-$HTML->box1_top(
-    $Language->getText('project_admin_index', 's_admin') . '&nbsp;' . help_button(
-        'project-admin.html#services-administration'
-    )
-);
-
-// {{{ Plugins
-$admin_pages = array();
-$params      = array('project' => &$group, 'admin_pages' => &$admin_pages);
-
-$em->processEvent('service_admin_pages', $params);
-
-foreach ($admin_pages as $admin_page) {
-    print '<br />';
-    print $admin_page;
-}
-
-// }}}
-
-$HTML->box1_bottom();
-
-echo'
-    </TD>
-    </TR>
-    </TABLE>';
 
 project_admin_footer(array());
