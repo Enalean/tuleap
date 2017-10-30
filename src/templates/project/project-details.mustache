@@ -5,6 +5,9 @@
         id="project_info_form"
         class="project-admin-details-form"
     >
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <div class="project-admin-details-container">
             <section class="tlp-pane project-admin-details-public-info">
                 <div class="tlp-pane-container">
@@ -112,7 +115,6 @@
                 {{/ project_global_visibility_presenter }}
             </div>
         </div>
-        <input type="hidden" name="action" value="update"/>
         <input type="hidden" name="pane" value="details"/>
         <button
             type="submit"

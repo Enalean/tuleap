@@ -27,6 +27,7 @@ namespace Tuleap\Project\Admin\ProjectDetails;
 require_once('www/project/admin/project_admin_utils.php');
 
 use Codendi_HTMLPurifier;
+use CSRFSynchronizerToken;
 use DataAccessException;
 use EventManager;
 use Feedback;
@@ -105,6 +106,11 @@ class ProjectDetailsController
      */
     private $project_visibility_presenter_builder;
 
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf_token;
+
     public function __construct(
         DescriptionFieldsFactory $description_fields_factory,
         Project $current_project,
@@ -116,7 +122,8 @@ class ProjectDetailsController
         ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
         ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
         UGroupBinding $ugroup_binding,
-        TroveCatLinkDao $trove_cat_link_dao
+        TroveCatLinkDao $trove_cat_link_dao,
+        CSRFSynchronizerToken $csrf_token
     ) {
         $this->description_fields_factory           = $description_fields_factory;
         $this->current_project                      = $current_project;
@@ -129,6 +136,7 @@ class ProjectDetailsController
         $this->ugroup_binding                       = $ugroup_binding;
         $this->project_visibility_presenter_builder = $project_visibility_presenter_builder;
         $this->trove_cat_link_dao                   = $trove_cat_link_dao;
+        $this->csrf_token                           = $csrf_token;
     }
 
     public function display(HTTPRequest $request)
@@ -175,13 +183,15 @@ class ProjectDetailsController
                 $hierarchy_presenter,
                 $global_visibility_presenter,
                 $are_trove_categories_used,
-                $project_trove_categories
+                $project_trove_categories,
+                $this->csrf_token
             )
         );
     }
 
     public function update(HTTPRequest $request)
     {
+        $this->csrf_token->check();
         if (! $this->validateFormData($request)) {
             return;
         }
@@ -191,6 +201,8 @@ class ProjectDetailsController
             $this->updateParentProject($request);
             $this->updateGroup($request);
             $this->validateChanges($request);
+            $this->updateProjectVisibility($request->getCurrentUser(), $request->getProject(), $request);
+            $this->updateTruncatedMails($request->getCurrentUser(), $request->getProject(), $request);
         } catch (DataAccessException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Update failed"));
         } catch (CannotUpdateProjectHierarchyException $e) {
@@ -440,17 +452,6 @@ class ProjectDetailsController
         return $result;
     }
 
-    public function updateVisibility(HTTPRequest $request)
-    {
-        $project      = $request->getProject();
-        $current_user = $request->getCurrentUser();
-
-        $this->updateProjectVisibility($current_user, $project, $request);
-        $this->updateTruncatedMails($current_user, $project, $request);
-
-        $this->ugroup_binding->reloadUgroupBindingInProject($project);
-    }
-
     private function updateTruncatedMails(PFUser $user, Project $project, HTTPRequest $request)
     {
         if ($this->project_visibility_configuration->canUserConfigureTruncatedMail($user)) {
@@ -468,6 +469,7 @@ class ProjectDetailsController
                 if ($request->get('term_of_service')) {
                     $this->project_manager->setAccess($project, $request->get('project_visibility'));
                     $this->project_manager->clear($project->getID());
+                    $this->ugroup_binding->reloadUgroupBindingInProject($project);
                 } else {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, _("Please accept term of service"));
                 }

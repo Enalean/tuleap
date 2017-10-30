@@ -62,6 +62,8 @@ $project_visibility_presenter_builder = new ProjectVisibilityPresenterBuilder(
     $service_truncated_mails_retriever
 );
 
+$csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
+
 $project_details_controller = new ProjectDetailsController(
     $fields_factory,
     $currentproject,
@@ -73,7 +75,8 @@ $project_details_controller = new ProjectDetailsController(
     $project_visibility_configuration,
     $service_truncated_mails_retriever,
     $ugroup_binding,
-    $trove_cat_link_dao
+    $trove_cat_link_dao,
+    $csrf_token
 );
 
 $project_details_router = new ProjectDetailsRouter(

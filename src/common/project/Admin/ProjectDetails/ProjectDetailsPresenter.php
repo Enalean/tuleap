@@ -24,6 +24,7 @@
 
 namespace Tuleap\Project\Admin\ProjectDetails;
 
+use CSRFSynchronizerToken;
 use Project;
 use TemplateSingleton;
 use Tuleap\Project\Admin\ProjectGlobalVisibilityPresenter;
@@ -57,6 +58,10 @@ class ProjectDetailsPresenter
     public $empty_project_trove_categories;
     public $project_global_visibility_presenter;
     public $project_name_info;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
     public function __construct(
         Project $project,
@@ -65,7 +70,8 @@ class ProjectDetailsPresenter
         ProjectHierarchyPresenter $project_hierarchy_presenter,
         ProjectGlobalVisibilityPresenter $project_global_visibility_presenter,
         $are_project_categories_used,
-        array $project_trove_categories
+        array $project_trove_categories,
+        CSRFSynchronizerToken $csrf_token
     ) {
         $this->group_id                            = $project->getID();
         $this->group_info                          = $group_info;
@@ -76,6 +82,7 @@ class ProjectDetailsPresenter
         $this->project_trove_categories            = $project_trove_categories;
         $this->group_name                          = $group_info['group_name'];
         $this->project_short_description           = $group_info['short_description'];
+        $this->csrf_token                          = $csrf_token;
 
         $this->project_type = $this->getLocalizedType($project->getType());
 
