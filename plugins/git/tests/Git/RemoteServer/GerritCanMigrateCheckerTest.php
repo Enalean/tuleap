@@ -26,9 +26,9 @@ require_once dirname(__FILE__).'/../../bootstrap.php';
 
 class GerritCanMigrateCheckerTest extends TuleapTestCase
 {
-
     private $can_migrate_checker;
     private $gerrit_server_factory;
+    private $project;
 
     public function setUp() {
         parent::setUp();
@@ -39,7 +39,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
             $this->gerrit_server_factory
         );
 
-        $this->repository = aGitRepository()->withId(1)->build();
+        $this->project    = aMockProject()->withId(101)->build();
     }
 
     public function tearDown()
@@ -60,7 +60,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
         $gerrit_servers = array();
         stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
 
-        $this->assertFalse($this->can_migrate_checker->canMigrate($this->repository));
+        $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
     }
 
     public function testCanMigrateReturnsFalseIfPlatformCannotUseGerritAndGerritServersSet()
@@ -73,10 +73,10 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
             false
         );
 
-        $gerrit_servers = array($this->repository);
+        $gerrit_servers = array(mock('Git_RemoteServer_GerritServer'));
         stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
 
-        $this->assertFalse($this->can_migrate_checker->canMigrate($this->repository));
+        $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
     }
 
     public function testCanMigrateReturnsFalseIfPlatformCanUseGerritAndGerritServersNotSet()
@@ -92,7 +92,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
         $gerrit_servers = array();
         stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
 
-        $this->assertFalse($this->can_migrate_checker->canMigrate($this->repository));
+        $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
     }
 
     public function testCanMigrateReturnsTrueIfPlatformCanUseGerritAndGerritServersSet()
@@ -108,7 +108,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
         $gerrit_servers = array('IAmAServer');
         stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
 
-        $this->assertTrue($this->can_migrate_checker->canMigrate($this->repository));
+        $this->assertTrue($this->can_migrate_checker->canMigrate($this->project));
     }
 }
 

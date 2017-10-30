@@ -102,7 +102,9 @@
                 </section>
 
                 {{# project_hierarchy_presenter }}
-                    {{> project-hierarchy }}
+                    {{# is_hierarchy_shown }}
+                        {{> project-hierarchy }}
+                    {{/is_hierarchy_shown}}
                 {{/ project_hierarchy_presenter }}
 
                 {{# project_global_visibility_presenter }}

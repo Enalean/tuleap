@@ -34,13 +34,16 @@ class ProjectHierarchyPresenter
     public $project_name_label;
     public $project_hierarchy_title;
     public $purified_project_hierarchy_desc;
+    public $is_hierarchy_shown;
 
     public function __construct(
         array $parent_project_info,
-        $purified_project_children
+        $purified_project_children,
+        $is_hierarchy_shown
     ) {
         $this->parent_project_info       = $parent_project_info;
         $this->purified_project_children = $purified_project_children;
+        $this->is_hierarchy_shown        = $is_hierarchy_shown;
 
         $this->project_name_label      = _('Project name');
         $this->empty_children_label    = _('No children projects');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -106,6 +106,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
 
     protected $repo_id  = 999;
     protected $group_id = 101;
+    protected $repository;
 
     public function setUp() {
         parent::setUp();
@@ -117,6 +118,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
         $this->template_factory = mock('Git_Driver_Gerrit_Template_TemplateFactory');
         $this->git_permissions_manager = mock('GitPermissionsManager');
+        $this->repository = aGitRepository()->withProject(mock('Project'))->build();
 
         stub($this->template_factory)->getTemplatesAvailableForRepository()->returns(array());
 
@@ -200,11 +202,11 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         return $git;
     }
 
-    protected function assertItIsForbiddenForNonProjectAdmins() {
+    protected function assertItIsForbiddenForNonProjectAdmins($factory) {
         stub($this->user_manager)->getCurrentUser()->returns($this->user);
         $request = aRequest()->with('repo_id', $this->repo_id)->build();
 
-        $git = $this->getGit($request, mock('GitRepositoryFactory'));
+        $git = $this->getGit($request, $factory);
 
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
@@ -213,14 +215,11 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $git->request();
     }
 
-    protected function assertItNeedsAValidRepoId() {
+    protected function assertItNeedsAValidRepoId($factory) {
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
         $request     = new HTTPRequest();
         $repo_id     = 999;
         $request->set('repo_id', $repo_id);
-
-        // not necessary, but we specify it to make it clear why we don't want he action to be called
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(null);
 
         $git = $this->getGit($request, $factory);
 
@@ -247,11 +246,15 @@ class Git_DisconnectFromGerritRouteTest extends Git_RouteBaseTestCase {
     }
 
     public function itIsForbiddenForNonProjectAdmins() {
-        $this->assertItIsForbiddenForNonProjectAdmins();
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(null);
+
+        $this->assertItIsForbiddenForNonProjectAdmins($factory);
     }
 
     public function itNeedsAValidRepoId() {
-        $this->assertItNeedsAValidRepoId();
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(null);
+
+        $this->assertItNeedsAValidRepoId($factory);
     }
 
     protected function getGit($request, $factory) {
@@ -261,14 +264,25 @@ class Git_DisconnectFromGerritRouteTest extends Git_RouteBaseTestCase {
     }
 }
 
-class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
-
-    public function setUp() {
+class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase
+{
+    public function setUp()
+    {
         parent::setUp();
+        ForgeConfig::store();
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
+
+        $this->factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns($this->repository);
     }
 
-    public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
+    public function tearDown()
+    {
+        ForgeConfig::restore();
+        parent::tearDown();
+    }
+
+    public function itDispatchesTo_migrateToGerrit_withRepoManagementView()
+    {
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
         $request            = new HTTPRequest();
         $repo_id            = 999;
@@ -279,25 +293,24 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         $request->set('remote_server_id', $server_id);
         $request->set('gerrit_template_id', $gerrit_template_id);
 
-        $repo    = mock('GitRepository');
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns($repo);
-        $git     = $this->getGit($request, $factory);
+        $git     = $this->getGit($request, $this->factory);
 
-        expect($git)->addAction('migrateToGerrit', array($repo, $server_id, $gerrit_template_id, $this->admin))->at(0);
+        expect($git)->addAction('migrateToGerrit', array($this->repository, $server_id, $gerrit_template_id, $this->admin))->at(0);
         expect($git)->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', '*')->at(1);
 
         $git->request();
     }
 
     public function itIsForbiddenForNonProjectAdmins() {
-        $this->assertItIsForbiddenForNonProjectAdmins();
+        $this->assertItIsForbiddenForNonProjectAdmins($this->factory);
     }
 
     public function itNeedsAValidRepoId() {
-        $this->assertItNeedsAValidRepoId();
+        $this->assertItNeedsAValidRepoId($this->factory);
     }
 
-    public function itNeedsAValidServerId() {
+    public function itNeedsAValidServerId()
+    {
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
         $request     = new HTTPRequest();
         $repo_id     = 999;
@@ -305,10 +318,7 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         $not_valid   = 'a_string';
         $request->set('remote_server_id', $not_valid);
 
-        // not necessary, but we specify it to make it clear why we don't want he action to be called
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(mock('GitRepository'));
-
-        $git = $this->getGit($request, $factory);
+        $git = $this->getGit($request, $this->factory);
 
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
@@ -318,25 +328,25 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         $git->request();
     }
 
-    public function itForbidsGerritMigrationIfTuleapIsNotConnectedToLDAP() {
+    public function itForbidsGerritMigrationIfTuleapIsNotConnectedToLDAP()
+    {
         ForgeConfig::set('sys_auth_type', 'not_ldap');
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
         $request     = new HTTPRequest();
         $repo_id     = 999;
         $server_id   = 111;
         $request->set('repo_id', $repo_id);
         $request->set('remote_server_id', $server_id);
-        $git = $this->getGit($request, $factory);
+        $git = $this->getGit($request, $this->factory);
         $git->expectNever('addAction');
         $git->expectOnce('redirect', array('/plugins/git/?group_id='. $this->group_id));
 
         $git->request();
     }
 
-    public function itAllowsGerritMigrationIfTuleapIsConnectedToLDAP() {
+    public function itAllowsGerritMigrationIfTuleapIsConnectedToLDAP()
+    {
         ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         stub($this->user_manager)->getCurrentUser()->returns($this->admin);
 
         $template_id      = 3;
@@ -350,7 +360,7 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         $request->set('repo_id', $repo_id);
         $request->set('remote_server_id', $server_id);
         $request->set('gerrit_template_id', $template_id);
-        $git = $this->getGit($request, $factory, $template_factory);
+        $git = $this->getGit($request, $this->factory, $template_factory);
         $git->expectAtLeastOnce('addAction');
         $git->expectNever('redirect');
 

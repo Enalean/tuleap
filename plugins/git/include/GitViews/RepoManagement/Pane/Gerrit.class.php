@@ -79,7 +79,7 @@ class Gerrit extends Pane
      */
     public function canBeDisplayed()
     {
-        return $this->gerrit_can_migrate_checker->canMigrate($this->repository);
+        return $this->gerrit_can_migrate_checker->canMigrate($this->repository->getProject());
     }
 
     /**
