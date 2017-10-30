@@ -31,11 +31,11 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\RealInvalidSearchableCollectorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
@@ -81,7 +81,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      */
     private $parser;
     /**
-     * @var InvalidSearchablesCollectorVisitor
+     * @var InvalidComparisonCollectorVisitor
      */
     private $collector;
     /**
@@ -135,7 +135,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $this->updated_at          = $updated_at;
 
         $this->parser    = new Parser();
-        $this->collector = new InvalidSearchablesCollectorVisitor(
+        $this->collector = new InvalidComparisonCollectorVisitor(
             new InvalidFields\EqualComparisonVisitor(),
             new InvalidFields\NotEqualComparisonVisitor(),
             new InvalidFields\LesserThanComparisonVisitor(),
@@ -154,7 +154,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             new InvalidMetadata\BetweenComparisonChecker(),
             new InvalidMetadata\InComparisonChecker(),
             new InvalidMetadata\NotInComparisonChecker(),
-            new RealInvalidSearchableCollectorVisitor($this->getFormElementFactory())
+            new InvalidSearchableCollectorVisitor($this->getFormElementFactory())
         );
         $this->query_builder  = new QueryBuilderVisitor(
             new QueryBuilder\EqualFieldComparisonVisitor(),

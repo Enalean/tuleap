@@ -27,7 +27,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\InvalidMetadataForComparisonException;
 
-class RealInvalidSearchableCollectorVisitor implements Visitor
+class InvalidSearchableCollectorVisitor implements Visitor
 {
     const SUPPORTED_NAME = '@comments';
 
@@ -43,7 +43,7 @@ class RealInvalidSearchableCollectorVisitor implements Visitor
 
     public function visitField(
         Field $searchable_field,
-        RealInvalidSearchableCollectorParameters $parameters
+        InvalidSearchableCollectorParameters $parameters
     ) {
         $field = $this->form_element_factory->getUsedFormElementFieldByNameForUser(
             $parameters->getInvalidSearchablesCollectorParameters()->getTracker()->getId(),
@@ -70,7 +70,7 @@ class RealInvalidSearchableCollectorVisitor implements Visitor
 
     public function visitMetadata(
         Metadata $metadata,
-        RealInvalidSearchableCollectorParameters $parameters
+        InvalidSearchableCollectorParameters $parameters
     ) {
         if ($metadata->getName() !== self::SUPPORTED_NAME) {
             $parameters->getInvalidSearchablesCollectorParameters()->getInvalidSearchablesCollection()->addNonexistentSearchable(
