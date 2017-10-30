@@ -26,13 +26,21 @@ use Service;
 
 class NavigationPresenterBuilder
 {
-    const DATA_ENTRY_SHORTNAME        = 'data';
-    const PERMISSIONS_ENTRY_SHORTNAME = 'permissions';
+    const DATA_ENTRY_SHORTNAME = 'data';
 
     /**
      * @var NavigationPresenter
      */
     private $presenter;
+    /**
+     * @var NavigationPermissionsDropdownPresenterBuilder
+     */
+    private $permission_builder;
+
+    public function __construct(NavigationPermissionsDropdownPresenterBuilder $permission_builder)
+    {
+        $this->permission_builder = $permission_builder;
+    }
 
     public function build(Project $project, \HTTPRequest $request)
     {
@@ -60,6 +68,9 @@ class NavigationPresenterBuilder
             'groups',
             $current_pane_shortname
         );
+
+        $entries[NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME] = $this->permission_builder->build($project, $current_pane_shortname);
+
         $entries['services'] = new NavigationItemPresenter(
             _('services'),
             '/project/admin/servicebar.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'services')),
@@ -77,25 +88,6 @@ class NavigationPresenterBuilder
             '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'references')),
             'references',
             $current_pane_shortname
-        );
-        $entries[self::PERMISSIONS_ENTRY_SHORTNAME] = new NavigationDropdownPresenter(
-            _('permissions'),
-            self::PERMISSIONS_ENTRY_SHORTNAME,
-            $current_pane_shortname,
-            array(
-                new NavigationItemPresenter(
-                    _('User Permissions'),
-                    '/project/admin/userperms.php?' . http_build_query(array('group_id' => $project_id, 'pane' => self::PERMISSIONS_ENTRY_SHORTNAME)),
-                    '',
-                    $current_pane_shortname
-                ),
-                new NavigationItemPresenter(
-                    _('Permission Request'),
-                    '/project/admin/permission_request.php?' . http_build_query(array('group_id' => $project_id, 'pane' => self::PERMISSIONS_ENTRY_SHORTNAME)),
-                    '',
-                    $current_pane_shortname
-                )
-            )
         );
         $entries['categories'] = new NavigationItemPresenter(
             _('categories'),

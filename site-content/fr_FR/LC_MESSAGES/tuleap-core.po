@@ -246,11 +246,17 @@ msgstr "Urgent"
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
 
+msgid "FRS"
+msgstr "FRS"
+
 msgid "Files"
 msgstr "Fichiers"
 
 msgid "Filled"
 msgstr "Rempli"
+
+msgid "Forum"
+msgstr "Forums"
 
 msgid "Forums"
 msgstr "Forums"
@@ -423,6 +429,9 @@ msgstr "Projets dans la catégorie selectionnée"
 msgid "Public information"
 msgstr "Informations publiques"
 
+msgid "Quick access to service admin"
+msgstr "Accès rapide à l'admin des services"
+
 msgid "RSS"
 msgstr "RSS"
 
@@ -452,6 +461,9 @@ msgstr "Commencez par choisir un widget"
 
 msgid "Style"
 msgstr "Style"
+
+msgid "Subversion"
+msgstr "Subversion"
 
 #, php-format
 msgid "The dashboard \"%s\" already exists."

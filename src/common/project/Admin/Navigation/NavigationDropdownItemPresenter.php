@@ -20,7 +20,7 @@
 
 namespace Tuleap\Project\Admin\Navigation;
 
-class NavigationDropdownItemPresenter
+class NavigationDropdownItemPresenter implements NavigationDropdownItemInterface
 {
     public $label;
     public $html_url;
@@ -29,5 +29,10 @@ class NavigationDropdownItemPresenter
     {
         $this->label     = $label;
         $this->html_url  = $html_url;
+    }
+
+    public function isMenuTitle()
+    {
+        return false;
     }
 }

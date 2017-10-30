@@ -52,7 +52,9 @@ class HeaderNavigationDisplayer
 
         $request = HTTPRequest::instance();
 
-        $builder  = new NavigationPresenterBuilder();
+        $builder  = new NavigationPresenterBuilder(
+            new NavigationPermissionsDropdownPresenterBuilder()
+        );
         $renderer = \TemplateRendererFactory::build()->getRenderer($template_path);
 
         $navigation_presenter = $builder->build($project, $request);
