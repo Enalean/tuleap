@@ -30,7 +30,7 @@
     flex: 0 1 auto;
     width: 100%;
     max-width: 40%;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-spacing $tlp-spacing 0;
 }
 
 .project-admin-details-right-container {
@@ -62,7 +62,7 @@
 }
 
 .project-admin-details-submit {
-    margin: $tlp-spacing auto;
+    margin: $tlp-spacing auto $tlp-double-spacing;
 }
 
 .project-admin-details-info-access {
@@ -87,4 +87,18 @@
 
 #term-of-service-usage {
     display: none;
+}
+
+@media screen and (max-width: 1200px) {
+    .project-admin-details-container {
+        flex-direction: column;
+    }
+
+    .project-admin-details-public-info {
+        max-width: 100%;
+    }
+
+    .project-admin-details-right-container {
+        max-width: 100%;
+    }
 }
