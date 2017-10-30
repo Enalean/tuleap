@@ -20,20 +20,20 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use GitDao;
+use GitRepository;
+use GitRepositoryFactory;
+use Luracast\Restler\RestException;
+use ProjectManager;
+use ReferenceManager;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\PullRequest\Authorization\AccessControlVerifier;
 use Tuleap\PullRequest\Dao as PullRequestDao;
+use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
 use Tuleap\PullRequest\Factory as PullRequestFactory;
 use Tuleap\PullRequest\Logger;
-use Tuleap\PullRequest\Exception\MalformedQueryParameterException;
-use Luracast\Restler\RestException;
-use GitRepositoryFactory;
-use GitRepository;
-use ProjectManager;
 use UserManager;
-use GitDao;
-use ReferenceManager;
 
 class RepositoryResource
 {
@@ -97,13 +97,17 @@ class RepositoryResource
             $repository_src  = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
             $repository_dest = $this->git_repository_factory->getRepositoryById($pull_request->getRepoDestId());
 
-            $pull_request_representation = new PullRequestMinimalRepresentation();
-            $pull_request_representation->buildMinimal(
-                $pull_request,
-                $repository_src,
-                $repository_dest
-            );
-            $collection[] = $pull_request_representation;
+            if ($repository_src && $repository_dest) {
+                $pull_request_representation = new PullRequestMinimalRepresentation();
+                $pull_request_representation->buildMinimal(
+                    $pull_request,
+                    $repository_src,
+                    $repository_dest
+                );
+                $collection[] = $pull_request_representation;
+            } else {
+                $this->logger->debug("Repository source or destination not found for pullrequest " . $pull_request->getId());
+            }
         }
 
         $representation = new RepositoryPullRequestRepresentation();
