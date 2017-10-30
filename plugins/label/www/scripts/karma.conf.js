@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,8 @@
  */
 
 /* eslint-disable */
-var webpack_config = require('./webpack.config.js');
-var path           = require('path');
+const webpack_config = require('./webpack.config.js');
+const path           = require('path');
 
 // Karma configuration
 module.exports = function(config) {
@@ -34,7 +34,6 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'tlp-mock.spec.js',
             'project-labeled-items/src/app.spec.js'
         ],
 

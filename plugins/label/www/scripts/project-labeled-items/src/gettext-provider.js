@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,18 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                  from 'vue';
-import LabeledItemsList     from './LabeledItemsList.vue';
-import { gettext_provider } from './gettext-provider.js';
+import Gettext             from 'node-gettext';
+import french_translations from '../po/fr.po';
 
-const widgets       = document.getElementsByClassName("labeled-items-widget");
-const RootComponent = Vue.extend(LabeledItemsList);
+const gettext_provider = new Gettext();
+gettext_provider.addTranslations('fr_FR', 'agiledashboard', french_translations);
+gettext_provider.setTextDomain('agiledashboard');
 
-for (const widget of widgets) {
-    const locale = widget.dataset.locale;
-    gettext_provider.setLocale(locale);
-
-    new RootComponent({
-        propsData: { ...widget.dataset }
-    }).$mount(widget);
-}
+export { gettext_provider };

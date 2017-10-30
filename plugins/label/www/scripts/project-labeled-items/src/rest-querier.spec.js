@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,33 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import tlp from 'tlp';
-import { getLabeledItems } from './rest-querier.js';
+import { tlp, mockFetchSuccess } from 'tlp-mocks';
+import { getLabeledItems }       from './rest-querier.js';
 
 describe('getLabeledItems', () => {
     const project_id = 101;
     const labels_id  = [3, 4];
-    let get;
 
-    beforeEach(function() {
-        get = spyOn(tlp, 'get');
+    beforeEach(() => {
+        tlp.get.calls.reset();
     });
 
     it('Returns the items', async () => {
-        get.and.returnValue(Promise.resolve({
-            headers: {
-                get: function() {
-                    /** 'X-PAGINATION-SIZE' */
-                    return 10;
-                }
-            },
-            json: function() {
-                return Promise.resolve({
-                    labeled_items: [{ title: "Le title" }],
-                    are_there_items_user_cannot_see: false
-                })
-            }
-        }));
+        const headers = {
+            /** 'X-PAGINATION-SIZE' */
+            get: () => 10
+        };
+        const return_json = {
+            labeled_items: [{ title: "Le title" }],
+            are_there_items_user_cannot_see: false
+        };
+        mockFetchSuccess(tlp.get, { headers, return_json });
 
         const { labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
 
@@ -51,20 +45,15 @@ describe('getLabeledItems', () => {
     });
 
     it('Returns the are_there_items_user_cannot_see flag', async () => {
-        get.and.returnValue(Promise.resolve({
-            headers: {
-                get: function() {
-                    /** 'X-PAGINATION-SIZE' */
-                    return 10;
-                }
-            },
-            json: function() {
-                return Promise.resolve({
-                    labeled_items: [{ title: "Le title" }],
-                    are_there_items_user_cannot_see: false
-                })
-            }
-        }));
+        const headers = {
+            /** 'X-PAGINATION-SIZE' */
+            get: () => 10
+        };
+        const return_json = {
+            labeled_items: [{ title: "Le title" }],
+            are_there_items_user_cannot_see: false
+        };
+        mockFetchSuccess(tlp.get, { headers, return_json });
 
         const { are_there_items_user_cannot_see } = await getLabeledItems(project_id, labels_id, 0, 1);
 
@@ -72,20 +61,15 @@ describe('getLabeledItems', () => {
     });
 
     it('Sets has_more to true if there are still elements to fetch', async () => {
-        get.and.returnValue(Promise.resolve({
-            headers: {
-                get: function() {
-                    /** 'X-PAGINATION-SIZE' */
-                    return 10;
-                }
-            },
-            json: function() {
-                return Promise.resolve({
-                    labeled_items: [{ title: "Le title" }],
-                    are_there_items_user_cannot_see: false
-                })
-            }
-        }));
+        const headers = {
+            /** 'X-PAGINATION-SIZE' */
+            get: () => 10
+        };
+        const return_json = {
+            labeled_items: [{ title: "Le title" }],
+            are_there_items_user_cannot_see: false
+        };
+        mockFetchSuccess(tlp.get, { headers, return_json });
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 0, 1);
 
@@ -93,20 +77,15 @@ describe('getLabeledItems', () => {
     });
 
     it('Sets has_more to false if there are no more elements to fetch', async () => {
-        get.and.returnValue(Promise.resolve({
-            headers: {
-                get: function() {
-                    /** 'X-PAGINATION-SIZE' */
-                    return 10;
-                }
-            },
-            json: function() {
-                return Promise.resolve({
-                    labeled_items: [{ title: "Le title" }],
-                    are_there_items_user_cannot_see: false
-                })
-            }
-        }));
+        const headers = {
+            /** 'X-PAGINATION-SIZE' */
+            get: () => 10
+        };
+        const return_json = {
+            labeled_items: [{ title: "Le title" }],
+            are_there_items_user_cannot_see: false
+        };
+        mockFetchSuccess(tlp.get, { headers, return_json });
 
         const { has_more } = await getLabeledItems(project_id, labels_id, 9, 1);
 
@@ -114,20 +93,15 @@ describe('getLabeledItems', () => {
     });
 
     it('Returns the offset so that the caller update its offset in case of recursive calls', async () => {
-        get.and.returnValue(Promise.resolve({
-            headers: {
-                get: function() {
-                    /** 'X-PAGINATION-SIZE' */
-                    return 10;
-                }
-            },
-            json: function() {
-                return Promise.resolve({
-                    labeled_items: [{ title: "Le title" }],
-                    are_there_items_user_cannot_see: false
-                })
-            }
-        }));
+        const headers = {
+            /** 'X-PAGINATION-SIZE' */
+            get: () => 10
+        };
+        const return_json = {
+            labeled_items: [{ title: "Le title" }],
+            are_there_items_user_cannot_see: false
+        };
+        mockFetchSuccess(tlp.get, { headers, return_json });
 
         const { offset } = await getLabeledItems(project_id, labels_id, 9, 1);
 
@@ -135,55 +109,43 @@ describe('getLabeledItems', () => {
     });
 
     it('Fetches items recursively until it finds at least one readable', async () => {
-        get.and.returnValues(
+        tlp.get.and.returnValues(
             Promise.resolve({
                 headers: {
-                    get: function() {
-                        /** 'X-PAGINATION-SIZE' */
-                        return 10;
-                    }
+                    /** 'X-PAGINATION-SIZE' */
+                    get: () => 10
                 },
-                json: function() {
-                    return Promise.resolve({
-                        labeled_items: [],
-                        are_there_items_user_cannot_see: true
-                    })
-                }
+                json: () => Promise.resolve({
+                    labeled_items: [],
+                    are_there_items_user_cannot_see: true
+                })
             }),
             Promise.resolve({
                 headers: {
-                    get: function() {
-                        /** 'X-PAGINATION-SIZE' */
-                        return 10;
-                    }
+                    /** 'X-PAGINATION-SIZE' */
+                    get: () => 10
                 },
-                json: function() {
-                    return Promise.resolve({
-                        labeled_items: [],
-                        are_there_items_user_cannot_see: true
-                    })
-                }
+                json: () => Promise.resolve({
+                    labeled_items: [],
+                    are_there_items_user_cannot_see: true
+                })
             }),
             Promise.resolve({
                 headers: {
-                    get: function() {
-                        /** 'X-PAGINATION-SIZE' */
-                        return 10;
-                    }
+                    /** 'X-PAGINATION-SIZE' */
+                    get: () => 10
                 },
-                json: function() {
-                    return Promise.resolve({
-                        labeled_items: [{ title: "Le title" }],
-                        are_there_items_user_cannot_see: false
-                    })
-                }
+                json: () => Promise.resolve({
+                    labeled_items: [{ title: "Le title" }],
+                    are_there_items_user_cannot_see: false
+                })
             })
         );
 
         const { offset, labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
 
-        expect(get.calls.count()).toEqual(3);
-        expect(get.calls.argsFor(0)).toEqual(
+        expect(tlp.get.calls.count()).toEqual(3);
+        expect(tlp.get.calls.argsFor(0)).toEqual(
             [
                 '/api/projects/' + project_id + '/labeled_items',
                 {
@@ -195,7 +157,7 @@ describe('getLabeledItems', () => {
                 }
             ]
         );
-        expect(get.calls.argsFor(1)).toEqual(
+        expect(tlp.get.calls.argsFor(1)).toEqual(
             [
                 '/api/projects/' + project_id + '/labeled_items',
                 {
@@ -207,7 +169,7 @@ describe('getLabeledItems', () => {
                 }
             ]
         );
-        expect(get.calls.argsFor(2)).toEqual(
+        expect(tlp.get.calls.argsFor(2)).toEqual(
             [
                 '/api/projects/' + project_id + '/labeled_items',
                 {
