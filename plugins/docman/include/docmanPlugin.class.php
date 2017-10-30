@@ -76,7 +76,6 @@ class DocmanPlugin extends Plugin
         $this->addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->addHook(GetPublicAreas::NAME);
-        $this->addHook('service_admin_pages',               'service_admin_pages',               false);
         $this->addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         $this->addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
         $this->addHook(Event::SERVICE_IS_USED);
@@ -305,14 +304,6 @@ class DocmanPlugin extends Plugin
                 $GLOBALS['Language']->getText('plugin_docman', 'title') .
                 '</a>'
             );
-        }
-    }
-    function service_admin_pages($params) {
-        if ($params['project']->usesService($this->getServiceShortname())) {
-            $params['admin_pages'][] = '<a href="/plugins/docman/?action=admin&amp;group_id='. $params['project']->getId() .'">' .
-                $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '.
-                $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .
-                '</a>';
         }
     }
     function installNewDocman($params) {

@@ -284,6 +284,9 @@ msgstr ""
 msgid "Mediawiki"
 msgstr ""
 
+msgid "Members"
+msgstr ""
+
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr ""
 
@@ -611,9 +614,6 @@ msgid "Your history is empty"
 msgstr ""
 
 msgid "Your platform does not allow restricted users."
-msgstr ""
-
-msgid "administration"
 msgstr ""
 
 msgid "categories"
