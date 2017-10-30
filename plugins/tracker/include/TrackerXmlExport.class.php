@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,9 @@
  */
 
 use Tuleap\Project\XML\Export\ArchiveInterface;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
 class TrackerXmlExport
 {
@@ -49,8 +51,13 @@ class TrackerXmlExport
     /** @var EventManager */
     private $event_manager;
 
-    /** @var  NatureDao */
-    private $nature_dao;
+    /** @var  NaturePresenterFactory */
+    private $nature_presenter_factory;
+
+    /**
+     * @var ArtifactLinksUsageDao
+     */
+    private $artifact_links_usage_dao;
 
     public function __construct(
         TrackerFactory $tracker_factory,
@@ -59,19 +66,21 @@ class TrackerXmlExport
         Tracker_Artifact_XMLExport $artifact_xml_export,
         UserXMLExporter $user_xml_exporter,
         EventManager $event_manager,
-        NatureDao $nature_dao
+        NaturePresenterFactory $nature_presenter_factory,
+        ArtifactLinksUsageDao $artifact_links_usage_dao
     ) {
-        $this->tracker_factory         = $tracker_factory;
-        $this->trigger_rules_manager   = $trigger_rules_manager;
-        $this->rng_validator           = $rng_validator;
-        $this->artifact_xml_export     = $artifact_xml_export;
-        $this->user_xml_exporter       = $user_xml_exporter;
-        $this->event_manager           = $event_manager;
-        $this->nature_dao              = $nature_dao;
+        $this->tracker_factory          = $tracker_factory;
+        $this->trigger_rules_manager    = $trigger_rules_manager;
+        $this->rng_validator            = $rng_validator;
+        $this->artifact_xml_export      = $artifact_xml_export;
+        $this->user_xml_exporter        = $user_xml_exporter;
+        $this->event_manager            = $event_manager;
+        $this->nature_presenter_factory = $nature_presenter_factory;
+        $this->artifact_links_usage_dao = $artifact_links_usage_dao;
     }
 
     public function exportToXmlFull(
-        $group_id,
+        Project $project,
         SimpleXMLElement $xml_content,
         PFUser $user,
         ArchiveInterface $archive
@@ -81,11 +90,11 @@ class TrackerXmlExport
 
         $xml_trackers = $xml_content->addChild('trackers');
 
-        $this->addUsedNature($xml_content, $group_id);
-        foreach ($this->tracker_factory->getTrackersByGroupId($group_id) as $tracker) {
+        $this->addUsedNature($xml_content, $project);
+        foreach ($this->tracker_factory->getTrackersByGroupId($project->getID()) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[] = $tracker;
-                $artifacts = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping, $group_id);
+                $artifacts = $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
                 $this->artifact_xml_export->export($tracker, $artifacts, $user, $archive);
             }
         }
@@ -93,7 +102,7 @@ class TrackerXmlExport
         $params = array(
             'user'        => $user,
             'xml_content' => &$xml_content,
-            'group_id'    => $group_id
+            'group_id'    => $project->getID()
         );
         $this->event_manager->processEvent(TRACKER_EVENT_EXPORT_FULL_XML, $params);
 
@@ -101,15 +110,21 @@ class TrackerXmlExport
         $this->validateTrackerExport($xml_trackers);
     }
 
-    private function addUsedNature(SimpleXMLElement $xml, $project_id)
+    private function addUsedNature(SimpleXMLElement $xml, Project $project)
     {
-        $natures      = $xml->addChild('natures');
-        $used_natures = $this->nature_dao->searchAllUsedNatureByProject($project_id);
+        $natures    = $xml->addChild('natures');
+        $used_types = $this->nature_presenter_factory->getAllTypesEditableInProject($project);
 
-        foreach ($used_natures as $nature) {
-            if ($nature['nature']) {
-                $natures->addChild('nature', $nature['nature']);
-            }
+        foreach ($used_types as $type) {
+            $this->addTypeChild($natures, $type, $project->getID());
+        }
+    }
+
+    private function addTypeChild(SimpleXMLElement $natures, NaturePresenter $type, $project_id)
+    {
+        $type_child = $natures->addChild('nature', $type->shortname);
+        if ($this->artifact_links_usage_dao->isTypeDisabledInProject($project_id, $type->shortname)) {
+            $type_child->addAttribute('is_used', 0);
         }
     }
 
@@ -127,7 +142,7 @@ class TrackerXmlExport
         foreach ($this->tracker_factory->getTrackersByGroupId($group_id) as $tracker) {
             if ($tracker->isActive()) {
                 $exported_trackers[] = $tracker;
-                $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping, $group_id);
+                $this->exportTracker($xml_trackers, $tracker, $xml_field_mapping);
             }
         }
 
@@ -135,7 +150,7 @@ class TrackerXmlExport
         $this->validateTrackerExport($xml_trackers);
     }
 
-    private function exportTracker(SimpleXMLElement $xml_trackers, Tracker $tracker, &$xml_field_mapping, $project_id)
+    private function exportTracker(SimpleXMLElement $xml_trackers, Tracker $tracker, &$xml_field_mapping)
     {
         $child = null;
 
