@@ -248,10 +248,35 @@ legend {
     border-bottom-color: $navbar-color;
 }
 
-.nav > li.dropdown.open.active > a:hover, .nav > li.dropdown.open.active > a:focus {
-    border-color: transparent;
-    background-color: transparent;
-    color: $navbar-color;
+.nav > li.dropdown.open {
+    &.active {
+        a:hover,
+        a:focus {
+            border-color: transparent;
+            background-color: transparent;
+            color: $navbar-color;
+        }
+    }
+
+    > .dropdown-menu {
+        font-size: 14px;
+        font-weight: normal;
+        letter-spacing: normal;
+        text-transform: none;
+
+        a {
+            padding: 10px 20px;
+            color: $navbar-color;
+            line-height: 14px;
+
+            &:hover,
+            &:focus {
+                border-color: transparent;
+                background: #f3f3f3;
+                color: $navbar-color;
+            }
+        }
+    }
 }
 
 .tabs-left > .nav-tabs {
