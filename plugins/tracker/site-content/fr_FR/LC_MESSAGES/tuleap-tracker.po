@@ -51,7 +51,9 @@ msgstr "Ajouter une notification"
 msgid ""
 "After artifact edition, all the disabled types used will be cleared without "
 "removing the existing link."
-msgstr "Suite à une mise à jour d'artéfact, les types de lien désactivés seront supprimés sans enlever les liens existants."
+msgstr ""
+"Suite à une mise à jour d'artéfact, les types de lien désactivés seront "
+"supprimés sans enlever les liens existants."
 
 msgid "Artifact link types has been disabled."
 msgstr "Les liens entre artéfacts typés ont été désactivés."
@@ -130,6 +132,27 @@ msgstr "Id du rendu"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+#, php-format
+msgid "The @comment metadata cannot be compared to MYSELF()."
+msgstr "Le champ @comment '%s' ne peut pas être comparé à MYSELF()."
+
+#, php-format
+msgid "The @comment metadata cannot be compared to NOW()."
+msgstr "Le champ @comment '%s' ne peut pas être comparé à NOW()."
+
+#, php-format
+msgid "The @comment metadata cannot be compared to a date."
+msgstr "Le champ @comment '%s' ne peut pas être comparé à une date."
+
+#, php-format
+msgid "The @comment metadata cannot be compared to the float value '%s'."
+msgstr ""
+"Le champ @comment '%s' ne peut pas être comparé à la valeur flottante '%s'."
+
+#, php-format
+msgid "The @comment metadata cannot be compared to the int value '%s'."
+msgstr "Le champ @comment '%s' ne peut pas être comparé à la chaîne '%s'."
 
 #, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
