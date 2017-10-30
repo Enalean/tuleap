@@ -402,6 +402,9 @@ msgstr "Hierarchie de projets"
 msgid "Project name"
 msgstr "Nom du projet"
 
+msgid "Project name shouldn't exceed 40 characters."
+msgstr "Le nom du projet ne doit pas dépasser 40 caractères."
+
 msgid "Project name..."
 msgstr "Nom du projet..."
 
