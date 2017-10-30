@@ -71,7 +71,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
      * @var Tracker_FormElementFactory
      */
     private $formelement_factory;
-    /** @var InvalidSearchablesCollectorVisitor */
+    /** @var InvalidComparisonCollectorVisitor */
     private $collector;
     private $user;
     private $parameters;
@@ -89,13 +89,13 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
         $this->user                = aUser()->build();
 
         $this->invalid_searchables_collection = new InvalidSearchablesCollection();
-        $this->parameters                     = new InvalidSearchablesCollectorParameters(
+        $this->parameters                     = new InvalidComparisonCollectorParameters(
             $this->user,
             $this->tracker,
             $this->invalid_searchables_collection
         );
 
-        $this->collector = new InvalidSearchablesCollectorVisitor(
+        $this->collector = new InvalidComparisonCollectorVisitor(
             new EqualComparisonVisitor(),
             new NotEqualComparisonVisitor(),
             new LesserThanComparisonVisitor(),
@@ -114,7 +114,7 @@ class InvalidSearchablesCollectorVisitorTest extends TuleapTestCase
             new BetweenComparisonChecker(),
             new InComparisonChecker(),
             new NotInComparisonChecker(),
-            new RealInvalidSearchableCollectorVisitor($this->formelement_factory)
+            new InvalidSearchableCollectorVisitor($this->formelement_factory)
         );
     }
 

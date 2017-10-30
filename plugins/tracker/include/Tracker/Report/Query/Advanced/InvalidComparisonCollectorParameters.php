@@ -23,7 +23,7 @@ use PFUser;
 use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
-class InvalidSearchablesCollectorParameters implements VisitorParameters
+class InvalidComparisonCollectorParameters implements VisitorParameters
 {
     /**
      * @var PFUser

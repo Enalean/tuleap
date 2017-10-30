@@ -24,7 +24,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\IProvideTheInvalidFieldCheckerForAComparison;
 
-class RealInvalidSearchableCollectorParameters implements VisitorParameters
+class InvalidSearchableCollectorParameters implements VisitorParameters
 {
     /**
      * @var IProvideTheInvalidFieldCheckerForAComparison
@@ -35,7 +35,7 @@ class RealInvalidSearchableCollectorParameters implements VisitorParameters
      */
     private $comparison;
     /**
-     * @var InvalidSearchablesCollectorParameters
+     * @var InvalidComparisonCollectorParameters
      */
     private $invalid_searchables_collector_parameters;
     /**
@@ -44,7 +44,7 @@ class RealInvalidSearchableCollectorParameters implements VisitorParameters
     private $metadata_checker;
 
     public function __construct(
-        InvalidSearchablesCollectorParameters $invalid_searchables_collector_parameters,
+        InvalidComparisonCollectorParameters $invalid_searchables_collector_parameters,
         IProvideTheInvalidFieldCheckerForAComparison $checker_provider,
         InvalidMetadata\ICheckMetadataForAComparison $metadata_checker,
         Comparison $comparison
@@ -72,7 +72,7 @@ class RealInvalidSearchableCollectorParameters implements VisitorParameters
     }
 
     /**
-     * @return InvalidSearchablesCollectorParameters
+     * @return InvalidComparisonCollectorParameters
      */
     public function getInvalidSearchablesCollectorParameters()
     {
