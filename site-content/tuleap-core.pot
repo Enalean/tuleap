@@ -371,6 +371,9 @@ msgstr ""
 msgid "Project name"
 msgstr ""
 
+msgid "Project name shouldn't exceed 40 characters."
+msgstr ""
+
 msgid "Project name..."
 msgstr ""
 

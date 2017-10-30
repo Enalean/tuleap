@@ -56,6 +56,7 @@ class ProjectDetailsPresenter
     public $are_project_categories_used;
     public $empty_project_trove_categories;
     public $project_global_visibility_presenter;
+    public $project_name_info;
 
     public function __construct(
         Project $project,
@@ -81,6 +82,7 @@ class ProjectDetailsPresenter
         $this->public_information_label       = _('Public information');
         $this->project_name_label             = _('Project name');
         $this->project_name_placeholder       = _('Project name...');
+        $this->project_name_info              = _('Project name shouldn\'t exceed 40 characters.');
         $this->short_description_label        = _('Short description');
         $this->short_description_info         = _("Short description shouldn't exceed 255 characters.");
         $this->project_type_label             = _('Project type');
