@@ -6,7 +6,7 @@ var spread       = require('lodash.spread');
 var readPkg      = require('read-pkg');
 var path         = require('path');
 var exec         = require('child_process').exec;
-var spawnSync    = require('child_process').spawnSync;
+var spawn        = require('child_process').spawn;
 
 function verifyPackageJsonFile(component_path) {
     var package_json_path = path.join(component_path, 'package.json');
@@ -41,10 +41,15 @@ function findComponentsWithPackageAndBuildScript(component_paths) {
 
 function installNpmComponent(component) {
     var task_name = 'install-' + component.name;
-    gulp.task(task_name, function (cb) {
+    gulp.task(task_name, function (callback) {
         exec('npm install', {
             cwd: component.path
-        }, cb);
+        }, function(error) {
+            if (error) {
+                return callback(error);
+            }
+            callback();
+        });
     });
 
     return task_name;
@@ -52,11 +57,18 @@ function installNpmComponent(component) {
 
 function buildNpmComponent(component, dependent_tasks) {
     var task_name = 'build-' + component.name;
-    gulp.task(task_name, dependent_tasks, function () {
-        return spawnSync('npm', ['run', 'build'], {
+    gulp.task(task_name, dependent_tasks, function (callback) {
+        var child_process = spawn('npm', ['run', 'build'], {
             stdio: 'inherit',
             cwd  : component.path
         });
+
+        child_process.on('close', function(code) {
+            if (code !== 0) {
+                return callback(code);
+            }
+            callback();
+        })
     });
 
     return task_name;
@@ -64,10 +76,15 @@ function buildNpmComponent(component, dependent_tasks) {
 
 function installBowerComponent(component, dependent_tasks) {
     var task_name = 'bower-install-' + component.name;
-    gulp.task(task_name, dependent_tasks, function (cb) {
+    gulp.task(task_name, dependent_tasks, function (callback) {
         exec('npm run bower install', {
             cwd: component.path
-        }, cb);
+        }, function(error) {
+            if (error) {
+                return callback(error);
+            }
+            callback();
+        });
     });
 
     return task_name;
@@ -86,11 +103,11 @@ function installAndBuildNpmComponents(component_paths, components_task_name, dep
         });
     });
 
-    gulp.task(components_task_name, dependent_tasks, function(cb) {
+    gulp.task(components_task_name, dependent_tasks, function(callback) {
         promise.then(function() {
-            runSequence(install_tasks.concat(build_tasks), cb);
+            runSequence(install_tasks.concat(build_tasks), callback);
         }).catch(function (error) {
-            cb(error);
+            callback(error);
         });
     });
 }
@@ -107,11 +124,11 @@ function installAndBuildBowerComponents(component_paths, components_task_name, d
         });
     });
 
-    gulp.task(components_task_name, dependent_tasks, function(cb) {
+    gulp.task(components_task_name, dependent_tasks, function(callback) {
         promise.then(function() {
-            return runBuildTasksInTheExactOrderTheyArePassed(build_tasks, cb);
+            return runBuildTasksInTheExactOrderTheyArePassed(build_tasks, callback);
         }).catch(function (error) {
-            cb(error);
+            callback(error);
         });
     });
 }
