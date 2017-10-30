@@ -37,6 +37,7 @@ use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
 use Tuleap\Tracker\FormElement\BurndownCalculator;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_DAILY;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 use Tuleap\Tracker\Import\Spotter;
@@ -906,7 +907,8 @@ class trackerPlugin extends Plugin {
      */
     private function getTrackerXmlExport(UserXMLExporter $user_xml_exporter, $can_bypass_threshold)
     {
-        $rng_validator = new XML_RNGValidator();
+        $rng_validator           = new XML_RNGValidator();
+        $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
         return new TrackerXmlExport(
             $this->getTrackerFactory(),
@@ -920,7 +922,8 @@ class trackerPlugin extends Plugin {
             ),
             $user_xml_exporter,
             EventManager::instance(),
-            new NatureDao()
+            new NaturePresenterFactory(new NatureDao(), $artifact_link_usage_dao),
+            $artifact_link_usage_dao
         );
     }
 
@@ -1254,7 +1257,7 @@ class trackerPlugin extends Plugin {
 
         if ($params['options']['all'] === true) {
             $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
-            ->exportToXmlFull($project->getID(), $params['into_xml'], $user, $params['archive']);
+            ->exportToXmlFull($project, $params['into_xml'], $user, $params['archive']);
 
         } else if (isset($params['options']['tracker_id'])) {
             $this->exportSingleTracker($params, $project, $user_xml_exporter, $user, $can_bypass_threshold);
