@@ -111,6 +111,26 @@ msgid "Save"
 msgstr ""
 
 #, php-format
+msgid "The @comment metadata cannot be compared to MYSELF()."
+msgstr ""
+
+#, php-format
+msgid "The @comment metadata cannot be compared to NOW()."
+msgstr ""
+
+#, php-format
+msgid "The @comment metadata cannot be compared to a date."
+msgstr ""
+
+#, php-format
+msgid "The @comment metadata cannot be compared to the float value '%s'."
+msgstr ""
+
+#, php-format
+msgid "The @comment metadata cannot be compared to the int value '%s'."
+msgstr ""
+
+#, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
 msgstr ""
 
