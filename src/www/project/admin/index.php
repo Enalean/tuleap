@@ -27,8 +27,7 @@ $GLOBALS['Response']->redirect(
     '/project/admin/editgroupinfo.php?' .
     http_build_query(
         array(
-            'group_id' => $request->getProject()->getid(),
-            'pane'     => 'details'
+            'group_id' => $request->getProject()->getid()
         )
     )
 );
