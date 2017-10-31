@@ -15,4 +15,4 @@ fi
 DOCKERIMAGE=build-plugin-crosstracker
 
 docker build -t "$DOCKERIMAGE" rpm
-docker run --rm -v "$TULEAP_PATH":/tuleap:ro -v "$WORKSPACE":/output -e UID="$(id -u)" -e GID="$(id -g)" "$DOCKERIMAGE"
+docker run --rm -e "RELEASE=$RELEASE" -v "$TULEAP_PATH":/tuleap:ro -v "$WORKSPACE":/output -e UID="$(id -u)" -e GID="$(id -g)" "$DOCKERIMAGE"
