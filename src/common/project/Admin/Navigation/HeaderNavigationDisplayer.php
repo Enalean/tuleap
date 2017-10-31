@@ -30,17 +30,17 @@ use Project;
 
 class HeaderNavigationDisplayer
 {
-    public function displayBurningParrotNavigation($title, Project $project)
+    public function displayBurningParrotNavigation($title, Project $project, $current_pane_shortname)
     {
-        $this->displayNavigation($title, $project, "navigation");
+        $this->displayNavigation($title, $project, "navigation", $current_pane_shortname);
     }
 
-    public function displayFlamingParrotNavigation($title, Project $project)
+    public function displayFlamingParrotNavigation($title, Project $project, $current_pane_shortname)
     {
-        $this->displayNavigation($title, $project, "navigation_flaming_parrot");
+        $this->displayNavigation($title, $project, "navigation_flaming_parrot", $current_pane_shortname);
     }
 
-    private function displayNavigation($title, Project $project, $template_name)
+    private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)
     {
         $params                 = array('title' => $title . ' - ' . $project->getUnconvertedPublicName());
         $params['toptab']       = 'admin';
@@ -57,7 +57,7 @@ class HeaderNavigationDisplayer
         );
         $renderer = \TemplateRendererFactory::build()->getRenderer($template_path);
 
-        $navigation_presenter = $builder->build($project, $request);
+        $navigation_presenter = $builder->build($project, $request, $current_pane_shortname);
 
         $renderer->renderToPage(
             $template_name,

@@ -32,9 +32,14 @@ class ReferenceAdministrationViews extends Views
 
     public function header()
     {
-        project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_reference','edit_reference'),
-                                   'group'=>$GLOBALS['group_id'],
-                                   'help' => 'project-admin.html#reference-pattern-configuration'));
+        project_admin_header(
+            array(
+                'title' => $GLOBALS['Language']->getText('project_reference', 'edit_reference'),
+                'group' => $GLOBALS['group_id'],
+                'help'  => 'project-admin.html#reference-pattern-configuration'
+            ),
+            'references'
+        );
 
     }
 

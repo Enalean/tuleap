@@ -31,7 +31,7 @@ require_once('common/include/TemplateSingleton.class.php');
 require_once('common/html/HTML_Element_Selectbox.class.php');
 require_once('common/include/Toggler.class.php');
 
-function project_admin_header($params) {
+function project_admin_header($params, $current_pane_shortname = null) {
     global $group_id;
 
     $params['toptab'] ='admin';
@@ -40,7 +40,7 @@ function project_admin_header($params) {
 
     $navigation_displayer = new HeaderNavigationDisplayer();
     $project              = ProjectManager::instance()->getProject($group_id);
-    $navigation_displayer->displayFlamingParrotNavigation($title, $project);
+    $navigation_displayer->displayFlamingParrotNavigation($title, $project, $current_pane_shortname);
 }
 
 /*

@@ -126,7 +126,7 @@ class IndexController
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
 
         $navigation_displayer = new HeaderNavigationDisplayer();
-        $navigation_displayer->displayBurningParrotNavigation($title, $project);
+        $navigation_displayer->displayBurningParrotNavigation($title, $project, 'labels');
     }
 
     private function displayFooter()

@@ -21,6 +21,7 @@
 namespace Tuleap\Project\Admin\Navigation;
 
 use EventManager;
+use HTTPRequest;
 use Project;
 use Service;
 
@@ -42,17 +43,17 @@ class NavigationPresenterBuilder
         $this->permission_builder = $permission_builder;
     }
 
-    public function build(Project $project, \HTTPRequest $request)
+    public function build(Project $project, HTTPRequest $request, $current_pane_shortname)
     {
         $project_id             = $project->getID();
-        $current_pane_shortname = $request->get('pane');
+        $current_pane_shortname = $current_pane_shortname ?: $request->get('pane');
 
         $entries = array();
 
 
         $entries['details'] = new NavigationItemPresenter(
             _('details'),
-            '/project/admin/editgroupinfo.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'details')),
+            '/project/admin/editgroupinfo.php?' . http_build_query(array('group_id' => $project_id)),
             'details',
             $current_pane_shortname
         );
@@ -79,13 +80,13 @@ class NavigationPresenterBuilder
         );
         $entries['labels'] = new NavigationItemPresenter(
             _('labels'),
-            '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'labels')),
+            '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id)),
             'labels',
             $current_pane_shortname
         );
         $entries['references'] = new NavigationItemPresenter(
             _('references'),
-            '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'references')),
+            '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id)),
             'references',
             $current_pane_shortname
         );

@@ -210,7 +210,7 @@ class ProjectDetailsController
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
 
         $header_displayer = new HeaderNavigationDisplayer();
-        $header_displayer->displayBurningParrotNavigation($title, $project);
+        $header_displayer->displayBurningParrotNavigation($title, $project, 'details');
     }
 
     private function validateFormData(HTTPRequest $request)
