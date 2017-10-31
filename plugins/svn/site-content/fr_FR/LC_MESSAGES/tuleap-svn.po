@@ -67,6 +67,9 @@ msgstr "La notification a été correctement supprimée."
 msgid "Notification to update doesn't exist."
 msgstr "La notification à mettre à jour n’existe pas."
 
+msgid "SVN"
+msgstr "SVN"
+
 msgid "Save"
 msgstr "Sauvegarder"
 

@@ -23,6 +23,9 @@ require_once 'constants.php';
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
@@ -60,7 +63,6 @@ use Tuleap\Svn\Explorer\RepositoryDisplayController;
 use Tuleap\Svn\Logs\QueryBuilder;
 use Tuleap\SVN\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Svn\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
-use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
 use Tuleap\Svn\Notifications\NotificationListBuilder;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Notifications\NotificationsForProjectMemberCleaner;
@@ -161,6 +163,7 @@ class SvnPlugin extends Plugin
         $this->addHook(ProjectGetSvn::NAME);
         $this->addHook(ProjectOptionsSvn::NAME);
         $this->addHook(ProjectRegistrationActivateService::NAME);
+        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
     }
 
     public function export_xml_project($params)
@@ -1050,5 +1053,26 @@ class SvnPlugin extends Plugin
     private function getUGroupNotifyDao()
     {
         return new UgroupsToNotifyDao();
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
+    {
+        $project = $quick_links_collector->getProject();
+
+        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                dgettext('tuleap-svn', 'SVN'),
+                $this->getPluginPath() . '/?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID(),
+                        'action'   => 'admin-groups'
+                    )
+                )
+            )
+        );
     }
 }

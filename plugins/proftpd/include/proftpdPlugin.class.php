@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+
 require_once 'constants.php';
 
 class proftpdPlugin extends Plugin {
@@ -37,6 +40,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::RENAME_PROJECT);
+        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
     }
 
     public function getPluginInfo() {
@@ -198,5 +202,27 @@ class proftpdPlugin extends Plugin {
             $base_sftp_dir     = $this->getPluginInfo()->getPropVal('proftpd_base_directory');
             $params['src_dir'] = $base_sftp_dir . '/' . $project->getUnixName();
         }
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
+    {
+        $project = $quick_links_collector->getProject();
+
+        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                dgettext('tuleap-proftpd', 'Proftpd'),
+                $this->getPluginPath() . '/?' . http_build_query(
+                    array(
+                        'group_id'   => $project->getID(),
+                        'controller' => "admin",
+                        'action'     => 'index'
+                    )
+                )
+            )
+        );
     }
 }

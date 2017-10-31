@@ -38,6 +38,10 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder;
+use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once 'autoload.php';
@@ -121,6 +125,7 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1146,5 +1151,26 @@ class DocmanPlugin extends Plugin
         return strpos($_SERVER['REQUEST_URI'], '/plugins/docman/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
+    {
+        $project = $quick_links_collector->getProject();
+
+        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                dgettext('tuleap-docman', 'Document Manager'),
+                $this->getPluginPath() . '/?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID(),
+                        'action'   => 'admin_permissions'
+                    )
+                )
+            )
+        );
     }
 }
