@@ -30,27 +30,6 @@ msgid_plural "%d members"
 msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
-msgid ""
-"<p>This feature aims to provide a way to structure projects organizations "
-"from permissions, user groups and control point of view.</p>\n"
-"                <p>As of today, it's only used by Git/ Gerrit for umbrella "
-"projects (if relevant to your platform/ project).</p>\n"
-"                <p><strong>However, setting a hierarchy between projects "
-"might have future impacts (e.g. members of the parent project could possibly "
-"have access to all sub-projects even without explicit permissions granted).</"
-"strong></p>"
-msgstr ""
-"<p>Cette fonctionnalité permet d'organiser vos projects les uns par rapport "
-"aux autres en termes de permissions, groupes d'utilisateurs et de contrôle.</"
-"p>\n"
-"            <p>Cependant, à l'heure actuelle, elle n'est exploitée que par "
-"Git/Gerrit pour les projets \"parapluies\" (si ces services sont activés/"
-"disponibles sur votre plate-forme).</p>\n"
-"            <p><strong>Veuillez noter que la définition d'une hierarchie "
-"pourra avoir un impact futur sur l'organisation des enfants (ex. les "
-"administrateurs d'un projet parent pourraient avoir automatiquement accès à "
-"l'administration de tous les sous-projets).</strong></p>"
-
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
@@ -209,6 +188,9 @@ msgstr "Supprimer %s"
 
 msgid "Delete dashboard"
 msgstr "Supprimer le tableau de bord"
+
+msgid "Delete parent"
+msgstr "Supprimer le parent"
 
 msgid "Delete widget"
 msgstr "Supprimer le widget"
@@ -378,6 +360,9 @@ msgstr "Contour"
 msgid "Owner"
 msgstr "Propriétaire"
 
+msgid "Parent project"
+msgstr "Projet parent"
+
 msgid "Permission Request"
 msgstr "Demande de permission"
 
@@ -525,6 +510,25 @@ msgstr "Il n'y a aucun widget correspondant"
 msgid "These projects are already related."
 msgstr "Un lien de parenté existe déjà entre ces projets."
 
+msgid ""
+"This feature aims to provide a way to structure projects organizations from\n"
+"            permissions, user groups and control point of view. As of today, "
+"it's only used by Git/Gerrit for umbrella\n"
+"            projects (if relevant to your platform/project). However, "
+"setting a hierarchy between projects might have\n"
+"            future impacts (e.g. members of the parent project could "
+"possibly have access to all sub-projects even\n"
+"            without explicit permissions granted)."
+msgstr ""
+"Cette fonctionnalité permet d'organiser vos projets les uns par rapport aux "
+"autres en termes de permissions, groupes d'utilisateurs et de contrôle. "
+"Cependant, à l'heure actuelle, elle n'est exploitée que par Git/Gerrit pour "
+"les projets \"parapluies\" (si ces services sont activés/disponibles sur "
+"votre plate-forme). Veuillez noter que la définition d'une hiérarchie pourra "
+"avoir un impact futur sur l'organisation des enfants (ex. les "
+"administrateurs d'un projet parent pourraient avoir automatiquement accès à "
+"l'administration de tous les sous-projets)."
+
 msgid "This label is used in the project"
 msgstr "Ce label est utilisé dans le projet"
 
@@ -568,9 +572,6 @@ msgstr "La mise à jour a échoué"
 msgid "Update label"
 msgstr "Mettre à jour le label"
 
-msgid "Update parent project"
-msgstr "Mettre à jour le projet parent"
-
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
 
@@ -606,6 +607,13 @@ msgstr "Widgets"
 
 msgid "Wiki"
 msgstr "Wiki"
+
+msgid ""
+"Wow, wait a minute. You are about to remove the parent. Please confirm your "
+"action."
+msgstr ""
+"Wow, attendez une minute. Vous êtes sur le point de supprimer le parent. "
+"Merci de confirmer votre action."
 
 #, php-format
 msgid ""

@@ -18,10 +18,11 @@
  */
 
 import { autocomplete_projects_for_select2 as autocomplete } from '../../tuleap/autocomplete-for-select2.js';
+import { modal as createModal } from 'tlp';
 
 document.addEventListener('DOMContentLoaded', () => {
-    initCheckboxTogglesDeleteButton();
     initTOSCheckbox();
+    initHierarchyModal();
 
     const select_element = document.getElementById('project-admin-details-hierarchy-project-select');
     if (! select_element) {
@@ -32,15 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function initCheckboxTogglesDeleteButton() {
-    const checkbox_element = document.getElementById('project-admin-details-hierarchy-remove-parent-checkbox');
-    const delete_button    = document.getElementById('project-admin-details-hierarchy-delete-button');
-    if (! checkbox_element || ! delete_button) {
+function initHierarchyModal() {
+    const button = document.getElementById('project-admin-details-hierarchy-delete-button');
+    if (! button) {
         return;
     }
 
-    checkbox_element.addEventListener('change', (event) => {
-        delete_button.disabled = ! event.target.checked;
+    const modal = createModal(document.getElementById(button.dataset.targetModalId));
+
+    button.addEventListener('click', () => {
+        modal.show();
     });
 }
 

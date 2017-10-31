@@ -4,6 +4,10 @@
             <h3 class="tlp-pane-title">{{ project_hierarchy_title }}</h3>
         </div>
         <section class="tlp-pane-section">
+            <p class="project-admin-details-hierarchy-description">
+                {{ project_hierarchy_desc }}
+            </p>
+
             <div class="project-admin-details-hierarchy-buttons">
                 <div class="tlp-form-element tlp-form-element-append">
                     <select
@@ -12,43 +16,35 @@
                         class="tlp-select tlp-select-adjusted"
                         size="50"
                         data-placeholder="{{ project_name_label }}"
+                        {{# parent_project_info }}disabled{{/ parent_project_info }}
                     ></select>
-                    <button class="tlp-append tlp-button-primary tlp-button-outline">
-                        {{# parent_project_info }}
-                            <i class="fa fa-pencil tlp-button-icon"></i> {{ update_parent_button }}
-                        {{/ parent_project_info }}
-                        {{^ parent_project_info }}
-                            <i class="fa fa-plus tlp-button-icon"></i> {{ add_parent_button }}
-                        {{/ parent_project_info }}
+                    <button class="tlp-append tlp-button-primary tlp-button-outline"
+                            {{# parent_project_info }}disabled{{/ parent_project_info }}
+                    >
+                        <i class="fa fa-plus tlp-button-icon"></i> {{ add_parent_button }}
                     </button>
                 </div>
 
                 {{# parent_project_info }}
                     <button
-                        type="submit"
-                        name="remove_parent_project"
+                        type="button"
                         id="project-admin-details-hierarchy-delete-button"
                         class="tlp-button tlp-button-danger tlp-button-outline"
-                        disabled
-                        value="1"
+                        data-target-modal-id="project-administration-delete-confirmation"
                     >
-                        <i class="fa fa-trash tlp-button-icon"></i> {{ delete_button }}
+                        <i class="fa fa-trash-o tlp-button-icon"></i> {{ delete_button }}
                     </button>
+
+                    {{> project-hierarchy-delete-modal }}
                 {{/ parent_project_info }}
-            </div>
-            <div class="tlp-alert-info project-admin-details-hierarchy-description">
-                {{{ purified_project_hierarchy_desc }}}
             </div>
 
             {{# parent_project_info }}
-                <div class="tlp-form-element project-admin-details-hierarchy-parent">
-                    <label class="tlp-label tlp-checkbox">
-                        <input
-                            type="checkbox"
-                            id="project-admin-details-hierarchy-remove-parent-checkbox"
-                        />
+                <div class="tlp-property">
+                    <label class="tlp-label">{{ parent_project_label }}</label>
+                    <p class="tlp-text-muted">
                         <a href="{{ url }}">{{ parent_name }}</a>
-                    </label>
+                    </p>
                 </div>
             {{/ parent_project_info }}
 

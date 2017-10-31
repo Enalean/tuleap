@@ -57,12 +57,8 @@
     width: 250px;
 }
 
-.tlp-alert-info.project-admin-details-hierarchy-description {
-    margin: $tlp-spacing 0 0;
-}
-
-.tlp-form-element.project-admin-details-hierarchy-parent {
-    margin: $tlp-spacing 0 0;
+.project-admin-details-hierarchy-description {
+    margin: 0 0 $tlp-spacing;
 }
 
 .project-admin-details-submit {
