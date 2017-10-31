@@ -192,8 +192,9 @@ project_admin_index	tracker_admin	Tracker Admin
 project_admin_index	no_tracker_found	No Accessible Trackers Found
 project_admin_index	admin	Admin
 project_admin_index	member_request_delegation_title	Project membership requests delegation
-project_admin_index	member_request_delegation_desc_private_group	When people don't have access to your project, because your project is private, they can request to be added as members.<br />The following group will receive the email requests:
-project_admin_index	member_request_delegation_desc_restricted_user	When people don't have access to your project, because they are restricted and only have access to projects they are member of, they can request to be added as members.<br />The following group will receive the email requests:
+project_admin_index	member_request_delegation_desc_private_group	When people don't have access to your project, because your project is private, they can request to be added as members.
+project_admin_index	member_request_delegation_desc_selected_group	The request is sent to the following users group:
+project_admin_index	member_request_delegation_desc_restricted_user	When people don't have access to your project, because they are restricted and only have access to projects they are member of, they can request to be added as members.
 project_admin_index	member_request_delegation_ugroups_error	Invalid user groups
 project_admin_index	member_request_delegation_ugroups_all_invalid	All selected user groups could not be added, they contain no project admins or they are empty
 project_admin_index	member_request_delegation_ugroups_some_invalid	Those selected user groups ($1) could not be added, they contain no project admins or they are empty

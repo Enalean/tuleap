@@ -898,7 +898,6 @@ plugin_docman	item_restored	The <a href="$1">selected item</a> has been successf
 plugin_docman	version_not_restored	The selected version has not been restored.
 plugin_docman	item_not_restored	The selected item has not been restored.
 
-plugin_docman	permission_requests	Document access requests
 plugin_docman	permission_requests_information	The selected group will not affect people notified for permission requests on documents service.<br> Only the <b>document managers</b> will be notified in that case.
 
 plugin_docman	search_type	Documents
