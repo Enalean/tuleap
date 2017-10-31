@@ -58,8 +58,8 @@ if (isset($_REQUEST['SUBMIT'])) {
             $period = $span;
             break;
     }
-        
-    // Send the result in CSV format	
+
+    // Send the result in CSV format
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=access_logs.csv');
 
@@ -68,7 +68,7 @@ if (isset($_REQUEST['SUBMIT'])) {
 	}
     if ($project->usesCVS()) {
 		export_cvs_logs($project, $period, $who);
-    }	
+    }
     if ($project->usesSVN()) {
     	export_svn_logs($project, $period, $who);
     }
@@ -82,9 +82,14 @@ if (isset($_REQUEST['SUBMIT'])) {
 }
 
 $pm = ProjectManager::instance();
-project_admin_header(array('title'=>$Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),
-			   'group'=>$group_id,
-			   'help' => 'project-admin.html#access-logs'));
+project_admin_header(
+    array(
+        'title'=>$Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),
+        'group'=>$group_id,
+        'help' => 'project-admin.html#access-logs'
+    ),
+    \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
+);
 
 //
 // BEGIN PAGE CONTENT CODE
@@ -146,7 +151,7 @@ switch($view) {
     wiki_attachments_logs_daily( $project, $span*7, $who);
     plugins_logs_daily( $project, $span*7, $who);
     break;
-  
+
     case 'daily':
     default:
     filedownload_logs_daily( $project, $span, $who);

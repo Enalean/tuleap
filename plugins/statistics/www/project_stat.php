@@ -119,7 +119,7 @@ if ($project && !$project->isError()) {
 
     $params['group'] = $groupId;
     $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin').': '.$project->getPublicName();
-    project_admin_header($params);
+    project_admin_header($params, \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
 
     echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</h2>';
     $usedProportion = $duMgr->returnTotalProjectSize($groupId);
