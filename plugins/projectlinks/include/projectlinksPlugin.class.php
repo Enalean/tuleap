@@ -102,10 +102,14 @@ class ProjectLinksPlugin extends Plugin {
             $this->adminPageUpdate_Service($request);
         }
 
-        project_admin_header(array(
-            'title' => $Language->getText('project_admin_servicebar',
-                'edit_s_bar'),
-            'group' => $group_id, 'help' => 'project-links.html'));
+        project_admin_header(
+            array(
+                'title' => $Language->getText('project_admin_servicebar', 'edit_s_bar'),
+                'group' => $group_id,
+                'help'  => 'project-links.html'
+            ),
+            'project_links'
+        );
         if ($request->exist('disp')) {
             $disp = $request->get('disp');
             switch ($disp) {
