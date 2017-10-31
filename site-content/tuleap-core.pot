@@ -14,17 +14,6 @@ msgid_plural "%d members"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid ""
-"<p>This feature aims to provide a way to structure projects organizations "
-"from permissions, user groups and control point of view.</p>\n"
-"                <p>As of today, it's only used by Git/ Gerrit for umbrella "
-"projects (if relevant to your platform/ project).</p>\n"
-"                <p><strong>However, setting a hierarchy between projects "
-"might have future impacts (e.g. members of the parent project could possibly "
-"have access to all sub-projects even without explicit permissions granted).</"
-"strong></p>"
-msgstr ""
-
 msgid "A project cannot be its own parent."
 msgstr ""
 
@@ -176,6 +165,9 @@ msgid "Delete %s"
 msgstr ""
 
 msgid "Delete dashboard"
+msgstr ""
+
+msgid "Delete parent"
 msgstr ""
 
 msgid "Delete widget"
@@ -344,6 +336,9 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
+msgid "Parent project"
+msgstr ""
+
 msgid "Permission Request"
 msgstr ""
 
@@ -490,6 +485,17 @@ msgstr ""
 msgid "These projects are already related."
 msgstr ""
 
+msgid ""
+"This feature aims to provide a way to structure projects organizations from\n"
+"            permissions, user groups and control point of view. As of today, "
+"it's only used by Git/Gerrit for umbrella\n"
+"            projects (if relevant to your platform/project). However, "
+"setting a hierarchy between projects might have\n"
+"            future impacts (e.g. members of the parent project could "
+"possibly have access to all sub-projects even\n"
+"            without explicit permissions granted)."
+msgstr ""
+
 msgid "This label is used in the project"
 msgstr ""
 
@@ -531,9 +537,6 @@ msgstr ""
 msgid "Update label"
 msgstr ""
 
-msgid "Update parent project"
-msgstr ""
-
 msgid "Update successful"
 msgstr ""
 
@@ -566,6 +569,11 @@ msgid "Widgets"
 msgstr ""
 
 msgid "Wiki"
+msgstr ""
+
+msgid ""
+"Wow, wait a minute. You are about to remove the parent. Please confirm your "
+"action."
 msgstr ""
 
 #, php-format
