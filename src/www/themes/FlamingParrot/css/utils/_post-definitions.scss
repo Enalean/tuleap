@@ -24,6 +24,14 @@
         background: $main-background;
     }
 
+    &.project-administration {
+        background: $main-background;
+
+        .content {
+            padding: 0;
+        }
+    }
+
     > .wrapper {
         min-height: 100%;
         position: relative;

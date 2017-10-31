@@ -50,6 +50,9 @@ function project_admin_header($params) {
 */
 
 function project_admin_footer($params) {
+    TemplateRendererFactory::build()
+        ->getRenderer(ForgeConfig::get('tuleap_dir') . '/src/templates/project')
+        ->renderToPage('end-project-admin-content', array());
     site_project_footer($params);
 }
 
