@@ -41,15 +41,9 @@ class ProjectDetailsRouter
 
     public function route(HTTPRequest $request)
     {
-        $action = $request->get('action');
-
-        switch ($action) {
-            case "update":
-                $this->project_details_controller->update($request);
-                $this->project_details_controller->updateVisibility($request);
-                break;
-            default:
-                break;
+        if ($request->isPost()) {
+            $this->project_details_controller->update($request);
+            $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
         }
 
         $this->display($request);
