@@ -4,7 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
@@ -21,7 +21,10 @@ if ($request->exist('export')) {
     exit;
 }
 
-project_admin_header(array('title'=>$Language->getText('project_admin_history','proj_history'),'group'=>$group_id));
+project_admin_header(
+    array('title'=>$Language->getText('project_admin_history','proj_history'),'group'=>$group_id),
+    \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
+);
 
 echo $Language->getText('project_admin_history','proj_change_log_msg');
 

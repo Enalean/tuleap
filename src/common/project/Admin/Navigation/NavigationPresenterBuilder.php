@@ -103,15 +103,15 @@ class NavigationPresenterBuilder
             array(
                 new NavigationDropdownItemPresenter(
                     _('Project Data Export'),
-                    '/project/export/index.php?' . http_build_query(array('group_id' => $project_id, 'pane' => self::DATA_ENTRY_SHORTNAME))
+                    '/project/export/index.php?' . http_build_query(array('group_id' => $project_id))
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Project History'),
-                    '/project/admin/history.php?' . http_build_query(array('group_id' => $project_id, 'pane' => self::DATA_ENTRY_SHORTNAME))
+                    '/project/admin/history.php?' . http_build_query(array('group_id' => $project_id))
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Access Logs'),
-                    '/project/stats/source_code_access.php/?' . http_build_query(array('group_id' => $project_id, 'pane' => self::DATA_ENTRY_SHORTNAME))
+                    '/project/stats/source_code_access.php/?' . http_build_query(array('group_id' => $project_id))
                 )
             )
         );
