@@ -29,6 +29,8 @@ use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
 use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
@@ -95,6 +97,7 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
+            $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
 
             /**
              * HACK
@@ -758,5 +761,26 @@ class MediaWikiPlugin extends Plugin {
             $clean_unused = $this->getCleanUnused($this->getBackendLogger());
             $clean_unused->purgeProject($params['group_id']);
         }
+    }
+
+    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
+    {
+        $project = $quick_links_collector->getProject();
+
+        if (! $project->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $quick_links_collector->addQuickLink(
+            new NavigationDropdownItemPresenter(
+                $GLOBALS['Language']->getText('plugin_mediawiki', 'service_lbl_key'),
+                $this->getPluginPath() . '/forge_admin.php?' . http_build_query(
+                    array(
+                        'group_id' => $project->getID(),
+                        'pane'     => 'permissions'
+                    )
+                )
+            )
+        );
     }
 }
