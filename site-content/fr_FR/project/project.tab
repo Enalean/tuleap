@@ -192,8 +192,9 @@ project_admin_index	tracker_admin	Administrations des outils de suivi
 project_admin_index	no_tracker_found	Aucun outil de suivi n'est accessible
 project_admin_index	admin	Administration
 project_admin_index	member_request_delegation_title	Délégation des demandes d'accès au projet
-project_admin_index	member_request_delegation_desc_private_group	Lorsqu'un utilisateur n'a pas accès à votre projet privé, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.<br />La demande est envoyée au group d'utilisateurs suivant :
-project_admin_index	member_request_delegation_desc_restricted_user	Lorsqu'un utilisateur n'a pas accès à votre projet, du fait qu'il soit soit restreint aux projects dont il est membre, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.<br />La demande est envoyée au group d'utilisateurs suivant :
+project_admin_index	member_request_delegation_desc_private_group	Lorsqu'un utilisateur n'a pas accès à votre projet privé, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.
+project_admin_index	member_request_delegation_desc_selected_group	La demande est envoyée au groupe d'utilisateurs suivant :
+project_admin_index	member_request_delegation_desc_restricted_user	Lorsqu'un utilisateur n'a pas accès à votre projet, du fait qu'il soit soit restreint aux projects dont il est membre, il peut vous envoyer une demande afin d'être ajouté aux membres de projet.
 project_admin_index	member_request_delegation_ugroups_error	Groupe d'utilisateur invalid
 project_admin_index	member_request_delegation_ugroups_all_invalid	Les groupes d'utilisateurs ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
 project_admin_index	member_request_delegation_ugroups_some_invalid	Ces groupes d'utilisateurs ($1) ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides

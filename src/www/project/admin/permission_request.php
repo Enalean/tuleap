@@ -154,6 +154,19 @@ if (!$project->isPublic()) {
 } else {
     echo $Language->getText('project_admin_index', 'member_request_delegation_desc_restricted_user');
 }
+echo '</p>';
+$notices = array();
+EventManager::instance()->processEvent(
+    'permission_request_information',
+    array('group_id' => $group_id, 'notices' => &$notices)
+);
+if ($notices) {
+    echo '<div class="alert alert-info">';
+    echo implode('<br>', $notices);
+    echo '</div>';
+}
+
+echo '<p>'. $Language->getText('project_admin_index', 'member_request_delegation_desc_selected_group');
 echo '</p></td></tr>';
 
 //Retrieve the saved ugroups for notification from DB
@@ -173,7 +186,7 @@ $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {
     $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
 }
-echo '<tr><td colspan="2" style="text-align: center;">';
+echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">';
 echo '<input type="hidden" name="func" value="member_req_notif_group" />';
 echo '<input type="hidden" name="group_id" value="'. $group_id .'">';
@@ -196,9 +209,9 @@ if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
     }
 }
 $purifier = Codendi_HTMLPurifier::instance();
-echo '<tr><td colspan="2" style="text-align: center;">';
+echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">
-          <textarea wrap="virtual" rows="5" cols="70" name="text">' . $purifier->purify($message) . '</textarea></p>
+          <textarea wrap="virtual" rows="5" cols="70" name="text">' . $purifier->purify($message) . '</textarea>
           <input type="hidden" name="func" value="member_req_notif_message">
           <input type="hidden" name="group_id" value="' .$group_id. '">
           <br><input name="submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'"/></br>
@@ -207,8 +220,4 @@ echo '<form method="post" action="permission_request.php">
 echo '</td></tr>';
 echo '</table>';
 
-$em = EventManager::instance();
-$em->processEvent('permission_request_information', array('group_id' => $group_id));
-
 project_admin_footer(array());
-?>
