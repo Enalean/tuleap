@@ -92,7 +92,7 @@ class NavigationPresenterBuilder
         );
         $entries['categories'] = new NavigationItemPresenter(
             _('categories'),
-            '/project/admin/group_trove.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'categories')),
+            '/project/admin/group_trove.php?' . http_build_query(array('group_id' => $project_id)),
             'categories',
             $current_pane_shortname
         );
