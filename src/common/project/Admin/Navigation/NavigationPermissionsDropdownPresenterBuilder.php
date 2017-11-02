@@ -68,7 +68,6 @@ class NavigationPermissionsDropdownPresenterBuilder
     {
         $core_services_quicklinks = array();
 
-        $core_services_quicklinks[] = new NavigationDropdownTitlePresenter(_("Quick access to service admin"));
         if ($project->usesForum()) {
             $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
                 _('Forum'),
@@ -140,6 +139,28 @@ class NavigationPermissionsDropdownPresenterBuilder
 
         $plugins_quick_links = $quick_links_collector->getQuickLinksList();
 
-        return array_merge($core_services_quicklinks, $plugins_quick_links);
+        $quick_links = array_merge($core_services_quicklinks, $plugins_quick_links);
+
+        return $this->indexQuickLinks($quick_links);
+    }
+
+    private function indexQuickLinks(array $quick_links)
+    {
+        if (count($quick_links) === 0) {
+            return array();
+        }
+
+        usort($quick_links, function ($previous_link, $current_link) {
+            return strnatcasecmp($previous_link->label, $current_link->label);
+        });
+
+        array_unshift(
+            $quick_links,
+            new NavigationDropdownTitlePresenter(
+                _("Quick access to service admin")
+            )
+        );
+
+        return $quick_links;
     }
 }
