@@ -1,13 +1,23 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// Copyright (c) Enalean, 2015-2017. All Rights Reserved.
-//
-// 
-//
-//
-//  Written for Codendi by Nicolas Guerin
-//
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
@@ -73,14 +83,14 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
     if ($group_id==100) {
         echo '<TD align="center">'.( $is_active ? $Language->getText('project_admin_editservice','available') : $Language->getText('project_admin_servicebar','unavailable') ).'</TD>';
     }
-    
+
     #echo '<TD align="center">'.( $is_used ? 'Yes' : 'No' ).'</TD>';
     echo '<TD align="center">'.( $is_used ? $Language->getText('project_admin_editservice','enabled') : ( $is_active ? '<i>'.$Language->getText('project_admin_servicebar','disabled').'</i>' : '-' ) ).'</TD>';
     if ($group_id==100) {
         echo'<TD align="center">'.$scope.'</TD>';
     }
     echo '<TD align="center">'.$rank.'</TD>';
- 
+
     if ((($scope!="system")&&($label!=$Language->getText('project_admin_servicebar','home_page')))||($group_id==100)) {
         if ($short_name) {
             $short= "&short_name=$short_name";
@@ -167,7 +177,7 @@ if (($func=='do_create')||($func=='do_update')) {
     }
 
     $minimal_rank = $project->getMinimalRank();
-   
+
     if ($short_name!='summary'){
         if($rank <= $minimal_rank){
             exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','bad_rank', $minimal_rank));
@@ -176,7 +186,7 @@ if (($func=='do_create')||($func=='do_update')) {
             exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','rank_missed'));
         }
     }
-    
+
     if (($group_id==100)&&(!$short_name)) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_s'));
     }
@@ -217,7 +227,7 @@ if ($func=='do_create') {
         if (db_numrows($result)>0) {
             exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','short_name_exist'));
         }
-    } 
+    }
 
     if (($group_id!=100)&&($scope=="system")) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_system_wide_s'));
@@ -232,10 +242,10 @@ if ($func=='do_create') {
     } else {
         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','s_create_success'));
     }
-    
+
     $pm->clear($group_id);
     $project = $pm->getProject($group_id);
-    
+
     if (($is_active)&&($group_id==100)) {
         // Add service to ALL active projects!
         $sql1="SELECT group_id FROM groups WHERE group_id!=100";
@@ -245,7 +255,7 @@ if ($func=='do_create') {
         $nbproj=1;
         $sys_default_protocol='http';
         if (ForgeConfig::get('sys_https_host')) {
-            $sys_default_protocol='https'; 
+            $sys_default_protocol='https';
         }
         while ($arr = db_fetch_array($result1)) {
             $my_group_id=$arr['group_id'];
@@ -295,7 +305,7 @@ if ($func=='do_update') {
     $admin_statement = '';
     if (user_is_super_user()) { //is_active and scope can only be change by a siteadmin
         $admin_statement = ", is_active=". ($is_active ? 1 : 0) .", scope='". db_es($scope) ."'";
-        
+
     }
 
     if (isset($short_name)) {
@@ -309,7 +319,7 @@ if ($func=='do_update') {
     $sql = "UPDATE service SET label='".db_es($label)."', description='".db_es($description)."', link='".db_es($link)."' ". $admin_statement .
         ", rank='".db_ei($rank)."' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=".db_ei($service_id);
     $result=db_query($sql);
-   
+
     if (!$result) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_update_s',db_error()));
     } else {
@@ -317,7 +327,7 @@ if ($func=='do_update') {
     }
     $pm->clear($group_id);
 
-    // If this is a global service (i.e. with a shortname)... 
+    // If this is a global service (i.e. with a shortname)...
     if (isset($short_name)) {
         $service_manager->toggleServiceUsage($project, $short_name, $is_used);
     }
@@ -325,8 +335,14 @@ if ($func=='do_update') {
     $GLOBALS['Response']->redirect($redirect_url);
 }
 
-project_admin_header(array('title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),'group'=>$group_id,
-			   'help' => 'project-admin.html#service-configuration'));
+project_admin_header(
+    array(
+        'title'=>$Language->getText('project_admin_servicebar','edit_s_bar'),
+        'group'=>$group_id,
+        'help' => 'project-admin.html#service-configuration'
+    ),
+    'services'
+);
 
 if ($group_id==100) {
     print '<P><h2>'.$Language->getText('project_admin_servicebar','edit_system_s').'</B></h2>';

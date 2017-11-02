@@ -1,10 +1,22 @@
 <?php
 /**
- * Codendi
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * http://www.codendi.com
+ * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
  *
- * Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('pre.php');
@@ -51,7 +63,14 @@ if ($request->isPost() && $func == 'do_create') {
 }
 
 if ($func=='create') {
-    project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'create_ug'), 'group' => $group_id, 'help' => 'project-admin.html#creating-a-user-group'));
+    project_admin_header(
+        array(
+            'title' => $Language->getText('project_admin_editugroup', 'create_ug'),
+            'group' => $group_id,
+            'help' => 'project-admin.html#creating-a-user-group'
+        ),
+        'groups'
+    );
     echo '<p>'.$Language->getText('project_admin_editugroup', 'fill_ug_desc').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
     <input type="hidden" name="func" value="do_create">
@@ -80,7 +99,7 @@ if ($func=='create') {
         $group_arr_value[] = $row['ugroup_id'];
     }
     echo html_build_select_box_from_arrays($group_arr_value, $group_arr, "group_templates", 'cx_empty', false);
-     
+
     echo '</td>
             </tr><tr><td><input type="submit" value="'.$Language->getText('project_admin_editugroup', 'create_ug').'"></tr></td>
         </table>
@@ -92,5 +111,3 @@ if (($func=='edit')||($func=='do_create')) {
     $router = new Project_Admin_UGroup_UGroupRouter();
     $router->process($request);
 }
-
-?>

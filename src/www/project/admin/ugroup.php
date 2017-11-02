@@ -1,13 +1,23 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
-//
-// Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
-//
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 // Show/manage ugroup list
 
@@ -46,7 +56,7 @@ session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
 if ($request->existAndNonEmpty('func')) {
     $ugroup_id   = $request->getValidated('ugroup_id', 'UInt', 0);
-    
+
     switch($request->get('func')) {
         case 'delete':
             $csrf->check();
@@ -67,8 +77,15 @@ if ($request->existAndNonEmpty('func')) {
 //
 
 
-project_admin_header(array('title'=>$Language->getText('project_admin_ugroup','manage_ug'),'group'=>$group_id,
-			   'help' => 'project-admin.html#user-groups'));
+project_admin_header(
+    array(
+        'title'=>$Language->getText('project_admin_ugroup','manage_ug'),
+        'group'=>$group_id,
+        'help' => 'project-admin.html#user-groups'
+    ),
+    'groups'
+);
+
 $pm = ProjectManager::instance();
 $project=$pm->getProject($group_id);
 
@@ -149,8 +166,3 @@ echo "<p>".$Language->getText('project_admin_ugroup','predef_g')."</p>\n";
 
 
 project_admin_footer(array());
-
-
- 
-
-?>

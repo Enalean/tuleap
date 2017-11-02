@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -74,9 +74,14 @@ class Project_Admin_UGroup_PaneManagement {
      * Output repo management sub screen to the browser
      */
     public function display() {
-        project_admin_header(array(
-            'title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'),
-            'group' => $this->ugroup->getProjectId(), 'help' => 'project-admin.html#creating-a-user-group'));
+        project_admin_header(
+            array(
+                'title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'),
+                'group' => $this->ugroup->getProjectId(),
+                'help' => 'project-admin.html#creating-a-user-group'
+            ),
+            'groups'
+        );
         echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.
                 $GLOBALS['Language']->getText('project_admin_utils','ug_admin').
                 '</a> - '.$this->ugroup->getName().'</h1>';
@@ -112,5 +117,3 @@ class Project_Admin_UGroup_PaneManagement {
         echo '<a href="'. $pane->getUrl() .'">'. $pane->getTitle() .'</a></li>';
     }
 }
-
-?>
