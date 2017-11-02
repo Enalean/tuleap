@@ -200,7 +200,7 @@ class ComputedFieldCalculator
                 $already_seen[$artifact_fetched] = true;
             }
 
-            if ($manual_sum) {
+            if ($manual_sum !== null) {
                 $sum += $manual_sum;
             }
         } while (count($artifact_ids_to_fetch) > 0);
