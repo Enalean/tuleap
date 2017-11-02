@@ -57,5 +57,5 @@ docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
 	cp -Rf /tuleap/ /build/src && chown -R build /build/src
-	su --login --command "make -C /build/src/plugins/label all TULEAP_VERSION=$(shell LANG=C cat /tuleap/VERSION)" build
+	su --login --command "make -C /build/src/plugins/label all TULEAP_VERSION=$(shell LANG=C cat /tuleap/VERSION) RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
