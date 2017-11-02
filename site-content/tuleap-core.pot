@@ -396,9 +396,6 @@ msgstr ""
 msgid "Public information"
 msgstr ""
 
-msgid "Quick access to service admin"
-msgstr ""
-
 msgid "RSS"
 msgstr ""
 
@@ -409,6 +406,9 @@ msgid "SVN"
 msgstr ""
 
 msgid "Save information"
+msgstr ""
+
+msgid "Service permissions"
 msgstr ""
 
 msgid "Short description"
