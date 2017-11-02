@@ -1,34 +1,43 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//
-//  Written for Codendi by Nicolas Guerin
-//
-// This script displays service details
-
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
 
 
 
-/* 
+/*
  * Display service configuration form
  * @param $group_id   - int - the group ID
  * @param $service_id - int - the service ID
  * @param $service    - array - Contains all service parameters (from DB query)
- * @param $ro         - bool - if true, then display an ALMOST read-only form (e.g. for system-wide 
+ * @param $ro         - bool - if true, then display an ALMOST read-only form (e.g. for system-wide
  *                      services). In fact the 'is_used' and 'rank' values are still configurable.
- *                      Moreover, if the service is 'homepage' the link is also configurable. 
+ *                      Moreover, if the service is 'homepage' the link is also configurable.
  * @param $su         - bool - true if the current user is a super-user (site admin). In this case
  *                      $ro is automatically set to false, and even system services are editable.
  */
 function display_service_configuration_form($group_id, $service_id, $service, $ro, $su) {
   global $Language;
-  
+
   // There is a special case for the 'Home Page' service: only the link can be modified (except for superuser)
   $hp=false;
   if ($service['short_name']=="homepage") {
@@ -45,7 +54,7 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
   if ($su) { $ro=false; }
   echo '
 <h3>'.$Language->getText('project_admin_editservice','s_conf').'</h3>';
-  
+
   $hp =& Codendi_HTMLPurifier::instance();
 
   echo '
@@ -57,7 +66,7 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
     echo '
 <input type="hidden" name="short_name" VALUE="'.$service['short_name'].'">';
   }
-  
+
   if ($ro) {
     echo '
 <input type="hidden" name="label" VALUE="'.$service['label'].'">
@@ -90,14 +99,14 @@ function display_service_configuration_form($group_id, $service_id, $service, $r
     echo '<input type="hidden" name="link" VALUE="'.$service['link'].'">';
   }
   echo '</td></tr>';
-  
+
   if (($su)&&$service['short_name']) {
     // Can't modify a shortname! Too many problems if the admin changes the system shortnames.
     echo '
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_short_name').'">'.$Language->getText('project_admin_editservice','short_name').'</a>:&nbsp;</td>
 <td>'.$service['short_name'].'</td></tr>';
   }
-  
+
   echo '</td></tr>
 <tr><td><a href="#" title="'.$Language->getText('project_admin_editservice','s_desc_in_tooltip').'">'.$Language->getText('project_admin_editservice','s_desc').'</a>:&nbsp;</td>
 <td>';
@@ -160,7 +169,7 @@ echo '</table>
 
 
 
-/* 
+/*
  * Display blank service form
  * Used for service creation
  */
@@ -237,12 +246,18 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 $pm = ProjectManager::instance();
 $project=$pm->getProject($group_id);
 
-project_admin_header(array('title'=>$Language->getText('project_admin_editservice','edit_s'),'group'=>$group_id,
-			   'help' => 'project-admin.html#service-configuration'));
+project_admin_header(
+    array(
+        'title'=>$Language->getText('project_admin_editservice','edit_s'),
+        'group'=>$group_id,
+        'help' => 'project-admin.html#service-configuration'
+    ),
+    'services'
+);
 
-// $func is either: 
+// $func is either:
 // 'create' -> blank form that allow service creation (-> do_create)
-// '' -> show service and allow modification (-> do_update) 
+// '' -> show service and allow modification (-> do_update)
 
 
 $func = $request->get('func');
@@ -259,9 +274,9 @@ else {
     if (!$service_id) {
         exit_error('ERROR','Service Id was not specified ');
     }
-    
+
     $sql = "SELECT * FROM service WHERE group_id=$group_id AND service_id=$service_id";
-    
+
     $result=db_query($sql);
     if (db_numrows($result) < 1) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_editservice','s_not_exist',$service_id));
