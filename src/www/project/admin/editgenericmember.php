@@ -69,7 +69,8 @@ project_admin_header(
         'title' => $title,
         'group' => $group_id,
         'help'  => 'project-admin.html'
-    )
+    ),
+    'members'
 );
 
 echo '<h2>'. $title .'</h2>';
