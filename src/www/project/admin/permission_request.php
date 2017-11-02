@@ -142,7 +142,13 @@ if ($request->isPost() && $request->valid($vFunc)) {
     Delegate notifications
 */
 
-project_admin_header(array('title'=>$Language->getText('project_admin_ugroup', 'permission_request'), 'group'=>$group_id));
+project_admin_header(
+    array(
+        'title'=>$Language->getText('project_admin_ugroup', 'permission_request'),
+        'group'=>$group_id
+    ),
+    \Tuleap\project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
+);
 
 echo '
 <h2>'.$Language->getText('project_admin_index', 'member_request_delegation_title').'</h2>';

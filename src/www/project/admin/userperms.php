@@ -237,8 +237,14 @@ while($row = db_fetch_array($res_ugrp)) {
     $ugroups[$row['user_id']][] = $row;
 }
 
-project_admin_header(array('title'=>$Language->getText('project_admin_utils','user_perms'),'group'=>$group_id,
-		     'help' => 'project-admin.html#user-permissions'));
+project_admin_header(
+    array(
+        'title'=>$Language->getText('project_admin_utils','user_perms'),
+        'group'=>$group_id,
+        'help' => 'project-admin.html#user-permissions'
+    ),
+    \Tuleap\project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
+);
 
 echo '
 <h2>'.$Language->getText('project_admin_utils','user_perms').'</h2>';

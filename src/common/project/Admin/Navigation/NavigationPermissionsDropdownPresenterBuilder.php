@@ -37,15 +37,13 @@ class NavigationPermissionsDropdownPresenterBuilder
             new NavigationDropdownItemPresenter(
                 _('User Permissions'),
                 '/project/admin/userperms.php?' . http_build_query(array(
-                    'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
+                    'group_id' => $project->getID()
                 ))
             ),
             new NavigationDropdownItemPresenter(
                 _('Permission Request'),
                 '/project/admin/permission_request.php?' . http_build_query(array(
                     'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
                 ))
             )
         );
@@ -68,58 +66,12 @@ class NavigationPermissionsDropdownPresenterBuilder
     {
         $core_services_quicklinks = array();
 
-        if ($project->usesForum()) {
-            $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
-                _('Forum'),
-                '/forum/admin/?' . http_build_query(array(
-                    'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
-                ))
-            );
-        }
-        if ($project->usesMail()) {
-            $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
-                _('Lists'),
-                '/mail/admin/?' . http_build_query(array(
-                    'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
-                ))
-            );
-        }
         if ($project->usesWiki()) {
             $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
                 _('Wiki'),
-                '/wiki/admin/?' . http_build_query(array(
+                '/wiki/admin/index.php?' . http_build_query(array(
                     'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
-                ))
-            );
-        }
-        if ($project->usesNews()) {
-            $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
-                _('News'),
-                '/news/admin/?' . http_build_query(array(
-                    'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
-                ))
-            );
-        }
-        if ($project->usesCVS()) {
-            $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
-                _('CVS'),
-                '/cvs/?' . http_build_query(array(
-                    'group_id' => $project->getID(),
-                    'func' => 'admin',
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
-                ))
-            );
-        }
-        if ($project->usesSVN()) {
-            $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
-                _('Subversion'),
-                '/svn/admin/?' . http_build_query(array(
-                    'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
+                    'view' => 'wikiPerms'
                 ))
             );
         }
@@ -128,7 +80,7 @@ class NavigationPermissionsDropdownPresenterBuilder
                 _('FRS'),
                 '/file/admin/?' . http_build_query(array(
                     'group_id' => $project->getID(),
-                    'pane' => self::PERMISSIONS_ENTRY_SHORTNAME
+                    'action' => 'edit-permissions'
                 ))
             );
         }
