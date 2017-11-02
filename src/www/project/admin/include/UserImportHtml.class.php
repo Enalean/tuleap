@@ -41,16 +41,21 @@ class UserImportHtml extends UserImport {
             $this->displayInput();
             return;
         }
-        
+
         $parsed_users = array();
         $ok = $this->parse($user_filename, $parsed_users);
-        
+
         if (!$ok) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_userimport','err_no_user_to_import'));
             $this->displayInput();
         } else {
-            project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_admin_userimport','import_members'),
-                 'help' => 'project-admin.html#adding-removing-users'));
+            project_admin_header(
+                array(
+                    'title'=>$GLOBALS['Language']->getText('project_admin_userimport','import_members'),
+                    'help' => 'project-admin.html#adding-removing-users'
+                ),
+                'members'
+            );
             echo '<h2>'.$GLOBALS['Language']->getText('project_admin_userimport','parse_report').'</h2>';
             $this->showParseResults($parsed_users);
             project_admin_footer(array());
@@ -100,7 +105,7 @@ class UserImportHtml extends UserImport {
         //use Codendi logins to add project members in DB, 
         //mail addresses are not used because it will fail in case plugin ldap is disabled/unplugged
         $this->updateDB($parsed_users);
-        $GLOBALS['Response']->redirect('/project/admin/index.php?group_id='.$this->group_id);
+        $GLOBALS['Response']->redirect('/project/admin/members.php?group_id='.$this->group_id);
     }
   
   
@@ -119,8 +124,13 @@ class UserImportHtml extends UserImport {
 
     public function displayInput()
     {
-        project_admin_header(array('title'=>$GLOBALS['Language']->getText('project_admin_userimport','import_members'),
-                 'help' => 'project-admin.html#adding-removing-users'));
+        project_admin_header(
+            array(
+                'title'=>$GLOBALS['Language']->getText('project_admin_userimport','import_members'),
+                'help' => 'project-admin.html#adding-removing-users'
+            ),
+            'members'
+        );
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/');
         $presenter = new UserImportPresenter($this->group_id);

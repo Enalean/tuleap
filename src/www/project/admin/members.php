@@ -110,7 +110,6 @@ if ($request->isPost() && $request->valid($vFunc)) {
         '/project/admin/members.php?' . http_build_query(
             array(
                 'group_id' => $group_id,
-                'pane'     => 'members'
             )
         )
     );
@@ -121,7 +120,8 @@ project_admin_header(
         'title' => $Language->getText('project_admin_index', 'p_admin', $group->getPublicName()),
         'group' => $group_id,
         'help'  => 'project-admin.html'
-    )
+    ),
+    'members'
 );
 
 $hp = Codendi_HTMLPurifier::instance();
@@ -206,7 +206,7 @@ $em->processEvent('project_admin_add_user_form', array('groupId' => $group_id));
 echo '
 <HR NoShade SIZE="1">
 <div align="center">
-<A href="/project/admin/userimport.php?group_id='. urlencode($group_id) . '&pane=members">' . $Language->getText(
+<A href="/project/admin/userimport.php?group_id='. urlencode($group_id) .'">' . $Language->getText(
     'project_admin_index',
     'import_user'
 ) . '</A>
