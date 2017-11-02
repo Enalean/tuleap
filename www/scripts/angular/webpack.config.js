@@ -2,8 +2,49 @@
 var path                  = require('path');
 var webpack               = require('webpack');
 var WebpackAssetsManifest = require('webpack-assets-manifest');
+var babel_preset_env      = require('babel-preset-env');
+var babel_plugin_istanbul = require('babel-plugin-istanbul');
 
 var assets_dir_path = path.resolve(__dirname, './bin/assets');
+
+var babel_preset_env_ie_config = [babel_preset_env, {
+    targets: {
+        ie: 11
+    },
+    modules: false
+}];
+
+var babel_preset_env_chrome_config = [babel_preset_env, {
+    targets: {
+        browsers: ['last 2 Chrome versions']
+    },
+    modules: false,
+    useBuiltIns: true,
+    shippedProposals: true
+}];
+
+var babel_options   = {
+    env: {
+        watch: {
+            presets: [babel_preset_env_ie_config]
+        },
+        production: {
+            presets: [babel_preset_env_ie_config]
+        },
+        test: {
+            presets: [babel_preset_env_chrome_config]
+        },
+        coverage: {
+            presets: [babel_preset_env_chrome_config],
+            plugins: [
+                [babel_plugin_istanbul.default, {
+                    exclude: ['**/*.spec.js']
+                }]
+            ]
+        }
+    }
+};
+
 var webpack_config = {
     entry : {
         testmanagement: './src/app/app.js',
@@ -29,6 +70,15 @@ var webpack_config = {
     module: {
         rules: [
             {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: babel_options
+                    }
+                ]
+            }, {
                 test: /\.html$/,
                 exclude: /node_modules/,
                 use: [
@@ -37,8 +87,7 @@ var webpack_config = {
                         query: '-url'
                     }
                 ]
-            },
-            {
+            }, {
                 test: /\.po$/,
                 exclude: /node_modules/,
                 use: [
@@ -63,11 +112,6 @@ var webpack_config = {
 
 if (process.env.NODE_ENV === 'production') {
     webpack_config.plugins = webpack_config.plugins.concat([
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
         new webpack.optimize.ModuleConcatenationPlugin()
     ]);
 }
