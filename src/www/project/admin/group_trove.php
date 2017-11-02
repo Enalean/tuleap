@@ -1,9 +1,7 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
- * SourceForge: Breaking Down the Barriers to Open Source Development
- * http://sourceforge.net
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('trove.php');
 require_once('www/project/admin/project_admin_utils.php');
 
@@ -50,10 +48,16 @@ if ($request->exist('Submit') && is_array($roots)) {
             }
         }
     }
-    session_redirect('/project/admin/?group_id='.$group_id);
+    session_redirect('/project/admin/group_trove.php?group_id='.$group_id);
 }
 
-project_admin_header(array('title'=>$Language->getText('project_admin_grouptrove','g_trove_info'),'group'=>$group_id));
+project_admin_header(
+    array(
+        'title'=>$Language->getText('project_admin_grouptrove','g_trove_info'),
+        'group'=>$group_id
+    ),
+    'categories'
+);
 
 // LJ New message added to explain that if a Topic category is not there
 // LJ put the project unclassified and the Codendi team will create the
