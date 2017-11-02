@@ -65,7 +65,7 @@ class NavigationPresenterBuilder
         );
         $entries['groups'] = new NavigationItemPresenter(
             _('groups'),
-            '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $project_id, 'pane' => 'groups')),
+            '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $project_id)),
             'groups',
             $current_pane_shortname
         );
