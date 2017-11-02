@@ -55,11 +55,6 @@ class FRSPermissionManager
         return false;
     }
 
-    public function doesProjectHaveOldFrsAdminMembers(Project $project)
-    {
-        return $this->permission_dao->doesProjectHaveLegacyFrsAdminMembers($project->getID());
-    }
-
     public function userCanRead(Project $project, PFUser $user)
     {
         if ($this->isAdmin($project, $user)) {

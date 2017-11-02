@@ -109,18 +109,6 @@ class FRSPermissionDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function doesProjectHaveLegacyFrsAdminMembers($project_id)
-    {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "SELECT NULL
-                FROM user_group
-                WHERE group_id = $project_id AND file_flags = 2
-                LIMIT 1";
-
-        return count($this->retrieve($sql)) > 0;
-    }
-
     public function disableAnonymousRegisteredAuthenticated($project_id)
     {
         return $this->updateAccessControl(
