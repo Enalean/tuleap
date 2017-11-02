@@ -420,9 +420,6 @@ msgstr "Projets dans la catégorie selectionnée"
 msgid "Public information"
 msgstr "Informations publiques"
 
-msgid "Quick access to service admin"
-msgstr "Accès rapide à l'admin des services"
-
 msgid "RSS"
 msgstr "RSS"
 
@@ -434,6 +431,9 @@ msgstr "SVN"
 
 msgid "Save information"
 msgstr "Enregistrer les informations"
+
+msgid "Service permissions"
+msgstr "Permissions des services"
 
 msgid "Short description"
 msgstr "Description courte"

@@ -34,7 +34,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
-use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Request\CurrentPage;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -113,7 +112,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook('widget_instance');
             $this->addHook('widgets');
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-            $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1137,29 +1135,5 @@ class AgileDashboardPlugin extends Plugin {
                 $item_ids[] = $child->getId();
             }
         }
-    }
-
-    public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)
-    {
-        $project = $quick_links_collector->getProject();
-
-        if (! $project->usesService(self::PLUGIN_SHORTNAME)) {
-            return;
-        }
-
-        $quick_links_collector->addQuickLink(
-            new NavigationDropdownItemPresenter(
-                dgettext(
-                    "tuleap-agiledashboard",
-                    "Agile Dashboard"
-                ),
-                $this->getPluginPath() . '/?' . http_build_query(
-                    array(
-                        'group_id' => $project->getID(),
-                        'action'   => 'admin'
-                    )
-                )
-            )
-        );
     }
 }
