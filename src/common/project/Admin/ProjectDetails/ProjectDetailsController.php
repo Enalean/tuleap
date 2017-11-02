@@ -184,6 +184,7 @@ class ProjectDetailsController
                 $global_visibility_presenter,
                 $are_trove_categories_used,
                 $project_trove_categories,
+                $this->getProjectsCreatedFromTemplate($project),
                 $this->csrf_token
             )
         );
@@ -485,5 +486,17 @@ class ProjectDetailsController
         }
 
         return $project_trove_categories;
+    }
+
+    private function getProjectsCreatedFromTemplate(Project $project)
+    {
+        $projects = array();
+        foreach ($project->getProjectsCreatedFrom() as $subproject) {
+            $projects[] = array(
+                'unix_group_name' => $subproject['unix_group_name'],
+                'group_name'      => util_unconvert_htmlspecialchars($subproject['group_name'])
+            );
+        }
+        return $projects;
     }
 }

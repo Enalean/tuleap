@@ -110,6 +110,25 @@
                     {{/is_hierarchy_shown}}
                 {{/ project_hierarchy_presenter }}
 
+                {{# has_projects }}
+                    <section class="tlp-pane">
+                        <div class="tlp-pane-container">
+                            <div class="tlp-pane-header">
+                                <h1 class="tlp-pane-title">{{ template_label }}</h1>
+                            </div>
+                            <section class="tlp-pane-section">
+                                <ul>
+                                    {{# projects_created_from_this_template }}
+                                        <li>
+                                            <a href="/projects/{{ unix_group_name }}">{{ group_name }}</a>
+                                        </li>
+                                    {{/ projects_created_from_this_template }}
+                                </ul>
+                            </section>
+                        </div>
+                    </section>
+                {{/ has_projects }}
+
                 {{# project_global_visibility_presenter }}
                     {{> truncated_emails }}
                 {{/ project_global_visibility_presenter }}

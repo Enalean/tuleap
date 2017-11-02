@@ -390,6 +390,9 @@ msgstr ""
 msgid "Project web site"
 msgstr ""
 
+msgid "Projects created from this template"
+msgstr ""
+
 msgid "Projects in category"
 msgstr ""
 
