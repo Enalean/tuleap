@@ -73,8 +73,8 @@ if ($export == 'artifact_deps') {
 
     } else {
 
-		project_admin_header(array('title'=>$pg_title));
-	
+		project_admin_header(array('title'=>$pg_title), 'data');
+
 		echo '<h3>'.$Language->getText('project_export_artifact_deps_export','art_deps_export').'</h3>';
 		if ($result) {
 		    echo '<P>'.$Language->getText('project_export_artifact_deps_export','no_deps_found');

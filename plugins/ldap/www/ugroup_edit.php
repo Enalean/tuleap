@@ -118,7 +118,13 @@ if($request->isPost() && $request->valid($vSubmit)) {
                     // Display
                     $um = UserManager::instance();
 
-                    project_admin_header(array('title' => $GLOBALS['Language']->getText('plugin_ldap','ugroup_members_synchro_title'), 'group' => $group_id));
+                    project_admin_header(
+                        array(
+                            'title' => $GLOBALS['Language']->getText('plugin_ldap','ugroup_members_synchro_title'),
+                            'group' => $group_id
+                        ),
+                        'groups'
+                    );
 
                     echo '<h1>'.$GLOBALS['Language']->getText('plugin_ldap','ugroup_members_synchro_title').'</h1>';
                     echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_members_synchro_warning').'</p>';
@@ -192,7 +198,10 @@ if($ldapGroup !== null) {
     $clean_ldapGroupName = '';
 }
 
-project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id));
+project_admin_header(
+    array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id),
+    'groups'
+);
 
 echo '
 <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>

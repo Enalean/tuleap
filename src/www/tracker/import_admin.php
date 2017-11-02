@@ -39,10 +39,15 @@ if ($group_id && $mode == "admin") {
 
 
   $pg_title = $Language->getText('tracker_import_admin','art_import');
-  
-  
-  project_admin_header(array('title'=>$pg_title,
-			     'help' => 'tracker.html#tracker-artifact-import'));
+
+
+  project_admin_header(
+      array(
+          'title'=>$pg_title,
+          'help' => 'tracker.html#tracker-artifact-import',
+      ),
+      \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
+  );
 
   $pm = ProjectManager::instance();
   $project=$pm->getProject($group_id);

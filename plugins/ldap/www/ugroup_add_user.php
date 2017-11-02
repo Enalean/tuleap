@@ -84,7 +84,10 @@ if ($ugroupUpdateUsersAllowed) {
     $ugroupName = util_translate_name_ugroup($row['name']);
     $clean_ugroupName = $hp->purify($ugroupName);
 
-    project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id));
+    project_admin_header(
+        array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id),
+        'groups'
+    );
 
     echo '<h2>'.$Language->getText('project_admin_editugroup','ug_admin', $clean_ugroupName).'</h2>';
 

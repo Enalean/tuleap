@@ -31,7 +31,7 @@ require_once('common/include/TemplateSingleton.class.php');
 require_once('common/html/HTML_Element_Selectbox.class.php');
 require_once('common/include/Toggler.class.php');
 
-function project_admin_header($params, $current_pane_shortname = null) {
+function project_admin_header($params, $current_pane_shortname) {
     global $group_id;
 
     $params['toptab'] ='admin';

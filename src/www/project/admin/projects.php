@@ -35,11 +35,14 @@ if (! $group_id) {
 
     session_require(array('group' => $group_id, 'admin_flags' => 'A'));
     if (! $request->isAjax()) {
-        project_admin_header(array(
-            'title' => $Language->getText('project_admin_index','p_admin', $project->getPublicName()),
-            'group' => $group_id,
-            'help'  => 'project-admin.html'
-        ));
+        project_admin_header(
+            array(
+                'title' => $Language->getText('project_admin_index','p_admin', $project->getPublicName()),
+                'group' => $group_id,
+                'help'  => 'project-admin.html'
+            ),
+            'details'
+        );
         echo '<h2>'. $GLOBALS['Language']->getText('project_admin_index', 'show_projects') .'</h2>';
     }
 

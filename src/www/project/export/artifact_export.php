@@ -122,8 +122,8 @@ if ($export == 'artifact') {
 	
     } else {
 
-		project_admin_header(array('title'=>$pg_title));
-	
+		project_admin_header(array('title'=>$pg_title), 'data');
+
 		echo '<h3>'.$Language->getText('project_export_artifact_export','art_export').'</h3>';
 		if ($result) {
 		    echo '<P>'.$Language->getText('project_export_artifact_export','no_art_found');
