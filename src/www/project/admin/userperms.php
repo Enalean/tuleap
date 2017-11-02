@@ -1,11 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright (c) Enalean, 2015. All Rights Reserved.
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-//
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
@@ -40,14 +52,6 @@ if ($project->isError()) {
         //wasn't found or some other problem
         echo $Language->getText('project_admin_userperms','unable_load_p')."<br>";
     	return;
-}
-
-$should_hide_warning_for_frs_legacy_perms = 'hide-warning-frs-legacy-perms';
-
-$csrf_hide_warning = new CSRFSynchronizerToken('/project/admin/userperms.php?group_id='. (int)$group_id);
-if ($request->get($should_hide_warning_for_frs_legacy_perms)) {
-    $csrf_hide_warning->check();
-    $current_user->setPreference($should_hide_warning_for_frs_legacy_perms, true);
 }
 
 // ########################### form submission, make updates
@@ -257,21 +261,6 @@ $frs_permission_manager = new FRSPermissionManager(
     new FRSPermissionDao(),
     new FRSPermissionFactory(new FRSPermissionDao())
 );
-
-if ($frs_permission_manager->doesProjectHaveOldFrsAdminMembers($group)
-    && ! $current_user->getPreference($should_hide_warning_for_frs_legacy_perms)
-) {
-    echo '<form action="" method="POST">
-        <input type="hidden" name="group_id" value="'. (int)$group_id .'" />
-        <input type="hidden" name="'. $should_hide_warning_for_frs_legacy_perms .'" value="1" />
-        '. $csrf_hide_warning->fetchHTMLInput() .'
-        <div class="alert alert-warning">
-            <button type="submit" class="close" aria-hidden="true">&times;</button> </a>
-            <i class="icon-warning-sign"></i> '.
-            $GLOBALS['Language']->getText('file_admin_index', 'warning_new_permission', (int)$group_id).
-        '</div>
-        </form>';
-}
 
 if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
 
