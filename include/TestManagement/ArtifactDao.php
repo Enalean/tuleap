@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use DataAccessObject;
+use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 
 class ArtifactDao extends DataAccessObject
 {
@@ -186,5 +187,25 @@ class ArtifactDao extends DataAccessObject
                 OFFSET $offset";
 
         return $this->retrieve($sql);
+    }
+
+    public function searchFirstRequirementId($test_definition_id, $test_exec_tracker_id)
+    {
+        $test_definition_id   = $this->da->escapeInt($test_definition_id);
+        $test_exec_tracker_id = $this->da->escapeInt($test_exec_tracker_id);
+        $nature               = $this->da->quoteSmart(NatureCoveredByPresenter::NATURE_COVERED_BY);
+
+        $sql = "SELECT DISTINCT a.id
+                FROM tracker_changeset_value_artifactlink AS artlink
+                    JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
+                    JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
+                    JOIN tracker                          AS t  ON (t.id = a.tracker_id)
+                WHERE artlink.artifact_id = $test_definition_id
+                  AND artlink.nature = $nature
+                  AND t.id != $test_exec_tracker_id
+                ORDER BY a.id ASC
+                LIMIT 1";
+
+        return $this->retrieveFirstRow($sql);
     }
 }

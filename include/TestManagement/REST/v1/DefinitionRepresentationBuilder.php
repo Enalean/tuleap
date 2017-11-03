@@ -49,24 +49,33 @@ class DefinitionRepresentationBuilder
      */
     private $conformance_validator;
 
+    /**
+     * @var RequirementRetriever
+     */
+    private $requirement_retriever;
+
     public function __construct(
         UserManager $user_manager,
         Tracker_FormElementFactory $tracker_form_element_factory,
-        ConfigConformanceValidator $conformance_validator
+        ConfigConformanceValidator $conformance_validator,
+        RequirementRetriever $requirement_retriever
     ) {
         $this->user_manager                       = $user_manager;
         $this->tracker_form_element_factory       = $tracker_form_element_factory;
         $this->conformance_validator              = $conformance_validator;
+        $this->requirement_retriever              = $requirement_retriever;
     }
 
-    public function getDefinitionRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    public function getDefinitionRepresentation(PFUser $user, Tracker_Artifact $definition_artifact)
     {
-        if (! $this->conformance_validator->isArtifactADefinition($artifact)) {
+        if (! $this->conformance_validator->isArtifactADefinition($definition_artifact)) {
             return null;
         }
 
+        $requirement = $this->requirement_retriever->getRequirementForDefinition($definition_artifact, $user);
+
         $definition_representation = new DefinitionRepresentation();
-        $definition_representation->build($artifact, $this->tracker_form_element_factory, $user);
+        $definition_representation->build($definition_artifact, $this->tracker_form_element_factory, $user, $requirement);
 
         return $definition_representation;
     }

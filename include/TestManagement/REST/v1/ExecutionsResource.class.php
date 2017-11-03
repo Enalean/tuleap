@@ -100,10 +100,12 @@ class ExecutionsResource
         $this->tracker_factory                 = TrackerFactory::instance();
         $this->formelement_factory             = Tracker_FormElementFactory::instance();
         $this->artifact_factory                = Tracker_ArtifactFactory::instance();
+        $artifact_dao                          = new ArtifactDao();
+
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             $this->artifact_factory,
-            new ArtifactDao()
+            $artifact_dao
         );
 
         $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
@@ -111,13 +113,16 @@ class ExecutionsResource
             $this->user_manager
         );
 
+        $retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+
         $this->execution_representation_builder = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
             $conformance_validator,
             $this->assigned_to_representation_builder,
             new ArtifactDao(),
-            $this->artifact_factory
+            $this->artifact_factory,
+            $retriever
         );
 
         $this->node_js_client         = new NodeJSClient();

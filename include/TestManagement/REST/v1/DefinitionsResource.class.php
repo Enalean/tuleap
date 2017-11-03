@@ -46,20 +46,27 @@ class DefinitionsResource {
     private $definition_representation_builder;
 
     public function __construct() {
-        $config = new Config(new Dao());
+        $config                = new Config(new Dao());
         $conformance_validator = new ConfigConformanceValidator($config);
+        $artifact_dao          = new ArtifactDao();
+        $artifact_factory      = Tracker_ArtifactFactory::instance();
 
         $this->user_manager                    = UserManager::instance();
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $config,
-            Tracker_ArtifactFactory::instance(),
-            new ArtifactDao()
+            $artifact_factory,
+            $artifact_dao
         );
-        $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
+
+        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+
+        $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $config);
+
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $this->user_manager,
             $this->tracker_form_element_factory,
-            $conformance_validator
+            $conformance_validator,
+            $retriever
         );
     }
 

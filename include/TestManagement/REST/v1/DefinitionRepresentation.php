@@ -20,10 +20,10 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use \Tuleap\REST\JsonCast;
 use \Tracker_Artifact;
 use \Tracker_FormElementFactory;
 use \PFUser;
+use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
 class DefinitionRepresentation extends MinimalDefinitionRepresentation
 {
@@ -34,10 +34,28 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
      */
     public $description;
 
-    public function build(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, PFUser $user)
-    {
+    /**
+     * @var ArtifactRepresentation|null
+     */
+    public $requirement;
+
+    public function build(
+        Tracker_Artifact $artifact,
+        Tracker_FormElementFactory $form_element_factory,
+        PFUser $user,
+        Tracker_Artifact $requirement = null
+    ) {
         parent::build($artifact, $form_element_factory, $user);
 
         $this->description = $this->getFieldValue(self::FIELD_DESCRIPTION)->getText();
+
+        $artifact_representation = null;
+
+        if ($requirement) {
+            $artifact_representation = new ArtifactRepresentation();
+            $artifact_representation->build($user, $requirement, array(), array());
+        }
+
+        $this->requirement = $artifact_representation;
     }
 }

@@ -70,32 +70,42 @@ class ProjectResource {
     /** @var CampaignRepresentationBuilder */
     private $campaign_representation_builder;
 
-    public function __construct() {
-        $this->config                          = new Config(new Dao());
-        $conformance_validator                 = new ConfigConformanceValidator($this->config);
-        $this->project_manager                 = ProjectManager::instance();
-        $this->tracker_factory                 = TrackerFactory::instance();
+    public function __construct()
+    {
+        $this->config          = new Config(new Dao());
+        $conformance_validator = new ConfigConformanceValidator($this->config);
+        $this->project_manager = ProjectManager::instance();
+        $this->tracker_factory = TrackerFactory::instance();
+        $artifact_dao          = new ArtifactDao();
+        $artifact_factory      = Tracker_ArtifactFactory::instance();
+
         $this->testmanagement_artifact_factory = new ArtifactFactory(
             $this->config,
             Tracker_ArtifactFactory::instance(),
-            new ArtifactDao()
+            $artifact_dao
         );
         $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
         $this->user_manager                      = UserManager::instance();
         $this->user                              = UserManager::instance()->getCurrentUser();
+
+        $retriever = new RequirementRetriever($artifact_factory, $artifact_dao, $this->config);
+
         $this->definition_representation_builder = new DefinitionRepresentationBuilder(
             $this->user_manager,
             $this->tracker_form_element_factory,
-            $conformance_validator
+            $conformance_validator,
+            $retriever
         );
-        $this->campaign_representation_builder   = new CampaignRepresentationBuilder(
+
+        $this->campaign_representation_builder = new CampaignRepresentationBuilder(
             $this->user_manager,
             $this->tracker_form_element_factory,
             $this->testmanagement_artifact_factory
         );
-        $this->query_to_criterion_converter      = new QueryToCriterionConverter(
+
+        $this->query_to_criterion_converter = new QueryToCriterionConverter(
             $conformance_validator,
-            Tracker_ArtifactFactory::instance()
+            $artifact_factory
         );
     }
 

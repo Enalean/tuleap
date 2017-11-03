@@ -140,13 +140,16 @@ class CampaignsResource {
             $this->user_manager
         );
 
+        $retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
+
         $this->execution_representation_builder   = new ExecutionRepresentationBuilder(
             $this->user_manager,
             $this->formelement_factory,
             $this->conformance_validator,
             $assigned_to_representation_builder,
             $artifact_dao,
-            $this->artifact_factory
+            $this->artifact_factory,
+            $retriever
         );
 
         $this->campaign_representation_builder    = new CampaignRepresentationBuilder(

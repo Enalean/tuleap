@@ -63,6 +63,10 @@ class ExecutionRepresentationBuilder
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var RequirementRetriever
+     */
+    private $requirement_retriever;
 
     public function __construct(
         UserManager $user_manager,
@@ -70,7 +74,8 @@ class ExecutionRepresentationBuilder
         ConfigConformanceValidator $conformance_validator,
         AssignedToRepresentationBuilder $assigned_to_representation_builder,
         ArtifactDao $artifact_dao,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_ArtifactFactory $artifact_factory,
+        RequirementRetriever $requirement_retriever
     ) {
         $this->user_manager                       = $user_manager;
         $this->tracker_form_element_factory       = $tracker_form_element_factory;
@@ -78,6 +83,7 @@ class ExecutionRepresentationBuilder
         $this->assigned_to_representation_builder = $assigned_to_representation_builder;
         $this->artifact_dao                       = $artifact_dao;
         $this->artifact_factory                   = $artifact_factory;
+        $this->requirement_retriever              = $requirement_retriever;
     }
 
     /**
@@ -162,12 +168,16 @@ class ExecutionRepresentationBuilder
         return new Tracker_Artifact_PaginatedArtifacts($executions, $total_size);
     }
 
-    private function getDefinitionRepresentationForExecution(PFUser $user, Tracker_Artifact $execution) {
+    private function getDefinitionRepresentationForExecution(PFUser $user, Tracker_Artifact $execution)
+    {
         $art_links = $execution->getLinkedArtifacts($user);
         foreach ($art_links as $art_link) {
             if ($this->conformance_validator->isArtifactAnExecutionOfDefinition($execution, $art_link)) {
+                $requirement = $this->requirement_retriever->getRequirementForDefinition($art_link, $user);
+
                 $definition_representation = new DefinitionRepresentation();
-                $definition_representation->build($art_link, $this->tracker_form_element_factory, $user);
+                $definition_representation->build($art_link, $this->tracker_form_element_factory, $user, $requirement);
+
                 return $definition_representation;
             }
         }

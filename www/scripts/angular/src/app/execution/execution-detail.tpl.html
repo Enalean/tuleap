@@ -38,7 +38,6 @@
             </div>
 
             <div class="current-test-header-actions">
-
                 <div class="tlp-dropdown" ng-if="linkMenuIsVisible">
                     <i class="fa fa-bug fa-fw current-test-header-action" id="dropdown-link-bug" open-tlp-dropdown></i>
                     <div class="tlp-dropdown-menu tlp-dropdown-menu-right tlp-dropdown-menu-on-icon" role="menu">
@@ -88,6 +87,17 @@
                      ng-click="showArtifactLinksGraphModal(execution)"
                      title="{{ 'Show dependencies graph for this test' | translate }}"
                 />
+            </div>
+        </section>
+
+        <section ng-if="execution.definition.requirement" class="tlp-pane-section current-test-requirement">
+            <div>
+                <i class="fa fa-long-arrow-right current-test-requirement-arrow"></i>
+                <a href="/plugins/tracker/?aid={{ execution.definition.requirement.id }}">
+                    <span ng-class="['current-test-requirement-badge', 'tlp-badge-outline', 'tlp-badge-' + execution.definition.requirement.tracker.color_name]">
+                        {{ execution.definition.requirement.xref }}
+                    </span> {{ execution.definition.requirement.title }}
+                </a>
             </div>
         </section>
 
