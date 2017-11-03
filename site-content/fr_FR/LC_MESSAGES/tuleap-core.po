@@ -414,6 +414,9 @@ msgstr "Visibilité du projet"
 msgid "Project web site"
 msgstr "Site web du projet"
 
+msgid "Projects created from this template"
+msgstr "Projets créés à partir de ce patron"
+
 msgid "Projects in category"
 msgstr "Projets dans la catégorie selectionnée"
 

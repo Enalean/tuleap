@@ -62,6 +62,13 @@ class ProjectDetailsPresenter
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
+    public $is_template;
+    public $template_label;
+    public $has_projects;
+    /**
+     * @var array
+     */
+    public $projects_created_from_this_template;
 
     public function __construct(
         Project $project,
@@ -71,6 +78,7 @@ class ProjectDetailsPresenter
         ProjectGlobalVisibilityPresenter $project_global_visibility_presenter,
         $are_project_categories_used,
         array $project_trove_categories,
+        array $projects_created_from_this_template,
         CSRFSynchronizerToken $csrf_token
     ) {
         $this->group_id                            = $project->getID();
@@ -83,6 +91,9 @@ class ProjectDetailsPresenter
         $this->group_name                          = $group_info['group_name'];
         $this->project_short_description           = $group_info['short_description'];
         $this->csrf_token                          = $csrf_token;
+        $this->is_template                         = $project->isTemplate();
+        $this->projects_created_from_this_template = $projects_created_from_this_template;
+        $this->has_projects                        = count($projects_created_from_this_template) > 0;
 
         $this->project_type = $this->getLocalizedType($project->getType());
 
@@ -96,6 +107,7 @@ class ProjectDetailsPresenter
         $this->update_button                  = _('Save information');
         $this->project_trove_category_label   = _('Project trove categories');
         $this->empty_project_trove_categories = _('No project trove categories');
+        $this->template_label                 = _('Projects created from this template');
     }
 
     private function getLocalizedType($project_type_id)
