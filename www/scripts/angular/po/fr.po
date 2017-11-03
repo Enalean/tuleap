@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -132,6 +132,10 @@ msgid ""
 msgstr ""
 "Entrez l'id du bug à lier avec \"{{ modal.test_summary }}\". La description "
 "du test sera ajoutée en commentaire du bug lié."
+
+#: src/app/execution/execution-detail-controller.js
+msgid "Error while refreshing the list of linked bugs"
+msgstr "Erreur pendant la récupération des bugs liés"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html

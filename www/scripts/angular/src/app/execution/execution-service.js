@@ -19,27 +19,28 @@ function ExecutionService(
 ) {
     var self = this;
 
-    _.extend(self, {
-        initialization                    : initialization,
-        synchronizeExecutions             : synchronizeExecutions,
-        loadExecutions                    : loadExecutions,
-        getAllRemoteExecutions            : getAllRemoteExecutions,
-        getExecutionsByDefinitionId       : getExecutionsByDefinitionId,
-        addPresenceCampaign               : addPresenceCampaign,
-        updateCampaign                    : updateCampaign,
-        addTestExecution                  : addTestExecution,
-        removeTestExecution               : removeTestExecution,
-        updateTestExecution               : updateTestExecution,
-        updatePresenceOnCampaign          : updatePresenceOnCampaign,
-        removeAllPresencesOnCampaign      : removeAllPresencesOnCampaign,
-        viewTestExecution                 : viewTestExecution,
-        removeAllViewTestExecution        : removeAllViewTestExecution,
-        removeViewTestExecution           : removeViewTestExecution,
-        removeViewTestExecutionByUUID     : removeViewTestExecutionByUUID,
-        displayPresencesForAllExecutions  : displayPresencesForAllExecutions,
-        displayPresencesByExecution       : displayPresencesByExecution,
-        displayError                      : displayError,
-        executionsForCampaign             : executionsForCampaign
+    Object.assign(self, {
+        initialization,
+        synchronizeExecutions,
+        loadExecutions,
+        getAllRemoteExecutions,
+        getExecutionsByDefinitionId,
+        addPresenceCampaign,
+        updateCampaign,
+        addTestExecution,
+        removeTestExecution,
+        updateTestExecution,
+        updatePresenceOnCampaign,
+        removeAllPresencesOnCampaign,
+        viewTestExecution,
+        removeAllViewTestExecution,
+        removeViewTestExecution,
+        removeViewTestExecutionByUUID,
+        displayPresencesForAllExecutions,
+        displayPresencesByExecution,
+        displayError,
+        displayErrorMessage,
+        executionsForCampaign,
     });
 
     initialization();
@@ -290,6 +291,11 @@ function ExecutionService(
         execution.error  = response.status + ': ' + response.data.error.message;
     }
 
+    function displayErrorMessage(execution, message) {
+        execution.saving = false;
+        execution.error  = message;
+    }
+
     function executionsForCampaign(campaign_id) {
         var executions = _.map(
             self.executions_by_categories_by_campaigns[campaign_id], 'executions'
@@ -297,4 +303,3 @@ function ExecutionService(
         return _.flatten(executions);
     }
 }
-

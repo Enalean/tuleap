@@ -1,33 +1,34 @@
-import _ from 'lodash';
-
 export default ExecutionRestService;
 
 ExecutionRestService.$inject = [
+    '$http',
     'Restangular',
     'SharedPropertiesService'
 ];
 
 function ExecutionRestService(
+    $http,
     Restangular,
     SharedPropertiesService
 ) {
-    _.extend(Restangular.configuration.defaultHeaders, {
-        'X-Client-UUID': SharedPropertiesService.getUUID()
-    });
+    Object.assign(Restangular.configuration.defaultHeaders,
+        { 'X-Client-UUID': SharedPropertiesService.getUUID() }
+    );
 
-    var self    = this,
-        baseurl = '/api/v1',
-        rest    = Restangular.withConfig(setRestangularConfig);
+    const self    = this;
+    const baseurl = '/api/v1';
+    const rest    = Restangular.withConfig(setRestangularConfig);
 
-    _.extend(self, {
-        getRemoteExecutions          : getRemoteExecutions,
-        postTestExecution            : postTestExecution,
-        putTestExecution             : putTestExecution,
-        changePresenceOnTestExecution: changePresenceOnTestExecution,
-        leaveTestExecution           : leaveTestExecution,
-        getArtifactById              : getArtifactById,
-        linkIssue                    : linkIssue,
-        linkIssueWithoutComment      : linkIssueWithoutComment
+    Object.assign(self, {
+        getRemoteExecutions,
+        postTestExecution,
+        putTestExecution,
+        changePresenceOnTestExecution,
+        leaveTestExecution,
+        getArtifactById,
+        linkIssue,
+        linkIssueWithoutComment,
+        getLinkedArtifacts
     });
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -131,6 +132,23 @@ function ExecutionRestService(
             .catch(function (response) {
                 return Promise.reject(response.data.error);
             });
+    }
+
+    function getLinkedArtifacts(test_execution, limit, offset) {
+        const { id: execution_id } = test_execution;
+        return $http.get(`/api/v1/artifacts/${execution_id}/linked_artifacts`, {
+            params: {
+                direction: 'forward',
+                nature: '',
+                limit,
+                offset
+            }
+        }).then((response) => {
+            return {
+                collection: response.data.collection,
+                total: Number.parseInt(response.headers('X-PAGINATION-SIZE'), 10)
+            };
+        });
     }
 }
 

@@ -1,55 +1,56 @@
-import testmanagement_module from '../app.js';
-import angular from 'angular';
+import execution_module from './execution.js';
+import angular          from 'angular';
 import 'angular-mocks';
 
-describe ('ExecutionRestService - ', function () {
-    var mockBackend, ExecutionRestService, SharedPropertiesService;
+describe('ExecutionRestService - ', () => {
+    let mockBackend,
+        ExecutionRestService,
+        SharedPropertiesService;
 
-    beforeEach(function() {
-        angular.mock.module(testmanagement_module);
+    beforeEach(() => {
+        angular.mock.module(execution_module);
 
         angular.mock.inject(function(
-            _ExecutionRestService_,
             $httpBackend,
-            _SharedPropertiesService_) {
-            ExecutionRestService    = _ExecutionRestService_;
+            _ExecutionRestService_,
+            _SharedPropertiesService_
+        ) {
             mockBackend             = $httpBackend;
+            ExecutionRestService    = _ExecutionRestService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
         spyOn(SharedPropertiesService, "getUUID").and.returnValue('123');
     });
 
-    afterEach (function () {
+    afterEach(() => {
         mockBackend.verifyNoOutstandingExpectation();
         mockBackend.verifyNoOutstandingRequest();
     });
 
-    it("getRemoteExecutions() - ", function() {
-        var response = [
+    it("getRemoteExecutions() - ", () => {
+        const response = [
             {
                 id: 4
-            },
-            {
+            }, {
                 id: 2
             }
         ];
 
         mockBackend
             .expectGET('/api/v1/testmanagement_campaigns/1/testmanagement_executions?limit=10&offset=0')
-            .respond (JSON.stringify(response));
+            .respond(JSON.stringify(response));
 
-        var promise = ExecutionRestService.getRemoteExecutions(1, 10, 0);
-
+        const promise = ExecutionRestService.getRemoteExecutions(1, 10, 0);
         mockBackend.flush();
 
-        promise.then(function(executions) {
+        promise.then(executions => {
             expect(executions.results.length).toEqual(2);
         });
     });
 
-    it("postTestExecution() - ", function() {
-        var execution = {
+    it("postTestExecution() - ", () => {
+        const execution = {
             id: 4,
             status: "notrun"
         };
@@ -58,17 +59,17 @@ describe ('ExecutionRestService - ', function () {
             .expectPOST('/api/v1/testmanagement_executions')
             .respond(execution);
 
-        var promise = ExecutionRestService.postTestExecution("notrun", "CentOS 5 - PHP 5.1");
+        const promise = ExecutionRestService.postTestExecution("notrun", "CentOS 5 - PHP 5.1");
 
         mockBackend.flush();
 
-        promise.then(function(execution_updated) {
+        promise.then(execution_updated => {
             expect(execution_updated.id).toBeDefined();
         });
     });
 
-    it("putTestExecution() - ", function() {
-        var execution = {
+    it("putTestExecution() - ", () => {
+        const execution = {
             id: 4,
             status: "passed",
             previous_result: {
@@ -81,32 +82,32 @@ describe ('ExecutionRestService - ', function () {
             .expectPUT('/api/v1/testmanagement_executions/4?results=nothing&status=passed&time=1')
             .respond(execution);
 
-        var promise = ExecutionRestService.putTestExecution(4, 'passed', 1, 'nothing');
+        const promise = ExecutionRestService.putTestExecution(4, 'passed', 1, 'nothing');
 
         mockBackend.flush();
 
-        promise.then(function(execution_updated) {
+        promise.then(execution_updated => {
             expect(execution_updated.id).toBeDefined();
         });
     });
 
-    it("changePresenceOnTestExecution() - ", function() {
+    it("changePresenceOnTestExecution() - ", () => {
         mockBackend
             .expectPATCH('/api/v1/testmanagement_executions/9/presences')
             .respond();
 
-        var promise = ExecutionRestService.changePresenceOnTestExecution(9, 4);
+        const promise = ExecutionRestService.changePresenceOnTestExecution(9, 4);
 
         mockBackend.flush();
 
-        promise.then(function(response) {
+        promise.then(response => {
             expect(response.status).toEqual(200);
         });
     });
 
-    it("linkIssue() - ", function() {
-        var issueId   = 400;
-        var execution = {
+    it("linkIssue() - ", () => {
+        const issueId   = 400;
+        const execution = {
             id: 100,
             previous_result: {
                 result: 'Something wrong'
@@ -117,17 +118,17 @@ describe ('ExecutionRestService - ', function () {
             }
         };
 
-        var expectedBody = new RegExp(execution.definition.summary
+        const expectedBody = new RegExp(execution.definition.summary
                                     + ".*"
                                     + execution.definition.description);
-        var matchPayload = {
+        const matchPayload = {
             id: issueId,
             comment: {
                 body  : 'MATCHING TEST SUMMARY + DESCRIPTION',
                 format: 'html'
             },
             test: function(data) {
-                var payload = JSON.parse(data);
+                const payload = JSON.parse(data);
                 return payload.issue_id === issueId &&
                     expectedBody.test(payload.comment.body) &&
                     payload.comment.format === 'html';
@@ -137,12 +138,47 @@ describe ('ExecutionRestService - ', function () {
             .expectPATCH('/api/v1/testmanagement_executions/100/issues', matchPayload)
             .respond();
 
-        var promise = ExecutionRestService.linkIssue(issueId, execution);
+        const promise = ExecutionRestService.linkIssue(issueId, execution);
 
         mockBackend.flush();
 
-        promise.then(function(response) {
+        promise.then(response => {
             expect(response.status).toEqual(200);
+        });
+    });
+
+    it("getLinkedArtifacts() - ", () => {
+        const linked_issues = [
+            {
+                id: 219,
+                xref: 'bug #219',
+                title: 'mascleless dollhouse',
+                tracker: { id: 23 }
+            }, {
+                id: 402,
+                xref: 'bug #402',
+                title: 'sugar candescent',
+                tracker: { id: 23 }
+            }
+        ];
+
+        mockBackend
+            .expectGET('/api/v1/artifacts/148/linked_artifacts?direction=forward&limit=10&nature=&offset=0')
+            .respond(angular.toJson({
+                collection: linked_issues
+            }), {
+                'X-Pagination-Size': 2
+            });
+
+        const test_execution = { id: 148 };
+        const promise = ExecutionRestService.getLinkedArtifacts(test_execution, 10, 0);
+        mockBackend.flush();
+
+        promise.then(result => {
+            expect(result).toEqual({
+                collection: linked_issues,
+                total: 2
+            });
         });
     });
 });

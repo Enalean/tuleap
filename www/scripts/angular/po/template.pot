@@ -120,6 +120,10 @@ msgstr ""
 msgid "Enter the id of the bug you want to link to \"{{ modal.test_summary }}\". The description of this test will be added as a follow-up comment to the linked bug."
 msgstr ""
 
+#: src/app/execution/execution-detail-controller.js
+msgid "Error while refreshing the list of linked bugs"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Failed"

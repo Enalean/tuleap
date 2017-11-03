@@ -17,6 +17,7 @@ ExecutionDetailCtrl.$inject = [
     'ArtifactLinksGraphModalLoading',
     'NewTuleapArtifactModalService',
     'ExecutionRestService',
+    'LinkedIssueService',
     'TlpModalService'
 ];
 
@@ -33,6 +34,7 @@ function ExecutionDetailCtrl(
     ArtifactLinksGraphModalLoading,
     NewTuleapArtifactModalService,
     ExecutionRestService,
+    LinkedIssueService,
     TlpModalService
 ) {
     var execution_id,
@@ -53,6 +55,7 @@ function ExecutionDetailCtrl(
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
     $scope.showEditArtifactModal       = showEditArtifactModal;
     $scope.closeLinkedIssueAlert       = closeLinkedIssueAlert;
+    $scope.refreshLinkedIssues         = refreshLinkedIssues;
     $scope.linkedIssueId               = null;
     $scope.linkedIssueAlertVisible     = false;
 
@@ -101,6 +104,7 @@ function ExecutionDetailCtrl(
                 .then(function () {
                     $scope.linkedIssueId           = artifact_id;
                     $scope.linkedIssueAlertVisible = true;
+                    $scope.refreshLinkedIssues();
                 });
         }
 
@@ -131,6 +135,7 @@ function ExecutionDetailCtrl(
         function callback(artifact_id) {
             $scope.linkedIssueId           = artifact_id;
             $scope.linkedIssueAlertVisible = true;
+            $scope.refreshLinkedIssues();
         }
 
         return TlpModalService.open({
@@ -205,6 +210,18 @@ function ExecutionDetailCtrl(
         $scope.execution         = ExecutionService.executions[execution_id];
         $scope.execution.results = '';
         $scope.execution.saving  = false;
+    }
+
+    function refreshLinkedIssues() {
+        $scope.execution.linked_bugs = [];
+        LinkedIssueService.getAllLinkedIssues($scope.execution, 0, (bunch_of_linked_issues) => {
+            $scope.execution.linked_bugs.push(...bunch_of_linked_issues);
+        }).catch((response) => {
+            ExecutionService.displayErrorMessage(
+                $scope.execution,
+                gettextCatalog.getString('Error while refreshing the list of linked bugs')
+            );
+        });
     }
 
     function isCurrentExecutionLoaded() {
