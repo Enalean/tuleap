@@ -162,8 +162,11 @@ class Docman_PermissionsExport {
     }
 
     public function renderDefinitionFormat() {
-        project_admin_header(array('title'=>$GLOBALS['Language']->getText('plugin_docman','export_format')));
-        
+        project_admin_header(
+            array('title'=>$GLOBALS['Language']->getText('plugin_docman','export_format')),
+            'data'
+        );
+
         echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman','perm_exp_format').'</h3>';
         echo '<p>'.$GLOBALS['Language']->getText('plugin_docman','perm_exp_format_msg').'</p>';
         $title_arr = array(

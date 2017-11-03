@@ -45,8 +45,7 @@ class NavigationPresenterBuilder
 
     public function build(Project $project, HTTPRequest $request, $current_pane_shortname)
     {
-        $project_id             = $project->getID();
-        $current_pane_shortname = $current_pane_shortname ?: $request->get('pane');
+        $project_id = $project->getID();
 
         $entries = array();
 
@@ -140,8 +139,7 @@ class NavigationPresenterBuilder
                 '/tracker/import_admin.php?' . http_build_query(
                     array(
                         'group_id' => $project->getID(),
-                        'mode' => 'admin',
-                        'pane' => self::DATA_ENTRY_SHORTNAME
+                        'mode' => 'admin'
                     )
                 )
             )

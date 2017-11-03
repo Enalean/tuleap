@@ -105,7 +105,7 @@ if ($export == 'artifact_history') {
 
     } else {
 
-	project_admin_header(array('title'=>$pg_title));
+	project_admin_header(array('title'=>$pg_title), 'data');
 
 	echo '<h3>'.$Language->getText('project_export_artifact_history_export','art_hist_export').'</h3>';
 	if ($result) {
