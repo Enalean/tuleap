@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,8 +33,10 @@ require_once('common/tracker/ArtifactField.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 require_once('common/event/EventManager.class.php');
 
-$em =& EventManager::instance();
-
+$em       =& EventManager::instance();
+$request  = HTTPRequest::instance();
+$export   = $request->get('export');
+$group_id = $request->get('group_id');
 if (!isset($export)) $export="";
 
 // Group ID must be defined and must be a project admin
