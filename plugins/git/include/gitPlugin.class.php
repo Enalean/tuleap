@@ -91,6 +91,8 @@ use Tuleap\Git\Repository\Settings\WebhookRouter;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\Glyph\GlyphLocation;
+use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\HierarchyDisplayer;
@@ -237,7 +239,7 @@ class GitPlugin extends Plugin {
     public function getHooksAndCallbacks()
     {
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(Event::GET_GLYPH, 'getGlyph');
+        $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(HierarchyDisplayer::NAME);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
@@ -2351,17 +2353,12 @@ class GitPlugin extends Plugin {
             || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
-    /**
-     * @see Event::GET_GLYPH
-     */
-    public function getGlyph(array $params)
+    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
     {
-        if (strpos($params['name'], 'tuleap-git') === 0) {
-            $svg_content = file_get_contents(GIT_BASE_DIR . '/../glyphs/'. $params['name'] .'.svg');
-            if ($svg_content !== false) {
-                $params['glyph'] = new \Tuleap\Glyph\Glyph($svg_content);
-            }
-        }
+        $glyph_locations_collector->addLocation(
+            'tuleap-git',
+            new GlyphLocation(GIT_BASE_DIR . '/../glyphs')
+        );
     }
 
     public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)

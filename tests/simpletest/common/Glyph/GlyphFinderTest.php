@@ -29,7 +29,7 @@ class GlyphFinderTest extends \TuleapTestCase
         parent::setUp();
         \ForgeConfig::store();
         $this->tmp_tuleap_dir = $this->getTmpDir();
-        \ForgeConfig::set('codendi_dir', $this->tmp_tuleap_dir);
+        \ForgeConfig::set('tuleap_dir', $this->tmp_tuleap_dir);
     }
 
     public function tearDown()
