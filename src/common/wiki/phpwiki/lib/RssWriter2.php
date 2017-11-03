@@ -43,15 +43,11 @@ class RssWriter2 extends RssWriter
     }
 
     // Required args: (applying defaults)
-    //  'domain', 'port', 'path', 'registerProcedure', 'protocol'
+    //  'domain', 'port', 'path', 'protocol'
     // Optional args:
     //  none
     function cloud($properties) {
-        // xml-rpc or soap or http-post
-        if (!isset($properties['protocol'])) $properties['protocol'] = 'xml-rpc'; 
-        if (!isset($properties['registerProcedure'])) 
-            $properties['registerProcedure'] = 'rssPleaseNotify';
-        if (!isset($properties['path'])) $properties['path'] = DATA_PATH.'/RPC2.php';
+        // soap or http-post
         if (!isset($properties['port'])) 
             $properties['port'] = !SERVER_PORT 
                 ? '80' 

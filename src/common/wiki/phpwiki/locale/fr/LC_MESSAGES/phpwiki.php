@@ -2028,8 +2028,6 @@ $locale["World"] =
    "Monde";
 $locale["Wrong password. Try again."] =
    "Mot de passe invalide, essayez encore.";
-$locale["XML-RPC access"] =
-   "Accès XML-RPC";
 $locale["Yes"] =
    "Oui";
 $locale["You are about to remove '%s'!"] =
@@ -2100,8 +2098,6 @@ $locale["_WikiTranslation"] =
    "_WikiTranslation";
 $locale["access this wiki via SOAP"] =
    "accéder à ce wiki via SOAP";
-$locale["access this wiki via XML-RPC"] =
-   "accéder à ce wiki via XML-RPC";
 $locale["add "] =
    "ajouter";
 $locale["always skip the HomePage."] =

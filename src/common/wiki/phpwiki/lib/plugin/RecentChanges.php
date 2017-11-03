@@ -689,13 +689,6 @@ extends _RecentChanges_RssFormatter {
     }
 
     function cloud_properties () { return false; } // xml-rpc registerProcedure not yet implemented
-    function cloud_properties_test () {
-        return array('protocol' => 'xml-rpc', // xml-rpc or soap or http-post
-                     'registerProcedure' => 'wiki.rssPleaseNotify',
-                     'path' => DATA_PATH.'/RPC2.php',
-                     'port' => !SERVER_PORT ? '80' : (SERVER_PROTOCOL == 'https' ? '443' : '80'),
-                     'domain' => SERVER_NAME);
-    }
 }
 
 class NonDeletedRevisionIterator extends WikiDB_PageRevisionIterator

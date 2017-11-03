@@ -907,10 +907,6 @@ msgstr ""
 msgid "view the source of this page"
 msgstr ""
 
-#: ../lib/main.php:507
-msgid "access this wiki via XML-RPC"
-msgstr ""
-
 #: ../lib/main.php:508
 msgid "access this wiki via SOAP"
 msgstr ""
@@ -977,10 +973,6 @@ msgstr ""
 
 #: ../lib/main.php:547
 msgid "Viewing the source of pages"
-msgstr ""
-
-#: ../lib/main.php:548
-msgid "XML-RPC access"
 msgstr ""
 
 #: ../lib/main.php:549
@@ -5067,10 +5059,6 @@ msgstr ""
 #: ../lib/WikiUser/POP3.php:59
 #, php-format
 msgid "Couldn't connect to %s"
-msgstr ""
-
-#: ../lib/XmlRpcServer.php:562
-msgid "xml-rpc change"
 msgstr ""
 
 #: ../lib/ziplib.php:199

@@ -166,7 +166,6 @@ function action2access ($action) {
     case 'viewsource':
     case 'diff':
     case 'select':
-    case 'xmlrpc':
     case 'search':
     case 'pdf':
         return 'view';

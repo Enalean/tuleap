@@ -275,7 +275,6 @@ ${POT_FILE}: ../lib/WikiUser/POP3.php
 ${POT_FILE}: ../lib/WikiUser/Session.php
 ${POT_FILE}: ../lib/XmlElement.php
 ${POT_FILE}: ../lib/XmlParser.php
-${POT_FILE}: ../lib/XmlRpcServer.php
 ${POT_FILE}: ../lib/ziplib.php
 ${POT_FILE}: ../themes/alphatest.php
 ${POT_FILE}: ../themes/Codendi/hyperapplet.php
