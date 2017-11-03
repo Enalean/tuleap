@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,13 +21,12 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use PFUser;
-use Tuleap\Tracker\REST\TrackerReference;
 use Tracker_Artifact;
 use Tuleap\Project\REST\ProjectReference;
-use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\ChangesetRepresentation;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
-use UserManager;
 
 class ArtifactRepresentation
 {
@@ -50,7 +49,7 @@ class ArtifactRepresentation
     public $xref;
 
     /**
-     * @var Tuleap\Tracker\REST\TrackerReference Reference to tracker the artifact belongs to {@type Tuleap\Tracker\REST\TrackerReference} {@required true}
+     * @var Tuleap\Tracker\REST\TrackerReference Reference to tracker the artifact belongs to {@type Tuleap\Tracker\REST\MinimalTrackerRepresentation} {@required true}
      */
     public $tracker;
 
@@ -63,7 +62,7 @@ class ArtifactRepresentation
      * @var int ID of the user who created the first version of the artifact {@type int} {@required true}
      */
     public $submitted_by;
-    
+
     /**
      * @var Tuleap\User\REST\MinimalUserRepresentation the minimal user representation who created the first version of the artifact {@type Tuleap\User\REST\MinimalUserRepresentation} {@required true}
      */
@@ -120,7 +119,7 @@ class ArtifactRepresentation
         $this->uri            = self::ROUTE . '/' . $artifact->getId();
         $this->xref           = $artifact->getXRef();
 
-        $this->tracker        = new TrackerReference();
+        $this->tracker        = new MinimalTrackerRepresentation();
         $this->tracker->build($artifact->getTracker());
 
         $this->project        = new ProjectReference();
