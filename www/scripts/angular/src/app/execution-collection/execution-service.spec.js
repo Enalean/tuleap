@@ -1,26 +1,29 @@
-import testmanagement_module from '../app.js';
-import angular from 'angular';
+import execution_collection_module from './execution-collection.js';
+import angular                     from 'angular';
 import 'angular-mocks';
 
-describe ('ExecutionService - ', function () {
-    var $q,
+describe ('ExecutionService - ', () => {
+    let $q,
         $rootScope,
         ExecutionRestService,
-        ExecutionService;
+        ExecutionService,
+        LinkedArtifactsService;
 
-    beforeEach(function() {
-        angular.mock.module(testmanagement_module);
+    beforeEach(() => {
+        angular.mock.module(execution_collection_module);
 
         angular.mock.inject(function(
             _$q_,
             _$rootScope_,
             _ExecutionRestService_,
-            _ExecutionService_
+            _ExecutionService_,
+            _LinkedArtifactsService_,
         ) {
             $q                   = _$q_;
             $rootScope           = _$rootScope_;
             ExecutionRestService = _ExecutionRestService_;
             ExecutionService     = _ExecutionService_;
+            LinkedArtifactsService   = _LinkedArtifactsService_;
         });
     });
 
@@ -996,6 +999,26 @@ describe ('ExecutionService - ', function () {
             ExecutionService.displayPresencesByExecution(4, presences);
 
             expect(ExecutionService.executions).toEqual(results);
+        });
+    });
+
+    describe("addArtifactLink", () => {
+        it("Given an execution and an artifact to link to it, then the artifact will be added to the execution's linked_bugs", () => {
+            let execution = {
+                id: 74,
+                linked_bugs: [
+                    { id: 38, title: 'thanan' }
+                ]
+            };
+            const artifact_to_link = { id: 88, title: 'paragraphically' };
+            ExecutionService.executions[74] = execution;
+
+            ExecutionService.addArtifactLink(execution, artifact_to_link);
+
+            expect(execution.linked_bugs).toEqual([
+                { id: 38, title: 'thanan' },
+                artifact_to_link
+            ]);
         });
     });
 });

@@ -27,6 +27,7 @@ use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact;
+use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
@@ -53,7 +54,8 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\User\REST\UserRepresentation;
 
-class ExecutionsResource {
+class ExecutionsResource
+{
     const FIELD_RESULTS      = 'results';
     const FIELD_STATUS       = 'status';
     const FIELD_TIME         = 'time';
@@ -86,7 +88,11 @@ class ExecutionsResource {
     /** @var Tracker_Permission_PermissionsSerializer */
     private $permissions_serializer;
 
-    public function __construct() {
+    /** @var RealTimeMessageSender  */
+    private $realtime_message_sender;
+
+    public function __construct()
+    {
         $this->config          = new Config(new Dao());
         $conformance_validator = new ConfigConformanceValidator($this->config);
 
@@ -117,6 +123,12 @@ class ExecutionsResource {
         $this->node_js_client         = new NodeJSClient();
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
+        $this->realtime_message_sender = new RealTimeMessageSender(
+            $this->node_js_client,
+            $this->permissions_serializer,
+            $this->testmanagement_artifact_factory,
+            $this->execution_representation_builder
         );
     }
 
@@ -341,6 +353,12 @@ class ExecutionsResource {
         if (! $is_linked) {
             throw new RestException(400, 'Could not link the issue artifact to the test execution');
         }
+
+        $this->realtime_message_sender->sendArtifactLinkAdded(
+            $user,
+            $execution_artifact,
+            $issue_artifact
+        );
 
         try {
             $updater = $this->getArtifactUpdater();

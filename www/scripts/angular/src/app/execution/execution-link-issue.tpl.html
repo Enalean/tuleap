@@ -18,7 +18,7 @@
             </label>
             <div class="link-issue-modal-input-container">
                 <input type="number"
-                    class="tlp-input"
+                    class="tlp-input link-issue-modal-input"
                     size="15"
                     id="issue-id"
                     name="issue_id"
@@ -28,10 +28,10 @@
                     ng-trim
                     auto-focus
                 />
-                <div class="link-issue-modal-input-info">
+                <div>
                     <i class="fa fa-spinner fa-spin" ng-if="link_issue_form.issue_id.$pending"></i>
                     <span ng-show="link_issue_form.$valid">
-                        <span class="tlp-badge-{{ modal.issue.xref_color }} tlp-badge-outline">{{ modal.issue.xref }}</span>
+                        <span class="tlp-badge-{{ modal.issue.xref_color }} tlp-badge-outline link-issue-modal-badge">{{ modal.issue.xref }}</span>
                         {{ modal.issue.title }}
                     </span>
                     <span class="tlp-text-danger"

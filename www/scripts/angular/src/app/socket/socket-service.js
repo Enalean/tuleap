@@ -26,20 +26,21 @@ function SocketService(
 ) {
     var self = this;
 
-    _.extend(self, {
-        checkDisconnect         : {
+    Object.assign(self, {
+        checkDisconnect: {
             disconnect: false
         },
-        listenTokenExpired      : listenTokenExpired,
-        listenNodeJSServer      : listenNodeJSServer,
-        listenToUserScore       : listenToUserScore,
-        listenToExecutionViewed : listenToExecutionViewed,
-        listenToExecutionLeft   : listenToExecutionLeft,
-        listenToExecutionCreated: listenToExecutionCreated,
-        listenToExecutionUpdated: listenToExecutionUpdated,
-        listenToExecutionDeleted: listenToExecutionDeleted,
-        listenToCampaignUpdated : listenToCampaignUpdated,
-        refreshToken            : refreshToken
+        listenTokenExpired,
+        listenNodeJSServer,
+        listenToUserScore,
+        listenToExecutionViewed,
+        listenToExecutionLeft,
+        listenToExecutionCreated,
+        listenToExecutionUpdated,
+        listenToExecutionDeleted,
+        listenToCampaignUpdated,
+        listenToArtifactLinked,
+        refreshToken,
     });
 
     function listenTokenExpired() {
@@ -60,6 +61,7 @@ function SocketService(
             listenToError();
             listenPresences();
             listenToUsersScore();
+            self.listenToArtifactLinked();
             return JWTService.getJWT().then(function (data) {
                 locker.put('token', data.token);
                 locker.put('token-expired-date', JWTService.getTokenExpiredDate(data.token));
@@ -175,6 +177,13 @@ function SocketService(
     function listenToCampaignUpdated(callback) {
         SocketFactory.on('testmanagement_campaign:update', function(data) {
             callback(data.artifact);
+        });
+    }
+
+    function listenToArtifactLinked() {
+        const event = 'testmanagement_execution:link_artifact';
+        SocketFactory.on(event, ({ execution, added_artifact_link }) => {
+            ExecutionService.addArtifactLink(execution, added_artifact_link);
         });
     }
 

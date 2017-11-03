@@ -1,11 +1,11 @@
-import execution_module from './execution.js';
+import execution_module from './execution-collection.js';
 import angular          from 'angular';
 import 'angular-mocks';
 
-describe("LinkedIssueService -", () => {
+describe("LinkedArtifactsService -", () => {
     let $q,
         $rootScope,
-        LinkedIssueService,
+        LinkedArtifactsService,
         ExecutionRestService,
         SharedPropertiesService;
 
@@ -15,13 +15,13 @@ describe("LinkedIssueService -", () => {
             _$q_,
             _$rootScope_,
             _ExecutionRestService_,
-            _LinkedIssueService_,
+            _LinkedArtifactsService_,
             _SharedPropertiesService_
         ) {
             $q                      = _$q_;
             $rootScope              = _$rootScope_;
             ExecutionRestService    = _ExecutionRestService_;
-            LinkedIssueService      = _LinkedIssueService_;
+            LinkedArtifactsService      = _LinkedArtifactsService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
@@ -61,7 +61,7 @@ describe("LinkedIssueService -", () => {
             }));
             spyOn(SharedPropertiesService, "getIssueTrackerId").and.returnValue(52);
 
-            LinkedIssueService.getAllLinkedIssues(execution, 0, (result) => {
+            LinkedArtifactsService.getAllLinkedIssues(execution, 0, (result) => {
                 expect(result).toEqual(linked_artifacts);
             });
         });
@@ -87,13 +87,13 @@ describe("LinkedIssueService -", () => {
                 return $q.when({
                     collection: Array(10).fill(bug),
                     total: 60
-                })
+                });
             })
 
             spyOn(SharedPropertiesService, "getIssueTrackerId").and.returnValue(16);
 
             let all_issues  = [];
-            LinkedIssueService.getAllLinkedIssues(execution, 0, (result) => {
+            LinkedArtifactsService.getAllLinkedIssues(execution, 0, (result) => {
                 all_issues.push(...result);
             });
             $rootScope.$apply();
@@ -108,7 +108,7 @@ describe("LinkedIssueService -", () => {
                 total: 0
             }));
 
-            const promise = LinkedIssueService.getAllLinkedIssues(execution, 0, angular.noop);
+            const promise = LinkedArtifactsService.getAllLinkedIssues(execution, 0, angular.noop);
 
             expect(promise).toBeResolved();
         });

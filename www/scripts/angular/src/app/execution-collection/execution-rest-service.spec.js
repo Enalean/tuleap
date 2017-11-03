@@ -1,4 +1,4 @@
-import execution_module from './execution.js';
+import execution_module from './execution-collection.js';
 import angular          from 'angular';
 import 'angular-mocks';
 

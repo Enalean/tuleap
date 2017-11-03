@@ -9,7 +9,7 @@ describe("ExecutionDetailController -", () => {
         $q,
         ExecutionDetailController,
         SharedPropertiesService,
-        LinkedIssueService,
+        LinkedArtifactsService,
         ExecutionService;
 
     beforeEach(() => {
@@ -23,14 +23,14 @@ describe("ExecutionDetailController -", () => {
             _$q_,
             _$rootScope_,
             _SharedPropertiesService_,
-            _LinkedIssueService_,
+            _LinkedArtifactsService_,
             _ExecutionService_,
         ) {
             $controller             = _$controller_;
             $q                      = _$q_;
             $rootScope              = _$rootScope_;
             SharedPropertiesService = _SharedPropertiesService_;
-            LinkedIssueService      = _LinkedIssueService_;
+            LinkedArtifactsService  = _LinkedArtifactsService_;
             ExecutionService        = _ExecutionService_;
         });
 
@@ -63,7 +63,7 @@ describe("ExecutionDetailController -", () => {
                 { id: 554 },
                 { id: 226 }
             ];
-            spyOn(LinkedIssueService, "getAllLinkedIssues").and.callFake((
+            spyOn(LinkedArtifactsService, "getAllLinkedIssues").and.callFake((
                 execution,
                 offset,
                 progress_callback
@@ -75,12 +75,12 @@ describe("ExecutionDetailController -", () => {
 
             $scope.refreshLinkedIssues();
 
-            expect(LinkedIssueService.getAllLinkedIssues).toHaveBeenCalledWith($scope.execution, 0, jasmine.any(Function));
+            expect(LinkedArtifactsService.getAllLinkedIssues).toHaveBeenCalledWith($scope.execution, 0, jasmine.any(Function));
             expect($scope.execution.linked_bugs).toEqual(linked_issues);
         });
 
         it("When there is an error, it will be displayed on the execution", function() {
-            spyOn(LinkedIssueService, "getAllLinkedIssues").and.returnValue($q.reject());
+            spyOn(LinkedArtifactsService, "getAllLinkedIssues").and.returnValue($q.reject());
             spyOn(ExecutionService, "displayErrorMessage");
 
             $scope.refreshLinkedIssues();

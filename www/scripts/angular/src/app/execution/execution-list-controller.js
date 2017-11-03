@@ -1,6 +1,8 @@
 import _ from 'lodash';
+import angular from 'angular';
 
 import '../campaign/campaign-edit.tpl.html';
+import './execution-presences.tpl.html';
 
 export default ExecutionListCtrl;
 
@@ -8,7 +10,6 @@ ExecutionListCtrl.$inject = [
     '$scope',
     '$state',
     '$filter',
-    '$q',
     'TlpModalService',
     'ExecutionService',
     'CampaignService',
@@ -21,7 +22,6 @@ function ExecutionListCtrl(
     $scope,
     $state,
     $filter,
-    $q,
     TlpModalService,
     ExecutionService,
     CampaignService,

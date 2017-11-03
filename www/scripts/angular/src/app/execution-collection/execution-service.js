@@ -1,21 +1,19 @@
 import _ from 'lodash';
 
-import './execution-presences.tpl.html';
-
 export default ExecutionService;
 
 ExecutionService.$inject = [
     '$q',
     '$rootScope',
     'ExecutionConstants',
-    'ExecutionRestService'
+    'ExecutionRestService',
 ];
 
 function ExecutionService(
     $q,
     $rootScope,
     ExecutionConstants,
-    ExecutionRestService
+    ExecutionRestService,
 ) {
     var self = this;
 
@@ -41,6 +39,7 @@ function ExecutionService(
         displayError,
         displayErrorMessage,
         executionsForCampaign,
+        addArtifactLink,
     });
 
     initialization();
@@ -141,7 +140,7 @@ function ExecutionService(
                 };
             }
 
-            if (! _.some(categories[category].executions, { id: execution.id })) {
+            if (! _.some(categories[category].executions, { id: execution.id })) {
                 categories[category].executions.push(execution);
             }
         });
@@ -301,5 +300,14 @@ function ExecutionService(
             self.executions_by_categories_by_campaigns[campaign_id], 'executions'
         );
         return _.flatten(executions);
+    }
+
+    function addArtifactLink({ id: execution_id }, artifact_link) {
+        if (! _.has(self.executions, execution_id)) {
+            return;
+        }
+        const execution = self.executions[execution_id];
+
+        execution.linked_bugs.push(artifact_link);
     }
 }

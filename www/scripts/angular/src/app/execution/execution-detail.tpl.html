@@ -56,8 +56,14 @@
                             role="menuitem"
                             translate
                         >Linked bugs</span>
-                        <a class="tlp-dropdown-menu-item" role="menuitem" href="/plugins/tracker/?aid={{ bug.id }}" ng-repeat="bug in execution.linked_bugs">
-                            <span ng-class="['tlp-badge-outline', 'tlp-badge-' + bug.tracker.color_name]">{{ bug.xref }}</span> {{ bug.title }}
+                        <a class="tlp-dropdown-menu-item"
+                           role="menuitem"
+                           href="/plugins/tracker/?aid={{ bug.id }}"
+                           ng-repeat="bug in execution.linked_bugs track by bug.id"
+                        >
+                            <span ng-class="['tlp-badge-outline', 'tlp-badge-' + bug.tracker.color_name, 'linked-issues-dropdown-content-badge']">
+                                {{ bug.xref }}
+                            </span> {{ bug.title }}
                         </a>
                     </div>
                 </div>

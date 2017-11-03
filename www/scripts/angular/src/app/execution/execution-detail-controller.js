@@ -17,8 +17,8 @@ ExecutionDetailCtrl.$inject = [
     'ArtifactLinksGraphModalLoading',
     'NewTuleapArtifactModalService',
     'ExecutionRestService',
-    'LinkedIssueService',
-    'TlpModalService'
+    'LinkedArtifactsService',
+    'TlpModalService',
 ];
 
 function ExecutionDetailCtrl(
@@ -34,8 +34,8 @@ function ExecutionDetailCtrl(
     ArtifactLinksGraphModalLoading,
     NewTuleapArtifactModalService,
     ExecutionRestService,
-    LinkedIssueService,
-    TlpModalService
+    LinkedArtifactsService,
+    TlpModalService,
 ) {
     var execution_id,
         campaign_id,
@@ -214,9 +214,9 @@ function ExecutionDetailCtrl(
 
     function refreshLinkedIssues() {
         $scope.execution.linked_bugs = [];
-        LinkedIssueService.getAllLinkedIssues($scope.execution, 0, (bunch_of_linked_issues) => {
+        LinkedArtifactsService.getAllLinkedIssues($scope.execution, 0, (bunch_of_linked_issues) => {
             $scope.execution.linked_bugs.push(...bunch_of_linked_issues);
-        }).catch((response) => {
+        }).catch(() => {
             ExecutionService.displayErrorMessage(
                 $scope.execution,
                 gettextCatalog.getString('Error while refreshing the list of linked bugs')
@@ -331,4 +331,3 @@ function ExecutionDetailCtrl(
         });
     }
 }
-

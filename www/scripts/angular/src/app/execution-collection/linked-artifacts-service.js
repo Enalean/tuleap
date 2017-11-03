@@ -1,11 +1,11 @@
-export default LinkedIssueService;
+export default LinkedArtifactsService;
 
-LinkedIssueService.$inject = [
+LinkedArtifactsService.$inject = [
     'ExecutionRestService',
     'SharedPropertiesService'
 ];
 
-function LinkedIssueService(
+function LinkedArtifactsService(
     ExecutionRestService,
     SharedPropertiesService
 ) {
