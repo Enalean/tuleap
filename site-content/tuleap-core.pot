@@ -213,9 +213,6 @@ msgstr ""
 msgid "Filled"
 msgstr ""
 
-msgid "Forum"
-msgstr ""
-
 msgid "Forums"
 msgstr ""
 
@@ -432,7 +429,7 @@ msgstr ""
 msgid "Style"
 msgstr ""
 
-msgid "Subversion"
+msgid "Template used by project"
 msgstr ""
 
 #, php-format
