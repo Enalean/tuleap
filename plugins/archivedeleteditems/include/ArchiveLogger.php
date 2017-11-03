@@ -29,8 +29,16 @@ class ArchiveLogger extends TruncateLevelLogger
 
     public function __construct()
     {
+        $file_path = ForgeConfig::get('codendi_log') .'/archive_deleted_item.log';
+
+        if (! is_file($file_path)) {
+            $http_user = ForgeConfig::get('sys_http_user');
+            touch($file_path);
+            chown($file_path, $http_user);
+        }
+
         parent::__construct(
-            new BackendLogger(ForgeConfig::get('codendi_log') .'/archive_deleted_item.log'),
+            new BackendLogger($file_path),
             ForgeConfig::get('sys_logger_level')
         );
     }
