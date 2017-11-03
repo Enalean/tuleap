@@ -658,7 +658,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     foreach (explode("\n", $value) as $new_value) {
                         $id = $this->addValue($new_value);
                         if ($id) {
-                            $this->values[$id] = $value_dao->searchById($id)->getRow();
+                            $this->values[$id] = $this->getValueFromRow($value_dao->searchById($id)->getRow());
                             $valueMapping[] = $id;
                         }
                     }
