@@ -173,11 +173,14 @@ class ProjectDetailsController
 
         $global_visibility_presenter = $this->project_visibility_presenter_builder->build($request);
 
+        $template_project = $this->project_manager->getProject($project->getTemplate());
+
         $renderer = \TemplateRendererFactory::build()->getRenderer($template_path);
         $renderer->renderToPage(
             'project-details',
             new ProjectDetailsPresenter(
                 $project,
+                $template_project,
                 $group_info,
                 $description_field_representations,
                 $hierarchy_presenter,

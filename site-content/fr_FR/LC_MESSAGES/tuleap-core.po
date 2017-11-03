@@ -237,9 +237,6 @@ msgstr "Fichiers"
 msgid "Filled"
 msgstr "Rempli"
 
-msgid "Forum"
-msgstr "Forums"
-
 msgid "Forums"
 msgstr "Forums"
 
@@ -456,8 +453,8 @@ msgstr "Commencez par choisir un widget"
 msgid "Style"
 msgstr "Style"
 
-msgid "Subversion"
-msgstr "Subversion"
+msgid "Template used by project"
+msgstr "Patron utilisé par ce projet"
 
 #, php-format
 msgid "The dashboard \"%s\" already exists."

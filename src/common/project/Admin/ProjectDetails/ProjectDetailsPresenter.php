@@ -72,6 +72,7 @@ class ProjectDetailsPresenter
 
     public function __construct(
         Project $project,
+        Project $template_project,
         array $group_info,
         array $description_fields_representation,
         ProjectHierarchyPresenter $project_hierarchy_presenter,
@@ -108,6 +109,10 @@ class ProjectDetailsPresenter
         $this->project_trove_category_label   = _('Project trove categories');
         $this->empty_project_trove_categories = _('No project trove categories');
         $this->template_label                 = _('Projects created from this template');
+
+        $this->template_project_label = _('Template used by project');
+        $this->template_project_name  = $template_project->getUnconvertedPublicName();
+        $this->template_project_url   = '/projects/' . urlencode($template_project->getUnixNameLowerCase());
     }
 
     private function getLocalizedType($project_type_id)
