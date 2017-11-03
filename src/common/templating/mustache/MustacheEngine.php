@@ -26,7 +26,7 @@ class MustacheEngine extends \Mustache_Engine
 {
     public function __construct(\Mustache_Loader $loader, TemplateCache $cache, $escape_callback = null)
     {
-        $gettext_helper = new GettextHelper();
+        $gettext_helper = new GettextHelper(new GettextSectionContentTransformer());
 
         parent::__construct(
             array(
@@ -37,16 +37,16 @@ class MustacheEngine extends \Mustache_Engine
                 'loader'           => $loader,
                 'cache'            => $cache->getPath(),
                 'helpers'          => array(
-                    'gettext'   => function ($text) use ($gettext_helper) {
+                    GettextHelper::GETTEXT   => function ($text) use ($gettext_helper) {
                         return $gettext_helper->gettext($text);
                     },
-                    'ngettext'  => function ($text, \Mustache_LambdaHelper $helper) use ($gettext_helper) {
+                    GettextHelper::NGETTEXT  => function ($text, \Mustache_LambdaHelper $helper) use ($gettext_helper) {
                         return $gettext_helper->ngettext($text, $helper);
                     },
-                    'dgettext'  => function ($text) use ($gettext_helper) {
+                    GettextHelper::DGETTEXT  => function ($text) use ($gettext_helper) {
                         return $gettext_helper->dgettext($text);
                     },
-                    'dngettext' => function ($text, \Mustache_LambdaHelper $helper) use ($gettext_helper) {
+                    GettextHelper::DNGETTEXT => function ($text, \Mustache_LambdaHelper $helper) use ($gettext_helper) {
                         return $gettext_helper->dngettext($text, $helper);
                     },
                 )

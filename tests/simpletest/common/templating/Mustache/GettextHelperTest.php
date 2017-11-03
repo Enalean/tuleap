@@ -24,7 +24,7 @@ class GettextHelperTest extends \TuleapTestCase
 {
     public function itTranslateASimpleString()
     {
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
 
         $this->assertEqual($helper->gettext('A text'), 'A text');
         $this->assertEqual($helper->dgettext('domain | A text'), 'A text');
@@ -32,7 +32,7 @@ class GettextHelperTest extends \TuleapTestCase
 
     public function itReplacesArgumentsIfTheyAreGiven()
     {
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
 
         $this->assertEqual($helper->gettext('A %s text|usefull'), 'A usefull text');
         $this->assertEqual($helper->dgettext('domain | A %s text|usefull'), 'A usefull text');
@@ -40,7 +40,7 @@ class GettextHelperTest extends \TuleapTestCase
 
     public function itTrimsTextAndArguments()
     {
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
 
         $this->assertEqual($helper->gettext(' A %s text | usefull '), 'A usefull text');
         $this->assertEqual($helper->dgettext(' domain | A %s text | usefull '), 'A usefull text');
@@ -48,7 +48,7 @@ class GettextHelperTest extends \TuleapTestCase
 
     public function itReturnsSingular()
     {
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = stub('Mustache_LambdaHelper')->render('{{ nb }}')->returns('1');
 
         $this->assertEqual(
@@ -63,7 +63,7 @@ class GettextHelperTest extends \TuleapTestCase
 
     public function itReturnsPlural()
     {
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = stub('Mustache_LambdaHelper')->render('{{ nb }}')->returns('2');
 
         $this->assertEqual(
@@ -78,7 +78,7 @@ class GettextHelperTest extends \TuleapTestCase
 
     public function itUsesNbAsArgumentByDefault()
     {
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = stub('Mustache_LambdaHelper')->render('{{ nb }}')->returns('2');
 
         $this->assertEqual(
@@ -93,7 +93,7 @@ class GettextHelperTest extends \TuleapTestCase
 
     public function itDoesNotUseNbAsArgumentIfDevelopersGaveExtraArguments()
     {
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
         $lambda = stub('Mustache_LambdaHelper')->render('{{ nb }}')->returns('2');
 
         $this->assertEqual(
@@ -110,7 +110,7 @@ class GettextHelperTest extends \TuleapTestCase
     {
         $this->expectException('\Tuleap\Templating\Mustache\InvalidGettextStringException');
 
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
         $helper->gettext('');
     }
 
@@ -118,7 +118,7 @@ class GettextHelperTest extends \TuleapTestCase
     {
         $this->expectException('\Tuleap\Templating\Mustache\InvalidGettextStringException');
 
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
         $helper->dgettext('domain');
         $helper->dgettext('domain|');
     }
@@ -129,7 +129,7 @@ class GettextHelperTest extends \TuleapTestCase
 
         $lambda = stub('Mustache_LambdaHelper')->render('{{ nb }}')->returns('2');
 
-        $helper = new GettextHelper();
+        $helper = new GettextHelper(new GettextSectionContentTransformer());
         $helper->ngettext('%d text | %d texts', $lambda);
         $helper->dngettext('domain | %d text | %d texts', $lambda);
     }
