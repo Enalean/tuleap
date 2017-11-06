@@ -26,7 +26,7 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 
 class ConfigConformanceAsserterTest extends TuleapTestCase {
 
-    /** @var ConfigConformanceAsserter */
+    /** @var ConfigConformanceValidator */
     private $validator;
 
     /** @var \Tracker_Artifact */
@@ -158,37 +158,6 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
     public function itReturnsTrueWhenTrackerIsACampaignTracker() {
         $this->assertTrue(
             $this->validator->isArtifactACampaign($this->campaign_artifact)
-        );
-    }
-
-    public function itReturnsTrueWhenCampaignIsLinkedToExecution() {
-        $this->assertTrue(
-            $this->validator->isArtifactAnExecutionOfCampaign(
-                $this->user,
-                $this->execution_artifact,
-                $this->campaign_artifact
-            )
-        );
-    }
-
-    public function itReturnsTrueWhenExecutionIsLinkedToCampaign()
-    {
-        $this->assertTrue(
-            $this->validator->isArtifactAnExecutionOfCampaign(
-                $this->user,
-                $this->another_execution_artifact,
-                $this->campaign_artifact
-            )
-        );
-    }
-
-    public function itReturnsFalseWhenExecutionDoesNotBelongsToCampaign() {
-        $this->assertFalse(
-            $this->validator->isArtifactAnExecutionOfCampaign(
-                $this->user,
-                $this->artifact_outside_of_project,
-                $this->campaign_artifact
-            )
         );
     }
 
