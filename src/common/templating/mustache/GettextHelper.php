@@ -22,6 +22,19 @@ namespace Tuleap\Templating\Mustache;
 
 class GettextHelper
 {
+    const GETTEXT   = 'gettext';
+    const NGETTEXT  = 'ngettext';
+    const DGETTEXT  = 'dgettext';
+    const DNGETTEXT = 'dngettext';
+    /**
+     * @var GettextSectionContentTransformer
+     */
+    private $transformer;
+
+    public function __construct(GettextSectionContentTransformer $transformer)
+    {
+        $this->transformer = $transformer;
+    }
 
     public function gettext($text)
     {
@@ -71,21 +84,12 @@ class GettextHelper
 
     private function splitTextInParts($text)
     {
-        return explode('|', $text);
+        return $this->transformer->splitTextInParts($text);
     }
 
     private function shift($text, array &$parts)
     {
-        if (! $parts) {
-            throw new InvalidGettextStringException($text);
-        }
-
-        $string = trim(array_shift($parts));
-        if ($string === '') {
-            throw new InvalidGettextStringException($text);
-        }
-
-        return $string;
+        return $this->transformer->shift($text, $parts);
     }
 
     private function getVsprintfArgumentsFromRemainingParts($parts)

@@ -19,6 +19,15 @@
 # along with Tuleap. If not, see <http://www.gnu.org/licenses/
 #
 
+use Tuleap\Language\Gettext\POTFileDumper;
+use Tuleap\Templating\Mustache\DomainExtractor;
+use Tuleap\Templating\Mustache\GettextCollector;
+use Tuleap\Templating\Mustache\GettextExtractor;
+use Tuleap\Templating\Mustache\GettextSectionContentTransformer;
+
+require_once __DIR__ .'/../../src/common/autoload.php';
+require_once __DIR__ .'/../../src/vendor/autoload.php';
+
 $basedir = $argv[1];
 
 function info($message)
@@ -63,6 +72,15 @@ function executeCommandAndExitIfStderrNotEmpty($command)
     }
 }
 
+$gettext_in_mustache_extractor = new DomainExtractor(
+    new POTFileDumper(),
+    new GettextExtractor(
+        new Mustache_Parser(),
+        new Mustache_Tokenizer(),
+        new GettextCollector(new GettextSectionContentTransformer())
+    )
+);
+
 info("[core] Generating .pot file");
 $core_src = escapeshellarg("$basedir/src");
 $template = escapeshellarg("$basedir/site-content/tuleap-core.pot");
@@ -77,6 +95,18 @@ executeCommandAndExitIfStderrNotEmpty("find $core_src -name '*.php' \
         -o - \
     | sed '/^msgctxt/d' \
     > $template");
+
+info("[core] Gerenating .pot file for .mustache files");
+$mustache_template = "$basedir/site-content/tuleap-core.mustache.pot";
+$gettext_in_mustache_extractor->extract(
+    'tuleap-core',
+    "$basedir/src/templates",
+    $mustache_template
+);
+
+info("[core] Combining .pot files into one");
+executeCommandAndExitIfStderrNotEmpty("msgcat --sort-output -o $template $template ". escapeshellarg($mustache_template));
+unlink($mustache_template);
 
 info("[core] Merging .pot file into .po files");
 $site_content = escapeshellarg("$basedir/site-content");
@@ -94,6 +124,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
     $template = escapeshellarg("$path/site-content/tuleap-$translated_plugin.pot");
     $default  = escapeshellarg("$path/site-content/tuleap-$translated_plugin-default.pot");
     $plural   = escapeshellarg("$path/site-content/tuleap-$translated_plugin-plural.pot");
+    $mustache = escapeshellarg("$path/site-content/tuleap-$translated_plugin-mustache.pot");
     executeCommandAndExitIfStderrNotEmpty("find $src -name '*.php' \
         | xargs xgettext \
             --keyword='dgettext:1c,2' \
@@ -123,10 +154,18 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
         | sed '/^msgctxt/d' \
         > $plural");
 
+    info("[$translated_plugin] Gerenating .pot file for .mustache files");
+    $gettext_in_mustache_extractor->extract(
+        "tuleap-$translated_plugin",
+        "$path/templates",
+        "$path/site-content/tuleap-$translated_plugin-mustache.pot"
+    );
+
     info("[$translated_plugin] Combining .pot files into one");
-    exec("msgcat --no-location --sort-output --use-first $plural $default > $template");
+    exec("msgcat --no-location --sort-output --use-first $plural $default $mustache > $template");
     unlink("$path/site-content/tuleap-$translated_plugin-default.pot");
     unlink("$path/site-content/tuleap-$translated_plugin-plural.pot");
+    unlink("$path/site-content/tuleap-$translated_plugin-mustache.pot");
 
     foreach (glob("$path/site-content/*", GLOB_ONLYDIR) as $foreign_dir) {
         if (basename($foreign_dir) === 'en_US') {
