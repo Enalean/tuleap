@@ -99,10 +99,11 @@ class Tracker_Permission_PermissionsSerializer {
     }
 
     public function getUserGroupsThatCanViewArtifact(Tracker_Artifact $artifact) {
-        $authorized_ugroups  = array(ProjectUGroup::PROJECT_ADMIN);
+        $authorized_ugroups  = array();
         $artifact_ugroup_ids = $artifact->getAuthorizedUGroups();
 
         if ($artifact_ugroup_ids) {
+            array_push($authorized_ugroups, ProjectUGroup::PROJECT_ADMIN);
             $authorized_ugroups = array_merge($authorized_ugroups, $artifact_ugroup_ids);
         }
 
