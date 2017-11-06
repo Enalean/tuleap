@@ -53,11 +53,11 @@ class LDAP_SyncMail {
         foreach ($projectList as $project) {
             $projectRecipient = array();
             $projectAdmins    = $project->getAdmins();
-            $projectName      = $project->getPublicName();
+            $unixProjectName      = $project->getUnixName();
             foreach($projectAdmins as $admin) {
                 $projectRecipient[$admin->getId()] = $admin->getEmail();
             }
-            $recipient[$projectName] = $projectRecipient;
+            $recipient[$unixProjectName] = $projectRecipient;
         }
         return $recipient;
     }
@@ -65,20 +65,20 @@ class LDAP_SyncMail {
     /**
      * Send mail to project administrators after daliy user sync.
      *
-     * @param String  $recipients  List of project administrators emails we want to notify
-     * @param String  $projectName Public name of the project we want to notify its administrators
-     * @param PFUser  $user        Suspended user after LDAP daily synchro
-     * @param String  $subject     The subject of the notification mail
-     * @param String  $body        The content of the notification mail
+     * @param String  $recipients       List of project administrators emails we want to notify
+     * @param String  $unixProjectName  Unix name of the project we want to notify its administrators
+     * @param PFUser  $user             Suspended user after LDAP daily synchro
+     * @param String  $subject          The subject of the notification mail
+     * @param String  $body             The content of the notification mail
      *
      * @return boolean
      */
-    public function notifyProjectsAdmins($recipients, $projectName, $user, $subject, $body) {
+    public function notifyProjectsAdmins($recipients, $unixProjectName, $user, $subject, $body) {
         $notificationStatus = true;
         try {
-            $mail = $this->prepareMail($recipients, $projectName, $subject, $body);
+            $mail = $this->prepareMail($recipients, $unixProjectName, $subject, $body);
             if (! $mail->send()) {
-                $this->logger->error("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().", but failed to notify administrators of <$projectName> project");
+                $this->logger->error("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().", but failed to notify administrators of <$unixProjectName> project (unix name)");
                 $notificationStatus = false;
             }
         } catch (InvalidArgumentException $e) {
@@ -93,18 +93,18 @@ class LDAP_SyncMail {
     /**
      * Prepare the mail to be sent after daily user sync
      *
-     * @param String  $recipients  List of project administrators emails we want to notify
-     * @param Integer $projectName Public name of the project we want to notify its administrators
-     * @param String  $subject     The subject of the notification mail
-     * @param String  $body        The content of the notification mail
+     * @param String  $recipients       List of project administrators emails we want to notify
+     * @param Integer $unixProjectName  Unix name of the project we want to notify its administrators
+     * @param String  $subject          The subject of the notification mail
+     * @param String  $body             The content of the notification mail
      *
      * @return Codendi_Mail
      */
-    protected function prepareMail($recipients, $projectName, $subject,$body) {
+    protected function prepareMail($recipients, $unixProjectName, $subject,$body) {
         $mail = new Codendi_Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
         if (empty($recipients)) {
-            throw new InvalidArgumentException('Cannot send notification without any valid receiver, Perhaps the project <'.$projectName.'> has no administrators.');
+            throw new InvalidArgumentException('Cannot send notification without any valid receiver, Perhaps the project <'.$unixProjectName.'> (unix name) has no administrators.');
         }
         $mail->setSubject($subject);
         $mail->setTo($recipients);
