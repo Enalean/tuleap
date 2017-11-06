@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Event\GetAdditionalContent;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 
@@ -66,11 +67,21 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html  = '';
         $html .= '<div class="tracker_artifact">';
         $html .= $this->fetchArtifactReferencesSidebar();
+        $html .= $this->fetchExternalContent();
         $html .= $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
         $html .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
         $html .= '</div>';
 
         return $html;
+    }
+
+    private function fetchExternalContent()
+    {
+        $event = new GetAdditionalContent($this->artifact);
+
+        EventManager::instance()->processEvent($event);
+
+        return $event->getContent();
     }
 
     protected function fetchArtifactReferencesSidebar() {
