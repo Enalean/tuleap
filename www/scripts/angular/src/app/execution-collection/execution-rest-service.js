@@ -93,12 +93,10 @@ function ExecutionRestService(
     }
 
     function getArtifactById(artifact_id) {
-        return rest
-            .one('artifacts', artifact_id)
-            .get()
-            .then(function(response) {
-                return response.data;
-            });
+        return $http.get('/api/v1/artifacts/' + artifact_id)
+        .then((response) => {
+            return response.data;
+        });
     }
 
     function linkIssue(issue_id, test_execution) {

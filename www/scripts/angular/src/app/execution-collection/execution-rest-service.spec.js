@@ -181,4 +181,23 @@ describe('ExecutionRestService - ', () => {
             });
         });
     });
+
+    it("getArtifactById() -", () => {
+        const artifact = {
+            id: 61,
+            xref: 'bug #61',
+            title: 'intercloud haustorium',
+            tracker: { id: 4 }
+        };
+        mockBackend
+            .expectGET('/api/v1/artifacts/61')
+            .respond(angular.toJson(artifact));
+
+        const promise = ExecutionRestService.getArtifactById(61);
+        mockBackend.flush();
+
+        promise.then(result => {
+            expect(result).toEqual(artifact);
+        })
+    });
 });

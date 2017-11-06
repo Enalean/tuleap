@@ -26,13 +26,12 @@
                     ng-model-options="{debounce: modal.issue_debounce}"
                     required="required"
                     ng-trim
-                    auto-focus
                 />
                 <div>
                     <i class="fa fa-spinner fa-spin" ng-if="link_issue_form.issue_id.$pending"></i>
                     <span ng-show="link_issue_form.$valid">
-                        <span class="tlp-badge-{{ modal.issue.xref_color }} tlp-badge-outline link-issue-modal-badge">{{ modal.issue.xref }}</span>
-                        {{ modal.issue.title }}
+                        <span class="tlp-badge-{{ modal.issue_artifact.tracker.color_name }} tlp-badge-outline link-issue-modal-badge">{{ modal.issue_artifact.xref }}</span>
+                        {{ modal.issue_artifact.title }}
                     </span>
                     <span class="tlp-text-danger"
                         ng-show="(link_issue_form.$dirty && link_issue_form.$invalid) || modal.error_message"

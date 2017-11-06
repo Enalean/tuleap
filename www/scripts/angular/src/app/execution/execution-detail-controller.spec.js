@@ -10,7 +10,8 @@ describe("ExecutionDetailController -", () => {
         ExecutionDetailController,
         SharedPropertiesService,
         LinkedArtifactsService,
-        ExecutionService;
+        ExecutionService,
+        TlpModalService;
 
     beforeEach(() => {
         angular.mock.module(execution_module);
@@ -25,6 +26,7 @@ describe("ExecutionDetailController -", () => {
             _SharedPropertiesService_,
             _LinkedArtifactsService_,
             _ExecutionService_,
+            _TlpModalService_,
         ) {
             $controller             = _$controller_;
             $q                      = _$q_;
@@ -32,6 +34,7 @@ describe("ExecutionDetailController -", () => {
             SharedPropertiesService = _SharedPropertiesService_;
             LinkedArtifactsService  = _LinkedArtifactsService_;
             ExecutionService        = _ExecutionService_;
+            TlpModalService         = _TlpModalService_;
         });
 
         $scope = $rootScope.$new()
@@ -46,8 +49,31 @@ describe("ExecutionDetailController -", () => {
         spyOn(ExecutionService, "loadExecutions");
 
         ExecutionDetailController = $controller(BaseController, {
-            $scope          : $scope,
-            ExecutionService: ExecutionService,
+            $scope,
+            ExecutionService,
+            TlpModalService,
+        });
+    });
+
+    describe("showLinkToExistingBugModal() -", () => {
+        it("when the callback is called from the modal, then the linked issue will be shown in an alert and will be added to the linked issues dropdown", () => {
+            const artifact = {
+                id: 70,
+                title: 'phalangean authorcraft',
+                xref: 'bugs #70'
+            };
+            $scope.execution = { id: 26 };
+            spyOn(TlpModalService, "open").and.callFake(({ resolve }) => {
+                resolve.modal_callback(artifact);
+            });
+            spyOn(ExecutionService, "addArtifactLink");
+
+            $scope.showLinkToExistingBugModal();
+
+            expect(TlpModalService.open).toHaveBeenCalled();
+            expect($scope.linkedIssueId).toBe(artifact.id);
+            expect($scope.linkedIssueAlertVisible).toBe(true);
+            expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution, artifact);
         });
     });
 

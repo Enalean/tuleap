@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import './execution-link-issue.tpl.html';
+import ExecutionLinkIssueCtrl from './execution-link-issue-controller.js';
 
 export default ExecutionDetailCtrl;
 
@@ -51,13 +52,16 @@ function ExecutionDetailCtrl(
     $scope.canCreateIssue              = issue_config.permissions.create;
     $scope.canLinkIssue                = issue_config.permissions.link;
     $scope.showLinkToNewBugModal       = showLinkToNewBugModal;
-    $scope.showLinkToExistingBugModal  = showLinkToExistingBugModal;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
     $scope.showEditArtifactModal       = showEditArtifactModal;
     $scope.closeLinkedIssueAlert       = closeLinkedIssueAlert;
     $scope.refreshLinkedIssues         = refreshLinkedIssues;
     $scope.linkedIssueId               = null;
     $scope.linkedIssueAlertVisible     = false;
+
+    Object.assign($scope, {
+        showLinkToExistingBugModal
+    });
 
     initialization();
     resetTimer();
@@ -132,17 +136,17 @@ function ExecutionDetailCtrl(
     }
 
     function showLinkToExistingBugModal() {
-        function callback(artifact_id) {
-            $scope.linkedIssueId           = artifact_id;
+        function callback(artifact) {
+            $scope.linkedIssueId           = artifact.id;
             $scope.linkedIssueAlertVisible = true;
-            $scope.refreshLinkedIssues();
+            ExecutionService.addArtifactLink($scope.execution, artifact);
         }
 
         return TlpModalService.open({
             templateUrl : 'execution-link-issue.tpl.html',
-            controller  : 'ExecutionLinkIssueCtrl',
+            controller  : ExecutionLinkIssueCtrl,
             controllerAs: 'modal',
-            resolve: {
+            resolve     : {
                 modal_model: {
                     test_execution: $scope.execution
                 },

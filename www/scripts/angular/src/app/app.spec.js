@@ -7,5 +7,6 @@ import './execution-collection/execution-rest-service.spec.js';
 import './execution-collection/execution-service.spec.js';
 import './execution-collection/linked-artifacts-service.spec.js';
 import './execution/execution-detail-controller.spec.js';
+import './execution/execution-link-issue-controller.spec.js';
 import './execution/execution-list-filter.spec.js';
 import './socket/socket-service.spec.js';

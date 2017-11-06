@@ -17,7 +17,6 @@ import ExecutionConfig         from './execution-config.js';
 import ExecutionPresencesCtrl  from './execution-presences-controller.js';
 import ExecutionListCtrl       from './execution-list-controller.js';
 import ExecutionDetailCtrl     from './execution-detail-controller.js';
-import ExecutionLinkIssueCtrl  from './execution-link-issue-controller.js';
 import ExecutionTimerDirective from './timer/execution-timer-directive.js';
 import ExecutionListFilter     from './execution-list-filter.js';
 
@@ -37,7 +36,6 @@ export default angular.module('execution', [
 .controller('ExecutionPresencesCtrl', ExecutionPresencesCtrl)
 .controller('ExecutionListCtrl', ExecutionListCtrl)
 .controller('ExecutionDetailCtrl', ExecutionDetailCtrl)
-.controller('ExecutionLinkIssueCtrl', ExecutionLinkIssueCtrl)
 .directive('timer', ExecutionTimerDirective)
 .filter('ExecutionListFilter', ExecutionListFilter)
 .name;
