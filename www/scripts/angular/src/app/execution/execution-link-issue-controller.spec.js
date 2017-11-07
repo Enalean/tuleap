@@ -72,11 +72,31 @@ describe("ExecutionLinkIssueController -", () => {
         installPromiseMatchers();
     });
 
+    describe("validateIssueIsNotAlreadyLinked", () => {
+        beforeEach(() => {
+            modal_model.test_execution.linked_bugs = [
+                { id: 39, title: 'disklike', xref: 'bugs #39' },
+                { id: 80, title: 'schoolless', xref: 'bugs #80' },
+            ];
+        });
+
+        it("Given an artifact id that is already linked to the execution, then it will return false", () => {
+            const result = ExecutionLinkIssueController.validateIssueIsNotAlreadyLinked('', '80');
+
+            expect(result).toBe(false);
+        });
+
+        it("Given an artifact id that is not already linked to the execution, then it will return true", () => {
+            const result = ExecutionLinkIssueController.validateIssueIsNotAlreadyLinked('', '66');
+
+            expect(result).toBe(true);
+        });
+    });
+
     describe("validateIssueId() -", () => {
         it("Given that the linking modal was initialized, when I enter a bug artifact id, then it will be valid and will be attached to the controller", () => {
-            const artifact_id = 52;
-            const artifact    = {
-                id     : artifact_id,
+            const artifact = {
+                id     : 52,
                 title  : 'nonreceipt aroxyl',
                 xref   : 'bug #52',
                 tracker: {
@@ -85,18 +105,17 @@ describe("ExecutionLinkIssueController -", () => {
             };
             spyOn(ExecutionRestService, "getArtifactById").and.returnValue($q.when(artifact));
 
-            var promise = ExecutionLinkIssueController.validateIssueId('', artifact_id);
+            var promise = ExecutionLinkIssueController.validateIssueId('', '52');
 
             expect(promise).toBeResolvedWith(true);
-            expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith(artifact_id);
+            expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith('52');
             expect(ExecutionLinkIssueController.issue_artifact).toBe(artifact);
             expect(ExecutionLinkIssueController.issue_artifact.tracker.color_name).toBe('flamingo_pink');
         });
 
         it("Given that the linking modal was initialized, when I enter an artifact id that isn't a bug, then it will not be valid and the promise will be rejected", () => {
-            const artifact_id = 17;
-            const artifact    = {
-                id     : artifact_id,
+            const artifact = {
+                id     : 17,
                 title  : 'nonprejudicial Elodeaceae',
                 xref   : 'story #17',
                 tracker: {
@@ -105,10 +124,10 @@ describe("ExecutionLinkIssueController -", () => {
             };
             spyOn(ExecutionRestService, "getArtifactById").and.returnValue($q.when(artifact));
 
-            var promise = ExecutionLinkIssueController.validateIssueId('', artifact_id);
+            var promise = ExecutionLinkIssueController.validateIssueId('', '17');
 
             expect(promise).toBeRejected();
-            expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith(artifact_id);
+            expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith('17');
             expect(ExecutionLinkIssueController.issue_artifact).toBe(null);
         });
     });

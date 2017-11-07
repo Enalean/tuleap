@@ -254,6 +254,10 @@ msgstr "Il n'existe pas de campagne"
 msgid "There are no open campaigns"
 msgstr "Il n’existe pas de campagne ouverte"
 
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "This artifact is already linked to this test."
+msgstr "Cet artéfact est déjà lié à ce test."
+
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."

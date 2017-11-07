@@ -35,16 +35,24 @@ function ExecutionLinkIssueCtrl(
         test_summary       : test_execution.definition.summary,
         linkIssue,
         validateIssueId,
+        validateIssueIsNotAlreadyLinked,
     });
 
     self.$onInit = function() {
-        $scope.link_issue_form.issue_id.$asyncValidators.validIssueId = self.validateIssueId;
+        const { issue_id } = $scope.link_issue_form;
+        issue_id.$validators.issueNotAlreadyLinked = self.validateIssueIsNotAlreadyLinked;
+        issue_id.$asyncValidators.validIssueId     = self.validateIssueId;
 
         modal_instance.tlp_modal.addEventListener('tlp-modal-shown', () => {
             const input = modal_instance.tlp_modal.element.querySelector('.link-issue-modal-input');
             if (input) { input.focus(); };
         });
     };
+
+    function validateIssueIsNotAlreadyLinked(model_value, view_value) {
+        const index = test_execution.linked_bugs.findIndex(artifact => artifact.id === Number.parseInt(view_value, 10));
+        return index === -1;
+    }
 
     function validateIssueId(model_value, view_value) {
         return ExecutionRestService.getArtifactById(view_value).then(artifact => {

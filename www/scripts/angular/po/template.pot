@@ -241,6 +241,10 @@ msgstr ""
 msgid "There are no open campaigns"
 msgstr ""
 
+#: src/app/execution/execution-link-issue.tpl.html
+msgid "This artifact is already linked to this test."
+msgstr ""
+
 #: src/app/socket/socket-disconnect.tpl.html
 msgid "You are disconnected from real time. Please reload your page."
 msgstr ""

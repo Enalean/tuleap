@@ -36,7 +36,8 @@
                     <span class="tlp-text-danger"
                         ng-show="(link_issue_form.$dirty && link_issue_form.$invalid) || modal.error_message"
                     >
-                        <span ng-if="link_issue_form.issue_id.$invalid" translate>The entered id is incorrect.</span>
+                        <span ng-if="link_issue_form.issue_id.$error.validIssueId" translate>The entered id is incorrect.</span>
+                        <span ng-if="link_issue_form.issue_id.$error.issueNotAlreadyLinked" translate>This artifact is already linked to this test.</span>
                         {{ modal.error_message }}
                         <i class="fa fa-frown-o"></i>
                     </span>
