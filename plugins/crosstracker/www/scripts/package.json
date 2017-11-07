@@ -11,15 +11,18 @@
     "mustache": "^2.3.0",
     "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
+    "vue": "^2.5.9",
     "wrist": "0.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.0.0",
-    "babel-preset-env": "^1.5.2",
+    "babel-preset-env": "^1.6.0",
     "json-loader": "^0.5.7",
     "po-gettext-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
+    "vue-loader": "^13.4.0",
+    "vue-template-compiler": "^2.5.9",
     "webpack": "^3.0.0",
     "webpack-assets-manifest": "^0.7.0"
   },

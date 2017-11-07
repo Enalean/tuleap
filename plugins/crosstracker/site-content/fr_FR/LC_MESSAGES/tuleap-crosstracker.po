@@ -15,32 +15,14 @@ msgstr ""
 msgid "Add"
 msgstr "Ajouter"
 
-msgid "Artifact"
-msgstr "Artefact"
-
-msgid "Assigned to"
-msgstr "Assigné à"
-
 msgid "Cancel"
 msgstr "Annuler"
-
-msgid "Cross tracker search"
-msgstr "Recherche multi trackers"
 
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
 
-msgid "Last update date"
-msgstr "Mis à jour le"
-
-msgid "Load more"
-msgstr "Voir plus"
-
-msgid "No matching artifacts found"
-msgstr "Aucun artefact correspondant trouvé"
-
 msgid "No trackers selected"
-msgstr "Aucun élément sélectionné"
+msgstr "Aucun outils de suivi sélectionné"
 
 msgid "Project"
 msgstr "Projet"
@@ -57,12 +39,6 @@ msgstr "Permet la recherche d'artefacts à travers plusieurs outils de suivi"
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
 
-msgid "Status"
-msgstr "État"
-
-msgid "Submitted by"
-msgstr "Auteur"
-
 msgid "Tracker"
 msgstr "Outil de suivi"
 
@@ -70,7 +46,9 @@ msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"
 
 msgid "You cannot access all the columns displayed in this search"
-msgstr "Vous ne pouvez pas accéder à toutes les colonnes affichées dans cette recherche"
+msgstr ""
+"Vous ne pouvez pas accéder à toutes les colonnes affichées dans cette "
+"recherche"
 
 msgid "You cannot access all the fields used to filter the search"
 msgstr ""

@@ -27,7 +27,6 @@ class ProjectCrossTrackerSearchPresenter
     public $locale;
     public $date_format;
     public $is_anonymous;
-    public $fetch_query_error;
     public $project_label;
     public $tracker_label;
     public $add_button_label;
@@ -35,13 +34,6 @@ class ProjectCrossTrackerSearchPresenter
     public $save_report;
     public $search;
     public $trackers_empty;
-    public $artifact_label;
-    public $summary_label;
-    public $status_label;
-    public $last_update_label;
-    public $submitted_by_label;
-    public $assigned_to_label;
-    public $artifacts_empty;
 
     public function __construct($report_id, \PFUser $user)
     {
@@ -57,12 +49,5 @@ class ProjectCrossTrackerSearchPresenter
         $this->save_report           = dgettext('tuleap-crosstracker', 'Save report');
         $this->search                = dgettext('tuleap-crosstracker', 'Search');
         $this->trackers_empty        = dgettext('tuleap-crosstracker', 'No trackers selected');
-        $this->artifact_label        = dgettext('tuleap-crosstracker', 'Artifact');
-        $this->status_label          = dgettext('tuleap-crosstracker', 'Status');
-        $this->last_update_label     = dgettext('tuleap-crosstracker', 'Last update date');
-        $this->submitted_by_label    = dgettext('tuleap-crosstracker', 'Submitted by');
-        $this->assigned_to_label     = dgettext('tuleap-crosstracker', 'Assigned to');
-        $this->artifacts_empty       = dgettext('tuleap-crosstracker', 'No matching artifacts found');
-        $this->load_more_label       = dgettext('tuleap-crosstracker', 'Load more');
     }
 }

@@ -2,7 +2,6 @@
 var path                  = require('path');
 var webpack               = require('webpack');
 var WebpackAssetsManifest = require('webpack-assets-manifest');
-var BabelPresetEnv        = require('babel-preset-env');
 
 var assets_dir_path = path.resolve(__dirname, '../assets');
 
@@ -28,6 +27,11 @@ var webpack_config = {
     externals: {
         tlp: 'tlp'
     },
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js'
+        }
+    },
     module: {
         rules: [
             {
@@ -37,6 +41,18 @@ var webpack_config = {
                     {
                         loader: 'babel-loader',
                         options: babel_options
+                    }
+                ]
+            }, {
+                test: /\.vue$/,
+                use: [
+                    {
+                        loader: 'vue-loader',
+                        options: {
+                            loaders: {
+                                js: 'babel-loader?' + JSON.stringify(babel_options)
+                            }
+                        }
                     }
                 ]
             },
