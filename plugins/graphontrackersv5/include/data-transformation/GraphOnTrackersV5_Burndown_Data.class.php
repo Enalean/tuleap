@@ -22,7 +22,7 @@
  * this class build data required to build a burndown
  *
  */
-class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Data_IProvideDataForBurndownChart
+class GraphOnTrackersV5_Burndown_Data
 {
     private $artifact_ids     = array();
     private $remaining_effort = array();
