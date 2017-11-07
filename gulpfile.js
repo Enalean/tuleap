@@ -162,7 +162,8 @@ var fat_combined_files = [
                 watched_includes: [
                     'src/www/themes/FlamingParrot/css/**/_*.scss'
                 ],
-                target_dir: 'src/www/themes/FlamingParrot/css'
+                target_dir: 'src/www/themes/FlamingParrot/assets',
+                is_revisioned: true
             },
             "BurningParrot": {
                 files: [
@@ -182,7 +183,8 @@ var fat_combined_files = [
                 watched_includes: [
                     'src/www/themes/BurningParrot/css/**/_*.scss'
                 ],
-                target_dir: 'src/www/themes/BurningParrot/css'
+                target_dir: 'src/www/themes/BurningParrot/assets',
+                is_revisioned: true
             }
         }
     },

@@ -26,6 +26,7 @@ use Event;
 use EventManager;
 use ThemeVariant;
 use ThemeVariantColor;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
@@ -169,10 +170,15 @@ class HeaderPresenterBuilder
 
     private function getStylesheets(ThemeVariantColor $color)
     {
+        $core_burning_parrot_include_assets = new IncludeAssets(
+            ForgeConfig::get('tuleap_dir') . '/src/www/themes/BurningParrot/assets',
+            '/themes/BurningParrot/assets'
+        );
+
         $stylesheets = array(
             '/themes/common/tlp/dist/tlp-'. $color->getName() .'.min.css',
-            '/themes/BurningParrot/css/burning-parrot-'. $color->getName() .'.css'
         );
+        $stylesheets[] = $core_burning_parrot_include_assets->getFileURL('burning-parrot-' . $color->getName() . '.css');
 
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,

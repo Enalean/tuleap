@@ -50,7 +50,9 @@ yarn-error.log
 *.css.map
 node_modules/
 src/www/assets/*
+src/www/themes/*/assets/*
 plugins/*/www/assets/*
+plugins/*/www/themes/*/assets/*
 src/www/themes/BurningParrot/css/vendor/*.scss
 tests/selenium/vendor
 tests/selenium/logs
