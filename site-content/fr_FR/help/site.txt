@@ -22,7 +22,7 @@
 
             <h2 class="tlp-pane-subtitle">Posez vos questions</h2>
 
-            <p>Le site <a href="https://www.tuleap.org/get-help">tuleap.org</a> met à disposition de nombreuses ressources ainsi qu'un <a href="https://chat.tuleap.org">salon de discussion</a> communautaire.</p>
+            <p>Le site <a href="https://www.tuleap.org/get-started">tuleap.org</a> met à disposition de nombreuses ressources ainsi qu'un <a href="https://chat.tuleap.org">salon de discussion</a> communautaire.</p>
 
         </section>
     </div>
