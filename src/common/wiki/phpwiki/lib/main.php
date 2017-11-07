@@ -221,14 +221,12 @@ class WikiRequest extends Request {
         $action = $this->getArg('action');
 
         // Save preferences in session and cookie
-        if ((defined('WIKI_XMLRPC') and !WIKI_XMLRPC) or $action != 'xmlrpc') {
-            if (isset($this->_user)) {
-            	if (!isset($this->_user->_authhow) or $this->_user->_authhow != 'session') {
-                    $this->_user->setPreferences($this->_prefs, true);
-            	}
+        if (isset($this->_user)) {
+            if (!isset($this->_user->_authhow) or $this->_user->_authhow != 'session') {
+                $this->_user->setPreferences($this->_prefs, true);
             }
-            $this->setSessionVar('wiki_user', $this->_user);
         }
+        $this->setSessionVar('wiki_user', $this->_user);
 
         // Ensure user has permissions for action
         // HACK ALERT: We may not set the request arg to create, 
@@ -499,7 +497,6 @@ class WikiRequest extends Request {
                     'upload'     => _("upload a zip dump"),
                     'verify'     => _("verify the current action"),
                     'viewsource' => _("view the source of this page"),
-                    'xmlrpc'     => _("access this wiki via XML-RPC"),
                     'soap'       => _("access this wiki via SOAP"),
                     'zip'        => _("download a zip dump from this wiki"),
                     'ziphtml'    => _("download an html zip dump from this wiki")
@@ -538,7 +535,6 @@ class WikiRequest extends Request {
                     'upload'     => _("Uploading zip dumps"),
                     'verify'     => _("Verify the current action"),
                     'viewsource' => _("Viewing the source of pages"),
-                    'xmlrpc'     => _("XML-RPC access"),
                     'soap'       => _("SOAP access"),
                     'zip'        => _("Downloading zip dumps"),
                     'ziphtml'    => _("Downloading html zip dumps")
@@ -586,7 +582,6 @@ class WikiRequest extends Request {
             case 'viewsource':
             case 'diff':
             case 'select':
-            case 'xmlrpc':
             case 'search':
             case 'pdf':
                 return WIKIAUTH_ANON;
@@ -795,14 +790,6 @@ class WikiRequest extends Request {
             // or any other virtual url as with xmlrpc
             if (defined('WIKI_SOAP')   and WIKI_SOAP)
                 return 'soap';
-            // Detect XML-RPC requests.
-            if ($this->isPost()
-                && $this->get('CONTENT_TYPE') == 'text/xml'
-                && strstr($GLOBALS['HTTP_RAW_POST_DATA'], '<methodCall>')
-               )
-            {
-                return 'xmlrpc';
-            }
             return 'browse';    // Default if no action specified.
         }
 
@@ -1039,12 +1026,6 @@ class WikiRequest extends Request {
             RemovePage($this);
         }
     }
-
-    function action_xmlrpc () {
-        include_once("lib/XmlRpcServer.php");
-        $xmlrpc = new XmlRpcServer($this);
-        $xmlrpc->service();
-    }
     
     function action_revert () {
         include_once "lib/loadsave.php";
@@ -1184,7 +1165,6 @@ function main () {
     $request->possiblyDeflowerVirginWiki();
     
 // hack! define proper actions for these.
-if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
 if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
 
     $validators = array('wikiname' => WIKI_NAME,
@@ -1212,7 +1192,7 @@ if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
     $request->finish();
 }
 
-// don't run the main loop for special requests (test, getimg, xmlrpc, soap, ...)
+// don't run the main loop for special requests (test, getimg, soap, ...)
 if (!defined('PHPWIKI_NOMAIN') or !PHPWIKI_NOMAIN)
     main();
 

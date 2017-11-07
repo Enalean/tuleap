@@ -80,7 +80,6 @@ function codendi_main () {
     $request->possiblyDeflowerVirginWiki();
     
 // hack! define proper actions for these.
-if (defined('WIKI_XMLRPC') and WIKI_XMLRPC) return;
 if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
 
     $validators = array('wikiname' => WIKI_NAME,

@@ -947,10 +947,6 @@ msgstr "vérifier l'action actuelle"
 msgid "view the source of this page"
 msgstr "voir la source de cette page"
 
-#: ../lib/main.php:507
-msgid "access this wiki via XML-RPC"
-msgstr "accéder à ce wiki via XML-RPC"
-
 #: ../lib/main.php:508
 msgid "access this wiki via SOAP"
 msgstr "accéder à ce wiki via SOAP"
@@ -1019,10 +1015,6 @@ msgstr "Vérifier l'action actuelle"
 #: ../lib/main.php:547
 msgid "Viewing the source of pages"
 msgstr "Visualisation de la source des pages"
-
-#: ../lib/main.php:548
-msgid "XML-RPC access"
-msgstr "Accès XML-RPC"
 
 #: ../lib/main.php:549
 msgid "SOAP access"
@@ -5260,10 +5252,6 @@ msgstr ""
 #, php-format
 msgid "Couldn't connect to %s"
 msgstr "Impossible d'établir une connexion à la base de données : %s"
-
-#: ../lib/XmlRpcServer.php:562
-msgid "xml-rpc change"
-msgstr ""
 
 #: ../lib/ziplib.php:199
 msgid "Can't inflate data: zlib support not enabled in this PHP"

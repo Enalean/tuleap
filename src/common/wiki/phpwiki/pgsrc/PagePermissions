@@ -110,7 +110,7 @@ list:
   _none, 'list' is checked for every pagename listed in PageList, to prevent from being listed in AllPages._
 
 view:
-  browse, viewsource, diff, select, xmlrpc, search, pdf
+  browse, viewsource, diff, select, search, pdf
 
 dump:
   zip, ziphtml

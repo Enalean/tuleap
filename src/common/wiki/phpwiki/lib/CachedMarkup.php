@@ -99,24 +99,6 @@ class CacheableMarkup extends XmlContent {
 	return array_unique($links);
     }
 
-    /** Get link info.
-     *
-     * This is here to support the XML-RPC listLinks() method.
-     *
-     * @return array
-     * Returns an array of hashes.
-     */
-    function getLinkInfo() {
-	$link = array();
-	foreach ($this->_content as $link) {
-	    if (! isa($link, 'Cached_Link'))
-		continue;
-	    $info = $link->getLinkInfo($this->_basepage);
-	    $links[$info->href] = $info;
-	}
-	return array_values($links);
-    }
-
     function _append($item) {
 	if (is_array($item)) {
 	    foreach ($item as $subitem)
@@ -263,30 +245,10 @@ class Cached_DynamicContent {
     }
 }
 
-class XmlRpc_LinkInfo {
-    function XmlRpc_LinkInfo($page, $type, $href) {
-	$this->page = $page;
-	$this->type = $type;
-	$this->href = $href;
-	//$this->pageref = str_replace("/RPC2.php", "/index.php", $href);
-    }
-}
-
 class Cached_Link extends Cached_DynamicContent {
 
     function isInlineElement() {
 	return true;
-    }
-
-    /** Get link info (for XML-RPC support)
-     *
-     * This is here to support the XML-RPC listLinks method.
-     * (See http://www.ecyrd.com/JSPWiki/Wiki.jsp?page=WikiRPCInterface)
-     */
-    function getLinkInfo($basepage) {
-	return new XmlRpc_LinkInfo($this->_getName($basepage),
-                                   $this->_getType(),
-                                   $this->_getURL($basepage));
     }
     
     function _getURL($basepage) {
