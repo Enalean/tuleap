@@ -6,8 +6,7 @@ describe ('ExecutionService - ', () => {
     let $q,
         $rootScope,
         ExecutionRestService,
-        ExecutionService,
-        LinkedArtifactsService;
+        ExecutionService;
 
     beforeEach(() => {
         angular.mock.module(execution_collection_module);
@@ -17,13 +16,11 @@ describe ('ExecutionService - ', () => {
             _$rootScope_,
             _ExecutionRestService_,
             _ExecutionService_,
-            _LinkedArtifactsService_,
         ) {
             $q                   = _$q_;
             $rootScope           = _$rootScope_;
             ExecutionRestService = _ExecutionRestService_;
             ExecutionService     = _ExecutionService_;
-            LinkedArtifactsService   = _LinkedArtifactsService_;
         });
     });
 
