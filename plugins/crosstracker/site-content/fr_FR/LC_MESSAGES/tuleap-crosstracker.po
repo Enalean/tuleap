@@ -50,9 +50,6 @@ msgstr "Aucun outils de suivi sélectionné"
 msgid "Project"
 msgstr "Projet"
 
-msgid "Save report"
-msgstr "Enregistrer le rapport"
-
 msgid "Search"
 msgstr "Rechercher"
 

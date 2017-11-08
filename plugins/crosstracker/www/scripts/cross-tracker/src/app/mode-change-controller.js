@@ -24,18 +24,16 @@ export default class ModeChangeController {
         widget_content,
         report_mode,
         reading_controller,
-        reading_trackers_controller,
         project_selector,
         success_displayer,
         error_displayer
     ) {
-        this.widget_content              = widget_content;
-        this.report_mode                 = report_mode;
-        this.success_displayer           = success_displayer;
-        this.error_displayer             = error_displayer;
-        this.reading_controller          = reading_controller;
-        this.reading_trackers_controller = reading_trackers_controller;
-        this.project_selector            = project_selector;
+        this.widget_content     = widget_content;
+        this.report_mode        = report_mode;
+        this.success_displayer  = success_displayer;
+        this.error_displayer    = error_displayer;
+        this.reading_controller = reading_controller;
+        this.project_selector   = project_selector;
 
         this.reading_mode_view = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-reading-mode');
         this.writing_mode_view = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode');
@@ -63,7 +61,6 @@ export default class ModeChangeController {
         this.reading_mode_view.classList.remove('cross-tracker-hide');
         this.writing_mode_view.classList.add('cross-tracker-hide');
         this.reading_controller.switchToReadingMode();
-        this.reading_trackers_controller.switchToReadingMode();
     }
 
     switchToWritingView() {

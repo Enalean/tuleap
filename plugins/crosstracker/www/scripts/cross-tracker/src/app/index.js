@@ -20,7 +20,7 @@
 import Vue from 'vue';
 
 import { gettext_provider }            from './gettext-provider.js';
-import ReadingTrackersController       from './reading-mode/reading-trackers-controller.js';
+import { init as initUser }            from './user-service.js';
 import ReadingModeController           from './reading-mode/reading-mode-controller.js';
 import WritingModeController           from './writing-mode/writing-mode-controller.js';
 import ProjectSelector                 from './writing-mode/project-selector.js';
@@ -39,12 +39,13 @@ import ModeChangeController            from './mode-change-controller.js';
 import ReportMode                      from './report-mode.js';
 import BackendCrossTrackerReport       from './backend-cross-tracker-report.js';
 import ReportSavedState                from './report-saved-state.js';
-import ArtifactTableRenderer           from './ArtifactTableRenderer.vue';
+import CrossTrackerWidget              from './CrossTrackerWidget.vue';
 import QueryEditor                     from './writing-mode/QueryEditor.vue';
 
 document.addEventListener('DOMContentLoaded', function () {
     const widget_cross_tracker_elements = document.getElementsByClassName('dashboard-widget-content-cross-tracker');
 
+    const Widget         = Vue.extend(CrossTrackerWidget);
     const VueQueryEditor = Vue.extend(QueryEditor);
 
     for (const widget_element of widget_cross_tracker_elements) {
@@ -54,29 +55,35 @@ document.addEventListener('DOMContentLoaded', function () {
         const is_anonymous              = (widget_element.dataset.isAnonymous == 'true');
 
         gettext_provider.setLocale(locale);
+        initUser(is_anonymous);
 
-        const tracker_selection                  = new TrackerSelection();
-        const report_mode                        = new ReportMode();
-        const report_saved_state                 = new ReportSavedState();
-        const backend_cross_tracker_report       = new BackendCrossTrackerReport(report_id);
-        const reading_cross_tracker_report       = new ReadingCrossTrackerReport();
-        const writing_cross_tracker_report       = new WritingCrossTrackerReport();
-        const success_displayer                  = new SuccessDisplayer(widget_element);
-        const error_displayer                    = new ErrorDisplayer(widget_element);
-        const widget_loader_displayer            = new WidgetLoaderDisplayer(widget_element);
-        const tracker_selection_loader_displayer = new TrackerSelectionLoaderDisplayer(widget_element);
-        const user                               = new User(
+        const tracker_selection            = new TrackerSelection();
+        const report_mode                  = new ReportMode();
+        const report_saved_state           = new ReportSavedState();
+        const backend_cross_tracker_report = new BackendCrossTrackerReport(report_id);
+        const reading_cross_tracker_report = new ReadingCrossTrackerReport();
+        const writing_cross_tracker_report = new WritingCrossTrackerReport();
+        const user                         = new User(
             locale,
             localized_php_date_format,
             is_anonymous
         );
 
-        const table_element = widget_element.querySelector('.dashboard-widget-content-cross-tracker-table-render');
+        const vue_mount_point = widget_element.querySelector('.vue-mount-point');
 
-        new Vue({
-            el        : table_element,
-            components: { ArtifactTableRenderer }
-        }).$mount();
+        new Widget({
+            propsData: {
+                backendCrossTrackerReport: backend_cross_tracker_report,
+                readingCrossTrackerReport: reading_cross_tracker_report,
+                writingCrossTrackerReport: writing_cross_tracker_report,
+                reportMode               : report_mode
+            }
+        }).$mount(vue_mount_point);
+
+        const success_displayer                  = new SuccessDisplayer(widget_element);
+        const error_displayer                    = new ErrorDisplayer(widget_element);
+        const widget_loader_displayer            = new WidgetLoaderDisplayer(widget_element);
+        const tracker_selection_loader_displayer = new TrackerSelectionLoaderDisplayer(widget_element);
 
         const query_editor_element = widget_element.querySelector('.cross-tracker-query-editor');
         new VueQueryEditor({
@@ -95,14 +102,6 @@ document.addEventListener('DOMContentLoaded', function () {
             gettext_provider
         );
 
-        const reading_trackers_controller = new ReadingTrackersController(
-            widget_element,
-            tracker_selection,
-            report_mode,
-            backend_cross_tracker_report,
-            reading_cross_tracker_report
-        );
-
         const reading_controller = new ReadingModeController(
             widget_element,
             report_mode,
@@ -110,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
             backend_cross_tracker_report,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
-            reading_trackers_controller,
             query_result_controller,
             user,
             widget_loader_displayer,
@@ -141,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
             widget_element,
             report_mode,
             reading_controller,
-            reading_trackers_controller,
             project_selector,
             success_displayer,
             error_displayer
@@ -170,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function () {
         reading_controller.init();
         writing_controller.init();
         query_result_controller.init();
-        reading_trackers_controller.init();
         project_selector.init();
     }
 });

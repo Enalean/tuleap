@@ -112,7 +112,7 @@
     cursor: pointer;
 }
 
-.dashboard-widget-content-cross-tracker-reading-mode-fields {
+.cross-tracker-reading-mode-fields {
     display: flex;
     flex-direction: column;
     color: $tlp-theme-color;
@@ -125,31 +125,37 @@
     }
 }
 
-.dashboard-widget-content-cross-tracker-reading-mode-trackers-list {
+.cross-tracker-reading-mode-trackers-list {
     display: flex;
     flex-direction: row;
     margin: $tlp-spacing;
 }
 
-.dashboard-widget-content-cross-tracker-reading-mode-trackers {
+.cross-tracker-reading-mode-trackers {
     display: flex;
 }
 
-.dashboard-widget-content-cross-tracker-reading-mode-tracker {
+.cross-tracker-reading-mode-tracker {
     display: flex;
     flex-direction: column;
     margin: 0 $tlp-spacing 0 0;
 }
 
-.dashboard-widget-content-cross-tracker-reading-mode-tracker-project-name {
+.cross-tracker-reading-mode-tracker-project-name {
     margin: 7px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 14px;
     font-weight: 400;
 
-    > .dashboard-widget-content-cross-tracker-project-icon {
+    > .cross-tracker-project-icon {
         margin: 0 5px 0 0;
+        fill: $tlp-theme-color;
     }
+}
+
+.cross-tracker-reading-mode-trackers-empty {
+    margin: 0 0 0 $tlp-spacing;
+    font-style: italic;
 }
 
 .dashboard-widget-content-cross-tracker-search {
@@ -226,11 +232,6 @@
     &.cross-tracker-loading >.cross-tracker-loader {
         display: inline-block;
     }
-}
-
-.dashboard-widget-content-cross-tracker-reading-mode-trackers-empty {
-    margin: 0 0 0 $tlp-spacing;
-    font-style: italic;
 }
 
 .dashboard-widget-content-cross-tracker-writing-mode {

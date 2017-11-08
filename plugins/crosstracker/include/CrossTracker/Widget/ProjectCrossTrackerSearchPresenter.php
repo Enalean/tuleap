@@ -31,7 +31,6 @@ class ProjectCrossTrackerSearchPresenter
     public $tracker_label;
     public $add_button_label;
     public $cancel;
-    public $save_report;
     public $search;
     public $trackers_empty;
 
@@ -46,7 +45,6 @@ class ProjectCrossTrackerSearchPresenter
         $this->tracker_label         = dgettext('tuleap-crosstracker', 'Tracker');
         $this->add_button_label      = dgettext('tuleap-crosstracker', 'Add');
         $this->cancel                = dgettext('tuleap-crosstracker', 'Cancel');
-        $this->save_report           = dgettext('tuleap-crosstracker', 'Save report');
         $this->search                = dgettext('tuleap-crosstracker', 'Search');
         $this->trackers_empty        = dgettext('tuleap-crosstracker', 'No trackers selected');
     }

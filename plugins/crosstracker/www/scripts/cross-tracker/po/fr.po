@@ -22,6 +22,9 @@ msgstr "Artéfact"
 msgid "Assigned to"
 msgstr "Assigné à"
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Error while fetching the cross tracker report"
 msgstr "Erreur à la récupération du rapport multi outil de suivi"
 
@@ -49,6 +52,9 @@ msgstr "Voir plus"
 msgid "No matching artifacts found"
 msgstr "Aucun artefact correspondant trouvé"
 
+msgid "No trackers selected"
+msgstr "Aucun élément sélectionné"
+
 msgid "Please choose..."
 msgstr "Veuillez choisir..."
 
@@ -57,6 +63,9 @@ msgstr "Requête"
 
 msgid "Report has been successfully saved"
 msgstr "Rapport enregistré avec succès"
+
+msgid "Save report"
+msgstr "Enregistrer le rapport"
 
 msgid "Status"
 msgstr "État"
