@@ -18,7 +18,7 @@
 
             <h2 class="tlp-pane-subtitle">Ask question</h2>
 
-            <p>Latest tips and tricks and tutorial can be found on <a href="https://www.tuleap.org/get-help">tuleap.org</a> web site as well as the <a href="https://chat.tuleap.org">community chat room</a>.</p>
+            <p>Latest tips and tricks and tutorial can be found on <a href="https://www.tuleap.org/get-started">tuleap.org</a> web site as well as the <a href="https://chat.tuleap.org">community chat room</a>.</p>
 
             <h2 class="tlp-pane-subtitle">Contact Us</h2>
             <p>For all other inquiries, <a href="/contact.php">get in touch</a> with us.</p>
