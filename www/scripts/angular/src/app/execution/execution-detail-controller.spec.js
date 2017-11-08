@@ -9,9 +9,10 @@ describe("ExecutionDetailController -", () => {
         $q,
         ExecutionDetailController,
         SharedPropertiesService,
-        LinkedArtifactsService,
         ExecutionService,
-        TlpModalService;
+        TlpModalService,
+        NewTuleapArtifactModalService,
+        ExecutionRestService;
 
     beforeEach(() => {
         angular.mock.module(execution_module);
@@ -24,17 +25,19 @@ describe("ExecutionDetailController -", () => {
             _$q_,
             _$rootScope_,
             _SharedPropertiesService_,
-            _LinkedArtifactsService_,
             _ExecutionService_,
             _TlpModalService_,
+            _NewTuleapArtifactModalService_,
+            _ExecutionRestService_,
         ) {
-            $controller             = _$controller_;
-            $q                      = _$q_;
-            $rootScope              = _$rootScope_;
-            SharedPropertiesService = _SharedPropertiesService_;
-            LinkedArtifactsService  = _LinkedArtifactsService_;
-            ExecutionService        = _ExecutionService_;
-            TlpModalService         = _TlpModalService_;
+            $controller                   = _$controller_;
+            $q                            = _$q_;
+            $rootScope                    = _$rootScope_;
+            SharedPropertiesService       = _SharedPropertiesService_;
+            ExecutionService              = _ExecutionService_;
+            TlpModalService               = _TlpModalService_;
+            NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
+            ExecutionRestService          = _ExecutionRestService_;
         });
 
         $scope = $rootScope.$new()
@@ -43,7 +46,8 @@ describe("ExecutionDetailController -", () => {
             permissions: {
                 create: true,
                 link  : true
-            }
+            },
+            xref_color: 'acid-green'
         });
 
         spyOn(ExecutionService, "loadExecutions");
@@ -52,6 +56,48 @@ describe("ExecutionDetailController -", () => {
             $scope,
             ExecutionService,
             TlpModalService,
+            NewTuleapArtifactModalService,
+            ExecutionRestService,
+        });
+    });
+
+    describe("showLinkToNewBugModal() -", () => {
+        it("when the callback is called from the modal, then the new issue will be linked to the execution and then will be shown in an alert and added to the linked issues dropdown", function() {
+            const artifact = {
+                id: 68,
+                title: 'Xanthomelanoi Kate',
+                xref: 'bugs #68',
+                tracker: {
+                    id: 4
+                }
+            };
+            $scope.execution = {
+                id: 51,
+                definition: {
+                    summary: 'syrinx',
+                    description: 'topping'
+                },
+                previous_result: {
+                    result: null
+                }
+            };
+            $scope.campaign = {
+                label: 'shirtless'
+            };
+            spyOn(NewTuleapArtifactModalService, "showCreation").and.callFake((tracker_id, b, callback, prefill_values) => {
+                callback(artifact.id);
+            });
+            spyOn(ExecutionRestService, "linkIssueWithoutComment").and.returnValue($q.when());
+            spyOn(ExecutionRestService, "getArtifactById").and.returnValue($q.when(artifact));
+            spyOn(ExecutionService, "addArtifactLink");
+
+            $scope.showLinkToNewBugModal();
+
+            $scope.$apply();
+            expect($scope.linkedIssueId).toBe(artifact.id);
+            expect($scope.linkedIssueAlertVisible).toBe(true);
+            expect(artifact.tracker.color_name).toBe('acid-green');
+            expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution, artifact);
         });
     });
 
@@ -74,45 +120,6 @@ describe("ExecutionDetailController -", () => {
             expect($scope.linkedIssueId).toBe(artifact.id);
             expect($scope.linkedIssueAlertVisible).toBe(true);
             expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith($scope.execution, artifact);
-        });
-    });
-
-    describe("refreshLinkedIssues() -", () => {
-        beforeEach(function() {
-            $scope.execution = {
-                id: 254
-            };
-        });
-
-        it("The execution's linked artifacts will be queried and attached to the execution", () => {
-            const linked_issues = [
-                { id: 554 },
-                { id: 226 }
-            ];
-            spyOn(LinkedArtifactsService, "getAllLinkedIssues").and.callFake((
-                execution,
-                offset,
-                progress_callback
-            ) => {
-                progress_callback(linked_issues);
-
-                return $q.when();
-            });
-
-            $scope.refreshLinkedIssues();
-
-            expect(LinkedArtifactsService.getAllLinkedIssues).toHaveBeenCalledWith($scope.execution, 0, jasmine.any(Function));
-            expect($scope.execution.linked_bugs).toEqual(linked_issues);
-        });
-
-        it("When there is an error, it will be displayed on the execution", function() {
-            spyOn(LinkedArtifactsService, "getAllLinkedIssues").and.returnValue($q.reject());
-            spyOn(ExecutionService, "displayErrorMessage");
-
-            $scope.refreshLinkedIssues();
-            $scope.$apply();
-
-            expect(ExecutionService.displayErrorMessage).toHaveBeenCalled();
         });
     });
 });

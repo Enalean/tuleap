@@ -18,7 +18,6 @@ ExecutionDetailCtrl.$inject = [
     'ArtifactLinksGraphModalLoading',
     'NewTuleapArtifactModalService',
     'ExecutionRestService',
-    'LinkedArtifactsService',
     'TlpModalService',
 ];
 
@@ -35,7 +34,6 @@ function ExecutionDetailCtrl(
     ArtifactLinksGraphModalLoading,
     NewTuleapArtifactModalService,
     ExecutionRestService,
-    LinkedArtifactsService,
     TlpModalService,
 ) {
     var execution_id,
@@ -51,16 +49,15 @@ function ExecutionDetailCtrl(
     $scope.linkMenuIsVisible           = issue_config.permissions.create && issue_config.permissions.link;
     $scope.canCreateIssue              = issue_config.permissions.create;
     $scope.canLinkIssue                = issue_config.permissions.link;
-    $scope.showLinkToNewBugModal       = showLinkToNewBugModal;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
     $scope.showEditArtifactModal       = showEditArtifactModal;
     $scope.closeLinkedIssueAlert       = closeLinkedIssueAlert;
-    $scope.refreshLinkedIssues         = refreshLinkedIssues;
     $scope.linkedIssueId               = null;
     $scope.linkedIssueAlertVisible     = false;
 
     Object.assign($scope, {
-        showLinkToExistingBugModal
+        showLinkToExistingBugModal,
+        showLinkToNewBugModal
     });
 
     initialization();
@@ -103,12 +100,21 @@ function ExecutionDetailCtrl(
 
     function showLinkToNewBugModal() {
         function callback(artifact_id) {
-            ExecutionRestService
+            return ExecutionRestService
                 .linkIssueWithoutComment(artifact_id, $scope.execution)
-                .then(function () {
+                .then(() => {
                     $scope.linkedIssueId           = artifact_id;
                     $scope.linkedIssueAlertVisible = true;
-                    $scope.refreshLinkedIssues();
+                    return ExecutionRestService.getArtifactById(artifact_id);
+                })
+                .then((artifact) => {
+                    artifact.tracker.color_name = SharedPropertiesService.getIssueTrackerConfig().xref_color;
+                    return ExecutionService.addArtifactLink($scope.execution, artifact);
+                }, () => {
+                    ExecutionService.displayErrorMessage(
+                        $scope.execution,
+                        gettextCatalog.getString('Error while refreshing the list of linked bugs')
+                    );
                 });
         }
 
@@ -214,18 +220,6 @@ function ExecutionDetailCtrl(
         $scope.execution         = ExecutionService.executions[execution_id];
         $scope.execution.results = '';
         $scope.execution.saving  = false;
-    }
-
-    function refreshLinkedIssues() {
-        $scope.execution.linked_bugs = [];
-        LinkedArtifactsService.getAllLinkedIssues($scope.execution, 0, (bunch_of_linked_issues) => {
-            $scope.execution.linked_bugs.push(...bunch_of_linked_issues);
-        }).catch(() => {
-            ExecutionService.displayErrorMessage(
-                $scope.execution,
-                gettextCatalog.getString('Error while refreshing the list of linked bugs')
-            );
-        });
     }
 
     function isCurrentExecutionLoaded() {
