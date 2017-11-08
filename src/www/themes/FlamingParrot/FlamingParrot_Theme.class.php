@@ -143,7 +143,7 @@ class FlamingParrot_Theme extends Layout {
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
 
-        $style_css_url = $core_flaming_parrot_include_assets->getFileURL($this->getCSSThemeFile());
+        $style_css_url = $this->getCSSThemeFileURL($core_flaming_parrot_include_assets);
         echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
         $print_css_url = $core_flaming_parrot_include_assets->getFileURL('print.css');
         echo '<link rel="stylesheet" type="text/css" href="' . $print_css_url . '" media="print" />';
@@ -167,11 +167,12 @@ class FlamingParrot_Theme extends Layout {
         echo '</style>';
     }
 
-    private function getCSSThemeFile() {
+    private function getCSSThemeFileURL(IncludeAssets $include_assets)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
 
         $theme_variant     = new ThemeVariant();
-        $css_file_provider = new FlamingParrot_CSSFilesProvider($theme_variant);
+        $css_file_provider = new FlamingParrot_CSSFilesProvider($theme_variant, $include_assets);
         $variant_used      = $theme_variant->getVariantForUser($current_user);
 
         return $css_file_provider->getCSSFileForVariant($variant_used);

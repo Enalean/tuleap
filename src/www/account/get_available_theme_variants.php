@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Layout\IncludeAssets;
+
 require_once 'pre.php';
 
 $available_theme_variants = array(
@@ -27,8 +29,14 @@ $available_theme_variants = array(
 
 if ($request->get('theme') === 'FlamingParrot') {
     require_once '../themes/FlamingParrot/FlamingParrot_CSSFilesProvider.class.php';
-    $theme_variant     = new ThemeVariant();
-    $css_file_selector = new FlamingParrot_CSSFilesProvider($theme_variant);
+
+    $theme_variant                      = new ThemeVariant();
+    $core_flaming_parrot_include_assets = new IncludeAssets(
+        ForgeConfig::get('tuleap_dir') . '/src/www/themes/FlamingParrot/assets',
+        '/themes/FlamingParrot/assets'
+    );
+
+    $css_file_selector = new FlamingParrot_CSSFilesProvider($theme_variant, $core_flaming_parrot_include_assets);
 
     $available_theme_variants['selected']  = $theme_variant->getVariantForUser($request->getCurrentUser());
     $available_theme_variants['values']    = $theme_variant->getAllowedVariants();
