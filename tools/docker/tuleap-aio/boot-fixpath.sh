@@ -43,26 +43,26 @@ ln -s /data/etc/nsswitch.conf nsswitch.conf
 ln -s /data/etc/crontab crontab
 
 cd /etc/pki/tls/private
-ln -s /data/etc/pki/tls/private/localhost.key localhost.key
+[ ! -f localhost.key ] && ln -s /data/etc/pki/tls/private/localhost.key localhost.key
 
 cd /etc/ssl/certs
-ln -s /data/etc/ssl/certs/localhost.crt localhost.crt
+[ ! -f localhost.crt ] && ln -s /data/etc/ssl/certs/localhost.crt localhost.crt
 
 cd /etc/logrotate.d
 ln -s /data/etc/logrotate.d/httpd httpd
 
 cd /etc/httpd
-ln -s /data/etc/httpd/conf conf
-ln -s /data/etc/httpd/conf.d conf.d
+[ ! -f conf ] && ln -s /data/etc/httpd/conf conf
+[ ! -f conf.d ] && ln -s /data/etc/httpd/conf.d conf.d
 
 cd /home
-ln -s /data/home/codendiadm codendiadm
-ln -s /data/home/users users
-ln -s /data/home/groups groups
+[ ! -f codendiadm ] && ln -s /data/home/codendiadm codendiadm
+[ ! -f users ] && ln -s /data/home/users users
+[ ! -f groups ] && ln -s /data/home/groups groups
 
 cd /var/lib
-ln -s /data/lib/mysql mysql
-ln -s /data/lib/tuleap tuleap
+[ ! -f mysql ] && ln -s /data/lib/mysql mysql
+[ ! -f tuleap ] && ln -s /data/lib/tuleap tuleap
 [ -d /data/lib/gitolite ] && ln -s /data/lib/gitolite gitolite
 
 if [ -d "/data/etc/nginx" ]; then

@@ -9,6 +9,15 @@ if [ -d $curdir ]; then
     cd $curdir;
 fi
 
+source mysql-utils.sh
+
+SUPERVISOR_CONF=$curdir/supervisord.conf
+if [ -n "$DB_HOST" ]; then
+    wait_for_db $DB_HOST root $MYSQL_ROOT_PASSWORD
+    echo "We got a DB!"
+    SUPERVISOR_CONF=$curdir/supervisord-nodb.conf
+fi
+
 TULEAP_INSTALL_TIME="false"
 if [ ! -f /data/etc/tuleap/conf/local.inc ]; then
     TULEAP_INSTALL_TIME="true"
@@ -41,10 +50,6 @@ sed -i \
 # Update nscd config
 perl -pi -e "s%enable-cache[\t ]+group[\t ]+yes%enable-cache group no%" /etc/nscd.conf
 
-source mysql-utils.sh
-
-start_mysql
-
 if [ "$TULEAP_INSTALL_TIME" == "false" ]; then
     # It seems there is no way to have nscd in foreground
     /usr/sbin/nscd
@@ -56,8 +61,7 @@ fi
 # Activate backend/crontab
 /etc/init.d/tuleap start
 
-stop_mysql
 
 popd
 
-exec supervisord -n -c $curdir/supervisord.conf
+exec supervisord -n -c $SUPERVISOR_CONF

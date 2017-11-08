@@ -35,14 +35,23 @@ ${VIRTUAL_HOST}
 root@${VIRTUAL_HOST}
 EOF
 
+INSTALL_OPTIONS="
+    --password-file=/data/root/.tuleap_passwd
+    --disable-chkconfig
+    --disable-domain-name-check
+    --sys-default-domain=$VIRTUAL_HOST
+    --sys-org-name=Tuleap
+    --sys-long-org-name=Tuleap"
+
+if [ -n "$DB_HOST" ]; then
+    INSTALL_OPTIONS="$INSTALL_OPTIONS
+        --mysql-host=$DB_HOST
+        --mysql-user-password=$MYSQL_ROOT_PASSWORD
+        --mysql-httpd-host=%"
+fi
+
 # Install Tuleap
-/usr/share/tuleap/tools/setup.sh \
-    --password-file=/data/root/.tuleap_passwd \
-    --disable-chkconfig \
-    --disable-domain-name-check \
-    --sys-default-domain=$VIRTUAL_HOST \
-    --sys-org-name=Tuleap \
-    --sys-long-org-name=Tuleap
+/usr/share/tuleap/tools/setup.sh $INSTALL_OPTIONS
 
 # Setting root password
 root_passwd=$(generate_passwd)
@@ -62,7 +71,9 @@ chmod 600 /var/lib/gitolite/.ssh/authorized_keys
 # Ensure system will be synchronized ASAP
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/launch_system_check.php
 
-service mysqld stop
+if [ -z "$DB_HOST" ]; then
+    service mysqld stop
+fi
 service httpd stop
 service crond stop
 service nginx stop
