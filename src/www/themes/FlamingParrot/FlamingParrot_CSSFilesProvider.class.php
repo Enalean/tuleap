@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,35 +17,42 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 /*
- * I retrive the CSS File regarding the FlamingParrot
+ * I retrieve the CSS File regarding the FlamingParrot
  * variant used or available
  */
 
-class FlamingParrot_CSSFilesProvider {
+use Tuleap\Layout\IncludeAssets;
 
-    const FULL_PATH = '/themes/FlamingParrot/css/';
-
+class FlamingParrot_CSSFilesProvider
+{
     /**
      * @var ThemeVariant
      */
     private $theme_variant;
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
 
-    public function __construct(ThemeVariant $theme_variant) {
-        $this->theme_variant = $theme_variant;
+    public function __construct(ThemeVariant $theme_variant, IncludeAssets $include_assets)
+    {
+        $this->theme_variant  = $theme_variant;
+        $this->include_assets = $include_assets;
     }
 
-    public function getCSSFileForVariant($variant_name) {
-        return $variant_name . '.css';
+    public function getCSSFileForVariant($variant_name)
+    {
+        return $this->include_assets->getFileURL($variant_name . '.css');
     }
 
-    public function getCSSFilesForAllAvailableVariants() {
+    public function getCSSFilesForAllAvailableVariants()
+    {
         $available_variants = $this->theme_variant->getAllowedVariants();
 
         $css_files = array();
         foreach ($available_variants as $variant) {
-            $css_files[] = self::FULL_PATH . $variant . '.css';
+            $css_files[] = $this->include_assets->getFileURL($variant . '.css');
         }
 
         return $css_files;
