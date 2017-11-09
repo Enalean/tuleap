@@ -1125,7 +1125,7 @@ fi
 %dir %{APP_DATA_DIR}/gitroot
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
-%attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
+%attr(00775,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
 %attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
@@ -1143,7 +1143,7 @@ fi
 %dir %{APP_DATA_DIR}/gitroot
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
-%attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
+%attr(00775,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
 %attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
