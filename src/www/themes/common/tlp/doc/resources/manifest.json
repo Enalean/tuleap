@@ -5,6 +5,8 @@
     "buttons",
     "forms",
     "tables",
-    "flyover"
+    "flyover",
+    "fetch",
+    "angular"
   ]
 }

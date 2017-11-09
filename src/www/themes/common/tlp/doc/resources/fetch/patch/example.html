@@ -1,0 +1,15 @@
+
+<script>
+import { patch } from 'tlp';
+
+async function removeLabel(label_id) {
+    const label = { id: label_id };
+
+    return await patch('/api/v1/labels/', {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ remove: [label] })
+    });
+}
+</script>

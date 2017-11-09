@@ -1,0 +1,13 @@
+<script>
+import { put } from 'tlp';
+
+async function updateReport(report_id, trackers_id) {
+    const response = await put('/api/v1/cross_tracker_reports/' + report_id, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ trackers_id })
+    });
+    return await response.json();
+}
+</script>

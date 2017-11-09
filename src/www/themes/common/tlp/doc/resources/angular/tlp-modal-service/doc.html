@@ -1,0 +1,23 @@
+<h4>Arguments:</h4>
+<ul>
+    <li>{ Object } options. Contains: <ul>
+        <li>{ String } templateUrl
+            <p>Relative URL to the template of the modal. Must be already defined in AngularJS' <code class="inline-code">$templateCache</code>.</p>
+        </li>
+        <li>{ Function } controller
+            <p>Controller function for the modal. Will be injected with <code class="inline-code">modal_instance</code> and all properties defined in the <code class="inline-code">resolve</code> option.</p>
+        </li>
+        <li>{ String } controllerAs
+            <p>Name of the scope property that will hold the controller in the template.</p>
+        </li>
+        <li>(Optional) { Object } tlpModalOptions
+            <p>Options passed down to the <a href="?section=flyover#modals">TLP modal</a> constructor.</p></li>
+        <li>(Optional) { Object } resolve
+            <p>Each key will be injected in the provided modal controller. Use it to pass data and callbacks to the modal controller.</p>
+        </li>
+    </ul></li>
+</ul>
+
+<p class="tlp-alert-warning">The template provided in <code class="inline-code">options.templateUrl</code> must be saved in AngularJS' <code class="inline-code">$templateCache</code>. TlpModalService will NOT load it dynamically. You must import it in the calling controller !</p>
+
+<p class="tlp-alert-warning"><code class="inline-code">modal_instance.tlp_modal</code> will be undefined at controller creation ! Code depending on it must be in the controller's <code class="inline-code">$onInit()</code> function !</p>
