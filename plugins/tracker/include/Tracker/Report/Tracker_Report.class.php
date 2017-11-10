@@ -392,21 +392,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         return $matchingIds;
     }
 
-    private function getMatchingIdsFromCriteriaInDb(array $criteria) {
-        $dao     = $this->getDao();
-        $tracker = $this->getTracker();
-        $user    = $this->getCurrentUser();
-        $dump_criteria = array();
-        foreach ($criteria as $c) {
-            $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
-        }
-        $dao->logStart(__METHOD__, json_encode(array(
-            'user'     => $user->getUserName(),
-            'project'  => $tracker->getGroupId(),
-            'query'    => $dump_criteria,
-            'trackers' => array($tracker->getId()),
-        )));
-
+    private function getMatchingIdsFromCriteriaInDb(array $criteria)
+    {
         $additional_from  = array();
         $additional_where = array();
         foreach($criteria as $c) {
@@ -422,9 +409,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $additional_from,
             $additional_where
         );
-
-        $nb_matching = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
-        $dao->logEnd(__METHOD__, $nb_matching);
 
         return $matching_ids;
     }
