@@ -169,7 +169,7 @@ class GitForkPermissionsManager {
         $form .= '<input type="hidden" id="fork_repositories_path" name="path" value="'.$this->getPurifier()->purify($params['namespace']).'" />';
         $form .= '<input type="hidden" id="fork_repositories_prefix" value="u/'. $userName .'" />';
         if (count($repository_ids) > 1) {
-            $form .= $this->displayDefaultAccessControl($groupId);
+            $form .= $this->displayDefaultAccessControlWhileForkingMultipleRepositories($groupId);
         } else {
             $form .= $this->displayAccessControlWhileForkingASingleRepository($groupId);
         }
@@ -178,11 +178,10 @@ class GitForkPermissionsManager {
         return $form;
     }
 
-    private function displayDefaultAccessControl($project_id) {
+    private function displayDefaultAccessControlWhileForkingMultipleRepositories($project_id) {
         $project = ProjectManager::instance()->getProject($project_id);
-        $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions     = $this->git_permission_manager->userIsGitAdmin($user, $project);
+        $can_use_fine_grained_permissions     = true;
         $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project);
 
         $branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project);
@@ -229,7 +228,7 @@ class GitForkPermissionsManager {
             $csrf,
             $is_fork,
             $this->areRegexpActivatedAtSiteLevel(),
-            false,
+            $this->isRegexpActivatedForProject($project),
             ""
         );
 
@@ -257,7 +256,9 @@ class GitForkPermissionsManager {
         $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
         $user    = UserManager::instance()->getCurrentUser();
 
-        $can_use_fine_grained_permissions = $this->git_permission_manager->userIsGitAdmin($user, $project);
+        $can_use_fine_grained_permissions = (boolean) ($this->git_permission_manager->userIsGitAdmin($user, $project) ||
+            $is_fork ||
+            $this->repository->belongsTo($user));
 
         $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions(
             $this->repository
@@ -313,6 +314,11 @@ class GitForkPermissionsManager {
     private function isRegexpActivatedForRepository()
     {
         return $this->regexp_retriever->areRegexpActivatedForRepository($this->repository);
+    }
+
+    private function isRegexpActivatedForProject(Project $project)
+    {
+        return $this->regexp_retriever->areRegexpActivatedForDefault($project);
     }
 
     private function isRWPlusBlocked() {
