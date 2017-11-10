@@ -33,6 +33,10 @@ require_once('common/tracker/ArtifactField.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
 require_once('common/event/EventManager.class.php');
 
+// Inherited from old .htaccess
+ini_set('max_execution_time', 3600);
+ini_set('memory_limit', '256M');
+
 $em       =& EventManager::instance();
 $request  = HTTPRequest::instance();
 $export   = $request->get('export');

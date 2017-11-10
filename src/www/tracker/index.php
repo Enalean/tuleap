@@ -43,6 +43,9 @@ require_once('./include/ArtifactImportHtml.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
+// Inherited from old .htaccess (needed for reports, linked artifact view, etc)
+ini_set('max_execution_time', 1800);
+
 $aid      = $request->getValidated('aid', 'uint', 0);
 $atid     = $request->getValidated('atid', 'uint', 0);
 $group_id = $request->getValidated('group_id', 'GroupId', 0);

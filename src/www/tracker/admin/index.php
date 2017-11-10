@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean SAS, 2017. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
@@ -28,8 +29,11 @@ require_once('../include/ArtifactTypeHtml.class.php');
 require_once('../include/ArtifactCannedHtml.class.php');
 require_once('../include/ArtifactReportHtml.class.php');
 require_once('../include/ArtifactHtml.class.php');
-
 require_once('common/include/SimpleSanitizer.class.php');
+
+// Inherited from old .htaccess (needed for reports, linked artifact view, etc)
+ini_set('max_execution_time', 1800);
+
 $sanitizer = new SimpleSanitizer();
 
 

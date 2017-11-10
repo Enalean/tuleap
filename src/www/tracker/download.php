@@ -1,6 +1,6 @@
 <?php
 //
-// Codendi
+// Copyright (c) Enalean SAS, 2017. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
 //
@@ -13,6 +13,9 @@ require_once('pre.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('common/tracker/ArtifactFieldFactory.class.php');
+
+// Inherited from old .htaccess (needed for reports, linked artifact view, etc)
+ini_set('max_execution_time', 1800);
 
 $id          = $request->get('id');
 $artifact_id = $request->get('artifact_id');
