@@ -90,17 +90,14 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     /**
      * Returns a diff between current changeset value and changeset value in param
      *
-     * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
-     * @param PFUser                          $user            The user or null
-     *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null)
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
     {
         $this->setCurrentUserIfUserIsNotDefined($user);
         $diff = $this->getArtifactLinkInfoDiff($this->getField()->getTracker(), $changeset_value);
 
-        return $diff->fetchFormatted($user, $format);
+        return $diff->fetchFormatted($user, $format, $ignore_perms);
     }
 
     /**

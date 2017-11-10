@@ -421,13 +421,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @param Tracker_Artifact $artifact
      * @return <type>
      */
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    {
         if (! $ignore_perms && ! $this->userCanRead($recipient) ) {
             return '';
         }
 
         $value = $artifact->getLastChangeset()->getValue($this);
-        $mail_formatted_value = $this->fetchMailArtifactValue($artifact, $recipient, $value, $format);
+        $mail_formatted_value = $this->fetchMailArtifactValue($artifact, $recipient, $ignore_perms, $value, $format);
 
         if ($format == 'text') {
             $output = ' * '.$this->getLabel().' : '.$mail_formatted_value;

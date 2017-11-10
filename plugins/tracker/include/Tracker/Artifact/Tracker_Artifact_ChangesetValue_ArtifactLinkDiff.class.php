@@ -153,7 +153,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         return $this->previous != $this->next;
     }
 
-    public function fetchFormatted(PFUser $user, $format)
+    public function fetchFormatted(PFUser $user, $format, $ignore_perms)
     {
         if (! $this->hasChanges()) {
             return;
@@ -164,12 +164,12 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
         }
 
         $formatted_messages = array();
-        $formatted_messages[] = $this->removed->fetchFormatted($user, $format);
+        $formatted_messages[] = $this->removed->fetchFormatted($user, $format, $ignore_perms);
         foreach ($this->added_by_nature as $collection) {
-            $formatted_messages[] = $collection->fetchFormatted($user, $format);
+            $formatted_messages[] = $collection->fetchFormatted($user, $format, $ignore_perms);
         }
         foreach ($this->updated_by_nature as $collection) {
-            $formatted_messages[] = $collection->fetchFormatted($user, $format);
+            $formatted_messages[] = $collection->fetchFormatted($user, $format, $ignore_perms);
         }
 
         return $this->groupFormattedMessages(array_filter($formatted_messages), $format);

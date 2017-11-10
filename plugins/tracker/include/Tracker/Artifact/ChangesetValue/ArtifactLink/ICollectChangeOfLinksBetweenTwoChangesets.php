@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) Enalean SAS, 2016. All Rights Reserved.
+ * Copyright (C) Enalean SAS, 2016 - 2017. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,5 +28,5 @@ interface ICollectChangeOfLinksBetweenTwoChangesets
     /**
      * @return string
      */
-    public function fetchFormatted(PFUser $user, $format);
+    public function fetchFormatted(PFUser $user, $format, $ignore_perms);
 }

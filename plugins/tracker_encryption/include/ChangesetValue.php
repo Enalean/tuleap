@@ -56,13 +56,9 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     }
 
     /**
-     * @param Tracker_Artifact_ChangesetValue $changeset_value
-     * @param string $format
-     * @param PFUser $user
-     *
      * @return string
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null)
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
     {
         $previous = explode(PHP_EOL, $changeset_value->getValue());
         $next     = explode(PHP_EOL, $this->getValue());

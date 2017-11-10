@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) Enalean SAS, 2016. All Rights Reserved.
+ * Copyright (C) Enalean SAS, 2016 - 2017. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,7 +56,7 @@ class AddedLinkByNatureCollection implements ICollectChangeOfLinksBetweenTwoChan
     /**
      * @return string
      */
-    public function fetchFormatted(PFUser $user, $format)
+    public function fetchFormatted(PFUser $user, $format, $ignore_perms)
     {
         if ($this->nature->shortname) {
             return $GLOBALS['Language']->getText(
@@ -64,14 +64,14 @@ class AddedLinkByNatureCollection implements ICollectChangeOfLinksBetweenTwoChan
                 'artlink_added_with_nature',
                 array(
                     $this->nature->forward_label,
-                    $this->formatter->format($this->added, $user, $format)
+                    $this->formatter->format($this->added, $user, $format, $ignore_perms)
                 )
             );
         } else {
             return $GLOBALS['Language']->getText(
                 'plugin_tracker',
                 'artlink_added',
-                $this->formatter->format($this->added, $user, $format)
+                $this->formatter->format($this->added, $user, $format, $ignore_perms)
             );
         }
     }

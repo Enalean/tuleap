@@ -147,6 +147,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     public function fetchMailArtifactValue(
         Tracker_Artifact $artifact,
         PFUser $user,
+        $ignore_perms,
         Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {

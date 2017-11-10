@@ -79,11 +79,19 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      * Fetch artifact value for email
      * @param Tracker_Artifact $artifact
      * @param PFUser $user
+     * @param boolean $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value
      * @param string $format
+     *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+    public function fetchMailArtifactValue(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        $ignore_perms,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $format = 'text'
+    ) {
         $output = '';
         switch ($format) {
             case 'html':

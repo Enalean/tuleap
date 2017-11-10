@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,15 +51,14 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
     public function getValue() {
         return $this->numeric;
     }
+
     /**
      * Get the diff between this numeric value and the one passed in param
      *
-     * @param Tracker_Artifact_ChangesetValue_Numeric $changeset_value the changeset value to compare
-     * @param PFUser                          $user            The user or null
-     *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value, $format = 'html', PFUser $user = null) {
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
+    {
         $previous_numeric = $changeset_value->getValue();
         $next_numeric     = $this->getValue();
         if ($previous_numeric !== $next_numeric) {

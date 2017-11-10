@@ -66,7 +66,7 @@ class UpdatedNatureLinkCollection implements ICollectChangeOfLinksBetweenTwoChan
     /**
      * @return string
      */
-    public function fetchFormatted(PFUser $user, $format)
+    public function fetchFormatted(PFUser $user, $format, $ignore_perms)
     {
         $source = $this->source_nature->forward_label;
         if (! $source) {
@@ -84,7 +84,7 @@ class UpdatedNatureLinkCollection implements ICollectChangeOfLinksBetweenTwoChan
             array(
                 $source,
                 $target,
-                $this->formatter->format($this->changed, $user, $format)
+                $this->formatter->format($this->changed, $user, $format, $ignore_perms)
             )
         );
     }

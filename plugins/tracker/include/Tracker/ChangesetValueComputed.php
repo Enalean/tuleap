@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,7 +51,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
         return $this->getValue();
     }
 
-    public function diff($changeset_value, $format = 'html', PFUser $user = null)
+    public function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false)
     {
         $previous_numeric = $changeset_value->getValue();
         $next_numeric     = $this->getValue();

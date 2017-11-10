@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -85,24 +85,28 @@ abstract class Tracker_Artifact_ChangesetValue
      * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
      * @param string                          $format          The format of the diff (html, text, ...)
      * @param PFUser                          $user            The user or null
+     * @param boolean                         $ignore_perms
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public abstract function diff($changeset_value, $format = 'html', PFUser $user = null);
+    public abstract function diff($changeset_value, $format = 'html', PFUser $user = null, $ignore_perms = false);
 
     public abstract function nodiff($format = 'html');
 
     /**
      * Returns a mail format diff between current changeset value and changeset value in param
      *
-     * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
-     * @param string                          $format          The format of the diff (html, text, ...)
-     * @param PFUser                          $user            The user or null
-     *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id) {
-        return $this->diff($changeset_value, $format, $user);
+    public function mailDiff(
+        $changeset_value,
+        $artifact_id,
+        $changeset_id,
+        $ignore_perms,
+        $format = 'html',
+        PFUser $user = null
+    ) {
+        return $this->diff($changeset_value, $format, $user, $ignore_perms);
     }
 
     /**
