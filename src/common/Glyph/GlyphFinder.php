@@ -48,13 +48,12 @@ class GlyphFinder
 
         $glyph = $this->getCoreGlyph($name);
         if ($glyph === null) {
-            $this->event_manager->processEvent(
-                \Event::GET_GLYPH,
-                array(
-                    'name'  => $name,
-                    'glyph' => &$glyph
-                )
-            );
+            $glyph_locations_collector = new GlyphLocationsCollector();
+            $this->event_manager->processEvent($glyph_locations_collector);
+            $glyph_location = $glyph_locations_collector->getLocation($name);
+            if ($glyph_location !== null) {
+                $glyph = $this->readGlyph($glyph_location, $name);
+            }
         }
 
         if ($glyph === null) {
@@ -70,8 +69,16 @@ class GlyphFinder
      */
     private function getCoreGlyph($name)
     {
-        $core_glyphs_dir   = \ForgeConfig::get('codendi_dir') . '/src/glyphs/';
-        $svg_file_path     = $core_glyphs_dir . $name . '.svg';
+        $core_glyphs_location = new GlyphLocation(\ForgeConfig::get('tuleap_dir') . '/src/glyphs');
+        return $this->readGlyph($core_glyphs_location, $name);
+    }
+
+    /**
+     * @return null|Glyph
+     */
+    private function readGlyph(GlyphLocation $location, $name)
+    {
+        $svg_file_path     = $location->getPath() . $name . '.svg';
         $svg_purified_path = URIModifier::removeDotSegments(
             URIModifier::removeEmptySegments($svg_file_path)
         );

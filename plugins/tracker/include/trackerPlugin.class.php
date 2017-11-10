@@ -21,6 +21,8 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Glyph\GlyphLocation;
+use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -146,7 +148,6 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::USER_HISTORY, 'getRecentlyVisitedArtifacts');
         $this->addHook(Event::USER_HISTORY_CLEAR, 'clearRecentlyVisitedArtifacts');
 
-        $this->addHook(Event::GET_GLYPH, 'getGlyph');
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
         $this->addHook(ProjectRegistrationActivateService::NAME);
     }
@@ -174,6 +175,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::LIST_DELETED_TRACKERS);
         $this->addHook(TemplatePresenter::EVENT_ADDITIONAL_ADMIN_BUTTONS);
 
+        $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(HeartbeatsEntryCollection::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -1477,17 +1479,12 @@ class trackerPlugin extends Plugin {
         $visit_cleaner->clearVisitedArtifacts($user);
     }
 
-    /**
-     * @see Event::GET_GLYPH
-     */
-    public function getGlyph(array $params)
+    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
     {
-        if (strpos($params['name'], 'tuleap-tracker') === 0) {
-            $svg_content = file_get_contents(TRACKER_BASE_DIR . '/../glyphs/'. $params['name'] .'.svg');
-            if ($svg_content !== false) {
-                $params['glyph'] = new \Tuleap\Glyph\Glyph($svg_content);
-            }
-        }
+        $glyph_locations_collector->addLocation(
+            'tuleap-tracker',
+            new GlyphLocation(TRACKER_BASE_DIR . '/../glyphs')
+        );
     }
 
     public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)
