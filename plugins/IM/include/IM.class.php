@@ -80,7 +80,7 @@ class IM extends Controler {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
                 }
                 break;
-            case 'muc_logs':
+            default:
                 if ($user->isMember($group_id)) {
                 	$any = $GLOBALS['Language']->getText('global', 'any');
                 	$start_date = $request->get('log_start_date');
@@ -107,27 +107,6 @@ class IM extends Controler {
                 } else {
 					$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
 				}
-                break;
-            default:
-                if ($group_id) {
-                    $pm = ProjectManager::instance();
-                    $project = $pm->getProject($group_id);
-                    if ($project->usesService('IM')) {
-                        if ($user->isMember($group_id)) {
-                            $this->view = 'chat_room';
-                        } else {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
-                        }
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_im_admin','service_not_used'));
-                    }
-                } else {
-                    if ($user->isSuperUser()) {
-                        $this->view = 'codendi_im_admin';
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global','perm_denied'));
-                    }
-                }
                 break;
         }
     }

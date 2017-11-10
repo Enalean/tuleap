@@ -77,30 +77,3 @@ plugin_im_status	forbidden	Status forbidden
 plugin_im	user_appearance_pref_name	Instant Messaging:
 plugin_im	user_appearance_pref_display_users_presence	Display users presence
 plugin_im	link_im_admin_tool	Openfire Jabber server administration (login 'admin')
-
-plugin_im	wait_loading	Please wait while loading...
-plugin_im	chatroom_title	Chat Room
-plugin_im	chatroom_summary	This chat room allows you to talk with the members of this project. You can also access the chat room with one of the many available clients (see help for details).
-plugin_im	chatroom_onlymembers	You need to be member of the project to enter the chat room.
-
-plugin_im	muckl_alt_roomname	This room's name
-plugin_im	muckl_topic	Topic:
-plugin_im	muckl_alt_roomtopic	This room's topic
-plugin_im	muckl_help_startwriting	Click here to start writing!
-plugin_im	muckl_alt_sendbutton	Submit Message
-plugin_im	muckl_status	Status:
-plugin_im	muckl_status_online	Online
-plugin_im	muckl_status_free	Free for Chat
-plugin_im	muckl_status_away	Away
-plugin_im	muckl_status_notavailable	Not available
-plugin_im	muckl_status_donotdisturb	Do not disturb
-plugin_im	muckl_statusmessage	Enter your status message here!
-plugin_im	muckl_alt_statusmessage	Enter a status message
-plugin_im	muckl_alt_togglesound	Toggle Sound
-plugin_im	muckl_alt_sendprivatemessage	Send private message
-plugin_im	muckl_hasbecomeavailable	has become available
-plugin_im	muckl_hassetthetopicto	has set the topic to:
-plugin_im	muckl_isnowknownas	is now known as:
-plugin_im	muckl_hasleft	has left
-plugin_im	muckl_send_button_img	/plugins/IM/themes/default/images/en_US_send_button.gif
-plugin_im	muckl_connection_conflict	Conflict: it seems that you are already connected to this chat room with another client.
