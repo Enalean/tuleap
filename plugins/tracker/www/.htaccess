@@ -1,11 +1,3 @@
-#
-# Increase PHP max execution time for the export
-# database because it can last a long time
-# add also higher memory limit as some projects
-# may have maany bugs to export
-#
-php_value max_execution_time "1800"
-
 # Prevent IE7 from caching the tracker reports.
 <Files index.php>
   ExpiresActive On

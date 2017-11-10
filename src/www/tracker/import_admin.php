@@ -1,6 +1,7 @@
 <?php
 
 //
+// Copyright (c) Enalean SAS, 2017. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
@@ -14,6 +15,8 @@ require_once('www/project/admin/project_admin_utils.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 
+// Inherited from old .htaccess (needed for reports, linked artifact view, etc)
+ini_set('max_execution_time', 1800);
 
 $group_id = $request->getValidated('group_id', 'GroupId');
 $mode = $request->get('mode');
