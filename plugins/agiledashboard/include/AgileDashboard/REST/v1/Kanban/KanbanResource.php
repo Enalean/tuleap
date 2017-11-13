@@ -19,62 +19,69 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
-use DateTime;
-use AgileDashboard_KanbanItemManager;
-use Luracast\Restler\RestException;
-use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
-use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
-use Tuleap\REST\Header;
-use Tuleap\REST\AuthenticatedResource;
-use AgileDashboard_PermissionsManager;
-use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanDao;
-use AgileDashboard_KanbanItemDao;
-use AgileDashboard_KanbanNotFoundException;
-use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_Kanban;
-use AgileDashboard_KanbanColumnFactory;
+use AgileDashboard_KanbanActionsChecker;
+use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_KanbanColumnDao;
+use AgileDashboard_KanbanColumnFactory;
+use AgileDashboard_KanbanColumnManager;
+use AgileDashboard_KanbanDao;
+use AgileDashboard_KanbanFactory;
+use AgileDashboard_KanbanItemDao;
+use AgileDashboard_KanbanItemManager;
+use AgileDashboard_KanbanNotFoundException;
+use AgileDashboard_KanbanUserPreferences;
+use AgileDashboard_PermissionsManager;
 use AgileDashboardStatisticsAggregator;
-use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
-use UserManager;
+use DateTime;
 use Exception;
-use TrackerFactory;
+use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
+use Kanban_SemanticStatusBasedOnASharedFieldException;
+use Kanban_SemanticStatusColumnIdsNotInOpenSemanticException;
+use Kanban_SemanticStatusNotBoundToStaticValuesException;
+use Kanban_SemanticStatusNotDefinedException;
+use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_Artifact_PriorityHistoryChange;
 use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryChange;
 use Tracker_Artifact_PriorityHistoryDao;
-use Tracker_ArtifactFactory;
 use Tracker_Artifact_PriorityManager;
-use Tracker_NoChangeException;
+use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List_Bind;
-use Tracker_Semantic_Status;
+use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tracker_FormElementFactory;
+use Tracker_NoChangeException;
+use Tracker_Permission_PermissionRetrieveAssignee;
+use Tracker_Permission_PermissionsSerializer;
+use Tracker_ReportFactory;
+use Tracker_Semantic_Status;
+use Tracker_Workflow_GlobalRulesViolationException;
+use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
+use TrackerFactory;
+use Tuleap\AgileDashboard\Kanban\TrackerReportFilter\ReportFilterFromWhereBuilder;
+use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
+use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
+use Tuleap\AgileDashboard\KanbanRightsPresenter;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter\FilteredBacklogRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
-use AgileDashboard_KanbanUserPreferences;
-use Kanban_SemanticStatusNotDefinedException;
-use Kanban_SemanticStatusNotBoundToStaticValuesException;
-use Kanban_SemanticStatusBasedOnASharedFieldException;
-use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
-use Kanban_SemanticStatusColumnIdsNotInOpenSemanticException;
-use AgileDashboard_KanbanColumnManager;
-use AgileDashboard_KanbanActionsChecker;
-use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
-use Tuleap\RealTime\NodeJSClient;
-use Tracker_Workflow_GlobalRulesViolationException;
-use Tracker_Permission_PermissionsSerializer;
-use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
-use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
-use Tuleap\AgileDashboard\KanbanRightsPresenter;
-use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
-use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
+use Tuleap\RealTime\NodeJSClient;
+use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\QueryParameterException;
+use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
+use UserManager;
 
-class KanbanResource extends AuthenticatedResource {
-
+class KanbanResource extends AuthenticatedResource
+{
     const MAX_LIMIT = 100;
     const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
@@ -125,7 +132,15 @@ class KanbanResource extends AuthenticatedResource {
     /** @var Tracker_Permission_PermissionsSerializer */
     private $permissions_serializer;
 
-    public function __construct() {
+    /** @var QueryParameterParser */
+    private $query_parser;
+    /** @var KanbanBacklogRepresentationBuilder */
+    private $backlog_builder;
+    /** @var FilteredBacklogRepresentationBuilder */
+    private $filtered_backlog_builder;
+
+    public function __construct()
+    {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
         $this->kanban_item_manager = new AgileDashboard_KanbanItemManager($this->kanban_item_dao);
         $this->tracker_factory = TrackerFactory::instance();
@@ -183,6 +198,29 @@ class KanbanResource extends AuthenticatedResource {
         $this->node_js_client         = new NodeJSClient();
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
+
+        $this->query_parser = new QueryParameterParser(
+            new JsonDecoder()
+        );
+
+        $this->backlog_builder = new KanbanBacklogRepresentationBuilder(
+            $this->kanban_item_dao,
+            $this->artifact_factory
+        );
+
+        $report_factory = Tracker_ReportFactory::instance();
+
+        $report_artifact_factory = new ReportArtifactFactory(
+            $this->artifact_factory
+        );
+
+        $report_from_where_builder = new ReportFilterFromWhereBuilder();
+
+        $this->filtered_backlog_builder = new FilteredBacklogRepresentationBuilder(
+            $report_factory,
+            $report_from_where_builder,
+            $report_artifact_factory
         );
     }
 
@@ -367,30 +405,74 @@ class KanbanResource extends AuthenticatedResource {
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
+     * <p><b>query</b> is optional. When filled, it is a json object with:</p>
+     * <p>an integer "tracker_report_id" to filter kanban items corresponding to the
+     *      given Tracker report id. <br></p>
+     *
+     *      Example: <pre>{"tracker_report_id":41}</pre>
+     *
+     * <br>
+     * <p>Reports using the field bound to the "Status" semantic may not filter items
+     *      the way you expect them to. For example, using a Tracker report with a "Status"
+     *      criteria with "Status" = "On going" will return an empty column. Items in
+     *      the Backlog column have an empty value for "Status", they can't have "On going"
+     *      and "empty" values at the same time.</p>
+     *
      * @url GET {id}/backlog
      * @access hybrid
      *
-     * @param int $id Id of the kanban
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int $id       Id of the kanban
+     * @param string $query Search string in json format
+     * @param int $limit    Number of elements displayed per page
+     * @param int $offset   Position of the first element to display
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanBacklogRepresentation
      *
      * @throws 403
      * @throws 404
      */
-    public function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $query = '', $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
-        $user   = $this->getCurrentUser();
-        $kanban = $this->getKanban($user, $id);
+        $user    = $this->getCurrentUser();
+        $kanban  = $this->getKanban($user, $id);
 
-        $backlog_representation = new KanbanBacklogRepresentation();
-        $backlog_representation->build($user, $kanban, $limit, $offset);
+        if ($query !== '') {
+            $tracker_report_id      = $this->getTrackerReportIdFromQuery($query);
+            $backlog_representation = $this->filtered_backlog_builder->build(
+                $user,
+                $kanban,
+                $tracker_report_id,
+                $limit,
+                $offset
+            );
+        } else {
+            $backlog_representation = $this->backlog_builder->build(
+                $user,
+                $kanban,
+                $limit,
+                $offset
+            );
+        }
 
         Header::allowOptionsGet();
         Header::sendPaginationHeaders($limit, $offset, $backlog_representation->total_size, self::MAX_LIMIT);
 
         return $backlog_representation;
+    }
+
+    /**
+     * @return int
+     */
+    private function getTrackerReportIdFromQuery($query)
+    {
+        try {
+            $tracker_report_id = $this->query_parser->getInt($query, 'tracker_report_id');
+        } catch (QueryParameterException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        return $tracker_report_id;
     }
 
     private function checkUserCanUpdateKanban(PFUser $user, AgileDashboard_Kanban $kanban) {

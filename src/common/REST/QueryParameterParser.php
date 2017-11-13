@@ -38,6 +38,42 @@ class QueryParameterParser
      */
     public function getArrayOfInt($query, $parameter_name)
     {
+        $parameter_content = $this->getParameterContent($query, $parameter_name);
+        if (! is_array($parameter_content)) {
+            throw new InvalidParameterTypeException($parameter_name);
+        }
+
+        $only_numeric_label_ids = array_filter($parameter_content, 'is_int');
+        if ($only_numeric_label_ids !== $parameter_content) {
+            throw new InvalidParameterTypeException($parameter_name);
+        }
+
+        $duplicates = array_diff_key($parameter_content, array_unique($parameter_content));
+        if (count($duplicates) > 0) {
+            throw new DuplicatedParameterValueException($parameter_name, $duplicates);
+        }
+
+        return $parameter_content;
+    }
+
+    /**
+     * @param string $query
+     * @param string $parameter_name
+     * @return int
+     * @throws QueryParameterException
+     */
+    public function getInt($query, $parameter_name)
+    {
+        $parameter_content = $this->getParameterContent($query, $parameter_name);
+        if (! is_int($parameter_content)) {
+            throw new InvalidParameterTypeException($parameter_name);
+        }
+
+        return $parameter_content;
+    }
+
+    private function getParameterContent($query, $parameter_name)
+    {
         $query = trim($query);
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
 
@@ -45,21 +81,6 @@ class QueryParameterParser
             throw new MissingMandatoryParameterException($parameter_name);
         }
 
-        $labels_id = $json_query[$parameter_name];
-        if (! is_array($labels_id)) {
-            throw new InvalidParameterTypeException($parameter_name);
-        }
-
-        $only_numeric_label_ids = array_filter($labels_id, 'is_int');
-        if ($only_numeric_label_ids !== $labels_id) {
-            throw new InvalidParameterTypeException($parameter_name);
-        }
-
-        $duplicates = array_diff_key($labels_id, array_unique($labels_id));
-        if (count($duplicates) > 0) {
-            throw new DuplicatedParameterValueException($parameter_name, $duplicates);
-        }
-
-        return $labels_id;
+        return $json_query[$parameter_name];
     }
 }
