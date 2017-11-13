@@ -1,0 +1,10 @@
+{
+    "label": "Fetch",
+    "children": [
+        "prerequisites",
+        "get",
+        "patch",
+        "put",
+        "recursive-get"
+    ]
+}

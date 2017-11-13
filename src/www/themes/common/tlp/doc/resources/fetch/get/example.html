@@ -1,0 +1,19 @@
+<script>
+import { get } from 'tlp';
+
+// searchUser("jdoe", 10, 0) will query /api/v1/users/?query%3D%7Busername%3A%22jdoe%22%7D&limit=10&offset=0
+async function searchUser(username, limit, offset) {
+    const response = await get('/api/v1/users/', {
+        cache: 'force-cache',
+        params: {
+            // These parameters are JSON-encoded and URI-encoded
+            query: { username },
+            limit,
+            offset
+        }
+    });
+    const users = await response.json();
+
+    return users;
+}
+</script>

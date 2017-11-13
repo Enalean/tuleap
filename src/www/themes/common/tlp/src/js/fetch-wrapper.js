@@ -20,8 +20,9 @@
 
 export {
     get,
-    recursiveGet,
-    put
+    patch,
+    put,
+    recursiveGet
 }
 
 const get = async (input, init = {}) => {
@@ -109,7 +110,7 @@ const put = (input, init = {}) => {
     return fetch(input, {method, credentials, ...init}).then(checkResponse);
 };
 
-export const patch = (input, init = {}) => {
+const patch = (input, init = {}) => {
     const method = 'PATCH',
           { credentials = 'same-origin' } = init;
 

@@ -1,0 +1,93 @@
+<script>
+// your-controller.js
+
+// You must import the modal's template this way to save it in AngularJS' $templateCache
+import './my-custom-modal.tpl.html';
+import MyCustomModalController from './my-custom-modal-controller.js';
+
+export default YourController;
+
+YourController.$inject = [
+    //...
+    'TlpModalService',
+    //...
+];
+
+function YourController(
+    //...
+    TlpModalService,
+    //...
+) {
+    const self = this;
+    self.openEditModal = openEditModal;
+
+    function customFunction(tracker_id) {
+        console.log(tracker_id);
+    }
+
+    function openEditModal(argument) {
+        TlpModalService.open({
+            // This template needs to already be in $templateCache.
+            // TlpModalService will NOT load it dynamically.
+            // You must import it at the top of the controller !
+            templateUrl: 'my-custom-modal.tpl.html',
+            // You should import the controller and provide it
+            // to the modal this way
+            controller: MyCustomModalController,
+            // Same as directives, the name of the controller in the template
+            controllerAs: 'my_custom_modal',
+            // TLP modal options
+            tlpModalOptions: {
+                keyboard: false
+            },
+            // All the properties of "resolve" will be injected in the modal's controller
+            // just as if they were services !
+            resolve: {
+                my_custom_object: {
+                    tracker_id: 76
+                },
+                // This can be used to provide callbacks to the modal
+                my_custom_function: customFunction
+            }
+        });
+    }
+}
+</script>
+<script>
+// my-custom-modal-controller.js
+export default MyCustomModalController;
+
+MyCustomModalController.$inject = [
+    //...
+    'modal_instance',
+    'my_custom_object',
+    'my_custom_function'
+    //...
+];
+
+function MyCustomModalController(
+    //...
+    modal_instance,
+    my_custom_object,
+    my_custom_function
+    //...
+) {
+    const self = this;
+
+    // Use $onInit to run code when the controller is instanciated
+    self.$onInit = function() {
+        // Use modal_instance to access TLP's modal object
+        modal_instance.tlp_modal.addEventListener('tlp-modal-shown', () => {
+            // You can also access the modal's DOM this way
+            const input = modal_instance.tlp_modal.element.querySelector('.my-title-input');
+            if (input) { input.focus(); };
+        });
+
+        modal_instance.tlp_modal.addEventListener('tlp-modal-hidden', () => {
+            // Using the "resolved" functions and objects
+            // This should log "76"
+            my_custom_function(my_custom_object.tracker_id);
+        });
+    }
+}
+</script>

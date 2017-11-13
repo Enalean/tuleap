@@ -1,0 +1,3 @@
+<p>Before being able to use TLP's fetch wrapper, you need to ensure that the browser supports the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">Fetch API</a>. See <a href="https://caniuse.com/#feat=fetch">Browser support</a>. If needed (e.g. for IE11), include the <a href="https://www.npmjs.com/package/whatwg-fetch">whatwg polyfill for Fetch</a>.</p>
+
+<p>If you're using webpack and are on a BurningParrot page, TLP should already be loaded. It is published on window, so to avoid loading it twice you should define it as <code class="code-inline">externals</code>.</p>

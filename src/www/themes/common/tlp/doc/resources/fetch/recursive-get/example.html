@@ -1,0 +1,23 @@
+<script>
+import { recursiveGet } from 'tlp';
+
+// On each request, recursiveGet will call this callback with the response.json()
+function getCollectionCallback({ collection }) {
+    // You can also leverage this callback to display this batch of items
+    displayABatchOfTrackers(collection);
+
+    // collection must be an [Array]
+    return collection;
+}
+
+async function getTrackersOfProject(project_id) {
+    return await recursiveGet('/api/v1/projects/' + project_id + '/trackers', {
+        params: {
+            // These parameters are JSON-encoded and URI-encoded
+            limit: 50,
+            query: { is_open: true }
+        },
+        getCollectionCallback
+    });
+}
+</script>

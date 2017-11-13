@@ -1,0 +1,4 @@
+{
+    "label": "put",
+    "shortcode": "tlp.put(url_to_query, options)"
+}
