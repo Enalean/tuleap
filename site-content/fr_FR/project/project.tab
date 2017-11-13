@@ -104,11 +104,7 @@ project_admin_editservice	conf_inherited_yes	Oui
 project_admin_editugroup	name	Nom
 project_admin_editugroup	avoid_special_ch	Veuillez éviter les espaces et les signes de ponctuation dans les noms de groupe
 project_admin_editugroup	desc	Description
-project_admin_editugroup	create_ug	Créer un groupe d'utilisateurs
 project_admin_editugroup	create_ug_for	Créer un nouveau groupe d'utilisateurs pour <B>$1</B>
-project_admin_editugroup	fill_ug_desc	Veuillez remplir le nom et la description de ce nouveau groupe d'utilisateurs&nbsp;:
-project_admin_editugroup	create_from	Créer à partir de
-project_admin_editugroup	empty_g	Groupe vide
 project_admin_editugroup	proj_members	Membres du projet
 project_admin_editugroup	proj_admins	Administrateurs du projet
 project_admin_editugroup	ug_id_missed	L'ID du ugroup est manquant

@@ -136,7 +136,13 @@ msgstr ""
 msgid "Could not update hooks of the SVN repository"
 msgstr ""
 
+msgid "Create from"
+msgstr ""
+
 msgid "Create label"
+msgstr ""
+
+msgid "Create user group"
 msgstr ""
 
 msgid "Dashboard creation failed."
@@ -205,6 +211,9 @@ msgid "Edit widget"
 msgstr ""
 
 msgid "Emergency"
+msgstr ""
+
+msgid "Empty group"
 msgstr ""
 
 msgid "Escape from input/textarea, close dropdown or modal"

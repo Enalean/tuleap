@@ -104,11 +104,7 @@ project_admin_editservice	conf_inherited_yes	Yes
 project_admin_editugroup	name	Name
 project_admin_editugroup	avoid_special_ch	Please avoid space and punctuation in user group names
 project_admin_editugroup	desc	Description
-project_admin_editugroup	create_ug	Create User Group
 project_admin_editugroup	create_ug_for	Creating new user group for <B>$1</B>
-project_admin_editugroup	fill_ug_desc	Please, fill the name and description of this new user group:
-project_admin_editugroup	create_from	Create from
-project_admin_editugroup	empty_g	Empty Group
 project_admin_editugroup	proj_members	Project Members
 project_admin_editugroup	proj_admins	Project Admins
 project_admin_editugroup	ug_id_missed	The ugroup ID is missing

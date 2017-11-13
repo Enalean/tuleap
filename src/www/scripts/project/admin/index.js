@@ -19,3 +19,4 @@
 
 import '../../labels/project-admin/project-admin-labels.js';
 import './project-admin.js';
+import './project-admin-ugroups.js';

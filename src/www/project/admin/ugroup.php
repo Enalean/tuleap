@@ -23,6 +23,8 @@
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\UGroupBuilder;
+use Tuleap\User\UserGroup\NameTranslator;
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
@@ -69,10 +71,21 @@ if ($request->existAndNonEmpty('func')) {
             $name = $request->getValidated('ugroup_name', 'String', '');
             $desc = $request->getValidated('ugroup_description', 'String', '');
             ugroup_update($group_id, $ugroup_id, $name, $desc);
-            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=settings');
+            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.urlencode($group_id).'&ugroup_id='.urlencode($ugroup_id).'&func=edit&pane=settings');
+            break;
+        case 'do_create':
+            $name     = $request->getValidated('ugroup_name', 'String', '');
+            $desc     = $request->getValidated('ugroup_description', 'String', '');
+            $template = $request->getValidated('group_templates', 'String', '');
+
+            $ugroup_id = ugroup_create($group_id, $name, $desc, $template);
+            $GLOBALS['Response']->redirect(
+                '/project/admin/editugroup.php?group_id=' . urlencode($group_id) .
+                '&ugroup_id=' . urlencode( $ugroup_id) . '&func=edit'
+            );
             break;
     }
-    $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
+    $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. urlencode($group_id));
 }
 
 $pm = ProjectManager::instance();
@@ -81,7 +94,7 @@ $project=$pm->getProject($group_id);
 $title = $Language->getText('project_admin_ugroup', 'manage_ug');
 
 $include_assets = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets');
-$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
+$GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin-ugroups.js'));
 
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'groups');
@@ -99,13 +112,17 @@ while ($row = db_fetch_array($result)) {
     );
 }
 
+$ugroup_builder   = new UGroupBuilder(new UGroupManager(), new NameTranslator());
+$template_ugroups = $ugroup_builder->getUGroupsThatCanBeUsedAsTemplate($project);
+
 $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/';
 TemplateRendererFactory::build()
     ->getRenderer($templates_dir)
     ->renderToPage('list-groups', array(
-        'ugroups'    => $ugroups,
-        'project_id' => $project->getID(),
-        'csrf'       => $csrf,
+        'ugroups'            => $ugroups,
+        'template_ugroups'   => $template_ugroups,
+        'project_id'         => $project->getID(),
+        'csrf'               => $csrf
     ));
 
 project_admin_footer(array());

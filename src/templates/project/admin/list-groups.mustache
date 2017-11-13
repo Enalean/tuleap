@@ -8,13 +8,15 @@
             </div>
             <section class="tlp-pane-section">
                 <div class="tlp-table-actions">
-                    <a type="button"
-                       class="tlp-button-primary tlp-table-actions-element"
-                       href="/project/admin/editugroup.php?func=create&group_id={{ project_id }}"
-                    >
+                    <button
+                            id="project-admin-ugroups-modal"
+                            type="button"
+                            data-target-modal-id="user-group-modal"
+                            class="tlp-button-primary tlp-table-actions-element">
                         <i class="tlp-button-icon fa fa-plus"></i>
                         {{# gettext }}Add users group{{/ gettext }}
-                    </a>
+                    </button>
+                    {{> modal-ugroup }}
                     <div class="tlp-table-actions-spacer"></div>
                     <div class="tlp-form-element tlp-table-actions-element">
                         <input type="search"
