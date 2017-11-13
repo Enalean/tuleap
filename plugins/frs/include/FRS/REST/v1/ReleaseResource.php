@@ -24,6 +24,7 @@ use FRSPackageFactory;
 use FRSRelease;
 use FRSReleaseFactory;
 use Luracast\Restler\RestException;
+use PFUser;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\UploadedLinksDao;
@@ -34,6 +35,10 @@ use UserManager;
 
 class ReleaseResource extends AuthenticatedResource
 {
+    const MAX_LIMIT      = 50;
+    const DEFAULT_LIMIT  = 10;
+    const DEFAULT_OFFSET = 0;
+
     /**
      * @var FRSPackageFactory
      */
@@ -65,7 +70,7 @@ class ReleaseResource extends AuthenticatedResource
     }
 
     /**
-     * Get FRS release
+     * Get release
      *
      * @url GET {id}
      * @access hybrid
@@ -79,26 +84,51 @@ class ReleaseResource extends AuthenticatedResource
         $this->sendAllowOptionsForRelease();
 
         $release = $this->getRelease($id);
+        $user    = $this->user_manager->getCurrentUser();
+        $this->checkUserCanReadRelease($release, $user);
 
         $release_representation = new ReleaseRepresentation();
-        $user                   = $this->user_manager->getCurrentUser();
-        $package                = $release->getPackage();
-
-        if (! $this->release_factory->userCanRead($package->getGroupID(), $package->getPackageID(), $release->getReleaseID(), $user->getId())) {
-            throw new RestException(403, "Access to release denied");
-        }
-
-        if ($package->isActive()) {
-            $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
-        } else if ($package->isHidden()
-            && $this->release_factory->userCanAdmin($user, $package->getGroupID())
-        ) {
-            $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
-        } else {
-            throw new RestException(403, "Access to package denied");
-        }
+        $release_representation->build($release, $this->retriever, $user, $this->uploaded_link_retriever);
 
         return $release_representation;
+    }
+
+    /**
+     * Get files
+     *
+     * Get files belonging to a release
+     *
+     * @url GET {id}/files
+     * @access hybrid
+     *
+     * @param int $id ID of the release
+     * @param int $limit  Number of files displayed per page {@from path}{@min 1}{@max 50}
+     * @param int $offset Position of the first file to display {@from path}{@min 0}
+     *
+     * @return \Tuleap\FRS\REST\v1\CollectionOfFileRepresentation
+     */
+    public function getFiles($id, $limit = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET)
+    {
+
+        $release = $this->getRelease($id);
+        $user    = $this->user_manager->getCurrentUser();
+        $this->checkUserCanReadRelease($release, $user);
+
+        $files_in_release = $release->getFiles();
+        $representations  = array();
+        foreach (array_slice($files_in_release, $offset, $limit) as $file) {
+            $file_representation = new FileRepresentation();
+            $file_representation->build($file);
+            $representations[] = $file_representation;
+        }
+
+        $this->sendAllowOptionsForFiles();
+        Header::sendPaginationHeaders($limit, $offset, count($files_in_release), self::MAX_LIMIT);
+
+        $collection = new CollectionOfFileRepresentation();
+        $collection->build($representations);
+
+        return $collection;
     }
 
     /**
@@ -233,9 +263,22 @@ class ReleaseResource extends AuthenticatedResource
         $this->sendAllowOptionsForRelease();
     }
 
+    /**
+     * @url OPTIONS {id}/frs_files
+     */
+    public function optionsFiles()
+    {
+        $this->sendAllowOptionsForFiles();
+    }
+
     private function sendAllowOptionsForRelease()
     {
         Header::allowOptionsGetPatch();
+    }
+
+    private function sendAllowOptionsForFiles()
+    {
+        Header::allowOptionsGet();
     }
 
     /**
@@ -301,5 +344,25 @@ class ReleaseResource extends AuthenticatedResource
         }
 
         return $release_array;
+    }
+
+    private function checkUserCanReadRelease(FRSRelease $release, PFUser $user)
+    {
+        $package = $release->getPackage();
+
+        if ($package->isHidden() && ! $this->release_factory->userCanAdmin($user, $package->getGroupID())) {
+            throw new RestException(403, "Access to package denied");
+        }
+
+        if (! $this->release_factory->userCanRead(
+            $package->getGroupID(),
+            $package->getPackageID(),
+            $release->getReleaseID(),
+            $user->getId()
+        )) {
+            throw new RestException(403, "Access to release denied");
+        }
+
+        return $user;
     }
 }
