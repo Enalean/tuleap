@@ -50,4 +50,16 @@ class POTEntryCollectionTest extends \TuleapTestCase
 
         $this->assertEqual($collection->getEntries(), array());
     }
+
+    public function itDoesNotAddTwiceTheSameEntryInSameDomain()
+    {
+        $collection = new POTEntryCollection('mydomain');
+
+        $entry1 = new POTEntry('a', '');
+        $entry2 = new POTEntry('a', '');
+        $collection->add('mydomain', $entry1);
+        $collection->add('mydomain', $entry2);
+
+        $this->assertEqual($collection->getEntries(), array($entry1));
+    }
 }
