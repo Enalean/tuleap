@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+
 /**
  * Class to create panes and display menu with them
  */
@@ -74,14 +76,20 @@ class Project_Admin_UGroup_PaneManagement {
      * Output repo management sub screen to the browser
      */
     public function display() {
-        project_admin_header(
-            array(
-                'title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'),
-                'group' => $this->ugroup->getProjectId(),
-                'help' => 'project-admin.html#creating-a-user-group'
-            ),
-            'groups'
-        );
+        $title = $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug');
+        if ($this->view->getIdentifier() === Project_Admin_UGroup_View_Settings::IDENTIFIER) {
+            $navigation_displayer = new HeaderNavigationDisplayer();
+            $navigation_displayer->displayBurningParrotNavigation($title, $this->ugroup->getProject(), 'groups');
+        } else {
+            project_admin_header(
+                array(
+                    'title' => $title,
+                    'group' => $this->ugroup->getProjectId(),
+                    'help'  => 'project-admin.html#creating-a-user-group'
+                ),
+                'groups'
+            );
+        }
         echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.
                 $GLOBALS['Language']->getText('project_admin_utils','ug_admin').
                 '</a> - '.$this->ugroup->getName().'</h1>';
@@ -96,12 +104,12 @@ class Project_Admin_UGroup_PaneManagement {
         echo $this->view->getContent();
         echo '</div>';
         echo '</div>';
-        $GLOBALS['HTML']->footer(array());
+        project_admin_footer(array());
     }
 
     /**
      *
-     * @param type $id
+     * @param string $id
      * @return Project_Admin_UGroup_PaneInfo object if exists, false if not
      */
     public function getPaneById($id) {

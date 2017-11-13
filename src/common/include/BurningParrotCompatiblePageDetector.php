@@ -67,8 +67,17 @@ class BurningParrotCompatiblePageDetector
 
     private function isInProjectAdmin()
     {
+        parse_str($_SERVER['QUERY_STRING'], $query_string);
+
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/editgroupinfo.php') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/project/admin/ugroup.php') === 0;
+            || strpos($_SERVER['REQUEST_URI'], '/project/admin/ugroup.php') === 0
+            || (
+                strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
+                && (
+                    ! isset($query_string['pane'])
+                    || $query_string['pane'] === \Project_Admin_UGroup_View_Settings::IDENTIFIER
+                )
+            );
     }
 
     private function isInCoreServicesSiteAdmin(PFUser $current_user)

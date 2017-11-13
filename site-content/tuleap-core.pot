@@ -228,6 +228,9 @@ msgstr ""
 msgid "Go up"
 msgstr ""
 
+msgid "Group details"
+msgstr ""
+
 msgid "Heartbeat"
 msgstr ""
 
@@ -274,6 +277,9 @@ msgid "Lists"
 msgstr ""
 
 msgid "Load users"
+msgstr ""
+
+msgid "Meaningful description of the group"
 msgstr ""
 
 msgid "Mediawiki"
@@ -355,6 +361,9 @@ msgid "Platform administration"
 msgstr ""
 
 msgid "Please accept term of service"
+msgstr ""
+
+msgid "Please avoid spaces and punctuation in users groups name."
 msgstr ""
 
 msgid "Please, enter a http:// or https:// link"

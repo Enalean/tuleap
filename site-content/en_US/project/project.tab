@@ -115,7 +115,6 @@ project_admin_editugroup	ug_id_missed	The ugroup ID is missing
 project_admin_editugroup	ug_not_found	ERROR - Can not find ugroup:$1 - $2
 project_admin_editugroup	edit_ug	Edit User Group
 project_admin_editugroup	ug_admin	User Group '<B>$1</B>' - Administration
-project_admin_editugroup	upd_ug_name	You can update the name and description of this user group:
 project_admin_editugroup	select_ug_members	Please select user group members:
 project_admin_editugroup	quick_filters	Quick Filters:
 project_admin_editugroup	show_items	Show items starting with $1
