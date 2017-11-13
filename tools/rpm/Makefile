@@ -166,7 +166,10 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 ## Build RPM
 ##
 
-rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).noarch.rpm
+rpm: $(RPM_TMP)/SPECS/$(SPEC_FILE) $(RPM_TMP)/SPECS/tuleap-all.spec $(RPM_TMP)/SPECS/codendi-customization.spec
+	$(RPMBUILD) -bb $(RPM_TMP)/SPECS/$(SPEC_FILE)
+	$(RPMBUILD) -bb $(RPM_TMP)/SPECS/tuleap-all.spec
+	$(RPMBUILD) -bb $(RPM_TMP)/SPECS/codendi-customization.spec
 
 srpms: $(SRPMS)
 
@@ -175,7 +178,10 @@ srpms-docker: $(SRPMS)
 $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm
 	rpmbuild --rebuild $<
 
-$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) $(RPM_TMP)/SPECS/$(SPEC_FILE) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$(SPEC_FILE)
+
+$(RPM_TMP)/SPECS/$(SPEC_FILE): $(SPEC_FILE)
 	cat $(SPEC_FILE) |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' |\
@@ -216,14 +222,23 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) 
 		sed -e 's/@@THEME_BURNINGPARROT_VERSION@@/$(THEME_BURNINGPARROT_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
-	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$(SPEC_FILE)
+
+$(RPM_TMP)/SPECS/tuleap-all.spec: tuleap-all.spec
+	cat tuleap-all.spec |\
+		sed -e 's/@@VERSION@@/$(version)/g' |\
+		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
+		> $(RPM_TMP)/SPECS/tuleap-all.spec
+
 
 custom_rpm: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
 $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
 	rpmbuild --rebuild $<
 
-$(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm: $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm: $(RPM_TMP)/SPECS/codendi-customization.spec $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/codendi-customization.spec
+
+$(RPM_TMP)/SPECS/codendi-customization.spec: $(CUSTOM_SPEC_FILE)
 	cat $(CUSTOM_SPEC_FILE) |\
 		sed -e 's/@@PLATFORM@@/default/' |\
 		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
@@ -231,8 +246,6 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
-	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
-	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/codendi-customization.spec
 
 rpm-all-deps: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
@@ -257,7 +270,6 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm:	tuleap-al
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$<
-	cp README.all $(RPM_TMP)/SOURCES/
 	$(RPMBUILD) -bs $(RPM_TMP)/SPECS/$<
 
 clean:

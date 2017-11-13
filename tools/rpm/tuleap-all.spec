@@ -8,8 +8,7 @@ Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://tuleap.net
-Source0: README.all
+URL: https://tuleap.net
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 Requires: @@PKG_NAME@@-install
@@ -40,7 +39,7 @@ what the platform propose.
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_defaultdocdir}/%{name}
-%{__cp} %{SOURCE0} $RPM_BUILD_ROOT/%{_defaultdocdir}/%{name}
+echo "${description}" > $RPM_BUILD_ROOT/%{_defaultdocdir}/%{name}/README.all
 
 #%post
 

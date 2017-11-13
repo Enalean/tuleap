@@ -23,16 +23,18 @@ if [ -z "$SRC_DIR" ]; then
     exit 1;
 fi
 
+docker image inspect tuleap-generated-files-builder > /dev/null 2>&1 || \
+    echo 'You should build tuleap-generated-files-builder from the sources https://tuleap.net/plugins/git/tuleap/docker/tuleap-generated-files-builder' && \
+    exit 1
+
 clean_tuleap_sources="$(mktemp -d)/"
 
 function cleanup {
-    docker rm srpms-builder || true
     docker rm rpm-builder || true
     rm -rf "$clean_tuleap_sources"
 }
 trap cleanup EXIT
 
-docker rm srpms-builder || true
 docker rm rpm-builder   || true
 
 is_in_git_repo=$(cd "$SRC_DIR" && git rev-parse --is-inside-work-tree 2> /dev/null || true)
@@ -42,10 +44,8 @@ else
     cp -R "$SRC_DIR" "$clean_tuleap_sources"
 fi
 
-docker run -i --name srpms-builder -v "$clean_tuleap_sources":/tuleap enalean/tuleap-buildsrpms
+docker run -i --rm -v "$clean_tuleap_sources":/tuleap -v "$clean_tuleap_sources":/output tuleap-generated-files-builder
 
-docker run -i --name rpm-builder --volumes-from srpms-builder enalean/tuleap-buildrpms:centos6 --php php --folder rhel6
-
-docker rm srpms-builder
+docker run -i --name rpm-builder -v "$clean_tuleap_sources":/tuleap:ro enalean/tuleap-buildrpms:centos6-without-srpms --os rhel6
 
 docker run -it --rm --name rpm-installer --volumes-from rpm-builder enalean/tuleap-installrpms
