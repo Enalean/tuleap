@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2017. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -30,7 +30,11 @@ class HudsonJob {
      * @var Http_Client
      */
     private $http_client;
-    
+    /**
+     * @var null|string
+     */
+    private $name;
+
     /**
      * Construct an Hudson job from a job URL
      */
@@ -109,7 +113,7 @@ class HudsonJob {
     }
     function getName() {
         try {
-            if (!$this->name) {
+            if ($this->name === null) {
                 $this->name = $this->getDomJob()->name;
             }
         } catch (Exception $e) {
