@@ -8,6 +8,7 @@ import 'angular-breadcrumb';
 import 'angular-gettext';
 import '../../po/fr.po';
 import 'angular-moment';
+import 'd3-selection-multi';
 
 import shared_properties from './shared-properties/shared-properties.js';
 import uuid_generator from './uuid-generator/uuid-generator.js';
