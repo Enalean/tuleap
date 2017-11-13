@@ -503,14 +503,6 @@ project_admin_servicebar	not_allowed	Ce service n'est pas autorisé
 # Script: SF/www/project/admin/ugroup.php
 #
 project_admin_ugroup	manage_ug	Gérer les groupes d'utilisateurs
-project_admin_ugroup	manage_ug_for	Modifier les groupes d'utilisateurs pour <B>$1</B>
-project_admin_ugroup	create_ug	Créer un nouveau groupe d'utilisateurs
-project_admin_ugroup	create_ug_for_p	Créer un nouveau groupe d'utilisateurs pour ce projet.
-project_admin_ugroup	edit_ug	Modifier les groupes d'utilisateurs
-project_admin_ugroup	ug_name	Nom du groupe d'utilisateurs
-project_admin_ugroup	members	Membres
-project_admin_ugroup	del_ug	Détruire de groupe d'utilisateurs ?
-project_admin_ugroup	predef_g	(*) indique un groupe prédéfini
 project_admin_ugroup	permission_request	Demande de permission
 #
 #-----------------------------------------------

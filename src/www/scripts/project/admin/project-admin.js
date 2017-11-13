@@ -18,11 +18,12 @@
  */
 
 import { autocomplete_projects_for_select2 as autocomplete } from '../../tuleap/autocomplete-for-select2.js';
-import { modal as createModal } from 'tlp';
+import { modal as createModal, filterInlineTable } from 'tlp';
 
 document.addEventListener('DOMContentLoaded', () => {
     initTOSCheckbox();
     initHierarchyModal();
+    initGroupsFilter();
 
     const select_element = document.getElementById('project-admin-details-hierarchy-project-select');
     if (! select_element) {
@@ -32,6 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
         include_private_projects: true
     });
 });
+
+function initGroupsFilter() {
+    const groups_filter = document.getElementById('project-admin-ugroups-list-table-filter');
+    if (groups_filter) {
+        filterInlineTable(groups_filter);
+    }
+}
 
 function initHierarchyModal() {
     const button = document.getElementById('project-admin-details-hierarchy-delete-button');

@@ -53,7 +53,7 @@ class BurningParrotCompatiblePageDetector
             || $this->current_page->isDashboard()
             || $this->isInHomepage()
             || $this->isManagingLabels()
-            || $this->isInProjectAdminDetails()
+            || $this->isInProjectAdmin()
             || $this->isInContact()
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
@@ -65,9 +65,10 @@ class BurningParrotCompatiblePageDetector
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/labels.php') === 0;
     }
 
-    private function isInProjectAdminDetails()
+    private function isInProjectAdmin()
     {
-        return strpos($_SERVER['REQUEST_URI'], '/project/admin/editgroupinfo.php') === 0;
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/editgroupinfo.php') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/project/admin/ugroup.php') === 0;
     }
 
     private function isInCoreServicesSiteAdmin(PFUser $current_user)

@@ -35,6 +35,9 @@ msgstr ""
 msgid "Add parent project"
 msgstr ""
 
+msgid "Add users group"
+msgstr ""
+
 msgid "Add widget"
 msgstr ""
 
@@ -173,6 +176,9 @@ msgstr ""
 msgid "Delete widget"
 msgstr ""
 
+msgid "Description"
+msgstr ""
+
 msgid "Details"
 msgstr ""
 
@@ -285,10 +291,16 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
+msgid "Name or description"
+msgstr ""
+
 msgid "Name, type..."
 msgstr ""
 
 msgid "Navebar"
+msgstr ""
+
+msgid "Nb members"
 msgstr ""
 
 msgid "News"
@@ -479,7 +491,13 @@ msgstr ""
 msgid "There isn't <br> any activity yet"
 msgstr ""
 
+msgid "There isn't any matching users groups"
+msgstr ""
+
 msgid "There isn't any matching widgets"
+msgstr ""
+
+msgid "There isn't any users groups yet"
 msgstr ""
 
 msgid "These projects are already related."
@@ -544,6 +562,9 @@ msgid "User Permissions"
 msgstr ""
 
 msgid "User avatar"
+msgstr ""
+
+msgid "Users groups"
 msgstr ""
 
 msgid "We cannot find any edition information for the requested widget."
