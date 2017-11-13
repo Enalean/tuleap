@@ -51,6 +51,9 @@ msgstr "Ajouter un lien"
 msgid "Add parent project"
 msgstr "Ajouter projet parent"
 
+msgid "Add users group"
+msgstr "Ajouter un groupe"
+
 msgid "Add widget"
 msgstr "Ajouter un widget"
 
@@ -195,6 +198,9 @@ msgstr "Supprimer le parent"
 msgid "Delete widget"
 msgstr "Supprimer le widget"
 
+msgid "Description"
+msgstr "Description"
+
 msgid "Details"
 msgstr "Détails"
 
@@ -309,11 +315,17 @@ msgstr "Ma page personnelle"
 msgid "Name"
 msgstr "Nom"
 
+msgid "Name or description"
+msgstr "Nom or description"
+
 msgid "Name, type..."
 msgstr "Nom, type …"
 
 msgid "Navebar"
 msgstr "Barre de menu"
+
+msgid "Nb members"
+msgstr "Nb membres"
 
 msgid "News"
 msgstr "Annonces"
@@ -504,8 +516,14 @@ msgstr "Il n’y a aucun widget."
 msgid "There isn't <br> any activity yet"
 msgstr "Il n'y a pas <br> encore d'activité"
 
+msgid "There isn't any matching users groups"
+msgstr "Il n'y a aucun groupe correspondant"
+
 msgid "There isn't any matching widgets"
 msgstr "Il n'y a aucun widget correspondant"
+
+msgid "There isn't any users groups yet"
+msgstr "Aucun groupe n'est actuellement défini"
 
 msgid "These projects are already related."
 msgstr "Un lien de parenté existe déjà entre ces projets."
@@ -580,6 +598,9 @@ msgstr "Permissions utilisateurs"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
+
+msgid "Users groups"
+msgstr "Groupes d'utilisateurs"
 
 msgid "We cannot find any edition information for the requested widget."
 msgstr "Impossible de trouver comment éditer le widget requis."
