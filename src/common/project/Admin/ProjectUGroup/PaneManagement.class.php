@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 
 /**
@@ -60,6 +59,11 @@ class Project_Admin_UGroup_PaneManagement {
                 Project_Admin_UGroup_View_Members::IDENTIFIER,
                 $GLOBALS['Language']->getText('admin_grouplist', 'members')
             ),
+            Project_Admin_UGroup_View_Permissions::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
+                $ugroup,
+                Project_Admin_UGroup_View_Permissions::IDENTIFIER,
+                $GLOBALS['Language']->getText('project_admin_utils', 'event_permission')
+            ),
             Project_Admin_UGroup_View_Binding::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
                 $ugroup,
                 Project_Admin_UGroup_View_Binding::IDENTIFIER,
@@ -74,9 +78,6 @@ class Project_Admin_UGroup_PaneManagement {
     public function display() {
         $title = $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug');
         if ($this->view->getIdentifier() === Project_Admin_UGroup_View_Settings::IDENTIFIER) {
-            $include_assets = new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets');
-            $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('project-admin.js'));
-
             $navigation_displayer = new HeaderNavigationDisplayer();
             $navigation_displayer->displayBurningParrotNavigation($title, $this->ugroup->getProject(), 'groups');
         } else {

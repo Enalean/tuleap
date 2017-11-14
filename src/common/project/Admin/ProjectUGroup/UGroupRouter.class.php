@@ -73,6 +73,7 @@ class Project_Admin_UGroup_UGroupRouter {
             array(
                 Project_Admin_UGroup_View_Settings::IDENTIFIER,
                 Project_Admin_UGroup_View_Members::IDENTIFIER,
+                Project_Admin_UGroup_View_Permissions::IDENTIFIER,
                 Project_Admin_UGroup_View_ShowBinding::IDENTIFIER,
                 Project_Admin_UGroup_View_EditBinding::IDENTIFIER
             )
