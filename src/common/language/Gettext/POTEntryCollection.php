@@ -35,8 +35,8 @@ class POTEntryCollection
 
     public function add($domain, POTEntry $entry)
     {
-        if ($domain === $this->domain) {
-            $this->entries[] = $entry;
+        if ($domain === $this->domain && ! isset($this->entries[$entry->getMsgid()])) {
+            $this->entries[$entry->getMsgid()] = $entry;
         }
     }
 
@@ -45,6 +45,6 @@ class POTEntryCollection
      */
     public function getEntries()
     {
-        return $this->entries;
+        return array_values($this->entries);
     }
 }
