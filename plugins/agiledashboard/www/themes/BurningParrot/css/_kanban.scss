@@ -30,6 +30,7 @@
 @import 'includes/reports-modal';
 @import 'includes/diagram';
 @import 'includes/add-to-dashboard';
+@import 'includes/filter';
 
 $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;
@@ -63,17 +64,18 @@ $kanban-column-footer-height: 50px;
     padding: $tlp-spacing;
 }
 
-.kanban-header-title {
-    margin: 0 $tlp-spacing 0 0;
-}
-
 .kanban-header-edit-button {
     margin: 0 $tlp-half-spacing 0 0;
 }
 
 .kanban-header-spacer {
-    flex: 1 1 auto;
+    flex: 10 1 auto;
     margin: $tlp-spacing;
+}
+
+.kanban-header-filter-edit-buttons-spacer {
+    flex: 1 1 auto;
+    margin: $tlp-half-spacing;
 }
 
 .kanban-header-view-button {
@@ -493,11 +495,9 @@ add-in-place {
     margin: 0 $tlp-double-spacing 0 0;
 }
 
-.kanban-header-title,
-.kanban-header-url,
-.kanban-header-report-button,
-.kanban-header-add-to-dashboard,
-.kanban-header-search {
-    margin-top: $tlp-half-spacing;
-    margin-bottom: $tlp-half-spacing;
+.kanban-header-config {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    margin: 0 0 $tlp-spacing $tlp-half-spacing;
 }

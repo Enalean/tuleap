@@ -1,0 +1,10 @@
+<div class="tlp-form-element kanban-header-filter">
+    <label class="tlp-label kanban-header-filter-label" for="kanban-filter" translate>Filters:</label>
+    <select class="tlp-select tlp-select-small"
+            id="kanban-filter"
+            ng-model="filter_tracker_report.selected_item"
+            ng-options="filter.id as filter.name for filter in filter_tracker_report.filters_collection"
+    >
+        <option value="" translate>None</option>
+    </select>
+</div>

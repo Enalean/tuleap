@@ -246,3 +246,11 @@ msgstr "Rapports de {{ reports_modal.kanban_label }}"
 #: src/app/kanban.tpl.html
 msgid "Go to Kanban"
 msgstr "Aller sur le Kanban"
+
+#: src/app/filter/filter.tpl.html
+msgid "Filters:"
+msgstr "Filtres :"
+
+#: src/app/filter/filter.tpl.html
+msgid "None"
+msgstr "Aucun"
