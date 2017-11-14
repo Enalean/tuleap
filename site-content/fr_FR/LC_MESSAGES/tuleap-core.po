@@ -252,6 +252,9 @@ msgstr "Git"
 msgid "Go up"
 msgstr "Niveau supérieur"
 
+msgid "Group details"
+msgstr "Détails du groupe"
+
 msgid "Heartbeat"
 msgstr "Activité"
 
@@ -299,6 +302,9 @@ msgstr "Listes"
 
 msgid "Load users"
 msgstr "Importer les utilisateurs"
+
+msgid "Meaningful description of the group"
+msgstr "Description du groupe"
 
 msgid "Mediawiki"
 msgstr "Mediawiki"
@@ -380,6 +386,11 @@ msgstr "Administration de la plateforme"
 
 msgid "Please accept term of service"
 msgstr "Merci d'accepter les conditions d'utilisation"
+
+msgid "Please avoid spaces and punctuation in users groups name."
+msgstr ""
+"Veuillez éviter les espaces et les signes de ponctuation dans les noms de "
+"groupe."
 
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"

@@ -33,11 +33,9 @@ class Project_Admin_UGroup_UGroupRouter {
     }
 
     public function process(Codendi_Request $request) {
-        $action          = self::DEFAULT_ACTION;
         $current_pane    = $this->getPane($request);
         $ugroup          = $this->getUGroup($request);
         $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup);
-        $pane            = $pane_management->getPaneById(Project_Admin_UGroup_View_Settings::IDENTIFIER);
         switch ($current_pane) {
             case Project_Admin_UGroup_View_Binding::IDENTIFIER:
                 $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
@@ -50,7 +48,7 @@ class Project_Admin_UGroup_UGroupRouter {
                 $action = $this->getMembersAction($request);
                 break;
             default:
-                $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup, $pane);
+                $controller = new Project_Admin_UGroup_UGroupController($request, $ugroup);
                 $action = $current_pane;
                 break;
         }

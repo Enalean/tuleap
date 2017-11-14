@@ -1,0 +1,51 @@
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-list tlp-pane-title-icon"></i>{{# gettext }}Group details{{/ gettext }}
+                </h1>
+            </div>
+            <form method="post" action="/project/admin/ugroup.php?group_id={{ project_id }}">
+                <section class="tlp-pane-section">
+                    <input type="hidden" name="func" value="do_update">
+                    <input type="hidden" name="group_id" value="{{ project_id }}">
+                    <input type="hidden" name="ugroup_id" value="{{ id }}">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="ugroup-name">
+                            {{# gettext }}Name{{/ gettext }}
+                            <i class="fa fa-asterisk"></i>
+                        </label>
+                        <input type="text"
+                               class="tlp-input"
+                               id="ugroup-name"
+                               name="ugroup_name"
+                               value="{{ name }}"
+                               placeholder="Developers"
+                               required
+                               autofocus>
+                        <p class="tlp-text-info">
+                            {{# gettext }}Please avoid spaces and punctuation in users groups name.{{/ gettext }}
+                        </p>
+                    </div>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="ugroup-description">
+                            {{# gettext }}Description{{/ gettext }}
+                        </label>
+                        <textarea type="text"
+                                  class="tlp-textarea"
+                                  id="ugroup-description"
+                                  name="ugroup_description"
+                                  placeholder="{{# gettext }}Meaningful description of the group{{/gettext}}"
+                        >{{ description }}</textarea>
+                    </div>
+                </section>
+                <section class="tlp-pane-section tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary">
+                        <i class="fa fa-save tlp-button-icon"></i> {{# gettext }}Save information{{/ gettext }}
+                    </button>
+                </section>
+            </form>
+        </div>
+    </section>
+</div>

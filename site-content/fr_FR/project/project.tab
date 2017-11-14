@@ -115,7 +115,6 @@ project_admin_editugroup	ug_id_missed	L'ID du ugroup est manquant
 project_admin_editugroup	ug_not_found	ERREUR - Impossible de trouver le ugroup&nbsp;:$1 - $2
 project_admin_editugroup	edit_ug	Modifier les groupes d'utilisateurs
 project_admin_editugroup	ug_admin	Administration du groupe d'utilisateurs '<B>$1</B>'
-project_admin_editugroup	upd_ug_name	Vous pouvez modifier le nom et la description de ce groupe d'utilisateurs&nbsp;:
 project_admin_editugroup	select_ug_members	Veuillez sélectionner les membres du groupe d'utilisateurs&nbsp;:
 project_admin_editugroup	quick_filters	Filtres rapides&nbsp;:
 project_admin_editugroup	show_items	Montrer les items commençant par $1
