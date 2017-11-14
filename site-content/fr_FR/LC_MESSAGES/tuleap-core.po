@@ -378,6 +378,9 @@ msgstr "Propriétaire"
 msgid "Parent project"
 msgstr "Projet parent"
 
+msgid "Permission"
+msgstr "Permission"
+
 msgid "Permission Request"
 msgstr "Demande de permission"
 
@@ -449,11 +452,17 @@ msgstr "RSS"
 msgid "Recently"
 msgstr "Récemment"
 
+msgid "Resource"
+msgstr "Ressource"
+
 msgid "SVN"
 msgstr "SVN"
 
 msgid "Save information"
 msgstr "Enregistrer les informations"
+
+msgid "See permissions"
+msgstr "Voir les permissions"
 
 msgid "Service permissions"
 msgstr "Permissions des services"
@@ -574,6 +583,9 @@ msgstr "Ce projet n'est pas encore catégorisé."
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"
 
+msgid "This user group is not granted any permissions yet"
+msgstr "Ce groupe n'a pas encore de permissions définies"
+
 msgid "Title"
 msgstr "Titre"
 
@@ -609,6 +621,9 @@ msgstr "Permissions utilisateurs"
 
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
+
+msgid "User group permissions"
+msgstr "Permissions du groupe"
 
 msgid "Users groups"
 msgstr "Groupes d'utilisateurs"

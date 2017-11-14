@@ -89,11 +89,6 @@ class Project_Admin_UGroup_UGroupController {
         $this->render($view);
     }
 
-    public function permissions() {
-        $view = new Project_Admin_UGroup_View_Permissions($this->ugroup);
-        $this->render($view);
-    }
-
     public function binding() {
         $pane = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
         $controller_binding = new Project_Admin_UGroup_UGroupController_Binding($this->request, $this->ugroup, $pane);

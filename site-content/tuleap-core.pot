@@ -354,6 +354,9 @@ msgstr ""
 msgid "Parent project"
 msgstr ""
 
+msgid "Permission"
+msgstr ""
+
 msgid "Permission Request"
 msgstr ""
 
@@ -423,10 +426,16 @@ msgstr ""
 msgid "Recently"
 msgstr ""
 
+msgid "Resource"
+msgstr ""
+
 msgid "SVN"
 msgstr ""
 
 msgid "Save information"
+msgstr ""
+
+msgid "See permissions"
 msgstr ""
 
 msgid "Service permissions"
@@ -537,6 +546,9 @@ msgstr ""
 msgid "This reference does not exist"
 msgstr ""
 
+msgid "This user group is not granted any permissions yet"
+msgstr ""
+
 msgid "Title"
 msgstr ""
 
@@ -571,6 +583,9 @@ msgid "User Permissions"
 msgstr ""
 
 msgid "User avatar"
+msgstr ""
+
+msgid "User group permissions"
 msgstr ""
 
 msgid "Users groups"
