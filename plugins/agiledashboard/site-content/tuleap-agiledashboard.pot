@@ -15,5 +15,11 @@ msgid ""
 "a kanban to add it."
 msgstr ""
 
+msgid "Planning succesfully created."
+msgstr ""
+
+msgid "Planning succesfully updated."
+msgstr ""
+
 msgid "There is no content <br> you can see"
 msgstr ""
