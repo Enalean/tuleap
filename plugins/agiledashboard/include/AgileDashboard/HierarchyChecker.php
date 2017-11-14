@@ -45,7 +45,8 @@ class AgileDashboard_HierarchyChecker {
         $this->tracker_factory   = $tracker_factory;
     }
 
-    public function isScrumHierarchy(Tracker $tracker) {
+    private function isScrumHierarchy(Tracker $tracker)
+    {
         $project   = $tracker->getProject();
         $hierarchy = $tracker->getHierarchy();
 

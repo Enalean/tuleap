@@ -57,17 +57,17 @@ class AgileDashboard_KanbanManager {
         $this->dao->duplicateKanbans($tracker_mapping, $field_mapping);
     }
 
-    public function getTrackersWithKanbanUsageAndHierarchy($project_id, PFUser $user) {
+    public function getTrackersWithKanbanUsage($project_id, PFUser $user)
+    {
         $trackers     = array();
         $all_trackers = $this->tracker_factory->getTrackersByGroupIdUserCanView($project_id, $user);
-
 
         foreach ($all_trackers as $tracker) {
             $tracker_representation         = array();
             $tracker_representation['id']   = $tracker->getId();
             $tracker_representation['name'] = $tracker->getName();
 
-            if ($this->doesKanbanExistForTracker($tracker) || $this->hierarchy_checker->isScrumHierarchy($tracker)) {
+            if ($this->doesKanbanExistForTracker($tracker)) {
                 $tracker_representation['used'] = true;
                 $trackers[] = $tracker_representation;
                 continue;

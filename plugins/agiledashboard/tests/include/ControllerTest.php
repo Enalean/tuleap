@@ -83,7 +83,6 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $configuration_manager,
             mock('TrackerFactory'),
             mock('AgileDashboard_PermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker'),
             $this->mono_milestone_checker,
             $this->event_manager
         );
