@@ -78,30 +78,3 @@ plugin_im_status	forbidden	Statut interdit
 plugin_im	user_appearance_pref_name	Messagerie Instantanée :
 plugin_im	user_appearance_pref_display_users_presence	Afficher la présence des utilisateurs
 plugin_im	link_im_admin_tool	Administration du serveur Jabber Openfire (login 'admin')
-
-plugin_im	wait_loading	Merci de patienter pendant le chargement de la page ...
-plugin_im	chatroom_title	Salon de discussion
-plugin_im	chatroom_summary	Ce salon de discussion vous permet de discuter avec les autres membres du projet. Vous pouvez également accéder à ce salon de discussion avec l'un des nombreux clients disponibles (voir l'aide pour plus de détails).
-plugin_im	chatroom_onlymembers	Vous devez être membre du projet pour entrer dans le salon de discussion.
-
-plugin_im	muckl_alt_roomname	Nom de cette salle de discussion
-plugin_im	muckl_topic	Sujet :
-plugin_im	muckl_alt_roomtopic	Sujet de cette salle de discussion
-plugin_im	muckl_help_startwriting	Cliquer ici pour commencer à discuter !
-plugin_im	muckl_alt_sendbutton	Envoyer le message
-plugin_im	muckl_status	Statut :
-plugin_im	muckl_status_online	En ligne
-plugin_im	muckl_status_free	Disponible pour discuter
-plugin_im	muckl_status_away	Parti
-plugin_im	muckl_status_notavailable	Pas disponible
-plugin_im	muckl_status_donotdisturb	Ne pas déranger
-plugin_im	muckl_statusmessage	Entrer un message pour votre statut ici !
-plugin_im	muckl_alt_statusmessage	Entrer un message pour votre statut
-plugin_im	muckl_alt_togglesound	Couper/Activer le son
-plugin_im	muckl_alt_sendprivatemessage	Envoyer un message privé
-plugin_im	muckl_hasbecomeavailable	vient d'entrer dans la salle de discussion
-plugin_im	muckl_hassetthetopicto	a changé le sujet de la salle de discussion en : 
-plugin_im	muckl_isnowknownas	a changé son pseudo en :
-plugin_im	muckl_hasleft	a quitté la salle de discussion
-plugin_im	muckl_send_button_img	/plugins/IM/themes/default/images/fr_FR_send_button.gif
-plugin_im	muckl_connection_conflict	Conflit : il semble que vous soyez déjà connecté à ce salon de discussion avec un autre client.
