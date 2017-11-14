@@ -59,9 +59,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
     /** @var AgileDashboard_PermissionsManager */
     private $permissions_manager;
-
-    /** @var AgileDashboard_HierarchyChecker */
-    private $hierarchy_checker;
     /**
      * @var ScrumForMonoMilestoneChecker
      */
@@ -77,7 +74,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory                      $tracker_factory,
         AgileDashboard_PermissionsManager   $permissions_manager,
-        AgileDashboard_HierarchyChecker     $hierarchy_checker,
         ScrumForMonoMilestoneChecker        $scrum_mono_milestone_checker,
         EventManager                        $event_manager
     ) {
@@ -90,7 +86,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $this->config_manager               = $config_manager;
         $this->tracker_factory              = $tracker_factory;
         $this->permissions_manager          = $permissions_manager;
-        $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->event_manager                = $event_manager;
     }
@@ -360,25 +355,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return;
         }
 
-        if ($this->isTrackerUsedInScrum($tracker)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'tracker_used_in_scrum')
-            );
-
-            $this->redirectToHome();
-            return;
-        }
-
-        if ($this->hierarchy_checker->isScrumHierarchy($tracker)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'hierarchy_used_in_scrum')
-            );
-            $this->redirectToHome();
-            return;
-        }
-
         if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
@@ -430,9 +406,5 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         } catch (AgileDashboard_KanbanCannotAccessException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'error_perm_denied'));
         }
-    }
-
-    private function isTrackerUsedInScrum(Tracker $tracker) {
-        return count($this->planning_factory->getPlanningsByBacklogTracker($tracker)) > 0 || count($this->planning_factory->getPlanningByPlanningTracker($tracker)) > 0;
     }
 }

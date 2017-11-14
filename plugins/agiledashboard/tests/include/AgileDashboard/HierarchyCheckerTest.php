@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -67,34 +67,38 @@ class AgileDashboard_HierarchyCheckerTest extends TuleapTestCase {
         );
     }
 
-    public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInScrumPlanning() {
+    public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInScrumPlanning()
+    {
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
         stub($this->planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array(78));
         stub($this->planning_factory)->getBacklogTrackerIdsByGroupId()->returns(array());
 
         stub($this->hierarchy)->flatten()->returns(array(12,45,78,68));
 
-        $this->assertTrue($this->hierarchy_checker->isScrumHierarchy($this->tracker));
+        $this->assertTrue($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
 
-    public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInScrumBacklog() {
+    public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInScrumBacklog()
+    {
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
         stub($this->planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array());
         stub($this->planning_factory)->getBacklogTrackerIdsByGroupId()->returns(array(45));
 
         stub($this->hierarchy)->flatten()->returns(array(12,45,78,68));
 
-        $this->assertTrue($this->hierarchy_checker->isScrumHierarchy($this->tracker));
+        $this->assertTrue($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
 
-    public function itReturnsFalseIfNoTrackerIsUsedInScrum() {
+    public function itReturnsFalseIfNoTrackerIsUsedInScrumAndKanban()
+    {
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
         stub($this->planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array(58));
         stub($this->planning_factory)->getBacklogTrackerIdsByGroupId()->returns(array(45));
+        stub($this->kanban_factory)->getKanbanTrackerIds()->returns(array());
 
         stub($this->hierarchy)->flatten()->returns(array(12,78,68));
 
-        $this->assertFalse($this->hierarchy_checker->isScrumHierarchy($this->tracker));
+        $this->assertFalse($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
 
     public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInKanban() {

@@ -141,8 +141,6 @@ plugin_agiledashboard_admin_semantic	deleted_initial_effort	Initial effort seman
 plugin_agiledashboard	config_title	Configuration
 plugin_agiledashboard	invalid_request	The request is invalid.
 plugin_agiledashboard	no_service_selected	At least one service must be selected.
-plugin_agiledashboard	tracker_used_in_scrum	The selected tracker is already used in a planning.
-plugin_agiledashboard	hierarchy_used_in_scrum	The selected tracker is part of a hierarchy already used in a planning.
 plugin_agiledashboard	config_submit_label	Save
 plugin_agiledashboard	title	Title
 plugin_agiledashboard	title_scrum_help	This will be used to identify the Scrum section from the Agile Dashboard homepage.
