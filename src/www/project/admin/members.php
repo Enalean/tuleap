@@ -21,6 +21,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
+use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
+use Tuleap\Project\Admin\ProjectMembers\ProjectMembersRouter;
+use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
+
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('account.php');
@@ -34,186 +40,83 @@ $request = HTTPRequest::instance();
 // Valid group id
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
+
 if (! $request->valid($vGroupId)) {
     exit_error(
         $Language->getText('project_admin_index', 'invalid_p'),
         $Language->getText('project_admin_index', 'p_not_found')
     );
 }
+
 $group_id = $request->get('group_id');
+
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+
+if (! $project || ! is_object($project) || $project->isError()) {
+    exit_no_group();
+}
 
 //must be a project admin
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
-//
-//  get the Group object
-//
-$pm    = ProjectManager::instance();
-$group = $pm->getProject($group_id);
-if (! $group || ! is_object($group) || $group->isError()) {
-    exit_no_group();
-}
-
 //if the project isn't active, require you to be a member of the super-admin group
-if ($group->getStatus() != 'A') {
+if ($project->getStatus() != 'A') {
     $request->checkUserIsSuperUser();
 }
 
-$em = EventManager::instance();
-
-$vFunc = new Valid_WhiteList(
-    'func',
-    array(
-        'adduser',
-        'rmuser'
-    )
-);
-$vFunc->required();
-if ($request->isPost() && $request->valid($vFunc)) {
-    /*
-    updating the database
-    */
-
-    $ugroup_user_dao = new UGroupUserDao();
-    $ugroup_manager  = new UGroupManager();
-
-    $ugroup_binding = new UGroupBinding(
-        $ugroup_user_dao,
-        $ugroup_manager
-    );
-
-    switch ($request->get('func')) {
-        case 'adduser':
-            // add user to this project
-            $form_unix_name = $request->get('form_unix_name');
-            $res            = account_add_user_to_group($group_id, $form_unix_name);
-            $ugroup_binding->reloadUgroupBindingInProject($group);
-            break;
-
-        case 'rmuser':
-            // remove a user from this portal
-            $rm_id        = $request->getValidated('rm_id', 'uint', 0);
-            $user_remover = new \Tuleap\Project\UserRemover(
-                ProjectManager::instance(),
-                EventManager::instance(),
-                new ArtifactTypeFactory(false),
-                new \Tuleap\Project\UserRemoverDao(),
-                UserManager::instance(),
-                new ProjectHistoryDao(),
-                $ugroup_manager
-            );
-            $user_remover->removeUserFromProject($group_id, $rm_id);
-            $ugroup_binding->reloadUgroupBindingInProject($group);
-            break;
-    }
-    $GLOBALS['Response']->redirect(
-        '/project/admin/members.php?' . http_build_query(
-            array(
-                'group_id' => $group_id,
-            )
-        )
-    );
-}
-
-project_admin_header(
-    array(
-        'title' => $Language->getText('project_admin_index', 'p_admin', $group->getPublicName()),
-        'group' => $group_id,
-        'help'  => 'project-admin.html'
-    ),
-    'members'
+$ugroup_user_dao = new UGroupUserDao();
+$ugroup_manager  = new UGroupManager();
+$ugroup_binding  = new UGroupBinding(
+    $ugroup_user_dao,
+    $ugroup_manager
 );
 
-$hp = Codendi_HTMLPurifier::instance();
-
-$HTML->box1_top(
-    $Language->getText('project_admin_editugroup', 'proj_members') . "&nbsp;" .
-    help_button('project-admin.html#user-permissions')
+$project_manager     = ProjectManager::instance();
+$event_manager       = EventManager::instance();
+$type_factory        = new ArtifactTypeFactory(false);
+$user_remover_dao    = new UserRemoverDao();
+$user_manager        = UserManager::instance();
+$project_history_dao = new ProjectHistoryDao();
+$user_remover        = new UserRemover(
+    $project_manager,
+    $event_manager,
+    $type_factory,
+    $user_remover_dao,
+    $user_manager,
+    $project_history_dao,
+    $ugroup_manager
 );
 
-/*
-
-Show the members of this project
-
-*/
-$sql = "SELECT user.realname, user.user_id, user.user_name, user.status, IF(generic_user.group_id, 1, 0) AS is_generic
-FROM user_group
-INNER JOIN user ON (user.user_id = user_group.user_id)
-LEFT JOIN generic_user ON (
-generic_user.user_id = user.user_id AND
-generic_user.group_id = " . db_ei($group_id) . ")
-WHERE user_group.group_id = " . db_ei($group_id) . "
-ORDER BY user.realname";
-
-$res_memb = db_query($sql);
-print '<div  style="max-height:200px; overflow:auto;">';
-print '<TABLE WIDTH="100%" BORDER="0">';
+$member_dao  = new ProjectMembersDAO();
+$csrf_token  = new CSRFSynchronizerToken('/project/admin/members.php?group_id=' . urlencode($group_id));
 $user_helper = new UserHelper();
 
-while ($row_memb = db_fetch_array($res_memb)) {
-    $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
+$member_controller = new ProjectMembersController(
+    $member_dao,
+    $csrf_token,
+    $user_helper,
+    $ugroup_binding,
+    $user_remover
+);
 
-    $edit_settings = '';
-    if ($row_memb['is_generic']) {
-        $url   = '/project/admin/editgenericmember.php?group_id=' . urlencode($group_id);
-        $title = $GLOBALS['Language']->getText('project_admin', 'edit_generic_user_settings');
+$action_whitelist = new Valid_WhiteList(
+    'action',
+    array(
+        'add-user',
+        'remove-user'
+    )
+);
 
-        $edit_settings = '<a href="' . $url . '" title="' . $title . '">';
-        $edit_settings .= $GLOBALS['HTML']->getImage('ic/edit.png');
-        $edit_settings .= '</a>';
-    }
+$router = new ProjectMembersRouter(
+    $member_controller,
+    $action_whitelist
+);
 
-    print '<FORM ACTION="?" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">' .
-        '<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="' . $row_memb['user_id'] . '">' .
-        '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">' .
-        '<TR><TD class="delete-project-member"><INPUT TYPE="IMAGE" NAME="DELETE" SRC="' . util_get_image_theme(
-            "ic/trash.png"
-        ) . '" HEIGHT="16" WIDTH="16" BORDER="0"></TD></FORM>' .
-        '<TD><A href="/users/' . $row_memb['user_name'] . '/">' . $display_name . ' </A>' . $edit_settings . '</TD></TR>';
-}
+$router->route($request);
 
-print '</TABLE></div> <HR NoShade SIZE="1">';
-
-/*
-Add member form
-*/
-
-echo '
-<FORM ACTION="?" METHOD="POST" class="add-user">
-<INPUT TYPE="hidden" NAME="func" VALUE="adduser">
-<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
-
-<div class="control-group">
-<label class="control-label" for="add_user">' . $Language->getText('project_admin_index', 'login_name') . '</label>
-<div class="input-append">
-<INPUT TYPE="TEXT" NAME="form_unix_name" VALUE="" id="add_user">
-<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('project_admin_index', 'add_user') . '" class="btn">
-</div>
-</div>
-';
-
-// JS code for autocompletion on "add_user" field defined on top.
-$js = "new UserAutoCompleter('add_user',
-'" . util_get_dir_image_theme() . "',
-false);";
-$GLOBALS['Response']->includeFooterJavascriptSnippet($js);
-
-echo '      </FORM>
-';
+$em = EventManager::instance();
 
 $em->processEvent('project_admin_add_user_form', array('groupId' => $group_id));
-
-echo '
-<HR NoShade SIZE="1">
-<div align="center">
-<A href="/project/admin/userimport.php?group_id='. urlencode($group_id) .'">' . $Language->getText(
-    'project_admin_index',
-    'import_user'
-) . '</A>
-</div>
-
-</TD></TR>';
-
-echo $HTML->box1_bottom();
 
 project_admin_footer(array());

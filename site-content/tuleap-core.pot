@@ -32,6 +32,9 @@ msgstr ""
 msgid "Add link"
 msgstr ""
 
+msgid "Add member"
+msgstr ""
+
 msgid "Add parent project"
 msgstr ""
 
@@ -218,6 +221,9 @@ msgstr ""
 msgid "Edit dashboard"
 msgstr ""
 
+msgid "Edit settings"
+msgstr ""
+
 msgid "Edit widget"
 msgstr ""
 
@@ -266,6 +272,9 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
+msgid "Import members"
+msgstr ""
+
 msgid "Initial layout creation"
 msgstr ""
 
@@ -306,6 +315,9 @@ msgid "Meaningful description of the group"
 msgstr ""
 
 msgid "Mediawiki"
+msgstr ""
+
+msgid "Member name, id"
 msgstr ""
 
 msgid "Members"
@@ -450,6 +462,9 @@ msgid "RSS"
 msgstr ""
 
 msgid "Recently"
+msgstr ""
+
+msgid "Remove from project"
 msgstr ""
 
 msgid "Resource"

@@ -17,12 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { autocomplete_projects_for_select2 as autocomplete } from '../../tuleap/autocomplete-for-select2.js';
 import { modal as createModal, filterInlineTable } from 'tlp';
+import {
+    autocomplete_projects_for_select2 as autocomplete,
+    autocomplete_users_for_select2
+} from '../../tuleap/autocomplete-for-select2.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initTOSCheckbox();
     initHierarchyModal();
+    initProjectMembersSelect2();
 
     const select_element = document.getElementById('project-admin-details-hierarchy-project-select');
     if (! select_element) {
@@ -54,5 +58,18 @@ function initTOSCheckbox() {
     select_element.addEventListener('change', () => {
         document.getElementById("term-of-service").required = true;
         document.getElementById("term-of-service-usage").style.display = 'block';
+    });
+}
+
+function initProjectMembersSelect2()
+{
+    const select_element = document.getElementById('project-admin-members-add-user-select');
+
+    if (! select_element) {
+        return;
+    }
+
+    autocomplete_users_for_select2(select_element, {
+        internal_users_only: false
     });
 }
