@@ -30,29 +30,24 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 class ScrumPlanningFilter
 {
     /**
-     * @var AgileDashboard_HierarchyChecker
-     */
-    private $hierarchy_checker;
-    /**
      * @var ScrumForMonoMilestoneChecker
      */
     private $scrum_mono_milestone_checker;
+
     /**
      * @var PlanningFactory
      */
     private $planning_factory;
 
     public function __construct(
-        AgileDashboard_HierarchyChecker $hierarchy_checker,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         PlanningFactory $planning_factory
     ) {
-        $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->planning_factory             = $planning_factory;
     }
 
-    public function getBacklogTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning)
+    public function getBacklogTrackersFiltered(array $trackers, Planning $planning)
     {
         $trackers_filtered = array();
 
@@ -60,9 +55,7 @@ class ScrumPlanningFilter
             $trackers_filtered[] = array(
                 'name'     => $tracker_presenter->getName(),
                 'id'       => $tracker_presenter->getId(),
-                'selected' => $tracker_presenter->selectedIfBacklogTracker(),
-                'disabled' => in_array($tracker_presenter->getId(), $kanban_tracker_ids)
-                    || $this->hierarchy_checker->isKanbanHierarchy($tracker_presenter->getTracker())
+                'selected' => $tracker_presenter->selectedIfBacklogTracker()
             );
         }
 
@@ -83,14 +76,9 @@ class ScrumPlanningFilter
     }
 
     /**
-     * @param array $kanban_tracker_ids
-     * @param Planning $planning
-     * @param PFUser $user
-     *
      * @return array
      */
     public function getPlanningTrackersFiltered(
-        array $kanban_tracker_ids,
         Planning $planning,
         PFUser $user,
         $project_id
@@ -105,7 +93,6 @@ class ScrumPlanningFilter
             $available_planning_trackers[] = $planning->getPlanningTracker();
             $trackers_filtered             = $this->getPlanningTrackerFilteredForMultiMilestone(
                 $available_planning_trackers,
-                $kanban_tracker_ids,
                 $planning
             );
         }
@@ -183,7 +170,6 @@ class ScrumPlanningFilter
      */
     private function getPlanningTrackerFilteredForMultiMilestone(
         array $trackers,
-        array $kanban_tracker_ids,
         Planning $planning
     ) {
         $trackers_filtered = array();
@@ -192,9 +178,7 @@ class ScrumPlanningFilter
             $trackers_filtered[] = array(
                 'name'     => $tracker_presenter->getName(),
                 'id'       => $tracker_presenter->getId(),
-                'selected' => $tracker_presenter->selectedIfPlanningTracker(),
-                'disabled' => in_array($tracker_presenter->getId(), $kanban_tracker_ids)
-                    || $this->hierarchy_checker->isKanbanHierarchy($tracker_presenter->getTracker())
+                'selected' => $tracker_presenter->selectedIfPlanningTracker()
             );
         }
 

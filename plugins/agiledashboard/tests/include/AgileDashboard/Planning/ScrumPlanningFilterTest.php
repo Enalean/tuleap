@@ -59,7 +59,6 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
         $this->user                   = mock('PFUser');
 
         $this->scrum_planning_filter  = new ScrumPlanningFilter(
-            mock('AgileDashboard_HierarchyChecker'),
             $this->mono_milestone_checker,
             $this->planning_factory
         );
@@ -74,7 +73,6 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
         expect($this->planning_factory)->getPotentialPlanningTrackers()->once();
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
-            array(1, 2),
             $this->planning,
             $this->user,
             101
@@ -88,7 +86,6 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
         stub($this->planning_factory)->getAvailablePlanningTrackers()->returns(array(mock('Tracker')));
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
-            array(),
             $this->planning,
             $this->user,
             101

@@ -113,7 +113,7 @@ class AgileDashboardRouterBuilder {
             new PlanningPermissionsManager(),
             $this->getHierarchyChecker(),
             $mono_milestone_checker,
-            new ScrumPlanningFilter($this->getHierarchyChecker(), $mono_milestone_checker, $planning_factory)
+            new ScrumPlanningFilter($mono_milestone_checker, $planning_factory)
         );
     }
 

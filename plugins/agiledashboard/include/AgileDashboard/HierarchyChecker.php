@@ -53,7 +53,8 @@ class AgileDashboard_HierarchyChecker {
         return $this->checkHierarchyContainsGivenTrackerIds($hierarchy, $this->getScrumTrackerIds($project));
     }
 
-    public function isKanbanHierarchy(Tracker $tracker) {
+    private function isKanbanHierarchy(Tracker $tracker)
+    {
         $project   = $tracker->getProject();
         $hierarchy = $tracker->getHierarchy();
 
