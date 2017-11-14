@@ -23,6 +23,7 @@ import { modal as createModal, filterInlineTable } from 'tlp';
 document.addEventListener('DOMContentLoaded', () => {
     initTOSCheckbox();
     initHierarchyModal();
+    initGroupsPermissionsModal();
     initGroupsFilter();
 
     const select_element = document.getElementById('project-admin-details-hierarchy-project-select');
@@ -33,6 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
         include_private_projects: true
     });
 });
+
+function initGroupsPermissionsModal() {
+    const button = document.getElementById('project-admin-ugroup-show-permissions-modal');
+    if (! button) {
+        return;
+    }
+
+    const modal = createModal(document.getElementById(button.dataset.targetModalId));
+
+    button.addEventListener('click', () => {
+        modal.show();
+    });
+}
 
 function initGroupsFilter() {
     const groups_filter = document.getElementById('project-admin-ugroups-list-table-filter');
