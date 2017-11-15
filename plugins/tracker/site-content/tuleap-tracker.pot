@@ -37,6 +37,16 @@ msgid ""
 "removing the existing link."
 msgstr ""
 
+msgid ""
+"An artifact could be considered <strong>done</strong> only if a semantic "
+"status is defined."
+msgstr ""
+
+msgid ""
+"An artifact will be considered <strong>done</strong> when at least one of "
+"the status closed values will be selected."
+msgstr ""
+
 msgid "Artifact link types has been disabled."
 msgstr ""
 
@@ -63,7 +73,13 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr ""
 
+msgid "Define the closed status that are considered Done"
+msgstr ""
+
 msgid "Delete"
+msgstr ""
+
+msgid "Done"
 msgstr ""
 
 msgid "Edit"

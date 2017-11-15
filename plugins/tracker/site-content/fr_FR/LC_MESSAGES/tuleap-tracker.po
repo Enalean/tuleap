@@ -55,6 +55,16 @@ msgstr ""
 "Suite à une mise à jour d'artéfact, les types de lien désactivés seront "
 "supprimés sans enlever les liens existants."
 
+msgid ""
+"An artifact could be considered <strong>done</strong> only if a semantic "
+"status is defined."
+msgstr "Un artéfact sera considéré comme <strong>fini</strong> seulement lorsqu'une sémantique statut sera définie."
+
+msgid ""
+"An artifact will be considered <strong>done</strong> when at least one of "
+"the status closed values will be selected."
+msgstr "Un artéfact sera considéré comme <strong>fini</strong> lorsqu'au moins une valeur fermée de la sémantique statut sera choisie."
+
 msgid "Artifact link types has been disabled."
 msgstr "Les liens entre artéfacts typés ont été désactivés."
 
@@ -84,8 +94,16 @@ msgstr "Configurer les trackers"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
+msgid "Define the closed status that are considered Done"
+msgstr ""
+"Définisser les valeurs fermées de la sémantique statut considérées comme "
+"finies"
+
 msgid "Delete"
 msgstr "Supprimer"
+
+msgid "Done"
+msgstr "Fini"
 
 msgid "Edit"
 msgstr "Éditer"

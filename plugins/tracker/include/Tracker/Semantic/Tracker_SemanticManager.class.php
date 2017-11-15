@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Semantic\SemanticDone;
 
 class Tracker_SemanticManager {
 
@@ -118,6 +119,9 @@ class Tracker_SemanticManager {
 
         $status_semantic = Tracker_Semantic_Status::load($this->tracker);
         $semantics->add($status_semantic->getShortName(), $status_semantic);
+
+        $done_semantic = SemanticDone::load($this->tracker);
+        $semantics->add($done_semantic->getShortName(), $done_semantic);
 
         $contributor_semantic = Tracker_Semantic_Contributor::load($this->tracker);
         $semantics->add($contributor_semantic->getShortName(), $contributor_semantic);
