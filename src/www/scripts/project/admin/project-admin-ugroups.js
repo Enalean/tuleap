@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initGroupsPermissionsModal();
     initGroupsFilter();
     initUserGroupModal();
+    initDeleteUserGroupModal();
 });
 
 function initGroupsPermissionsModal() {
@@ -54,5 +55,20 @@ function initUserGroupModal() {
         button.addEventListener('click', () => {
             modal.show();
         });
+    }
+}
+
+function initDeleteUserGroupModal() {
+    const modal_user_groups_delete_buttons = document.querySelectorAll('.project-admin-delete-ugroups-modal');
+    for (const button of modal_user_groups_delete_buttons) {
+        const modal_element = document.getElementById(button.dataset.targetModalId);
+
+        if (modal_element) {
+            const modal = tlp.modal(modal_element);
+
+            button.addEventListener('click', function () {
+                modal.toggle();
+            });
+        }
     }
 }

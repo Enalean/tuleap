@@ -1,0 +1,34 @@
+<form method="POST"
+      action="/project/admin/ugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}&func=delete"
+      class="tlp-modal tlp-modal-danger"
+      role="dialog"
+      id="project-admin-delete-ugroups-modal-{{ id }}"
+      aria-labelledby="project-admin-delete-user-group-modal-title-{{ id }}"
+>
+    {{# csrf }}
+        {{> csrf_token_input }}
+    {{/ csrf }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-delete-user-group-modal-title-{{ id }}">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{# gettext }} Delete users group {{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# gettext }}
+            You are about to delete <b>%s</b> users group. Please, confirm your action.
+            | {{ name }}
+        {{/ gettext }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action user-group-modal-button">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete users group{{/ gettext }}
+        </button>
+    </div>
+</form>
