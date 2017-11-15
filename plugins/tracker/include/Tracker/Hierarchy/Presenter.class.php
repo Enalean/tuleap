@@ -36,21 +36,6 @@ class Tracker_Hierarchy_Presenter {
     public $hierarchy;
 
     /**
-     * @var array
-     */
-    public $trackers_not_in_hierarchy;
-
-    /**
-     * @var bool
-     */
-    public $has_trackers_not_in_hierarchy;
-
-    /**
-     * @var bool
-     */
-    public $cannot_be_used_in_hierarchy;
-
-    /**
      * @var String
      */
     public $current_full_hierarchy_title;
@@ -89,23 +74,14 @@ class Tracker_Hierarchy_Presenter {
         Tracker_Hierarchy_HierarchicalTracker $tracker,
         array $possible_children,
         TreeNode $hierarchy,
-        array $trackers_not_in_hierarchy,
         $is_child_is_disabled
     ) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
         $this->hierarchy         = $hierarchy;
 
-        $this->trackers_not_in_hierarchy     = $trackers_not_in_hierarchy;
-        $this->has_trackers_not_in_hierarchy = count($trackers_not_in_hierarchy) > 0;
-        $this->cannot_be_used_in_hierarchy   = in_array(
-            $tracker->getUnhierarchizedTracker(),
-            $this->trackers_not_in_hierarchy
-        );
-
         $visitor = new TreeNode_InjectPaddingInTreeNodeVisitor();
         $this->hierarchy->accept($visitor);
-        usort($this->trackers_not_in_hierarchy, array($this, 'sortTrackerAlphabetically'));
 
         $this->current_full_hierarchy_title = $GLOBALS['Language']->getText(
             'plugin_tracker_admin_hierarchy',
@@ -116,11 +92,6 @@ class Tracker_Hierarchy_Presenter {
             'plugin_tracker_admin_hierarchy',
             'edit_children_title',
             $tracker->getUnhierarchizedTracker()->getName()
-        );
-
-        $this->cannot_be_used = $GLOBALS['Language']->getText(
-            'plugin_tracker_admin_hierarchy',
-            'cannot_be_used'
         );
 
         $this->can_be_defined = ! $is_child_is_disabled;
@@ -168,9 +139,5 @@ class Tracker_Hierarchy_Presenter {
         if ($this->tracker->hasChild($possible_child)) {
             return 'selected="selected"';
         }
-    }
-
-    private function sortTrackerAlphabetically(Tracker $a, Tracker $b) {
-        return strnatcasecmp($a->getName(), $b->getName());
     }
 }
