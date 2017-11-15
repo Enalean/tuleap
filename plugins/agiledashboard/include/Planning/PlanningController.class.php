@@ -530,6 +530,11 @@ class Planning_Controller extends MVC2_PluginController {
                 )
             );
 
+            $this->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-agiledashboard', 'Planning succesfully created.')
+            );
+
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
         } else {
             // TODO: Error message should reflect validation detail
@@ -608,7 +613,8 @@ class Planning_Controller extends MVC2_PluginController {
         return $view;
     }
 
-    public function update() {
+    public function update()
+    {
         $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
 
@@ -619,6 +625,11 @@ class Planning_Controller extends MVC2_PluginController {
                 PlanningParameters::fromArray(
                     $this->request->get('planning')
                 )
+            );
+
+            $this->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-agiledashboard', 'Planning succesfully updated.')
             );
         } else {
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
