@@ -520,7 +520,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }
 
-        $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
+        $validator = new Planning_RequestValidator($this->planning_factory);
 
         if ($validator->isValid($this->request)) {
             $this->planning_factory->createPlanning(
@@ -559,10 +559,8 @@ class Planning_Controller extends MVC2_PluginController {
 
         $available_trackers = $this->planning_factory->getAvailableBacklogTrackers($user, $group_id);
         $cardwall_admin     = $this->getCardwallConfiguration($planning);
-        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($group_id);
 
         $planning_trackers_filtered = $this->scrum_planning_filter->getPlanningTrackersFiltered(
-            $kanban_tracker_ids,
             $planning,
             $user,
             $this->group_id
@@ -570,7 +568,6 @@ class Planning_Controller extends MVC2_PluginController {
 
         $backlog_trackers_filtered = $this->scrum_planning_filter->getBacklogTrackersFiltered(
             $available_trackers,
-            $kanban_tracker_ids,
             $planning
         );
 
@@ -616,7 +613,7 @@ class Planning_Controller extends MVC2_PluginController {
     public function update()
     {
         $this->checkUserIsAdmin();
-        $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
+        $validator = new Planning_RequestValidator($this->planning_factory);
 
         if ($validator->isValid($this->request)) {
             $this->planning_factory->updatePlanning(

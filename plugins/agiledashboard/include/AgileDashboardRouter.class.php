@@ -146,8 +146,7 @@ class AgileDashboardRouter {
             $request,
             $this->planning_factory,
             $this->milestone_factory,
-            $this->plugin->getThemePath(),
-            $this->kanban_factory
+            $this->plugin->getThemePath()
         );
 
         switch($request->get('action')) {

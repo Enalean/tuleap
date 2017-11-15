@@ -103,18 +103,22 @@ class AgileDashboard_HierarchyCheckerTest extends TuleapTestCase {
 
     public function itReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInKanban() {
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
+        stub($this->planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array());
+        stub($this->planning_factory)->getBacklogTrackerIdsByGroupId()->returns(array());
         stub($this->kanban_factory)->getKanbanTrackerIds()->returns(array(45,68));
         stub($this->hierarchy)->flatten()->returns(array(12,45,78,68));
 
-        $this->assertTrue($this->hierarchy_checker->isKanbanHierarchy($this->tracker));
+        $this->assertTrue($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
 
     public function itReturnsFalseIfNoTrackerIsUsedInKanban() {
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
+        stub($this->planning_factory)->getPlanningTrackerIdsByGroupId()->returns(array());
+        stub($this->planning_factory)->getBacklogTrackerIdsByGroupId()->returns(array());
         stub($this->kanban_factory)->getKanbanTrackerIds()->returns(array(98,63));
         stub($this->hierarchy)->flatten()->returns(array(12,45,78,68));
 
-        $this->assertFalse($this->hierarchy_checker->isKanbanHierarchy($this->tracker));
+        $this->assertFalse($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
 
     public function itReturnsNoDeniedTrackersIfTheSelectedTrackerIsNotPartOfAnyHierarchyOrConcernedByAgileDashboard() {

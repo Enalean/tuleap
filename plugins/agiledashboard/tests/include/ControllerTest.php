@@ -207,7 +207,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('PlanningPermissionsManager'),
             $hierarchy_checker,
             $scrum_mono_milestone_checker,
-            new ScrumPlanningFilter($hierarchy_checker, $scrum_mono_milestone_checker, $this->planning_factory)
+            new ScrumPlanningFilter($scrum_mono_milestone_checker, $this->planning_factory)
         );
 
         $GLOBALS['Language'] = new MockBaseLanguage_Planning_ControllerNewTest();

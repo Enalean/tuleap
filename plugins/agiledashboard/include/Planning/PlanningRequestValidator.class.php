@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/valid/ValidFactory.class.php';
-require_once 'common/include/Codendi_Request.class.php';
-
 /**
  * Validates planning creation requests.
  */
@@ -30,18 +27,15 @@ class Planning_RequestValidator {
      * @var PlanningFactory
      */
     private $factory;
-
-    /** @var AgileDashboard_KanbanFactory */
-    private $kanban_factory;
     
     /**
      * Creates a new validator instance.
      * 
      * @param PlanningFactory $factory Used to retrieve existing planning trackers for validation purpose.
      */
-    public function __construct(PlanningFactory $factory, AgileDashboard_KanbanFactory $kanban_factory) {
-        $this->factory        = $factory;
-        $this->kanban_factory = $kanban_factory;
+    public function __construct(PlanningFactory $factory)
+    {
+        $this->factory = $factory;
     }
     
     /**
@@ -54,7 +48,8 @@ class Planning_RequestValidator {
      * 
      * @return bool
      */
-    public function isValid(Codendi_Request $request) {
+    public function isValid(Codendi_Request $request)
+    {
         $group_id            = (int)$request->get('group_id');
         $planning_id         = $request->get('planning_id');
         $planning_parameters = $request->get('planning');
@@ -68,29 +63,7 @@ class Planning_RequestValidator {
         return $this->nameIsPresent($planning_parameters)
             && $this->backlogTrackerIdsArePresentAndArePositiveIntegers($planning_parameters)
             && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($planning_parameters)
-            && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters)
-            && $this->noKanbanTrackersAreSelected($planning_parameters, $group_id);
-    }
-
-    private function noKanbanTrackersAreSelected(PlanningParameters $planning_parameters, $project_id) {
-        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project_id);
-
-        if (count($kanban_tracker_ids) === 0) {
-            return true;
-        }
-
-        $selected_tracker_ids = array_merge(
-            array($planning_parameters->planning_tracker_id),
-            $planning_parameters->backlog_tracker_ids
-        );
-
-        foreach ($selected_tracker_ids as $tracker_id) {
-            if (in_array($tracker_id, $kanban_tracker_ids)) {
-                return false;
-            }
-        }
-
-        return true;
+            && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters);
     }
     
     /**
