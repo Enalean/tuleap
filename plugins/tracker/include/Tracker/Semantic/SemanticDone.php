@@ -25,6 +25,7 @@ use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker;
+use Tracker_FormElement_Field;
 use Tracker_Semantic;
 use Tracker_Semantic_Status;
 use Tracker_SemanticManager;
@@ -101,7 +102,47 @@ class SemanticDone extends Tracker_Semantic
      */
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
-        return;
+        $sm->displaySemanticHeader($this, $tracker_manager);
+
+        $semantic_status_field = $this->semantic_status->getField();
+        $closed_values         = array();
+
+        if ($semantic_status_field) {
+            $closed_values = $this->getClosedValues($semantic_status_field);
+        }
+
+        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/semantic');
+        $presenter = new SemanticDoneAdminPresenter(
+            $this->tracker,
+            $closed_values,
+            $semantic_status_field
+        );
+
+        $renderer->renderToPage('done-admin', $presenter);
+
+        $sm->displaySemanticFooter($this, $tracker_manager);
+    }
+
+    /**
+     * @return array
+     */
+    private function getClosedValues(Tracker_FormElement_Field $semantic_status_field)
+    {
+        $all_values    = $semantic_status_field->getAllValues();
+        $open_values   = $this->semantic_status->getOpenValues();
+        $closed_values = array();
+
+        foreach ($all_values as $value_id => $value) {
+            if (in_array($value_id, $open_values)) {
+                continue;
+            }
+
+            $closed_values[] = array(
+                'label' => $value->getLabel()
+            );
+        }
+
+        return $closed_values;
     }
 
     /**
@@ -116,7 +157,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
-        return;
+        $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
     }
 
     /**
