@@ -269,6 +269,9 @@ msgstr "Lien entre groupes"
 msgid "Group details"
 msgstr "Détails du groupe"
 
+msgid "Group members"
+msgstr "Membres du groupe"
+
 msgid "Heartbeat"
 msgstr "Activité"
 
@@ -586,6 +589,9 @@ msgstr ""
 "avoir un impact futur sur l'organisation des enfants (ex. les "
 "administrateurs d'un projet parent pourraient avoir automatiquement accès à "
 "l'administration de tous les sous-projets)."
+
+msgid "This group does not have any members yet."
+msgstr "Ce groupe n'a pas encore de membres."
 
 msgid "This label is used in the project"
 msgstr "Ce label est utilisé dans le projet"

@@ -36,3 +36,30 @@
 #project-admin-ugroup-binding-clones {
     margin: 0 0 $tlp-spacing;
 }
+
+.project-admin-user-groups-container {
+    display: flex;
+}
+
+.project-admin-user-groups-details {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.project-admin-user-groups-member-list-container {
+    flex: 1 1 auto;
+}
+
+@media screen and (max-width: 1200px) {
+    .project-admin-user-groups-container {
+        flex-direction: column;
+    }
+
+    .project-admin-user-groups-member-list-container {
+        order: 1;
+    }
+
+    .project-admin-user-groups-details {
+        margin: 0;
+        order: 2;
+    }
+}

@@ -245,6 +245,9 @@ msgstr ""
 msgid "Group details"
 msgstr ""
 
+msgid "Group members"
+msgstr ""
+
 msgid "Heartbeat"
 msgstr ""
 
@@ -550,6 +553,9 @@ msgid ""
 "            future impacts (e.g. members of the parent project could "
 "possibly have access to all sub-projects even\n"
 "            without explicit permissions granted)."
+msgstr ""
+
+msgid "This group does not have any members yet."
 msgstr ""
 
 msgid "This label is used in the project"
