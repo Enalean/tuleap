@@ -22,35 +22,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 namespace Tuleap\Project\Admin\ProjectMembers;
 
-use CSRFSynchronizerToken;
 use Project;
+use Tuleap\Event\Dispatchable;
 
-class ProjectMembersPresenter
+class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
 {
+    const NAME = "project_admin_members_additional_modal";
 
     /**
-     * @var array
+     * @var Project
      */
-    public $project_members_list;
-    public $csrf_token;
-    public $project_id;
+    private $project;
+
+    public $modals_buttons = array();
+    public $modals_content = array();
+
+    public function __construct(Project $project)
+    {
+        $this->project = $project;
+    }
+
+    public function getProject()
+    {
+        return $this->project;
+    }
 
     /**
-     * @var ProjectMembersAdditionalModalCollectionPresenter
+     * @param $purified_html_button string A purified html string containing a button meant to trigger a modal.
      */
-    public $additional_modals;
+    public function addModalButton($purified_html_button)
+    {
+        $this->modals_buttons["purified_html_button"] = $purified_html_button;
+    }
 
-    public function __construct(
-        array $project_members_list,
-        CSRFSynchronizerToken $csrf_token,
-        Project $project,
-        ProjectMembersAdditionalModalCollectionPresenter $additional_modals
-    ) {
-        $this->project_members_list = $project_members_list;
-        $this->csrf_token           = $csrf_token;
-        $this->project_id           = $project->getID();
-        $this->additional_modals    = $additional_modals;
+    /**
+     * @param $purified_html_modal_content string A purified html string containing a modal.
+     */
+    public function addModalContent($purified_html_modal_content)
+    {
+        $this->modals_content["purified_html_modal"] = $purified_html_modal_content;
     }
 }

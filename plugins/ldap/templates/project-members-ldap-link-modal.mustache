@@ -1,0 +1,61 @@
+<div id="project-admin-members-link-ldap-modal" class="tlp-modal" role="dialog" aria-labelledby="modal-simple-content-label">
+      <div class="tlp-modal-header">
+          <h1 class="tlp-modal-title" id="modal-simple-content-label">
+              <i class="fa fa-link tlp-button-icon"></i>
+              {{# dgettext }} tuleap-ldap | Link LDAP{{/ dgettext }}
+          </h1>
+          <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+              &times;
+          </div>
+      </div>
+      <div class="tlp-modal-body">
+          <form id="link-ldap" method="post" action="{{ form_action }}">
+              <div class="tlp-form-element">
+                  <label class="tlp-label"
+                         for="project-admin-members-ldap-group-select"
+                  >
+                      {{# dgettext }} tuleap-ldap | Link with Enterprise Directory Group{{/ dgettext }}
+                  </label>
+                  <select
+                          name="ldap_group"
+                          id="project-admin-members-ldap-group-select"
+                          data-placeholder="{{# dgettext }} tuleap-ldap | Enterprise directory group name{{/ dgettext }}"
+                          class="tlp-input"
+                  >
+                       {{# ldap_group_name }}
+                           <option value="{{ ldap_group_name }}" selected>{{ ldap_group_name }}</option>
+                       {{/ ldap_group_name }}
+                  </select>
+
+                  <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Please select a LDAP group.{{/ dgettext }}</p>
+              </div>
+              <div class="tlp-form-element">
+                  <label class="tlp-label tlp-checkbox">
+                  <input type="checkbox"
+                         name="preserve_members"
+                         {{# is_preserved_members_checked }}checked{{/ is_preserved_members_checked }}
+                  >
+                      {{# dgettext }} tuleap-ldap | Preserve members{{/ dgettext }}
+                  </label>
+                  <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Check this option if you want to preserve users that are not part of the Directory group.{{/ dgettext }}</p>
+              </div>
+              <div class="tlp-form-element">
+                  <label class="tlp-label tlp-checkbox">
+                      <input type="checkbox"
+                             name="synchronize"
+                             {{# is_synchro_daily_checked }}checked{{/ is_synchro_daily_checked }}
+                      >
+                      {{# dgettext }} tuleap-ldap | Synchronize daily{{/ dgettext }}
+                  </label>
+                  <p class="tlp-text-info">{{# dgettext }} tuleap-ldap | Check this option if you want to synchronize the group nightly with the directory one.{{/ dgettext }}</p>
+              </div>
+          </form>
+      </div>
+      <div class="tlp-modal-footer">
+          <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# dgettext }} tuleap-ldap | Cancel{{/ dgettext }}</button>
+          <button type="submit" form="link-ldap" class="tlp-button-primary tlp-modal-action">
+              <i class="fa fa-link tlp-button-icon"></i>
+              {{# dgettext }} tuleap-ldap | Link LDAP{{/ dgettext }}
+          </button>
+      </div>
+</div>

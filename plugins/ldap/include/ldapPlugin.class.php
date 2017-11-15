@@ -25,7 +25,10 @@
 require_once 'autoload.php';
 require_once 'constants.php';
 
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidRetriever;
+use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionPresenter;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
@@ -46,8 +49,11 @@ class LdapPlugin extends Plugin {
      */
     private $_ldapUmInstance;
 
-    function __construct($id) {
+    public function __construct($id)
+    {
         parent::__construct($id);
+
+        bindTextDomain('tuleap-ldap', LDAP_SITE_CONTENT_DIR);
     }
 
     public function getHooksAndCallbacks() {
@@ -100,7 +106,7 @@ class LdapPlugin extends Plugin {
 
         // Project admin
         $this->addHook('ugroup_table_row',                 'ugroup_table_row',            false);
-        $this->addHook('project_admin_add_user_form',      'project_admin_add_user_form', false);
+        $this->addHook(ProjectMembersAdditionalModalCollectionPresenter::NAME);
         $this->addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
 
         // Svn intro
@@ -138,6 +144,9 @@ class LdapPlugin extends Plugin {
         $this->addHook(UserDetailsPresenter::ADDITIONAL_DETAILS);
         $this->addHook('root_daily_start');
         $this->addHook('ugroup_duplication');
+
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -802,16 +811,17 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Display form elements to bind project members and an LDAP group
+     * Collects additional modals to display in project-admin > members
      *
-     * @param array $params
+     * @param ProjectMembersAdditionalModalCollectionPresenter $collector
      *
      * @return void
      */
-    function project_admin_add_user_form(array $params) {
+    function projectAdminMembersAdditionalModal(ProjectMembersAdditionalModalCollectionPresenter $collector)
+    {
         if ($this->isLDAPGroupsUsageEnabled()) {
             $projectMembersManager = $this->getLdapProjectGroupManager();
-            $project_id            = $params['groupId'];
+            $project_id            = $collector->getProject()->getID();
             $ldapGroup             = $projectMembersManager->getLdapGroupByGroupId($project_id);
 
             if ($ldapGroup) {
@@ -820,41 +830,65 @@ class LdapPlugin extends Plugin {
                 $groupName = '';
             }
 
-            $synchro_checked = '';
-            if ($projectMembersManager->isProjectBindingSynchronized($project_id)) {
-                $synchro_checked = 'checked="checked"';
-            }
+            $synchro_checked = $projectMembersManager->isProjectBindingSynchronized($project_id);
+            $bind_checked    = $projectMembersManager->doesProjectBindingKeepUsers($project_id);
 
-            $bind_checked = '';
-            if ($projectMembersManager->doesProjectBindingKeepUsers($project_id)) {
-                $bind_checked = 'checked="checked"';
-            }
+            $mustache_renderer = TemplateRendererFactory::build()->getRenderer(LDAP_TEMPLATE_DIR);
 
-            $html = '<hr />'.PHP_EOL;
+            $modal_button = $mustache_renderer->renderToString(
+                'project-members-ldap-link-modal-button',
+                array()
+            );
 
-            $html .= '<form method="post" class="link-with-ldap" action="'.$this->getPluginPath().'/admin.php?group_id='.$project_id.'">'.PHP_EOL;
-            $html .= '<div class="control-group">
-                        <label class="control-label" for="add_user">'.$GLOBALS['Language']->getText('plugin_ldap', 'project_admin_add_ugroup').'</label>
-                        <div class="controls">
-                            <input type="text" value="'.$groupName.'" name="ldap_group" id="project_admin_add_ldap_group" size="60" />
-                        </div>
-                    </div>';
-            $html .= '<label class="checkbox" for="preserve_members"><input type="checkbox" id="preserve_members" name="preserve_members" '. $bind_checked .' />'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
-            $html .= '<label class="checkbox" for="synchronize"><input type="checkbox" id="synchronize" name="synchronize" '. $synchro_checked .'/>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_info').')</label>';
-            $html .= '<br />'.PHP_EOL;
-            $html .= '<input type="submit" name="delete" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'" />'.PHP_EOL;
-            $html .= '<input type="submit" name="check" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />'.PHP_EOL;
-            $html .= '</form>'.PHP_EOL;
+            $modal_content = $mustache_renderer->renderToString(
+                'project-members-ldap-link-modal',
+                new LinkModalContentPresenter(
+                    $this->getPluginPath().'/admin.php?group_id='. urlencode($project_id),
+                    $groupName,
+                    $bind_checked,
+                    $synchro_checked
+                )
+            );
 
-            $GLOBALS['Response']->includeFooterJavascriptFile($this->getPluginPath().'/scripts/autocomplete.js');
-            $js = "new LdapGroupAutoCompleter('project_admin_add_ldap_group',
-                            '".$this->getPluginPath()."',
-                            '".util_get_dir_image_theme()."',
-                            'project_admin_add_ldap_group',
-                            false);";
-            $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+            $collector->addModalButton(
+                Codendi_HTMLPurifier::instance()->purify(
+                    $modal_button,
+                    CODENDI_PURIFIER_DISABLED
+                )
+            );
 
-            echo $html;
+            $collector->addModalContent(
+                Codendi_HTMLPurifier::instance()->purify(
+                    $modal_content,
+                    CODENDI_PURIFIER_DISABLED
+                )
+            );
+        }
+    }
+
+    public function burningParrotGetJavascriptFiles(array $params)
+    {
+        if ($this->currentRequestIsForProjectMembersAdmin())
+        {
+            $include_assets = new IncludeAssets(
+                $this->getFilesystemPath() . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $params['javascript_files'][] = $include_assets->getFileURL('project-admin-members.js');
+        }
+    }
+
+    public function burningParrotGetStylesheets(array $params)
+    {
+        if ($this->currentRequestIsForProjectMembersAdmin()) {
+            $theme_include_assets = new IncludeAssets(
+                $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
+
+            $variant                 = $params['variant'];
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 
@@ -1194,5 +1228,10 @@ class LdapPlugin extends Plugin {
             new ProjectHistoryDao(),
             new UGroupManager()
         );
+    }
+
+    private function currentRequestIsForProjectMembersAdmin()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/members') === 0;
     }
 }

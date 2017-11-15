@@ -1,4 +1,4 @@
-/*!
+/**
  * Copyright Enalean (c) 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
@@ -21,32 +21,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#project-admin-members-controls {
-    display: flex;
-}
+import {
+    autocomplete_groups_for_select2
+} from './autocomplete-for-select2.js';
 
-#project-admin-members-add-user-section {
-    margin-right: $tlp-double-spacing;
-}
+import { modal as createModal } from 'tlp';
 
-#project-admin-members-modal-buttons-section {
-    > :not(:first-child) {
-        margin-left: $tlp-spacing;
+document.addEventListener('DOMContentLoaded', () => {
+    initLdapGroupsAutocompleter();
+    initLdapLinkModal();
+});
+
+function initLdapGroupsAutocompleter() {
+    const select = document.getElementById('project-admin-members-ldap-group-select');
+
+    if (! select) {
+        return;
     }
+
+    autocomplete_groups_for_select2(select);
 }
 
-#project-admin-members-add-user-select {
-    width: 250px;
-}
+function initLdapLinkModal() {
+    const button = document.getElementById('project-admin-members-link-ldap-button');
+    if (! button) {
+        return;
+    }
+    const modal = createModal(document.getElementById(button.dataset.targetModalId));
 
-#project-admin-members-modal-import-users-button {
-    margin-left: $tlp-double-spacing;
-}
-
-.project-admin-members-import-members-title {
-    margin: 0 0 $tlp-double-spacing;
-}
-
-#project-admin-members-input-file-helper {
-    line-height: 24px;
+    button.addEventListener('click', () => {
+        modal.show();
+    });
 }

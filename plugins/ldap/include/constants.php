@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2015. All Rights Reserved.
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@
 define('LDAP_BASE_URL', '/plugins/ldap');
 define('LDAP_BASE_DIR', dirname(__FILE__));
 define('LDAP_TEMPLATE_DIR', realpath(dirname(__FILE__).'/../templates'));
+define('LDAP_SITE_CONTENT_DIR', LDAP_BASE_DIR . '/../site-content');
 
 /**
  * Suspend user from gerrit when he's suspended from ldap

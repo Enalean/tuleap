@@ -1,0 +1,30 @@
+msgid "Cancel"
+msgstr ""
+
+msgid ""
+"Check this option if you want to preserve users that are not part of the "
+"Directory group."
+msgstr ""
+
+msgid ""
+"Check this option if you want to synchronize the group nightly with the "
+"directory one."
+msgstr ""
+
+msgid "Enterprise directory group name"
+msgstr ""
+
+msgid "Link LDAP"
+msgstr ""
+
+msgid "Link with Enterprise Directory Group"
+msgstr ""
+
+msgid "Please select a LDAP group."
+msgstr ""
+
+msgid "Preserve members"
+msgstr ""
+
+msgid "Synchronize daily"
+msgstr ""

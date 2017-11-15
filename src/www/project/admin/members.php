@@ -97,7 +97,8 @@ $member_controller = new ProjectMembersController(
     $csrf_token,
     $user_helper,
     $ugroup_binding,
-    $user_remover
+    $user_remover,
+    $event_manager
 );
 
 $action_whitelist = new Valid_WhiteList(
@@ -114,9 +115,5 @@ $router = new ProjectMembersRouter(
 );
 
 $router->route($request);
-
-$em = EventManager::instance();
-
-$em->processEvent('project_admin_add_user_form', array('groupId' => $group_id));
 
 project_admin_footer(array());
