@@ -14,27 +14,15 @@
                     class="tracker-admin-hierarchy-edit-children"
                     name="children[]"
                     multiple="multiple"
-                    {{# cannot_be_used_in_hierarchy }}disabled{{/ cannot_be_used_in_hierarchy }}
             >
                 {{# getPossibleChildren }}
                     <option value="{{ id }}"{{ selected }}>{{ name }}</option>
                 {{/ getPossibleChildren }}
             </select>
             <p>
-                <input type="submit" class="btn" value="{{ getSubmitLabel }}" {{# cannot_be_used_in_hierarchy }}disabled{{/ cannot_be_used_in_hierarchy }}>
+                <input type="submit" class="btn" value="{{ getSubmitLabel }}">
             </p>
         </form>
-
-        {{# has_trackers_not_in_hierarchy }}
-            <div>
-                <p>{{ cannot_be_used }}</p>
-                <ul>
-                    {{# trackers_not_in_hierarchy }}
-                        <li><a href="/plugins/tracker/?tracker={{ getId }}&amp;func=admin-hierarchy">{{ getName }}</a></li>
-                    {{/ trackers_not_in_hierarchy }}
-                </ul>
-            </div>
-        {{/ has_trackers_not_in_hierarchy }}
     </div>
 {{/ can_be_defined }}
 

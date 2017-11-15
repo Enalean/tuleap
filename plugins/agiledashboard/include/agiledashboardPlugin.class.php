@@ -83,7 +83,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
             $this->addHook(TRACKER_USAGE);
-            $this->addHook(TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY);
             $this->addHook(Event::SERVICE_ICON);
             $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
             $this->addHook(Event::REGISTER_PROJECT_CREATION);
@@ -1008,13 +1007,6 @@ class AgileDashboardPlugin extends Plugin {
 
     public function rest_project_agile_endpoints($params) {
         $params['available'] = true;
-    }
-
-    public function tracker_event_trackers_cannot_use_in_hierarchy($params) {
-        $params['result'] = array_merge(
-            $params['result'],
-            $this->getHierarchyChecker()->getDeniedTrackersForATrackerHierarchy($params['tracker'], $params['user'])
-        );
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */

@@ -65,14 +65,12 @@ class Tracker_Hierarchy_Controller {
         $this->renderer                 = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../../../templates');
     }
     
-    public function edit() {
-        $trackers_not_in_hierarchy = $this->getTrackersNotInHierachy();
-
+    public function edit()
+    {
         $presenter = new Tracker_Hierarchy_Presenter(
             $this->tracker,
-            $this->getPossibleChildren($trackers_not_in_hierarchy),
+            $this->factory->getPossibleChildren($this->tracker),
             $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker()),
-            $trackers_not_in_hierarchy,
             $this->isIsChildTypeDisabledForProject($this->tracker->getProject())
         );
 
@@ -142,34 +140,5 @@ class Tracker_Hierarchy_Controller {
      */
     public function updateFromXmlProjectImportProcess(array $mapping) {
         $this->dao->updateChildren($this->tracker->getId(), $mapping);
-    }
-
-    private function removeTrackersThatCannotBeUsedInHierarchy(
-        array &$possible_children,
-        array $trackers_not_in_hierarchy
-    ) {
-        $possible_children = array_diff($possible_children, $trackers_not_in_hierarchy);
-    }
-
-    private function getPossibleChildren(array $trackers_not_in_hierarchy) {
-        $possible_children = $this->factory->getPossibleChildren($this->tracker);
-        $this->removeTrackersThatCannotBeUsedInHierarchy($possible_children, $trackers_not_in_hierarchy);
-
-        return $possible_children;
-    }
-
-    private function getTrackersNotInHierachy() {
-        $trackers_not_in_hierarchy = array();
-
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY,
-            array(
-                'tracker' => $this->tracker->getUnhierarchizedTracker(),
-                'user'    => $this->request->getCurrentUser(),
-                'result'  => &$trackers_not_in_hierarchy
-            )
-        );
-
-        return $trackers_not_in_hierarchy;
     }
 }

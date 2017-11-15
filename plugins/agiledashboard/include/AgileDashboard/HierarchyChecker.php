@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,26 +65,6 @@ class AgileDashboard_HierarchyChecker {
         return ($this->isScrumHierarchy($tracker) || $this->isKanbanHierarchy($tracker));
     }
 
-    public function getDeniedTrackersForATrackerHierarchy(Tracker $tracker, PFUser $user) {
-        $concerned_by_scrum  = $this->isScrumHierarchy($tracker);
-        $concerned_by_kanban = $this->isKanbanHierarchy($tracker);
-
-        if (! $concerned_by_scrum && ! $concerned_by_kanban) {
-            return array();
-        }
-
-        $available_trackers = $this->tracker_factory->getTrackersByGroupIdUserCanView($tracker->getGroupId(), $user);
-
-        if ($concerned_by_scrum) {
-            $possible_trackers = $this->getTrackersConcernedByScrum($available_trackers, $tracker->getProject());
-
-            return array_diff($available_trackers, $possible_trackers);
-        }
-
-        $possible_trackers = $this->getTrackersConcernedByKanban($available_trackers, $tracker->getProject());
-        return array_diff($available_trackers, $possible_trackers);
-    }
-
     private function getScrumTrackerIds(Project $project) {
         $planning_tracker_ids = $this->planning_factory->getPlanningTrackerIdsByGroupId($project->getID());
         $backlog_tracker_ids  = $this->planning_factory->getBacklogTrackerIdsByGroupId($project->getID());
@@ -105,43 +85,6 @@ class AgileDashboard_HierarchyChecker {
         }
 
         return false;
-    }
-
-    private function getTrackersConcernedByKanban(array $available_trackers, Project $project) {
-        $scrum_tracker_ids = $this->getScrumTrackerIds($project);
-
-        return $this->getTrackerListPurgedFromUneligibleTrackersAndTheirHierarchy($available_trackers, $scrum_tracker_ids);
-    }
-
-    private function getTrackersConcernedByScrum(array $available_trackers, Project $project) {
-        $kanban_tracker_ids = $this->getKanbanTrackerIds($project);
-
-        return $this->getTrackerListPurgedFromUneligibleTrackersAndTheirHierarchy($available_trackers, $kanban_tracker_ids);
-    }
-
-    private function getTrackerListPurgedFromUneligibleTrackersAndTheirHierarchy(array $available_trackers, $uneligible_trackers) {
-        $possible_trackers = $available_trackers;
-
-        foreach ($available_trackers as $tracker) {
-
-            if (! isset($possible_trackers[$tracker->getId()])) {
-                continue;
-            }
-
-            $hierarchy = $tracker->getHierarchy();
-
-            if ($this->checkHierarchyContainsGivenTrackerIds($hierarchy, $uneligible_trackers)) {
-                $this->removeAllConcernedValues($possible_trackers, $hierarchy);
-            }
-        }
-
-        return $possible_trackers;
-    }
-
-    private function removeAllConcernedValues(array &$possible_trackers, Tracker_Hierarchy $hierarchy) {
-        foreach($hierarchy->flatten() as $tracker_id) {
-            unset($possible_trackers[$tracker_id]);
-        }
     }
 
     public function getADTrackerIdsByProjectId($project_id) {

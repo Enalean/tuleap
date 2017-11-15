@@ -1344,7 +1344,6 @@ plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Ei
 plugin_tracker_admin_import	importing_nature	Columns using type will not be taken into account during import : $1.
 plugin_tracker_admin_hierarchy	edit_children_title	Edit children of $1
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarchy
-plugin_tracker_admin_hierarchy	cannot_be_used	<strong>Note:</strong> The following trackers cannot be used in the hierarchy because they are used elsewhere (kanban, …):
 
 plugin_tracker_hierarchy	error_is_cyclic	Tracker hierarchy is Cyclic
 plugin_tracker_hierarchy	tracker_not_in_hierarchy	Tracker not in hierarchy

@@ -1342,7 +1342,6 @@ plugin_tracker_admin_import	importing_nature	Les colonnes basées sur les nature
 
 plugin_tracker_admin_hierarchy	edit_children_title	Modifier les enfants de $1
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Hiérarchie actuellement définie
-plugin_tracker_admin_hierarchy	cannot_be_used	<strong>Note :</strong> Les trackers suivants ne peuvent pas être utilisés dans la hiérarchie car ils sont utilisés autre part (kanban, …) :
 
 plugin_tracker_hierarchy	error_is_cyclic	La hiérarchie est cyclique
 plugin_tracker_hierarchy	tracker_not_in_hierarchy	Le tracker n'appartient pas à la hiérarchie
