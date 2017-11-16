@@ -1,5 +1,12 @@
 <div class="tlp-framed-horizontally">
     {{> ugroup-permissions-modal }}
-    {{> ugroup-settings-details }}
-    {{> ugroup-settings-binding }}
+    <div class="project-admin-user-groups-container">
+        <div class="project-admin-user-groups-details">
+            {{> ugroup-settings-details }}
+            {{> ugroup-settings-binding }}
+        </div>
+        <div class="project-admin-user-groups-member-list-container">
+            {{> ugroup-settings-member-list }}
+        </div>
+    </div>
 </div>
