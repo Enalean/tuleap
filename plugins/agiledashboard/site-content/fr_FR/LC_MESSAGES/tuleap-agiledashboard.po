@@ -62,7 +62,7 @@ msgstr "La planning a été créé."
 msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
 
-msgid "The selected values will defined the artifact as done:"
+msgid "The selected values will define the artifact as done:"
 msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
 
 msgid ""
@@ -74,6 +74,10 @@ msgstr ""
 
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"
+
+msgid ""
+"This semantic will be used in the <strong>AgileDashboard</strong> service."
+msgstr "Cette sémantique sera utilisée par le service <strong>AgileDashboard</strong>."
 
 msgid "Tracker semantic done"
 msgstr "Sémantique fini"
