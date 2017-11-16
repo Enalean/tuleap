@@ -212,6 +212,9 @@ msgstr "Supprimer le tableau de bord"
 msgid "Delete parent"
 msgstr "Supprimer le parent"
 
+msgid "Delete users group"
+msgstr "Supprimer un groupe utilisateurs"
+
 msgid "Delete widget"
 msgstr "Supprimer le widget"
 
@@ -729,6 +732,12 @@ msgstr ""
 
 msgid "Yesterday"
 msgstr "Hier"
+
+msgid ""
+"You are about to delete <b>%s</b> users group. Please, confirm your action."
+msgstr ""
+"Wow, attendez une minute. Vous êtes sur le point de supprimer le groupe "
+"utilisateurs <b>%s</b>. Merci de confirmer votre action."
 
 #, php-format
 msgid ""

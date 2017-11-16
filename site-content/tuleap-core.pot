@@ -190,6 +190,9 @@ msgstr ""
 msgid "Delete parent"
 msgstr ""
 
+msgid "Delete users group"
+msgstr ""
+
 msgid "Delete widget"
 msgstr ""
 
@@ -682,6 +685,10 @@ msgid ""
 msgstr ""
 
 msgid "Yesterday"
+msgstr ""
+
+msgid ""
+"You are about to delete <b>%s</b> users group. Please, confirm your action."
 msgstr ""
 
 #, php-format
