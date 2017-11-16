@@ -104,7 +104,7 @@ class ArtifactsFoldersPlugin extends Plugin
     public function javascript_footer($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
-            echo '</script>' . $this->getMinifiedAssetHTML() . '</script>';
+            echo '</script>' . $this->getMinifiedAssetHTML() . '<script>';
         }
     }
 

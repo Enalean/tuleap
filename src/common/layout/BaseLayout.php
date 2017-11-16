@@ -513,4 +513,12 @@ abstract class BaseLayout extends Response
 
         return $privacy;
     }
+
+    protected function getFooterSiteJs()
+    {
+        ob_start();
+        include($GLOBALS['Language']->getContent('layout/footer', null, null, '.js'));
+
+        return ob_get_clean();
+    }
 }
