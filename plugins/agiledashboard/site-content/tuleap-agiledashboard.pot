@@ -16,8 +16,13 @@ msgid ""
 msgstr ""
 
 msgid ""
-"An artifact will be considered <strong>done</strong> when at least one of "
-"the status closed values will be selected."
+"An artifact is considered <strong>done</strong> when it has one of the "
+"following closed values:"
+msgstr ""
+
+msgid ""
+"Artifacts cannot be considered <strong>done</strong> because there is no "
+"value selected for this semantic."
 msgstr ""
 
 msgid "Define the closed status that are considered Done"
