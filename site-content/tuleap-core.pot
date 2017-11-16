@@ -666,6 +666,9 @@ msgstr ""
 msgid "User group permissions"
 msgstr ""
 
+msgid "User name"
+msgstr ""
+
 msgid "Users group"
 msgstr ""
 

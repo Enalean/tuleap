@@ -706,6 +706,9 @@ msgstr "Groupe d'utilisateurs"
 msgid "User group permissions"
 msgstr "Permissions du groupe"
 
+msgid "User name"
+msgstr "Nom d'utilisateur"
+
 msgid "Users group"
 msgstr "Groupe d'utilisateurs"
 
