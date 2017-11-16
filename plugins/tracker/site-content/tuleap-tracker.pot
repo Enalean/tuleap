@@ -88,6 +88,9 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
+msgid "Go back to semantic overview"
+msgstr ""
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -333,6 +336,14 @@ msgid ""
 "to continue."
 msgstr ""
 
+msgid "The selected values will defined the artifact as done:"
+msgstr ""
+
+msgid ""
+"The semantic done cannot be defined because the semantic status is not "
+"defined."
+msgstr ""
+
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr ""
@@ -355,6 +366,9 @@ msgid "Tracker global admininistration"
 msgstr ""
 
 msgid "Tracker renderer"
+msgstr ""
+
+msgid "Tracker semantic done"
 msgstr ""
 
 msgid "Use"
