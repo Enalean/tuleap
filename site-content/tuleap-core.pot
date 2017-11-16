@@ -708,6 +708,9 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
+msgid "You are about to delete <b>%s</b> binding. Please, confirm your action."
+msgstr ""
+
 msgid ""
 "You are about to delete <b>%s</b> users group. Please, confirm your action."
 msgstr ""
