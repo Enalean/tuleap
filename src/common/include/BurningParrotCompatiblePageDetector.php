@@ -71,6 +71,7 @@ class BurningParrotCompatiblePageDetector
 
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/editgroupinfo.php') === 0
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/ugroup.php') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/project/admin/members.php') === 0
             || (
                 strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
                 && (

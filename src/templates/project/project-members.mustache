@@ -1,0 +1,91 @@
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-group"></i> {{# gettext }}Members{{/ gettext }} </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <div class="tlp-table-actions">
+                    <form action="?group_id={{ project_id }}"
+                          method="post"
+                          class="project-admin-members-form"
+                    >
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <div class="tlp-form-element tlp-form-element-append">
+                            <select
+                                name="new_project_member"
+                                id="project-admin-members-add-user-select"
+                                class="tlp-select tlp-select-adjusted"
+                                size="50"
+                                data-placeholder="{{# gettext }}Member name, id{{/ gettext }}"
+                            ></select>
+                            <button class="tlp-append tlp-button-primary">
+                                <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Add member{{/ gettext }}
+                            </button>
+                        </div>
+                        <input type="hidden" name="action" value="add-user">
+                    </form>
+                    <div id="import-members-link">
+                        <a href="/project/admin/userimport.php?group_id={{ project_id }}"
+                           class="tlp-button-primary tlp-button-outline"
+                           role="button"
+                        >
+                            <i class="fa fa-download"></i> {{# gettext }}Import members{{/ gettext }}
+                        </a>
+                    </div>
+                </div>
+                <table class="tlp-table" id="project-admin-members-list">
+                    <thead>
+                        <tr>
+                            <th>{{# gettext }}Name{{/ gettext }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{# project_members_list }}
+                            <form
+                                action="?group_id={{ project_id }}"
+                                method="post"
+                                class="project-admin-members-form"
+                            >
+                                {{# csrf_token }}
+                                    {{> csrf_token_input }}
+                                {{/ csrf_token }}
+
+                                <tr>
+                                    <td>
+                                        <div class="tlp-avatar siteadmin-userlist-result-name-avatar">
+                                            {{# has_avatar }}
+                                                <img src="/users/{{ user_name }}/avatar.png" />
+                                            {{/ has_avatar }}
+                                        </div>
+                                        <a href="{{ profile_page_url }}">{{ username_display }}</a>
+                                    </td>
+                                    <td class="tlp-table-cell-actions">
+                                        {{# is_generic }}
+                                            <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline"
+                                                href="/project/admin/editgenericmember.php?group_id={{ project_id }}"
+                                            >
+                                                <i class="fa fa-pencil tlp-button-icon"></i>
+                                                {{# gettext }}Edit settings{{/ gettext }}
+                                            </a>
+                                        {{/ is_generic }}
+                                        <button type="submit" class="tlp-table-cell-actions-button tlp-button-danger tlp-button-small tlp-button-outline">
+                                            <i class="fa fa-trash-o tlp-button-icon"></i>
+                                            {{# gettext }}Remove from project{{/ gettext }}
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <input type="hidden" name="action" value="remove-user">
+                                <input type="hidden" name="user_id" value="{{ user_id }}">
+                            </form>
+                        {{/ project_members_list }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>
