@@ -308,10 +308,18 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     private function getMembers()
     {
+        $can_be_updated = ! $this->ugroup->isBound();
+        $em             = EventManager::instance();
+        $em->processEvent(
+            Event::UGROUP_UPDATE_USERS_ALLOWED,
+            array('ugroup_id' => $this->ugroup->getId(), 'allowed' => &$can_be_updated)
+        );
+
         $members = $this->getFormattedProjectMembers();
 
         return array(
             'has_members'    => count($members) > 0,
+            'can_be_updated' => $can_be_updated,
             'members'        => $members
         );
     }
@@ -330,6 +338,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
             $ugroup_members[$key]['has_avatar'] = $member->hasAvatar();
             $ugroup_members[$key]['user_name']  = $member->getUserName();
+            $ugroup_members[$key]['user_id']    = $member->getId();
         }
 
         return $ugroup_members;

@@ -33,7 +33,13 @@
                                     </div>
                                     <a href="{{ profile_page_url }}">{{ username_display }}</a>
                                 </td>
-                                <td>
+                                <td class="tlp-table-cell-actions">
+                                    {{# can_be_updated }}
+                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+                                       href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&action=edit_ugroup_members&user[{{ user_id }}]=remove">
+                                        <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
+                                    </a>
+                                    {{/ can_be_updated }}
                                 </td>
                             </tr>
                         {{/ members }}
