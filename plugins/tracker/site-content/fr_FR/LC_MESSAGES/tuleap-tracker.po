@@ -55,20 +55,6 @@ msgstr ""
 "Suite à une mise à jour d'artéfact, les types de lien désactivés seront "
 "supprimés sans enlever les liens existants."
 
-msgid ""
-"An artifact could be considered <strong>done</strong> only if a semantic "
-"status is defined."
-msgstr ""
-"Un artéfact sera considéré comme <strong>fini</strong> seulement lorsqu'une "
-"sémantique statut sera définie."
-
-msgid ""
-"An artifact will be considered <strong>done</strong> when at least one of "
-"the status closed values will be selected."
-msgstr ""
-"Un artéfact sera considéré comme <strong>fini</strong> lorsqu'au moins une "
-"valeur fermée de la sémantique statut sera choisie."
-
 msgid "Artifact link types has been disabled."
 msgstr "Les liens entre artéfacts typés ont été désactivés."
 
@@ -98,25 +84,14 @@ msgstr "Configurer les trackers"
 msgid "Confirm deletion"
 msgstr "Confirmer la suppression"
 
-msgid "Define the closed status that are considered Done"
-msgstr ""
-"Définisser les valeurs fermées de la sémantique statut considérées comme "
-"finies"
-
 msgid "Delete"
 msgstr "Supprimer"
-
-msgid "Done"
-msgstr "Fini"
 
 msgid "Edit"
 msgstr "Éditer"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
-
-msgid "Go back to semantic overview"
-msgstr "Retour à l'administration de la sémantique"
 
 #, php-format
 msgid "Group '%s' couldn't be added."
@@ -409,16 +384,6 @@ msgstr ""
 "La requête est estimée trop complexe pour être exécutée par le serveur. "
 "Veuillez la simplifier (ex: enlever des comparaisons) pour pouvoir continuer."
 
-msgid "The selected values will defined the artifact as done:"
-msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
-
-msgid ""
-"The semantic done cannot be defined because the semantic status is not "
-"defined."
-msgstr ""
-"La sémantique fini ne peut être définie car la sémantique statut n'est pas "
-"définie."
-
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr "Le champ texte '%s' ne peut pas être comparé à MYSELF()."
@@ -442,9 +407,6 @@ msgstr "Administration globale des outils de suivi"
 
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
-
-msgid "Tracker semantic done"
-msgstr "Sémantique fini"
 
 msgid "Use"
 msgstr "Utiliser"

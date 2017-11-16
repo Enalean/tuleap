@@ -37,16 +37,6 @@ msgid ""
 "removing the existing link."
 msgstr ""
 
-msgid ""
-"An artifact could be considered <strong>done</strong> only if a semantic "
-"status is defined."
-msgstr ""
-
-msgid ""
-"An artifact will be considered <strong>done</strong> when at least one of "
-"the status closed values will be selected."
-msgstr ""
-
 msgid "Artifact link types has been disabled."
 msgstr ""
 
@@ -73,22 +63,13 @@ msgstr ""
 msgid "Confirm deletion"
 msgstr ""
 
-msgid "Define the closed status that are considered Done"
-msgstr ""
-
 msgid "Delete"
-msgstr ""
-
-msgid "Done"
 msgstr ""
 
 msgid "Edit"
 msgstr ""
 
 msgid "Error during parsing expert query"
-msgstr ""
-
-msgid "Go back to semantic overview"
 msgstr ""
 
 #, php-format
@@ -336,14 +317,6 @@ msgid ""
 "to continue."
 msgstr ""
 
-msgid "The selected values will defined the artifact as done:"
-msgstr ""
-
-msgid ""
-"The semantic done cannot be defined because the semantic status is not "
-"defined."
-msgstr ""
-
 #, php-format
 msgid "The text field '%s' cannot be compared to MYSELF()."
 msgstr ""
@@ -366,9 +339,6 @@ msgid "Tracker global admininistration"
 msgstr ""
 
 msgid "Tracker renderer"
-msgstr ""
-
-msgid "Tracker semantic done"
 msgstr ""
 
 msgid "Use"

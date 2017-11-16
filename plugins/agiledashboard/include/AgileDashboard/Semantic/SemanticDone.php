@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Semantic;
+namespace Tuleap\AgileDashboard\Semantic;
 
 use Codendi_Request;
 use PFUser;
@@ -64,7 +64,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function getLabel()
     {
-        return dgettext('tuleap-tracker', 'Done');
+        return dgettext('tuleap-agiledashboard', 'Done');
     }
 
     /**
@@ -74,7 +74,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function getDescription()
     {
-        return dgettext('tuleap-tracker', 'Define the closed status that are considered Done');
+        return dgettext('tuleap-agiledashboard', 'Define the closed status that are considered Done');
     }
 
     /**
@@ -84,7 +84,7 @@ class SemanticDone extends Tracker_Semantic
      */
     public function display()
     {
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/semantic');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/semantic');
         $presenter = new SemanticDoneIntroPresenter($this->semantic_status->getField());
 
         $renderer->renderToPage('done-intro', $presenter);
@@ -111,7 +111,7 @@ class SemanticDone extends Tracker_Semantic
             $closed_values = $this->getClosedValues($semantic_status_field);
         }
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/semantic');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/semantic');
         $presenter = new SemanticDoneAdminPresenter(
             $this->tracker,
             $closed_values,

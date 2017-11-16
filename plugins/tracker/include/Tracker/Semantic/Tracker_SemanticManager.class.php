@@ -120,9 +120,6 @@ class Tracker_SemanticManager {
         $status_semantic = Tracker_Semantic_Status::load($this->tracker);
         $semantics->add($status_semantic->getShortName(), $status_semantic);
 
-        $done_semantic = SemanticDone::load($this->tracker);
-        $semantics->add($done_semantic->getShortName(), $done_semantic);
-
         $contributor_semantic = Tracker_Semantic_Contributor::load($this->tracker);
         $semantics->add($contributor_semantic->getShortName(), $contributor_semantic);
 

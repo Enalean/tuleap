@@ -25,11 +25,36 @@ msgid "Add to project dashboard"
 msgstr "Ajouter au tableau de bord du projet"
 
 msgid ""
+"An artifact could be considered <strong>done</strong> only if a semantic "
+"status is defined."
+msgstr ""
+"Un artéfact sera considéré comme <strong>fini</strong> seulement lorsqu'une "
+"sémantique statut sera définie."
+
+msgid ""
+"An artifact will be considered <strong>done</strong> when at least one of "
+"the status closed values will be selected."
+msgstr ""
+"Un artéfact sera considéré comme <strong>fini</strong> lorsqu'au moins une "
+"valeur fermée de la sémantique statut sera choisie."
+
+msgid "Define the closed status that are considered Done"
+msgstr ""
+"Définisser les valeurs fermées de la sémantique statut considérées comme "
+"finies"
+
+msgid ""
 "Displays a board to see the tasks to do, in progress, done etc. Please go on "
 "a kanban to add it."
 msgstr ""
 "Affiche un tableau pour voir les tâches à faire, en cours, terminées etc. "
 "Veuillez aller sur un kanban pour l’ajouter."
+
+msgid "Done"
+msgstr "Fini"
+
+msgid "Go back to semantic overview"
+msgstr "Retour à l'administration de la sémantique"
 
 msgid "Planning succesfully created."
 msgstr "La planning a été créé."
@@ -37,5 +62,18 @@ msgstr "La planning a été créé."
 msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
 
+msgid "The selected values will defined the artifact as done:"
+msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
+
+msgid ""
+"The semantic done cannot be defined because the semantic status is not "
+"defined."
+msgstr ""
+"La sémantique fini ne peut être définie car la sémantique statut n'est pas "
+"définie."
+
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"
+
+msgid "Tracker semantic done"
+msgstr "Sémantique fini"
