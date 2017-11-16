@@ -275,6 +275,9 @@ msgstr "Fichiers"
 msgid "Filled"
 msgstr "Rempli"
 
+msgid "Filter by name"
+msgstr "Filtrer par nom d'utilisateur"
+
 msgid "Forums"
 msgstr "Forums"
 
@@ -833,8 +836,8 @@ msgid ""
 "You're about to remove <b>{{ username_display }}</b> from this project. "
 "Please confirm your action."
 msgstr ""
-"Vous êtes sur le point de retirer <b>{{ username_display }}</b> de ce projet. "
-"Veuillez confirmer votre action."
+"Vous êtes sur le point de retirer <b>{{ username_display }}</b> de ce "
+"projet. Veuillez confirmer votre action."
 
 msgid "Your history is empty"
 msgstr "Votre historique est vide"

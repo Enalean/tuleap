@@ -251,6 +251,9 @@ msgstr ""
 msgid "Filled"
 msgstr ""
 
+msgid "Filter by name"
+msgstr ""
+
 msgid "Forums"
 msgstr ""
 
