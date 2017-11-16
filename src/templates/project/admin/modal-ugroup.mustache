@@ -1,0 +1,75 @@
+<form method="POST"
+      action="/project/admin/ugroup.php?group_id={{ project_id }}&ugroup_id=&func=do_create"
+      class="tlp-modal"
+      role="dialog"
+      id="user-group-modal"
+      aria-labelledby="project-admin-create-user-group-modal-title"
+>
+    {{# csrf }}
+        {{> csrf_token_input }}
+    {{/ csrf }}
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-create-user-group-modal-title">
+            <i class="fa fa-plus tlp-modal-title-icon"></i>{{# gettext }}Add users group{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <div class="tlp-form-element">
+            <label
+                    class="tlp-label"
+                    for="ugroup_name"
+            >
+                {{# gettext }}Name{{/ gettext }}<i class="fa fa-asterisk"></i>
+            </label>
+            <input
+                    type="text"
+                    class="tlp-input"
+                    id="ugroup_name"
+                    name="ugroup_name"
+                    placeholder="Developers"
+                    required
+            >
+            <p class="tlp-text-info">
+                {{# gettext }}Please avoid spaces and punctuation in users groups name.{{/ gettext }}
+            </p>
+        </div>
+
+        <div class="tlp-form-element">
+            <label
+                    class="tlp-label"
+                    for="ugroup_description"
+            >
+                {{# gettext }}Description{{/ gettext }}</i>
+            </label>
+            <textarea
+                    type="text"
+                    class="tlp-textarea"
+                    id="ugroup_description"
+                    name="ugroup_description"
+                    placeholder="{{# gettext }}Meaningful description of the group{{/ gettext }}"></textarea>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="group_templates">{{# gettext }}Create from{{/ gettext }}</label>
+            <select class="tlp-select" id="group_templates" name="group_templates">
+                {{# template_ugroups }}
+                    <option value="{{ id }}" {{ selected }}>{{ name }}</option>
+                {{/ template_ugroups }}
+
+
+            </select>
+        </div>
+
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action user-group-modal-button">
+            <i class="fa fa-plus tlp-button-icon"></i>{{# gettext }}Create user group{{/ gettext }}
+        </button>
+    </div>
+</form>

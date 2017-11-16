@@ -130,7 +130,8 @@ var webpack_config_for_labels = {
 
 var webpack_config_for_project_admin = {
     entry: {
-        'project-admin' : './project/admin/index.js'
+        'project-admin'         : './project/admin/index.js',
+        'project-admin-ugroups' : './project/admin//project-admin-ugroups.js',
     },
     output: {
         path: assets_dir_path,

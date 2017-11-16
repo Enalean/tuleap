@@ -17,24 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { autocomplete_projects_for_select2 as autocomplete } from '../../tuleap/autocomplete-for-select2.js';
 import { modal as createModal, filterInlineTable } from 'tlp';
 
 document.addEventListener('DOMContentLoaded', () => {
-    initTOSCheckbox();
-    initHierarchyModal();
-
-    const select_element = document.getElementById('project-admin-details-hierarchy-project-select');
-    if (! select_element) {
-        return;
-    }
-    autocomplete(select_element, {
-        include_private_projects: true
-    });
+    initGroupsPermissionsModal();
+    initGroupsFilter();
+    initUserGroupModal();
 });
 
-function initHierarchyModal() {
-    const button = document.getElementById('project-admin-details-hierarchy-delete-button');
+function initGroupsPermissionsModal() {
+    const button = document.getElementById('project-admin-ugroup-show-permissions-modal');
     if (! button) {
         return;
     }
@@ -46,13 +38,21 @@ function initHierarchyModal() {
     });
 }
 
-function initTOSCheckbox() {
-    const select_element = document.getElementById('project_visibility');
-    if (! select_element) {
-        return;
+function initGroupsFilter() {
+    const groups_filter = document.getElementById('project-admin-ugroups-list-table-filter');
+    if (groups_filter) {
+        filterInlineTable(groups_filter);
     }
-    select_element.addEventListener('change', () => {
-        document.getElementById("term-of-service").required = true;
-        document.getElementById("term-of-service-usage").style.display = 'block';
-    });
+}
+
+function initUserGroupModal() {
+    const button = document.getElementById('project-admin-ugroups-modal');
+
+    if (button) {
+        const modal = createModal(document.getElementById(button.dataset.targetModalId));
+
+        button.addEventListener('click', () => {
+            modal.show();
+        });
+    }
 }

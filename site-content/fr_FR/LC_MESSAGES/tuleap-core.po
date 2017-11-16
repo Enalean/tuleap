@@ -158,8 +158,14 @@ msgstr "Impossible d'accèder au fichier de contrôle d'accès du dépôt SVN"
 msgid "Could not update hooks of the SVN repository"
 msgstr "Impossible de mettre à jour les hooks du dépôt SVN"
 
+msgid "Create from"
+msgstr "Créer à partir de"
+
 msgid "Create label"
 msgstr "Créer le label"
+
+msgid "Create user group"
+msgstr "Ajouter un groupe utilisateur"
 
 msgid "Dashboard creation failed."
 msgstr "La création du tableau de bord a échouée."
@@ -230,6 +236,9 @@ msgstr "Éditer le widget"
 
 msgid "Emergency"
 msgstr "Urgent"
+
+msgid "Empty group"
+msgstr "Groupe vide"
 
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
