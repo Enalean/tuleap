@@ -5,7 +5,8 @@ MainCtrl.$inject = [
     'gettextCatalog',
     'SharedPropertiesService',
     'amMoment',
-    'UUIDGeneratorService'
+    'UUIDGeneratorService',
+    'FilterTrackerReportService'
 ];
 
 function MainCtrl(
@@ -13,14 +14,15 @@ function MainCtrl(
     gettextCatalog,
     SharedPropertiesService,
     amMoment,
-    UUIDGeneratorService
+    UUIDGeneratorService,
+    FilterTrackerReportService
 ) {
     $scope.init = init;
 
     function init(
         kanban,
         dashboard_dropdown,
-        filters,
+        filters_tracker_report,
         user_id,
         user_is_admin,
         widget_id,
@@ -30,10 +32,12 @@ function MainCtrl(
         nodejs_server,
         kanban_url
     ) {
+        const uuid = UUIDGeneratorService.generateUUID();
+
+        FilterTrackerReportService.setFiltersTrackerReport(Object.values(filters_tracker_report));
         SharedPropertiesService.setUserId(user_id);
         SharedPropertiesService.setKanban(kanban);
         SharedPropertiesService.setDashboardDropdown(dashboard_dropdown);
-        SharedPropertiesService.setFilters(filters);
         SharedPropertiesService.setUserIsAdmin(user_is_admin);
         SharedPropertiesService.setWidgetId(widget_id);
         SharedPropertiesService.setProjectId(project_id);
@@ -41,7 +45,6 @@ function MainCtrl(
         SharedPropertiesService.setKanbanUrl(kanban_url);
         gettextCatalog.setCurrentLanguage(lang);
         amMoment.changeLocale(lang);
-        var uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);
         SharedPropertiesService.setNodeServerVersion("1.1.0");
         SharedPropertiesService.setNodeServerAddress(nodejs_server);

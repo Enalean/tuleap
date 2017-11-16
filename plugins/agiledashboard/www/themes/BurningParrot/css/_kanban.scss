@@ -498,6 +498,10 @@ add-in-place {
 .kanban-header-config {
     display: flex;
     flex: 1 1 auto;
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+.kanban-header-compact-toggler-label {
+    display: flex;
     align-items: center;
-    margin: 0 0 $tlp-spacing $tlp-half-spacing;
 }

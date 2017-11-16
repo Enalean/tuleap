@@ -97,6 +97,10 @@ msgstr ""
 msgid "Filter..."
 msgstr ""
 
+#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
+msgid "Filters:"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "General configuration"
 msgstr ""
@@ -162,6 +166,10 @@ msgstr ""
 msgid "Nb. of cards"
 msgstr ""
 
+#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
+msgid "None"
+msgstr ""
+
 #: src/app/error-modal/error.tpl.html
 msgid "OK, reload the page"
 msgstr ""
@@ -218,14 +226,14 @@ msgstr ""
 msgid "You have reached the work in progress limit for this column!"
 msgstr ""
 
+#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
+msgid "Your kanban is filtered, there is no update of WIP."
+msgstr ""
+
+#: src/app/filter-tracker-report/filter-tracker-report.tpl.html
+msgid "Your kanban is filtered, there is no update of cards in real time or WIP."
+msgstr ""
+
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "{{ reports_modal.kanban_label }} reports"
-msgstr ""
-
-#: src/app/filter/filter.tpl.html
-msgid "Filters:"
-msgstr ""
-
-#: src/app/filter/filter.tpl.html
-msgid "None"
 msgstr ""

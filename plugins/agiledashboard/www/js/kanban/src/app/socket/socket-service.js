@@ -75,7 +75,7 @@ function SocketService(
 
     function subscribe() {
         var kanban = SharedPropertiesService.getKanban();
-        if(kanban) {
+        if (kanban) {
             SocketFactory.emit('subscription', {
                 nodejs_server_version: SharedPropertiesService.getNodeServerVersion(),
                 token                : locker.get('token'),

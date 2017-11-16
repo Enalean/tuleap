@@ -1,24 +1,45 @@
 export default FilterTrackerReportController;
 
 FilterTrackerReportController.$inject = [
-    'SharedPropertiesService',
+    '$window',
+    'FilterTrackerReportService'
 ];
 
 function FilterTrackerReportController(
-    SharedPropertiesService
+    $window,
+    FilterTrackerReportService
 ) {
     const self = this;
 
-    self.selected_item      = null;
-    self.filters_collection = Object.values(SharedPropertiesService.getFilters());
+    Object.assign(self, {
+        filters_collection: FilterTrackerReportService.getFiltersTrackerReport(),
+        selected_item: '' + FilterTrackerReportService.getSelectedFilterTrackerReportId(),
+        changeFilter,
+        displayCardsAndWIPNotUpdated,
+        displayWIPNotUpdated
+    });
 
-    self.$onInit = init;
+    function changeFilter() {
+        const params      = $window.location.search.split('?')[1];
+        let search_params = params.split('&');
+        let index         = search_params.findIndex((search_param) => { return search_param.split('=')[0] === 'tracker_report_id'; });
 
-    function init() {
-        const item = self.filters_collection.find((filter) => { return filter.selected; });
+        index = index < 0 ? search_params.length: index;
 
-        if (item) {
-            self.selected_item = item.id;
+        if (parseInt(self.selected_item, 10)) {
+            search_params[index] = 'tracker_report_id=' + self.selected_item;
+        } else {
+            search_params.splice(index, 1);
         }
+        $window.location.search = '?' + search_params.join('&');
+    }
+
+    function displayCardsAndWIPNotUpdated() {
+        return FilterTrackerReportService.areNotCardsAndWIPUpdated();
+    }
+
+    function displayWIPNotUpdated() {
+        return ! FilterTrackerReportService.areNotCardsAndWIPUpdated() &&
+            FilterTrackerReportService.isNotWIPUpdated();
     }
 }

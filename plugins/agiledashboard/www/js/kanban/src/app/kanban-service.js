@@ -8,7 +8,8 @@ KanbanService.$inject = [
     '$window',
     'gettextCatalog',
     'SharedPropertiesService',
-    'RestErrorService'
+    'RestErrorService',
+    'FilterTrackerReportService'
 ];
 
 function KanbanService(
@@ -17,7 +18,8 @@ function KanbanService(
     $window,
     gettextCatalog,
     SharedPropertiesService,
-    RestErrorService
+    RestErrorService,
+    FilterTrackerReportService
 ) {
     _.extend(Restangular.configuration.defaultHeaders, {
         'X-Client-UUID': SharedPropertiesService.getUUID()
@@ -68,15 +70,18 @@ function KanbanService(
     }
 
     function getBacklog(id, limit, offset) {
-        var data = $q.defer();
+        const data       = $q.defer();
+        let query_params = {
+            limit: limit,
+            offset: offset
+        };
+
+        augmentQueryParamsWithFilterTrackerReport(query_params);
 
         Restangular
             .one('kanban', id)
             .one('backlog')
-            .get({
-                limit: limit,
-                offset: offset
-            })
+            .get(query_params)
             .then(function (response) {
                 var result = {
                     results : augmentItems(response.data.collection),
@@ -101,15 +106,18 @@ function KanbanService(
     }
 
     function getArchive(id, limit, offset) {
-        var data = $q.defer();
+        const data       = $q.defer();
+        let query_params = {
+            limit: limit,
+            offset: offset
+        };
+
+        augmentQueryParamsWithFilterTrackerReport(query_params);
 
         Restangular
             .one('kanban', id)
             .one('archive')
-            .get({
-                limit: limit,
-                offset: offset
-            })
+            .get(query_params)
             .then(function (response) {
                 var result = {
                     results: augmentItems(response.data.collection),
@@ -134,16 +142,19 @@ function KanbanService(
     }
 
     function getItems(id, column_id, limit, offset) {
-        var data = $q.defer();
+        const data       = $q.defer();
+        let query_params = {
+            column_id: column_id,
+            limit: limit,
+            offset: offset
+        };
+
+        augmentQueryParamsWithFilterTrackerReport(query_params);
 
         Restangular
             .one('kanban', id)
             .one('items')
-            .get({
-                column_id: column_id,
-                limit: limit,
-                offset: offset
-            })
+            .get(query_params)
             .then(function (response) {
                 var result = {
                     results: augmentItems(response.data.collection),
@@ -372,5 +383,13 @@ function KanbanService(
         );
         $window.sessionStorage.setItem('tuleap_feedback', message);
         $window.location.href = '/plugins/agiledashboard/?group_id=' + SharedPropertiesService.getProjectId();
+    }
+
+    function augmentQueryParamsWithFilterTrackerReport(query_params) {
+        const selected_filter_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
+
+        if (selected_filter_tracker_report_id) {
+            query_params['query'] = { tracker_report_id: selected_filter_tracker_report_id };
+        }
     }
 }

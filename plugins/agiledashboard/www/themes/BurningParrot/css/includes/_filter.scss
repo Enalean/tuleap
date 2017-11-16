@@ -1,12 +1,25 @@
 .kanban-header-filter {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+}
 
-    > :first-child {
-        margin: 0 5px 0 0;
-    }
+.kanban-header-filter-text-info {
+    margin: 3px 0 0;
+    font-size: 13px;
+}
+
+.kanban-header-filter-form {
+    display: flex;
+    align-items: center;
+    margin: 0;
 }
 
 .kanban-header-filter-label {
+    margin: 0 5px 0 0;
     white-space: nowrap;
+}
+
+.kanban-header-filter-select {
+    min-width: 90px;
 }

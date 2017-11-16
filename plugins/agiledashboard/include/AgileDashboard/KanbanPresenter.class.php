@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\KanbanFiltersTrackerReportBuilder;
 use Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownBuilder;
 use Tuleap\AgileDashboard\Widget\WidgetAddToDashboardDropdownRepresentationBuilder;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -58,7 +60,7 @@ class KanbanPresenter {
     /**
      * @var array
      */
-    public $filters;
+    public $filters_tracker_report;
 
     public function __construct(
         AgileDashboard_Kanban $kanban,
@@ -66,7 +68,8 @@ class KanbanPresenter {
         $user_is_kanban_admin,
         $language,
         $project_id,
-        $dashboard_widget_id
+        $dashboard_widget_id,
+        $filter_tracker_report_id
     ) {
         $user_preferences              = new AgileDashboard_KanbanUserPreferences();
         $kanban_representation_builder = new Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentationBuilder(
@@ -94,13 +97,18 @@ class KanbanPresenter {
             ),
             new ProjectDashboardRetriever(new ProjectDashboardDao($widget_dao))
         );
-        $project_manager        = ProjectManager::instance();
-        $tracker_report_factory = Tracker_ReportFactory::instance();
+        $project_manager                = ProjectManager::instance();
+        $tracker_report_factory         = Tracker_ReportFactory::instance();
+        $filters_tracker_report_builder = new KanbanFiltersTrackerReportBuilder(
+            $user,
+            $tracker_report_factory,
+            $kanban
+        );
 
         $this->widget_id                         = $dashboard_widget_id;
         $this->kanban_representation             = json_encode($kanban_representation_builder->build($kanban, $user));
         $this->dashboard_dropdown_representation = json_encode($widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)));
-        $this->filters                           = json_encode($tracker_report_factory->getReportsByTrackerId($kanban->getTrackerId(), $user->getId()));
+        $this->filters_tracker_report            = json_encode($filters_tracker_report_builder->build($filter_tracker_report_id));
         $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;
         $this->language                          = $language;
         $this->project_id                        = $project_id;

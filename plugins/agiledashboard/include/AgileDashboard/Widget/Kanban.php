@@ -34,6 +34,7 @@ abstract class Kanban extends Widget
 {
     protected $kanban_id;
     protected $kanban_title;
+    protected $tracker_report_id;
     /**
      * @var WidgetKanbanCreator
      */
@@ -68,7 +69,8 @@ abstract class Kanban extends Widget
         WidgetKanbanDeletor $widget_kanban_deletor,
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
-        AgileDashboard_PermissionsManager $permissions_manager
+        AgileDashboard_PermissionsManager $permissions_manager,
+        $tracker_report_id
     ) {
         parent::__construct($id);
         $this->owner_id                = $owner_id;
@@ -79,6 +81,7 @@ abstract class Kanban extends Widget
         $this->kanban_factory          = $kanban_factory;
         $this->tracker_factory         = $tracker_factory;
         $this->permissions_manager     = $permissions_manager;
+        $this->tracker_report_id       = $tracker_report_id;
     }
 
     public function create(&$request)
@@ -134,7 +137,8 @@ abstract class Kanban extends Widget
                 $user_is_kanban_admin,
                 $this->getCurrentUser()->getShortLocale(),
                 $project_id,
-                $this->dashboard_widget_id
+                $this->dashboard_widget_id,
+                $this->tracker_report_id
             );
             $widget_kanban_presenter = new WidgetKanbanPresenter(
                 $is_empty,

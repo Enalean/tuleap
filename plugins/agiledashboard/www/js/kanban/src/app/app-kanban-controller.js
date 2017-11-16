@@ -23,7 +23,8 @@ KanbanCtrl.$inject = [
     'DroppedService',
     'KanbanFilterValue',
     'TlpModalService',
-    'RestErrorService'
+    'RestErrorService',
+    'FilterTrackerReportService'
 ];
 
 function KanbanCtrl(
@@ -42,7 +43,8 @@ function KanbanCtrl(
     DroppedService,
     KanbanFilterValue,
     TlpModalService,
-    RestErrorService
+    RestErrorService,
+    FilterTrackerReportService
 ) {
     var self    = this,
         limit   = 50,
@@ -108,9 +110,11 @@ function KanbanCtrl(
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
         SocketService.listenNodeJSServer().then(function() {
-            SocketService.listenKanbanItemCreate();
+            if (! FilterTrackerReportService.isFiltersTrackerReportSelected()) {
+                SocketService.listenKanbanItemCreate();
+                SocketService.listenKanbanItemEdit();
+            }
             SocketService.listenKanbanItemMove();
-            SocketService.listenKanbanItemEdit();
             SocketService.listenKanbanColumnCreate();
             SocketService.listenKanbanColumnMove();
             SocketService.listenKanbanColumnEdit();
@@ -434,7 +438,9 @@ function KanbanCtrl(
     }
 
     function isColumnWipReached(column) {
-        return (column.limit && column.limit < column.content.length);
+        return (FilterTrackerReportService.areCardsAndWIPUpdated()
+            || FilterTrackerReportService.isWIPUpdated())
+        && (column.limit && column.limit < column.content.length);
     }
 
     function setWipLimitForColumn(column) {

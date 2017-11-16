@@ -1,10 +1,21 @@
-<div class="tlp-form-element kanban-header-filter">
-    <label class="tlp-label kanban-header-filter-label" for="kanban-filter" translate>Filters:</label>
-    <select class="tlp-select tlp-select-small"
-            id="kanban-filter"
-            ng-model="filter_tracker_report.selected_item"
-            ng-options="filter.id as filter.name for filter in filter_tracker_report.filters_collection"
-    >
-        <option value="" translate>None</option>
-    </select>
+<div class="kanban-header-filter">
+    <div class="tlp-form-element kanban-header-filter-form">
+        <label class="tlp-label kanban-header-filter-label" for="kanban-filter" translate>Filters:</label>
+        <select class="tlp-select tlp-select-small kanban-header-filter-select"
+                id="kanban-filter"
+                ng-model="filter_tracker_report.selected_item"
+                ng-change="filter_tracker_report.changeFilter()"
+        >
+            <option value="0" translate>None</option>
+            <option ng-repeat="filter in filter_tracker_report.filters_collection" value="{{ filter.id }}">
+                {{ filter.name }}
+            </option>
+        </select>
+    </div>
+    <p class="tlp-text-info kanban-header-filter-text-info" ng-if="filter_tracker_report.displayCardsAndWIPNotUpdated()">
+        <i class="fa fa-life-saver"></i> <span translate>Your kanban is filtered, there is no update of cards in real time or WIP.</span>
+    </p>
+    <p class="tlp-text-info kanban-header-filter-text-info" ng-if="filter_tracker_report.displayWIPNotUpdated()">
+        <i class="fa fa-life-saver"></i> <span translate>Your kanban is filtered, there is no update of WIP.</span>
+    </p>
 </div>

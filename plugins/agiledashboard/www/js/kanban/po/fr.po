@@ -254,3 +254,11 @@ msgstr "Filtres :"
 #: src/app/filter/filter.tpl.html
 msgid "None"
 msgstr "Aucun"
+
+#: src/app/filter/filter.tpl.html
+msgid "Your kanban is filtered, there is no update of cards in real time or WIP."
+msgstr "Votre kanban est filtré, il n'y a pas de mise à jour des cartes en temps réel, ou du WIP."
+
+#: src/app/filter/filter.tpl.html
+msgid "Your kanban is filtered, there is no update of WIP."
+msgstr "Votre kanban est filtré, il n'y a pas de mise à jour du WIP."
