@@ -17,10 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'project-admin/labels';
-@import 'project-admin/details';
-@import 'project-admin/ugroups';
+#project-admin-ugroup-add-binding {
+    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+}
 
-.project-administration-title {
-    padding: $tlp-spacing $tlp-spacing 0;
+#project-admin-ugroup-add-ldap-binding {
+    margin: 0 0 $tlp-spacing;
+}
+
+#project-admin-ugroup-current-binding {
+    display: flex;
+}
+
+#project-admin-ugroup-current-binding-project {
+    margin: 0 $tlp-double-spacing 0 0;
+}
+
+#project-admin-ugroup-binding-clones {
+    margin: 0 0 $tlp-spacing;
 }

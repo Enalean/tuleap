@@ -39,10 +39,32 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
      * @var Codendi_HTMLPurifier
      */
     private $html_purifier;
+    private $plugin_binding;
+    /**
+     * @var LdapPlugin
+     */
+    private $ldap_plugin;
+    /**
+     * @var UGroupBinding
+     */
+    protected $ugroup_binding;
+    /**
+     * @var ProjectManager
+     */
+    protected $project_manager;
 
-    public function __construct(ProjectUGroup $ugroup) {
+    public function __construct(
+        ProjectUGroup $ugroup,
+        UGroupBinding $ugroup_binding,
+        $plugin_binding,
+        LdapPlugin $ldap_plugin = null
+    ) {
         parent::__construct($ugroup);
+        $this->plugin_binding = $plugin_binding;
+        $this->ldap_plugin    = $ldap_plugin;
+        $this->ugroup_binding = $ugroup_binding;
 
+        $this->project_manager     = ProjectManager::instance();
         $this->permissions_manager = PermissionsManager::instance();
         $this->event_manager       = EventManager::instance();
         $this->html_purifier       = Codendi_HTMLPurifier::instance();
@@ -51,11 +73,12 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     public function getContent() {
         $permissions = $this->getFormattedPermissions();
+        $binding     = $this->getBinding();
 
         return TemplateRendererFactory::build()
             ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/')
             ->renderToString(
-                'ugroup-settings-details',
+                'ugroup-settings',
                 array(
                     'id'              => $this->ugroup->getId(),
                     'project_id'      => $this->ugroup->getProjectId(),
@@ -63,6 +86,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
                     'description'     => $this->ugroup->getDescription(),
                     'has_permissions' => count($permissions) > 0,
                     'permissions'     => $permissions,
+                    'binding'         => $binding,
                 )
             );
     }
@@ -156,5 +180,127 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     public function getIdentifier() {
         return self::IDENTIFIER;
+    }
+
+    private function getBinding()
+    {
+        $url_add = '/project/admin/editugroup.php?'.
+            http_build_query(array(
+                    'group_id' => $this->ugroup->getProjectId(),
+                    'ugroup_id' => $this->ugroup->getId(),
+                    'func' => 'edit',
+                    'pane' => 'binding',
+                    'action' => 'edit_binding',
+                )
+            );
+
+        $url_add_ldap = '/project/admin/editugroup.php?'.
+            http_build_query(array(
+                    'group_id' => $this->ugroup->getProjectId(),
+                    'ugroup_id' => $this->ugroup->getId(),
+                    'func' => 'edit',
+                    'pane' => 'binding',
+                    'action' => 'edit_directory_group',
+                )
+            );
+
+        $clones = $this->getClones();
+
+        return array(
+            'url_add_binding'      => $url_add,
+            'url_add_ldap_binding' => $url_add_ldap,
+            'add_ldap_title'       => $this->getLDAPTitle(),
+            'has_clones'           => count($clones) > 0,
+            'clones'               => $clones,
+            'current_binding'      => $this->getCurrentBinding(),
+            'has_ldap'             => ! empty($this->plugin_binding)
+        );
+    }
+
+    /**
+     * Get the HTML output for ugroups bound to the current one
+     */
+    private function getClones() {
+        $ugroups        = array();
+        $nb_not_visible = 0;
+        foreach ($this->ugroup_binding->getUGroupsByBindingSource($this->ugroup->getId()) as $id => $clone) {
+            $project = $this->project_manager->getProject($clone['group_id']);
+            if ($project->userIsAdmin()) {
+                $ugroups[] = $this->getUgroupBindingPresenter($project, $id, $clone['cloneName']);
+            } else {
+                $nb_not_visible ++;
+            }
+        }
+
+        return array(
+            'ugroups'        => $ugroups,
+            'has_ugroups'    => count($ugroups) > 0,
+            'nb_not_visible' => $nb_not_visible
+        );
+    }
+
+    /**
+     * Create the good title link if we have already a ldap group linked or not
+     *
+     * @return String
+     */
+    private function getLDAPTitle() {
+        if (! $this->ldap_plugin) {
+            return false;
+        }
+
+        $ldap_group = $this->ldap_plugin
+            ->getLdapUserGroupManager()
+            ->getLdapGroupByGroupId($this->ugroup->getId());
+
+        if ($ldap_group !== null) {
+            $name = $this->html_purifier->purify($ldap_group->getCommonName());
+            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $name);
+        } else {
+            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
+        }
+
+        return $title;
+    }
+
+    private function getCurrentBinding()
+    {
+        $source = $this->ugroup->getSourceGroup();
+        if (! $source) {
+            return false;
+        }
+
+        $project = $source->getProject();
+        if (! $project->userIsAdmin()) {
+            return $this->getEmptyUgroupBindingPresenter();
+        }
+
+        return $this->getUgroupBindingPresenter($project, $source->getId(), $source->getName());
+    }
+
+    private function getUgroupBindingPresenter($project, $id, $name)
+    {
+        return array(
+            'project_url'  => '/projects/' . $project->getUnixName(),
+            'project_name' => $project->getUnconvertedPublicName(),
+            'ugroup_url'   => '/project/admin/editugroup.php?' . http_build_query(
+                    array(
+                        'group_id'  => $project->getID(),
+                        'ugroup_id' => $id,
+                        'func'      => 'edit',
+                    )
+                ),
+            'ugroup_name'  => $name,
+        );
+    }
+
+    private function getEmptyUgroupBindingPresenter()
+    {
+        return array(
+            'project_url'  => '',
+            'project_name' => '',
+            'ugroup_url'   => '',
+            'ugroup_name'  => '',
+        );
     }
 }

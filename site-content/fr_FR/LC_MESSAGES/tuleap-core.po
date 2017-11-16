@@ -54,6 +54,9 @@ msgstr "Ajouter projet parent"
 msgid "Add users group"
 msgstr "Ajouter un groupe"
 
+msgid "Add users group binding"
+msgstr "Ajouter un lien à un groupe"
+
 msgid "Add widget"
 msgstr "Ajouter un widget"
 
@@ -95,6 +98,11 @@ msgstr "Une erreur est survenue lors de la suppression du label."
 
 msgid "And more..."
 msgstr "Et plus ..."
+
+msgid "And one other users group you are not allowed to administrate."
+msgid_plural "And %d other users groups you are not allowed to administrate."
+msgstr[0] "Et un autre groupe que vous ne pouvez pas administrer."
+msgstr[1] "Et %d autres groupes que vous ne pouvez pas administrer."
 
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
@@ -195,6 +203,9 @@ msgstr "Supprimer"
 msgid "Delete %s"
 msgstr "Supprimer %s"
 
+msgid "Delete binding"
+msgstr "Supprimer le lien"
+
 msgid "Delete dashboard"
 msgstr "Supprimer le tableau de bord"
 
@@ -260,6 +271,9 @@ msgstr "Git"
 
 msgid "Go up"
 msgstr "Niveau supérieur"
+
+msgid "Group binding"
+msgstr "Lien entre groupes"
 
 msgid "Group details"
 msgstr "Détails du groupe"
@@ -407,6 +421,9 @@ msgstr ""
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
 
+msgid "Project"
+msgstr "Projet"
+
 msgid "Project Data Export"
 msgstr "Export des données"
 
@@ -542,6 +559,9 @@ msgstr "Aucun projet dans cette catégorie"
 msgid "There are no widgets here."
 msgstr "Il n’y a aucun widget."
 
+msgid "There is no users group bound to this one."
+msgstr "Il n'y a pas de groupe lié à celui-ci."
+
 msgid "There isn't <br> any activity yet"
 msgstr "Il n'y a pas <br> encore d'activité"
 
@@ -595,6 +615,28 @@ msgstr "La référence demandée n'existe pas"
 msgid "This user group is not granted any permissions yet"
 msgstr "Ce groupe n'a pas encore de permissions définies"
 
+msgid ""
+"This users group is bound to a group you are not allowed to administrate."
+msgstr "Ce groupe est lié à un groupe que vous ne pouvez pas administrer."
+
+msgid "This users group is bound to the following group:"
+msgstr "Ce groupe est lié aux groupe suivant :"
+
+msgid "This users group is not bound to any users group."
+msgstr "Ce groupe n'a pas lié à un autre groupe."
+
+msgid ""
+"This users group is the source of one other users group you are not allowed "
+"to administrate."
+msgid_plural ""
+"This users group is the source of %d other users groups you are not allowed "
+"to administrate."
+msgstr[0] ""
+"Ce groupe est la source d'un autre groupe que vous ne pouvez pas administrer."
+msgstr[1] ""
+"Ce groupe est la source de %d autres groupes que vous ne pouvez pas "
+"administrer."
+
 msgid "Title"
 msgstr "Titre"
 
@@ -631,11 +673,17 @@ msgstr "Permissions utilisateurs"
 msgid "User avatar"
 msgstr "Avatar de l'utilisateur"
 
+msgid "User group"
+msgstr "Groupe d'utilisateurs"
+
 msgid "User group permissions"
 msgstr "Permissions du groupe"
 
 msgid "Users groups"
 msgstr "Groupes d'utilisateurs"
+
+msgid "Users groups bound to this one"
+msgstr "Groupes liés à celui-ci"
 
 msgid "We cannot find any edition information for the requested widget."
 msgstr "Impossible de trouver comment éditer le widget requis."

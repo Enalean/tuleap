@@ -66,6 +66,7 @@ class Project_Admin_UGroup_UGroupController {
         $this->ugroup_manager = new UGroupManager();
         $this->ugroup_binding = new UGroupBinding(new UGroupUserDao(), $this->ugroup_manager);
         $this->pane_management = new Project_Admin_UGroup_PaneManagement($this->ugroup, null);
+        $this->pane = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Settings::IDENTIFIER);
     }
 
     protected function render(Project_Admin_UGroup_View $view) {
@@ -77,7 +78,11 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function settings() {
-        $view = new Project_Admin_UGroup_View_Settings($this->ugroup);
+        $pane               = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
+        $controller_binding = new Project_Admin_UGroup_UGroupController_Binding($this->request, $this->ugroup, $pane);
+        $binding            = $controller_binding->displayUgroupBinding();
+        $ldap_plugin        = $controller_binding->getLdapPlugin() ?: null;
+        $view               = new Project_Admin_UGroup_View_Settings($this->ugroup, $this->ugroup_binding, $binding, $ldap_plugin);
         $this->render($view);
     }
 
@@ -99,6 +104,26 @@ class Project_Admin_UGroup_UGroupController {
         } else {
             $controller_binding->edit_binding();
         }
+    }
+
+    public function remove_binding()
+    {
+        $history_dao = new ProjectHistoryDao();
+        if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
+            $history_dao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
+            $this->launchEditBindingUgroupEvent();
+        }
+        $this->redirect();
+    }
+
+    private function launchEditBindingUgroupEvent() {
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent('project_admin_ugroup_bind_modified',
+            array(
+                'group_id'  => $this->ugroup->getProjectId(),
+                'ugroup_id' => $this->ugroup->getId()
+            )
+        );
     }
 
     /**

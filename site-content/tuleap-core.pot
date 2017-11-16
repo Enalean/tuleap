@@ -38,6 +38,9 @@ msgstr ""
 msgid "Add users group"
 msgstr ""
 
+msgid "Add users group binding"
+msgstr ""
+
 msgid "Add widget"
 msgstr ""
 
@@ -75,6 +78,11 @@ msgstr ""
 
 msgid "And more..."
 msgstr ""
+
+msgid "And one other users group you are not allowed to administrate."
+msgid_plural "And %d other users groups you are not allowed to administrate."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr ""
@@ -173,6 +181,9 @@ msgstr ""
 msgid "Delete %s"
 msgstr ""
 
+msgid "Delete binding"
+msgstr ""
+
 msgid "Delete dashboard"
 msgstr ""
 
@@ -235,6 +246,9 @@ msgid "Git"
 msgstr ""
 
 msgid "Go up"
+msgstr ""
+
+msgid "Group binding"
 msgstr ""
 
 msgid "Group details"
@@ -381,6 +395,9 @@ msgstr ""
 msgid "Please, enter a http:// or https:// link"
 msgstr ""
 
+msgid "Project"
+msgstr ""
+
 msgid "Project Data Export"
 msgstr ""
 
@@ -515,6 +532,9 @@ msgstr ""
 msgid "There are no widgets here."
 msgstr ""
 
+msgid "There is no users group bound to this one."
+msgstr ""
+
 msgid "There isn't <br> any activity yet"
 msgstr ""
 
@@ -558,6 +578,25 @@ msgstr ""
 msgid "This user group is not granted any permissions yet"
 msgstr ""
 
+msgid ""
+"This users group is bound to a group you are not allowed to administrate."
+msgstr ""
+
+msgid "This users group is bound to the following group:"
+msgstr ""
+
+msgid "This users group is not bound to any users group."
+msgstr ""
+
+msgid ""
+"This users group is the source of one other users group you are not allowed "
+"to administrate."
+msgid_plural ""
+"This users group is the source of %d other users groups you are not allowed "
+"to administrate."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Title"
 msgstr ""
 
@@ -594,10 +633,16 @@ msgstr ""
 msgid "User avatar"
 msgstr ""
 
+msgid "User group"
+msgstr ""
+
 msgid "User group permissions"
 msgstr ""
 
 msgid "Users groups"
+msgstr ""
+
+msgid "Users groups bound to this one"
 msgstr ""
 
 msgid "We cannot find any edition information for the requested widget."

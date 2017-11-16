@@ -1,0 +1,106 @@
+{{# binding }}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-link tlp-pane-title-icon"></i>{{# gettext }}Group binding{{/ gettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                {{^ current_binding }}
+                    <a href="{{ url_add_binding }}" class="tlp-button-primary" id="project-admin-ugroup-add-binding">
+                        <i class="fa fa-plus tlp-button-icon"></i>
+                        {{# gettext }}Add users group binding{{/ gettext }}
+                    </a>
+                    {{# has_ldap }}
+                        <a href="{{ url_add_ldap_binding }}"
+                           class="tlp-button-outline tlp-button-primary"
+                           id="project-admin-ugroup-add-ldap-binding"
+                        >
+                            {{ add_ldap_title }}
+                        </a>
+                    {{/ has_ldap }}
+                    <p>{{# gettext }}This users group is not bound to any users group.{{/ gettext }}</p>
+                {{/ current_binding }}
+                {{# current_binding }}
+                    {{^ ugroup_url }}
+                        <p>{{# gettext }}This users group is bound to a group you are not allowed to administrate.{{/ gettext }}.</p>
+                    {{/ ugroup_url }}
+                    {{# ugroup_url }}
+                        <p>{{# gettext }}This users group is bound to the following group:{{/ gettext }}</p>
+                        <div id="project-admin-ugroup-current-binding">
+                            <div class="tlp-property" id="project-admin-ugroup-current-binding-project">
+                                <label class="tlp-label">{{# gettext }}Project{{/ gettext }}</label>
+                                <p><a href="{{ project_url }}">{{ project_name }}</a></p>
+                            </div>
+                            <div class="tlp-property">
+                                <label class="tlp-label">{{# gettext }}User group{{/ gettext }}</label>
+                                <p><a href="{{ ugroup_url }}">{{ ugroup_name }}</a></p>
+                            </div>
+                        </div>
+                    {{/ ugroup_url }}
+                    <form action="" method="post" class="tlp-pane-section-submit">
+                        <input type="hidden" name="action" value="remove_binding" />
+                        <button type="submit" class="tlp-button-danger tlp-button-outline">
+                            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete binding{{/ gettext }}
+                        </button>
+                    </form>
+                {{/ current_binding }}
+            </section>
+            <section class="tlp-pane-section">
+                <h2 class="tlp-pane-subtitle">
+                    {{# gettext }}Users groups bound to this one{{/ gettext }}
+                </h2>
+                {{# clones }}
+                    <table class="tlp-table" id="project-admin-ugroup-binding-clones">
+                        <thead>
+                            <tr>
+                                <th>{{# gettext }}Project{{/ gettext }}</th>
+                                <th>{{# gettext }}User group{{/ gettext }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{^ has_ugroups }}
+                                <tr>
+                                    <td class="tlp-table-cell-empty" colspan="2">
+                                        {{# nb_not_visible }}
+                                            {{# ngettext }}
+                                                This users group is the source of one other users group you are not allowed to administrate. |
+                                                This users group is the source of %d other users groups you are not allowed to administrate. |
+                                                {{ nb_not_visible }}
+                                            {{/ ngettext }}
+                                        {{/ nb_not_visible }}
+                                        {{^ nb_not_visible }}
+                                            {{# gettext }}There is no users group bound to this one.{{/ gettext }}
+                                        {{/ nb_not_visible }}
+                                    </td>
+                                </tr>
+                            {{/ has_ugroups }}
+                            {{# ugroups }}
+                                <tr>
+                                    <td>
+                                        <a href="{{ project_url }}">{{ project_name }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ ugroup_url }}">{{ ugroup_name }}</a>
+                                    </td>
+                                </tr>
+                            {{/ ugroups }}
+                        </tbody>
+                    </table>
+                    {{# has_ugroups }}
+                        {{# nb_not_visible }}
+                            <p>
+                                {{# ngettext }}
+                                    And one other users group you are not allowed to administrate. |
+                                    And %d other users groups you are not allowed to administrate. |
+                                    {{ nb_not_visible }}
+                                {{/ ngettext }}
+                            </p>
+                        {{/ nb_not_visible }}
+                    {{/ has_ugroups }}
+                {{/ clones }}
+            </section>
+        </div>
+    </section>
+{{/ binding }}
