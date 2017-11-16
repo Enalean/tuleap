@@ -20,36 +20,19 @@
 import { modal as createModal, filterInlineTable } from 'tlp';
 
 document.addEventListener('DOMContentLoaded', () => {
-    initGroupsPermissionsModal();
+    initModals();
     initGroupsFilter();
-    initUserGroupModal();
-    initDeleteUserGroupModal();
 });
 
-function initGroupsPermissionsModal() {
-    const button = document.getElementById('project-admin-ugroup-show-permissions-modal');
-    if (! button) {
-        return;
-    }
+function initModals() {
+    const buttons = document.querySelectorAll(`
+        #project-admin-ugroup-show-permissions-modal,
+        #project-admin-ugroups-modal,
+        #project-admin-delete-binding,
+        .project-admin-delete-ugroups-modal
+    `);
 
-    const modal = createModal(document.getElementById(button.dataset.targetModalId));
-
-    button.addEventListener('click', () => {
-        modal.show();
-    });
-}
-
-function initGroupsFilter() {
-    const groups_filter = document.getElementById('project-admin-ugroups-list-table-filter');
-    if (groups_filter) {
-        filterInlineTable(groups_filter);
-    }
-}
-
-function initUserGroupModal() {
-    const button = document.getElementById('project-admin-ugroups-modal');
-
-    if (button) {
+    for (const button of buttons) {
         const modal = createModal(document.getElementById(button.dataset.targetModalId));
 
         button.addEventListener('click', () => {
@@ -58,17 +41,9 @@ function initUserGroupModal() {
     }
 }
 
-function initDeleteUserGroupModal() {
-    const modal_user_groups_delete_buttons = document.querySelectorAll('.project-admin-delete-ugroups-modal');
-    for (const button of modal_user_groups_delete_buttons) {
-        const modal_element = document.getElementById(button.dataset.targetModalId);
-
-        if (modal_element) {
-            const modal = tlp.modal(modal_element);
-
-            button.addEventListener('click', function () {
-                modal.toggle();
-            });
-        }
+function initGroupsFilter() {
+    const groups_filter = document.getElementById('project-admin-ugroups-list-table-filter');
+    if (groups_filter) {
+        filterInlineTable(groups_filter);
     }
 }

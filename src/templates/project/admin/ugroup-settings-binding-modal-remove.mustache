@@ -1,0 +1,32 @@
+<form method="POST"
+      action=""
+      class="tlp-modal tlp-modal-danger"
+      role="dialog"
+      id="project-admin-delete-binding-modal"
+      aria-labelledby="project-admin-delete-binding-modal-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-delete-binding-modal-title">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{# gettext }}Delete binding{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <input type="hidden" name="action" value="remove_binding" />
+        {{# gettext }}
+            You are about to delete <b>%s</b> binding. Please, confirm your action.
+            | {{ ugroup_name }}
+        {{/ gettext }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action user-group-modal-button">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete binding{{/ gettext }}
+        </button>
+    </div>
+</form>
