@@ -50,6 +50,8 @@ sed -i \
 # Update nscd config
 perl -pi -e "s%enable-cache[\t ]+group[\t ]+yes%enable-cache group no%" /etc/nscd.conf
 
+start_mysql
+
 if [ "$TULEAP_INSTALL_TIME" == "false" ]; then
     # It seems there is no way to have nscd in foreground
     /usr/sbin/nscd
@@ -61,6 +63,7 @@ fi
 # Activate backend/crontab
 /etc/init.d/tuleap start
 
+stop_mysql
 
 popd
 
