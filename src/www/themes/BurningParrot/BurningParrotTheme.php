@@ -158,6 +158,7 @@ class BurningParrotTheme extends BaseLayout
         foreach ($javascript_files as $javascript_file) {
             $this->includeFooterJavascriptFile($javascript_file);
         }
+        $this->includeFooterJavascriptSnippet($this->getFooterSiteJs());
 
         $footer = new FooterPresenter(
             $this->javascript_in_footer,

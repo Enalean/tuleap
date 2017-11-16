@@ -532,12 +532,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         </script>';
     }
 
-    protected function getFooterSiteJs() {
-        ob_start();
-        include($GLOBALS['Language']->getContent('layout/footer', null, null, '.js'));
-        return ob_get_clean();
-    }
-
     /**
      * Add a stylesheet to be include in headers
      *
