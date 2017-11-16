@@ -172,20 +172,13 @@ deploy-githooks:
 # Start development enviromnent with Docker Compose
 #
 
+dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should only be run once)
+
 .env:
 	@echo "MYSQL_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" > .env
 	@echo "LDAP_ROOT_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo "LDAP_MANAGER_PASSWORD=`env LC_CTYPE=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 32`" >> .env
 	@echo VIRTUAL_HOST=tuleap-web.tuleap-aio-dev.docker >> .env
-
-dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should only be run once)
-	@echo "Create all data containers"
-	@$(DOCKER) inspect tuleap_ldap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_ldap_data -v /data busybox true
-	@$(DOCKER) inspect tuleap_db_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_db_data -v /var/lib/mysql busybox true
-	@$(DOCKER) inspect tuleap_es_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_es_data -v /data busybox true
-	@$(DOCKER) inspect tuleap_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_data -v /data busybox true
-	@$(DOCKER) inspect tuleap_reverseproxy_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_reverseproxy_data -v /reverseproxy_data busybox true
-	@$(DOCKER) inspect tuleap_gerrit_data > /dev/null 2>&1 || $(DOCKER) run -t --name=tuleap_gerrit_data -v /home/gerrit busybox true
 
 show-passwords: ## Display passwords generated for Docker Compose environment
 	@$(DOCKER) run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
@@ -196,30 +189,28 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER) exec tuleap-web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start-dns: ## Start dnsdock to be able to reach Docker Compose environment without having to touch /etc/hosts file
-	@$(DOCKER) stop dnsdock || true
-	@$(DOCKER) rm dnsdock || true
-	@$(DOCKER) run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
-
-start-rp:
-	@echo "Start reverse proxy"
-	@$(DOCKER_COMPOSE) up -d rp
-
 start: ## Start Tuleap Web + LDAP + DB in Docker Compose environment
 	@echo "Start Tuleap Web + LDAP + DB"
+	@./tools/docker/migrate_to_volume.sh
 	@$(DOCKER_COMPOSE) up -d web
 	@echo -n "Your instance will be soon available: http://"
 	@grep VIRTUAL_HOST .env | cut -d= -f2
 	@echo "You might want to type 'make show-passwords' to see site default passwords"
+	@echo -n "tuleap-web ip address: "
+	@$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap-web
 
-start-php56: ## Start Tuleap web with php56 & nginx18 support - EXPERIMENTAL
+start-php56: ## Start Tuleap web with php56 & nginx
 	@echo "Start Tuleap in PHP 5.6"
+	@./tools/docker/migrate_to_volume.sh
 	@$(DOCKER_COMPOSE) -f docker-compose-php56.yml up -d web
+	@echo -n "tuleap-web ip address: "
+	@$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap-web
 
 start-distlp:
 	@echo "Start Tuleap with reverse-proxy, backend web and backend svn"
+	@./tools/docker/migrate_to_volume.sh
 	-@$(DOCKER_COMPOSE) stop
-	@$(SUDO) docker-compose -f docker-compose-distlp.yml up -d reverse-proxy
+	@$(DOCKER_COMPOSE) -f docker-compose-distlp.yml up -d reverse-proxy
 	@ip=`$(DOCKER) inspect -f '{{.NetworkSettings.Networks.tuleap_default.IPAddress}}' tuleap_reverse-proxy_1`; \
 		echo "Add '$$ip tuleap-web.tuleap-aio-dev.docker' to /etc/hosts"; \
 		echo "Ensure $$ip is configured as sys_trusted_proxies in /etc/tuleap/conf/local.inc"
@@ -230,9 +221,6 @@ start-distlp:
 
 stop-distlp:
 	@$(SUDO) docker-compose -f docker-compose-distlp.yml stop
-
-start-es:
-	@$(DOCKER_COMPOSE) up -d es
 
 env-gerrit: .env
 	@grep --quiet GERRIT_SERVER_NAME .env || echo 'GERRIT_SERVER_NAME=tuleap-gerrit.gerrit-tuleap.docker' >> .env
