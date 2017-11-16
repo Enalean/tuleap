@@ -221,3 +221,11 @@ msgstr ""
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "{{ reports_modal.kanban_label }} reports"
 msgstr ""
+
+#: src/app/filter/filter.tpl.html
+msgid "Filters:"
+msgstr ""
+
+#: src/app/filter/filter.tpl.html
+msgid "None"
+msgstr ""

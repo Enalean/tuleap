@@ -1,68 +1,74 @@
 <div class="kanban-header">
     <h1 class="kanban-header-title">{{ kanban.kanban.label }}</h1>
+    <div class="kanban-header-config">
+        <go-to-kanban></go-to-kanban>
 
-    <go-to-kanban></go-to-kanban>
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-edit-button"
+                ng-click="kanban.editKanban()"
+                ng-show="kanban.showEditbutton()"
+        >
+            <i class="fa fa-pencil tlp-button-icon"></i>
+            <span translate>Edit this Kanban</span>
+        </button>
+        <button type="button"
+                class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-report-button"
+                ng-click="kanban.openReportModal()"
+        >
+            <i class="fa fa-bar-chart tlp-button-icon"></i>
+            <span translate>Show reports</span>
+        </button>
 
-    <button type="button"
-        class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-edit-button"
-        ng-click="kanban.editKanban()"
-        ng-show="kanban.showEditbutton()"
-    >
-        <i class="fa fa-pencil tlp-button-icon"></i>
-        <span translate>Edit this Kanban</span>
-    </button>
-    <button type="button"
-        class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-report-button"
-        ng-click="kanban.openReportModal()"
-    >
-        <i class="fa fa-bar-chart tlp-button-icon"></i>
-        <span translate>Show reports</span>
-    </button>
+        <add-to-dashboard></add-to-dashboard>
 
-    <add-to-dashboard></add-to-dashboard>
+        <div class="kanban-header-spacer"></div>
 
-    <div class="kanban-header-spacer"></div>
-    <div class="tlp-button-bar kanban-header-edit-button">
-        <div class="tlp-button-bar-item" title="{{::'Compact view' | translate }}">
-            <input
-                type="radio"
-                id="kanban-header-compact-toggler"
-                class="tlp-button-bar-checkbox"
-                ng-change="kanban.saveCardsViewMode()"
-                ng-model="kanban.user_prefers_collapsed_cards"
-                ng-value="true"
-            >
-            <label
-                for="kanban-header-compact-toggler"
-                class="tlp-button-primary tlp-button-outline tlp-button-small"
-            >
-                <i class="fa fa-list tlp-button-icon"></i> <span translate>Compact view</span>
-            </label>
+        <filter-tracker-report></filter-tracker-report>
+
+        <div class="kanban-header-filter-edit-buttons-spacer"></div>
+
+        <div class="tlp-button-bar kanban-header-edit-button">
+            <div class="tlp-button-bar-item" title="{{::'Compact view' | translate }}">
+                <input
+                        type="radio"
+                        id="kanban-header-compact-toggler"
+                        class="tlp-button-bar-checkbox"
+                        ng-change="kanban.saveCardsViewMode()"
+                        ng-model="kanban.user_prefers_collapsed_cards"
+                        ng-value="true"
+                >
+                <label
+                        for="kanban-header-compact-toggler"
+                        class="tlp-button-primary tlp-button-outline tlp-button-small"
+                >
+                    <i class="fa fa-list tlp-button-icon"></i></span>
+                </label>
+            </div>
+            <div class="tlp-button-bar-item" title="{{::'Detailed view' | translate }}">
+                <input
+                        type="radio"
+                        id="kanban-header-detailed-toggler"
+                        class="tlp-button-bar-checkbox"
+                        ng-change="kanban.saveCardsViewMode()"
+                        ng-model="kanban.user_prefers_collapsed_cards"
+                        ng-value="false"
+                >
+                <label
+                        for="kanban-header-detailed-toggler"
+                        class="tlp-button-primary tlp-button-outline tlp-button-small"
+                >
+                    <i class="fa fa-th-list tlp-button-icon"></i></span>
+                </label>
+            </div>
         </div>
-        <div class="tlp-button-bar-item" title="{{::'Detailed view' | translate }}">
-            <input
-                type="radio"
-                id="kanban-header-detailed-toggler"
-                class="tlp-button-bar-checkbox"
-                ng-change="kanban.saveCardsViewMode()"
-                ng-model="kanban.user_prefers_collapsed_cards"
-                ng-value="false"
-            >
-            <label
-                for="kanban-header-detailed-toggler"
-                class="tlp-button-primary tlp-button-outline tlp-button-small"
-            >
-                <i class="fa fa-th-list tlp-button-icon"></i> <span translate>Detailed view</span>
-            </label>
-        </div>
+        <input type="search"
+               class="tlp-search tlp-search-small kanban-header-search"
+               placeholder="{{ 'Filter...' | translate }}"
+               ng-model="kanban.filter.terms"
+               ng-keyup="kanban.filterCards()"
+        >
+        <div class="tuleap-modal-loading" ng-if="kanban.loading_modal.loading"></div>
     </div>
-    <input type="search"
-            class="tlp-search tlp-search-small kanban-header-search"
-            placeholder="{{ 'Filter...' | translate }}"
-            ng-model="kanban.filter.terms"
-            ng-keyup="kanban.filterCards()"
-    >
-    <div class="tuleap-modal-loading" ng-if="kanban.loading_modal.loading"></div>
     <socket-disconnect></socket-disconnect>
 </div>
 

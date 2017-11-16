@@ -1,0 +1,12 @@
+.kanban-header-filter {
+    display: flex;
+    align-items: center;
+
+    > :first-child {
+        margin: 0 5px 0 0;
+    }
+}
+
+.kanban-header-filter-label {
+    white-space: nowrap;
+}

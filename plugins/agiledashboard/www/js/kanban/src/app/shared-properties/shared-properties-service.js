@@ -13,6 +13,7 @@ function SharedPropertiesService() {
         nodejs_server_version: undefined,
         uuid                 : undefined,
         dashboard_dropdown   : undefined,
+        filters              : undefined,
         widget_id            : 0,
         kanban_url           : ''
     };
@@ -38,6 +39,8 @@ function SharedPropertiesService() {
         getNodeServerVersion        : getNodeServerVersion,
         setDashboardDropdown        : setDashboardDropdown,
         getDashboardDropdown        : getDashboardDropdown,
+        setFilters                  : setFilters,
+        getFilters                  : getFilters,
         getUserIsOnWidget           : getUserIsOnWidget,
         setWidgetId                 : setWidgetId,
         getWidgetId                 : getWidgetId,
@@ -123,6 +126,14 @@ function SharedPropertiesService() {
 
     function getDashboardDropdown() {
         return property.dashboard_dropdown;
+    }
+
+    function setFilters(filters) {
+        property.filters = filters;
+    }
+
+    function getFilters() {
+        return property.filters;
     }
 
     function getUserIsOnWidget() {

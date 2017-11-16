@@ -55,6 +55,11 @@ class KanbanPresenter {
     /** @var int */
     public $widget_id;
 
+    /**
+     * @var array
+     */
+    public $filters;
+
     public function __construct(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
@@ -89,11 +94,13 @@ class KanbanPresenter {
             ),
             new ProjectDashboardRetriever(new ProjectDashboardDao($widget_dao))
         );
-        $project_manager = ProjectManager::instance();
+        $project_manager        = ProjectManager::instance();
+        $tracker_report_factory = Tracker_ReportFactory::instance();
 
         $this->widget_id                         = $dashboard_widget_id;
         $this->kanban_representation             = json_encode($kanban_representation_builder->build($kanban, $user));
         $this->dashboard_dropdown_representation = json_encode($widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)));
+        $this->filters                           = json_encode($tracker_report_factory->getReportsByTrackerId($kanban->getTrackerId(), $user->getId()));
         $this->user_is_kanban_admin              = (int) $user_is_kanban_admin;
         $this->language                          = $language;
         $this->project_id                        = $project_id;

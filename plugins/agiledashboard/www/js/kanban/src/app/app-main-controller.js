@@ -20,6 +20,7 @@ function MainCtrl(
     function init(
         kanban,
         dashboard_dropdown,
+        filters,
         user_id,
         user_is_admin,
         widget_id,
@@ -32,6 +33,7 @@ function MainCtrl(
         SharedPropertiesService.setUserId(user_id);
         SharedPropertiesService.setKanban(kanban);
         SharedPropertiesService.setDashboardDropdown(dashboard_dropdown);
+        SharedPropertiesService.setFilters(filters);
         SharedPropertiesService.setUserIsAdmin(user_is_admin);
         SharedPropertiesService.setWidgetId(widget_id);
         SharedPropertiesService.setProjectId(project_id);
