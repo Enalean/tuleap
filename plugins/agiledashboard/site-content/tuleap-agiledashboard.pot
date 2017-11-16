@@ -11,8 +11,27 @@ msgid "Add to project dashboard"
 msgstr ""
 
 msgid ""
+"An artifact could be considered <strong>done</strong> only if a semantic "
+"status is defined."
+msgstr ""
+
+msgid ""
+"An artifact will be considered <strong>done</strong> when at least one of "
+"the status closed values will be selected."
+msgstr ""
+
+msgid "Define the closed status that are considered Done"
+msgstr ""
+
+msgid ""
 "Displays a board to see the tasks to do, in progress, done etc. Please go on "
 "a kanban to add it."
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Go back to semantic overview"
 msgstr ""
 
 msgid "Planning succesfully created."
@@ -21,5 +40,16 @@ msgstr ""
 msgid "Planning succesfully updated."
 msgstr ""
 
+msgid "The selected values will defined the artifact as done:"
+msgstr ""
+
+msgid ""
+"The semantic done cannot be defined because the semantic status is not "
+"defined."
+msgstr ""
+
 msgid "There is no content <br> you can see"
+msgstr ""
+
+msgid "Tracker semantic done"
 msgstr ""

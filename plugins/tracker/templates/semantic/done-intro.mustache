@@ -1,9 +1,0 @@
-<p>
-    {{# semantic_status_is_defined }}
-        {{# dgettext }}tuleap-tracker | An artifact will be considered <strong>done</strong> when at least one of the status closed values will be selected.{{/ dgettext }}
-    {{/ semantic_status_is_defined }}
-
-    {{^ semantic_status_is_defined }}
-        {{# dgettext }}tuleap-tracker | An artifact could be considered <strong>done</strong> only if a semantic status is defined.{{/ dgettext }}
-    {{/ semantic_status_is_defined }}
-</p>

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Semantic;
+namespace Tuleap\AgileDashboard\Semantic;
 
 use Tracker_FormElement_Field;
 

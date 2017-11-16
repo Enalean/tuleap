@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\AgileDashboard\Widget\MyKanban;
 use Tuleap\AgileDashboard\Widget\ProjectKanban;
@@ -648,6 +649,9 @@ class AgileDashboardPlugin extends Plugin {
 
         $effort_semantic = AgileDashBoard_Semantic_InitialEffort::load($tracker);
         $semantics->add($effort_semantic->getShortName(), $effort_semantic);
+
+        $done_semantic = SemanticDone::load($tracker);
+        $semantics->add($done_semantic->getShortName(), $done_semantic);
     }
 
     /**

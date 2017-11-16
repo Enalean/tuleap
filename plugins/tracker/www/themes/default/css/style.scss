@@ -3389,12 +3389,12 @@ td.tracker-global-notifications-checkbox-cell {
     }
 }
 
-#tracker-semantic-done-disabled {
+#tracker-semantic-disabled {
     $muted-text-color: #676767;
     text-align: center;
     margin: 25vmin 0 0;
 
-    > .tracker-semantic-done-content {
+    > .tracker-semantic-content {
         width: 550px;
         margin: 0 auto 30px;
         font-family: SourceSansPro, "Helvetica Neue", Arial, sans-serif;
@@ -3403,7 +3403,7 @@ td.tracker-global-notifications-checkbox-cell {
         font-weight: 300;
         color: #2F2F2F;
 
-        &.tracker-semantic-done-description {
+        &.tracker-semantic-description {
             font-size: 18px;
             color: $muted-text-color;
             line-height: 30px;
