@@ -1,0 +1,49 @@
+<form method="POST"
+      action=""
+      class="tlp-modal"
+      role="dialog"
+      id="project-admin-ugroup-add-binding-modal"
+      aria-labelledby="project-admin-ugroup-add-binding-modal-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-ugroup-add-binding-modal-title">
+            <i class="fa fa-plus tlp-modal-title-icon"></i>
+            {{# gettext }}Add users group binding{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# add_binding }}
+            <input type="hidden" name="action" value="add_binding">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="project-admin-ugroup-add-binding-project">
+                    {{# gettext }}Project{{/ gettext }} <i class="fa fa-asterisk"></i>
+                </label>
+                <select class="tlp-select" id="project-admin-ugroup-add-binding-project" name="source_project" required>
+                    <option value=""></option>
+                    {{# projects }}
+                        <option value="{{ id }}" data-ugroups="{{ json_encoded_ugroups }}">{{ name }}</option>
+                    {{/projects}}
+                </select>
+            </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="project-admin-ugroup-add-binding-ugroup">
+                    {{# gettext }}Users group{{/ gettext }} <i class="fa fa-asterisk"></i>
+                </label>
+                <select class="tlp-select" id="project-admin-ugroup-add-binding-ugroup" name="source_ugroup" required>
+                    <option value=""></option>
+                </select>
+            </div>
+        {{/ add_binding }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-primary tlp-modal-action user-group-modal-button">
+            <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Add binding{{/ gettext }}
+        </button>
+    </div>
+</form>

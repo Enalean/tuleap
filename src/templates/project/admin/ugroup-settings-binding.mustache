@@ -8,10 +8,14 @@
             </div>
             <section class="tlp-pane-section">
                 {{^ current_binding }}
-                    <a href="{{ url_add_binding }}" class="tlp-button-primary" id="project-admin-ugroup-add-binding">
+                    <button type="button"
+                            class="tlp-button-primary"
+                            id="project-admin-ugroup-add-binding"
+                            data-target-modal-id="project-admin-ugroup-add-binding-modal"
+                    >
                         <i class="fa fa-plus tlp-button-icon"></i>
                         {{# gettext }}Add users group binding{{/ gettext }}
-                    </a>
+                    </button>
                     {{# has_ldap }}
                         <a href="{{ url_add_ldap_binding }}"
                            class="tlp-button-outline tlp-button-primary"
@@ -20,6 +24,7 @@
                             {{ add_ldap_title }}
                         </a>
                     {{/ has_ldap }}
+                    {{> ugroup-settings-binding-modal-add }}
                     <p>{{# gettext }}This users group is not bound to any users group.{{/ gettext }}</p>
                 {{/ current_binding }}
                 {{# current_binding }}
@@ -60,7 +65,7 @@
                         <thead>
                             <tr>
                                 <th>{{# gettext }}Project{{/ gettext }}</th>
-                                <th>{{# gettext }}User group{{/ gettext }}</th>
+                                <th>{{# gettext }}Users group{{/ gettext }}</th>
                             </tr>
                         </thead>
                         <tbody>

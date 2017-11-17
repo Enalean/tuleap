@@ -116,6 +116,28 @@ class Project_Admin_UGroup_UGroupController {
         $this->redirect();
     }
 
+    public function add_binding()
+    {
+        $history_dao       = new ProjectHistoryDao();
+        $project_source_id = $this->request->getValidated('source_project', 'GroupId');
+        $ugroup_source_id  = $this->request->get('source_ugroup');
+        $is_valid          = $this->ugroup_manager->checkUGroupValidityByGroupId($project_source_id, $ugroup_source_id);
+        $project           = ProjectManager::instance()->getProject($project_source_id);
+        if ($is_valid && $project->userIsAdmin()) {
+            if ($this->ugroup_binding->addBinding($this->ugroup->getId(), $ugroup_source_id)) {
+                $history_dao->groupAddHistory(
+                    "ugroup_add_binding",
+                    $this->ugroup->getId().":".$ugroup_source_id,
+                    $this->ugroup->getProjectId()
+                );
+                $this->launchEditBindingUgroupEvent();
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+        }
+        $this->redirect();
+    }
+
     private function launchEditBindingUgroupEvent() {
         $event_manager = EventManager::instance();
         $event_manager->processEvent('project_admin_ugroup_bind_modified',
