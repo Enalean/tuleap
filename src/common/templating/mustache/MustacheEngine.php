@@ -20,6 +20,8 @@
 
 namespace Tuleap\Templating\Mustache;
 
+use EventManager;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Templating\TemplateCache;
 
 class MustacheEngine extends \Mustache_Engine
@@ -27,6 +29,7 @@ class MustacheEngine extends \Mustache_Engine
     public function __construct(\Mustache_Loader $loader, TemplateCache $cache, $escape_callback = null)
     {
         $gettext_helper = new GettextHelper(new GettextSectionContentTransformer());
+        $glyph_helper   = new GlyphHelper(new GlyphFinder(EventManager::instance()));
 
         parent::__construct(
             array(
@@ -48,6 +51,9 @@ class MustacheEngine extends \Mustache_Engine
                     },
                     GettextHelper::DNGETTEXT => function ($text, \Mustache_LambdaHelper $helper) use ($gettext_helper) {
                         return $gettext_helper->dngettext($text, $helper);
+                    },
+                    GlyphHelper::GLYPH => function ($text) use ($glyph_helper) {
+                        return $glyph_helper->glyph($text);
                     },
                 )
             )
