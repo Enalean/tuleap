@@ -30,6 +30,7 @@ use Tracker_Semantic;
 use Tracker_Semantic_Status;
 use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 
 class SemanticDone extends Tracker_Semantic
 {
@@ -40,11 +41,20 @@ class SemanticDone extends Tracker_Semantic
      */
     private $semantic_status;
 
-    public function __construct(Tracker $tracker, Tracker_Semantic_Status $semantic_status)
-    {
+    /**
+     * @var SemanticDoneDao
+     */
+    private $dao;
+
+    public function __construct(
+        Tracker $tracker,
+        Tracker_Semantic_Status $semantic_status,
+        SemanticDoneDao $dao
+    ) {
         parent::__construct($tracker);
 
         $this->semantic_status = $semantic_status;
+        $this->dao             = $dao;
     }
 
     /**
@@ -85,7 +95,15 @@ class SemanticDone extends Tracker_Semantic
     public function display()
     {
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/semantic');
-        $presenter = new SemanticDoneIntroPresenter($this->semantic_status->getField());
+
+        $semantic_status_field = $this->semantic_status->getField();
+        $selected_values         = array();
+
+        if ($semantic_status_field) {
+            $selected_values = $this->getSelectedValues($semantic_status_field);
+        }
+
+        $presenter = new SemanticDoneIntroPresenter($selected_values, $semantic_status_field);
 
         $renderer->renderToPage('done-intro', $presenter);
     }
@@ -108,7 +126,7 @@ class SemanticDone extends Tracker_Semantic
         $closed_values         = array();
 
         if ($semantic_status_field) {
-            $closed_values = $this->getClosedValues($semantic_status_field);
+            $closed_values = $this->getFormattedClosedValues($semantic_status_field);
         }
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/semantic');
@@ -126,6 +144,47 @@ class SemanticDone extends Tracker_Semantic
     /**
      * @return array
      */
+    private function getSelectedValues(Tracker_FormElement_Field $semantic_status_field)
+    {
+        $selected_values = array();
+        $closed_values   = $this->getClosedValues($semantic_status_field);
+
+        foreach ($this->dao->getSelectedValues($this->tracker->getId()) as $selected_value_row) {
+            $value_id = $selected_value_row['value_id'];
+
+            if (! array_key_exists($value_id, $closed_values)) {
+                continue;
+            }
+
+            $value = $closed_values[$value_id];
+
+            $selected_values[] = array(
+                'label' => $value->getLabel()
+            );
+        }
+
+        return $selected_values;
+    }
+
+    /**
+     * @return array
+     */
+    private function getFormattedClosedValues(Tracker_FormElement_Field $semantic_status_field)
+    {
+        $formated_closed_values = array();
+
+        foreach ($this->getClosedValues($semantic_status_field) as $value) {
+            $formated_closed_values[] = array(
+                'label' => $value->getLabel()
+            );
+        }
+
+        return $formated_closed_values;
+    }
+
+    /**
+     * @return array
+     */
     private function getClosedValues(Tracker_FormElement_Field $semantic_status_field)
     {
         $all_values    = $semantic_status_field->getAllValues();
@@ -137,9 +196,7 @@ class SemanticDone extends Tracker_Semantic
                 continue;
             }
 
-            $closed_values[] = array(
-                'label' => $value->getLabel()
-            );
+            $closed_values[$value_id] = $value;
         }
 
         return $closed_values;
@@ -215,7 +272,9 @@ class SemanticDone extends Tracker_Semantic
     private static function forceLoad(Tracker $tracker)
     {
         $semantic_status = Tracker_Semantic_Status::load($tracker);
-        self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status);
+        $dao             = new SemanticDoneDao();
+
+        self::$_instances[$tracker->getId()] = new SemanticDone($tracker, $semantic_status, $dao);
 
         return self::$_instances[$tracker->getId()];
     }

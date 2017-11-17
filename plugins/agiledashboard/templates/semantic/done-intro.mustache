@@ -1,11 +1,21 @@
+<p>{{# dgettext }}tuleap-agiledashboard | This semantic will be used in the <strong>AgileDashboard</strong> service.{{/ dgettext }}</p>
 <p>
     {{# semantic_status_is_defined }}
-        {{# dgettext }}tuleap-agiledashboard | An artifact will be considered <strong>done</strong> when at least one of the status closed values will be selected.{{/ dgettext }}
+        {{^ has_selected_values }}
+            {{# dgettext }}tuleap-agiledashboard | Artifacts cannot be considered <strong>done</strong> because there is no value selected for this semantic.{{/ dgettext }}
+        {{/ has_selected_values }}
+
+        {{# has_selected_values }}
+            {{# dgettext }}tuleap-agiledashboard | An artifact is considered <strong>done</strong> when it has one of the following closed values: {{/ dgettext }}
+            <ul>
+                {{# selected_values }}
+                    <li class="tracker-semantic-selected-value">{{ label }}</li>
+                {{/ selected_values }}
+            </ul>
+        {{/ has_selected_values }}
     {{/ semantic_status_is_defined }}
 
     {{^ semantic_status_is_defined }}
         {{# dgettext }}tuleap-agiledashboard | An artifact could be considered <strong>done</strong> only if a semantic status is defined.{{/ dgettext }}
     {{/ semantic_status_is_defined }}
-
-    {{# dgettext }}tuleap-agiledashboard | This semantic will be used in the <strong>AgileDashboard</strong> service.{{/ dgettext }}
 </p>

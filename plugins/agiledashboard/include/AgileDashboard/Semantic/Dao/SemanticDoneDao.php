@@ -2,6 +2,10 @@
 /**
  * Copyright Enalean (c) 2017. All rights reserved.
  *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -18,31 +22,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\Semantic;
+namespace Tuleap\AgileDashboard\Semantic\Dao;
 
-use Tracker_FormElement_Field;
+use DataAccessObject;
 
-class SemanticDoneIntroPresenter
+class SemanticDoneDao extends DataAccessObject
 {
-    /**
-     * @var bool
-     */
-    public $semantic_status_is_defined;
 
-    /**
-     * @var array
-     */
-    public $selected_values;
-
-    /**
-     * @var boolean
-     */
-    public $has_selected_values;
-
-    public function __construct(array $selected_values, Tracker_FormElement_Field $semantic_status_field = null)
+    public function getSelectedValues($tracker_id)
     {
-        $this->semantic_status_is_defined = (boolean) ($semantic_status_field !== null);
-        $this->selected_values            = $selected_values;
-        $this->has_selected_values        = count($selected_values) > 0;
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT value_id
+                FROM plugin_agiledashboard_semantic_done
+                WHERE tracker_id = $tracker_id";
+
+        return $this->retrieve($sql);
     }
 }
