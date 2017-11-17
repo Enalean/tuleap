@@ -148,6 +148,110 @@ class Project_Admin_UGroup_UGroupController {
         );
     }
 
+    public function edit_ugroup_members() {
+        $ugroupUpdateUsersAllowed = !$this->ugroup->isBound();
+        $groupId  = $this->ugroup->getProjectId();
+        $ugroupId = $this->ugroup->getId();
+        $validRequest = $this->validateRequest($groupId, $this->request);
+
+        $url_additional_params = array(
+            'offset'          => (int)$validRequest['offset'],
+            'number_per_page' => (int)$validRequest['number_per_page'],
+            'search'          => urlencode($validRequest['search']),
+            'begin'           => urlencode($validRequest['begin']),
+            'in_project'      => (int)$validRequest['in_project'],
+            'pane'            => $validRequest['pane']
+        );
+
+        if ($ugroupUpdateUsersAllowed) {
+            $user = $validRequest['user'];
+            if ($user && is_array($user)) {
+                $this->editMembershipByUserId($groupId, $ugroupId, $user);
+            }
+            $add_user_name = $validRequest['add_user_name'];
+            if ($add_user_name) {
+                $this->addUserByName($groupId, $ugroupId, $add_user_name);
+            }
+        }
+        $this->redirect($url_additional_params);
+    }
+
+    /**
+     * Add a user by his name to an ugroup
+     *
+     * @param int $groupId
+     * @param int $ugroupId
+     * @param String $add_user_name
+     */
+    private function addUserByName($groupId, $ugroupId, $add_user_name) {
+        $user = UserManager::instance()->findUser($add_user_name);
+        if ($user) {
+            ugroup_add_user_to_ugroup($groupId, $ugroupId, $user->getId());
+        } else {
+            //user doesn't exist
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
+        }
+    }
+
+    /**
+     * Add or remove user from an ugroup
+     *
+     * @param int $groupId
+     * @param int $ugroupId
+     * @param array $user
+     */
+    private function editMembershipByUserId($groupId, $ugroupId, array $user) {
+        list($userId, $action) = each($user);
+        $userId = (int)$userId;
+        if ($userId) {
+            switch($action) {
+                case 'add':
+                    ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
+                    break;
+                case 'remove':
+                    ugroup_remove_user_from_ugroup($groupId, $ugroupId, $userId);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Validate the HTTP request for the user members pane
+     *
+     * @param Integer     $groupId Id of the project
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Array
+     */
+    private function validateRequest($groupId, $request) {
+        $userDao            = new UserDao();
+        $res                = $userDao->firstUsernamesLetters();
+        $allowedBeginValues = array();
+        foreach ($res as $data) {
+            $allowedBeginValues[] = $data['capital'];
+        }
+        $result['allowed_begin_values'] = $allowedBeginValues;
+
+        $validBegin = new Valid_WhiteList('begin', $allowedBeginValues);
+        $validBegin->required();
+
+        $validInProject = new Valid_UInt('in_project');
+        $validInProject->required();
+
+        $result['offset']          = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
+        $result['number_per_page'] = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
+        $result['search']          = $request->getValidated('search', 'string', '');
+        $result['begin']           = $request->getValidated('begin', $validBegin, '');
+        $result['in_project']      = $request->getValidated('in_project', $validInProject, $groupId);
+        $result['user']            = $request->get('user');
+        $result['add_user_name']   = $request->get('add_user_name');
+        $result['pane']            = $request->get('pane');
+
+        return $result;
+    }
+
     /**
      *
      * @param array $additional_params must be http_build_query friendly :
@@ -158,8 +262,7 @@ class Project_Admin_UGroup_UGroupController {
         if (! empty($additional_params)) {
             $url = $url . '&' . http_build_query($additional_params);
         }
+
         return $GLOBALS['Response']->redirect($url);
     }
 }
-
-?>
