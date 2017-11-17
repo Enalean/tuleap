@@ -52,6 +52,10 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
      * @var ProjectManager
      */
     protected $project_manager;
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
 
     public function __construct(
         ProjectUGroup $ugroup,
@@ -69,11 +73,13 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         $this->event_manager       = EventManager::instance();
         $this->html_purifier       = Codendi_HTMLPurifier::instance();
         $this->release_factory     = new FRSReleaseFactory();
+        $this->user_helper         = new UserHelper();
     }
 
     public function getContent() {
         $permissions = $this->getFormattedPermissions();
         $binding     = $this->getBinding();
+        $members     = $this->getMembers();
 
         return TemplateRendererFactory::build()
             ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/')
@@ -87,6 +93,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
                     'has_permissions' => count($permissions) > 0,
                     'permissions'     => $permissions,
                     'binding'         => $binding,
+                    'members'         => $members
                 )
             );
     }
@@ -302,5 +309,34 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
             'ugroup_url'   => '',
             'ugroup_name'  => '',
         );
+    }
+
+    private function getMembers()
+    {
+        $members = $this->getFormattedProjectMembers();
+
+        return array(
+            'has_members'    => count($members) > 0,
+            'members'        => $members
+        );
+    }
+
+    private function getFormattedProjectMembers()
+    {
+        $ugroup_members = array();
+
+        foreach ($this->ugroup->getMembers() as $key => $member) {
+            $ugroup_members[$key]['profile_page_url'] = "/users/" . urlencode($member->getUserName()) . "/";
+
+            $ugroup_members[$key]['username_display'] = $this->user_helper->getDisplayName(
+                $member->getUserName(),
+                $member->getRealName()
+            );
+
+            $ugroup_members[$key]['has_avatar'] = $member->hasAvatar();
+            $ugroup_members[$key]['user_name']  = $member->getUserName();
+        }
+
+        return $ugroup_members;
     }
 }
