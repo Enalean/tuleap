@@ -7,6 +7,26 @@
                 </h1>
             </div>
             <section class="tlp-pane-section">
+                {{# can_be_updated }}
+                    <form action="?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&perform=addUser"
+                          method="post"
+                          class="project-admin-members-form"
+                    >
+                        <div class="tlp-form-element tlp-form-element-append">
+                            <select
+                                    name="add_user_name"
+                                    id="project-admin-members-add-user-select"
+                                    class="tlp-select tlp-select-adjusted"
+                                    size="50"
+                                    data-placeholder="{{# gettext }}User name{{/ gettext }}"
+                            ></select>
+                            <button class="tlp-append tlp-button-primary">
+                                <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Add member{{/ gettext }}
+                            </button>
+                        </div>
+                        <input type="hidden" name="action" value="edit_ugroup_members">
+                    </form>
+                {{/ can_be_updated }}
                 <table class="tlp-table">
                     <thead>
                     <tr>
