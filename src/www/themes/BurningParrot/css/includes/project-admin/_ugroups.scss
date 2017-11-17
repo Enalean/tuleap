@@ -33,6 +33,20 @@
     margin: 0 $tlp-double-spacing 0 0;
 }
 
+.project-admin-ugroup-binding-project-info {
+    > .tuleap-svg-project-small {
+        margin: 0 3px 0 0;
+        fill: $tlp-ui-dimmed;
+    }
+}
+
+.project-admin-ugroup-binding-project-info-header {
+    > .tuleap-svg-project-small {
+        margin: 0 3px 0 0;
+        fill: $tlp-theme-color;
+    }
+}
+
 #project-admin-ugroup-binding-clones {
     margin: 0 0 $tlp-spacing;
 }
@@ -59,11 +73,11 @@
     }
 
     .project-admin-user-groups-details {
-        margin: 0;
         order: 2;
+        margin: 0;
     }
 }
 
 .projectadmin-userlist-result-name-avatar {
-    margin: 0 ($tlp-spacing / 2) 0 0;
+    margin: 0 $tlp-half-spacing 0 0;
 }

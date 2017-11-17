@@ -20,23 +20,24 @@
 
 namespace Tuleap\Templating\Mustache;
 
-class MustacheEngineTest extends \TuleapTestCase
-{
-    public function itContainsGettextHelpersToDoI18nDirectlyInTemplates()
-    {
-        $engine = new MustacheEngine(
-            mock('Mustache_Loader'),
-            mock('Tuleap\Templating\TemplateCache')
-        );
+use Tuleap\Glyph\GlyphFinder;
 
-        try {
-            $engine->getHelper('gettext');
-            $engine->getHelper('ngettext');
-            $engine->getHelper('dgettext');
-            $engine->getHelper('dngettext');
-            $engine->getHelper('glyph');
-        } catch (\Mustache_Exception_UnknownHelperException $exception) {
-            $this->fail($exception->getMessage());
-        }
+class GlyphHelper
+{
+    const GLYPH = 'glyph';
+
+    /**
+     * @var GlyphFinder
+     */
+    private $finder;
+
+    public function __construct(GlyphFinder $finder)
+    {
+        $this->finder = $finder;
+    }
+
+    public function glyph($text)
+    {
+        return $this->finder->get(trim($text))->getInlineString();
     }
 }

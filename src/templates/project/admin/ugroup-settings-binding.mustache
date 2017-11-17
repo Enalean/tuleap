@@ -35,7 +35,10 @@
                         <p>{{# gettext }}This users group is bound to the following group:{{/ gettext }}</p>
                         <div id="project-admin-ugroup-current-binding">
                             <div class="tlp-property" id="project-admin-ugroup-current-binding-project">
-                                <label class="tlp-label">{{# gettext }}Project{{/ gettext }}</label>
+                                <label class="tlp-label project-admin-ugroup-binding-project-info">
+                                    {{# glyph }}project-small{{/glyph}}
+                                    {{# gettext }}Project{{/ gettext }}
+                                </label>
                                 <p><a href="{{ project_url }}">{{ project_name }}</a></p>
                             </div>
                             <div class="tlp-property">
@@ -64,7 +67,10 @@
                     <table class="tlp-table" id="project-admin-ugroup-binding-clones">
                         <thead>
                             <tr>
-                                <th>{{# gettext }}Project{{/ gettext }}</th>
+                                <th class="project-admin-ugroup-binding-project-info-header">
+                                    {{# glyph }}project-small{{/glyph}}
+                                    {{# gettext }}Project{{/ gettext }}
+                                </th>
                                 <th>{{# gettext }}Users group{{/ gettext }}</th>
                             </tr>
                         </thead>
