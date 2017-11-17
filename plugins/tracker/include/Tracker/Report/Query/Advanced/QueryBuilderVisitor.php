@@ -55,6 +55,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVis
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitorParameter;
+use Tuleap\Tracker\Report\Query\FromWhere;
 
 class QueryBuilderVisitor implements Visitor
 {

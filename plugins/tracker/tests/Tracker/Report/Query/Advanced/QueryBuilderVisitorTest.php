@@ -48,6 +48,7 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVis
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
+use Tuleap\Tracker\Report\Query\FromWhere;
 use TuleapTestCase;
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
