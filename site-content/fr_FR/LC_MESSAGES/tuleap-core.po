@@ -445,6 +445,13 @@ msgstr ""
 "Veuillez éviter les espaces et les signes de ponctuation dans les noms de "
 "groupe."
 
+msgid ""
+"Please make sure the users who will be imported are already registered and "
+"have an active account."
+msgstr ""
+"Veuillez vous assurer que les utilisateurs qui seront importés sont déjà "
+"enregistrés et possèdent un compte actif."
+
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
 
@@ -716,6 +723,9 @@ msgstr "Mettre à jour le label"
 msgid "Update successful"
 msgstr "Mis à jour avec succès"
 
+msgid "Upload text file"
+msgstr "Téléverser un fichier texte"
+
 msgid "User Permissions"
 msgstr "Permissions utilisateurs"
 
@@ -819,6 +829,14 @@ msgstr ""
 "Vous êtes sur le point de supprimer <b>%s</b> de <b>%s</b>. Merci de "
 "confirmer votre action."
 
+msgid "You can import users into your project by specifying a text file."
+msgstr ""
+"Vous pouvez importer des utilisateurs dans votre projet en spécifiant un "
+"fichier texte."
+
+msgid "You can include empty lines in the import file."
+msgstr "Vous pouvez inclure des lignes vides dans le fichier d'import."
+
 msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."
 
@@ -851,6 +869,13 @@ msgstr ""
 msgid "You must be a project admin to edit this widget."
 msgstr ""
 "Vous devez être administrateur du projet pour pouvoir éditer ce widget."
+
+msgid ""
+"You need to provide a simple file, containing in each line the email address "
+"or the username of the user."
+msgstr ""
+"Vous devez fournir un fichier simple, contenant pour chaque ligne l'adresse "
+"email ou le nom de l'utilisateur à importer."
 
 msgid ""
 "You're about to remove <b>{{ username_display }}</b> from this project. "

@@ -25,6 +25,14 @@
     width: 250px;
 }
 
-#import-members-link {
-    margin-left: $tlp-spacing;
+#project-admin-members-modal-import-users-button {
+    margin-left: $tlp-double-spacing;
+}
+
+.project-admin-members-import-members-title {
+    margin: 0 0 $tlp-double-spacing;
+}
+
+#project-admin-members-input-file-helper {
+    line-height: 24px;
 }
