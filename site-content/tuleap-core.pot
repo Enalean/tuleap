@@ -329,6 +329,9 @@ msgstr ""
 msgid "Member name, id"
 msgstr ""
 
+msgid "Member removal"
+msgstr ""
+
 msgid "Members"
 msgstr ""
 
@@ -471,6 +474,9 @@ msgid "RSS"
 msgstr ""
 
 msgid "Recently"
+msgstr ""
+
+msgid "Remove"
 msgstr ""
 
 msgid "Remove from project"
@@ -755,6 +761,11 @@ msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
 
 msgid "You must be a project admin to edit this widget."
+msgstr ""
+
+msgid ""
+"You're about to remove <b>{{ username_display }}</b> from this project. "
+"Please confirm your action."
 msgstr ""
 
 msgid "Your history is empty"

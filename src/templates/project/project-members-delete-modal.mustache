@@ -1,0 +1,37 @@
+<div id="project-admin-members-remove-{{ user_id }}"
+     class="tlp-modal tlp-modal-danger"
+     role="dialog"
+     aria-labelledby="project-admin-members-confirm-member-removal-modal-label-{{ user_id }}"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-members-confirm-member-removal-modal-label-{{ user_id }}">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{# gettext }}Member removal{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">×</div>
+    </div>
+    <div class="tlp-modal-body">
+        <form
+                action="?group_id={{ project_id }}"
+                method="post"
+        >
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+
+            {{# gettext }}You're about to remove <b>{{ username_display }}</b> from this project. Please confirm your action.{{/ gettext }}
+
+            <input type="hidden" name="action" value="remove-user">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+        </form>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" form="remove-{{ user_id }}" class="tlp-button-danger tlp-modal-action">
+            <i class="fa fa-trash-o tlp-button-icon"></i>
+            {{# gettext }}Remove{{/ gettext }}
+        </button>
+    </div>
+</div>
