@@ -101,26 +101,14 @@ project_admin_editservice	conf_inherited_yes	Yes
 #-----------------------------------------------
 # Script: SF/www/project/admin/editugroup.php
 #
-project_admin_editugroup	name	Name
-project_admin_editugroup	avoid_special_ch	Please avoid space and punctuation in user group names
 project_admin_editugroup	desc	Description
-project_admin_editugroup	create_ug_for	Creating new user group for <B>$1</B>
 project_admin_editugroup	proj_members	Project Members
-project_admin_editugroup	proj_admins	Project Admins
 project_admin_editugroup	ug_id_missed	The ugroup ID is missing
 project_admin_editugroup	ug_not_found	ERROR - Can not find ugroup:$1 - $2
 project_admin_editugroup	edit_ug	Edit User Group
 project_admin_editugroup	ug_admin	User Group '<B>$1</B>' - Administration
-project_admin_editugroup	select_ug_members	Please select user group members:
-project_admin_editugroup	quick_filters	Quick Filters:
 project_admin_editugroup	show_items	Show items starting with $1
-project_admin_editugroup	sel01	Selection 01 - please ignore
-project_admin_editugroup	please_wait	Please wait...
 project_admin_editugroup	filter	Filter:
-project_admin_editugroup	ug_perms	This user group is granted the following permissions:
-project_admin_editugroup	no_perms	This user group is not granted any permissions yet
-project_admin_editugroup	permission	Permission
-project_admin_editugroup	resource_name	Resource Name
 project_admin_editugroup	release	Release
 project_admin_editugroup	from_package	from package
 project_admin_editugroup	package	Package
@@ -130,23 +118,7 @@ project_admin_editugroup	wiki	Wiki
 project_admin_editugroup	wiki_page	Wiki Page
 project_admin_editugroup	tracker	Tracker
 project_admin_editugroup	tracker_field	Fields from tracker
-project_admin_editugroup	group_members	Group Members
-project_admin_editugroup	nobody_yet	Nobody yet
-project_admin_editugroup	go_back	Go back to the user groups list
-project_admin_editugroup	add_user	Add users to this group
-project_admin_editugroup	members	Members
-project_admin_editugroup	users	Users
-project_admin_editugroup	search_in	Or search in
-project_admin_editugroup	any_project	any project
-project_admin_editugroup	this_project	this project
-project_admin_editugroup	name_contains	 users whose name or email contains
-project_admin_editugroup	begins	or begins with
-project_admin_editugroup	show	Show
-project_admin_editugroup	users_per_page	users per page.
-project_admin_editugroup	add_users_to	Add users to
 project_admin_editugroup	group_empty	The group is empty
-project_admin_editugroup	permissions_title	Permissions
-project_admin_editugroup	settings_title	General settings
 project_admin_editugroup	binding_title	Groups binding
 #
 #-----------------------------------------------
@@ -351,7 +323,7 @@ project_admin_utils	tracker_import	Tracker Import
 project_admin_utils	access_logs	Access Logs
 project_admin_utils	g_change_history	Project Change History
 project_admin_utils	event	Event
-project_admin_utils	event_placeholder	Choose an event…
+project_admin_utils	event_placeholder	Choose an event?
 project_admin_utils	val	Value
 project_admin_utils	date	Date
 project_admin_utils	access	Change Access
@@ -963,7 +935,7 @@ project_ugroup_binding	clone_error	Unable to clone ugroup $1
 project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
 project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
 project_ugroup_binding	ldap_group_empty	LDAP group name cannot be empty.
-project_ugroup_user	add_username	Type username
+
 
 project_admin	generic_member_settings	Generic User Settings
 project_admin	generic_member_updated	Generic user settings updated

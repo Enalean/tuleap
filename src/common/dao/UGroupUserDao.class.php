@@ -22,13 +22,13 @@ require_once('include/DataAccessObject.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 /**
- *  Data Access Object for ProjectUGroup 
+ *  Data Access Object for ProjectUGroup
  */
 class UGroupUserDao extends DataAccessObject {
 
     /**
-    * Searches ProjectUGroup members by UGroupId 
-    * 
+    * Searches ProjectUGroup members by UGroupId
+    *
     * Return all Active or Restricted ugroup members
     * Only return active & restricted to keep it coherent with Group::getMembersUserNames
     *
@@ -106,10 +106,10 @@ class UGroupUserDao extends DataAccessObject {
 
     /**
      * Return project admins of given static group
-     * 
+     *
      * @param Integer $groupId Id of the project
      * @param Array   $ugroups List of ugroups
-     * 
+     *
      * @return Data Access Result
      */
     function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
@@ -187,79 +187,6 @@ class UGroupUserDao extends DataAccessObject {
      */
     public function isDynamicUGroupMember($user_id, $ugroup_id, $group_id) {
         return ugroup_user_is_member($user_id, $ugroup_id, $group_id);
-    }
-
-    /**
-     * Search users to add to ugroup
-     *
-     * @param Integer $ugroupId Id of the uGroup
-     * @param Array   $filters  List of filters
-     *
-     * @return Array
-     */
-    public function searchUsersToAdd($ugroupId, $filters) {
-        $ugroup_id              = $this->da->escapeInt($ugroupId);
-        $offset                 = $this->da->escapeInt($filters['offset']);
-        $number_per_page        = $this->da->escapeInt($filters['number_per_page']);
-        $order_by               = (user_get_preference("username_display") > 1 ? 'realname' : 'user_name');
-        $join_user_group        = $this->getJoinUserGroup($filters);
-        $and_username_filter    = $this->getUsernameFilter($filters);
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
-                FROM user
-                    NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id = $ugroup_id ) AS R
-                    $join_user_group
-                WHERE status in ('A', 'R')
-                  $and_username_filter
-                ORDER BY $order_by
-                LIMIT $offset, $number_per_page";
-
-        $res  = $this->retrieve($sql);
-        $res2 = $this->retrieve('SELECT FOUND_ROWS() as nb');
-        $numTotalRows = $res2->getRow();
-
-        return array('result' => $res, 'num_total_rows' => $numTotalRows['nb']);
-    }
-
-    private function getJoinUserGroup($filters) {
-        $group_id = $this->da->escapeInt($filters['in_project']);
-        if ($group_id) {
-            return "INNER JOIN user_group ON (
-                user_group.user_id = user.user_id
-                AND user_group.group_id = $group_id
-            )";
-        }
-        return '';
-    }
-
-    private function getUsernameFilter($filters) {
-        $username_filters = array(
-            $this->getContainsFilter($filters),
-            $this->getBeginsWithFilter($filters)
-        );
-        $username_filters = array_filter($username_filters);
-        if ($username_filters) {
-            return 'AND ('. implode(' OR ', $username_filters) .')';
-        }
-        return '';
-    }
-
-    private function getContainsFilter($filters) {
-        if ($filters['search']) {
-            $contain = $this->getDa()->quoteLikeValueSurround($filters['search']);
-            return "user.realname LIKE $contain
-                OR user.user_name LIKE $contain
-                OR user.email LIKE $contain";
-        }
-    }
-
-    private function getBeginsWithFilter($filters) {
-        if ($filters['begin']) {
-            $begin = $this->getDa()->quoteLikeValueSuffix($filters['begin']);
-            return "user.realname LIKE $begin
-                OR user.user_name LIKE $begin
-                OR user.email LIKE $begin";
-        }
     }
 
     /**
