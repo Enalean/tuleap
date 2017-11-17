@@ -31,7 +31,8 @@ function initModals() {
         #project-admin-ugroup-show-permissions-modal,
         #project-admin-ugroups-modal,
         #project-admin-delete-binding,
-        .project-admin-delete-ugroups-modal
+        .project-admin-delete-ugroups-modal,
+        .project-admin-remove-user-from-group
     `);
 
     for (const button of buttons) {

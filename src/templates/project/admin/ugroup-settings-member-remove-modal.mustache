@@ -1,0 +1,33 @@
+<form method="POST"
+      action="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}&user[{{ user_id }}]=remove&pane=settings&func=edit"
+      class="tlp-modal tlp-modal-danger"
+      role="dialog"
+      id="project-admin-remove-user-from-group-modal-{{ user_id }}"
+      aria-labelledby="project-admin-remove-user-from-group-modal-title-{{ user_id }}"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-remove-user-from-group-modal-title-{{ user_id }}">
+            <i class="fa fa-trash-o tlp-modal-title-icon"></i>
+            {{# gettext }}Remove group member{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        <input type="hidden" name="action" value="edit_ugroup_members" />
+        {{# gettext }}
+            You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your action.
+            | {{ user_name }}
+            | {{ name }}
+        {{/ gettext }}
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        <button type="submit" class="tlp-button-danger tlp-modal-action user-group-modal-button">
+            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Remove{{/ gettext }}
+        </button>
+    </div>
+</form>

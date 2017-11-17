@@ -499,8 +499,14 @@ msgstr "RSS"
 msgid "Recently"
 msgstr "Récemment"
 
+msgid "Remove"
+msgstr "Supprimer"
+
 msgid "Remove from project"
 msgstr "Retirer du projet"
+
+msgid "Remove group member"
+msgstr "Supprimer un membre du groupe"
 
 msgid "Resource"
 msgstr "Ressource"
@@ -786,6 +792,13 @@ msgid ""
 msgstr ""
 "Vous êtes sur le point de supprimer le widget \"%s\". Cette action est "
 "irréversible. Merci de confirmer cette suppression."
+
+msgid ""
+"You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
+"action."
+msgstr ""
+"Vous êtes sur le point de supprimer <b>%s</b> de <b>%s</b>. Merci de "
+"confirmer votre action."
 
 msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."

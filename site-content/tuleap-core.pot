@@ -473,7 +473,13 @@ msgstr ""
 msgid "Recently"
 msgstr ""
 
+msgid "Remove"
+msgstr ""
+
 msgid "Remove from project"
+msgstr ""
+
+msgid "Remove group member"
 msgstr ""
 
 msgid "Resource"
@@ -731,6 +737,11 @@ msgstr ""
 msgid ""
 "You are about to delete the widget \"%s\".\n"
 "                This action is irreversible. Please confirm this deletion."
+msgstr ""
+
+msgid ""
+"You are about to remove <b>%s</b> from <b>%s</b>. Please, confirm your "
+"action."
 msgstr ""
 
 msgid "You can only edit your own widgets."
