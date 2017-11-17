@@ -353,6 +353,9 @@ msgstr "Mediawiki"
 msgid "Member name, id"
 msgstr "Nom du membre, id"
 
+msgid "Member removal"
+msgstr "Suppression de membre"
+
 msgid "Members"
 msgstr "Membres"
 
@@ -498,6 +501,9 @@ msgstr "RSS"
 
 msgid "Recently"
 msgstr "Récemment"
+
+msgid "Remove"
+msgstr "Retirer"
 
 msgid "Remove from project"
 msgstr "Retirer du projet"
@@ -819,6 +825,13 @@ msgstr ""
 msgid "You must be a project admin to edit this widget."
 msgstr ""
 "Vous devez être administrateur du projet pour pouvoir éditer ce widget."
+
+msgid ""
+"You're about to remove <b>{{ username_display }}</b> from this project. "
+"Please confirm your action."
+msgstr ""
+"Vous êtes sur le point de retirer <b>{{ username_display }}</b> de ce projet. "
+"Veuillez confirmer votre action."
 
 msgid "Your history is empty"
 msgstr "Votre historique est vide"
