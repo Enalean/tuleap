@@ -342,7 +342,7 @@ function showErrors() {
 			'help' => 'tracker-v3.html#tracker-artifact-import'));
     echo '<div id="tracker_toolbar_clear"></div>'.PHP_EOL;
 
-    echo '<h3>'.$Language->getText('tracker_import','import_new_hdr', array(help_button('tracker-v3.html#tracker-artifact-import'))).'</h3>';
+    echo '<h3>'.$Language->getText('tracker_import','import_new_hdr').'</h3>';
     echo '<p>'.$Language->getText('tracker_import','import_new_msg',array('/tracker/index.php?group_id='.(int)$this->group->group_id.'&atid='.(int)$atid.'&user_id='.(int)$user_id.'&mode=showformat&func=import')).'</p>';
     
     $_pref_notify  = user_get_preference('tracker_import_notify_'.$atid);
@@ -360,7 +360,7 @@ function showErrors() {
 
 			<table border="0">
 			<tr>
-			<th> ';//<input type="checkbox" name="file_upload" value="1"> 
+			<th> ';//<input type="checkbox" name="file_upload" value="1">
     echo '<B>'.$Language->getText('tracker_import','upload_file').'</B></th>
 			<td> <input type="file" name="csv_filename" size="50"> </td>
       <td> <span class="help"><i>'.$Language->getText('tracker_import','max_upload_size',formatByteToMb($sys_max_size_upload)).'</i></span> </td>
