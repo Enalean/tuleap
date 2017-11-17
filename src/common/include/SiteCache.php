@@ -95,7 +95,7 @@ class SiteCache {
             $this->logger->error('codendi_cache_dir parameter is invalid, please check your configuration');
             return;
         }
-        $this->logger->info('Restore ownership to ' . $cache_directory);
+        $this->logger->debug('Restore ownership to ' . $cache_directory);
         $backend->changeOwnerGroupMode(
             $cache_directory,
             ForgeConfig::getApplicationUserLogin(),
@@ -104,7 +104,7 @@ class SiteCache {
         );
 
         $language_cache_directory = $GLOBALS['Language']->getCacheDirectory();
-        $this->logger->info('Restore ownership to ' . $language_cache_directory);
+        $this->logger->debug('Restore ownership to ' . $language_cache_directory);
         $backend->recurseChownChgrp(
             $language_cache_directory,
             ForgeConfig::getApplicationUserLogin(),
@@ -117,7 +117,7 @@ class SiteCache {
         if (! file_exists($plugin_cache_file)) {
             touch($plugin_cache_file);
         }
-        $this->logger->info('Restore ownership to ' . $plugin_cache_file);
+        $this->logger->debug('Restore ownership to ' . $plugin_cache_file);
         $backend->changeOwnerGroupMode(
             $plugin_cache_file,
             ForgeConfig::getApplicationUserLogin(),
