@@ -146,51 +146,6 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
         return null;
     }
 
-    /**
-     * Get the recipients for notification
-     *
-     * @param bool $is_update It is an update, not a new artifact
-     *
-     * @return array
-     */
-    public function getRecipients($is_update) {
-        return array();
+    public function notify() {
     }
-
-    /**
-     * Get the body for notification
-     *
-     * @param bool   $is_update It is an update, not a new artifact
-     * @param string $recipient The recipient who will receive the notification
-     *
-     * @return string
-     */
-    public function getBodyHtml($is_update, $recipient_user, $ignore_perms=false) {
-        return '';
-    }
-
-    /**
-     * Get the body for notification
-     *
-     * @param bool   $is_update It is an update, not a new artifact
-     * @param string $recipient The recipient who will receive the notification
-     *
-     * @return string
-     */
-    public function getBodyText($is_update, $recipient_user, $ignore_perms=false) {
-        return '';
-    }
-
-    /**
-     * Get the subject for notification
-     *
-     * @param string $recipient The recipient who will receive the notification
-     *
-     * @return string
-     */
-    public function getSubject($recipient, $ignore_perms=false) {
-        return '';
-    }
-
 }
-?>

@@ -757,7 +757,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @param Tracker_Artifact_ChangesetValue_List $changeset_value The changeset
      *
-     * @return array
+     * @return string[]
      */
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
         $recipients = array();

@@ -24,9 +24,7 @@ require_once 'pre.php';
 
 $request_queue = (isset($argv[1])) ? $argv[1] : SystemEvent::DEFAULT_QUEUE;
 
-$logger = new TruncateLevelLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
-
-$factory = new SystemEventProcessor_Factory($logger, SystemEventManager::instance(), EventManager::instance());
+$factory = new SystemEventProcessor_Factory(BackendLogger::getDefaultLogger(), SystemEventManager::instance(), EventManager::instance());
 
 $processor = $factory->getProcessForQueue($request_queue);
 
