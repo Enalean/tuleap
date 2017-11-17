@@ -23,6 +23,9 @@ msgstr ""
 msgid "Access Logs"
 msgstr ""
 
+msgid "Add binding"
+msgstr ""
+
 msgid "Add dashboard"
 msgstr ""
 
@@ -661,6 +664,9 @@ msgid "User group"
 msgstr ""
 
 msgid "User group permissions"
+msgstr ""
+
+msgid "Users group"
 msgstr ""
 
 msgid "Users groups"

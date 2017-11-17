@@ -39,6 +39,9 @@ msgstr "Accès"
 msgid "Access Logs"
 msgstr "Journal des accès"
 
+msgid "Add binding"
+msgstr "Ajouter le lien"
+
 msgid "Add dashboard"
 msgstr "Ajouter un tableau de bord"
 
@@ -702,6 +705,9 @@ msgstr "Groupe d'utilisateurs"
 
 msgid "User group permissions"
 msgstr "Permissions du groupe"
+
+msgid "Users group"
+msgstr "Groupe d'utilisateurs"
 
 msgid "Users groups"
 msgstr "Groupes d'utilisateurs"

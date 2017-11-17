@@ -24,6 +24,10 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
     const IDENTIFIER = 'settings';
 
     /**
+     * @var UserManager
+     */
+    private $user_manager;
+    /**
      * @var EventManager
      */
     private $event_manager;
@@ -69,6 +73,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         $this->ugroup_binding = $ugroup_binding;
 
         $this->project_manager     = ProjectManager::instance();
+        $this->user_manager        = UserManager::instance();
         $this->permissions_manager = PermissionsManager::instance();
         $this->event_manager       = EventManager::instance();
         $this->html_purifier       = Codendi_HTMLPurifier::instance();
@@ -191,16 +196,6 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     private function getBinding()
     {
-        $url_add = '/project/admin/editugroup.php?'.
-            http_build_query(array(
-                    'group_id' => $this->ugroup->getProjectId(),
-                    'ugroup_id' => $this->ugroup->getId(),
-                    'func' => 'edit',
-                    'pane' => 'binding',
-                    'action' => 'edit_binding',
-                )
-            );
-
         $url_add_ldap = '/project/admin/editugroup.php?'.
             http_build_query(array(
                     'group_id' => $this->ugroup->getProjectId(),
@@ -214,7 +209,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         $clones = $this->getClones();
 
         return array(
-            'url_add_binding'      => $url_add,
+            'add_binding'          => $this->getAddBinding(),
             'url_add_ldap_binding' => $url_add_ldap,
             'add_ldap_title'       => $this->getLDAPTitle(),
             'has_clones'           => count($clones) > 0,
@@ -338,5 +333,56 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         }
 
         return $ugroup_members;
+    }
+
+    private function getAddBinding()
+    {
+        return array(
+            'projects' => $this->getProjectsPresentersForBinding(),
+        );
+    }
+
+    private function getProjectsPresentersForBinding()
+    {
+        $current_user       = $this->user_manager->getCurrentUser();
+        $projects           = array();
+        $current_project_id = $this->ugroup->getProjectId();
+        $projects_of_user   = $current_user->getProjects(true);
+        foreach ($projects_of_user as $project_as_row) {
+            if ($current_project_id == $project_as_row['group_id']) {
+                continue;
+            }
+
+            $project = $this->project_manager->getProject($project_as_row['group_id']);
+            if (! $current_user->isAdmin($project->getID())) {
+                continue;
+            }
+
+            $ugroup_list = $this->getUgroupPresenterList($project->getID());
+            if (empty($ugroup_list)) {
+                continue;
+            }
+
+            $projects[] = array(
+                'id'                   => $project->getID(),
+                'name'                 => $project->getUnconvertedPublicName(),
+                'json_encoded_ugroups' => json_encode($ugroup_list)
+            );
+        }
+
+        return $projects;
+    }
+
+    private function getUgroupPresenterList($project_id) {
+        $ugroupList = array();
+        $ugroups    = ugroup_db_get_existing_ugroups($project_id);
+        while ($ugroup_row = db_fetch_array($ugroups)) {
+            $user_group = new ProjectUGroup(array('ugroup_id' => $ugroup_row['ugroup_id']));
+            if (! $user_group->isBound()) {
+                $ugroupList[] = array('id' => $ugroup_row['ugroup_id'], 'name' => $ugroup_row['name']);
+            }
+        }
+
+        return $ugroupList;
     }
 }

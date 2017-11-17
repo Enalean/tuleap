@@ -49,7 +49,7 @@ class Project_Admin_UGroup_UGroupRouter {
                 break;
             default:
                 $controller = new Project_Admin_UGroup_UGroupController($request, $ugroup);
-                $vAction = new Valid_WhiteList('action', array('remove_binding'));
+                $vAction = new Valid_WhiteList('action', array('remove_binding', 'add_binding'));
                 $vAction->required();
                 $action = $request->getValidated('action', $vAction, $current_pane);
                 break;

@@ -22,10 +22,12 @@ import { modal as createModal, filterInlineTable } from 'tlp';
 document.addEventListener('DOMContentLoaded', () => {
     initModals();
     initGroupsFilter();
+    initBindingDependencies();
 });
 
 function initModals() {
     const buttons = document.querySelectorAll(`
+        #project-admin-ugroup-add-binding,
         #project-admin-ugroup-show-permissions-modal,
         #project-admin-ugroups-modal,
         #project-admin-delete-binding,
@@ -45,5 +47,33 @@ function initGroupsFilter() {
     const groups_filter = document.getElementById('project-admin-ugroups-list-table-filter');
     if (groups_filter) {
         filterInlineTable(groups_filter);
+    }
+}
+
+function initBindingDependencies() {
+    const project_selectbox = document.getElementById('project-admin-ugroup-add-binding-project');
+    const ugroup_selectbox  = document.getElementById('project-admin-ugroup-add-binding-ugroup');
+
+    if (! project_selectbox || ! ugroup_selectbox) {
+        return;
+    }
+
+    project_selectbox.addEventListener('change', mapUgroupsSelectboxToProjectSelectbox);
+    mapUgroupsSelectboxToProjectSelectbox();
+
+    function mapUgroupsSelectboxToProjectSelectbox() {
+        let i = ugroup_selectbox.options.length;
+        while (--i > 0) {
+            ugroup_selectbox.remove(i);
+        }
+
+        const selected_option = project_selectbox.options[project_selectbox.selectedIndex];
+        if (! selected_option.value) {
+            return;
+        }
+
+        for (const ugroup of JSON.parse(selected_option.dataset.ugroups)) {
+            ugroup_selectbox.options.add(new Option(ugroup['name'], ugroup['id']));
+        }
     }
 }
