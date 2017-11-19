@@ -14,7 +14,7 @@ plugin_ldap	login_pls_use_ldap	Please use your Enterprise Directory login (not t
 plugin_ldap	ugroup_list_ldap_title	Import from Enterprise Directory
 plugin_ldap	ugroup_list_add_users	Add directory users
 plugin_ldap	ugroup_list_add_set_binding	Set directory group binding
-plugin_ldap	ugroup_list_add_upd_binding	Update Directory group binding ($1)
+plugin_ldap	ugroup_list_add_upd_binding	Update directory group binding ($1)
 plugin_ldap	project_admin_add_ugroup	Link with an Enterprise Directory Group:
 #
 #-----------------------------------------------
@@ -55,7 +55,7 @@ plugin_ldap	welcome_mandatory	Fields marked with $1 are mandatory.
 #
 # plugins/ldap/www/ugroup_edit.php
 #
-plugin_ldap	ugroup_edit_ugroup_linked	<strong>$1</strong> is already linked with Directory group <strong>$2</strong>.
+plugin_ldap	ugroup_edit_ugroup_linked	<strong>$1</strong> is already linked with directory group <strong>$2</strong>.
 plugin_ldap	ugroup_edit_group_add_users_help	Add users into the group (comma separated list).
 plugin_ldap	ugroup_edit_group_you_can	You can:
 plugin_ldap	ugroup_edit_group_resync	Re-synchronize the group with the directory (just press "Update").
@@ -63,13 +63,13 @@ plugin_ldap	ugroup_edit_group_link	Link (and synchronize) with a new group in th
 plugin_ldap	ugroup_edit_group_remove	Remove the link between this group and the directory.
 plugin_ldap	ugroup_edit_group_synchro	If you choose to synchronize with a group from the directory, it will  
 plugin_ldap	ugroup_edit_group_synchro_add	Add those who are not already member of this $1 group.
-plugin_ldap	ugroup_edit_group_synchro_del	Remove all users who belong to this $1 group but not to the Directory group if you don't enable the 'Preserve members' option.
-plugin_ldap	ugroup_edit_group_preserve_members_info	Check this option if you want to preserve users that are not part of the Directory group
+plugin_ldap	ugroup_edit_group_synchro_del	Remove all users who belong to this $1 group but not to the directory group if you don't enable the 'Preserve members' option.
+plugin_ldap	ugroup_edit_group_preserve_members_info	Check this option if you want to preserve users that are not part of the directory group
 plugin_ldap	ugroup_edit_group_preserve_members_option	Preserve members
 plugin_ldap	ugroup_edit_group_synchronize_info	Check this option if you want to synchronize the group nightly with the directory one
 plugin_ldap	ugroup_edit_group_synchronize_option	Synchronize daily
 plugin_ldap	ugroup_edit_group_add_users	Users to add:
-plugin_ldap	ugroup_edit_group_bind_with_group	Bind with group from Directory:
+plugin_ldap	ugroup_edit_group_bind_with_group	Bind with group from directory
 plugin_ldap	ugroup_edit_btn_update	Update group
 plugin_ldap	ugroup_edit_btn_unlink	Unlink group and directory
 plugin_ldap	ugroup_members_synchro_title	Enterprise directory <-> User Group members synchronization

@@ -1,0 +1,24 @@
+#, javascript-format
+msgid "%d user not impacted."
+msgid_plural "%d users not impacted."
+msgstr[0] ""
+msgstr[1] ""
+
+#, javascript-format
+msgid "%d user to add."
+msgid_plural "%d users to add."
+msgstr[0] ""
+msgstr[1] ""
+
+#, javascript-format
+msgid "%d user to remove."
+msgid_plural "%d users to remove."
+msgstr[0] ""
+msgstr[1] ""
+
+#, javascript-format
+msgid "Binding %s to directory group %s"
+msgstr ""
+
+msgid "There aren't any users to add nor to remove."
+msgstr ""

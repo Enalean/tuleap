@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
+
 class Project_Admin_UGroup_UGroupController {
 
     /**
@@ -78,11 +80,7 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function settings() {
-        $pane               = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
-        $controller_binding = new Project_Admin_UGroup_UGroupController_Binding($this->request, $this->ugroup, $pane);
-        $binding            = $controller_binding->displayUgroupBinding();
-        $ldap_plugin        = $controller_binding->getLdapPlugin() ?: null;
-        $view               = new Project_Admin_UGroup_View_Settings($this->ugroup, $this->ugroup_binding, $binding, $ldap_plugin);
+        $view = new Project_Admin_UGroup_View_Settings($this->ugroup, $this->ugroup_binding);
         $this->render($view);
     }
 
@@ -96,6 +94,23 @@ class Project_Admin_UGroup_UGroupController {
         } else {
             $controller_binding->edit_binding();
         }
+    }
+
+    public function ldap_remove_binding()
+    {
+        $this->ldap();
+    }
+
+    public function ldap_add_binding()
+    {
+        $this->ldap();
+    }
+
+    public function ldap()
+    {
+        $event = new UGroupEditProcessAction($this->request, $this->ugroup);
+        EventManager::instance()->processEvent($event);
+        $this->redirect();
     }
 
     public function remove_binding()

@@ -1,17 +1,24 @@
+msgid ""
+"<strong>%s</strong> is already linked with directory group <strong>%s</"
+"strong>."
+msgstr ""
+
+msgid "Add those who are not already member of this %s group."
+msgstr ""
+
+msgid "Bind with group from directory"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
-msgid ""
-"Check this option if you want to preserve users that are not part of the "
-"Directory group."
-msgstr ""
-
-msgid ""
-"Check this option if you want to synchronize the group nightly with the "
-"directory one."
-msgstr ""
-
 msgid "Enterprise directory group name"
+msgstr ""
+
+msgid "Every night the group will be synchronized with the directory one."
+msgstr ""
+
+msgid "If you choose to synchronize with a group from the directory, it will:"
 msgstr ""
 
 msgid "Link LDAP"
@@ -26,5 +33,20 @@ msgstr ""
 msgid "Preserve members"
 msgstr ""
 
+msgid "Preserve users that are not part of the directory group."
+msgstr ""
+
+msgid ""
+"Remove all users who belong to this %s group but not to the directory group "
+"if you don't enable\n"
+"                      the 'Preserve members' option."
+msgstr ""
+
+msgid "Synchronize"
+msgstr ""
+
 msgid "Synchronize daily"
+msgstr ""
+
+msgid "Unlink group and directory"
 msgstr ""

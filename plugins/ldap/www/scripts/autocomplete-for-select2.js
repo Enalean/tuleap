@@ -55,5 +55,5 @@ function autocomplete_groups_for_select2(element, options) {
         ...options
     };
 
-    select2(element, real_options);
+    return select2(element, real_options);
 }

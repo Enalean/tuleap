@@ -29,6 +29,9 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\LinkModalContentPresenter;
 use Tuleap\LDAP\NonUniqueUidRetriever;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersAdditionalModalCollectionPresenter;
+use Tuleap\LDAP\Project\UGroup\Binding\AdditionalModalPresenterBuilder;
+use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupEditProcessAction;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
@@ -144,6 +147,8 @@ class LdapPlugin extends Plugin {
         $this->addHook(UserDetailsPresenter::ADDITIONAL_DETAILS);
         $this->addHook('root_daily_start');
         $this->addHook('ugroup_duplication');
+        $this->addHook(BindingAdditionalModalPresenterCollection::NAME);
+        $this->addHook(UGroupEditProcessAction::NAME);
 
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -868,20 +873,21 @@ class LdapPlugin extends Plugin {
 
     public function burningParrotGetJavascriptFiles(array $params)
     {
-        if ($this->currentRequestIsForProjectMembersAdmin())
-        {
-            $include_assets = new IncludeAssets(
-                $this->getFilesystemPath() . '/www/assets',
-                $this->getPluginPath() . '/assets'
-            );
+        $include_assets = new IncludeAssets(
+            $this->getFilesystemPath() . '/www/assets',
+            $this->getPluginPath() . '/assets'
+        );
 
+        if ($this->currentRequestIsForProjectMembersAdmin()) {
             $params['javascript_files'][] = $include_assets->getFileURL('project-admin-members.js');
+        } else if ($this->currentRequestIsForProjectUgroupAdmin()) {
+            $params['javascript_files'][] = $include_assets->getFileURL('project-admin-ugroups.js');
         }
     }
 
     public function burningParrotGetStylesheets(array $params)
     {
-        if ($this->currentRequestIsForProjectMembersAdmin()) {
+        if ($this->currentRequestIsForProjectMembersAdmin() || $this->currentRequestIsForProjectUgroupAdmin()) {
             $theme_include_assets = new IncludeAssets(
                 $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
                 $this->getThemePath() . '/assets'
@@ -1233,5 +1239,86 @@ class LdapPlugin extends Plugin {
     private function currentRequestIsForProjectMembersAdmin()
     {
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/members') === 0;
+    }
+
+    private function currentRequestIsForProjectUgroupAdmin()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup') === 0;
+    }
+
+    public function bindingAdditionalModalPresenterCollection(BindingAdditionalModalPresenterCollection $collection)
+    {
+        $request = HTTPRequest::instance();
+        $builder = new AdditionalModalPresenterBuilder($this->getLdapUserGroupManager(), $request);
+        $collection->addModal(
+            $builder->build(
+                $collection->getUgroup(),
+                $this->getBindOption($request),
+                $this->getSynchro($request)
+            )
+        );
+    }
+
+    public function ugroupEditProcessAction(UGroupEditProcessAction $event)
+    {
+        $request = $event->getRequest();
+        $ugroup  = $event->getUGroup();
+
+        $ldapUserGroupManager = $this->getLdapUserGroupManager();
+        $ldapUserGroupManager->setId($ugroup->getId());
+        $ldapUserGroupManager->setProjectId($ugroup->getProjectId());
+
+        switch ($request->get('action')) {
+            case 'ldap_remove_binding':
+                $ldapUserGroupManager->setGroupName($request->get('previous_bind_with_group'));
+                if ($ldapUserGroupManager->unbindFromBindLdap()) {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink')
+                    );
+                    $this->launchEditBindingUgroupEvent($ugroup);
+                }
+                break;
+            case 'ldap_add_binding':
+                $ldap_group_name = $request->get('bind_with_group');
+                $ldapUserGroupManager->setGroupName($ldap_group_name);
+                $ldapUserGroupManager->bindWithLdap($this->getBindOption($request), $this->getSynchro($request));
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', $ldap_group_name)
+                );
+                $this->launchEditBindingUgroupEvent($ugroup);
+                break;
+        }
+    }
+
+    private function launchEditBindingUgroupEvent(ProjectUGroup $ugroup)
+    {
+        EventManager::instance()->processEvent('project_admin_ugroup_bind_modified',
+            array(
+                'group_id'  => $ugroup->getProjectId(),
+                'ugroup_id' => $ugroup->getId()
+            )
+        );
+    }
+
+    private function getSynchro(Codendi_Request $request)
+    {
+        $synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
+        if ($request->get('synchronize')) {
+            $synchro = LDAP_GroupManager::AUTO_SYNCHRONIZATION;
+        }
+
+        return $synchro;
+    }
+
+    private function getBindOption(Codendi_Request $request)
+    {
+        $bind_option = LDAP_GroupManager::BIND_OPTION;
+        if ($request->get('preserve_members')) {
+            $bind_option = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
+        }
+
+        return $bind_option;
     }
 }

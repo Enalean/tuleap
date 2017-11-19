@@ -16,15 +16,15 @@
                         <i class="fa fa-plus tlp-button-icon"></i>
                         {{# gettext }}Add users group binding{{/ gettext }}
                     </button>
-                    {{# has_ldap }}
-                        <a href="{{ url_add_ldap_binding }}"
-                           class="tlp-button-outline tlp-button-primary"
-                           id="project-admin-ugroup-add-ldap-binding"
-                        >
-                            {{ add_ldap_title }}
-                        </a>
-                    {{/ has_ldap }}
+                    {{# modals }}
+                        {{{ purified_html_button }}}
+                    {{/ modals }}
+
                     {{> ugroup-settings-binding-modal-add }}
+                    {{# modals }}
+                        {{{ purified_html_modal_content }}}
+                    {{/ modals }}
+
                     <p>{{# gettext }}This users group is not bound to any users group.{{/ gettext }}</p>
                 {{/ current_binding }}
                 {{# current_binding }}

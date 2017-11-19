@@ -1,0 +1,122 @@
+<form method="POST"
+      action=""
+      class="tlp-modal"
+      role="dialog"
+      id="project-admin-ugroup-ldap-binding-modal"
+      aria-labelledby="project-admin-ugroup-ldap-binding-modal-title"
+>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="project-admin-ugroup-ldap-binding-modal-title">
+            <i class="fa fa-link tlp-modal-title-icon"></i>
+            {{ title }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{# gettext }}Close{{/ gettext }}">
+            &times;
+        </div>
+    </div>
+    <div class="tlp-modal-body">
+        {{# is_linked }}
+            <p class="project-admin-ugroup-ldap-binding-modal-linked-with">{{# dgettext }}
+                tuleap-ldap
+                | <strong>%s</strong> is already linked with directory group <strong>%s</strong>.
+                | {{ ugroup_name }}
+                | {{ ldap_group_name }}
+            {{/ dgettext }}
+        {{/ is_linked }}
+
+        <p>{{# dgettext }}tuleap-ldap | If you choose to synchronize with a group from the directory, it will:{{/ dgettext }}</p>
+        <ul>
+            <li>
+                {{# dgettext }}
+                    tuleap-ldap
+                    | Add those who are not already member of this %s group.
+                    | {{ sys_name }}
+                {{/ dgettext }}
+            </li>
+            <li>
+                {{# dgettext }}
+                    tuleap-ldap
+                    | Remove all users who belong to this %s group but not to the directory group if you don't enable
+                      the 'Preserve members' option.
+                    | {{ sys_name }}
+                {{/ dgettext }}
+            </li>
+        </ul>
+
+        <input type="hidden" name="ugroup_id" value="{{ ugroup_id }}" />
+        <input type="hidden" name="previous_bind_with_group" value="{{ ldap_group_name }}" />
+        <div class="tlp-form-element">
+            <label class="tlp-label" for="project-admin-ugroup-binding-ldap-group">
+                {{# dgettext }}tuleap-ldap | Bind with group from directory{{/ dgettext }}
+            </label>
+            <select
+                name="bind_with_group"
+                id="project-admin-ugroup-binding-ldap-group"
+                data-placeholder="{{# dgettext }} tuleap-ldap | Enterprise directory group name{{/ dgettext }}"
+                class="tlp-input"
+                style="width: 100%"
+                data-ugroup-id="{{ ugroup_id }}"
+                data-ugroup-name="{{ ugroup_name }}"
+                data-locale="{{ locale }}"
+            >
+                {{# ldap_group_name }}
+                    <option value="{{ ldap_group_name }}" selected>{{ ldap_group_name }}</option>
+                {{/ ldap_group_name }}
+            </select>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox"
+                       name="preserve_members"
+                       id="project-admin-ugroup-binding-ldap-group-preserve"
+                       value="1"
+                       {{# is_preserved }}checked{{/ is_preserved }}
+                >
+                {{# dgettext }}tuleap-ldap | Preserve members{{/ dgettext }}
+            </label>
+            <p class="tlp-text-info">
+                {{# dgettext }}tuleap-ldap | Preserve users that are not part of the directory group.{{/ dgettext }}
+            </p>
+        </div>
+
+        <div class="tlp-form-element">
+            <label class="tlp-label tlp-checkbox">
+                <input type="checkbox" name="synchronize" value="1" {{# is_synchronized }}checked{{/ is_synchronized }}>
+                {{# dgettext }}tuleap-ldap | Synchronize daily{{/ dgettext }}
+            </label>
+            <p class="tlp-text-info">
+                {{# dgettext }}tuleap-ldap | Every night the group will be synchronized with the directory one.{{/ dgettext }}
+            </p>
+        </div>
+
+        <div id="project-admin-ugroup-ldap-binding-modal-preview">
+        </div>
+    </div>
+    <div class="tlp-modal-footer">
+        <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            {{# gettext }}Cancel{{/ gettext }}
+        </button>
+        {{# is_linked }}
+            <button type="submit"
+                    class="tlp-button-danger tlp-button-outline tlp-modal-action"
+                    id="project-admin-ugroup-ldap-binding-modal-unlink-button"
+                    name="action"
+                    value="ldap_remove_binding"
+            >
+                <i class="fa fa-unlink tlp-button-icon"></i>
+                {{# dgettext }}tuleap-ldap | Unlink group and directory{{/ dgettext }}
+            </button>
+        {{/ is_linked }}
+        <button type="submit"
+                id="project-admin-ugroup-ldap-binding-modal-link-button"
+                class="tlp-button-primary tlp-modal-action"
+                name="action"
+                value="ldap_add_binding"
+                disabled
+        >
+            <i class="fa fa-link tlp-button-icon"></i>
+            {{# dgettext }}tuleap-ldap | Synchronize{{/ dgettext }}
+        </button>
+    </div>
+</form>

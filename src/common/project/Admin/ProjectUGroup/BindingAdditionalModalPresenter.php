@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -17,5 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'project-admin-members';
-@import 'project-admin-ugroups';
+namespace Tuleap\Project\Admin\ProjectUGroup;
+
+class BindingAdditionalModalPresenter
+{
+    /**
+     * @var string
+     */
+    public $purified_html_button;
+    /**
+     * @var string
+     */
+    public $purified_html_modal_content;
+
+    /**
+     * @param $purified_html_button string A purified html string containing a button meant to trigger a modal.
+     * @param $purified_html_modal_content string A purified html string containing a modal.
+     */
+    public function __construct($purified_html_button, $purified_html_modal_content)
+    {
+        $this->purified_html_button        = $purified_html_button;
+        $this->purified_html_modal_content = $purified_html_modal_content;
+    }
+}
