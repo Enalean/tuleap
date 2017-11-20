@@ -41,7 +41,7 @@
                                 </label>
                                 <p><a href="{{ project_url }}">{{ project_name }}</a></p>
                             </div>
-                            <div class="tlp-property">
+                            <div class="tlp-property user-group-binding-link">
                                 <label class="tlp-label">{{# gettext }}User group{{/ gettext }}</label>
                                 <p><a href="{{ ugroup_url }}">{{ ugroup_name }}</a></p>
                             </div>
@@ -64,10 +64,10 @@
                     {{# gettext }}Users groups bound to this one{{/ gettext }}
                 </h2>
                 {{# clones }}
-                    <table class="tlp-table" id="project-admin-ugroup-binding-clones">
+                    <table class="tlp-table user-group-project-name-table" id="project-admin-ugroup-binding-clones">
                         <thead>
                             <tr>
-                                <th class="project-admin-ugroup-binding-project-info-header">
+                                <th class="project-admin-ugroup-binding-project-info-header user-group-project-name-user-group-table">
                                     {{# glyph }}project-small{{/glyph}}
                                     {{# gettext }}Project{{/ gettext }}
                                 </th>
@@ -93,7 +93,7 @@
                             {{/ has_ugroups }}
                             {{# ugroups }}
                                 <tr>
-                                    <td>
+                                    <td class="user-group-project-name-user-group-table">
                                         <a href="{{ project_url }}">{{ project_name }}</a>
                                     </td>
                                     <td>

@@ -84,7 +84,8 @@ class Project_Admin_UGroup_PaneManagement {
                 'groups'
             );
         }
-        echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.
+        echo '<h1 class="project-admin-user-group-title">
+                <a href="/project/admin/ugroup.php?group_id='.urlencode($this->ugroup->getProjectId()).'">'.
                 $GLOBALS['Language']->getText('project_admin_utils','ug_admin').
                 '</a> - '.$this->ugroup->getName().'</h1>';
         echo '<div class="tabbable">';
