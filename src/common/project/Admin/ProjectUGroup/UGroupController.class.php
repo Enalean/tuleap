@@ -140,7 +140,14 @@ class Project_Admin_UGroup_UGroupController {
         );
     }
 
-    public function edit_ugroup_members() {
+    public function edit_ugroup_members()
+    {
+        $csrf = new CSRFSynchronizerToken(
+            '/project/admin/editugroup.php?group_id=' . $this->ugroup->getProjectId()
+            . '&ugroup_id=' . $this->ugroup->getId() . '&func=edit&pane=settings'
+        );
+        $csrf->check();
+
         $ugroupUpdateUsersAllowed = !$this->ugroup->isBound();
         $groupId  = $this->ugroup->getProjectId();
         $ugroupId = $this->ugroup->getId();

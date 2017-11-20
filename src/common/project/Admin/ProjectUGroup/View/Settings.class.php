@@ -320,10 +320,16 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
         $members = $this->getFormattedProjectMembers();
 
+        $csrf = new CSRFSynchronizerToken(
+            '/project/admin/editugroup.php?group_id=' . $this->ugroup->getProjectId()
+            . '&ugroup_id=' . $this->ugroup->getId() . '&func=edit&pane=settings'
+        );
+
         return array(
             'has_members'    => count($members) > 0,
             'can_be_updated' => $can_be_updated,
-            'members'        => $members
+            'members'        => $members,
+            'csrf_token'     => $csrf
         );
     }
 

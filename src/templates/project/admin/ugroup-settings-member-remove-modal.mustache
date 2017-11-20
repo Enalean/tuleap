@@ -5,6 +5,9 @@
       id="project-admin-remove-user-from-group-modal-{{ user_id }}"
       aria-labelledby="project-admin-remove-user-from-group-modal-title-{{ user_id }}"
 >
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="project-admin-remove-user-from-group-modal-title-{{ user_id }}">
             <i class="fa fa-trash-o tlp-modal-title-icon"></i>
