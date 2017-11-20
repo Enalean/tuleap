@@ -10,6 +10,11 @@
                 <input type="hidden" name="func" value="do_update">
                 <input type="hidden" name="group_id" value="{{ project_id }}">
                 <input type="hidden" name="ugroup_id" value="{{ id }}">
+
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
+
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="ugroup-name">
                         {{# gettext }}Name{{/ gettext }}

@@ -86,6 +86,8 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         $binding     = $this->getBinding();
         $members     = $this->getMembers();
 
+        $csrf = new CSRFSynchronizerToken('/project/admin/ugroup.php');
+
         return TemplateRendererFactory::build()
             ->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/')
             ->renderToString(
@@ -98,7 +100,8 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
                     'has_permissions' => count($permissions) > 0,
                     'permissions'     => $permissions,
                     'binding'         => $binding,
-                    'members'         => $members
+                    'members'         => $members,
+                    'csrf_token'      => $csrf
                 )
             );
     }

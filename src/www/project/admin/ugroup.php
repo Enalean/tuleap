@@ -68,6 +68,7 @@ if ($request->existAndNonEmpty('func')) {
             ugroup_delete($group_id, $ugroup_id);
             break;
         case 'do_update':
+            $csrf->check();
             $name = $request->getValidated('ugroup_name', 'String', '');
             $desc = $request->getValidated('ugroup_description', 'String', '');
             ugroup_update($group_id, $ugroup_id, $name, $desc);
