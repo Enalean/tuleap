@@ -37,6 +37,7 @@ class ProjectMembersDAO extends DataAccessObject
                        user.user_id,
                        user.user_name,
                        user.status,
+                       user_group.admin_flags,
                        user.has_avatar,
                        IF(generic_user.group_id, 1, 0) AS is_generic
                 FROM user_group

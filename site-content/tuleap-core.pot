@@ -434,6 +434,11 @@ msgstr ""
 msgid "Project administration"
 msgstr ""
 
+msgid ""
+"Project admins can't be removed from project. To do so, remove the admin "
+"flag in user permissions first."
+msgstr ""
+
 msgid "Project hierarchy"
 msgstr ""
 
