@@ -110,6 +110,10 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+msgid ""
+"Some selected values was not saved because they are used in another semantic."
+msgstr ""
+
 #, php-format
 msgid "The @comment metadata cannot be compared to MYSELF()."
 msgstr ""

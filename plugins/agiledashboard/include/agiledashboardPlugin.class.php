@@ -38,6 +38,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
+use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -115,6 +116,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook('widgets');
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
             $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
+            $this->addHook(SemanticStatusGetDisabledValues::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1153,5 +1155,19 @@ class AgileDashboardPlugin extends Plugin {
         $dao     = new SemanticDoneDao();
 
         $event->add($dao->getSemanticStatement($field->getId(), $tracker->getId()));
+    }
+
+    public function semanticStatusGetDisabledValues(SemanticStatusGetDisabledValues $event)
+    {
+        $field   = $event->getField();
+        $tracker = $field->getTracker();
+        $dao     = new SemanticDoneDao();
+
+        $disabled_values = array();
+        foreach ($dao->getSelectedValues($tracker->getId()) as $value_row) {
+            $disabled_values[] = $value_row['value_id'];
+        }
+
+        $event->setDisabledValues(array_unique($disabled_values));
     }
 }
