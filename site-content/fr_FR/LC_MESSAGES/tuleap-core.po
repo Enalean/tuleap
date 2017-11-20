@@ -460,6 +460,13 @@ msgstr "Historique du projet"
 msgid "Project administration"
 msgstr "Administration du projet"
 
+msgid ""
+"Project admins can't be removed from project. To do so, remove the admin "
+"flag in user permissions first."
+msgstr ""
+"Les administrateurs ne peuvent pas être retirés du projet. Pour ce faire, "
+"retirer d'abord l'indicateur administrateur dans les permissions utilisateur."
+
 msgid "Project hierarchy"
 msgstr "Hierarchie de projets"
 

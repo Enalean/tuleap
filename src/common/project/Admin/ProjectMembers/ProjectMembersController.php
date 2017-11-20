@@ -32,6 +32,7 @@ use TemplateRendererFactory;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\UserRemover;
+use Tuleap\REST\UserManager;
 use UGroupBinding;
 use UserHelper;
 
@@ -142,8 +143,8 @@ class ProjectMembersController
 
         foreach ($database_results as $member) {
             $member['profile_page_url']  = "/users/" . urlencode($member['user_name']) .  "/";
-
-            $member['username_display'] = $this->user_helper->getDisplayName(
+            $member['is_project_admin']  = $member['admin_flags'] === 'A';
+            $member['username_display']  = $this->user_helper->getDisplayName(
                 $member['user_name'],
                 $member['realname']
             );
