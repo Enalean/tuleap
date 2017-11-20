@@ -39,4 +39,17 @@ class SemanticDoneDao extends DataAccessObject
 
         return $this->retrieve($sql);
     }
+
+    public function getSemanticStatement($field_id, $tracker_id)
+    {
+        $field_id   = $this->da->escapeInt($field_id);
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        return "SELECT IF(static_value.original_value_id, static_value.original_value_id, static_value.id) AS id
+                FROM tracker_field_list_bind_static_value AS static_value
+                    INNER JOIN plugin_agiledashboard_semantic_done AS semantic_done
+                    ON (semantic_done.value_id = static_value.id OR semantic_done.value_id = static_value.original_value_id)
+                WHERE semantic_done.tracker_id = $tracker_id
+                    AND static_value.field_id = $field_id";
+    }
 }

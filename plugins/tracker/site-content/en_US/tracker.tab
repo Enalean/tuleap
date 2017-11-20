@@ -1177,7 +1177,7 @@ plugin_tracker_formelement_admin	field_used_in_semantics	Impossible to delete th
 plugin_tracker_formelement_admin	field_used_in_workflow	Impossible to delete this field (used in workflow)
 plugin_tracker_formelement_admin	field_used_in_triggers	Impossible to delete this field (used in triggers)
 plugin_tracker_formelement_admin	field_used_in_field_dependencies	Impossible to delete this field (field dependencies)
-plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in status semantic, in workflow or in  field dependency
+plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in a semantic, in workflow or in field dependency
 plugin_tracker_formelement_admin	hide_value	Show/hide this value
 plugin_tracker_formelement_admin	checkbox	Checkbox
 plugin_tracker_formelement_admin	checkbox_desc	Checkbox

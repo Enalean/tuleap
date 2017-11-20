@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
+
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject {
@@ -157,16 +159,16 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 
-    public function canValueBeHiddenWithoutCheckingSemanticStatus($field_id, $value_id) {
-        $semantic_status_statement = '';
+    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field $field, $value_id) {
+        $collection = new CanValueBeHiddenStatementsCollection($field);
 
-        return $this->isValueHiddenable($field_id, $value_id, $semantic_status_statement);
+        return $this->isValueHiddenable($field->getId(), $value_id, $collection);
     }
 
-    public function canValueBeHidden($field_id, $value_id) {
-        $field_id = $this->da->escapeInt($field_id);
+    public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id) {
+        $field_id = $this->da->escapeInt($field->getId());
 
-        $semantic_status_statement = "UNION
+        $semantic_status_statement = "
             SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
             FROM $this->table_name AS v
                 INNER JOIN tracker_semantic_status AS s
@@ -174,11 +176,18 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     AND s.field_id = v.field_id)
             WHERE v.field_id = $field_id";
 
-        return $this->isValueHiddenable($field_id, $value_id, $semantic_status_statement);
+        $collection = new CanValueBeHiddenStatementsCollection($field);
+        $collection->add($semantic_status_statement);
+
+        EventManager::instance()->processEvent($collection);
+
+        return $this->isValueHiddenable($field_id, $value_id, $collection);
     }
 
-    private function isValueHiddenable($field_id, $value_id, $semantic_status_statement) {
+    private function isValueHiddenable($field_id, $value_id, CanValueBeHiddenStatementsCollection $collection) {
         $field_id = $this->da->escapeInt($field_id);
+
+        $additionnal_unions = $collection->asUnion();
 
         if (! isset($this->cache_canbehidden_values[$field_id])) {
             $sql = "SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
@@ -204,7 +213,6 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                             (wt.to_id = v.id OR wt.to_id = v.original_value_id)
                         )
                     WHERE v.field_id = $field_id
-                    $semantic_status_statement
                     UNION
                     SELECT v.id AS id
                     FROM $this->table_name AS v
@@ -235,6 +243,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                             tr.target_field_id = copied_field.id AND tr.target_value_id = copied_value.id
                         )
                     WHERE original.id = $field_id
+                    $additionnal_unions
                     ";
 
             foreach ($this->retrieve($sql) as $row) {
@@ -245,8 +254,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return ! isset($this->cache_canbehidden_values[$field_id][$value_id]);
     }
 
-    public function canValueBeDeleted($field_id, $value_id) {
-        $field_id = $this->da->escapeInt($field_id);
+    public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id) {
+        $field_id = $this->da->escapeInt($field->getId());
         $value_id = $this->da->escapeInt($value_id);
 
         if (! isset($this->cache_canbedeleted_values[$field_id])) {
@@ -271,7 +280,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
             }
         }
 
-        return $this->canValueBeHidden($field_id, $value_id) && ! isset($this->cache_canbedeleted_values[$field_id][$value_id]);
+        return $this->canValueBeHidden($field, $value_id) && ! isset($this->cache_canbedeleted_values[$field_id][$value_id]);
     }
 
     public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id) {
