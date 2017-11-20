@@ -108,6 +108,18 @@ class Project_Admin_UGroup_UGroupController {
 
     public function remove_binding()
     {
+        $csrf = new CSRFSynchronizerToken(
+            'project/admin/editugroup.php&' . http_build_query(
+                array(
+                    'group_id'  => $this->ugroup->getProjectId(),
+                    'ugroup_id' => $this->ugroup->getId(),
+                    'func'      => 'edit',
+                    'pane'      => 'settings',
+                )
+            )
+        );
+        $csrf->check();
+
         $history_dao = new ProjectHistoryDao();
         if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
             $history_dao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());

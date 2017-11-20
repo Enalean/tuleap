@@ -199,17 +199,29 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     private function getBinding()
     {
-        $url_add_ldap = '/project/admin/editugroup.php?'.
-            http_build_query(array(
-                    'group_id' => $this->ugroup->getProjectId(),
+        $url_add_ldap = '/project/admin/editugroup.php?' .
+            http_build_query(
+                array(
+                    'group_id'  => $this->ugroup->getProjectId(),
                     'ugroup_id' => $this->ugroup->getId(),
-                    'func' => 'edit',
-                    'pane' => 'binding',
-                    'action' => 'edit_directory_group',
+                    'func'      => 'edit',
+                    'pane'      => 'binding',
+                    'action'    => 'edit_directory_group',
                 )
             );
 
         $clones = $this->getClones();
+
+        $csrf = new CSRFSynchronizerToken(
+            'project/admin/editugroup.php&' . http_build_query(
+                array(
+                    'group_id'  => $this->ugroup->getProjectId(),
+                    'ugroup_id' => $this->ugroup->getId(),
+                    'func'      => 'edit',
+                    'pane'      => 'settings',
+                )
+            )
+        );
 
         return array(
             'add_binding'          => $this->getAddBinding(),
@@ -218,7 +230,8 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
             'has_clones'           => count($clones) > 0,
             'clones'               => $clones,
             'current_binding'      => $this->getCurrentBinding(),
-            'has_ldap'             => ! empty($this->plugin_binding)
+            'has_ldap'             => ! empty($this->plugin_binding),
+            'csrf_token'           => $csrf
         );
     }
 
