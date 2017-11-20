@@ -66,10 +66,16 @@
                                 </td>
                                 <td class="tlp-table-cell-actions">
                                     {{# can_be_updated }}
-                                    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
-                                       href="/project/admin/editugroup.php?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&action=edit_ugroup_members&user[{{ user_id }}]=remove">
-                                        <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
-                                    </a>
+                                        <button class="tlp-table-cell-actions-button
+                                            tlp-button-small
+                                            tlp-button-danger
+                                            tlp-button-outline
+                                            project-admin-remove-user-from-group"
+                                            data-target-modal-id="project-admin-remove-user-from-group-modal-{{ user_id }}"
+                                        >
+                                            <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
+                                        </button>
+                                        {{> ugroup-settings-member-remove-modal }}
                                     {{/ can_be_updated }}
                                 </td>
                             </tr>
