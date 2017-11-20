@@ -144,7 +144,7 @@ if ($json_format) {
         )
     );
 
-    echo json_encode($output);
+    $GLOBALS['Response']->sendJSON($output);
 } else {
     $purifier = Codendi_HTMLPurifier::instance();
     echo "<ul>\n";
