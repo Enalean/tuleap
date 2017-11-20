@@ -42,11 +42,6 @@ class Project_Admin_UGroup_UGroupRouter {
                 $controller   = new Project_Admin_UGroup_UGroupController_Binding($request, $ugroup, $pane);
                 $action = $this->getBindingAction($request);
                 break;
-            case Project_Admin_UGroup_View_Members::IDENTIFIER:
-                $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Members::IDENTIFIER);
-                $controller = new Project_Admin_UGroup_UGroupController_Members($request, $ugroup, $pane);
-                $action = $this->getMembersAction($request);
-                break;
             default:
                 $controller = new Project_Admin_UGroup_UGroupController($request, $ugroup);
                 $vAction = new Valid_WhiteList('action', array('remove_binding', 'add_binding', 'edit_ugroup_members'));
@@ -63,18 +58,11 @@ class Project_Admin_UGroup_UGroupRouter {
         return $request->getValidated('action', $vAction, Project_Admin_UGroup_View_ShowBinding::IDENTIFIER);
     }
 
-    private function getMembersAction($request) {
-        $vAction = new Valid_WhiteList('action', array('edit_ugroup_members'));
-        $vAction->required();
-        return $request->getValidated('action', $vAction, Project_Admin_UGroup_View_Members::IDENTIFIER);
-    }
-
     private function getPane($request) {
         $vPane = new Valid_WhiteList(
             'pane',
             array(
                 Project_Admin_UGroup_View_Settings::IDENTIFIER,
-                Project_Admin_UGroup_View_Members::IDENTIFIER,
                 Project_Admin_UGroup_View_ShowBinding::IDENTIFIER,
                 Project_Admin_UGroup_View_EditBinding::IDENTIFIER
             )
@@ -91,5 +79,3 @@ class Project_Admin_UGroup_UGroupRouter {
         return $this->ugroup_manager->getById($ugroup_id);
     }
 }
-
-?>

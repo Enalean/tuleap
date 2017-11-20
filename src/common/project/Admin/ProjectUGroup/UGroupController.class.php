@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -83,14 +83,6 @@ class Project_Admin_UGroup_UGroupController {
         $binding            = $controller_binding->displayUgroupBinding();
         $ldap_plugin        = $controller_binding->getLdapPlugin() ?: null;
         $view               = new Project_Admin_UGroup_View_Settings($this->ugroup, $this->ugroup_binding, $binding, $ldap_plugin);
-        $this->render($view);
-    }
-
-    public function members() {
-        $pane = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Members::IDENTIFIER);
-        $controller_members = new Project_Admin_UGroup_UGroupController_Members($this->request, $this->ugroup, $pane);
-        $validated_request = $controller_members->validateRequest($this->ugroup->getProjectId(), $this->request);
-        $view = new Project_Admin_UGroup_View_Members($this->ugroup, $this->request, $this->ugroup_manager, $validated_request);
         $this->render($view);
     }
 

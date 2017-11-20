@@ -55,11 +55,6 @@ class Project_Admin_UGroup_PaneManagement {
                 Project_Admin_UGroup_View_Settings::IDENTIFIER,
                 $GLOBALS['Language']->getText('global', 'settings')
             ),
-            Project_Admin_UGroup_View_Members::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
-                $ugroup,
-                Project_Admin_UGroup_View_Members::IDENTIFIER,
-                $GLOBALS['Language']->getText('admin_grouplist', 'members')
-            ),
             Project_Admin_UGroup_View_Binding::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
                 $ugroup,
                 Project_Admin_UGroup_View_Binding::IDENTIFIER,
