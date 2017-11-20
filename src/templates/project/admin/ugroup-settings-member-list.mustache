@@ -13,6 +13,9 @@
                               method="post"
                               class="project-admin-members-form"
                         >
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
                             <div class="tlp-form-element tlp-form-element-append">
                                 <select
                                         name="add_user_name"
