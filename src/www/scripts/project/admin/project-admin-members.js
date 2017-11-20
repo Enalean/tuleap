@@ -21,12 +21,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal }           from 'tlp';
+import {
+    modal as createModal,
+    filterInlineTable
+} from 'tlp';
+
 import { autocomplete_users_for_select2 } from '../../tuleap/autocomplete-for-select2.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initProjectMembersSelect2();
     initDeleteProjectMembersModals();
+    initMembersFilter();
 });
 
 function initProjectMembersSelect2()
@@ -55,5 +60,13 @@ function initDeleteProjectMembersModals() {
                 modal.toggle();
             });
         }
+    }
+}
+
+function initMembersFilter() {
+    const members_filter = document.getElementById('project-admin-members-list-filter-table');
+
+    if (members_filter) {
+        filterInlineTable(members_filter);
     }
 }

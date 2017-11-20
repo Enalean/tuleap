@@ -574,6 +574,9 @@ msgstr ""
 msgid "There isn't <br> any activity yet"
 msgstr ""
 
+msgid "There isn't any matching members"
+msgstr ""
+
 msgid "There isn't any matching users groups"
 msgstr ""
 

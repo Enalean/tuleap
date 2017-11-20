@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -600,6 +600,9 @@ msgstr "Il n'y a pas de groupe lié à celui-ci."
 
 msgid "There isn't <br> any activity yet"
 msgstr "Il n'y a pas <br> encore d'activité"
+
+msgid "There isn't any matching members"
+msgstr "Il n'y a aucun membre correspondant"
 
 msgid "There isn't any matching users groups"
 msgstr "Il n'y a aucun groupe correspondant"
