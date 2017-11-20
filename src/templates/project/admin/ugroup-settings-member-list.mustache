@@ -7,30 +7,41 @@
                 </h1>
             </div>
             <section class="tlp-pane-section">
-                {{# can_be_updated }}
-                    <form action="?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&perform=addUser"
-                          method="post"
-                          class="project-admin-members-form"
-                    >
-                        <div class="tlp-form-element tlp-form-element-append">
-                            <select
-                                    name="add_user_name"
-                                    id="project-admin-members-add-user-select"
-                                    class="tlp-select tlp-select-adjusted"
-                                    size="50"
-                                    data-placeholder="{{# gettext }}User name{{/ gettext }}"
-                            ></select>
-                            <button class="tlp-append tlp-button-primary">
-                                <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Add member{{/ gettext }}
-                            </button>
-                        </div>
-                        <input type="hidden" name="action" value="edit_ugroup_members">
-                    </form>
-                {{/ can_be_updated }}
-                <table class="tlp-table">
+                <div class="tlp-table-actions">
+                    {{# can_be_updated }}
+                        <form action="?group_id={{ project_id }}&ugroup_id={{ id }}&func=edit&pane=settings&perform=addUser"
+                              method="post"
+                              class="project-admin-members-form"
+                        >
+                            <div class="tlp-form-element tlp-form-element-append">
+                                <select
+                                        name="add_user_name"
+                                        id="project-admin-members-add-user-select"
+                                        class="tlp-select tlp-select-adjusted"
+                                        size="50"
+                                        data-placeholder="{{# gettext }}User name{{/ gettext }}"
+                                ></select>
+                                <button class="tlp-append tlp-button-primary">
+                                    <i class="fa fa-plus tlp-button-icon"></i> {{# gettext }}Add member{{/ gettext }}
+                                </button>
+                            </div>
+                            <input type="hidden" name="action" value="edit_ugroup_members">
+                        </form>
+                    {{/ can_be_updated }}
+                    <div class="tlp-table-actions-spacer"></div>
+                    <div class="tlp-form-element tlp-table-actions-element">
+                        <input type="search"
+                               class="tlp-search"
+                               id="project-admin-ugroups-list-table-filter"
+                               data-target-table-id="project-admin-ugroups-members-table"
+                               autocomplete="off"
+                               placeholder="{{# gettext }}Filter by name{{/ gettext }}">
+                    </div>
+                </div>
+                <table class="tlp-table" id="project-admin-ugroups-members-table">
                     <thead>
                     <tr>
-                        <th>{{# gettext }}Name{{/ gettext }}</th>
+                        <th class="tlp-table-cell-filterable">{{# gettext }}Name{{/ gettext }}</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -45,7 +56,7 @@
                     {{# has_members }}
                         {{# members }}
                             <tr>
-                                <td>
+                                <td class="tlp-table-cell-filterable">
                                     <div class="tlp-avatar projectadmin-userlist-result-name-avatar">
                                         {{# has_avatar }}
                                             <img src="/users/{{ user_name }}/avatar.png"/>
