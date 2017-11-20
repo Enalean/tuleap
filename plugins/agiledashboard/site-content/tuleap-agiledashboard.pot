@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"An artifact is considered <strong>done</strong> when it has one of the "
-"following closed values:"
+"An artifact is considered to be <strong>done</strong> when its field %s will "
+"have one of the following closed values:"
 msgstr ""
 
 msgid ""

@@ -39,10 +39,19 @@ class SemanticDoneIntroPresenter
      */
     public $has_selected_values;
 
+    /**
+     * @var string
+     */
+    public $semantic_status_field_label = '';
+
     public function __construct(array $selected_values, Tracker_FormElement_Field $semantic_status_field = null)
     {
-        $this->semantic_status_is_defined = (boolean) ($semantic_status_field !== null);
-        $this->selected_values            = $selected_values;
-        $this->has_selected_values        = count($selected_values) > 0;
+        $this->semantic_status_is_defined  = (boolean)($semantic_status_field !== null);
+        $this->selected_values             = $selected_values;
+        $this->has_selected_values         = count($selected_values) > 0;
+
+        if ($this->semantic_status_is_defined) {
+            $this->semantic_status_field_label = $semantic_status_field->getLabel();
+        }
     }
 }
