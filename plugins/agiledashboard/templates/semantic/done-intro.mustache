@@ -6,7 +6,11 @@
         {{/ has_selected_values }}
 
         {{# has_selected_values }}
-            {{# dgettext }}tuleap-agiledashboard | An artifact is considered <strong>done</strong> when it has one of the following closed values: {{/ dgettext }}
+            {{# dgettext }}
+                    tuleap-agiledashboard
+                    | An artifact is considered to be <strong>done</strong> when its field %s will have one of the following closed values:
+                    | {{ semantic_status_field_label }}
+            {{/ dgettext }}
             <ul>
                 {{# selected_values }}
                     <li class="tracker-semantic-selected-value">{{ label }}</li>
