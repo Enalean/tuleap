@@ -46,6 +46,11 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <tr class="tlp-table-empty-filter">
+                        <td colspan="2" class="tlp-table-cell-empty">
+                            {{# gettext }}There isn't any matching members{{/ gettext }}
+                        </td>
+                    </tr>
                     {{^ has_members }}
                         <tr>
                             <td colspan="2" class="tlp-table-cell-empty">

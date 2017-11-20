@@ -598,6 +598,9 @@ msgstr "Il n'y a pas de groupe lié à celui-ci."
 msgid "There isn't <br> any activity yet"
 msgstr "Il n'y a pas <br> encore d'activité"
 
+msgid "There isn't any matching members"
+msgstr "Il n'y a aucun membre correspondant"
+
 msgid "There isn't any matching users groups"
 msgstr "Il n'y a aucun groupe correspondant"
 
