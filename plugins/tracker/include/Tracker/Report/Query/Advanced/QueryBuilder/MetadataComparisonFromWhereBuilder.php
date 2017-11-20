@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
+use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 
 interface MetadataComparisonFromWhereBuilder

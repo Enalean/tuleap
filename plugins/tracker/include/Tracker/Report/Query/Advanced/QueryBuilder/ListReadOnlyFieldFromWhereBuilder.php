@@ -21,7 +21,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\FromWhere;
+use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 
