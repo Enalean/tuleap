@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\AgileDashboard\Widget\MyKanban;
@@ -36,6 +37,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Request\CurrentPage;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -112,6 +114,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook('widget_instance');
             $this->addHook('widgets');
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
+            $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1141,5 +1144,14 @@ class AgileDashboardPlugin extends Plugin {
                 $item_ids[] = $child->getId();
             }
         }
+    }
+
+    public function canValueBeHiddenStatementsCollection(CanValueBeHiddenStatementsCollection $event)
+    {
+        $field   = $event->getField();
+        $tracker = $field->getTracker();
+        $dao     = new SemanticDoneDao();
+
+        $event->add($dao->getSemanticStatement($field->getId(), $tracker->getId()));
     }
 }
