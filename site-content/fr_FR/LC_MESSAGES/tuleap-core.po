@@ -353,8 +353,8 @@ msgstr "Description du groupe"
 msgid "Mediawiki"
 msgstr "Mediawiki"
 
-msgid "Member name, id"
-msgstr "Nom du membre, id"
+msgid "Member name"
+msgstr "Nom du membre"
 
 msgid "Member removal"
 msgstr "Suppression de membre"

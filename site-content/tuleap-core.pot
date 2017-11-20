@@ -329,7 +329,7 @@ msgstr ""
 msgid "Mediawiki"
 msgstr ""
 
-msgid "Member name, id"
+msgid "Member name"
 msgstr ""
 
 msgid "Member removal"
