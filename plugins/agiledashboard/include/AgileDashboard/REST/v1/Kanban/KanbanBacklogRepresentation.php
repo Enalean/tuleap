@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,39 +19,21 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
-use AgileDashboard_Kanban;
-use AgileDashboard_KanbanItemDao;
-use Tracker_ArtifactFactory;
-use PFUser;
-
-class KanbanBacklogRepresentation {
-
-    /** @var array */
+class KanbanBacklogRepresentation
+{
+    /** @var KanbanItemRepresentation[] */
     public $collection;
 
     /** @var int */
     public $total_size;
 
-    public function build(PFUser $user, AgileDashboard_Kanban $kanban, $limit, $offset) {
-        $dao     = new AgileDashboard_KanbanItemDao();
-        $factory = Tracker_ArtifactFactory::instance();
-
-        $data    = $dao->searchPaginatedBacklogItemsByTrackerId($kanban->getTrackerId(), $limit, $offset);
-
-        $this->total_size = (int) $dao->foundRows();
-        $this->collection = array();
-        foreach ($data as $row) {
-            $artifact = $factory->getInstanceFromRow($row);
-            if ($artifact->userCanView($user)) {
-                $item_representation = new KanbanItemRepresentation();
-                $item_representation->build(
-                    $artifact,
-                    array(),
-                    KanbanColumnRepresentation::BACKLOG_COLUMN
-                );
-
-                $this->collection[] = $item_representation;
-            }
-        }
+    /**
+     * @param KanbanItemRepresentation[] $collection
+     * @param int $total_size
+     */
+    public function __construct($collection, $total_size)
+    {
+        $this->collection = $collection;
+        $this->total_size = $total_size;
     }
 }

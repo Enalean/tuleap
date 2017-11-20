@@ -28,17 +28,18 @@ use Tuleap\Tracker\Report\ExpertModePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Visitable;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\FromWhere;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 
@@ -92,6 +93,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
      * @var QueryBuilderVisitor
      */
     private $query_builder;
+    /** @var FromWhere */
+    private $additional_from_where;
 
     /**
      * Constructor
@@ -1850,8 +1853,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     }
 
     private function getMatchingIdsInDb(
-        $additional_from,
-        $additional_where
+        $from,
+        $where
     ) {
         $matching_ids = $this->getNoMatchingIds();
 
@@ -1862,11 +1865,17 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $permissions          = $this->getPermissionsManager()->getPermissionsAndUgroupsByObjectid($tracker->getId());
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
+
+        if (isset($this->additional_from_where)) {
+            $from[]  = $this->additional_from_where->getFrom();
+            $where[] = $this->additional_from_where->getWhere();
+        }
+
         $matching_ids_result  = $dao->searchMatchingIds(
             $group_id,
             $tracker->getId(),
-            $additional_from,
-            $additional_where,
+            $from,
+            $where,
             $user,
             $permissions,
             $contributor_field_id
@@ -1928,5 +1937,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         );
 
         return $invalid_searchables_collection;
+    }
+
+    public function getMatchingIdsWithAdditionalFromWhere(FromWhere $from_where)
+    {
+        $this->additional_from_where = $from_where;
+        $matching_ids = $this->getMatchingIds();
+        unset($this->additional_from_where);
+
+        return $matching_ids;
     }
 }

@@ -67,4 +67,25 @@ class QueryParameterParserTest extends \TuleapTestCase
 
         $this->assertEqual(array(21, 74), $result);
     }
+
+    public function itThrowsWhenTrackerReportIdIsMissing()
+    {
+        $this->expectException('Tuleap\\REST\\MissingMandatoryParameterException');
+
+        $this->query_parser->getInt('{"some_other_property": ""}', 'tracker_report_id');
+    }
+
+    public function itThrowsWhenTrackerReportIdIsNotAnInt()
+    {
+        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
+
+        $this->query_parser->getInt('{"tracker_report_id": "a"}', 'tracker_report_id');
+    }
+
+    public function itReturnsAnIntForTrackerReportId()
+    {
+        $result = $this->query_parser->getInt('{"tracker_report_id": 47}', 'tracker_report_id');
+
+        $this->assertEqual(47, $result);
+    }
 }
