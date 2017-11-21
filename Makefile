@@ -181,7 +181,7 @@ dev-setup: .env deploy-githooks ## Setup environment for Docker Compose (should 
 	@echo VIRTUAL_HOST=tuleap-web.tuleap-aio-dev.docker >> .env
 
 show-passwords: ## Display passwords generated for Docker Compose environment
-	@$(DOCKER) run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
+	@$(DOCKER_COMPOSE) exec web cat /data/root/.tuleap_passwd
 
 dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 	@$(DOCKER) exec tuleap-web /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini update
