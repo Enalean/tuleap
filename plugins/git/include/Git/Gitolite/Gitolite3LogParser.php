@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -34,10 +34,11 @@ use GitRepository;
 
 class Gitolite3LogParser
 {
-    const REPOSITORY_PATH = 'gitolite/repositories/';
-    const GIT_COMMAND     = 'pre_git';
-    const FILE_NAME       = 'gitolite-';
-    const FILE_EXTENSION  = '.log';
+    const REPOSITORY_PATH                       = 'gitolite/repositories/';
+    const GIT_COMMAND                           = 'pre_git';
+    const FILE_NAME                             = 'gitolite-';
+    const FILE_EXTENSION                        = '.log';
+    const EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE = 8;
 
 
     /** @var Logger */
@@ -150,7 +151,8 @@ class Gitolite3LogParser
 
     private function parseLine(array $line, $filename)
     {
-        if ($this->isAReadAccess($line) && $this->isNotASystemUser($line[4])) {
+        if (count($line) === self::EXPECTED_NUMBER_OF_FIELDS_IN_LOG_LINE &&
+                $this->isAReadAccess($line) && $this->isNotASystemUser($line[4])) {
             $this->logger->debug(
                 'File ' . $filename . '. Add one Read access for repository ' . $line[3] . ' pattern ' . $line[7] . ' for user ' . $line[4]
             );
@@ -169,6 +171,10 @@ class Gitolite3LogParser
 
             $user = $this->user_manager->getUserByUserName($line[4]);
             $day  = DateTime::createFromFormat('Y-m-d.H:i:s', $line[0]);
+            if ($day === false) {
+                $this->logger->debug('Not able to parse the date ' . $line[0]);
+                return;
+            }
 
             if ($user) {
                 $user_id = $user->getId();

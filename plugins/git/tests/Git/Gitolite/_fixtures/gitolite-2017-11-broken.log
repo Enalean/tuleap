@@ -1,0 +1,2 @@
+2017-11-21.09:33:43	10072	pre_git	project_name/repository_name	username	R	any
+wrongly_formatted_date	10072	pre_git	project_name/repository_name	username	R	any	refs/.*
