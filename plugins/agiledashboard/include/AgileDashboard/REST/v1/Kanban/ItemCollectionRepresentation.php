@@ -19,7 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
-class KanbanBacklogRepresentation
+class ItemCollectionRepresentation
 {
     /** @var KanbanItemRepresentation[] */
     public $collection;

@@ -24,13 +24,14 @@ use AgileDashboard_Kanban;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_ReportFactory;
+use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\Kanban\TrackerReportFilter\ReportFilterFromWhereBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanBacklogRepresentation;
-use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnRepresentation;
+use Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemRepresentation;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 
-class FilteredBacklogRepresentationBuilder
+class FilteredItemCollectionRepresentationBuilder
 {
     /** @var Tracker_ReportFactory */
     private $report_factory;
@@ -38,42 +39,33 @@ class FilteredBacklogRepresentationBuilder
     private $report_artifact_factory;
     /** @var ReportFilterFromWhereBuilder */
     private $from_where_builder;
+    /** @var TimeInfoFactory */
+    private $time_info_factory;
 
     public function __construct(
         Tracker_ReportFactory $report_factory,
         ReportFilterFromWhereBuilder $from_where_builder,
-        ReportArtifactFactory $report_artifact_factory
+        ReportArtifactFactory $report_artifact_factory,
+        TimeInfoFactory $time_info_factory
     ) {
         $this->report_factory          = $report_factory;
         $this->report_artifact_factory = $report_artifact_factory;
         $this->from_where_builder      = $from_where_builder;
+        $this->time_info_factory       = $time_info_factory;
     }
 
-    /**
-     * @param PFUser $user
-     * @param AgileDashboard_Kanban $kanban
-     * @param int $tracker_report_id
-     * @param int $limit
-     * @param int $offset
-     * @return KanbanBacklogRepresentation
-     */
     public function build(
+        ColumnIdentifier $column_identifier,
         PFUser $user,
         AgileDashboard_Kanban $kanban,
         $tracker_report_id,
         $limit,
         $offset
     ) {
-        $report = $this->report_factory->getReportById($tracker_report_id, $user->getId(), false);
-        if ($report === null) {
-            throw new RestException(404, "The report was not found");
-        }
-        if ($report->getTracker()->getId() !== $kanban->getTrackerId()) {
-            throw new RestException(400, "The provided report does not belong to the kanban tracker");
-        }
+        $report                = $this->getReport($user, $kanban, $tracker_report_id);
+        $additional_from_where = $this->from_where_builder->getFromWhere($report->getTracker(), $column_identifier);
 
-        $additional_from_where = $this->from_where_builder->getFromWhereForBacklog($report->getTracker());
-
+        $collection          = array();
         $artifact_collection = $this->report_artifact_factory->getArtifactsMatchingReportWithAdditionalFromWhere(
             $report,
             $additional_from_where,
@@ -81,22 +73,35 @@ class FilteredBacklogRepresentationBuilder
             $offset
         );
 
-        $collection = array();
         foreach ($artifact_collection->getArtifacts() as $artifact) {
             if (! $artifact->userCanView($user)) {
                 continue;
             }
 
+            $time_info = $column_identifier->isBacklog() ? array() : $this->time_info_factory->getTimeInfo($artifact);
+
             $item_representation = new KanbanItemRepresentation();
             $item_representation->build(
                 $artifact,
-                array(),
-                KanbanColumnRepresentation::BACKLOG_COLUMN
+                $time_info,
+                $column_identifier->getColumnId()
             );
 
             $collection[] = $item_representation;
         }
 
-        return new KanbanBacklogRepresentation($collection, $artifact_collection->getTotalSize());
+        return new ItemCollectionRepresentation($collection, $artifact_collection->getTotalSize());
+    }
+
+    private function getReport(PFUser $user, AgileDashboard_Kanban $kanban, $tracker_report_id)
+    {
+        $report = $this->report_factory->getReportById($tracker_report_id, $user->getId(), false);
+        if ($report === null) {
+            throw new RestException(404, "The report was not found");
+        }
+        if ($report->getTracker()->getId() !== $kanban->getTrackerId()) {
+            throw new RestException(400, "The provided report does not belong to the kanban tracker");
+        }
+        return $report;
     }
 }

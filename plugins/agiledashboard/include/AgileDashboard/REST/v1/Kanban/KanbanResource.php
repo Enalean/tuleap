@@ -58,13 +58,14 @@ use Tracker_Semantic_Status;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\Kanban\TrackerReportFilter\ReportFilterFromWhereBuilder;
 use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
-use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter\FilteredBacklogRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter\FilteredItemCollectionRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
@@ -134,10 +135,12 @@ class KanbanResource extends AuthenticatedResource
 
     /** @var QueryParameterParser */
     private $query_parser;
-    /** @var KanbanBacklogRepresentationBuilder */
-    private $backlog_builder;
-    /** @var FilteredBacklogRepresentationBuilder */
-    private $filtered_backlog_builder;
+    /** @var ItemCollectionRepresentationBuilder */
+    private $item_collection_builder;
+    /** @var FilteredItemCollectionRepresentationBuilder */
+    private $filtered_item_collection_builder;
+    /** @var TimeInfoFactory */
+    private $time_info_factory;
 
     public function __construct()
     {
@@ -204,9 +207,14 @@ class KanbanResource extends AuthenticatedResource
             new JsonDecoder()
         );
 
-        $this->backlog_builder = new KanbanBacklogRepresentationBuilder(
+        $this->time_info_factory = new TimeInfoFactory(
+            $this->kanban_item_dao
+        );
+
+        $this->item_collection_builder = new ItemCollectionRepresentationBuilder(
             $this->kanban_item_dao,
-            $this->artifact_factory
+            $this->artifact_factory,
+            $this->time_info_factory
         );
 
         $report_factory = Tracker_ReportFactory::instance();
@@ -217,10 +225,11 @@ class KanbanResource extends AuthenticatedResource
 
         $report_from_where_builder = new ReportFilterFromWhereBuilder();
 
-        $this->filtered_backlog_builder = new FilteredBacklogRepresentationBuilder(
+        $this->filtered_item_collection_builder = new FilteredItemCollectionRepresentationBuilder(
             $report_factory,
             $report_from_where_builder,
-            $report_artifact_factory
+            $report_artifact_factory,
+            $this->time_info_factory
         );
     }
 
@@ -426,7 +435,7 @@ class KanbanResource extends AuthenticatedResource
      * @param int $limit    Number of elements displayed per page
      * @param int $offset   Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanBacklogRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
      *
      * @throws 403
      * @throws 404
@@ -434,12 +443,14 @@ class KanbanResource extends AuthenticatedResource
     public function getBacklog($id, $query = '', $limit = 10, $offset = 0)
     {
         $this->checkAccess();
-        $user    = $this->getCurrentUser();
-        $kanban  = $this->getKanban($user, $id);
+        $user              = $this->getCurrentUser();
+        $kanban            = $this->getKanban($user, $id);
+        $column_identifier = new ColumnIdentifier(ColumnIdentifier::BACKLOG_COLUMN);
 
         if ($query !== '') {
-            $tracker_report_id      = $this->getTrackerReportIdFromQuery($query);
-            $backlog_representation = $this->filtered_backlog_builder->build(
+            $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
+            $items_representation = $this->filtered_item_collection_builder->build(
+                $column_identifier,
                 $user,
                 $kanban,
                 $tracker_report_id,
@@ -447,7 +458,8 @@ class KanbanResource extends AuthenticatedResource
                 $offset
             );
         } else {
-            $backlog_representation = $this->backlog_builder->build(
+            $items_representation = $this->item_collection_builder->build(
+                $column_identifier,
                 $user,
                 $kanban,
                 $limit,
@@ -456,9 +468,9 @@ class KanbanResource extends AuthenticatedResource
         }
 
         Header::allowOptionsGet();
-        Header::sendPaginationHeaders($limit, $offset, $backlog_representation->total_size, self::MAX_LIMIT);
+        Header::sendPaginationHeaders($limit, $offset, $items_representation->total_size, self::MAX_LIMIT);
 
-        return $backlog_representation;
+        return $items_representation;
     }
 
     /**
@@ -821,20 +833,35 @@ class KanbanResource extends AuthenticatedResource
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
+     * <p><b>query</b> is optional. When filled, it is a json object with:</p>
+     * <p>an integer "tracker_report_id" to filter kanban items corresponding to the
+     *      given Tracker report id. <br></p>
+     *
+     *      Example: <pre>{"tracker_report_id":41}</pre>
+     *
+     * <br>
+     * <p>Reports using the field bound to the "Status" semantic may not filter items
+     *      the way you expect them to. For example, using a Tracker report with a "Status"
+     *      criteria with "Status" = "On going" and providing the column id for the "Review"
+     *      column will return an empty column. Items cannot have two "Status" values at
+     *      the same time, so this will result in an empty list.</p>
+     *
      * @url GET {id}/items
      * @access hybrid
      *
-     * @param int $id Id of the kanban
+     * @param int $id        Id of the kanban
      * @param int $column_id Id of the column the item belongs to
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param string $query  Search string in json format
+     * @param int $limit     Number of elements displayed per page
+     * @param int $offset    Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemCollectionRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
      *
      * @throws 403
      * @throws 404
      */
-    public function getItems($id, $column_id, $limit = 10, $offset = 0) {
+    public function getItems($id, $column_id, $query = '', $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
@@ -843,8 +870,27 @@ class KanbanResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $items_representation = new KanbanItemCollectionRepresentation();
-        $items_representation->build($user, $kanban, $column_id, $limit, $offset);
+        $column_identifier = new ColumnIdentifier($column_id);
+
+        if ($query !== '') {
+            $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
+            $items_representation = $this->filtered_item_collection_builder->build(
+                $column_identifier,
+                $user,
+                $kanban,
+                $tracker_report_id,
+                $limit,
+                $offset
+            );
+        } else {
+            $items_representation = $this->item_collection_builder->build(
+                $column_identifier,
+                $user,
+                $kanban,
+                $limit,
+                $offset
+            );
+        }
 
         Header::allowOptionsGet();
         Header::sendPaginationHeaders($limit, $offset, $items_representation->total_size, self::MAX_LIMIT);
