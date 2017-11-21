@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,8 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
@@ -22,8 +23,8 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 use AgileDashboard_KanbanColumn;
 use Tuleap\REST\JsonCast;
 
-class KanbanColumnRepresentation {
-
+class KanbanColumnRepresentation
+{
     const ROUTE = "kanban_columns";
 
     /**
@@ -66,11 +67,12 @@ class KanbanColumnRepresentation {
      */
     public $user_can_edit_label;
 
-    const ARCHIVE_COLUMN = 'archive';
-
-    const BACKLOG_COLUMN = 'backlog';
-
-    public function build(AgileDashboard_KanbanColumn $column, $user_can_add_in_place, $user_can_remove_column, $user_can_edit_label) {
+    public function build(
+        AgileDashboard_KanbanColumn $column,
+        $user_can_add_in_place,
+        $user_can_remove_column,
+        $user_can_edit_label
+    ) {
         $this->id                     = JsonCast::toInt($column->getId());
         $this->label                  = $column->getLabel();
         $this->is_open                = $column->isOpen();
