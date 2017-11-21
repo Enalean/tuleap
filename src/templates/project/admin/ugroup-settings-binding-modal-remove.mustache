@@ -5,6 +5,9 @@
       id="project-admin-delete-binding-modal"
       aria-labelledby="project-admin-delete-binding-modal-title"
 >
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="project-admin-delete-binding-modal-title">
             <i class="fa fa-trash-o tlp-modal-title-icon"></i>
