@@ -45,6 +45,11 @@ class SemanticDoneAdminPresenter
      */
     public $go_back_url;
 
+    /**
+     * @var bool
+     */
+    public $has_closed_values_selectable;
+
     public function __construct(
         Tracker $tracker,
         array $closed_values,
@@ -58,5 +63,7 @@ class SemanticDoneAdminPresenter
             'tracker' => $this->tracker_id,
             'func'    => 'admin-semantic'
         ));
+
+        $this->has_closed_values_selectable = count($this->closed_values) > 0;
     }
 }

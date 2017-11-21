@@ -90,3 +90,8 @@ msgstr ""
 
 msgid "Tracker semantic done"
 msgstr "Sémantique fini"
+
+msgid ""
+"You can't add values in this semantic because all possible values are "
+"defined as open in semantic status."
+msgstr "Vous ne pouvez pas ajouter de valeur dans cette sémantique car l'ensemble des valeurs possibles sont définies en tant que valeurs ouvertes dans la sémantique statut."

@@ -749,7 +749,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return array
      */
-    private function getAllVisibleValues()
+    public function getAllVisibleValues()
     {
         return $this->getBind()->getAllVisibleValues();
     }

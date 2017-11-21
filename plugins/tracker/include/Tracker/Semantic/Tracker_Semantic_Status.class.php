@@ -261,20 +261,18 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             if ($field) {
                 $disabled_values = $this->getDisabledValues();
 
-                foreach ($field->getAllValues() as $v) {
-                    if (!$v->isHidden()) {
-                        $selected = '';
-                        if (in_array($v->getId(), $this->open_values)) {
-                            $selected = ' selected="selected" ';
-                        }
-
-                        $disabled = '';
-                        if (in_array($v->getId(), $disabled_values)) {
-                            $disabled = ' disabled="disabled" ';
-                        }
-
-                        $values .= '<option value="' . $v->getId() . '" ' . $selected . $disabled .'>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+                foreach ($field->getAllVisibleValues() as $v) {
+                    $selected = '';
+                    if (in_array($v->getId(), $this->open_values)) {
+                        $selected = ' selected="selected" ';
                     }
+
+                    $disabled = '';
+                    if (in_array($v->getId(), $disabled_values)) {
+                        $disabled = ' disabled="disabled" ';
+                    }
+
+                    $values .= '<option value="' . $v->getId() . '" ' . $selected . $disabled .'>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
                 }
             }
             $values .= '</select>';
