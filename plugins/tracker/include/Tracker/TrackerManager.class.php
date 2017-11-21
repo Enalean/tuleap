@@ -1173,7 +1173,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * @return GlobalAdminController
      */
-    private function getGlobalAdminController(Project $project)
+    protected function getGlobalAdminController(Project $project)
     {
         $global_admin_csrf       = new CSRFSynchronizerToken($this->getTrackerHomepageURL($project->getID()));
         $dao                     = new ArtifactLinksUsageDao();

@@ -184,11 +184,12 @@ class TrackerManagerTest extends TuleapTestCase {
     public function testProcessItself() {
         $request_artifact = new MockCodendi_Request($this);
 
-        $tm = TestHelper::getPartialMock('TrackerManager', array('getProject', 'displayAllTrackers', 'checkServiceEnabled'));
+        $tm = TestHelper::getPartialMock('TrackerManager', array('getProject', 'displayAllTrackers', 'checkServiceEnabled', 'getGlobalAdminController'));
         $project = new MockProject();
         $tm->expectOnce('getProject');
         $tm->setReturnValue('getProject', $project, array(5));
         $tm->setReturnValue('checkServiceEnabled', true, array($project, $request_artifact));
+        stub($tm)->getGlobalAdminController()->returns(mock('Tuleap\Tracker\Admin\GlobalAdminController'));
         $tm->expectOnce('displayAllTrackers', array($project, $this->user));
 
         $this->artifact->expectNever('process');
