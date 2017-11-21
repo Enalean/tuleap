@@ -30,9 +30,24 @@ import { autocomplete_users_for_select2 } from '../../tuleap/autocomplete-for-se
 
 document.addEventListener('DOMContentLoaded', () => {
     initProjectMembersSelect2();
-    initDeleteProjectMembersModals();
     initMembersFilter();
+    initModals();
 });
+
+function initModals() {
+    const buttons = document.querySelectorAll(`
+        #project-admin-members-modal-import-users-button,
+        .project-members-delete-button
+    `);
+
+    for (const button of buttons) {
+        const modal = createModal(document.getElementById(button.dataset.targetModalId));
+
+        button.addEventListener('click', () => {
+            modal.show();
+        });
+    }
+}
 
 function initProjectMembersSelect2()
 {
@@ -45,22 +60,6 @@ function initProjectMembersSelect2()
     autocomplete_users_for_select2(select_element, {
         internal_users_only: false
     });
-}
-
-function initDeleteProjectMembersModals() {
-    const modal_project_member_delete_buttons = document.querySelectorAll('.project-members-delete-button');
-
-    for (const button of modal_project_member_delete_buttons) {
-        const modal_element = document.getElementById(button.dataset.targetModalId);
-
-        if (modal_element) {
-            const modal = createModal(modal_element);
-
-            button.addEventListener('click', function () {
-                modal.toggle();
-            });
-        }
-    }
 }
 
 function initMembersFilter() {

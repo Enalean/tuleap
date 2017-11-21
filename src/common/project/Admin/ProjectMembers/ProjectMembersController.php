@@ -84,7 +84,7 @@ class ProjectMembersController
         $this->displayHeader($title, $project);
 
         $project_members_list = $this->getFormattedProjectMembers($request);
-        $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project';
+        $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project/members';
         $renderer             = TemplateRendererFactory::build()->getRenderer($template_path);
 
         $renderer->renderToPage(

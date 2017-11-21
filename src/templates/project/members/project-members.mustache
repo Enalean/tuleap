@@ -27,14 +27,13 @@
                         </div>
                         <input type="hidden" name="action" value="add-user">
                     </form>
-                    <div id="import-members-link">
-                        <a href="/project/admin/userimport.php?group_id={{ project_id }}"
-                           class="tlp-button-primary tlp-button-outline"
-                           role="button"
-                        >
-                            <i class="fa fa-download"></i> {{# gettext }}Import members{{/ gettext }}
-                        </a>
-                    </div>
+                    <button id="project-admin-members-modal-import-users-button"
+                            type="button"
+                            data-target-modal-id="modal-import-users"
+                            class="tlp-button-primary tlp-button-outline"
+                    >
+                        <i class="fa fa-download"></i> {{# gettext }}Import members{{/ gettext }}
+                    </button>
                     <div class="tlp-table-actions-spacer"></div>
                     <div class="tlp-form-element tlp-table-actions-element">
                         <input type="search"
@@ -99,3 +98,5 @@
         </div>
     </section>
 </div>
+
+{{> modal-import-members }}

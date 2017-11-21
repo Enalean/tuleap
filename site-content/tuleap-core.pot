@@ -419,6 +419,11 @@ msgstr ""
 msgid "Please avoid spaces and punctuation in users groups name."
 msgstr ""
 
+msgid ""
+"Please make sure the users who will be imported are already registered and "
+"have an active account."
+msgstr ""
+
 msgid "Please, enter a http:// or https:// link"
 msgstr ""
 
@@ -674,6 +679,9 @@ msgstr ""
 msgid "Update successful"
 msgstr ""
 
+msgid "Upload text file"
+msgstr ""
+
 msgid "User Permissions"
 msgstr ""
 
@@ -761,6 +769,12 @@ msgid ""
 "action."
 msgstr ""
 
+msgid "You can import users into your project by specifying a text file."
+msgstr ""
+
+msgid "You can include empty lines in the import file."
+msgstr ""
+
 msgid "You can only edit your own widgets."
 msgstr ""
 
@@ -783,6 +797,11 @@ msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
 
 msgid "You must be a project admin to edit this widget."
+msgstr ""
+
+msgid ""
+"You need to provide a simple file, containing in each line the email address "
+"or the username of the user."
 msgstr ""
 
 msgid ""
