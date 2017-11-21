@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
@@ -377,7 +378,16 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     /**
      * Delete this semantic
      */
-    private function delete() {
+    private function delete()
+    {
+        $event = new SemanticStatusCanBeDeleted($this->tracker);
+
+        EventManager::instance()->processEvent($event);
+
+        if (! $event->semanticCanBeDeleted()) {
+            return;
+        }
+
         $this->list_field  = null;
         $this->open_values = array();
         $dao = new Tracker_Semantic_StatusDao();

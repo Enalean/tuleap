@@ -53,6 +53,11 @@ msgid ""
 "defined."
 msgstr ""
 
+msgid ""
+"The semantic status cannot de deleted because the semantic done is defined "
+"for this tracker."
+msgstr ""
+
 msgid "There is no content <br> you can see"
 msgstr ""
 
