@@ -418,7 +418,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         //Only filter query if field is used
         if($this->isUsed()) {
             $criteria_value = $this->getCriteriaValue($criteria);
-            if ($criteria_value && count($criteria_value) == 1 && in_array("100", array_keys($criteria_value))){
+            if ($criteria_value && count($criteria_value) === 1 && array_key_exists("100", $criteria_value)){
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                  $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ". $this->id .")
@@ -429,9 +429,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                 $c = 'C_'. $this->id;
+
+                $ugroup_ids = CodendiDataAccess::instance()->escapeIntImplode(array_keys($criteria_value));
+
                 $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ". $this->id .")
                          INNER JOIN tracker_changeset_value_permissionsonartifact AS $b ON ($b.changeset_value_id = $a.id
-                            AND $b.ugroup_id IN(". implode(',', array_keys($criteria_value)) .")
+                            AND $b.ugroup_id IN ($ugroup_ids)
                       )";
                 return $sql;
             }

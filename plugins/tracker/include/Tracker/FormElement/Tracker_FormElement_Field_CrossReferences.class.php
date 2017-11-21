@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/dao/CrossReferenceDao.class.php');
@@ -32,27 +33,23 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
 
     public $default_properties = array();
     
-    public function getCriteriaFrom($criteria) {
+    public function getCriteriaFrom($criteria)
+    {
         //Only filter query if field is used
         if($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                //TODO: move this in a dao
-                $v = $criteria_value;
-                if (is_numeric($v)) {
-                    $cond = '= '. (int)$v;
-                } else {
-                    $cond = "= '$v'"; //todo quotesmart + rlike
-                }
+                $criteria_value = CodendiDataAccess::instance()->quoteSmart($criteria_value);
                 $a = 'A_'. $this->id; 
                 return " INNER JOIN cross_references AS $a 
-                         ON (artifact.id = $a.source_id AND $a.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.target_id $cond
+                         ON (artifact.id = $a.source_id AND $a.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.target_id = $criteria_value
                              OR
-                             artifact.id = $a.target_id AND $a.target_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.source_id $cond
+                             artifact.id = $a.target_id AND $a.target_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.source_id = $criteria_value
                          )
                 ";
             }
         }
+        return '';
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
