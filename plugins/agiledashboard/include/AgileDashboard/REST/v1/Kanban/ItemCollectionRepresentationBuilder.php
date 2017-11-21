@@ -58,6 +58,12 @@ class ItemCollectionRepresentationBuilder
                 $limit,
                 $offset
             );
+        } elseif ($column_identifier->isArchive()) {
+            $data = $this->kanban_item_dao->searchPaginatedArchivedItemsByTrackerId(
+                $kanban->getTrackerId(),
+                $limit,
+                $offset
+            );
         } else {
             $data = $this->kanban_item_dao->searchPaginatedItemsInColumn(
                 $kanban->getTrackerId(),

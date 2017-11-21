@@ -686,25 +686,58 @@ class KanbanResource extends AuthenticatedResource
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
+     * <p><b>query</b> is optional. When filled, it is a json object with:</p>
+     * <p>an integer "tracker_report_id" to filter kanban items corresponding to the
+     *      given Tracker report id. <br></p>
+     *
+     *      Example: <pre>{"tracker_report_id":41}</pre>
+     *
+     * <br>
+     * <p>Reports using the field bound to the "Status" semantic may not filter items
+     *      the way you expect them to. For example, using a Tracker report with a "Status"
+     *      criteria with "Status" = "On going" will return an empty column. Items in
+     *      the Archive column have one of the "closed" values for "Status", they can't
+     *      have "On going" and "closed" values at the same time.</p>
+     *
      * @url GET {id}/archive
      * @access hybrid
      *
-     * @param int $id Id of the kanban
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int $id       Id of the kanban
+     * @param string $query Search string in json format
+     * @param int $limit    Number of elements displayed per page
+     * @param int $offset   Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanArchiveRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\ItemCollectionRepresentation
      *
      * @throws 403
      * @throws 404
      */
-    public function getArchive($id, $limit = 10, $offset = 0) {
+    public function getArchive($id, $query = '', $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
-        $user   = $this->getCurrentUser();
-        $kanban = $this->getKanban($user, $id);
+        $user              = $this->getCurrentUser();
+        $kanban            = $this->getKanban($user, $id);
+        $column_identifier = new ColumnIdentifier(ColumnIdentifier::ARCHIVE_COLUMN);
 
-        $items_representation = new KanbanArchiveRepresentation();
-        $items_representation->build($user, $kanban, $limit, $offset);
+        if ($query !== '') {
+            $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
+            $items_representation = $this->filtered_item_collection_builder->build(
+                $column_identifier,
+                $user,
+                $kanban,
+                $tracker_report_id,
+                $limit,
+                $offset
+            );
+        } else {
+            $items_representation = $this->item_collection_builder->build(
+                $column_identifier,
+                $user,
+                $kanban,
+                $limit,
+                $offset
+            );
+        }
 
         Header::allowOptionsGet();
         Header::sendPaginationHeaders($limit, $offset, $items_representation->total_size, self::MAX_LIMIT);
