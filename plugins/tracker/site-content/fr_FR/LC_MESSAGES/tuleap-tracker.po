@@ -133,6 +133,12 @@ msgstr "Id du rendu"
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid ""
+"Some selected values was not saved because they are used in another semantic."
+msgstr ""
+"Certaines valeurs selectionnées n'ont pu être enregistrées car elle sont "
+"utilisées par une autre sémantique."
+
 #, php-format
 msgid "The @comment metadata cannot be compared to MYSELF()."
 msgstr "Le champ @comment '%s' ne peut pas être comparé à MYSELF()."

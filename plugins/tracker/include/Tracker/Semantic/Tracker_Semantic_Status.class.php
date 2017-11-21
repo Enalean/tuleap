@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/include/Codendi_Request.class.php');
-require_once('common/user/User.class.php');
+
+use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
     const NAME   = 'status';
@@ -217,7 +217,12 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      *
      * @return string html
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
+    public function displayAdmin(
+        Tracker_SemanticManager $sm,
+        TrackerManager $tracker_manager,
+        Codendi_Request $request,
+        PFUser $current_user
+    ) {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
@@ -253,14 +258,22 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
                 $params = 'name="open_values['. $this->getFieldId() .'][]" multiple="multiple" size="7" style="vertical-align:top;"';
             }
             $values = '<select '. $params .'>';
-            if ($field) { //see above
+            if ($field) {
+                $disabled_values = $this->getDisabledValues();
+
                 foreach ($field->getAllValues() as $v) {
                     if (!$v->isHidden()) {
                         $selected = '';
                         if (in_array($v->getId(), $this->open_values)) {
                             $selected = ' selected="selected" ';
                         }
-                        $values .= '<option value="' . $v->getId() . '" ' . $selected . '>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
+
+                        $disabled = '';
+                        if (in_array($v->getId(), $disabled_values)) {
+                            $disabled = ' disabled="disabled" ';
+                        }
+
+                        $values .= '<option value="' . $v->getId() . '" ' . $selected . $disabled .'>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
                     }
                 }
             }
@@ -284,6 +297,15 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
 
+    private function getDisabledValues()
+    {
+        $event = new SemanticStatusGetDisabledValues($this->getField());
+
+        EventManager::instance()->processEvent($event);
+
+        return $event->getDisabledValues();
+    }
+
     /**
      * Process the form
      *
@@ -304,9 +326,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             } else if ($field = Tracker_FormElementFactory::instance()->getUsedListFieldById($this->tracker, $request->get('field_id'))) {
                 if ($this->getFieldId() != $request->get('field_id') || $request->get('open_values')) {
                     $this->list_field = $field;
-                    $open_values = $request->get('open_values');
-                    if ($open_values && is_array($open_values) && isset($open_values[$this->getFieldId()]) && is_array($open_values[$this->getFieldId()])) {
-                        $this->open_values = $open_values[$this->getFieldId()];
+                    $open_values = $this->getFilteredOpenValues($request);
+                    if (count($open_values) > 0) {
+                        $this->open_values = $open_values;
                         if ($this->save()) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_now', array($field->getLabel())));
                             $GLOBALS['Response']->redirect($this->getUrl());
@@ -323,6 +345,35 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             }
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+    }
+
+    /**
+     * @return array
+     */
+    private function getFilteredOpenValues(HTTPRequest $request)
+    {
+        $filtered_values = array();
+        $open_values     = $request->get('open_values');
+
+        if (! $open_values ||
+            ! is_array($open_values) ||
+            ! isset($open_values[$this->getFieldId()]) ||
+            ! is_array($open_values[$this->getFieldId()])
+        ) {
+            return $filtered_values;
+        }
+
+        $selected_open_values = $open_values[$this->getFieldId()];
+        $filtered_values      = array_diff($selected_open_values, $this->getDisabledValues());
+
+        if ($filtered_values !== $selected_open_values) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                dgettext('tuleap-tracker', 'Some selected values was not saved because they are used in another semantic.')
+            );
+        }
+
+        return $filtered_values;
     }
 
     /**
