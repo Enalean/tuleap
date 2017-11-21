@@ -4,8 +4,10 @@ var webpack               = require('webpack');
 var WebpackAssetsManifest = require('webpack-assets-manifest');
 var BabelPresetEnv        = require('babel-preset-env');
 
+var manifest_data   = Object.create(null);
 var assets_dir_path = path.resolve(__dirname, './dist');
-module.exports = {
+
+var webpack_config_for_kanban = {
     entry : {
         kanban: './src/app/app.js',
     },
@@ -80,10 +82,38 @@ module.exports = {
     plugins: [
         new WebpackAssetsManifest({
             output: 'manifest.json',
-            merge: true,
-            writeToDisk: true
+            assets: manifest_data
         }),
         // This ensure we only load moment's fr locale. Otherwise, every single locale is included !
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /fr/)
     ]
 };
+
+var webpack_config_for_angular = {
+    entry : {
+        angular: 'angular'
+    },
+    output: {
+        path    : assets_dir_path,
+        filename: '[name]-[chunkhash].js',
+    },
+    plugins: [
+        new WebpackAssetsManifest({
+            output: 'manifest.json',
+            assets: manifest_data,
+            merge: true,
+            writeToDisk: true
+        })
+    ]
+};
+
+if (process.env.NODE_ENV === 'production') {
+    webpack_config_for_kanban.plugins = webpack_config_for_kanban.plugins.concat([
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ]);
+}
+
+module.exports = [
+    webpack_config_for_kanban,
+    webpack_config_for_angular
+];
