@@ -38,6 +38,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
+use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -117,6 +118,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(BurningParrotCompatiblePageEvent::NAME);
             $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
             $this->addHook(SemanticStatusGetDisabledValues::NAME);
+            $this->addHook(SemanticStatusCanBeDeleted::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1169,5 +1171,22 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         $event->setDisabledValues(array_unique($disabled_values));
+    }
+
+    public function semanticStatusCanBeDeleted(SemanticStatusCanBeDeleted $event)
+    {
+        $tracker = $event->getTracker();
+        $dao     = new SemanticDoneDao();
+
+        $selected_values = $dao->getSelectedValues($tracker->getId());
+
+        if ($selected_values->rowCount() === 0) {
+            $event->semanticIsDeletable();
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::WARN,
+                dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
+            );
+        }
     }
 }

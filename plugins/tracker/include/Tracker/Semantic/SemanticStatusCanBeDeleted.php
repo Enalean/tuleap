@@ -24,46 +24,46 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-use Tracker_FormElement_Field_List;
+use Tracker;
 use Tuleap\Event\Dispatchable;
 
-class SemanticStatusGetDisabledValues implements Dispatchable
+class SemanticStatusCanBeDeleted implements Dispatchable
 {
-    const NAME = 'semanticStatusGetDisabledValues';
+    const NAME = 'semanticStatusCanBeDeleted';
 
     /**
-     * @var Tracker_FormElement_Field_List
+     * @var Tracker
      */
-    private $field;
+    private $tracker;
 
     /**
-     * @var array
+     * @var bool
      */
-    private $disabled_values = array();
+    private $semantic_can_be_deleted = false;
 
-    public function __construct(Tracker_FormElement_Field_List $field)
+    public function __construct(Tracker $tracker)
     {
-        $this->field = $field;
+        $this->tracker = $tracker;
     }
 
     /**
-     * @return Tracker_FormElement_Field_List
+     * @return Tracker
      */
-    public function getField()
+    public function getTracker()
     {
-        return $this->field;
+        return $this->tracker;
     }
 
     /**
-     * @return array
+     * @return bool
      */
-    public function getDisabledValues()
+    public function semanticCanBeDeleted()
     {
-        return $this->disabled_values;
+        return $this->semantic_can_be_deleted;
     }
 
-    public function setDisabledValues(array $disabled_values)
+    public function semanticIsDeletable()
     {
-        $this->disabled_values = $disabled_values;
+        $this->semantic_can_be_deleted = true;
     }
 }
