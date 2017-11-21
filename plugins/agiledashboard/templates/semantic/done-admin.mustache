@@ -8,15 +8,19 @@
 {{/ semantic_status_is_defined }}
 
 {{# semantic_status_is_defined }}
-
     {{# has_closed_values_selectable }}
-    <form method="POST" action="#">
+    <form method="POST" action="{{ form_url }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
         <p>{{# dgettext }}tuleap-agiledashboard | The selected values will define the artifact as done:{{/ dgettext }}</p>
-        <select name="done_values[{{ tracker_id }}]" multiple="multiple" disabled="disabled">
+        <select name="done_values[{{ tracker_id }}][]" multiple="multiple">
         {{# closed_values }}
-            <option>{{ label }}</option>
+            <option value="{{ id }}" {{# selected }} selected="selected" {{/ selected }}>{{ label }}</option>
         {{/closed_values}}
         </select>
+        <button type="submit" class="btn btn-primary tracker-semantic-submit" name="submit">{{# dgettext }}tuleap-agiledashboard | Submit{{/ dgettext }}</button>
     </form>
     {{/ has_closed_values_selectable }}
 
