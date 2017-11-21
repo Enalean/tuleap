@@ -62,3 +62,8 @@ msgstr ""
 
 msgid "Tracker semantic done"
 msgstr ""
+
+msgid ""
+"You can't add values in this semantic because all possible values are "
+"defined as open in semantic status."
+msgstr ""

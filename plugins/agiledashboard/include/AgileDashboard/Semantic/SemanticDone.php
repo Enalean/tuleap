@@ -187,7 +187,7 @@ class SemanticDone extends Tracker_Semantic
      */
     private function getClosedValues(Tracker_FormElement_Field $semantic_status_field)
     {
-        $all_values    = $semantic_status_field->getAllValues();
+        $all_values    = $semantic_status_field->getAllVisibleValues();
         $open_values   = $this->semantic_status->getOpenValues();
         $closed_values = array();
 
