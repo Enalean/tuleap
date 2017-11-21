@@ -5,7 +5,7 @@
                 <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-group"></i> {{# gettext }}Members{{/ gettext }} </h1>
             </div>
             <section class="tlp-pane-section">
-                <div class="tlp-table-actions">
+                <div class="tlp-table-actions" id="project-admin-members-modal-buttons-section">
                     <form action="?group_id={{ project_id }}"
                           method="post"
                           class="project-admin-members-form"
@@ -13,7 +13,9 @@
                         {{# csrf_token }}
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
-                        <div class="tlp-form-element tlp-form-element-append">
+                        <div class="tlp-form-element tlp-form-element-append"
+                             id="project-admin-members-add-user-section"
+                        >
                             <select
                                 name="new_project_member"
                                 id="project-admin-members-add-user-select"
@@ -34,6 +36,11 @@
                     >
                         <i class="fa fa-download"></i> {{# gettext }}Import members{{/ gettext }}
                     </button>
+                    {{# additional_modals }}
+                        {{# modals_buttons }}
+                            {{{ purified_html_button }}}
+                        {{/ modals_buttons }}
+                    {{/ additional_modals }}
                     <div class="tlp-table-actions-spacer"></div>
                     <div class="tlp-form-element tlp-table-actions-element">
                         <input type="search"
@@ -100,3 +107,9 @@
 </div>
 
 {{> modal-import-members }}
+
+{{# additional_modals }}
+    {{# modals_content }}
+        {{{ purified_html_modal }}}
+    {{/ modals_content }}
+{{/ additional_modals }}

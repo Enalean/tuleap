@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -32,28 +32,57 @@ if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
     return;
 }
 
-$groupList = array();
+$json_format = false;
+if ($request->get('return_type') === 'json_for_select_2') {
+    $json_format = true;
+}
+
+$group_list   = array();
+$more_results = false;
 
 $vGroupName = new Valid_String('ldap_group_name');
 $vGroupName->required();
-if($request->valid($vGroupName)) {
+if ($request->valid($vGroupName)) {
     $ldap = $ldapPlugin->getLdap();
-    $lri  = $ldap->searchGroupAsYouType($request->get('ldap_group_name'), 15);
-    if($lri !== false) {
-        while($lri->valid()) {
+    $lri = $ldap->searchGroupAsYouType($request->get('ldap_group_name'), 15);
+    if ($lri !== false) {
+        while ($lri->valid()) {
             $lr = $lri->current();
-            $groupList[] = $lr->getCommonName();
+            $group_list[] = $lr->getCommonName();
             $lri->next();
         }
-        if($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
-            $groupList[] = "<strong>...</strong>";
+        if ($ldap->getErrno() == LDAP::ERR_SIZELIMIT) {
+            $more_results = true;
         }
     }
 }
 
-$purifier = Codendi_HTMLPurifier::instance();
-echo "<ul>\n";
-foreach($groupList as $group) {
-    echo '<li>' . $purifier->purify($group) . '</li>';
+// Display
+if ($json_format) {
+    $json_entries = array();
+    foreach ($group_list as $group) {
+        $json_entries[] = array(
+            'id'   => $group,
+            'text' => $group
+        );
+    }
+
+    $output = array(
+        'results'    => $json_entries,
+        'pagination' => array(
+              'more' => $more_results
+        )
+    );
+
+    $GLOBALS['Response']->sendJSON($output);
+} else {
+    if ($more_results) {
+        $group_list[] = "<strong>...</strong>";
+    }
+    $purifier = Codendi_HTMLPurifier::instance();
+    echo "<ul>\n";
+    foreach ($group_list as $group) {
+        echo '<li>' . $purifier->purify($group) . '</li>';
+    }
+    echo "</ul>\n";
 }
-echo "</ul>\n";

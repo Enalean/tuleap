@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * Copyright Enalean (c) 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
@@ -21,32 +22,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#project-admin-members-controls {
-    display: flex;
-}
+namespace Tuleap\LDAP;
 
-#project-admin-members-add-user-section {
-    margin-right: $tlp-double-spacing;
-}
+class LinkModalContentPresenter
+{
+    public $form_action;
+    public $ldap_group_name;
+    public $is_preserved_members_checked;
+    public $is_synchro_daily_checked;
 
-#project-admin-members-modal-buttons-section {
-    > :not(:first-child) {
-        margin-left: $tlp-spacing;
+    public function __construct(
+        $form_action,
+        $ldap_group_name,
+        $is_preserved_members_checked,
+        $is_synchro_daily_checked
+    ) {
+        $this->form_action                  = $form_action;
+        $this->ldap_group_name              = $ldap_group_name;
+        $this->is_preserved_members_checked = $is_preserved_members_checked;
+        $this->is_synchro_daily_checked     = $is_synchro_daily_checked;
     }
-}
-
-#project-admin-members-add-user-select {
-    width: 250px;
-}
-
-#project-admin-members-modal-import-users-button {
-    margin-left: $tlp-double-spacing;
-}
-
-.project-admin-members-import-members-title {
-    margin: 0 0 $tlp-double-spacing;
-}
-
-#project-admin-members-input-file-helper {
-    line-height: 24px;
 }

@@ -25,6 +25,7 @@
 namespace Tuleap\Project\Admin\ProjectMembers;
 
 use CSRFSynchronizerToken;
+use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
@@ -62,18 +63,25 @@ class ProjectMembersController
      */
     private $user_remover;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         ProjectMembersDAO     $members_dao,
         CSRFSynchronizerToken $csrf_token,
         UserHelper            $user_helper,
         UGroupBinding         $user_group_bindings,
-        UserRemover           $user_remover
+        UserRemover           $user_remover,
+        EventManager          $event_manager
     ) {
         $this->members_dao         = $members_dao;
         $this->csrf_token          = $csrf_token;
         $this->user_helper         = $user_helper;
         $this->user_group_bindings = $user_group_bindings;
         $this->user_remover        = $user_remover;
+        $this->event_manager       = $event_manager;
     }
 
     public function display(HTTPRequest $request)
@@ -86,13 +94,17 @@ class ProjectMembersController
         $project_members_list = $this->getFormattedProjectMembers($request);
         $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project/members';
         $renderer             = TemplateRendererFactory::build()->getRenderer($template_path);
+        $additional_modals    = new ProjectMembersAdditionalModalCollectionPresenter($project);
+
+        $this->event_manager->processEvent($additional_modals);
 
         $renderer->renderToPage(
             'project-members',
             new ProjectMembersPresenter(
                 $project_members_list,
                 $this->csrf_token,
-                $project
+                $project,
+                $additional_modals
             )
         );
     }
