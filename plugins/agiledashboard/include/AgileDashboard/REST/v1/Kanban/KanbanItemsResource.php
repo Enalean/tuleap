@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
 use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
+use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
@@ -36,7 +37,6 @@ use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanItemDao;
 use AgileDashboardStatisticsAggregator;
 use TrackerFactory;
-use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use UserManager;
@@ -91,7 +91,10 @@ class KanbanItemsResource extends AuthenticatedResource {
     /** @var Tracker_Permission_PermissionsSerializer */
     private $permissions_serializer;
 
-    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
+    /**
+     * @var ItemRepresentationBuilder
+     */
+    private $item_representation_builder;
 
     public function __construct() {
         $this->tracker_factory      = TrackerFactory::instance();
@@ -128,6 +131,10 @@ class KanbanItemsResource extends AuthenticatedResource {
         $this->node_js_client         = new NodeJSClient();
         $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
+        $this->item_representation_builder = new ItemRepresentationBuilder(
+            $this->kanban_item_manager,
+            $this->time_info_factory
         );
     }
 
@@ -191,28 +198,7 @@ class KanbanItemsResource extends AuthenticatedResource {
             $tracker->getGroupId()
         );
 
-        $item_representation = $this->buildItemRepresentation($artifact);
-
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $kanban_id = $this->kanban_factory->getKanbanIdByTrackerId($artifact->getTrackerId());
-            $item      = $item_representation;
-            array_push($item->card_fields, $artifact->getTracker()->getTitleField());
-            array_push($item->card_fields, $artifact->getTracker()->getStatusField());
-            $data = array(
-                'artifact' => $item
-            );
-            $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $message  = new MessageDataPresenter(
-                $current_user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban_id,
-                $rights,
-                'kanban_item:create',
-                $data
-            );
-
-            $this->node_js_client->sendMessage($message);
-        }
+        $item_representation = $this->item_representation_builder->buildItemRepresentation($artifact);
 
         return $item_representation;
     }
@@ -266,9 +252,9 @@ class KanbanItemsResource extends AuthenticatedResource {
             throw new RestException(403, 'You cannot access this kanban item.');
         }
 
-        $item_representation = $this->buildItemRepresentation($artifact);
+        $item_representation = $this->item_representation_builder->buildItemRepresentation($artifact);
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+        if (! empty($_SERVER[RealTimeArtifactMessageSender::HTTP_CLIENT_UUID])) {
             $index           = $this->kanban_item_manager->getIndexOfKanbanItem($artifact, $item_representation->in_column);
             $kanban_id       = $this->kanban_factory->getKanbanIdByTrackerId($artifact->getTrackerId());
             $current_user_id = $current_user->getId();
@@ -282,7 +268,7 @@ class KanbanItemsResource extends AuthenticatedResource {
             $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
             $message  = new MessageDataPresenter(
                 $current_user_id,
-                $_SERVER[self::HTTP_CLIENT_UUID],
+                $_SERVER[RealTimeArtifactMessageSender::HTTP_CLIENT_UUID],
                 $kanban_id,
                 $rights,
                 'kanban_item:edit',
@@ -291,30 +277,6 @@ class KanbanItemsResource extends AuthenticatedResource {
 
             $this->node_js_client->sendMessage($message);
         }
-
-        return $item_representation;
-    }
-
-    private function buildItemRepresentation(Tracker_Artifact $artifact) {
-        $item_representation = new KanbanItemRepresentation();
-
-        $item_in_backlog = $this->kanban_item_manager->isKanbanItemInBacklog($artifact);
-        $in_column = ($item_in_backlog) ? 'backlog' : null;
-
-        if (! $in_column) {
-            $item_in_archive = $this->kanban_item_manager->isKanbanItemInArchive($artifact);
-            $in_column = ($item_in_archive) ? 'archive' : null;
-        }
-
-        if (! $in_column) {
-            $in_column = $this->kanban_item_manager->getColumnIdOfKanbanItem($artifact);
-        }
-
-        $item_representation->build(
-            $artifact,
-            $this->time_info_factory->getTimeInfo($artifact),
-            $in_column
-        );
 
         return $item_representation;
     }
