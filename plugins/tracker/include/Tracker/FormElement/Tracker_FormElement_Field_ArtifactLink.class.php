@@ -417,20 +417,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return '';
     }
 
-    public function getQuerySelect() {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-        return "$R2.artifact_id AS `". $this->name . "`";
+    public function getQuerySelect()
+    {
+        return '';
     }
 
     public function getQueryFrom()
     {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-
-        return "LEFT JOIN ( tracker_changeset_value AS $R1
-                    INNER JOIN tracker_changeset_value_artifactlink AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
+        return '';
     }
 
     /**

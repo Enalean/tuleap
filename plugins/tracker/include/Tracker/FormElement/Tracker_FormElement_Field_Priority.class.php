@@ -96,8 +96,9 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @return string
      * @see getQueryFrom
      */
-    public function getQuerySelect() {
-        return "tracker_artifact_priority_rank.rank AS `$this->name`";
+    public function getQuerySelect()
+    {
+        return '';
     }
 
     /**
@@ -106,8 +107,9 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * which tables used to retrieve the last changeset of matching artifacts.
      * @return string
      */
-    public function getQueryFrom() {
-        return "INNER JOIN tracker_artifact_priority_rank ON a.id = tracker_artifact_priority_rank.artifact_id";
+    public function getQueryFrom()
+    {
+        return '';
     }
 
     /**
