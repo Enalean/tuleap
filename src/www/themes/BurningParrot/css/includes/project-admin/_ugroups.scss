@@ -56,6 +56,7 @@
 }
 
 .project-admin-user-groups-details {
+    width: 25vw;
     margin: 0 $tlp-spacing 0 0;
 }
 
@@ -80,4 +81,20 @@
 
 .projectadmin-userlist-result-name-avatar {
     margin: 0 $tlp-half-spacing 0 0;
+}
+
+.project-admin-user-group-title,
+.remove-binding-modal-text,
+.remove-user-from-group-modal-text,
+.user-group-project-name-table {
+    word-break: break-all;
+}
+
+.user-group-binding-link {
+    max-width: 200px;
+    word-break: break-all;
+}
+
+.user-group-project-name-user-group-table {
+    word-break: keep-all;
 }
