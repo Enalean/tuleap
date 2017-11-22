@@ -144,6 +144,10 @@ var webpack_config_for_project_admin = {
         rules: [
             babel_rule,
             {
+                test: /\.mustache$/,
+                use: { loader: 'raw-loader' }
+            },
+            {
                 test: /\.po$/,
                 exclude: /node_modules/,
                 use: [

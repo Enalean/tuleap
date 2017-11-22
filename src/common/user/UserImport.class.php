@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
@@ -22,79 +22,81 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('www/include/account.php');
-require_once('common/dao/UserDao.class.php');
+use Tuleap\User\UserImportCollection;
 
-class UserImport {
-
-    //the group our users is part of
-    var $group_id;
-
-    public function __construct($group_id) {
-        $this->group_id = $group_id;    
-    }
-
-    /** 
-     * Parse a file in simple text  format containing users to be imported into the project
-     * 
-     * @param string $user_filename (IN):  the complete file name of the file to be parsed
-     * @param array  $parsed_users  (OUT): the users parsed in the import file
-     *                                     array of the form (column_number => User object)
-     * 
-     * @return boolean true if at least one entry was successfully parsed
-     */
-    function parse($user_filename, &$parsed_users) {
-        $um = UserManager::instance();
-
-        $fileContent = file($user_filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        if ($fileContent) {
-            foreach ($fileContent as $line) {
-                $line = trim($line);
-                if ($line != "") {
-                    $user = $um->findUser($line);
-                    if (! $user) {
-                        $users = $um->getAllUsersByEmail($line);
-                        $users_number = count($users);
-                        if ($users_number === 1) {
-                            $user = $users[0];
-                        } else if ($users_number > 1) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_userimport','multiple_users', $line));
-                            continue;
-                        }
-                    }
-                    if ($user && ($user->isActive() || $user->isRestricted())) {
-                        if (!$user->isMember($this->group_id)
-                            && !isset($parsed_users[$user->getId()])) {
-                            $parsed_users[$user->getId()] = $user;
-                        }
-                    } else {
-                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_userimport','invalid_mail_or_username', $line));
-                    }
-                }
-            }
-            return (count($parsed_users) > 0);
-        } else {
-            return false;
-        }
-    }
-
+class UserImport
+{
+    private $project_id;
     /**
-     * Insert the imported users into the db
-     * @param array parsed_users: array of the form (column_number => user id) containing
-     *                            all the users parsed from import file
-     * @return true if parse ok, false if errors occurred
+     * @var UserManager
      */
-    function updateDB($parsed_users)
+    private $user_manager;
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
+
+    public function __construct($group_id, UserManager $user_manager, UserHelper $user_helper)
     {
-        $res = true;
-        $um = UserManager::instance();
-        foreach ($parsed_users as $user_id) {
-            $user = $um->getUserById($user_id);
-            if ($user) {
-                $send_notifications = true;
-                $check_user_status  = true;
-                $res = $res & account_add_user_obj_to_group($this->group_id, $user, $check_user_status, $send_notifications);
+        $this->project_id      = $group_id;
+        $this->user_manager    = $user_manager;
+        $this->user_helper = $user_helper;
+    }
+
+    public function parse($user_filename)
+    {
+        $user_collection = new UserImportCollection($this->user_helper);
+        if (! $user_filename) {
+            return;
+        }
+
+        $file_content = file($user_filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach ($file_content as $line) {
+            $line = trim($line);
+            if ($line === "") {
+                continue;
             }
+
+            $user = $this->user_manager->findUser($line);
+            if (! $user) {
+                $users        = $this->user_manager->getAllUsersByEmail($line);
+                $users_number = count($users);
+
+                if ($users_number > 1) {
+                    $user_collection->addWarningMultipleUsers($line);
+                    continue;
+                }
+
+                if ($users_number === 0) {
+                    $user_collection->addWarningsInvalidUsers($line);
+                    continue;
+                }
+
+                $user = $users[0];
+            }
+
+            if (! $user || ($user && ! $user->isActive() && ! $user->isRestricted())) {
+                $user_collection->addWarningsInvalidUsers($line);
+                continue;
+            }
+
+            if (! $user->isMember($this->project_id)) {
+                $user_collection->addUser($user);
+            }
+        }
+
+        return $user_collection;
+    }
+
+    public function updateDB(array $parsed_users)
+    {
+        $res                = true;
+        $send_notifications = true;
+        $check_user_status  = true;
+
+        foreach ($parsed_users as $user) {
+            $res &= account_add_user_obj_to_group($this->project_id, $user, $check_user_status, $send_notifications);
         }
         return $res;
     }

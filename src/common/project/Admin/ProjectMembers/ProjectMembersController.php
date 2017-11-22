@@ -104,6 +104,7 @@ class ProjectMembersController
         $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project/members';
         $renderer             = TemplateRendererFactory::build()->getRenderer($template_path);
         $additional_modals    = new ProjectMembersAdditionalModalCollectionPresenter($project, $this->csrf_token);
+        $user_locale          = $request->getCurrentUser()->getLocale();
 
         $this->event_manager->processEvent($additional_modals);
 
@@ -113,7 +114,8 @@ class ProjectMembersController
                 $project_members_list,
                 $this->csrf_token,
                 $project,
-                $additional_modals
+                $additional_modals,
+                $user_locale
             )
         );
     }
