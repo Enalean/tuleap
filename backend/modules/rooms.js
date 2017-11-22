@@ -207,6 +207,35 @@ define([
         /**
          * @access public
          *
+         * Function to broadcast data to all users in room
+         *
+         * @param message (Object): information to broadcast
+         */
+        self.broadcastDataToAll = function (message) {
+            var room_id     = message.room_id;
+            var room        = self.get(room_id);
+            var rights_user = message.rights;
+            var data        = message.data;
+
+            if (! self.rights.isRightsContentWellFormed(rights_user)) {
+                console.error('User rights sent are incorrect.');
+                return;
+            }
+
+            _.filter(room, function (socket) {
+                return (self.rights.userCanReceiveData(socket.username, rights_user));
+            }).forEach(function (socket) {
+                if (MessageContentVerifier.hasCardFields(data)) {
+                    data.artifact = self.rights.filterMessageByRights(socket.username, rights_user, data.artifact);
+                }
+
+                socket.emit(message.cmd, data);
+            });
+        };
+
+        /**
+         * @access public
+         *
          * Function to emit presences
          * by room
          *

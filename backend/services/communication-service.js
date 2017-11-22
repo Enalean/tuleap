@@ -97,6 +97,9 @@ define([
                 if (socketSender) {
                     console.log('Client (user id: ' + socketSender.username + ' - room id: ' + socketSender.room + ') broadcasts data.');
                     self.rooms.broadcastData(socketSender, data);
+                } else {
+                    console.log('Broadcast data to room id: ' + room_id + '.');
+                    self.rooms.broadcastDataToAll(data);
                 }
             } else {
                 console.log('Room doesn\'t exist');
