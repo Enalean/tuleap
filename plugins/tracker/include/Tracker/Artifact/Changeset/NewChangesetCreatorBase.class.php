@@ -133,8 +133,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                 $this->changeset_dao->rollBack();
                 throw new Tracker_AfterSaveException();
             }
-
-            $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
         } catch (Tracker_NoChangeException $exception) {
             $collection = $this->source_of_association_collection_builder->getSourceOfAssociationCollection(
                 $artifact,
@@ -158,6 +156,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $artifact->getChangeset($changeset_id)->notify();
         }
 
+        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
         return $new_changeset;
     }
 

@@ -34,6 +34,7 @@ use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_PermissionsManager;
 use AgileDashboardStatisticsAggregator;
 use DateTime;
+use EventManager;
 use Exception;
 use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
 use Kanban_SemanticStatusBasedOnASharedFieldException;
@@ -60,7 +61,6 @@ use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Kanban\ColumnIdentifier;
 use Tuleap\AgileDashboard\Kanban\TrackerReportFilter\ReportFilterFromWhereBuilder;
-use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
@@ -78,6 +78,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
@@ -180,7 +181,8 @@ class KanbanResource extends AuthenticatedResource
         $this->resources_patcher = new ResourcesPatcher(
             $artifactlink_updater,
             $this->artifact_factory,
-            $priority_manager
+            $priority_manager,
+            EventManager::instance()
         );
 
         $this->form_element_factory = Tracker_FormElementFactory::instance();
@@ -596,21 +598,6 @@ class KanbanResource extends AuthenticatedResource
             $this->statistics_aggregator->addCardDragAndDropHit(
                 $this->getProjectIdForKanban($kanban)
             );
-            $in_column = 'backlog';
-
-            if (! is_null($from_column)) {
-                if ($from_column !== 'backlog' && $from_column !== 'archive') {
-                    $from_column = intval($from_column);
-
-                    if ($from_column === 0 || ! $this->columnIsInTracker($kanban, $current_user, $from_column)) {
-                        throw new RestException(400, 'Invalid from_column');
-                    }
-                }
-            } else {
-                $from_column = $in_column;
-            }
-
-            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column, $from_column);
         }
     }
 
@@ -840,22 +827,6 @@ class KanbanResource extends AuthenticatedResource
             $this->statistics_aggregator->addCardDragAndDropHit(
                 $this->getProjectIdForKanban($kanban)
             );
-
-            $in_column = 'archive';
-
-            if (! is_null($from_column)) {
-                if ($from_column !== 'backlog' && $from_column !== 'archive') {
-                    $from_column = intval($from_column);
-
-                    if ($from_column === 0 || ! $this->columnIsInTracker($kanban, $current_user, $from_column)) {
-                        throw new RestException(400, 'Invalid from_column');
-                    }
-                }
-            } else {
-                $from_column = $in_column;
-            }
-
-            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $in_column, $from_column);
         }
     }
 
@@ -1047,20 +1018,6 @@ class KanbanResource extends AuthenticatedResource
             $this->statistics_aggregator->addCardDragAndDropHit(
                 $this->getProjectIdForKanban($kanban)
             );
-
-            if (! is_null($from_column)) {
-                if ($from_column !== 'backlog' && $from_column !== 'archive') {
-                    $from_column = intval($from_column);
-
-                    if ($from_column === 0 || ! $this->columnIsInTracker($kanban, $current_user, $from_column)) {
-                        throw new RestException(400, 'Invalid from_column');
-                    }
-                }
-            } else {
-                $from_column = $column_id;
-            }
-
-            $this->sendMessageForDroppingItem($current_user, $kanban, $order, $add, $column_id, $from_column);
         }
     }
 
@@ -1431,47 +1388,6 @@ class KanbanResource extends AuthenticatedResource
      */
     private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
         return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
-    }
-
-    private function sendMessageForDroppingItem(
-        PFUser $current_user,
-        AgileDashboard_Kanban $kanban,
-        $order,
-        $add,
-        $in_column,
-        $from_column
-    ) {
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
-            $data_to_send = array(
-                'add'         => $add,
-                'order'       => $order,
-                'in_column'   => $in_column,
-                'from_column' => $from_column
-            );
-            if($add) {
-                $this->sendMessageForEachArtifact($current_user, $kanban, $add->ids, $data_to_send);
-            } else {
-                $this->sendMessageForEachArtifact($current_user, $kanban, $order->ids, $data_to_send);
-            }
-
-        }
-    }
-
-    private function sendMessageForEachArtifact(PFUser $current_user, AgileDashboard_Kanban $kanban, array $artifact_ids, array $data) {
-        foreach($artifact_ids as $artifact_id) {
-            $artifact = $this->artifact_factory->getArtifactById($artifact_id);
-            $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $message  = new MessageDataPresenter(
-                $current_user->getId(),
-                $_SERVER[self::HTTP_CLIENT_UUID],
-                $kanban->getId(),
-                $rights,
-                'kanban_item:move',
-                $data
-            );
-
-            $this->node_js_client->sendMessage($message);
-        }
     }
 
     private function getReport(PFUser $user, AgileDashboard_Kanban $kanban, $tracker_report_id)

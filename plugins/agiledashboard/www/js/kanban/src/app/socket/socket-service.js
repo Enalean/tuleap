@@ -165,34 +165,22 @@ function SocketService(
         /**
          * Data received looks like:
          *  {
-         *      order: {
-         *          ids: [79213],
-         *          direction: 'before',
-         *          compared_to: 79790
-         *      },
-         *      add: {
-         *          ids: [79213]
-         *      },
-         *      in_column: 6816
+         *      artifact_id: 321,
+         *      items_ids: [302, 321, 562]
+         *      in_column: 6816,
+         *      from_column: 6580
          *  }
          *
          */
         SocketFactory.on('kanban_item:move', function(data) {
-            var ids         = data.add ? data.add.ids : data.order.ids,
-                compared_to = null;
+            const source_column    = ColumnCollectionService.getColumn(data.from_column),
+                destination_column = ColumnCollectionService.getColumn(data.in_column);
 
-            if (data.order) {
-                compared_to = {
-                    direction: data.order.direction,
-                    item_id  : data.order.compared_to
-                };
+            if (! source_column || ! destination_column) {
+                return;
             }
 
-            _.forEach(ids, function(id) {
-                var source_column      = ColumnCollectionService.getColumn(data.from_column),
-                    destination_column = ColumnCollectionService.getColumn(data.in_column);
-                KanbanColumnService.findAndMoveItem(id, source_column, destination_column, compared_to);
-            });
+            KanbanColumnService.findItemAndReorderItems(data.artifact_id, source_column, destination_column, data.ordered_destination_column_items_ids);
         });
     }
 
@@ -219,13 +207,16 @@ function SocketService(
          *                      archive: null
          *                    },
          *          in_column: 'backlog'
-         *    },
-         *    index: 2
+         *    }
          *  }
          */
-        SocketFactory.on('kanban_item:edit', function(data) {
+        SocketFactory.on('kanban_item:update', function(data) {
             var item               = ColumnCollectionService.findItemById(data.artifact.id),
                 destination_column = ColumnCollectionService.getColumn(data.artifact.in_column);
+
+            if (! item) {
+                return;
+            }
 
             _.extend(data.artifact, {
                 updating    : false,

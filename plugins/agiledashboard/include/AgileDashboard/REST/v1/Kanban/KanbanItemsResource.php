@@ -20,9 +20,6 @@
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
-use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
-use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
-use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use AgileDashboard_PermissionsManager;
@@ -50,11 +47,8 @@ use Tuleap\Tracker\REST\TrackerReference                  as TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation   as ArtifactValuesRepresentation;
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanItemManager;
-use Tuleap\RealTime\NodeJSClient;
 use AgileDashboard_KanbanActionsChecker;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
-use Tracker_Permission_PermissionsSerializer;
-use Tracker_Permission_PermissionRetrieveAssignee;
 
 class KanbanItemsResource extends AuthenticatedResource {
 
@@ -79,17 +73,8 @@ class KanbanItemsResource extends AuthenticatedResource {
     /** @var TimeInfoFactory */
     private $time_info_factory;
 
-    /** @var AgileDashboard_KanbanItemManager */
-    private $kanban_item_manager;
-
     /** @var AgileDashboardStatisticsAggregator */
     private $statistics_aggregator;
-
-    /** @var NodeJSClient */
-    private $node_js_client;
-
-    /** @var Tracker_Permission_PermissionsSerializer */
-    private $permissions_serializer;
 
     /**
      * @var ItemRepresentationBuilder
@@ -122,18 +107,11 @@ class KanbanItemsResource extends AuthenticatedResource {
             )
         );
 
-        $kanban_item_dao             = new AgileDashboard_KanbanItemDao();
-        $this->time_info_factory     = new TimeInfoFactory($kanban_item_dao);
-        $this->kanban_item_manager   = new AgileDashboard_KanbanItemManager($kanban_item_dao);
-
-        $this->statistics_aggregator = new AgileDashboardStatisticsAggregator();
-
-        $this->node_js_client         = new NodeJSClient();
-        $this->permissions_serializer = new Tracker_Permission_PermissionsSerializer(
-            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
-        );
+        $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
+        $this->time_info_factory           = new TimeInfoFactory($kanban_item_dao);
+        $this->statistics_aggregator       = new AgileDashboardStatisticsAggregator();
         $this->item_representation_builder = new ItemRepresentationBuilder(
-            $this->kanban_item_manager,
+            new AgileDashboard_KanbanItemManager($kanban_item_dao),
             $this->time_info_factory
         );
     }
@@ -253,30 +231,6 @@ class KanbanItemsResource extends AuthenticatedResource {
         }
 
         $item_representation = $this->item_representation_builder->buildItemRepresentation($artifact);
-
-        if (! empty($_SERVER[RealTimeArtifactMessageSender::HTTP_CLIENT_UUID])) {
-            $index           = $this->kanban_item_manager->getIndexOfKanbanItem($artifact, $item_representation->in_column);
-            $kanban_id       = $this->kanban_factory->getKanbanIdByTrackerId($artifact->getTrackerId());
-            $current_user_id = $current_user->getId();
-            $item            = $item_representation;
-            array_push($item->card_fields, $artifact->getTracker()->getTitleField());
-            array_push($item->card_fields, $artifact->getTracker()->getStatusField());
-            $data = array(
-                'artifact' => $item,
-                'index'    => $index
-            );
-            $rights   = new KanbanArtifactRightsPresenter($artifact, $this->permissions_serializer);
-            $message  = new MessageDataPresenter(
-                $current_user_id,
-                $_SERVER[RealTimeArtifactMessageSender::HTTP_CLIENT_UUID],
-                $kanban_id,
-                $rights,
-                'kanban_item:edit',
-                $data
-            );
-
-            $this->node_js_client->sendMessage($message);
-        }
 
         return $item_representation;
     }

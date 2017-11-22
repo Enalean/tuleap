@@ -156,7 +156,8 @@ class ProjectBacklogResource {
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $tracker_artifact_factory,
-            $priority_manager
+            $priority_manager,
+            \EventManager::instance()
         );
 
         $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(

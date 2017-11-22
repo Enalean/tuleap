@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
+use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;
@@ -41,6 +44,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -125,6 +129,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(SemanticStatusGetDisabledValues::NAME);
             $this->addHook(SemanticStatusCanBeDeleted::NAME);
             $this->addHook(ArtifactCreated::NAME);
+            $this->addHook(ArtifactsReordered::NAME);
+            $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1209,12 +1215,12 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     /**
-     * @return RealTimeArtifactMessageSender
+     * @return KanbanArtifactMessageSender
      */
-    private function getRealtimeMessageSender()
+    private function getKanbanArtifactMessageSender()
     {
-        $kanban_item_dao = new AgileDashboard_KanbanItemDao();
-        $item_representation_builder = new ItemRepresentationBuilder(
+        $kanban_item_dao                   = new AgileDashboard_KanbanItemDao();
+        $item_representation_builder       = new ItemRepresentationBuilder(
             new AgileDashboard_KanbanItemManager(
                 $kanban_item_dao
             ),
@@ -1222,30 +1228,74 @@ class AgileDashboardPlugin extends Plugin {
                 $kanban_item_dao
             )
         );
-        $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+        $permissions_serializer            = new Tracker_Permission_PermissionsSerializer(
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
-        $node_js_client = new NodeJSClient();
-        return new RealTimeArtifactMessageSender(
-            $node_js_client,
-            $permissions_serializer,
-            $item_representation_builder
+        $node_js_client                    = new NodeJSClient();
+        $realtime_artifact_message_builder = new KanbanArtifactMessageBuilder(
+            $kanban_item_dao,
+            new Tracker_Artifact_ChangesetFactory(
+                new Tracker_Artifact_ChangesetDao(),
+                new Tracker_Artifact_Changeset_ValueDao(),
+                new Tracker_Artifact_Changeset_CommentDao(),
+                new Tracker_Artifact_ChangesetJsonFormatter(
+                    TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
+                ),
+                Tracker_FormElementFactory::instance()
+            )
+        );
+        $backend_logger                    = new BackendLogger(ForgeConfig::get('codendi_log') .'/realtime_syslog');
+        $realtime_artifact_message_sender  = new RealTimeArtifactMessageSender($node_js_client, $permissions_serializer);
+
+        return new KanbanArtifactMessageSender(
+            $realtime_artifact_message_sender,
+            $item_representation_builder,
+            $realtime_artifact_message_builder,
+            $backend_logger
+        );
+    }
+
+    /**
+     * @return RealTimeArtifactMessageController
+     */
+    public function getRealtimeMessageController()
+    {
+        return new RealTimeArtifactMessageController(
+            $this->getKanbanFactory(),
+            $this->getKanbanArtifactMessageSender()
         );
     }
 
     public function trackerArtifactCreated(ArtifactCreated $event)
     {
         $artifact  = $event->getArtifact();
-        $kanban_id = $this->getKanbanFactory()->getKanbanIdByTrackerId($artifact->getTrackerId());
-
-        if (! $kanban_id) {
-            return;
-        }
-
-        $this->getRealtimeMessageSender()->sendMessageArtifactCreated(
+        $this->getRealtimeMessageController()->sendMessageForKanban(
             $this->getCurrentUser(),
             $artifact,
-            $kanban_id
+            RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_CREATED
         );
+    }
+
+    public function tracker_event_artifact_post_update(array $params)
+    {
+        $artifact  = $params['artifact'];
+        $this->getRealtimeMessageController()->sendMessageForKanban(
+            $this->getCurrentUser(),
+            $artifact,
+            RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_UPDATED
+        );
+    }
+
+    public function trackerArtifactsReordered(ArtifactsReordered $event)
+    {
+        $artifacts_ids = $event->getArtifactsIds();
+        $artifacts     = $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifacts_ids);
+        foreach ($artifacts as $artifact) {
+            $this->getRealtimeMessageController()->sendMessageForKanban(
+                $this->getCurrentUser(),
+                $artifact,
+                RealTimeArtifactMessageController::EVENT_NAME_ARTIFACT_REORDERED
+            );
+        }
     }
 }

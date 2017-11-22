@@ -541,4 +541,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public function isBasedOnASharedField() {
         return $this->list_field->isTargetSharedField();
     }
+
+    public function isOpenValue($label)
+    {
+        return in_array($label, $this->getOpenLabels());
+    }
 }

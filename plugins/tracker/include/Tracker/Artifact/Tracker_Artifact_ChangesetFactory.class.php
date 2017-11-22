@@ -92,6 +92,28 @@ class Tracker_Artifact_ChangesetFactory {
     }
 
     /**
+     * @return \Tracker_Artifact_Changeset|null
+     */
+    public function getPreviousChangesetWithFieldValue(
+        Tracker_Artifact $artifact,
+        Tracker_FormElement_Field $field,
+        $changeset_id
+    ) {
+        $row = $this->dao->searchPreviousChangesetAndValueForArtifactField(
+            $artifact->getId(),
+            $field->getId(),
+            $changeset_id
+        );
+        if ($row) {
+            $changeset = $this->getChangesetFromRow($artifact, $row);
+            $value     = $field->getChangesetValue($changeset, $row['value_id'], $row['has_changed']);
+            $changeset->setFieldValue($field, $value);
+            return $changeset;
+        }
+        return null;
+    }
+
+    /**
      * Return all the changesets of an artifact
      *
      * @param Tracker_Artifact $artifact

@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class Tracker_Artifact_ChangesetDao extends DataAccessObject {
@@ -61,6 +62,24 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                 WHERE a.id = $artifact_id
                     AND field_id = $field_id";
         return $this->retrieve($sql);
+    }
+
+    public function searchPreviousChangesetAndValueForArtifactField($artifact_id, $field_id, $changeset_id)
+    {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+        $field_id     = $this->da->escapeInt($field_id);
+        $changeset_id = $this->da->escapeInt($changeset_id);
+
+        $sql = "SELECT cs.id AS id, cs.submitted_by, cs.submitted_on, cs.email, cv.id AS value_id, cv.has_changed
+                FROM tracker_artifact        AS a
+                JOIN tracker_changeset       AS cs ON (cs.artifact_id = a.id)
+                JOIN tracker_changeset_value AS cv ON (cs.id = cv.changeset_id)
+                WHERE a.id = $artifact_id
+                    AND field_id = $field_id
+                    AND cs.id != $changeset_id
+                ORDER BY cs.id DESC";
+
+        return $this->retrieveFirstRow($sql);
     }
 
     public function create($artifact_id, $submitted_by, $email, $submitted_on) {

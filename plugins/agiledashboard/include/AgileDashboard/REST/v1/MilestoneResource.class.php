@@ -168,15 +168,16 @@ class MilestoneResource extends AuthenticatedResource {
             $this->tracker_artifact_factory
         );
 
+        $this->event_manager = EventManager::instance();
+
         $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->tracker_artifact_factory,
-            $priority_manager
+            $priority_manager,
+            $this->event_manager
         );
-
-        $this->event_manager = EventManager::instance();
 
         $this->milestone_representation_builder = new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
             $this->milestone_factory,
