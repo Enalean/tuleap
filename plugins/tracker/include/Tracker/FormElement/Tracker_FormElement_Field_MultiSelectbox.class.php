@@ -129,9 +129,13 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
          * fields that have changed. In that case, we do not want to set a default value but, rather, use the
          * existing one.
          */
-        if(isset($fields_data['request_method_called']) && ($fields_data['request_method_called'] = 'artifact-update' || $fields_data['request_method_called'] = 'artifact-masschange')) {
+        if (isset($fields_data['request_method_called']) &&
+            ($fields_data['request_method_called'] === 'artifact-update' ||
+                $fields_data['request_method_called'] === 'artifact-masschange')
+        ) {
             return false;
         }
+
         return true;
     }
 
