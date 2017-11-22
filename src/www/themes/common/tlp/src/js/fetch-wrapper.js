@@ -22,6 +22,7 @@ export {
     get,
     patch,
     put,
+    post,
     recursiveGet
 }
 
@@ -115,6 +116,15 @@ const patch = (input, init = {}) => {
           { credentials = 'same-origin' } = init;
 
     return fetch(input, {method, credentials, ...init}).then(checkResponse);
+};
+
+const post = async (input, init = {}) => {
+    const method = 'POST',
+        { credentials = 'same-origin' } = init;
+
+    const response = await fetch(input, {method, credentials, ...init});
+
+    return checkResponse(response);
 };
 
 function checkResponse(response) {

@@ -1,0 +1,4 @@
+{
+    "label": "post",
+    "shortcode": "tlp.post(url_to_query, options)"
+}
