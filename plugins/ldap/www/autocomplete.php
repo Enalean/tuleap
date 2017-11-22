@@ -32,11 +32,6 @@ if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
     return;
 }
 
-$json_format = false;
-if ($request->get('return_type') === 'json_for_select_2') {
-    $json_format = true;
-}
-
 $group_list   = array();
 $more_results = false;
 
@@ -57,32 +52,19 @@ if ($request->valid($vGroupName)) {
     }
 }
 
-// Display
-if ($json_format) {
-    $json_entries = array();
-    foreach ($group_list as $group) {
-        $json_entries[] = array(
-            'id'   => $group,
-            'text' => $group
-        );
-    }
-
-    $output = array(
-        'results'    => $json_entries,
-        'pagination' => array(
-              'more' => $more_results
-        )
+$json_entries = array();
+foreach ($group_list as $group) {
+    $json_entries[] = array(
+        'id'   => $group,
+        'text' => $group
     );
-
-    $GLOBALS['Response']->sendJSON($output);
-} else {
-    if ($more_results) {
-        $group_list[] = "<strong>...</strong>";
-    }
-    $purifier = Codendi_HTMLPurifier::instance();
-    echo "<ul>\n";
-    foreach ($group_list as $group) {
-        echo '<li>' . $purifier->purify($group) . '</li>';
-    }
-    echo "</ul>\n";
 }
+
+$output = array(
+    'results'    => $json_entries,
+    'pagination' => array(
+          'more' => $more_results
+    )
+);
+
+$GLOBALS['Response']->sendJSON($output);

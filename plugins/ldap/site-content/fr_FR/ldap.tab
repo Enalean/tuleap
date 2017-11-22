@@ -12,7 +12,6 @@ plugin_ldap	not_found	Erreur - Introuvable
 plugin_ldap	no_ldap_login_found	Identifiant sur l'annuaire d'entreprise introuvable
 plugin_ldap	login_pls_use_ldap	Merci d'utiliser le login de votre annuaire d'entreprise (pas celui de $1).
 plugin_ldap	ugroup_list_ldap_title	Import depuis l'annuaire
-plugin_ldap	ugroup_list_add_users	Ajouter des utilisateurs depuis l'annuaire
 plugin_ldap	ugroup_list_add_set_binding	Lier avec un groupe de l'annuaire
 plugin_ldap	ugroup_list_add_upd_binding	Mettre à jour le lien avec l'annuaire ($1)
 plugin_ldap	project_admin_add_ugroup	Lier avec un groupe de l'annuaire :
@@ -52,30 +51,6 @@ plugin_ldap	welcome_tz	Fuseau Horaire
 plugin_ldap	welcome_communitymail	Recevoir du courrier électronique supplémentaire au sujet de la communauté. <I>(Faible trafic)</I>
 plugin_ldap	welcome_siteupdate	Recevoir du courrier électronique à propos des mises à jour du site <i>(Faible trafic et informations relatives à la sécurité. Fortement recommandé.)</I>
 plugin_ldap	welcome_mandatory	Les champs marqués $1 sont obligatoires.
-#
-# plugins/ldap/www/ugroup_edit.php
-#
-plugin_ldap	ugroup_edit_ugroup_linked	<strong>$1</strong> est déjà connecté au groupe <strong>$2</strong> de l'annuaire.
-plugin_ldap	ugroup_edit_group_add_users_help	Ajoutez des utilisateurs au groupe (la virgule est le séparateur).
-plugin_ldap	ugroup_edit_group_you_can	Vous pouvez :
-plugin_ldap	ugroup_edit_group_resync	Re-synchroniser ce groupe avec l'annuaire (cliquez sur "Mettre à jour").
-plugin_ldap	ugroup_edit_group_link	Lier (et synchroniser) ce groupe avec un groupe de l'annuaire.
-plugin_ldap	ugroup_edit_group_remove	Supprimer le lien entre ce groupe et l'annuaire.
-plugin_ldap	ugroup_edit_group_synchro	Lors de la synchronisation avec l'annuaire :  
-plugin_ldap	ugroup_edit_group_synchro_add	les utilisateurs de l'annuaire non membres de ce groupe y sont ajoutés ;
-plugin_ldap	ugroup_edit_group_synchro_del	les utilisateurs membres de ce groupe mais pas dans l'annuaire sont supprimés si vous ne choisissez pas l'option 'Préserver les membres'.
-plugin_ldap	ugroup_edit_group_preserve_members_info	Choisissez cette option si vous ne voulez pas supprimer les membres de ce groupe qui n'appartiennent pas au groupe de l'annuaire.
-plugin_ldap	ugroup_edit_group_preserve_members_option	Préserver les membres
-plugin_ldap	ugroup_edit_group_synchronize_info	Choisissez cette option si vous voulez synchroniser journalièrement ce groupe avec le groupe de l'annuaire.
-plugin_ldap	ugroup_edit_group_synchronize_option	Synchroniser journalièrement
-plugin_ldap	ugroup_edit_group_add_users	Utilisateurs à ajouter :
-plugin_ldap	ugroup_edit_group_bind_with_group	Lier avec un groupe de l'annuaire :
-plugin_ldap	ugroup_edit_btn_update	Mettre à jour
-plugin_ldap	ugroup_edit_btn_unlink	Supprimer le lien avec l'annuaire
-plugin_ldap	ugroup_members_synchro_title	Synchronisation annuaire <-> membres d'un groupe utilisateur
-plugin_ldap	ugroup_members_synchro_warning	Cet écran vous permet de visualiser les changements qui vont intervenir sur les membres de ce groupe si vous cliquez sur le bouton "mettre à jour" ci-dessous.<br/>A gauche se trouve la liste des utilisateurs qui ne seront plus membres et à droite, ceux qui seront ajoutez.
-plugin_ldap	ugroup_members_import_title	Import d'utilisateurs à partir d'un groupe de l'annuaire
-plugin_ldap	ugroup_members_import_warning	Cet écran vous permet de visualiser les changements qui vont intervenir sur les memberes de ce groupe si vous cliquez sur le bouton "mettre à jour" ci-dessous.<br/>A gauche se trouve la liste des utilisateurs qui vont être ajoutés et à droite, ceux qui ne seront pas impactés.
 #
 # plugins/ldap/www/admin.php
 #

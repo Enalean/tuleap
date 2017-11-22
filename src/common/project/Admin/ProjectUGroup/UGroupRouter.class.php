@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,8 +24,6 @@
 
 class Project_Admin_UGroup_UGroupRouter {
 
-    const DEFAULT_ACTION = 'settings';
-
     private $ugroup_manager;
 
     public function __construct() {
@@ -33,45 +31,17 @@ class Project_Admin_UGroup_UGroupRouter {
     }
 
     public function process(Codendi_Request $request) {
-        $current_pane    = $this->getPane($request);
-        $ugroup          = $this->getUGroup($request);
-        $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup);
-        switch ($current_pane) {
-            case Project_Admin_UGroup_View_Binding::IDENTIFIER:
-                $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
-                $controller   = new Project_Admin_UGroup_UGroupController_Binding($request, $ugroup, $pane);
-                $action = $this->getBindingAction($request);
-                break;
-            default:
-                $controller = new Project_Admin_UGroup_UGroupController($request, $ugroup);
-                $vAction = new Valid_WhiteList(
-                    'action',
-                    array('remove_binding', 'add_binding', 'edit_ugroup_members', 'ldap_remove_binding', 'ldap_add_binding')
-                );
-                $vAction->required();
-                $action = $request->getValidated('action', $vAction, $current_pane);
-                break;
-        }
-        $controller->$action();
-    }
+        $ugroup = $this->getUGroup($request);
 
-    private function getBindingAction($request) {
-        $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding', 'edit_directory_group', 'edit_directory'));
-        $vAction->required();
-        return $request->getValidated('action', $vAction, Project_Admin_UGroup_View_ShowBinding::IDENTIFIER);
-    }
-
-    private function getPane($request) {
-        $vPane = new Valid_WhiteList(
-            'pane',
-            array(
-                Project_Admin_UGroup_View_Settings::IDENTIFIER,
-                Project_Admin_UGroup_View_ShowBinding::IDENTIFIER,
-                Project_Admin_UGroup_View_EditBinding::IDENTIFIER
-            )
+        $controller = new Project_Admin_UGroup_UGroupController($request, $ugroup);
+        $vAction = new Valid_WhiteList(
+            'action',
+            array('remove_binding', 'add_binding', 'edit_ugroup_members', 'ldap_remove_binding', 'ldap_add_binding')
         );
-        $vPane->required();
-        return $request->getValidated('pane', $vPane, Project_Admin_UGroup_View_Settings::IDENTIFIER);
+        $vAction->required();
+        $action = $request->getValidated('action', $vAction, Project_Admin_UGroup_View_Settings::IDENTIFIER);
+
+        $controller->$action();
     }
 
     private function getUGroup(Codendi_Request $request) {

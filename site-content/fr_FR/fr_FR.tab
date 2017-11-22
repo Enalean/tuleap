@@ -109,7 +109,6 @@ global	pick_date	Choisir une date
 global	show_frame	Montrer seulement ce cadre
 global	null	NULL
 global	error_synchronizertoken	Votre requête ne semble pas être valide. Merci de recommencer.
-global	operation_not_allowed	Opération non permise
 global	settings	Propriétés
 global	usage	Utilisation
 global	powered_by	<a href="https://tuleap.org/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank" rel="noreferrer">Tuleap&trade;</a>
