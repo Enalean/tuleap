@@ -845,11 +845,12 @@ class Event {
      * Event raised to get trackers from a project with REST
      *
      * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'limit'   => int
-     *     'offset'  => int
-     *     'result'  => array
+     *     'version'        => String
+     *     'representation' => String
+     *     'project'        => Project
+     *     'limit'          => int
+     *     'offset'         => int
+     *     'result'         => array
      */
     const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
 

@@ -643,21 +643,26 @@ class ProjectResource extends AuthenticatedResource {
     /**
      * Get trackers
      *
-     * Get the trackers of a given project
+     * Get the trackers of a given project.
+     *
+     *
+     * Fetching reference representations can be helpful if you encounter performance issues with complex trackers.
      *
      * @url GET {id}/trackers
      * @access hybrid
      *
      * @param int $id     Id of the project
+     * @param string $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      */
-    public function getTrackers($id, $limit = 10, $offset = 0) {
+    public function getTrackers($id, $representation = 'full', $limit = 10, $offset = 0)
+    {
         $this->checkAccess();
 
-        $trackers = $this->getRepresentationsForTrackers($id, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
+        $trackers = $this->getRepresentationsForTrackers($id, $representation, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
         $this->sendAllowHeadersForProject();
 
         return $trackers;
@@ -672,18 +677,20 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForProject();
     }
 
-    private function getRepresentationsForTrackers($id, $limit, $offset, $event) {
+    private function getRepresentationsForTrackers($id, $representation, $limit, $offset, $event)
+    {
         $project = $this->getProjectWithoutAuthorisation($id);
         $result  = array();
 
         $this->event_manager->processEvent(
             $event,
             array(
-                'version' => 'v1',
-                'project' => $project,
-                'limit'   => $limit,
-                'offset'  => $offset,
-                'result'  => &$result,
+                'version'        => 'v1',
+                'project'        => $project,
+                'representation' => $representation,
+                'limit'          => $limit,
+                'offset'         => $offset,
+                'result'         => &$result,
             )
         );
 

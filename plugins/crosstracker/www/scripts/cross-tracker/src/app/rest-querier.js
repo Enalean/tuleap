@@ -50,7 +50,7 @@ async function getQueryResult(report_id, trackers_id) {
     const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
         params: {
             limit: MAXIMUM_NUMBER_OF_ARTIFACTS_DISPLAYED,
-            query: { trackers_id }
+            query: JSON.stringify({ trackers_id })
         }
     });
     const { artifacts } = await response.json();
@@ -72,7 +72,7 @@ async function getSortedProjectsIAmMemberOf() {
     const json = await recursiveGet('/api/v1/projects/', {
         params: {
             limit: 50,
-            query: {'is_member_of': true }
+            query: JSON.stringify({'is_member_of': true})
         }
     });
 
@@ -84,7 +84,8 @@ async function getSortedProjectsIAmMemberOf() {
 async function getTrackersOfProject(project_id) {
     return await recursiveGet('/api/v1/projects/' + project_id + '/trackers', {
         params: {
-            limit: 50
+            limit: 50,
+            representation: 'minimal'
         }
     });
 }
