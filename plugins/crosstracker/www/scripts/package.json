@@ -10,6 +10,7 @@
     "lodash.xor": "^4.5.0",
     "moment": "^2.18.1",
     "mustache": "^2.3.0",
+    "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
     "wrist": "0.0.3"
   },
@@ -18,7 +19,6 @@
     "babel-loader": "^7.0.0",
     "babel-preset-env": "^1.5.2",
     "json-loader": "^0.5.7",
-    "node-gettext": "^2.0.0",
     "po-gettext-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
     "webpack": "^3.0.0",
