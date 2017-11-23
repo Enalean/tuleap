@@ -23,6 +23,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\BindingController;
 use Tuleap\Project\Admin\ProjectUGroup\DetailsController;
+use Tuleap\Project\Admin\ProjectUGroup\EditBindingUGroupEventLauncher;
 use Tuleap\Project\Admin\ProjectUGroup\IndexController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersController;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
@@ -34,30 +35,41 @@ $request = HTTPRequest::instance();
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
-$ugroup_manager     = new UGroupManager();
-$ugroup_binding     = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
-$project_manager    = ProjectManager::instance();
-$binding_controller = new BindingController(
+$event_manager       = EventManager::instance();
+$ugroup_manager      = new UGroupManager();
+$ugroup_binding      = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
+$project_manager     = ProjectManager::instance();
+$edit_event_launcher = new EditBindingUGroupEventLauncher($event_manager);
+$binding_controller  = new BindingController(
     new ProjectHistoryDao(),
     $project_manager,
     $ugroup_manager,
     $ugroup_binding,
-    $request
+    $request,
+    $edit_event_launcher
 );
-$user_manager       = UserManager::instance();
-$members_controller = new MembersController($request, $user_manager);
-$index_controller   = new IndexController(
+$user_manager        = UserManager::instance();
+$members_controller  = new MembersController($request, $user_manager);
+$index_controller    = new IndexController(
     $ugroup_binding,
     $project_manager,
     $user_manager,
     PermissionsManager::instance(),
-    EventManager::instance(),
+    $event_manager,
     new FRSReleaseFactory(),
     new UserHelper(),
     new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
     new HeaderNavigationDisplayer()
 );
-$details_controller = new DetailsController($request);
+$details_controller  = new DetailsController($request);
 
-$router = new UGroupRouter($ugroup_manager, $request, $binding_controller, $members_controller, $index_controller, $details_controller);
+$router = new UGroupRouter(
+    $ugroup_manager,
+    $request,
+    $edit_event_launcher,
+    $binding_controller,
+    $members_controller,
+    $index_controller,
+    $details_controller
+);
 $router->process();

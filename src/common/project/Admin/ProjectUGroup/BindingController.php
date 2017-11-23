@@ -52,19 +52,25 @@ class BindingController
      * @var ProjectManager
      */
     private $project_manager;
+    /**
+     * @var EditBindingUGroupEventLauncher
+     */
+    private $edit_event_launcher;
 
     public function __construct(
         ProjectHistoryDao $history_dao,
         ProjectManager $project_manager,
         UGroupManager $ugroup_manager,
         UGroupBinding $ugroup_binding,
-        Codendi_Request $request
+        Codendi_Request $request,
+        EditBindingUGroupEventLauncher $edit_event_launcher
     ) {
-        $this->history_dao     = $history_dao;
-        $this->ugroup_binding  = $ugroup_binding;
-        $this->request         = $request;
-        $this->ugroup_manager  = $ugroup_manager;
-        $this->project_manager = $project_manager;
+        $this->history_dao         = $history_dao;
+        $this->ugroup_binding      = $ugroup_binding;
+        $this->request             = $request;
+        $this->ugroup_manager      = $ugroup_manager;
+        $this->project_manager     = $project_manager;
+        $this->edit_event_launcher = $edit_event_launcher;
     }
 
     public function removeBinding(ProjectUGroup $ugroup)
@@ -72,7 +78,7 @@ class BindingController
         $ugroup_id = $ugroup->getId();
         if ($this->ugroup_binding->removeBinding($ugroup_id)) {
             $this->history_dao->groupAddHistory("ugroup_remove_binding", $ugroup_id, $ugroup->getProjectId());
-            $this->launchEditBindingUgroupEvent($ugroup);
+            $this->edit_event_launcher->launch($ugroup);
         }
     }
 
@@ -89,7 +95,7 @@ class BindingController
                     $ugroup->getId() . ":" . $ugroup_source_id,
                     $ugroup->getProjectId()
                 );
-                $this->launchEditBindingUgroupEvent($ugroup);
+                $this->edit_event_launcher->launch($ugroup);
             }
         } else {
             $GLOBALS['Response']->addFeedback(
@@ -97,16 +103,5 @@ class BindingController
                 $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error')
             );
         }
-    }
-
-    private function launchEditBindingUgroupEvent(ProjectUGroup $ugroup)
-    {
-        EventManager::instance()->processEvent(
-            'project_admin_ugroup_bind_modified',
-            array(
-                'group_id'  => $ugroup->getProjectId(),
-                'ugroup_id' => $ugroup->getId()
-            )
-        );
     }
 }

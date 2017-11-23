@@ -1244,7 +1244,7 @@ class LdapPlugin extends Plugin {
                         Feedback::INFO,
                         $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink')
                     );
-                    $this->launchEditBindingUgroupEvent($ugroup);
+                    $event->getEditEventLauncher()->launch($ugroup);
                 }
                 break;
             case 'ldap_add_binding':
@@ -1258,7 +1258,7 @@ class LdapPlugin extends Plugin {
                         Feedback::INFO,
                         $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', $ldap_group_name)
                     );
-                    $this->launchEditBindingUgroupEvent($ugroup);
+                    $event->getEditEventLauncher()->launch($ugroup);
                 } else {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
@@ -1267,16 +1267,6 @@ class LdapPlugin extends Plugin {
                 }
                 break;
         }
-    }
-
-    private function launchEditBindingUgroupEvent(ProjectUGroup $ugroup)
-    {
-        EventManager::instance()->processEvent('project_admin_ugroup_bind_modified',
-            array(
-                'group_id'  => $ugroup->getProjectId(),
-                'ugroup_id' => $ugroup->getId()
-            )
-        );
     }
 
     private function getSynchro(Codendi_Request $request)
