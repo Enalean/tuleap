@@ -19,6 +19,9 @@
  */
 
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageSender;
+use Tuleap\AgileDashboard\REST\v1\Kanban\ItemRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TimeInfoFactory;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\BurningParrotCompatiblePageEvent;
@@ -35,8 +38,9 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
+use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
+use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
@@ -52,6 +56,7 @@ class AgileDashboardPlugin extends Plugin {
 
     const PLUGIN_NAME = 'agiledashboard';
     const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
+    const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
 
     /** @var AgileDashboard_SequenceIdManager */
     private $sequence_id_manager;
@@ -119,6 +124,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(CanValueBeHiddenStatementsCollection::NAME);
             $this->addHook(SemanticStatusGetDisabledValues::NAME);
             $this->addHook(SemanticStatusCanBeDeleted::NAME);
+            $this->addHook(ArtifactCreated::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1188,5 +1194,46 @@ class AgileDashboardPlugin extends Plugin {
                 dgettext('tuleap-agiledashboard', 'The semantic status cannot de deleted because the semantic done is defined for this tracker.')
             );
         }
+    }
+
+    /**
+     * @return RealTimeArtifactMessageSender
+     */
+    private function getRealtimeMessageSender()
+    {
+        $kanban_item_dao = new AgileDashboard_KanbanItemDao();
+        $item_representation_builder = new ItemRepresentationBuilder(
+            new AgileDashboard_KanbanItemManager(
+                $kanban_item_dao
+            ),
+            new TimeInfoFactory(
+                $kanban_item_dao
+            )
+        );
+        $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
+        $node_js_client = new NodeJSClient();
+        return new RealTimeArtifactMessageSender(
+            $node_js_client,
+            $permissions_serializer,
+            $item_representation_builder
+        );
+    }
+
+    public function trackerArtifactCreated(ArtifactCreated $event)
+    {
+        $artifact  = $event->getArtifact();
+        $kanban_id = $this->getKanbanFactory()->getKanbanIdByTrackerId($artifact->getTrackerId());
+
+        if (! $kanban_id) {
+            return;
+        }
+
+        $this->getRealtimeMessageSender()->sendMessageArtifactCreated(
+            $this->getCurrentUser(),
+            $artifact,
+            $kanban_id
+        );
     }
 }

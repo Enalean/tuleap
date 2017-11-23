@@ -20,6 +20,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
@@ -96,6 +97,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE);
             $this->addHook('tracker_followup_event_update', 'tracker_event_artifact_post_update', false);
             $this->addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
+            $this->addHook(ArtifactCreated::NAME);
         }
 
         // site admin
@@ -895,5 +897,10 @@ class fulltextsearchPlugin extends Plugin {
         $calculator = new FullTextSearch_TypeOfSearchCalculator(PluginManager::instance(), $this);
 
         $params['type'] = $calculator->calculate($params['user'], $params['type'], $params['service_name'], $params['project_id']);
+    }
+
+    public function trackerArtifactCreated(ArtifactCreated $event)
+    {
+        $this->getTrackerSystemEventManager()->queueArtifactUpdate($event->getArtifact());
     }
 }

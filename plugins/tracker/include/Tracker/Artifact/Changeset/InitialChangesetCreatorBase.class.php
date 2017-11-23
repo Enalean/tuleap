@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 /**
  * I am a Template Method to create an initial changeset.
@@ -73,7 +75,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
         $artifact->clearChangesets();
 
-        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
+        $this->event_manager->processEvent(new ArtifactCreated($artifact));
 
         return $changeset_id;
     }

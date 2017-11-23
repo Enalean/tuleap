@@ -157,7 +157,6 @@ class Tracker_ArtifactCreator {
             $this->visit_recorder->record($user, $artifact);
         }
 
-
         return $artifact;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,7 +82,11 @@ class KanbanItemRepresentation {
 
         foreach($card_fields_semantic->getFields() as $field) {
             if ($field->userCanRead($current_user)) {
-                $card_fields[] = $field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+                $value = $field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+
+                if ($value) {
+                    $card_fields[] = $value;
+                }
             }
         }
 
