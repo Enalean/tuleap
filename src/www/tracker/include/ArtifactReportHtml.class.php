@@ -205,7 +205,6 @@ class ArtifactReportHtml extends ArtifactReport {
                 $group_id = $ath->Group->getID();
                 $help_args = $group_id.'|'.$this->group_artifact_id.'|'.$field->getName();
                 $labels .= '<td class="small"><b>'. $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'&nbsp;'.
-                    help_button('browse_tracker_query_field',$help_args).
                     '</b></td>';
             
                 $boxes .= '<TD><FONT SIZE="-1">';
@@ -463,7 +462,7 @@ class ArtifactReportHtml extends ArtifactReport {
 						else {
 						    $target = ($pv == 0 ? "" : " target=blank");
 						    $html_result .= "<TD $width>".'<A HREF="/tracker/?func=detail&aid='.
-						    urlencode($value).'&atid='.(int)$this->group_artifact_id.'&group_id='.(int)$group_id.'"'.$target.'>'. 
+						    urlencode($value).'&atid='.(int)$this->group_artifact_id.'&group_id='.(int)$group_id.'"'.$target.'>'.
 						    $value .'</A></TD>'."\n";
 						}    
 	                        
@@ -526,7 +525,7 @@ class ArtifactReportHtml extends ArtifactReport {
 		while (list($field,$value) = each($prefs) ) {
 			if (is_array($value)) {
 				while (list(,$val) = each($value)) {
-					$html_result .= '<INPUT TYPE="HIDDEN" NAME="'. $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) .'[]" VALUE="'. $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) .'">';	
+					$html_result .= '<INPUT TYPE="HIDDEN" NAME="'. $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) .'[]" VALUE="'. $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) .'">';
 				}
 			} else {
 				$html_result .= '<INPUT TYPE="HIDDEN" NAME="'. $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) .'" VALUE="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'">';
@@ -551,7 +550,7 @@ class ArtifactReportHtml extends ArtifactReport {
                		' - <a href="javascript:checkAll(0)">'.$Language->getText('tracker_include_report','clear_all_items').' </a><p>';
 		
 			$html_result .= '<table width= "100%"><tr><td width="60%" align ="center" class="small">';
-			$html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,(int)$total_rows)).'">';			
+			$html_result .= '<INPUT TYPE="SUBMIT" name="submit_btn" VALUE="'.$Language->getText('tracker_masschange_detail','selected_items',array(1,(int)$total_rows)).'">';
 		    }
 		}
 		$html_result .= '</td></tr></table>';		
@@ -638,8 +637,8 @@ class ArtifactReportHtml extends ArtifactReport {
                 if ($advsrch) { 
                     $url_alternate_search = str_replace('advsrch=1','advsrch=0',$url);
                     $text = $Language->getText('tracker_include_report','simple_search');
-                } else {    
-                    $url_alternate_search = str_replace('advsrch=0','advsrch=1',$url); 
+                } else {
+                    $url_alternate_search = str_replace('advsrch=0','advsrch=1',$url);
                     $text = $Language->getText('tracker_include_report','adv_search');
                 }
                 
@@ -691,7 +690,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     // Build the sorting header messages
                     if ($pv != 2) {    
                         if ( $morder ) {
-                                $order_statement = $Language->getText('tracker_include_report','sorted_by').' '.($pv != 0 ? '':help_button('tracker-v3.html#selection-criteria',false)).
+                                $order_statement = $Language->getText('tracker_include_report','sorted_by').
                                     ' : '.$this->criteriaListToText($morder, $url_nomorder);
                         } else {
                                 $order_statement ='';
@@ -926,9 +925,9 @@ class ArtifactReportHtml extends ArtifactReport {
             $title_arr[]=$Language->getText('tracker_include_report','search_crit');
             $title_arr[]=$Language->getText('tracker_include_report','rank_search');
             $title_arr[]=$Language->getText('tracker_include_report','rep_col');
-            $title_arr[]=$Language->getText('tracker_include_report','rank_repo');      
-            $title_arr[]=$Language->getText('tracker_include_report','col_width');     
-        
+            $title_arr[]=$Language->getText('tracker_include_report','rank_repo');
+            $title_arr[]=$Language->getText('tracker_include_report','col_width');
+
             echo'       
                 <FORM ACTION="/tracker/admin/" METHOD="POST">
                    <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
@@ -995,10 +994,10 @@ class ArtifactReportHtml extends ArtifactReport {
 	                echo "\n<td>".$field->label.'</td>'.
 	                    "\n<td>".$field->description.'</td>'.
 	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1"></td>'.
-	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="" size="5" maxlen="5"></td>'.        
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="" size="5" maxlen="5"></td>'.
 	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1"></td>'.
-	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="" size="5" maxlen="5"></td>'.        
-	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="" size="5" maxlen="5"></td>'.      
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="" size="5" maxlen="5"></td>'.
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="" size="5" maxlen="5"></td>'.
 	                    '</tr>';
 	                $i++;
 	            }
@@ -1036,9 +1035,9 @@ class ArtifactReportHtml extends ArtifactReport {
             $title_arr[]=$Language->getText('tracker_include_report','search_crit');
             $title_arr[]=$Language->getText('tracker_include_report','rank_search');
             $title_arr[]=$Language->getText('tracker_include_report','rep_col');
-            $title_arr[]=$Language->getText('tracker_include_report','rank_repo');      
-            $title_arr[]=$Language->getText('tracker_include_report','col_width');     
-                
+            $title_arr[]=$Language->getText('tracker_include_report','rank_repo');
+            $title_arr[]=$Language->getText('tracker_include_report','col_width');
+
             echo '<FORM ACTION="/tracker/admin/" METHOD="POST">
                    <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
                    <INPUT TYPE="HIDDEN" NAME="update_report" VALUE="y">
@@ -1124,10 +1123,10 @@ class ArtifactReportHtml extends ArtifactReport {
 	                echo "\n<td>".$field->getLabel().'</td>'.
 	                    "\n<td>".$field->getDescription().'</td>'.
 	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_search.'" value="1" '.$cb_search_chk.' ></td>'.
-	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="'.$tf_search_val.'" size="5" maxlen="5"></td>'.      
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_search.'" value="'.$tf_search_val.'" size="5" maxlen="5"></td>'.
 	                    "\n<td align=\"center\">".'<input type="checkbox" name="'.$cb_report.'" value="1" '.$cb_report_chk.' ></td>'.
-	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="'.$tf_report_val.'" size="5" maxlen="5"></td>'.      
-	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="'.$tf_colwidth_val.'" size="5" maxlen="5"></td>'.          
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_report.'" value="'.$tf_report_val.'" size="5" maxlen="5"></td>'.
+	                    "\n<td align=\"center\">".'<input type="text" name="'.$tf_colwidth.'" value="'.$tf_colwidth_val.'" size="5" maxlen="5"></td>'.
 	                    '</TR>';
 	                $i++;
 	            }

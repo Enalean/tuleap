@@ -121,7 +121,7 @@ class ArtifactHtml extends Artifact {
                             if ($sz > $max_size || $field->getName()=='details') {
                                 $fieldset_html .= "\n<TR>".
                                   '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
-                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'. $field_html['value'] .'</TD>'.                     
+                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'. $field_html['value'] .'</TD>'.
                                   "\n</TR>";
                                 $i=0;
                             } else {
@@ -221,9 +221,6 @@ class ArtifactHtml extends Artifact {
             $hp =& Codendi_HTMLPurifier::instance();
             $title .= ' title="'. $hp->purify(util_unconvert_htmlspecialchars($group->getPublicName()).' '.SimpleSanitizer::unsanitize($this->ArtifactType->getName()) .' #'. $this->getId() .' - '. util_unconvert_htmlspecialchars($this->getValue('summary')), CODENDI_PURIFIER_CONVERT_HTML) .' - '. $Language->getText('tracker_include_artifact','follow_ups') .'">';
             $title .= '[xml]</a> ';
-            if ($pv == 0) {
-                $title .= help_button('tracker-v3.html#comments') .' ';
-            }
             echo $this->_getSection(
                 'artifact_section_followups',
                 $title,
@@ -249,7 +246,7 @@ class ArtifactHtml extends Artifact {
             
             echo $this->_getSection(
                 'artifact_section_cc',
-                $Language->getText('tracker_include_artifact','cc_list').' '. ($pv == 0 ? help_button('tracker-v3.html#cc-list') : ''),
+                $Language->getText('tracker_include_artifact','cc_list'),
                 $html,
                 db_numrows($this->getCCList()),
                 db_numrows($this->getCCList()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','cc_empty') .'</div>'
@@ -270,7 +267,7 @@ class ArtifactHtml extends Artifact {
             
             echo $this->_getSection(
                 'artifact_section_attachments',
-                $Language->getText('tracker_include_artifact','attachment').' '. ($pv == 0 ? help_button('tracker-v3.html#artifact-attachments') : ''),
+                $Language->getText('tracker_include_artifact','attachment'),
                 $html,
                 db_numrows($this->getAttachedFiles()),
                 db_numrows($this->getAttachedFiles()) ? '' : '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact','no_file_attached') .'</div>'
@@ -294,7 +291,7 @@ class ArtifactHtml extends Artifact {
             $html .= $this->showInverseDependencies($group_id,$group_artifact_id);
             echo $this->_getSection(
                 'artifact_section_dependencies',
-                $Language->getText('tracker_include_artifact','dependencies').' '.($pv == 0 ? help_button('tracker-v3.html#artifact-dependencies') : ''),
+                $Language->getText('tracker_include_artifact','dependencies'),
                 $html,
                (db_numrows($this->getDependencies()) || db_numrows($this->getInverseDependencies())),
                (db_numrows($this->getDependencies()) || db_numrows($this->getInverseDependencies())) ? '' : '<div>'. $Language->getText('tracker_include_artifact','dep_list_empty') .'</div>'
@@ -308,7 +305,7 @@ class ArtifactHtml extends Artifact {
             $html.=$crossref_fact->getHTMLDisplayCrossRefs();
             echo $this->_getSection(
                 'artifact_section_references',
-                $Language->getText('cross_ref_fact_include','references').' '.($pv == 0 ? help_button('tracker-v3.html#artifact-cross-referencing') : ''),
+                $Language->getText('cross_ref_fact_include','references'),
                 $html,
                 $crossref_fact->getNbReferences(),
                 $crossref_fact->getNbReferences() ? '' : '<div>'. $Language->getText('tracker_include_artifact','ref_list_empty') .'</div>'
@@ -346,7 +343,7 @@ class ArtifactHtml extends Artifact {
                 </script>";
                 echo $this->_getSection(
                     'artifact_section_permissions',
-                    $Language->getText('tracker_include_artifact','permissions').' '.($pv == 0 ? help_button('tracker-v3.html#permissions-on-artifacts') : ''),
+                    $Language->getText('tracker_include_artifact','permissions'),
                     $html,
                     $checked,
                     ($checked ? '' : $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_not_restricted'))
@@ -358,8 +355,8 @@ class ArtifactHtml extends Artifact {
             //
             $is_there_history = db_numrows($this->getHistory());
             echo $this->_getSection(
-                'artifact_section_history', 
-                $Language->getText('tracker_include_artifact','change_history').' '.($pv == 0 ? help_button('tracker-v3.html#artifact-history') : ''),
+                'artifact_section_history',
+                $Language->getText('tracker_include_artifact','change_history'),
                 $this->showHistory($group_id,$group_artifact_id),
                 !$is_there_history
             );
@@ -469,7 +466,7 @@ class ArtifactHtml extends Artifact {
                 } else if ($field->getName() == 'open_date') {
                     $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
                 } else if ($field->getName() == 'last_update_date') {
-                	$value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);    
+                    $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
                 } else {
                     $value = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $read_only, false, false, 0, false, 0, false, 0, true, $this->ArtifactType->getGroupID());
                 }
@@ -645,7 +642,6 @@ class ArtifactHtml extends Artifact {
         $html .= "<br />";
         
         $title  = $Language->getText('tracker_include_artifact','follow_ups').' ';
-        $title .= help_button('tracker-v3.html#comments');
         echo $this->_getSection(
             'artifact_section_followups',
             $title,
@@ -666,7 +662,7 @@ class ArtifactHtml extends Artifact {
         
         echo $this->_getSection(
             'artifact_section_cc',
-            $Language->getText('tracker_include_artifact','cc_list').' '. help_button('tracker-v3.html#cc-list'),
+            $Language->getText('tracker_include_artifact','cc_list'),
             $html,
             true
         );
@@ -683,7 +679,7 @@ class ArtifactHtml extends Artifact {
         
         echo $this->_getSection(
             'artifact_section_attachments',
-            $Language->getText('tracker_include_artifact','attachment').' '. help_button('tracker-v3.html#artifact-attachments'),
+            $Language->getText('tracker_include_artifact','attachment'),
             $html,
             true
         );
@@ -703,7 +699,7 @@ class ArtifactHtml extends Artifact {
         
         echo $this->_getSection(
             'artifact_section_dependencies',
-            $Language->getText('tracker_include_artifact','dependencies').' '.help_button('tracker-v3.html#artifact-dependencies'),
+            $Language->getText('tracker_include_artifact','dependencies'),
             $html,
             true
         );
@@ -843,8 +839,8 @@ class ArtifactHtml extends Artifact {
             if ($ascii) {
 		$out .= $Language->getText('tracker_include_artifact','dep_list').$sys_lf.str_repeat("*",strlen($Language->getText('tracker_include_artifact','dep_list')))."$sys_lf$sys_lf";
                         $fmt = "%-15s | %s (%s)$sys_lf";
-                        $out .= sprintf($fmt, 
-                                        $Language->getText('tracker_include_artifact','artifact'), 
+                        $out .= sprintf($fmt,
+                                        $Language->getText('tracker_include_artifact','artifact'),
                                         $Language->getText('tracker_include_artifact','summary'),
                                         $Language->getText('global','status')
                         );
@@ -915,7 +911,7 @@ class ArtifactHtml extends Artifact {
         if ( $this->ArtifactType->getSubmitInstructions() ) {
             echo  $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODENDI_PURIFIER_FULL) ;
         }
-        
+
         // Beginning of the submission form with fixed fields
         echo '<FORM ACTION="" METHOD="POST" enctype="multipart/form-data" NAME="artifact_form">
                 <INPUT TYPE="hidden" name="MAX_FILE_SIZE" value="'.$sys_max_size_attachment.'">
@@ -951,7 +947,7 @@ class ArtifactHtml extends Artifact {
                 // or if not used by this project  then skip it. 
                 // Plus only show fields allowed on the artifact submit_form 
                 if ( (!$field->isSpecial() || $field->getName()=='summary' || $field->getName()=='details') ) {
-                    if ($field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {                                    
+                    if ($field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {
                         // display the artifact field with its default value
                         // if field size is greatest than max_size chars then force it to
                         // appear alone on a new line or it won't fit in the page
@@ -1013,7 +1009,7 @@ class ArtifactHtml extends Artifact {
         
         echo $this->_getSection(
             'artifact_section_cc',
-            $Language->getText('tracker_include_artifact','cc_list').' '. help_button('tracker-v3.html#cc-list'),
+            $Language->getText('tracker_include_artifact','cc_list'),
             $html,
             true
         );
@@ -1030,7 +1026,7 @@ class ArtifactHtml extends Artifact {
         
         echo $this->_getSection(
             'artifact_section_attachments',
-            $Language->getText('tracker_include_artifact','attachment').' '. help_button('tracker-v3.html#artifact-attachments'),
+            $Language->getText('tracker_include_artifact','attachment'),
             $html,
             true
         );
@@ -1067,7 +1063,7 @@ class ArtifactHtml extends Artifact {
             </script>";
             echo $this->_getSection(
                 'artifact_section_permissions',
-                $Language->getText('tracker_include_artifact','permissions') .' '. help_button('tracker-v3.html#permissions-on-artifacts'),
+                $Language->getText('tracker_include_artifact','permissions'),
                 $html,
                 false,
                 $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_use_default')

@@ -200,7 +200,7 @@ if ( $func == 'gotoid' ) {
                                                 if (!$afh->upload($_FILES['input_file']['tmp_name'],
                                                                   $_FILES['input_file']['name'],
                                                                   $_FILES['input_file']['type'],
-                                                                  $sanitizer->sanitize($request->get('file_description')),$changes)) 
+                                                                  $sanitizer->sanitize($request->get('file_description')),$changes))
                                                 {
                                                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_attach_file',$afh->getErrorMessage()));
                                                 }
@@ -281,7 +281,7 @@ if ( $func == 'gotoid' ) {
                                                 if (!$afh->upload($_FILES['input_file']['tmp_name'],
                                                                   $_FILES['input_file']['name'],
                                                                   $_FILES['input_file']['type'],
-                                                                  $sanitizer->sanitize($request->get('file_description')),$changes)) 
+                                                                  $sanitizer->sanitize($request->get('file_description')),$changes))
                                                 {
                                                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_attach_file',$afh->getErrorMessage()));
                                                 }
@@ -316,7 +316,7 @@ if ( $func == 'gotoid' ) {
                                     
                                     $itemname = $ath->getItemName();
                                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
-                                        '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);                                
+                                        '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);
                                     if ($ath->getStopNotification()) {
 									$GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
 								}                            
@@ -528,7 +528,7 @@ if ( $func == 'gotoid' ) {
                                         if (!$afh->upload($_FILES['input_file']['tmp_name'],
                                                           $_FILES['input_file']['name'],
                                                           $_FILES['input_file']['type'],
-                                                          $sanitizer->sanitize($request->get('file_description')),$changes)) 
+                                                          $sanitizer->sanitize($request->get('file_description')),$changes))
                                         {
                                             $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_upload_err',$afh->getErrorMessage()));
                                                 $was_error=true;
@@ -560,7 +560,7 @@ if ( $func == 'gotoid' ) {
                         if (!isset($was_error) || !$was_error) {
                             $itemname = $ath->getItemName();
                             $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success',
-                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);                                
+                                    '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);
                             if ($ah->ArtifactType->getStopNotification()) {
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
                             }                                                            
@@ -662,7 +662,7 @@ if ( $func == 'gotoid' ) {
 			if (!$afh->upload($_FILES['input_file']['tmp_name'],
                               $_FILES['input_file']['name'],
                               $_FILES['input_file']['type'],
-                              $sanitizer->sanitize($request->get('file_description')),$changes)) 
+                              $sanitizer->sanitize($request->get('file_description')),$changes))
             {
 			  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_upload_err',$afh->getErrorMessage()));
 			  $was_error=true;
@@ -768,7 +768,7 @@ if ( $func == 'gotoid' ) {
                     if (!$afh->upload($_FILES['input_file']['tmp_name'],
                                       $_FILES['input_file']['name'],
                                       $_FILES['input_file']['type'],
-                                      $sanitizer->sanitize($request->get('file_description')),$changes)) 
+                                      $sanitizer->sanitize($request->get('file_description')),$changes))
                     {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file',$afh->getErrorMessage()));
                     }
@@ -873,8 +873,8 @@ if ( $func == 'gotoid' ) {
                 $ah = new ArtifactHtml($ath,$artifact_id);
                 $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
-                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes,$comment_format)) {  
-                    $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
+                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes,$comment_format)) {
+                    $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));
                     $agnf = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
                     $ah->mailFollowupWithPermissions($addresses,$changes);
@@ -1073,9 +1073,6 @@ if ( $func == 'gotoid' ) {
             if ($params['help']) {
                 echo ' | ';
             }
-        }
-        if ($params['help']) {
-            echo help_button($params['help'],false,$Language->getText('global','help'));
         }
         echo "</strong><p>";
         

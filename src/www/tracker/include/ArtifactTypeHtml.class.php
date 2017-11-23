@@ -65,9 +65,6 @@ class ArtifactTypeHtml extends ArtifactType {
                 echo ' | <a href="/tracker/?func=import&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_import_admin','import').' </a>';
             }
             echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='.(int)$this->getID().'">'.$Language->getText('tracker_include_type','admin').'</a>';
-            if ($params['help']) {
-                echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
-            }
 
             echo '</div>'.PHP_EOL;
         }
@@ -121,7 +118,6 @@ class ArtifactTypeHtml extends ArtifactType {
         $em =& EventManager::instance();
         $em->processEvent('tracker_graphic_report_admin_header',null);
         		echo ' | <a href="/tracker/admin/?func=notification&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'&func=notification">'.$Language->getText('tracker_include_type','mail_notif').'</a>';
-                echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
 		echo '</strong><hr>';
 	}
 
@@ -146,9 +142,6 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		echo '<strong><a href="/tracker/admin/?group_id='.(int)$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
 		echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&func=create">'.$Language->getText('tracker_index','create_new_tracker').'</a>';
-		if ($params['help']) {
-		    echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
-		}
 		echo '</strong><hr>';
 	}
 
@@ -409,7 +402,7 @@ EOS;
                 }
                 ksort($ugroups_permissions);
                 $header = array(
-                                $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'), 
+                                $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
                                 $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
                                 $GLOBALS['Language']->getText('tracker_admin_permissions', $submit_permission),
                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')) ;
@@ -424,8 +417,8 @@ EOS;
                     reset($ugroups_permissions[$key_field]['related_parts']);
                 }
                 $header = array(
-                               $GLOBALS['Language']->getText('tracker_include_report', 'field_label'), 
-                               $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'), 
+                               $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
+                               $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
                                $GLOBALS['Language']->getText('tracker_admin_permissions', $submit_permission),
                                $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')) ;
             }
@@ -447,12 +440,12 @@ EOS;
                 
                 //We display 'group_first' or 'field_first'
                 if ($group_first) {
-                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 
-                                                           'fields_tracker_toggle_field', 
+                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions',
+                                                           'fields_tracker_toggle_field',
                                                            $url_action_without_group_first."&group_first=0");
                 } else {
-                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 
-                                                           'fields_tracker_toggle_group', 
+                    $html .= $GLOBALS['Language']->getText('tracker_admin_permissions',
+                                                           'fields_tracker_toggle_group',
                                                            $url_action_without_group_first."&group_first=1");
                 }
 
@@ -1048,9 +1041,9 @@ EOS;
         }
         // Now print the HTML table (for used fields)
 		if ($iu == 0) {
-		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','no_field_in_use').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','no_field_in_use').'</b></center></tr>'.$html;
 		} else {
-		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','used_field').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','used_field').'</b></center></tr>'.$html;
 		}
         
         $html = '';
@@ -1086,9 +1079,9 @@ EOS;
         }
         // Now print the HTML table (for unused fields)
 		if ($iu == 0) {
-		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','no_unused_field').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','no_unused_field').'</b></center></tr>'.$html;
 		} else {
-		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','unused_field').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="7"><center><b>'.$Language->getText('tracker_include_type','unused_field').'</b></center></tr>'.$html;
 		}
 
 		echo '</TABLE>';
@@ -1284,7 +1277,6 @@ EOS;
 	
 		echo '
 		  <b>'.$Language->getText('tracker_include_type','field_ident').'</b> ';
-		echo  help_button('tracker-v3.html#field-usage-management');
 		echo '
                               <p>'.$Language->getText('tracker_include_report','field_label').': <font color="red">*</font> ';
 		      
@@ -1316,7 +1308,6 @@ EOS;
 		
 		echo '			
 		  <p><b>'.$Language->getText('tracker_include_type','display_info').' </b>';
-		echo  help_button('tracker-v3.html#field-usage-management');
 		echo'
                                 <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr> 
@@ -1522,8 +1513,8 @@ EOS;
 	    } else {
 	    	echo '<h3>'.$Language->getText('tracker_include_type','bind_to_list').' ';
 	    }
-	    echo  help_button('tracker-v3.html#binding-a-field-to-a-list-of-values').'</h3>';
-	
+	    echo  '</h3>';
+
 
 	    echo '
 	      <FORM ACTION="" METHOD="POST">
@@ -1582,7 +1573,7 @@ EOS;
 	      if ( $value_function && in_array($ugr,$value_function)) {
 		$selected = " selected";
 	      }
-	      echo '<option value="'.$ugr.'"'.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) .'</option>';	      
+	      echo '<option value="'.$ugr.'"'.$selected.'>'. $hp->purify(util_translate_name_ugroup(db_result($ugroup_res, $i, 'name')), CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
 	    }
 	    
 	    if ($this->Group->getID() != 100) {
@@ -1623,9 +1614,9 @@ EOS;
 		$hp = Codendi_HTMLPurifier::instance();
         
 		if ( $func == "value_create" ) {
-			echo '<h3>'.$Language->getText('tracker_include_type','create_value').' '.help_button('tracker-v3.html#creating-a-tracker-field-value').'</h3>';
+			echo '<h3>'.$Language->getText('tracker_include_type','create_value').'</h3>';
 		} else {
-			echo '<h3>'.$Language->getText('tracker_include_type','update_value').' '.help_button('tracker-v3.html#creating-a-tracker-field-value').'</h3>';
+			echo '<h3>'.$Language->getText('tracker_include_type','update_value').'</h3>';
 		}
 					
 		echo '
@@ -1829,9 +1820,9 @@ EOS;
 		
 		// Now print the HTML table
 		if ($iu == 0) {
-		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','no_active_val').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','no_active_val').'</b></center></tr>'.$html;
 		} else {
-		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','active_val').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','active_val').'</b></center></tr>'.$html;
 		}
 
 		// Build HTML ouput for Unused fields
@@ -1874,7 +1865,7 @@ EOS;
 		if ($iu == 0) {
 		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','no_hidden_val').'</b></center></tr>'.$html;
 		} else {
-		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','hidden_val').'</b></center></tr>'.$html;  
+		    echo '<tr><td colspan="4"><center><b>'.$Language->getText('tracker_include_type','hidden_val').'</b></center></tr>'.$html;
 		}
 
 		echo '</TABLE>';
@@ -1932,20 +1923,20 @@ EOS;
 		
 		if ($this->userIsAdmin()) {
 	    	echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','toggle_notification').' '.
-			help_button('tracker-v3.html#email-notification-settings').'</h3>';
+			'</h3>';
 			echo '
 			<P>'.$Language->getText('tracker_include_type','toggle_notif_note').'<BR>
-			<BR><INPUT TYPE="checkbox" NAME="stop_notification" VALUE="1" '.(($this->getStopNotification())?'CHECKED':'').'> '.$Language->getText('tracker_include_type','stop_notification');     
+			<BR><INPUT TYPE="checkbox" NAME="stop_notification" VALUE="1" '.(($this->getStopNotification())?'CHECKED':'').'> '.$Language->getText('tracker_include_type','stop_notification');
 		} else if ($this->getStopNotification()) {
 		    echo '<h3><a name="ToggleEmailNotification"></a>'.$Language->getText('tracker_include_type','notification_suspended').' '.
-			help_button('tracker-v3.html#email-notification-settings').'</h3>';
+			'</h3>';
 			echo '
 			<P><b>'.$Language->getText('tracker_include_type','toggle_notif_warn').'</b><BR>';
 		}
 		
 		echo '<h3><a name="GlobalEmailNotification"></a>'.$Language->getText('tracker_include_type','global_mail_notif').' '.
-		help_button('tracker-v3.html#email-notification-settings').'</h3>';
-		
+		'</h3>';
+
         $agnf = new ArtifactGlobalNotificationFactory();
         $notifs = $agnf->getGlobalNotificationsForTracker($this->getID());
 		if ($this->userIsAdmin()) {
@@ -2030,7 +2021,7 @@ EOS;
 		    // To watch other users you must have at least admin rights on the tracker
 		    echo'
 		<h4>'.$Language->getText('tracker_include_type','users_to_watch').' '.
-		help_button('tracker-v3.html#tracker-watchers').'</h4>
+		'</h4>
 		<P>'.$Language->getText('tracker_include_type','backup_person').'
 		<p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'. $hp->purify($watchees, CODENDI_PURIFIER_CONVERT_HTML) .'" SIZE="55" MAXLENGTH="255"><br></p>
 		';
@@ -2055,7 +2046,7 @@ EOS;
 		// Build Role/Event table 
 		// Rk: Can't use html_build_list_table_top because of the specific layout
 		echo '<h4>'.$Language->getText('tracker_include_type','event_settings').' '.
-		help_button('tracker-v3.html#event-role-based-notification-settings').'</h4>
+		'</h4>
 		              <P>'.$Language->getText('tracker_include_type','tune_settings');
 		
 		echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2120,8 +2111,8 @@ EOS;
 			return;
 		}
 
-		echo '<h3>'.$Language->getText('tracker_include_type','def_default').' '.help_button('tracker-v3.html#field-values-management').'</h3>';
-					
+		echo '<h3>'.$Language->getText('tracker_include_type','def_default').'</h3>';
+
 		echo '
 	      <FORM ACTION="" METHOD="POST" name="artifact_form">
 	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_default_value">
@@ -2169,8 +2160,8 @@ EOS;
 			return;
 		}
 
-		echo '<h3>'.$Language->getText('tracker_include_type','def_default').' '.help_button('tracker-v3.html#field-values-management').'</h3>';
-					
+		echo '<h3>'.$Language->getText('tracker_include_type','def_default').'</h3>';
+
 		echo '
 	      <FORM ACTION="" METHOD="POST" name="artifact_form">
 	      <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_default_value">
@@ -2271,7 +2262,7 @@ EOS;
 		reset($mass_change_ids);
 		while (list(,$val) = each($mass_change_ids)) {
 			echo '
-	    <INPUT TYPE="HIDDEN" NAME="mass_change_ids[]" VALUE="'. $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) .'">';	
+	    <INPUT TYPE="HIDDEN" NAME="mass_change_ids[]" VALUE="'. $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) .'">';
 		}
 
 
@@ -2350,7 +2341,7 @@ EOS;
                 echo '
 	    <TR><TD colspan="2" align="top"><HR></td></TR>
 	    <TR><TD>
-            <h3>'.$Language->getText('tracker_include_artifact','follow_ups').' '.help_button('tracker-v3.html#comments').'</h3></td>
+            <h3>'.$Language->getText('tracker_include_artifact','follow_ups').'</h3></td>
             <TD>
             <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('tracker_include_type','submit_mass_change').'">
             </td></tr>';
@@ -2388,8 +2379,8 @@ EOS;
                 <TR><TD colspan="2"><hr></td></tr>
                 
                 <TR><TD colspan="2">
-                <h3>'.$Language->getText('tracker_include_artifact','cc_list').' '.help_button('tracker-v3.html#cc-list').'</h3>';
-                
+                <h3>'.$Language->getText('tracker_include_artifact','cc_list').'</h3>';
+
                 if ( !$ro ) {
                     echo '
                                 '.$Language->getText('tracker_include_artifact','fill_cc_list_msg');
@@ -2412,8 +2403,8 @@ EOS;
                 echo '
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR><TD colspan="2">
-                <h3>'.$Language->getText('tracker_include_artifact','attachment').' '.help_button('tracker-v3.html#artifact-attachments').'</h3>';
-                
+                <h3>'.$Language->getText('tracker_include_artifact','attachment').'</h3>';
+
                 echo $Language->getText('tracker_include_artifact','upload_checkbox');
 		echo ' <input type="checkbox" name="add_file" VALUE="1">';
                 echo $Language->getText('tracker_include_artifact','upload_file_lbl');
@@ -2433,8 +2424,8 @@ EOS;
                 echo '
                 <TR><TD colspan="2"><hr></td></tr>
                 <TR ><TD colspan="2">';
-                
-                echo '<h3>'.$Language->getText('tracker_include_artifact','dependencies').' '.help_button('tracker-v3.html#artifact-dependencies').'</h3>
+
+                echo '<h3>'.$Language->getText('tracker_include_artifact','dependencies').'</h3>
                 <B>'.$Language->getText('tracker_include_artifact','dependent_on').'</B><BR>
                 <P>';
                 if ( !$ro ) {
@@ -2454,8 +2445,8 @@ EOS;
                     echo '
                     <TR><TD colspan="2"><hr></td></tr>
                     <TR ><TD colspan="2">';
-                    
-                    echo '<h3>'. $Language->getText('tracker_include_artifact','permissions') .' '. help_button('tracker-v3.html#permissions-on-artifacts') .'</h3>';
+
+                    echo '<h3>'. $Language->getText('tracker_include_artifact','permissions') .' '. '</h3>';
                     echo '<input type="hidden" name="change_permissions" value="0" />';
                     echo '<input type="checkbox" name="change_permissions" value="1" id="change_permissions" />';
                     echo '<label for="change_permissions">'. $GLOBALS['Language']->getText('tracker_include_type', 'mass_change_permissions') .'</label>';
@@ -2539,8 +2530,8 @@ EOS;
                         $title_arr[]=$Language->getText('tracker_include_type','occurrence');
                         $title_arr[]=$Language->getText('tracker_include_canned','delete');
                         $out .= html_build_list_table_top ($title_arr);
-                
-                        $fmt = "\n".'<TR class="%s"><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';				
+
+                        $fmt = "\n".'<TR class="%s"><td>%s</td><td align="center">%s</td><td align="center">%s</td></tr>';
 
 			
 			// Loop through the cc and format them
