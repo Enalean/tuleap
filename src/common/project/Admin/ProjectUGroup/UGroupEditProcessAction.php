@@ -21,12 +21,18 @@
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
 use ProjectUGroup;
 use Tuleap\Event\Dispatchable;
 
 class UGroupEditProcessAction implements Dispatchable
 {
     const NAME = 'ugroupEditProcessAction';
+
+    /**
+     * @var bool
+     */
+    private $has_been_handled;
     /**
      * @var Codendi_Request
      */
@@ -35,11 +41,17 @@ class UGroupEditProcessAction implements Dispatchable
      * @var ProjectUGroup
      */
     private $ugroup;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf;
 
-    public function __construct(Codendi_Request $request, ProjectUGroup $ugroup)
+    public function __construct(Codendi_Request $request, ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf)
     {
-        $this->request = $request;
-        $this->ugroup  = $ugroup;
+        $this->request          = $request;
+        $this->ugroup           = $ugroup;
+        $this->csrf             = $csrf;
+        $this->has_been_handled = false;
     }
 
     /**
@@ -56,5 +68,26 @@ class UGroupEditProcessAction implements Dispatchable
     public function getUGroup()
     {
         return $this->ugroup;
+    }
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    public function getCSRF()
+    {
+        return $this->csrf;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBeenHandled()
+    {
+        return $this->has_been_handled;
+    }
+
+    public function setHasBeenHandledToTrue()
+    {
+        $this->has_been_handled = true;
     }
 }

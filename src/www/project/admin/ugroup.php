@@ -67,13 +67,6 @@ if ($request->existAndNonEmpty('func')) {
             $csrf->check();
             ugroup_delete($group_id, $ugroup_id);
             break;
-        case 'do_update':
-            $csrf->check();
-            $name = $request->getValidated('ugroup_name', 'String', '');
-            $desc = $request->getValidated('ugroup_description', 'String', '');
-            ugroup_update($group_id, $ugroup_id, $name, $desc);
-            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.urlencode($group_id).'&ugroup_id='.urlencode($ugroup_id).'&func=edit&pane=settings');
-            break;
         case 'do_create':
             $name     = $request->getValidated('ugroup_name', 'String', '');
             $desc     = $request->getValidated('ugroup_description', 'String', '');
@@ -82,7 +75,7 @@ if ($request->existAndNonEmpty('func')) {
             $ugroup_id = ugroup_create($group_id, $name, $desc, $template);
             $GLOBALS['Response']->redirect(
                 '/project/admin/editugroup.php?group_id=' . urlencode($group_id) .
-                '&ugroup_id=' . urlencode( $ugroup_id) . '&func=edit'
+                '&ugroup_id=' . urlencode( $ugroup_id)
             );
             break;
     }

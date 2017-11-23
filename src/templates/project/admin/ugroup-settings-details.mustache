@@ -5,9 +5,9 @@
                 <i class="fa fa-list tlp-pane-title-icon"></i>{{# gettext }}Group details{{/ gettext }}
             </h1>
         </div>
-        <form method="post" action="/project/admin/ugroup.php?group_id={{ project_id }}">
+        <form method="post" action="">
             <section class="tlp-pane-section">
-                <input type="hidden" name="func" value="do_update">
+                <input type="hidden" name="action" value="update_details">
                 <input type="hidden" name="group_id" value="{{ project_id }}">
                 <input type="hidden" name="ugroup_id" value="{{ id }}">
 

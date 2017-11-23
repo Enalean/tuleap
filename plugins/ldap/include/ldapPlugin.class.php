@@ -1218,7 +1218,8 @@ class LdapPlugin extends Plugin {
             $builder->build(
                 $collection->getUgroup(),
                 $this->getBindOption($request),
-                $this->getSynchro($request)
+                $this->getSynchro($request),
+                $collection->getCSRF()
             )
         );
     }
@@ -1227,6 +1228,7 @@ class LdapPlugin extends Plugin {
     {
         $request = $event->getRequest();
         $ugroup  = $event->getUGroup();
+        $csrf    = $event->getCSRF();
 
         $ldapUserGroupManager = $this->getLdapUserGroupManager();
         $ldapUserGroupManager->setId($ugroup->getId());
@@ -1234,6 +1236,8 @@ class LdapPlugin extends Plugin {
 
         switch ($request->get('action')) {
             case 'ldap_remove_binding':
+                $event->setHasBeenHandledToTrue();
+                $csrf->check();
                 $ldapUserGroupManager->setGroupName($request->get('previous_bind_with_group'));
                 if ($ldapUserGroupManager->unbindFromBindLdap()) {
                     $GLOBALS['Response']->addFeedback(
@@ -1244,6 +1248,8 @@ class LdapPlugin extends Plugin {
                 }
                 break;
             case 'ldap_add_binding':
+                $event->setHasBeenHandledToTrue();
+                $csrf->check();
                 $ldap_group_name = $request->get('bind_with_group');
                 $ldapUserGroupManager->setGroupName($ldap_group_name);
                 if ($ldapUserGroupManager->getGroupDn()) {

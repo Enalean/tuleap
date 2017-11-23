@@ -19,6 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\ProjectUGroup\BindingController;
+use Tuleap\Project\Admin\ProjectUGroup\DetailsController;
+use Tuleap\Project\Admin\ProjectUGroup\IndexController;
+use Tuleap\Project\Admin\ProjectUGroup\MembersController;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
+
 require_once('pre.php');
 
 $request = HTTPRequest::instance();
@@ -26,12 +34,30 @@ $request = HTTPRequest::instance();
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
-$vFunc = new Valid_WhiteList('func', array('create', 'do_create', 'edit'));
-$vFunc->required();
-$func = $request->getValidated('func', $vFunc, 'create');
+$ugroup_manager     = new UGroupManager();
+$ugroup_binding     = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
+$project_manager    = ProjectManager::instance();
+$binding_controller = new BindingController(
+    new ProjectHistoryDao(),
+    $project_manager,
+    $ugroup_manager,
+    $ugroup_binding,
+    $request
+);
+$user_manager       = UserManager::instance();
+$members_controller = new MembersController($request, $user_manager);
+$index_controller   = new IndexController(
+    $ugroup_binding,
+    $project_manager,
+    $user_manager,
+    PermissionsManager::instance(),
+    EventManager::instance(),
+    new FRSReleaseFactory(),
+    new UserHelper(),
+    new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
+    new HeaderNavigationDisplayer()
+);
+$details_controller = new DetailsController($request);
 
-
-if (($func=='edit')||($func=='do_create')) {
-    $router = new Project_Admin_UGroup_UGroupRouter();
-    $router->process($request);
-}
+$router = new UGroupRouter($ugroup_manager, $request, $binding_controller, $members_controller, $index_controller, $details_controller);
+$router->process();

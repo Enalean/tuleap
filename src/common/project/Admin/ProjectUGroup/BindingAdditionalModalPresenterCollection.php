@@ -20,6 +20,7 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
+use CSRFSynchronizerToken;
 use ProjectUGroup;
 use Tuleap\Event\Dispatchable;
 
@@ -28,14 +29,23 @@ class BindingAdditionalModalPresenterCollection implements Dispatchable
     const NAME = 'bindingAdditionalModalPresenterCollection';
 
     /**
+     * @var BindingAdditionalModalPresenter[]
+     */
+    private $modals;
+    /**
      * @var ProjectUGroup
      */
     private $ugroup;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf;
 
-    public function __construct(ProjectUGroup $ugroup)
+    public function __construct(ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf)
     {
         $this->ugroup = $ugroup;
         $this->modals = array();
+        $this->csrf = $csrf;
     }
 
     /**
@@ -57,5 +67,13 @@ class BindingAdditionalModalPresenterCollection implements Dispatchable
     public function getModals()
     {
         return $this->modals;
+    }
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    public function getCSRF()
+    {
+        return $this->csrf;
     }
 }
