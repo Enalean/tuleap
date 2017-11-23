@@ -38,7 +38,6 @@ function autocomplete_groups_for_select2(element, options) {
             delay   : 250,
             data: function({ term, page = 1 }) {
                 return {
-                    return_type: 'json_for_select_2',
                     ldap_group_name: term,
                     page
                 };

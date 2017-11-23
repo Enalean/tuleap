@@ -104,7 +104,6 @@ project_admin_editservice	conf_inherited_yes	Yes
 project_admin_editugroup	desc	Description
 project_admin_editugroup	proj_members	Project Members
 project_admin_editugroup	ug_id_missed	The ugroup ID is missing
-project_admin_editugroup	ug_not_found	ERROR - Can not find ugroup:$1 - $2
 project_admin_editugroup	edit_ug	Edit User Group
 project_admin_editugroup	ug_admin	User Group '<B>$1</B>' - Administration
 project_admin_editugroup	show_items	Show items starting with $1
@@ -119,7 +118,6 @@ project_admin_editugroup	wiki_page	Wiki Page
 project_admin_editugroup	tracker	Tracker
 project_admin_editugroup	tracker_field	Fields from tracker
 project_admin_editugroup	group_empty	The group is empty
-project_admin_editugroup	binding_title	Groups binding
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -907,7 +905,6 @@ project	does_not_exist	The project doesn't exist
 #
 project_ugroup_binding	ugroup	User group
 project_ugroup_binding	binding	Binding
-project_ugroup_binding	edit_binding_title	Edit user group binding
 project_ugroup_binding	update_binding	Update binding
 project_ugroup_binding	add_binding	Add binding
 project_ugroup_binding	binding_added	Binding added
@@ -915,15 +912,6 @@ project_ugroup_binding	add_error	Something went wrong when binding user group
 project_ugroup_binding	duplicate_binding_warning	The user group with the id $1 is already defined as binding source
 project_ugroup_binding	binding_removed	User group binding successfully removed
 project_ugroup_binding	remove_error	User group binding not removed
-project_ugroup_binding	current_binding	Current binding
-project_ugroup_binding	binding_sources	User groups bound to this one
-project_ugroup_binding	edit_binding	Edit binding
-project_ugroup_binding	source_project	Source project
-project_ugroup_binding	source_ugroup	Source user group
-project_ugroup_binding	no_binding	This user group is not bound to any other user group
-project_ugroup_binding	remove_binding	Remove current binding
-project_ugroup_binding	current_binded	This user group is bound to $1 in project $2
-project_ugroup_binding	not_source	This user group is not the source of any other user group
 project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
 project_ugroup_binding	reset_error	Unable to reset ugroup $1
 project_ugroup_binding	clone_error	Unable to clone ugroup $1
@@ -934,7 +922,6 @@ project_ugroup_binding	clone_error	Unable to clone ugroup $1
 
 project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
 project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
-project_ugroup_binding	ldap_group_empty	LDAP group name cannot be empty.
 
 
 project_admin	generic_member_settings	Generic User Settings

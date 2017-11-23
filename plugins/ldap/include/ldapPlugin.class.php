@@ -108,7 +108,6 @@ class LdapPlugin extends Plugin {
         $this->addHook('usergroup_update', 'updateLdapID', false);
 
         // Project admin
-        $this->addHook('ugroup_table_row',                 'ugroup_table_row',            false);
         $this->addHook(ProjectMembersAdditionalModalCollectionPresenter::NAME);
         $this->addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
 
@@ -781,41 +780,6 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Hook in upgroup edition
-     * $params['row'] A row from ugroup table
-     *
-     * @param Array $params
-     */
-    function ugroup_table_row($params) {
-        if($this->isLdapAuthType() && $this->isLDAPGroupsUsageEnabled()) {
-            // No ldap for project 100
-            if($params['row']['group_id'] != 100) {
-                $hp = Codendi_HTMLPurifier::instance();
-                $ldapUserGroupManager = $this->getLdapUserGroupManager();
-
-                $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
-                $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a><br/>';
-                if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['row']['ugroup_id'])) {
-                    $linkAdd = '';
-                }
-
-                $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($params['row']['ugroup_id']);
-                if($ldapGroup !== null) {
-                    $grpName = $hp->purify($ldapGroup->getCommonName());
-                    $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $grpName);
-                } else {
-                    $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
-                }
-
-                $urlBind = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'].'&func=bind_with_group';
-                $linkBind = '<a href="'.$urlBind.'">- '.$title.'</a>';
-
-                $params['html'] .= '<br />'.$linkAdd.$linkBind;
-            }
-        }
-    }
-
-    /**
      * Collects additional modals to display in project-admin > members
      *
      * @param ProjectMembersAdditionalModalCollectionPresenter $collector
@@ -1282,12 +1246,19 @@ class LdapPlugin extends Plugin {
             case 'ldap_add_binding':
                 $ldap_group_name = $request->get('bind_with_group');
                 $ldapUserGroupManager->setGroupName($ldap_group_name);
-                $ldapUserGroupManager->bindWithLdap($this->getBindOption($request), $this->getSynchro($request));
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', $ldap_group_name)
-                );
-                $this->launchEditBindingUgroupEvent($ugroup);
+                if ($ldapUserGroupManager->getGroupDn()) {
+                    $ldapUserGroupManager->bindWithLdap($this->getBindOption($request), $this->getSynchro($request));
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::INFO,
+                        $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', $ldap_group_name)
+                    );
+                    $this->launchEditBindingUgroupEvent($ugroup);
+                } else {
+                    $GLOBALS['Response']->addFeedback(
+                        Feedback::ERROR,
+                        $GLOBALS['Language']->getText('project_ugroup_binding', 'ldap_group_error', $ldap_group_name)
+                    );
+                }
                 break;
         }
     }

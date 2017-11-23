@@ -54,12 +54,7 @@ class Project_Admin_UGroup_PaneManagement {
                 $ugroup,
                 Project_Admin_UGroup_View_Settings::IDENTIFIER,
                 $GLOBALS['Language']->getText('global', 'settings')
-            ),
-            Project_Admin_UGroup_View_Binding::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
-                $ugroup,
-                Project_Admin_UGroup_View_Binding::IDENTIFIER,
-                $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding')
-            ),
+            )
         );
     }
 

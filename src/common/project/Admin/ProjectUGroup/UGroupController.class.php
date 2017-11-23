@@ -84,18 +84,6 @@ class Project_Admin_UGroup_UGroupController {
         $this->render($view);
     }
 
-    public function binding() {
-        $pane = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
-        $controller_binding = new Project_Admin_UGroup_UGroupController_Binding($this->request, $this->ugroup, $pane);
-        $binding = $controller_binding->displayUgroupBinding();
-        if ($binding) {
-            $view = new Project_Admin_UGroup_View_ShowBinding($this->ugroup, $this->ugroup_binding, $binding, $controller_binding->getLdapPlugin());
-            $this->render($view);
-        } else {
-            $controller_binding->edit_binding();
-        }
-    }
-
     public function ldap_remove_binding()
     {
         $this->ldap();
