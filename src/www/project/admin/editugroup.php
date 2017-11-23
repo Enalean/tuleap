@@ -22,10 +22,13 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\BindingController;
+use Tuleap\Project\Admin\ProjectUGroup\BindingPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\DetailsController;
 use Tuleap\Project\Admin\ProjectUGroup\EditBindingUGroupEventLauncher;
 use Tuleap\Project\Admin\ProjectUGroup\IndexController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersController;
+use Tuleap\Project\Admin\ProjectUGroup\MembersPresenterBuilder;
+use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 
 require_once('pre.php');
@@ -51,13 +54,18 @@ $binding_controller  = new BindingController(
 $user_manager        = UserManager::instance();
 $members_controller  = new MembersController($request, $user_manager);
 $index_controller    = new IndexController(
-    $ugroup_binding,
-    $project_manager,
-    $user_manager,
-    PermissionsManager::instance(),
-    $event_manager,
-    new FRSReleaseFactory(),
-    new UserHelper(),
+    new ProjectUGroupPresenterBuilder(
+        PermissionsManager::instance(),
+        $event_manager,
+        new FRSReleaseFactory(),
+        new BindingPresenterBuilder(
+            $ugroup_binding,
+            $project_manager,
+            $user_manager,
+            $event_manager
+        ),
+        new MembersPresenterBuilder($event_manager, new UserHelper())
+    ),
     new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
     new HeaderNavigationDisplayer()
 );

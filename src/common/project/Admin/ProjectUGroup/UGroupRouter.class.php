@@ -27,8 +27,6 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
-use Project_Admin_UGroup_UGroupController;
-use Project_Admin_UGroup_View_Settings;
 use ProjectUGroup;
 use UGroupManager;
 
