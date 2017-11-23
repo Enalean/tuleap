@@ -51,7 +51,7 @@ msgstr ""
 
 #, php-format
 msgid ""
-"You can also <a href=\"%1$s\">create</a> or <a href=\"%2$s\">modify</a>\n"
+"You can also <a href=\"%1$s\">create or modify</a>\n"
 "                user groups in project administration."
 msgstr ""
 

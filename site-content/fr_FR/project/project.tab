@@ -207,7 +207,7 @@ project_admin_permissions	object	objet $1
 # ...end of values
 project_admin_permissions	perm_type_not_def	permission_type '$1' indéfini
 project_admin_permissions	submit_perm	Valider les permissions
-project_admin_permissions	admins_create_modify_ug	Les administrateurs de projet peuvent aussi <a href="$1">créer</a> ou <a href="$2">modifier</a> des groupes d'utilisateurs.
+project_admin_permissions	admins_create_modify_ug	Les administrateurs de projet peuvent aussi <a href="$1">créer ou modifier</a> des groupes d'utilisateurs.
 project_admin_permissions	perm_reset_for	Réinitialisation des permissions pour $1
 project_admin_permissions	perm_granted_for	Permission accordée à $1
 project_admin_permissions	obj_id_missed	object_id manquant

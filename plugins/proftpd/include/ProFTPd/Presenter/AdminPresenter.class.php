@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -38,18 +37,14 @@ class AdminPresenter {
     private $writers_ugroup_id;
 
     /** @var string */
-    private $create_ugroup_url;
-
-    /** @var string */
-    private $update_ugroup_url;
+    private $admin_ugroup_url;
 
     public function __construct($project_id, array $static_ugroups, $readers_ugroup_id, $writers_ugroup_id) {
         $this->project_id        = $project_id;
         $this->static_ugroups    = $static_ugroups;
         $this->readers_ugroup_id = $readers_ugroup_id;
         $this->writers_ugroup_id = $writers_ugroup_id;
-        $this->create_ugroup_url = '/project/admin/editugroup.php?' .  http_build_query(array('func' => 'create', 'group_id' => $this->project_id));
-        $this->update_ugroup_url = '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $this->project_id));
+        $this->admin_ugroup_url  = '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $this->project_id));
     }
 
     public function project_id() {
@@ -125,18 +120,17 @@ class AdminPresenter {
 
     public function permissions_create_modify() {
         return sprintf(
-            dgettext('tuleap-proftpd', 'You can also <a href="%1$s">create</a> or <a href="%2$s">modify</a>
+            dgettext('tuleap-proftpd', 'You can also <a href="%1$s">create or modify</a>
                 user groups in project administration.'
             ),
-            $this->create_ugroup_url,
-            $this->update_ugroup_url
+            $this->admin_ugroup_url
         );
     }
 
     public function permissions_create() {
         return sprintf(
             dgettext('tuleap-proftpd', 'No user group defined yet ! You should <a href="%1$s">create</a> some in project administration.'),
-            $this->create_ugroup_url
+            $this->admin_ugroup_url
         );
     }
 }

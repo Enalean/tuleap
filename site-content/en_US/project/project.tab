@@ -207,7 +207,7 @@ project_admin_permissions	artifact	Artifact $1
 # ...end of values
 project_admin_permissions	perm_type_not_def	permission_type '$1' is not defined
 project_admin_permissions	submit_perm	Submit Permissions
-project_admin_permissions	admins_create_modify_ug	Project admins can also <a href="$1">create</a> or <a href="$2">modify</a> user groups.
+project_admin_permissions	admins_create_modify_ug	Project admins can also <a href="$1">create or modify</a> user groups.
 project_admin_permissions	perm_reset_for	Permission reset for $1
 project_admin_permissions	perm_granted_for	Permission granted for $1
 project_admin_permissions	obj_id_missed	object_id is missing

@@ -1820,7 +1820,6 @@ EOS;
         $html .= $GLOBALS['Language']->getText('project_admin_permissions',
                 'admins_create_modify_ug',
                 array(
-                "/project/admin/editugroup.php?func=create&group_id=".(int)$this->getGroupID(),
                 "/project/admin/ugroup.php?group_id=".(int)$this->getGroupID()
                 )
         );

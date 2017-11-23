@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,8 +35,7 @@ class FRSReleasePermissionPresenter
             'project_admin_permissions',
             'admins_create_modify_ug',
             array(
-                "/project/admin/editugroup.php?func=create&group_id=".$project->getGroupId(),
-                "/project/admin/ugroup.php?group_id=".$project->getGroupId()
+                "/project/admin/ugroup.php?group_id=" . urlencode($project->getGroupId())
             )
         );
     }

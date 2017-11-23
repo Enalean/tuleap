@@ -1,15 +1,23 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//
-//	Originally by to the SourceForge Team,1999-2000
-//
-//  Written for Codendi by Stephane Bouhet
-//
-
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ */
 require_once('common/tracker/ArtifactType.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
@@ -570,13 +578,13 @@ EOS;
             }
             $html .= "</div></form>";
             $html .= "<p>";
-            $html .= $GLOBALS['Language']->getText('project_admin_permissions',
-                                                   'admins_create_modify_ug',
-                                                   array(
-                                                         "/project/admin/editugroup.php?func=create&group_id=".(int)$this->getGroupID(),
-                                                         "/project/admin/ugroup.php?group_id=".(int)$this->getGroupID()
-                                                         )
-                                                   );
+            $html .= $GLOBALS['Language']->getText(
+                'project_admin_permissions',
+                'admins_create_modify_ug',
+                array(
+                    "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID()
+                )
+            );
             $html .= "</p>";
             print $html;
         }
@@ -652,13 +660,13 @@ EOS;
             //}}}
             $html .= "</div></form>";
             $html .= "<p>";
-            $html .= $GLOBALS['Language']->getText('project_admin_permissions',
-                                                   'admins_create_modify_ug',
-                                                   array(
-                                                         "/project/admin/editugroup.php?func=create&group_id=".(int)$this->getGroupID(),
-                                                         "/project/admin/ugroup.php?group_id=".(int)$this->getGroupID()
-                                                         )
-                                                   );
+            $html .= $GLOBALS['Language']->getText(
+                'project_admin_permissions',
+                'admins_create_modify_ug',
+                array(
+                    "/project/admin/ugroup.php?group_id=" . (int) $this->getGroupID()
+                )
+            );
             $html .= "</p>";
             print $html;
             
