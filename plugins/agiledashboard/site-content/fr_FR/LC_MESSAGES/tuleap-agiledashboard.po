@@ -38,10 +38,10 @@ msgstr ""
 "Un artéfact sera considéré comme <strong>fini</strong> lorsque son champ %s "
 "aura une des valeurs fermées suivantes :"
 
-msgid "An error occured while clearing done values."
+msgid "An error occurred while clearing done values."
 msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
 
-msgid "An error occured while updating done values."
+msgid "An error occurred while updating done values."
 msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
 
 msgid ""
@@ -66,10 +66,10 @@ msgstr ""
 msgid "Done"
 msgstr "Fini"
 
-msgid "Done values successfuly cleared."
+msgid "Done values successfully cleared."
 msgstr "Les valeurs finies ont été supprimées avec succès."
 
-msgid "Done values successfuly updated."
+msgid "Done values successfully updated."
 msgstr "Les valeurs finies ont été mises à jour avec succès."
 
 msgid "Go back to semantic overview"
@@ -82,7 +82,9 @@ msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
 
 msgid "Selected values are invalid because some are not closed values anymore."
-msgstr "Certaines valeurs sélectionnées sont invalides car elles ne sont plus considérées comme fermées."
+msgstr ""
+"Certaines valeurs sélectionnées sont invalides car elles ne sont plus "
+"considérées comme fermées."
 
 msgid "Semantic status is not defined."
 msgstr "La sémantique status n'est pas définie."
@@ -107,7 +109,8 @@ msgid ""
 "The semantic status cannot de deleted because the semantic done is defined "
 "for this tracker."
 msgstr ""
-"La sémantique statut ne peut être supprimée car la sémantique fini est définie."
+"La sémantique statut ne peut être supprimée car la sémantique fini est "
+"définie."
 
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"
