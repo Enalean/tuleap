@@ -21,7 +21,8 @@ export {
     get,
     recursiveGet,
     put,
-    patch
+    patch,
+    post
 } from './fetch-wrapper.js';
 
 export {
