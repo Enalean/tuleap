@@ -23,7 +23,7 @@
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
-use Tuleap\Project\Admin\UGroupBuilder;
+use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
 use Tuleap\User\UserGroup\NameTranslator;
 
 require_once('pre.php');
@@ -93,30 +93,11 @@ $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('proje
 $navigation_displayer = new HeaderNavigationDisplayer();
 $navigation_displayer->displayBurningParrotNavigation($title, $project, 'groups');
 
-$ugroups = array();
-$result = db_query("SELECT * FROM ugroup WHERE group_id=$group_id ORDER BY name");
-while ($row = db_fetch_array($result)) {
-    $res2 = db_query("SELECT count(*) FROM ugroup_user WHERE ugroup_id=".$row['ugroup_id']);
-    $nb_members = db_result($res2,0,0);
-    $ugroups[] = array(
-        'id'          => $row['ugroup_id'],
-        'name'        => util_translate_name_ugroup($row['name']),
-        'description' => util_translate_name_ugroup($row['description']),
-        'nb_members'  => $nb_members
-    );
-}
-
-$ugroup_builder   = new UGroupBuilder(new UGroupManager(), new NameTranslator());
-$template_ugroups = $ugroup_builder->getUGroupsThatCanBeUsedAsTemplate($project);
+$presenter_builder = new UGroupListPresenterBuilder(new UGroupManager());
 
 $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/project/admin/';
 TemplateRendererFactory::build()
     ->getRenderer($templates_dir)
-    ->renderToPage('list-groups', array(
-        'ugroups'            => $ugroups,
-        'template_ugroups'   => $template_ugroups,
-        'project_id'         => $project->getID(),
-        'csrf'               => $csrf
-    ));
+    ->renderToPage('list-groups', $presenter_builder->build($project, $csrf));
 
 project_admin_footer(array());
