@@ -31,7 +31,6 @@ use Project_Admin_UGroup_UGroupController;
 use Project_Admin_UGroup_View_Settings;
 use ProjectUGroup;
 use UGroupManager;
-use Valid_WhiteList;
 
 class UGroupRouter
 {
@@ -59,21 +58,27 @@ class UGroupRouter
      * @var DetailsController
      */
     private $details_controller;
+    /**
+     * @var EditBindingUGroupEventLauncher
+     */
+    private $edit_event_launcher;
 
     public function __construct(
         UGroupManager $ugroup_manager,
         Codendi_Request $request,
+        EditBindingUGroupEventLauncher $edit_event_launcher,
         BindingController $binding_controller,
         MembersController $members_controller,
         IndexController $index_controller,
         DetailsController $details_controller
     ) {
-        $this->ugroup_manager     = $ugroup_manager;
-        $this->request            = $request;
-        $this->binding_controller = $binding_controller;
-        $this->members_controller = $members_controller;
-        $this->index_controller   = $index_controller;
-        $this->details_controller = $details_controller;
+        $this->ugroup_manager      = $ugroup_manager;
+        $this->request             = $request;
+        $this->binding_controller  = $binding_controller;
+        $this->members_controller  = $members_controller;
+        $this->index_controller    = $index_controller;
+        $this->details_controller  = $details_controller;
+        $this->edit_event_launcher = $edit_event_launcher;
     }
 
     public function process()
@@ -101,7 +106,7 @@ class UGroupRouter
                 $this->details_controller->updateDetails($ugroup);
                 $this->redirect($ugroup);
             default:
-                $event = new UGroupEditProcessAction($this->request, $ugroup, $csrf);
+                $event = new UGroupEditProcessAction($this->request, $ugroup, $csrf, $this->edit_event_launcher);
                 EventManager::instance()->processEvent($event);
                 if ($event->hasBeenHandled()) {
                     $this->redirect($ugroup);

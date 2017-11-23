@@ -45,13 +45,22 @@ class UGroupEditProcessAction implements Dispatchable
      * @var CSRFSynchronizerToken
      */
     private $csrf;
+    /**
+     * @var EditBindingUGroupEventLauncher
+     */
+    private $edit_event_launcher;
 
-    public function __construct(Codendi_Request $request, ProjectUGroup $ugroup, CSRFSynchronizerToken $csrf)
-    {
-        $this->request          = $request;
-        $this->ugroup           = $ugroup;
-        $this->csrf             = $csrf;
-        $this->has_been_handled = false;
+    public function __construct(
+        Codendi_Request $request,
+        ProjectUGroup $ugroup,
+        CSRFSynchronizerToken $csrf,
+        EditBindingUGroupEventLauncher $edit_event_launcher
+    ) {
+        $this->request             = $request;
+        $this->ugroup              = $ugroup;
+        $this->csrf                = $csrf;
+        $this->has_been_handled    = false;
+        $this->edit_event_launcher = $edit_event_launcher;
     }
 
     /**
@@ -89,5 +98,13 @@ class UGroupEditProcessAction implements Dispatchable
     public function setHasBeenHandledToTrue()
     {
         $this->has_been_handled = true;
+    }
+
+    /**
+     * @return EditBindingUGroupEventLauncher
+     */
+    public function getEditEventLauncher()
+    {
+        return $this->edit_event_launcher;
     }
 }
