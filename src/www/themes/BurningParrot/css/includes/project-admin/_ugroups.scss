@@ -60,6 +60,17 @@
     flex: 1 1 auto;
 }
 
+.project-admin-user-groups-header {
+    display: flex;
+    align-items: flex-end;
+    margin: 0 0 20px;
+}
+
+.project-admin-user-groups-header-title {
+    margin: 0 $tlp-spacing 0 0;
+    word-break: break-all;
+}
+
 @media screen and (max-width: 1200px) {
     .project-admin-user-groups-container {
         flex-direction: column;
