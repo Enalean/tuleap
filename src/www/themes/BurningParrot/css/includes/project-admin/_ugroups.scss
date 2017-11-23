@@ -21,10 +21,6 @@
     margin: 0 $tlp-half-spacing $tlp-spacing 0;
 }
 
-#project-admin-ugroup-add-ldap-binding {
-    margin: 0 0 $tlp-spacing;
-}
-
 #project-admin-ugroup-current-binding {
     display: flex;
 }
@@ -56,7 +52,7 @@
 }
 
 .project-admin-user-groups-details {
-    width: 25vw;
+    flex: 1 1 auto;
     margin: 0 $tlp-spacing 0 0;
 }
 

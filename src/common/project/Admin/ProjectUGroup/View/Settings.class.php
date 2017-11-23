@@ -19,8 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
+use Tuleap\Project\Admin\ProjectUGroup\BindingAdditionalModalPresenterCollection;
 
+class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View
+{
     const IDENTIFIER = 'settings';
 
     /**
@@ -43,11 +45,6 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
      * @var Codendi_HTMLPurifier
      */
     private $html_purifier;
-    private $plugin_binding;
-    /**
-     * @var LdapPlugin
-     */
-    private $ldap_plugin;
     /**
      * @var UGroupBinding
      */
@@ -63,13 +60,9 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     public function __construct(
         ProjectUGroup $ugroup,
-        UGroupBinding $ugroup_binding,
-        $plugin_binding,
-        LdapPlugin $ldap_plugin = null
+        UGroupBinding $ugroup_binding
     ) {
         parent::__construct($ugroup);
-        $this->plugin_binding = $plugin_binding;
-        $this->ldap_plugin    = $ldap_plugin;
         $this->ugroup_binding = $ugroup_binding;
 
         $this->project_manager     = ProjectManager::instance();
@@ -199,17 +192,6 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     private function getBinding()
     {
-        $url_add_ldap = '/project/admin/editugroup.php?' .
-            http_build_query(
-                array(
-                    'group_id'  => $this->ugroup->getProjectId(),
-                    'ugroup_id' => $this->ugroup->getId(),
-                    'func'      => 'edit',
-                    'pane'      => 'binding',
-                    'action'    => 'edit_directory_group',
-                )
-            );
-
         $clones = $this->getClones();
 
         $csrf = new CSRFSynchronizerToken(
@@ -223,15 +205,16 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
             )
         );
 
+        $collection = new BindingAdditionalModalPresenterCollection($this->ugroup);
+        $this->event_manager->processEvent($collection);
+
         return array(
-            'add_binding'          => $this->getAddBinding(),
-            'url_add_ldap_binding' => $url_add_ldap,
-            'add_ldap_title'       => $this->getLDAPTitle(),
-            'has_clones'           => count($clones) > 0,
-            'clones'               => $clones,
-            'current_binding'      => $this->getCurrentBinding(),
-            'has_ldap'             => ! empty($this->plugin_binding),
-            'csrf_token'           => $csrf
+            'add_binding'     => $this->getAddBinding(),
+            'has_clones'      => count($clones) > 0,
+            'clones'          => $clones,
+            'current_binding' => $this->getCurrentBinding(),
+            'modals'          => $collection->getModals(),
+            'csrf_token'      => $csrf,
         );
     }
 
@@ -257,30 +240,6 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         );
     }
 
-    /**
-     * Create the good title link if we have already a ldap group linked or not
-     *
-     * @return String
-     */
-    private function getLDAPTitle() {
-        if (! $this->ldap_plugin) {
-            return false;
-        }
-
-        $ldap_group = $this->ldap_plugin
-            ->getLdapUserGroupManager()
-            ->getLdapGroupByGroupId($this->ugroup->getId());
-
-        if ($ldap_group !== null) {
-            $name = $this->html_purifier->purify($ldap_group->getCommonName());
-            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $name);
-        } else {
-            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
-        }
-
-        return $title;
-    }
-
     private function getCurrentBinding()
     {
         $source = $this->ugroup->getSourceGroup();
@@ -296,7 +255,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         return $this->getUgroupBindingPresenter($project, $source->getId(), $source->getName());
     }
 
-    private function getUgroupBindingPresenter($project, $id, $name)
+    private function getUgroupBindingPresenter(Project $project, $id, $name)
     {
         return array(
             'project_url'  => '/projects/' . $project->getUnixName(),

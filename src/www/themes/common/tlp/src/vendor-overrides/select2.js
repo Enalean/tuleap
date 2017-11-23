@@ -35,5 +35,5 @@ export default function overrideSelect2(element, options) {
         options.theme = 'tlp-select2-large';
     }
 
-    jQuery(element).select2(options);
+    return jQuery(element).select2(options);
 }

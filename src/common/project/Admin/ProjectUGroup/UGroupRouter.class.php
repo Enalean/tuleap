@@ -44,7 +44,10 @@ class Project_Admin_UGroup_UGroupRouter {
                 break;
             default:
                 $controller = new Project_Admin_UGroup_UGroupController($request, $ugroup);
-                $vAction = new Valid_WhiteList('action', array('remove_binding', 'add_binding', 'edit_ugroup_members'));
+                $vAction = new Valid_WhiteList(
+                    'action',
+                    array('remove_binding', 'add_binding', 'edit_ugroup_members', 'ldap_remove_binding', 'ldap_add_binding')
+                );
                 $vAction->required();
                 $action = $request->getValidated('action', $vAction, $current_pane);
                 break;

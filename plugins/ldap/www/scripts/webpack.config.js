@@ -31,6 +31,7 @@ var assets_dir_path = path.resolve(__dirname, '../assets');
 module.exports = {
     entry : {
         'project-admin-members': './project-admin-members.js',
+        'project-admin-ugroups': './project-admin-ugroups/project-admin-ugroups.js'
     },
     output: {
         path    : assets_dir_path,
@@ -46,6 +47,18 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.mustache$/,
+                use: { loader: 'raw-loader' }
+            },
+            {
+                test: /\.po$/,
+                exclude: /node_modules/,
+                use: [
+                    { loader: 'json-loader' },
+                    { loader: 'po-gettext-loader' }
+                ]
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
