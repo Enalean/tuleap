@@ -45,6 +45,30 @@ class KanbanCumulativeFlowDiagramDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function searchKanbanItemsByDatesWithArtifactIds($tracker_id, array $artifact_ids, array $dates)
+    {
+        $tracker_id   = $this->da->escapeInt($tracker_id);
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $table_dates  = $this->generateTableDates($dates);
+
+        $sql = "SELECT ART.*, CVL.bindvalue_id AS column_id, FROM_UNIXTIME(dates.day, '%Y-%m-%d') AS day
+                  FROM tracker_artifact AS ART
+                  INNER JOIN (
+                      $table_dates
+                  ) dates
+                  INNER JOIN tracker_changeset AS CHG1 ON (CHG1.artifact_id = ART.id AND CHG1.submitted_on <= dates.day)
+                  LEFT JOIN tracker_changeset AS CHG2 ON (CHG2.artifact_id = ART.id AND CHG1.id < CHG2.id AND CHG2.submitted_on <= dates.day)
+                  INNER JOIN tracker_changeset_value AS CV2 ON (CHG1.id = CV2.changeset_id)
+                  INNER JOIN (
+                    SELECT DISTINCT(field_id) FROM tracker_semantic_status WHERE tracker_id = $tracker_id
+                  ) AS SS ON (CV2.field_id = SS.field_id)
+                  INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
+                  WHERE CHG2.id IS NULL
+                    AND ART.tracker_id = $tracker_id
+                    AND ART.id IN($artifact_ids)";
+        return $this->retrieve($sql);
+    }
+
     /**
      * @return string
      */

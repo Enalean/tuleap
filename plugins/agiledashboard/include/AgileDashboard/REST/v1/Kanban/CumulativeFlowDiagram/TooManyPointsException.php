@@ -22,6 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
 
 use Exception;
 
-class TooMuchPointsException extends Exception
+class TooManyPointsException extends Exception
 {
 }

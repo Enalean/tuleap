@@ -64,7 +64,9 @@ use Tuleap\AgileDashboard\KanbanArtifactRightsPresenter;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
-use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooMuchPointsException;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
+use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter\FilteredDiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter\FilteredItemCollectionRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
@@ -141,6 +143,12 @@ class KanbanResource extends AuthenticatedResource
     private $filtered_item_collection_builder;
     /** @var TimeInfoFactory */
     private $time_info_factory;
+    /** @var Tracker_ReportFactory */
+    private $report_factory;
+    /** @var DiagramRepresentationBuilder */
+    private $diagram_builder;
+    /** @var FilteredDiagramRepresentationBuilder */
+    private $filtered_diagram_builder;
 
     public function __construct()
     {
@@ -217,7 +225,7 @@ class KanbanResource extends AuthenticatedResource
             $this->time_info_factory
         );
 
-        $report_factory = Tracker_ReportFactory::instance();
+        $this->report_factory = Tracker_ReportFactory::instance();
 
         $report_artifact_factory = new ReportArtifactFactory(
             $this->artifact_factory
@@ -226,10 +234,26 @@ class KanbanResource extends AuthenticatedResource
         $report_from_where_builder = new ReportFilterFromWhereBuilder();
 
         $this->filtered_item_collection_builder = new FilteredItemCollectionRepresentationBuilder(
-            $report_factory,
             $report_from_where_builder,
             $report_artifact_factory,
             $this->time_info_factory
+        );
+
+        $ordered_column_representation_builder = new OrderedColumnRepresentationsBuilder(
+            $this->kanban_column_factory,
+            $this->artifact_factory
+        );
+
+        $cumulative_flow_diagram_dao = new KanbanCumulativeFlowDiagramDao();
+
+        $this->diagram_builder = new DiagramRepresentationBuilder(
+            $cumulative_flow_diagram_dao,
+            $ordered_column_representation_builder
+        );
+
+        $this->filtered_diagram_builder = new FilteredDiagramRepresentationBuilder(
+            $cumulative_flow_diagram_dao,
+            $ordered_column_representation_builder
         );
     }
 
@@ -449,11 +473,11 @@ class KanbanResource extends AuthenticatedResource
 
         if ($query !== '') {
             $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
+            $report               = $this->getReport($user, $kanban, $tracker_report_id);
             $items_representation = $this->filtered_item_collection_builder->build(
                 $column_identifier,
                 $user,
-                $kanban,
-                $tracker_report_id,
+                $report,
                 $limit,
                 $offset
             );
@@ -721,11 +745,11 @@ class KanbanResource extends AuthenticatedResource
 
         if ($query !== '') {
             $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
+            $report               = $this->getReport($user, $kanban, $tracker_report_id);
             $items_representation = $this->filtered_item_collection_builder->build(
                 $column_identifier,
                 $user,
-                $kanban,
-                $tracker_report_id,
+                $report,
                 $limit,
                 $offset
             );
@@ -907,11 +931,11 @@ class KanbanResource extends AuthenticatedResource
 
         if ($query !== '') {
             $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
+            $report               = $this->getReport($user, $kanban, $tracker_report_id);
             $items_representation = $this->filtered_item_collection_builder->build(
                 $column_identifier,
                 $user,
-                $kanban,
-                $tracker_report_id,
+                $report,
                 $limit,
                 $offset
             );
@@ -1258,6 +1282,19 @@ class KanbanResource extends AuthenticatedResource
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
+     * <p><b>query</b> is optional. When filled, it is a json object with:</p>
+     * <p>an integer "tracker_report_id" to filter kanban items corresponding to the
+     *      given Tracker report id. <br></p>
+     *
+     *      Example: <pre>{"tracker_report_id":41}</pre>
+     *
+     * <br>
+     * <p>Reports using the field bound to the "Status" semantic may not filter items
+     *      the way you expect them to. For example, using a Tracker report with a "Status"
+     *      criteria with "Status" = "On going" will return an empty column for other columns
+     *      such as Archive or Backlog. Columns are based on "Status" and items can
+     *      only have one "Status" value at a time.</p>
+     *
      * @url GET {id}/cumulative_flow
      * @access hybrid
      *
@@ -1265,6 +1302,7 @@ class KanbanResource extends AuthenticatedResource
      * @param string $start_date             Start date of the cumulative flow in ISO format (YYYY-MM-DD) {@from path}{@type date}
      * @param string $end_date               End date of the cumulative flow in ISO format (YYYY-MM-DD) {@from path}{@type date}
      * @param int    $interval_between_point Number of days between 2 points of the cumulative flow {@from path}{@type int}{@min 1}
+     * @param string $query                  Search string in json format {@from path}{@type string}
      *
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation
      *
@@ -1272,18 +1310,11 @@ class KanbanResource extends AuthenticatedResource
      * @throws 403
      * @throws 404
      */
-    public function getCumulativeFlow($id, $start_date, $end_date, $interval_between_point)
+    public function getCumulativeFlow($id, $start_date, $end_date, $interval_between_point, $query = '')
     {
         $this->checkAccess();
         $user             = $this->getCurrentUser();
         $kanban           = $this->getKanban($user, $id);
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-
-        $representation_builder = new DiagramRepresentationBuilder(
-            new KanbanCumulativeFlowDiagramDao(),
-            $this->kanban_column_factory,
-            $artifact_factory
-        );
 
         Header::allowOptionsGet();
 
@@ -1294,17 +1325,31 @@ class KanbanResource extends AuthenticatedResource
         }
 
         try {
-            $diagram_representation = $representation_builder->build(
-                $kanban,
-                $user,
-                $datetime_start,
-                $datetime_end,
-                $interval_between_point
-            );
-        } catch (TooMuchPointsException $exception) {
+            if ($query !== '') {
+                $tracker_report_id = $this->getTrackerReportIdFromQuery($query);
+                $report            = $this->getReport($user, $kanban, $tracker_report_id);
+
+                $diagram_representation = $this->filtered_diagram_builder->build(
+                    $kanban,
+                    $user,
+                    $datetime_start,
+                    $datetime_end,
+                    $interval_between_point,
+                    $report
+                );
+            } else {
+                $diagram_representation = $this->diagram_builder->build(
+                    $kanban,
+                    $user,
+                    $datetime_start,
+                    $datetime_end,
+                    $interval_between_point
+                );
+            }
+        } catch (TooManyPointsException $exception) {
             throw new RestException(
                 400,
-                'Number of points requested is too large, you can request for ' . DiagramRepresentationBuilder::MAX_POSSIBLE_POINTS . 'maximum'
+                'Number of points requested is too large, you can request for ' . OrderedColumnRepresentationsBuilder::MAX_POSSIBLE_POINTS . 'maximum'
             );
         }
 
@@ -1427,5 +1472,17 @@ class KanbanResource extends AuthenticatedResource
 
             $this->node_js_client->sendMessage($message);
         }
+    }
+
+    private function getReport(PFUser $user, AgileDashboard_Kanban $kanban, $tracker_report_id)
+    {
+        $report = $this->report_factory->getReportById($tracker_report_id, $user->getId(), false);
+        if ($report === null) {
+            throw new RestException(404, "The report was not found");
+        }
+        if ($report->getTracker()->getId() !== $kanban->getTrackerId()) {
+            throw new RestException(400, "The provided report does not belong to the kanban tracker");
+        }
+        return $report;
     }
 }

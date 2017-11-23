@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
+namespace Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReportFilter;
 
 use AgileDashboard_Kanban;
 use DataAccessException;
 use DateTime;
 use PFUser;
+use Tracker_Report;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentation;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
+use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
 
-class DiagramRepresentationBuilder
+class FilteredDiagramRepresentationBuilder
 {
     /** @var KanbanCumulativeFlowDiagramDao */
     private $kanban_cumulative_flow_diagram_dao;
@@ -51,11 +55,17 @@ class DiagramRepresentationBuilder
         PFUser $user,
         DateTime $start_date,
         DateTime $end_date,
-        $interval_between_point
+        $interval_between_point,
+        Tracker_Report $report
     ) {
         $dates = $this->column_builder->getDates($start_date, $end_date, $interval_between_point);
 
-        $cumulative_flow_columns_representation = $this->getColumnsRepresentation($kanban, $user, $dates);
+        $cumulative_flow_columns_representation = $this->getFilteredColumnsRepresentation(
+            $kanban,
+            $user,
+            $dates,
+            $report
+        );
 
         $diagram_representation = new DiagramRepresentation();
         $diagram_representation->build(
@@ -65,17 +75,22 @@ class DiagramRepresentationBuilder
         return $diagram_representation;
     }
 
-    /**
-     * @return DiagramColumnRepresentation[]
-     * @throws DataAccessException
-     */
-    private function getColumnsRepresentation(
+    private function getFilteredColumnsRepresentation(
         AgileDashboard_Kanban $kanban,
         PFUser $user,
-        array $dates
+        array $dates,
+        Tracker_Report $report
     ) {
-        $items_in_columns = $this->kanban_cumulative_flow_diagram_dao->searchKanbanItemsByDates(
+        $matching_ids = $report->getMatchingIds();
+        if (! $matching_ids['id']) {
+            return $this->column_builder->build($kanban, $user, $dates, array());
+        }
+
+        $matching_artifact_ids = explode(',', $matching_ids['id']);
+
+        $items_in_columns = $this->kanban_cumulative_flow_diagram_dao->searchKanbanItemsByDatesWithArtifactIds(
             $kanban->getTrackerId(),
+            $matching_artifact_ids,
             $dates
         );
         if ($items_in_columns === false) {
