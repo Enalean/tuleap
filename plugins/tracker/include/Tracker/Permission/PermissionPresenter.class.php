@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,7 +63,6 @@ class Tracker_Permission_PermissionPresenter {
             'project_admin_permissions',
             'admins_create_modify_ug',
             array(
-                '/project/admin/editugroup.php?func=create&group_id='.(int)$this->tracker->getGroupID(),
                 '/project/admin/ugroup.php?group_id='.(int)$this->tracker->getGroupID()
             )
         );

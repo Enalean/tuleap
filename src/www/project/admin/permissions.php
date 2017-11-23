@@ -598,7 +598,14 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
     $html .= '<p><INPUT TYPE="SUBMIT" NAME="submit" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','submit_perm').'">';
     $html .= '<INPUT TYPE="SUBMIT" NAME="reset" VALUE="'.$GLOBALS['Language']->getText('project_admin_permissions','reset_to_def').'">';
     $html .= '</FORM>';
-    $html .= '<p>'.$GLOBALS['Language']->getText('project_admin_permissions','admins_create_modify_ug',array("/project/admin/editugroup.php?func=create&group_id=$group_id","/project/admin/ugroup.php?group_id=$group_id"));
+    $html .= '<p>' . $GLOBALS['Language']->getText(
+            'project_admin_permissions',
+            'admins_create_modify_ug',
+            array(
+                "/project/admin/ugroup.php?group_id=" . urlencode($group_id)
+            )
+        );
+
     return $html;
 }
 
