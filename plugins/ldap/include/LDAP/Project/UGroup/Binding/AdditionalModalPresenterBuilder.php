@@ -20,6 +20,7 @@
 
 namespace Tuleap\LDAP\Project\UGroup\Binding;
 
+use CSRFSynchronizerToken;
 use ForgeConfig;
 use HTTPRequest;
 use LDAP_GroupManager;
@@ -56,14 +57,14 @@ class AdditionalModalPresenterBuilder
         $this->request            = $request;
     }
 
-    public function build(ProjectUGroup $ugroup, $bind_option, $synchro)
+    public function build(ProjectUGroup $ugroup, $bind_option, $synchro, CSRFSynchronizerToken $csrf)
     {
         $ldap_group = $this->user_group_manager->getLdapGroupByGroupId($ugroup->getId());
         $title      = $this->getTitle($ldap_group);
 
         return new BindingAdditionalModalPresenter(
             $this->getButton($title),
-            $this->getContent($title, $ugroup, $bind_option, $synchro, $ldap_group)
+            $this->getContent($title, $ugroup, $bind_option, $synchro, $csrf, $ldap_group)
         );
     }
 
@@ -75,8 +76,14 @@ class AdditionalModalPresenterBuilder
         );
     }
 
-    private function getContent($title, ProjectUGroup $ugroup, $bind_option, $synchro, LDAPResult $ldap_group = null)
-    {
+    private function getContent(
+        $title,
+        ProjectUGroup $ugroup,
+        $bind_option,
+        $synchro,
+        CSRFSynchronizerToken $csrf,
+        LDAPResult $ldap_group = null
+    ) {
         return $this->renderer->renderToString(
             'modal-content',
             array(
@@ -89,6 +96,7 @@ class AdditionalModalPresenterBuilder
                 'is_preserved'    => $this->isPreserved($ugroup, $bind_option),
                 'is_synchronized' => $this->isSynchronized($ugroup, $synchro),
                 'locale'          => $this->request->getCurrentUser()->getLocale(),
+                'csrf_token'      => $csrf,
             )
         );
     }

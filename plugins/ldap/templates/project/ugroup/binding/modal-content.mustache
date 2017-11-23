@@ -15,6 +15,9 @@
         </div>
     </div>
     <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         {{# is_linked }}
             <p class="project-admin-ugroup-ldap-binding-modal-linked-with">{{# dgettext }}
                 tuleap-ldap

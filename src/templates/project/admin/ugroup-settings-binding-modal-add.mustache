@@ -15,6 +15,9 @@
         </div>
     </div>
     <div class="tlp-modal-body">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         {{# add_binding }}
             <input type="hidden" name="action" value="add_binding">
             <div class="tlp-form-element">

@@ -1,10 +1,6 @@
 <?php
-/*
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/**
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,26 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Project_Admin_UGroup_View {
+namespace Tuleap\Project\Admin\ProjectUGroup;
 
+use Codendi_Request;
+use ProjectUGroup;
+
+class DetailsController
+{
     /**
-     * @var ProjectUGroup
+     * @var Codendi_Request
      */
-    protected $ugroup;
+    private $request;
 
-    public function __construct(ProjectUGroup $ugroup) {
-        $this->ugroup = $ugroup;
+    public function __construct(Codendi_Request $request)
+    {
+        $this->request = $request;
     }
 
-    /**
-     * @return string eg: 'perms'
-     */
-    public abstract function getIdentifier();
-
-    /**
-     * @return string eg: '<form>...</form>'
-     */
-    public abstract function getContent();
+    public function updateDetails(ProjectUGroup $ugroup)
+    {
+        $name = $this->request->getValidated('ugroup_name', 'String', '');
+        $desc = $this->request->getValidated('ugroup_description', 'String', '');
+        ugroup_update($ugroup->getProjectId(), $ugroup->getId(), $name, $desc);
+    }
 }
-
-?>
