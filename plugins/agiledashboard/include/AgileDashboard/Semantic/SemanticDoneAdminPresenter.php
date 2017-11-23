@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Semantic;
 
+use CSRFSynchronizerToken;
 use Tracker;
 use Tracker_FormElement_Field;
 
@@ -50,20 +51,32 @@ class SemanticDoneAdminPresenter
      */
     public $has_closed_values_selectable;
 
+    /**
+     * @var string
+     */
+    public $form_url;
+
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
     public function __construct(
+        CSRFSynchronizerToken $csrf,
         Tracker $tracker,
         array $closed_values,
+        $form_url,
+        $go_back_url,
         Tracker_FormElement_Field $semantic_status_field = null
     ) {
         $this->semantic_status_is_defined = (boolean)($semantic_status_field !== null);
         $this->tracker_id                 = $tracker->getId();
         $this->closed_values              = $closed_values;
 
-        $this->go_back_url = TRACKER_BASE_URL. '/?' . http_build_query(array(
-            'tracker' => $this->tracker_id,
-            'func'    => 'admin-semantic'
-        ));
-
         $this->has_closed_values_selectable = count($this->closed_values) > 0;
+
+        $this->go_back_url = $go_back_url;
+        $this->form_url    = $form_url;
+        $this->csrf_token  = $csrf;
     }
 }

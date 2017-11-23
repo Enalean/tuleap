@@ -20,6 +20,12 @@ msgid ""
 "have one of the following closed values:"
 msgstr ""
 
+msgid "An error occured while clearing done values."
+msgstr ""
+
+msgid "An error occured while updating done values."
+msgstr ""
+
 msgid ""
 "Artifacts cannot be considered <strong>done</strong> because there is no "
 "value selected for this semantic."
@@ -36,6 +42,12 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
+msgid "Done values successfuly cleared."
+msgstr ""
+
+msgid "Done values successfuly updated."
+msgstr ""
+
 msgid "Go back to semantic overview"
 msgstr ""
 
@@ -43,6 +55,18 @@ msgid "Planning succesfully created."
 msgstr ""
 
 msgid "Planning succesfully updated."
+msgstr ""
+
+msgid "Selected values are invalid because some are not closed values anymore."
+msgstr ""
+
+msgid "Semantic status is not defined."
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "The request is not valid."
 msgstr ""
 
 msgid "The selected values will define the artifact as done:"

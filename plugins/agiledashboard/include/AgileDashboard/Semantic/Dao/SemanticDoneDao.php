@@ -24,10 +24,17 @@
 
 namespace Tuleap\AgileDashboard\Semantic\Dao;
 
+use DataAccess;
+use DataAccessException;
 use DataAccessObject;
 
 class SemanticDoneDao extends DataAccessObject
 {
+    public function __construct(DataAccess $da = null)
+    {
+        parent::__construct($da);
+        $this->enableExceptionsOnError();
+    }
 
     public function getSelectedValues($tracker_id)
     {
@@ -51,5 +58,46 @@ class SemanticDoneDao extends DataAccessObject
                     ON (semantic_done.value_id = static_value.id OR semantic_done.value_id = static_value.original_value_id)
                 WHERE semantic_done.tracker_id = $tracker_id
                     AND static_value.field_id = $field_id";
+    }
+
+    public function clearForTracker($tracker_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "DELETE FROM plugin_agiledashboard_semantic_done
+                WHERE tracker_id = $tracker_id";
+
+        return $this->update($sql);
+    }
+
+    private function addForTracker($tracker_id, array $selected_values)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $values = array();
+        foreach ($selected_values as $value_id) {
+            $value_id = $this->da->escapeInt($value_id);
+            $values[] = "($tracker_id, $value_id)";
+        }
+
+        $values_statement = implode(', ', $values);
+
+        $sql = "INSERT INTO plugin_agiledashboard_semantic_done (tracker_id, value_id)
+                VALUES $values_statement";
+
+        return $this->update($sql);
+    }
+
+    public function updateForTracker($tracker_id, array $selected_values)
+    {
+        $this->startTransaction();
+        try {
+            $this->clearForTracker($tracker_id);
+            $this->addForTracker($tracker_id, $selected_values);
+            $this->commit();
+        } catch (DataAccessException $e) {
+            $this->rollBack();
+            throw $e;
+        }
     }
 }

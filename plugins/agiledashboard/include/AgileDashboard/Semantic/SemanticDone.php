@@ -21,6 +21,9 @@
 namespace Tuleap\AgileDashboard\Semantic;
 
 use Codendi_Request;
+use CSRFSynchronizerToken;
+use DataAccessException;
+use Feedback;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
@@ -100,7 +103,7 @@ class SemanticDone extends Tracker_Semantic
         $selected_values         = array();
 
         if ($semantic_status_field) {
-            $selected_values = $this->getSelectedValues($semantic_status_field);
+            $selected_values = $this->getFormattedSelectedValues($semantic_status_field);
         }
 
         $presenter = new SemanticDoneIntroPresenter($selected_values, $semantic_status_field);
@@ -129,10 +132,15 @@ class SemanticDone extends Tracker_Semantic
             $closed_values = $this->getFormattedClosedValues($semantic_status_field);
         }
 
+        $csrf = $this->getCSRFSynchronizerToken();
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR.'/semantic');
         $presenter = new SemanticDoneAdminPresenter(
+            $csrf,
             $this->tracker,
             $closed_values,
+            $this->getUrl(),
+            $this->getAdminSemanticUrl(),
             $semantic_status_field
         );
 
@@ -142,12 +150,47 @@ class SemanticDone extends Tracker_Semantic
     }
 
     /**
+     * @return CSRFSynchronizerToken
+     */
+    private function getCSRFSynchronizerToken()
+    {
+        return new CSRFSynchronizerToken($this->getAdminSemanticUrl());
+    }
+
+    /**
+     * @return string
+     */
+    private function getAdminSemanticUrl()
+    {
+        return  TRACKER_BASE_URL. '/?' . http_build_query(array(
+                'tracker' => $this->tracker->getId(),
+                'func'    => 'admin-semantic'
+        ));
+    }
+
+    /**
+     * @return array
+     */
+    private function getFormattedSelectedValues(Tracker_FormElement_Field $semantic_status_field)
+    {
+        $selected_values = array();
+
+        foreach ($this->getSelectedValues($semantic_status_field) as $selected_value) {
+            $selected_values[] = array(
+                'label' => $selected_value->getLabel()
+            );
+        }
+
+        return $selected_values;
+    }
+
+    /**
      * @return array
      */
     private function getSelectedValues(Tracker_FormElement_Field $semantic_status_field)
     {
-        $selected_values = array();
         $closed_values   = $this->getClosedValues($semantic_status_field);
+        $selected_values = array();
 
         foreach ($this->dao->getSelectedValues($this->tracker->getId()) as $selected_value_row) {
             $value_id = $selected_value_row['value_id'];
@@ -156,11 +199,7 @@ class SemanticDone extends Tracker_Semantic
                 continue;
             }
 
-            $value = $closed_values[$value_id];
-
-            $selected_values[] = array(
-                'label' => $value->getLabel()
-            );
+            $selected_values[$value_id] = $closed_values[$value_id];
         }
 
         return $selected_values;
@@ -171,11 +210,14 @@ class SemanticDone extends Tracker_Semantic
      */
     private function getFormattedClosedValues(Tracker_FormElement_Field $semantic_status_field)
     {
+        $selected_values        = $this->getSelectedValues($semantic_status_field);
         $formated_closed_values = array();
 
-        foreach ($this->getClosedValues($semantic_status_field) as $value) {
+        foreach ($this->getClosedValues($semantic_status_field) as $value_id => $value) {
             $formated_closed_values[] = array(
-                'label' => $value->getLabel()
+                'id'       => $value->getId(),
+                'label'    => $value->getLabel(),
+                'selected' => array_key_exists($value_id, $selected_values)
             );
         }
 
@@ -214,7 +256,82 @@ class SemanticDone extends Tracker_Semantic
      */
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
+        if ($request->exist('submit')) {
+            $csrf = $this->getCSRFSynchronizerToken();
+            $csrf->check();
+
+            $semantic_status_field = $this->semantic_status->getField();
+
+            $tracker_id = $this->tracker->getId();
+            $values     = $request->get('done_values');
+
+            if (! $semantic_status_field) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::WARN,
+                    dgettext('tuleap-agiledashboard', 'Semantic status is not defined.')
+                );
+            } elseif (! $values) {
+                $this->clearValuesForTracker($tracker_id);
+            } elseif (isset($values[$tracker_id]) && is_array($values[$tracker_id])) {
+                $this->updateValuesForTracker($semantic_status_field, $tracker_id, $values[$tracker_id]);
+            } else {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    dgettext('tuleap-agiledashboard', 'The request is not valid.')
+                );
+            }
+        }
+
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+    }
+
+    private function clearValuesForTracker($tracker_id)
+    {
+        try {
+            $this->dao->clearForTracker($tracker_id);
+
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-agiledashboard', 'Done values successfuly cleared.')
+            );
+        } catch (DataAccessException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-agiledashboard', 'An error occured while clearing done values.')
+            );
+        }
+    }
+
+    private function updateValuesForTracker(
+        Tracker_FormElement_Field $semantic_status_field,
+        $tracker_id,
+        array $selected_values
+    ) {
+        $selected_values            = array_map('intval', $selected_values);
+        $closed_values              = $this->getClosedValues($semantic_status_field);
+        $non_closed_selected_values = array_diff($selected_values, array_keys($closed_values));
+
+        if (count($non_closed_selected_values) > 0) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-agiledashboard', 'Selected values are invalid because some are not closed values anymore.')
+            );
+
+            return;
+        }
+
+        try {
+            $this->dao->updateForTracker($tracker_id, $selected_values);
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                dgettext('tuleap-agiledashboard', 'Done values successfuly updated.')
+            );
+        } catch (DataAccessException $exception) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-agiledashboard', 'An error occured while updating done values.')
+            );
+        }
     }
 
     /**

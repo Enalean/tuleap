@@ -38,6 +38,12 @@ msgstr ""
 "Un artéfact sera considéré comme <strong>fini</strong> lorsque son champ %s "
 "aura une des valeurs fermées suivantes :"
 
+msgid "An error occured while clearing done values."
+msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
+
+msgid "An error occured while updating done values."
+msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
+
 msgid ""
 "Artifacts cannot be considered <strong>done</strong> because there is no "
 "value selected for this semantic."
@@ -60,6 +66,12 @@ msgstr ""
 msgid "Done"
 msgstr "Fini"
 
+msgid "Done values successfuly cleared."
+msgstr "Les valeurs finies ont été supprimées avec succès."
+
+msgid "Done values successfuly updated."
+msgstr "Les valeurs finies ont été mises à jour avec succès."
+
 msgid "Go back to semantic overview"
 msgstr "Retour à l'administration de la sémantique"
 
@@ -68,6 +80,18 @@ msgstr "La planning a été créé."
 
 msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
+
+msgid "Selected values are invalid because some are not closed values anymore."
+msgstr "Certaines valeurs sélectionnées sont invalides car elles ne sont plus considérées comme fermées."
+
+msgid "Semantic status is not defined."
+msgstr "La sémantique status n'est pas définie."
+
+msgid "Submit"
+msgstr "Valider"
+
+msgid "The request is not valid."
+msgstr "La requête n'est pas valide."
 
 msgid "The selected values will define the artifact as done:"
 msgstr "Les valeurs sélectionnées définissent l'artéfact comme fini :"
