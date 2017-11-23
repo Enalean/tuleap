@@ -18,7 +18,7 @@ server {
         ssl_prefer_server_ciphers on;
 
         # Tweak for file upload and SVN
-        client_max_body_size 64M;
+        client_max_body_size 256M;
 
         include conf.d/tuleap.d/*.conf;
 
