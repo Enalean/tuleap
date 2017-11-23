@@ -292,12 +292,12 @@ class SemanticDone extends Tracker_Semantic
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                dgettext('tuleap-agiledashboard', 'Done values successfuly cleared.')
+                dgettext('tuleap-agiledashboard', 'Done values successfully cleared.')
             );
         } catch (DataAccessException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'An error occured while clearing done values.')
+                dgettext('tuleap-agiledashboard', 'An error occurred while clearing done values.')
             );
         }
     }
@@ -324,12 +324,12 @@ class SemanticDone extends Tracker_Semantic
             $this->dao->updateForTracker($tracker_id, $selected_values);
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                dgettext('tuleap-agiledashboard', 'Done values successfuly updated.')
+                dgettext('tuleap-agiledashboard', 'Done values successfully updated.')
             );
         } catch (DataAccessException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                dgettext('tuleap-agiledashboard', 'An error occured while updating done values.')
+                dgettext('tuleap-agiledashboard', 'An error occurred while updating done values.')
             );
         }
     }

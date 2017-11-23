@@ -20,10 +20,10 @@ msgid ""
 "have one of the following closed values:"
 msgstr ""
 
-msgid "An error occured while clearing done values."
+msgid "An error occurred while clearing done values."
 msgstr ""
 
-msgid "An error occured while updating done values."
+msgid "An error occurred while updating done values."
 msgstr ""
 
 msgid ""
@@ -42,10 +42,10 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-msgid "Done values successfuly cleared."
+msgid "Done values successfully cleared."
 msgstr ""
 
-msgid "Done values successfuly updated."
+msgid "Done values successfully updated."
 msgstr ""
 
 msgid "Go back to semantic overview"
