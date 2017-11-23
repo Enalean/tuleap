@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -140,5 +140,11 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         expect($this->history_dao)->insertGitReadAccess()->never();
         expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
+    }
+
+    public function itParsesWronglyFormattedLogsWithoutErrors()
+    {
+        stub($this->factory)->getFromFullPath()->returns($this->repository);
+        $this->parser->parseLogs(__DIR__ . '/_fixtures/gitolite-2017-11-broken.log');
     }
 }
