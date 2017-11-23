@@ -277,8 +277,7 @@ class WikiServiceViews extends WikiViews {
         print '<li><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>';
     }
     
-    print '<li>'.help_button('wiki.html', false, $help_menu).'</li>
-   </ul>';
+    print '</ul>';
     
   print '
   </td>

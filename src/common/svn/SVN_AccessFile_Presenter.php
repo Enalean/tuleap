@@ -72,8 +72,7 @@ class SVN_AccessFile_Presenter {
     }
 
     public function access_ctrl_file() {
-        return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl_file').' '.
-               help_button('svn.html#subversion-access-control');
+        return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl_file');
     }
 
     public function access_form_title() {
