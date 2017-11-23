@@ -14,6 +14,6 @@ To use get, import it: <code class="code-inline">import { get } from 'tlp';</cod
 <br>
 You can pass parameters directly to Fetch, such as <code class="code-inline">{ cache: 'force-cache', ... }</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request/Request">the Request API</a>.
 <br>
-All parameters in <code class="code-inline">{ params: { ... }}</code> will be turned to JSON and URI-encoded. Common cases are to pass limit and offset for paginated routes.
+All parameters in <code class="code-inline">{ params: { ... }}</code> will be URI-encoded. Common cases are to pass limit and offset for paginated routes.
 </p>
 <p class="tlp-alert-warning">Please note that you must <code class="inline-code">await response.json();</code> too !</p>

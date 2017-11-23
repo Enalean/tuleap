@@ -188,7 +188,7 @@ describe('getLabeledItems', () => {
                 '/api/projects/' + project_id + '/labeled_items',
                 {
                     params: {
-                        query: {labels_id},
+                        query: JSON.stringify({labels_id}),
                         offset: 0,
                         limit: 1
                     }
@@ -200,7 +200,7 @@ describe('getLabeledItems', () => {
                 '/api/projects/' + project_id + '/labeled_items',
                 {
                     params: {
-                        query: {labels_id},
+                        query: JSON.stringify({labels_id}),
                         offset: 1,
                         limit: 1
                     }
@@ -212,7 +212,7 @@ describe('getLabeledItems', () => {
                 '/api/projects/' + project_id + '/labeled_items',
                 {
                     params: {
-                        query: {labels_id},
+                        query: JSON.stringify({labels_id}),
                         offset: 2,
                         limit: 1
                     }

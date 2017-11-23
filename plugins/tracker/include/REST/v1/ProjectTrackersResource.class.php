@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,17 +26,20 @@ use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\Header;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
  * Wrapper for tracker related REST methods
  */
 class ProjectTrackersResource {
-    const MAX_LIMIT = 50;
+    const MAX_LIMIT              = 50;
+    const MINIMAL_REPRESENTATION = 'minimal';
 
     /**
-     * Get all the tracker reprensations of a given project
+     * Get all the tracker representation of a given project
      */
-    public function get(PFUser $user, Project $project, $limit, $offset) {
+    public function get(PFUser $user, Project $project, $representation, $limit, $offset)
+    {
         if (! $this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
@@ -47,8 +50,13 @@ class ProjectTrackersResource {
         $tracker_representations = array();
 
         foreach($trackers as $tracker) {
-
-            $tracker_representations[] = $builder->getTrackerRepresentation($user, $tracker);
+            if ($representation === self::MINIMAL_REPRESENTATION) {
+                $tracker_minimal_representation = new MinimalTrackerRepresentation();
+                $tracker_minimal_representation->build($tracker);
+                $tracker_representations[] = $tracker_minimal_representation;
+            } else {
+                $tracker_representations[] = $builder->getTrackerRepresentation($user, $tracker);
+            }
         }
 
         $this->sendAllowHeaders();

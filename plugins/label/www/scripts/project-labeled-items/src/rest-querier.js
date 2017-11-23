@@ -26,7 +26,7 @@ export {
 async function getLabeledItems(project_id, labels_id, offset, limit) {
     const response = await get('/api/projects/' + project_id + '/labeled_items', {
         params: {
-            query: { labels_id },
+            query: JSON.stringify({ labels_id }),
             limit,
             offset
         }

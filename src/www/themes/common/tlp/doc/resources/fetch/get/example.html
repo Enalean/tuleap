@@ -6,8 +6,8 @@ async function searchUser(username, limit, offset) {
     const response = await get('/api/v1/users/', {
         cache: 'force-cache',
         params: {
-            // These parameters are JSON-encoded and URI-encoded
-            query: { username },
+            // These parameters are URI-encoded
+            query: JSON.stringify({ username }),
             limit,
             offset
         }

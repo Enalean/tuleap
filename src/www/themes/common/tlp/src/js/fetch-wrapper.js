@@ -57,11 +57,11 @@ const encodeAllParamsToURI = (params) => {
     }
 
     return url_params;
-}
+};
 
 const encodeParamToURI = ([key, value] = param) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(JSON.stringify(value));
-}
+    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+};
 
 const recursiveGet = async (input, init = {}) => {
     const {
