@@ -51,7 +51,7 @@ class GitExec extends Git_Exec
 
         try {
             $this->gitCmdWithOutput(
-                'diff --name-status ' . escapeshellarg($dest_reference) . '...' . escapeshellarg($src_reference),
+                'diff --no-renames --name-status ' . escapeshellarg($dest_reference) . '...' . escapeshellarg($src_reference),
                 $output
             );
         } catch (Git_Command_Exception $exception) {
@@ -152,7 +152,7 @@ class GitExec extends Git_Exec
         $ref_base    = escapeshellarg($ref_base);
         $ref_compare = escapeshellarg($ref_compare);
         $file_path   = escapeshellarg($file_path);
-        $cmd         = "diff --numstat $ref_base...$ref_compare -- $file_path";
+        $cmd         = "diff --no-renames --numstat $ref_base...$ref_compare -- $file_path";
         $output      = array();
 
         $this->gitCmdWithOutput($cmd, $output);
