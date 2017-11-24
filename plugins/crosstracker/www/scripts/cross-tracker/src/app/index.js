@@ -17,27 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext from 'node-gettext';
+import Gettext             from 'node-gettext';
 import french_translations from '../../po/fr.po';
 
-import ReadingTrackersController from './reading-mode/reading-trackers-controller.js';
-import ReadingModeController from './reading-mode/reading-mode-controller.js';
-import WritingModeController from './writing-mode/writing-mode-controller.js';
-import ProjectSelector from './writing-mode/project-selector.js';
-import TrackerSelector from './writing-mode/tracker-selector.js';
-import TrackerSelection from './writing-mode/tracker-selection.js';
-import TrackerSelectionController from './writing-mode/tracker-selection-controller.js';
+import ReadingTrackersController       from './reading-mode/reading-trackers-controller.js';
+import ReadingModeController           from './reading-mode/reading-mode-controller.js';
+import WritingModeController           from './writing-mode/writing-mode-controller.js';
+import ProjectSelector                 from './writing-mode/project-selector.js';
+import TrackerSelector                 from './writing-mode/tracker-selector.js';
+import TrackerSelection                from './writing-mode/tracker-selection.js';
+import TrackerSelectionController      from './writing-mode/tracker-selection-controller.js';
 import TrackerSelectionLoaderDisplayer from './writing-mode/tracker-selection-loader-displayer.js';
-import QueryResultController from './query-result-controller.js';
-import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
-import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
-import User from './user.js';
-import SuccessDisplayer from './rest-success-displayer.js';
-import ErrorDisplayer from './rest-error-displayer.js';
-import WidgetLoaderDisplayer from './widget-loader-displayer.js';
-import ModeChangeController from './mode-change-controller.js';
-import ReportMode from './report-mode.js';
-import BackendCrossTrackerReport from './backend-cross-tracker-report.js';
+import QueryResultController           from './query-result-controller.js';
+import ReadingCrossTrackerReport       from './reading-mode/reading-cross-tracker-report.js';
+import WritingCrossTrackerReport       from './writing-mode/writing-cross-tracker-report.js';
+import User                            from './user.js';
+import SuccessDisplayer                from './rest-success-displayer.js';
+import ErrorDisplayer                  from './rest-error-displayer.js';
+import WidgetLoaderDisplayer           from './widget-loader-displayer.js';
+import ModeChangeController            from './mode-change-controller.js';
+import ReportMode                      from './report-mode.js';
+import BackendCrossTrackerReport       from './backend-cross-tracker-report.js';
+import ReportSavedState                from './report-saved-state.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const widget_cross_tracker_elements = document.getElementsByClassName('dashboard-widget-content-cross-tracker');
@@ -55,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const tracker_selection                  = new TrackerSelection();
         const report_mode                        = new ReportMode();
+        const report_saved_state                 = new ReportSavedState();
         const backend_cross_tracker_report       = new BackendCrossTrackerReport(report_id);
         const reading_cross_tracker_report       = new ReadingCrossTrackerReport();
         const writing_cross_tracker_report       = new WritingCrossTrackerReport();
@@ -71,6 +73,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const query_result_controller = new QueryResultController(
             widget_element,
             backend_cross_tracker_report,
+            writing_cross_tracker_report,
+            report_saved_state,
             user,
             error_displayer,
             gettext_provider
@@ -84,16 +88,10 @@ document.addEventListener('DOMContentLoaded', function () {
             reading_cross_tracker_report
         );
 
-        new ModeChangeController(
+        const reading_controller = new ReadingModeController(
             widget_element,
             report_mode,
-            success_displayer,
-            error_displayer
-        );
-
-        new ReadingModeController(
-            widget_element,
-            report_mode,
+            report_saved_state,
             backend_cross_tracker_report,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
@@ -106,22 +104,32 @@ document.addEventListener('DOMContentLoaded', function () {
             gettext_provider
         );
 
-        new WritingModeController(
+        const writing_controller = new WritingModeController(
             widget_element,
             report_mode,
+            report_saved_state,
             writing_cross_tracker_report,
             reading_cross_tracker_report,
             query_result_controller
         );
 
-        new ProjectSelector(
+        const project_selector = new ProjectSelector(
             widget_element,
             tracker_selection,
-            report_mode,
             user,
             error_displayer,
             tracker_selection_loader_displayer,
             gettext_provider
+        );
+
+        const mode_change_controller = new ModeChangeController(
+            widget_element,
+            report_mode,
+            reading_controller,
+            reading_trackers_controller,
+            project_selector,
+            success_displayer,
+            error_displayer
         );
 
         const tracker_selector = new TrackerSelector(
@@ -142,5 +150,12 @@ document.addEventListener('DOMContentLoaded', function () {
             error_displayer,
             gettext_provider
         );
+
+        mode_change_controller.init();
+        reading_controller.init();
+        writing_controller.init();
+        query_result_controller.init();
+        reading_trackers_controller.init();
+        project_selector.init();
     }
 });

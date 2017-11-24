@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import xor from 'lodash.xor';
-
 export default class BackendCrossTrackerReport {
     constructor(report_id) {
         this.loaded    = false;
@@ -44,14 +42,6 @@ export default class BackendCrossTrackerReport {
 
     duplicateFromReport(report) {
         this.trackers = new Map(report.trackers);
-    }
-
-    isDifferentFromReadingReport(reading_report) {
-        const reading_trackers_array = Array.from(reading_report.getTrackerIds());
-        const backend_trackers_array = Array.from(this.getTrackerIds());
-        const array_diff             = xor(reading_trackers_array, backend_trackers_array);
-
-        return array_diff.length > 0;
     }
 
     getTrackerIds() {

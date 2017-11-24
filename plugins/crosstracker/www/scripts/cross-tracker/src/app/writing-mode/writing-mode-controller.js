@@ -21,19 +21,23 @@ export default class WritingModeController {
     constructor(
         widget_content,
         report_mode,
+        report_saved_state,
         writing_cross_tracker_report,
         reading_cross_tracker_report,
         query_result_controller
     ) {
         this.widget_content               = widget_content;
         this.report_mode                  = report_mode;
+        this.report_saved_state           = report_saved_state;
         this.writing_cross_tracker_report = writing_cross_tracker_report;
         this.reading_cross_tracker_report = reading_cross_tracker_report;
         this.query_result_controller      = query_result_controller;
 
         this.writing_mode_cancel = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-cancel');
         this.writing_mode_search = this.widget_content.querySelector('.dashboard-widget-content-cross-tracker-writing-mode-actions-search');
+    }
 
+    init() {
         this.listenCancel();
         this.listenSearch();
     }
@@ -41,6 +45,7 @@ export default class WritingModeController {
     listenCancel() {
         this.writing_mode_cancel.addEventListener('click', () => {
             this.writing_cross_tracker_report.duplicateFromReport(this.reading_cross_tracker_report);
+            this.report_saved_state.switchToSavedState();
             this.changeMode();
         });
     }
@@ -48,8 +53,9 @@ export default class WritingModeController {
     listenSearch() {
         this.writing_mode_search.addEventListener('click', () => {
             this.reading_cross_tracker_report.duplicateFromReport(this.writing_cross_tracker_report);
+            this.report_saved_state.switchToUnsavedState();
             this.changeMode();
-            this.query_result_controller.updateQueryResults(this.writing_cross_tracker_report.getTrackerIds());
+            this.query_result_controller.loadFirstBatchOfArtifacts();
         });
     }
 

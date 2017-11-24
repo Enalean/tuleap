@@ -19,13 +19,13 @@ msgstr ""
 msgid "Last update date"
 msgstr ""
 
+msgid "Load more"
+msgstr ""
+
 msgid "No matching artifacts found"
 msgstr ""
 
 msgid "No trackers selected"
-msgstr ""
-
-msgid "Only the first 30 results are shown"
 msgstr ""
 
 msgid "Project"
