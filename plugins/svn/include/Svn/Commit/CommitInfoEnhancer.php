@@ -68,7 +68,7 @@ class CommitInfoEnhancer {
             $info_commit  = $this->svn_look->getInfo($repository, $revision);
             $this->commit_info->setUser($info_commit[0]);
             $this->commit_info->setDate($info_commit[1]);
-            $this->commit_info->setCommitMessage($info_commit[3]);
+            $this->commit_info->setCommitMessage(implode("\n", array_slice($info_commit, 2)));
         } else {
             throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
         }
