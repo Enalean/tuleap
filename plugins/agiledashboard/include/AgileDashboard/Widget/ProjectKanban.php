@@ -36,7 +36,8 @@ class ProjectKanban extends Kanban
         WidgetKanbanDeletor $widget_kanban_deletor,
         AgileDashboard_KanbanFactory $kanban_factory,
         TrackerFactory $tracker_factory,
-        AgileDashboard_PermissionsManager $permissions_manager
+        AgileDashboard_PermissionsManager $permissions_manager,
+        $tracker_report_id
     ) {
         parent::__construct(
             self::NAME,
@@ -47,7 +48,8 @@ class ProjectKanban extends Kanban
             $widget_kanban_deletor,
             $kanban_factory,
             $tracker_factory,
-            $permissions_manager
+            $permissions_manager,
+            $tracker_report_id
         );
     }
 }

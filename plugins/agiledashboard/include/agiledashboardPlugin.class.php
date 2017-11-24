@@ -376,23 +376,31 @@ class AgileDashboardPlugin extends Plugin {
 
         switch ($params['widget']) {
             case MyKanban::NAME:
+                $request           = HTTPRequest::instance();
+                $tracker_report_id = $request->get('tracker_report_id');
+
                 $params['instance'] = new MyKanban(
                     $widget_kanban_creator,
                     $widget_kanban_retriever,
                     $widget_kanban_deletor,
                     $kanban_factory,
                     TrackerFactory::instance(),
-                    $permission_manager
+                    $permission_manager,
+                    $tracker_report_id
                 );
                 break;
             case ProjectKanban::NAME:
+                $request           = HTTPRequest::instance();
+                $tracker_report_id = $request->get('tracker_report_id');
+
                 $params['instance'] = new ProjectKanban(
                     $widget_kanban_creator,
                     $widget_kanban_retriever,
                     $widget_kanban_deletor,
                     $kanban_factory,
                     TrackerFactory::instance(),
-                    $permission_manager
+                    $permission_manager,
+                    $tracker_report_id
                 );
                 break;
             default:
