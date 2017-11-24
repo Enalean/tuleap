@@ -80,6 +80,7 @@
                                             tlp-button-outline
                                             project-admin-remove-user-from-group"
                                             data-target-modal-id="project-admin-remove-user-from-group-modal-{{ user_id }}"
+                                            {{^ can_be_deleted }} disabled {{/ can_be_deleted }}
                                         >
                                             <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
                                         </button>

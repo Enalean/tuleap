@@ -23,7 +23,10 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Codendi_Request;
 use Feedback;
+use Project;
 use ProjectUGroup;
+use Tuleap\Project\UserPermissionsDao;
+use UGroupBinding;
 use UserManager;
 
 class MembersController
@@ -36,43 +39,89 @@ class MembersController
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var UserPermissionsDao
+     */
+    private $user_permissions_dao;
+    /**
+     * @var UGroupBinding
+     */
+    private $ugroup_binding;
 
-    public function __construct(Codendi_Request $request, UserManager $user_manager)
-    {
-        $this->request      = $request;
-        $this->user_manager = $user_manager;
+    public function __construct(
+        Codendi_Request $request,
+        UserManager $user_manager,
+        UserPermissionsDao $user_permissions_dao,
+        UGroupBinding $ugroup_binding
+    ) {
+        $this->request              = $request;
+        $this->user_manager         = $user_manager;
+        $this->user_permissions_dao = $user_permissions_dao;
+        $this->ugroup_binding       = $ugroup_binding;
     }
 
-    public function editMembers(ProjectUGroup $ugroup)
+    public function editMembers(Project $project, ProjectUGroup $ugroup)
     {
         $is_update_allowed = ! $ugroup->isBound();
         if (! $is_update_allowed) {
             return;
         }
 
-        $project_id = $ugroup->getProjectId();
-        $ugroup_id  = $ugroup->getId();
-
-        $user_id = $this->request->get('remove_user');
-        if ($user_id) {
-            ugroup_remove_user_from_ugroup($project_id, $ugroup_id, $user_id);
-        }
-        $add_user_name = $this->request->get('add_user_name');
-        if ($add_user_name) {
-            $this->addUserByName($project_id, $ugroup_id, $add_user_name);
-        }
+        $this->removeUserFromUGroup($project, $ugroup);
+        $this->addUserToUGroup($project, $ugroup);
     }
 
-    private function addUserByName($project_id, $ugroup_id, $add_user_name)
+    private function addUserToUGroup(Project $project, ProjectUGroup $ugroup)
     {
+        $add_user_name = $this->request->get('add_user_name');
+        if (! $add_user_name) {
+            return;
+        }
         $user = $this->user_manager->findUser($add_user_name);
-        if ($user) {
-            ugroup_add_user_to_ugroup($project_id, $ugroup_id, $user->getId());
-        } else {
+        if (! $user) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('include_account', 'user_not_exist')
             );
         }
+        if ($ugroup->isStatic()) {
+            ugroup_add_user_to_ugroup($project->getID(), $ugroup->getId(), $user->getId());
+
+            return;
+        }
+
+        if (! $user->isMember($project->getID())) {
+            account_add_user_to_group($project->getID(), $user->getUserName());
+            $this->ugroup_binding->reloadUgroupBindingInProject($project);
+        }
+        $this->user_permissions_dao->addUserAsProjectAdmin($project->getID(), $user->getId());
+    }
+
+    /**
+     * @param Project       $project
+     * @param ProjectUGroup $ugroup
+     */
+    private function removeUserFromUGroup(Project $project, ProjectUGroup $ugroup)
+    {
+        $user_id = $this->request->get('remove_user');
+        if (! $user_id) {
+            return;
+        }
+
+        $user = $this->user_manager->getUserById($user_id);
+        if (! $user) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('include_account', 'user_not_exist')
+            );
+        }
+
+        if ($ugroup->isStatic()) {
+            ugroup_remove_user_from_ugroup($project->getID(), $ugroup->getId(), $user_id);
+
+            return;
+        }
+
+        $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
     }
 }

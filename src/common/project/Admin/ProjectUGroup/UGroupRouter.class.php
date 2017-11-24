@@ -27,6 +27,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
+use Project;
 use ProjectUGroup;
 use UGroupManager;
 
@@ -81,8 +82,9 @@ class UGroupRouter
 
     public function process()
     {
-        $ugroup = $this->getUGroup();
-        $csrf   = new CSRFSynchronizerToken($this->getUGroupUrl($ugroup));
+        $project = $this->request->getProject();
+        $ugroup  = $this->getUGroup($project);
+        $csrf    = new CSRFSynchronizerToken($this->getUGroupUrl($ugroup));
         switch ($this->request->get('action')) {
             case 'remove_binding':
                 $csrf->check();
@@ -96,7 +98,7 @@ class UGroupRouter
                 break;
             case 'edit_ugroup_members':
                 $csrf->check();
-                $this->members_controller->editMembers($ugroup);
+                $this->members_controller->editMembers($project, $ugroup);
                 $this->redirect($ugroup);
                 break;
             case 'update_details':
@@ -114,14 +116,14 @@ class UGroupRouter
         }
     }
 
-    private function getUGroup()
+    private function getUGroup(Project $project)
     {
         $ugroup_id = $this->request->getValidated('ugroup_id', 'uint', 0);
         if (! $ugroup_id) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), 'The ugroup ID is missing');
         }
 
-        return $this->ugroup_manager->getById($ugroup_id);
+        return $this->ugroup_manager->getUGroup($project, $ugroup_id);
     }
 
     protected function redirect(ProjectUGroup $ugroup)

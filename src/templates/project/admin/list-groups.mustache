@@ -62,6 +62,7 @@
                                         tlp-button-outline
                                         project-admin-delete-ugroups-modal"
                                         data-target-modal-id="project-admin-delete-ugroups-modal-{{ id }}"
+                                        {{^ can_be_deleted }}disabled="disabled"{{/ can_be_deleted }}
                                     >
                                         <i class="fa fa-trash-o tlp-button-icon"></i> {{# gettext }}Delete{{/ gettext }}
                                     </button>

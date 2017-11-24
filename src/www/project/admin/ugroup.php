@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Show/manage ugroup list
-
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
@@ -28,27 +26,6 @@ use Tuleap\User\UserGroup\NameTranslator;
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
-
-function format_html_row($row, &$row_num) {
-    echo "<tr class=\"". util_get_alt_row_color($row_num++) ."\">\n";
-    foreach($row as $cell) {
-        $htmlattrs = '';
-        $value = '';
-        if(is_array($cell)) {
-            if(isset($cell['value'])) {
-                $value = $cell['value'];
-            }
-            if(isset($cell['html_attrs'])) {
-                $htmlattrs = ' '.$cell['html_attrs'];
-            }
-        } else {
-            $value = $cell;
-        }
-
-        echo '  <td>'.$value."</td>\n";
-    }
-    echo "</tr>\n";
-}
 
 $em      = EventManager::instance();
 $request = HTTPRequest::instance();
@@ -65,7 +42,11 @@ if ($request->existAndNonEmpty('func')) {
     switch($request->get('func')) {
         case 'delete':
             $csrf->check();
-            ugroup_delete($group_id, $ugroup_id);
+            if ($group_id > 100) {
+                ugroup_delete($group_id, $ugroup_id);
+            } else {
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('You can not delete system user groups'));
+            }
             break;
         case 'do_create':
             $name     = $request->getValidated('ugroup_name', 'String', '');

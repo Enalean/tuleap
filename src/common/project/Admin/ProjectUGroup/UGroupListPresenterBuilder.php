@@ -22,6 +22,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use CSRFSynchronizerToken;
 use Project;
+use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
 use UGroupManager;
 
@@ -43,12 +44,28 @@ class UGroupListPresenterBuilder
         $templates      = $this->getUGroupsThatCanBeUsedAsTemplate($static_ugroups);
 
         $ugroups = array();
+
+        $ugroup = $this->ugroup_manager->getUGroup(
+            $project,
+            ProjectUGroup::PROJECT_ADMIN
+        );
+
+        $ugroups[] = array(
+            'id'             => $ugroup->getId(),
+            'name'           => $ugroup->getTranslatedName(),
+            'description'    => $ugroup->getTranslatedDescription(),
+            'nb_members'     => $ugroup->countStaticOrDynamicMembers($project->getID()),
+            'can_be_deleted' => false
+        );
+
+
         foreach ($static_ugroups as $ugroup) {
             $ugroups[] = array(
-                'id'          => $ugroup->getId(),
-                'name'        => $ugroup->getTranslatedName(),
-                'description' => $ugroup->getTranslatedDescription(),
-                'nb_members'  => $ugroup->countStaticOrDynamicMembers($project->getID())
+                'id'             => $ugroup->getId(),
+                'name'           => $ugroup->getTranslatedName(),
+                'description'    => $ugroup->getTranslatedDescription(),
+                'nb_members'     => $ugroup->countStaticOrDynamicMembers($project->getID()),
+                'can_be_deleted' => true
             );
         }
 
