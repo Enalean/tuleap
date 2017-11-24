@@ -78,9 +78,6 @@ function codendi_main () {
     if (!empty($_PEAR_destructor_object_list))
         $_PEAR_destructor_object_list = array();
     $request->possiblyDeflowerVirginWiki();
-    
-// hack! define proper actions for these.
-if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
 
     $validators = array('wikiname' => WIKI_NAME,
                         'args'     => wikihash($request->getArgs()),

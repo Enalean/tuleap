@@ -497,7 +497,6 @@ class WikiRequest extends Request {
                     'upload'     => _("upload a zip dump"),
                     'verify'     => _("verify the current action"),
                     'viewsource' => _("view the source of this page"),
-                    'soap'       => _("access this wiki via SOAP"),
                     'zip'        => _("download a zip dump from this wiki"),
                     'ziphtml'    => _("download an html zip dump from this wiki")
                     );
@@ -535,7 +534,6 @@ class WikiRequest extends Request {
                     'upload'     => _("Uploading zip dumps"),
                     'verify'     => _("Verify the current action"),
                     'viewsource' => _("Viewing the source of pages"),
-                    'soap'       => _("SOAP access"),
                     'zip'        => _("Downloading zip dumps"),
                     'ziphtml'    => _("Downloading html zip dumps")
                     );
@@ -594,7 +592,6 @@ class WikiRequest extends Request {
 
             case 'edit':
             case 'revert':
-            case 'soap':
             case 'upload':
                 if (defined('REQUIRE_SIGNIN_BEFORE_EDIT') && REQUIRE_SIGNIN_BEFORE_EDIT)
                     return WIKIAUTH_BOGO;
@@ -786,10 +783,6 @@ class WikiRequest extends Request {
 
     function _deduceAction () {
         if (!($action = $this->getArg('action'))) {
-            // TODO: improve this SOAP.php hack by letting SOAP use index.php 
-            // or any other virtual url as with xmlrpc
-            if (defined('WIKI_SOAP')   and WIKI_SOAP)
-                return 'soap';
             return 'browse';    // Default if no action specified.
         }
 
@@ -1163,9 +1156,6 @@ function main () {
     if (!empty($_PEAR_destructor_object_list))
         $_PEAR_destructor_object_list = array();
     $request->possiblyDeflowerVirginWiki();
-    
-// hack! define proper actions for these.
-if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
 
     $validators = array('wikiname' => WIKI_NAME,
                         'args'     => wikihash($request->getArgs()),
