@@ -105,7 +105,7 @@ class KanbanPresenter {
             $kanban
         );
 
-        $this->widget_id                         = $dashboard_widget_id;
+        $this->widget_id                         = json_encode($dashboard_widget_id);
         $this->kanban_representation             = json_encode($kanban_representation_builder->build($kanban, $user));
         $this->dashboard_dropdown_representation = json_encode($widget_dropdown_builder->build($kanban, $user, $project_manager->getProject($project_id)));
         $this->filters_tracker_report            = json_encode($filters_tracker_report_builder->build($filter_tracker_report_id));

@@ -1,32 +1,40 @@
 export default MainController;
 
 MainController.$inject = [
-    '$scope',
-    '$window',
+    '$element',
     'SharedPropertiesService',
     'amMoment',
     'gettextCatalog'
 ];
 
 function MainController(
-    $scope,
-    $window,
+    $element,
     SharedPropertiesService,
     amMoment,
     gettextCatalog
 ) {
-    $scope.init = init;
+    init();
 
-    function init(user_id, project_id, milestone_id, lang, view_mode, milestone, initial_backlog_items, initial_milestones) {
+    function init() {
+        const planning_init_data = $element[0].querySelector('.planning-init-data').dataset;
+
+        const user_id = planning_init_data.userId;
         SharedPropertiesService.setUserId(user_id);
+        const project_id = planning_init_data.projectId;
         SharedPropertiesService.setProjectId(project_id);
+        const milestone_id = planning_init_data.milestoneId;
         SharedPropertiesService.setMilestoneId(milestone_id);
+        const milestone = JSON.parse(planning_init_data.milestone);
         SharedPropertiesService.setMilestone(milestone);
+        const initial_backlog_items = JSON.parse(planning_init_data.paginatedBacklogItems);
         SharedPropertiesService.setInitialBacklogItems(initial_backlog_items);
+        const initial_milestones = JSON.parse(planning_init_data.paginatedMilestones);
         SharedPropertiesService.setInitialMilestones(initial_milestones);
+        const view_mode = planning_init_data.viewMode;
         SharedPropertiesService.setViewMode(view_mode);
 
-        initLocale(lang);
+        const language = planning_init_data.language;
+        initLocale(language);
     }
 
     function initLocale(lang) {

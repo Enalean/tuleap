@@ -1,7 +1,16 @@
 <div id="planning-app"
     ng-app="planning"
     ng-controller="MainController"
-    ng-init="init({{ user_id }}, {{ project_id }}, '{{ milestone_id }}', '{{ lang }}', '{{ view_mode }}', {{ milestone_representation }}, {{ paginated_backlog_items_representations }}, {{ paginated_milestones_representations }})"
 >
+    <div class="planning-init-data" ng-non-bindable
+         data-user-id="{{ user_id }}"
+         data-project-id="{{ project_id }}"
+         data-milestone-id="{{ milestone_id }}"
+         data-language="{{ lang }}"
+         data-view-mode="{{ view_mode }}"
+         data-milestone="{{ milestone_representation }}"
+         data-paginated-backlog-items="{{ paginated_backlog_items_representations }}"
+         data-paginated-milestones="{{ paginated_milestones_representations }}"
+    ></div>
     <ui-view></ui-view>
 </div>
