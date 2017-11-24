@@ -1,5 +1,4 @@
 import 'babel-polyfill';
-import './app-controller.spec.js';
 import './app-filter.spec.js';
 import './artifact-links-graph/artifact-links-model-service.spec.js';
 import './campaign/campaign-service.spec.js';
