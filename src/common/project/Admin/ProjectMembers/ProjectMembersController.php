@@ -94,7 +94,7 @@ class ProjectMembersController
         $project_members_list = $this->getFormattedProjectMembers($request);
         $template_path        = ForgeConfig::get('tuleap_dir') . '/src/templates/project/members';
         $renderer             = TemplateRendererFactory::build()->getRenderer($template_path);
-        $additional_modals    = new ProjectMembersAdditionalModalCollectionPresenter($project);
+        $additional_modals    = new ProjectMembersAdditionalModalCollectionPresenter($project, $this->csrf_token);
 
         $this->event_manager->processEvent($additional_modals);
 

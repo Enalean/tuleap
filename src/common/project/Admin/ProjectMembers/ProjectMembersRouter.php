@@ -24,8 +24,9 @@
 
 namespace Tuleap\Project\Admin\ProjectMembers;
 
+use CSRFSynchronizerToken;
+use EventManager;
 use HTTPRequest;
-use Valid_WhiteList;
 
 class ProjectMembersRouter
 {
@@ -33,34 +34,60 @@ class ProjectMembersRouter
      * @var ProjectMembersController
      */
     private $members_controller;
-
     /**
-     * @var Valid_WhiteList
+     * @var CSRFSynchronizerToken
      */
-    private $valid_Whitelist;
+    private $csrf_token;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         ProjectMembersController $members_controller,
-        Valid_WhiteList $valid_Whitelist
+        CSRFSynchronizerToken $csrf_token,
+        EventManager $event_manager
     ) {
         $this->members_controller = $members_controller;
-        $this->valid_Whitelist    = $valid_Whitelist;
+        $this->csrf_token         = $csrf_token;
+        $this->event_manager      = $event_manager;
     }
 
     public function route(HTTPRequest $request)
     {
-        if ($request->isPost() && $request->valid($this->valid_Whitelist)) {
-            switch ($request->get('action')) {
-                case 'add-user':
-                    $this->members_controller->addUserToProject($request);
-                    break;
+        switch ($request->get('action')) {
+            case 'add-user':
+                $this->members_controller->addUserToProject($request);
+                $this->redirect($request);
+                break;
 
-                case 'remove-user':
-                    $this->members_controller->removeUserFromProject($request);
-                    break;
-            }
+            case 'remove-user':
+                $this->members_controller->removeUserFromProject($request);
+                $this->redirect($request);
+                break;
+            default:
+                $event = new MembersEditProcessAction(
+                    $request,
+                    $this->csrf_token
+                );
+
+                $this->event_manager->processEvent($event);
+                if ($event->hasBeenHandled()) {
+                    $this->redirect($request);
+                } else {
+                    $this->members_controller->display($request);
+                }
+
+                break;
         }
+    }
 
-        $this->members_controller->display($request);
+    private function redirect(HTTPRequest $request)
+    {
+        $GLOBALS['Response']->redirect(
+            '/project/admin/members.php?group_id=' . urlencode(
+                $request->getProject()->getID()
+            )
+        );
     }
 }

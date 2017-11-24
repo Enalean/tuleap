@@ -22,57 +22,78 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 namespace Tuleap\Project\Admin\ProjectMembers;
 
+use Codendi_Request;
 use CSRFSynchronizerToken;
 use Project;
 use Tuleap\Event\Dispatchable;
 
-class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
+class MembersEditProcessAction implements Dispatchable
 {
-    const NAME = "project_admin_members_additional_modal";
+    const NAME = 'membersEditProcessAction';
 
+    /**
+     * @var bool
+     */
+    private $has_been_handled;
+    /**
+     * @var Codendi_Request
+     */
+    private $request;
     /**
      * @var Project
      */
     private $project;
-
-    public $modals_buttons = array();
-    public $modals_content = array();
-    private $csrf_token;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $csrf;
 
     public function __construct(
-        Project $project,
-        CSRFSynchronizerToken $csrf_token
+        Codendi_Request $request,
+        CSRFSynchronizerToken $csrf
     ) {
-        $this->project    = $project;
-        $this->csrf_token = $csrf_token;
+        $this->request          = $request;
+        $this->project          = $request->getProject();
+        $this->csrf             = $csrf;
+        $this->has_been_handled = false;
     }
 
+    /**
+     * @return Codendi_Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return Project
+     */
     public function getProject()
     {
         return $this->project;
     }
 
     /**
-     * @param $purified_html_button string A purified html string containing a button meant to trigger a modal.
+     * @return CSRFSynchronizerToken
      */
-    public function addModalButton($purified_html_button)
+    public function getCSRF()
     {
-        $this->modals_buttons["purified_html_button"] = $purified_html_button;
+        return $this->csrf;
     }
 
     /**
-     * @param $purified_html_modal_content string A purified html string containing a modal.
+     * @return bool
      */
-    public function addModalContent($purified_html_modal_content)
+    public function hasBeenHandled()
     {
-        $this->modals_content["purified_html_modal"] = $purified_html_modal_content;
+        return $this->has_been_handled;
     }
 
-    public function getCSRF()
+    public function setHasBeenHandledToTrue()
     {
-        return $this->csrf_token;
+        $this->has_been_handled = true;
     }
 }

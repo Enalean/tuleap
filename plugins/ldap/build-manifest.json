@@ -30,9 +30,9 @@
         "plugins/ldap/www/scripts/"
     ],
     "gettext-js": {
-        "ldap-ugroups": {
-            "src": "www/scripts/project-admin-ugroups",
-            "po": "www/scripts/project-admin-ugroups/po"
+        "ldap-bindings": {
+            "src": "www/scripts/project-admin",
+            "po": "www/scripts/project-admin/po"
         }
     }
 }
