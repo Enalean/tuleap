@@ -816,18 +816,10 @@ class fulltextsearchPlugin extends Plugin {
     public function project_admin_change_user_permissions($params) {
         $project_id = $params['group_id'];
 
-        if ($this->hasAMemberOfProjectMembersBeenRemoved($params)) {
-            $ugroup_id = ProjectUGroup::PROJECT_ADMIN;
-            $this->reindexForServicesUsingUgroup($ugroup_id, $project_id);
-        }
         if ($this->hasAMemberOfWikiAdminsBeenRemoved($params)) {
             $ugroup_id = ProjectUGroup::WIKI_ADMIN;
             $this->reindexForWikiServiceUsingUgroup($ugroup_id, $project_id);
         }
-    }
-
-    private function hasAMemberOfProjectMembersBeenRemoved(array $params) {
-        return $params['user_permissions']['admin_flags'] === '' && $params['previous_permissions']['admin_flags'] === 'A';
     }
 
     private function hasAMemberOfWikiAdminsBeenRemoved(array $params) {

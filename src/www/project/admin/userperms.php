@@ -62,7 +62,7 @@ if ($request->exist('submit')) {
     $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
     while ($row_dev = db_fetch_array($res_dev)) {
 
-        if($request ->exist("admin_user_$row_dev[user_id]")){
+        if($request ->exist("update_user_$row_dev[user_id]")){
             $forum_flags= "forums_user_$row_dev[user_id]";
             $file_flags = "file_user_$row_dev[user_id]";
             $wiki_flags = "wiki_user_$row_dev[user_id]";
@@ -76,47 +76,21 @@ if ($request->exist('submit')) {
                 'news_flags',
                 'svn_flags'
             );
-            $admin_flags  = "admin_user_$row_dev[user_id]";
-            $$admin_flags = $request->get($admin_flags);
-        //
-        // cannot turn off their own admin flag if no other admin in project -- set it back to 'A'
-        //
-            if (user_getid() == $row_dev['user_id']) {
-                if ($$admin_flags != 'A') {
-                    $other_admin_exists=false;
-                    // Check that there is still at least one admin
-                    $sql = "SELECT NULL FROM user_group WHERE user_id != ".db_ei($row_dev['user_id'])." AND admin_flags='A' AND group_id=".db_ei($group_id).' LIMIT 1';
-                    $res_dev2 = db_query($sql);
 
-                    if (db_numrows($res_dev2) > 0 ) {
-                        $other_admin_exists=true;
-                    }
-
-                    if (!$other_admin_exists) {
-                        $is_admin_only_modification = true;
-                        foreach ($flags as $flag) {
-                            if ($request->get($$flag) !== false && $request->get($$flag) != $row_dev[$flag]) {
-                                $is_admin_only_modification = false;
-                            }
-                        }
-                        if ($is_admin_only_modification) {
-                            $nb_errors++;
-                        }
-                        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','cannot_remove_admin_stat'));
-                        $$admin_flags='A';
-                    }
-                }
-            }
-
-            $sql = "UPDATE user_group SET admin_flags='". db_es($$admin_flags) ."'";
+            $update_statements = array();
             foreach ($flags as $flag) {
                 if ($request->exist($$flag)) {
-                    $sql .= ", $flag = '". db_es($request->get($$flag)) ."'";
+                    $update_statements[] = "$flag = '". db_es($request->get($$flag)) ."'";
                 }
             }
-            $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
+            $res = true;
+            if ($update_statements) {
+                $sql = "UPDATE user_group SET " . implode(', ', $update_statements);
+                $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
 
-            $res = db_query($sql);
+                $res = db_query($sql);
+            }
+
             $tracker_error = false;
             if ( $project->usesTracker()&&$at_arr ) {
                 for ($j = 0; $j < count($at_arr); $j++) {
@@ -145,7 +119,6 @@ if ($request->exist('submit')) {
             // Raise an event
             $em =& EventManager::instance();
             $user_permissions = array();
-            $user_permissions['admin_flags'] = $$admin_flags;
             foreach ($flags as $flag) {
                 if (isset($$$flag)) {
                     $user_permissions[$flag] = $$$flag;
@@ -183,7 +156,6 @@ $sql = array();
 $sql['select'] = "SELECT SQL_CALC_FOUND_ROWS user.user_name AS user_name,
                   user.realname AS realname,
                   user.user_id AS user_id,
-                  user_group.admin_flags,
                   user_group.bug_flags,
                   user_group.forum_flags,
                   user_group.project_flags,
@@ -287,26 +259,32 @@ function userperms_add_header($header) {
     $head .= $header;
 }
 
+$should_display_submit_button = false;
+
 $head .= '<th>'.$Language->getText('project_admin_userperms','user_name').'</th>';
-$head .= '<th>'.$Language->getText('project_admin_userperms','proj_admin').'</th>';
 
 if ($project->usesCVS()) {
     $head .= '<th>'.$Language->getText('project_admin_userperms','cvs_write').'</th>';
 }
 if ($project->usesSVN()) {
+    $should_display_submit_button = true;
     $head .= '<th>'.$Language->getText('project_admin_userperms','svn').'</th>';
 }
 if ($project->usesForum()) {
+    $should_display_submit_button = true;
     $head .= '<th>'.$Language->getText('project_admin_userperms','forums').'</th>';
 }
 if ($project->usesWiki()) {
+    $should_display_submit_button = true;
     $head .= '<th>'.$Language->getText('project_admin_userperms','wiki').'</th>';
 }
 if ($project->usesNews()) {
+    $should_display_submit_button = true;
     $head .= '<th>'.$Language->getText('project_admin_userperms','news').'</th>';
 }
 
 if ( $project->usesTracker()&&$at_arr ) {
+    $should_display_submit_button = true;
 	for ($j = 0; $j < count($at_arr); $j++) {
         userperms_add_header('<th>'.$Language->getText('project_admin_userperms','tracker',$at_arr[$j]->getName()).'</th>');
 	}
@@ -334,12 +312,7 @@ echo $head;
         $i++;
         print '<TR class="'. util_get_alt_row_color($i) .'">';
         $user_name = $hp->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODENDI_PURIFIER_CONVERT_HTML);
-        echo '<td><a name="'. ucfirst(substr($row_dev['user_name'], 0, 1)) .'"></a>'. $user_name .'</td>';
-        echo '
-            <TD>
-            <INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="A" '.(($row_dev['admin_flags']=='A')?'CHECKED':'').'>&nbsp;'.$Language->getText('global','yes').'<BR>
-            <INPUT TYPE="RADIO" NAME="admin_user_'.$row_dev['user_id'].'" VALUE="" '.(($row_dev['admin_flags']=='')?'CHECKED':'').'>&nbsp;'.$Language->getText('global','no').'
-            </TD>';
+        echo '<td><input type="hidden" name="update_user_'. urlencode($row_dev['user_id']) .'">'. $user_name .'</td>';
         if ($project->usesCVS()) {
             echo '<TD>'.$Language->getText('global','yes').'</TD>';
         }
@@ -405,7 +378,7 @@ echo $head;
                 if (!$is_first) {
                     print ', ';
                 }
-                print '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.
+                print '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'">'.
                     $row['name'].'</a>';
                 $is_first = false;
             }
@@ -456,8 +429,10 @@ if ($num_total_rows && $number_per_page < $num_total_rows) {
     echo '</div>';
 }
 
-echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms','upd_user_perm').'">
-</FORM>';
+if ($should_display_submit_button) {
+    echo '<P align="center"><INPUT type="submit" name="submit" value="'.$Language->getText('project_admin_userperms','upd_user_perm').'">';
+}
+echo '</FORM>';
 }
 
 project_admin_footer(array());
