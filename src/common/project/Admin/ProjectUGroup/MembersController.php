@@ -22,6 +22,7 @@
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use Codendi_Request;
+use EventManager;
 use Feedback;
 use Project;
 use ProjectUGroup;
@@ -90,11 +91,17 @@ class MembersController
             return;
         }
 
+        if ((int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN) {
+            return;
+        }
+
         if (! $user->isMember($project->getID())) {
             account_add_user_to_group($project->getID(), $user->getUserName());
             $this->ugroup_binding->reloadUgroupBindingInProject($project);
         }
+
         $this->user_permissions_dao->addUserAsProjectAdmin($project->getID(), $user->getId());
+        EventManager::instance()->processEvent(new UserBecomesProjectAdmin($project, $user));
     }
 
     /**
@@ -122,6 +129,11 @@ class MembersController
             return;
         }
 
+        if ((int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN) {
+            return;
+        }
+
         $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
+        EventManager::instance()->processEvent(new UserIsNoLongerProjectAdmin($project, $user));
     }
 }

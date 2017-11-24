@@ -95,6 +95,8 @@ use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
+use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
@@ -243,6 +245,8 @@ class GitPlugin extends Plugin {
         $this->addHook(HeartbeatsEntryCollection::NAME);
         $this->addHook(HierarchyDisplayer::NAME);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
+        $this->addHook(UserBecomesProjectAdmin::NAME);
+        $this->addHook(UserIsNoLongerProjectAdmin::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -1319,6 +1323,28 @@ class GitPlugin extends Plugin {
                 )
             );
         }
+    }
+
+    public function userIsNoLongerProjectAdmin(UserIsNoLongerProjectAdmin $event)
+    {
+        $this->project_admin_ugroup_remove_user(
+            array(
+                'user_id'   => $event->getUser()->getId(),
+                'group_id'  => $event->getProject()->getID(),
+                'ugroup_id' => ProjectUGroup::PROJECT_ADMIN
+            )
+        );
+    }
+
+    public function userBecomesProjectAdmin(UserBecomesProjectAdmin $event)
+    {
+        $this->project_admin_ugroup_add_user(
+            array(
+                'user_id'   => $event->getUser()->getId(),
+                'group_id'  => $event->getProject()->getID(),
+                'ugroup_id' => ProjectUGroup::PROJECT_ADMIN
+            )
+        );
     }
 
     public function project_admin_change_user_permissions($params) {

@@ -20,6 +20,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 
 require_once 'common/plugin/Plugin.class.php';
@@ -141,6 +142,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(UserIsNoLongerProjectAdmin::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -804,6 +806,11 @@ class fulltextsearchPlugin extends Plugin {
         $project_id = $ugroup->getProjectId();
 
         $this->reindexForServicesUsingUgroup($ugroup->getId(), $project_id);
+    }
+
+    public function userIsNoLongerProjectAdmin(UserIsNoLongerProjectAdmin $event)
+    {
+        $this->reindexForServicesUsingUgroup(ProjectUGroup::PROJECT_ADMIN, $event->getProject()->getID());
     }
 
     public function project_admin_change_user_permissions($params) {
