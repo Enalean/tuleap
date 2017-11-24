@@ -116,6 +116,10 @@ class ProjectMembersController
         $project        = $request->getProject();
         $form_unix_name = $request->get('new_project_member');
 
+        if (! $form_unix_name) {
+            return;
+        }
+
         account_add_user_to_group($project->getID(), $form_unix_name);
 
         $this->user_group_bindings->reloadUgroupBindingInProject($project);
