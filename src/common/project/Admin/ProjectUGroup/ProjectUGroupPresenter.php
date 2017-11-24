@@ -38,6 +38,7 @@ class ProjectUGroupPresenter
     public $binding;
     public $members;
     public $csrf_token;
+    public $is_static_ugroup;
 
     public function __construct(
         ProjectUGroup $ugroup,
@@ -46,14 +47,15 @@ class ProjectUGroupPresenter
         $members,
         CSRFSynchronizerToken $csrf_token
     ) {
-        $this->id              = $ugroup->getId();
-        $this->project_id      = $ugroup->getProjectId();
-        $this->name            = $ugroup->getName();
-        $this->description     = $ugroup->getDescription();
-        $this->has_permissions = count($permissions) > 0;
-        $this->permissions     = $permissions;
-        $this->binding         = $binding;
-        $this->members         = $members;
-        $this->csrf_token      = $csrf_token;
+        $this->id               = $ugroup->getId();
+        $this->project_id       = $ugroup->getProjectId();
+        $this->name             = $ugroup->getTranslatedName();
+        $this->description      = $ugroup->getDescription();
+        $this->has_permissions  = count($permissions) > 0;
+        $this->permissions      = $permissions;
+        $this->binding          = $binding;
+        $this->members          = $members;
+        $this->csrf_token       = $csrf_token;
+        $this->is_static_ugroup = $ugroup->isStatic();
     }
 }

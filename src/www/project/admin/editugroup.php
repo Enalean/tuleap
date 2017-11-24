@@ -30,6 +30,7 @@ use Tuleap\Project\Admin\ProjectUGroup\MembersController;
 use Tuleap\Project\Admin\ProjectUGroup\MembersPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
+use Tuleap\Project\UserPermissionsDao;
 
 require_once('pre.php');
 
@@ -52,7 +53,7 @@ $binding_controller  = new BindingController(
     $edit_event_launcher
 );
 $user_manager        = UserManager::instance();
-$members_controller  = new MembersController($request, $user_manager);
+$members_controller  = new MembersController($request, $user_manager, new UserPermissionsDao(), $ugroup_binding);
 $index_controller    = new IndexController(
     new ProjectUGroupPresenterBuilder(
         PermissionsManager::instance(),

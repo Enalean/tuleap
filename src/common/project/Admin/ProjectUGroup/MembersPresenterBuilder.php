@@ -60,7 +60,10 @@ class MembersPresenterBuilder
     {
         $ugroup_members = array();
 
-        foreach ($ugroup->getMembers() as $key => $member) {
+        $members        = $ugroup->getMembers();
+        $can_be_deleted = $ugroup->isStatic() || count($members) > 1;
+
+        foreach ($members as $key => $member) {
             $ugroup_members[$key]['profile_page_url'] = "/users/" . urlencode($member->getUserName()) . "/";
 
             $ugroup_members[$key]['username_display'] = $this->user_helper->getDisplayName(
@@ -68,9 +71,10 @@ class MembersPresenterBuilder
                 $member->getRealName()
             );
 
-            $ugroup_members[$key]['has_avatar'] = $member->hasAvatar();
-            $ugroup_members[$key]['user_name']  = $member->getUserName();
-            $ugroup_members[$key]['user_id']    = $member->getId();
+            $ugroup_members[$key]['has_avatar']     = $member->hasAvatar();
+            $ugroup_members[$key]['user_name']      = $member->getUserName();
+            $ugroup_members[$key]['user_id']        = $member->getId();
+            $ugroup_members[$key]['can_be_deleted'] = $can_be_deleted;
         }
 
         return $ugroup_members;

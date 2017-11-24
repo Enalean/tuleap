@@ -1,13 +1,17 @@
 <div class="tlp-framed-horizontally">
     <div class="project-admin-user-groups-header">
         <h2 class="project-admin-user-groups-header-title">{{ name }}</h2>
-        {{> ugroup-permissions-modal }}
+        {{# is_static_ugroup }}
+            {{> ugroup-permissions-modal }}
+        {{/ is_static_ugroup }}
     </div>
     <div class="project-admin-user-groups-container">
-        <div class="project-admin-user-groups-details">
-            {{> ugroup-settings-details }}
-            {{> ugroup-settings-binding }}
-        </div>
+        {{# is_static_ugroup }}
+            <div class="project-admin-user-groups-details">
+                {{> ugroup-settings-details }}
+                {{> ugroup-settings-binding }}
+            </div>
+        {{/ is_static_ugroup }}
         <div class="project-admin-user-groups-member-list-container">
             {{> ugroup-settings-member-list }}
         </div>

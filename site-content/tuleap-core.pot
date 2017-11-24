@@ -775,6 +775,9 @@ msgstr ""
 msgid "You can include empty lines in the import file."
 msgstr ""
 
+msgid "You can not delete system user groups"
+msgstr ""
+
 msgid "You can only edit your own widgets."
 msgstr ""
 
