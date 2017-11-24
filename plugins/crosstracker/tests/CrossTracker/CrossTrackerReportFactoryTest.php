@@ -68,7 +68,7 @@ class CrossTrackerReportFactoryTest extends \TuleapTestCase
         stub($this->report_dao)->searchReportById()->returns(false);
         $this->expectException('Tuleap\CrossTracker\CrossTrackerReportNotFoundException');
 
-        $this->cross_tracker_factory->getById(1, $this->user);
+        $this->cross_tracker_factory->getById(1);
     }
 
     public function itDoesNotThrowsAnExceptionWhenTrackerIsNotFound()
@@ -92,34 +92,7 @@ class CrossTrackerReportFactoryTest extends \TuleapTestCase
         $expected_result = new CrossTrackerReport(1, array($this->tracker_2));
 
         $this->assertEqual(
-            $this->cross_tracker_factory->getById(1, $this->user),
-            $expected_result
-        );
-    }
-
-    public function itReturnsTrackersUserCanSee()
-    {
-        stub($this->report_dao)->searchReportById()->returns(
-            array(1)
-        );
-
-        stub($this->report_dao)->searchReportTrackersById()->returns(
-            array(
-                array("tracker_id" => 1),
-                array("tracker_id" => 2)
-            )
-        );
-
-        stub($this->tracker_factory)->getTrackerById(1)->returns($this->tracker_1);
-        stub($this->tracker_factory)->getTrackerById(2)->returns($this->tracker_2);
-
-        stub($this->tracker_1)->userCanView()->returns(false);
-        stub($this->tracker_2)->userCanView()->returns(true);
-
-        $expected_result = new CrossTrackerReport(1, array($this->tracker_2));
-
-        $this->assertEqual(
-            $this->cross_tracker_factory->getById(1, $this->user),
+            $this->cross_tracker_factory->getById(1),
             $expected_result
         );
     }

@@ -69,12 +69,13 @@ msgstr "Taille (Octets)"
 msgid "Writers"
 msgstr "Ecrivains"
 
+#, php-format
 msgid ""
 "You can also <a href=\"%1$s\">create or modify</a>\n"
 "                user groups in project administration."
 msgstr ""
-"Vous pouvez également <a href=\"%1$s\">créer ou modifier</a> le groupe d'utilisateurs dans l'interface d'administration "
-"de projet."
+"Vous pouvez également <a href=\"%1$s\">créer ou modifier</a> le groupe "
+"d'utilisateurs dans l'interface d'administration de projet."
 
 msgid "You must be granted Project Administrator permission to access this"
 msgstr "Vous devez être administrateur projet pour accéder à cette section"
