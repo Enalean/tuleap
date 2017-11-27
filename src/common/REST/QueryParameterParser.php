@@ -40,12 +40,12 @@ class QueryParameterParser
     {
         $parameter_content = $this->getParameterContent($query, $parameter_name);
         if (! is_array($parameter_content)) {
-            throw new InvalidParameterTypeException($parameter_name);
+            throw new InvalidParameterTypeException("$parameter_name must be an array of int");
         }
 
         $only_numeric_label_ids = array_filter($parameter_content, 'is_int');
         if ($only_numeric_label_ids !== $parameter_content) {
-            throw new InvalidParameterTypeException($parameter_name);
+            throw new InvalidParameterTypeException("$parameter_name must be an array of int");
         }
 
         $duplicates = array_diff_key($parameter_content, array_unique($parameter_content));
@@ -66,7 +66,7 @@ class QueryParameterParser
     {
         $parameter_content = $this->getParameterContent($query, $parameter_name);
         if (! is_int($parameter_content)) {
-            throw new InvalidParameterTypeException($parameter_name);
+            throw new InvalidParameterTypeException("$parameter_name must be an int");
         }
 
         return $parameter_content;
@@ -82,5 +82,16 @@ class QueryParameterParser
         }
 
         return $json_query[$parameter_name];
+    }
+
+    public function getString($query, $parameter_name)
+    {
+        $parameter_content = $this->getParameterContent($query, $parameter_name);
+
+        if (! is_string($parameter_content)) {
+            throw new InvalidParameterTypeException("$parameter_name must be a string");
+        }
+
+        return $parameter_content;
     }
 }

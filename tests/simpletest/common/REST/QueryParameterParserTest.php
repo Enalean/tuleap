@@ -88,4 +88,32 @@ class QueryParameterParserTest extends \TuleapTestCase
 
         $this->assertEqual(47, $result);
     }
+
+    public function itThrowsWhenStringIsMissing()
+    {
+        $this->expectException('Tuleap\\REST\\MissingMandatoryParameterException');
+
+        $this->query_parser->getString('{"some_other_property": ""}', 'identifier');
+    }
+
+    public function itThrowsWhenStringIsAnArray()
+    {
+        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
+
+        $this->query_parser->getString('{"identifier": ["test"]}', 'identifier');
+    }
+
+    public function itThrowsWhenStringIsAnInt()
+    {
+        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
+
+        $this->query_parser->getString('{"identifier": 123}', 'identifier');
+    }
+
+    public function itReturnsAStringForIdentifier()
+    {
+        $result = $this->query_parser->getString('{"identifier": "test"}', 'identifier');
+
+        $this->assertEqual('test', $result);
+    }
 }

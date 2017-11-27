@@ -23,11 +23,14 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use ProjectUGroup;
-use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\MissingMandatoryParameterException;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\QueryParameterParser;
 use Tuleap\User\REST\UserRepresentation;
 use UGroupManager;
 use URLVerification;
@@ -44,6 +47,11 @@ class UserGroupResource extends AuthenticatedResource {
     const USERNAME_ID = 'username';
     const EMAIL_ID    = 'email';
     const LDAP_ID_ID  = 'ldap_id';
+
+    /**
+     * @var QueryParameterParser
+     */
+    private $query_parser;
 
     /**
      * @var UserGroupRetriever
@@ -64,6 +72,7 @@ class UserGroupResource extends AuthenticatedResource {
         $this->user_manager         = UserManager::instance();
         $this->project_manager      = ProjectManager::instance();
         $this->user_group_retriever = new UserGroupRetriever($this->ugroup_manager);
+        $this->query_parser         = new QueryParameterParser(new JsonDecoder());
     }
 
     /**
@@ -119,23 +128,36 @@ class UserGroupResource extends AuthenticatedResource {
      *
      * Get the users of a given user_group
      *
+     * <br>
+     * <br>
+     * ?query is optional. When filled, it is a json object:
+     * <ul>
+     *   <li>With a property "identifier" to search if user_name is present in project_members.
+     *     If user present it will retrieve its representation.
+     *     Example: <pre>{"identifier": "my_user_name"}</pre>
+     *   </li>
+     * </ul>
+     *
      * @url GET {id}/users
      * @access protected
      *
      * @param string $id Id of the ugroup This should be one of two formats<br>
      * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
      * - format: ugroupId for all other groups (registered users, custom groups, ...)
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int    $limit Number of elements displayed per page
+     * @param int    $offset Position of the first element to display
+     * @param string $query User name to look for
+     *
      *
      * @throws 400
      * @throws 403
      * @throws 404
      * @throws 406
      *
-     * @return Array {@type \Tuleap\User\REST\UserRepresentation}
+     * @return array {@type \Tuleap\User\REST\UserRepresentation}
      */
-    protected function getUsers($id, $limit = 10, $offset = 0) {
+    protected function getUsers($id, $limit = 10, $offset = 0, $query = null)
+    {
         $this->checkLimitValueIsAcceptable($limit);
 
         $user_group = $this->user_group_retriever->getExistingUserGroup($id);
@@ -144,13 +166,32 @@ class UserGroupResource extends AuthenticatedResource {
         $this->userCanSeeUserGroupMembers($project_id);
 
         $member_representations = array();
-        $members                = $this->getUserGroupMembers($user_group, $project_id, $limit, $offset);
 
-        foreach($members as $member) {
-            $member_representations[] = $this->getUserRepresentation($member);
+        try {
+            $identifier = $this->query_parser->getString($query, 'identifier');
+        } catch (MissingMandatoryParameterException $e) {
+            $identifier = null;
         }
 
-        $this->sendPaginationHeaders($limit, $offset, $this->countUserGroupMembers($user_group, $project_id));
+        if ($identifier === null) {
+            $members = $this->getUserGroupMembers($user_group, $project_id, $limit, $offset);
+
+            foreach ($members as $member) {
+                $member_representations[] = $this->getUserRepresentation($member);
+            }
+            $this->sendPaginationHeaders($limit, $offset, $this->countUserGroupMembers($user_group, $project_id));
+        } else {
+            $member = $this->getUGroupMemberByIdentifier($identifier, $user_group);
+
+            $nb_member = 0;
+            if ($member !== null) {
+                $member_representations   = array_slice(array($member), $offset, $limit);
+                $nb_member                = 1;
+            }
+            $this->sendPaginationHeaders($limit, $offset, $nb_member);
+        }
+
+
         $this->sendAllowHeadersForUserGroup();
 
         return $member_representations;
@@ -413,5 +454,22 @@ class UserGroupResource extends AuthenticatedResource {
         }
 
         return true;
+    }
+
+    /**
+     * @return null|UserRepresentation
+     */
+    private function getUGroupMemberByIdentifier($query, ProjectUGroup $ugroup)
+    {
+        $user = $this->user_manager->findUser($query);
+        if (! $user) {
+            throw new RestException(400, 'Unable to find user');
+        }
+
+        if ($user->isMember($ugroup->getProjectId())) {
+            return $this->getUserRepresentation($user);
+        }
+
+        return null;
     }
 }

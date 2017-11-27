@@ -17,12 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {filterInlineTable, modal as createModal} from 'tlp';
-import { sanitize }                              from 'dompurify';
-import Gettext                                   from 'node-gettext';
-import french_translations                       from '../po/fr.po';
+import {filterInlineTable, get, modal as createModal} from 'tlp';
+import {sanitize} from 'dompurify';
+import Gettext from 'node-gettext';
+import french_translations from '../po/fr.po';
+
+const gettext_provider = new Gettext();
 
 document.addEventListener('DOMContentLoaded', () => {
+
+
+    const member_list_container = document.getElementById('project-admin-user-groups-member-list-container');
+    if (member_list_container) {
+        gettext_provider.addTranslations('fr_FR', 'project-admin', french_translations);
+        gettext_provider.setLocale(member_list_container.dataset.locale);
+        gettext_provider.setTextDomain('project-admin');
+    }
+
     initModals();
     initModalAddDynamicUserToUGroup();
     initGroupsFilter();
@@ -48,37 +59,63 @@ function initModals() {
     }
 }
 
-function initModalAddDynamicUserToUGroup() {
-    const buttons = document.querySelectorAll(`.project-admin-add-dynamic-modal`);
+async function initModalAddDynamicUserToUGroup() {
+    const button = document.getElementById('project-admin-add-dynamic-modal');
+    if (! button) {
+        return;
+    }
 
-    const gettext_provider = new Gettext();
-    gettext_provider.addTranslations('fr_FR', 'tuleap-core', french_translations);
-    gettext_provider.setLocale(document.getElementById('project-admin-user-groups-member-list-container').dataset.locale);
-    gettext_provider.setTextDomain('tuleap-core');
+    button.addEventListener('click', () => {
+        const selected_user = document.getElementById('project-admin-members-add-user-select').value;
+        if (! selected_user) {
+            return;
+        }
 
-    for (const button of buttons) {
-        const modal = createModal(document.getElementById(button.dataset.targetModalId));
+        document.getElementById('project-administration-add-dynamic-ugroup-icon').classList.remove('fa-plus');
+        document.getElementById('project-administration-add-dynamic-ugroup-icon').classList.add('fa-spin');
+        document.getElementById('project-administration-add-dynamic-ugroup-icon').classList.add('fa-spinner');
 
-        button.addEventListener('click', () => {
-            var selected_user = sanitize(document.getElementById('project-admin-members-add-user-select').value);
+        document.getElementById('add-user-to-ugroup').value = selected_user;
+        initModalOrSendForm(selected_user);
+    });
+}
 
-            if (selected_user === "") {
-                return;
-            }
+function openConfirmationModal(selected_user) {
+    const button               = document.getElementById('project-admin-add-dynamic-modal');
+    const modal                = createModal(document.getElementById(button.dataset.targetModalId));
+    const ugroup_name          = document.getElementById('user-group').value;
+    const confirmation_message = sprintf(
+        gettext_provider.gettext('You are about to add <b>%s</b> in <b>%s</b> users group.'),
+        selected_user,
+        ugroup_name
+    );
 
-            modal.show();
+    document.getElementById('add-user-to-dynamic-ugroup-confirmation-message').innerHTML = sanitize(confirmation_message);
 
-            var ugroup_name   = sanitize(document.getElementById('user-group').value);
+    modal.show();
+    document.getElementById('project-administration-add-dynamic-ugroup-icon').classList.add('fa-plus');
+    document.getElementById('project-administration-add-dynamic-ugroup-icon').classList.remove('fa-spin');
+    document.getElementById('project-administration-add-dynamic-ugroup-icon').classList.remove('fa-spinner');
+}
 
-            var confirmation_message = sprintf(
-                gettext_provider.gettext('You are about to add <b>%s</b> in <b>%s</b> users group.'),
-                selected_user,
-                ugroup_name
-            );
+async function initModalOrSendForm(identifier) {
+    const button     = document.getElementById('project-admin-add-dynamic-modal');
+    const project_id = button.dataset.projectId;
+    const ugroup_id  = button.dataset.ugroupId;
 
-            document.getElementById('add-user-to-ugroup').value                                  = selected_user;
-            document.getElementById('add-user-to-dynamic-ugroup-confirmation-message').innerHTML = confirmation_message;
-        });
+    const ugroup_identifier = project_id + '_' + ugroup_id;
+
+    const response = await get('/api/v1/user_groups/' + ugroup_identifier + '/users', {
+        params: {
+            query: JSON.stringify({identifier})
+        }
+    });
+    const users = await response.json();
+
+    if (users.length === 0) {
+        openConfirmationModal(identifier);
+    } else {
+        document.getElementById("add-user-to-dynamic-ugroup").submit();
     }
 }
 
