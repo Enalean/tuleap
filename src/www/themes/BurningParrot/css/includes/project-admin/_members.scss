@@ -25,13 +25,13 @@
     display: flex;
 }
 
-#project-admin-members-add-user-section {
-    margin-right: $tlp-double-spacing;
-}
-
 #project-admin-members-modal-buttons-section {
-    > :not(:first-child) {
+    > button:nth-child(2) {
         margin-left: $tlp-spacing;
+    }
+
+    > button:not(:nth-child(2)) {
+        margin-left: $tlp-half-spacing;
     }
 }
 
