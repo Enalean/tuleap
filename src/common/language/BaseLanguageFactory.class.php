@@ -90,6 +90,18 @@ class BaseLanguageFactory {
         setlocale(LC_ALL, $currentlocale);
         return $language;
     }
-}
 
-?>
+    public function getAvailableLanguages()
+    {
+        $languages = array();
+        foreach ($this->getSupportedLanguages() as $lang) {
+            $languages[$lang] = $this->getBaseLanguage($lang)->getText('system', 'locale_label');
+        }
+        return $languages;
+    }
+
+    private function getSupportedLanguages()
+    {
+        return array_map('trim', explode(',', $this->supported_languages));
+    }
+}
