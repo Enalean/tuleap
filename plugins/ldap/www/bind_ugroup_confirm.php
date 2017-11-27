@@ -37,6 +37,8 @@ if (! $ugroup_id) {
 $ugroup_manager = new UGroupManager();
 $ugroup = $ugroup_manager->getById($ugroup_id);
 
+session_require(array('group' => $ugroup->getProjectId(), 'admin_flags' => 'A'));
+
 $bind_option = LDAP_GroupManager::BIND_OPTION;
 if ($request->get('preserve_members')) {
     $bind_option = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
