@@ -28,11 +28,30 @@ class CrossTrackerPermissionGateTest extends \TuleapTestCase
     {
         $user    = mock('PFUser');
         $tracker = mock('Tracker');
+        $project = mock('Project');
         stub($tracker)->userCanView()->returns(true);
         $report  = mock('\\Tuleap\\CrossTracker\\CrossTrackerReport');
+        stub($report)->getProjects()->returns(array($project));
         stub($report)->getTrackers()->returns(array($tracker));
 
-        $permission_gate = new CrossTrackerPermissionGate();
+        $url_verification = mock('URLVerification');
+        $permission_gate  = new CrossTrackerPermissionGate($url_verification);
+        $permission_gate->check($user, $report);
+    }
+
+    public function itBlocksUserThatCannotAccessToProjects()
+    {
+        $user     = mock('PFUser');
+        $project1 = mock('Project');
+        $project2 = mock('Project');
+        $report   = mock('\\Tuleap\\CrossTracker\\CrossTrackerReport');
+        stub($report)->getProjects()->returns(array($project1, $project2));
+        $url_verification = mock('URLVerification');
+        stub($url_verification)->userCanAccessProject()->returnsAt(0, true);
+        stub($url_verification)->userCanAccessProject()->throwsAt(1, new \Project_AccessPrivateException());
+
+        $permission_gate = new CrossTrackerPermissionGate($url_verification);
+        $this->expectException('Tuleap\\CrossTracker\\Permission\\CrossTrackerUnauthorizedProjectException');
         $permission_gate->check($user, $report);
     }
 
@@ -43,10 +62,13 @@ class CrossTrackerPermissionGateTest extends \TuleapTestCase
         stub($tracker1)->userCanView()->returns(true);
         $tracker2 = mock('Tracker');
         stub($tracker2)->userCanView()->returns(false);
+        $project  = mock('Project');
         $report   = mock('\\Tuleap\\CrossTracker\\CrossTrackerReport');
+        stub($report)->getProjects()->returns(array($project));
         stub($report)->getTrackers()->returns(array($tracker1, $tracker2));
 
-        $permission_gate = new CrossTrackerPermissionGate();
+        $url_verification = mock('URLVerification');
+        $permission_gate = new CrossTrackerPermissionGate($url_verification);
         $this->expectException('Tuleap\\CrossTracker\\Permission\\CrossTrackerUnauthorizedTrackerException');
         $permission_gate->check($user, $report);
     }
